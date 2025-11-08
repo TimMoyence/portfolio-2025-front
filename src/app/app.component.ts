@@ -17,7 +17,7 @@ import { SeoManagerComponent } from './shared/components/seo-manager.component';
           <router-outlet></router-outlet>
         </section>
       </main>
-      <footer class="py-6 px-4 backdrop-blur-lg bg-black/20  text-center">
+      <footer class="py-6 px-4 text-center">
         <div class="container mx-auto">
           <p>© {{ currentYear }} Portfolio. All rights reserved.</p>
         </div>
