@@ -1,135 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
-@use 'tailwindcss/base';
-@use 'tailwindcss/components';
-@use 'tailwindcss/utilities';
-@use './app/shared/styles/animations.scss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Glassmorphism Base Styles */
-@layer components {
-  .glass-card {
-    background-color: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    @apply rounded-xl border border-opacity-20 border-white shadow-lg;
+/* Utilitaires custom pour coller au HTML Relume */
+
+@layer utilities {
+  /* Rayons */
+  .rounded-card {
+    @apply rounded-lg;
+  } // 0.5rem
+  .rounded-form {
+    @apply rounded-lg;
+  }
+  .rounded-image {
+    @apply rounded-xl;
+  } // par ex. un peu plus arrondi
+  .rounded-button {
+    @apply rounded-full;
   }
 
-  .glass-card-dark {
-    background-color: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(12px);
-    @apply rounded-xl border border-opacity-20 border-white shadow-lg;
+  /* Fonts : tu peux ajouter font-heading aux titres si tu veux le serif */
+  .font-heading {
+    font-family: 'Cormorant Garamond', serif;
   }
-
-  .glass-button {
-    background-color: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    @apply px-4 py-2 rounded-lg border border-opacity-20 border-white shadow-md 
-    hover:bg-opacity-25 transition-all duration-300 ease-in-out;
-  }
-
-  .gradient-bg {
-    @apply bg-gradient-to-br from-primary-200 via-secondary-100 to-tertiary-200;
-    background-size: 200% 200%;
-    animation: gradientAnimation 15s ease infinite;
-  }
-}
-
-/* Global Styles */
-body {
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-}
-
-.container {
-  @apply mx-auto px-4 py-8;
-}
-
-/* Text opacity utilities */
-.text-white\/70 {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.text-white\/80 {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* Background opacity utilities */
-.bg-white\/10 {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.bg-white\/15 {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.bg-white\/20 {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.bg-white\/25 {
-  background-color: rgba(255, 255, 255, 0.25);
-}
-
-.bg-white\/30 {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-.bg-black\/25 {
-  background-color: rgba(0, 0, 0, 0.25);
-}
-
-.bg-black\/50 {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-/* Border opacity utilities */
-.border-white\/10 {
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.border-white\/20 {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .glass-card,
-  .glass-card-dark {
-    @apply p-4;
-  }
-
-  .container {
-    @apply py-4;
-  }
-}
-
-/* Animation keyframes */
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+  .font-body {
+    font-family: 'Merriweather Sans', system-ui, sans-serif;
   }
 }
