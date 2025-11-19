@@ -1,58 +1,97 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
+    container: {
+      center: true,
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1200px',
+      },
+      padding: '1.25rem', // ~5%
+    },
     extend: {
+      // --------------------
+      // COULEURS PRIMITIVES
+      // --------------------
       colors: {
-        primary: {
-          50: '#f5faff',
-          100: '#e8f5fb',
-          200: '#d3eefd',
-          300: '#b1e1fa',
-          400: '#89d3f5',
-          500: '#5dc6f0',
-          600: '#3aaee0',
-          700: '#289dcf',
-          800: '#1e84b0',
-          900: '#186e93',
-        },
-        secondary: {
-          50: '#fafaf9',
-          100: '#f5f5f4',
-          200: '#e7e5e4',
-          300: '#d6d3d1',
-          400: '#a8a29e',
-          500: '#78716c',
-          600: '#57534e',
-          700: '#44403c',
-          800: '#292524',
-          900: '#1c1917',
-        },
-        tertiary: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          200: '#e9d5ff',
-          300: '#d8b4fe',
-          400: '#c084fc',
-          500: '#a855f7',
-          600: '#9333ea',
-          700: '#7e22ce',
-          800: '#6b21a8',
-          900: '#581c87',
-        },
+        // Neutres (primitives.color.*)
+        'neutral-darkest': '#0c0902', // primitives.color.neutral darkest
+        'neutral-darker': '#24211b',
+        'neutral-dark': '#54524d',
+        neutral: '#858480',
+        'neutral-light': '#b6b5b3',
+        'neutral-lighter': '#dadad9',
+        'neutral-lightest': '#f2f2f2',
+        white: '#ffffff',
+
+        // Mountain meadow (vert) primitives.color.mountain meadow*
+        'mm-lightest': '#e8f4f3',
+        'mm-lighter': '#d1eae7',
+        'mm-light': '#5fb7ad',
+        mm: '#1b998b',
+        'mm-dark': '#157a6f',
+        'mm-darker': '#0a3d37',
+        'mm-darkest': '#082d29',
+
+        // --------------------
+        // COLOR SCHEMES
+        // --------------------
+        // Color scheme 1
+        'scheme-background': '#e8f4f3', // mountain meadow lightest
+        'scheme-text': '#0c0902', // neutral darkest
+        'scheme-border': '#0c090226', // neutral darkest 15% opacity
+        'scheme-accent': '#1b998b', // mountain meadow
+
+        // Color scheme 2/3 si tu en as besoin plus tard :
+        'scheme2-background': '#ffffff',
+        'scheme2-text': '#0c0902',
+        'scheme3-background': '#f2f2f2',
+        'scheme3-text': '#0c0902',
       },
-      backdropFilter: {
-        none: 'none',
-        blur: 'blur(20px)',
+
+      // --------------------
+      // TYPO / FONT SIZES
+      // (génère text-h1, text-h2, text-medium, etc.)
+      // --------------------
+      fontFamily: {
+        heading: ['"Cormorant Garamond"', 'serif'],
+        body: ['"Merriweather Sans"', 'system-ui', 'sans-serif'],
       },
-      backgroundColor: {
-        glass: 'rgba(255, 255, 255, 0.25)',
-        'glass-dark': 'rgba(0, 0, 0, 0.25)',
+      fontSize: {
+        h1: ['4.5rem', { lineHeight: '1.2', letterSpacing: '-0.72px' }],
+        h2: ['3.25rem', { lineHeight: '1.2', letterSpacing: '-0.52px' }],
+        h6: ['1.375rem', { lineHeight: '1.4', letterSpacing: '-0.22px' }],
+        medium: ['1.125rem', { lineHeight: '1.5' }],
+        small: ['0.875rem', { lineHeight: '1.5' }],
       },
-      borderColor: {
-        glass: 'rgba(255, 255, 255, 0.18)',
+
+      // --------------------
+      // RADIUS
+      // (rounded-card, rounded-form, rounded-image, etc.)
+      // --------------------
+      borderRadius: {
+        card: '0.5rem', // 8px
+        form: '0.5rem',
+        image: '0.75rem',
+        button: '9999px', // pill
       },
+
+      // --------------------
+      // SPACING / HEIGHTS
+      // --------------------
+      spacing: {
+        18: '4.5rem', // 72px => pour h-18, min-h-18
+      },
+
+      // Optionnel : ombres issues de effect.medium, etc. :contentReference[oaicite:2]{index=2}
       boxShadow: {
-        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        xxs: '0 1px 2px 0 #0000000d',
+        xs: '0 1px 2px 0 #0000000f, 0 1px 3px 0 #0000001a',
+        sm: '0 2px 4px -2px #0000000f, 0 4px 8px -2px #0000001a',
+        md: '0 4px 6px -2px #00000008, 0 12px 16px -4px #00000014',
       },
     },
   },
