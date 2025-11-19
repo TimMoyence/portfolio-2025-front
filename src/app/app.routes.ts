@@ -13,6 +13,30 @@ export const routes: Routes = [
       },
     },
   },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/auth/auth.component').then((m) => m.AuthComponent),
+    data: {
+      seo: {
+        title: 'Login — Pour acceder à votre compte',
+        description: "You can't access this page without logging in.",
+        image: '/assets/og-services.jpg',
+      },
+    },
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./features/auth/auth.component').then((m) => m.AuthComponent),
+    data: {
+      seo: {
+        title: 'Register — Pour acceder à votre compte',
+        description: "You can't access this page without registering.",
+        image: '/assets/og-services.jpg',
+      },
+    },
+  },
   { path: 'home', redirectTo: '', pathMatch: 'full' },
   { path: '**', redirectTo: '' },
 ];
