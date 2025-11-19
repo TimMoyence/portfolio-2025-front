@@ -1,8 +1,16 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+} from '@angular/router';
 import { environment } from '../environments/environnement';
 import { routes } from './app.routes';
 import { APP_CONFIG } from './core/config/app-config.token';
@@ -14,20 +22,21 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withComponentInputBinding(),
-      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      }),
     ),
     provideClientHydration(),
     provideAnimations(),
     provideHttpClient(
-      withInterceptors([
-        requestIdInterceptor,
-        errorInterceptor
-      ])
+      withInterceptors([requestIdInterceptor, errorInterceptor]),
+      withFetch(),
     ),
 
     {
       provide: APP_CONFIG,
-      useValue: environment
-    }
-  ]
+      useValue: environment,
+    },
+  ],
 };
