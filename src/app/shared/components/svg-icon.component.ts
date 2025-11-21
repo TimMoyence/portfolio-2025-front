@@ -102,8 +102,25 @@ export class SvgIconComponent implements OnChanges {
       return '';
     }
 
-    const targetFill = this.fill ?? 'currentColor';
-    svgElement.setAttribute('fill', targetFill.toString());
+    const targetFill = (this.fill ?? 'currentColor').toString();
+
+    svgElement.setAttribute('fill', targetFill);
+
+    const elementsWithFill = svgElement.querySelectorAll('[fill]');
+    elementsWithFill.forEach((el) => {
+      const value = el.getAttribute('fill');
+      if (value && value !== 'none') {
+        el.setAttribute('fill', targetFill);
+      }
+    });
+
+    const elementsWithStroke = svgElement.querySelectorAll('[stroke]');
+    elementsWithStroke.forEach((el) => {
+      const value = el.getAttribute('stroke');
+      if (value && value !== 'none') {
+        el.setAttribute('stroke', targetFill);
+      }
+    });
 
     if (!svgElement.getAttribute('viewBox')) {
       const width = parseFloat(svgElement.getAttribute('width') || '0');
