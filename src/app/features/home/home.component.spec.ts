@@ -19,4 +19,12 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render the composed sections including contact and footer', () => {
+    const compiled: HTMLElement = fixture.nativeElement;
+    expect(compiled.querySelector('app-hero-section')).not.toBeNull();
+    expect(compiled.querySelector('app-services-section')).not.toBeNull();
+    expect(compiled.querySelector('app-contact')).not.toBeNull();
+    expect(compiled.querySelector('app-footer')).not.toBeNull();
+  });
 });
