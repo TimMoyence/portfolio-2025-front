@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+@keyframes mobileMenuSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobileBackdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Apply animations */
+.mobile-menu-panel {
+  animation: mobileMenuSlideDown 0.18s ease-out;
+}
+
+.mobile-menu-backdrop {
+  animation: mobileBackdropFadeIn 0.18s ease-out;
+}
