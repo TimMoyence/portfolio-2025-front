@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { A11yDialogService } from '../../services/a11y-dialog.service';
 import { SvgIconComponent } from '../svg-icon.component';
 
 @Component({
@@ -12,9 +20,9 @@ import { SvgIconComponent } from '../svg-icon.component';
 })
 export class NavbarComponent implements OnInit {
   readonly navLinks: NavLink[] = [
-    { label: 'Accueil', href: '#' },
-    { label: 'Cours', href: '#' },
-    { label: 'Présentation', href: '#' },
+    { label: 'Accueil', href: '/' },
+    { label: 'Cours', href: '/cours' },
+    { label: 'Présentation', href: '/presentation' },
   ];
 
   dropdownSections = signal<DropdownSection[]>([
@@ -91,10 +99,17 @@ export class NavbarComponent implements OnInit {
 
   scrolled = false;
   mobileMenuOpen = false;
-  MenuOpen = false;
+
   isMobile = false;
   currentlyHovered = signal<string | null>(null);
 
+  @ViewChild('mobileMenuPanel', { static: false })
+  mobileMenuPanel?: ElementRef<HTMLElement>;
+
+  @ViewChild('burgerButton', { static: false })
+  burgerButton?: ElementRef<HTMLButtonElement>;
+
+  constructor(private a11yDialog: A11yDialogService) {}
   ngOnInit(): void {
     this.updateIsMobileState();
   }
@@ -109,40 +124,52 @@ export class NavbarComponent implements OnInit {
     this.updateIsMobileState();
   }
 
-  openOnMobileDropdownMenu(label: string): void {
-    console.log('Clicked on', label);
+  @HostListener('document:keydown', ['$event'])
+  handleGlobalKeydown(event: KeyboardEvent): void {
+    const activeElement = document.activeElement as HTMLElement | null;
+    const isSpace =
+      event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
 
-    if (!this.isMobile) return;
+    // 1) SPACE on burger button: open menu + prevent scroll
+    if (activeElement === this.burgerButton?.nativeElement && isSpace) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.openMobileMenu();
+      return;
+    }
 
-    this.dropdownSections.update((sections) =>
-      sections.map((section) => ({
-        ...section,
-        isOpen: section.label === label ? !section.isOpen : false,
-      })),
-    );
+    // 2) When mobile menu is open: ESC and Tab inside dialog
+    if (this.mobileMenuOpen) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.closeMobileMenu();
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        this.a11yDialog.trapFocus(
+          event,
+          this.mobileMenuPanel?.nativeElement ?? null,
+        );
+      }
+    }
   }
 
-  closeMobileMenu() {
-    this.mobileMenuOpen = false;
-
-    // Optionnel : fermer les dropdowns aussi
-    this.dropdownSections.update((sections) =>
-      sections.map((s) => ({ ...s, isOpen: false })),
-    );
-
-    document.body.style.overflow = '';
-  }
-
-  openOnDesktopDropdownMenu(label: string): void {
-    if (this.isMobile) return;
-
-    this.currentlyHovered.set(label);
+  openDropdownMenuAndToggleInMobile(label: string): void {
+    if (!this.isMobile) this.currentlyHovered.set(label);
 
     this.dropdownSections.update((sections) =>
-      sections.map((section) => ({
-        ...section,
-        isOpen: section.label === label,
-      })),
+      sections.map((section) => {
+        if (section.label !== label) {
+          // Close other sections
+          return { ...section, isOpen: false };
+        }
+
+        return {
+          ...section,
+          isOpen: this.isMobile ? !section.isOpen : true,
+        };
+      }),
     );
   }
 
@@ -152,7 +179,6 @@ export class NavbarComponent implements OnInit {
       if (this.currentlyHovered() === label) {
         return;
       }
-
       this.dropdownSections.update((sections) =>
         sections.map((section) =>
           section.label === label ? { ...section, isOpen: false } : section,
@@ -161,19 +187,45 @@ export class NavbarComponent implements OnInit {
     }, 150);
   }
 
-  openMobileMenu() {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
-    if (this.mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+  /**
+   * Called on the burger button click.
+   */
+  openMobileMenu(): void {
+    if (this.mobileMenuOpen) return this.closeMobileMenu();
+
+    this.mobileMenuOpen = true;
+    document.body.style.overflow = 'hidden';
+
+    // Save current focus (usually the burger button)
+    this.a11yDialog.saveFocus();
+
+    // After the view updates, move focus inside the dialog
+    requestAnimationFrame(() => {
+      const panel = this.mobileMenuPanel?.nativeElement ?? null;
+      this.a11yDialog.focusFirstDescendant(panel);
+    });
+  }
+
+  /**
+   * Called by the close button, backdrop click or Esc key.
+   */
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+    document.body.style.overflow = '';
+
+    // Close all dropdowns when menu closes
+    this.dropdownSections.update((sections) =>
+      sections.map((s) => ({ ...s, isOpen: false })),
+    );
+
+    // Restore focus to what opened the menu (e.g. burger button)
+    this.a11yDialog.restoreFocus();
   }
 
   private updateIsMobileState(): void {
     if (typeof window === 'undefined') return;
 
-    const isMobileViewport = window.innerWidth < 768;
+    const isMobileViewport = window.innerWidth < 1024;
 
     if (this.isMobile === isMobileViewport) return;
 
@@ -181,6 +233,7 @@ export class NavbarComponent implements OnInit {
 
     if (!this.isMobile) {
       this.mobileMenuOpen = false;
+      document.body.style.overflow = '';
       this.dropdownSections.update((sections) =>
         sections.map((section) => ({ ...section, isOpen: false })),
       );

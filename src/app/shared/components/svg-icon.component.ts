@@ -32,11 +32,7 @@ export class SvgIconComponent implements OnChanges {
   @HostBinding('style.display') display = 'inline-flex';
   @HostBinding('style.width') hostWidth: string | null = null;
   @HostBinding('style.height') hostHeight: string | null = null;
-  @HostBinding('attr.aria-hidden') get ariaHidden(): string | null {
-    return this.ariaLabel ? null : 'true';
-  }
-
-  @HostBinding('attr.aria-label') get ariaLabelBinding(): string | null {
+  @HostBinding('attr.aria-label') get hostAriaLabel(): string | null {
     return this.ariaLabel ?? null;
   }
 
@@ -102,25 +98,27 @@ export class SvgIconComponent implements OnChanges {
       return '';
     }
 
-    const targetFill = (this.fill ?? 'currentColor').toString();
+    if (this.fill != 'keep') {
+      const targetFill = (this.fill ?? 'currentColor').toString();
 
-    svgElement.setAttribute('fill', targetFill);
+      svgElement.setAttribute('fill', targetFill);
 
-    const elementsWithFill = svgElement.querySelectorAll('[fill]');
-    elementsWithFill.forEach((el) => {
-      const value = el.getAttribute('fill');
-      if (value && value !== 'none') {
-        el.setAttribute('fill', targetFill);
-      }
-    });
+      const elementsWithFill = svgElement.querySelectorAll('[fill]');
+      elementsWithFill.forEach((el) => {
+        const value = el.getAttribute('fill');
+        if (value && value !== 'none') {
+          el.setAttribute('fill', targetFill);
+        }
+      });
 
-    const elementsWithStroke = svgElement.querySelectorAll('[stroke]');
-    elementsWithStroke.forEach((el) => {
-      const value = el.getAttribute('stroke');
-      if (value && value !== 'none') {
-        el.setAttribute('stroke', targetFill);
-      }
-    });
+      const elementsWithStroke = svgElement.querySelectorAll('[stroke]');
+      elementsWithStroke.forEach((el) => {
+        const value = el.getAttribute('stroke');
+        if (value && value !== 'none') {
+          el.setAttribute('stroke', targetFill);
+        }
+      });
+    }
 
     if (!svgElement.getAttribute('viewBox')) {
       const width = parseFloat(svgElement.getAttribute('width') || '0');

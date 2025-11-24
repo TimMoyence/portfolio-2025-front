@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { SeoManagerComponent } from './shared/components/seo-manager.component';
+import { SkipLinkComponent } from './shared/components/skip-link.component';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +15,14 @@ import { SeoManagerComponent } from './shared/components/seo-manager.component';
     NavbarComponent,
     SeoManagerComponent,
     FooterComponent,
+    SkipLinkComponent,
   ],
   template: `
     <app-seo-manager></app-seo-manager>
+    <app-skip-link></app-skip-link>
     <div class="min-h-screen text-scheme-text">
       <app-navbar></app-navbar>
-      <main class="pt-24 md:pt-28 lg:pt-32">
+      <main id="main-content" class="pt-32 lg:pt-36">
         <router-outlet></router-outlet>
       </main>
       <app-footer></app-footer>

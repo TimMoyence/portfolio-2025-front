@@ -1,9 +1,8 @@
-<nav class="fixed top-0 left-0 right-0 z-50 pt-4 px-6 transition-all duration-300" [ngClass]="{ 'py-2': scrolled }"
-  [ngClass]="
+<nav class="fixed top-0 left-0 right-0 z-50 pt-4 px-6 transition-all duration-300" [ngClass]="
             scrolled
               ? 'bg-transparent backdrop-blur-sm'
               : 'bg-scheme-background'
-          ">
+          " aria-label="main-navigation">
   <div
     class="glass-card-dark bg-scheme-background  flex items-center justify-between p-3 px-6 rounded-full max-w-7xl mx-auto transition-all duration-300"
     [ngClass]="{ 'shadow-lg': scrolled }">
@@ -18,23 +17,30 @@
       </ng-container>
     </div>
 
-    <button (click)="openMobileMenu()" class="lg:hidden ">
+    <button [attr.aria-expanded]="mobileMenuOpen" (click)="openMobileMenu()" #burgerButton type="button"
+      class="lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-full p-2"
+      aria-haspopup="dialog" aria-controls="mobile-nav"
+      [attr.aria-label]="mobileMenuOpen ? 'Fermer le menu principal' : 'Ouvrir le menu principal'">
       @if (mobileMenuOpen) {
-      <app-svg-icon name="close" [size]="1.7"></app-svg-icon>
+      <app-svg-icon ariaLabel="Close menu" name="close" [size]="1.7"></app-svg-icon>
       } @else {
-      <app-svg-icon name="burger-menu" [size]="1.7"></app-svg-icon>
+      <app-svg-icon ariaLabel="Open menu" name="burger-menu" [size]="1.7"></app-svg-icon>
       }
     </button>
   </div>
 
 </nav>
 @if (mobileMenuOpen) {
-<div class="lg:hidden fixed inset-0 z-40">
-  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm mobile-menu-backdrop" (click)="closeMobileMenu()"></div>
+<div id="mobile-nav" class="lg:hidden fixed inset-0 z-40" role="dialog" aria-modal="true"
+  aria-labelledby="mobile-nav-label">
+  <button type="button" class="absolute inset-0 bg-black/40 backdrop-blur-sm mobile-menu-backdrop"
+    aria-label="Fermer le menu principal" (click)="closeMobileMenu()"></button>
 
   <div class="absolute top-[15%] w-full flex justify-center px-4 mobile-menu-panel">
 
-    <div class="glass-card-dark rounded-2xl mt-2 py-3 px-4 w-80 border border-scheme-border bg-scheme-background">
+    <div #mobileMenuPanel
+      class="glass-card-dark rounded-2xl mt-2 py-3 px-4 w-80 border border-scheme-border bg-scheme-background">
+      <h2 id="mobile-nav-label" class="sr-only">Menu principal</h2>
       <div class="mt-3 flex flex-col gap-4 justify-center items-center">
         <ng-container *ngTemplateOutlet="navContent; context: { isMobile: true }"></ng-container>
       </div>
@@ -44,70 +50,77 @@
 }
 
 
-
+<!-- SHARED NAV CONTENT -->
 <ng-template #navContent let-isMobile="isMobile">
-  @for (item of navLinks; track $index) {
-  <a [routerLink]="item.href" routerLinkActive="font-medium" class=" hover: transition-colors duration-300 "
-    [ngClass]="'hover:text-scheme-accent delay-' + ($index + 1) + '00'" (click)="isMobile && (mobileMenuOpen = false)">
-    {{ item.label }}
-  </a>
-  }
-  @for (dropdown of dropdownSections(); track $index) {
-  <div
-    (mouseenter)="!isMobile && currentlyHovered.set(dropdown.label); !isMobile &&openOnDesktopDropdownMenu(dropdown.label)"
-    (mouseleave)="!isMobile && currentlyHovered.set(null); !isMobile && closeOnDesktopDropdownMenu(dropdown.label)">
-    <button role="button" class="flex w-full items-center justify-center text-left text-regular "
-      (click)="openOnMobileDropdownMenu(dropdown.label)">
-      {{ dropdown.label }}
-
-      <app-svg-icon name="chevron-down" [size]="1.7"></app-svg-icon>
-    </button>
-    @if(dropdown.isOpen){
-    <div data-slot="card"
-      class="z-50 overflow-hidden rounded-card border border-scheme-border bg-scheme-background text-scheme-text "
-      [ngClass]="
-            isMobile
-              ? 'mt-1  w-60 p-4 [--y-close:25%]'
-              : 'mt-4 md:absolute lg:w-80 lg:p-6 lg:[--y-close:25%]'
-          ">
-      <div class="grid grid-cols-1 grid-rows-[max-content] gap-y-2 py-3 lg:gap-y-4 lg:py-0">
-        @for (items of dropdown.items; track $index) {
-        <a [routerLink]="items.href"
-          class="grid auto-cols-fr grid-cols-[max-content_1fr] items-start gap-x-3 py-2 lg:py-1 hover:text-scheme-accent"
-          (click)="isMobile && (mobileMenuOpen = false)">
-          <div class="flex flex-col items-center justify-center">
-            <app-svg-icon [name]="items.icon" [size]="1.5"></app-svg-icon>
-          </div>
-          <div class="flex flex-col items-start justify-center">
-            <p class="text-regular font-semibold">{{ items.title }}</p>
-            <p class="text-small block">
-              {{ items.description }}
-            </p>
-          </div>
-        </a>
-        }
-      </div>
-    </div>
+  <ul class="flex flex-col lg:flex-row items-center gap-3" [ngClass]="isMobile ? 'mt-2' : 'flex-row'">
+    @for (item of navLinks; track $index) {
+    <li>
+      <a [routerLink]="item.href" routerLinkActive="font-medium" #rla="routerLinkActive"
+        [attr.aria-current]="rla.isActive ? 'page' : null" [id]="item.label + $index"
+        class="transition-colors duration-300 hover:text-scheme-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        (click)="isMobile && closeMobileMenu()">
+        {{ item.label }}
+      </a>
+    </li>
     }
-  </div>
-  }
-  <div class="gap-3 flex md:inline-flex items-center justify-center gap-3 " [ngClass]="
-            isMobile
-              ? 'mt-4 '
-              : ''
-          ">
 
-    <button data-slot="button"
-      class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2 scheme-accent"
-      title="Button" [routerLink]="'/devis'" (click)="isMobile && (mobileMenuOpen = false)">
+    @for (dropdown of dropdownSections(); track $index) {
+    <li class="relative"
+      (mouseenter)="!isMobile && currentlyHovered.set(dropdown.label); openDropdownMenuAndToggleInMobile(dropdown.label)"
+      (mouseleave)="!isMobile && currentlyHovered.set(null); closeOnDesktopDropdownMenu(dropdown.label)">
+      <button type="button"
+        class="flex w-full items-center justify-center text-left text-regular gap-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        [attr.aria-expanded]="dropdown.isOpen" aria-haspopup="true" [attr.aria-controls]="'nav-section-' + $index"
+        [attr.data-dropdown-trigger]="dropdown.label" (click)="openDropdownMenuAndToggleInMobile(dropdown.label)">
+        {{ dropdown.label }}
+        <app-svg-icon name="chevron-down" [size]="1.7" ariaLabel="icon svg of chevron-down"></app-svg-icon>
+      </button>
+
+      @if (dropdown.isOpen) {
+      <div [id]="'nav-section-' + $index"
+        class="z-50 overflow-hidden rounded-card border border-scheme-border bg-scheme-background text-scheme-text"
+        [attr.data-dropdown-panel]="dropdown.label" [ngClass]="
+              isMobile
+                ? 'mt-1 w-60 p-4'
+                : 'mt-4 md:absolute lg:w-80 lg:p-6'
+            ">
+        <ul class="grid grid-cols-1 gap-y-2 py-3 lg:gap-y-4 lg:py-0">
+          @for (items of dropdown.items; track $index) {
+          <li>
+            <a [routerLink]="items.href"
+              class="grid auto-cols-fr grid-cols-[max-content_1fr] items-start gap-x-3 py-2 lg:py-1 hover:text-scheme-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              (click)="isMobile && closeMobileMenu()">
+              <div class="flex flex-col items-center justify-center">
+                <app-svg-icon [name]="items.icon" [size]="1.5"
+                  [aria-label]="'icon svg of ' + items.title"></app-svg-icon>
+              </div>
+              <div class="flex flex-col items-start justify-center">
+                <p class="text-regular font-semibold">{{ items.title }}</p>
+                <p class="text-small block">
+                  {{ items.description }}
+                </p>
+              </div>
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
+      }
+    </li>
+    }
+  </ul>
+
+  <div class="flex items-center justify-center gap-3" [ngClass]="isMobile ? 'mt-4' : ''">
+    <button type="button"
+      class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
+      title="Demander un devis" [routerLink]="'/devis'" (click)="isMobile && closeMobileMenu()">
       Devis
     </button>
 
-    <button data-slot="button"
-      class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border border-scheme-border  px-5 py-2 scheme-accent text-white"
-      title="Button" [routerLink]="'/contact'" (click)="isMobile && (mobileMenuOpen = false)">
+    <button type="button"
+      class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white"
+      title="Me contacter" [routerLink]="'/contact'" (click)="isMobile && closeMobileMenu()">
       Contact
     </button>
-
   </div>
 </ng-template>

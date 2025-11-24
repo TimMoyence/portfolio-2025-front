@@ -27,3 +27,8 @@
     font-family: 'Merriweather Sans', system-ui, sans-serif;
   }
 }
+
+:focus {
+  outline: 2px solid var(--mm);
+  outline-offset: 4px;
+}
