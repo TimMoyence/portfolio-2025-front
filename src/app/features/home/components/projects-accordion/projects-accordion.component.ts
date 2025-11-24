@@ -26,23 +26,30 @@ type Project = {
       <div class="container">
         <div class="mb-12 w-full max-w-lg md:mb-18 lg:mb-20">
           <p class="mb-3 font-semibold md:mb-4">Projets</p>
-          <h1 class="heading-h2 mb-5 font-bold md:mb-6">
+          <h2 class="heading-h2 mb-5 font-bold md:mb-6">
             Mes réalisations numériques
-          </h1>
+          </h2>
           <p class="text-medium">
-            Chaque projet raconte une histoire unique de transformation digitale.
-            Découvrez comment j'ai relevé des défis techniques et créatifs avec
-            passion et précision.
+            Chaque projet raconte une histoire unique de transformation
+            digitale. Découvrez comment j'ai relevé des défis techniques et
+            créatifs avec passion et précision.
           </p>
         </div>
         <div
           class="flex w-full flex-col overflow-hidden border border-scheme-border lg:h-[90vh] lg:flex-row"
+          role="tablist"
         >
           <div
             *ngFor="let project of projects; let i = index; trackBy: trackById"
             class="flex flex-col justify-start overflow-hidden border-b border-scheme-border last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0"
             [ngStyle]="getColumnStyles(i)"
             (click)="setActiveIndex(i)"
+            role="tab"
+            [attr.aria-selected]="activeIndex === i"
+            [attr.tabindex]="activeIndex === i ? 0 : -1"
+            [attr.aria-controls]="'panel-' + i"
+            [id]="'tab-' + i"
+            (keydown)="onKeydown($event, i)"
           >
             <div
               class="relative flex h-16 w-full cursor-pointer items-center justify-center py-8 md:h-20 lg:h-full lg:w-20 lg:flex-col lg:justify-between"
@@ -62,6 +69,10 @@ type Project = {
             <div
               class="flex flex-col px-6 pt-4 pb-8 transition-all duration-300 ease-in-out md:px-10 md:pt-12 md:pb-12 lg:px-12 lg:pt-16 lg:pb-16"
               [ngStyle]="getContentStyles(i)"
+              role="tabpanel"
+              [id]="'panel-' + i"
+              [attr.aria-labelledby]="'tab-' + i"
+              [attr.hidden]="activeIndex !== i"
             >
               <h3 class="heading-h3 mb-5 font-bold md:mb-6">
                 {{ project.title }}
@@ -155,6 +166,8 @@ export class ProjectsAccordionComponent implements OnInit {
 
   setActiveIndex(index: number): void {
     this.activeIndex = index;
+    const el = document.getElementById('tab-' + index);
+    el?.focus();
   }
 
   trackById(_: number, project: Project): string {
@@ -199,5 +212,22 @@ export class ProjectsAccordionComponent implements OnInit {
 
   private get canUseWindow(): boolean {
     return isPlatformBrowser(this.platformId) && typeof window !== 'undefined';
+  }
+
+  onKeydown(event: KeyboardEvent, index: number) {
+    event.preventDefault();
+    if (event.key === 'ArrowRight') {
+      this.setActiveIndex((index + 1) % this.projects.length);
+    } else if (event.key === 'ArrowLeft') {
+      this.setActiveIndex(
+        (index - 1 + this.projects.length) % this.projects.length,
+      );
+    } else if (event.key === 'Home') {
+      this.setActiveIndex(0);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      this.setActiveIndex((index + 1) % this.projects.length);
+    } else if (event.key === 'End') {
+      this.setActiveIndex(this.projects.length - 1);
+    }
   }
 }

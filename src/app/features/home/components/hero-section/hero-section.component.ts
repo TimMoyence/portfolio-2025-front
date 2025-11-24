@@ -13,9 +13,9 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
           <div class="mb-12 text-center md:mb-18 lg:mb-20">
             <div class="w-full max-w-lg">
               <p class="mb-3 font-semibold md:mb-4">Innovation</p>
-              <h2 class="heading-h2 mb-5 font-bold md:mb-6">
+              <h1 class="heading-h2 mb-5 font-bold md:mb-6">
                 Bienvenue chez Asili Design
-              </h2>
+              </h1>
               <p class="text-medium">
                 Je suis Tim, un professionnel qui transforme les défis
                 numériques en opportunités. Mon parcours unique mêle
