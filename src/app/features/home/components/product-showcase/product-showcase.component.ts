@@ -7,14 +7,20 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
   standalone: true,
   imports: [CommonModule, SvgIconComponent],
   template: `
-    <section class="px-[5%] py-16 md:py-24 lg:py-28">
+    <section
+      class="px-[5%] py-16 md:py-24 lg:py-28"
+      aria-labelledby="sebastian-heading"
+    >
       <div class="container">
         <div
           class="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-20"
         >
           <div>
-            <p class="mb-3 font-semibold md:mb-4">Alfred</p>
-            <h2 class="heading-h2 mb-5 font-bold md:mb-6">
+            <p class="mb-3 font-semibold md:mb-4">Sebastian</p>
+            <h2
+              id="sebastian-heading"
+              class="heading-h2 mb-5 font-bold md:mb-6"
+            >
               Votre assistant personnel de suivi de consommation
             </h2>
             <p class="text-medium mb-5 md:mb-6">
@@ -23,24 +29,30 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
               conseils personnalisés.
             </p>
             <ul class="my-4 list-disc pl-5">
-              <li class="my-1 self-start pl-2" *ngFor="let feature of features">
-                <p>{{ feature }}</p>
+              @for (feature of features; track $index) {
+              <li class="my-1 self-start pl-2">
+                {{ feature }}
               </li>
+              }
             </ul>
             <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <button
-                type="button"
+              <a
+                href="/register"
                 class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
               >
-                Découvrir
-              </button>
-              <button
-                type="button"
+                Tester ma consommation
+              </a>
+              <a
+                href="/sebastian"
                 class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
               >
                 En savoir plus
-                <app-svg-icon name="chevron-right" [size]="1.2"></app-svg-icon>
-              </button>
+                <app-svg-icon
+                  name="chevron-right"
+                  [size]="1.2"
+                  aria-hidden="true"
+                ></app-svg-icon>
+              </a>
             </div>
           </div>
           <div>
@@ -49,6 +61,7 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
               class="w-full rounded-image object-cover"
               alt="Relume placeholder image"
               loading="lazy"
+              aria-hidden="true"
             />
           </div>
         </div>
@@ -64,5 +77,9 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
   ],
 })
 export class ProductShowcaseComponent {
-  readonly features = ["Suivi de café", "Analyse d'alcool", 'Objectifs personnalisés'];
+  readonly features = [
+    'Suivi de café',
+    "Analyse d'alcool",
+    'Objectifs personnalisés',
+  ];
 }

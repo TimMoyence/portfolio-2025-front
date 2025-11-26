@@ -16,25 +16,25 @@ export class ContactComponent {
   readonly contactMethods: ContactMethod[] = [
     {
       label: 'Email',
-      value: 'hello@relume.io',
-      href: 'mailto:hello@relume.io',
+      value: 'moyencet@gmail.com',
+      href: 'mailto:moyencet@gmail.com',
       icon: 'attach_email',
     },
     {
       label: 'Téléphone',
-      value: '+33 6 12 34 56 78',
-      href: 'tel:+33612345678',
+      value: '+33 6 98 50 32 82',
+      href: 'tel:+33698503282',
       icon: 'phone',
     },
     {
       label: 'Bureau',
-      value: '12 rue de la Technologie, Paris 75001, France',
+      value: 'Allée Serr, 33100 Bordeaux, France',
       icon: 'location_on',
     },
   ];
 
   readonly map = {
-    href: '#',
+    href: 'https://www.google.com/maps/place/Allée+Serr,+33100+Bordeaux,+France/@44.8353083,-0.5750133,17z/data=!3m1!4b1!4m6!3m5!1s0xd5527dace2f6b7f:0x8c6f3e3f8a4f4e2!8m2!3d44.8353042!4d-0.5728246!16s%2Fg%2F11c52_5y9r',
     imageSrc: './assets/images/bordeaux-placeholder.png',
     alt: 'Bordeaux placeholder map image',
   };

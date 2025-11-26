@@ -1,4 +1,4 @@
-<footer class="px-[5%] py-12 md:py-18 lg:py-20">
+<footer role="contentinfo" class="px-[5%] py-12 md:py-18 lg:py-20">
   <div class="container">
     <div
       class="grid grid-cols-1 gap-x-[4vw] gap-y-12 pb-12 md:gap-y-16 md:pb-18 sm:grid-cols-[1fr_0.5fr] sm:gap-y-4 sm:pb-20">
@@ -6,7 +6,7 @@
         <div class="mb-6 md:mb-8">
           <a href="#">
             <img src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg" alt="Logo image" class="inline-block"
-              loading="lazy" />
+              loading="lazy" aria-hidden="true" />
           </a>
         </div>
         <div class="mb-6 sm:mb-8">
@@ -19,35 +19,40 @@
             }}</a>
         </div>
         <div class="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-x-3">
-          <a *ngFor="let social of socialLinks" class="flex size-6 items-center justify-center" [href]="social.href"
-            [attr.aria-label]="social.label" data-testid="social-link">
-            <ng-container *ngIf="social.icon; else socialFallback">
-              <app-svg-icon [name]="social.icon!" [size]="1.5"></app-svg-icon>
-            </ng-container>
-            <ng-template #socialFallback>
-              <span class="text-small font-semibold">{{ social.fallback }}</span>
-            </ng-template>
+          @for (social of socialLinks; track $index) {
+          <a class="flex size-6 items-center justify-center" [href]="social.href" [attr.aria-label]="social.label"
+            data-testid="social-link">
+            @if(social.icon) {
+            <app-svg-icon aria-hidden="true" [name]="social.icon!" [size]="1.5"></app-svg-icon>
+            }
           </a>
+          }
         </div>
       </div>
       <div class="grid grid-cols-1 items-start gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-4">
-        <ul *ngFor="let column of navColumns" data-testid="footer-column">
-          <li *ngFor="let link of column.links" class="text-small py-2 font-semibold">
+        @for (column of navColumns; track $index) {
+        <ul data-testid="footer-column">
+          @for (link of column.links; track $index) {
+          <li class="text-small py-2 font-semibold">
             <a [href]="link.href">{{ link.label }}</a>
           </li>
+          }
         </ul>
+        }
       </div>
     </div>
     <div class="h-px w-full bg-scheme-border"></div>
     <div
       class="text-small flex flex-col-reverse items-start justify-between pt-6 pb-4 sm:flex-row sm:items-center sm:pt-8 sm:pb-0">
-      <p class="mt-8 sm:mt-0">© 2024 Relume. All rights reserved.</p>
+      <p class="mt-8 sm:mt-0">© 2025 Moyence. All rights reserved.</p>
       <ul
         class="text-small grid grid-flow-row grid-cols-[max-content] justify-center gap-y-4 sm:grid-flow-col sm:gap-x-6 sm:gap-y-0"
         data-testid="legal-links">
-        <li *ngFor="let legalLink of legalLinks" class="underline">
+        @for (legalLink of legalLinks; track $index) {
+        <li>
           <a [href]="legalLink.href">{{ legalLink.label }}</a>
         </li>
+        }
       </ul>
     </div>
   </div>

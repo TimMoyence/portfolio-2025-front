@@ -22,7 +22,7 @@ import { SkipLinkComponent } from './shared/components/skip-link.component';
     <app-skip-link></app-skip-link>
     <div class="min-h-screen text-scheme-text">
       <app-navbar></app-navbar>
-      <main id="main-content" class="pt-32 lg:pt-36">
+      <main id="main-content" role="main" class="pt-32 lg:pt-36">
         <router-outlet></router-outlet>
       </main>
       <app-footer></app-footer>

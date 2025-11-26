@@ -1,54 +1,42 @@
-<section class="px-[5%] py-16 md:py-24 lg:py-28">
+<section class="px-[5%] py-16 md:py-24 lg:py-28" aria-labelledby="contact-heading">
   <div class="container">
     <div>
       <div
-        class="mb-12 grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 md:mb-20 md:grid-cols-[1fr_.75fr] md:gap-x-20 md:gap-y-16"
-      >
+        class="mb-12 grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 md:mb-20 md:grid-cols-[1fr_.75fr] md:gap-x-20 md:gap-y-16">
         <div class="max-w-lg">
           <p class="mb-3 font-semibold md:mb-4">Support</p>
-          <h2 class="heading-h2 mb-5 font-bold md:mb-6">{{ title }}</h2>
+          <h2 class="heading-h2 mb-5 font-bold md:mb-6" id="contact-heading">{{ title }}</h2>
           <p class="text-medium">
             {{ subtitle }}
           </p>
         </div>
         <div class="flex flex-col">
           <div class="grid auto-cols-fr grid-cols-1 gap-x-4 gap-y-6 py-2">
-            <div
-              class="flex flex-row"
-              *ngFor="let method of contactMethods; let i = index"
-              [attr.data-testid]="'contact-method-' + i"
-            >
+            @for (method of contactMethods; track $index) {
+            <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
               <div class="mr-4 flex items-center justify-center md:mb-4">
-                <app-svg-icon
-                  *ngIf="method.icon"
-                  [name]="method.icon!"
-                  [size]="1.5"
-                  aria-hidden="true"
-                ></app-svg-icon>
+                @if(method.icon) {
+                <app-svg-icon aria-hidden="true" [name]="method.icon!" [size]="1.5" aria-hidden="true"></app-svg-icon>
+                }
               </div>
               <div>
                 <h3 class="heading-h6 mb-2 font-bold">{{ method.label }}</h3>
-                <ng-container *ngIf="method.href; else methodValue">
-                  <a class="underline" [href]="method.href">{{
-                    method.value
+                @if(method.href) {
+                <a [href]="method.href">{{
+                  method.value
                   }}</a>
-                </ng-container>
-                <ng-template #methodValue>
-                  <p>{{ method.value }}</p>
-                </ng-template>
+                } @else {
+                <p>{{ method.value }}</p>
+                }
               </div>
             </div>
+            }
           </div>
         </div>
       </div>
     </div>
-    <a [href]="map.href" class="justify-self-end md:w-[321.6px] lg:w-auto">
-      <img
-        [src]="map.imageSrc"
-        [alt]="map.alt"
-        class="size-full h-[400px] object-cover md:h-[516px]"
-        loading="lazy"
-      />
+    <a [href]="map.href" target="_blank" class="justify-self-end md:w-[321.6px] lg:w-auto">
+      <img [src]="map.imageSrc" [alt]="map.alt" class="size-full h-[400px] object-cover md:h-[516px]" loading="lazy" />
     </a>
   </div>
 </section>

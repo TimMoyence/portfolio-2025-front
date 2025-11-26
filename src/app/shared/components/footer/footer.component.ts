@@ -11,11 +11,11 @@ import { SvgIconComponent } from '../svg-icon.component';
 })
 export class FooterComponent {
   readonly address = {
-    city: 'Paris, France',
-    phone: '+33 6 12 34 56 78',
-    email: 'info@relume.io',
-    phoneHref: 'tel:+33612345678',
-    emailHref: 'mailto:info@relume.io',
+    city: 'Bordeaux, France',
+    phone: '+33 6 98 50 32 82',
+    email: 'moyencet@gmail.com',
+    phoneHref: 'tel:+33698503282',
+    emailHref: 'mailto:moyencet@gmail.com',
   };
 
   readonly navColumns: FooterColumn[] = [

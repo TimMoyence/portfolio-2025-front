@@ -24,22 +24,23 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
               <div
                 class="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8"
               >
-                <button
-                  type="button"
+                <a
+                  routerLink="/a-propos"
                   class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
                 >
                   En savoir plus
-                </button>
-                <button
-                  type="button"
+                </a>
+                <a
+                  routerLink="/projets"
                   class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
                 >
                   Projets
                   <app-svg-icon
                     name="chevron-right"
                     [size]="1.2"
+                    aria-hidden="true"
                   ></app-svg-icon>
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -47,7 +48,7 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
             <img
               src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
               class="size-full rounded-image object-cover"
-              alt="Relume placeholder image"
+              alt="Portrait de Tim, développeur web chez Asili Design"
               loading="lazy"
             />
           </div>

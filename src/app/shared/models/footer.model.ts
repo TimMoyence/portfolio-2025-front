@@ -9,5 +9,4 @@ type FooterColumn = {
 
 type SocialLink = FooterLink & {
   icon?: string | null;
-  fallback?: string;
 };

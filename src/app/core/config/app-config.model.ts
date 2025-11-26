@@ -4,6 +4,6 @@ export interface AppConfig {
   apiBaseUrl: string;
   external: {
     presqUrl: string;
-    alfredUrl: string;
+    sebastianUrl: string;
   };
 }

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContactComponent } from '../../shared/components/contact/contact.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { CtaSectionComponent } from './components/cta-section/cta-section.component';
 import { HeroSectionComponent } from './components/hero-section/hero-section.component';
 import { MissionSectionComponent } from './components/mission-section/mission-section.component';
@@ -21,7 +20,6 @@ import { ServicesSectionComponent } from './components/services-section/services
     ProductShowcaseComponent,
     ContactComponent,
     CtaSectionComponent,
-    FooterComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

@@ -4,6 +4,6 @@ export const environment = {
   apiBaseUrl: 'https://asilidesign.fr/api',
   external: {
     presqUrl: 'https://asilidesign.fr/api/presq',
-    alfredUrl: 'https://asilidesign.fr/api/alfred'
-  }
+    sebastianUrl: 'https://asilidesign.fr/api/sebastian',
+  },
 };

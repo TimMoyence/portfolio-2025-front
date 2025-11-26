@@ -22,11 +22,14 @@ type Project = {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <section class="px-[5%] py-16 md:py-24 lg:py-28">
+    <section
+      class="px-[5%] py-16 md:py-24 lg:py-28"
+      aria-labelledby="projects-heading"
+    >
       <div class="container">
         <div class="mb-12 w-full max-w-lg md:mb-18 lg:mb-20">
           <p class="mb-3 font-semibold md:mb-4">Projets</p>
-          <h2 class="heading-h2 mb-5 font-bold md:mb-6">
+          <h2 id="projects-heading" class="heading-h2 mb-5 font-bold md:mb-6">
             Mes réalisations numériques
           </h2>
           <p class="text-medium">
@@ -39,20 +42,21 @@ type Project = {
           class="flex w-full flex-col overflow-hidden border border-scheme-border lg:h-[90vh] lg:flex-row"
           role="tablist"
         >
+          @for(project of projects; track $index){
           <div
-            *ngFor="let project of projects; let i = index; trackBy: trackById"
-            class="flex flex-col justify-start overflow-hidden border-b border-scheme-border last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0"
-            [ngStyle]="getColumnStyles(i)"
-            (click)="setActiveIndex(i)"
+            class="flex flex-col lg:grid lg:grid-cols-6 justify-start overflow-hidden border-b border-scheme-border last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0"
+            [ngStyle]="getColumnStyles($index)"
+            (click)="setActiveIndex($index)"
             role="tab"
-            [attr.aria-selected]="activeIndex === i"
-            [attr.tabindex]="activeIndex === i ? 0 : -1"
-            [attr.aria-controls]="'panel-' + i"
-            [id]="'tab-' + i"
-            (keydown)="onKeydown($event, i)"
+            [attr.aria-selected]="activeIndex === $index"
+            [attr.tabindex]="activeIndex === $index ? 0 : -1"
+            [attr.aria-controls]="'panel-' + $index"
+            [id]="'tab-' + $index"
+            (keydown)="onKeydown($event, $index)"
           >
             <div
-              class="relative flex h-16 w-full cursor-pointer items-center justify-center py-8 md:h-20 lg:h-full lg:w-20 lg:flex-col lg:justify-between"
+              class="relative tab-header lg:col-span-1 flex h-16 w-full cursor-pointer items-center justify-center py-8 md:h-16 lg:h-full lg:w-16 lg:flex-col lg:justify-between"
+              role="tab"
             >
               <p
                 class="heading-h5 absolute left-6 font-bold whitespace-nowrap md:left-10 lg:relative lg:left-0"
@@ -67,12 +71,12 @@ type Project = {
               <p class="heading-h5 font-bold lg:hidden">{{ project.label }}</p>
             </div>
             <div
-              class="flex flex-col px-6 pt-4 pb-8 transition-all duration-300 ease-in-out md:px-10 md:pt-12 md:pb-12 lg:px-12 lg:pt-16 lg:pb-16"
-              [ngStyle]="getContentStyles(i)"
+              class="flex flex-col lg:col-span-5 px-6 pt-4 pb-8 transition-all duration-300 ease-in-out md:px-10 md:pt-12 md:pb-12 lg:px-12 lg:pt-16 lg:pb-16 justify-center tab-panel"
+              [ngStyle]="getContentStyles($index)"
               role="tabpanel"
-              [id]="'panel-' + i"
-              [attr.aria-labelledby]="'tab-' + i"
-              [attr.hidden]="activeIndex !== i"
+              [id]="'panel-' + $index"
+              [attr.aria-labelledby]="'tab-' + $index"
+              [attr.hidden]="activeIndex !== $index"
             >
               <h3 class="heading-h3 mb-5 font-bold md:mb-6">
                 {{ project.title }}
@@ -90,6 +94,7 @@ type Project = {
               </div>
             </div>
           </div>
+          }
         </div>
       </div>
     </section>
@@ -170,10 +175,6 @@ export class ProjectsAccordionComponent implements OnInit {
     el?.focus();
   }
 
-  trackById(_: number, project: Project): string {
-    return project.id;
-  }
-
   getColumnStyles(index: number): Record<string, string> {
     if (this.isMobile) {
       return { flex: '1 1 100%', maxWidth: '100%' };
@@ -215,19 +216,31 @@ export class ProjectsAccordionComponent implements OnInit {
   }
 
   onKeydown(event: KeyboardEvent, index: number) {
-    event.preventDefault();
-    if (event.key === 'ArrowRight') {
+    const isArrowRight = event.key === 'ArrowRight';
+    const isArrowLeft = event.key === 'ArrowLeft';
+    const isHome = event.key === 'Home';
+    const isEnd = event.key === 'End';
+    const isEnter = event.key === 'Enter';
+    const isSpace =
+      event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
+
+    if (isArrowRight || isArrowLeft || isHome || isEnd || isEnter || isSpace) {
+      event.preventDefault();
+    }
+
+    if (isArrowRight) {
       this.setActiveIndex((index + 1) % this.projects.length);
-    } else if (event.key === 'ArrowLeft') {
+    } else if (isArrowLeft) {
       this.setActiveIndex(
         (index - 1 + this.projects.length) % this.projects.length,
       );
-    } else if (event.key === 'Home') {
+    } else if (isHome) {
       this.setActiveIndex(0);
-    } else if (event.key === 'Enter' || event.key === ' ') {
-      this.setActiveIndex((index + 1) % this.projects.length);
-    } else if (event.key === 'End') {
+    } else if (isEnd) {
       this.setActiveIndex(this.projects.length - 1);
+    } else if (isEnter || isSpace) {
+      // 👉 Ici, on devrait activer l’onglet courant, pas passer au suivant
+      this.setActiveIndex(index);
     }
   }
 }

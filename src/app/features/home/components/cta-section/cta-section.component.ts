@@ -7,13 +7,16 @@ import { Component } from '@angular/core';
   imports: [CommonModule],
   template: `
     <section class="px-[5%] py-16 md:py-24 lg:py-28">
-      <div class="container">
+      <div class="container" aria-labelledby="start-project-heading">
         <div
           class="grid auto-cols-fr grid-cols-1 overflow-hidden rounded-2xl border border-scheme-border bg-scheme-background lg:grid-cols-2"
         >
           <div class="flex flex-col justify-center p-8 md:p-12">
             <div>
-              <h2 class="heading-h2 mb-5 font-bold md:mb-6">
+              <h2
+                id="start-project-heading"
+                class="heading-h2 mb-5 font-bold md:mb-6"
+              >
                 Commençons votre projet digital
               </h2>
               <p class="text-medium">
@@ -22,18 +25,18 @@ import { Component } from '@angular/core';
               </p>
             </div>
             <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <button
-                type="button"
+              <a
+                href="/devis"
                 class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-5 py-2 font-semibold text-scheme-text"
               >
                 Démarrer
-              </button>
-              <button
-                type="button"
+              </a>
+              <a
+                href="/contact"
                 class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
               >
                 Contactez-moi
-              </button>
+              </a>
             </div>
           </div>
           <div class="flex items-center justify-center">
@@ -42,6 +45,7 @@ import { Component } from '@angular/core';
               class="w-full object-cover"
               alt="Relume placeholder image"
               loading="lazy"
+              aria-hidden="true"
             />
           </div>
         </div>

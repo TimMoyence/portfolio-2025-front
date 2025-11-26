@@ -19,10 +19,8 @@ type Service = {
           class="mb-12 grid grid-cols-1 gap-5 md:mb-18 md:grid-cols-2 md:gap-x-12 md:gap-y-8 lg:mb-20 lg:gap-x-20"
         >
           <div>
-            <p class="mb-3 font-semibold md:mb-4">Services</p>
-            <h2 class="heading-h2 font-bold">
-              Solutions numériques sur mesure
-            </h2>
+            <h2 class="mb-3 font-semibold md:mb-4">Services</h2>
+            <p class="heading-h2 font-bold">Solutions numériques sur mesure</p>
           </div>
           <div>
             <p class="text-medium">
@@ -41,6 +39,7 @@ type Service = {
                 class="size-12"
                 [alt]="service.iconAlt"
                 loading="lazy"
+                aria-hidden="true"
               />
             </div>
             <h3 class="heading-h5 mb-3 font-bold md:mb-4">
@@ -50,18 +49,18 @@ type Service = {
           </article>
         </div>
         <div class="mt-12 flex flex-wrap items-center gap-4 md:mt-18 lg:mt-20">
-          <button
-            type="button"
+          <a
+            href="/tarif"
             class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
           >
             Tarifs
-          </button>
-          <button
-            type="button"
+          </a>
+          <a
+            href="/contact"
             class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
           >
             Contactez-moi
-          </button>
+          </a>
         </div>
       </div>
     </section>

@@ -7,7 +7,10 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
   standalone: true,
   imports: [CommonModule, SvgIconComponent],
   template: `
-    <section class="px-[5%] py-16 md:py-24 lg:py-28">
+    <section
+      class="px-[5%] py-16 md:py-24 lg:py-28"
+      aria-labelledby="presQ-heading"
+    >
       <div class="container">
         <div
           class="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-20"
@@ -18,12 +21,13 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
               class="w-full rounded-image object-cover"
               alt="Relume placeholder image"
               loading="lazy"
+              aria-hidden="true"
             />
           </div>
           <div class="order-1 lg:order-2">
             <p class="mb-3 font-semibold md:mb-4">Mission</p>
-            <h2 class="heading-h2 mb-5 font-bold md:mb-6">
-              PresQ transforme l'échec en opportunité
+            <h2 id="presQ-heading" class="heading-h2 mb-5 font-bold md:mb-6">
+              PresQ la marque qui transforme l'échec en opportunité
             </h2>
             <p class="text-medium">
               Une approche innovante qui démystifie l'échec et le transforme en
@@ -32,19 +36,23 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
               la bienveillance.
             </p>
             <div class="mt-6 flex flex-wrap gap-4 md:mt-8">
-              <button
-                type="button"
+              <a
+                href="/offres-et-tarifs"
                 class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
               >
-                Explorer
-              </button>
-              <button
-                type="button"
+                En savoir PresQ plus..
+              </a>
+              <a
+                href="/questionnaire"
                 class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
               >
-                Comprendre
-                <app-svg-icon name="chevron-right" [size]="1.2"></app-svg-icon>
-              </button>
+                Voter son PresQ modèle
+                <app-svg-icon
+                  aria-hidden="true"
+                  name="chevron-right"
+                  [size]="1.2"
+                ></app-svg-icon>
+              </a>
             </div>
           </div>
         </div>

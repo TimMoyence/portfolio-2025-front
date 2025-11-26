@@ -36,6 +36,7 @@ export class AuthComponent {
   };
 
   activeTab: AuthTab = 'sign-up';
+  showPassword: boolean = false;
   isSignupSubmitted: boolean = false;
   isLoginSubmitted: boolean = false;
   isSignupLoading: boolean = false;
@@ -51,6 +52,7 @@ export class AuthComponent {
     label: string;
     type: string;
     required: boolean;
+    icon?: string;
   }[] = [
     { key: 'firstName', label: 'Prénom', type: 'text', required: true },
     { key: 'lastName', label: 'Nom', type: 'text', required: true },
@@ -88,10 +90,7 @@ export class AuthComponent {
   ];
 
   selectTab(tab: AuthTab): void {
-    if (this.activeTab === tab) {
-      return;
-    }
-
+    if (this.activeTab === tab) return;
     this.activeTab = tab;
   }
 
@@ -104,10 +103,7 @@ export class AuthComponent {
     this.signupErrorMessage = undefined;
     this.signupSuccessMessage = undefined;
 
-    if (form.invalid) {
-      // On laisse Angular afficher les erreurs, on ne soumet pas
-      return;
-    }
+    if (form.invalid) return;
 
     if (this.signupForm.password !== this.signupForm.verifPassword) {
       this.signupErrorMessage = 'Les mots de passe ne correspondent pas.';
@@ -144,15 +140,13 @@ export class AuthComponent {
     this.loginErrorMessage = undefined;
     this.loginSuccessMessage = undefined;
 
-    if (form.invalid) {
-      // On laisse Angular afficher les erreurs, on ne soumet pas
-      return;
-    }
+    if (form.invalid) return;
 
     this.isLoginLoading = true;
 
     this.authService.login(this.loginForm).subscribe({
       next: (session) => {
+        // TODO : Intégrer la gestion de session & token & integrer la redirection vers le bon endroit
         this.loginSuccessMessage = `Bienvenue ${session.user.firstName} !`;
       },
       error: (error) => {
