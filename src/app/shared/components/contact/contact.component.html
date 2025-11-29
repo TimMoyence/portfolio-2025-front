@@ -4,7 +4,12 @@
       <div
         class="mb-12 grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 md:mb-20 md:grid-cols-[1fr_.75fr] md:gap-x-20 md:gap-y-16">
         <div class="max-w-lg">
-          <p class="mb-3 font-semibold md:mb-4">Support</p>
+          <p
+            class="mb-3 font-semibold md:mb-4"
+            i18n="contact.kicker|Section small label@@contactKicker"
+          >
+            Support
+          </p>
           <h2 class="heading-h2 mb-5 font-bold md:mb-6" id="contact-heading">{{ title }}</h2>
           <p class="text-medium">
             {{ subtitle }}
@@ -22,9 +27,13 @@
               <div>
                 <h3 class="heading-h6 mb-2 font-bold">{{ method.label }}</h3>
                 @if(method.href) {
-                <a [href]="method.href">{{
-                  method.value
-                  }}</a>
+                <a
+                  [href]="method.href"
+                  [attr.aria-label]="method.label + ': ' + method.value"
+                  i18n-aria-label="contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria"
+                >
+                  {{ method.value }}
+                </a>
                 } @else {
                 <p>{{ method.value }}</p>
                 }
@@ -35,7 +44,13 @@
         </div>
       </div>
     </div>
-    <a [href]="map.href" target="_blank" class="justify-self-end md:w-[321.6px] lg:w-auto">
+    <a
+      [href]="map.href"
+      target="_blank"
+      class="justify-self-end md:w-[321.6px] lg:w-auto"
+      aria-label="Voir l'emplacement sur la carte dans un nouvel onglet"
+      i18n-aria-label="contact.map.linkAria|Map link label@@contactMapLinkAria"
+    >
       <img [src]="map.imageSrc" [alt]="map.alt" class="size-full h-[400px] object-cover md:h-[516px]" loading="lazy" />
     </a>
   </div>

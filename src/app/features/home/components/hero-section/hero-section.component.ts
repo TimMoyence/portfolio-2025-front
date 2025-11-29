@@ -12,14 +12,25 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
         <div class="flex flex-col items-center">
           <div class="mb-12 text-center md:mb-18 lg:mb-20">
             <div class="w-full max-w-lg">
-              <p class="mb-3 font-semibold md:mb-4">Innovation</p>
-              <h1 class="heading-h2 mb-5 font-bold md:mb-6">
+              <p
+                class="mb-3 font-semibold md:mb-4"
+                i18n="hero.kicker|Hero small label@@heroKicker"
+              >
+                Innovation
+              </p>
+              <h1
+                class="heading-h2 mb-5 font-bold md:mb-6"
+                i18n="hero.title|Hero heading@@heroTitle"
+              >
                 Bienvenue chez Asili Design
               </h1>
-              <p class="text-medium">
-                Je suis Tim, un professionnel qui transforme les défis
-                numériques en opportunités. Mon parcours unique mêle
-                développement web, management et enseignement.
+              <p
+                class="text-medium"
+                i18n="hero.lead|Hero description@@heroLead"
+              >
+                Je suis Tim, un professionnel qui transforme les défis numériques
+                en opportunités. Mon parcours unique mêle développement web,
+                management et enseignement.
               </p>
               <div
                 class="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8"
@@ -27,12 +38,14 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
                 <a
                   routerLink="/a-propos"
                   class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
+                  i18n="hero.cta.about|Hero about CTA@@heroCtaAbout"
                 >
                   En savoir plus
                 </a>
                 <a
                   routerLink="/projets"
                   class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
+                  i18n="hero.cta.projects|Hero projects CTA@@heroCtaProjects"
                 >
                   Projets
                   <app-svg-icon
@@ -49,6 +62,7 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
               src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
               class="size-full rounded-image object-cover"
               alt="Portrait de Tim, développeur web chez Asili Design"
+              i18n-alt="hero.imageAlt|Hero portrait alt text@@heroImageAlt"
               loading="lazy"
             />
           </div>

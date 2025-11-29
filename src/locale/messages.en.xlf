@@ -1,0 +1,1698 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="fr" datatype="plaintext" original="ng2.template" target-language="en-US">
+    <body>
+      <trans-unit id="routeHomeSeoTitle" datatype="html">
+        <source>Accueil — Tim Moyence Portfolio</source>
+        <target>Home — Tim Moyence Portfolio</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for home</note>
+        <note priority="1" from="meaning">route.home.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routeHomeSeoDescription" datatype="html">
+        <source>Explore my professional services.</source>
+        <target>Explore my professional services.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for home</note>
+        <note priority="1" from="meaning">route.home.seo.description</note>
+      </trans-unit>
+      <trans-unit id="routeLoginSeoTitle" datatype="html">
+        <source>Login — Pour acceder à votre compte</source>
+        <target>Login — Access your account</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for login</note>
+        <note priority="1" from="meaning">route.login.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routeLoginSeoDescription" datatype="html">
+        <source>You can't access this page without logging in.</source>
+        <target>You can't access this page without logging in.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for login</note>
+        <note priority="1" from="meaning">route.login.seo.description</note>
+      </trans-unit>
+      <trans-unit id="routeRegisterSeoTitle" datatype="html">
+        <source>Register — Pour acceder à votre compte</source>
+        <target>Register — Access your account</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for register</note>
+        <note priority="1" from="meaning">route.register.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routeRegisterSeoDescription" datatype="html">
+        <source>You can't access this page without registering.</source>
+        <target>You can't access this page without registering.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for register</note>
+        <note priority="1" from="meaning">route.register.seo.description</note>
+      </trans-unit>
+      <trans-unit id="authTabSignup" datatype="html">
+        <source>S'inscrire</source>
+        <target>Sign up</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">22,25</context>
+        </context-group>
+        <note priority="1" from="description">Signup tab label</note>
+        <note priority="1" from="meaning">auth.tabs.signup</note>
+      </trans-unit>
+      <trans-unit id="authTabLogin" datatype="html">
+        <source>Connexion</source>
+        <target>Log in</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">39,42</context>
+        </context-group>
+        <note priority="1" from="description">Login tab label</note>
+        <note priority="1" from="meaning">auth.tabs.login</note>
+      </trans-unit>
+      <trans-unit id="authSignupTitle" datatype="html">
+        <source>Votre parcours</source>
+        <target>Your journey</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+        <note priority="1" from="description">Signup panel heading</note>
+        <note priority="1" from="meaning">auth.signup.title</note>
+      </trans-unit>
+      <trans-unit id="authSignupLead" datatype="html">
+        <source> Déverrouillez votre potentiel avec un compte personnalisé </source>
+        <target>Unlock your potential with a personalized account</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">49,52</context>
+        </context-group>
+        <note priority="1" from="description">Signup panel description</note>
+        <note priority="1" from="meaning">auth.signup.lead</note>
+      </trans-unit>
+      <trans-unit id="authFieldOptional" datatype="html">
+        <source>(facultatif)</source>
+        <target>(optional)</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">85,88</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">160,162</context>
+        </context-group>
+        <note priority="1" from="description">Optional field helper</note>
+        <note priority="1" from="meaning">auth.field.optional</note>
+      </trans-unit>
+      <trans-unit id="authErrorRequired" datatype="html">
+        <source>Ce champ est obligatoire.</source>
+        <target>This field is required.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">90,92</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">164,166</context>
+        </context-group>
+        <note priority="1" from="description">Required field error</note>
+        <note priority="1" from="meaning">auth.error.required</note>
+      </trans-unit>
+      <trans-unit id="authErrorEmail" datatype="html">
+        <source>Merci d’entrer une adresse email valide.</source>
+        <target>Please enter a valid email address.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">92,93</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">166,168</context>
+        </context-group>
+        <note priority="1" from="description">Invalid email error</note>
+        <note priority="1" from="meaning">auth.error.email</note>
+      </trans-unit>
+      <trans-unit id="authErrorPasswordLength" datatype="html">
+        <source>Le mot de passe doit contenir au moins 8 caractères.</source>
+        <target>Password must be at least 8 characters.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">94,96</context>
+        </context-group>
+        <note priority="1" from="description">Password length error</note>
+        <note priority="1" from="meaning">auth.error.passwordLength</note>
+      </trans-unit>
+      <trans-unit id="authErrorGeneric" datatype="html">
+        <source>Valeur invalide.</source>
+        <target>Invalid value.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">96,100</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">168,172</context>
+        </context-group>
+        <note priority="1" from="description">Generic validation error</note>
+        <note priority="1" from="meaning">auth.error.generic</note>
+      </trans-unit>
+      <trans-unit id="4765439965811877229" datatype="html">
+        <source>Créer compte</source>
+        <target>Create account</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authSignupSubmit" datatype="html">
+        <source>Créer compte</source>
+        <target>Create account</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">106,109</context>
+        </context-group>
+        <note priority="1" from="description">Signup submit label</note>
+        <note priority="1" from="meaning">auth.signup.submit</note>
+      </trans-unit>
+      <trans-unit id="authSignupLoading" datatype="html">
+        <source>Création en cours...</source>
+        <target>Creating account...</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">110,112</context>
+        </context-group>
+        <note priority="1" from="description">Signup loading state</note>
+        <note priority="1" from="meaning">auth.signup.loading</note>
+      </trans-unit>
+      <trans-unit id="7215127729541696793" datatype="html">
+        <source>Inscrivez-vous avec Google</source>
+        <target>Sign up with Google</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authSignupGoogle" datatype="html">
+        <source>Inscrivez-vous avec Google</source>
+        <target>Sign up with Google</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">122,126</context>
+        </context-group>
+        <note priority="1" from="description">Signup with Google</note>
+        <note priority="1" from="meaning">auth.signup.google</note>
+      </trans-unit>
+      <trans-unit id="authLoginTitle" datatype="html">
+        <source>Se connecter</source>
+        <target>Log in</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">132,133</context>
+        </context-group>
+        <note priority="1" from="description">Login panel heading</note>
+        <note priority="1" from="meaning">auth.login.title</note>
+      </trans-unit>
+      <trans-unit id="authLoginLead" datatype="html">
+        <source> Votre espace de croissance commence </source>
+        <target>Your growth space begins here</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">134,137</context>
+        </context-group>
+        <note priority="1" from="description">Login panel description</note>
+        <note priority="1" from="meaning">auth.login.lead</note>
+      </trans-unit>
+      <trans-unit id="2336550011721758066" datatype="html">
+        <source>Log in</source>
+        <target>Log in</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authLoginSubmit" datatype="html">
+        <source>Log in</source>
+        <target>Log in</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">178,181</context>
+        </context-group>
+        <note priority="1" from="description">Login submit label</note>
+        <note priority="1" from="meaning">auth.login.submit</note>
+      </trans-unit>
+      <trans-unit id="authLoginLoading" datatype="html">
+        <source>Connexion en cours...</source>
+        <target>Signing in...</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">182,184</context>
+        </context-group>
+        <note priority="1" from="description">Login loading state</note>
+        <note priority="1" from="meaning">auth.login.loading</note>
+      </trans-unit>
+      <trans-unit id="385129033471599880" datatype="html">
+        <source>Connectez-vous avec Google</source>
+        <target>Sign in with Google</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authLoginGoogle" datatype="html">
+        <source>Connectez-vous avec Google</source>
+        <target>Sign in with Google</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">194,197</context>
+        </context-group>
+        <note priority="1" from="description">Login with Google</note>
+        <note priority="1" from="meaning">auth.login.google</note>
+      </trans-unit>
+      <trans-unit id="authContactSubtitle" datatype="html">
+        <source>Nous sommes là pour vous aider à résoudre rapidement tous vos problèmes de connexion ou de compte.</source>
+        <target>We’re here to quickly resolve any login or account issues.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">205,206</context>
+        </context-group>
+        <note priority="1" from="description">Support invite under auth forms</note>
+        <note priority="1" from="meaning">auth.contact.subtitle</note>
+      </trans-unit>
+      <trans-unit id="authSignupFieldFirstName" datatype="html">
+        <source>Prénom</source>
+        <target>First name</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Signup field label</note>
+        <note priority="1" from="meaning">auth.signup.field.firstName</note>
+      </trans-unit>
+      <trans-unit id="authSignupFieldLastName" datatype="html">
+        <source>Nom</source>
+        <target>Last name</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Signup field label</note>
+        <note priority="1" from="meaning">auth.signup.field.lastName</note>
+      </trans-unit>
+      <trans-unit id="authSignupFieldEmail" datatype="html">
+        <source>Email</source>
+        <target>Email</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Signup field label</note>
+        <note priority="1" from="meaning">auth.signup.field.email</note>
+      </trans-unit>
+      <trans-unit id="authSignupFieldPassword" datatype="html">
+        <source>Mot de passe</source>
+        <target>Password</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Signup field label</note>
+        <note priority="1" from="meaning">auth.signup.field.password</note>
+      </trans-unit>
+      <trans-unit id="authSignupFieldPasswordConfirm" datatype="html">
+        <source>Verification de mot de passe</source>
+        <target>Confirm password</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <note priority="1" from="description">Signup field label</note>
+        <note priority="1" from="meaning">auth.signup.field.passwordConfirm</note>
+      </trans-unit>
+      <trans-unit id="authSignupFieldPhone" datatype="html">
+        <source>Téléphone</source>
+        <target>Phone</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Signup field label</note>
+        <note priority="1" from="meaning">auth.signup.field.phone</note>
+      </trans-unit>
+      <trans-unit id="authLoginFieldEmail" datatype="html">
+        <source>Email</source>
+        <target>Email</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">Login field label</note>
+        <note priority="1" from="meaning">auth.login.field.email</note>
+      </trans-unit>
+      <trans-unit id="authLoginFieldPassword" datatype="html">
+        <source>Mot de passe</source>
+        <target>Password</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Login field label</note>
+        <note priority="1" from="meaning">auth.login.field.password</note>
+      </trans-unit>
+      <trans-unit id="authSignupErrorPasswordMismatch" datatype="html">
+        <source>Les mots de passe ne correspondent pas.</source>
+        <target>Passwords do not match.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Signup error message</note>
+        <note priority="1" from="meaning">auth.signup.error.passwordMismatch</note>
+      </trans-unit>
+      <trans-unit id="authSignupSuccess" datatype="html">
+        <source>Compte créé pour <x id="PH" equiv-text="user.firstName" /> <x id="PH_1" equiv-text="user.lastName" />.</source>
+        <target>Account created for <x id="PH" equiv-text="user.firstName" /> <x id="PH_1" equiv-text="user.lastName" />.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <note priority="1" from="description">Signup success message</note>
+        <note priority="1" from="meaning">auth.signup.success</note>
+      </trans-unit>
+      <trans-unit id="authLoginSuccess" datatype="html">
+        <source>Bienvenue <x id="PH" equiv-text="session.user.firstName" /> !</source>
+        <target>Welcome <x id="PH" equiv-text="session.user.firstName" />!</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+        <note priority="1" from="description">Login success message</note>
+        <note priority="1" from="meaning">auth.login.success</note>
+      </trans-unit>
+      <trans-unit id="authGoogleTriggered" datatype="html">
+        <source>Google auth triggered for <x id="PH" equiv-text="context" /></source>
+        <target>Google auth triggered for <x id="PH" equiv-text="context" /></target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <note priority="1" from="description">Console message for Google auth</note>
+        <note priority="1" from="meaning">auth.google.triggered</note>
+      </trans-unit>
+      <trans-unit id="authGenericError" datatype="html">
+        <source>Une erreur est survenue. Veuillez réessayer.</source>
+        <target>An error occurred. Please try again.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+        <note priority="1" from="description">Generic error message</note>
+        <note priority="1" from="meaning">auth.genericError</note>
+      </trans-unit>
+      <trans-unit id="ctaTitle" datatype="html">
+        <source> Commençons votre projet digital </source>
+        <target>Let's start your digital project</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">CTA heading</note>
+        <note priority="1" from="meaning">cta.title</note>
+      </trans-unit>
+      <trans-unit id="ctaLead" datatype="html">
+        <source> Ensemble, transformons vos idées en solutions numériques performantes et innovantes. </source>
+        <target>Together, let's turn your ideas into high-performing and innovative digital solutions.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
+          <context context-type="linenumber">27,29</context>
+        </context-group>
+        <note priority="1" from="description">CTA description</note>
+        <note priority="1" from="meaning">cta.lead</note>
+      </trans-unit>
+      <trans-unit id="ctaPrimary" datatype="html">
+        <source> Démarrer </source>
+        <target>Get started</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
+          <context context-type="linenumber">37,40</context>
+        </context-group>
+        <note priority="1" from="description">CTA primary button</note>
+        <note priority="1" from="meaning">cta.cta.start</note>
+      </trans-unit>
+      <trans-unit id="ctaSecondary" datatype="html">
+        <source> Contactez-moi </source>
+        <target>Contact me</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
+          <context context-type="linenumber">44,47</context>
+        </context-group>
+        <note priority="1" from="description">CTA secondary button</note>
+        <note priority="1" from="meaning">cta.cta.contact</note>
+      </trans-unit>
+      <trans-unit id="ctaImageAlt" datatype="html">
+        <source>Relume placeholder image</source>
+        <target>Relume placeholder image</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
+          <context context-type="linenumber">52,53</context>
+        </context-group>
+        <note priority="1" from="description">CTA illustration alt text</note>
+        <note priority="1" from="meaning">cta.image.alt</note>
+      </trans-unit>
+      <trans-unit id="heroKicker" datatype="html">
+        <source> Innovation </source>
+        <target>Innovation</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="linenumber">19,22</context>
+        </context-group>
+        <note priority="1" from="description">Hero small label</note>
+        <note priority="1" from="meaning">hero.kicker</note>
+      </trans-unit>
+      <trans-unit id="heroTitle" datatype="html">
+        <source> Bienvenue chez Asili Design </source>
+        <target>Welcome to Asili Design</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="description">Hero heading</note>
+        <note priority="1" from="meaning">hero.title</note>
+      </trans-unit>
+      <trans-unit id="heroLead" datatype="html">
+        <source> Je suis Tim, un professionnel qui transforme les défis numériques en opportunités. Mon parcours unique mêle développement web, management et enseignement. </source>
+        <target>I'm Tim, a professional who turns digital challenges into opportunities. My unique path blends web development, management, and teaching.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="linenumber">31,34</context>
+        </context-group>
+        <note priority="1" from="description">Hero description</note>
+        <note priority="1" from="meaning">hero.lead</note>
+      </trans-unit>
+      <trans-unit id="heroCtaAbout" datatype="html">
+        <source> En savoir plus </source>
+        <target>Learn more</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+        <note priority="1" from="description">Hero about CTA</note>
+        <note priority="1" from="meaning">hero.cta.about</note>
+      </trans-unit>
+      <trans-unit id="heroCtaProjects" datatype="html">
+        <source> Projets <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                     name=&quot;chevron-right&quot;                     [size]=&quot;1.2&quot;                     aria-hidden=&quot;true&quot;                   &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></source>
+        <target> Projects <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                     name=&quot;chevron-right&quot;                     [size]=&quot;1.2&quot;                     aria-hidden=&quot;true&quot;                   &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="linenumber">50,57</context>
+        </context-group>
+        <note priority="1" from="description">Hero projects CTA</note>
+        <note priority="1" from="meaning">hero.cta.projects</note>
+      </trans-unit>
+      <trans-unit id="heroImageAlt" datatype="html">
+        <source>Portrait de Tim, développeur web chez Asili Design</source>
+        <target>Portrait of Tim, web developer at Asili Design</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+        <note priority="1" from="description">Hero portrait alt text</note>
+        <note priority="1" from="meaning">hero.imageAlt</note>
+      </trans-unit>
+      <trans-unit id="missionImageAlt" datatype="html">
+        <source>Relume placeholder image</source>
+        <target>Relume placeholder image</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+        <note priority="1" from="description">Mission illustration alt</note>
+        <note priority="1" from="meaning">mission.imageAlt</note>
+      </trans-unit>
+      <trans-unit id="missionKicker" datatype="html">
+        <source> Mission </source>
+        <target>Mission</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="description">Section label</note>
+        <note priority="1" from="meaning">mission.kicker</note>
+      </trans-unit>
+      <trans-unit id="missionTitle" datatype="html">
+        <source> PresQ la marque qui transforme l'échec en opportunité </source>
+        <target>PresQ, the brand that turns failure into opportunity</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">40,43</context>
+        </context-group>
+        <note priority="1" from="description">Section heading</note>
+        <note priority="1" from="meaning">mission.title</note>
+      </trans-unit>
+      <trans-unit id="missionLead" datatype="html">
+        <source> Une approche innovante qui démystifie l'échec et le transforme en source de croissance personnelle. Nous créons des expériences qui encouragent la résilience et l'apprentissage à travers l'humour et la bienveillance. </source>
+        <target>An innovative approach that demystifies failure and turns it into a source of personal growth. We create experiences that encourage resilience and learning through humor and kindness.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">46,50</context>
+        </context-group>
+        <note priority="1" from="description">Section description</note>
+        <note priority="1" from="meaning">mission.lead</note>
+      </trans-unit>
+      <trans-unit id="missionCtaMore" datatype="html">
+        <source> En savoir PresQ plus.. </source>
+        <target>Learn PresQ more..</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">57,60</context>
+        </context-group>
+        <note priority="1" from="description">Learn more CTA</note>
+        <note priority="1" from="meaning">mission.cta.more</note>
+      </trans-unit>
+      <trans-unit id="missionCtaVote" datatype="html">
+        <source> Voter son PresQ modèle <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   aria-hidden=&quot;true&quot;                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></source>
+        <target> Choose your PresQ model <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   aria-hidden=&quot;true&quot;                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">64,71</context>
+        </context-group>
+        <note priority="1" from="description">Vote CTA</note>
+        <note priority="1" from="meaning">mission.cta.vote</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseKicker" datatype="html">
+        <source> Sebastian </source>
+        <target>Sebastian</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">23,26</context>
+        </context-group>
+        <note priority="1" from="description">Section label</note>
+        <note priority="1" from="meaning">productShowcase.kicker</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseTitle" datatype="html">
+        <source> Votre assistant personnel de suivi de consommation </source>
+        <target>Your personal consumption tracking assistant</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+        <note priority="1" from="description">Section heading</note>
+        <note priority="1" from="meaning">productShowcase.title</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseLead" datatype="html">
+        <source> Une application conçue pour vous aider à comprendre et gérer vos habitudes de consommation avec des statistiques précises et des conseils personnalisés. </source>
+        <target>An app designed to help you understand and manage your consumption habits with precise statistics and personalized advice.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">36,40</context>
+        </context-group>
+        <note priority="1" from="description">Section description</note>
+        <note priority="1" from="meaning">productShowcase.lead</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseCtaTest" datatype="html">
+        <source> Tester ma consommation </source>
+        <target>Test my consumption</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">53,57</context>
+        </context-group>
+        <note priority="1" from="description">CTA label to test consumption</note>
+        <note priority="1" from="meaning">productShowcase.cta.test</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseCtaLearnMore" datatype="html">
+        <source> En savoir plus <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                   aria-hidden=&quot;true&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></source>
+        <target> Learn more <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                   aria-hidden=&quot;true&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">60,67</context>
+        </context-group>
+        <note priority="1" from="description">CTA label learn more</note>
+        <note priority="1" from="meaning">productShowcase.cta.learnMore</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseImageAlt" datatype="html">
+        <source>Relume placeholder image</source>
+        <target>Relume placeholder image</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">73,74</context>
+        </context-group>
+        <note priority="1" from="description">Product illustration alt</note>
+        <note priority="1" from="meaning">productShowcase.imageAlt</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseFeatureCoffee" datatype="html">
+        <source>Suivi de café</source>
+        <target>Coffee tracking</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">Feature bullet</note>
+        <note priority="1" from="meaning">productShowcase.feature.coffee</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseFeatureAlcohol" datatype="html">
+        <source>Analyse d'alcool</source>
+        <target>Alcohol analysis</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Feature bullet</note>
+        <note priority="1" from="meaning">productShowcase.feature.alcohol</note>
+      </trans-unit>
+      <trans-unit id="productShowcaseFeatureGoals" datatype="html">
+        <source>Objectifs personnalisés</source>
+        <target>Personalized goals</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Feature bullet</note>
+        <note priority="1" from="meaning">productShowcase.feature.goals</note>
+      </trans-unit>
+      <trans-unit id="projectsKicker" datatype="html">
+        <source> Projets </source>
+        <target>Projects</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+        <note priority="1" from="description">Section label</note>
+        <note priority="1" from="meaning">projects.kicker</note>
+      </trans-unit>
+      <trans-unit id="projectsTitle" datatype="html">
+        <source> Mes réalisations numériques </source>
+        <target>My digital achievements</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">42,45</context>
+        </context-group>
+        <note priority="1" from="description">Section heading</note>
+        <note priority="1" from="meaning">projects.title</note>
+      </trans-unit>
+      <trans-unit id="projectsLead" datatype="html">
+        <source> Chaque projet raconte une histoire unique de transformation digitale. Découvrez comment j'ai relevé des défis techniques et créatifs avec passion et précision. </source>
+        <target>Each project tells a unique story of digital transformation. Discover how I tackled technical and creative challenges with passion and precision.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">48,51</context>
+        </context-group>
+        <note priority="1" from="description">Section description</note>
+        <note priority="1" from="meaning">projects.lead</note>
+      </trans-unit>
+      <trans-unit id="projectsItemWebLabel" datatype="html">
+        <source>Site web</source>
+        <target>Website</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Project label</note>
+        <note priority="1" from="meaning">projects.item.web.label</note>
+      </trans-unit>
+      <trans-unit id="projectsItemWebTitle" datatype="html">
+        <source>Enquête interactive</source>
+        <target>Interactive investigation</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">Project title</note>
+        <note priority="1" from="meaning">projects.item.web.title</note>
+      </trans-unit>
+      <trans-unit id="projectsItemWebDesc" datatype="html">
+        <source>Un jeu narratif immersif qui combine storytelling et mécaniques de résolution d'énigmes pour une expérience unique.</source>
+        <target>An immersive narrative game combining storytelling and puzzle-solving mechanics for a unique experience.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">projects.item.web.desc</note>
+      </trans-unit>
+      <trans-unit id="projectsItemWebImageAlt" datatype="html">
+        <source>Relume placeholder image 1</source>
+        <target>Relume placeholder image 1</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Project image alt</note>
+        <note priority="1" from="meaning">projects.item.web.imageAlt</note>
+      </trans-unit>
+      <trans-unit id="projectsItemMobileLabel" datatype="html">
+        <source>Application mobile</source>
+        <target>Mobile app</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">Project label</note>
+        <note priority="1" from="meaning">projects.item.mobile.label</note>
+      </trans-unit>
+      <trans-unit id="projectsItemMobileTitle" datatype="html">
+        <source>Expérience mobile complète</source>
+        <target>Complete mobile experience</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Project title</note>
+        <note priority="1" from="meaning">projects.item.mobile.title</note>
+      </trans-unit>
+      <trans-unit id="projectsItemMobileDesc" datatype="html">
+        <source>Une plateforme appliquée qui accompagne les utilisateurs dans leur quotidien grâce à une interface intuitive et performante.</source>
+        <target>A dedicated platform that supports users in their daily life with an intuitive and high-performing interface.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">projects.item.mobile.desc</note>
+      </trans-unit>
+      <trans-unit id="projectsItemMobileImageAlt" datatype="html">
+        <source>Relume placeholder image 2</source>
+        <target>Relume placeholder image 2</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Project image alt</note>
+        <note priority="1" from="meaning">projects.item.mobile.imageAlt</note>
+      </trans-unit>
+      <trans-unit id="projectsItemAppLabel" datatype="html">
+        <source>Application web</source>
+        <target>Web application</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <note priority="1" from="description">Project label</note>
+        <note priority="1" from="meaning">projects.item.app.label</note>
+      </trans-unit>
+      <trans-unit id="projectsItemAppTitle" datatype="html">
+        <source>Pilotage data</source>
+        <target>Data cockpit</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">Project title</note>
+        <note priority="1" from="meaning">projects.item.app.title</note>
+      </trans-unit>
+      <trans-unit id="projectsItemAppDesc" datatype="html">
+        <source>Un tableau de bord conçu pour visualiser les données clés et faciliter la prise de décision en temps réel.</source>
+        <target>A dashboard designed to visualize key data and make real-time decision-making easier.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">projects.item.app.desc</note>
+      </trans-unit>
+      <trans-unit id="projectsItemAppImageAlt" datatype="html">
+        <source>Relume placeholder image 3</source>
+        <target>Relume placeholder image 3</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <note priority="1" from="description">Project image alt</note>
+        <note priority="1" from="meaning">projects.item.app.imageAlt</note>
+      </trans-unit>
+      <trans-unit id="projectsItemGameLabel" datatype="html">
+        <source>Jeu narratif</source>
+        <target>Narrative game</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Project label</note>
+        <note priority="1" from="meaning">projects.item.game.label</note>
+      </trans-unit>
+      <trans-unit id="projectsItemGameTitle" datatype="html">
+        <source>Univers interactif</source>
+        <target>Interactive universe</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">Project title</note>
+        <note priority="1" from="meaning">projects.item.game.title</note>
+      </trans-unit>
+      <trans-unit id="projectsItemGameDesc" datatype="html">
+        <source>Une expérience immersive qui marie narration, design sonore et interactions pour captiver vos audiences.</source>
+        <target>An immersive experience combining storytelling, sound design, and interactions to captivate your audiences.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">projects.item.game.desc</note>
+      </trans-unit>
+      <trans-unit id="projectsItemGameImageAlt" datatype="html">
+        <source>Relume placeholder image 4</source>
+        <target>Relume placeholder image 4</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Project image alt</note>
+        <note priority="1" from="meaning">projects.item.game.imageAlt</note>
+      </trans-unit>
+      <trans-unit id="servicesKicker" datatype="html">
+        <source> Services </source>
+        <target>Services</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+        <note priority="1" from="description">Section label</note>
+        <note priority="1" from="meaning">services.kicker</note>
+      </trans-unit>
+      <trans-unit id="servicesTitle" datatype="html">
+        <source> Solutions numériques sur mesure </source>
+        <target>Tailor-made digital solutions</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">32,35</context>
+        </context-group>
+        <note priority="1" from="description">Section heading</note>
+        <note priority="1" from="meaning">services.title</note>
+      </trans-unit>
+      <trans-unit id="servicesLead" datatype="html">
+        <source> Je propose des services complets adaptés à vos besoins spécifiques, avec une approche personnalisée et professionnelle. </source>
+        <target>I offer end-to-end services tailored to your specific needs with a personalized, professional approach.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">40,43</context>
+        </context-group>
+        <note priority="1" from="description">Section description</note>
+        <note priority="1" from="meaning">services.lead</note>
+      </trans-unit>
+      <trans-unit id="servicesCtaPricing" datatype="html">
+        <source> Tarifs </source>
+        <target>Pricing</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">70,73</context>
+        </context-group>
+        <note priority="1" from="description">Pricing link</note>
+        <note priority="1" from="meaning">services.cta.pricing</note>
+      </trans-unit>
+      <trans-unit id="servicesCtaContact" datatype="html">
+        <source> Contactez-moi </source>
+        <target>Contact me</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">77,81</context>
+        </context-group>
+        <note priority="1" from="description">Contact link</note>
+        <note priority="1" from="meaning">services.cta.contact</note>
+      </trans-unit>
+      <trans-unit id="servicesItemWebTitle" datatype="html">
+        <source>Création de site web</source>
+        <target>Website creation</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Service title</note>
+        <note priority="1" from="meaning">services.item.web.title</note>
+      </trans-unit>
+      <trans-unit id="servicesItemWebDesc" datatype="html">
+        <source>Stratégies avancées pour améliorer la visibilité de votre site et attirer plus de clients potentiels.</source>
+        <target>Advanced strategies to improve your site's visibility and attract more potential clients.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Service description</note>
+        <note priority="1" from="meaning">services.item.web.desc</note>
+      </trans-unit>
+      <trans-unit id="servicesItemWebIconAlt" datatype="html">
+        <source>Relume logo 1</source>
+        <target>Relume logo 1</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Service icon alt</note>
+        <note priority="1" from="meaning">services.item.web.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="servicesItemMaintenanceTitle" datatype="html">
+        <source>Maintenance de site web</source>
+        <target>Website maintenance</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">Service title</note>
+        <note priority="1" from="meaning">services.item.maintenance.title</note>
+      </trans-unit>
+      <trans-unit id="servicesItemMaintenanceDesc" datatype="html">
+        <source>Accompagnement personnalisé pour développer vos compétences numériques et atteindre vos objectifs professionnels.</source>
+        <target>Personalized support to develop your digital skills and reach your professional goals.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Service description</note>
+        <note priority="1" from="meaning">services.item.maintenance.desc</note>
+      </trans-unit>
+      <trans-unit id="servicesItemMaintenanceIconAlt" datatype="html">
+        <source>Relume logo 1</source>
+        <target>Relume logo 1</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Service icon alt</note>
+        <note priority="1" from="meaning">services.item.maintenance.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="servicesItemSeoTitle" datatype="html">
+        <source>Référencement SEO</source>
+        <target>SEO optimization</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Service title</note>
+        <note priority="1" from="meaning">services.item.seo.title</note>
+      </trans-unit>
+      <trans-unit id="servicesItemSeoDesc" datatype="html">
+        <source>Solutions expertes pour votre transformation digitale et votre visibilité en ligne.</source>
+        <target>Expert solutions for your digital transformation and online visibility.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Service description</note>
+        <note priority="1" from="meaning">services.item.seo.desc</note>
+      </trans-unit>
+      <trans-unit id="servicesItemSeoIconAlt" datatype="html">
+        <source>Relume logo 1</source>
+        <target>Relume logo 1</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Service icon alt</note>
+        <note priority="1" from="meaning">services.item.seo.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="servicesItemTrainingTitle" datatype="html">
+        <source>Formation et coaching</source>
+        <target>Training and coaching</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Service title</note>
+        <note priority="1" from="meaning">services.item.training.title</note>
+      </trans-unit>
+      <trans-unit id="servicesItemTrainingDesc" datatype="html">
+        <source>Programmes conçus pour propulser votre entreprise vers de nouveaux horizons numériques.</source>
+        <target>Programs designed to propel your business toward new digital horizons.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Service description</note>
+        <note priority="1" from="meaning">services.item.training.desc</note>
+      </trans-unit>
+      <trans-unit id="servicesItemTrainingIconAlt" datatype="html">
+        <source>Relume logo 1</source>
+        <target>Relume logo 1</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Service icon alt</note>
+        <note priority="1" from="meaning">services.item.training.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="homeContactSubtitle" datatype="html">
+        <source>Contactez nous si vous avez des questions, un besoin ou une suggestion.</source>
+        <target>Contact us if you have a question, a need, or a suggestion.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+        <note priority="1" from="description">Home contact prompt</note>
+        <note priority="1" from="meaning">home.contact.subtitle</note>
+      </trans-unit>
+      <trans-unit id="contactKicker" datatype="html">
+        <source> Support </source>
+        <target>Support</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+        <note priority="1" from="description">Section small label</note>
+        <note priority="1" from="meaning">contact.kicker</note>
+      </trans-unit>
+      <trans-unit id="contactMapLinkAria" datatype="html">
+        <source>Voir l'emplacement sur la carte dans un nouvel onglet</source>
+        <target>View the location on the map in a new tab</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Map link label</note>
+        <note priority="1" from="meaning">contact.map.linkAria</note>
+      </trans-unit>
+      <trans-unit id="contactTitle" datatype="html">
+        <source>Contactez-nous</source>
+        <target>Contact us</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Section heading</note>
+        <note priority="1" from="meaning">contact.title</note>
+      </trans-unit>
+      <trans-unit id="contactMethodEmailLabel" datatype="html">
+        <source>Email</source>
+        <target>Email</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Contact method label</note>
+        <note priority="1" from="meaning">contact.method.email.label</note>
+      </trans-unit>
+      <trans-unit id="contactMethodEmailValue" datatype="html">
+        <source>moyencet@gmail.com</source>
+        <target>moyencet@gmail.com</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Contact method value</note>
+        <note priority="1" from="meaning">contact.method.email.value</note>
+      </trans-unit>
+      <trans-unit id="contactMethodPhoneLabel" datatype="html">
+        <source>Téléphone</source>
+        <target>Phone</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Contact method label</note>
+        <note priority="1" from="meaning">contact.method.phone.label</note>
+      </trans-unit>
+      <trans-unit id="contactMethodPhoneValue" datatype="html">
+        <source>+33 6 98 50 32 82</source>
+        <target>+33 6 98 50 32 82</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Contact method value</note>
+        <note priority="1" from="meaning">contact.method.phone.value</note>
+      </trans-unit>
+      <trans-unit id="contactMethodOfficeLabel" datatype="html">
+        <source>Bureau</source>
+        <target>Office</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Contact method label</note>
+        <note priority="1" from="meaning">contact.method.office.label</note>
+      </trans-unit>
+      <trans-unit id="contactMethodOfficeValue" datatype="html">
+        <source>Allée Serr, 33100 Bordeaux, France</source>
+        <target>Allée Serr, 33100 Bordeaux, France</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Contact method value</note>
+        <note priority="1" from="meaning">contact.method.office.value</note>
+      </trans-unit>
+      <trans-unit id="contactMapAlt" datatype="html">
+        <source>Bordeaux placeholder map image</source>
+        <target>Bordeaux placeholder map image</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Map image alt text</note>
+        <note priority="1" from="meaning">contact.map.alt</note>
+      </trans-unit>
+      <trans-unit id="footerLogoAlt" datatype="html">
+        <source>Logo image</source>
+        <target>Logo image</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+        <note priority="1" from="description">Footer logo alt</note>
+        <note priority="1" from="meaning">footer.logo.alt</note>
+      </trans-unit>
+      <trans-unit id="footerAddressLabel" datatype="html">
+        <source> Adresse </source>
+        <target>Address</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="description">Footer address label</note>
+        <note priority="1" from="meaning">footer.address.label</note>
+      </trans-unit>
+      <trans-unit id="footerContactLabel" datatype="html">
+        <source> Contact </source>
+        <target>Contact</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="description">Footer contact label</note>
+        <note priority="1" from="meaning">footer.contact.label</note>
+      </trans-unit>
+      <trans-unit id="footerCopyright" datatype="html">
+        <source> © 2025 Moyence. All rights reserved. </source>
+        <target>© 2025 Moyence. All rights reserved.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
+          <context context-type="linenumber">62,65</context>
+        </context-group>
+        <note priority="1" from="description">Footer copyright</note>
+        <note priority="1" from="meaning">footer.copyright</note>
+      </trans-unit>
+      <trans-unit id="footerAddressCity" datatype="html">
+        <source>Bordeaux, France</source>
+        <target>Bordeaux, France</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Footer address city</note>
+        <note priority="1" from="meaning">footer.address.city</note>
+      </trans-unit>
+      <trans-unit id="footerAddressPhone" datatype="html">
+        <source>+33 6 98 50 32 82</source>
+        <target>+33 6 98 50 32 82</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Footer address phone</note>
+        <note priority="1" from="meaning">footer.address.phone</note>
+      </trans-unit>
+      <trans-unit id="footerAddressEmail" datatype="html">
+        <source>moyencet@gmail.com</source>
+        <target>moyencet@gmail.com</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Footer address email</note>
+        <note priority="1" from="meaning">footer.address.email</note>
+      </trans-unit>
+      <trans-unit id="footerNavHome" datatype="html">
+        <source>Accueil</source>
+        <target>Home</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.home</note>
+      </trans-unit>
+      <trans-unit id="footerNavCourses" datatype="html">
+        <source>Les cours</source>
+        <target>Courses</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.courses</note>
+      </trans-unit>
+      <trans-unit id="footerNavTraining" datatype="html">
+        <source>Ma formation</source>
+        <target>My training</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.training</note>
+      </trans-unit>
+      <trans-unit id="footerNavProjects" datatype="html">
+        <source>Projets</source>
+        <target>Projects</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.projects</note>
+      </trans-unit>
+      <trans-unit id="footerNavServices" datatype="html">
+        <source>Services</source>
+        <target>Services</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.services</note>
+      </trans-unit>
+      <trans-unit id="footerNavPresq" datatype="html">
+        <source>PresQ</source>
+        <target>PresQ</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.presq</note>
+      </trans-unit>
+      <trans-unit id="footerNavSebastian" datatype="html">
+        <source>Sebastian</source>
+        <target>Sebastian</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.sebastian</note>
+      </trans-unit>
+      <trans-unit id="footerNavContact" datatype="html">
+        <source>Contact</source>
+        <target>Contact</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.contact</note>
+      </trans-unit>
+      <trans-unit id="footerNavOffers" datatype="html">
+        <source>Offres</source>
+        <target>Offers</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.offers</note>
+      </trans-unit>
+      <trans-unit id="footerSocialFacebook" datatype="html">
+        <source>Facebook</source>
+        <target>Facebook</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <note priority="1" from="description">Footer social link</note>
+        <note priority="1" from="meaning">footer.social.facebook</note>
+      </trans-unit>
+      <trans-unit id="footerSocialInstagram" datatype="html">
+        <source>Instagram</source>
+        <target>Instagram</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Footer social link</note>
+        <note priority="1" from="meaning">footer.social.instagram</note>
+      </trans-unit>
+      <trans-unit id="footerSocialLinkedin" datatype="html">
+        <source>LinkedIn</source>
+        <target>LinkedIn</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Footer social link</note>
+        <note priority="1" from="meaning">footer.social.linkedin</note>
+      </trans-unit>
+      <trans-unit id="footerLegalTerms" datatype="html">
+        <source>Conditions d'utilisation</source>
+        <target>Terms of use</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Footer legal link</note>
+        <note priority="1" from="meaning">footer.legal.terms</note>
+      </trans-unit>
+      <trans-unit id="footerLegalCookiesFr" datatype="html">
+        <source>Paramètres de cookies</source>
+        <target>Cookie settings</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Footer legal link</note>
+        <note priority="1" from="meaning">footer.legal.cookiesSettingsFr</note>
+      </trans-unit>
+      <trans-unit id="footerLegalCookiesEn" datatype="html">
+        <source>Cookies Settings</source>
+        <target>Cookie settings</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Footer legal link</note>
+        <note priority="1" from="meaning">footer.legal.cookiesSettingsEn</note>
+      </trans-unit>
+      <trans-unit id="navLandmark" datatype="html">
+        <source>Navigation principale</source>
+        <target>Main navigation</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+        <note priority="1" from="description">Main navigation landmark</note>
+        <note priority="1" from="meaning">navbar.landmark</note>
+      </trans-unit>
+      <trans-unit id="navBrand" datatype="html">
+        <source>Portfolio</source>
+        <target>Portfolio</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">12,16</context>
+        </context-group>
+        <note priority="1" from="description">Site brand name in navbar</note>
+        <note priority="1" from="meaning">navbar.brand</note>
+      </trans-unit>
+      <trans-unit id="navCtaQuoteTitle" datatype="html">
+        <source>Demander un devis</source>
+        <target>Request a quote</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Quote CTA tooltip</note>
+        <note priority="1" from="meaning">navbar.cta.quote.title</note>
+      </trans-unit>
+      <trans-unit id="navCtaQuoteLabel" datatype="html">
+        <source>Devis</source>
+        <target>Quote</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">119,123</context>
+        </context-group>
+        <note priority="1" from="description">Quote CTA label</note>
+        <note priority="1" from="meaning">navbar.cta.quote.label</note>
+      </trans-unit>
+      <trans-unit id="navCtaContactTitle" datatype="html">
+        <source>Me contacter</source>
+        <target>Contact me</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">Contact CTA tooltip</note>
+        <note priority="1" from="meaning">navbar.cta.contact.title</note>
+      </trans-unit>
+      <trans-unit id="navCtaContactLabel" datatype="html">
+        <source>Contact</source>
+        <target>Contact</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">126,129</context>
+        </context-group>
+        <note priority="1" from="description">Contact CTA label</note>
+        <note priority="1" from="meaning">navbar.cta.contact.label</note>
+      </trans-unit>
+      <trans-unit id="navLinkHome" datatype="html">
+        <source>Accueil</source>
+        <target>Home</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Navbar primary link</note>
+        <note priority="1" from="meaning">navbar.link.home</note>
+      </trans-unit>
+      <trans-unit id="navLinkCourses" datatype="html">
+        <source>Cours</source>
+        <target>Courses</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Navbar primary link</note>
+        <note priority="1" from="meaning">navbar.link.courses</note>
+      </trans-unit>
+      <trans-unit id="navLinkPresentation" datatype="html">
+        <source>Présentation</source>
+        <target>About</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Navbar primary link</note>
+        <note priority="1" from="meaning">navbar.link.presentation</note>
+      </trans-unit>
+      <trans-unit id="navMenuOpen" datatype="html">
+        <source>Ouvrir le menu principal</source>
+        <target>Open main menu</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Burger button label</note>
+        <note priority="1" from="meaning">navbar.menu.open</note>
+      </trans-unit>
+      <trans-unit id="navMenuClose" datatype="html">
+        <source>Fermer le menu principal</source>
+        <target>Close main menu</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Burger button label</note>
+        <note priority="1" from="meaning">navbar.menu.close</note>
+      </trans-unit>
+      <trans-unit id="navMenuHeading" datatype="html">
+        <source>Menu principal</source>
+        <target>Main menu</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Mobile nav heading</note>
+        <note priority="1" from="meaning">navbar.menu.heading</note>
+      </trans-unit>
+      <trans-unit id="navMenuCloseIcon" datatype="html">
+        <source>Fermer le menu</source>
+        <target>Close menu</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Icon label</note>
+        <note priority="1" from="meaning">navbar.menu.icon.close</note>
+      </trans-unit>
+      <trans-unit id="navMenuOpenIcon" datatype="html">
+        <source>Ouvrir le menu</source>
+        <target>Open menu</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Icon label</note>
+        <note priority="1" from="meaning">navbar.menu.icon.open</note>
+      </trans-unit>
+      <trans-unit id="navDropdownChevron" datatype="html">
+        <source>Ouvrir ou fermer la section</source>
+        <target>Open or close section</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Chevron icon label</note>
+        <note priority="1" from="meaning">navbar.dropdown.chevron</note>
+      </trans-unit>
+      <trans-unit id="navDropdownProjectsLabel" datatype="html">
+        <source>Projets</source>
+        <target>Projects</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Dropdown section</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.label</note>
+      </trans-unit>
+      <trans-unit id="navDropdownPresqTitle" datatype="html">
+        <source>PresQ</source>
+        <target>PresQ</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.presq.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownPresqDesc" datatype="html">
+        <source>Plateforme de questionnaires interactifs</source>
+        <target>Interactive questionnaire platform</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.presq.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownPresqIconAlt" datatype="html">
+        <source>Icône pour la marque PresQ</source>
+        <target>Icon for the PresQ brand</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.presq.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navDropdownSebastianTitle" datatype="html">
+        <source>Sebastian</source>
+        <target>Sebastian</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.sebastian.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownSebastianDesc" datatype="html">
+        <source>Suivi de consommation et conseils</source>
+        <target>Consumption tracking and advice</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.sebastian.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownSebastianIconAlt" datatype="html">
+        <source>Icône du majordome Sebastian</source>
+        <target>Sebastian butler icon</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.sebastian.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navDropdownPersonalTitle" datatype="html">
+        <source>Personnel</source>
+        <target>Personal</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.personal.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownPersonalDesc" datatype="html">
+        <source>Explorations numériques et expériences</source>
+        <target>Digital explorations and experiments</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.personal.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownPersonalIconAlt" datatype="html">
+        <source>Icône représentant l'espace personnel</source>
+        <target>Icon representing personal space</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.personal.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navDropdownProfessionalTitle" datatype="html">
+        <source>Professionnel</source>
+        <target>Professional</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.professional.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownProfessionalDesc" datatype="html">
+        <source>Sites web pour clients et entreprises</source>
+        <target>Websites for clients and businesses</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.professional.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownProfessionalIconAlt" datatype="html">
+        <source>Icône représentant le professionnel</source>
+        <target>Icon representing professional</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.projects.professional.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navDropdownDevLabel" datatype="html">
+        <source>Développement</source>
+        <target>Development</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Dropdown section</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.label</note>
+      </trans-unit>
+      <trans-unit id="navDropdownAppMuseumTitle" datatype="html">
+        <source>App museum</source>
+        <target>App museum</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.appMuseum.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownAppMuseumDesc" datatype="html">
+        <source>Expérience muséale interactive et immersive</source>
+        <target>Interactive and immersive museum experience</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.appMuseum.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownAppMuseumIconAlt" datatype="html">
+        <source>Icône représentant l'application museum</source>
+        <target>Icon representing the museum app</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.appMuseum.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navDropdownWeekAwayTitle" datatype="html">
+        <source>Week Away</source>
+        <target>Week Away</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.weekAway.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownWeekAwayDesc" datatype="html">
+        <source>Planification de voyages simplifiée</source>
+        <target>Simplified trip planning</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.weekAway.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownWeekAwayIconAlt" datatype="html">
+        <source>Icône représentant Week Away</source>
+        <target>Icon representing Week Away</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.weekAway.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navDropdownDeathCounterTitle" datatype="html">
+        <source>Death Counter</source>
+        <target>Death Counter</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.deathCounter.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownDeathCounterDesc" datatype="html">
+        <source>Jeu de stratégie et de défi</source>
+        <target>Strategy and challenge game</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.deathCounter.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownDeathCounterIconAlt" datatype="html">
+        <source>Icône représentant Death Counter</source>
+        <target>Icon representing Death Counter</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.deathCounter.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navDropdownAssassinTitle" datatype="html">
+        <source>Assassin</source>
+        <target>Assassin</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">Project link</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.assassin.title</note>
+      </trans-unit>
+      <trans-unit id="navDropdownAssassinDesc" datatype="html">
+        <source>Enquête narrative et mystère</source>
+        <target>Narrative investigation and mystery</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Project description</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.assassin.desc</note>
+      </trans-unit>
+      <trans-unit id="navDropdownAssassinIconAlt" datatype="html">
+        <source>Icône représentant Assassin</source>
+        <target>Icon representing Assassin</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">Icon alt text</note>
+        <note priority="1" from="meaning">navbar.dropdown.dev.assassin.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="navbarIconLabel" datatype="html">
+        <source>Icône pour <x id="navItemTitle" equiv-text="title" />.</source>
+        <target>Icon for <x id="navItemTitle" equiv-text="title" />.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">241</context>
+        </context-group>
+        <note priority="1" from="description">Icon label with item title</note>
+        <note priority="1" from="meaning">navbar.icon.dynamicLabel</note>
+      </trans-unit>
+      <trans-unit id="seoDefaultTitle" datatype="html">
+        <source>Professional Portfolio | Web Developer &amp; Designer</source>
+        <target>Professional Portfolio | Web Developer &amp; Designer</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Fallback SEO title</note>
+        <note priority="1" from="meaning">seo.default.title</note>
+      </trans-unit>
+      <trans-unit id="seoDefaultDescription" datatype="html">
+        <source>Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.</source>
+        <target>Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Fallback SEO description</note>
+        <note priority="1" from="meaning">seo.default.description</note>
+      </trans-unit>
+      <trans-unit id="seoKeywordWebDev" datatype="html">
+        <source>web development</source>
+        <target>web development</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <note priority="1" from="description">SEO keyword</note>
+        <note priority="1" from="meaning">seo.default.keyword.webDev</note>
+      </trans-unit>
+      <trans-unit id="seoKeywordPortfolio" datatype="html">
+        <source>portfolio</source>
+        <target>portfolio</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">SEO keyword</note>
+        <note priority="1" from="meaning">seo.default.keyword.portfolio</note>
+      </trans-unit>
+      <trans-unit id="seoKeywordFrontend" datatype="html">
+        <source>frontend</source>
+        <target>frontend</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">SEO keyword</note>
+        <note priority="1" from="meaning">seo.default.keyword.frontend</note>
+      </trans-unit>
+      <trans-unit id="seoKeywordBackend" datatype="html">
+        <source>backend</source>
+        <target>backend</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">SEO keyword</note>
+        <note priority="1" from="meaning">seo.default.keyword.backend</note>
+      </trans-unit>
+      <trans-unit id="seoKeywordFullstack" datatype="html">
+        <source>full stack</source>
+        <target>full stack</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">SEO keyword</note>
+        <note priority="1" from="meaning">seo.default.keyword.fullstack</note>
+      </trans-unit>
+      <trans-unit id="seoKeywordDeveloper" datatype="html">
+        <source>developer</source>
+        <target>developer</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">SEO keyword</note>
+        <note priority="1" from="meaning">seo.default.keyword.developer</note>
+      </trans-unit>
+      <trans-unit id="skipLinkLabel" datatype="html">
+        <source> Passer au contenu principal </source>
+        <target>Skip to main content</target><context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/skip-link.component.ts</context>
+          <context context-type="linenumber">19,25</context>
+        </context-group>
+        <note priority="1" from="description">Skip to main content</note>
+        <note priority="1" from="meaning">skipLink.label</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

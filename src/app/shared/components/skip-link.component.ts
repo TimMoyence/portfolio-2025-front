@@ -11,7 +11,13 @@ import { CommonModule } from '@angular/common';
       - Visible only when focused
       - Jumps directly to the main content landmark
     -->
-    <a class="skip-link" href="#main-content"> Passer au contenu principal </a>
+    <a
+      class="skip-link"
+      href="#main-content"
+      i18n="skipLink.label|Skip to main content@@skipLinkLabel"
+    >
+      Passer au contenu principal
+    </a>
   `,
   styles: [
     `

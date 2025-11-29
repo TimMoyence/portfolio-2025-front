@@ -19,7 +19,7 @@
               data-[state=active]:border-b-scheme-accent
               data-[state=inactive]:border-b-transparent
             " (click)="selectTab('sign-up')">
-            S'inscrire
+            <span i18n="auth.tabs.signup|Signup tab label@@authTabSignup">S'inscrire</span>
           </button>
 
           <button type="button" role="tab" id="auth-trigger-log-in" [attr.aria-controls]="'auth-tab-log-in'"
@@ -36,7 +36,7 @@
               data-[state=active]:border-b-scheme-accent
               data-[state=inactive]:border-b-transparent
             " (click)="selectTab('log-in')">
-            Connexion
+            <span i18n="auth.tabs.login|Login tab label@@authTabLogin">Connexion</span>
           </button>
         </div>
         <div *ngIf="isTabActive('sign-up')" role="tabpanel" id="auth-tab-sign-up"
@@ -44,8 +44,8 @@
           class="focus-visible:outline-none data-[state=active]:animate-tabs"
           [attr.data-state]="isTabActive('sign-up') ? 'active' : 'inactive'" tabindex="0">
           <div class="mb-6 text-center md:mb-8">
-            <h1 class="mb-5 text-h2 font-bold md:mb-6">Votre parcours</h1>
-            <p class="text-medium">
+            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.signup.title|Signup panel heading@@authSignupTitle">Votre parcours</h1>
+            <p class="text-medium" i18n="auth.signup.lead|Signup panel description@@authSignupLead">
               Déverrouillez votre potentiel avec un compte personnalisé
             </p>
           </div>
@@ -82,18 +82,18 @@
         : 'top-2 text-sm text-gray-500'"
                 [class.text-red-500]="control.invalid && (control.touched || isSignupSubmitted)">
                 {{ field.label }}
-                <span *ngIf="!field.required">(facultatif)</span>
+                <span *ngIf="!field.required" i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
 
               </label>
               <p *ngIf="control.invalid && (control.touched || isSignupSubmitted)" class="mt-1 text-xs text-red-500">
                 @if (control.errors?.['required']) {
-                Ce champ est obligatoire.
+                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est obligatoire.</span>
                 } @else if (control.errors?.['email']) {
-                Merci d’entrer une adresse email valide.
+                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
                 } @else if (control.errors?.['minlength'] && field.key === 'password') {
-                Le mot de passe doit contenir au moins 8 caractères.
+                <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength">Le mot de passe doit contenir au moins 8 caractères.</span>
                 } @else {
-                Valeur invalide.
+                <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
                 }
               </p>
             </div>
@@ -101,13 +101,13 @@
             <div class="grid grid-cols-1 gap-4">
               <button type="submit" data-slot="button"
                 class="bg-scheme-accent inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-neutral-darkest px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
-                title="Créer compte" [disabled]="isSignupLoading" [attr.aria-busy]="isSignupLoading">
+                title="Créer compte" i18n-title [disabled]="isSignupLoading" [attr.aria-busy]="isSignupLoading">
                 <ng-container *ngIf="!isSignupLoading; else signupLoading">
-                  Créer compte
+                  <span i18n="auth.signup.submit|Signup submit label@@authSignupSubmit">Créer compte</span>
                 </ng-container>
               </button>
               <ng-template #signupLoading>
-                <span>Création en cours...</span>
+                <span i18n="auth.signup.loading|Signup loading state@@authSignupLoading">Création en cours...</span>
               </ng-template>
               <p *ngIf="signupErrorMessage" class="text-sm text-red-500">
                 {{ signupErrorMessage }}
@@ -117,9 +117,9 @@
               </p>
               <button type="button" data-slot="button"
                 class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3  transition-all duration-200 ease-in-out"
-                title="Inscrivez-vous avec Google" (click)="handleGoogleAuth('sign-up')">
+                title="Inscrivez-vous avec Google" i18n-title (click)="handleGoogleAuth('sign-up')">
                 <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
-                <p class="text-scheme-text">Inscrivez-vous avec Google</p>
+                <p class="text-scheme-text" i18n="auth.signup.google|Signup with Google@@authSignupGoogle">Inscrivez-vous avec Google</p>
               </button>
             </div>
           </form>
@@ -129,8 +129,8 @@
           class="focus-visible:outline-none data-[state=active]:animate-tabs"
           [attr.data-state]="isTabActive('log-in') ? 'active' : 'inactive'" tabindex="0">
           <div class="mb-6 text-center md:mb-8">
-            <h1 class="mb-5 text-h2 font-bold md:mb-6">Se connecter</h1>
-            <p class="text-medium">
+            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.login.title|Login panel heading@@authLoginTitle">Se connecter</h1>
+            <p class="text-medium" i18n="auth.login.lead|Login panel description@@authLoginLead">
               Votre espace de croissance commence
             </p>
           </div>
@@ -157,15 +157,15 @@
                     : 'top-2 text-sm text-gray-500'"
                 [class.text-red-500]="control.invalid && (control.touched || isLoginSubmitted)">
                 {{ field.label }}
-                <span *ngIf="!field.required">(facultatif)</span>
+                <span *ngIf="!field.required" i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
               </label>
               <p *ngIf="control.invalid && (control.touched || isLoginSubmitted)" class="mt-1 text-xs text-red-500">
                 @if (control.errors?.['required']) {
-                Ce champ est obligatoire.
+                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est obligatoire.</span>
                 } @else if (control.errors?.['email']) {
-                Merci d’entrer une adresse email valide.
+                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
                 } @else {
-                Valeur invalide.
+                <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
                 }
               </p>
             </div>
@@ -173,13 +173,13 @@
             <div class="grid grid-cols-1 gap-4">
               <button type="submit" data-slot="button"
                 class="bg-scheme-accent inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-neutral-darkest px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
-                title="Log in" [disabled]="isLoginLoading" [attr.aria-busy]="isLoginLoading">
+                title="Log in" i18n-title [disabled]="isLoginLoading" [attr.aria-busy]="isLoginLoading">
                 <ng-container *ngIf="!isLoginLoading; else loginLoading">
-                  Log in
+                  <span i18n="auth.login.submit|Login submit label@@authLoginSubmit">Log in</span>
                 </ng-container>
               </button>
               <ng-template #loginLoading>
-                <span>Connexion en cours...</span>
+                <span i18n="auth.login.loading|Login loading state@@authLoginLoading">Connexion en cours...</span>
               </ng-template>
               <p *ngIf="loginErrorMessage" class="text-sm text-red-500">
                 {{ loginErrorMessage }}
@@ -189,9 +189,9 @@
               </p>
               <button type="button" data-slot="button"
                 class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3 transition-all duration-200 ease-in-out"
-                title="Connectez-vous avec Google" (click)="handleGoogleAuth('log-in')">
+                title="Connectez-vous avec Google" i18n-title (click)="handleGoogleAuth('log-in')">
                 <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
-                <p class="text-scheme-text">Connectez-vous avec Google</p>
+                <p class="text-scheme-text" i18n="auth.login.google|Login with Google@@authLoginGoogle">Connectez-vous avec Google</p>
               </button>
             </div>
           </form>
@@ -202,5 +202,6 @@
 </section>
 
 <app-contact
-  subtitle="Nous sommes là pour vous aider à résoudre rapidement tous vos problèmes de connexion ou de compte.">
+  subtitle="Nous sommes là pour vous aider à résoudre rapidement tous vos problèmes de connexion ou de compte."
+  i18n-subtitle="auth.contact.subtitle|Support invite under auth forms@@authContactSubtitle">
 </app-contact>

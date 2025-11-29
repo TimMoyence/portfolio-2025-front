@@ -13,6 +13,12 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "fr",
+        "locales": {
+          "en-US": "src/locale/messages.en.xlf"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -20,7 +26,7 @@
             "outputPath": "dist/portfolio-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -59,6 +65,7 @@
                   "maximumError": "8kB"
                 }
               ],
+              "localize": ["fr", "en-US"],
               "outputHashing": "all",
               "optimization": true,
               "extractLicenses": true,
@@ -68,6 +75,12 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "en-US": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": ["en-US"]
             }
           },
           "defaultConfiguration": "production"
@@ -80,6 +93,9 @@
             },
             "development": {
               "buildTarget": "portfolio-app:build:development"
+            },
+            "en-US": {
+              "buildTarget": "portfolio-app:build:en-US"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +106,11 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "@angular/localize/init"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [

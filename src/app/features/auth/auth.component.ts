@@ -54,22 +54,42 @@ export class AuthComponent {
     required: boolean;
     icon?: string;
   }[] = [
-    { key: 'firstName', label: 'Prénom', type: 'text', required: true },
-    { key: 'lastName', label: 'Nom', type: 'text', required: true },
-    { key: 'email', label: 'Email', type: 'email', required: true },
+    {
+      key: 'firstName',
+      label: $localize`:auth.signup.field.firstName|Signup field label@@authSignupFieldFirstName:Prénom`,
+      type: 'text',
+      required: true,
+    },
+    {
+      key: 'lastName',
+      label: $localize`:auth.signup.field.lastName|Signup field label@@authSignupFieldLastName:Nom`,
+      type: 'text',
+      required: true,
+    },
+    {
+      key: 'email',
+      label: $localize`:auth.signup.field.email|Signup field label@@authSignupFieldEmail:Email`,
+      type: 'email',
+      required: true,
+    },
     {
       key: 'password',
-      label: 'Mot de passe',
+      label: $localize`:auth.signup.field.password|Signup field label@@authSignupFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
     },
     {
       key: 'verifPassword',
-      label: 'Verification de mot de passe',
+      label: $localize`:auth.signup.field.passwordConfirm|Signup field label@@authSignupFieldPasswordConfirm:Verification de mot de passe`,
       type: 'password',
       required: true,
     },
-    { key: 'phone', label: 'Téléphone', type: 'tel', required: false },
+    {
+      key: 'phone',
+      label: $localize`:auth.signup.field.phone|Signup field label@@authSignupFieldPhone:Téléphone`,
+      type: 'tel',
+      required: false,
+    },
   ];
 
   loginForm: LoginFormState = { ...this.defaultLoginState };
@@ -80,10 +100,15 @@ export class AuthComponent {
     type: string;
     required: boolean;
   }[] = [
-    { key: 'email', label: 'Email', type: 'email', required: true },
+    {
+      key: 'email',
+      label: $localize`:auth.login.field.email|Login field label@@authLoginFieldEmail:Email`,
+      type: 'email',
+      required: true,
+    },
     {
       key: 'password',
-      label: 'Mot de passe',
+      label: $localize`:auth.login.field.password|Login field label@@authLoginFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
     },
@@ -106,7 +131,7 @@ export class AuthComponent {
     if (form.invalid) return;
 
     if (this.signupForm.password !== this.signupForm.verifPassword) {
-      this.signupErrorMessage = 'Les mots de passe ne correspondent pas.';
+      this.signupErrorMessage = $localize`:auth.signup.error.passwordMismatch|Signup error message@@authSignupErrorPasswordMismatch:Les mots de passe ne correspondent pas.`;
       return;
     }
 
@@ -122,7 +147,7 @@ export class AuthComponent {
 
     this.authService.register(payload).subscribe({
       next: (user) => {
-        this.signupSuccessMessage = `Compte créé pour ${user.firstName} ${user.lastName}.`;
+        this.signupSuccessMessage = $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Compte créé pour ${user.firstName} ${user.lastName}.`;
         this.resetSignupForm(form);
       },
       error: (error) => {
@@ -147,7 +172,7 @@ export class AuthComponent {
     this.authService.login(this.loginForm).subscribe({
       next: (session) => {
         // TODO : Intégrer la gestion de session & token & integrer la redirection vers le bon endroit
-        this.loginSuccessMessage = `Bienvenue ${session.user.firstName} !`;
+        this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
       },
       error: (error) => {
         this.loginErrorMessage = this.extractErrorMessage(error);
@@ -160,7 +185,9 @@ export class AuthComponent {
   }
 
   handleGoogleAuth(context: AuthTab): void {
-    console.log(`Google auth triggered for ${context}`);
+    console.log(
+      $localize`:auth.google.triggered|Console message for Google auth@@authGoogleTriggered:Google auth triggered for ${context}`,
+    );
   }
 
   private resetSignupForm(form: NgForm): void {
@@ -182,6 +209,6 @@ export class AuthComponent {
       }
     }
 
-    return 'Une erreur est survenue. Veuillez réessayer.';
+    return $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`;
   }
 }

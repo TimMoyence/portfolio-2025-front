@@ -19,11 +19,24 @@ type Service = {
           class="mb-12 grid grid-cols-1 gap-5 md:mb-18 md:grid-cols-2 md:gap-x-12 md:gap-y-8 lg:mb-20 lg:gap-x-20"
         >
           <div>
-            <h2 class="mb-3 font-semibold md:mb-4">Services</h2>
-            <p class="heading-h2 font-bold">Solutions numériques sur mesure</p>
+            <h2
+              class="mb-3 font-semibold md:mb-4"
+              i18n="services.kicker|Section label@@servicesKicker"
+            >
+              Services
+            </h2>
+            <p
+              class="heading-h2 font-bold"
+              i18n="services.title|Section heading@@servicesTitle"
+            >
+              Solutions numériques sur mesure
+            </p>
           </div>
           <div>
-            <p class="text-medium">
+            <p
+              class="text-medium"
+              i18n="services.lead|Section description@@servicesLead"
+            >
               Je propose des services complets adaptés à vos besoins
               spécifiques, avec une approche personnalisée et professionnelle.
             </p>
@@ -49,21 +62,23 @@ type Service = {
           </article>
         </div>
         <div class="mt-12 flex flex-wrap items-center gap-4 md:mt-18 lg:mt-20">
-          <a
-            href="/tarif"
-            class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
-          >
-            Tarifs
-          </a>
-          <a
-            href="/contact"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
-          >
-            Contactez-moi
-          </a>
+            <a
+              href="/tarif"
+              class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
+              i18n="services.cta.pricing|Pricing link@@servicesCtaPricing"
+            >
+              Tarifs
+            </a>
+            <a
+              href="/contact"
+              class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
+              i18n="services.cta.contact|Contact link@@servicesCtaContact"
+            >
+              Contactez-moi
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
   `,
   styles: [
     `
@@ -76,32 +91,28 @@ type Service = {
 export class ServicesSectionComponent {
   readonly services: Service[] = [
     {
-      title: 'Création de site web',
-      description:
-        'Stratégies avancées pour améliorer la visibilité de votre site et attirer plus de clients potentiels.',
+      title: $localize`:services.item.web.title|Service title@@servicesItemWebTitle:Création de site web`,
+      description: $localize`:services.item.web.desc|Service description@@servicesItemWebDesc:Stratégies avancées pour améliorer la visibilité de votre site et attirer plus de clients potentiels.`,
       iconSrc: 'https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg',
-      iconAlt: 'Relume logo 1',
+      iconAlt: $localize`:services.item.web.iconAlt|Service icon alt@@servicesItemWebIconAlt:Relume logo 1`,
     },
     {
-      title: 'Maintenance de site web',
-      description:
-        'Accompagnement personnalisé pour développer vos compétences numériques et atteindre vos objectifs professionnels.',
+      title: $localize`:services.item.maintenance.title|Service title@@servicesItemMaintenanceTitle:Maintenance de site web`,
+      description: $localize`:services.item.maintenance.desc|Service description@@servicesItemMaintenanceDesc:Accompagnement personnalisé pour développer vos compétences numériques et atteindre vos objectifs professionnels.`,
       iconSrc: 'https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg',
-      iconAlt: 'Relume logo 1',
+      iconAlt: $localize`:services.item.maintenance.iconAlt|Service icon alt@@servicesItemMaintenanceIconAlt:Relume logo 1`,
     },
     {
-      title: 'Référencement SEO',
-      description:
-        'Solutions expertes pour votre transformation digitale et votre visibilité en ligne.',
+      title: $localize`:services.item.seo.title|Service title@@servicesItemSeoTitle:Référencement SEO`,
+      description: $localize`:services.item.seo.desc|Service description@@servicesItemSeoDesc:Solutions expertes pour votre transformation digitale et votre visibilité en ligne.`,
       iconSrc: 'https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg',
-      iconAlt: 'Relume logo 1',
+      iconAlt: $localize`:services.item.seo.iconAlt|Service icon alt@@servicesItemSeoIconAlt:Relume logo 1`,
     },
     {
-      title: 'Formation et coaching',
-      description:
-        'Programmes conçus pour propulser votre entreprise vers de nouveaux horizons numériques.',
+      title: $localize`:services.item.training.title|Service title@@servicesItemTrainingTitle:Formation et coaching`,
+      description: $localize`:services.item.training.desc|Service description@@servicesItemTrainingDesc:Programmes conçus pour propulser votre entreprise vers de nouveaux horizons numériques.`,
       iconSrc: 'https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg',
-      iconAlt: 'Relume logo 1',
+      iconAlt: $localize`:services.item.training.iconAlt|Service icon alt@@servicesItemTrainingIconAlt:Relume logo 1`,
     },
   ];
 }

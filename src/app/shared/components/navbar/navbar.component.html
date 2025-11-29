@@ -2,13 +2,14 @@
             scrolled
               ? 'bg-transparent backdrop-blur-sm'
               : 'bg-scheme-background'
-          " role="navigation" aria-label="main-navigation">
+          " role="navigation" aria-label="Navigation principale"
+  i18n-aria-label="navbar.landmark|Main navigation landmark@@navLandmark">
   <div
     class="glass-card-dark bg-scheme-background  flex items-center justify-between p-3 px-6 rounded-full max-w-7xl mx-auto transition-all duration-300"
     [ngClass]="{ 'shadow-lg': scrolled }">
     <div class=" font-bold text-xl">
       <a routerLink="/" class="flex items-center gap-2" (click)="isMobile && (mobileMenuOpen = false)">
-        <span class="text-2xl">Portfolio</span>
+        <span class="text-2xl" i18n="navbar.brand|Site brand name in navbar@@navBrand">Portfolio</span>
       </a>
     </div>
 
@@ -20,11 +21,11 @@
     <button [attr.aria-expanded]="mobileMenuOpen" (click)="openMobileMenu()" #burgerButton type="button"
       class="lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-full p-2"
       aria-haspopup="dialog" aria-controls="mobile-nav"
-      [attr.aria-label]="mobileMenuOpen ? 'Fermer le menu principal' : 'Ouvrir le menu principal'">
+      [attr.aria-label]="mobileMenuOpen ? closeMenuLabel : openMenuLabel">
       @if (mobileMenuOpen) {
-      <app-svg-icon ariaLabel="Close menu" name="close" [size]="1.7"></app-svg-icon>
+      <app-svg-icon [ariaLabel]="closeMenuIconLabel" name="close" [size]="1.7"></app-svg-icon>
       } @else {
-      <app-svg-icon ariaLabel="Open menu" name="burger-menu" [size]="1.7"></app-svg-icon>
+      <app-svg-icon [ariaLabel]="openMenuIconLabel" name="burger-menu" [size]="1.7"></app-svg-icon>
       }
     </button>
   </div>
@@ -34,13 +35,13 @@
 <div id="mobile-nav" class="lg:hidden fixed inset-0 z-40" role="dialog" aria-modal="true"
   aria-labelledby="mobile-nav-label">
   <button type="button" class="absolute inset-0 bg-black/40 backdrop-blur-sm mobile-menu-backdrop"
-    aria-label="Fermer le menu principal" (click)="closeMobileMenu()"></button>
+    [attr.aria-label]="closeMenuLabel" (click)="closeMobileMenu()"></button>
 
   <div class="absolute top-[15%] w-full flex justify-center px-4 mobile-menu-panel">
 
     <div #mobileMenuPanel
       class="glass-card-dark rounded-2xl mt-2 py-3 px-4 w-80 border border-scheme-border bg-scheme-background">
-      <h2 id="mobile-nav-label" class="sr-only">Menu principal</h2>
+      <h2 id="mobile-nav-label" class="sr-only">{{ mobileNavHeading }}</h2>
       <div class="mt-3 flex flex-col gap-4 justify-center items-center">
         <ng-container *ngTemplateOutlet="navContent; context: { isMobile: true }"></ng-container>
       </div>
@@ -73,7 +74,7 @@
         [attr.aria-expanded]="dropdown.isOpen" aria-haspopup="true" [attr.aria-controls]="'nav-section-' + $index"
         [attr.data-dropdown-trigger]="dropdown.label" (click)="openDropdownMenuAndToggleInMobile(dropdown.label)">
         {{ dropdown.label }}
-        <app-svg-icon name="chevron-down" [size]="1.7" ariaLabel="icon svg of chevron-down"></app-svg-icon>
+        <app-svg-icon name="chevron-down" [size]="1.7" [ariaLabel]="dropdownChevronLabel"></app-svg-icon>
       </button>
 
       @if (dropdown.isOpen) {
@@ -92,7 +93,7 @@
               (click)="isMobile && closeMobileMenu()">
               <div class="flex flex-col items-center justify-center">
                 <app-svg-icon [name]="items.icon" [size]="1.5"
-                  [aria-label]="'icon svg of ' + items.title"></app-svg-icon>
+                  [aria-label]="getIconAriaLabel(items.title)"></app-svg-icon>
               </div>
               <div class="flex flex-col items-start justify-center">
                 <p class="text-regular font-semibold">{{ items.title }}</p>
@@ -113,14 +114,16 @@
   <div class="flex items-center justify-center gap-3" [ngClass]="isMobile ? 'mt-4' : ''">
     <button type="button"
       class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
-      title="Demander un devis" [routerLink]="'/devis'" (click)="isMobile && closeMobileMenu()">
-      Devis
+      title="Demander un devis" i18n-title="navbar.cta.quote.title|Quote CTA tooltip@@navCtaQuoteTitle"
+      [routerLink]="'/devis'" (click)="isMobile && closeMobileMenu()">
+      <span i18n="navbar.cta.quote.label|Quote CTA label@@navCtaQuoteLabel">Devis</span>
     </button>
 
     <button type="button"
       class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white"
-      title="Me contacter" [routerLink]="'/contact'" (click)="isMobile && closeMobileMenu()">
-      Contact
+      title="Me contacter" i18n-title="navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
+      [routerLink]="'/contact'" (click)="isMobile && closeMobileMenu()">
+      <span i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel">Contact</span>
     </button>
   </div>
 </ng-template>

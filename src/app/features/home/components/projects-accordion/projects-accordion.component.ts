@@ -25,19 +25,31 @@ type Project = {
     <section
       class="px-[5%] py-16 md:py-24 lg:py-28"
       aria-labelledby="projects-heading"
-    >
-      <div class="container">
-        <div class="mb-12 w-full max-w-lg md:mb-18 lg:mb-20">
-          <p class="mb-3 font-semibold md:mb-4">Projets</p>
-          <h2 id="projects-heading" class="heading-h2 mb-5 font-bold md:mb-6">
-            Mes réalisations numériques
-          </h2>
-          <p class="text-medium">
-            Chaque projet raconte une histoire unique de transformation
-            digitale. Découvrez comment j'ai relevé des défis techniques et
-            créatifs avec passion et précision.
-          </p>
-        </div>
+        >
+          <div class="container">
+            <div class="mb-12 w-full max-w-lg md:mb-18 lg:mb-20">
+              <p
+                class="mb-3 font-semibold md:mb-4"
+                i18n="projects.kicker|Section label@@projectsKicker"
+              >
+                Projets
+              </p>
+              <h2
+                id="projects-heading"
+                class="heading-h2 mb-5 font-bold md:mb-6"
+                i18n="projects.title|Section heading@@projectsTitle"
+              >
+                Mes réalisations numériques
+              </h2>
+              <p
+                class="text-medium"
+                i18n="projects.lead|Section description@@projectsLead"
+              >
+                Chaque projet raconte une histoire unique de transformation
+                digitale. Découvrez comment j'ai relevé des défis techniques et
+                créatifs avec passion et précision.
+              </p>
+            </div>
         <div
           class="flex w-full flex-col overflow-hidden border border-scheme-border lg:h-[90vh] lg:flex-row"
           role="tablist"
@@ -112,44 +124,40 @@ export class ProjectsAccordionComponent implements OnInit {
     {
       id: 'web',
       order: '01',
-      label: 'Site web',
-      title: 'Enquête interactive',
-      description:
-        "Un jeu narratif immersif qui combine storytelling et mécaniques de résolution d'énigmes pour une expérience unique.",
-      imageAlt: 'Relume placeholder image 1',
+      label: $localize`:projects.item.web.label|Project label@@projectsItemWebLabel:Site web`,
+      title: $localize`:projects.item.web.title|Project title@@projectsItemWebTitle:Enquête interactive`,
+      description: $localize`:projects.item.web.desc|Project description@@projectsItemWebDesc:Un jeu narratif immersif qui combine storytelling et mécaniques de résolution d'énigmes pour une expérience unique.`,
+      imageAlt: $localize`:projects.item.web.imageAlt|Project image alt@@projectsItemWebImageAlt:Relume placeholder image 1`,
       imageSrc:
         'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
     },
     {
       id: 'mobile',
       order: '02',
-      label: 'Application mobile',
-      title: 'Expérience mobile complète',
-      description:
-        'Une plateforme appliquée qui accompagne les utilisateurs dans leur quotidien grâce à une interface intuitive et performante.',
-      imageAlt: 'Relume placeholder image 2',
+      label: $localize`:projects.item.mobile.label|Project label@@projectsItemMobileLabel:Application mobile`,
+      title: $localize`:projects.item.mobile.title|Project title@@projectsItemMobileTitle:Expérience mobile complète`,
+      description: $localize`:projects.item.mobile.desc|Project description@@projectsItemMobileDesc:Une plateforme appliquée qui accompagne les utilisateurs dans leur quotidien grâce à une interface intuitive et performante.`,
+      imageAlt: $localize`:projects.item.mobile.imageAlt|Project image alt@@projectsItemMobileImageAlt:Relume placeholder image 2`,
       imageSrc:
         'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
     },
     {
       id: 'app',
       order: '03',
-      label: 'Application web',
-      title: 'Pilotage data',
-      description:
-        'Un tableau de bord conçu pour visualiser les données clés et faciliter la prise de décision en temps réel.',
-      imageAlt: 'Relume placeholder image 3',
+      label: $localize`:projects.item.app.label|Project label@@projectsItemAppLabel:Application web`,
+      title: $localize`:projects.item.app.title|Project title@@projectsItemAppTitle:Pilotage data`,
+      description: $localize`:projects.item.app.desc|Project description@@projectsItemAppDesc:Un tableau de bord conçu pour visualiser les données clés et faciliter la prise de décision en temps réel.`,
+      imageAlt: $localize`:projects.item.app.imageAlt|Project image alt@@projectsItemAppImageAlt:Relume placeholder image 3`,
       imageSrc:
         'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
     },
     {
       id: 'game',
       order: '04',
-      label: 'Jeu narratif',
-      title: 'Univers interactif',
-      description:
-        'Une expérience immersive qui marie narration, design sonore et interactions pour captiver vos audiences.',
-      imageAlt: 'Relume placeholder image 4',
+      label: $localize`:projects.item.game.label|Project label@@projectsItemGameLabel:Jeu narratif`,
+      title: $localize`:projects.item.game.title|Project title@@projectsItemGameTitle:Univers interactif`,
+      description: $localize`:projects.item.game.desc|Project description@@projectsItemGameDesc:Une expérience immersive qui marie narration, design sonore et interactions pour captiver vos audiences.`,
+      imageAlt: $localize`:projects.item.game.imageAlt|Project image alt@@projectsItemGameImageAlt:Relume placeholder image 4`,
       imageSrc:
         'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
     },

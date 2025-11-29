@@ -20,77 +20,92 @@ import { SvgIconComponent } from '../svg-icon.component';
 })
 export class NavbarComponent implements OnInit {
   readonly navLinks: NavLink[] = [
-    { label: 'Accueil', href: '/' },
-    { label: 'Cours', href: '/cours' },
-    { label: 'Présentation', href: '/presentation' },
+    {
+      label: $localize`:navbar.link.home|Navbar primary link@@navLinkHome:Accueil`,
+      href: '/',
+    },
+    {
+      label: $localize`:navbar.link.courses|Navbar primary link@@navLinkCourses:Cours`,
+      href: '/cours',
+    },
+    {
+      label: $localize`:navbar.link.presentation|Navbar primary link@@navLinkPresentation:Présentation`,
+      href: '/presentation',
+    },
   ];
+
+  readonly openMenuLabel = $localize`:navbar.menu.open|Burger button label@@navMenuOpen:Ouvrir le menu principal`;
+  readonly closeMenuLabel = $localize`:navbar.menu.close|Burger button label@@navMenuClose:Fermer le menu principal`;
+  readonly mobileNavHeading = $localize`:navbar.menu.heading|Mobile nav heading@@navMenuHeading:Menu principal`;
+  readonly closeMenuIconLabel = $localize`:navbar.menu.icon.close|Icon label@@navMenuCloseIcon:Fermer le menu`;
+  readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
+  readonly dropdownChevronLabel = $localize`:navbar.dropdown.chevron|Chevron icon label@@navDropdownChevron:Ouvrir ou fermer la section`;
 
   dropdownSections = signal<DropdownSection[]>([
     {
-      label: 'Projets',
+      label: $localize`:navbar.dropdown.projects.label|Dropdown section@@navDropdownProjectsLabel:Projets`,
       isOpen: false,
       items: [
         {
-          title: 'PresQ',
-          description: 'Plateforme de questionnaires interactifs',
+          title: $localize`:navbar.dropdown.projects.presq.title|Project link@@navDropdownPresqTitle:PresQ`,
+          description: $localize`:navbar.dropdown.projects.presq.desc|Project description@@navDropdownPresqDesc:Plateforme de questionnaires interactifs`,
           icon: 'planet',
-          iconAlt:
-            'Presque un icon pour une marque qui fait presque les choses',
+          iconAlt: $localize`:navbar.dropdown.projects.presq.iconAlt|Icon alt text@@navDropdownPresqIconAlt:Icône pour la marque PresQ`,
           href: 'PresQ',
         },
         {
-          title: 'Sebastian',
-          description: 'Suivi de consommation et conseils',
+          title: $localize`:navbar.dropdown.projects.sebastian.title|Project link@@navDropdownSebastianTitle:Sebastian`,
+          description: $localize`:navbar.dropdown.projects.sebastian.desc|Project description@@navDropdownSebastianDesc:Suivi de consommation et conseils`,
           icon: 'sebastian',
-          iconAlt: 'Sebastien majordome',
+          iconAlt: $localize`:navbar.dropdown.projects.sebastian.iconAlt|Icon alt text@@navDropdownSebastianIconAlt:Icône du majordome Sebastian`,
           href: 'Sebastian',
         },
         {
-          title: 'Personnel',
-          description: 'Explorations numériques et expériences',
+          title: $localize`:navbar.dropdown.projects.personal.title|Project link@@navDropdownPersonalTitle:Personnel`,
+          description: $localize`:navbar.dropdown.projects.personal.desc|Project description@@navDropdownPersonalDesc:Explorations numériques et expériences`,
           icon: 'perso',
-          iconAlt: 'Icon representant le personnel',
+          iconAlt: $localize`:navbar.dropdown.projects.personal.iconAlt|Icon alt text@@navDropdownPersonalIconAlt:Icône représentant l'espace personnel`,
           href: 'Personnel',
         },
         {
-          title: 'Professionnel',
-          description: 'Sites web pour clients et entreprises',
+          title: $localize`:navbar.dropdown.projects.professional.title|Project link@@navDropdownProfessionalTitle:Professionnel`,
+          description: $localize`:navbar.dropdown.projects.professional.desc|Project description@@navDropdownProfessionalDesc:Sites web pour clients et entreprises`,
           icon: 'business',
-          iconAlt: 'Icon representant le professionnel',
+          iconAlt: $localize`:navbar.dropdown.projects.professional.iconAlt|Icon alt text@@navDropdownProfessionalIconAlt:Icône représentant le professionnel`,
           href: 'Professionnel',
         },
       ],
     },
     {
-      label: 'Développement',
+      label: $localize`:navbar.dropdown.dev.label|Dropdown section@@navDropdownDevLabel:Développement`,
       isOpen: false,
       items: [
         {
-          title: 'App museum',
-          description: 'Expérience muséale interactive et immersive',
+          title: $localize`:navbar.dropdown.dev.appMuseum.title|Project link@@navDropdownAppMuseumTitle:App museum`,
+          description: $localize`:navbar.dropdown.dev.appMuseum.desc|Project description@@navDropdownAppMuseumDesc:Expérience muséale interactive et immersive`,
           icon: 'museum',
-          iconAlt: "représentation de l'application museum",
+          iconAlt: $localize`:navbar.dropdown.dev.appMuseum.iconAlt|Icon alt text@@navDropdownAppMuseumIconAlt:Icône représentant l'application museum`,
           href: 'App museum',
         },
         {
-          title: 'Week Away',
-          description: 'Planification de voyages simplifiée',
+          title: $localize`:navbar.dropdown.dev.weekAway.title|Project link@@navDropdownWeekAwayTitle:Week Away`,
+          description: $localize`:navbar.dropdown.dev.weekAway.desc|Project description@@navDropdownWeekAwayDesc:Planification de voyages simplifiée`,
           icon: 'travel',
-          iconAlt: 'icon de représentation de week away',
+          iconAlt: $localize`:navbar.dropdown.dev.weekAway.iconAlt|Icon alt text@@navDropdownWeekAwayIconAlt:Icône représentant Week Away`,
           href: 'Week Away',
         },
         {
-          title: 'Death Counter',
-          description: 'Jeu de stratégie et de défi',
+          title: $localize`:navbar.dropdown.dev.deathCounter.title|Project link@@navDropdownDeathCounterTitle:Death Counter`,
+          description: $localize`:navbar.dropdown.dev.deathCounter.desc|Project description@@navDropdownDeathCounterDesc:Jeu de stratégie et de défi`,
           icon: 'death-counter',
-          iconAlt: 'Icon representant le death counter',
+          iconAlt: $localize`:navbar.dropdown.dev.deathCounter.iconAlt|Icon alt text@@navDropdownDeathCounterIconAlt:Icône représentant Death Counter`,
           href: 'Death Counter',
         },
         {
-          title: 'Assassin',
-          description: 'Enquête narrative et mystère',
+          title: $localize`:navbar.dropdown.dev.assassin.title|Project link@@navDropdownAssassinTitle:Assassin`,
+          description: $localize`:navbar.dropdown.dev.assassin.desc|Project description@@navDropdownAssassinDesc:Enquête narrative et mystère`,
           icon: 'assassin',
-          iconAlt: "Icon representant l'assassin",
+          iconAlt: $localize`:navbar.dropdown.dev.assassin.iconAlt|Icon alt text@@navDropdownAssassinIconAlt:Icône représentant Assassin`,
           href: 'Assassin',
         },
       ],
@@ -220,6 +235,10 @@ export class NavbarComponent implements OnInit {
 
     // Restore focus to what opened the menu (e.g. burger button)
     this.a11yDialog.restoreFocus();
+  }
+
+  getIconAriaLabel(title: string): string {
+    return $localize`:navbar.icon.dynamicLabel|Icon label with item title@@navbarIconLabel:Icône pour ${title}:navItemTitle:.`;
   }
 
   private updateIsMobileState(): void {
