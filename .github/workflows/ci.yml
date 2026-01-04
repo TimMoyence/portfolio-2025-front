@@ -69,14 +69,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: >
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/master' &&
-      secrets.DEPLOY_HOST != '' &&
-      secrets.DEPLOY_USER != '' &&
-      secrets.SSH_PRIVATE_KEY != '' &&
-      secrets.DEPLOY_REGISTRY_USER != '' &&
-      secrets.DEPLOY_REGISTRY_TOKEN != ''
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: docker
     steps:
       - name: Deploy web container
