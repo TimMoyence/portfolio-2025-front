@@ -7,10 +7,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ secrets.DEPLOY_REGISTRY_USER }}/portfolio-2025-front
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -51,9 +47,9 @@ jobs:
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and push image
         uses: docker/build-push-action@v6
@@ -62,8 +58,8 @@ jobs:
           file: ./Dockerfile
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ghcr.io/timmoyence/portfolio-2025-front:${{ github.sha }}
+            ghcr.io/timmoyence/portfolio-2025-front:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -77,21 +73,20 @@ jobs:
         env:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           DEPLOY_COMPOSE_FILE: ${{ secrets.DEPLOY_COMPOSE_FILE }}
-          DEPLOY_REGISTRY_USER: ${{ secrets.DEPLOY_REGISTRY_USER }}
-          DEPLOY_REGISTRY_TOKEN: ${{ secrets.DEPLOY_REGISTRY_TOKEN }}
+          PROJECT: 'portfolio25'
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -euo pipefail
-            WORKDIR="${DEPLOY_PATH}"
-            COMPOSE_FILE="${DEPLOY_COMPOSE_FILE}"
-            IMAGE_TAG="${{ github.sha }}"
-            FRONT_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${IMAGE_TAG}"
+            WORKDIR="${DEPLOY_PATH:-/opt/portfolio-2025}"
+            COMPOSE_FILE="${DEPLOY_COMPOSE_FILE:-$WORKDIR/compose.yaml}"
+            FRONT_IMAGE="ghcr.io/${{ secrets.DEPLOY_REGISTRY_USER }}/portfolio-2025-front:${{ github.sha }}"
             PROJECT="portfolio25"
 
             cd "$WORKDIR"
-            docker login ghcr.io -u "$DEPLOY_REGISTRY_USER" -p "$DEPLOY_REGISTRY_TOKEN"
+            echo "${{ secrets.DEPLOY_REGISTRY_TOKEN }}" | docker login ghcr.io -u "${{ secrets.DEPLOY_REGISTRY_USER }}" --password-stdin || true
+
             FRONT_IMAGE="$FRONT_IMAGE" docker compose -p "$PROJECT" -f "$COMPOSE_FILE" pull web
             FRONT_IMAGE="$FRONT_IMAGE" docker compose -p "$PROJECT" -f "$COMPOSE_FILE" up -d web
