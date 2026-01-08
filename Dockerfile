@@ -11,6 +11,7 @@ COPY . .
 # --- Build production SSR bundle ---
 FROM deps AS build
 RUN npm run build -- --configuration=production
+RUN test -f dist/portfolio-app/server.mjs || (echo "Missing dist/portfolio-app/server.mjs" && find dist -maxdepth 3 -type f | sed -n '1,200p' && exit 1)
 
 # --- Runtime ---
 FROM node:22-slim AS runner
@@ -34,7 +35,7 @@ USER nodeuser
 EXPOSE 4000
 
 # Option A: run via npm script (safe)
-CMD ["npm", "run", "serve:ssr:portfolio-app"]
+CMD ["node", "dist/portfolio-app/server.mjs"]
 
 # Option B: run directly (equivalent)
 # CMD ["node", "dist/portfolio-app/server/server.mjs"]
