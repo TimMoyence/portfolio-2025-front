@@ -21,12 +21,6 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build SSR bundle
-        run: npm run build -- --configuration=production
-
   docker:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -91,7 +85,7 @@ jobs:
             echo "${{ secrets.DEPLOY_REGISTRY_TOKEN }}" | docker login ghcr.io -u "${{ secrets.DEPLOY_REGISTRY_USER }}" --password-stdin || true
                         
             BACK_IMAGE="$BACK_IMAGE_VALUE" FRONT_IMAGE="$FRONT_IMAGE_VALUE" \
-            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" pull web
+            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" pull web-fr web-en
 
             BACK_IMAGE="$BACK_IMAGE_VALUE" FRONT_IMAGE="$FRONT_IMAGE_VALUE" \
-            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" up -d --no-deps web
+            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" up -d --no-deps web-fr web-en

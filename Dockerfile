@@ -37,8 +37,8 @@ USER nodeuser
 
 EXPOSE 4000
 
-# Option A: run via npm script (safe)
-CMD ["node", "dist/portfolio-app/server.mjs"]
+ENV SSR_LOCALE=fr
+CMD ["sh", "-lc", "node dist/portfolio-app/server/${SSR_LOCALE}/server.mjs"]
 
 # Option B: run directly (equivalent)
 # CMD ["node", "dist/portfolio-app/server/server.mjs"]
