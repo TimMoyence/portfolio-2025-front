@@ -11,7 +11,10 @@ COPY . .
 # --- Build production SSR bundle ---
 FROM deps AS build
 RUN npm run build -- --configuration=production
-RUN test -f dist/portfolio-app/server.mjs || (echo "Missing dist/portfolio-app/server.mjs" && find dist -maxdepth 3 -type f | sed -n '1,200p' && exit 1)
+RUN echo "=== SSR entry candidates ===" \
+ && find dist/portfolio-app -maxdepth 3 -type f \( -name "server.mjs" -o -name "main.server.mjs" \) -print \
+ && echo "=== dist tree depth 3 ===" \
+ && find dist/portfolio-app -maxdepth 3 -type f | sed -n '1,200p'
 
 # --- Runtime ---
 FROM node:22-slim AS runner
