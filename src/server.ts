@@ -13,27 +13,41 @@ const app = express();
 const commonEngine = new CommonEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/**', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ *  Serve i18n static files correctly
+ * - Do NOT serve index.html for asset requests
+ * - Serve locale folders explicitly
  */
-
-/**
- * Serve static files from /browser
- */
-app.get(
-  '**',
-  express.static(browserDistFolder, {
+app.use(
+  '/fr',
+  express.static(resolve(browserDistFolder, 'fr'), {
     maxAge: '1y',
-    index: 'index.html'
+    index: false,
   }),
 );
+app.use(
+  '/en-US',
+  express.static(resolve(browserDistFolder, 'en-US'), {
+    maxAge: '1y',
+    index: false,
+  }),
+);
+
+/**
+ * si certains assets sont demandés sans préfixe (rare)
+ */
+app.use(
+  '/assets',
+  express.static(resolve(browserDistFolder, 'fr/assets'), {
+    maxAge: '1y',
+    index: false,
+  }),
+);
+
+/**
+ * Serve other static files (css/js/map/woff2/...) if any are at browser root
+ * Important: index:false so it never returns HTML for missing files
+ */
+app.use(express.static(browserDistFolder, { maxAge: '1y', index: false }));
 
 /**
  * Handle all other requests by rendering the Angular application.
