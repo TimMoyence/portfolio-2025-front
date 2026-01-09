@@ -6,7 +6,15 @@ import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
-const browserDistFolder = resolve(serverDistFolder, '../browser');
+
+// On est dans dist/portfolio-app/server/<locale>/
+// donc distRoot = dist/portfolio-app
+const distRoot = resolve(serverDistFolder, '../..');
+
+// dist/portfolio-app/browser
+const browserDistFolder = resolve(distRoot, 'browser');
+
+// index SSR propre à la locale: dist/portfolio-app/server/<locale>/index.server.html
 const indexHtml = join(serverDistFolder, 'index.server.html');
 
 const app = express();
