@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { DOCUMENT } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import {
   Component,
   HostBinding,
@@ -7,15 +7,15 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-} from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { of } from 'rxjs';
-import { catchError, map, take, tap } from 'rxjs/operators';
+} from "@angular/core";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { of } from "rxjs";
+import { catchError, map, take, tap } from "rxjs/operators";
 
 @Component({
-  selector: 'app-svg-icon',
+  selector: "app-svg-icon",
   standalone: true,
-  template: '',
+  template: "",
 })
 export class SvgIconComponent implements OnChanges {
   private static cache = new Map<string, string>();
@@ -25,14 +25,14 @@ export class SvgIconComponent implements OnChanges {
   @Input() width?: number;
   @Input() height?: number;
   @Input() fill?: number | string;
-  @Input('aria-label') ariaLabel?: string;
+  @Input("aria-label") ariaLabel?: string;
 
-  @HostBinding('innerHTML') svgContent: SafeHtml | null = null;
-  @HostBinding('attr.role') role = 'img';
-  @HostBinding('style.display') display = 'inline-flex';
-  @HostBinding('style.width') hostWidth: string | null = null;
-  @HostBinding('style.height') hostHeight: string | null = null;
-  @HostBinding('attr.aria-label') get hostAriaLabel(): string | null {
+  @HostBinding("innerHTML") svgContent: SafeHtml | null = null;
+  @HostBinding("attr.role") role = "img";
+  @HostBinding("style.display") display = "inline-flex";
+  @HostBinding("style.width") hostWidth: string | null = null;
+  @HostBinding("style.height") hostHeight: string | null = null;
+  @HostBinding("attr.aria-label") get hostAriaLabel(): string | null {
     return this.ariaLabel ?? null;
   }
 
@@ -44,17 +44,19 @@ export class SvgIconComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
-      changes['name'] ||
-      changes['size'] ||
-      changes['width'] ||
-      changes['height'] ||
-      changes['fill']
+      changes["name"] ||
+      changes["size"] ||
+      changes["width"] ||
+      changes["height"] ||
+      changes["fill"]
     ) {
       this.loadIcon();
     }
   }
 
   private loadIcon(): void {
+    this.size = Number(this.size);
+
     if (!this.name) {
       this.svgContent = null;
       return;
@@ -81,50 +83,50 @@ export class SvgIconComponent implements OnChanges {
   private httpGetIcon(name: string) {
     const url = `assets/icons/${name}.svg`;
     return this.http
-      .get(url, { responseType: 'text' })
+      .get(url, { responseType: "text" })
       .pipe(tap((raw) => SvgIconComponent.cache.set(name, raw)));
   }
 
   private prepareSvg(raw: string | null): string {
     if (!raw) {
-      return '';
+      return "";
     }
 
-    const container = this.document.createElement('div');
+    const container = this.document.createElement("div");
     container.innerHTML = raw.trim();
-    const svgElement = container.querySelector('svg');
+    const svgElement = container.querySelector("svg");
 
     if (!svgElement) {
-      return '';
+      return "";
     }
 
-    if (this.fill != 'keep') {
-      const targetFill = (this.fill ?? 'currentColor').toString();
+    if (this.fill != "keep") {
+      const targetFill = (this.fill ?? "currentColor").toString();
 
-      svgElement.setAttribute('fill', targetFill);
+      svgElement.setAttribute("fill", targetFill);
 
-      const elementsWithFill = svgElement.querySelectorAll('[fill]');
+      const elementsWithFill = svgElement.querySelectorAll("[fill]");
       elementsWithFill.forEach((el) => {
-        const value = el.getAttribute('fill');
-        if (value && value !== 'none') {
-          el.setAttribute('fill', targetFill);
+        const value = el.getAttribute("fill");
+        if (value && value !== "none") {
+          el.setAttribute("fill", targetFill);
         }
       });
 
-      const elementsWithStroke = svgElement.querySelectorAll('[stroke]');
+      const elementsWithStroke = svgElement.querySelectorAll("[stroke]");
       elementsWithStroke.forEach((el) => {
-        const value = el.getAttribute('stroke');
-        if (value && value !== 'none') {
-          el.setAttribute('stroke', targetFill);
+        const value = el.getAttribute("stroke");
+        if (value && value !== "none") {
+          el.setAttribute("stroke", targetFill);
         }
       });
     }
 
-    if (!svgElement.getAttribute('viewBox')) {
-      const width = parseFloat(svgElement.getAttribute('width') || '0');
-      const height = parseFloat(svgElement.getAttribute('height') || '0');
+    if (!svgElement.getAttribute("viewBox")) {
+      const width = parseFloat(svgElement.getAttribute("width") || "0");
+      const height = parseFloat(svgElement.getAttribute("height") || "0");
       if (width > 0 && height > 0) {
-        svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        svgElement.setAttribute("viewBox", `0 0 ${width} ${height}`);
       }
     }
 
@@ -132,23 +134,23 @@ export class SvgIconComponent implements OnChanges {
     const computedHeight = this.dimensionToRem(this.size ?? this.height);
 
     if (computedWidth) {
-      svgElement.setAttribute('width', computedWidth);
+      svgElement.setAttribute("width", computedWidth);
     }
 
     if (computedHeight) {
-      svgElement.setAttribute('height', computedHeight);
+      svgElement.setAttribute("height", computedHeight);
     }
 
     this.hostWidth = computedWidth;
     this.hostHeight = computedHeight;
 
-    svgElement.removeAttribute('xmlns:a');
+    svgElement.removeAttribute("xmlns:a");
 
     return svgElement.outerHTML;
   }
 
   private dimensionToRem(value?: number): string | null {
-    if (typeof value === 'number' && !Number.isNaN(value)) {
+    if (typeof value === "number" && !Number.isNaN(value)) {
       return `${value}rem`;
     }
     return null;

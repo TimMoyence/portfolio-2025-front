@@ -8,7 +8,7 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
   imports: [CommonModule, SvgIconComponent],
   template: `
     <section
-      class="px-[5%] py-16 md:py-24 lg:py-28"
+      class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-22"
       aria-labelledby="presQ-heading"
     >
       <div class="container">
@@ -20,7 +20,8 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
               src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
               class="w-full rounded-image object-cover"
               alt="Relume placeholder image"
-              i18n-alt="mission.imageAlt|Mission illustration alt@@missionImageAlt"
+              i18n-alt="
+                mission.imageAlt|Mission illustration alt@@missionImageAlt"
               loading="lazy"
               aria-hidden="true"
             />
@@ -32,40 +33,40 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
             >
               Mission
             </p>
-            <h2
+            <h3
               id="presQ-heading"
-              class="heading-h2 mb-5 font-bold md:mb-6"
+              class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
               i18n="mission.title|Section heading@@missionTitle"
             >
-              PresQ la marque qui transforme l'échec en opportunité
-            </h2>
+              Pourquoi Asili ? Pourquoi cette approche ?
+            </h3>
             <p
-              class="text-medium"
+              class="text-sm"
               i18n="mission.lead|Section description@@missionLead"
             >
-              Une approche innovante qui démystifie l'échec et le transforme en
-              source de croissance personnelle. Nous créons des expériences qui
-              encouragent la résilience et l'apprentissage à travers l'humour et
-              la bienveillance.
+              Le digital et l’intelligence artificielle sont des leviers
+              puissants, mais mal utilisés, ils créent souvent plus de
+              complexité que de valeur.
             </p>
-            <div class="mt-6 flex flex-wrap gap-4 md:mt-8">
+            <p
+              class="pt-2 md:pt-3 lg:pt-4 text-sm"
+              i18n="mission.lead|Section description@@missionLead"
+            >
+              Mon rôle est d’aider à clarifier les besoins, à structurer les
+              usageset à mettre en place des solutions compréhensibles, adaptées
+              à la réalité terrain et pensées pour durer.
+            </p>
+            <div class="mt-6 text-xs flex md:mt-8">
               <a
-                href="/offres-et-tarifs"
-                class="inline-flex items-center justify-center rounded-button border border-scheme-border px-5 py-2 font-semibold"
-                i18n="mission.cta.more|Learn more CTA@@missionCtaMore"
+                routerLink="/contact"
+                class="inline-flex items-center justify-center gap-2  py-2 font-semibold underline"
+                i18n="hero.cta.contact|Hero contact CTA@@heroCtaContact"
               >
-                En savoir PresQ plus..
-              </a>
-              <a
-                href="/questionnaire"
-                class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
-                i18n="mission.cta.vote|Vote CTA@@missionCtaVote"
-              >
-                Voter son PresQ modèle
+                Échanger sur votre contexte
                 <app-svg-icon
-                  aria-hidden="true"
                   name="chevron-right"
                   [size]="1.2"
+                  aria-hidden="true"
                 ></app-svg-icon>
               </a>
             </div>

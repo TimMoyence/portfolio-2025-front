@@ -1,19 +1,18 @@
-<section class="px-[5%] py-16 md:py-24 lg:py-28" aria-labelledby="contact-heading">
+<section class="px-[5%] py-12 md:py-18 lg:py-22" aria-labelledby="contact-heading">
   <div class="container">
     <div>
       <div
         class="mb-12 grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 md:mb-20 md:grid-cols-[1fr_.75fr] md:gap-x-20 md:gap-y-16">
-        <div class="max-w-lg">
-          <p
-            class="mb-3 font-semibold md:mb-4"
-            i18n="contact.kicker|Section small label@@contactKicker"
-          >
-            Support
+        <div class="max-w-lg flex flex-col justify-between">
+          <p class="mb-3 font-semibold md:mb-4" i18n="contact.kicker|Section small label@@contactKicker">
+            Contact
           </p>
-          <h2 class="heading-h2 mb-5 font-bold md:mb-6" id="contact-heading">{{ title }}</h2>
-          <p class="text-medium">
-            {{ subtitle }}
+          <h3 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" id="contact-heading">{{ title }}</h3>
+          @for (p of leadParagraphs; track $index) {
+          <p class="text-small" [ngClass]="$index > 0 ? 'pt-2' : ''">
+            {{ p }}
           </p>
+          }
         </div>
         <div class="flex flex-col">
           <div class="grid auto-cols-fr grid-cols-1 gap-x-4 gap-y-6 py-2">
@@ -25,13 +24,10 @@
                 }
               </div>
               <div>
-                <h3 class="heading-h6 mb-2 font-bold">{{ method.label }}</h3>
+                <h3 class="font-heading heading-h6 mb-2 font-bold">{{ method.label }}</h3>
                 @if(method.href) {
-                <a
-                  [href]="method.href"
-                  [attr.aria-label]="method.label + ': ' + method.value"
-                  i18n-aria-label="contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria"
-                >
+                <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value"
+                  i18n-aria-label="contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria">
                   {{ method.value }}
                 </a>
                 } @else {
@@ -44,14 +40,10 @@
         </div>
       </div>
     </div>
-    <a
-      [href]="map.href"
-      target="_blank"
-      class="justify-self-end md:w-[321.6px] lg:w-auto"
+    <a [href]="map.href" target="_blank" class="justify-self-end md:w-[321.6px] lg:w-auto"
       aria-label="Voir l'emplacement sur la carte dans un nouvel onglet"
-      i18n-aria-label="contact.map.linkAria|Map link label@@contactMapLinkAria"
-    >
-      <img [src]="map.imageSrc" [alt]="map.alt" class="size-full h-[400px] object-cover md:h-[516px]" loading="lazy" />
+      i18n-aria-label="contact.map.linkAria|Map link label@@contactMapLinkAria">
+      <img [src]="map.imageSrc" [alt]="map.alt" class="size-full h-[250px] object-cover md:h-[516px]" loading="lazy" />
     </a>
   </div>
 </section>

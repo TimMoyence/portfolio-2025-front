@@ -1,0 +1,130 @@
+<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" [actions]="hero.actions"
+  titleLevel="h1"></app-hero-section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-20">
+      <div>
+        <p class="mb-3 font-semibold md:mb-4">{{ technologySection.label }}</p>
+        <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@presentationTechHeading">
+          {{ technologySection.title }}
+        </h2>
+        <p class="mb-5 md:mb-6 md:text-md">
+          {{ technologySection.description }}
+        </p>
+        <ul class="my-4 list-disc pl-5">
+          @for (item of technologySection.bullets; track $index) {
+          <li class="my-1 self-start pl-2">
+            <p>{{ item }}</p>
+          </li>
+          }
+        </ul>
+        <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
+          @for (action of technologySection.actions; track $index) {
+          <a [routerLink]="action.href"
+            class="rounded-button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            [ngClass]="{
+                'bg-background-secondary text-black border border-border-primary': action.variant === 'secondary',
+                'bg-transparent border border-transparent text-black underline underline-offset-2': action.variant === 'ghost',
+                'bg-black text-white border border-black': !action.variant
+              }">
+            {{ action.label }}
+          </a>
+          }
+        </div>
+      </div>
+      <div>
+        <img class="w-full object-cover" [src]="technologySection.image" [alt]="technologySection.imageAlt"
+          loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-x-20">
+      <div class="order-2 md:order-1">
+        <img class="w-full object-cover" src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+          [alt]="highlightSection.title" loading="lazy" />
+      </div>
+      <div class="order-1 md:order-2">
+        <p class="mb-3 font-semibold md:mb-4">{{ highlightSection.label }}</p>
+        <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@presentationHighlightHeading">
+          {{ highlightSection.title }}
+        </h2>
+        <p class="mb-5 md:mb-6 md:text-md">
+          {{ highlightSection.description }}
+        </p>
+        <div class="flex flex-wrap items-center gap-x-8 gap-y-6 py-2">
+          @for (logo of highlightSection.logos; track $index) {
+          <img class="max-h-12" [src]="logo.src" [alt]="logo.alt" loading="lazy" />
+          }
+        </div>
+        <div class="mt-6 flex flex-wrap gap-4 md:mt-8">
+          @for (action of highlightSection.actions; track $index) {
+          <a [routerLink]="action.href"
+            class="rounded-button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            [ngClass]="{
+                'bg-background-secondary text-black border border-border-primary': action.variant === 'secondary',
+                'bg-transparent border border-transparent text-black underline underline-offset-2': action.variant === 'ghost',
+                'bg-black text-white border border-black': !action.variant
+              }">
+            {{ action.label }}
+          </a>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <header class="mx-auto mb-12 max-w-lg text-center md:mb-18 lg:mb-20">
+      <p class="mb-3 font-semibold md:mb-4">
+        {{ portfolioHeader.label }}
+      </p>
+      <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@presentationPortfolioHeading">
+        {{ portfolioHeader.title }}
+      </h2>
+      <p class="md:text-md">{{ portfolioHeader.description }}</p>
+    </header>
+    <div class="columns-1 after:block md:columns-2 md:gap-x-8 lg:columns-3">
+      @for (project of portfolioCards; track $index) {
+      <article class="mb-8 break-inside-avoid">
+        <div class="mb-5 md:mb-6">
+          <a routerLink="/client-project">
+            <img class="w-full object-cover" [src]="project.image" [alt]="project.alt" loading="lazy" />
+          </a>
+        </div>
+        <h3 class="mb-2 text-xl font-bold md:text-2xl">
+          <a routerLink="/client-project">{{ project.title }}</a>
+        </h3>
+        <p>{{ project.description }}</p>
+        <ul class="mt-3 flex flex-wrap gap-2 md:mt-4">
+          @for (tag of project.tags; track $index) {
+          <li class="flex">
+            <span class="bg-background-secondary px-2 py-1 text-sm font-semibold">{{ tag }}</span>
+          </li>
+          }
+        </ul>
+        <a class="mt-5 inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-2 md:mt-6"
+          routerLink="/client-project" i18n="@@presentationPortfolioLink">
+          Voir projet
+        </a>
+      </article>
+      }
+    </div>
+    <footer class="mt-8 flex justify-center md:mt-18 lg:mt-20">
+      <a routerLink="/client-project"
+        class="rounded-button border border-border-primary bg-background-secondary px-6 py-3 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+        {{ portfolioHeader.ctaLabel }}
+      </a>
+    </footer>
+  </div>
+</section>
+
+<app-cta-block [title]="overlayCta.title" [description]="overlayCta.description"
+  [backgroundImage]="overlayCta.background" [overlay]="true" [textOnDark]="true"
+  [actions]="overlayCta.actions"></app-cta-block>

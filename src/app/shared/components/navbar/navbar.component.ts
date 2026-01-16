@@ -21,14 +21,6 @@ import { SvgIconComponent } from '../svg-icon.component';
 export class NavbarComponent implements OnInit {
   readonly navLinks: NavLink[] = [
     {
-      label: $localize`:navbar.link.home|Navbar primary link@@navLinkHome:Accueil`,
-      href: '/',
-    },
-    {
-      label: $localize`:navbar.link.courses|Navbar primary link@@navLinkCourses:Cours`,
-      href: '/cours',
-    },
-    {
       label: $localize`:navbar.link.presentation|Navbar primary link@@navLinkPresentation:Présentation`,
       href: '/presentation',
     },
@@ -47,69 +39,69 @@ export class NavbarComponent implements OnInit {
       isOpen: false,
       items: [
         {
-          title: $localize`:navbar.dropdown.projects.presq.title|Project link@@navDropdownPresqTitle:PresQ`,
-          description: $localize`:navbar.dropdown.projects.presq.desc|Project description@@navDropdownPresqDesc:Plateforme de questionnaires interactifs`,
+          title: $localize`:navbar.dropdown.projects.presq.title|Project link@@navDropdownPresqTitle:Projet Vincent`,
+          description: $localize`:navbar.dropdown.projects.presq.desc|Project description@@navDropdownPresqDesc:Solution web personnalisée`,
           icon: 'planet',
-          iconAlt: $localize`:navbar.dropdown.projects.presq.iconAlt|Icon alt text@@navDropdownPresqIconAlt:Icône pour la marque PresQ`,
-          href: 'PresQ',
+          iconAlt: $localize`:navbar.dropdown.projects.presq.iconAlt|Icon alt text@@navDropdownPresqIconAlt:Icône pour un projet client`,
+          href: '/client-project',
         },
         {
-          title: $localize`:navbar.dropdown.projects.sebastian.title|Project link@@navDropdownSebastianTitle:Sebastian`,
-          description: $localize`:navbar.dropdown.projects.sebastian.desc|Project description@@navDropdownSebastianDesc:Suivi de consommation et conseils`,
+          title: $localize`:navbar.dropdown.projects.sebastian.title|Project link@@navDropdownSebastianTitle:Louisons`,
+          description: $localize`:navbar.dropdown.projects.sebastian.desc|Project description@@navDropdownSebastianDesc:Site sur mesure pour Louisons`,
           icon: 'sebastian',
-          iconAlt: $localize`:navbar.dropdown.projects.sebastian.iconAlt|Icon alt text@@navDropdownSebastianIconAlt:Icône du majordome Sebastian`,
-          href: 'Sebastian',
+          iconAlt: $localize`:navbar.dropdown.projects.sebastian.iconAlt|Icon alt text@@navDropdownSebastianIconAlt:Icône pour un projet vitrine`,
+          href: '/client-project',
         },
         {
-          title: $localize`:navbar.dropdown.projects.personal.title|Project link@@navDropdownPersonalTitle:Personnel`,
+          title: $localize`:navbar.dropdown.projects.personal.title|Project link@@navDropdownPersonalTitle:Portfolio`,
           description: $localize`:navbar.dropdown.projects.personal.desc|Project description@@navDropdownPersonalDesc:Explorations numériques et expériences`,
           icon: 'perso',
           iconAlt: $localize`:navbar.dropdown.projects.personal.iconAlt|Icon alt text@@navDropdownPersonalIconAlt:Icône représentant l'espace personnel`,
-          href: 'Personnel',
+          href: '/presentation',
         },
         {
-          title: $localize`:navbar.dropdown.projects.professional.title|Project link@@navDropdownProfessionalTitle:Professionnel`,
+          title: $localize`:navbar.dropdown.projects.professional.title|Project link@@navDropdownProfessionalTitle:Projets clients`,
           description: $localize`:navbar.dropdown.projects.professional.desc|Project description@@navDropdownProfessionalDesc:Sites web pour clients et entreprises`,
           icon: 'business',
           iconAlt: $localize`:navbar.dropdown.projects.professional.iconAlt|Icon alt text@@navDropdownProfessionalIconAlt:Icône représentant le professionnel`,
-          href: 'Professionnel',
+          href: '/client-project',
         },
       ],
     },
-    {
-      label: $localize`:navbar.dropdown.dev.label|Dropdown section@@navDropdownDevLabel:Développement`,
-      isOpen: false,
-      items: [
-        {
-          title: $localize`:navbar.dropdown.dev.appMuseum.title|Project link@@navDropdownAppMuseumTitle:App museum`,
-          description: $localize`:navbar.dropdown.dev.appMuseum.desc|Project description@@navDropdownAppMuseumDesc:Expérience muséale interactive et immersive`,
-          icon: 'museum',
-          iconAlt: $localize`:navbar.dropdown.dev.appMuseum.iconAlt|Icon alt text@@navDropdownAppMuseumIconAlt:Icône représentant l'application museum`,
-          href: 'App museum',
-        },
-        {
-          title: $localize`:navbar.dropdown.dev.weekAway.title|Project link@@navDropdownWeekAwayTitle:Week Away`,
-          description: $localize`:navbar.dropdown.dev.weekAway.desc|Project description@@navDropdownWeekAwayDesc:Planification de voyages simplifiée`,
-          icon: 'travel',
-          iconAlt: $localize`:navbar.dropdown.dev.weekAway.iconAlt|Icon alt text@@navDropdownWeekAwayIconAlt:Icône représentant Week Away`,
-          href: 'Week Away',
-        },
-        {
-          title: $localize`:navbar.dropdown.dev.deathCounter.title|Project link@@navDropdownDeathCounterTitle:Death Counter`,
-          description: $localize`:navbar.dropdown.dev.deathCounter.desc|Project description@@navDropdownDeathCounterDesc:Jeu de stratégie et de défi`,
-          icon: 'death-counter',
-          iconAlt: $localize`:navbar.dropdown.dev.deathCounter.iconAlt|Icon alt text@@navDropdownDeathCounterIconAlt:Icône représentant Death Counter`,
-          href: 'Death Counter',
-        },
-        {
-          title: $localize`:navbar.dropdown.dev.assassin.title|Project link@@navDropdownAssassinTitle:Assassin`,
-          description: $localize`:navbar.dropdown.dev.assassin.desc|Project description@@navDropdownAssassinDesc:Enquête narrative et mystère`,
-          icon: 'assassin',
-          iconAlt: $localize`:navbar.dropdown.dev.assassin.iconAlt|Icon alt text@@navDropdownAssassinIconAlt:Icône représentant Assassin`,
-          href: 'Assassin',
-        },
-      ],
-    },
+    // {
+    //   label: $localize`:navbar.dropdown.dev.label|Dropdown section@@navDropdownDevLabel:Développement`,
+    //   isOpen: false,
+    //   items: [
+    //     {
+    //       title: $localize`:navbar.dropdown.dev.appMuseum.title|Project link@@navDropdownAppMuseumTitle:App museum`,
+    //       description: $localize`:navbar.dropdown.dev.appMuseum.desc|Project description@@navDropdownAppMuseumDesc:Expérience muséale interactive et immersive`,
+    //       icon: 'museum',
+    //       iconAlt: $localize`:navbar.dropdown.dev.appMuseum.iconAlt|Icon alt text@@navDropdownAppMuseumIconAlt:Icône représentant l'application museum`,
+    //       href: '/offer',
+    //     },
+    //     {
+    //       title: $localize`:navbar.dropdown.dev.weekAway.title|Project link@@navDropdownWeekAwayTitle:Week Away`,
+    //       description: $localize`:navbar.dropdown.dev.weekAway.desc|Project description@@navDropdownWeekAwayDesc:Planification de voyages simplifiée`,
+    //       icon: 'travel',
+    //       iconAlt: $localize`:navbar.dropdown.dev.weekAway.iconAlt|Icon alt text@@navDropdownWeekAwayIconAlt:Icône représentant Week Away`,
+    //       href: '/offer',
+    //     },
+    //     {
+    //       title: $localize`:navbar.dropdown.dev.deathCounter.title|Project link@@navDropdownDeathCounterTitle:Death Counter`,
+    //       description: $localize`:navbar.dropdown.dev.deathCounter.desc|Project description@@navDropdownDeathCounterDesc:Jeu de stratégie et de défi`,
+    //       icon: 'death-counter',
+    //       iconAlt: $localize`:navbar.dropdown.dev.deathCounter.iconAlt|Icon alt text@@navDropdownDeathCounterIconAlt:Icône représentant Death Counter`,
+    //       href: '/presentation',
+    //     },
+    //     {
+    //       title: $localize`:navbar.dropdown.dev.assassin.title|Project link@@navDropdownAssassinTitle:Assassin`,
+    //       description: $localize`:navbar.dropdown.dev.assassin.desc|Project description@@navDropdownAssassinDesc:Enquête narrative et mystère`,
+    //       icon: 'assassin',
+    //       iconAlt: $localize`:navbar.dropdown.dev.assassin.iconAlt|Icon alt text@@navDropdownAssassinIconAlt:Icône représentant Assassin`,
+    //       href: '/presentation',
+    //     },
+    //   ],
+    // },
   ]);
 
   scrolled = false;

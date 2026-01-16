@@ -10,8 +10,8 @@ import { SvgIconComponent } from '../svg-icon.component';
   styleUrl: './contact.component.scss',
 })
 export class ContactComponent {
-  @Input({ required: true }) subtitle!: string;
-  readonly title = $localize`:contact.title|Section heading@@contactTitle:Contactez-nous`;
+  @Input() leadParagraphs: string[] = [];
+  readonly title = $localize`:contact.title|Section heading@@contactTitle:Parler de votre situation`;
 
   readonly contactMethods: ContactMethod[] = [
     {
@@ -28,7 +28,7 @@ export class ContactComponent {
     },
     {
       label: $localize`:contact.method.office.label|Contact method label@@contactMethodOfficeLabel:Bureau`,
-      value: $localize`:contact.method.office.value|Contact method value@@contactMethodOfficeValue:Allée Serr, 33100 Bordeaux, France`,
+      value: $localize`:contact.method.office.value|Contact method value@@contactMethodOfficeValue:Bordeaux, 33100, France`,
       icon: 'location_on',
     },
   ];

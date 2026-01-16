@@ -8,7 +8,7 @@ module.exports = {
         sm: '640px',
         md: '768px',
         lg: '1024px',
-        xl: '1200px',
+        xl: '1280px',
       },
       padding: '1.25rem', // ~5%
     },
@@ -17,39 +17,23 @@ module.exports = {
       // COULEURS PRIMITIVES
       // --------------------
       colors: {
-        // Neutres (primitives.color.*)
-        'neutral-darkest': '#0c0902', // primitives.color.neutral darkest
-        'neutral-darker': '#24211b',
-        'neutral-dark': '#54524d',
-        neutral: '#858480',
-        'neutral-light': '#b6b5b3',
-        'neutral-lighter': '#dadad9',
-        'neutral-lightest': '#f2f2f2',
-        white: '#ffffff',
-
-        // Mountain meadow (vert) primitives.color.mountain meadow*
-        'mm-lightest': '#e8f4f3',
-        'mm-lighter': '#d1eae7',
-        'mm-light': '#5fb7ad',
-        mm: '#1b998b',
-        'mm-dark': '#157a6f',
-        'mm-darker': '#0a3d37',
-        'mm-darkest': '#082d29',
-
         // --------------------
-        // COLOR SCHEMES
+        // COLOR SCHEME (UI TOKENS)
         // --------------------
-        // Color scheme 1
-        'scheme-background': '#e8f4f3', // mountain meadow lightest
-        'scheme-text': '#0c0902', // neutral darkest
-        'scheme-border': '#0c090226', // neutral darkest 15% opacity
-        'scheme-accent': '#1b998b', // mountain meadow
+        'scheme-background': '#e8f4f3',
+        'scheme-surface': '#ffffff',
+        'scheme-surface-hover': '#f6fbfa',
 
-        // Color scheme 2/3 si tu en as besoin plus tard :
-        'scheme2-background': '#ffffff',
-        'scheme2-text': '#0c0902',
-        'scheme3-background': '#f2f2f2',
-        'scheme3-text': '#0c0902',
+        'scheme-text': '#0c0902',
+        'scheme-text-muted': '#54524d',
+
+        'scheme-border': '#0c090226',
+
+        'scheme-accent': '#1b998b',
+        'scheme-accent-hover': '#157a6f', // mm-dark
+        'scheme-accent-active': '#0a3d37', // mm-darker
+        'scheme-accent-focus': '#1b998b33', // 20% ring
+        'scheme-on-accent': '#ffffff',
       },
 
       // --------------------
@@ -61,11 +45,16 @@ module.exports = {
         body: ['"Merriweather Sans"', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        h1: ['4.5rem', { lineHeight: '1.2', letterSpacing: '-0.72px' }],
-        h2: ['3.25rem', { lineHeight: '1.2', letterSpacing: '-0.52px' }],
-        h6: ['1.375rem', { lineHeight: '1.4', letterSpacing: '-0.22px' }],
-        medium: ['1.125rem', { lineHeight: '1.5' }],
-        small: ['0.875rem', { lineHeight: '1.5' }],
+        h1: ['3.5rem', { lineHeight: '1.12', letterSpacing: '-0.05em' }], // 56px
+        h2: ['3rem', { lineHeight: '1.15', letterSpacing: '-0.045em' }], // 48px
+        h3: ['2.5rem', { lineHeight: '1.18', letterSpacing: '-0.04em' }], // 40px
+        h4: ['2.125rem', { lineHeight: '1.22', letterSpacing: '-0.03em' }], // 34px
+        h5: ['1.75rem', { lineHeight: '1.28', letterSpacing: '-0.02em' }], // 28px
+        h6: ['1.5rem', { lineHeight: '1.35', letterSpacing: '-0.01em' }], // 24px
+
+        large: ['1.25rem', { lineHeight: '1.6' }],
+        medium: ['1.125rem', { lineHeight: '1.65' }],
+        small: ['0.9375rem', { lineHeight: '1.65' }],
       },
 
       // --------------------

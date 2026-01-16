@@ -1,0 +1,162 @@
+<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" [actions]="hero.actions"
+  titleLevel="h1"></app-hero-section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div
+    class="container grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-2 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16">
+    <div>
+      <div class="mb-6 md:mb-8">
+        <p class="mb-3 font-semibold md:mb-4">{{ contactInfo.label }}</p>
+        <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@contactFormHeading">
+          {{ contactInfo.heading }}
+        </h2>
+        <p class="md:text-md">{{ contactInfo.description }}</p>
+      </div>
+      <div class="grid grid-cols-1 gap-4 py-2">
+        @for (detail of contactInfo.details; track $index) {
+        <div class="flex items-center gap-4">
+          <span aria-hidden="true" class="text-xl">{{ detail.icon }}</span>
+          <p>{{ detail.label }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    <form class="grid max-w-lg grid-cols-1 grid-rows-[auto_auto] gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <label class="grid w-full items-center">
+          <span class="mb-2" i18n="@@contactFormFirstName">Prénom</span>
+          <input type="text" name="firstName" class="border border-border-primary px-3 py-2" aria-label="Prénom" />
+        </label>
+        <label class="grid w-full items-center">
+          <span class="mb-2" i18n="@@contactFormLastName">Nom</span>
+          <input type="text" name="lastName" class="border border-border-primary px-3 py-2" aria-label="Nom" />
+        </label>
+      </div>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <label class="grid w-full items-center">
+          <span class="mb-2" i18n="@@contactFormEmail">Email</span>
+          <input type="email" name="email" class="border border-border-primary px-3 py-2" aria-label="Email" />
+        </label>
+        <label class="grid w-full items-center">
+          <span class="mb-2" i18n="@@contactFormPhone">Numéro de téléphone</span>
+          <input type="text" name="phone" class="border border-border-primary px-3 py-2"
+            aria-label="Numéro de téléphone" />
+        </label>
+      </div>
+      <label class="grid w-full items-center">
+        <span class="mb-2" i18n="@@contactFormSubject">Objet de votre message</span>
+        <select class="border border-border-primary px-3 py-2">
+          <option i18n="@@contactFormSubjectPlaceholder">Sélectionnez un sujet</option>
+          @for (subject of contactInfo.subjects; track $index) {
+          <option>{{ subject }}</option>
+          }
+        </select>
+      </label>
+      <div class="grid w-full items-center py-3 md:py-4">
+        <span class="mb-3 md:mb-4" i18n="@@contactFormRole">Qui êtes-vous?</span>
+        <div class="grid grid-cols-2 gap-x-6 gap-y-3.5">
+          @for (role of contactInfo.roles; track $index) {
+          <label class="flex items-center space-x-2">
+            <input type="radio" name="role" [value]="role" />
+            <span>{{ role }}</span>
+          </label>
+          }
+        </div>
+      </div>
+      <label class="grid w-full items-center">
+        <span class="mb-2" i18n="@@contactFormMessage">Message</span>
+        <textarea name="message" class="min-h-[11.25rem] overflow-auto border border-border-primary px-3 py-2"
+          placeholder="Écrivez votre message ici" i18n-placeholder="@@contactFormMessagePlaceholder"></textarea>
+      </label>
+      <label class="mb-3 flex items-center space-x-2 text-sm md:mb-4">
+        <input type="checkbox" name="terms" />
+        <span i18n="@@contactFormTerms">J'accepte les conditions</span>
+      </label>
+      <div>
+        <button type="submit"
+          class="rounded-button bg-black px-5 py-2 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          i18n="@@contactFormSubmit">
+          Envoyer
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="rb-12 mx-auto mb-12 flex max-w-lg flex-col justify-center text-center md:mb-18 lg:mb-20">
+      <p class="mb-3 font-semibold md:mb-4" i18n="@@contactLocationLabel">Localisation</p>
+      <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@contactLocationHeading">
+        Où me trouver
+      </h2>
+      <p class="md:text-md" i18n="@@contactLocationSubheading">Découvrez mes emplacements de travail</p>
+    </div>
+    <div class="grid auto-cols-fr grid-cols-1 items-center gap-x-12 gap-y-12 md:grid-cols-2 md:gap-16">
+      @for (place of locations; track place.title) {
+      <div class="flex flex-col items-center justify-start text-center">
+        <div class="mb-6 aspect-[3/2] md:mb-8">
+          <img class="h-full w-full object-cover" [src]="place.image" [alt]="place.alt" loading="lazy" />
+        </div>
+        <h3 class="mb-3 text-2xl font-bold leading-[1.4] md:text-3xl lg:mb-4 lg:text-4xl">
+          {{ place.title }}
+        </h3>
+        <p class="text-center">{{ place.description }}</p>
+        <div class="mt-5 md:mt-6">
+          <a class="inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-2"
+            routerLink="/contact">
+            {{ place.actionLabel }}
+          </a>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="rb-12 mb-12 max-w-lg md:mb-18 lg:mb-20">
+      <p class="mb-3 font-semibold md:mb-4" i18n="@@contactMethodsLabel">Coordonnées</p>
+      <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@contactMethodsHeading">
+        Comment me joindre
+      </h2>
+      <p class="md:text-md" i18n="@@contactMethodsSubheading">
+        Restons en contact pour vos projets numériques
+      </p>
+    </div>
+    <div
+      class="grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 sm:grid-cols-2 md:gap-x-20 md:gap-y-16 lg:grid-cols-[0.5fr_1fr]">
+      <div class="grid auto-cols-fr grid-cols-1 gap-x-4 gap-y-10">
+        @for (method of methods; track method.title) {
+        <div>
+          <div class="mb-3 md:mb-4">
+            <span class="text-2xl" aria-hidden="true">•</span>
+          </div>
+          <h3 class="mb-2 text-md font-bold leading-[1.4] md:text-xl">
+            {{ method.title }}
+          </h3>
+          <p class="mb-2">{{ method.description }}</p>
+          @if (method.link) {
+          <a class="underline" [href]="method.link">{{ method.value }}</a>
+          } @else {
+          <span class="underline">{{ method.value }}</span>
+          }
+          @if (!method.link && method.hasRouteAction) {
+          <div class="mt-5 md:mt-6">
+            <a class="inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-2"
+              routerLink="/contact" i18n="@@contactMethodsOfficeCta">
+              Voir l'itinéraire
+            </a>
+          </div>
+          }
+        </div>
+        }
+      </div>
+      <div>
+        <img class="size-full object-cover" src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+          alt="Contact illustration" loading="lazy" i18n-alt="@@contactIllustrationAlt" />
+      </div>
+    </div>
+  </div>
+</section>

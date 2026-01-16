@@ -23,7 +23,7 @@ describe('ContactComponent', () => {
   it('should display the heading and subtitle', () => {
     const compiled: HTMLElement = fixture.nativeElement;
     expect(compiled.textContent).toContain(component.title);
-    expect(compiled.textContent).toContain(component.subtitle);
+    expect(compiled.textContent).toContain(component.leadParagraphs[0]);
   });
 
   it('should render each contact method', () => {
@@ -31,7 +31,9 @@ describe('ContactComponent', () => {
       const method = fixture.nativeElement.querySelector(
         `[data-testid="contact-method-${index}"]`,
       );
-      expect(method).withContext(`Missing method at index ${index}`).not.toBeNull();
+      expect(method)
+        .withContext(`Missing method at index ${index}`)
+        .not.toBeNull();
     });
   });
 

@@ -1,0 +1,131 @@
+<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" [actions]="hero.actions"
+  titleLevel="h1"></app-hero-section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="mx-auto mb-12 w-full max-w-lg text-center md:mb-18 lg:mb-20">
+      <p class="mb-3 font-semibold md:mb-4">{{ hero.label }}</p>
+      <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@clientProjectShowcaseHeading">
+        {{ hero.title }}
+      </h2>
+      <p class="md:text-md">{{ hero.description }}</p>
+    </div>
+    <div class="grid grid-cols-1 gap-8">
+      @for (study of caseStudies; track study.title) {
+      <div
+        class="grid grid-cols-1 content-center overflow-hidden border border-border-primary bg-neutral-white md:grid-cols-2">
+        <div class="order-1 flex flex-col justify-center p-6 md:p-8 lg:p-12"
+          [ngClass]="study.reverse ? 'md:order-2' : ''">
+          <p class="mb-2 font-semibold">{{ study.tag }}</p>
+          <h3 class="rb-5 mb-5 text-4xl font-bold leading-[1.2] md:mb-6 md:text-5xl lg:text-6xl"
+            i18n="@@clientProjectCaseStudyTitle">
+            {{ study.title }}
+          </h3>
+          <p>{{ study.description }}</p>
+          <div class="mt-6 flex items-center gap-x-4 md:mt-8">
+            @for (action of study.actions; track $index) {
+            <a [routerLink]="action.href"
+              class="rounded-button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              [ngClass]="{
+                    'bg-background-secondary text-black border border-border-primary': action.variant === 'secondary',
+                    'bg-transparent border border-transparent text-black underline underline-offset-2': action.variant === 'ghost',
+                    'bg-black text-white border border-black': !action.variant
+                  }">
+              {{ action.label }}
+            </a>
+            }
+          </div>
+        </div>
+        <div class="order-2 flex flex-col items-center justify-center" [ngClass]="study.reverse ? 'md:order-1' : ''">
+          <img [src]="study.image" [alt]="study.imageAlt" class="w-full object-cover" loading="lazy" />
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="rb-12 mb-12 md:mb-18 lg:mb-20">
+      <div class="mx-auto max-w-lg text-center">
+        <p class="mb-3 font-semibold md:mb-4">{{ featureBlock.label }}</p>
+        <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@clientProjectFeatureHeading">
+          {{ featureBlock.title }}
+        </h2>
+        <p class="md:text-md">{{ featureBlock.description }}</p>
+      </div>
+    </div>
+    <div class="grid auto-cols-fr grid-cols-1 border border-border-primary md:grid-cols-2">
+      <div class="flex flex-col justify-center p-6 md:p-8 lg:p-12">
+        <div>
+          <p class="mb-2 text-sm font-semibold">{{ featureBlock.label }}</p>
+          <h3 class="mb-5 text-4xl font-bold leading-[1.2] md:mb-6 md:text-5xl lg:text-6xl"
+            i18n="@@clientProjectFeatureSubheading">
+            Approche créative
+          </h3>
+          <p>
+            {{ featureBlock.description }}
+          </p>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
+          @for (action of featureBlock.actions; track $index) {
+          <a [routerLink]="action.href"
+            class="rounded-button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            [ngClass]="{
+                'bg-background-secondary text-black border border-border-primary': action.variant === 'secondary',
+                'bg-transparent border border-transparent text-black underline underline-offset-2': action.variant === 'ghost',
+                'bg-black text-white border border-black': !action.variant
+              }">
+            {{ action.label }}
+          </a>
+          }
+        </div>
+      </div>
+      <div class="flex items-center justify-center">
+        <img [src]="featureBlock.image" [alt]="featureBlock.imageAlt" class="size-full object-cover" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="flex flex-col items-center">
+      <div class="mb-12 md:mb-18 lg:mb-20">
+        <div class="mx-auto flex max-w-lg flex-col items-center text-center">
+          <p class="mb-3 font-semibold md:mb-4">{{ clientHighlight.label }}</p>
+          <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl"
+            i18n="@@clientProjectHighlightHeading">
+            {{ clientHighlight.title }}
+          </h2>
+          <p class="mb-5 md:mb-6 md:text-md">
+            {{ clientHighlight.description }}
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-6 py-2">
+            @for (logo of clientHighlight.logos; track $index) {
+            <img class="max-h-14" [src]="logo.src" [alt]="logo.alt" loading="lazy" />
+            }
+          </div>
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8">
+            @for (action of clientHighlight.actions; track $index) {
+            <a [routerLink]="action.href"
+              class="rounded-button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              [ngClass]="{
+                  'bg-background-secondary text-black border border-border-primary': action.variant === 'secondary',
+                  'bg-transparent border border-transparent text-black underline underline-offset-2': action.variant === 'ghost',
+                  'bg-black text-white border border-black': !action.variant
+                }">
+              {{ action.label }}
+            </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <img [src]="clientHighlight.heroImage" [alt]="clientHighlight.title" class="size-full object-cover"
+        loading="lazy" />
+    </div>
+  </div>
+</section>
