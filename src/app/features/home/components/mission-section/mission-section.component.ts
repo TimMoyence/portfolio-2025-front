@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { SvgIconComponent } from '../../../../shared/components/svg-icon.component';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { SvgIconComponent } from "../../../../shared/components/svg-icon.component";
 
 @Component({
-  selector: 'app-mission-section',
+  selector: "app-mission-section",
   standalone: true,
   imports: [CommonModule, SvgIconComponent],
   template: `
@@ -50,7 +50,7 @@ import { SvgIconComponent } from '../../../../shared/components/svg-icon.compone
             </p>
             <p
               class="pt-2 md:pt-3 lg:pt-4 text-sm"
-              i18n="mission.lead|Section description@@missionLead"
+              i18n="mission.lead|Section description@@missionLead2"
             >
               Mon rôle est d’aider à clarifier les besoins, à structurer les
               usageset à mettre en place des solutions compréhensibles, adaptées

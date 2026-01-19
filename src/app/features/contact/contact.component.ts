@@ -1,15 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { HeroAction, HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
-
-interface ContactLocation {
-  title: string;
-  description: string;
-  image: string;
-  alt: string;
-  actionLabel: string;
-}
+import { CommonModule } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { FormsModule, NgForm } from "@angular/forms";
+import { RouterModule } from "@angular/router";
+import { ContactFormState } from "../../core/models/contact.model";
+import { ContactService } from "../../core/services/contact.service";
+import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
+import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 
 interface ContactMethod {
   title: string;
@@ -18,51 +14,38 @@ interface ContactMethod {
   link?: string;
   hasRouteAction?: boolean;
 }
-
+type ContactFormKey = keyof ContactFormState;
 @Component({
-  selector: 'app-contact',
+  selector: "app-contact",
   standalone: true,
-  imports: [CommonModule, RouterModule, HeroSectionComponent],
-  templateUrl: './contact.component.html',
-  styleUrl: './contact.component.scss',
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    HeroSectionComponent,
+    ContactCtaComponent,
+  ],
+  templateUrl: "./contact.component.html",
+  styleUrl: "./contact.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactComponent {
+  isContactLoading: boolean = false;
+  isContactSubmitted: boolean = false;
+  contactErrorMessage?: string;
+  contactSuccessMessage?: string;
+  private readonly contactService = inject(ContactService);
+
   readonly hero = {
     label: $localize`:contact.hero.label@@contactHeroLabel:Connexion`,
-    title: $localize`:contact.hero.title@@contactHeroTitle:Contactez Tim de Asili Design`,
-    description: $localize`:contact.hero.description@@contactHeroDescription:Développeur web passionné et ancien manager, prêt à transformer vos idées numériques en réalité concrète.`,
-    actions: [
-      {
-        label: $localize`:contact.hero.action.send@@contactHeroActionSend:Envoyer`,
-        href: '/contact',
-      },
-      {
-        label: $localize`:contact.hero.action.cancel@@contactHeroActionCancel:Annuler`,
-        variant: 'secondary' as HeroAction['variant'],
-        href: '/presentation',
-      },
-    ],
+    title: $localize`:contact.hero.title@@contactHeroTitle:Parler de votre situation`,
+    description: $localize`:contact.hero.description@@contactHeroDescription:Un premier échange pour comprendre votre contexte,clarifier votre besoin et envisager la suite la plus pertinente.`,
   };
 
   readonly contactInfo = {
     label: $localize`:contact.form.label@@contactFormLabel:Contact`,
     heading: $localize`:contact.form.heading@@contactFormHeading:Formulaire de contact`,
-    description: $localize`:contact.form.description@@contactFormDescription:Partagez vos idées, je suis à l'écoute`,
-    details: [
-      {
-        label: $localize`:contact.form.detail.email@@contactFormDetailEmail:hello@relume.io`,
-        icon: '✉️',
-      },
-      {
-        label: $localize`:contact.form.detail.phone@@contactFormDetailPhone:+33 6 12 34 56 78`,
-        icon: '📞',
-      },
-      {
-        label: $localize`:contact.form.detail.city@@contactFormDetailCity:Paris, France`,
-        icon: '📍',
-      },
-    ],
+    description: $localize`:contact.form.description@@contactFormDescription:Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.`,
     roles: [
       $localize`:contact.form.role.developer@@contactFormRoleDeveloper:Développeur web`,
       $localize`:contact.form.role.manager@@contactFormRoleManager:Manager`,
@@ -72,49 +55,159 @@ export class ContactComponent {
       $localize`:contact.form.role.other@@contactFormRoleOther:Autre`,
     ],
     subjects: [
-      $localize`:contact.form.subject.first@@contactFormSubjectFirst:Premier choix`,
-      $localize`:contact.form.subject.second@@contactFormSubjectSecond:Second choix`,
-      $localize`:contact.form.subject.third@@contactFormSubjectThird:Troisième choix`,
+      $localize`:contact.form.subject.first@@contactFormSubjectFirst:Premier contact`,
+      $localize`:contact.form.subject.second@@contactFormSubjectSecond:Demande de devis`,
+      $localize`:contact.form.subject.third@@contactFormSubjectThird:Urgent - Besoin rapide`,
     ],
   };
 
-  readonly locations: ContactLocation[] = [
-    {
-      title: $localize`:contact.location.paris.title@@contactLocationParisTitle:Paris`,
-      description: $localize`:contact.location.paris.desc@@contactLocationParisDesc:12 rue de la République, 75001 Paris`,
-      image:
-        'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
-      alt: $localize`:contact.location.paris.alt@@contactLocationParisAlt:Carte de Paris`,
-      actionLabel: $localize`:contact.location.paris.cta@@contactLocationParisCta:Voir l'itinéraire`,
-    },
-    {
-      title: $localize`:contact.location.remote.title@@contactLocationRemoteTitle:Travail à distance`,
-      description: $localize`:contact.location.remote.desc@@contactLocationRemoteDesc:Disponible pour des projets internationaux`,
-      image:
-        'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
-      alt: $localize`:contact.location.remote.alt@@contactLocationRemoteAlt:Illustration de travail à distance`,
-      actionLabel: $localize`:contact.location.remote.cta@@contactLocationRemoteCta:Voir mes options`,
-    },
-  ];
+  readonly contactSection = {
+    leadParagraphs: [
+      $localize`:home.contact.lead.1|Home contact lead paragraph@@homeContactLead1:Vous avez un besoin, une contrainte ou une idée à clarifier ?`,
+      $localize`:home.contact.lead.2|Home contact lead paragraph@@homeContactLead2:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
+    ],
+  };
 
-  readonly methods: ContactMethod[] = [
+  private readonly defaultContactFormState: ContactFormState = {
+    email: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    subject: "",
+    message: "",
+    role: "",
+    terms: false,
+  };
+
+  contactForm: ContactFormState = { ...this.defaultContactFormState };
+
+  contactFields: {
+    key: Extract<
+      keyof ContactFormState,
+      "firstName" | "lastName" | "email" | "phone"
+    >;
+    label: string;
+    type: "text" | "email" | "tel";
+    required: boolean;
+  }[] = [
     {
-      title: $localize`:contact.methods.email.title@@contactMethodsEmailTitle:Email`,
-      description: $localize`:contact.methods.email.desc@@contactMethodsEmailDesc:Contactez-moi directement`,
-      value: $localize`:contact.form.detail.email@@contactFormDetailEmail:hello@relume.io`,
-      link: 'mailto:hello@relume.io',
+      key: "firstName",
+      label: $localize`:contact.form.field.firstName@@contactFormFieldFirstName:Prénom`,
+      type: "text",
+      required: true,
     },
     {
-      title: $localize`:contact.methods.phone.title@@contactMethodsPhoneTitle:Téléphone`,
-      description: $localize`:contact.methods.phone.desc@@contactMethodsPhoneDesc:Disponible du lundi au vendredi`,
-      value: $localize`:contact.form.detail.phone@@contactFormDetailPhone:+33 6 12 34 56 78`,
-      link: 'tel:+33612345678',
+      key: "lastName",
+      label: $localize`:contact.form.field.lastName@@contactFormFieldLastName:Nom`,
+      type: "text",
+      required: true,
     },
     {
-      title: $localize`:contact.methods.office.title@@contactMethodsOfficeTitle:Bureau`,
-      description: $localize`:contact.methods.office.desc@@contactMethodsOfficeDesc:Paris, France`,
-      value: $localize`:contact.methods.office.action@@contactMethodsOfficeAction:Voir l'itinéraire`,
-      hasRouteAction: true,
+      key: "email",
+      label: $localize`:contact.form.field.email@@contactFormFieldEmail:Email`,
+      type: "email",
+      required: true,
+    },
+    {
+      key: "phone",
+      label: $localize`:contact.form.field.phone@@contactFormFieldPhone:Téléphone`,
+      type: "tel",
+      required: false,
     },
   ];
+  // contactFields: {
+  //   key: ContactFormKey;
+  //   label: string;
+  //   type: string;
+  //   required: boolean;
+  //   icon?: string;
+  // }[] = [
+  //   {
+  //     key: "firstName",
+  //     label: $localize`:contact.form.field.firstName|Contact form field label@@contactFormFieldFirstName:Prénom`,
+  //     type: "text",
+  //     required: true,
+  //   },
+  //   {
+  //     key: "lastName",
+  //     label: $localize`:contact.form.field.lastName|Contact form field label@@contactFormFieldLastName:Nom`,
+  //     type: "text",
+  //     required: true,
+  //   },
+  //   {
+  //     key: "email",
+  //     label: $localize`:contact.form.field.email|Contact form field label@@contactFormFieldEmail:Email`,
+  //     type: "email",
+  //     required: true,
+  //     icon: "email",
+  //   },
+  //   {
+  //     key: "phone",
+  //     label: $localize`:contact.form.field.phone|Contact form field label@@contactFormFieldPhone:Téléphone`,
+  //     type: "tel",
+  //     required: false,
+  //     icon: "phone",
+  //   },
+  //   {
+  //     key: "role",
+  //     label: $localize`:contact.form.field.role|Contact form field label@@contactFormFieldRole:Votre rôle`,
+  //     type: "select",
+  //     required: true,
+  //   },
+  //   {
+  //     key: "subject",
+  //     label: $localize`:contact.form.field.subject|Contact form field label@@contactFormFieldSubject:Sujet`,
+  //     type: "select",
+  //     required: true,
+  //   },
+  //   {
+  //     key: "message",
+  //     label: $localize`:contact.form.field.message|Contact form field label@@contactFormFieldMessage:Votre message`,
+  //     type: "textarea",
+  //     required: true,
+  //   },
+  // ];
+
+  handleContactSubmit(form: NgForm): void {
+    this.isContactSubmitted = true;
+    this.contactErrorMessage = undefined;
+    this.contactSuccessMessage = undefined;
+
+    if (!form.valid) {
+      this.contactErrorMessage = $localize`:contact.form.error.invalid@@contactFormErrorInvalid:Merci de vérifier les champs en rouge.`;
+      return;
+    }
+
+    this.isContactLoading = true;
+
+    this.contactService.contact(this.contactForm).subscribe({
+      next: () => {
+        this.isContactLoading = false;
+        this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
+
+        this.contactForm = { ...this.defaultContactFormState };
+        form.resetForm(this.contactForm);
+        this.isContactSubmitted = false;
+      },
+      error: (error: any) => {
+        this.isContactLoading = false;
+        this.contactErrorMessage =
+          error?.message ||
+          $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`;
+      },
+      complete: () => {
+        this.isContactLoading = false;
+      },
+    });
+
+    // TODO: brancher ton service HTTP ici
+    setTimeout(() => {
+      this.isContactLoading = false;
+      this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
+
+      this.contactForm = { ...this.defaultContactFormState };
+      form.resetForm(this.contactForm);
+      this.isContactSubmitted = false;
+    }, 1200);
+  }
 }

@@ -29,7 +29,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/** 
+/.angular/**
 .sass-cache/
 /connect.lock
 /coverage
@@ -47,3 +47,9 @@ Thumbs.db
 /todo.md
 architecture.md
 */**/*.jsx
+src/assets/figma/Asili Design Desktop/Les sites clients • Desktop.png
+src/assets/figma/Asili Design Desktop/Offre de service • Desktop.png
+src/assets/figma/Asili Design Desktop/Présentation en tant que développeur web • Desktop.png
+src/assets/figma/Asili Design Mobile/Les sites clients • Mobile.png
+src/assets/figma/Asili Design Mobile/Offre de service • Mobile.png
+src/assets/figma/Asili Design Mobile/Présentation en tant que développeur web • Mobile.png

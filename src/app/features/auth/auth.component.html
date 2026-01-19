@@ -27,8 +27,8 @@
             [attr.data-state]="isTabActive('log-in') ? 'active' : 'inactive'"
             [attr.tabindex]="isTabActive('log-in') ? 0 : -1" data-slot="tabs-trigger" class="
               inline-flex w-1/2 items-center justify-center
-              rounded-none               
-              border-x-0 border-t-0      
+              rounded-none
+              border-x-0 border-t-0
               border-b-2 border-b-transparent
               px-6 py-3
               text-center text-scheme-text
@@ -44,7 +44,8 @@
           class="focus-visible:outline-none data-[state=active]:animate-tabs"
           [attr.data-state]="isTabActive('sign-up') ? 'active' : 'inactive'" tabindex="0">
           <div class="mb-6 text-center md:mb-8">
-            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.signup.title|Signup panel heading@@authSignupTitle">Votre parcours</h1>
+            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
+              Votre parcours</h1>
             <p class="text-medium" i18n="auth.signup.lead|Signup panel description@@authSignupLead">
               Déverrouillez votre potentiel avec un compte personnalisé
             </p>
@@ -69,7 +70,7 @@
               </button>
               }
 
-              <label [for]="field.key" class="absolute left-3 tosp-2 px-1 
+              <label [for]="field.key" class="absolute left-3 tosp-2 px-1
              bg-white text-gray-600 text-sm font-medium
              pointer-events-none transition-all duration-200
              peer-placeholder-shown:top-2
@@ -77,21 +78,25 @@
              peer-placeholder-shown:text-gray-500
              peer-focus:-top-3
              peer-focus:text-sm
-             peer-focus:text-scheme-accent" [ngClass]="signupForm[field.key] 
-        ? '-top-3 text-xs text-scheme-accent' 
+             peer-focus:text-scheme-accent" [ngClass]="signupForm[field.key]
+        ? '-top-3 text-xs text-scheme-accent'
         : 'top-2 text-sm text-gray-500'"
                 [class.text-red-500]="control.invalid && (control.touched || isSignupSubmitted)">
                 {{ field.label }}
-                <span *ngIf="!field.required" i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
+                <span *ngIf="!field.required"
+                  i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
 
               </label>
               <p *ngIf="control.invalid && (control.touched || isSignupSubmitted)" class="mt-1 text-xs text-red-500">
                 @if (control.errors?.['required']) {
-                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est obligatoire.</span>
+                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est
+                  obligatoire.</span>
                 } @else if (control.errors?.['email']) {
-                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
+                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email
+                  valide.</span>
                 } @else if (control.errors?.['minlength'] && field.key === 'password') {
-                <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength">Le mot de passe doit contenir au moins 8 caractères.</span>
+                <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength">Le mot de passe
+                  doit contenir au moins 8 caractères.</span>
                 } @else {
                 <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
                 }
@@ -119,7 +124,8 @@
                 class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3  transition-all duration-200 ease-in-out"
                 title="Inscrivez-vous avec Google" i18n-title (click)="handleGoogleAuth('sign-up')">
                 <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
-                <p class="text-scheme-text" i18n="auth.signup.google|Signup with Google@@authSignupGoogle">Inscrivez-vous avec Google</p>
+                <p class="text-scheme-text" i18n="auth.signup.google|Signup with Google@@authSignupGoogle">
+                  Inscrivez-vous avec Google</p>
               </button>
             </div>
           </form>
@@ -129,7 +135,8 @@
           class="focus-visible:outline-none data-[state=active]:animate-tabs"
           [attr.data-state]="isTabActive('log-in') ? 'active' : 'inactive'" tabindex="0">
           <div class="mb-6 text-center md:mb-8">
-            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.login.title|Login panel heading@@authLoginTitle">Se connecter</h1>
+            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.login.title|Login panel heading@@authLoginTitle">Se
+              connecter</h1>
             <p class="text-medium" i18n="auth.login.lead|Login panel description@@authLoginLead">
               Votre espace de croissance commence
             </p>
@@ -144,7 +151,7 @@
                           focus:outline-none" #control="ngModel"
                 [class.border-red-500]="control.invalid && (control.touched || isLoginSubmitted)" />
 
-              <label [for]="field.key" class="absolute left-3 tosp-2 px-1 
+              <label [for]="field.key" class="absolute left-3 tosp-2 px-1
                          bg-white text-gray-600 text-sm font-medium
                          pointer-events-none transition-all duration-200
                          peer-placeholder-shown:top-2
@@ -152,18 +159,21 @@
                          peer-placeholder-shown:text-gray-500
                          peer-focus:-top-3
                          peer-focus:text-sm
-                         peer-focus:text-scheme-accent" [ngClass]="loginForm[field.key] 
-                    ? '-top-3 text-xs text-scheme-accent' 
+                         peer-focus:text-scheme-accent" [ngClass]="loginForm[field.key]
+                    ? '-top-3 text-xs text-scheme-accent'
                     : 'top-2 text-sm text-gray-500'"
                 [class.text-red-500]="control.invalid && (control.touched || isLoginSubmitted)">
                 {{ field.label }}
-                <span *ngIf="!field.required" i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
+                <span *ngIf="!field.required"
+                  i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
               </label>
               <p *ngIf="control.invalid && (control.touched || isLoginSubmitted)" class="mt-1 text-xs text-red-500">
                 @if (control.errors?.['required']) {
-                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est obligatoire.</span>
+                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est
+                  obligatoire.</span>
                 } @else if (control.errors?.['email']) {
-                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
+                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email
+                  valide.</span>
                 } @else {
                 <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
                 }
@@ -191,7 +201,8 @@
                 class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3 transition-all duration-200 ease-in-out"
                 title="Connectez-vous avec Google" i18n-title (click)="handleGoogleAuth('log-in')">
                 <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
-                <p class="text-scheme-text" i18n="auth.login.google|Login with Google@@authLoginGoogle">Connectez-vous avec Google</p>
+                <p class="text-scheme-text" i18n="auth.login.google|Login with Google@@authLoginGoogle">Connectez-vous
+                  avec Google</p>
               </button>
             </div>
           </form>
@@ -201,7 +212,7 @@
   </div>
 </section>
 
-<app-contact
+<app-cta-contact
   subtitle="Nous sommes là pour vous aider à résoudre rapidement tous vos problèmes de connexion ou de compte."
   i18n-subtitle="auth.contact.subtitle|Support invite under auth forms@@authContactSubtitle">
-</app-contact>
+</app-cta-contact>

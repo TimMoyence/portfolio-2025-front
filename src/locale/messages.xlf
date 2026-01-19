@@ -6,7 +6,7 @@
         <source>Accueil — Tim Moyence Portfolio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">SEO title for home</note>
         <note priority="1" from="meaning">route.home.seo.title</note>
@@ -15,7 +15,7 @@
         <source>Explore my professional services.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <note priority="1" from="description">SEO description for home</note>
         <note priority="1" from="meaning">route.home.seo.description</note>
@@ -24,7 +24,7 @@
         <source>Login — Pour acceder à votre compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <note priority="1" from="description">SEO title for login</note>
         <note priority="1" from="meaning">route.login.seo.title</note>
@@ -33,7 +33,7 @@
         <source>You can&apos;t access this page without logging in.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <note priority="1" from="description">SEO description for login</note>
         <note priority="1" from="meaning">route.login.seo.description</note>
@@ -42,7 +42,7 @@
         <source>Register — Pour acceder à votre compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <note priority="1" from="description">SEO title for register</note>
         <note priority="1" from="meaning">route.register.seo.title</note>
@@ -51,10 +51,100 @@
         <source>You can&apos;t access this page without registering.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <note priority="1" from="description">SEO description for register</note>
         <note priority="1" from="meaning">route.register.seo.description</note>
+      </trans-unit>
+      <trans-unit id="routePresentationSeoTitle" datatype="html">
+        <source>Présentation — Tim Moyence Portfolio</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for presentation</note>
+        <note priority="1" from="meaning">route.presentation.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routePresentationSeoDescription" datatype="html">
+        <source>Découvrez mon parcours et mes compétences en développement web.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for presentation</note>
+        <note priority="1" from="meaning">route.presentation.seo.description</note>
+      </trans-unit>
+      <trans-unit id="routeOfferSeoTitle" datatype="html">
+        <source>Offres — Services professionnels web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for offer</note>
+        <note priority="1" from="meaning">route.offer.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routeOfferSeoDescription" datatype="html">
+        <source>Solutions numériques sur mesure et plans tarifaires.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for offer</note>
+        <note priority="1" from="meaning">route.offer.seo.description</note>
+      </trans-unit>
+      <trans-unit id="routeContactSeoTitle" datatype="html">
+        <source>Contact — Échanges et devis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for contact</note>
+        <note priority="1" from="meaning">route.contact.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routeContactSeoDescription" datatype="html">
+        <source>Prenez contact pour discuter de vos projets numériques.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for contact</note>
+        <note priority="1" from="meaning">route.contact.seo.description</note>
+      </trans-unit>
+      <trans-unit id="routeClientProjectSeoTitle" datatype="html">
+        <source>Projets clients — Réalisations web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for client projects</note>
+        <note priority="1" from="meaning">route.clientProject.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routeClientProjectSeoDescription" datatype="html">
+        <source>Découvrez une sélection de projets clients réalisés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for client projects</note>
+        <note priority="1" from="meaning">route.clientProject.seo.description</note>
+      </trans-unit>
+      <trans-unit id="routeNotFoundSeoTitle" datatype="html">
+        <source>Page introuvable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">SEO title for 404</note>
+        <note priority="1" from="meaning">route.notFound.seo.title</note>
+      </trans-unit>
+      <trans-unit id="routeNotFoundSeoDescription" datatype="html">
+        <source>La page demandée est introuvable.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">SEO description for 404</note>
+        <note priority="1" from="meaning">route.notFound.seo.description</note>
       </trans-unit>
       <trans-unit id="authTabSignup" datatype="html">
         <source>S&apos;inscrire</source>
@@ -379,8 +469,711 @@
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
       </trans-unit>
+      <trans-unit id="clientProjectShowcaseHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ hero.title }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudyTitle" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ study.title }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ featureBlock.title }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.html</context>
+          <context context-type="linenumber">54,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureSubheading" datatype="html">
+        <source> Approche créative </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.html</context>
+          <context context-type="linenumber">65,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientProjectHighlightHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ clientHighlight.title }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.html</context>
+          <context context-type="linenumber">100,102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientProjectHeroLabel" datatype="html">
+        <source>Clients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.hero.label</note>
+      </trans-unit>
+      <trans-unit id="clientProjectHeroTitle" datatype="html">
+        <source>Mes projets web réalisés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.hero.title</note>
+      </trans-unit>
+      <trans-unit id="clientProjectHeroDescription" datatype="html">
+        <source>Découvrez l&apos;histoire derrière chaque site web, fruit d&apos;une collaboration unique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.hero.description</note>
+      </trans-unit>
+      <trans-unit id="clientProjectHeroActionView" datatype="html">
+        <source>Voir les projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.hero.action.view</note>
+      </trans-unit>
+      <trans-unit id="clientProjectHeroActionContact" datatype="html">
+        <source>Contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.hero.action.contact</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesTag" datatype="html">
+        <source>Projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.tag</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesTitle1" datatype="html">
+        <source>Sites web développés avec passion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.title1</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesDescription1" datatype="html">
+        <source>Chaque projet raconte une histoire différente. Des solutions numériques sur mesure.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.description1</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesImage1Alt" datatype="html">
+        <source>Illustration de projet web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.image1.alt</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesActionDetails" datatype="html">
+        <source>Détails</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.action.details</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesActionLink" datatype="html">
+        <source>Lien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.action.link</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesTitle2" datatype="html">
+        <source>Créations numériques sur mesure</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.title2</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesDescription2" datatype="html">
+        <source>Des expériences fluides et intuitives pensées pour chaque utilisateur.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.description2</note>
+      </trans-unit>
+      <trans-unit id="clientProjectCaseStudiesImage2Alt" datatype="html">
+        <source>Illustration de création numérique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.caseStudies.image2.alt</note>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureLabel" datatype="html">
+        <source>Projet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.feature.label</note>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureTitle" datatype="html">
+        <source>Site Vincent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.feature.title</note>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureDescription" datatype="html">
+        <source>Solution web personnalisée développée pour répondre à l&apos;identité unique de Vincent.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.feature.description</note>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureImageAlt" datatype="html">
+        <source>Maquette du site Vincent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.feature.image.alt</note>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureActionDiscover" datatype="html">
+        <source>Découvrir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.feature.action.discover</note>
+      </trans-unit>
+      <trans-unit id="clientProjectFeatureActionExplore" datatype="html">
+        <source>Explorer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.feature.action.explore</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightLabel" datatype="html">
+        <source>Client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.label</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightTitle" datatype="html">
+        <source>Projet Louisons</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.title</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightDescription" datatype="html">
+        <source>Un site web sur mesure conçu pour répondre aux besoins spécifiques de Louisons.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.description</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightLogoWebflow1" datatype="html">
+        <source>Logo Webflow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.logo.webflow1</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightLogoRelume1" datatype="html">
+        <source>Logo Relume</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.logo.relume1</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightLogoWebflow2" datatype="html">
+        <source>Deuxième logo Webflow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.logo.webflow2</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightLogoRelume2" datatype="html">
+        <source>Deuxième logo Relume</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.logo.relume2</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightActionVisit" datatype="html">
+        <source>Visiter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.action.visit</note>
+      </trans-unit>
+      <trans-unit id="clientProjectClientHighlightActionWebsite" datatype="html">
+        <source>Site web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">clientProject.clientHighlight.action.website</note>
+      </trans-unit>
+      <trans-unit id="contactFormHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ contactInfo.heading }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormFirstName" datatype="html">
+        <source>Prénom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormLastName" datatype="html">
+        <source>Nom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormEmail" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">37,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormPhone" datatype="html">
+        <source>Numéro de téléphone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormSubject" datatype="html">
+        <source>Objet de votre message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormSubjectPlaceholder" datatype="html">
+        <source>Sélectionnez un sujet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormRole" datatype="html">
+        <source>Qui êtes-vous?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormMessage" datatype="html">
+        <source>Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">67,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormMessagePlaceholder" datatype="html">
+        <source>Écrivez votre message ici</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormTerms" datatype="html">
+        <source>J&apos;accepte les conditions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">73,75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFormSubmit" datatype="html">
+        <source> Envoyer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">79,81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactLocationLabel" datatype="html">
+        <source>Localisation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">89,90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactLocationHeading" datatype="html">
+        <source> Où me trouver </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">91,93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactLocationSubheading" datatype="html">
+        <source>Découvrez mes emplacements de travail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">93,95</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactMethodsLabel" datatype="html">
+        <source>Coordonnées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">120,121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactMethodsHeading" datatype="html">
+        <source> Comment me joindre </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">122,124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactMethodsSubheading" datatype="html">
+        <source> Restons en contact pour vos projets numériques </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">125,129</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactMethodsOfficeCta" datatype="html">
+        <source> Voir l&apos;itinéraire </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">149,151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactIllustrationAlt" datatype="html">
+        <source>Contact illustration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactHeroLabel" datatype="html">
+        <source>Connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">contact.hero.label</note>
+      </trans-unit>
+      <trans-unit id="contactHeroTitle" datatype="html">
+        <source>Contactez Tim de Asili Design</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">contact.hero.title</note>
+      </trans-unit>
+      <trans-unit id="contactHeroDescription" datatype="html">
+        <source>Développeur web passionné et ancien manager, prêt à transformer vos idées numériques en réalité concrète.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">contact.hero.description</note>
+      </trans-unit>
+      <trans-unit id="contactHeroActionSend" datatype="html">
+        <source>Envoyer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">contact.hero.action.send</note>
+      </trans-unit>
+      <trans-unit id="contactHeroActionCancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">contact.hero.action.cancel</note>
+      </trans-unit>
+      <trans-unit id="contactFormLabel" datatype="html">
+        <source>Contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.label</note>
+      </trans-unit>
+      <trans-unit id="contactFormDescription" datatype="html">
+        <source>Partagez vos idées, je suis à l&apos;écoute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.description</note>
+      </trans-unit>
+      <trans-unit id="contactFormDetailEmail" datatype="html">
+        <source>hello@relume.io</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.detail.email</note>
+      </trans-unit>
+      <trans-unit id="contactFormDetailPhone" datatype="html">
+        <source>+33 6 12 34 56 78</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.detail.phone</note>
+      </trans-unit>
+      <trans-unit id="contactFormDetailCity" datatype="html">
+        <source>Paris, France</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.detail.city</note>
+      </trans-unit>
+      <trans-unit id="contactFormRoleDeveloper" datatype="html">
+        <source>Développeur web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.role.developer</note>
+      </trans-unit>
+      <trans-unit id="contactFormRoleManager" datatype="html">
+        <source>Manager</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.role.manager</note>
+      </trans-unit>
+      <trans-unit id="contactFormRoleEntrepreneur" datatype="html">
+        <source>Entrepreneur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.role.entrepreneur</note>
+      </trans-unit>
+      <trans-unit id="contactFormRoleStudent" datatype="html">
+        <source>Étudiant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.role.student</note>
+      </trans-unit>
+      <trans-unit id="contactFormRoleFreelance" datatype="html">
+        <source>Freelance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.role.freelance</note>
+      </trans-unit>
+      <trans-unit id="contactFormRoleOther" datatype="html">
+        <source>Autre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.role.other</note>
+      </trans-unit>
+      <trans-unit id="contactFormSubjectFirst" datatype="html">
+        <source>Premier choix</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.subject.first</note>
+      </trans-unit>
+      <trans-unit id="contactFormSubjectSecond" datatype="html">
+        <source>Second choix</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.subject.second</note>
+      </trans-unit>
+      <trans-unit id="contactFormSubjectThird" datatype="html">
+        <source>Troisième choix</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">contact.form.subject.third</note>
+      </trans-unit>
+      <trans-unit id="contactLocationParisTitle" datatype="html">
+        <source>Paris</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.paris.title</note>
+      </trans-unit>
+      <trans-unit id="contactLocationParisDesc" datatype="html">
+        <source>12 rue de la République, 75001 Paris</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.paris.desc</note>
+      </trans-unit>
+      <trans-unit id="contactLocationParisAlt" datatype="html">
+        <source>Carte de Paris</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.paris.alt</note>
+      </trans-unit>
+      <trans-unit id="contactLocationParisCta" datatype="html">
+        <source>Voir l&apos;itinéraire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.paris.cta</note>
+      </trans-unit>
+      <trans-unit id="contactLocationRemoteTitle" datatype="html">
+        <source>Travail à distance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.remote.title</note>
+      </trans-unit>
+      <trans-unit id="contactLocationRemoteDesc" datatype="html">
+        <source>Disponible pour des projets internationaux</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.remote.desc</note>
+      </trans-unit>
+      <trans-unit id="contactLocationRemoteAlt" datatype="html">
+        <source>Illustration de travail à distance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.remote.alt</note>
+      </trans-unit>
+      <trans-unit id="contactLocationRemoteCta" datatype="html">
+        <source>Voir mes options</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+        <note priority="1" from="description">contact.location.remote.cta</note>
+      </trans-unit>
+      <trans-unit id="contactMethodsEmailTitle" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">contact.methods.email.title</note>
+      </trans-unit>
+      <trans-unit id="contactMethodsEmailDesc" datatype="html">
+        <source>Contactez-moi directement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">contact.methods.email.desc</note>
+      </trans-unit>
+      <trans-unit id="contactMethodsPhoneTitle" datatype="html">
+        <source>Téléphone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">contact.methods.phone.title</note>
+      </trans-unit>
+      <trans-unit id="contactMethodsPhoneDesc" datatype="html">
+        <source>Disponible du lundi au vendredi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">contact.methods.phone.desc</note>
+      </trans-unit>
+      <trans-unit id="contactMethodsOfficeTitle" datatype="html">
+        <source>Bureau</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">contact.methods.office.title</note>
+      </trans-unit>
+      <trans-unit id="contactMethodsOfficeDesc" datatype="html">
+        <source>Paris, France</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">contact.methods.office.desc</note>
+      </trans-unit>
+      <trans-unit id="contactMethodsOfficeAction" datatype="html">
+        <source>Voir l&apos;itinéraire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">contact.methods.office.action</note>
+      </trans-unit>
       <trans-unit id="ctaTitle" datatype="html">
-        <source> Commençons votre projet digital </source>
+        <source> Parlons de votre situation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
           <context context-type="linenumber">21,23</context>
@@ -389,37 +1182,28 @@
         <note priority="1" from="meaning">cta.title</note>
       </trans-unit>
       <trans-unit id="ctaLead" datatype="html">
-        <source> Ensemble, transformons vos idées en solutions numériques performantes et innovantes. </source>
+        <source> Un premier échange, sans engagement, pour comprendre votre contexte et vos priorités. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
-          <context context-type="linenumber">27,29</context>
+          <context context-type="linenumber">24,26</context>
         </context-group>
         <note priority="1" from="description">CTA description</note>
         <note priority="1" from="meaning">cta.lead</note>
       </trans-unit>
       <trans-unit id="ctaPrimary" datatype="html">
-        <source> Démarrer </source>
+        <source> Echanger sur votre contexte </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
-          <context context-type="linenumber">37,40</context>
+          <context context-type="linenumber">41,44</context>
         </context-group>
         <note priority="1" from="description">CTA primary button</note>
         <note priority="1" from="meaning">cta.cta.start</note>
       </trans-unit>
-      <trans-unit id="ctaSecondary" datatype="html">
-        <source> Contactez-moi </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
-          <context context-type="linenumber">44,47</context>
-        </context-group>
-        <note priority="1" from="description">CTA secondary button</note>
-        <note priority="1" from="meaning">cta.cta.contact</note>
-      </trans-unit>
       <trans-unit id="ctaImageAlt" datatype="html">
-        <source>Relume placeholder image</source>
+        <source> image of me smiling ready to discuss your project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
-          <context context-type="linenumber">52,53</context>
+          <context context-type="linenumber">49,50</context>
         </context-group>
         <note priority="1" from="description">CTA illustration alt text</note>
         <note priority="1" from="meaning">cta.image.alt</note>
@@ -427,57 +1211,61 @@
       <trans-unit id="heroKicker" datatype="html">
         <source> Innovation </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
           <context context-type="linenumber">19,22</context>
         </context-group>
         <note priority="1" from="description">Hero small label</note>
         <note priority="1" from="meaning">hero.kicker</note>
       </trans-unit>
       <trans-unit id="heroTitle" datatype="html">
-        <source> Bienvenue chez Asili Design </source>
+        <source> Des solutions digitales claires, pensées pour votre réalité métier </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
+          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
           <context context-type="linenumber">25,27</context>
         </context-group>
         <note priority="1" from="description">Hero heading</note>
         <note priority="1" from="meaning">hero.title</note>
       </trans-unit>
       <trans-unit id="heroLead" datatype="html">
-        <source> Je suis Tim, un professionnel qui transforme les défis numériques en opportunités. Mon parcours unique mêle développement web, management et enseignement. </source>
+        <source> J’accompagne entreprises et indépendants dans la clarification, la structuration et l’évolution de leurs outils digitaux, avec une approche sobre, progressive et adaptée aux usages réels. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
-          <context context-type="linenumber">31,34</context>
+          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
+          <context context-type="linenumber">32,35</context>
         </context-group>
         <note priority="1" from="description">Hero description</note>
         <note priority="1" from="meaning">hero.lead</note>
       </trans-unit>
       <trans-unit id="heroCtaAbout" datatype="html">
-        <source> En savoir plus </source>
+        <source> Découvrir l’approche </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
-          <context context-type="linenumber">43,45</context>
+          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
+          <context context-type="linenumber">44,46</context>
         </context-group>
         <note priority="1" from="description">Hero about CTA</note>
         <note priority="1" from="meaning">hero.cta.about</note>
       </trans-unit>
-      <trans-unit id="heroCtaProjects" datatype="html">
-        <source> Projets <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon
+      <trans-unit id="heroCtaContact" datatype="html">
+        <source> Échanger sur votre contexte <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon
                     name=&quot;chevron-right&quot;
                     [size]=&quot;1.2&quot;
                     aria-hidden=&quot;true&quot;
                   &gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
-          <context context-type="linenumber">50,57</context>
+          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
+          <context context-type="linenumber">52,59</context>
         </context-group>
-        <note priority="1" from="description">Hero projects CTA</note>
-        <note priority="1" from="meaning">hero.cta.projects</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">65,72</context>
+        </context-group>
+        <note priority="1" from="description">Hero contact CTA</note>
+        <note priority="1" from="meaning">hero.cta.contact</note>
       </trans-unit>
       <trans-unit id="heroImageAlt" datatype="html">
         <source>Portrait de Tim, développeur web chez Asili Design</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
-          <context context-type="linenumber">64,65</context>
+          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
+          <context context-type="linenumber">66,67</context>
         </context-group>
         <note priority="1" from="description">Hero portrait alt text</note>
         <note priority="1" from="meaning">hero.imageAlt</note>
@@ -486,7 +1274,7 @@
         <source>Relume placeholder image</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">22,23</context>
+          <context context-type="linenumber">22,24</context>
         </context-group>
         <note priority="1" from="description">Mission illustration alt</note>
         <note priority="1" from="meaning">mission.imageAlt</note>
@@ -495,135 +1283,37 @@
         <source> Mission </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">33,36</context>
+          <context context-type="linenumber">34,37</context>
         </context-group>
         <note priority="1" from="description">Section label</note>
         <note priority="1" from="meaning">mission.kicker</note>
       </trans-unit>
       <trans-unit id="missionTitle" datatype="html">
-        <source> PresQ la marque qui transforme l&apos;échec en opportunité </source>
+        <source> Pourquoi Asili ? Pourquoi cette approche ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">40,43</context>
+          <context context-type="linenumber">41,44</context>
         </context-group>
         <note priority="1" from="description">Section heading</note>
         <note priority="1" from="meaning">mission.title</note>
       </trans-unit>
       <trans-unit id="missionLead" datatype="html">
-        <source> Une approche innovante qui démystifie l&apos;échec et le transforme en source de croissance personnelle. Nous créons des expériences qui encouragent la résilience et l&apos;apprentissage à travers l&apos;humour et la bienveillance. </source>
+        <source> Le digital et l’intelligence artificielle sont des leviers puissants, mais mal utilisés, ils créent souvent plus de complexité que de valeur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">46,50</context>
+          <context context-type="linenumber">47,50</context>
         </context-group>
         <note priority="1" from="description">Section description</note>
         <note priority="1" from="meaning">mission.lead</note>
       </trans-unit>
-      <trans-unit id="missionCtaMore" datatype="html">
-        <source> En savoir PresQ plus.. </source>
+      <trans-unit id="missionLead2" datatype="html">
+        <source> Mon rôle est d’aider à clarifier les besoins, à structurer les usageset à mettre en place des solutions compréhensibles, adaptées à la réalité terrain et pensées pour durer. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">57,60</context>
-        </context-group>
-        <note priority="1" from="description">Learn more CTA</note>
-        <note priority="1" from="meaning">mission.cta.more</note>
-      </trans-unit>
-      <trans-unit id="missionCtaVote" datatype="html">
-        <source> Voter son PresQ modèle <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon
-                  aria-hidden=&quot;true&quot;
-                  name=&quot;chevron-right&quot;
-                  [size]=&quot;1.2&quot;
-                &gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">64,71</context>
-        </context-group>
-        <note priority="1" from="description">Vote CTA</note>
-        <note priority="1" from="meaning">mission.cta.vote</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseKicker" datatype="html">
-        <source> Sebastian </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">23,26</context>
-        </context-group>
-        <note priority="1" from="description">Section label</note>
-        <note priority="1" from="meaning">productShowcase.kicker</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseTitle" datatype="html">
-        <source> Votre assistant personnel de suivi de consommation </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">30,33</context>
-        </context-group>
-        <note priority="1" from="description">Section heading</note>
-        <note priority="1" from="meaning">productShowcase.title</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseLead" datatype="html">
-        <source> Une application conçue pour vous aider à comprendre et gérer vos habitudes de consommation avec des statistiques précises et des conseils personnalisés. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">36,40</context>
+          <context context-type="linenumber">55,59</context>
         </context-group>
         <note priority="1" from="description">Section description</note>
-        <note priority="1" from="meaning">productShowcase.lead</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseCtaTest" datatype="html">
-        <source> Tester ma consommation </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">53,57</context>
-        </context-group>
-        <note priority="1" from="description">CTA label to test consumption</note>
-        <note priority="1" from="meaning">productShowcase.cta.test</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseCtaLearnMore" datatype="html">
-        <source> En savoir plus <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon
-                  name=&quot;chevron-right&quot;
-                  [size]=&quot;1.2&quot;
-                  aria-hidden=&quot;true&quot;
-                &gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">60,67</context>
-        </context-group>
-        <note priority="1" from="description">CTA label learn more</note>
-        <note priority="1" from="meaning">productShowcase.cta.learnMore</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseImageAlt" datatype="html">
-        <source>Relume placeholder image</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">73,74</context>
-        </context-group>
-        <note priority="1" from="description">Product illustration alt</note>
-        <note priority="1" from="meaning">productShowcase.imageAlt</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseFeatureCoffee" datatype="html">
-        <source>Suivi de café</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">93</context>
-        </context-group>
-        <note priority="1" from="description">Feature bullet</note>
-        <note priority="1" from="meaning">productShowcase.feature.coffee</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseFeatureAlcohol" datatype="html">
-        <source>Analyse d&apos;alcool</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">94</context>
-        </context-group>
-        <note priority="1" from="description">Feature bullet</note>
-        <note priority="1" from="meaning">productShowcase.feature.alcohol</note>
-      </trans-unit>
-      <trans-unit id="productShowcaseFeatureGoals" datatype="html">
-        <source>Objectifs personnalisés</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-        <note priority="1" from="description">Feature bullet</note>
-        <note priority="1" from="meaning">productShowcase.feature.goals</note>
+        <note priority="1" from="meaning">mission.lead</note>
       </trans-unit>
       <trans-unit id="projectsKicker" datatype="html">
         <source> Projets </source>
@@ -644,52 +1334,52 @@
         <note priority="1" from="meaning">projects.title</note>
       </trans-unit>
       <trans-unit id="projectsLead" datatype="html">
-        <source> Chaque projet raconte une histoire unique de transformation digitale. Découvrez comment j&apos;ai relevé des défis techniques et créatifs avec passion et précision. </source>
+        <source> Quelques projets représentatifs de mon approche et de ma manière de travailler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">48,51</context>
+          <context context-type="linenumber">48,52</context>
         </context-group>
         <note priority="1" from="description">Section description</note>
         <note priority="1" from="meaning">projects.lead</note>
       </trans-unit>
-      <trans-unit id="projectsItemWebLabel" datatype="html">
-        <source>Site web</source>
+      <trans-unit id="projectsItemAutomationLabel" datatype="html">
+        <source>Automatisation de validation de diplômes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">Project label</note>
-        <note priority="1" from="meaning">projects.item.web.label</note>
+        <note priority="1" from="meaning">projects.item.automation.label</note>
       </trans-unit>
-      <trans-unit id="projectsItemWebTitle" datatype="html">
-        <source>Enquête interactive</source>
+      <trans-unit id="projectsItemAutomationTitle" datatype="html">
+        <source>Automatisation de validation de parcours de formation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">128</context>
         </context-group>
         <note priority="1" from="description">Project title</note>
-        <note priority="1" from="meaning">projects.item.web.title</note>
+        <note priority="1" from="meaning">projects.item.automation.title</note>
       </trans-unit>
-      <trans-unit id="projectsItemWebDesc" datatype="html">
-        <source>Un jeu narratif immersif qui combine storytelling et mécaniques de résolution d&apos;énigmes pour une expérience unique.</source>
+      <trans-unit id="projectsItemAutomationDesc" datatype="html">
+        <source>Mise en place d’un processus automatisé pour la génération et l’envoi de communications de validation de diplômes sur une plateforme e-learning.L’objectif était de fiabiliser les échanges, réduire les interventions manuelles et garantir une communication cohérente à grande échelle.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">projects.item.web.desc</note>
+        <note priority="1" from="meaning">projects.item.automation.desc</note>
       </trans-unit>
-      <trans-unit id="projectsItemWebImageAlt" datatype="html">
-        <source>Relume placeholder image 1</source>
+      <trans-unit id="projectsItemAutomationImageAlt" datatype="html">
+        <source>automation image presentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">Project image alt</note>
-        <note priority="1" from="meaning">projects.item.web.imageAlt</note>
+        <note priority="1" from="meaning">projects.item.automation.imageAlt</note>
       </trans-unit>
       <trans-unit id="projectsItemMobileLabel" datatype="html">
-        <source>Application mobile</source>
+        <source>Assistant de guide de musée (POC)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">137</context>
@@ -698,7 +1388,7 @@
         <note priority="1" from="meaning">projects.item.mobile.label</note>
       </trans-unit>
       <trans-unit id="projectsItemMobileTitle" datatype="html">
-        <source>Expérience mobile complète</source>
+        <source>Prototype d’assistant numérique pour médiation culturelle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">138</context>
@@ -707,7 +1397,7 @@
         <note priority="1" from="meaning">projects.item.mobile.title</note>
       </trans-unit>
       <trans-unit id="projectsItemMobileDesc" datatype="html">
-        <source>Une plateforme appliquée qui accompagne les utilisateurs dans leur quotidien grâce à une interface intuitive et performante.</source>
+        <source>Conception d’un prototype d’assistant destiné à accompagner les guides de musée dans leur médiation, en apportant un soutien contextuel et interactif. Le projet visait à explorer l’usage de l’intelligence artificielle comme outil d’aide, sans remplacer l’expertise humaine.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">139</context>
@@ -716,7 +1406,7 @@
         <note priority="1" from="meaning">projects.item.mobile.desc</note>
       </trans-unit>
       <trans-unit id="projectsItemMobileImageAlt" datatype="html">
-        <source>Relume placeholder image 2</source>
+        <source>Image du prototype d’assistant numérique pour médiation culturelle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">140</context>
@@ -725,7 +1415,7 @@
         <note priority="1" from="meaning">projects.item.mobile.imageAlt</note>
       </trans-unit>
       <trans-unit id="projectsItemAppLabel" datatype="html">
-        <source>Application web</source>
+        <source>Plateforme de réservation de vélos (Atlantic Bike)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">147</context>
@@ -734,7 +1424,7 @@
         <note priority="1" from="meaning">projects.item.app.label</note>
       </trans-unit>
       <trans-unit id="projectsItemAppTitle" datatype="html">
-        <source>Pilotage data</source>
+        <source>Plateforme de réservation et de gestion pour location de vélos</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">148</context>
@@ -743,7 +1433,7 @@
         <note priority="1" from="meaning">projects.item.app.title</note>
       </trans-unit>
       <trans-unit id="projectsItemAppDesc" datatype="html">
-        <source>Un tableau de bord conçu pour visualiser les données clés et faciliter la prise de décision en temps réel.</source>
+        <source>Conception d’un site de réservation destiné à une activité de location de vélos, avec une attention particulière portée à la simplicité d’usage et à la gestion opérationnelle. L’objectif était de faciliter les réservations tout en structurant les flux internes de l’activité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">149</context>
@@ -752,7 +1442,7 @@
         <note priority="1" from="meaning">projects.item.app.desc</note>
       </trans-unit>
       <trans-unit id="projectsItemAppImageAlt" datatype="html">
-        <source>Relume placeholder image 3</source>
+        <source>Image du site Atlantic Bike présentant une bicyclette le long de la côte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">150</context>
@@ -760,209 +1450,1105 @@
         <note priority="1" from="description">Project image alt</note>
         <note priority="1" from="meaning">projects.item.app.imageAlt</note>
       </trans-unit>
-      <trans-unit id="projectsItemGameLabel" datatype="html">
-        <source>Jeu narratif</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">157</context>
-        </context-group>
-        <note priority="1" from="description">Project label</note>
-        <note priority="1" from="meaning">projects.item.game.label</note>
-      </trans-unit>
-      <trans-unit id="projectsItemGameTitle" datatype="html">
-        <source>Univers interactif</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">158</context>
-        </context-group>
-        <note priority="1" from="description">Project title</note>
-        <note priority="1" from="meaning">projects.item.game.title</note>
-      </trans-unit>
-      <trans-unit id="projectsItemGameDesc" datatype="html">
-        <source>Une expérience immersive qui marie narration, design sonore et interactions pour captiver vos audiences.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">159</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">projects.item.game.desc</note>
-      </trans-unit>
-      <trans-unit id="projectsItemGameImageAlt" datatype="html">
-        <source>Relume placeholder image 4</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">160</context>
-        </context-group>
-        <note priority="1" from="description">Project image alt</note>
-        <note priority="1" from="meaning">projects.item.game.imageAlt</note>
-      </trans-unit>
       <trans-unit id="servicesKicker" datatype="html">
-        <source> Services </source>
+        <source>Approche</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">26,29</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <note priority="1" from="description">Section label</note>
         <note priority="1" from="meaning">services.kicker</note>
       </trans-unit>
       <trans-unit id="servicesTitle" datatype="html">
-        <source> Solutions numériques sur mesure </source>
+        <source>Une approche simple, progressive et adaptée</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">32,35</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <note priority="1" from="description">Section heading</note>
         <note priority="1" from="meaning">services.title</note>
       </trans-unit>
-      <trans-unit id="servicesLead" datatype="html">
-        <source> Je propose des services complets adaptés à vos besoins spécifiques, avec une approche personnalisée et professionnelle. </source>
+      <trans-unit id="servicesLead1" datatype="html">
+        <source>Chaque projet commence par une phase de compréhension.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">40,43</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <note priority="1" from="description">Section description</note>
-        <note priority="1" from="meaning">services.lead</note>
+        <note priority="1" from="meaning">services.lead.1</note>
       </trans-unit>
-      <trans-unit id="servicesCtaPricing" datatype="html">
-        <source> Tarifs </source>
+      <trans-unit id="servicesLead2" datatype="html">
+        <source>L’objectif est de faire les bons choix, au bon moment, sans complexifier inutilement.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">70,73</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">35</context>
         </context-group>
-        <note priority="1" from="description">Pricing link</note>
-        <note priority="1" from="meaning">services.cta.pricing</note>
-      </trans-unit>
-      <trans-unit id="servicesCtaContact" datatype="html">
-        <source> Contactez-moi </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">77,81</context>
-        </context-group>
-        <note priority="1" from="description">Contact link</note>
-        <note priority="1" from="meaning">services.cta.contact</note>
+        <note priority="1" from="description">Section description</note>
+        <note priority="1" from="meaning">services.lead.2</note>
       </trans-unit>
       <trans-unit id="servicesItemWebTitle" datatype="html">
-        <source>Création de site web</source>
+        <source>Clarifier</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <note priority="1" from="description">Service title</note>
         <note priority="1" from="meaning">services.item.web.title</note>
       </trans-unit>
       <trans-unit id="servicesItemWebDesc" datatype="html">
-        <source>Stratégies avancées pour améliorer la visibilité de votre site et attirer plus de clients potentiels.</source>
+        <source>Comprendre le contexte, identifier les priorités et poser un cadre avant toute décision technique.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <note priority="1" from="description">Service description</note>
         <note priority="1" from="meaning">services.item.web.desc</note>
       </trans-unit>
       <trans-unit id="servicesItemWebIconAlt" datatype="html">
-        <source>Relume logo 1</source>
+        <source>Icon for clarification</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Service icon alt</note>
         <note priority="1" from="meaning">services.item.web.iconAlt</note>
       </trans-unit>
-      <trans-unit id="servicesItemMaintenanceTitle" datatype="html">
-        <source>Maintenance de site web</source>
+      <trans-unit id="servicesItemConstructionTitle" datatype="html">
+        <source>Construire</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">Service title</note>
-        <note priority="1" from="meaning">services.item.maintenance.title</note>
+        <note priority="1" from="meaning">services.item.construction.title</note>
       </trans-unit>
-      <trans-unit id="servicesItemMaintenanceDesc" datatype="html">
-        <source>Accompagnement personnalisé pour développer vos compétences numériques et atteindre vos objectifs professionnels.</source>
+      <trans-unit id="servicesItemConstructionDesc" datatype="html">
+        <source>Mettre en place des solutions sobres et utiles, pensées pour s’intégrer naturellement dans l’existant.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">Service description</note>
-        <note priority="1" from="meaning">services.item.maintenance.desc</note>
+        <note priority="1" from="meaning">services.item.construction.desc</note>
       </trans-unit>
-      <trans-unit id="servicesItemMaintenanceIconAlt" datatype="html">
-        <source>Relume logo 1</source>
+      <trans-unit id="servicesItemConstructionIconAlt" datatype="html">
+        <source>Icon for building</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Service icon alt</note>
-        <note priority="1" from="meaning">services.item.maintenance.iconAlt</note>
+        <note priority="1" from="meaning">services.item.construction.iconAlt</note>
       </trans-unit>
-      <trans-unit id="servicesItemSeoTitle" datatype="html">
-        <source>Référencement SEO</source>
+      <trans-unit id="servicesItemEvolutionAndMaintenanceTitle" datatype="html">
+        <source>Faire évoluer</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">Service title</note>
-        <note priority="1" from="meaning">services.item.seo.title</note>
+        <note priority="1" from="meaning">services.item.evolution.maintenance.title</note>
       </trans-unit>
-      <trans-unit id="servicesItemSeoDesc" datatype="html">
-        <source>Solutions expertes pour votre transformation digitale et votre visibilité en ligne.</source>
+      <trans-unit id="servicesItemEvolutionAndMaintenanceDesc" datatype="html">
+        <source>Accompagner les outils dans le temps pour qu’ils restent pertinents, sans complexité inutile.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Service description</note>
-        <note priority="1" from="meaning">services.item.seo.desc</note>
+        <note priority="1" from="meaning">services.item.evolution.maintenance.desc</note>
       </trans-unit>
-      <trans-unit id="servicesItemSeoIconAlt" datatype="html">
-        <source>Relume logo 1</source>
+      <trans-unit id="servicesItemEvolutionAndMaintenanceIconAlt" datatype="html">
+        <source>Evolution logo icon</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="description">Service icon alt</note>
+        <note priority="1" from="meaning">services.item.evolution.maintenance.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="servicesCtaContact" datatype="html">
+        <source>Contactez-moi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Contact link</note>
+        <note priority="1" from="meaning">services.cta.contact</note>
+      </trans-unit>
+      <trans-unit id="homeContactLead1" datatype="html">
+        <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Home contact lead paragraph</note>
+        <note priority="1" from="meaning">home.contact.lead.1</note>
+      </trans-unit>
+      <trans-unit id="homeContactLead2" datatype="html">
+        <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Home contact lead paragraph</note>
+        <note priority="1" from="meaning">home.contact.lead.2</note>
+      </trans-unit>
+      <trans-unit id="notFoundLabel" datatype="html">
+        <source>Erreur 404</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.component.ts</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFoundTitle" datatype="html">
+        <source> Page introuvable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.component.ts</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFoundDescription" datatype="html">
+        <source> La page que vous recherchez n&apos;existe pas ou a été déplacée. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.component.ts</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFoundCta" datatype="html">
+        <source> Retour à l&apos;accueil </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.component.ts</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="offerServiceHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ service.heading }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="offerQualityHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ quality.heading }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.html</context>
+          <context context-type="linenumber">62,63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="offerHeroTitle" datatype="html">
+        <source>Services professionnels web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">offer.hero.title</note>
+      </trans-unit>
+      <trans-unit id="offerHeroDescription" datatype="html">
+        <source>Solutions numériques sur mesure pour transformer votre présence en ligne et propulser votre entreprise vers de nouveaux horizons stratégiques.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">offer.hero.description</note>
+      </trans-unit>
+      <trans-unit id="offerHeroActionContact" datatype="html">
+        <source>Contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">offer.hero.action.contact</note>
+      </trans-unit>
+      <trans-unit id="offerHeroActionPresentation" datatype="html">
+        <source>Présentation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">offer.hero.action.presentation</note>
+      </trans-unit>
+      <trans-unit id="offerServiceSite" datatype="html">
+        <source>Création de site web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.site</note>
+      </trans-unit>
+      <trans-unit id="offerServiceCategoryDesign" datatype="html">
+        <source>Design</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.category.design</note>
+      </trans-unit>
+      <trans-unit id="offerServiceHeadingCustom" datatype="html">
+        <source>Conception de sites web sur mesure</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <note priority="1" from="description">Service icon alt</note>
-        <note priority="1" from="meaning">services.item.seo.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="servicesItemTrainingTitle" datatype="html">
-        <source>Formation et coaching</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.heading.custom</note>
+      </trans-unit>
+      <trans-unit id="offerServiceDescription" datatype="html">
+        <source>Développement de sites web professionnels adaptés à vos besoins spécifiques. Chaque projet est unique et conçu pour maximiser votre présence en ligne.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.description</note>
+      </trans-unit>
+      <trans-unit id="offerServiceImageSiteAlt" datatype="html">
+        <source>Illustration de création de site</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.image.site.alt</note>
+      </trans-unit>
+      <trans-unit id="offerServiceActionDiscover" datatype="html">
+        <source>Découvrir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.action.discover</note>
+      </trans-unit>
+      <trans-unit id="offerServiceActionDetails" datatype="html">
+        <source>Détails</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.action.details</note>
+      </trans-unit>
+      <trans-unit id="offerServiceMaintenance" datatype="html">
+        <source>Maintenance de site</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.maintenance</note>
+      </trans-unit>
+      <trans-unit id="offerServiceImageMaintenanceAlt" datatype="html">
+        <source>Illustration de maintenance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.image.maintenance.alt</note>
+      </trans-unit>
+      <trans-unit id="offerServiceSeo" datatype="html">
+        <source>Référencement SEO</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">offer.service.seo</note>
+      </trans-unit>
+      <trans-unit id="offerServiceImageSeoAlt" datatype="html">
+        <source>Illustration SEO</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
           <context context-type="linenumber">112</context>
         </context-group>
-        <note priority="1" from="description">Service title</note>
-        <note priority="1" from="meaning">services.item.training.title</note>
+        <note priority="1" from="description">offer.service.image.seo.alt</note>
       </trans-unit>
-      <trans-unit id="servicesItemTrainingDesc" datatype="html">
-        <source>Programmes conçus pour propulser votre entreprise vers de nouveaux horizons numériques.</source>
+      <trans-unit id="offerServiceTraining" datatype="html">
+        <source>Formation et coaching</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">129</context>
         </context-group>
-        <note priority="1" from="description">Service description</note>
-        <note priority="1" from="meaning">services.item.training.desc</note>
+        <note priority="1" from="description">offer.service.training</note>
       </trans-unit>
-      <trans-unit id="servicesItemTrainingIconAlt" datatype="html">
-        <source>Relume logo 1</source>
+      <trans-unit id="offerServiceImageTrainingAlt" datatype="html">
+        <source>Illustration formation</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">134</context>
         </context-group>
-        <note priority="1" from="description">Service icon alt</note>
-        <note priority="1" from="meaning">services.item.training.iconAlt</note>
+        <note priority="1" from="description">offer.service.image.training.alt</note>
       </trans-unit>
-      <trans-unit id="homeContactSubtitle" datatype="html">
-        <source>Contactez nous si vous avez des questions, un besoin ou une suggestion.</source>
+      <trans-unit id="offerQualityExpertise" datatype="html">
+        <source>Expertise technique</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.html</context>
-          <context context-type="linenumber">8,9</context>
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">154</context>
         </context-group>
-        <note priority="1" from="description">Home contact prompt</note>
-        <note priority="1" from="meaning">home.contact.subtitle</note>
+        <note priority="1" from="description">offer.quality.expertise</note>
+      </trans-unit>
+      <trans-unit id="offerQualityCategory" datatype="html">
+        <source>Qualité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.category.quality</note>
+      </trans-unit>
+      <trans-unit id="offerQualityHeadingPerformance" datatype="html">
+        <source>Solutions web hautement performantes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.heading.performance</note>
+      </trans-unit>
+      <trans-unit id="offerQualityDescription" datatype="html">
+        <source>Conception de sites web modernes utilisant les dernières technologies. Chaque projet bénéficie d&apos;une approche sur mesure et innovante.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.description</note>
+      </trans-unit>
+      <trans-unit id="offerQualityImageExpertiseAlt" datatype="html">
+        <source>Illustration expertise</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.image.expertise.alt</note>
+      </trans-unit>
+      <trans-unit id="offerQualityActionLearn" datatype="html">
+        <source>En savoir plus</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">207</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.action.learn</note>
+      </trans-unit>
+      <trans-unit id="offerQualityActionDetails" datatype="html">
+        <source>Détails</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.action.details</note>
+      </trans-unit>
+      <trans-unit id="offerQualitySupport" datatype="html">
+        <source>Support client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.support</note>
+      </trans-unit>
+      <trans-unit id="offerQualityImageSupportAlt" datatype="html">
+        <source>Illustration support</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.image.support.alt</note>
+      </trans-unit>
+      <trans-unit id="offerQualityStrategy" datatype="html">
+        <source>Stratégie digitale</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.strategy</note>
+      </trans-unit>
+      <trans-unit id="offerQualityImageStrategyAlt" datatype="html">
+        <source>Illustration stratégie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+        <note priority="1" from="description">offer.quality.image.strategy.alt</note>
+      </trans-unit>
+      <trans-unit id="offerCtaTitle" datatype="html">
+        <source>Prêt à transformer votre présence web ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+        <note priority="1" from="description">offer.cta.title</note>
+      </trans-unit>
+      <trans-unit id="offerCtaDescription" datatype="html">
+        <source>Contactez Asili Design pour un devis personnalisé et une consultation gratuite sur vos projets numériques.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">offer.cta.description</note>
+      </trans-unit>
+      <trans-unit id="offerCtaActionQuote" datatype="html">
+        <source>Demander un devis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+        <note priority="1" from="description">offer.cta.action.quote</note>
+      </trans-unit>
+      <trans-unit id="offerCtaActionContact" datatype="html">
+        <source>Contactez-nous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">offer.cta.action.contact</note>
+      </trans-unit>
+      <trans-unit id="presentationTechHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ technologySection.title }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="presentationHighlightHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ highlightSection.title }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.html</context>
+          <context context-type="linenumber">54,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioHeading" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ portfolioHeader.title }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.html</context>
+          <context context-type="linenumber">89,91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioLink" datatype="html">
+        <source> Voir projet </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.html</context>
+          <context context-type="linenumber">114,117</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="presentationHeroLabel" datatype="html">
+        <source>Développeur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">presentation.hero.label</note>
+      </trans-unit>
+      <trans-unit id="presentationHeroTitle" datatype="html">
+        <source>Parcours de développement web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">presentation.hero.title</note>
+      </trans-unit>
+      <trans-unit id="presentationHeroDescription" datatype="html">
+        <source>Passionné de technologies web avec trois ans d&apos;expérience, je transforme des idées complexes en solutions numériques élégantes et fonctionnelles.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">presentation.hero.description</note>
+      </trans-unit>
+      <trans-unit id="presentationHeroActionProjects" datatype="html">
+        <source>Projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">presentation.hero.action.projects</note>
+      </trans-unit>
+      <trans-unit id="presentationHeroActionContact" datatype="html">
+        <source>Contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">presentation.hero.action.contact</note>
+      </trans-unit>
+      <trans-unit id="presentationTechLabel" datatype="html">
+        <source>Technologies</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.label</note>
+      </trans-unit>
+      <trans-unit id="presentationTechTitle" datatype="html">
+        <source>Compétences techniques au service de vos projets web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.title</note>
+      </trans-unit>
+      <trans-unit id="presentationTechDescription" datatype="html">
+        <source>Mon expertise technique couvre un large spectre de technologies modernes. Je transforme des concepts complexes en solutions numériques élégantes et performantes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.description</note>
+      </trans-unit>
+      <trans-unit id="presentationTechBulletFrontend" datatype="html">
+        <source>Développement frontend avec HTML5, CSS3 et JavaScript</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.bullet.frontend</note>
+      </trans-unit>
+      <trans-unit id="presentationTechBulletFrameworks" datatype="html">
+        <source>Frameworks modernes comme Angular, React et Node.js</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.bullet.frameworks</note>
+      </trans-unit>
+      <trans-unit id="presentationTechBulletPerformance" datatype="html">
+        <source>Intégration et optimisation des performances web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.bullet.performance</note>
+      </trans-unit>
+      <trans-unit id="presentationTechImageAlt" datatype="html">
+        <source>Illustration de compétences techniques</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.image.alt</note>
+      </trans-unit>
+      <trans-unit id="presentationTechActionSkills" datatype="html">
+        <source>Voir mes compétences</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.action.skills</note>
+      </trans-unit>
+      <trans-unit id="presentationTechActionLearnMore" datatype="html">
+        <source>En savoir plus</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">presentation.tech.action.learnMore</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightLabel" datatype="html">
+        <source>Projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.label</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightTitle" datatype="html">
+        <source>Une sélection de mes réalisations web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.title</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightDescription" datatype="html">
+        <source>Chaque projet raconte une histoire unique de transformation numérique. Découvrez comment j&apos;ai relevé différents défis techniques et créatifs.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.description</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightLogoWebflow1" datatype="html">
+        <source>Logo Webflow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.logo.webflow1</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightLogoRelume1" datatype="html">
+        <source>Logo Relume</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.logo.relume1</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightLogoWebflow2" datatype="html">
+        <source>Logo Webflow alternatif</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.logo.webflow2</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightLogoRelume2" datatype="html">
+        <source>Second logo Relume</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.logo.relume2</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightActionProjects" datatype="html">
+        <source>Voir mes projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.action.projects</note>
+      </trans-unit>
+      <trans-unit id="presentationHighlightActionDetails" datatype="html">
+        <source>Détails</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">presentation.highlight.action.details</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioLabel" datatype="html">
+        <source>Réalisations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.label</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTitle" datatype="html">
+        <source>Projets innovants en entreprise</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.title</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioDescription" datatype="html">
+        <source>Chaque ligne de code raconte une histoire de transformation numérique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.description</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCta" datatype="html">
+        <source>Tous les projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.cta</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardAssistant" datatype="html">
+        <source>Assistant IA Geev</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.assistant</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardAssistantDesc" datatype="html">
+        <source>Développement d&apos;un système intelligent de tri automatique des annonces par analyse d&apos;images.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.assistant.desc</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardAssistantAlt" datatype="html">
+        <source>Capture du projet Assistant IA Geev</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.assistant.alt</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagAi" datatype="html">
+        <source>Intelligence artificielle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.ai</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagImage" datatype="html">
+        <source>Traitement d&apos;image</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.image</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagAutomation" datatype="html">
+        <source>Automatisation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.automation</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardTest" datatype="html">
+        <source>Test IA Geev</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.test</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardTestDesc" datatype="html">
+        <source>Conception d&apos;un système d&apos;intelligence artificielle pour la planification automatisée des rendez-vous.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.test.desc</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardTestAlt" datatype="html">
+        <source>Capture du projet Test IA Geev</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.test.alt</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagOptimisation" datatype="html">
+        <source>Optimisation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.optimisation</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagPlanning" datatype="html">
+        <source>Planification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.planning</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagEfficiency" datatype="html">
+        <source>Efficacité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.efficiency</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardBeecoming" datatype="html">
+        <source>App Beecoming</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.beecoming</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardBeecomingDesc" datatype="html">
+        <source>Application de suivi de production pour la filière cognac, de la vigne à la bouteille.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.beecoming.desc</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardBeecomingAlt" datatype="html">
+        <source>Capture du projet App Beecoming</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.beecoming.alt</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagTraceability" datatype="html">
+        <source>Traçabilité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.traceability</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagAgriculture" datatype="html">
+        <source>Agriculture</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.agriculture</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagInnovation" datatype="html">
+        <source>Innovation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.innovation</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardLouisons" datatype="html">
+        <source>Projet Louisons</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.louisons</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardLouisonsDesc" datatype="html">
+        <source>Création d&apos;un site web personnalisé avec des fonctionnalités sur mesure pour répondre aux besoins spécifiques.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.louisons.desc</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardLouisonsAlt" datatype="html">
+        <source>Capture du projet Louisons</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.louisons.alt</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagWebdesign" datatype="html">
+        <source>Web design</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.webdesign</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagDevelopment" datatype="html">
+        <source>Développement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.development</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagCustom" datatype="html">
+        <source>Personnalisation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.custom</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardVincent" datatype="html">
+        <source>Projet Vincent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.vincent</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardVincentDesc" datatype="html">
+        <source>Développement d&apos;une solution web adaptée aux exigences uniques du client.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.vincent.desc</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardVincentAlt" datatype="html">
+        <source>Capture du projet Vincent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.vincent.alt</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagWebsolution" datatype="html">
+        <source>Solution web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.websolution</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagCreativity" datatype="html">
+        <source>Créativité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.creativity</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardOthers" datatype="html">
+        <source>Autres projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.others</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardOthersDesc" datatype="html">
+        <source>Exploration de solutions techniques innovantes qui repoussent les limites du possible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.others.desc</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioCardOthersAlt" datatype="html">
+        <source>Illustration d&apos;autres projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.card.others.alt</note>
+      </trans-unit>
+      <trans-unit id="presentationPortfolioTagTechnical" datatype="html">
+        <source>Technique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <note priority="1" from="description">presentation.portfolio.tag.technical</note>
+      </trans-unit>
+      <trans-unit id="presentationCtaTitle" datatype="html">
+        <source>Prêt à démarrer votre projet web?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <note priority="1" from="description">presentation.cta.title</note>
+      </trans-unit>
+      <trans-unit id="presentationCtaDescription" datatype="html">
+        <source>Ensemble, transformons vos idées en solutions numériques performantes et innovantes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <note priority="1" from="description">presentation.cta.description</note>
+      </trans-unit>
+      <trans-unit id="presentationCtaActionTalk" datatype="html">
+        <source>Discutons</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">presentation.cta.action.talk</note>
+      </trans-unit>
+      <trans-unit id="presentationCtaActionQuote" datatype="html">
+        <source>Devis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">presentation.cta.action.quote</note>
       </trans-unit>
       <trans-unit id="contactKicker" datatype="html">
-        <source> Support </source>
+        <source> Contact </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/contact/contact.component.html</context>
-          <context context-type="linenumber">11,13</context>
+          <context context-type="linenumber">8,10</context>
         </context-group>
         <note priority="1" from="description">Section small label</note>
         <note priority="1" from="meaning">contact.kicker</note>
@@ -971,13 +2557,13 @@
         <source>Voir l&apos;emplacement sur la carte dans un nouvel onglet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/contact/contact.component.html</context>
-          <context context-type="linenumber">51,52</context>
+          <context context-type="linenumber">44,45</context>
         </context-group>
         <note priority="1" from="description">Map link label</note>
         <note priority="1" from="meaning">contact.map.linkAria</note>
       </trans-unit>
       <trans-unit id="contactTitle" datatype="html">
-        <source>Contactez-nous</source>
+        <source>Parler de votre situation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
           <context context-type="linenumber">14</context>
@@ -1031,7 +2617,7 @@
         <note priority="1" from="meaning">contact.method.office.label</note>
       </trans-unit>
       <trans-unit id="contactMethodOfficeValue" datatype="html">
-        <source>Allée Serr, 33100 Bordeaux, France</source>
+        <source>Bordeaux, 33100, France</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -1085,7 +2671,7 @@
         <note priority="1" from="meaning">footer.copyright</note>
       </trans-unit>
       <trans-unit id="footerAddressCity" datatype="html">
-        <source>Bordeaux, France</source>
+        <source>Paris, France</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
           <context context-type="linenumber">14</context>
@@ -1094,7 +2680,7 @@
         <note priority="1" from="meaning">footer.address.city</note>
       </trans-unit>
       <trans-unit id="footerAddressPhone" datatype="html">
-        <source>+33 6 98 50 32 82</source>
+        <source>+33 6 12 34 56 78</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
           <context context-type="linenumber">15</context>
@@ -1103,7 +2689,7 @@
         <note priority="1" from="meaning">footer.address.phone</note>
       </trans-unit>
       <trans-unit id="footerAddressEmail" datatype="html">
-        <source>moyencet@gmail.com</source>
+        <source>info@relume.io</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
           <context context-type="linenumber">16</context>
@@ -1264,23 +2850,23 @@
         <note priority="1" from="description">Site brand name in navbar</note>
         <note priority="1" from="meaning">navbar.brand</note>
       </trans-unit>
-      <trans-unit id="navCtaQuoteTitle" datatype="html">
+      <trans-unit id="navLinkOffer:Offres" datatype="html">
         <source>Demander un devis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
           <context context-type="linenumber">117</context>
         </context-group>
-        <note priority="1" from="description">Quote CTA tooltip</note>
-        <note priority="1" from="meaning">navbar.cta.quote.title</note>
+        <note priority="1" from="description">Navbar primary link</note>
+        <note priority="1" from="meaning">navbar.link.offer</note>
       </trans-unit>
-      <trans-unit id="navCtaQuoteLabel" datatype="html">
-        <source>Devis</source>
+      <trans-unit id="navLinkOfferSpan:Offres" datatype="html">
+        <source>Offres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
           <context context-type="linenumber">119,123</context>
         </context-group>
-        <note priority="1" from="description">Quote CTA label</note>
-        <note priority="1" from="meaning">navbar.cta.quote.label</note>
+        <note priority="1" from="description">Navbar primary link</note>
+        <note priority="1" from="meaning">navbar.link.offer</note>
       </trans-unit>
       <trans-unit id="navCtaContactTitle" datatype="html">
         <source>Me contacter</source>
@@ -1300,29 +2886,11 @@
         <note priority="1" from="description">Contact CTA label</note>
         <note priority="1" from="meaning">navbar.cta.contact.label</note>
       </trans-unit>
-      <trans-unit id="navLinkHome" datatype="html">
-        <source>Accueil</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <note priority="1" from="description">Navbar primary link</note>
-        <note priority="1" from="meaning">navbar.link.home</note>
-      </trans-unit>
-      <trans-unit id="navLinkCourses" datatype="html">
-        <source>Cours</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <note priority="1" from="description">Navbar primary link</note>
-        <note priority="1" from="meaning">navbar.link.courses</note>
-      </trans-unit>
       <trans-unit id="navLinkPresentation" datatype="html">
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.presentation</note>
@@ -1331,7 +2899,7 @@
         <source>Ouvrir le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.open</note>
@@ -1340,7 +2908,7 @@
         <source>Fermer le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.close</note>
@@ -1349,7 +2917,7 @@
         <source>Menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <note priority="1" from="description">Mobile nav heading</note>
         <note priority="1" from="meaning">navbar.menu.heading</note>
@@ -1358,7 +2926,7 @@
         <source>Fermer le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.close</note>
@@ -1367,7 +2935,7 @@
         <source>Ouvrir le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>
@@ -1376,7 +2944,7 @@
         <source>Ouvrir ou fermer la section</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <note priority="1" from="description">Chevron icon label</note>
         <note priority="1" from="meaning">navbar.dropdown.chevron</note>
@@ -1385,70 +2953,70 @@
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">Dropdown section</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.label</note>
       </trans-unit>
       <trans-unit id="navDropdownPresqTitle" datatype="html">
-        <source>PresQ</source>
+        <source>Projet Vincent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Project link</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.presq.title</note>
       </trans-unit>
       <trans-unit id="navDropdownPresqDesc" datatype="html">
-        <source>Plateforme de questionnaires interactifs</source>
+        <source>Solution web personnalisée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">Project description</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.presq.desc</note>
       </trans-unit>
       <trans-unit id="navDropdownPresqIconAlt" datatype="html">
-        <source>Icône pour la marque PresQ</source>
+        <source>Icône pour un projet client</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">Icon alt text</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.presq.iconAlt</note>
       </trans-unit>
       <trans-unit id="navDropdownSebastianTitle" datatype="html">
-        <source>Sebastian</source>
+        <source>Louisons</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <note priority="1" from="description">Project link</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.sebastian.title</note>
       </trans-unit>
       <trans-unit id="navDropdownSebastianDesc" datatype="html">
-        <source>Suivi de consommation et conseils</source>
+        <source>Site sur mesure pour Louisons</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <note priority="1" from="description">Project description</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.sebastian.desc</note>
       </trans-unit>
       <trans-unit id="navDropdownSebastianIconAlt" datatype="html">
-        <source>Icône du majordome Sebastian</source>
+        <source>Icône pour un projet vitrine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Icon alt text</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.sebastian.iconAlt</note>
       </trans-unit>
       <trans-unit id="navDropdownPersonalTitle" datatype="html">
-        <source>Personnel</source>
+        <source>Portfolio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <note priority="1" from="description">Project link</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.personal.title</note>
@@ -1457,7 +3025,7 @@
         <source>Explorations numériques et expériences</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <note priority="1" from="description">Project description</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.personal.desc</note>
@@ -1466,16 +3034,16 @@
         <source>Icône représentant l&apos;espace personnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">Icon alt text</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.personal.iconAlt</note>
       </trans-unit>
       <trans-unit id="navDropdownProfessionalTitle" datatype="html">
-        <source>Professionnel</source>
+        <source>Projets clients</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">Project link</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.professional.title</note>
@@ -1484,7 +3052,7 @@
         <source>Sites web pour clients et entreprises</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">Project description</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.professional.desc</note>
@@ -1493,133 +3061,16 @@
         <source>Icône représentant le professionnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">Icon alt text</note>
         <note priority="1" from="meaning">navbar.dropdown.projects.professional.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="navDropdownDevLabel" datatype="html">
-        <source>Développement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">80</context>
-        </context-group>
-        <note priority="1" from="description">Dropdown section</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.label</note>
-      </trans-unit>
-      <trans-unit id="navDropdownAppMuseumTitle" datatype="html">
-        <source>App museum</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-        <note priority="1" from="description">Project link</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.appMuseum.title</note>
-      </trans-unit>
-      <trans-unit id="navDropdownAppMuseumDesc" datatype="html">
-        <source>Expérience muséale interactive et immersive</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.appMuseum.desc</note>
-      </trans-unit>
-      <trans-unit id="navDropdownAppMuseumIconAlt" datatype="html">
-        <source>Icône représentant l&apos;application museum</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">87</context>
-        </context-group>
-        <note priority="1" from="description">Icon alt text</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.appMuseum.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="navDropdownWeekAwayTitle" datatype="html">
-        <source>Week Away</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">91</context>
-        </context-group>
-        <note priority="1" from="description">Project link</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.weekAway.title</note>
-      </trans-unit>
-      <trans-unit id="navDropdownWeekAwayDesc" datatype="html">
-        <source>Planification de voyages simplifiée</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">92</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.weekAway.desc</note>
-      </trans-unit>
-      <trans-unit id="navDropdownWeekAwayIconAlt" datatype="html">
-        <source>Icône représentant Week Away</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">94</context>
-        </context-group>
-        <note priority="1" from="description">Icon alt text</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.weekAway.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="navDropdownDeathCounterTitle" datatype="html">
-        <source>Death Counter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-        <note priority="1" from="description">Project link</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.deathCounter.title</note>
-      </trans-unit>
-      <trans-unit id="navDropdownDeathCounterDesc" datatype="html">
-        <source>Jeu de stratégie et de défi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">99</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.deathCounter.desc</note>
-      </trans-unit>
-      <trans-unit id="navDropdownDeathCounterIconAlt" datatype="html">
-        <source>Icône représentant Death Counter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">101</context>
-        </context-group>
-        <note priority="1" from="description">Icon alt text</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.deathCounter.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="navDropdownAssassinTitle" datatype="html">
-        <source>Assassin</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">105</context>
-        </context-group>
-        <note priority="1" from="description">Project link</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.assassin.title</note>
-      </trans-unit>
-      <trans-unit id="navDropdownAssassinDesc" datatype="html">
-        <source>Enquête narrative et mystère</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">106</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.assassin.desc</note>
-      </trans-unit>
-      <trans-unit id="navDropdownAssassinIconAlt" datatype="html">
-        <source>Icône représentant Assassin</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
-        <note priority="1" from="description">Icon alt text</note>
-        <note priority="1" from="meaning">navbar.dropdown.dev.assassin.iconAlt</note>
       </trans-unit>
       <trans-unit id="navbarIconLabel" datatype="html">
         <source>Icône pour <x id="navItemTitle" equiv-text="title"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">233</context>
         </context-group>
         <note priority="1" from="description">Icon label with item title</note>
         <note priority="1" from="meaning">navbar.icon.dynamicLabel</note>

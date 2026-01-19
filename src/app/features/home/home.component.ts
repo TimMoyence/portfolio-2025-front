@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { ContactComponent } from "../../shared/components/contact/contact.component";
+import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import {
   ServiceItem,
   ServicesSectionComponent,
@@ -19,8 +19,7 @@ import { ProjectsAccordionComponent } from "./components/projects-accordion/proj
     ServicesSectionComponent,
     ProjectsAccordionComponent,
     MissionSectionComponent,
-
-    ContactComponent,
+    ContactCtaComponent,
     CtaSectionComponent,
   ],
   templateUrl: "./home.component.html",

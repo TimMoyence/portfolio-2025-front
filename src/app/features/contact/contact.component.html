@@ -1,4 +1,4 @@
-<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" [actions]="hero.actions"
+7<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description"
   titleLevel="h1"></app-hero-section>
 
 <section class="px-[5%] py-12 md:py-18 lg:py-22">
@@ -7,156 +7,149 @@
     <div>
       <div class="mb-6 md:mb-8">
         <p class="mb-3 font-semibold md:mb-4">{{ contactInfo.label }}</p>
-        <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@contactFormHeading">
+        <h2 class="mb-5 heading-h2 text-h2 md:mb-6" i18n="@@contactFormHeading">
           {{ contactInfo.heading }}
         </h2>
         <p class="md:text-md">{{ contactInfo.description }}</p>
       </div>
-      <div class="grid grid-cols-1 gap-4 py-2">
-        @for (detail of contactInfo.details; track $index) {
-        <div class="flex items-center gap-4">
-          <span aria-hidden="true" class="text-xl">{{ detail.icon }}</span>
-          <p>{{ detail.label }}</p>
+    </div>
+    <form class="grid max-w-lg grid-cols-1 grid-rows-[auto_auto] gap-6" #contactFormRef="ngForm"
+      (ngSubmit)="handleContactSubmit(contactFormRef)">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        @for (field of contactFields; track field.key) {
+        <div class="relative">
+          <input [type]="field.type" [id]="field.key" [name]="field.key" [(ngModel)]="contactForm[field.key]"
+            [required]="field.required" [email]="field.type === 'email'" placeholder=" "
+            class="peer block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
+            #control="ngModel" [class.border-red-500]="control.invalid && (control.touched || isContactSubmitted)" />
+
+          <label [for]="field.key" class="absolute left-3 px-1 bg-white text-gray-700 text-sm font-medium pointer-events-none transition-all duration-200
+                 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500
+                 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+            [ngClass]="contactForm[field.key] ? '-top-3 text-xs text-scheme-accent' : 'top-2 text-sm text-gray-500'"
+            [class.text-red-500]="control.invalid && (control.touched || isContactSubmitted)">
+            {{ field.label }}
+            <span *ngIf="!field.required" i18n="auth.field.optional@@authFieldOptional">(facultatif)</span>
+          </label>
+
+          <p *ngIf="control.invalid && (control.touched || isContactSubmitted)" class="mt-1 text-xs text-red-500">
+            @if (control.errors?.['required']) {
+            <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+            } @else if (control.errors?.['email']) {
+            <span i18n="auth.error.email@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
+            } @else {
+            <span i18n="auth.error.generic@@authErrorGeneric">Valeur invalide.</span>
+            }
+          </p>
         </div>
         }
       </div>
-    </div>
-    <form class="grid max-w-lg grid-cols-1 grid-rows-[auto_auto] gap-6">
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <label class="grid w-full items-center">
-          <span class="mb-2" i18n="@@contactFormFirstName">Prénom</span>
-          <input type="text" name="firstName" class="border border-border-primary px-3 py-2" aria-label="Prénom" />
-        </label>
-        <label class="grid w-full items-center">
-          <span class="mb-2" i18n="@@contactFormLastName">Nom</span>
-          <input type="text" name="lastName" class="border border-border-primary px-3 py-2" aria-label="Nom" />
-        </label>
-      </div>
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <label class="grid w-full items-center">
-          <span class="mb-2" i18n="@@contactFormEmail">Email</span>
-          <input type="email" name="email" class="border border-border-primary px-3 py-2" aria-label="Email" />
-        </label>
-        <label class="grid w-full items-center">
-          <span class="mb-2" i18n="@@contactFormPhone">Numéro de téléphone</span>
-          <input type="text" name="phone" class="border border-border-primary px-3 py-2"
-            aria-label="Numéro de téléphone" />
-        </label>
-      </div>
-      <label class="grid w-full items-center">
-        <span class="mb-2" i18n="@@contactFormSubject">Objet de votre message</span>
-        <select class="border border-border-primary px-3 py-2">
-          <option i18n="@@contactFormSubjectPlaceholder">Sélectionnez un sujet</option>
+
+      <label class="grid w-full gap-2">
+        <span class=" text-gray-700" i18n="@@contactFormSubject">
+          Sujet de votre demande
+        </span>
+
+        <select class="rounded-form border border-scheme-border bg-white px-3 py-2 text-gray-700
+         focus:border-scheme-accent focus:outline-none transition-colors" name="subject" required
+          [(ngModel)]="contactForm.subject" #subjectCtrl="ngModel"
+          [class.border-red-500]="subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)">
+          <option value="" class="font-semibold text-gray-700" disabled i18n="@@contactFormSubjectPlaceholder">
+            Sélectionnez un sujet
+          </option>
           @for (subject of contactInfo.subjects; track $index) {
-          <option>{{ subject }}</option>
+          <option [value]="subject">{{ subject }}</option>
           }
         </select>
+
+        <p *ngIf="subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)" class="text-xs text-red-500">
+          <span i18n="auth.error.required@@authErrorRequired">
+            Ce champ est obligatoire.
+          </span>
+        </p>
       </label>
+      <!-- Rôle -->
       <div class="grid w-full items-center py-3 md:py-4">
-        <span class="mb-3 md:mb-4" i18n="@@contactFormRole">Qui êtes-vous?</span>
-        <div class="grid grid-cols-2 gap-x-6 gap-y-3.5">
+        <span class="mb-3 md:mb-4 text-gray-700" i18n="@@contactFormRole">Qui êtes-vous ?</span>
+        <fieldset class="space-y-3 grid grid-cols-2 gap-x-6 gap-y-3.5">
           @for (role of contactInfo.roles; track $index) {
-          <label class="flex items-center space-x-2">
-            <input type="radio" name="role" [value]="role" />
-            <span>{{ role }}</span>
-          </label>
+          <legend class="sr-only">{{ role }}</legend>
+
+          <div>
+            <label for="{{ role }}"
+              class="flex items-center justify-between space-x-2 gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600">
+              <div>
+                <p class="text-gray-700">{{ role }}</p>
+              </div>
+              <input [(ngModel)]="contactForm.role" type="radio" name="DeliveryOption" [value]="role" id="{{ role }}"
+                class="size-5 border-gray-300" checked="">
+            </label>
+          </div>
+
+
           }
-        </div>
+        </fieldset>
+
+
+        <p *ngIf="contactFormRef.controls['role']?.invalid && (contactFormRef.controls['role']?.touched || isContactSubmitted)"
+          class="mt-1 text-xs text-red-500">
+          <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+        </p>
       </div>
-      <label class="grid w-full items-center">
-        <span class="mb-2" i18n="@@contactFormMessage">Message</span>
-        <textarea name="message" class="min-h-[11.25rem] overflow-auto border border-border-primary px-3 py-2"
-          placeholder="Écrivez votre message ici" i18n-placeholder="@@contactFormMessagePlaceholder"></textarea>
+
+      <!-- Message -->
+      <div class="relative">
+        <textarea id="message" name="message" required [(ngModel)]="contactForm.message" placeholder=" "
+          class="peer block w-full min-h-[11.25rem] rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
+          #messageCtrl="ngModel"
+          [class.border-red-500]="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)"></textarea>
+
+        <label for="message" class="absolute left-3 px-1 bg-white text-gray-700 text-sm font-medium pointer-events-none transition-all duration-200
+             peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500
+             peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+          [ngClass]="contactForm.message ? '-top-3 text-xs text-scheme-accent' : 'top-2 text-sm text-gray-500'"
+          [class.text-red-500]="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)"
+          i18n="@@contactFormMessageLabel">
+          Votre message
+        </label>
+
+        <p *ngIf="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)" class="mt-1 text-xs text-red-500">
+          <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+        </p>
+      </div>
+
+      <!-- Terms -->
+      <label class="flex items-center space-x-2 text-sm">
+        <input type="checkbox" name="terms" required [(ngModel)]="contactForm.terms" #termsCtrl="ngModel" />
+        <span class="text-gray-700" i18n="@@contactFormTerms">J'accepte les conditions</span>
       </label>
-      <label class="mb-3 flex items-center space-x-2 text-sm md:mb-4">
-        <input type="checkbox" name="terms" />
-        <span i18n="@@contactFormTerms">J'accepte les conditions</span>
-      </label>
-      <div>
+      <p *ngIf="termsCtrl.invalid && (termsCtrl.touched || isContactSubmitted)" class="mt-1 text-xs text-red-500">
+        <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+      </p>
+
+      <!-- Submit -->
+      <div class="grid grid-cols-1 gap-4">
         <button type="submit"
-          class="rounded-button bg-black px-5 py-2 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          i18n="@@contactFormSubmit">
-          Envoyer
+          class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-scheme-accent px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 hover:bg-scheme-accent-hover "
+          i18n-title title="Envoyer" [disabled]="isContactLoading || !contactFormRef.form.valid"
+          [attr.aria-busy]="isContactLoading">
+          <ng-container *ngIf="!isContactLoading; else contactLoading">
+            <span i18n="@@contactFormSubmit">Envoyer</span>
+          </ng-container>
         </button>
+
+        <ng-template #contactLoading>
+          <span i18n="@@contactFormLoading">Envoi en cours...</span>
+        </ng-template>
+
+        <p *ngIf="contactErrorMessage" class="text-sm text-red-500">{{ contactErrorMessage }}</p>
+        <p *ngIf="contactSuccessMessage" class="text-sm text-green-600">{{ contactSuccessMessage }}</p>
+
+        <p class="text-xs text-gray-600" i18n="@@contactFormResponseTime">Réponse sous 48h ouvrées.</p>
       </div>
     </form>
+
   </div>
 </section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
-  <div class="container">
-    <div class="rb-12 mx-auto mb-12 flex max-w-lg flex-col justify-center text-center md:mb-18 lg:mb-20">
-      <p class="mb-3 font-semibold md:mb-4" i18n="@@contactLocationLabel">Localisation</p>
-      <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@contactLocationHeading">
-        Où me trouver
-      </h2>
-      <p class="md:text-md" i18n="@@contactLocationSubheading">Découvrez mes emplacements de travail</p>
-    </div>
-    <div class="grid auto-cols-fr grid-cols-1 items-center gap-x-12 gap-y-12 md:grid-cols-2 md:gap-16">
-      @for (place of locations; track place.title) {
-      <div class="flex flex-col items-center justify-start text-center">
-        <div class="mb-6 aspect-[3/2] md:mb-8">
-          <img class="h-full w-full object-cover" [src]="place.image" [alt]="place.alt" loading="lazy" />
-        </div>
-        <h3 class="mb-3 text-2xl font-bold leading-[1.4] md:text-3xl lg:mb-4 lg:text-4xl">
-          {{ place.title }}
-        </h3>
-        <p class="text-center">{{ place.description }}</p>
-        <div class="mt-5 md:mt-6">
-          <a class="inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-2"
-            routerLink="/contact">
-            {{ place.actionLabel }}
-          </a>
-        </div>
-      </div>
-      }
-    </div>
-  </div>
-</section>
-
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
-  <div class="container">
-    <div class="rb-12 mb-12 max-w-lg md:mb-18 lg:mb-20">
-      <p class="mb-3 font-semibold md:mb-4" i18n="@@contactMethodsLabel">Coordonnées</p>
-      <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@contactMethodsHeading">
-        Comment me joindre
-      </h2>
-      <p class="md:text-md" i18n="@@contactMethodsSubheading">
-        Restons en contact pour vos projets numériques
-      </p>
-    </div>
-    <div
-      class="grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 sm:grid-cols-2 md:gap-x-20 md:gap-y-16 lg:grid-cols-[0.5fr_1fr]">
-      <div class="grid auto-cols-fr grid-cols-1 gap-x-4 gap-y-10">
-        @for (method of methods; track method.title) {
-        <div>
-          <div class="mb-3 md:mb-4">
-            <span class="text-2xl" aria-hidden="true">•</span>
-          </div>
-          <h3 class="mb-2 text-md font-bold leading-[1.4] md:text-xl">
-            {{ method.title }}
-          </h3>
-          <p class="mb-2">{{ method.description }}</p>
-          @if (method.link) {
-          <a class="underline" [href]="method.link">{{ method.value }}</a>
-          } @else {
-          <span class="underline">{{ method.value }}</span>
-          }
-          @if (!method.link && method.hasRouteAction) {
-          <div class="mt-5 md:mt-6">
-            <a class="inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-2"
-              routerLink="/contact" i18n="@@contactMethodsOfficeCta">
-              Voir l'itinéraire
-            </a>
-          </div>
-          }
-        </div>
-        }
-      </div>
-      <div>
-        <img class="size-full object-cover" src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-          alt="Contact illustration" loading="lazy" i18n-alt="@@contactIllustrationAlt" />
-      </div>
-    </div>
-  </div>
-</section>
+<app-cta-contact [leadParagraphs]="contactSection.leadParagraphs"></app-cta-contact>

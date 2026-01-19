@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="routeHomeSeoTitle" datatype="html">
         <source>Accueil — Tim Moyence Portfolio</source>
-        <target>Home — Tim Moyence Portfolio</target><context-group purpose="location">
+        <target>Home — Tim Moyence | Digital Portfolio</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
           <context context-type="linenumber">10</context>
         </context-group>
@@ -13,7 +13,7 @@
       </trans-unit>
       <trans-unit id="routeHomeSeoDescription" datatype="html">
         <source>Explore my professional services.</source>
-        <target>Explore my professional services.</target><context-group purpose="location">
+        <target>Explore bespoke digital services and standout projects.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
           <context context-type="linenumber">11</context>
         </context-group>
@@ -22,7 +22,7 @@
       </trans-unit>
       <trans-unit id="routeLoginSeoTitle" datatype="html">
         <source>Login — Pour acceder à votre compte</source>
-        <target>Login — Access your account</target><context-group purpose="location">
+        <target>Sign in — Secure account access</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
           <context context-type="linenumber">22</context>
         </context-group>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="routeLoginSeoDescription" datatype="html">
         <source>You can't access this page without logging in.</source>
-        <target>You can't access this page without logging in.</target><context-group purpose="location">
+        <target>Please sign in to view this page.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
           <context context-type="linenumber">23</context>
         </context-group>
@@ -40,7 +40,7 @@
       </trans-unit>
       <trans-unit id="routeRegisterSeoTitle" datatype="html">
         <source>Register — Pour acceder à votre compte</source>
-        <target>Register — Access your account</target><context-group purpose="location">
+        <target>Create an account — Start your experience</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
           <context context-type="linenumber">34</context>
         </context-group>
@@ -49,7 +49,7 @@
       </trans-unit>
       <trans-unit id="routeRegisterSeoDescription" datatype="html">
         <source>You can't access this page without registering.</source>
-        <target>You can't access this page without registering.</target><context-group purpose="location">
+        <target>Please create an account to view this page.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/app.routes.ts</context>
           <context context-type="linenumber">35</context>
         </context-group>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="authTabLogin" datatype="html">
         <source>Connexion</source>
-        <target>Log in</target><context-group purpose="location">
+        <target>Sign in</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">39,42</context>
         </context-group>
@@ -76,7 +76,7 @@
       </trans-unit>
       <trans-unit id="authSignupTitle" datatype="html">
         <source>Votre parcours</source>
-        <target>Your journey</target><context-group purpose="location">
+        <target>Your journey starts here</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">47,48</context>
         </context-group>
@@ -85,7 +85,7 @@
       </trans-unit>
       <trans-unit id="authSignupLead" datatype="html">
         <source> Déverrouillez votre potentiel avec un compte personnalisé </source>
-        <target>Unlock your potential with a personalized account</target><context-group purpose="location">
+        <target>Unlock your potential with a tailored account.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">49,52</context>
         </context-group>
@@ -133,7 +133,7 @@
       </trans-unit>
       <trans-unit id="authErrorPasswordLength" datatype="html">
         <source>Le mot de passe doit contenir au moins 8 caractères.</source>
-        <target>Password must be at least 8 characters.</target><context-group purpose="location">
+        <target>Password must be at least 8 characters long.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">94,96</context>
         </context-group>
@@ -142,7 +142,7 @@
       </trans-unit>
       <trans-unit id="authErrorGeneric" datatype="html">
         <source>Valeur invalide.</source>
-        <target>Invalid value.</target><context-group purpose="location">
+        <target>Please enter a valid value.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">96,100</context>
         </context-group>
@@ -153,16 +153,9 @@
         <note priority="1" from="description">Generic validation error</note>
         <note priority="1" from="meaning">auth.error.generic</note>
       </trans-unit>
-      <trans-unit id="4765439965811877229" datatype="html">
-        <source>Créer compte</source>
-        <target>Create account</target><context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">104</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="authSignupSubmit" datatype="html">
         <source>Créer compte</source>
-        <target>Create account</target><context-group purpose="location">
+        <target>Create my account</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">106,109</context>
         </context-group>
@@ -171,23 +164,16 @@
       </trans-unit>
       <trans-unit id="authSignupLoading" datatype="html">
         <source>Création en cours...</source>
-        <target>Creating account...</target><context-group purpose="location">
+        <target>Creating your account...</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">110,112</context>
         </context-group>
         <note priority="1" from="description">Signup loading state</note>
         <note priority="1" from="meaning">auth.signup.loading</note>
       </trans-unit>
-      <trans-unit id="7215127729541696793" datatype="html">
-        <source>Inscrivez-vous avec Google</source>
-        <target>Sign up with Google</target><context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">120</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="authSignupGoogle" datatype="html">
         <source>Inscrivez-vous avec Google</source>
-        <target>Sign up with Google</target><context-group purpose="location">
+        <target>Continue with Google</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">122,126</context>
         </context-group>
@@ -196,7 +182,7 @@
       </trans-unit>
       <trans-unit id="authLoginTitle" datatype="html">
         <source>Se connecter</source>
-        <target>Log in</target><context-group purpose="location">
+        <target>Welcome back</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">132,133</context>
         </context-group>
@@ -205,23 +191,16 @@
       </trans-unit>
       <trans-unit id="authLoginLead" datatype="html">
         <source> Votre espace de croissance commence </source>
-        <target>Your growth space begins here</target><context-group purpose="location">
+        <target>Your growth journey starts here.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">134,137</context>
         </context-group>
         <note priority="1" from="description">Login panel description</note>
         <note priority="1" from="meaning">auth.login.lead</note>
       </trans-unit>
-      <trans-unit id="2336550011721758066" datatype="html">
-        <source>Log in</source>
-        <target>Log in</target><context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">176</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="authLoginSubmit" datatype="html">
         <source>Log in</source>
-        <target>Log in</target><context-group purpose="location">
+        <target>Sign in</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">178,181</context>
         </context-group>
@@ -230,23 +209,16 @@
       </trans-unit>
       <trans-unit id="authLoginLoading" datatype="html">
         <source>Connexion en cours...</source>
-        <target>Signing in...</target><context-group purpose="location">
+        <target>Signing you in...</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">182,184</context>
         </context-group>
         <note priority="1" from="description">Login loading state</note>
         <note priority="1" from="meaning">auth.login.loading</note>
       </trans-unit>
-      <trans-unit id="385129033471599880" datatype="html">
-        <source>Connectez-vous avec Google</source>
-        <target>Sign in with Google</target><context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">192</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="authLoginGoogle" datatype="html">
         <source>Connectez-vous avec Google</source>
-        <target>Sign in with Google</target><context-group purpose="location">
+        <target>Continue with Google</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">194,197</context>
         </context-group>
@@ -255,7 +227,7 @@
       </trans-unit>
       <trans-unit id="authContactSubtitle" datatype="html">
         <source>Nous sommes là pour vous aider à résoudre rapidement tous vos problèmes de connexion ou de compte.</source>
-        <target>We’re here to quickly resolve any login or account issues.</target><context-group purpose="location">
+        <target>Need help? We'll quickly resolve any sign-in or account issue.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">205,206</context>
         </context-group>
@@ -336,7 +308,7 @@
       </trans-unit>
       <trans-unit id="authSignupErrorPasswordMismatch" datatype="html">
         <source>Les mots de passe ne correspondent pas.</source>
-        <target>Passwords do not match.</target><context-group purpose="location">
+        <target>Passwords don't match.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
           <context context-type="linenumber">134</context>
         </context-group>
@@ -354,7 +326,7 @@
       </trans-unit>
       <trans-unit id="authLoginSuccess" datatype="html">
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName" /> !</source>
-        <target>Welcome <x id="PH" equiv-text="session.user.firstName" />!</target><context-group purpose="location">
+        <target>Welcome back, <x id="PH" equiv-text="session.user.firstName" />!</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
           <context context-type="linenumber">175</context>
         </context-group>
@@ -363,7 +335,7 @@
       </trans-unit>
       <trans-unit id="authGoogleTriggered" datatype="html">
         <source>Google auth triggered for <x id="PH" equiv-text="context" /></source>
-        <target>Google auth triggered for <x id="PH" equiv-text="context" /></target><context-group purpose="location">
+        <target>Google sign-in triggered for <x id="PH" equiv-text="context" /></target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
           <context context-type="linenumber">189</context>
         </context-group>
@@ -372,7 +344,7 @@
       </trans-unit>
       <trans-unit id="authGenericError" datatype="html">
         <source>Une erreur est survenue. Veuillez réessayer.</source>
-        <target>An error occurred. Please try again.</target><context-group purpose="location">
+        <target>Something went wrong. Please try again.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
           <context context-type="linenumber">212</context>
         </context-group>
@@ -381,7 +353,7 @@
       </trans-unit>
       <trans-unit id="ctaTitle" datatype="html">
         <source> Commençons votre projet digital </source>
-        <target>Let's start your digital project</target><context-group purpose="location">
+        <target>Let's launch your digital project</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
           <context context-type="linenumber">21,23</context>
         </context-group>
@@ -390,7 +362,7 @@
       </trans-unit>
       <trans-unit id="ctaLead" datatype="html">
         <source> Ensemble, transformons vos idées en solutions numériques performantes et innovantes. </source>
-        <target>Together, let's turn your ideas into high-performing and innovative digital solutions.</target><context-group purpose="location">
+        <target>Together, we'll turn your ideas into high-impact, innovative digital solutions.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
           <context context-type="linenumber">27,29</context>
         </context-group>
@@ -399,7 +371,7 @@
       </trans-unit>
       <trans-unit id="ctaPrimary" datatype="html">
         <source> Démarrer </source>
-        <target>Get started</target><context-group purpose="location">
+        <target>Start now</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
           <context context-type="linenumber">37,40</context>
         </context-group>
@@ -408,7 +380,7 @@
       </trans-unit>
       <trans-unit id="ctaSecondary" datatype="html">
         <source> Contactez-moi </source>
-        <target>Contact me</target><context-group purpose="location">
+        <target>Let's talk</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
           <context context-type="linenumber">44,47</context>
         </context-group>
@@ -417,7 +389,7 @@
       </trans-unit>
       <trans-unit id="ctaImageAlt" datatype="html">
         <source>Relume placeholder image</source>
-        <target>Relume placeholder image</target><context-group purpose="location">
+        <target>Relume placeholder illustration</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/cta-section/cta-section.component.ts</context>
           <context context-type="linenumber">52,53</context>
         </context-group>
@@ -444,7 +416,7 @@
       </trans-unit>
       <trans-unit id="heroLead" datatype="html">
         <source> Je suis Tim, un professionnel qui transforme les défis numériques en opportunités. Mon parcours unique mêle développement web, management et enseignement. </source>
-        <target>I'm Tim, a professional who turns digital challenges into opportunities. My unique path blends web development, management, and teaching.</target><context-group purpose="location">
+        <target>I'm Tim, turning digital challenges into growth opportunities. My background blends web development, leadership, and teaching.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
           <context context-type="linenumber">31,34</context>
         </context-group>
@@ -453,7 +425,7 @@
       </trans-unit>
       <trans-unit id="heroCtaAbout" datatype="html">
         <source> En savoir plus </source>
-        <target>Learn more</target><context-group purpose="location">
+        <target>About me</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
           <context context-type="linenumber">43,45</context>
         </context-group>
@@ -462,7 +434,7 @@
       </trans-unit>
       <trans-unit id="heroCtaProjects" datatype="html">
         <source> Projets <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                     name=&quot;chevron-right&quot;                     [size]=&quot;1.2&quot;                     aria-hidden=&quot;true&quot;                   &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></source>
-        <target> Projects <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                     name=&quot;chevron-right&quot;                     [size]=&quot;1.2&quot;                     aria-hidden=&quot;true&quot;                   &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
+        <target> See my projects <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                     name=&quot;chevron-right&quot;                     [size]=&quot;1.2&quot;                     aria-hidden=&quot;true&quot;                   &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/hero-section/hero-section.component.ts</context>
           <context context-type="linenumber">50,57</context>
         </context-group>
@@ -480,7 +452,7 @@
       </trans-unit>
       <trans-unit id="missionImageAlt" datatype="html">
         <source>Relume placeholder image</source>
-        <target>Relume placeholder image</target><context-group purpose="location">
+        <target>Relume placeholder illustration</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
           <context context-type="linenumber">22,23</context>
         </context-group>
@@ -498,7 +470,7 @@
       </trans-unit>
       <trans-unit id="missionTitle" datatype="html">
         <source> PresQ la marque qui transforme l'échec en opportunité </source>
-        <target>PresQ, the brand that turns failure into opportunity</target><context-group purpose="location">
+        <target>PresQ — the brand turning setbacks into opportunity</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
           <context context-type="linenumber">40,43</context>
         </context-group>
@@ -507,7 +479,7 @@
       </trans-unit>
       <trans-unit id="missionLead" datatype="html">
         <source> Une approche innovante qui démystifie l'échec et le transforme en source de croissance personnelle. Nous créons des expériences qui encouragent la résilience et l'apprentissage à travers l'humour et la bienveillance. </source>
-        <target>An innovative approach that demystifies failure and turns it into a source of personal growth. We create experiences that encourage resilience and learning through humor and kindness.</target><context-group purpose="location">
+        <target>An innovative approach that turns failure into fuel for personal growth. We craft experiences that build resilience and learning through humor and care.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
           <context context-type="linenumber">46,50</context>
         </context-group>
@@ -516,7 +488,7 @@
       </trans-unit>
       <trans-unit id="missionCtaMore" datatype="html">
         <source> En savoir PresQ plus.. </source>
-        <target>Learn PresQ more..</target><context-group purpose="location">
+        <target>Discover PresQ</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
           <context context-type="linenumber">57,60</context>
         </context-group>
@@ -525,7 +497,7 @@
       </trans-unit>
       <trans-unit id="missionCtaVote" datatype="html">
         <source> Voter son PresQ modèle <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   aria-hidden=&quot;true&quot;                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></source>
-        <target> Choose your PresQ model <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   aria-hidden=&quot;true&quot;                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
+        <target>Choose your PresQ model <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   aria-hidden=&quot;true&quot;                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
           <context context-type="linenumber">64,71</context>
         </context-group>
@@ -543,7 +515,7 @@
       </trans-unit>
       <trans-unit id="productShowcaseTitle" datatype="html">
         <source> Votre assistant personnel de suivi de consommation </source>
-        <target>Your personal consumption tracking assistant</target><context-group purpose="location">
+        <target>Your personal consumption concierge</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
           <context context-type="linenumber">30,33</context>
         </context-group>
@@ -552,7 +524,7 @@
       </trans-unit>
       <trans-unit id="productShowcaseLead" datatype="html">
         <source> Une application conçue pour vous aider à comprendre et gérer vos habitudes de consommation avec des statistiques précises et des conseils personnalisés. </source>
-        <target>An app designed to help you understand and manage your consumption habits with precise statistics and personalized advice.</target><context-group purpose="location">
+        <target>An app that helps you understand and master your habits with clear insights, precise stats, and actionable guidance.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
           <context context-type="linenumber">36,40</context>
         </context-group>
@@ -561,7 +533,7 @@
       </trans-unit>
       <trans-unit id="productShowcaseCtaTest" datatype="html">
         <source> Tester ma consommation </source>
-        <target>Test my consumption</target><context-group purpose="location">
+        <target>Assess my consumption</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
           <context context-type="linenumber">53,57</context>
         </context-group>
@@ -570,7 +542,7 @@
       </trans-unit>
       <trans-unit id="productShowcaseCtaLearnMore" datatype="html">
         <source> En savoir plus <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                   aria-hidden=&quot;true&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></source>
-        <target> Learn more <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                   aria-hidden=&quot;true&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
+        <target> Discover more <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon                   name=&quot;chevron-right&quot;                   [size]=&quot;1.2&quot;                   aria-hidden=&quot;true&quot;                 &gt;" /><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;" /></target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
           <context context-type="linenumber">60,67</context>
         </context-group>
@@ -579,7 +551,7 @@
       </trans-unit>
       <trans-unit id="productShowcaseImageAlt" datatype="html">
         <source>Relume placeholder image</source>
-        <target>Relume placeholder image</target><context-group purpose="location">
+        <target>Relume placeholder illustration</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
           <context context-type="linenumber">73,74</context>
         </context-group>
@@ -597,7 +569,7 @@
       </trans-unit>
       <trans-unit id="productShowcaseFeatureAlcohol" datatype="html">
         <source>Analyse d'alcool</source>
-        <target>Alcohol analysis</target><context-group purpose="location">
+        <target>Alcohol insights</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/product-showcase/product-showcase.component.ts</context>
           <context context-type="linenumber">94</context>
         </context-group>
@@ -624,7 +596,7 @@
       </trans-unit>
       <trans-unit id="projectsTitle" datatype="html">
         <source> Mes réalisations numériques </source>
-        <target>My digital achievements</target><context-group purpose="location">
+        <target>Signature digital projects</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">42,45</context>
         </context-group>
@@ -633,7 +605,7 @@
       </trans-unit>
       <trans-unit id="projectsLead" datatype="html">
         <source> Chaque projet raconte une histoire unique de transformation digitale. Découvrez comment j'ai relevé des défis techniques et créatifs avec passion et précision. </source>
-        <target>Each project tells a unique story of digital transformation. Discover how I tackled technical and creative challenges with passion and precision.</target><context-group purpose="location">
+        <target>Every project tells a story of digital transformation. See how I solve technical and creative challenges with passion and precision.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">48,51</context>
         </context-group>
@@ -660,7 +632,7 @@
       </trans-unit>
       <trans-unit id="projectsItemWebDesc" datatype="html">
         <source>Un jeu narratif immersif qui combine storytelling et mécaniques de résolution d'énigmes pour une expérience unique.</source>
-        <target>An immersive narrative game combining storytelling and puzzle-solving mechanics for a unique experience.</target><context-group purpose="location">
+        <target>An immersive narrative game blending storytelling and puzzle-solving for a one-of-a-kind experience.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">129</context>
         </context-group>
@@ -669,7 +641,7 @@
       </trans-unit>
       <trans-unit id="projectsItemWebImageAlt" datatype="html">
         <source>Relume placeholder image 1</source>
-        <target>Relume placeholder image 1</target><context-group purpose="location">
+        <target>Relume placeholder illustration 1</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">130</context>
         </context-group>
@@ -687,7 +659,7 @@
       </trans-unit>
       <trans-unit id="projectsItemMobileTitle" datatype="html">
         <source>Expérience mobile complète</source>
-        <target>Complete mobile experience</target><context-group purpose="location">
+        <target>Comprehensive mobile experience</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">138</context>
         </context-group>
@@ -696,7 +668,7 @@
       </trans-unit>
       <trans-unit id="projectsItemMobileDesc" datatype="html">
         <source>Une plateforme appliquée qui accompagne les utilisateurs dans leur quotidien grâce à une interface intuitive et performante.</source>
-        <target>A dedicated platform that supports users in their daily life with an intuitive and high-performing interface.</target><context-group purpose="location">
+        <target>A dedicated platform that supports users daily with an intuitive, high-performance experience.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">139</context>
         </context-group>
@@ -705,7 +677,7 @@
       </trans-unit>
       <trans-unit id="projectsItemMobileImageAlt" datatype="html">
         <source>Relume placeholder image 2</source>
-        <target>Relume placeholder image 2</target><context-group purpose="location">
+        <target>Relume placeholder illustration 2</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">140</context>
         </context-group>
@@ -732,7 +704,7 @@
       </trans-unit>
       <trans-unit id="projectsItemAppDesc" datatype="html">
         <source>Un tableau de bord conçu pour visualiser les données clés et faciliter la prise de décision en temps réel.</source>
-        <target>A dashboard designed to visualize key data and make real-time decision-making easier.</target><context-group purpose="location">
+        <target>A dashboard built to spotlight key data and simplify real-time decisions.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">149</context>
         </context-group>
@@ -741,7 +713,7 @@
       </trans-unit>
       <trans-unit id="projectsItemAppImageAlt" datatype="html">
         <source>Relume placeholder image 3</source>
-        <target>Relume placeholder image 3</target><context-group purpose="location">
+        <target>Relume placeholder illustration 3</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">150</context>
         </context-group>
@@ -768,7 +740,7 @@
       </trans-unit>
       <trans-unit id="projectsItemGameDesc" datatype="html">
         <source>Une expérience immersive qui marie narration, design sonore et interactions pour captiver vos audiences.</source>
-        <target>An immersive experience combining storytelling, sound design, and interactions to captivate your audiences.</target><context-group purpose="location">
+        <target>An immersive world weaving storytelling, sound design, and interaction to captivate your audience.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">159</context>
         </context-group>
@@ -777,7 +749,7 @@
       </trans-unit>
       <trans-unit id="projectsItemGameImageAlt" datatype="html">
         <source>Relume placeholder image 4</source>
-        <target>Relume placeholder image 4</target><context-group purpose="location">
+        <target>Relume placeholder illustration 4</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
           <context context-type="linenumber">160</context>
         </context-group>
@@ -795,7 +767,7 @@
       </trans-unit>
       <trans-unit id="servicesTitle" datatype="html">
         <source> Solutions numériques sur mesure </source>
-        <target>Tailor-made digital solutions</target><context-group purpose="location">
+        <target>Bespoke digital solutions</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">32,35</context>
         </context-group>
@@ -804,7 +776,7 @@
       </trans-unit>
       <trans-unit id="servicesLead" datatype="html">
         <source> Je propose des services complets adaptés à vos besoins spécifiques, avec une approche personnalisée et professionnelle. </source>
-        <target>I offer end-to-end services tailored to your specific needs with a personalized, professional approach.</target><context-group purpose="location">
+        <target>I deliver end-to-end services tailored to your needs with a bespoke, hands-on approach.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">40,43</context>
         </context-group>
@@ -813,7 +785,7 @@
       </trans-unit>
       <trans-unit id="servicesCtaPricing" datatype="html">
         <source> Tarifs </source>
-        <target>Pricing</target><context-group purpose="location">
+        <target>View pricing</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">70,73</context>
         </context-group>
@@ -831,7 +803,7 @@
       </trans-unit>
       <trans-unit id="servicesItemWebTitle" datatype="html">
         <source>Création de site web</source>
-        <target>Website creation</target><context-group purpose="location">
+        <target>Custom website creation</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">94</context>
         </context-group>
@@ -840,7 +812,7 @@
       </trans-unit>
       <trans-unit id="servicesItemWebDesc" datatype="html">
         <source>Stratégies avancées pour améliorer la visibilité de votre site et attirer plus de clients potentiels.</source>
-        <target>Advanced strategies to improve your site's visibility and attract more potential clients.</target><context-group purpose="location">
+        <target>Advanced strategies to elevate your visibility and attract qualified clients.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">95</context>
         </context-group>
@@ -867,7 +839,7 @@
       </trans-unit>
       <trans-unit id="servicesItemMaintenanceDesc" datatype="html">
         <source>Accompagnement personnalisé pour développer vos compétences numériques et atteindre vos objectifs professionnels.</source>
-        <target>Personalized support to develop your digital skills and reach your professional goals.</target><context-group purpose="location">
+        <target>Personalized support to grow your digital skills and reach your goals.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">101</context>
         </context-group>
@@ -894,7 +866,7 @@
       </trans-unit>
       <trans-unit id="servicesItemSeoDesc" datatype="html">
         <source>Solutions expertes pour votre transformation digitale et votre visibilité en ligne.</source>
-        <target>Expert solutions for your digital transformation and online visibility.</target><context-group purpose="location">
+        <target>Expert solutions to accelerate your digital transformation and online visibility.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">107</context>
         </context-group>
@@ -921,7 +893,7 @@
       </trans-unit>
       <trans-unit id="servicesItemTrainingDesc" datatype="html">
         <source>Programmes conçus pour propulser votre entreprise vers de nouveaux horizons numériques.</source>
-        <target>Programs designed to propel your business toward new digital horizons.</target><context-group purpose="location">
+        <target>Programs designed to propel your business into new digital territory.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/services-section/services-section.component.ts</context>
           <context context-type="linenumber">113</context>
         </context-group>
@@ -939,7 +911,7 @@
       </trans-unit>
       <trans-unit id="homeContactSubtitle" datatype="html">
         <source>Contactez nous si vous avez des questions, un besoin ou une suggestion.</source>
-        <target>Contact us if you have a question, a need, or a suggestion.</target><context-group purpose="location">
+        <target>Reach out with any questions, needs, or ideas.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/home.component.html</context>
           <context context-type="linenumber">8,9</context>
         </context-group>
@@ -957,7 +929,7 @@
       </trans-unit>
       <trans-unit id="contactMapLinkAria" datatype="html">
         <source>Voir l'emplacement sur la carte dans un nouvel onglet</source>
-        <target>View the location on the map in a new tab</target><context-group purpose="location">
+        <target>Open the location on the map in a new tab</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/contact/contact.component.html</context>
           <context context-type="linenumber">51,52</context>
         </context-group>
@@ -1029,7 +1001,7 @@
       </trans-unit>
       <trans-unit id="contactMapAlt" datatype="html">
         <source>Bordeaux placeholder map image</source>
-        <target>Bordeaux placeholder map image</target><context-group purpose="location">
+        <target>Bordeaux map placeholder</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/contact/contact.component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
@@ -1209,7 +1181,7 @@
       </trans-unit>
       <trans-unit id="footerLegalTerms" datatype="html">
         <source>Conditions d'utilisation</source>
-        <target>Terms of use</target><context-group purpose="location">
+        <target>Terms of Use</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
           <context context-type="linenumber">60</context>
         </context-group>
@@ -1416,7 +1388,7 @@
       </trans-unit>
       <trans-unit id="navDropdownSebastianDesc" datatype="html">
         <source>Suivi de consommation et conseils</source>
-        <target>Consumption tracking and advice</target><context-group purpose="location">
+        <target>Personalized consumption tracking and guidance</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
           <context context-type="linenumber">58</context>
         </context-group>
@@ -1470,7 +1442,7 @@
       </trans-unit>
       <trans-unit id="navDropdownProfessionalDesc" datatype="html">
         <source>Sites web pour clients et entreprises</source>
-        <target>Websites for clients and businesses</target><context-group purpose="location">
+        <target>High-impact websites for clients and businesses</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
           <context context-type="linenumber">72</context>
         </context-group>
@@ -1533,7 +1505,7 @@
       </trans-unit>
       <trans-unit id="navDropdownWeekAwayDesc" datatype="html">
         <source>Planification de voyages simplifiée</source>
-        <target>Simplified trip planning</target><context-group purpose="location">
+        <target>Effortless trip planning</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
           <context context-type="linenumber">92</context>
         </context-group>
@@ -1560,7 +1532,7 @@
       </trans-unit>
       <trans-unit id="navDropdownDeathCounterDesc" datatype="html">
         <source>Jeu de stratégie et de défi</source>
-        <target>Strategy and challenge game</target><context-group purpose="location">
+        <target>Strategy challenge game</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
           <context context-type="linenumber">99</context>
         </context-group>
@@ -1587,7 +1559,7 @@
       </trans-unit>
       <trans-unit id="navDropdownAssassinDesc" datatype="html">
         <source>Enquête narrative et mystère</source>
-        <target>Narrative investigation and mystery</target><context-group purpose="location">
+        <target>Narrative mystery investigation</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
           <context context-type="linenumber">106</context>
         </context-group>
@@ -1614,7 +1586,7 @@
       </trans-unit>
       <trans-unit id="seoDefaultTitle" datatype="html">
         <source>Professional Portfolio | Web Developer &amp; Designer</source>
-        <target>Professional Portfolio | Web Developer &amp; Designer</target><context-group purpose="location">
+        <target>Tim Moyence | Web Developer &amp; Designer Portfolio</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
           <context context-type="linenumber">60</context>
         </context-group>
@@ -1623,7 +1595,7 @@
       </trans-unit>
       <trans-unit id="seoDefaultDescription" datatype="html">
         <source>Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.</source>
-        <target>Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.</target><context-group purpose="location">
+        <target>Browse a curated portfolio of web development projects, courses, and services that highlight modern technologies and creative solutions.</target><context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
           <context context-type="linenumber">61</context>
         </context-group>

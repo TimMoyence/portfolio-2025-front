@@ -1,41 +1,41 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { RegisterUserPayload } from '../../core/models/auth.model';
-import { LoginFormState } from '../../core/models/loginForm.model';
-import { SignupFormState } from '../../core/models/signupForm.model';
-import { AuthService } from '../../core/services/auth.service';
-import { ContactComponent } from '../../shared/components/contact/contact.component';
-import { SvgIconComponent } from '../../shared/components/svg-icon.component';
+import { CommonModule } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { FormsModule, NgForm } from "@angular/forms";
+import { RegisterUserPayload } from "../../core/models/auth.model";
+import { LoginFormState } from "../../core/models/loginForm.model";
+import { SignupFormState } from "../../core/models/signupForm.model";
+import { AuthService } from "../../core/services/auth.service";
+import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
+import { SvgIconComponent } from "../../shared/components/svg-icon.component";
 
-type AuthTab = 'sign-up' | 'log-in';
+type AuthTab = "sign-up" | "log-in";
 type SignupFormKey = keyof SignupFormState;
 type LoginFormKey = keyof LoginFormState;
 
 @Component({
-  selector: 'app-auth',
+  selector: "app-auth",
   standalone: true,
-  imports: [CommonModule, FormsModule, SvgIconComponent, ContactComponent],
-  templateUrl: './auth.component.html',
-  styleUrl: './auth.component.scss',
+  imports: [CommonModule, FormsModule, SvgIconComponent, ContactCtaComponent],
+  templateUrl: "./auth.component.html",
+  styleUrl: "./auth.component.scss",
 })
 export class AuthComponent {
   private readonly authService = inject(AuthService);
   private readonly defaultSignupState: SignupFormState = {
-    email: '',
-    password: '',
-    verifPassword: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
+    email: "",
+    password: "",
+    verifPassword: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
   };
 
   private readonly defaultLoginState: LoginFormState = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   };
 
-  activeTab: AuthTab = 'sign-up';
+  activeTab: AuthTab = "sign-up";
   showPassword: boolean = false;
   isSignupSubmitted: boolean = false;
   isLoginSubmitted: boolean = false;
@@ -55,39 +55,39 @@ export class AuthComponent {
     icon?: string;
   }[] = [
     {
-      key: 'firstName',
+      key: "firstName",
       label: $localize`:auth.signup.field.firstName|Signup field label@@authSignupFieldFirstName:Prénom`,
-      type: 'text',
+      type: "text",
       required: true,
     },
     {
-      key: 'lastName',
+      key: "lastName",
       label: $localize`:auth.signup.field.lastName|Signup field label@@authSignupFieldLastName:Nom`,
-      type: 'text',
+      type: "text",
       required: true,
     },
     {
-      key: 'email',
+      key: "email",
       label: $localize`:auth.signup.field.email|Signup field label@@authSignupFieldEmail:Email`,
-      type: 'email',
+      type: "email",
       required: true,
     },
     {
-      key: 'password',
+      key: "password",
       label: $localize`:auth.signup.field.password|Signup field label@@authSignupFieldPassword:Mot de passe`,
-      type: 'password',
+      type: "password",
       required: true,
     },
     {
-      key: 'verifPassword',
+      key: "verifPassword",
       label: $localize`:auth.signup.field.passwordConfirm|Signup field label@@authSignupFieldPasswordConfirm:Verification de mot de passe`,
-      type: 'password',
+      type: "password",
       required: true,
     },
     {
-      key: 'phone',
+      key: "phone",
       label: $localize`:auth.signup.field.phone|Signup field label@@authSignupFieldPhone:Téléphone`,
-      type: 'tel',
+      type: "tel",
       required: false,
     },
   ];
@@ -101,15 +101,15 @@ export class AuthComponent {
     required: boolean;
   }[] = [
     {
-      key: 'email',
+      key: "email",
       label: $localize`:auth.login.field.email|Login field label@@authLoginFieldEmail:Email`,
-      type: 'email',
+      type: "email",
       required: true,
     },
     {
-      key: 'password',
+      key: "password",
       label: $localize`:auth.login.field.password|Login field label@@authLoginFieldPassword:Mot de passe`,
-      type: 'password',
+      type: "password",
       required: true,
     },
   ];
@@ -198,10 +198,10 @@ export class AuthComponent {
 
   private extractErrorMessage(error: unknown): string {
     if (
-      typeof error === 'object' &&
+      typeof error === "object" &&
       error !== null &&
-      'error' in error &&
-      typeof (error as { error: { message?: string } }).error === 'object'
+      "error" in error &&
+      typeof (error as { error: { message?: string } }).error === "object"
     ) {
       const apiError = (error as { error: { message?: string } }).error;
       if (apiError?.message) {
