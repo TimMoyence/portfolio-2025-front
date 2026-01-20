@@ -1,9 +1,9 @@
-type NavLink = {
+export type NavLink = {
   label: string;
   href: string;
 };
 
-type DropdownItem = {
+export type DropdownItem = {
   title: string;
   description: string;
   icon: string;
@@ -11,7 +11,7 @@ type DropdownItem = {
   href: string;
 };
 
-type DropdownSection = {
+export type DropdownSection = {
   label: string;
   isOpen: boolean;
   items: DropdownItem[];

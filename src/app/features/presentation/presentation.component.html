@@ -1,12 +1,12 @@
 <app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" [actions]="hero.actions"
-  titleLevel="h1"></app-hero-section>
+  titleLevel="h1" align="left"></app-hero-section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
+<section class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="technology-section">
   <div class="container">
     <div class="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-20">
       <div>
         <p class="mb-3 font-semibold md:mb-4">{{ technologySection.label }}</p>
-        <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@presentationTechHeading">
+        <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" i18n="@@presentationTechHeading">
           {{ technologySection.title }}
         </h2>
         <p class="mb-5 md:mb-6 md:text-md">
@@ -41,7 +41,7 @@
   </div>
 </section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
+<section class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="highlight-section">
   <div class="container">
     <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-x-20">
       <div class="order-2 md:order-1">
@@ -50,7 +50,7 @@
       </div>
       <div class="order-1 md:order-2">
         <p class="mb-3 font-semibold md:mb-4">{{ highlightSection.label }}</p>
-        <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@presentationHighlightHeading">
+        <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" i18n="@@presentationHighlightHeading">
           {{ highlightSection.title }}
         </h2>
         <p class="mb-5 md:mb-6 md:text-md">
@@ -79,13 +79,13 @@
   </div>
 </section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
+<section class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="portfolio-section">
   <div class="container">
     <header class="mx-auto mb-12 max-w-lg text-center md:mb-18 lg:mb-20">
       <p class="mb-3 font-semibold md:mb-4">
         {{ portfolioHeader.label }}
       </p>
-      <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@presentationPortfolioHeading">
+      <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" i18n="@@presentationPortfolioHeading">
         {{ portfolioHeader.title }}
       </h2>
       <p class="md:text-md">{{ portfolioHeader.description }}</p>
@@ -124,6 +124,8 @@
     </footer>
   </div>
 </section>
+
+<app-cta-contact [leadParagraphs]="contactSection.leadParagraphs"></app-cta-contact>
 
 <app-cta-block [title]="overlayCta.title" [description]="overlayCta.description"
   [backgroundImage]="overlayCta.background" [overlay]="true" [textOnDark]="true"

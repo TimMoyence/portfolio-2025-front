@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
@@ -8,7 +9,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeComponent],
+      imports: [HomeComponent, RouterTestingModule, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
@@ -22,9 +23,8 @@ describe('HomeComponent', () => {
 
   it('should render the composed sections including contact and footer', () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    expect(compiled.querySelector('app-hero-section')).not.toBeNull();
+    expect(compiled.querySelector('app-hero-section-home')).not.toBeNull();
     expect(compiled.querySelector('app-services-section')).not.toBeNull();
-    expect(compiled.querySelector('app-contact')).not.toBeNull();
-    expect(compiled.querySelector('app-footer')).not.toBeNull();
+    expect(compiled.querySelector('app-cta-contact')).not.toBeNull();
   });
 });

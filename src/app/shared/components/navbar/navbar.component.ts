@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { A11yDialogService } from '../../services/a11y-dialog.service';
+import { DropdownSection, NavLink } from '../../models/navbar.model';
 import { SvgIconComponent } from '../svg-icon.component';
 
 @Component({

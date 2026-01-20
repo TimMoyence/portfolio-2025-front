@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CtaBlockComponent } from '../../shared/components/cta-block/cta-block.component';
+import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { HeroAction, HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
 
 interface HighlightLogo {
@@ -20,7 +21,13 @@ interface PortfolioCard {
 @Component({
   selector: 'app-presentation',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeroSectionComponent, CtaBlockComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeroSectionComponent,
+    CtaBlockComponent,
+    ContactCtaComponent,
+  ],
   templateUrl: './presentation.component.html',
   styleUrl: './presentation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -200,6 +207,13 @@ export class PresentationComponent {
         variant: 'secondary' as HeroAction['variant'],
         href: '/offer',
       },
+    ],
+  };
+
+  readonly contactSection = {
+    leadParagraphs: [
+      $localize`:home.contact.lead.1|Home contact lead paragraph@@homeContactLead1:Vous avez un besoin, une contrainte ou une idée à clarifier ?`,
+      $localize`:home.contact.lead.2|Home contact lead paragraph@@homeContactLead2:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
     ],
   };
 }

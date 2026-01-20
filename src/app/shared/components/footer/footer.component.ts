@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FooterColumn, FooterLink, SocialLink } from '../../models/footer.model';
 import { SvgIconComponent } from '../svg-icon.component';
 
 @Component({

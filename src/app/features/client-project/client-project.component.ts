@@ -5,6 +5,7 @@ import {
   HeroAction,
   HeroSectionComponent,
 } from '../../shared/components/hero-section/hero-section.component';
+import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 
 interface CaseStudy {
   tag: string;
@@ -24,7 +25,12 @@ interface LogoItem {
 @Component({
   selector: 'app-client-project',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeroSectionComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeroSectionComponent,
+    ContactCtaComponent,
+  ],
   templateUrl: './client-project.component.html',
   styleUrl: './client-project.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -144,6 +150,13 @@ export class ClientProjectComponent {
         variant: 'ghost' as HeroAction['variant'],
         href: '/presentation',
       },
+    ],
+  };
+
+  readonly contactSection = {
+    leadParagraphs: [
+      $localize`:home.contact.lead.1|Home contact lead paragraph@@homeContactLead1:Vous avez un besoin, une contrainte ou une idée à clarifier ?`,
+      $localize`:home.contact.lead.2|Home contact lead paragraph@@homeContactLead2:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
     ],
   };
 }

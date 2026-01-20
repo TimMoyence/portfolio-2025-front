@@ -1,12 +1,12 @@
-type FooterLink = {
+export type FooterLink = {
   label: string;
   href: string;
 };
 
-type FooterColumn = {
+export type FooterColumn = {
   links: FooterLink[];
 };
 
-type SocialLink = FooterLink & {
+export type SocialLink = FooterLink & {
   icon?: string | null;
 };

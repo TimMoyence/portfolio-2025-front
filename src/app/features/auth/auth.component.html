@@ -1,14 +1,18 @@
-<section class="px-[5%]">
-  <div class="relative flex flex-col overflow-auto">
-    <div class="mx-auto w-full max-w-sm">
-      <div dir="ltr" data-orientation="horizontal" data-slot="tabs" class="flex flex-col justify-start">
-        <div role="tablist" aria-orientation="horizontal" data-slot="tabs-list"
-          class="mb-8 scrollbar-none flex w-full items-center overflow-auto md:justify-center md:overflow-hidden"
-          tabindex="-1" data-orientation="horizontal">
-          <button type="button" role="tab" id="auth-trigger-sign-up" [attr.aria-controls]="'auth-tab-sign-up'"
-            [attr.aria-selected]="isTabActive('sign-up')"
-            [attr.data-state]="isTabActive('sign-up') ? 'active' : 'inactive'"
-            [attr.tabindex]="isTabActive('sign-up') ? 0 : -1" data-slot="tabs-trigger" class="
+<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" titleLevel="h1"
+  align="left"></app-hero-section>
+
+<section class="px-[5%] py-12 md:py-18 lg:py-22">
+  <div class="container">
+    <div class="relative flex flex-col overflow-auto">
+      <div class="mx-auto w-full max-w-xl">
+        <div dir="ltr" data-orientation="horizontal" data-slot="tabs" class="flex flex-col justify-start">
+          <div role="tablist" aria-orientation="horizontal" data-slot="tabs-list"
+            class="mb-8 scrollbar-none flex w-full items-center overflow-auto md:justify-center md:overflow-hidden"
+            tabindex="-1" data-orientation="horizontal">
+            <button type="button" role="tab" id="auth-trigger-sign-up" [attr.aria-controls]="'auth-tab-sign-up'"
+              [attr.aria-selected]="isTabActive('sign-up')"
+              [attr.data-state]="isTabActive('sign-up') ? 'active' : 'inactive'"
+              [attr.tabindex]="isTabActive('sign-up') ? 0 : -1" data-slot="tabs-trigger" class="
               inline-flex w-1/2 items-center justify-center
               rounded-none
               border-x-0 border-t-0
@@ -19,13 +23,13 @@
               data-[state=active]:border-b-scheme-accent
               data-[state=inactive]:border-b-transparent
             " (click)="selectTab('sign-up')">
-            <span i18n="auth.tabs.signup|Signup tab label@@authTabSignup">S'inscrire</span>
-          </button>
+              <span i18n="auth.tabs.signup|Signup tab label@@authTabSignup">S'inscrire</span>
+            </button>
 
-          <button type="button" role="tab" id="auth-trigger-log-in" [attr.aria-controls]="'auth-tab-log-in'"
-            [attr.aria-selected]="isTabActive('log-in')"
-            [attr.data-state]="isTabActive('log-in') ? 'active' : 'inactive'"
-            [attr.tabindex]="isTabActive('log-in') ? 0 : -1" data-slot="tabs-trigger" class="
+            <button type="button" role="tab" id="auth-trigger-log-in" [attr.aria-controls]="'auth-tab-log-in'"
+              [attr.aria-selected]="isTabActive('log-in')"
+              [attr.data-state]="isTabActive('log-in') ? 'active' : 'inactive'"
+              [attr.tabindex]="isTabActive('log-in') ? 0 : -1" data-slot="tabs-trigger" class="
               inline-flex w-1/2 items-center justify-center
               rounded-none
               border-x-0 border-t-0
@@ -36,41 +40,42 @@
               data-[state=active]:border-b-scheme-accent
               data-[state=inactive]:border-b-transparent
             " (click)="selectTab('log-in')">
-            <span i18n="auth.tabs.login|Login tab label@@authTabLogin">Connexion</span>
-          </button>
-        </div>
-        <div *ngIf="isTabActive('sign-up')" role="tabpanel" id="auth-tab-sign-up"
-          [attr.aria-labelledby]="'auth-trigger-sign-up'" data-slot="tabs-content"
-          class="focus-visible:outline-none data-[state=active]:animate-tabs"
-          [attr.data-state]="isTabActive('sign-up') ? 'active' : 'inactive'" tabindex="0">
-          <div class="mb-6 text-center md:mb-8">
-            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
-              Votre parcours</h1>
-            <p class="text-medium" i18n="auth.signup.lead|Signup panel description@@authSignupLead">
-              Déverrouillez votre potentiel avec un compte personnalisé
-            </p>
+              <span i18n="auth.tabs.login|Login tab label@@authTabLogin">Connexion</span>
+            </button>
           </div>
-          <form class="grid grid-cols-1 gap-6" #signupFormRef="ngForm" (ngSubmit)="handleSignupSubmit(signupFormRef)">
+          <div *ngIf="isTabActive('sign-up')" role="tabpanel" id="auth-tab-sign-up"
+            [attr.aria-labelledby]="'auth-trigger-sign-up'" data-slot="tabs-content"
+            class="focus-visible:outline-none data-[state=active]:animate-tabs"
+            [attr.data-state]="isTabActive('sign-up') ? 'active' : 'inactive'" tabindex="0">
+            <div class="mb-6 text-center md:mb-8">
+              <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
+                i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
+                Votre parcours</h2>
+              <p class="text-medium" i18n="auth.signup.lead|Signup panel description@@authSignupLead">
+                Déverrouillez votre potentiel avec un compte personnalisé
+              </p>
+            </div>
+            <form class="grid grid-cols-1 gap-6" #signupFormRef="ngForm" (ngSubmit)="handleSignupSubmit(signupFormRef)">
 
-            @for (field of signupFields; track field.key) {
-            <div class="relative mb-6">
+              @for (field of signupFields; track field.key) {
+              <div class="relative mb-6">
 
-              <input
-                [type]="(field.key === 'password' || field.key === 'verifPassword') && showPassword ? 'text' : field.type"
-                [id]="field.key" [name]="field.key" [(ngModel)]="signupForm[field.key]" [required]="field.required"
-                [minlength]="field.key === 'password' ? 8 : null" [email]="field.type === 'email' ? '' : false"
-                placeholder=" " class="peer block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent
+                <input
+                  [type]="(field.key === 'password' || field.key === 'verifPassword') && showPassword ? 'text' : field.type"
+                  [id]="field.key" [name]="field.key" [(ngModel)]="signupForm[field.key]" [required]="field.required"
+                  [minlength]="field.key === 'password' ? 8 : null" [email]="field.type === 'email' ? '' : false"
+                  placeholder=" " class="peer block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent
               focus:outline-none" #control="ngModel"
-                [class.border-red-500]="control.invalid && (control.touched || isSignupSubmitted)" />
-              @if (field.key === 'password' || field.key === 'verifPassword') {
-              <button type="button" (click)="showPassword = !showPassword"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                <app-svg-icon [name]="showPassword ? 'visibility_off' : 'visibility'" [fill]="'keep'"
-                  [size]="1"></app-svg-icon>
-              </button>
-              }
+                  [class.border-red-500]="control.invalid && (control.touched || isSignupSubmitted)" />
+                @if (field.key === 'password' || field.key === 'verifPassword') {
+                <button type="button" (click)="showPassword = !showPassword"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                  <app-svg-icon [name]="showPassword ? 'visibility_off' : 'visibility'" [fill]="'keep'"
+                    [size]="1"></app-svg-icon>
+                </button>
+                }
 
-              <label [for]="field.key" class="absolute left-3 tosp-2 px-1
+                <label [for]="field.key" class="absolute left-3 tosp-2 px-1
              bg-white text-gray-600 text-sm font-medium
              pointer-events-none transition-all duration-200
              peer-placeholder-shown:top-2
@@ -81,77 +86,78 @@
              peer-focus:text-scheme-accent" [ngClass]="signupForm[field.key]
         ? '-top-3 text-xs text-scheme-accent'
         : 'top-2 text-sm text-gray-500'"
-                [class.text-red-500]="control.invalid && (control.touched || isSignupSubmitted)">
-                {{ field.label }}
-                <span *ngIf="!field.required"
-                  i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
+                  [class.text-red-500]="control.invalid && (control.touched || isSignupSubmitted)">
+                  {{ field.label }}
+                  <span *ngIf="!field.required"
+                    i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
 
-              </label>
-              <p *ngIf="control.invalid && (control.touched || isSignupSubmitted)" class="mt-1 text-xs text-red-500">
-                @if (control.errors?.['required']) {
-                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est
-                  obligatoire.</span>
-                } @else if (control.errors?.['email']) {
-                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email
-                  valide.</span>
-                } @else if (control.errors?.['minlength'] && field.key === 'password') {
-                <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength">Le mot de passe
-                  doit contenir au moins 8 caractères.</span>
-                } @else {
-                <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
-                }
-              </p>
-            </div>
-            }
-            <div class="grid grid-cols-1 gap-4">
-              <button type="submit" data-slot="button"
-                class="bg-scheme-accent inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-neutral-darkest px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
-                title="Créer compte" i18n-title [disabled]="isSignupLoading" [attr.aria-busy]="isSignupLoading">
-                <ng-container *ngIf="!isSignupLoading; else signupLoading">
-                  <span i18n="auth.signup.submit|Signup submit label@@authSignupSubmit">Créer compte</span>
-                </ng-container>
-              </button>
-              <ng-template #signupLoading>
-                <span i18n="auth.signup.loading|Signup loading state@@authSignupLoading">Création en cours...</span>
-              </ng-template>
-              <p *ngIf="signupErrorMessage" class="text-sm text-red-500">
-                {{ signupErrorMessage }}
-              </p>
-              <p *ngIf="signupSuccessMessage" class="text-sm text-green-600">
-                {{ signupSuccessMessage }}
-              </p>
-              <button type="button" data-slot="button"
-                class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3  transition-all duration-200 ease-in-out"
-                title="Inscrivez-vous avec Google" i18n-title (click)="handleGoogleAuth('sign-up')">
-                <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
-                <p class="text-scheme-text" i18n="auth.signup.google|Signup with Google@@authSignupGoogle">
-                  Inscrivez-vous avec Google</p>
-              </button>
-            </div>
-          </form>
-        </div>
-        <div *ngIf="isTabActive('log-in')" role="tabpanel" id="auth-tab-log-in"
-          [attr.aria-labelledby]="'auth-trigger-log-in'" data-slot="tabs-content"
-          class="focus-visible:outline-none data-[state=active]:animate-tabs"
-          [attr.data-state]="isTabActive('log-in') ? 'active' : 'inactive'" tabindex="0">
-          <div class="mb-6 text-center md:mb-8">
-            <h1 class="mb-5 text-h2 font-bold md:mb-6" i18n="auth.login.title|Login panel heading@@authLoginTitle">Se
-              connecter</h1>
-            <p class="text-medium" i18n="auth.login.lead|Login panel description@@authLoginLead">
-              Votre espace de croissance commence
-            </p>
+                </label>
+                <p *ngIf="control.invalid && (control.touched || isSignupSubmitted)" class="mt-1 text-xs text-red-500">
+                  @if (control.errors?.['required']) {
+                  <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est
+                    obligatoire.</span>
+                  } @else if (control.errors?.['email']) {
+                  <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email
+                    valide.</span>
+                  } @else if (control.errors?.['minlength'] && field.key === 'password') {
+                  <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength">Le mot de passe
+                    doit contenir au moins 8 caractères.</span>
+                  } @else {
+                  <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
+                  }
+                </p>
+              </div>
+              }
+              <div class="grid grid-cols-1 gap-4">
+                <button type="submit" data-slot="button"
+                  class="bg-scheme-accent inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-neutral-darkest px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
+                  title="Créer compte" i18n-title [disabled]="isSignupLoading" [attr.aria-busy]="isSignupLoading">
+                  <ng-container *ngIf="!isSignupLoading; else signupLoading">
+                    <span i18n="auth.signup.submit|Signup submit label@@authSignupSubmit">Créer compte</span>
+                  </ng-container>
+                </button>
+                <ng-template #signupLoading>
+                  <span i18n="auth.signup.loading|Signup loading state@@authSignupLoading">Création en cours...</span>
+                </ng-template>
+                <p *ngIf="signupErrorMessage" class="text-sm text-red-500">
+                  {{ signupErrorMessage }}
+                </p>
+                <p *ngIf="signupSuccessMessage" class="text-sm text-green-600">
+                  {{ signupSuccessMessage }}
+                </p>
+                <button type="button" data-slot="button"
+                  class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3  transition-all duration-200 ease-in-out"
+                  title="Inscrivez-vous avec Google" i18n-title (click)="handleGoogleAuth('sign-up')">
+                  <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
+                  <p class="text-scheme-text" i18n="auth.signup.google|Signup with Google@@authSignupGoogle">
+                    Inscrivez-vous avec Google</p>
+                </button>
+              </div>
+            </form>
           </div>
-          <form class="grid grid-cols-1 gap-6" #loginFormRef="ngForm" (ngSubmit)="handleLoginSubmit(loginFormRef)">
-            @for (field of loginFields; track field.key) {
-            <div class="relative mb-6">
+          <div *ngIf="isTabActive('log-in')" role="tabpanel" id="auth-tab-log-in"
+            [attr.aria-labelledby]="'auth-trigger-log-in'" data-slot="tabs-content"
+            class="focus-visible:outline-none data-[state=active]:animate-tabs"
+            [attr.data-state]="isTabActive('log-in') ? 'active' : 'inactive'" tabindex="0">
+            <div class="mb-6 text-center md:mb-8">
+              <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
+                i18n="auth.login.title|Login panel heading@@authLoginTitle">Se
+                connecter</h2>
+              <p class="text-medium" i18n="auth.login.lead|Login panel description@@authLoginLead">
+                Votre espace de croissance commence
+              </p>
+            </div>
+            <form class="grid grid-cols-1 gap-6" #loginFormRef="ngForm" (ngSubmit)="handleLoginSubmit(loginFormRef)">
+              @for (field of loginFields; track field.key) {
+              <div class="relative mb-6">
 
-              <input [type]="field.type" [id]="field.key" [name]="field.key" [(ngModel)]="loginForm[field.key]"
-                [required]="field.required" [minlength]="field.key === 'password' ? 8 : null"
-                [email]="field.type === 'email' ? '' : false" placeholder=" " class="peer block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent
+                <input [type]="field.type" [id]="field.key" [name]="field.key" [(ngModel)]="loginForm[field.key]"
+                  [required]="field.required" [minlength]="field.key === 'password' ? 8 : null"
+                  [email]="field.type === 'email' ? '' : false" placeholder=" " class="peer block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent
                           focus:outline-none" #control="ngModel"
-                [class.border-red-500]="control.invalid && (control.touched || isLoginSubmitted)" />
+                  [class.border-red-500]="control.invalid && (control.touched || isLoginSubmitted)" />
 
-              <label [for]="field.key" class="absolute left-3 tosp-2 px-1
+                <label [for]="field.key" class="absolute left-3 tosp-2 px-1
                          bg-white text-gray-600 text-sm font-medium
                          pointer-events-none transition-all duration-200
                          peer-placeholder-shown:top-2
@@ -162,57 +168,55 @@
                          peer-focus:text-scheme-accent" [ngClass]="loginForm[field.key]
                     ? '-top-3 text-xs text-scheme-accent'
                     : 'top-2 text-sm text-gray-500'"
-                [class.text-red-500]="control.invalid && (control.touched || isLoginSubmitted)">
-                {{ field.label }}
-                <span *ngIf="!field.required"
-                  i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
-              </label>
-              <p *ngIf="control.invalid && (control.touched || isLoginSubmitted)" class="mt-1 text-xs text-red-500">
-                @if (control.errors?.['required']) {
-                <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est
-                  obligatoire.</span>
-                } @else if (control.errors?.['email']) {
-                <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email
-                  valide.</span>
-                } @else {
-                <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
-                }
-              </p>
-            </div>
-            }
-            <div class="grid grid-cols-1 gap-4">
-              <button type="submit" data-slot="button"
-                class="bg-scheme-accent inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-neutral-darkest px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
-                title="Log in" i18n-title [disabled]="isLoginLoading" [attr.aria-busy]="isLoginLoading">
-                <ng-container *ngIf="!isLoginLoading; else loginLoading">
-                  <span i18n="auth.login.submit|Login submit label@@authLoginSubmit">Log in</span>
-                </ng-container>
-              </button>
-              <ng-template #loginLoading>
-                <span i18n="auth.login.loading|Login loading state@@authLoginLoading">Connexion en cours...</span>
-              </ng-template>
-              <p *ngIf="loginErrorMessage" class="text-sm text-red-500">
-                {{ loginErrorMessage }}
-              </p>
-              <p *ngIf="loginSuccessMessage" class="text-sm text-green-600">
-                {{ loginSuccessMessage }}
-              </p>
-              <button type="button" data-slot="button"
-                class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3 transition-all duration-200 ease-in-out"
-                title="Connectez-vous avec Google" i18n-title (click)="handleGoogleAuth('log-in')">
-                <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
-                <p class="text-scheme-text" i18n="auth.login.google|Login with Google@@authLoginGoogle">Connectez-vous
-                  avec Google</p>
-              </button>
-            </div>
-          </form>
+                  [class.text-red-500]="control.invalid && (control.touched || isLoginSubmitted)">
+                  {{ field.label }}
+                  <span *ngIf="!field.required"
+                    i18n="auth.field.optional|Optional field helper@@authFieldOptional">(facultatif)</span>
+                </label>
+                <p *ngIf="control.invalid && (control.touched || isLoginSubmitted)" class="mt-1 text-xs text-red-500">
+                  @if (control.errors?.['required']) {
+                  <span i18n="auth.error.required|Required field error@@authErrorRequired">Ce champ est
+                    obligatoire.</span>
+                  } @else if (control.errors?.['email']) {
+                  <span i18n="auth.error.email|Invalid email error@@authErrorEmail">Merci d’entrer une adresse email
+                    valide.</span>
+                  } @else {
+                  <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric">Valeur invalide.</span>
+                  }
+                </p>
+              </div>
+              }
+              <div class="grid grid-cols-1 gap-4">
+                <button type="submit" data-slot="button"
+                  class="bg-scheme-accent inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-neutral-darkest px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
+                  title="Log in" i18n-title [disabled]="isLoginLoading" [attr.aria-busy]="isLoginLoading">
+                  <ng-container *ngIf="!isLoginLoading; else loginLoading">
+                    <span i18n="auth.login.submit|Login submit label@@authLoginSubmit">Log in</span>
+                  </ng-container>
+                </button>
+                <ng-template #loginLoading>
+                  <span i18n="auth.login.loading|Login loading state@@authLoginLoading">Connexion en cours...</span>
+                </ng-template>
+                <p *ngIf="loginErrorMessage" class="text-sm text-red-500">
+                  {{ loginErrorMessage }}
+                </p>
+                <p *ngIf="loginSuccessMessage" class="text-sm text-green-600">
+                  {{ loginSuccessMessage }}
+                </p>
+                <button type="button" data-slot="button"
+                  class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border px-6 py-3 transition-all duration-200 ease-in-out"
+                  title="Connectez-vous avec Google" i18n-title (click)="handleGoogleAuth('log-in')">
+                  <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.7"></app-svg-icon>
+                  <p class="text-scheme-text" i18n="auth.login.google|Login with Google@@authLoginGoogle">Connectez-vous
+                    avec Google</p>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<app-cta-contact
-  subtitle="Nous sommes là pour vous aider à résoudre rapidement tous vos problèmes de connexion ou de compte."
-  i18n-subtitle="auth.contact.subtitle|Support invite under auth forms@@authContactSubtitle">
-</app-cta-contact>
+<app-cta-contact [leadParagraphs]="contactSection.leadParagraphs"></app-cta-contact>

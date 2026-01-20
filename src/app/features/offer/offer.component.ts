@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CtaBlockComponent } from '../../shared/components/cta-block/cta-block.component';
+import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import {
   HeroAction,
   HeroSectionComponent,
@@ -35,6 +36,7 @@ interface PricingPlan {
     RouterModule,
     HeroSectionComponent,
     CtaBlockComponent,
+    ContactCtaComponent,
   ],
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.scss',
@@ -230,6 +232,13 @@ export class OfferComponent {
         variant: 'secondary' as HeroAction['variant'],
         href: '/contact',
       },
+    ],
+  };
+
+  readonly contactSection = {
+    leadParagraphs: [
+      $localize`:home.contact.lead.1|Home contact lead paragraph@@homeContactLead1:Vous avez un besoin, une contrainte ou une idée à clarifier ?`,
+      $localize`:home.contact.lead.2|Home contact lead paragraph@@homeContactLead2:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
     ],
   };
 }

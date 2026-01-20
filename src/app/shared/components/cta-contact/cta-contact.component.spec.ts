@@ -1,5 +1,5 @@
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { ContactCtaComponent } from "./cta-contact.component";
 
 describe("ContactCtaComponent", () => {
@@ -7,7 +7,7 @@ describe("ContactCtaComponent", () => {
   let fixture: ComponentFixture<ContactCtaComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContactCtaComponent],
+      imports: [ContactCtaComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContactCtaComponent);
@@ -19,10 +19,12 @@ describe("ContactCtaComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should display the heading and subtitle", () => {
+  it("should display the heading and lead paragraph when provided", () => {
+    component.leadParagraphs = ["Première phrase"];
+    fixture.detectChanges();
     const compiled: HTMLElement = fixture.nativeElement;
     expect(compiled.textContent).toContain(component.title);
-    expect(compiled.textContent).toContain(component.leadParagraphs[0]);
+    expect(compiled.textContent).toContain("Première phrase");
   });
 
   it("should render each contact method", () => {
@@ -37,12 +39,18 @@ describe("ContactCtaComponent", () => {
   });
 
   it("should set href attributes for linkable methods", () => {
+    fixture.detectChanges();
     const compiled: HTMLElement = fixture.nativeElement;
-    const links = compiled.querySelectorAll("a.underline");
-    const expectedLinkCount = component.contactMethods.filter(
-      (method: any) => !!method.href,
-    ).length;
-    expect(links.length).toBe(expectedLinkCount);
+    const links = compiled.querySelectorAll("a[href]");
+    expect(links.length).toBeGreaterThan(0);
+    component.contactMethods
+      .filter((method: any) => !!method.href)
+      .forEach((method) => {
+        const match = Array.from(links).find((link) =>
+          (link as HTMLAnchorElement).href.includes(method.href!),
+        );
+        expect(match).withContext(`Missing href for ${method.label}`).toBeTruthy();
+      });
   });
 
   it("should render the contact map image", () => {

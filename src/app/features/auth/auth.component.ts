@@ -6,6 +6,7 @@ import { LoginFormState } from "../../core/models/loginForm.model";
 import { SignupFormState } from "../../core/models/signupForm.model";
 import { AuthService } from "../../core/services/auth.service";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
+import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import { SvgIconComponent } from "../../shared/components/svg-icon.component";
 
 type AuthTab = "sign-up" | "log-in";
@@ -15,7 +16,13 @@ type LoginFormKey = keyof LoginFormState;
 @Component({
   selector: "app-auth",
   standalone: true,
-  imports: [CommonModule, FormsModule, SvgIconComponent, ContactCtaComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SvgIconComponent,
+    ContactCtaComponent,
+    HeroSectionComponent,
+  ],
   templateUrl: "./auth.component.html",
   styleUrl: "./auth.component.scss",
 })
@@ -46,6 +53,19 @@ export class AuthComponent {
   loginErrorMessage?: string;
   loginSuccessMessage?: string;
   signupForm: SignupFormState = { ...this.defaultSignupState };
+
+  readonly hero = {
+    label: $localize`:auth.hero.label@@authHeroLabel:Accès`,
+    title: $localize`:auth.hero.title@@authHeroTitle:Connexion ou inscription`,
+    description: $localize`:auth.hero.description@@authHeroDescription:Rejoignez votre espace sécurisé pour suivre vos projets et vos échanges.`,
+  };
+
+  readonly contactSection = {
+    leadParagraphs: [
+      $localize`:home.contact.lead.1|Home contact lead paragraph@@homeContactLead1:Vous avez un besoin, une contrainte ou une idée à clarifier ?`,
+      $localize`:home.contact.lead.2|Home contact lead paragraph@@homeContactLead2:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
+    ],
+  };
 
   signupFields: {
     key: SignupFormKey;

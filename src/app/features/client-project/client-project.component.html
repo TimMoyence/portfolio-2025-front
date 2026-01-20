@@ -1,11 +1,11 @@
 <app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" [actions]="hero.actions"
-  titleLevel="h1"></app-hero-section>
+  titleLevel="h1" align="left"></app-hero-section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
+<section class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="case-studies-section">
   <div class="container">
     <div class="mx-auto mb-12 w-full max-w-lg text-center md:mb-18 lg:mb-20">
       <p class="mb-3 font-semibold md:mb-4">{{ hero.label }}</p>
-      <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@clientProjectShowcaseHeading">
+      <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" i18n="@@clientProjectShowcaseHeading">
         {{ hero.title }}
       </h2>
       <p class="md:text-md">{{ hero.description }}</p>
@@ -17,7 +17,7 @@
         <div class="order-1 flex flex-col justify-center p-6 md:p-8 lg:p-12"
           [ngClass]="study.reverse ? 'md:order-2' : ''">
           <p class="mb-2 font-semibold">{{ study.tag }}</p>
-          <h3 class="rb-5 mb-5 text-4xl font-bold leading-[1.2] md:mb-6 md:text-5xl lg:text-6xl"
+          <h3 class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
             i18n="@@clientProjectCaseStudyTitle">
             {{ study.title }}
           </h3>
@@ -45,12 +45,12 @@
   </div>
 </section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
+<section class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="feature-section">
   <div class="container">
     <div class="rb-12 mb-12 md:mb-18 lg:mb-20">
       <div class="mx-auto max-w-lg text-center">
         <p class="mb-3 font-semibold md:mb-4">{{ featureBlock.label }}</p>
-        <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl" i18n="@@clientProjectFeatureHeading">
+        <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" i18n="@@clientProjectFeatureHeading">
           {{ featureBlock.title }}
         </h2>
         <p class="md:text-md">{{ featureBlock.description }}</p>
@@ -60,7 +60,7 @@
       <div class="flex flex-col justify-center p-6 md:p-8 lg:p-12">
         <div>
           <p class="mb-2 text-sm font-semibold">{{ featureBlock.label }}</p>
-          <h3 class="mb-5 text-4xl font-bold leading-[1.2] md:mb-6 md:text-5xl lg:text-6xl"
+          <h3 class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
             i18n="@@clientProjectFeatureSubheading">
             Approche créative
           </h3>
@@ -89,13 +89,13 @@
   </div>
 </section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
+<section class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="highlight-section">
   <div class="container">
     <div class="flex flex-col items-center">
       <div class="mb-12 md:mb-18 lg:mb-20">
         <div class="mx-auto flex max-w-lg flex-col items-center text-center">
           <p class="mb-3 font-semibold md:mb-4">{{ clientHighlight.label }}</p>
-          <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl"
+          <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
             i18n="@@clientProjectHighlightHeading">
             {{ clientHighlight.title }}
           </h2>
@@ -129,3 +129,5 @@
     </div>
   </div>
 </section>
+
+<app-cta-contact [leadParagraphs]="contactSection.leadParagraphs"></app-cta-contact>

@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { SvgIconComponent } from "../svg-icon.component";
+import { ContactMethod } from "../../models/contact.model";
 
 @Component({
   selector: "app-cta-contact",

@@ -1,11 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { APP_CONFIG } from './core/config/app-config.token';
+import { environment } from '../environments/environnement';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, RouterModule.forRoot([])],
+      imports: [AppComponent, RouterTestingModule, HttpClientTestingModule],
+      providers: [
+        {
+          provide: APP_CONFIG,
+          useValue: environment,
+        },
+      ],
     }).compileComponents();
   });
 
