@@ -96,7 +96,7 @@ export class PresentationComponent {
       tags: [
         $localize`:presentation.portfolio.tag.ai@@presentationPortfolioTagAi:Intelligence artificielle`,
         $localize`:presentation.portfolio.tag.image@@presentationPortfolioTagImage:Analyse de contenu`,
-        $localize`:presentation.portfolio.tag.automation@@presentationPortfolioTagAutomation:Automatisation`,
+        $localize`:presentation.portfolio.tag.automation.Geev@@presentationPortfolioTagAutomationGeev:Automatisation`,
       ],
     },
     {
@@ -138,7 +138,7 @@ export class PresentationComponent {
       tags: [
         $localize`:presentation.portfolio.tag.web@@presentationPortfolioTagWeb:Web`,
         $localize`:presentation.portfolio.tag.development@@presentationPortfolioTagDevelopment:Développement`,
-        $localize`:presentation.portfolio.tag.custom@@presentationPortfolioTagCustom:Sur mesure`,
+        $localize`:@@presentationPortfolioTagLouisonCustom:Sur mesure`,
       ],
     },
     {
@@ -151,7 +151,7 @@ export class PresentationComponent {
       alt: $localize`:presentation.portfolio.card.vincent.alt@@presentationPortfolioCardVincentAlt:Capture du projet Vincent`,
       tags: [
         $localize`:presentation.portfolio.tag.websolution@@presentationPortfolioTagWebsolution:Solution web`,
-        $localize`:presentation.portfolio.tag.custom@@presentationPortfolioTagCustom:Personnalisation`,
+        $localize`:presentation.portfolio.tag.customAB@@presentationPortfolioTagCustom:Personnalisation`,
         $localize`:presentation.portfolio.tag.creativity@@presentationPortfolioTagCreativity:Usage`,
       ],
     },
