@@ -9,7 +9,7 @@ import { Component } from "@angular/core";
     <section class="px-[5%] py-12 md:py-18 lg:py-22">
       <div class="container" aria-labelledby="start-project-heading">
         <div
-          class="grid auto-cols-fr grid-cols-1 overflow-hidden rounded-2xl border border-scheme-border bg-scheme-background lg:grid-cols-2"
+          class="shadow-xl overflow-hidden grid auto-cols-fr grid-cols-1 overflow-hidden rounded-2xl border border-scheme-border bg-scheme-background lg:grid-cols-2"
         >
           <div class="flex flex-col justify-center p-8 md:p-12">
             <div>

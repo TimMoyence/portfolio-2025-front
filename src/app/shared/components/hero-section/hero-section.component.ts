@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { SvgIconComponent } from "../svg-icon.component";
 
 type HeroActionVariant = "primary" | "secondary" | "ghost";
 
@@ -13,61 +14,70 @@ export interface HeroAction {
 @Component({
   selector: "app-hero-section",
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SvgIconComponent],
   template: `
-    <section class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-22">
-      <div
-        class="container"
-        [ngClass]="
-          align === 'center' ? 'max-w-lg text-center' : 'max-w-6xl text-left'
-        "
-        data-testid="hero-section"
-      >
-        @if (label) {
-          <p class="mb-3 font-semibold md:mb-4">{{ label }}</p>
-        }
-        @if (titleLevel === "h1") {
-          <h1
-            class="mb-5 font-heading heading-h1 text-h1 md:mb-6"
-            data-testid="hero-title"
-          >
-            {{ title }}
-          </h1>
-        } @else {
-          <h2
-            class="mb-5 font-heading heading-h1 text-h1 md:mb-6"
-            data-testid="hero-title"
-          >
-            {{ title }}
-          </h2>
-        }
-        @if (description) {
-          <p class="md:text-md">{{ description }}</p>
-        }
-        @if (actions.length) {
-          <div
-            class="mt-6 flex flex-wrap items-center gap-4 md:mt-8"
-            [ngClass]="align === 'center' ? 'justify-center' : 'justify-start'"
-          >
-            @for (action of actions; track $index) {
-              <a
-                [routerLink]="action.href || null"
-                [attr.href]="!action.href ? '#' : null"
-                class="rounded-button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                [ngClass]="{
-                  'bg-black text-white border border-black':
-                    action.variant !== 'secondary',
-                  'bg-background-secondary text-black border border-border-primary':
-                    action.variant === 'secondary',
-                  'bg-transparent border border-transparent text-black underline underline-offset-2':
-                    action.variant === 'ghost',
-                }"
-              >
-                {{ action.label }}
-              </a>
-            }
-          </div>
-        }
+    <section class="bg-scheme-background px-[5%] pb-12 md:pb-18 lg:pb-22">
+      <div class="container" data-testid="hero-section">
+        <div class="w-full sm:px-6 md:px-10 lg:px-16">
+          @if (label) {
+            <p class="mb-3 font-semibold md:mb-4">{{ label }}</p>
+          }
+          @if (titleLevel === "h1") {
+            <h1
+              class="font-heading md:heading-h2 md:text-h2 heading-h3 text-h3 mb-5 md:mb-6"
+              data-testid="hero-title"
+            >
+              {{ title }}
+            </h1>
+          } @else {
+            <h2
+              class="font-heading md:heading-h2 md:text-h2 heading-h3 text-h3 mb-5 md:mb-6"
+              data-testid="hero-title"
+            >
+              {{ title }}
+            </h2>
+          }
+          @if (description) {
+            <p class="text-xs md:text-base lg:text-medium">{{ description }}</p>
+          }
+          @if (actions.length) {
+            <div
+              class="mt-6 flex flex-wrap items-center gap-4 md:mt-8"
+              [ngClass]="
+                align === 'center' ? 'justify-center' : 'justify-start'
+              "
+            >
+              @for (action of actions; track action.href ?? action.label) {
+                <button
+                  [routerLink]="action.href ?? null"
+                  [attr.type]="'button'"
+                  class="px-5 py-2 text-sm transition-colors"
+                  [ngClass]="[
+                    action.variant === 'primary'
+                      ? 'inline-flex items-center justify-center bg-scheme-accent rounded-button font-semibold text-scheme-on-accent hover:bg-scheme-accent-hover active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus'
+                      : '',
+                    action.variant === 'secondary'
+                      ? 'hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small hover:bg-scheme-accent-hover active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus'
+                      : '',
+                    action.variant === 'ghost' || !action.variant
+                      ? 'inline-flex items-center justify-center gap-2 font-semibold underline rounded-button hover:text-scheme-accent-hover focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus'
+                      : '',
+                  ]"
+                >
+                  {{ action.label }}
+                </button>
+
+                @if (action.variant === "ghost") {
+                  <app-svg-icon
+                    aria-hidden="true"
+                    [name]="'chevron-right'"
+                    [size]="1.5"
+                  ></app-svg-icon>
+                }
+              }
+            </div>
+          }
+        </div>
       </div>
     </section>
   `,

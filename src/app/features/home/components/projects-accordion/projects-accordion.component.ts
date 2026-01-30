@@ -50,7 +50,7 @@ type Project = {
           </p>
         </div>
         <div
-          class="flex w-full flex-col overflow-hidden border border-scheme-border lg:h-[85vh] lg:flex-row"
+          class="flex w-full flex-col overflow-hidden border border-scheme-border lg:flex-row"
           role="tablist"
         >
           @for (project of projects; track $index) {
@@ -96,11 +96,11 @@ type Project = {
                 <p class="text-small">
                   {{ project.description }}
                 </p>
-                <div class="mt-8 h-80 md:mt-10 md:h-[25rem] lg:mt-12">
+                <div class="mt-8 h-80 md:mt-10 md:h-[40rem] lg:mt-12">
                   <img
                     [src]="project.imageSrc"
                     [alt]="project.imageAlt"
-                    class="size-full rounded-image object-cover"
+                    class="size-full shadow-xl overflow-hidden rounded-image object-cover"
                     loading="lazy"
                   />
                 </div>
@@ -128,8 +128,7 @@ export class ProjectsAccordionComponent implements OnInit {
       title: $localize`:projects.item.automation.title|Project title@@projectsItemAutomationTitle:Automatisation de validation de parcours de formation`,
       description: $localize`:projects.item.automation.desc|Project description@@projectsItemAutomationDesc:Mise en place d’un processus automatisé pour la génération et l’envoi de communications de validation de diplômes sur une plateforme e-learning.L’objectif était de fiabiliser les échanges, réduire les interventions manuelles et garantir une communication cohérente à grande échelle.`,
       imageAlt: $localize`:projects.item.automation.imageAlt|Project image alt@@projectsItemAutomationImageAlt:automation image presentation`,
-      imageSrc:
-        "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg",
+      imageSrc: "./assets/images/projects/Automation-validation.webp",
     },
     {
       id: "mobile",
@@ -139,7 +138,7 @@ export class ProjectsAccordionComponent implements OnInit {
       description: $localize`:projects.item.mobile.desc|Project description@@projectsItemMobileDesc:Conception d’un prototype d’assistant destiné à accompagner les guides de musée dans leur médiation, en apportant un soutien contextuel et interactif. Le projet visait à explorer l’usage de l’intelligence artificielle comme outil d’aide, sans remplacer l’expertise humaine.`,
       imageAlt: $localize`:projects.item.mobile.imageAlt|Project image alt@@projectsItemMobileImageAlt:Image du prototype d’assistant numérique pour médiation culturelle`,
       imageSrc:
-        "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg",
+        "./assets/images/projects/Modélisation-prédictive-risques-sanitaires.webp",
     },
     {
       id: "web",
@@ -148,8 +147,7 @@ export class ProjectsAccordionComponent implements OnInit {
       title: $localize`:projects.item.app.title|Project title@@projectsItemAppTitle:Plateforme de réservation et de gestion pour location de vélos`,
       description: $localize`:projects.item.app.desc|Project description@@projectsItemAppDesc:Conception d’un site de réservation destiné à une activité de location de vélos, avec une attention particulière portée à la simplicité d’usage et à la gestion opérationnelle. L’objectif était de faciliter les réservations tout en structurant les flux internes de l’activité.`,
       imageAlt: $localize`:projects.item.app.imageAlt|Project image alt@@projectsItemAppImageAlt:Image du site Atlantic Bike présentant une bicyclette le long de la côte`,
-      imageSrc:
-        "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg",
+      imageSrc: "/assets/images/projects/project-atlantic-bike.webp",
     },
   ];
 

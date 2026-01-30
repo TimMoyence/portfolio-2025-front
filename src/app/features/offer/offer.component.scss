@@ -1,0 +1,17 @@
+/* état par défaut (quand ça se chevauche en scroll) */
+.sticky-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    background 200ms ease,
+    backdrop-filter 200ms ease,
+    opacity 200ms ease;
+}
+
+/* quand la card est vraiment “collée” au top */
+.sticky-card.is-stuck {
+  background: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}

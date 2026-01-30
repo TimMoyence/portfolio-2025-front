@@ -7,9 +7,12 @@
   <div
     class="glass-card-dark bg-scheme-background  flex items-center justify-between p-3 px-6 rounded-full max-w-7xl mx-auto transition-all duration-300"
     [ngClass]="{ 'shadow-lg': scrolled }">
-    <div class=" font-bold text-xl">
-      <a routerLink="/" class="flex items-center gap-2" (click)="isMobile && (mobileMenuOpen = false)">
-        <span class="text-2xl" i18n="navbar.brand|Site brand name in navbar@@navBrand">Portfolio</span>
+    <div>
+      <a class="flex flex-row items-center gap-3" href="#">
+        <img src="/assets/images/logo.webp" alt="Logo image" i18n-alt="Navbar.logo.alt|Navbar logo alt@@NavbarLogoAlt"
+          class="inline-block" loading="lazy" aria-hidden="true" style="width: 2rem; height: auto;" />
+        <p i18n-alt="navbar.title.company|Navbar company title@@NavbarCompanyTitle"
+          class="font-heading md:heading-h6 md:text-h6">Asili Design</p>
       </a>
     </div>
 
@@ -65,7 +68,8 @@
     </li>
     }
 
-    @for (dropdown of dropdownSections(); track $index) {
+    <!-- ? DropdownSection for project menu to be added later -->
+    <!-- @for (dropdown of dropdownSections(); track $index) {
     <li class="relative"
       (mouseenter)="!isMobile && currentlyHovered.set(dropdown.label); openDropdownMenuAndToggleInMobile(dropdown.label)"
       (mouseleave)="!isMobile && currentlyHovered.set(null); closeOnDesktopDropdownMenu(dropdown.label)">
@@ -108,7 +112,7 @@
       </div>
       }
     </li>
-    }
+    } -->
   </ul>
 
   <div class="flex items-center justify-center gap-5" [ngClass]="isMobile ? 'mt-4' : ''">

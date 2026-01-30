@@ -47,10 +47,10 @@ export type ServicesCta = {
         </div>
 
         <div
-          class="flex row items-center justify-between md:flex-nowrap flex-wrap"
+          class="flex items-stretch justify-between flex-wrap md:flex-nowrap"
         >
           @for (service of services; track service.title) {
-            <article class="m-2 md:m-3">
+            <article class="m-2 md:m-3 flex-1 basis-0">
               <div class="mb-5 md:mb-6">
                 <img
                   [src]="service.iconSrc"
@@ -63,7 +63,7 @@ export type ServicesCta = {
               <h3 class="heading-h5 mb-3 font-bold md:mb-4">
                 {{ service.title }}
               </h3>
-              <p>{{ service.description }}</p>
+              <p class="text-wrap">{{ service.description }}</p>
             </article>
           }
         </div>
@@ -81,7 +81,7 @@ export type ServicesCta = {
                 <app-svg-icon
                   [size]="1.2"
                   aria-hidden="true"
-                  [name]="'chevron-right'"
+                  [name]="cta.iconName"
                 />
               }
             </a>

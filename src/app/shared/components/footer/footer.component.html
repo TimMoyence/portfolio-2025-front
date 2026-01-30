@@ -5,31 +5,35 @@
       <div>
         <div class="mb-6 md:mb-8">
           <a href="#">
-            <img src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg" alt="Logo image"
+            <img src="/assets/images/logo.webp" alt="Logo image"
               i18n-alt="footer.logo.alt|Footer logo alt@@footerLogoAlt" class="inline-block" loading="lazy"
-              aria-hidden="true" />
+              aria-hidden="true" style="width: 10rem; height: auto;" />
           </a>
         </div>
-        <div class="mb-6 sm:mb-8">
-          <p
-            class="text-small mb-1 font-semibold"
-            i18n="footer.address.label|Footer address label@@footerAddressLabel"
-          >
-            Adresse
-          </p>
-          <p class="text-small mb-5 sm:mb-6">{{ address.city }}</p>
-          <p
-            class="text-small mb-1 font-semibold"
-            i18n="footer.contact.label|Footer contact label@@footerContactLabel"
-          >
-            Contact
-          </p>
-          <a class="text-small block underline" [href]="address.phoneHref">{{ address.phone }}</a>
-          <a class="text-small block underline" [href]="address.emailHref">{{
-            address.email
-            }}</a>
+        <div class="flex flex-col">
+          <div class="grid auto-cols-fr grid-cols-1 gap-x-4 gap-y-6 py-2">
+            @for (method of contactMethods; track $index) {
+            <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
+              <div class="mr-4 flex items-center justify-center md:mb-4">
+                @if(method.icon) {
+                <app-svg-icon aria-hidden="true" [name]="method.icon!" [size]="1.5" aria-hidden="true"></app-svg-icon>
+                }
+              </div>
+              <div>
+                @if(method.href) {
+                <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value"
+                  i18n-aria-label="contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria">
+                  {{ method.value }}
+                </a>
+                } @else {
+                <p>{{ method.value }}</p>
+                }
+              </div>
+            </div>
+            }
+          </div>
         </div>
-        <div class="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-x-3">
+        <div class="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-y-6 py-2 gap-x-4">
           @for (social of socialLinks; track $index) {
           <a class="flex size-6 items-center justify-center" [href]="social.href" [attr.aria-label]="social.label"
             data-testid="social-link">
@@ -40,7 +44,7 @@
           }
         </div>
       </div>
-      <div class="grid grid-cols-1 items-start gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-4">
+      <div class="grid grid-cols-1 items-center gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-4">
         @for (column of navColumns; track $index) {
         <ul data-testid="footer-column">
           @for (link of column.links; track $index) {
@@ -55,10 +59,7 @@
     <div class="h-px w-full bg-scheme-border"></div>
     <div
       class="text-small flex flex-col-reverse items-start justify-between pt-6 pb-4 sm:flex-row sm:items-center sm:pt-8 sm:pb-0">
-      <p
-        class="mt-8 sm:mt-0"
-        i18n="footer.copyright|Footer copyright@@footerCopyright"
-      >
+      <p class="mt-8 sm:mt-0" i18n="footer.copyright|Footer copyright@@footerCopyright">
         © 2025 Moyence. All rights reserved.
       </p>
       <ul

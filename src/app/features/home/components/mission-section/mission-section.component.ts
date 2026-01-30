@@ -17,9 +17,9 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
         >
           <div class="order-2 md:order-1">
             <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-              class="w-full rounded-image object-cover"
-              alt="Relume placeholder image"
+              src="/assets/images/why-asili.webp"
+              class="w-full shadow-xl overflow-hidden rounded-image object-cover"
+              alt="Illustration expliquant pourquoi Asili"
               i18n-alt="
                 mission.imageAlt|Mission illustration alt@@missionImageAlt"
               loading="lazy"
@@ -64,7 +64,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
               >
                 Échanger sur votre contexte
                 <app-svg-icon
-                  name="chevron-right"
+                  [name]="'chevron-right'"
                   [size]="1.2"
                   aria-hidden="true"
                 ></app-svg-icon>

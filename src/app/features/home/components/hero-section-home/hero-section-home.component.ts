@@ -62,8 +62,8 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
           </div>
           <div>
             <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              class="size-full rounded-image object-cover"
+              src="./assets/images/portrait-tim-asili-design.webp"
+              class="shadow-xl overflow-hidden rounded-image size-full md:h-[35rem] lg:h-[65rem] object-cover"
               alt="Portrait de Tim, développeur web chez Asili Design"
               i18n-alt="hero.imageAlt|Hero portrait alt text@@heroImageAlt"
               loading="lazy"
