@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map, mergeMap } from 'rxjs/operators';
-import { SeoService } from '../../core/seo/seo.service';
-import { SeoConfig } from '../../core/seo/seo.interface';
+import { CommonModule } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { filter, map, mergeMap } from "rxjs/operators";
+import { SeoService } from "../../core/seo/seo.service";
+import { SeoConfig } from "../../core/seo/seo.interface";
 
 @Component({
-  selector: 'app-seo-manager',
+  selector: "app-seo-manager",
   standalone: true,
   imports: [CommonModule],
   template: ``,
@@ -30,16 +30,16 @@ export class SeoManagerComponent implements OnInit {
           }
           return route;
         }),
-        filter((route) => route.outlet === 'primary'),
+        filter((route) => route.outlet === "primary"),
         mergeMap((route) => route.data),
       )
       .subscribe((data) => {
-        if (data['seo']) {
+        if (data["seo"]) {
           const currentUrl = this.router.url;
-          const baseUrl = 'https://portfolio-example.com'; // todo : Replace with actual domain in production
+          const baseUrl = "https://asilidesign.fr"; // todo : Replace with actual domain in production
 
           const seoConfig: SeoConfig = {
-            ...data['seo'],
+            ...data["seo"],
             ogUrl: `${baseUrl}${currentUrl}`,
             canonicalUrl: `${baseUrl}${currentUrl}`,
           };
@@ -67,8 +67,8 @@ export class SeoManagerComponent implements OnInit {
         $localize`:seo.default.keyword.fullstack|SEO keyword@@seoKeywordFullstack:full stack`,
         $localize`:seo.default.keyword.developer|SEO keyword@@seoKeywordDeveloper:developer`,
       ],
-      ogImage: 'https://portfolio-example.com/assets/images/og-image.jpg', // Replace with actual image
-      twitterCard: 'summary_large_image',
+      ogImage: "https://asilidesign.fr/assets/images/og-image.jpg", // Replace with actual image
+      twitterCard: "summary_large_image",
     };
 
     this.seoService.updateSeoMetadata(seoConfig);
