@@ -18,7 +18,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
           <div class="order-2 md:order-1">
             <img
               src="/assets/images/why-asili.webp"
-              class="w-full shadow-xl overflow-hidden rounded-image object-cover"
+              class="w-full md:h-[30rem] lg:h-[40rem] shadow-xl overflow-hidden rounded-image object-cover"
               alt="Illustration expliquant pourquoi Asili"
               i18n-alt="
                 mission.imageAlt|Mission illustration alt@@missionImageAlt"

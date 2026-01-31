@@ -63,7 +63,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
           <div>
             <img
               src="./assets/images/portrait-tim-asili-design.webp"
-              class="shadow-xl overflow-hidden rounded-image size-full md:h-[35rem] lg:h-[65rem] object-cover"
+              class="shadow-xl overflow-hidden rounded-image size-full md:h-[35rem] lg:h-[45rem] object-cover"
               alt="Portrait de Tim, développeur web chez Asili Design"
               i18n-alt="hero.imageAlt|Hero portrait alt text@@heroImageAlt"
               loading="lazy"
