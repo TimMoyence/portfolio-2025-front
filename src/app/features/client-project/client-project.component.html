@@ -8,7 +8,7 @@
     <!-- header -->
     <div class="mx-auto mb-10 w-full max-w-2xl text-center md:mb-14 lg:mb-16">
       <p class="mb-3 font-semibold md:mb-4">{{ project.label }}</p>
-      <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6">{{ project.title }}</h2>
+      <h2 class="font-heading md:heading-h3 md:text-h3 text-4 heading-h4 mb-5 md:mb-6">{{ project.title }}</h2>
       <p class="md:text-md whitespace-pre-line">{{ project.description }}</p>
 
       @if (project.actions?.length) {
@@ -31,10 +31,10 @@
     <!-- content -->
     @if (project.kind === 'singleCard') {
     <div
-      class="rounded-2xl shadow-xl overflow-hidden  grid grid-cols-1 overflow-hidden border border-border-primary bg-neutral-white md:grid-cols-2">
+      class="rounded-2xl md:shadow-xl md:overflow-hidden  grid grid-cols-1 overflow-hidden border border-border-primary bg-neutral-white md:grid-cols-2">
       <div class="flex flex-col justify-center p-6 md:p-8 lg:p-12">
         <p class="mb-2 text-sm font-semibold">{{ project.card.kicker }}</p>
-        <h3 class="font-heading heading-h3 text-h3 mb-5 md:mb-6">
+        <h3 class="font-heading md:heading-h3 md:text-h3 text-4 heading-h4 mb-5 md:mb-6">
           {{ project.card.heading }}
         </h3>
         <ul class="mt-4 list-disc space-y-2 pl-5">
@@ -45,7 +45,7 @@
       </div>
 
       <div class="flex flex-col items-center justify-center bg-neutral-100">
-        <img [src]="project.imageSrc" [alt]="project.imageAlt" class="shadow-xl w-full object-cover" loading="lazy" />
+        <img [src]="project.imageSrc" [alt]="project.imageAlt" class=" w-full object-cover" loading="lazy" />
       </div>
     </div>
     }
@@ -54,11 +54,11 @@
     <div class="grid grid-cols-1 gap-8">
       @for (mod of project.modules; track mod.key) {
       <div
-        class="rounded-2xl shadow-xl overflow-hidden grid grid-cols-1 overflow-hidden border border-border-primary bg-neutral-white md:grid-cols-2">
+        class="rounded-2xl md:shadow-xl md:overflow-hidden grid grid-cols-1 overflow-hidden border border-border-primary bg-neutral-white md:grid-cols-2">
         <div class="order-1 flex flex-col justify-center p-6 md:p-8 lg:p-12"
           [ngClass]="mod.reverse ? 'md:order-2' : ''">
           <p class="mb-2 text-sm font-semibold">{{ mod.moduleLabel }}</p>
-          <h3 class="font-heading heading-h3 text-h3 mb-5 md:mb-6">{{ mod.title }}</h3>
+          <h3 class="font-heading md:heading-h3 md:text-h3 text-4 heading-h4 mb-5 md:mb-6">{{ mod.title }}</h3>
 
           <div class="space-y-4 text-sm md:text-base">
             <div>
