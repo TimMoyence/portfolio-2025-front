@@ -406,7 +406,7 @@
       <notes>
         <note category="location">src/app/features/auth/auth.component.ts:65</note>
         <note category="location">src/app/features/contact/contact.component.ts:66</note>
-        <note category="location">src/app/features/home/home.component.ts:66</note>
+        <note category="location">src/app/features/home/home.component.ts:72</note>
         <note category="description">Home contact lead paragraph</note>
         <note category="meaning">home.contact.lead.1</note>
       </notes>
@@ -418,7 +418,7 @@
       <notes>
         <note category="location">src/app/features/auth/auth.component.ts:66</note>
         <note category="location">src/app/features/contact/contact.component.ts:67</note>
-        <note category="location">src/app/features/home/home.component.ts:67</note>
+        <note category="location">src/app/features/home/home.component.ts:73</note>
         <note category="description">Home contact lead paragraph</note>
         <note category="meaning">home.contact.lead.2</note>
       </notes>
@@ -1493,7 +1493,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <note category="meaning">cta.title</note>
       </notes>
       <segment>
-        <source> Parlons de votre situation </source>
+        <source> Parlons de votre projet </source>
       </segment>
     </unit>
     <unit id="ctaLead">
@@ -1894,26 +1894,38 @@ L’application est organisée autour de trois modules complémentaires, chacun 
     <unit id="servicesItemEvolutionAndMaintenanceTitle">
       <notes>
         <note category="location">src/app/features/home/home.component.ts:50</note>
+        <note category="location">src/app/features/home/home.component.ts:56</note>
         <note category="description">Service title</note>
-        <note category="meaning">services.item.evolution.maintenance.title</note>
+        <note category="meaning">services.item.evolution.testing.title</note>
       </notes>
       <segment>
-        <source>Faire évoluer</source>
+        <source>Tester</source>
       </segment>
     </unit>
     <unit id="servicesItemEvolutionAndMaintenanceDesc">
       <notes>
         <note category="location">src/app/features/home/home.component.ts:51</note>
+        <note category="location">src/app/features/home/home.component.ts:57</note>
         <note category="description">Service description</note>
-        <note category="meaning">services.item.evolution.maintenance.desc</note>
+        <note category="meaning">services.item.evolution.testing.desc</note>
       </notes>
       <segment>
-        <source>Accompagner les outils dans le temps pour qu’ils restent pertinents, sans complexité inutile.</source>
+        <source>Mettre en place des campagnes de tests utilisateurs pour valider les choix effectués et ajuster la trajectoire si nécessaire.</source>
+      </segment>
+    </unit>
+    <unit id="servicesItemtestingIconAlt">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:53</note>
+        <note category="description">Service icon alt</note>
+        <note category="meaning">services.item.evolution.testing.iconAlt</note>
+      </notes>
+      <segment>
+        <source>Tester icon</source>
       </segment>
     </unit>
     <unit id="servicesItemEvolutionAndMaintenanceIconAlt">
       <notes>
-        <note category="location">src/app/features/home/home.component.ts:53</note>
+        <note category="location">src/app/features/home/home.component.ts:59</note>
         <note category="description">Service icon alt</note>
         <note category="meaning">services.item.evolution.maintenance.iconAlt</note>
       </notes>
@@ -1923,7 +1935,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
     </unit>
     <unit id="servicesCtaContact">
       <notes>
-        <note category="location">src/app/features/home/home.component.ts:57</note>
+        <note category="location">src/app/features/home/home.component.ts:63</note>
         <note category="description">Contact link</note>
         <note category="meaning">services.cta.contact</note>
       </notes>
@@ -3045,9 +3057,6 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Sur mesure</source>
       </segment>
     </unit>
-
-
-
     <unit id="presentationPortfolioCardVincent">
       <notes>
         <note category="location">src/app/features/presentation/presentation.component.ts:145</note>

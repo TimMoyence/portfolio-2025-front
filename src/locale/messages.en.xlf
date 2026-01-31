@@ -1812,8 +1812,8 @@ The application is organized around three complementary modules, each tailored t
         <note category="meaning">cta.title</note>
       </notes>
       <segment>
-        <source> Parlons de votre situation </source>
-        <target> Let’s talk about your situation </target>
+        <source> Parlons de votre projet </source>
+        <target> Let’s talk about your project </target>
       </segment>
     </unit>
 
@@ -2328,7 +2328,43 @@ The application is organized around three complementary modules, each tailored t
         <target>Evolution icon</target>
       </segment>
     </unit>
+<unit id="servicesItemEvolutionAndMaintenanceTitle">
+  <notes>
+    <note category="location">src/app/features/home/home.component.ts:50</note>
+    <note category="location">src/app/features/home/home.component.ts:56</note>
+    <note category="description">Service title</note>
+    <note category="meaning">services.item.evolution.testing.title</note>
+  </notes>
+  <segment>
+    <source>Tester</source>
+    <target>Test</target>
+  </segment>
+</unit>
 
+<unit id="servicesItemEvolutionAndMaintenanceDesc">
+  <notes>
+    <note category="location">src/app/features/home/home.component.ts:51</note>
+    <note category="location">src/app/features/home/home.component.ts:57</note>
+    <note category="description">Service description</note>
+    <note category="meaning">services.item.evolution.testing.desc</note>
+  </notes>
+  <segment>
+    <source>Mettre en place des campagnes de tests utilisateurs pour valider les choix effectués et ajuster la trajectoire si nécessaire.</source>
+    <target>Run user testing campaigns to validate the choices made and adjust the direction if needed.</target>
+  </segment>
+</unit>
+
+<unit id="servicesItemtestingIconAlt">
+  <notes>
+    <note category="location">src/app/features/home/home.component.ts:53</note>
+    <note category="description">Service icon alt</note>
+    <note category="meaning">services.item.evolution.testing.iconAlt</note>
+  </notes>
+  <segment>
+    <source>Tester icon</source>
+    <target>Test icon</target>
+  </segment>
+</unit>
     <unit id="servicesCtaContact">
       <notes>
         <note category="location">src/app/features/home/home.component.ts:57</note>

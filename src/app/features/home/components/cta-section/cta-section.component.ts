@@ -18,7 +18,7 @@ import { Component } from "@angular/core";
                 class="font-heading heading-h3 text-h3 mb-5 font-bold md:mb-6"
                 i18n="cta.title|CTA heading@@ctaTitle"
               >
-                Parlons de votre situation
+                Parlons de votre projet
               </h3>
               <p class="text-medium" i18n="cta.lead|CTA description@@ctaLead">
                 Un premier échange, sans engagement, pour comprendre votre
@@ -28,7 +28,7 @@ import { Component } from "@angular/core";
             <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
               <a
                 href="/contact"
-                class="inline-flex items-center justify-center rounded-button
+                class="inline-flex text-xs md:text-base items-center justify-center rounded-button
                 bg-scheme-accent px-5 py-2
                 font-semibold text-scheme-on-accent
                 transition-colors
