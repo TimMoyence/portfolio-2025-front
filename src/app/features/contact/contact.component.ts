@@ -44,7 +44,6 @@ export class ContactComponent {
 
   readonly contactInfo = {
     label: $localize`:contact.form.label@@contactFormLabel:Contact`,
-    heading: $localize`:contact.form.heading@@contactFormHeading:Formulaire de contact`,
     description: $localize`:contact.form.description@@contactFormDescription:Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.`,
     roles: [
       $localize`:contact.form.role.developer@@contactFormRoleDeveloper:Développeur web`,
