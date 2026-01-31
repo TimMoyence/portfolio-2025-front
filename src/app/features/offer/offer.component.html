@@ -4,7 +4,7 @@
 <section id="services" class="px-[5%] mb-12  md:py-18 lg:py-22" data-testid="services-section">
   <div class="container space-y-12 lg:space-y-16">
     @for (service of services; track service.id) {
-    <div class="relative border-t border-border-primary bg-white pb-8 md:pb-14 lg:sticky lg:pb-0"
+    <div class="relative border-t border-border-primary bg-white pb-8 md:pb-14 sticky lg:pb-0"
       [ngStyle]="{ top: service.offsetTop }">
       <a class="flex h-16 w-full items-center">
         <span class="mr-5 font-semibold md:mr-6 md:text-md">{{ service.id }}</span>
@@ -55,7 +55,7 @@
 <section id="qualities" class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="qualities-section">
   <div class="container space-y-12 lg:space-y-16">
     @for (quality of qualities; track quality.id) {
-    <div class="relative border-t border-border-primary bg-white pb-8 md:pb-14 lg:sticky lg:pb-0"
+    <div class="relative border-t border-border-primary bg-white pb-8 md:pb-14 sticky lg:pb-0"
       [ngStyle]="{ top: quality.offsetTop }">
       <a class="flex h-16 w-full items-center underline">
         <span class="mr-5 font-semibold md:mr-6 md:text-md">{{ quality.id }}</span>
