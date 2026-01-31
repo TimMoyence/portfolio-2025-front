@@ -1,16 +1,12 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { APP_CONFIG } from '../config/app-config.token';
 import { SeoConfig } from './seo.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SeoService {
-
-  private readonly config = inject(APP_CONFIG);
-
   constructor(
     private meta: Meta,
     private title: Title,
@@ -18,9 +14,6 @@ export class SeoService {
   ) {}
 
   updateSeoMetadata(config: SeoConfig): void {
-
-    console.log(this.config.appName, this.config.apiBaseUrl); 
-
     if (!this.document) return;
 
     this.title.setTitle(config.title);
@@ -51,7 +44,10 @@ export class SeoService {
     
     if (config.twitterImage) 
       this.meta.updateTag({ name: 'twitter:image', content: config.twitterImage });
-    
+
+    if (config.robots) {
+      this.meta.updateTag({ name: 'robots', content: config.robots });
+    }
 
     if (config.canonicalUrl) {
       // Remove existing canonical link if it exists

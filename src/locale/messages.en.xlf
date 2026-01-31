@@ -1475,11 +1475,10 @@ The application is organized around three complementary modules, each tailored t
     <unit id="contactFormHeading">
       <notes>
         <note category="location">src/app/features/contact/contact.component.html:11,13</note>
-        <note category="location">src/app/features/contact/contact.component.ts:47</note>
       </notes>
       <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ contactInfo.heading }}"/> </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ contactInfo.heading }}"/> </target>
+        <source> Formulaire de contact </source>
+        <target>Contact Form</target>
       </segment>
     </unit>
 

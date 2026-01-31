@@ -1,0 +1,166 @@
+{
+  "site": {
+    "baseUrl": "https://asilidesign.fr",
+    "defaultLocale": "fr",
+    "locales": ["fr", "en"],
+    "homePath": "/home"
+  },
+  "defaults": {
+    "keywords": [
+      "web development",
+      "portfolio",
+      "frontend",
+      "backend",
+      "full stack",
+      "developer"
+    ],
+    "ogImage": "/assets/images/logo.webp",
+    "twitterCard": "summary_large_image"
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "/home",
+      "index": true,
+      "changefreq": "weekly",
+      "priority": 1.0,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Accueil — Tim Moyence Portfolio",
+          "description": "Explore my professional services."
+        },
+        "en": {
+          "title": "Home — Tim Moyence Portfolio",
+          "description": "Explore my professional services."
+        }
+      }
+    },
+    {
+      "id": "presentation",
+      "path": "/presentation",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Présentation — Tim Moyence Portfolio",
+          "description": "Découvrez mon parcours et mes compétences en développement web."
+        },
+        "en": {
+          "title": "About — Tim Moyence Portfolio",
+          "description": "Discover my background and web development skills."
+        }
+      }
+    },
+    {
+      "id": "offer",
+      "path": "/offer",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.7,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Offres — Services professionnels web",
+          "description": "Solutions numériques sur mesure et plans tarifaires."
+        },
+        "en": {
+          "title": "Offers — Professional web services",
+          "description": "Tailor-made digital solutions and pricing plans."
+        }
+      }
+    },
+    {
+      "id": "contact",
+      "path": "/contact",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Contact — Échanges et devis",
+          "description": "Prenez contact pour discuter de vos projets numériques."
+        },
+        "en": {
+          "title": "Contact — Discussion and quotes",
+          "description": "Get in touch to discuss your digital projects."
+        }
+      }
+    },
+    {
+      "id": "client-project",
+      "path": "/client-project",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.6,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Projets clients — Réalisations web",
+          "description": "Découvrez une sélection de projets clients réalisés."
+        },
+        "en": {
+          "title": "Client projects — Web work",
+          "description": "Explore a selection of completed client projects."
+        }
+      }
+    },
+    {
+      "id": "login",
+      "path": "/login",
+      "index": false,
+      "changefreq": "yearly",
+      "priority": 0.1,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Login — Pour acceder à votre compte",
+          "description": "You can't access this page without logging in."
+        },
+        "en": {
+          "title": "Log in — Access your account",
+          "description": "You can't access this page without logging in."
+        }
+      }
+    },
+    {
+      "id": "register",
+      "path": "/register",
+      "index": false,
+      "changefreq": "yearly",
+      "priority": 0.1,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Register — Pour acceder à votre compte",
+          "description": "You can't access this page without registering."
+        },
+        "en": {
+          "title": "Sign up — Access your account",
+          "description": "You can't access this page without signing up."
+        }
+      }
+    },
+    {
+      "id": "not-found",
+      "path": "/404",
+      "index": false,
+      "changefreq": "yearly",
+      "priority": 0.0,
+      "lastmod": "2026-01-31",
+      "locales": {
+        "fr": {
+          "title": "Page introuvable",
+          "description": "La page demandée est introuvable."
+        },
+        "en": {
+          "title": "Page not found",
+          "description": "The requested page could not be found."
+        }
+      }
+    }
+  ]
+}

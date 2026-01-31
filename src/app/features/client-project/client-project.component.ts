@@ -97,12 +97,7 @@ export class ClientProjectComponent {
         {
           label: $localize`:clientProjects.projects.maria.actions.details@@clientProjects.projects.maria.actions.details:Détails`,
           variant: "secondary" as HeroAction["variant"],
-          href: "/client-project/ifs-academy",
-        },
-        {
-          label: $localize`:clientProjects.projects.maria.actions.contact@@clientProjects.projects.maria.actions.contact:Contact`,
-          variant: "ghost" as HeroAction["variant"],
-          href: "/contact",
+          href: "https://ifscourse.com/",
         },
       ],
       card: {

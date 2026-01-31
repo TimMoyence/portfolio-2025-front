@@ -16,7 +16,7 @@
       "i18n": {
         "sourceLocale": "fr",
         "locales": {
-          "en-US": "src/locale/messages.en.xlf"
+          "en": "src/locale/messages.en.xlf"
         }
       },
       "architect": {
@@ -65,7 +65,7 @@
                   "maximumError": "8kB"
                 }
               ],
-              "localize": ["fr", "en-US"],
+              "localize": ["fr", "en"],
               "outputHashing": "all",
               "optimization": true,
               "extractLicenses": true,
@@ -76,11 +76,11 @@
               "extractLicenses": false,
               "sourceMap": true
             },
-            "en-US": {
+            "en": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "localize": ["en-US"]
+              "localize": ["en"]
             }
           },
           "defaultConfiguration": "production"
@@ -94,8 +94,8 @@
             "development": {
               "buildTarget": "portfolio-app:build:development"
             },
-            "en-US": {
-              "buildTarget": "portfolio-app:build:en-US"
+            "en": {
+              "buildTarget": "portfolio-app:build:en"
             }
           },
           "defaultConfiguration": "development"
