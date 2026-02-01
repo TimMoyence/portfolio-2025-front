@@ -71,7 +71,7 @@ export class ContactComponent {
     email: "",
     firstName: "",
     lastName: "",
-    phone: "",
+    phone: null,
     subject: "",
     message: "",
     role: "",
@@ -179,34 +179,48 @@ export class ContactComponent {
 
     this.isContactLoading = true;
 
-    this.contactService.contact(this.contactForm).subscribe({
-      next: () => {
-        this.isContactLoading = false;
-        this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
+    const payload = this.normalizeContactPayload(this.contactForm);
 
-        this.contactForm = { ...this.defaultContactFormState };
-        form.resetForm(this.contactForm);
-        this.isContactSubmitted = false;
+    this.contactService.contact(payload).subscribe({
+      next: (response) => {
+        if (response.httpCode !== 201)
+          this.contactErrorMessage = response.message;
+        else
+          this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
       },
       error: (error: any) => {
-        this.isContactLoading = false;
+        const serverMessage = Array.isArray(error?.error?.message)
+          ? error.error.message.join(" ")
+          : error?.error?.message;
+
         this.contactErrorMessage =
+          serverMessage ||
           error?.message ||
           $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`;
       },
       complete: () => {
-        this.isContactLoading = false;
+        this.contactForm = { ...this.defaultContactFormState };
+        form.resetForm(this.contactForm);
+        this.isContactSubmitted = false;
       },
     });
+  }
 
-    // TODO: brancher ton service HTTP ici
-    setTimeout(() => {
-      this.isContactLoading = false;
-      this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
-
-      this.contactForm = { ...this.defaultContactFormState };
-      form.resetForm(this.contactForm);
-      this.isContactSubmitted = false;
-    }, 1200);
+  private normalizeContactPayload(form: ContactFormState): ContactFormState {
+    const trimOrEmpty = (value: string): string => value.trim();
+    const trimmedPhone =
+      form.phone === undefined || form.phone === null
+        ? null
+        : trimOrEmpty(form.phone);
+    return {
+      ...form,
+      email: trimOrEmpty(form.email),
+      firstName: trimOrEmpty(form.firstName),
+      lastName: trimOrEmpty(form.lastName),
+      subject: trimOrEmpty(form.subject),
+      message: trimOrEmpty(form.message),
+      role: trimOrEmpty(form.role),
+      phone: trimmedPhone === "" ? null : trimmedPhone,
+    };
   }
 }

@@ -81,8 +81,8 @@
               <div>
                 <p class="text-gray-500">{{ role }}</p>
               </div>
-              <input [(ngModel)]="contactForm.role" type="radio" name="DeliveryOption" [value]="role" id="{{ role }}"
-                class="size-5 border-gray-300" checked="">
+              <input [(ngModel)]="contactForm.role" type="radio" name="role" required [value]="role" id="{{ role }}"
+                class="size-5 border-gray-300">
             </label>
           </div>
 
@@ -99,7 +99,7 @@
 
       <!-- Message -->
       <div class="relative">
-        <textarea id="message" name="message" required [(ngModel)]="contactForm.message" placeholder=" "
+        <textarea id="message" name="message" required minlength="10" [(ngModel)]="contactForm.message" placeholder=" "
           class="peer block w-full min-h-[11.25rem] rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
           #messageCtrl="ngModel"
           [class.border-red-500]="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)"></textarea>
@@ -114,7 +114,8 @@
         </label>
 
         <p *ngIf="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)" class="mt-1 text-xs text-red-500">
-          <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+          <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire et doit contenir au moins 10
+            caractères.</span>
         </p>
       </div>
 
