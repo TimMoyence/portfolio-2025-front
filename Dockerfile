@@ -3,7 +3,7 @@ WORKDIR /app
 
 # --- Install deps (build) ---
 FROM base AS deps
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 COPY package*.json ./
 RUN npm ci
 COPY . .
