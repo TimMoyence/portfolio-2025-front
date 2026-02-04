@@ -1,17 +1,16 @@
-<footer role="contentinfo" class="px-[5%] py-12 md:py-18 lg:py-20">
+<footer role="contentinfo" class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-20">
   <div class="container">
     <div
-      class="grid grid-cols-1 gap-x-[4vw] gap-y-12 pb-12 md:gap-y-16 md:pb-18 sm:grid-cols-[1fr_0.5fr] sm:gap-y-4 sm:pb-20">
+      class="flex justify-between gap-x-[4vw] gap-y-6 pb-12 md:gap-y-16 md:pb-18 sm:grid-cols-[1fr_0.5fr] sm:gap-y-4 sm:pb-20">
+      <div class="mb-6 md:mb-8">
+        <a href="#">
+          <img src="/assets/images/logo.webp" alt="Logo image" i18n-alt="footer.logo.alt|Footer logo alt@@footerLogoAlt"
+            class="inline-block" loading="lazy" aria-hidden="true" style="width: 15rem; height: auto;" />
+        </a>
+      </div>
       <div>
-        <div class="mb-6 md:mb-8">
-          <a href="#">
-            <img src="/assets/images/logo.webp" alt="Logo image"
-              i18n-alt="footer.logo.alt|Footer logo alt@@footerLogoAlt" class="inline-block" loading="lazy"
-              aria-hidden="true" style="width: 10rem; height: auto;" />
-          </a>
-        </div>
         <div class="flex flex-col">
-          <div class="grid auto-cols-fr grid-cols-1 gap-x-4 gap-y-6 py-2">
+          <div class="grid auto-cols-fr grid-cols-1 gap-x-2 gap-y-3 py-2">
             @for (method of contactMethods; track $index) {
             <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
               <div class="mr-4 flex items-center justify-center md:mb-4">
