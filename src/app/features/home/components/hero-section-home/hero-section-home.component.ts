@@ -27,7 +27,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
                 métier
               </h1>
               <p
-                class="text-xs md:text-base lg:text-medium"
+                class="text-xs md:text-base lg:text-medium col-span-2 text-center"
                 i18n="hero.lead|Hero description@@heroLead"
               >
                 J’accompagne entreprises et indépendants dans la clarification,
