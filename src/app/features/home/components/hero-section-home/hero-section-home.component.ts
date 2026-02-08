@@ -38,8 +38,8 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
                 class=" col-span-full text-xs md:text-base lg:text-medium mt-4 flex flex-wrap items-center justify-center gap-2 md:mt-8 lg:mt-12"
               >
                 <a
-                  [routerLink]="'/presentations'"
-                  class="transition-colors hover:bg-scheme-accent-hover active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
+                  [routerLink]="'/presentation'"
+                  class="transition-colors bg-white hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
                   i18n="hero.cta.about|Hero about CTA@@heroCtaAbout"
                 >
                   Découvrir l’approche

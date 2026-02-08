@@ -22,7 +22,7 @@ import { RouterModule } from "@angular/router";
         </p>
         <div class="flex justify-center gap-4">
           <a
-            routerLink="/presentation"
+            routerLink="/"
             class="inline-flex items-center justify-center rounded-button
                 bg-scheme-accent px-5 py-2
                 font-semibold text-scheme-on-accent

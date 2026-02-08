@@ -24,7 +24,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1.0,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -42,7 +42,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -60,7 +60,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
@@ -78,7 +78,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -96,7 +96,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Projets clients — Réalisations web",
@@ -114,7 +114,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.1,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Login — Pour acceder à votre compte",
@@ -132,7 +132,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.1,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Register — Pour acceder à votre compte",
@@ -150,7 +150,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.0,
-      "lastmod": "2026-01-31",
+      "lastmod": "2026-02-08",
       "locales": {
         "fr": {
           "title": "Page introuvable",

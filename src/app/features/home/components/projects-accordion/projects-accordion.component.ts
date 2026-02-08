@@ -41,10 +41,7 @@ type Project = {
           >
             Mes réalisations numériques
           </h2>
-          <p
-            class="text-sm"
-            i18n="projects.lead|Section description@@projectsLead"
-          >
+          <p i18n="projects.lead|Section description@@projectsLead">
             Quelques projets représentatifs de mon approche et de ma manière de
             travailler
           </p>

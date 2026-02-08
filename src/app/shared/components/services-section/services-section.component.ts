@@ -60,7 +60,7 @@ export type ServicesCta = {
                   aria-hidden="true"
                 />
               </div>
-              <h3 class="heading-h5 mb-3 font-bold md:mb-4">
+              <h3 class="heading-h4 text-h4 mb-3 font-bold md:mb-4">
                 {{ service.title }}
               </h3>
               <p class="text-wrap">{{ service.description }}</p>
