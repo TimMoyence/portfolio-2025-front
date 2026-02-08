@@ -12,22 +12,22 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
       <div class="container">
         <div class="flex flex-col items-center">
           <div class="mb-4 text-center md:mb-8 lg:mb-12">
-            <div class="w-full sm:px-6 md:px-10 lg:px-16">
+            <div class="w-full  grid grid-cols-12 sm:px-6 md:px-10 lg:px-16">
               <p
-                class="mb-3 font-semibold md:mb-4"
+                class="col-span-full mb-3 font-semibold md:mb-4"
                 i18n="hero.kicker|Hero small label@@heroKicker"
               >
                 Innovation
               </p>
               <h1
-                class="font-heading md:heading-h2 md:text-h2 heading-h3 text-h3 mb-5 md:mb-6"
+                class="col-span-full font-heading md:heading-h2 md:text-h2 heading-h3 text-h3 mb-5 md:mb-6"
                 i18n="hero.title|Hero heading@@heroTitle"
               >
                 Des solutions digitales claires, pensées pour votre réalité
                 métier
               </h1>
               <p
-                class="text-xs md:text-base lg:text-medium "
+                class="col-start-3 col-end-11 text-xs md:text-base lg:text-medium"
                 i18n="hero.lead|Hero description@@heroLead"
               >
                 J’accompagne entreprises et indépendants dans la clarification,
@@ -35,7 +35,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
                 une approche sobre, progressive et adaptée aux usages réels.
               </p>
               <div
-                class="  text-xs md:text-base lg:text-medium mt-4 flex flex-wrap items-center justify-center gap-2 md:mt-8 lg:mt-12"
+                class=" col-span-full text-xs md:text-base lg:text-medium mt-4 flex flex-wrap items-center justify-center gap-2 md:mt-8 lg:mt-12"
               >
                 <a
                   [routerLink]="'/presentations'"
@@ -63,7 +63,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
           <div>
             <img
               src="./assets/images/portrait-tim-asili-design.webp"
-              class="shadow-xl overflow-hidden rounded-image size-full md:h-[25rem] lg:h-[35rem] object-cover"
+              class="shadow-xl overflow-hidden rounded-image size-full h-[15rem] md:h-[20rem] lg:h-[30rem] object-cover"
               alt="Portrait de Tim, développeur web chez Asili Design"
               i18n-alt="hero.imageAlt|Hero portrait alt text@@heroImageAlt"
               loading="lazy"

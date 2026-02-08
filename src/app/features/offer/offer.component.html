@@ -38,7 +38,7 @@
             </div>
           </div>
           <div class="relative">
-            <img class="h-[25rem] rounded-xl w-full object-cover sm:h-[30rem] lg:h-[60vh]" [src]="service.image"
+            <img class="h-[20rem] md:h-[25rem] lg:h-[30rem] rounded-xl w-full object-cover " [src]="service.image"
               [alt]="service.imageAlt" loading="lazy" />
           </div>
         </div>
@@ -52,7 +52,7 @@
   [leadParagraphs]="servicesSection.leadParagraphs" [services]="servicesSection.services"
   [cta]="servicesSection.cta"></app-services-section>
 
-<section id="qualities" class="px-[5%] py-12 md:py-18 lg:py-22" data-testid="qualities-section">
+<section id="qualities" class="px-[5%] py-6 md:py-8 lg:py-12" data-testid="qualities-section">
   <div class="container space-y-12 lg:space-y-16">
     @for (quality of qualities; track quality.id) {
     <div class="relative border-t border-border-primary bg-white pb-8 md:pb-14 sticky lg:pb-0"

@@ -47,10 +47,10 @@ export class HomeComponent {
         iconAlt: $localize`:services.item.construction.iconAlt|Service icon alt@@servicesItemConstructionIconAlt:Icon for building`,
       },
       {
-        title: $localize`:services.item.evolution.testing.title|Service title@@servicesItemEvolutionAndMaintenanceTitle:Tester`,
-        description: $localize`:services.item.evolution.testing.desc|Service description@@servicesItemEvolutionAndMaintenanceDesc:Mettre en place des campagnes de tests utilisateurs pour valider les choix effectués et ajuster la trajectoire si nécessaire.`,
+        title: $localize`:services.item.evolution.testing.title|Service title@@servicesItemTestingTitle:Tester`,
+        description: $localize`:services.item.evolution.testing.desc|Service description@@servicesItemTestingDesc:Mettre en place des campagnes de tests utilisateurs pour valider les choix effectués et ajuster la trajectoire si nécessaire.`,
         iconSrc: "/assets/icons/stat_3.svg",
-        iconAlt: $localize`:services.item.evolution.testing.iconAlt|Service icon alt@@servicesItemtestingIconAlt:Tester icon`,
+        iconAlt: $localize`:services.item.evolution.testing.iconAlt|Service icon alt@@servicesItemTestingIconAlt:Tester icon`,
       },
       {
         title: $localize`:services.item.evolution.maintenance.title|Service title@@servicesItemEvolutionAndMaintenanceTitle:Faire évoluer`,

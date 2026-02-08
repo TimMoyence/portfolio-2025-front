@@ -17,15 +17,16 @@
         }
       </div>
       <div>
-        <img class="w-full rounded-image  object-cover" [src]="technologySection.image"
-          [alt]="technologySection.imageAlt" loading="lazy" />
+        <img class="w-full h-[25rem] md:h-[30rem] lg:h-[35rem] rounded-image  object-cover"
+          [src]="technologySection.image" [alt]="technologySection.imageAlt" loading="lazy" />
       </div>
     </div>
   </div>
 </section>
 
 
-<section class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-22" data-testid="portfolio-section">
+<section class="bg-scheme-background px-[5%] py-6 md:py-8 lg:py-12 mb-6 md:mb-8 lg:mb-12 "
+  data-testid="portfolio-section">
   <div class="container">
     <header class="mx-auto mb-12 max-w-lg text-center md:mb-18 lg:mb-20">
       <p class="mb-3 font-semibold md:mb-4">
@@ -41,8 +42,8 @@
       <article class="mb-8 break-inside-avoid">
         <div class="mb-5 md:mb-6">
           <a routerLink="/client-project">
-            <img class="shadow-xl overflow-hidden w-full rounded-image object-cover" [src]="project.image"
-              [alt]="project.alt" loading="lazy" />
+            <img class="shadow-xl overflow-hidden w-full h-[15rem] md:h-[20rem] lg:h-[25rem] rounded-image object-cover"
+              [src]="project.image" [alt]="project.alt" loading="lazy" />
           </a>
         </div>
         <h5 class="mb-2 font-heading heading-h6 text-h6 md:heading-h5 md:text-h5">

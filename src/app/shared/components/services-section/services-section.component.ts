@@ -23,10 +23,10 @@ export type ServicesCta = {
   imports: [CommonModule, RouterModule, SvgIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="px-[5%] py-12 md:py-18 lg:py-22">
+    <section class="px-[5%] py-6 md:py-8 lg:py-12">
       <div class="container">
         <div
-          class="mb-12 grid grid-cols-1 gap-5 md:mb-18 md:grid-cols-2 md:gap-x-12 md:gap-y-8 lg:mb-20 lg:gap-x-20"
+          class="mb-12 grid grid-cols-1 gap-5 md:mb-18 md:gap-x-12 md:gap-y-8 lg:mb-20 lg:gap-x-20"
         >
           <div>
             <p class="mb-3 font-semibold md:mb-4">
@@ -47,10 +47,10 @@ export type ServicesCta = {
         </div>
 
         <div
-          class="flex items-stretch justify-between flex-wrap md:flex-nowrap"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-stretch justify-between"
         >
           @for (service of services; track service.title) {
-            <article class="m-2 md:m-3 flex-1 basis-0">
+            <article class="m-2 col-span-1 md:m-3 flex-1 basis-0">
               <div class="mb-5 md:mb-6">
                 <img
                   [src]="service.iconSrc"

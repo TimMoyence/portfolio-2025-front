@@ -1,14 +1,13 @@
 <footer role="contentinfo" class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-20">
   <div class="container">
-    <div
-      class="flex justify-between gap-x-[4vw] gap-y-6 pb-12 md:gap-y-16 md:pb-18 sm:grid-cols-[1fr_0.5fr] sm:gap-y-4 sm:pb-20">
-      <div class="mb-6 md:mb-8">
+    <div class="flex flex-col md:flex-row justify-between">
+      <div class="mb-4 flex justify-start items-start md:justify-center md:items-center">
         <a href="#">
           <img src="/assets/images/logo.webp" alt="Logo image" i18n-alt="footer.logo.alt|Footer logo alt@@footerLogoAlt"
-            class="inline-block" loading="lazy" aria-hidden="true" style="width: 15rem; height: auto;" />
+            class="h-[5rem] md:h-[7.5rem] lg:h-[10rem] inline-block" loading="lazy" aria-hidden="true" />
         </a>
       </div>
-      <div>
+      <div class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center">
         <div class="flex flex-col">
           <div class="grid auto-cols-fr grid-cols-1 gap-x-2 gap-y-3 py-2">
             @for (method of contactMethods; track $index) {
@@ -43,7 +42,7 @@
           }
         </div>
       </div>
-      <div class="grid grid-cols-1 items-center gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-4">
+      <div class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center">
         @for (column of navColumns; track $index) {
         <ul data-testid="footer-column">
           @for (link of column.links; track $index) {
@@ -56,20 +55,19 @@
       </div>
     </div>
     <div class="h-px w-full bg-scheme-border"></div>
-    <div
-      class="text-small flex flex-col-reverse items-start justify-between pt-6 pb-4 sm:flex-row sm:items-center sm:pt-8 sm:pb-0">
-      <p class="mt-8 sm:mt-0" i18n="footer.copyright|Footer copyright@@footerCopyright">
-        © 2025 Moyence. All rights reserved.
-      </p>
-      <ul
-        class="text-small grid grid-flow-row grid-cols-[max-content] justify-center gap-y-4 sm:grid-flow-col sm:gap-x-6 sm:gap-y-0"
-        data-testid="legal-links">
-        @for (legalLink of legalLinks; track $index) {
-        <li>
-          <a [href]="legalLink.href">{{ legalLink.label }}</a>
-        </li>
-        }
-      </ul>
-    </div>
+
+    <ul
+      class="sm:flex-row sm:items-center sm:pt-8 sm:pb-0 pt-6 pb-4 text-small grid sm:grid-flow-col md:grid-cols-2 gap-y-4 sm:gap-x-6 sm:gap-y-0"
+      data-testid="legal-links">
+      @for (legalLink of legalLinks; track $index) {
+      <li class="grid-cols-1">
+        <a [href]="legalLink.href">{{ legalLink.label }}</a>
+      </li>
+      }
+    </ul>
+
+    <p class="md:text-center md:mt-4 sm:mt-2" i18n="footer.copyright|Footer copyright@@footerCopyright">
+      © 2025 Moyence. All rights reserved.
+    </p>
   </div>
 </footer>

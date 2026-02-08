@@ -1590,7 +1590,7 @@ The application is organized around three complementary modules, each tailored t
       </notes>
       <segment>
         <source>Parler de votre situation</source>
-        <target>Talk about your situation</target>
+        <target>Share your situation</target>
       </segment>
     </unit>
 
@@ -1601,7 +1601,7 @@ The application is organized around three complementary modules, each tailored t
       </notes>
       <segment>
         <source>Un premier échange pour comprendre votre contexte,clarifier votre besoin et envisager la suite la plus pertinente.</source>
-        <target>An initial discussion to understand your context, clarify your needs, and explore the most relevant next steps.</target>
+        <target>Through an initial conversation, we uncover your context and define the most impactful path forward.</target>
       </segment>
     </unit>
 
@@ -1623,7 +1623,7 @@ The application is organized around three complementary modules, each tailored t
       </notes>
       <segment>
         <source>Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.</source>
-        <target>Do you have a project, a constraint, or an idea to clarify? Share a few details and I’ll get back to you quickly.</target>
+        <target>Are you facing a challenge, a constraint, or a question that needs clarity?</target>
       </segment>
     </unit>
 
@@ -2327,7 +2327,7 @@ The application is organized around three complementary modules, each tailored t
         <target>Evolution icon</target>
       </segment>
     </unit>
-<unit id="servicesItemEvolutionAndMaintenanceTitle">
+<unit id="servicesItemTestingTitle">
   <notes>
     <note category="location">src/app/features/home/home.component.ts:50</note>
     <note category="location">src/app/features/home/home.component.ts:56</note>
@@ -2340,7 +2340,7 @@ The application is organized around three complementary modules, each tailored t
   </segment>
 </unit>
 
-<unit id="servicesItemEvolutionAndMaintenanceDesc">
+<unit id="servicesItemTestingDesc">
   <notes>
     <note category="location">src/app/features/home/home.component.ts:51</note>
     <note category="location">src/app/features/home/home.component.ts:57</note>

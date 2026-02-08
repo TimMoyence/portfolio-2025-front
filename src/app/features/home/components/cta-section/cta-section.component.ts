@@ -6,7 +6,10 @@ import { Component } from "@angular/core";
   standalone: true,
   imports: [CommonModule],
   template: `
-    <section class="px-[5%] py-12 md:py-18 lg:py-22">
+    <section
+      class="px-[5%] pb-8 md:pb-12 lg:pb-16"
+      aria-labelledby="start-project-heading"
+    >
       <div class="container" aria-labelledby="start-project-heading">
         <div
           class="shadow-xl overflow-hidden grid auto-cols-fr grid-cols-1 overflow-hidden rounded-2xl border border-scheme-border bg-scheme-background lg:grid-cols-2"
@@ -45,7 +48,7 @@ import { Component } from "@angular/core";
           <div class="flex items-center justify-center">
             <img
               src="./assets/images/letsTalkIllustration.webp"
-              class="w-full object-cover  md:h-[35rem] lg:h-[45rem]"
+              class="w-full object-cover  h-[15rem] md:h-[20rem] lg:h-[30rem]"
               alt=" image of me smiling ready to discuss your project"
               i18n-alt="cta.image.alt|CTA illustration alt text@@ctaImageAlt"
               loading="lazy"

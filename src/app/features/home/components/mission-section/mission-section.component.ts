@@ -8,7 +8,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
   imports: [CommonModule, SvgIconComponent],
   template: `
     <section
-      class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-22"
+      class="bg-scheme-background px-[5%] py-6 md:py-8 lg:py-12"
       aria-labelledby="presQ-heading"
     >
       <div class="container">
@@ -18,7 +18,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
           <div class="order-2 md:order-1">
             <img
               src="/assets/images/why-asili.webp"
-              class="w-full md:h-[30rem] lg:h-[40rem] shadow-xl overflow-hidden rounded-image object-cover"
+              class="w-full h-[15rem] md:h-[20rem] lg:h-[30rem] shadow-xl overflow-hidden rounded-image object-cover"
               alt="Illustration expliquant pourquoi Asili"
               i18n-alt="
                 mission.imageAlt|Mission illustration alt@@missionImageAlt"

@@ -1,21 +1,19 @@
-<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description"
+<app-hero-section [label]="hero.label" align="center" [title]="hero.title" [description]="hero.description"
   titleLevel="h1"></app-hero-section>
 
-<section class="px-[5%] py-12 md:py-18 lg:py-22">
+<section class="px-[5%] py-6 md:py-8 lg:py-12">
+  <div class="container mb-6 md:mb-8">
+    <p class="mb-3 font-semibold md:mb-4">{{ contactInfo.label }}</p>
+    <h2 class="mb-5 heading-h2 text-h2 md:mb-6" i18n="@@contactFormHeading">
+      Formulaire de contact
+    </h2>
+    <p class="md:text-md">{{ contactInfo.description }}</p>
+  </div>
   <div
-    class="container grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-2 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16">
-    <div>
-      <div class="mb-6 md:mb-8">
-        <p class="mb-3 font-semibold md:mb-4">{{ contactInfo.label }}</p>
-        <h2 class="mb-5 heading-h2 text-h2 md:mb-6" i18n="@@contactFormHeading">
-          Formulaire de contact
-        </h2>
-        <p class="md:text-md">{{ contactInfo.description }}</p>
-      </div>
-    </div>
-    <form class="grid max-w-lg grid-cols-1 grid-rows-[auto_auto] gap-6" #contactFormRef="ngForm"
+    class="container grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-3 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16">
+    <form class="col-span-full md:col-span-3 grid md:grid-cols-2 gap-3" #contactFormRef="ngForm"
       (ngSubmit)="handleContactSubmit(contactFormRef)">
-      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         @for (field of contactFields; track field.key) {
         <div class="relative">
           <input [type]="field.type" [id]="field.key" [name]="field.key" [(ngModel)]="contactForm[field.key]"
@@ -45,39 +43,48 @@
         }
       </div>
 
-      <label class="grid w-full gap-2">
-        <span class="transition-colors font-medium text-gray-500" i18n="@@contactFormSubject">
+      <div class="grid w-full gap-2">
+        <label for="subject" class="font-medium text-gray-500" i18n="@@contactFormSubject">
           Sujet de votre demande
-        </span>
+        </label>
 
-        <select class="rounded-form border border-scheme-border bg-white px-3 py-2 font-medium text-gray-500
-         focus:border-scheme-accent focus:outline-none transition-colors" name="subject" required
-          [(ngModel)]="contactForm.subject" #subjectCtrl="ngModel"
+        <!-- Wrapper owns border + bg -->
+        <div class="rounded-form border border-scheme-border bg-white w-full
+          font-medium text-gray-500 flex items-center
+         focus:border-scheme-accent focus:outline-none transition-colors
+         appearance-none
+         bg-[url('/assets/icons/chevron-down.svg')]
+         bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
           [class.border-red-500]="subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)">
-          <option value="" class="font-semibold  text-gray-500" disabled i18n="@@contactFormSubjectPlaceholder">
-            Sélectionnez un sujet
-          </option>
-          @for (subject of contactInfo.subjects; track $index) {
-          <option [value]="subject">{{ subject }}</option>
-          }
-        </select>
+          <select id="subject" name="subject" required [(ngModel)]="contactForm.subject" #subjectCtrl="ngModel" class="relative z-10 w-full appearance-none bg-transparent px-3 py-2 pr-12
+             font-medium text-gray-500 focus:outline-none">
+            <option value="" disabled i18n="@@contactFormSubjectPlaceholder">
+              Sélectionnez un sujet
+            </option>
 
-        <p *ngIf="subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)" class="text-xs text-red-500">
-          <span i18n="auth.error.required@@authErrorRequired">
-            Ce champ est obligatoire.
-          </span>
+            @for (subject of contactInfo.subjects; track $index) {
+            <option [value]="subject">{{ subject }}</option>
+            }
+          </select>
+        </div>
+
+        <p *ngIf="subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)" class="text-xs text-red-500"
+          i18n="auth.error.required@@authErrorRequired">
+          Ce champ est obligatoire.
         </p>
-      </label>
+      </div>
+
+
       <!-- Rôle -->
       <div class="grid w-full items-center py-3 md:py-4">
         <span class="mb-3 md:mb-4 font-medium text-gray-500" i18n="@@contactFormRole">Qui êtes-vous ?</span>
-        <fieldset class="space-y-3 grid grid-cols-2 gap-x-6 gap-y-3.5">
+        <fieldset class="space-y-3 grid grid-cols-2 gap-x-3 gap-y-5">
           @for (role of contactInfo.roles; track $index) {
           <legend class="sr-only">{{ role }}</legend>
 
           <div>
             <label for="{{ role }}"
-              class="flex items-center justify-between space-x-2 gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600">
+              class="flex items-center justify-between space-x-2 gap-2 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600">
               <div>
                 <p class="text-gray-500">{{ role }}</p>
               </div>
@@ -120,7 +127,7 @@
       </div>
 
       <!-- Terms -->
-      <label class="flex items-center space-x-2 text-sm">
+      <label class="flex col-span-1 md:col-span-2 items-center space-x-2 text-sm">
         <input type="checkbox" name="terms" required [(ngModel)]="contactForm.terms" #termsCtrl="ngModel" />
         <span class="text-gray-700" i18n="@@contactFormTerms">J'accepte les conditions</span>
       </label>
@@ -129,7 +136,7 @@
       </p>
 
       <!-- Submit -->
-      <div class="grid grid-cols-1 gap-4">
+      <div class="grid col-span-1 md:col-span-2 gap-4">
         <button type="submit"
           class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-scheme-accent px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 hover:bg-scheme-accent-hover "
           i18n-title title="Envoyer" [disabled]="isContactLoading || !contactFormRef.form.valid"

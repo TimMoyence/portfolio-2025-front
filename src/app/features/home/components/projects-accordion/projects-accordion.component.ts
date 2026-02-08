@@ -23,7 +23,7 @@ type Project = {
   imports: [CommonModule],
   template: `
     <section
-      class="px-[5%] py-12 md:py-18 lg:py-22"
+      class="px-[5%] py-6 md:py-8 lg:py-12"
       aria-labelledby="projects-heading"
     >
       <div class="container">
@@ -96,7 +96,9 @@ type Project = {
                 <p class="text-small">
                   {{ project.description }}
                 </p>
-                <div class="mt-8 h-80 md:mt-10 md:h-[40rem] lg:mt-12">
+                <div
+                  class="mt-4 h-12rem h-[15rem] md:h-[20rem] lg:h-[30rem] md:mt-6 lg:mt-8"
+                >
                   <img
                     [src]="project.imageSrc"
                     [alt]="project.imageAlt"

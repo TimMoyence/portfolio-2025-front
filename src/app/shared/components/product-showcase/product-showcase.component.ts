@@ -1,14 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { SvgIconComponent } from '../svg-icon.component';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { SvgIconComponent } from "../svg-icon.component";
 
 @Component({
-  selector: 'app-product-showcase',
+  selector: "app-product-showcase",
   standalone: true,
   imports: [CommonModule, SvgIconComponent],
   template: `
     <section
-      class="px-[5%] py-12 md:py-18 lg:py-22"
+      class="px-[5%] py-6 md:py-8 lg:py-12"
       aria-labelledby="sebastian-heading"
     >
       <div class="container">
@@ -40,9 +40,9 @@ import { SvgIconComponent } from '../svg-icon.component';
             </p>
             <ul class="my-4 list-disc pl-5">
               @for (feature of features; track $index) {
-              <li class="my-1 self-start pl-2">
-                {{ feature }}
-              </li>
+                <li class="my-1 self-start pl-2">
+                  {{ feature }}
+                </li>
               }
             </ul>
             <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">

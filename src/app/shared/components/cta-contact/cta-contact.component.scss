@@ -1,0 +1,43 @@
+.background-image-bordeaux {
+  position: relative;
+  min-height: 100%; /* or explicit height, see next section */
+  display: flex;
+}
+
+.background-image-bordeaux {
+  align-self: stretch;
+}
+
+.background-image-bordeaux::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/images/bordeaux-placeholder.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.15; /* transparency only on image */
+  z-index: 0;
+}
+
+/* Ensure content stays above the background */
+.background-image-bordeaux > * {
+  position: relative;
+  z-index: 1;
+}
+
+.background-image-bordeaux {
+  min-height: 25rem;
+}
+
+@media (min-width: 768px) {
+  .background-image-bordeaux {
+    min-height: 35rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .background-image-bordeaux {
+    min-height: 40rem;
+  }
+}

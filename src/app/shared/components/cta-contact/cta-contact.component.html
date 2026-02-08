@@ -1,50 +1,42 @@
-<section class="px-[5%] py-12 md:py-18 lg:py-22" aria-labelledby="contact-heading">
-  <div class="container">
-    <div>
-      <div
-        class="mb-12 grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 md:mb-20 md:grid-cols-[1fr_.75fr] md:gap-x-20 md:gap-y-16">
-        <div class="max-w-lg flex flex-col justify-between">
-          <p class="mb-3 font-semibold md:mb-4" i18n="contact.kicker|Section small label@@contactKicker">
-            Contact
-          </p>
-          <h3 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" id="contact-heading">{{ title }}</h3>
-          @for (p of leadParagraphs; track $index) {
-          <p class="text-small" [ngClass]="$index > 0 ? 'pt-2' : ''">
-            {{ p }}
-          </p>
-          }
-        </div>
-        <div class="flex flex-col">
-          <div class="grid auto-cols-fr grid-cols-1 gap-x-4 gap-y-6 py-2">
-            @for (method of contactMethods; track $index) {
-            <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
-              <div class="mr-4 flex items-center justify-center md:mb-4">
-                @if(method.icon) {
-                <app-svg-icon aria-hidden="true" [name]="method.icon!" [size]="1.5" aria-hidden="true"></app-svg-icon>
-                }
-              </div>
-              <div>
-                <h3 class="font-heading heading-h6 mb-2 font-bold">{{ method.label }}</h3>
-                @if(method.href) {
-                <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value"
-                  i18n-aria-label="contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria">
-                  {{ method.value }}
-                </a>
-                } @else {
-                <p>{{ method.value }}</p>
-                }
-              </div>
-            </div>
+<section class="px-[5%]" aria-labelledby="contact-heading">
+  <div class="container grid grid-cols-8 ">
+    <div class="col-span-full md:col-span-4 flex flex-col justify-center pb-2 md:pb-0 "
+      aria-label="Contact information">
+      <p class="mb-3 font-semibold md:mb-4" i18n="contact.kicker|Section small label@@contactKicker">
+        Contact
+      </p>
+      <h3 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" id="contact-heading">{{ title }}</h3>
+      @for (p of leadParagraphs; track $index) {
+      <p class="text-small" [ngClass]="$index > 0 ? 'pt-2' : ''">
+        {{ p }}
+      </p>
+      }
+    </div>
+    <div class="col-span-full md:col-span-4 flex items-center justify-center background-image-bordeaux"
+      aria-label="Contact methods">
+      <div class="grid grid-cols-1 gap-x-4 gap-y-4 py-2">
+        @for (method of contactMethods; track $index) {
+        <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
+          <div class="mr-4 flex items-center justify-center md:mb-4">
+            @if(method.icon) {
+            <app-svg-icon aria-hidden="true" [name]="method.icon!" [size]="1.5" aria-hidden="true"></app-svg-icon>
+            }
+          </div>
+          <div>
+            <h3 class="font-heading heading-h6 mb-2 font-bold">{{ method.label }}</h3>
+            @if(method.href) {
+            <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value"
+              i18n-aria-label="contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria">
+              {{ method.value }}
+            </a>
+            } @else {
+            <p>{{ method.value }}</p>
             }
           </div>
         </div>
+        }
       </div>
+
     </div>
-    <a [href]="map.href" target="_blank" class="justify-self-end md:w-[321.6px] lg:w-auto"
-      aria-label="Voir l'emplacement sur la carte dans un nouvel onglet"
-      i18n-aria-label="contact.map.linkAria|Map link label@@contactMapLinkAria">
-      <img [src]="map.imageSrc" [alt]="map.alt"
-        class="shadow-xl overflow-hidden rounded-image size-full h-[250px] object-cover md:h-[516px]" loading="lazy" />
-    </a>
   </div>
 </section>

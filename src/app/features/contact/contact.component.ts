@@ -7,14 +7,14 @@ import { ContactService } from "../../core/services/contact.service";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 
-interface ContactMethod {
-  title: string;
-  description: string;
-  value: string;
-  link?: string;
-  hasRouteAction?: boolean;
-}
-type ContactFormKey = keyof ContactFormState;
+// interface ContactMethod {
+//   title: string;
+//   description: string;
+//   value: string;
+//   link?: string;
+//   hasRouteAction?: boolean;
+// }
+// type ContactFormKey = keyof ContactFormState;
 @Component({
   selector: "app-contact",
   standalone: true,
@@ -46,10 +46,10 @@ export class ContactComponent {
     label: $localize`:contact.form.label@@contactFormLabel:Contact`,
     description: $localize`:contact.form.description@@contactFormDescription:Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.`,
     roles: [
-      $localize`:contact.form.role.developer@@contactFormRoleDeveloper:Développeur web`,
+      $localize`:contact.form.role.developer@@contactFormRoleDeveloper:Développeur`,
       $localize`:contact.form.role.manager@@contactFormRoleManager:Manager`,
       $localize`:contact.form.role.entrepreneur@@contactFormRoleEntrepreneur:Entrepreneur`,
-      $localize`:contact.form.role.student@@contactFormRoleStudent:Étudiant`,
+      $localize`:contact.form.role.cto@@contactFormRoleCTO:CTO`,
       $localize`:contact.form.role.freelance@@contactFormRoleFreelance:Freelance`,
       $localize`:contact.form.role.other@@contactFormRoleOther:Autre`,
     ],
@@ -114,58 +114,6 @@ export class ContactComponent {
       required: false,
     },
   ];
-  // contactFields: {
-  //   key: ContactFormKey;
-  //   label: string;
-  //   type: string;
-  //   required: boolean;
-  //   icon?: string;
-  // }[] = [
-  //   {
-  //     key: "firstName",
-  //     label: $localize`:contact.form.field.firstName|Contact form field label@@contactFormFieldFirstName:Prénom`,
-  //     type: "text",
-  //     required: true,
-  //   },
-  //   {
-  //     key: "lastName",
-  //     label: $localize`:contact.form.field.lastName|Contact form field label@@contactFormFieldLastName:Nom`,
-  //     type: "text",
-  //     required: true,
-  //   },
-  //   {
-  //     key: "email",
-  //     label: $localize`:contact.form.field.email|Contact form field label@@contactFormFieldEmail:Email`,
-  //     type: "email",
-  //     required: true,
-  //     icon: "email",
-  //   },
-  //   {
-  //     key: "phone",
-  //     label: $localize`:contact.form.field.phone|Contact form field label@@contactFormFieldPhone:Téléphone`,
-  //     type: "tel",
-  //     required: false,
-  //     icon: "phone",
-  //   },
-  //   {
-  //     key: "role",
-  //     label: $localize`:contact.form.field.role|Contact form field label@@contactFormFieldRole:Votre rôle`,
-  //     type: "select",
-  //     required: true,
-  //   },
-  //   {
-  //     key: "subject",
-  //     label: $localize`:contact.form.field.subject|Contact form field label@@contactFormFieldSubject:Sujet`,
-  //     type: "select",
-  //     required: true,
-  //   },
-  //   {
-  //     key: "message",
-  //     label: $localize`:contact.form.field.message|Contact form field label@@contactFormFieldMessage:Votre message`,
-  //     type: "textarea",
-  //     required: true,
-  //   },
-  // ];
 
   handleContactSubmit(form: NgForm): void {
     this.isContactSubmitted = true;
