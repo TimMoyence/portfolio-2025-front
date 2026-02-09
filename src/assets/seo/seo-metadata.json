@@ -12,7 +12,41 @@
       "frontend",
       "backend",
       "full stack",
-      "developer"
+      "developer",
+      "developpement web",
+      "Bordeaux",
+      "freelance",
+      "services web",
+      "solutions numériques",
+      "projets clients",
+      "contact",
+      "échanges",
+      "devis",
+      "Tim Moyence",
+      "web",
+      "frontend",
+      "backend",
+      "full stack",
+      "développeur",
+      "réalisations",
+      "projets clients",
+      "contact",
+      "échanges",
+      "devis",
+      "réparateur de vélo",
+      "réparateur de vélo à Bordeaux",
+      "atelier de réparation de vélo à Bordeaux",
+      "réparation site web",
+      "maintenance site web",
+      "optimisation site web",
+      "création site web",
+      "développement site web",
+      "services web sur mesure",
+      "solutions numériques personnalisées",
+      "projets web réussis",
+      "contact professionnel",
+      "échanges professionnels",
+      "devis personnalisé"
     ],
     "ogImage": "/assets/images/logo.webp",
     "twitterCard": "summary_large_image"
@@ -28,11 +62,15 @@
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
-          "description": "Explore my professional services."
+          "description": "Explore my professional services.",
+          "ogTitle": "Accueil de Tim Moyence",
+          "ogDescription": "Découvrez mes services professionnels et mes réalisations en développement web."
         },
         "en": {
           "title": "Home — Tim Moyence Portfolio",
-          "description": "Explore my professional services."
+          "description": "Explore my professional services.",
+          "ogTitle": "Home of Tim Moyence",
+          "ogDescription": "Discover my professional services and web development work."
         }
       }
     },
@@ -46,11 +84,15 @@
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
-          "description": "Découvrez mon parcours et mes compétences en développement web."
+          "description": "Découvrez mon parcours et mes compétences en développement web.",
+          "ogTitle": "Présentation de Tim Moyence",
+          "ogDescription": "Parcours, compétences et approche pour créer des expériences web modernes."
         },
         "en": {
           "title": "About — Tim Moyence Portfolio",
-          "description": "Discover my background and web development skills."
+          "description": "Discover my background and web development skills.",
+          "ogTitle": "About Tim Moyence",
+          "ogDescription": "Background, skills, and approach to building modern web experiences."
         }
       }
     },
@@ -64,11 +106,15 @@
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
-          "description": "Solutions numériques sur mesure et plans tarifaires."
+          "description": "Solutions numériques sur mesure et plans tarifaires.",
+          "ogTitle": "Offres de services web professionnels",
+          "ogDescription": "Solutions numériques personnalisées et plans tarifaires adaptés."
         },
         "en": {
           "title": "Offers — Professional web services",
-          "description": "Tailor-made digital solutions and pricing plans."
+          "description": "Tailor-made digital solutions and pricing plans.",
+          "ogTitle": "Professional web service offers",
+          "ogDescription": "Customized digital solutions and tailored pricing plans."
         }
       }
     },
@@ -82,11 +128,15 @@
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
-          "description": "Prenez contact pour discuter de vos projets numériques."
+          "description": "Prenez contact pour discuter de vos projets numériques.",
+          "ogTitle": "Contactez Tim Moyence",
+          "ogDescription": "Discutez de vos projets numériques et obtenez un devis personnalisé."
         },
         "en": {
           "title": "Contact — Discussion and quotes",
-          "description": "Get in touch to discuss your digital projects."
+          "description": "Get in touch to discuss your digital projects.",
+          "ogTitle": "Contact Tim Moyence",
+          "ogDescription": "Discuss your digital projects and get a personalized quote."
         }
       }
     },
@@ -100,11 +150,15 @@
       "locales": {
         "fr": {
           "title": "Projets clients — Réalisations web",
-          "description": "Découvrez une sélection de projets clients réalisés."
+          "description": "Découvrez une sélection de projets clients réalisés.",
+          "ogTitle": "Projets clients de Tim Moyence",
+          "ogDescription": "Une sélection de projets clients réussis, démontrant mes compétences en développement web."
         },
         "en": {
           "title": "Client projects — Web work",
-          "description": "Explore a selection of completed client projects."
+          "description": "Explore a selection of completed client projects.",
+          "ogTitle": "Tim Moyence's client projects",
+          "ogDescription": "A selection of successful client projects showcasing my web development skills."
         }
       }
     },
@@ -118,11 +172,15 @@
       "locales": {
         "fr": {
           "title": "Login — Pour acceder à votre compte",
-          "description": "You can't access this page without logging in."
+          "description": "You can't access this page without logging in.",
+          "ogTitle": "Connexion à votre compte",
+          "ogDescription": "Vous ne pouvez pas accéder à cette page sans vous connecter."
         },
         "en": {
           "title": "Log in — Access your account",
-          "description": "You can't access this page without logging in."
+          "description": "You can't access this page without logging in.",
+          "ogTitle": "Log in to your account",
+          "ogDescription": "You can't access this page without logging in."
         }
       }
     },
@@ -136,11 +194,15 @@
       "locales": {
         "fr": {
           "title": "Register — Pour acceder à votre compte",
-          "description": "You can't access this page without registering."
+          "description": "You can't access this page without registering.",
+          "ogTitle": "Inscrivez-vous à votre compte",
+          "ogDescription": "Vous ne pouvez pas accéder à cette page sans vous inscrire."
         },
         "en": {
           "title": "Sign up — Access your account",
-          "description": "You can't access this page without signing up."
+          "description": "You can't access this page without signing up.",
+          "ogTitle": "Sign up for your account",
+          "ogDescription": "You can't access this page without signing up."
         }
       }
     },
@@ -154,11 +216,15 @@
       "locales": {
         "fr": {
           "title": "Page introuvable",
-          "description": "La page demandée est introuvable."
+          "description": "La page demandée est introuvable.",
+          "ogTitle": "Page introuvable",
+          "ogDescription": "La page demandée est introuvable."
         },
         "en": {
           "title": "Page not found",
-          "description": "The requested page could not be found."
+          "description": "The requested page could not be found.",
+          "ogTitle": "Page not found",
+          "ogDescription": "The requested page could not be found."
         }
       }
     }

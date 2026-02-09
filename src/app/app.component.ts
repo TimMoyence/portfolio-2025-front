@@ -1,13 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from './shared/components/footer/footer.component';
-import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { SeoManagerComponent } from './shared/components/seo-manager.component';
-import { SkipLinkComponent } from './shared/components/skip-link.component';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
+import { FooterComponent } from "./shared/components/footer/footer.component";
+import { NavbarComponent } from "./shared/components/navbar/navbar.component";
+import { SeoManagerComponent } from "./shared/components/seo-manager.component";
+import { SkipLinkComponent } from "./shared/components/skip-link.component";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
   imports: [
     CommonModule,
@@ -38,5 +38,5 @@ import { SkipLinkComponent } from './shared/components/skip-link.component';
   ],
 })
 export class AppComponent {
-  title = 'portfolio-app';
+  title = "portfolio-app";
 }

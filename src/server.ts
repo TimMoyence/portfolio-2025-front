@@ -244,6 +244,10 @@ app.use(
   }),
 );
 
+app.get(["/fr", "/en"], (req, res) => {
+  const locale = req.path.replace("/", "");
+  return res.redirect(301, `/${locale}/home`);
+});
 /**
  * Serve other static files (css/js/map/woff2/...) if any are at browser root
  * Important: index:false so it never returns HTML for missing files

@@ -1,14 +1,15 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { of } from "rxjs";
 import { filter, map, mergeMap, switchMap } from "rxjs/operators";
-import { SeoService } from "../../core/seo/seo.service";
-import { SeoConfig } from "../../core/seo/seo.interface";
+import { APP_CONFIG } from "../../core/config/app-config.token";
 import {
   SeoRegistryService,
   SeoResolvedConfig,
 } from "../../core/seo/seo-registry.service";
+import { SeoConfig } from "../../core/seo/seo.interface";
+import { SeoService } from "../../core/seo/seo.service";
 
 @Component({
   selector: "app-seo-manager",
@@ -18,6 +19,7 @@ import {
   styles: [],
 })
 export class SeoManagerComponent implements OnInit {
+  private readonly appConfig = inject(APP_CONFIG);
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -92,7 +94,7 @@ export class SeoManagerComponent implements OnInit {
     const index =
       typeof forceNoIndex === "boolean"
         ? !forceNoIndex
-        : resolved?.index ?? true;
+        : (resolved?.index ?? true);
     const robots =
       typeof data["robots"] === "string"
         ? (data["robots"] as string)
@@ -105,6 +107,17 @@ export class SeoManagerComponent implements OnInit {
       seo.twitterImage ?? ogImage,
     );
 
+    const locales = this.seoRegistry.getLocales();
+    const hreflangs: Record<string, string> = {};
+
+    for (const locale of locales) {
+      const localizedPath = this.buildCanonicalPath(currentUrl).replace(
+        `/${this.seoRegistry.getLocaleId()}`,
+        `/${locale}`,
+      );
+      hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, localizedPath);
+    }
+
     this.seoService.updateSeoMetadata({
       ...seo,
       ogImage,
@@ -112,6 +125,7 @@ export class SeoManagerComponent implements OnInit {
       ogUrl: canonicalUrl,
       canonicalUrl,
       robots,
+      hreflangs,
     });
   }
 
@@ -140,7 +154,11 @@ export class SeoManagerComponent implements OnInit {
   }
 
   private resolveBaseUrl(): string {
-    return this.seoRegistry.getBaseUrl() ?? "https://asilidesign.fr";
+    return (
+      this.appConfig.baseUrl ||
+      this.seoRegistry.getBaseUrl() ||
+      "https://asilidesign.fr"
+    );
   }
 
   private getCleanUrl(url: string): string {
@@ -151,7 +169,8 @@ export class SeoManagerComponent implements OnInit {
     const normalized = this.normalizePath(currentUrl);
     const locales = this.seoRegistry.getLocales();
     const hasLocalePrefix = locales.some(
-      (locale) => normalized === `/${locale}` || normalized.startsWith(`/${locale}/`),
+      (locale) =>
+        normalized === `/${locale}` || normalized.startsWith(`/${locale}/`),
     );
 
     if (hasLocalePrefix) {
@@ -182,7 +201,10 @@ export class SeoManagerComponent implements OnInit {
     return `${trimmedBase}${normalizedPath}`;
   }
 
-  private resolveAbsoluteUrl(baseUrl: string, value?: string): string | undefined {
+  private resolveAbsoluteUrl(
+    baseUrl: string,
+    value?: string,
+  ): string | undefined {
     if (!value) return undefined;
     if (value.startsWith("http://") || value.startsWith("https://")) {
       return value;

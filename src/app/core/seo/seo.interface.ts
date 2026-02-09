@@ -7,9 +7,10 @@ export interface SeoConfig {
   ogImage?: string;
   ogUrl?: string;
   robots?: string;
-  twitterCard?: 'summary' | 'summary_large_image';
+  twitterCard?: "summary" | "summary_large_image";
   twitterTitle?: string;
   twitterDescription?: string;
   twitterImage?: string;
   canonicalUrl?: string;
+  hreflangs?: Record<string, string>;
 }
