@@ -29,10 +29,11 @@ module.exports = {
 
         "scheme-border": "#0c090226",
 
-        "scheme-accent": "#1b998b",
-        "scheme-accent-hover": "#157a6f", // mm-dark
-        "scheme-accent-active": "#0a3d37", // mm-darker
-        "scheme-accent-focus": "#1b998b33", // 20% ring
+        "scheme-accent": "#4fb3a2",
+
+        "scheme-accent-hover": "#3f9c8e",
+        "scheme-accent-active": "#2f7f74",
+        "scheme-accent-focus": "#4fb3a233",
         "scheme-on-accent": "#ffffff",
       },
 
@@ -54,7 +55,7 @@ module.exports = {
 
         large: ["1.5rem", { lineHeight: "1.6" }],
         medium: ["1.25rem", { lineHeight: "1.65" }],
-        small: ["1.125rem", { lineHeight: "1.65" }],
+        small: ["1rem", { lineHeight: "1.65" }],
       },
 
       // --------------------

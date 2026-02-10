@@ -11,16 +11,16 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
     <section class="bg-scheme-background px-[5%] pb-12 md:pb-18 lg:pb-22">
       <div class="container">
         <div class="flex flex-col items-center">
-          <div class="mb-4 text-center md:mb-8 lg:mb-12">
+          <div class="mb-2 text-center md:mb-4 lg:mb-6">
             <div class="w-full  grid grid-cols-12 sm:px-6 md:px-10 lg:px-16">
               <p
-                class="col-span-full mb-3 font-semibold md:mb-4"
+                class="col-span-full mb-1 font-semibold md:mb-2"
                 i18n="hero.kicker|Hero small label@@heroKicker"
               >
                 Innovation
               </p>
               <h1
-                class="col-span-full font-heading md:heading-h2 md:text-h2 heading-h3 text-h3 mb-5 md:mb-6"
+                class="col-span-full font-heading md:heading-h2 md:text-h2 heading-h3 text-h3 mb-1 md:mb-2"
                 i18n="hero.title|Hero heading@@heroTitle"
               >
                 Des solutions digitales claires, pensées pour votre réalité

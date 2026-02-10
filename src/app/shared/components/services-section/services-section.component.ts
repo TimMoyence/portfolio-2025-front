@@ -26,7 +26,7 @@ export type ServicesCta = {
     <section class="px-[5%] py-6 md:py-8 lg:py-12">
       <div class="container">
         <div
-          class="mb-12 grid grid-cols-1 gap-5 md:mb-18 md:gap-x-12 md:gap-y-8 lg:mb-20 lg:gap-x-20"
+          class="mb-3 grid grid-cols-1 gap-5 md:mb-6 md:gap-x-12 md:gap-y-8 lg:mb-9 lg:gap-x-20"
         >
           <div>
             <p class="mb-3 font-semibold md:mb-4">
@@ -39,7 +39,7 @@ export type ServicesCta = {
 
           <div>
             @for (p of leadParagraphs; track $index) {
-              <p class="text-small" [ngClass]="$index > 0 ? 'pt-2' : ''">
+              <p class="text-small">
                 {{ p }}
               </p>
             }
@@ -69,12 +69,10 @@ export type ServicesCta = {
         </div>
 
         @if (cta) {
-          <div
-            class="mt-12 flex flex-wrap items-center gap-4 md:mt-18 lg:mt-20"
-          >
+          <div class="mt-3 flex flex-wrap items-center gap-4 md:mt-9 lg:mt-10">
             <a
               [routerLink]="cta.href"
-              class="inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold"
+              class="transition-colors bg-white hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
             >
               {{ cta.label }}
               @if (cta.iconName) {

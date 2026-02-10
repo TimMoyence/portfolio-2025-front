@@ -24,13 +24,14 @@
           <label [for]="field.key" class="absolute left-3 px-1 bg-white text-gray-700 text-sm font-medium pointer-events-none transition-all duration-200
                  peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500
                  peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
-            [ngClass]="contactForm[field.key] ? '-top-3 text-xs text-scheme-accent' : 'top-2 text-sm text-gray-500'"
+            [ngClass]="contactForm[field.key] ? '-top-3 text-sm md:text-base text-scheme-accent' : 'top-2 text-sm text-gray-500'"
             [class.text-red-500]="control.invalid && (control.touched || isContactSubmitted)">
             {{ field.label }}
             <span *ngIf="!field.required" i18n="auth.field.optional@@authFieldOptional">(facultatif)</span>
           </label>
 
-          <p *ngIf="control.invalid && (control.touched || isContactSubmitted)" class="mt-1 text-xs text-red-500">
+          <p *ngIf="control.invalid && (control.touched || isContactSubmitted)"
+            class="mt-1 text-sm md:text-base text-red-500">
             @if (control.errors?.['required']) {
             <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
             } @else if (control.errors?.['email']) {
@@ -68,8 +69,8 @@
           </select>
         </div>
 
-        <p *ngIf="subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)" class="text-xs text-red-500"
-          i18n="auth.error.required@@authErrorRequired">
+        <p *ngIf="subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)"
+          class="text-sm md:text-base text-red-500" i18n="auth.error.required@@authErrorRequired">
           Ce champ est obligatoire.
         </p>
       </div>
@@ -99,7 +100,7 @@
 
 
         <p *ngIf="contactFormRef.controls['role']?.invalid && (contactFormRef.controls['role']?.touched || isContactSubmitted)"
-          class="mt-1 text-xs text-red-500">
+          class="mt-1 text-sm md:text-base text-red-500">
           <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
         </p>
       </div>
@@ -107,31 +108,33 @@
       <!-- Message -->
       <div class="relative">
         <textarea id="message" name="message" required minlength="10" [(ngModel)]="contactForm.message" placeholder=" "
-          class="peer block w-full min-h-[11.25rem] rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
+          class="peer block w-full min-h-[11.25rem] md:min-h-[17rem] rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
           #messageCtrl="ngModel"
           [class.border-red-500]="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)"></textarea>
 
         <label for="message" class="absolute left-3 px-1 bg-white text-gray-700 text-sm font-medium pointer-events-none transition-all duration-200
              peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500
              peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
-          [ngClass]="contactForm.message ? '-top-3 text-xs text-scheme-accent' : 'top-2 text-sm text-gray-500'"
+          [ngClass]="contactForm.message ? '-top-3 text-sm md:text-base text-scheme-accent' : 'top-2 text-sm text-gray-500'"
           [class.text-red-500]="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)"
           i18n="@@contactFormMessageLabel">
           Votre message
         </label>
 
-        <p *ngIf="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)" class="mt-1 text-xs text-red-500">
+        <p *ngIf="messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)"
+          class="mt-1 text-sm md:text-base text-red-500">
           <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire et doit contenir au moins 10
             caractères.</span>
         </p>
       </div>
 
       <!-- Terms -->
-      <label class="flex col-span-1 md:col-span-2 items-center space-x-2 text-sm">
+      <label class="flex col-span-1 md:col-span-2 items-center space-x-2 text-sm md:text-base">
         <input type="checkbox" name="terms" required [(ngModel)]="contactForm.terms" #termsCtrl="ngModel" />
         <span class="text-gray-700" i18n="@@contactFormTerms">J'accepte les conditions</span>
       </label>
-      <p *ngIf="termsCtrl.invalid && (termsCtrl.touched || isContactSubmitted)" class="mt-1 text-xs text-red-500">
+      <p *ngIf="termsCtrl.invalid && (termsCtrl.touched || isContactSubmitted)"
+        class="mt-1 text-sm md:text-base text-red-500">
         <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
       </p>
 
@@ -153,7 +156,7 @@
         <p *ngIf="contactErrorMessage" class="text-sm text-red-500">{{ contactErrorMessage }}</p>
         <p *ngIf="contactSuccessMessage" class="text-sm text-green-600">{{ contactSuccessMessage }}</p>
 
-        <p class="text-xs text-gray-600" i18n="@@contactFormResponseTime">Réponse sous 48h ouvrées.</p>
+        <p class="text-sm md:text-base text-gray-600" i18n="@@contactFormResponseTime">Réponse sous 48h ouvrées.</p>
       </div>
     </form>
 

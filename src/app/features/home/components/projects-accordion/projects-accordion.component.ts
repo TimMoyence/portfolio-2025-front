@@ -27,21 +27,24 @@ type Project = {
       aria-labelledby="projects-heading"
     >
       <div class="container">
-        <div class="mb-8 w-full md:mb-12 lg:mb-16">
+        <div class="mb-2 w-full md:mb-4 lg:mb-6">
           <p
-            class="mb-3 font-semibold md:mb-4"
+            class="mb-1 font-semibold md:mb-2"
             i18n="projects.kicker|Section label@@projectsKicker"
           >
             Projets
           </p>
           <h2
             id="projects-heading"
-            class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
+            class="font-heading heading-h3 text-h3 mb-1 md:mb-2"
             i18n="projects.title|Section heading@@projectsTitle"
           >
             Mes réalisations numériques
           </h2>
-          <p i18n="projects.lead|Section description@@projectsLead">
+          <p
+            class="text-small"
+            i18n="projects.lead|Section description@@projectsLead"
+          >
             Quelques projets représentatifs de mon approche et de ma manière de
             travailler
           </p>

@@ -64,7 +64,7 @@ export class FooterComponent {
     {
       label: $localize`:footer.social.facebook|Footer social link@@footerSocialFacebook:Facebook`,
       href: "https://www.facebook.com/tim.moyence/",
-      icon: "facebook",
+      icon: "network/facebook",
     },
     // {
     //   label: $localize`:footer.social.instagram|Footer social link@@footerSocialInstagram:Instagram`,
@@ -74,7 +74,7 @@ export class FooterComponent {
     {
       label: $localize`:footer.social.linkedin|Footer social link@@footerSocialLinkedin:LinkedIn`,
       href: "https://www.linkedin.com/in/tim-moyence",
-      icon: "linkedin",
+      icon: "network/linkedin",
     },
   ];
 

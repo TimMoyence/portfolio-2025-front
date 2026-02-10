@@ -1,11 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
+import { RouterModule } from "@angular/router";
 import { SvgIconComponent } from "../../../../shared/components/svg-icon.component";
 
 @Component({
   selector: "app-mission-section",
   standalone: true,
-  imports: [CommonModule, SvgIconComponent],
+  imports: [CommonModule, SvgIconComponent, RouterModule],
   template: `
     <section
       class="bg-scheme-background px-[5%] py-6 md:py-8 lg:py-12"
@@ -41,7 +42,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
               Pourquoi Asili ? Pourquoi cette approche ?
             </h3>
             <p
-              class="text-sm"
+              class="text-sm md:text-base lg:text-medium"
               i18n="mission.lead|Section description@@missionLead"
             >
               Le digital et l’intelligence artificielle sont des leviers
@@ -49,7 +50,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
               complexité que de valeur.
             </p>
             <p
-              class="pt-2 md:pt-3 lg:pt-4 text-sm"
+              class="pt-2 md:pt-3 lg:pt-4 text-sm md:text-base lg:text-medium"
               i18n="mission.lead|Section description@@missionLead2"
             >
               Mon rôle est d’aider à clarifier les besoins, à structurer les
@@ -58,8 +59,8 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
             </p>
             <div class="mt-6 text-xs flex md:mt-8">
               <a
-                routerLink="/contact"
-                class="inline-flex items-center justify-center gap-2  py-2 font-semibold underline"
+                [routerLink]="'/contact'"
+                class="transition-colors bg-white hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
                 i18n="hero.cta.contact|Hero contact CTA@@heroCtaContact"
               >
                 Échanger sur votre contexte

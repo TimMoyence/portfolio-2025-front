@@ -48,7 +48,7 @@ import { Component } from "@angular/core";
           <div class="flex items-center justify-center">
             <img
               src="./assets/images/letsTalkIllustration.webp"
-              class="w-full object-cover  h-[15rem] md:h-[20rem] lg:h-[30rem]"
+              class="w-full object-[4%_31%] md:object-[4%_40%] object-cover  h-[15rem] md:h-[20rem] lg:h-[30rem]"
               alt=" image of me smiling ready to discuss your project"
               i18n-alt="cta.image.alt|CTA illustration alt text@@ctaImageAlt"
               loading="lazy"
