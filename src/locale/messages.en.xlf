@@ -4631,3 +4631,617 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target> Skip to main content </target>
       </segment>
     </unit>
+    <unit id="cookieBannerMessage">
+      <segment>
+        <source>Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.</source>
+        <target>We use essential cookies to run the site and remember your choices. No analytics or marketing cookies are enabled without your consent.</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerSettings">
+      <segment>
+        <source>Paramètres des cookies</source>
+        <target>Cookie settings</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerAcceptAll">
+      <segment>
+        <source>Tout accepter</source>
+        <target>Accept all</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerEssentialOnly">
+      <segment>
+        <source>Essentiels uniquement</source>
+        <target>Essential only</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsHeroLabel">
+      <segment>
+        <source>Conformité &amp; Cookies</source>
+        <target>Compliance &amp; Cookies</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsHeroTitle">
+      <segment>
+        <source>Vos choix de confidentialité</source>
+        <target>Your privacy choices</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsHeroDescription">
+      <segment>
+        <source>Retrouvez ici les informations GDPR et gérez vos préférences de cookies pour l'Union européenne et le Royaume-Uni.</source>
+        <target>Find GDPR information and manage your cookie preferences for the European Union and the United Kingdom.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsMetaLastUpdated">
+      <segment>
+        <source>Dernière mise à jour : 11 février 2026</source>
+        <target>Last updated: February 11, 2026</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsMetaVersion">
+      <segment>
+        <source>Version de la politique : 2026-02-11</source>
+        <target>Policy version: 2026-02-11</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsMetaRegion">
+      <segment>
+        <source>Ce dispositif s'applique aux visiteurs de l'Union européenne et du Royaume-Uni.</source>
+        <target>This setup applies to visitors from the European Union and the United Kingdom.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsMetaTitle">
+      <segment>
+        <source>Synthèse</source>
+        <target>Summary</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsGdprTitle">
+      <segment>
+        <source>Conformité GDPR (UE &amp; Royaume-Uni)</source>
+        <target>GDPR compliance (EU &amp; UK)</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsGdprIntro">
+      <segment>
+        <source>Nous traitons les données personnelles de manière transparente, limitée et sécurisée.</source>
+        <target>We handle personal data transparently, minimally, and securely.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsGdprItem1">
+      <segment>
+        <source>Les données collectées sont strictement nécessaires aux finalités annoncées.</source>
+        <target>Collected data is strictly necessary for the stated purposes.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsGdprItem2">
+      <segment>
+        <source>Le consentement est libre, spécifique, informé et peut être retiré à tout moment.</source>
+        <target>Consent is freely given, specific, informed, and can be withdrawn at any time.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsGdprItem3">
+      <segment>
+        <source>Les durées de conservation sont limitées et documentées.</source>
+        <target>Retention periods are limited and documented.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsGdprItem4">
+      <segment>
+        <source>Vous pouvez demander l'accès, la rectification ou la suppression de vos données.</source>
+        <target>You can request access to, correction of, or deletion of your data.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsCookiesTitle">
+      <segment>
+        <source>Gestion des cookies</source>
+        <target>Cookie management</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsCookiesIntro">
+      <segment>
+        <source>Nous utilisons uniquement les cookies nécessaires au fonctionnement du site et à la gestion de vos choix.</source>
+        <target>We only use cookies needed for site operation and to manage your choices.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsCookiesItem1">
+      <segment>
+        <source>Cookies essentiels : indispensables pour le fonctionnement et la sécurité.</source>
+        <target>Essential cookies: required for operation and security.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsCookiesItem2">
+      <segment>
+        <source>Cookies de préférences : optionnels, pour améliorer l'expérience.</source>
+        <target>Preference cookies: optional, to improve your experience.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsCookiesItem3">
+      <segment>
+        <source>Cookies analytiques et marketing : non utilisés sur ce site pour le moment.</source>
+        <target>Analytics and marketing cookies: not used on this site at the moment.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsCookiesItem4">
+      <segment>
+        <source>Aucun cookie non essentiel n'est déposé sans votre accord.</source>
+        <target>No non-essential cookie is set without your consent.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsLogicTitle">
+      <segment>
+        <source>Logique conditionnelle &amp; activation</source>
+        <target>Conditional logic &amp; activation</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsLogicIntro">
+      <segment>
+        <source>Les cookies non essentiels restent désactivés tant que vous n'avez pas donné votre accord.</source>
+        <target>Non-essential cookies remain disabled until you give consent.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsLogicItem1">
+      <segment>
+        <source>Le bandeau de consentement s'affiche pour les visiteurs UE/Royaume-Uni.</source>
+        <target>The consent banner is shown to EU/UK visitors.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsLogicItem2">
+      <segment>
+        <source>Les scripts non essentiels sont bloqués jusqu'à consentement.</source>
+        <target>Non-essential scripts are blocked until consent.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsLogicItem3">
+      <segment>
+        <source>Vous pouvez modifier ou retirer votre choix depuis cette page.</source>
+        <target>You can change or withdraw your choice on this page.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsI18nTitle">
+      <segment>
+        <source>Internationalisation</source>
+        <target>Internationalization</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsI18nIntro">
+      <segment>
+        <source>Les informations de confidentialité sont présentées en français et en anglais avec un sens juridique équivalent.</source>
+        <target>Privacy information is provided in French and English with equivalent legal meaning.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsI18nItem1">
+      <segment>
+        <source>Les notices et politiques sont affichées dans la langue de l'interface.</source>
+        <target>Notices and policies are shown in the interface language.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsI18nItem2">
+      <segment>
+        <source>Les versions traduites sont alignées sur la version de référence.</source>
+        <target>Translated versions are aligned with the reference version.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsI18nItem3">
+      <segment>
+        <source>La version affichée est enregistrée lors du consentement.</source>
+        <target>The displayed version is recorded when consent is given.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsAuditTitle">
+      <segment>
+        <source>Documentation &amp; traçabilité</source>
+        <target>Documentation &amp; audit trail</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsAuditIntro">
+      <segment>
+        <source>Nous conservons des preuves de consentement pour répondre aux exigences d'audit.</source>
+        <target>We keep proof of consent to meet audit requirements.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsAuditItem1">
+      <segment>
+        <source>Journalisation de la date, de la version, de la langue et des catégories.</source>
+        <target>Logging includes date, version, language, and categories.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsAuditItem2">
+      <segment>
+        <source>Les traces de consentement sont conservées pour démontrer la conformité.</source>
+        <target>Consent records are retained to demonstrate compliance.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsAuditItem3">
+      <segment>
+        <source>Tout retrait de consentement est enregistré.</source>
+        <target>Any consent withdrawal is recorded.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesTitle">
+      <segment>
+        <source>Vos préférences cookies</source>
+        <target>Your cookie preferences</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesDescription">
+      <segment>
+        <source>Vous pouvez ajuster vos choix à tout moment.</source>
+        <target>You can adjust your choices at any time.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesEssentialTitle">
+      <segment>
+        <source>Essentiels (obligatoires)</source>
+        <target>Essential (required)</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesEssentialDesc">
+      <segment>
+        <source>Nécessaires au fonctionnement du site et à la mémorisation de votre choix.</source>
+        <target>Required for site operation and to remember your choice.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesOptionalTitle">
+      <segment>
+        <source>Préférences</source>
+        <target>Preferences</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesOptionalDesc">
+      <segment>
+        <source>Permettent d'améliorer votre expérience (langue, affichage).</source>
+        <target>Helps improve your experience (language, display).</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesAnalyticsTitle">
+      <segment>
+        <source>Analytique (désactivé)</source>
+        <target>Analytics (disabled)</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesAnalyticsDesc">
+      <segment>
+        <source>Aucun outil de mesure d'audience n'est actif actuellement.</source>
+        <target>No audience measurement tools are active at the moment.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesMarketingTitle">
+      <segment>
+        <source>Marketing (désactivé)</source>
+        <target>Marketing (disabled)</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesMarketingDesc">
+      <segment>
+        <source>Aucun suivi publicitaire n'est actif actuellement.</source>
+        <target>No advertising tracking is active at the moment.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesSave">
+      <segment>
+        <source>Enregistrer mes préférences</source>
+        <target>Save my preferences</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesWithdraw">
+      <segment>
+        <source>Retirer mon consentement</source>
+        <target>Withdraw my consent</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesSaved">
+      <segment>
+        <source>Vos préférences ont été enregistrées.</source>
+        <target>Your preferences have been saved.</target>
+      </segment>
+    </unit>
+    <unit id="cookieSettingsPreferencesError">
+      <segment>
+        <source>Impossible d'enregistrer vos préférences pour le moment.</source>
+        <target>Unable to save your preferences at the moment.</target>
+      </segment>
+    </unit>
+      <unit id="termsHeroLabel">
+      <segment>
+        <source>Conditions d'utilisation</source>
+        <target>Terms of use</target>
+      </segment>
+    </unit>
+    <unit id="termsHeroTitle">
+      <segment>
+        <source>Conditions de services</source>
+        <target>Terms of service</target>
+      </segment>
+    </unit>
+    <unit id="termsHeroDescription">
+      <segment>
+        <source>Ces conditions encadrent l'accès au site et l'utilisation des services proposés.</source>
+        <target>These terms govern access to the site and the use of the services offered.</target>
+      </segment>
+    </unit>
+    <unit id="termsMetaLastUpdated">
+      <segment>
+        <source>Dernière mise à jour : 11 février 2026</source>
+        <target>Last updated: February 11, 2026</target>
+      </segment>
+    </unit>
+    <unit id="termsScopeTitle">
+      <segment>
+        <source>Objet et acceptation</source>
+        <target>Purpose and acceptance</target>
+      </segment>
+    </unit>
+    <unit id="termsScopeBody">
+      <segment>
+        <source>L'utilisation du site implique l'acceptation des présentes conditions. Elles s'appliquent à toute navigation et à toute prise de contact via les formulaires.</source>
+        <target>Using the site means you accept these terms. They apply to any browsing and any contact made through the forms.</target>
+      </segment>
+    </unit>
+    <unit id="termsServicesTitle">
+      <segment>
+        <source>Services proposés</source>
+        <target>Services offered</target>
+      </segment>
+    </unit>
+    <unit id="termsServicesBody">
+      <segment>
+        <source>Le site présente des prestations de conseil et de développement. Toute mission fait l'objet d'un devis et d'un accord contractuel distinct.</source>
+        <target>The site presents consulting and development services. Any engagement is subject to a quote and a separate agreement.</target>
+      </segment>
+    </unit>
+    <unit id="termsAccessTitle">
+      <segment>
+        <source>Accès au site</source>
+        <target>Site access</target>
+      </segment>
+    </unit>
+    <unit id="termsAccessBody">
+      <segment>
+        <source>L'accès au site est fourni en l'état. Nous nous réservons le droit de suspendre ou de limiter l'accès pour maintenance ou mise à jour.</source>
+        <target>Access to the site is provided as-is. We reserve the right to suspend or limit access for maintenance or updates.</target>
+      </segment>
+    </unit>
+    <unit id="termsIpTitle">
+      <segment>
+        <source>Propriété intellectuelle</source>
+        <target>Intellectual property</target>
+      </segment>
+    </unit>
+    <unit id="termsIpBody">
+      <segment>
+        <source>Tous les contenus (textes, visuels, identité graphique) sont protégés. Toute reproduction sans autorisation écrite est interdite.</source>
+        <target>All content (text, visuals, visual identity) is protected. Any reproduction without written permission is prohibited.</target>
+      </segment>
+    </unit>
+    <unit id="termsLiabilityTitle">
+      <segment>
+        <source>Responsabilité</source>
+        <target>Liability</target>
+      </segment>
+    </unit>
+    <unit id="termsLiabilityBody">
+      <segment>
+        <source>Nous mettons tout en œuvre pour fournir des informations fiables, sans garantir l'absence d'erreur. La responsabilité ne saurait être engagée pour des dommages indirects.</source>
+        <target>We strive to provide reliable information without guaranteeing the absence of errors. Liability cannot be engaged for indirect damages.</target>
+      </segment>
+    </unit>
+    <unit id="termsLinksTitle">
+      <segment>
+        <source>Liens externes</source>
+        <target>External links</target>
+      </segment>
+    </unit>
+    <unit id="termsLinksBody">
+      <segment>
+        <source>Le site peut contenir des liens vers des sites tiers. Nous ne contrôlons pas leur contenu et déclinons toute responsabilité associée.</source>
+        <target>The site may contain links to third-party websites. We do not control their content and disclaim any related responsibility.</target>
+      </segment>
+    </unit>
+    <unit id="termsPrivacyTitle">
+      <segment>
+        <source>Données personnelles &amp; cookies</source>
+        <target>Personal data &amp; cookies</target>
+      </segment>
+    </unit>
+    <unit id="termsPrivacyBody">
+      <segment>
+        <source>Les traitements de données sont décrits dans la politique de confidentialité et les paramètres de cookies.</source>
+        <target>Data processing is described in the privacy policy and cookie settings.</target>
+      </segment>
+    </unit>
+    <unit id="termsPrivacyLinkLabel">
+      <segment>
+        <source>Consulter la politique</source>
+        <target>View the policy</target>
+      </segment>
+    </unit>
+    <unit id="termsLawTitle">
+      <segment>
+        <source>Droit applicable</source>
+        <target>Governing law</target>
+      </segment>
+    </unit>
+    <unit id="termsLawBody">
+      <segment>
+        <source>Les présentes conditions sont régies par le droit français. En cas de litige, une solution amiable sera recherchée en priorité.</source>
+        <target>These terms are governed by French law. In case of dispute, an amicable solution will be sought first.</target>
+      </segment>
+    </unit>
+    <unit id="privacyHeroLabel">
+      <segment>
+        <source>Politique de confidentialité</source>
+        <target>Privacy policy</target>
+      </segment>
+    </unit>
+    <unit id="privacyHeroTitle">
+      <segment>
+        <source>Protection des données</source>
+        <target>Data protection</target>
+      </segment>
+    </unit>
+    <unit id="privacyHeroDescription">
+      <segment>
+        <source>Cette politique décrit comment les données sont collectées, utilisées et protégées.</source>
+        <target>This policy explains how data is collected, used, and protected.</target>
+      </segment>
+    </unit>
+    <unit id="privacyMetaLastUpdated">
+      <segment>
+        <source>Dernière mise à jour : 11 février 2026</source>
+        <target>Last updated: February 11, 2026</target>
+      </segment>
+    </unit>
+    <unit id="privacyControllerTitle">
+      <segment>
+        <source>Responsable du traitement</source>
+        <target>Data controller</target>
+      </segment>
+    </unit>
+    <unit id="privacyControllerBody">
+      <segment>
+        <source>Le responsable du traitement est Moyence, basé à Bordeaux, France. Pour toute question, contactez-moi à moyencet@gmail.com.</source>
+        <target>The data controller is Moyence, based in Bordeaux, France. For any questions, contact me at moyencet@gmail.com.</target>
+      </segment>
+    </unit>
+    <unit id="privacyDataTitle">
+      <segment>
+        <source>Données collectées</source>
+        <target>Data collected</target>
+      </segment>
+    </unit>
+    <unit id="privacyDataItem1">
+      <segment>
+        <source>Informations fournies via le formulaire de contact (nom, email, téléphone, sujet, message, rôle).</source>
+        <target>Information provided via the contact form (name, email, phone, subject, message, role).</target>
+      </segment>
+    </unit>
+    <unit id="privacyDataItem2">
+      <segment>
+        <source>Preuves de consentement (version, langue et date d'acceptation).</source>
+        <target>Proof of consent (version, language, and acceptance date).</target>
+      </segment>
+    </unit>
+    <unit id="privacyDataItem3">
+      <segment>
+        <source>Préférences de cookies enregistrées lorsque vous interagissez avec le bandeau.</source>
+        <target>Cookie preferences recorded when you interact with the banner.</target>
+      </segment>
+    </unit>
+    <unit id="privacyPurposeTitle">
+      <segment>
+        <source>Finalités</source>
+        <target>Purposes</target>
+      </segment>
+    </unit>
+    <unit id="privacyPurposeItem1">
+      <segment>
+        <source>Répondre à vos demandes et préparer une proposition de service.</source>
+        <target>Respond to your requests and prepare a service proposal.</target>
+      </segment>
+    </unit>
+    <unit id="privacyPurposeItem2">
+      <segment>
+        <source>Gérer vos préférences de cookies et prouver votre consentement.</source>
+        <target>Manage your cookie preferences and demonstrate your consent.</target>
+      </segment>
+    </unit>
+    <unit id="privacyPurposeItem3">
+      <segment>
+        <source>Assurer la sécurité et le bon fonctionnement du site.</source>
+        <target>Ensure site security and proper operation.</target>
+      </segment>
+    </unit>
+    <unit id="privacyBasisTitle">
+      <segment>
+        <source>Base légale</source>
+        <target>Legal basis</target>
+      </segment>
+    </unit>
+    <unit id="privacyBasisItem1">
+      <segment>
+        <source>Exécution de mesures précontractuelles lorsque vous demandez un contact.</source>
+        <target>Performance of pre-contractual steps when you request contact.</target>
+      </segment>
+    </unit>
+    <unit id="privacyBasisItem2">
+      <segment>
+        <source>Consentement pour les cookies non essentiels (si activés).</source>
+        <target>Consent for non-essential cookies (if enabled).</target>
+      </segment>
+    </unit>
+    <unit id="privacyBasisItem3">
+      <segment>
+        <source>Intérêt légitime pour la sécurité et l'administration du site.</source>
+        <target>Legitimate interest for site security and administration.</target>
+      </segment>
+    </unit>
+    <unit id="privacyRetentionTitle">
+      <segment>
+        <source>Durées de conservation</source>
+        <target>Retention periods</target>
+      </segment>
+    </unit>
+    <unit id="privacyRetentionBody">
+      <segment>
+        <source>Les messages de contact sont conservés le temps de traiter votre demande. Les preuves de consentement sont conservées tant que nécessaire pour démontrer la conformité.</source>
+        <target>Contact messages are kept for the time needed to process your request. Proof of consent is kept as long as necessary to demonstrate compliance.</target>
+      </segment>
+    </unit>
+    <unit id="privacyRecipientsTitle">
+      <segment>
+        <source>Destinataires</source>
+        <target>Recipients</target>
+      </segment>
+    </unit>
+    <unit id="privacyRecipientsBody">
+      <segment>
+        <source>Les données sont consultées uniquement par la personne en charge du site et ne sont pas vendues ni partagées à des fins commerciales.</source>
+        <target>Data is accessed only by the person in charge of the site and is not sold or shared for commercial purposes.</target>
+      </segment>
+    </unit>
+    <unit id="privacyRightsTitle">
+      <segment>
+        <source>Vos droits</source>
+        <target>Your rights</target>
+      </segment>
+    </unit>
+    <unit id="privacyRightsBody">
+      <segment>
+        <source>Vous pouvez demander l'accès, la rectification, l'effacement ou la limitation du traitement. Pour exercer vos droits, contactez-moi à moyencet@gmail.com.</source>
+        <target>You can request access, rectification, erasure, or restriction of processing. To exercise your rights, contact me at moyencet@gmail.com.</target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesTitle">
+      <segment>
+        <source>Cookies</source>
+        <target>Cookies</target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesBody">
+      <segment>
+        <source>Les préférences de cookies sont gérées depuis le bandeau ou la page dédiée.</source>
+        <target>Cookie preferences are managed from the banner or the dedicated page.</target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesLinkLabel">
+      <segment>
+        <source>Accéder aux paramètres</source>
+        <target>Go to settings</target>
+      </segment>
+    </unit>
+    <unit id="footerLegalPrivacy">
+      <segment>
+        <source>Politique de confidentialité</source>
+        <target>Privacy policy</target>
+      </segment>
+    </unit>
+    <unit id="footerLegalCookies">
+      <segment>
+        <source>Paramètres de cookies</source>
+        <target>Cookie settings</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

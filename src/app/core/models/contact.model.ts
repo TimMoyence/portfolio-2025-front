@@ -7,4 +7,8 @@ export interface ContactFormState {
   message: string;
   role: string;
   terms: boolean;
+  termsVersion?: string;
+  termsLocale?: string;
+  termsAcceptedAt?: string;
+  termsMethod?: string;
 }

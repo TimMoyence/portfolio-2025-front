@@ -69,6 +69,36 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cookie-settings',
+    loadComponent: () =>
+      import('./features/cookie-settings/cookie-settings.component').then(
+        (m) => m.CookieSettingsComponent,
+      ),
+    data: {
+      seoKey: 'cookie-settings',
+    },
+  },
+  {
+    path: 'terms',
+    loadComponent: () =>
+      import('./features/terms/terms.component').then(
+        (m) => m.TermsComponent,
+      ),
+    data: {
+      seoKey: 'terms',
+    },
+  },
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./features/privacy/privacy.component').then(
+        (m) => m.PrivacyComponent,
+      ),
+    data: {
+      seoKey: 'privacy',
+    },
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then(
@@ -79,4 +109,3 @@ export const routes: Routes = [
     },
   },
 ];
-

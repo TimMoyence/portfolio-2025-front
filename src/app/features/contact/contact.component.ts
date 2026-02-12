@@ -1,7 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, LOCALE_ID } from "@angular/core";
 import { FormsModule, NgForm } from "@angular/forms";
 import { RouterModule } from "@angular/router";
+import { APP_CONFIG } from "../../core/config/app-config.token";
 import { ContactFormState } from "../../core/models/contact.model";
 import { ContactService } from "../../core/services/contact.service";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
@@ -34,6 +35,8 @@ export class ContactComponent {
   isContactSubmitted: boolean = false;
   contactErrorMessage?: string;
   contactSuccessMessage?: string;
+  private readonly appConfig = inject(APP_CONFIG);
+  private readonly localeId = inject(LOCALE_ID);
   private readonly contactService = inject(ContactService);
 
   readonly hero = {
@@ -76,6 +79,9 @@ export class ContactComponent {
     message: "",
     role: "",
     terms: false,
+    termsVersion: this.appConfig.gdpr?.termsVersion ?? "2026-02-11",
+    termsLocale: this.localeId,
+    termsMethod: "contact_form_checkbox",
   };
 
   contactForm: ContactFormState = { ...this.defaultContactFormState };
@@ -169,6 +175,10 @@ export class ContactComponent {
       message: trimOrEmpty(form.message),
       role: trimOrEmpty(form.role),
       phone: trimmedPhone === "" ? null : trimmedPhone,
+      termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
+      termsLocale: this.localeId,
+      termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
+      termsMethod: form.termsMethod ?? "contact_form_checkbox",
     };
   }
 }

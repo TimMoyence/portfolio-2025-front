@@ -84,11 +84,11 @@ export class FooterComponent {
       href: "/terms",
     },
     {
-      label: $localize`:footer.legal.cookiesSettingsFr|Footer legal link@@footerLegalCookiesFr:Paramètres de cookies`,
-      href: "/cookie-settings",
+      label: $localize`:footer.legal.privacy|Footer legal link@@footerLegalPrivacy:Politique de confidentialité`,
+      href: "/privacy",
     },
     {
-      label: $localize`:footer.legal.cookiesSettingsEn|Footer legal link@@footerLegalCookiesEn:Cookies Settings`,
+      label: $localize`:footer.legal.cookiesSettings|Footer legal link@@footerLegalCookies:Paramètres de cookies`,
       href: "/cookie-settings",
     },
   ];

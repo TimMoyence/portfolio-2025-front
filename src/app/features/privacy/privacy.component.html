@@ -1,0 +1,83 @@
+<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" titleLevel="h1"
+  align="center"></app-hero-section>
+
+<section class="px-[5%] py-6 md:py-8 lg:py-10 bg-scheme-background">
+  <div class="container">
+    <p class="text-sm md:text-base text-gray-600">{{ meta.lastUpdated }}</p>
+  </div>
+</section>
+
+<section class="px-[5%] pb-12 md:pb-16 lg:pb-20 bg-scheme-background">
+  <div class="container grid gap-6">
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyControllerTitle">Responsable du traitement</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@privacyControllerBody">
+        Le responsable du traitement est Moyence, basé à Bordeaux, France. Pour toute question, contactez-moi à
+        moyencet&#64;gmail.com.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyDataTitle">Données collectées</h2>
+      <ul class="space-y-2 text-sm md:text-base text-gray-700">
+        <li i18n="@@privacyDataItem1">Informations fournies via le formulaire de contact (nom, email, téléphone, sujet,
+          message, rôle).</li>
+        <li i18n="@@privacyDataItem2">Preuves de consentement (version, langue et date d'acceptation).</li>
+        <li i18n="@@privacyDataItem3">Préférences de cookies enregistrées lorsque vous interagissez avec le bandeau.
+        </li>
+      </ul>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyPurposeTitle">Finalités</h2>
+      <ul class="space-y-2 text-sm md:text-base text-gray-700">
+        <li i18n="@@privacyPurposeItem1">Répondre à vos demandes et préparer une proposition de service.</li>
+        <li i18n="@@privacyPurposeItem2">Gérer vos préférences de cookies et prouver votre consentement.</li>
+        <li i18n="@@privacyPurposeItem3">Assurer la sécurité et le bon fonctionnement du site.</li>
+      </ul>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyBasisTitle">Base légale</h2>
+      <ul class="space-y-2 text-sm md:text-base text-gray-700">
+        <li i18n="@@privacyBasisItem1">Exécution de mesures précontractuelles lorsque vous demandez un contact.</li>
+        <li i18n="@@privacyBasisItem2">Consentement pour les cookies non essentiels (si activés).</li>
+        <li i18n="@@privacyBasisItem3">Intérêt légitime pour la sécurité et l'administration du site.</li>
+      </ul>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyRetentionTitle">Durées de conservation</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@privacyRetentionBody">
+        Les messages de contact sont conservés le temps de traiter votre demande. Les preuves de consentement sont
+        conservées tant que nécessaire pour démontrer la conformité.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyRecipientsTitle">Destinataires</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@privacyRecipientsBody">
+        Les données sont consultées uniquement par la personne en charge du site et ne sont pas vendues ni partagées à
+        des fins commerciales.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyRightsTitle">Vos droits</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@privacyRightsBody">
+        Vous pouvez demander l'accès, la rectification, l'effacement ou la limitation du traitement. Pour exercer vos
+        droits, contactez-moi à moyencet&#64;gmail.com.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyCookiesTitle">Cookies</h2>
+      <p class="text-sm md:text-base text-gray-700">
+        <span i18n="@@privacyCookiesBody">Les préférences de cookies sont gérées depuis le bandeau ou la page
+          dédiée.</span>
+        <a routerLink="/cookie-settings" class="underline font-semibold" i18n="@@privacyCookiesLinkLabel">Accéder aux
+          paramètres</a>
+      </p>
+    </article>
+  </div>
+</section>

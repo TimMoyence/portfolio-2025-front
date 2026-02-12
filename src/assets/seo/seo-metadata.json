@@ -207,6 +207,72 @@
       }
     },
     {
+      "id": "cookie-settings",
+      "path": "/cookie-settings",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.2,
+      "lastmod": "2026-02-11",
+      "locales": {
+        "fr": {
+          "title": "Cookies & confidentialité — Paramètres",
+          "description": "Informations GDPR et gestion des préférences de cookies.",
+          "ogTitle": "Paramètres de cookies et confidentialité",
+          "ogDescription": "Consultez les informations GDPR et gérez vos préférences de cookies."
+        },
+        "en": {
+          "title": "Cookies & privacy — Settings",
+          "description": "GDPR information and cookie preference management.",
+          "ogTitle": "Cookie settings and privacy",
+          "ogDescription": "Read GDPR information and manage your cookie preferences."
+        }
+      }
+    },
+    {
+      "id": "terms",
+      "path": "/terms",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.2,
+      "lastmod": "2026-02-11",
+      "locales": {
+        "fr": {
+          "title": "Conditions de services — Moyence",
+          "description": "Conditions d'utilisation et accès aux services.",
+          "ogTitle": "Conditions de services",
+          "ogDescription": "Consultez les conditions d'utilisation et les règles d'accès aux services."
+        },
+        "en": {
+          "title": "Terms of service — Moyence",
+          "description": "Terms of use and service access conditions.",
+          "ogTitle": "Terms of service",
+          "ogDescription": "Read the terms of use and service access conditions."
+        }
+      }
+    },
+    {
+      "id": "privacy",
+      "path": "/privacy",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.2,
+      "lastmod": "2026-02-11",
+      "locales": {
+        "fr": {
+          "title": "Politique de confidentialité — Moyence",
+          "description": "Informations sur le traitement des données et la confidentialité.",
+          "ogTitle": "Politique de confidentialité",
+          "ogDescription": "Découvrez comment les données sont collectées et protégées."
+        },
+        "en": {
+          "title": "Privacy policy — Moyence",
+          "description": "Information about data processing and privacy.",
+          "ogTitle": "Privacy policy",
+          "ogDescription": "Learn how data is collected and protected."
+        }
+      }
+    },
+    {
       "id": "not-found",
       "path": "/404",
       "index": false,

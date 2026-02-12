@@ -7,4 +7,10 @@ export const environment = {
     presqUrl: "https://asilidesign.fr/api/v1/portfolio25/presq",
     sebastianUrl: "https://asilidesign.fr/api/v1/portfolio25/sebastian",
   },
+  gdpr: {
+    regionScope: "EU_UK",
+    policyVersion: "2026-02-11",
+    cookieMaxAgeDays: 365,
+    termsVersion: "2026-02-11",
+  },
 };

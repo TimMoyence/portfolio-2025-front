@@ -1,0 +1,76 @@
+<app-hero-section
+  [label]="hero.label"
+  [title]="hero.title"
+  [description]="hero.description"
+  titleLevel="h1"
+  align="center"
+></app-hero-section>
+
+<section class="px-[5%] py-6 md:py-8 lg:py-10 bg-scheme-background">
+  <div class="container">
+    <p class="text-sm md:text-base text-gray-600">{{ meta.lastUpdated }}</p>
+  </div>
+</section>
+
+<section class="px-[5%] pb-12 md:pb-16 lg:pb-20 bg-scheme-background">
+  <div class="container grid gap-6">
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsScopeTitle">Objet et acceptation</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@termsScopeBody">
+        L'utilisation du site implique l'acceptation des présentes conditions. Elles s'appliquent à toute navigation et à toute prise de contact via les formulaires.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsServicesTitle">Services proposés</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@termsServicesBody">
+        Le site présente des prestations de conseil et de développement. Toute mission fait l'objet d'un devis et d'un accord contractuel distinct.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsAccessTitle">Accès au site</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@termsAccessBody">
+        L'accès au site est fourni en l'état. Nous nous réservons le droit de suspendre ou de limiter l'accès pour maintenance ou mise à jour.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsIpTitle">Propriété intellectuelle</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@termsIpBody">
+        Tous les contenus (textes, visuels, identité graphique) sont protégés. Toute reproduction sans autorisation écrite est interdite.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsLiabilityTitle">Responsabilité</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@termsLiabilityBody">
+        Nous mettons tout en œuvre pour fournir des informations fiables, sans garantir l'absence d'erreur. La responsabilité ne saurait être engagée pour des dommages indirects.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsLinksTitle">Liens externes</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@termsLinksBody">
+        Le site peut contenir des liens vers des sites tiers. Nous ne contrôlons pas leur contenu et déclinons toute responsabilité associée.
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsPrivacyTitle">Données personnelles &amp; cookies</h2>
+      <p class="text-sm md:text-base text-gray-700">
+        <span i18n="@@termsPrivacyBody">
+          Les traitements de données sont décrits dans la politique de confidentialité et les paramètres de cookies.
+        </span>
+        <a routerLink="/privacy" class="underline font-semibold" i18n="@@termsPrivacyLinkLabel">Consulter la politique</a>
+      </p>
+    </article>
+
+    <article class="rounded-form border border-scheme-border bg-white p-6">
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsLawTitle">Droit applicable</h2>
+      <p class="text-sm md:text-base text-gray-700" i18n="@@termsLawBody">
+        Les présentes conditions sont régies par le droit français. En cas de litige, une solution amiable sera recherchée en priorité.
+      </p>
+    </article>
+  </div>
+</section>

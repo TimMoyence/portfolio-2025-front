@@ -7,4 +7,10 @@ export interface AppConfig {
     presqUrl: string;
     sebastianUrl: string;
   };
+  gdpr?: {
+    regionScope: "EU_UK";
+    policyVersion: string;
+    cookieMaxAgeDays: number;
+    termsVersion: string;
+  };
 }
