@@ -273,6 +273,28 @@
       }
     },
     {
+      "id": "growth-audit",
+      "path": "/growth-audit",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.7,
+      "lastmod": "2026-02-12",
+      "locales": {
+        "fr": {
+          "title": "Audit gratuit SEO & croissance — 15 points",
+          "description": "Audit gratuit en 24h avec vidéo personnalisée et scorecard actionnable.",
+          "ogTitle": "Audit gratuit de croissance",
+          "ogDescription": "Recevez un diagnostic rapide : conversion, vitesse, SEO, confiance et tech."
+        },
+        "en": {
+          "title": "Free SEO & growth audit — 15 points",
+          "description": "Free 24h audit with a personalized video and actionable scorecard.",
+          "ogTitle": "Free growth audit",
+          "ogDescription": "Get a fast diagnosis: conversion, speed, SEO, trust, and tech."
+        }
+      }
+    },
+    {
       "id": "not-found",
       "path": "/404",
       "index": false,

@@ -14,12 +14,14 @@ import {
 import { environment } from "../environments/environnement";
 import { routes } from "./app.routes";
 import { AuthHttpAdapter } from "./core/adapters/auth-http.adapter";
+import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adapter";
 import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
 import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
 import { APP_CONFIG } from "./core/config/app-config.token";
 import { errorInterceptor } from "./core/http/interceptors/error.interceptor";
 import { requestIdInterceptor } from "./core/http/interceptors/request-id.interceptor";
 import { AUTH_PORT } from "./core/ports/auth.port";
+import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
 import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
 import { CONTACT_PORT } from "./core/ports/contact.port";
 
@@ -51,6 +53,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: CONTACT_PORT,
       useClass: ContactHttpAdapter,
+    },
+    {
+      provide: AUDIT_REQUEST_PORT,
+      useClass: AuditRequestHttpAdapter,
     },
     {
       provide: COOKIE_CONSENT_PORT,

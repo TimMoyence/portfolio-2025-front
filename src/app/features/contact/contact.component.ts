@@ -1,5 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, LOCALE_ID } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  LOCALE_ID,
+} from "@angular/core";
 import { FormsModule, NgForm } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
@@ -8,14 +13,6 @@ import { ContactService } from "../../core/services/contact.service";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 
-// interface ContactMethod {
-//   title: string;
-//   description: string;
-//   value: string;
-//   link?: string;
-//   hasRouteAction?: boolean;
-// }
-// type ContactFormKey = keyof ContactFormState;
 @Component({
   selector: "app-contact",
   standalone: true,

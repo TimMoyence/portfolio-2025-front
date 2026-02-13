@@ -116,15 +116,14 @@
   </ul>
 
   <div class="flex items-center justify-center gap-5" [ngClass]="isMobile ? 'mt-4' : ''">
-    <button type="button"
-      class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
-      title="Demander un devis" i18n-title="navbar.link.offer|Navbar primary link@@navLinkOffer:Offres"
-      [routerLink]="'/offer'" (click)="isMobile && closeMobileMenu()">
-      <span i18n="navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Offres">Offres</span>
+    <button type="button" class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white
+      " title="Demander un devis" i18n-title="navbar.link.audit|Navbar primary link@@navLinkAudit:Audit"
+      [routerLink]="'/growth-audit'" (click)="isMobile && closeMobileMenu()">
+      <span i18n="navbar.link.audit|Navbar primary link@@navLinkAuditSpan:Audit">Audit</span>
     </button>
 
     <button type="button"
-      class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white"
+      class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
       title="Me contacter" i18n-title="navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
       [routerLink]="'/contact'" (click)="isMobile && closeMobileMenu()">
       <span i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel">Contact</span>

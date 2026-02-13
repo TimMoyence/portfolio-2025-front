@@ -29,6 +29,10 @@ export class NavbarComponent implements OnInit {
       label: $localize`:navbar.link.projects|Navbar primary link@@navLinkProjects:Projets`,
       href: "/client-project",
     },
+    {
+      label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Offres`,
+      href: "/offer",
+    },
   ];
 
   readonly openMenuLabel = $localize`:navbar.menu.open|Burger button label@@navMenuOpen:Ouvrir le menu principal`;

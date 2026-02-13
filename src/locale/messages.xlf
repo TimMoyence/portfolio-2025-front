@@ -4124,5 +4124,245 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Paramètres de cookies</source>
       </segment>
     </unit>
+      <unit id="auditHeroLabel">
+      <segment>
+        <source>Audit gratuit (24h)</source>
+      </segment>
+    </unit>
+    <unit id="auditHeroTitle">
+      <segment>
+        <source>Audit de croissance en 15 points</source>
+      </segment>
+    </unit>
+    <unit id="auditHeroDescription">
+      <segment>
+        <source>Laissez votre site ou votre activité → recevez une courte vidéo personnalisée + un scorecard clair pour savoir quoi améliorer.</source>
+      </segment>
+    </unit>
+    <unit id="auditHighlightsVideo">
+      <segment>
+        <source>Vidéo personnalisée (10 min)</source>
+      </segment>
+    </unit>
+    <unit id="auditHighlightsScore">
+      <segment>
+        <source>Scorecard claire (15 points)</source>
+      </segment>
+    </unit>
+    <unit id="auditHighlightsWins">
+      <segment>
+        <source>3 quick wins + 1 opportunité forte</source>
+      </segment>
+    </unit>
+    <unit id="auditHighlightsNoObligation">
+      <segment>
+        <source>Aucun engagement</source>
+      </segment>
+    </unit>
+    <unit id="auditStepOneTitle">
+      <segment>
+        <source>1. Vous laissez vos infos</source>
+      </segment>
+    </unit>
+    <unit id="auditStepOneDesc">
+      <segment>
+        <source>Nom du site + contact email ou téléphone.</source>
+      </segment>
+    </unit>
+    <unit id="auditStepTwoTitle">
+      <segment>
+        <source>2. Analyse rapide (30–45 min)</source>
+      </segment>
+    </unit>
+    <unit id="auditStepTwoDesc">
+      <segment>
+        <source>Je scanne votre site, votre SEO et votre conversion.</source>
+      </segment>
+    </unit>
+    <unit id="auditStepThreeTitle">
+      <segment>
+        <source>3. Livraison en 24h</source>
+      </segment>
+    </unit>
+    <unit id="auditStepThreeDesc">
+      <segment>
+        <source>Vidéo + scorecard envoyées par email.</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarConversionTitle">
+      <segment>
+        <source>Conversion &amp; clarté</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarConversionDesc">
+      <segment>
+        <source>Proposition de valeur, CTA, friction contact, mobile.</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarConversionTime">
+      <segment>
+        <source>5–7 min</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarPerformanceTitle">
+      <segment>
+        <source>Vitesse &amp; performance</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarPerformanceDesc">
+      <segment>
+        <source>PageSpeed, poids images, Core Web Vitals.</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarPerformanceTime">
+      <segment>
+        <source>5–8 min</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarSeoTitle">
+      <segment>
+        <source>SEO fondations</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarSeoDesc">
+      <segment>
+        <source>Titres, H1, meta, indexation, SEO local.</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarSeoTime">
+      <segment>
+        <source>7–10 min</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarTrustTitle">
+      <segment>
+        <source>Crédibilité &amp; confiance</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarTrustDesc">
+      <segment>
+        <source>Preuves sociales, portfolio, signaux de confiance.</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarTrustTime">
+      <segment>
+        <source>5–7 min</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarTechTitle">
+      <segment>
+        <source>Tech &amp; scalabilité</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarTechDesc">
+      <segment>
+        <source>CMS, sécurité, erreurs, maintenabilité.</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarTechTime">
+      <segment>
+        <source>7–10 min</source>
+      </segment>
+    </unit>
+    <unit id="auditFormTitle">
+      <segment>
+        <source>Demander un audit gratuit</source>
+      </segment>
+    </unit>
+    <unit id="auditFormDescription">
+      <segment>
+        <source>Je ne prends que 5 audits par semaine pour garantir une réponse rapide.</source>
+      </segment>
+    </unit>
+    <unit id="auditFormWebsiteLabel">
+      <segment>
+        <source>Nom du site ou URL</source>
+      </segment>
+    </unit>
+    <unit id="auditFormWebsitePlaceholder">
+      <segment>
+        <source>ex. https://votresite.fr</source>
+      </segment>
+    </unit>
+    <unit id="auditFormContactMethodLabel">
+      <segment>
+        <source>Méthode de contact</source>
+      </segment>
+    </unit>
+    <unit id="auditFormContactEmail">
+      <segment>
+        <source>Email</source>
+      </segment>
+    </unit>
+    <unit id="auditFormContactPhone">
+      <segment>
+        <source>Téléphone</source>
+      </segment>
+    </unit>
+    <unit id="auditFormContactValueLabel">
+      <segment>
+        <source>Coordonnée</source>
+      </segment>
+    </unit>
+    <unit id="auditFormEmailPlaceholder">
+      <segment>
+        <source>ex. hello@votresite.fr</source>
+      </segment>
+    </unit>
+    <unit id="auditFormPhonePlaceholder">
+      <segment>
+        <source>ex. +33 6 98 50 32 82</source>
+      </segment>
+    </unit>
+    <unit id="auditFormSubmit">
+      <segment>
+        <source>Recevoir mon audit</source>
+      </segment>
+    </unit>
+    <unit id="auditFormSuccess">
+      <segment>
+        <source>Merci ! Je reviens vers vous sous 24h avec votre audit.</source>
+      </segment>
+    </unit>
+    <unit id="auditFormError">
+      <segment>
+        <source>Impossible d'envoyer la demande. Réessayez dans un instant.</source>
+      </segment>
+    </unit>
+    <unit id="auditHighlightsTitle">
+      <segment>
+        <source>Ce que vous recevez</source>
+      </segment>
+    </unit>
+    <unit id="auditStepsTitle">
+      <segment>
+        <source>Comment ça fonctionne</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarsTitle">
+      <segment>
+        <source>Audit rapide en 5 piliers</source>
+      </segment>
+    </unit>
+    <unit id="auditPillarsSubtitle">
+      <segment>
+        <source>Un diagnostic concret, actionnable et faisable en moins de 45 minutes.</source>
+      </segment>
+    </unit>
+    <unit id="auditAsideTitle">
+      <segment>
+        <source>Pourquoi c'est utile</source>
+      </segment>
+    </unit>
+    <unit id="auditAsideBody">
+      <segment>
+        <source>Je vous montre exactement pourquoi votre site ne transforme pas vos visiteurs en clients — et ce qu'il faut corriger en moins d'une semaine.</source>
+      </segment>
+    </unit>
+    <unit id="auditAsideLimit">
+      <segment>
+        <source>Disponibilités limitées : 5 audits par semaine.</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

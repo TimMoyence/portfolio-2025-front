@@ -99,6 +99,16 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'growth-audit',
+    loadComponent: () =>
+      import('./features/growth-audit/growth-audit.component').then(
+        (m) => m.GrowthAuditComponent,
+      ),
+    data: {
+      seoKey: 'growth-audit',
+    },
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then(
