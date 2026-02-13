@@ -1,3 +1,41 @@
 :host {
   display: block;
 }
+
+.image-background-audit {
+  position: relative;
+}
+
+.image-background-audit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/images/audit.webp");
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  opacity: 0.15; /* transparency only on image */
+  z-index: 0;
+}
+
+/* Ensure content stays above the background */
+.image-background-audit > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .image-background-audit::before {
+    background-size: 50%;
+  }
+}
+@media (min-width: 768px) {
+  .image-background-audit::before {
+    background-size: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .image-background-audit::before {
+    background-size: 70%;
+  }
+}
