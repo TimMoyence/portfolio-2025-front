@@ -1,7 +1,11 @@
 import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { AuditRequestPayload } from "../models/audit-request.model";
-import { MessageResponse } from "../models/message.response";
+import {
+  AuditCreateResponse,
+  AuditRequestPayload,
+  AuditStreamEvent,
+  AuditSummaryResponse,
+} from "../models/audit-request.model";
 import { AUDIT_REQUEST_PORT, AuditRequestPort } from "../ports/audit-request.port";
 
 @Injectable({
@@ -12,7 +16,15 @@ export class AuditRequestService {
     @Inject(AUDIT_REQUEST_PORT) private readonly auditPort: AuditRequestPort,
   ) {}
 
-  submit(payload: AuditRequestPayload): Observable<MessageResponse> {
+  submit(payload: AuditRequestPayload): Observable<AuditCreateResponse> {
     return this.auditPort.submit(payload);
+  }
+
+  getSummary(auditId: string): Observable<AuditSummaryResponse> {
+    return this.auditPort.getSummary(auditId);
+  }
+
+  stream(auditId: string): Observable<AuditStreamEvent> {
+    return this.auditPort.stream(auditId);
   }
 }

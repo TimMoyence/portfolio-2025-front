@@ -105,6 +105,49 @@
       @if (successMessage) {
       <p class="text-sm text-green-600">{{ successMessage }}</p>
       }
+
+      @if (auditId) {
+      <p class="text-xs text-gray-500">Audit ID: {{ auditId }}</p>
+      }
+
+      @if (isAuditRunning) {
+      <div class="mt-3 rounded-form border border-scheme-border p-3 bg-slate-50">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-semibold" i18n="@@auditProgressLabel">Progression de l'audit</span>
+          <span class="text-sm">{{ auditProgress }}%</span>
+        </div>
+        <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+          <div class="h-2 bg-scheme-accent transition-all duration-300" [style.width.%]="auditProgress"></div>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">{{ auditStep }}</p>
+      </div>
+      }
+
+      @if (auditSummary?.ready) {
+      <div class="mt-3 rounded-form border border-scheme-border p-4 bg-green-50">
+        <p class="text-sm font-semibold text-green-700" i18n="@@auditResumeTitle">Résumé de votre audit</p>
+        <p class="text-sm text-gray-700 mt-2">{{ auditSummary?.summaryText }}</p>
+
+        @if (auditSummary?.quickWins?.length) {
+        <ul class="list-disc ms-5 mt-3 text-sm text-gray-700">
+          @for (quickWin of auditSummary?.quickWins; track quickWin) {
+          <li>{{ quickWin }}</li>
+          }
+        </ul>
+        }
+
+        @if (scoreEntries.length) {
+        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+          @for (item of scoreEntries; track item.key) {
+          <div class="rounded-form border border-scheme-border bg-white p-2">
+            <p class="text-xs uppercase tracking-wide text-gray-500">{{ item.key }}</p>
+            <p class="text-lg font-semibold">{{ item.score }}/100</p>
+          </div>
+          }
+        </div>
+        }
+      </div>
+      }
     </form>
   </div>
 
