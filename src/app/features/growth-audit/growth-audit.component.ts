@@ -46,6 +46,7 @@ export class GrowthAuditComponent implements OnDestroy {
   auditProgress = 0;
   auditStep = "";
   auditSummary?: AuditSummaryResponse;
+  hasInstantSummary = false;
 
   readonly hero = {
     label: $localize`:audit.hero.label@@auditHeroLabel:Audit gratuit (24h)`,
@@ -156,6 +157,7 @@ export class GrowthAuditComponent implements OnDestroy {
     this.errorMessage = undefined;
     this.successMessage = undefined;
     this.auditSummary = undefined;
+    this.hasInstantSummary = false;
     this.stopStream();
 
     if (!form.valid) {
@@ -232,6 +234,24 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
+    if (event.type === "instant_summary") {
+      this.hasInstantSummary = true;
+      this.auditSummary = {
+        auditId: event.data.auditId,
+        ready: false,
+        status: event.data.status,
+        progress: event.data.progress,
+        summaryText: event.data.summaryText,
+        keyChecks: event.data.keyChecks,
+        quickWins: event.data.quickWins,
+        pillarScores: event.data.pillarScores,
+      };
+      this.auditProgress = Math.max(this.auditProgress, event.data.progress ?? 0);
+      this.auditStep = "Diagnostic initial prêt";
+      this.cdr.markForCheck();
+      return;
+    }
+
     if (event.type === "completed") {
       this.auditProgress = event.data.progress ?? 100;
       this.auditStep = "Audit terminé";
@@ -260,6 +280,7 @@ export class GrowthAuditComponent implements OnDestroy {
       next: (summary) => {
         if (summary.ready || summary.status === "COMPLETED") {
           this.auditSummary = summary;
+          this.hasInstantSummary = true;
           this.auditProgress = summary.progress;
           this.auditStep = "Audit terminé";
           this.isAuditRunning = false;
@@ -273,6 +294,14 @@ export class GrowthAuditComponent implements OnDestroy {
           this.errorMessage = "L'audit a échoué.";
           this.cdr.markForCheck();
           return;
+        }
+
+        if (summary.summaryText) {
+          this.auditSummary = summary;
+          this.hasInstantSummary = true;
+          this.auditProgress = Math.max(this.auditProgress, summary.progress);
+          this.auditStep = "Diagnostic initial prêt";
+          this.cdr.markForCheck();
         }
 
         if (this.reconnectAttempts < 3) {

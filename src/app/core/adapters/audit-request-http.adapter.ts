@@ -53,6 +53,12 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
         subscriber.complete();
       };
 
+      const onInstantSummary = (event: Event) => {
+        const payload = parsePayload(event as MessageEvent);
+        if (!payload) return;
+        subscriber.next({ type: "instant_summary", data: payload });
+      };
+
       const onFailed = (event: Event) => {
         const payload = parsePayload(event as MessageEvent);
         if (payload) {
@@ -69,6 +75,7 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
       };
 
       source.addEventListener("progress", onProgress);
+      source.addEventListener("instant_summary", onInstantSummary);
       source.addEventListener("completed", onCompleted);
       source.addEventListener("failed", onFailed);
       source.addEventListener("heartbeat", onHeartbeat);
