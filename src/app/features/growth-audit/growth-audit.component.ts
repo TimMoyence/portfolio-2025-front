@@ -11,8 +11,8 @@ import { Subscription } from "rxjs";
 import {
   AuditContactMethod,
   AuditRequestPayload,
-  AuditSummaryResponse,
   AuditStreamEvent,
+  AuditSummaryResponse,
 } from "../../core/models/audit-request.model";
 import { AuditRequestService } from "../../core/services/audit-request.service";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
@@ -33,6 +33,7 @@ interface AuditPillar {
 export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService = inject(AuditRequestService);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly localeUrlPrefix = this.getLocaleUrlPrefix();
 
   private streamSub?: Subscription;
   private reconnectAttempts = 0;
@@ -46,7 +47,6 @@ export class GrowthAuditComponent implements OnDestroy {
   auditProgress = 0;
   auditStep = "";
   auditSummary?: AuditSummaryResponse;
-  hasInstantSummary = false;
 
   readonly hero = {
     label: $localize`:audit.hero.label@@auditHeroLabel:Audit gratuit (24h)`,
@@ -132,10 +132,29 @@ export class GrowthAuditComponent implements OnDestroy {
 
   get scoreEntries(): Array<{ key: string; score: number }> {
     if (!this.auditSummary) return [];
-    return Object.entries(this.auditSummary.pillarScores).map(([key, score]) => ({
-      key,
-      score,
-    }));
+    return Object.entries(this.auditSummary.pillarScores).map(
+      ([key, score]) => ({
+        key,
+        score,
+      }),
+    );
+  }
+
+  get formattedSummaryText(): string {
+    return this.formatSummaryText(this.auditSummary?.summaryText);
+  }
+
+  private getLocaleUrlPrefix(): "fr" | "en" {
+    if (typeof window === "undefined") {
+      return "fr";
+    }
+
+    const [, locale] =
+      window.location.pathname.toLowerCase().match(/\/(fr|en)(?=\/|$)/) ?? [];
+
+    if (locale === undefined) return "fr";
+
+    return locale === "fr" ? "fr" : "en";
   }
 
   onContactMethodToggle(event: Event): void {
@@ -157,7 +176,6 @@ export class GrowthAuditComponent implements OnDestroy {
     this.errorMessage = undefined;
     this.successMessage = undefined;
     this.auditSummary = undefined;
-    this.hasInstantSummary = false;
     this.stopStream();
 
     if (!form.valid) {
@@ -168,6 +186,7 @@ export class GrowthAuditComponent implements OnDestroy {
 
     this.isSubmitting = true;
     const payload = {
+      locale: this.localeUrlPrefix,
       websiteName: this.auditFormState.websiteName.trim(),
       contactMethod: this.auditFormState.contactMethod,
       contactValue: this.auditFormState.contactValue.trim(),
@@ -228,26 +247,8 @@ export class GrowthAuditComponent implements OnDestroy {
 
     if (event.type === "progress") {
       this.auditProgress = event.data.progress ?? 0;
-      this.auditStep = event.data.step ?? "Audit en cours...";
+      this.auditStep = this.formatProgressStep(event.data);
       this.isAuditRunning = true;
-      this.cdr.markForCheck();
-      return;
-    }
-
-    if (event.type === "instant_summary") {
-      this.hasInstantSummary = true;
-      this.auditSummary = {
-        auditId: event.data.auditId,
-        ready: false,
-        status: event.data.status,
-        progress: event.data.progress,
-        summaryText: event.data.summaryText,
-        keyChecks: event.data.keyChecks,
-        quickWins: event.data.quickWins,
-        pillarScores: event.data.pillarScores,
-      };
-      this.auditProgress = Math.max(this.auditProgress, event.data.progress ?? 0);
-      this.auditStep = "Diagnostic initial prêt";
       this.cdr.markForCheck();
       return;
     }
@@ -280,7 +281,6 @@ export class GrowthAuditComponent implements OnDestroy {
       next: (summary) => {
         if (summary.ready || summary.status === "COMPLETED") {
           this.auditSummary = summary;
-          this.hasInstantSummary = true;
           this.auditProgress = summary.progress;
           this.auditStep = "Audit terminé";
           this.isAuditRunning = false;
@@ -294,14 +294,6 @@ export class GrowthAuditComponent implements OnDestroy {
           this.errorMessage = "L'audit a échoué.";
           this.cdr.markForCheck();
           return;
-        }
-
-        if (summary.summaryText) {
-          this.auditSummary = summary;
-          this.hasInstantSummary = true;
-          this.auditProgress = Math.max(this.auditProgress, summary.progress);
-          this.auditStep = "Diagnostic initial prêt";
-          this.cdr.markForCheck();
         }
 
         if (this.reconnectAttempts < 3) {
@@ -327,5 +319,48 @@ export class GrowthAuditComponent implements OnDestroy {
   private stopStream(): void {
     this.streamSub?.unsubscribe();
     this.streamSub = undefined;
+  }
+
+  private formatProgressStep(event: {
+    step?: string | null;
+    details?: Record<string, unknown>;
+  }): string {
+    const base = event.step ?? "Audit en cours...";
+    if (/\(\d+\/\d+\)/.test(base)) {
+      return base;
+    }
+    const details = event.details;
+    if (!details) return base;
+
+    const done = Number(details["done"]);
+    const total = Number(details["total"]);
+    if (!Number.isFinite(done) || !Number.isFinite(total) || total <= 0) {
+      return base;
+    }
+
+    return `${base} (${Math.max(0, done)}/${Math.max(1, total)})`;
+  }
+
+  private formatSummaryText(summaryText: string | null | undefined): string {
+    if (!summaryText) {
+      return "";
+    }
+
+    const sectionLabels =
+      "(Contexte|Context|Blocages?|Blockers?|Impacts?\\s+business|Business\\s+impact|Priorit[eé]s?\\s+imm[eé]diates?|Immediate\\s+priorities)";
+    const prioritiesLabel =
+      "(Priorit[eé]s?\\s+imm[eé]diates?|Immediate\\s+priorities)";
+
+    return summaryText
+      .replace(/\r\n?/g, "\n")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/__([^_]+)__/g, "$1")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(new RegExp(`([^\\n])\\s+${sectionLabels}\\s*:`, "gi"), "$1\n$2 :")
+      .replace(new RegExp(`${prioritiesLabel}\\s*:\\s*(\\d+\\))`, "gi"), "$1 :\n$2")
+      .replace(/\s+(\d+\))/g, "\n$1")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
   }
 }

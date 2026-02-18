@@ -9,6 +9,7 @@ export interface AuditRequestPayload {
   websiteName: string;
   contactMethod: AuditContactMethod;
   contactValue: string;
+  locale?: "fr" | "en";
 }
 
 export interface AuditCreateResponse {
@@ -34,6 +35,7 @@ export interface AuditProgressEvent {
   status: AuditProcessingStatus;
   progress: number;
   step?: string | null;
+  details?: Record<string, unknown>;
   done: boolean;
   updatedAt: string;
 }
@@ -61,20 +63,6 @@ export interface AuditFailedEvent {
 
 export type AuditStreamEvent =
   | { type: "progress"; data: AuditProgressEvent }
-  | {
-      type: "instant_summary";
-      data: {
-        auditId: string;
-        ready: false;
-        status: AuditProcessingStatus;
-        progress: number;
-        summaryText: string | null;
-        keyChecks: Record<string, unknown>;
-        quickWins: string[];
-        pillarScores: Record<string, number>;
-        updatedAt: string;
-      };
-    }
   | { type: "completed"; data: AuditCompletedEvent }
   | { type: "failed"; data: AuditFailedEvent }
   | { type: "heartbeat"; data: { ts: string } };
