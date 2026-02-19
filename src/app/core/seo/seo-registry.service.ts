@@ -27,7 +27,16 @@ export class SeoRegistryService {
   }
 
   getLocaleId(): string {
-    return this.localeId;
+    const normalizedLocale = this.localeId.split("-")[0];
+    const locales = this.getLocales();
+    if (locales.includes(normalizedLocale)) {
+      return normalizedLocale;
+    }
+    return this.getDefaultLocale();
+  }
+
+  getDefaultLocale(): string {
+    return this.data.site.defaultLocale;
   }
 
   getSeoByKey(key: string): Observable<SeoResolvedConfig | null> {
@@ -91,8 +100,8 @@ export class SeoRegistryService {
     const withoutLocale = this.stripLocalePrefix(trimmed);
     const normalized = withoutLocale ? `/${withoutLocale}` : "/";
 
-    if (normalized === "/" && this.data.site.homePath) {
-      return this.normalizePagePath(this.data.site.homePath);
+    if (normalized === "/" || normalized === "/home") {
+      return this.normalizePagePath(this.data.site.homePath ?? "/");
     }
 
     return normalized;

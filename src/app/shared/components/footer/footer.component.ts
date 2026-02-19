@@ -42,7 +42,7 @@ export class FooterComponent {
       links: [
         {
           label: $localize`:footer.nav.home|Footer nav link@@footerNavHome:Accueil`,
-          href: "/home",
+          href: "/",
         },
         {
           label: $localize`:footer.nav.presentation|Footer nav link@@footerNavPresentation:Présentation`,

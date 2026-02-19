@@ -99,6 +99,7 @@ const buildSitemapXml = (
       .replace(/'/g, "&apos;");
 
   for (const page of urls) {
+    const pagePath = page.id === "home" ? "/" : page.path;
     const lastmod = page.lastmod ? `<lastmod>${page.lastmod}</lastmod>` : "";
     const changefreq = page.changefreq
       ? `<changefreq>${page.changefreq}</changefreq>`
@@ -109,7 +110,7 @@ const buildSitemapXml = (
         : "";
 
     const alternateLinks = activeLocales.map((locale) => {
-      const path = buildLocalizedPath(locale, page.path);
+      const path = buildLocalizedPath(locale, pagePath);
       const href = new URL(path, baseUrl).toString();
       return `    <xhtml:link rel="alternate" hreflang="${escapeXml(
         locale || defaultLocale,
@@ -117,7 +118,7 @@ const buildSitemapXml = (
     });
 
     if (defaultLocale) {
-      const path = buildLocalizedPath(defaultLocale, page.path);
+      const path = buildLocalizedPath(defaultLocale, pagePath);
       const href = new URL(path, baseUrl).toString();
       alternateLinks.push(
         `    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(
@@ -131,7 +132,7 @@ const buildSitemapXml = (
       : "";
 
     for (const locale of activeLocales) {
-      const path = buildLocalizedPath(locale, page.path);
+      const path = buildLocalizedPath(locale, pagePath);
       const loc = new URL(path, baseUrl).toString();
       urlEntries.push(
         [
@@ -244,9 +245,16 @@ app.use(
   }),
 );
 
-app.get(["/fr", "/en"], (req, res) => {
-  const locale = req.path.replace("/", "");
-  return res.redirect(301, `/${locale}/home`);
+app.get("/home", (_req, res) => {
+  return res.redirect(301, "/fr");
+});
+
+app.get("/fr/home", (_req, res) => {
+  return res.redirect(301, "/fr");
+});
+
+app.get("/en/home", (_req, res) => {
+  return res.redirect(301, "/en");
 });
 /**
  * Serve other static files (css/js/map/woff2/...) if any are at browser root

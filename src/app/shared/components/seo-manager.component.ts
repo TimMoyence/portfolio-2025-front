@@ -89,8 +89,11 @@ export class SeoManagerComponent implements OnInit {
     forceNoIndex?: boolean,
   ): void {
     const baseUrl = this.resolveBaseUrl();
-    const canonicalPath = this.buildCanonicalPath(currentUrl);
-    const canonicalUrl = this.buildAbsoluteUrl(baseUrl, canonicalPath);
+    const canonicalState = this.resolveCanonicalState(currentUrl);
+    const canonicalUrl = this.buildAbsoluteUrl(
+      baseUrl,
+      canonicalState.canonicalPath,
+    );
     const index =
       typeof forceNoIndex === "boolean"
         ? !forceNoIndex
@@ -111,11 +114,19 @@ export class SeoManagerComponent implements OnInit {
     const hreflangs: Record<string, string> = {};
 
     for (const locale of locales) {
-      const localizedPath = this.buildCanonicalPath(currentUrl).replace(
-        `/${this.seoRegistry.getLocaleId()}`,
-        `/${locale}`,
-      );
+      const localizedPath =
+        canonicalState.relativePath === "/"
+          ? `/${locale}`
+          : `/${locale}${canonicalState.relativePath}`;
       hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, localizedPath);
+    }
+    const defaultLocale = this.seoRegistry.getDefaultLocale();
+    if (defaultLocale && locales.includes(defaultLocale)) {
+      const defaultPath =
+        canonicalState.relativePath === "/"
+          ? `/${defaultLocale}`
+          : `/${defaultLocale}${canonicalState.relativePath}`;
+      hreflangs["x-default"] = this.buildAbsoluteUrl(baseUrl, defaultPath);
     }
 
     this.seoService.updateSeoMetadata({
@@ -166,33 +177,64 @@ export class SeoManagerComponent implements OnInit {
   }
 
   private buildCanonicalPath(currentUrl: string): string {
-    const normalized = this.normalizePath(currentUrl);
-    const locales = this.seoRegistry.getLocales();
-    const hasLocalePrefix = locales.some(
-      (locale) =>
-        normalized === `/${locale}` || normalized.startsWith(`/${locale}/`),
-    );
-
-    if (hasLocalePrefix) {
-      return normalized;
-    }
-
-    const locale = this.seoRegistry.getLocaleId();
-    if (!locale) {
-      return normalized;
-    }
-
-    if (normalized === "/") {
-      return `/${locale}`;
-    }
-
-    return `/${locale}${normalized}`;
+    return this.resolveCanonicalState(currentUrl).canonicalPath;
   }
 
   private normalizePath(path: string): string {
     const clean = this.getCleanUrl(path);
     const trimmed = clean.replace(/^\/+/, "").replace(/\/+$/, "");
     return trimmed ? `/${trimmed}` : "/";
+  }
+
+  private resolveCanonicalState(currentUrl: string): {
+    canonicalPath: string;
+    relativePath: string;
+  } {
+    const normalized = this.normalizePath(currentUrl);
+    const locales = this.seoRegistry.getLocales();
+    const activeLocale = this.seoRegistry.getLocaleId();
+    const matchedLocale = locales.find(
+      (locale) =>
+        normalized === `/${locale}` || normalized.startsWith(`/${locale}/`),
+    );
+
+    if (matchedLocale) {
+      const relativePath = this.normalizeRelativePath(normalized, matchedLocale);
+      if (this.isHomeAlias(relativePath)) {
+        return {
+          canonicalPath: `/${matchedLocale}`,
+          relativePath: "/",
+        };
+      }
+      return {
+        canonicalPath:
+          relativePath === "/" ? `/${matchedLocale}` : `/${matchedLocale}${relativePath}`,
+        relativePath,
+      };
+    }
+
+    if (this.isHomeAlias(normalized)) {
+      return {
+        canonicalPath: `/${activeLocale}`,
+        relativePath: "/",
+      };
+    }
+
+    return {
+      canonicalPath: normalized === "/" ? `/${activeLocale}` : `/${activeLocale}${normalized}`,
+      relativePath: normalized === "/" ? "/" : normalized,
+    };
+  }
+
+  private normalizeRelativePath(path: string, locale: string): string {
+    const localePrefix = `/${locale}`;
+    if (path === localePrefix) return "/";
+    const suffix = path.slice(localePrefix.length);
+    return suffix ? this.normalizePath(suffix) : "/";
+  }
+
+  private isHomeAlias(path: string): boolean {
+    return path === "/" || path === "/home";
   }
 
   private buildAbsoluteUrl(baseUrl: string, path: string): string {

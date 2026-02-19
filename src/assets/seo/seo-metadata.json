@@ -3,7 +3,7 @@
     "baseUrl": "https://asilidesign.fr",
     "defaultLocale": "fr",
     "locales": ["fr", "en"],
-    "homePath": "/home"
+    "homePath": "/"
   },
   "defaults": {
     "keywords": [
@@ -54,7 +54,7 @@
   "pages": [
     {
       "id": "home",
-      "path": "/home",
+      "path": "/",
       "index": true,
       "changefreq": "weekly",
       "priority": 1.0,
