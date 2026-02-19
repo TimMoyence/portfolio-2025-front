@@ -1821,182 +1821,142 @@ The application is organized around three complementary modules, each tailored t
     </unit>
 
 
-<unit id="authErrorPhone">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.html:87,90</note>
-    <note category="description">auth.error.phone</note>
-  </notes>
-  <segment>
-    <source>Merci d’entrer un numéro de téléphone valide.</source>
-    <target>Please enter a valid phone number.</target>
-  </segment>
-</unit>
-
-<unit id="auditPillarsTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.html:116,117</note>
-  </notes>
-  <segment>
-    <source>Audit rapide en 5 piliers</source>
-    <target>5-Pillar Rapid Audit</target>
-  </segment>
-</unit>
-
-<unit id="auditPillarsSubtitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.html:118,120</note>
-  </notes>
-  <segment>
-    <source> Un diagnostic concret, actionnable et faisable en moins de 45 minutes. </source>
-    <target>A practical, actionable diagnosis completed in under 45 minutes.</target>
-  </segment>
-</unit>
-
-<unit id="auditStepsTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.html:130,131</note>
-  </notes>
-  <segment>
-    <source>Comment ça fonctionne</source>
-    <target>How it works</target>
-  </segment>
-</unit>
 
 <unit id="auditHeroLabel">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:33</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:52</note>
     <note category="description">audit.hero.label</note>
   </notes>
   <segment>
-    <source>Audit gratuit (24h)</source>
-    <target>Free Audit (24h turnaround)</target>
+    <source>Audit gratuit (IA + humain, 24h)</source>
+    <target>Free Audit (AI + Human, 24h)</target>
   </segment>
 </unit>
 
 <unit id="auditHeroTitle">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:34</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:53</note>
     <note category="description">audit.hero.title</note>
   </notes>
   <segment>
     <source>Audit de croissance en 15 points</source>
-    <target>15-Point Growth Audit</target>
+    <target>15-Point Website Growth Audit</target>
   </segment>
 </unit>
 
 <unit id="auditHeroDescription">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:35</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:54</note>
     <note category="description">audit.hero.description</note>
   </notes>
   <segment>
-    <source>Laissez votre site ou le nom de votre entreprise, et recevez une analyse personnalisée comprenant une video et un scorecard clair avec des recommandations concrètes pour booster votre croissance en ligne.</source>
-    <target>Leave your website URL or business name and receive a personalized analysis including a short video and a clear scorecard with practical recommendations to boost your online growth.</target>
+    <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, signaux de conversion). Ensuite, sous 24h, je réalise l’audit moi-même et je vous envoie une vidéo + une scorecard claire + des recommandations concrètes pour gagner en visibilité et en clients.</source>
+    <target>Share your website → I first run an AI scan (page analysis, SEO, performance, and conversion signals). Then, within 24 hours, I personally review everything and send you a short video, a clear scorecard, and practical recommendations to improve visibility and generate more leads.</target>
   </segment>
 </unit>
 
 <unit id="auditStepOneTitle">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:40</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:59</note>
     <note category="description">audit.steps.one.title</note>
   </notes>
   <segment>
     <source>1. Vous laissez vos infos</source>
-    <target>1. Submit your details</target>
+    <target>1. Share your details</target>
   </segment>
 </unit>
 
 <unit id="auditStepOneDesc">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:41</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:60</note>
     <note category="description">audit.steps.one.desc</note>
   </notes>
   <segment>
-    <source>Nom du site + contact email ou téléphone.</source>
-    <target>Your website name + email or phone number.</target>
+    <source>Nom du site ou URL + contact (email ou téléphone).</source>
+    <target>Website name or URL + your preferred contact (email or phone).</target>
   </segment>
 </unit>
 
 <unit id="auditStepTwoTitle">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:44</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:63</note>
     <note category="description">audit.steps.two.title</note>
   </notes>
   <segment>
-    <source>2. Analyse rapide de votre site</source>
-    <target>2. Quick website analysis</target>
+    <source>2. Audit instantané (IA)</source>
+    <target>2. Instant AI scan</target>
   </segment>
 </unit>
 
 <unit id="auditStepTwoDesc">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:45</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:64</note>
     <note category="description">audit.steps.two.desc</note>
   </notes>
   <segment>
-    <source>Je scanne votre site, votre SEO et votre conversion.</source>
-    <target>I review your website, SEO performance, and conversion flow.</target>
+    <source>Je scanne vos pages (SEO, performance, conversion) et je sors un premier diagnostic rapide.</source>
+    <target>I scan your pages (SEO, performance, and conversion) and generate a first quick diagnostic.</target>
   </segment>
 </unit>
 
 <unit id="auditStepThreeTitle">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:48</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:67</note>
     <note category="description">audit.steps.three.title</note>
   </notes>
   <segment>
-    <source>3. Livraison en 24h</source>
-    <target>3. Delivered within 24 hours</target>
+    <source>3. Audit humain sous 24h</source>
+    <target>3. Human review within 24h</target>
   </segment>
 </unit>
 
 <unit id="auditStepThreeDesc">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:49</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:68</note>
     <note category="description">audit.steps.three.desc</note>
   </notes>
   <segment>
-    <source>Vidéo + scorecard envoyées par email.</source>
-    <target>Video + scorecard sent directly to your inbox.</target>
+    <source>Je reprends l’analyse moi-même, je priorise, et je vous envoie une vidéo + une scorecard + un plan d’actions.</source>
+    <target>I personally review the results, prioritize opportunities, and send you a short video, a clear scorecard, and an action plan.</target>
   </segment>
 </unit>
 
 <unit id="auditHighlightsVideo">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:51</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:70</note>
     <note category="description">audit.highlights.video</note>
   </notes>
   <segment>
-    <source>Vidéo personnalisée (10 min)</source>
-    <target>Personalized 10-minute video</target>
+    <source>Vidéo personnalisée</source>
+    <target>Personalized video</target>
   </segment>
 </unit>
 
 <unit id="auditHighlightsScore">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:52</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:71</note>
     <note category="description">audit.highlights.score</note>
   </notes>
   <segment>
-    <source>Scorecard claire (15 points)</source>
-    <target>Clear 15-point scorecard</target>
+    <source>Scorecard claire</source>
+    <target>Clear scorecard</target>
   </segment>
 </unit>
 
 <unit id="auditHighlightsWins">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:53</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:72</note>
     <note category="description">audit.highlights.wins</note>
   </notes>
   <segment>
-    <source>3 quick wins + 1 opportunité forte</source>
-    <target>3 quick wins + 1 high-impact opportunity</target>
+    <source>Quick wins + priorités (impact/effort)</source>
+    <target>Quick wins + prioritized actions (impact/effort)</target>
   </segment>
 </unit>
 
 <unit id="auditHighlightsNoObligation">
   <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:54</note>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:73</note>
     <note category="description">audit.highlights.noObligation</note>
   </notes>
   <segment>
@@ -2005,7 +1965,258 @@ The application is organized around three complementary modules, each tailored t
   </segment>
 </unit>
 
+<unit id="auditPillarConversionTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:80</note>
+    <note category="description">audit.pillar.conversion.title</note>
+  </notes>
+  <segment>
+    <source>Conversion &amp; clarté</source>
+    <target>Conversion &amp; clarity</target>
+  </segment>
+</unit>
 
+<unit id="auditPillarConversionDesc">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:81</note>
+    <note category="description">audit.pillar.conversion.desc</note>
+  </notes>
+  <segment>
+    <source>Proposition de valeur, CTA, friction contact, mobile.</source>
+    <target>Value proposition, CTAs, contact friction, mobile experience.</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarPerformanceTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:84</note>
+    <note category="description">audit.pillar.performance.title</note>
+  </notes>
+  <segment>
+    <source>Vitesse &amp; performance</source>
+    <target>Speed &amp; performance</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarPerformanceDesc">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:85</note>
+    <note category="description">audit.pillar.performance.desc</note>
+  </notes>
+  <segment>
+    <source>PageSpeed, poids images, Core Web Vitals.</source>
+    <target>PageSpeed, image weight, Core Web Vitals.</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarSeoTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:88</note>
+    <note category="description">audit.pillar.seo.title</note>
+  </notes>
+  <segment>
+    <source>SEO fondations</source>
+    <target>SEO foundations</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarSeoDesc">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:89</note>
+    <note category="description">audit.pillar.seo.desc</note>
+  </notes>
+  <segment>
+    <source>Titres, H1, meta, indexation, SEO local.</source>
+    <target>Titles, H1, meta, indexing, local SEO.</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarTrustTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:92</note>
+    <note category="description">audit.pillar.trust.title</note>
+  </notes>
+  <segment>
+    <source>Crédibilité &amp; confiance</source>
+    <target>Credibility &amp; trust</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarTrustDesc">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:93</note>
+    <note category="description">audit.pillar.trust.desc</note>
+  </notes>
+  <segment>
+    <source>Preuves sociales, portfolio, signaux de confiance.</source>
+    <target>Social proof, portfolio, trust signals.</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarTechTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:96</note>
+    <note category="description">audit.pillar.tech.title</note>
+  </notes>
+  <segment>
+    <source>Tech &amp; scalabilité</source>
+    <target>Tech &amp; scalability</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarTechDesc">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:97</note>
+    <note category="description">audit.pillar.tech.desc</note>
+  </notes>
+  <segment>
+    <source>CMS, sécurité, erreurs, maintenabilité.</source>
+    <target>CMS, security, errors, maintainability.</target>
+  </segment>
+</unit>
+
+<unit id="auditFormTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:102</note>
+    <note category="description">audit.form.title</note>
+  </notes>
+  <segment>
+    <source>Demander un audit gratuit</source>
+    <target>Request a free audit</target>
+  </segment>
+</unit>
+
+<unit id="auditFormDescription">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:103</note>
+    <note category="description">audit.form.description</note>
+  </notes>
+  <segment>
+    <source>Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.</source>
+    <target>I only take 5 audits per week to guarantee a proper human review within 24 hours.</target>
+  </segment>
+</unit>
+
+<unit id="auditFormWebsiteLabel">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:104</note>
+    <note category="description">audit.form.websiteLabel</note>
+  </notes>
+  <segment>
+    <source>Nom du site ou URL</source>
+    <target>Website name or URL</target>
+  </segment>
+</unit>
+
+<unit id="auditFormWebsitePlaceholder">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:105</note>
+    <note category="description">audit.form.websitePlaceholder</note>
+  </notes>
+  <segment>
+    <source>ex. https://votresite.fr</source>
+    <target>e.g. https://yourwebsite.com</target>
+  </segment>
+</unit>
+
+<unit id="auditFormContactMethodLabel">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:106</note>
+    <note category="description">audit.form.contactMethodLabel</note>
+  </notes>
+  <segment>
+    <source>Méthode de contact</source>
+    <target>Preferred contact method</target>
+  </segment>
+</unit>
+
+<unit id="auditFormContactEmail">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:107</note>
+    <note category="description">audit.form.contactEmail</note>
+  </notes>
+  <segment>
+    <source>Email</source>
+    <target>Email</target>
+  </segment>
+</unit>
+
+<unit id="auditFormContactPhone">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:108</note>
+    <note category="description">audit.form.contactPhone</note>
+  </notes>
+  <segment>
+    <source>Téléphone</source>
+    <target>Phone</target>
+  </segment>
+</unit>
+
+<unit id="auditFormContactValueLabel">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:109</note>
+    <note category="description">audit.form.contactValueLabel</note>
+  </notes>
+  <segment>
+    <source>Coordonnée</source>
+    <target>Contact details</target>
+  </segment>
+</unit>
+
+<unit id="auditFormEmailPlaceholder">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:110</note>
+    <note category="description">audit.form.emailPlaceholder</note>
+  </notes>
+  <segment>
+    <source>ex. hello@votresite.fr</source>
+    <target>e.g. hello@yourwebsite.com</target>
+  </segment>
+</unit>
+
+<unit id="auditFormPhonePlaceholder">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:111</note>
+    <note category="description">audit.form.phonePlaceholder</note>
+  </notes>
+  <segment>
+    <source>ex. +33 6 98 50 32 82</source>
+    <target>e.g. +33 6 98 50 32 82</target>
+  </segment>
+</unit>
+
+<unit id="auditFormSubmit">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:112</note>
+    <note category="description">audit.form.submit</note>
+  </notes>
+  <segment>
+    <source>Demander mon audit (scan IA immédiat + audit humain sous 24h)</source>
+    <target>Request my audit (instant AI scan + human review within 24h)</target>
+  </segment>
+</unit>
+
+<unit id="auditFormSuccess">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:113</note>
+    <note category="description">audit.form.success</note>
+  </notes>
+  <segment>
+    <source>Merci ! Scan IA lancé — audit humain envoyé sous 24h.</source>
+    <target>Thank you! Your AI scan has started — your full review will be sent within 24h.</target>
+  </segment>
+</unit>
+
+<unit id="auditFormError">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:114</note>
+    <note category="description">audit.form.error</note>
+  </notes>
+  <segment>
+    <source>Impossible d&apos;envoyer la demande. Réessayez dans un instant.</source>
+    <target>Couldn&apos;t send your request. Please try again in a moment.</target>
+  </segment>
+</unit>
 
     <unit id="ctaTitle">
       <notes>
@@ -5492,20 +5703,20 @@ The goal is not to add features, but to choose the most relevant levers to gener
     </unit>
     <unit id="auditHighlightsVideo">
       <segment>
-        <source>Vidéo personnalisée (10 min)</source>
-        <target>Personalized video (10 min)</target>
+        <source>Vidéo personnalisée</source>
+        <target>Personalized video</target>
       </segment>
     </unit>
     <unit id="auditHighlightsScore">
       <segment>
-        <source>Scorecard claire (15 points)</source>
-        <target>Clear scorecard (15 points)</target>
+        <source>Scorecard claire</source>
+        <target>Clear scorecard</target>
       </segment>
     </unit>
     <unit id="auditHighlightsWins">
       <segment>
-        <source>3 quick wins + 1 opportunité forte</source>
-        <target>3 quick wins + 1 high-impact opportunity</target>
+        <source>Quick Wins et vision opportunités business</source>
+        <target>Quick Wins and business opportunity vision</target>
       </segment>
     </unit>
     <unit id="auditHighlightsNoObligation">

@@ -1629,32 +1629,46 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">auth.error.phone</note>
       </trans-unit>
+      <trans-unit id="auditProgressLabel" datatype="html">
+        <source>Progression de l&apos;audit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
+          <context context-type="linenumber">116,117</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditResumeTitle" datatype="html">
+        <source>Résumé de votre audit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
+          <context context-type="linenumber">129,131</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="auditPillarsTitle" datatype="html">
         <source>Audit rapide en 5 piliers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">116,117</context>
+          <context context-type="linenumber">153,154</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsSubtitle" datatype="html">
         <source> Un diagnostic concret, actionnable et faisable en moins de 45 minutes. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">118,120</context>
+          <context context-type="linenumber">155,157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditStepsTitle" datatype="html">
         <source>Comment ça fonctionne</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">130,131</context>
+          <context context-type="linenumber">167,168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditHeroLabel" datatype="html">
-        <source>Audit gratuit (24h)</source>
+        <source>Audit gratuit (IA + humain, 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">audit.hero.label</note>
       </trans-unit>
@@ -1662,15 +1676,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Audit de croissance en 15 points</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">audit.hero.title</note>
       </trans-unit>
       <trans-unit id="auditHeroDescription" datatype="html">
-        <source>Laissez votre site ou le nom de votre entreprise, et recevez une analyse personnalisée comprenant une video et un scorecard clair avec des recommandations concrètes pour booster votre croissance en ligne.</source>
+        <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, signaux de conversion). Ensuite, sous 24h, je réalise l’audit moi-même et je vous envoie une vidéo + une scorecard claire + des recommandations concrètes pour gagner en visibilité et en clients.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="description">audit.hero.description</note>
       </trans-unit>
@@ -1678,71 +1692,71 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>1. Vous laissez vos infos</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.title</note>
       </trans-unit>
       <trans-unit id="auditStepOneDesc" datatype="html">
-        <source>Nom du site + contact email ou téléphone.</source>
+        <source>Nom du site ou URL + contact (email ou téléphone).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.desc</note>
       </trans-unit>
       <trans-unit id="auditStepTwoTitle" datatype="html">
-        <source>2. Analyse rapide de votre site</source>
+        <source>2. Audit instantané (IA)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.title</note>
       </trans-unit>
       <trans-unit id="auditStepTwoDesc" datatype="html">
-        <source>Je scanne votre site, votre SEO et votre conversion.</source>
+        <source>Je scanne vos pages (SEO, performance, conversion) et je sors un premier diagnostic rapide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.desc</note>
       </trans-unit>
       <trans-unit id="auditStepThreeTitle" datatype="html">
-        <source>3. Livraison en 24h</source>
+        <source>3. Audit humain sous 24h</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.title</note>
       </trans-unit>
       <trans-unit id="auditStepThreeDesc" datatype="html">
-        <source>Vidéo + scorecard envoyées par email.</source>
+        <source>Je reprends l’analyse moi-même, je priorise, et je vous envoie une vidéo + une scorecard + un plan d’actions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.desc</note>
       </trans-unit>
       <trans-unit id="auditHighlightsVideo" datatype="html">
-        <source>Vidéo personnalisée (10 min)</source>
+        <source>Vidéo personnalisée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.video</note>
       </trans-unit>
       <trans-unit id="auditHighlightsScore" datatype="html">
-        <source>Scorecard claire (15 points)</source>
+        <source>Scorecard claire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.score</note>
       </trans-unit>
       <trans-unit id="auditHighlightsWins" datatype="html">
-        <source>3 quick wins + 1 opportunité forte</source>
+        <source>Quick wins + priorités (impact/effort)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.wins</note>
       </trans-unit>
@@ -1750,7 +1764,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Aucun engagement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.noObligation</note>
       </trans-unit>
@@ -1758,7 +1772,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Conversion &amp; clarté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.title</note>
       </trans-unit>
@@ -1766,7 +1780,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Proposition de valeur, CTA, friction contact, mobile.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.desc</note>
       </trans-unit>
@@ -1774,7 +1788,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Vitesse &amp; performance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.title</note>
       </trans-unit>
@@ -1782,7 +1796,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>PageSpeed, poids images, Core Web Vitals.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.desc</note>
       </trans-unit>
@@ -1790,7 +1804,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>SEO fondations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.title</note>
       </trans-unit>
@@ -1798,7 +1812,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Titres, H1, meta, indexation, SEO local.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.desc</note>
       </trans-unit>
@@ -1806,7 +1820,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Crédibilité &amp; confiance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.title</note>
       </trans-unit>
@@ -1814,7 +1828,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Preuves sociales, portfolio, signaux de confiance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.desc</note>
       </trans-unit>
@@ -1822,7 +1836,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Tech &amp; scalabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.title</note>
       </trans-unit>
@@ -1830,7 +1844,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>CMS, sécurité, erreurs, maintenabilité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.desc</note>
       </trans-unit>
@@ -1838,15 +1852,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Demander un audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">audit.form.title</note>
       </trans-unit>
       <trans-unit id="auditFormDescription" datatype="html">
-        <source>Je ne prends que 5 audits par semaine pour garantir une réponse rapide.</source>
+        <source>Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <note priority="1" from="description">audit.form.description</note>
       </trans-unit>
@@ -1854,7 +1868,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Nom du site ou URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <note priority="1" from="description">audit.form.websiteLabel</note>
       </trans-unit>
@@ -1862,7 +1876,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>ex. https://votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">audit.form.websitePlaceholder</note>
       </trans-unit>
@@ -1870,7 +1884,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Méthode de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactMethodLabel</note>
       </trans-unit>
@@ -1878,7 +1892,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactEmail</note>
       </trans-unit>
@@ -1886,7 +1900,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactPhone</note>
       </trans-unit>
@@ -1894,7 +1908,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Coordonnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactValueLabel</note>
       </trans-unit>
@@ -1902,7 +1916,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>ex. hello@votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">audit.form.emailPlaceholder</note>
       </trans-unit>
@@ -1910,23 +1924,23 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>ex. +33 6 98 50 32 82</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">audit.form.phonePlaceholder</note>
       </trans-unit>
       <trans-unit id="auditFormSubmit" datatype="html">
-        <source>Demander mon audit</source>
+        <source>Demander mon audit (scan IA immédiat + audit humain sous 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">112</context>
         </context-group>
         <note priority="1" from="description">audit.form.submit</note>
       </trans-unit>
       <trans-unit id="auditFormSuccess" datatype="html">
-        <source>Merci ! Je reviens vers vous sous 24h avec votre audit.</source>
+        <source>Merci ! Scan IA lancé — audit humain envoyé sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">audit.form.success</note>
       </trans-unit>
@@ -1934,7 +1948,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Impossible d&apos;envoyer la demande. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <note priority="1" from="description">audit.form.error</note>
       </trans-unit>

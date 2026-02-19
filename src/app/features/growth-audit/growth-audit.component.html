@@ -1,189 +1,320 @@
-<app-hero-section [label]="hero.label" [title]="hero.title" [description]="hero.description" titleLevel="h1"
-  align="center"></app-hero-section>
-
+<app-hero-section
+  [label]="hero.label"
+  [title]="hero.title"
+  [description]="hero.description"
+  titleLevel="h1"
+  align="center"
+></app-hero-section>
 
 <section class="container px-2 py-4 grid gap-6 grid-cols-12">
-
-  <div class="rounded-form border border-scheme-border bg-white p-6 col-span-12 ">
+  <div
+    class="rounded-form border border-scheme-border bg-white p-6 col-span-12"
+  >
     <h2 class="font-heading heading-h3 text-h3 mb-2">{{ formLabels.title }}</h2>
-    <p class="text-sm md:text-base text-gray-600 mb-6">{{ formLabels.description }}</p>
+    <p class="text-sm md:text-base text-gray-600 mb-6">
+      {{ formLabels.description }}
+    </p>
 
     <form #auditForm="ngForm" class="grid gap-4" (ngSubmit)="submit(auditForm)">
-
-
-      <label class="text-sm md:text-base  font-semibold" for="websiteName">{{ formLabels.websiteLabel }}</label>
-      <input id="websiteName" name="websiteName" type="text" required [(ngModel)]="auditFormState.websiteName"
+      <label class="text-sm md:text-base font-semibold" for="websiteName">{{
+        formLabels.websiteLabel
+      }}</label>
+      <input
+        id="websiteName"
+        name="websiteName"
+        type="text"
+        required
+        [(ngModel)]="auditFormState.websiteName"
         [placeholder]="formLabels.websitePlaceholder"
         class="mt-2 block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
-        #websiteCtrl="ngModel" [class.border-red-500]="websiteCtrl.invalid && (websiteCtrl.touched || isSubmitted)" />
-      <p *ngIf="websiteCtrl.invalid && (websiteCtrl.touched || isSubmitted)"
-        class="mt-1 text-sm md:text-base text-red-500">
-        @if (websiteCtrl.errors?.['required']) {
-        <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+        #websiteCtrl="ngModel"
+        [class.border-red-500]="
+          websiteCtrl.invalid && (websiteCtrl.touched || isSubmitted)
+        "
+      />
+      <p
+        *ngIf="websiteCtrl.invalid && (websiteCtrl.touched || isSubmitted)"
+        class="mt-1 text-sm md:text-base text-red-500"
+      >
+        @if (websiteCtrl.errors?.["required"]) {
+          <span i18n="auth.error.required@@authErrorRequired"
+            >Ce champ est obligatoire.</span
+          >
         }
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
-        <div class="md:col-span-3 lg:col-span-2 md:flex md:flex-col md:justify-center md:items-center">
-          <p class="text-sm md:text-base  font-semibold mb-3">
+        <div
+          class="md:col-span-3 lg:col-span-2 md:flex md:flex-col md:justify-center md:items-center"
+        >
+          <p class="text-sm md:text-base font-semibold mb-3">
             {{ formLabels.contactMethodLabel }}
           </p>
           <div class="flex items-center gap-4 select-none">
             <!-- EMAIL label (active turns accent) -->
-            <span class="text-sm md:text-base  font-semibold transition-all duration-200" [ngClass]="auditFormState.contactMethod === 'EMAIL'
-                ? 'text-scheme-accent'
-                : 'text-scheme-text-muted opacity-80'">
+            <span
+              class="text-sm md:text-base font-semibold transition-all duration-200"
+              [ngClass]="
+                auditFormState.contactMethod === 'EMAIL'
+                  ? 'text-scheme-accent'
+                  : 'text-scheme-text-muted opacity-80'
+              "
+            >
               {{ formLabels.emailOption }}
             </span>
             <!-- Apple-like toggle -->
             <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" class="peer sr-only" [checked]="auditFormState.contactMethod === 'PHONE'"
-                (change)="onContactMethodToggle($event)" />
+              <input
+                type="checkbox"
+                class="peer sr-only"
+                [checked]="auditFormState.contactMethod === 'PHONE'"
+                (change)="onContactMethodToggle($event)"
+              />
               <!-- Track (iOS-like) -->
-              <span class="relative h-8 w-14 rounded-full
-                       bg-scheme-background border border-scheme-border
-                       transition-all duration-300
-                       peer-checked:bg-scheme-accent
-                       peer-focus-visible:ring-4 peer-focus-visible:ring-scheme-accent-focus
-                       shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]"></span>
+              <span
+                class="relative h-8 w-14 rounded-full bg-scheme-background border border-scheme-border transition-all duration-300 peer-checked:bg-scheme-accent peer-focus-visible:ring-4 peer-focus-visible:ring-scheme-accent-focus shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]"
+              ></span>
               <!-- Knob -->
-              <span class="absolute left-1 top-1 h-6 w-6 rounded-full bg-white
-                       transition-all duration-300
-                       peer-checked:translate-x-6
-                       shadow-[0_10px_20px_rgba(0,0,0,0.18),0_1px_2px_rgba(0,0,0,0.12)]"></span>
+              <span
+                class="absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition-all duration-300 peer-checked:translate-x-6 shadow-[0_10px_20px_rgba(0,0,0,0.18),0_1px_2px_rgba(0,0,0,0.12)]"
+              ></span>
               <!-- Gloss -->
-              <span class="pointer-events-none absolute left-1 top-1 h-6 w-6 rounded-full
-                       opacity-70 transition-all duration-300 peer-checked:translate-x-6
-                       bg-gradient-to-b from-white/70 to-white/5"></span>
+              <span
+                class="pointer-events-none absolute left-1 top-1 h-6 w-6 rounded-full opacity-70 transition-all duration-300 peer-checked:translate-x-6 bg-gradient-to-b from-white/70 to-white/5"
+              ></span>
             </label>
             <!-- PHONE label (active turns accent) -->
-            <span class="text-sm md:text-base  font-semibold transition-colors" [ngClass]="auditFormState.contactMethod === 'PHONE'
-              ? 'text-scheme-accent'
-              : 'text-scheme-text-muted'">
+            <span
+              class="text-sm md:text-base font-semibold transition-colors"
+              [ngClass]="
+                auditFormState.contactMethod === 'PHONE'
+                  ? 'text-scheme-accent'
+                  : 'text-scheme-text-muted'
+              "
+            >
               {{ formLabels.phoneOption }}
             </span>
           </div>
         </div>
 
-
-
-
         <div class="md:ms-4 lg:ms-4 md:col-span-3 lg:col-span-4">
-          <label class="text-sm md:text-base font-semibold" for="contactValue">{{ formLabels.contactValueLabel
-            }}</label>
-          <input id="contactValue" name="contactValue" [type]="contactInputType" required
-            [(ngModel)]="auditFormState.contactValue" [placeholder]="contactPlaceholder"
+          <label
+            class="text-sm md:text-base font-semibold"
+            for="contactValue"
+            >{{ formLabels.contactValueLabel }}</label
+          >
+          <input
+            id="contactValue"
+            name="contactValue"
+            [type]="contactInputType"
+            required
+            [(ngModel)]="auditFormState.contactValue"
+            [placeholder]="contactPlaceholder"
             class="mt-2 block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
             #contactCtrl="ngModel"
-            [class.border-red-500]="contactCtrl.invalid && (contactCtrl.touched || isSubmitted)" />
-          <p *ngIf="contactCtrl.invalid && (contactCtrl.touched || isSubmitted)"
-            class="mt-1 text-sm md:text-base text-red-500">
-            @if (contactCtrl.errors?.['required']) {
-            <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
-            } @else if (auditFormState.contactMethod === 'EMAIL' && contactCtrl.errors?.['email']) {
-            <span i18n="auth.error.email@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
-            } @else if
-            (auditFormState.contactMethod === 'PHONE' &&contactCtrl.errors?.['phone']) { <span
-              i18n="auth.error.phone@@authErrorPhone">Merci d’entrer un numéro de
-              téléphone valide.</span>
+            [class.border-red-500]="
+              contactCtrl.invalid && (contactCtrl.touched || isSubmitted)
+            "
+          />
+          <p
+            *ngIf="contactCtrl.invalid && (contactCtrl.touched || isSubmitted)"
+            class="mt-1 text-sm md:text-base text-red-500"
+          >
+            @if (contactCtrl.errors?.["required"]) {
+              <span i18n="auth.error.required@@authErrorRequired"
+                >Ce champ est obligatoire.</span
+              >
+            } @else if (
+              auditFormState.contactMethod === "EMAIL" &&
+              contactCtrl.errors?.["email"]
+            ) {
+              <span i18n="auth.error.email@@authErrorEmail"
+                >Merci d’entrer une adresse email valide.</span
+              >
+            } @else if (
+              auditFormState.contactMethod === "PHONE" &&
+              contactCtrl.errors?.["phone"]
+            ) {
+              <span i18n="auth.error.phone@@authErrorPhone"
+                >Merci d’entrer un numéro de téléphone valide.</span
+              >
             } @else {
-            <span i18n="auth.error.generic@@authErrorGeneric">Valeur invalide.</span>
+              <span i18n="auth.error.generic@@authErrorGeneric"
+                >Valeur invalide.</span
+              >
             }
           </p>
         </div>
-
       </div>
-      <button type="submit"
-        class="mt-2 inline-flex items-center justify-center rounded-button bg-scheme-accent px-6 py-3 text-sm md:text-base  font-semibold text-white transition-colors hover:bg-scheme-accent-hover disabled:opacity-60"
-        [disabled]="isSubmitting || !auditForm.form.valid">
+      <button
+        type="submit"
+        class="mt-2 inline-flex items-center justify-center rounded-button bg-scheme-accent px-6 py-3 text-sm md:text-base font-semibold text-white transition-colors hover:bg-scheme-accent-hover disabled:opacity-60"
+        [disabled]="isSubmitting || !auditForm.form.valid"
+      >
         {{ formLabels.submit }}
       </button>
 
       @if (errorMessage) {
-      <p class="text-sm text-red-500">{{ errorMessage }}</p>
+        <p class="text-sm text-red-500">{{ errorMessage }}</p>
       }
       @if (successMessage) {
-      <p class="text-sm text-green-600">{{ successMessage }}</p>
+        <p class="text-sm text-green-600">{{ successMessage }}</p>
       }
 
       @if (auditId) {
-      <p class="text-xs text-gray-500">Audit ID: {{ auditId }}</p>
+        <p class="text-xs text-gray-500">Audit ID: {{ auditId }}</p>
       }
 
       @if (isAuditRunning) {
-      <div class="mt-3 rounded-form border border-scheme-border p-3 bg-slate-50">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-semibold" i18n="@@auditProgressLabel">Progression de l'audit</span>
-          <span class="text-sm">{{ auditProgress }}%</span>
+        <div
+          class="mt-3 rounded-form border border-scheme-border p-3 bg-slate-50"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-semibold" i18n="@@auditProgressLabel"
+              >Progression de l'audit</span
+            >
+            <span class="text-sm">{{ auditProgress }}%</span>
+          </div>
+          <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+            <div
+              class="h-2 bg-scheme-accent transition-all duration-300"
+              [style.width.%]="auditProgress"
+            ></div>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">{{ auditStep }}</p>
+
+          @if (
+            auditPhaseLabel ||
+            auditCurrentUrl ||
+            auditIaTask ||
+            auditSectionBadges.length ||
+            auditRecentCompletedUrls.length
+          ) {
+            <div
+              class="mt-3 rounded-form border border-slate-200 bg-white p-3 space-y-2"
+            >
+              @if (auditPhaseLabel) {
+                <p class="text-xs uppercase tracking-wide text-slate-500">
+                  {{ auditPhaseLabel }}
+                </p>
+              }
+              @if (auditIaTask || auditIaSubTask) {
+                <p class="text-sm text-slate-700">
+                  <span class="font-semibold">{{ auditIaTask || "IA" }}</span>
+                  @if (auditIaSubTask) {
+                    <span> · {{ auditIaSubTask }}</span>
+                  }
+                </p>
+              }
+              @if (auditCurrentUrl) {
+                <p class="text-xs text-slate-600 break-all">
+                  <span class="font-semibold">URL en cours:</span>
+                  {{ auditCurrentUrl }}
+                </p>
+              }
+
+              @if (auditSectionBadges.length) {
+                <div class="flex flex-wrap gap-2">
+                  @for (badge of auditSectionBadges; track badge.key) {
+                    <span
+                      class="text-xs px-2 py-1 rounded-full border"
+                      [class]="sectionBadgeClass(badge.status)"
+                    >
+                      {{ badge.label }}: {{ badge.status }}
+                    </span>
+                  }
+                </div>
+              }
+
+              @if (auditRecentCompletedUrls.length) {
+                <div>
+                  <p class="text-xs font-semibold text-slate-600 mb-1">
+                    Dernières pages terminées:
+                  </p>
+                  <ul class="space-y-1">
+                    @for (url of auditRecentCompletedUrls; track url) {
+                      <li class="text-xs text-slate-600 break-all">
+                        {{ url }}
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          }
         </div>
-        <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
-          <div class="h-2 bg-scheme-accent transition-all duration-300" [style.width.%]="auditProgress"></div>
-        </div>
-        <p class="text-sm text-gray-600 mt-2">{{ auditStep }}</p>
-      </div>
       }
 
       @if (auditSummary?.ready && auditSummary?.summaryText) {
-      <div class="mt-3 rounded-form border border-scheme-border p-4 bg-green-50">
-        <p class="text-sm font-semibold text-green-700">
-          <span i18n="@@auditResumeTitle">Résumé de votre audit</span>
-        </p>
-        <p class="text-sm text-gray-700 mt-2 whitespace-pre-line">{{ formattedSummaryText }}</p>
+        <div
+          class="mt-3 rounded-form border border-scheme-border p-4 bg-green-50"
+        >
+          <p class="text-sm font-semibold text-green-700">
+            <span i18n="@@auditResumeTitle">Résumé de votre audit</span>
+          </p>
+          <p class="text-sm text-gray-700 mt-2 whitespace-pre-line">
+            {{ formattedSummaryText }}
+          </p>
 
-        @if (auditSummary?.quickWins?.length) {
-        <ul class="list-disc ms-5 mt-3 text-sm text-gray-700">
-          @for (quickWin of auditSummary?.quickWins; track quickWin) {
-          <li>{{ quickWin }}</li>
-          }
-        </ul>
-        }
-
-        @if (scoreEntries.length) {
-        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
-          @for (item of scoreEntries; track item.key) {
-          <div class="rounded-form border border-scheme-border bg-white p-2">
-            <p class="text-xs uppercase tracking-wide text-gray-500">{{ item.key }}</p>
-            <p class="text-lg font-semibold">{{ item.score }}/100</p>
-          </div>
+          @if (scoreEntries.length) {
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+              @for (item of scoreEntries; track item.key) {
+                <div
+                  class="rounded-form border border-scheme-border bg-white p-2"
+                >
+                  <p class="text-xs uppercase tracking-wide text-gray-500">
+                    {{ item.key }}
+                  </p>
+                  <p class="text-lg font-semibold">{{ item.score }}/100</p>
+                </div>
+              }
+            </div>
           }
         </div>
-        }
-      </div>
       }
     </form>
   </div>
-
 </section>
 
 <section class="container px-2 py-4 grid gap-6 grid-cols-12">
-
-  <div class="border border-scheme-border col-span-12 md:col-span-6 bg-white p-6">
-    <h2 class="font-heading heading-h3 text-h3 mb-2" i18n="@@auditPillarsTitle">Audit rapide en 5 piliers</h2>
-    <p class="text-sm md:text-base text-gray-600 mb-4" i18n="@@auditPillarsSubtitle">
+  <div
+    class="border border-scheme-border col-span-12 md:col-span-6 bg-white p-6"
+  >
+    <h2 class="font-heading heading-h3 text-h3 mb-2" i18n="@@auditPillarsTitle">
+      Audit rapide en 5 piliers
+    </h2>
+    <p
+      class="text-sm md:text-base text-gray-600 mb-4"
+      i18n="@@auditPillarsSubtitle"
+    >
       Un diagnostic concret, actionnable et faisable en moins de 45 minutes.
     </p>
     <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
       @for (pillar of pillars; track pillar.title) {
-      <div class="rounded-form border border-scheme-border p-4">
-        <p class="font-semibold text-base md:text-lg">{{ pillar.title }}</p>
-        <p class="text-sm md:text-base text-gray-600">{{ pillar.description }}</p>
-      </div>
+        <div class="rounded-form border border-scheme-border p-4">
+          <p class="font-semibold text-base md:text-lg">{{ pillar.title }}</p>
+          <p class="text-sm md:text-base text-gray-600">
+            {{ pillar.description }}
+          </p>
+        </div>
       }
     </div>
   </div>
-  <div class="border border-scheme-border col-span-12 md:col-span-6 bg-white p-6 image-background-audit ">
-    <h2 class="font-heading heading-h3 text-h3 mb-4" i18n="@@auditStepsTitle">Comment ça fonctionne</h2>
-    <div class="space-y-4 ">
+  <div
+    class="border border-scheme-border col-span-12 md:col-span-6 bg-white p-6 image-background-audit"
+  >
+    <h2 class="font-heading heading-h3 text-h3 mb-4" i18n="@@auditStepsTitle">
+      Comment ça fonctionne
+    </h2>
+    <div class="space-y-4">
       @for (step of steps; track step.title) {
-      <p class="font-semibold text-base md:text-lg">{{ step.title }}</p>
-      <ul class="list-disc ms-8 space-y-2 text-sm md:text-base text-gray-700">
-        @for (item of step.highlights; track item) {
-        <li> {{ item }}</li>
-        }
-      </ul>
+        <p class="font-semibold text-base md:text-lg">{{ step.title }}</p>
+        <ul class="list-disc ms-8 space-y-2 text-sm md:text-base text-gray-700">
+          @for (item of step.highlights; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
       }
     </div>
-
   </div>
-
 </section>
