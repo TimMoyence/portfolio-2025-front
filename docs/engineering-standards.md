@@ -64,3 +64,9 @@ npm run build
 Les hooks Git (`pre-commit`, `commit-msg`, `pre-push`) doivent rester actifs et non contournes.
 
 Puis creer un commit atomique avec un message au format Conventional Commit.
+
+## 9. Gouvernance de depot
+
+- Toute decision d'architecture durable doit etre capturee dans `docs/adr`.
+- Les protections distantes de la branche `master` doivent exiger les checks `quality-gate` et `security`.
+- `CODEOWNERS` doit rester coherent avec les responsabilites reelles du projet.

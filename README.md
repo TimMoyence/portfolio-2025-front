@@ -50,6 +50,7 @@ npm run lint
 npm run format:check
 npm run typecheck
 npm run test:ci
+npm run test:cov
 npm run build
 npm run ci:check
 ```
@@ -63,6 +64,12 @@ Apres `npm ci`, Husky installe automatiquement trois hooks :
 - `pre-push` : lance `npm run ci:check` pour bloquer un push sale.
 
 Ces hooks ne remplacent pas la CI, ils evitent surtout d'introduire une regression evidente dans l'historique local.
+
+## Gouvernance depot
+
+- Le proprietaire de code est defini dans [`.github/CODEOWNERS`](./.github/CODEOWNERS).
+- Les regles de protection de branche a appliquer sur GitHub sont documentees dans [`docs/repository-governance.md`](./docs/repository-governance.md).
+- Les decisions d'architecture sont historisees dans [`docs/adr`](./docs/adr).
 
 ## Garde-fous qualite
 
@@ -87,4 +94,6 @@ Chaque lot de changement coherent doit idealement valider :
 
 - [Guide de contribution](./CONTRIBUTING.md)
 - [Standards d'ingenierie](./docs/engineering-standards.md)
+- [Gouvernance du depot](./docs/repository-governance.md)
+- [ADR](./docs/adr/README.md)
 - [Garde-fous agent](./AGENTS.md)

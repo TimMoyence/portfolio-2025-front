@@ -8,10 +8,11 @@
     "build": "CI=true ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox",
+    "test:cov": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox --code-coverage",
     "lint": "eslint . --ext .ts,.html,.js",
     "lint:fix": "eslint . --ext .ts,.html,.js --fix",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"*.{json,js,cjs,md}\" \".github/**/*.md\" \"docs/**/*.md\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"*.{json,js,cjs,md,yml,yaml}\" \".github/**/*.{md,yml,yaml}\" \"docs/**/*.md\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "ci:check": "npm run lint && npm run format:check && npm run typecheck && npm run test:ci && npm run build",
     "serve:ssr:portfolio-app": "node dist/portfolio-app/server/fr/server.mjs",
@@ -21,7 +22,7 @@
     "*.{ts,js,html}": [
       "eslint --fix --max-warnings=0"
     ],
-    "*.{ts,js,html,scss,css,json,md,cjs}": [
+    "*.{ts,js,html,scss,css,json,md,cjs,yml,yaml}": [
       "prettier --write"
     ]
   },

@@ -52,3 +52,4 @@ Une tache n'est pas terminee tant que :
 - la documentation impactee est a jour ;
 - accessibilite, SSR, responsive et i18n ont ete pris en compte ;
 - le changement est committe comme une unite coherente.
+- si l'architecture, les conventions ou la gouvernance evoluent, un ADR ou la documentation de gouvernance a ete mis a jour.
