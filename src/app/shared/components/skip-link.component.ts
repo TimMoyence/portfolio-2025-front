@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
 @Component({
-  selector: 'app-skip-link',
+  selector: "app-skip-link",
   standalone: true,
   imports: [CommonModule],
   template: `

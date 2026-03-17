@@ -38,6 +38,7 @@ import { RouterModule } from "@angular/router";
         </div>
         <img
           src="/assets/images/404.gif"
+          alt="Illustration erreur 404"
           class="size-full rounded-image object-cover"
           i18n-alt="notFound.imageAlt|Image d'erreur 404@@notFoundImageAlt"
           loading="lazy"

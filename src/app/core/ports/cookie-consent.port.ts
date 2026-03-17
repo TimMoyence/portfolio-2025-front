@@ -1,7 +1,7 @@
 import { InjectionToken } from "@angular/core";
-import { Observable } from "rxjs";
-import { MessageResponse } from "../models/message.response";
-import { CookieConsentPayload } from "../models/cookie-consent.model";
+import type { Observable } from "rxjs";
+import type { MessageResponse } from "../models/message.response";
+import type { CookieConsentPayload } from "../models/cookie-consent.model";
 
 export interface CookieConsentPort {
   recordConsent(payload: CookieConsentPayload): Observable<MessageResponse>;

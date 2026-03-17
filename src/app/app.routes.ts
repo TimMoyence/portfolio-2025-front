@@ -1,121 +1,119 @@
-import { Routes } from '@angular/router';
+import type { Routes } from "@angular/router";
 
 export const routes: Routes = [
   {
-    path: '',
+    path: "",
     loadComponent: () =>
-      import('./features/home/home.component').then((m) => m.HomeComponent),
+      import("./features/home/home.component").then((m) => m.HomeComponent),
     data: {
-      seoKey: 'home',
+      seoKey: "home",
     },
   },
   {
-    path: 'home',
-    pathMatch: 'full',
-    redirectTo: '',
+    path: "home",
+    pathMatch: "full",
+    redirectTo: "",
   },
   {
-    path: 'login',
+    path: "login",
     loadComponent: () =>
-      import('./features/auth/auth.component').then((m) => m.AuthComponent),
+      import("./features/auth/auth.component").then((m) => m.AuthComponent),
     data: {
-      seoKey: 'login',
+      seoKey: "login",
     },
   },
   {
-    path: 'register',
+    path: "register",
     loadComponent: () =>
-      import('./features/auth/auth.component').then((m) => m.AuthComponent),
+      import("./features/auth/auth.component").then((m) => m.AuthComponent),
     data: {
-      seoKey: 'register',
+      seoKey: "register",
     },
   },
   {
-    path: 'presentation',
+    path: "presentation",
     loadComponent: () =>
-      import('./features/presentation/presentation.component').then(
+      import("./features/presentation/presentation.component").then(
         (m) => m.PresentationComponent,
       ),
     data: {
-      seoKey: 'presentation',
+      seoKey: "presentation",
     },
   },
   {
-    path: 'offer',
+    path: "offer",
     loadComponent: () =>
-      import('./features/offer/offer.component').then((m) => m.OfferComponent),
+      import("./features/offer/offer.component").then((m) => m.OfferComponent),
     data: {
-      seoKey: 'offer',
+      seoKey: "offer",
     },
   },
   {
-    path: 'contact',
+    path: "contact",
     loadComponent: () =>
-      import('./features/contact/contact.component').then(
+      import("./features/contact/contact.component").then(
         (m) => m.ContactComponent,
       ),
     data: {
-      seoKey: 'contact',
+      seoKey: "contact",
     },
   },
   {
-    path: 'client-project',
+    path: "client-project",
     loadComponent: () =>
-      import('./features/client-project/client-project.component').then(
+      import("./features/client-project/client-project.component").then(
         (m) => m.ClientProjectComponent,
       ),
     data: {
-      seoKey: 'client-project',
+      seoKey: "client-project",
     },
   },
   {
-    path: 'cookie-settings',
+    path: "cookie-settings",
     loadComponent: () =>
-      import('./features/cookie-settings/cookie-settings.component').then(
+      import("./features/cookie-settings/cookie-settings.component").then(
         (m) => m.CookieSettingsComponent,
       ),
     data: {
-      seoKey: 'cookie-settings',
+      seoKey: "cookie-settings",
     },
   },
   {
-    path: 'terms',
+    path: "terms",
     loadComponent: () =>
-      import('./features/terms/terms.component').then(
-        (m) => m.TermsComponent,
-      ),
+      import("./features/terms/terms.component").then((m) => m.TermsComponent),
     data: {
-      seoKey: 'terms',
+      seoKey: "terms",
     },
   },
   {
-    path: 'privacy',
+    path: "privacy",
     loadComponent: () =>
-      import('./features/privacy/privacy.component').then(
+      import("./features/privacy/privacy.component").then(
         (m) => m.PrivacyComponent,
       ),
     data: {
-      seoKey: 'privacy',
+      seoKey: "privacy",
     },
   },
   {
-    path: 'growth-audit',
+    path: "growth-audit",
     loadComponent: () =>
-      import('./features/growth-audit/growth-audit.component').then(
+      import("./features/growth-audit/growth-audit.component").then(
         (m) => m.GrowthAuditComponent,
       ),
     data: {
-      seoKey: 'growth-audit',
+      seoKey: "growth-audit",
     },
   },
   {
-    path: '**',
+    path: "**",
     loadComponent: () =>
-      import('./features/not-found/not-found.component').then(
+      import("./features/not-found/not-found.component").then(
         (m) => m.NotFoundComponent,
       ),
     data: {
-      seoKey: 'not-found',
+      seoKey: "not-found",
     },
   },
 ];

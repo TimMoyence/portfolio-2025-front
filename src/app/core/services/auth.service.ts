@@ -1,21 +1,19 @@
-import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import {
+import { Inject, Injectable } from "@angular/core";
+import type { Observable } from "rxjs";
+import type {
   AuthSession,
   AuthUser,
   LoginCredentials,
   RegisterUserPayload,
-} from '../models/auth.model';
-import { AUTH_PORT } from '../ports/auth.port';
-import type { AuthPort } from '../ports/auth.port';
+} from "../models/auth.model";
+import { AUTH_PORT } from "../ports/auth.port";
+import type { AuthPort } from "../ports/auth.port";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AuthService {
-  constructor(
-    @Inject(AUTH_PORT) private readonly authPort: AuthPort,
-  ) {}
+  constructor(@Inject(AUTH_PORT) private readonly authPort: AuthPort) {}
 
   login(credentials: LoginCredentials): Observable<AuthSession> {
     return this.authPort.login(credentials);

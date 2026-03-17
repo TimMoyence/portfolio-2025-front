@@ -1,14 +1,15 @@
 import { CommonModule } from "@angular/common";
+import type { OnDestroy } from "@angular/core";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
   inject,
 } from "@angular/core";
-import { FormsModule, NgForm } from "@angular/forms";
-import { Subscription } from "rxjs";
-import {
+import type { NgForm } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
+import type { Subscription } from "rxjs";
+import type {
   AuditContactMethod,
   AuditRequestPayload,
   AuditStreamEvent,
@@ -220,11 +221,9 @@ export class GrowthAuditComponent implements OnDestroy {
         this.reconnectAttempts = 0;
         this.startStream(response.auditId);
       },
-      error: (error: any) => {
-        const serverMessage = Array.isArray(error?.error?.message)
-          ? error.error.message.join(" ")
-          : error?.error?.message;
-        this.errorMessage = serverMessage || this.formLabels.error;
+      error: (error: unknown) => {
+        this.errorMessage =
+          this.extractErrorMessage(error) || this.formLabels.error;
       },
       complete: () => {
         this.isSubmitting = false;
@@ -334,6 +333,22 @@ export class GrowthAuditComponent implements OnDestroy {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  private extractErrorMessage(error: unknown): string | undefined {
+    const nestedMessage = (error as { error?: { message?: string | string[] } })
+      ?.error?.message;
+
+    if (Array.isArray(nestedMessage)) {
+      return nestedMessage.join(" ");
+    }
+
+    if (typeof nestedMessage === "string") {
+      return nestedMessage;
+    }
+
+    const topLevelMessage = (error as { message?: string })?.message;
+    return typeof topLevelMessage === "string" ? topLevelMessage : undefined;
   }
 
   private stopStream(): void {
@@ -533,12 +548,12 @@ export class GrowthAuditComponent implements OnDestroy {
 
         // If "Priorités immédiates : 1)" or "Priorités immédiates : 1." => newline after colon
         .replace(
-          new RegExp(`${prioritiesLabel}\\s*:\\s*(\\d+[\\)\\.])`, "gi"),
+          new RegExp(`${prioritiesLabel}\\s*:\\s*(\\d+[).])`, "gi"),
           "$1 :\n$2",
         )
 
         // One item per line for BOTH "1)" and "1."
-        .replace(/\s+(\d+[)\.])\s*/g, "\n$1 ")
+        .replace(/\s+(\d+[).])\s*/g, "\n$1 ")
 
         // Clean up too many blank lines
         .replace(/\n{3,}/g, "\n\n")

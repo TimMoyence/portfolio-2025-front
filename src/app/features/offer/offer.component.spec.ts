@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import type { ComponentFixture } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { OfferComponent } from "./offer.component";
 
@@ -9,11 +10,7 @@ describe("OfferComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        OfferComponent,
-        RouterTestingModule,
-        HttpClientTestingModule,
-      ],
+      imports: [OfferComponent, RouterTestingModule, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OfferComponent);
@@ -28,7 +25,9 @@ describe("OfferComponent", () => {
   it("should render main title", () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const heading = compiled.querySelector('[data-testid="hero-title"]');
-    expect(heading?.textContent).toContain("Services professionnels web");
+    expect(heading?.textContent).toContain(
+      "Des solutions digitales claires, pensées pour votre réalité métier",
+    );
   });
 
   it("should render services, qualities, and contact CTA sections", () => {

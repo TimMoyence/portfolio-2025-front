@@ -1,10 +1,16 @@
 <div class="flex flex-col text-scheme-text">
   <app-hero-section-home></app-hero-section-home>
-  <app-services-section [kicker]="servicesSection.kicker" [title]="servicesSection.title"
-    [leadParagraphs]="servicesSection.leadParagraphs" [services]="servicesSection.services"
-    [cta]="servicesSection.cta"></app-services-section>
+  <app-services-section
+    [kicker]="servicesSection.kicker"
+    [title]="servicesSection.title"
+    [leadParagraphs]="servicesSection.leadParagraphs"
+    [services]="servicesSection.services"
+    [cta]="servicesSection.cta"
+  ></app-services-section>
   <app-projects-accordion></app-projects-accordion>
   <app-mission-section></app-mission-section>
-  <app-cta-contact [leadParagraphs]="contactSection.leadParagraphs"></app-cta-contact>
+  <app-cta-contact
+    [leadParagraphs]="contactSection.leadParagraphs"
+  ></app-cta-contact>
   <app-cta-section></app-cta-section>
 </div>

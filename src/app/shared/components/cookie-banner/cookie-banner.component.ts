@@ -1,12 +1,8 @@
 import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from "@angular/core";
+import type { OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { Subscription } from "rxjs";
+import type { Subscription } from "rxjs";
 import { CookieConsentService } from "../../../core/services/cookie-consent.service";
 
 @Component({

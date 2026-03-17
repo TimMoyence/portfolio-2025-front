@@ -1,73 +1,116 @@
-<footer role="contentinfo" class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-20">
+<footer
+  role="contentinfo"
+  class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-20"
+>
   <div class="container">
     <div class="flex flex-col md:flex-row justify-evenly items-start">
-      <div class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center">
+      <div
+        class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center"
+      >
         <a href="#">
-          <img src="/assets/images/logo.webp" alt="Logo image" i18n-alt="footer.logo.alt|Footer logo alt@@footerLogoAlt"
-            class="h-[5rem] md:h-[7.5rem] lg:h-[10rem] inline-block" loading="lazy" aria-hidden="true" />
+          <img
+            src="/assets/images/logo.webp"
+            alt="Logo image"
+            i18n-alt="footer.logo.alt|Footer logo alt@@footerLogoAlt"
+            class="h-[5rem] md:h-[7.5rem] lg:h-[10rem] inline-block"
+            loading="lazy"
+            aria-hidden="true"
+          />
         </a>
-        <div class="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-y-6 py-2 gap-x-4">
+        <div
+          class="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-y-6 py-2 gap-x-4"
+        >
           @for (social of socialLinks; track $index) {
-          <a class="flex size-6 items-center justify-center" [href]="social.href" [attr.aria-label]="social.label"
-            data-testid="social-link">
-            @if(social.icon) {
-            <app-svg-icon aria-hidden="true" [name]="social.icon!" [fill]="'keep'" [size]="2"></app-svg-icon>
-            }
-          </a>
+            <a
+              class="flex size-6 items-center justify-center"
+              [href]="social.href"
+              [attr.aria-label]="social.label"
+              data-testid="social-link"
+            >
+              @if (social.icon) {
+                <app-svg-icon
+                  aria-hidden="true"
+                  [name]="social.icon!"
+                  [fill]="'keep'"
+                  [size]="2"
+                ></app-svg-icon>
+              }
+            </a>
           }
         </div>
       </div>
-      <div class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center">
+      <div
+        class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center"
+      >
         <div class="flex flex-col">
           <div class="grid auto-cols-fr grid-cols-1 gap-x-2 gap-y-3 py-2">
             @for (method of contactMethods; track $index) {
-            <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
-              <div class="mr-4 flex items-center justify-center md:mb-4">
-                @if(method.icon) {
-                <app-svg-icon aria-hidden="true" [name]="method.icon!" [fill]="'keep'" [size]="1.5"
-                  aria-hidden="true"></app-svg-icon>
-                }
+              <div
+                class="flex flex-row"
+                [attr.data-testid]="'contact-method-' + $index"
+              >
+                <div class="mr-4 flex items-center justify-center md:mb-4">
+                  @if (method.icon) {
+                    <app-svg-icon
+                      aria-hidden="true"
+                      [name]="method.icon!"
+                      [fill]="'keep'"
+                      [size]="1.5"
+                      aria-hidden="true"
+                    ></app-svg-icon>
+                  }
+                </div>
+                <div>
+                  @if (method.href) {
+                    <a
+                      [href]="method.href"
+                      [attr.aria-label]="method.label + ': ' + method.value"
+                      i18n-aria-label="
+                        contact.method.linkAria|Aria label for contact method
+                        link@@contactMethodLinkAria"
+                    >
+                      {{ method.value }}
+                    </a>
+                  } @else {
+                    <p>{{ method.value }}</p>
+                  }
+                </div>
               </div>
-              <div>
-                @if(method.href) {
-                <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value"
-                  i18n-aria-label="contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria">
-                  {{ method.value }}
-                </a>
-                } @else {
-                <p>{{ method.value }}</p>
-                }
-              </div>
-            </div>
             }
           </div>
         </div>
-
       </div>
-      <div class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center">
+      <div
+        class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center"
+      >
         @for (column of navColumns; track $index) {
-        <ul data-testid="footer-column">
-          @for (link of column.links; track $index) {
-          <li class="text-small py-2 font-semibold">
-            <a [href]="link.href">{{ link.label }}</a>
-          </li>
-          }
-        </ul>
+          <ul data-testid="footer-column">
+            @for (link of column.links; track $index) {
+              <li class="text-small py-2 font-semibold">
+                <a [href]="link.href">{{ link.label }}</a>
+              </li>
+            }
+          </ul>
         }
       </div>
     </div>
     <div class="h-px w-full bg-scheme-border"></div>
 
-    <ul class="flex flex-col sm:items-center sm:pt-8 sm:pb-0 pt-6 pb-4 justify-evenly md:flex-row"
-      data-testid="legal-links">
+    <ul
+      class="flex flex-col sm:items-center sm:pt-8 sm:pb-0 pt-6 pb-4 justify-evenly md:flex-row"
+      data-testid="legal-links"
+    >
       @for (legalLink of legalLinks; track $index) {
-      <li class="text-sm py-1 md:py-0">
-        <a [href]="legalLink.href">{{ legalLink.label }}</a>
-      </li>
+        <li class="text-sm py-1 md:py-0">
+          <a [href]="legalLink.href">{{ legalLink.label }}</a>
+        </li>
       }
     </ul>
 
-    <p class="md:text-center text-sm md:mt-2 sm:mt-1" i18n="footer.copyright|Footer copyright@@footerCopyright">
+    <p
+      class="md:text-center text-sm md:mt-2 sm:mt-1"
+      i18n="footer.copyright|Footer copyright@@footerCopyright"
+    >
       © 2025 Moyence. All rights reserved.
     </p>
   </div>

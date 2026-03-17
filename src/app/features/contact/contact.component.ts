@@ -5,10 +5,11 @@ import {
   inject,
   LOCALE_ID,
 } from "@angular/core";
-import { FormsModule, NgForm } from "@angular/forms";
+import type { NgForm } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
-import { ContactFormState } from "../../core/models/contact.model";
+import type { ContactFormState } from "../../core/models/contact.model";
 import { ContactService } from "../../core/services/contact.service";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
@@ -139,14 +140,11 @@ export class ContactComponent {
         else
           this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
       },
-      error: (error: any) => {
-        const serverMessage = Array.isArray(error?.error?.message)
-          ? error.error.message.join(" ")
-          : error?.error?.message;
-
+      error: (error: unknown) => {
+        const serverMessage = this.extractErrorMessage(error);
         this.contactErrorMessage =
           serverMessage ||
-          error?.message ||
+          this.readErrorMessage(error) ||
           $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`;
       },
       complete: () => {
@@ -177,5 +175,21 @@ export class ContactComponent {
       termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
       termsMethod: form.termsMethod ?? "contact_form_checkbox",
     };
+  }
+
+  private extractErrorMessage(error: unknown): string | undefined {
+    const nestedMessage = (error as { error?: { message?: string | string[] } })
+      ?.error?.message;
+
+    if (Array.isArray(nestedMessage)) {
+      return nestedMessage.join(" ");
+    }
+
+    return typeof nestedMessage === "string" ? nestedMessage : undefined;
+  }
+
+  private readErrorMessage(error: unknown): string | undefined {
+    const message = (error as { message?: string })?.message;
+    return typeof message === "string" ? message : undefined;
   }
 }

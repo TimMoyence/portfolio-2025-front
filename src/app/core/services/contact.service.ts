@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { ContactFormState } from "../models/contact.model";
-import { MessageResponse } from "../models/message.response";
+import type { Observable } from "rxjs";
+import type { ContactFormState } from "../models/contact.model";
+import type { MessageResponse } from "../models/message.response";
 import type { ContactPort } from "../ports/contact.port";
 import { CONTACT_PORT } from "../ports/contact.port";
 

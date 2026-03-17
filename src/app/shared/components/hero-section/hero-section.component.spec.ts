@@ -1,8 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HeroSectionComponent } from './hero-section.component';
+import type { ComponentFixture } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { HeroSectionComponent } from "./hero-section.component";
 
-describe('HeroSectionComponent', () => {
+describe("HeroSectionComponent", () => {
   let component: HeroSectionComponent;
   let fixture: ComponentFixture<HeroSectionComponent>;
 
@@ -13,29 +14,29 @@ describe('HeroSectionComponent', () => {
 
     fixture = TestBed.createComponent(HeroSectionComponent);
     component = fixture.componentInstance;
-    component.title = 'Test heading';
-    component.description = 'A short description';
+    component.title = "Test heading";
+    component.description = "A short description";
     component.actions = [
-      { label: 'Primary', href: '/presentation' },
-      { label: 'Secondary', variant: 'secondary', href: '/contact' },
+      { label: "Primary", href: "/presentation" },
+      { label: "Secondary", variant: "secondary", href: "/contact" },
     ];
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render provided title', () => {
+  it("should render provided title", () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const heading = compiled.querySelector('[data-testid="hero-title"]');
-    expect(heading?.textContent).toContain('Test heading');
+    expect(heading?.textContent).toContain("Test heading");
   });
 
-  it('should render actions', () => {
+  it("should render actions", () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    const buttons = compiled.querySelectorAll('a');
+    const buttons = compiled.querySelectorAll("button");
     expect(buttons.length).toBe(2);
-    expect(buttons[0].textContent).toContain('Primary');
+    expect(buttons[0].textContent).toContain("Primary");
   });
 });

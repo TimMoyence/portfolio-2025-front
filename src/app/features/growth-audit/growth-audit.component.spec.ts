@@ -1,8 +1,19 @@
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
-import { AuditStreamEvent } from "../../core/models/audit-request.model";
+import type { AuditStreamEvent } from "../../core/models/audit-request.model";
 import { AuditRequestService } from "../../core/services/audit-request.service";
 import { GrowthAuditComponent } from "./growth-audit.component";
+
+const emitStreamEvent = (
+  component: GrowthAuditComponent,
+  event: AuditStreamEvent,
+): void => {
+  (
+    component as unknown as {
+      handleStreamEvent(streamEvent: AuditStreamEvent): void;
+    }
+  ).handleStreamEvent(event);
+};
 
 describe("GrowthAuditComponent", () => {
   const auditServiceMock = {
@@ -44,7 +55,7 @@ describe("GrowthAuditComponent", () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
 
-    (component as any).handleStreamEvent({
+    emitStreamEvent(component, {
       type: "progress",
       data: {
         auditId: "audit-1",
@@ -86,7 +97,7 @@ describe("GrowthAuditComponent", () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
 
-    (component as any).handleStreamEvent({
+    emitStreamEvent(component, {
       type: "progress",
       data: {
         auditId: "audit-2",
@@ -110,7 +121,7 @@ describe("GrowthAuditComponent", () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
 
-    (component as any).handleStreamEvent({
+    emitStreamEvent(component, {
       type: "progress",
       data: {
         auditId: "audit-3",

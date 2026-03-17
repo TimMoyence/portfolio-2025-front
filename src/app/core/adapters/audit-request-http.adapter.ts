@@ -2,13 +2,16 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { getApiBaseUrl } from "../http/api-config";
-import {
+import type {
+  AuditCompletedEvent,
+  AuditFailedEvent,
   AuditCreateResponse,
+  AuditProgressEvent,
   AuditRequestPayload,
   AuditStreamEvent,
   AuditSummaryResponse,
 } from "../models/audit-request.model";
-import { AuditRequestPort } from "../ports/audit-request.port";
+import type { AuditRequestPort } from "../ports/audit-request.port";
 
 @Injectable()
 export class AuditRequestHttpAdapter implements AuditRequestPort {
@@ -17,7 +20,10 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
   constructor(private readonly http: HttpClient) {}
 
   submit(payload: AuditRequestPayload): Observable<AuditCreateResponse> {
-    return this.http.post<AuditCreateResponse>(`${this.baseUrl}audits`, payload);
+    return this.http.post<AuditCreateResponse>(
+      `${this.baseUrl}audits`,
+      payload,
+    );
   }
 
   getSummary(auditId: string): Observable<AuditSummaryResponse> {
@@ -31,7 +37,7 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
       const streamUrl = `${this.baseUrl}audits/${encodeURIComponent(auditId)}/stream`;
       const source = new EventSource(streamUrl);
 
-      const parsePayload = (raw: MessageEvent): any => {
+      const parsePayload = (raw: MessageEvent): unknown => {
         try {
           return JSON.parse(raw.data);
         } catch {
@@ -42,13 +48,19 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
       const onProgress = (event: Event) => {
         const payload = parsePayload(event as MessageEvent);
         if (!payload) return;
-        subscriber.next({ type: "progress", data: payload });
+        subscriber.next({
+          type: "progress",
+          data: payload as AuditProgressEvent,
+        });
       };
 
       const onCompleted = (event: Event) => {
         const payload = parsePayload(event as MessageEvent);
         if (!payload) return;
-        subscriber.next({ type: "completed", data: payload });
+        subscriber.next({
+          type: "completed",
+          data: payload as AuditCompletedEvent,
+        });
         source.close();
         subscriber.complete();
       };
@@ -56,7 +68,10 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
       const onFailed = (event: Event) => {
         const payload = parsePayload(event as MessageEvent);
         if (payload) {
-          subscriber.next({ type: "failed", data: payload });
+          subscriber.next({
+            type: "failed",
+            data: payload as AuditFailedEvent,
+          });
         }
         source.close();
         subscriber.complete();
@@ -65,7 +80,10 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
       const onHeartbeat = (event: Event) => {
         const payload = parsePayload(event as MessageEvent);
         if (!payload) return;
-        subscriber.next({ type: "heartbeat", data: payload });
+        subscriber.next({
+          type: "heartbeat",
+          data: payload as { ts: string },
+        });
       };
 
       source.addEventListener("progress", onProgress);

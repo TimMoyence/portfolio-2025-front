@@ -1,14 +1,15 @@
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT, isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
+import type { OnChanges, SimpleChanges } from "@angular/core";
 import {
   Component,
   HostBinding,
   Inject,
   Input,
-  OnChanges,
-  SimpleChanges,
+  PLATFORM_ID,
 } from "@angular/core";
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
+import type { SafeHtml } from "@angular/platform-browser";
 import { of } from "rxjs";
 import { catchError, map, take, tap } from "rxjs/operators";
 
@@ -19,6 +20,7 @@ import { catchError, map, take, tap } from "rxjs/operators";
 })
 export class SvgIconComponent implements OnChanges {
   private static cache = new Map<string, string>();
+  private readonly isBrowser: boolean;
 
   @Input({ required: true }) name!: string;
   @Input() size?: number;
@@ -40,7 +42,10 @@ export class SvgIconComponent implements OnChanges {
     private readonly http: HttpClient,
     private readonly sanitizer: DomSanitizer,
     @Inject(DOCUMENT) private readonly document: Document,
-  ) {}
+    @Inject(PLATFORM_ID) platformId: object,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -57,7 +62,7 @@ export class SvgIconComponent implements OnChanges {
   private loadIcon(): void {
     this.size = Number(this.size);
 
-    if (!this.name) {
+    if (!this.name || !this.isBrowser) {
       this.svgContent = null;
       return;
     }

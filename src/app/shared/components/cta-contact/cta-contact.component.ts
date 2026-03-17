@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
-import { ContactMethod } from "../../models/contact.model";
+import type { ContactMethod } from "../../models/contact.model";
 import { SvgIconComponent } from "../svg-icon.component";
 
 @Component({

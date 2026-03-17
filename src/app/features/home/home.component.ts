@@ -1,10 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
-import {
-  ServiceItem,
-  ServicesSectionComponent,
-} from "../../shared/components/services-section/services-section.component";
+import type { ServiceItem } from "../../shared/components/services-section/services-section.component";
+import { ServicesSectionComponent } from "../../shared/components/services-section/services-section.component";
 import { CtaSectionComponent } from "./components/cta-section/cta-section.component";
 import { HeroSectionComponent } from "./components/hero-section-home/hero-section-home.component";
 import { MissionSectionComponent } from "./components/mission-section/mission-section.component";

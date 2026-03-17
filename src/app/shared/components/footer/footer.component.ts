@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { ContactMethod } from "../../models/contact.model";
-import {
+import type { ContactMethod } from "../../models/contact.model";
+import type {
   FooterColumn,
   FooterLink,
   SocialLink,

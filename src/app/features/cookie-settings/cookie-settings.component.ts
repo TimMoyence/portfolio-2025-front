@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CookieConsentPreferences } from "../../core/models/cookie-consent.model";
+import type { CookieConsentPreferences } from "../../core/models/cookie-consent.model";
 import { CookieConsentService } from "../../core/services/cookie-consent.service";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 

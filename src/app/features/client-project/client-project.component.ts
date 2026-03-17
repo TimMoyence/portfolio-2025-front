@@ -1,10 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import {
-  HeroAction,
-  HeroSectionComponent,
-} from "../../shared/components/hero-section/hero-section.component";
+import type { HeroAction } from "../../shared/components/hero-section/hero-section.component";
+import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import { CtaSectionComponent } from "../home/components/cta-section/cta-section.component";
 
 type ProjectKey =

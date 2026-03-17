@@ -1,12 +1,13 @@
 import { Inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import {
+import type { Observable } from "rxjs";
+import type {
   AuditCreateResponse,
   AuditRequestPayload,
   AuditStreamEvent,
   AuditSummaryResponse,
 } from "../models/audit-request.model";
-import { AUDIT_REQUEST_PORT, AuditRequestPort } from "../ports/audit-request.port";
+import type { AuditRequestPort } from "../ports/audit-request.port";
+import { AUDIT_REQUEST_PORT } from "../ports/audit-request.port";
 
 @Injectable({
   providedIn: "root",

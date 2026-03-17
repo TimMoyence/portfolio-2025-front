@@ -1,8 +1,9 @@
 import { Inject, Injectable, LOCALE_ID } from "@angular/core";
-import { Observable, of } from "rxjs";
+import type { Observable } from "rxjs";
+import { of } from "rxjs";
 import seoMetadata from "../../../assets/seo/seo-metadata.json";
-import { SeoConfig } from "./seo.interface";
-import { SeoMetadataFile, SeoPageEntry } from "./seo-metadata.model";
+import type { SeoConfig } from "./seo.interface";
+import type { SeoMetadataFile, SeoPageEntry } from "./seo-metadata.model";
 
 export interface SeoResolvedConfig {
   seo: SeoConfig;
@@ -67,7 +68,8 @@ export class SeoRegistryService {
       twitterCard: localeMeta.twitterCard ?? defaults.twitterCard,
       twitterTitle: localeMeta.twitterTitle,
       twitterDescription: localeMeta.twitterDescription,
-      twitterImage: localeMeta.twitterImage ?? localeMeta.ogImage ?? defaults.ogImage,
+      twitterImage:
+        localeMeta.twitterImage ?? localeMeta.ogImage ?? defaults.ogImage,
     };
 
     return {

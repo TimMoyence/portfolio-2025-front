@@ -8,30 +8,50 @@
 
 <section class="px-[5%] py-6 md:py-8 lg:py-10 bg-scheme-background">
   <div class="container grid gap-6 md:grid-cols-3">
-    <div class="rounded-form border border-scheme-border bg-white p-6 md:col-span-1">
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@cookieSettingsMetaTitle">Synthèse</h2>
+    <div
+      class="rounded-form border border-scheme-border bg-white p-6 md:col-span-1"
+    >
+      <h2 class="heading-h4 text-h4 mb-3" i18n="@@cookieSettingsMetaTitle">
+        Synthèse
+      </h2>
       <p class="text-sm md:text-base text-gray-600">{{ meta.lastUpdated }}</p>
       <p class="text-sm md:text-base text-gray-600">{{ meta.version }}</p>
-      <p class="mt-4 text-sm md:text-base text-gray-700">{{ meta.regionNote }}</p>
+      <p class="mt-4 text-sm md:text-base text-gray-700">
+        {{ meta.regionNote }}
+      </p>
     </div>
 
-    <div class="rounded-form border border-scheme-border bg-white p-6 md:col-span-2">
+    <div
+      class="rounded-form border border-scheme-border bg-white p-6 md:col-span-2"
+    >
       <h2 class="heading-h4 text-h4 mb-2">{{ preferenceLabels.title }}</h2>
-      <p class="text-sm md:text-base text-gray-600 mb-4">{{ preferenceLabels.description }}</p>
+      <p class="text-sm md:text-base text-gray-600 mb-4">
+        {{ preferenceLabels.description }}
+      </p>
 
       <div class="space-y-4">
-        <label class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4">
+        <label
+          class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4"
+        >
           <div>
             <p class="font-semibold">{{ preferenceLabels.essential.title }}</p>
-            <p class="text-sm text-gray-600">{{ preferenceLabels.essential.description }}</p>
+            <p class="text-sm text-gray-600">
+              {{ preferenceLabels.essential.description }}
+            </p>
           </div>
           <input type="checkbox" checked disabled class="mt-1" />
         </label>
 
-        <label class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4">
+        <label
+          class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4"
+        >
           <div>
-            <p class="font-semibold">{{ preferenceLabels.preferences.title }}</p>
-            <p class="text-sm text-gray-600">{{ preferenceLabels.preferences.description }}</p>
+            <p class="font-semibold">
+              {{ preferenceLabels.preferences.title }}
+            </p>
+            <p class="text-sm text-gray-600">
+              {{ preferenceLabels.preferences.description }}
+            </p>
           </div>
           <input
             type="checkbox"
@@ -40,18 +60,26 @@
           />
         </label>
 
-        <label class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4 opacity-70">
+        <label
+          class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4 opacity-70"
+        >
           <div>
             <p class="font-semibold">{{ preferenceLabels.analytics.title }}</p>
-            <p class="text-sm text-gray-600">{{ preferenceLabels.analytics.description }}</p>
+            <p class="text-sm text-gray-600">
+              {{ preferenceLabels.analytics.description }}
+            </p>
           </div>
           <input type="checkbox" [checked]="false" disabled class="mt-1" />
         </label>
 
-        <label class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4 opacity-70">
+        <label
+          class="flex items-start justify-between gap-4 rounded-form border border-scheme-border p-4 opacity-70"
+        >
           <div>
             <p class="font-semibold">{{ preferenceLabels.marketing.title }}</p>
-            <p class="text-sm text-gray-600">{{ preferenceLabels.marketing.description }}</p>
+            <p class="text-sm text-gray-600">
+              {{ preferenceLabels.marketing.description }}
+            </p>
           </div>
           <input type="checkbox" [checked]="false" disabled class="mt-1" />
         </label>
@@ -88,7 +116,9 @@
     @for (section of sections; track section.title) {
       <article class="rounded-form border border-scheme-border bg-white p-6">
         <h3 class="heading-h5 text-h5 mb-3">{{ section.title }}</h3>
-        <p class="text-sm md:text-base text-gray-600 mb-4">{{ section.intro }}</p>
+        <p class="text-sm md:text-base text-gray-600 mb-4">
+          {{ section.intro }}
+        </p>
         <ul class="space-y-2">
           @for (item of section.items; track item) {
             <li class="text-sm md:text-base text-gray-700">• {{ item }}</li>

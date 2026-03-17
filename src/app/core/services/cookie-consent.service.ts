@@ -1,25 +1,19 @@
 import { isPlatformBrowser } from "@angular/common";
-import {
-  Inject,
-  Injectable,
-  LOCALE_ID,
-  PLATFORM_ID,
-} from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Inject, Injectable, LOCALE_ID, PLATFORM_ID } from "@angular/core";
+import type { Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { APP_CONFIG } from "../config/app-config.token";
-import { AppConfig } from "../config/app-config.model";
-import {
+import type { AppConfig } from "../config/app-config.model";
+import type {
   CookieConsentAction,
   CookieConsentPayload,
   CookieConsentPreferences,
   CookieConsentSource,
   CookieConsentState,
 } from "../models/cookie-consent.model";
-import { MessageResponse } from "../models/message.response";
-import {
-  COOKIE_CONSENT_PORT,
-  CookieConsentPort,
-} from "../ports/cookie-consent.port";
+import type { MessageResponse } from "../models/message.response";
+import type { CookieConsentPort } from "../ports/cookie-consent.port";
+import { COOKIE_CONSENT_PORT } from "../ports/cookie-consent.port";
 
 @Injectable({
   providedIn: "root",
@@ -33,15 +27,15 @@ export class CookieConsentService {
     marketing: false,
   };
   private readonly isBrowser: boolean;
-  private readonly consentSubject = new BehaviorSubject<CookieConsentState | null>(
-    null,
-  );
+  private readonly consentSubject =
+    new BehaviorSubject<CookieConsentState | null>(null);
 
   constructor(
     @Inject(PLATFORM_ID) platformId: object,
     @Inject(LOCALE_ID) private readonly localeId: string,
     @Inject(APP_CONFIG) private readonly appConfig: AppConfig,
-    @Inject(COOKIE_CONSENT_PORT) private readonly consentPort: CookieConsentPort,
+    @Inject(COOKIE_CONSENT_PORT)
+    private readonly consentPort: CookieConsentPort,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
     if (this.isBrowser) {
@@ -66,7 +60,9 @@ export class CookieConsentService {
 
   getPreferences(): CookieConsentPreferences {
     const stored = this.consentSubject.value?.preferences;
-    return stored ? this.normalizePreferences(stored) : { ...this.defaultPreferences };
+    return stored
+      ? this.normalizePreferences(stored)
+      : { ...this.defaultPreferences };
   }
 
   getDefaultPreferences(): CookieConsentPreferences {

@@ -1,11 +1,6 @@
 import { CommonModule, isPlatformBrowser } from "@angular/common";
-import {
-  Component,
-  HostListener,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-} from "@angular/core";
+import type { OnInit } from "@angular/core";
+import { Component, HostListener, Inject, PLATFORM_ID } from "@angular/core";
 
 type Project = {
   id: string;

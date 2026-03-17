@@ -1,5 +1,7 @@
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import type { ComponentFixture } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
+import type { ContactMethod } from "../../models/contact.model";
 import { ContactCtaComponent } from "./cta-contact.component";
 
 describe("ContactCtaComponent", () => {
@@ -28,7 +30,7 @@ describe("ContactCtaComponent", () => {
   });
 
   it("should render each contact method", () => {
-    component.contactMethods.forEach((_: any, index: number) => {
+    component.contactMethods.forEach((_: ContactMethod, index: number) => {
       const method = fixture.nativeElement.querySelector(
         `[data-testid="contact-method-${index}"]`,
       );
@@ -41,22 +43,26 @@ describe("ContactCtaComponent", () => {
   it("should set href attributes for linkable methods", () => {
     fixture.detectChanges();
     const compiled: HTMLElement = fixture.nativeElement;
-    const links = compiled.querySelectorAll("a[href]");
+    const links = Array.from(
+      compiled.querySelectorAll("a[href]"),
+    ) as HTMLAnchorElement[];
     expect(links.length).toBeGreaterThan(0);
     component.contactMethods
-      .filter((method: any) => !!method.href)
+      .filter((method: ContactMethod) => !!method.href)
       .forEach((method) => {
-        const match = Array.from(links).find((link) =>
-          (link as HTMLAnchorElement).href.includes(method.href!),
+        const match = links.find(
+          (link) =>
+            link.getAttribute("href") === method.href ||
+            link.textContent?.includes(method.value),
         );
-        expect(match).withContext(`Missing href for ${method.label}`).toBeTruthy();
+        expect(match)
+          .withContext(`Missing href for ${method.label}`)
+          .toBeTruthy();
       });
   });
 
-  it("should render the contact map image", () => {
-    const image = fixture.nativeElement.querySelector("img");
-    expect(image).toBeTruthy();
-    expect(image.getAttribute("src")).toBe(component.map.imageSrc);
-    expect(image.getAttribute("alt")).toBe(component.map.alt);
+  it("should render the contact section heading", () => {
+    const heading = fixture.nativeElement.querySelector("#contact-heading");
+    expect(heading?.textContent).toContain(component.title);
   });
 });

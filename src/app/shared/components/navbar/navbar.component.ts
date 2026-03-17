@@ -1,14 +1,8 @@
 import { CommonModule } from "@angular/common";
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  signal,
-  ViewChild,
-} from "@angular/core";
+import type { ElementRef, OnInit } from "@angular/core";
+import { Component, HostListener, signal, ViewChild } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { NavLink } from "../../models/navbar.model";
+import type { NavLink } from "../../models/navbar.model";
 import { A11yDialogService } from "../../services/a11y-dialog.service";
 import { SvgIconComponent } from "../svg-icon.component";
 

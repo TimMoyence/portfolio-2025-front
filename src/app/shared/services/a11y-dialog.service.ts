@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class A11yDialogService {
   /**
@@ -36,7 +36,7 @@ export class A11yDialogService {
   focusFirstDescendant(container?: HTMLElement | null): void {
     if (!container) return;
     const focusableSelector =
-      'a[href], button:not([disabled]), textarea, input, select, ' +
+      "a[href], button:not([disabled]), textarea, input, select, " +
       '[tabindex]:not([tabindex="-1"])';
 
     const firstFocusable =
@@ -52,16 +52,16 @@ export class A11yDialogService {
    */
   trapFocus(event: KeyboardEvent, container?: HTMLElement | null): void {
     if (!container) return;
-    if (event.key !== 'Tab') return;
+    if (event.key !== "Tab") return;
 
     const focusableSelector =
-      'a[href], button:not([disabled]), textarea, input, select, ' +
+      "a[href], button:not([disabled]), textarea, input, select, " +
       '[tabindex]:not([tabindex="-1"])';
 
     const focusableElements = Array.from(
       container.querySelectorAll<HTMLElement>(focusableSelector),
     ).filter(
-      (el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'),
+      (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden"),
     );
 
     if (!focusableElements.length) return;

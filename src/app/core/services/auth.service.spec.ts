@@ -1,15 +1,24 @@
-import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { AuthSession, AuthUser, LoginCredentials, RegisterUserPayload } from '../models/auth.model';
-import { AUTH_PORT, AuthPort } from '../ports/auth.port';
-import { AuthService } from './auth.service';
+import { TestBed } from "@angular/core/testing";
+import { of } from "rxjs";
+import type {
+  AuthSession,
+  AuthUser,
+  LoginCredentials,
+  RegisterUserPayload,
+} from "../models/auth.model";
+import type { AuthPort } from "../ports/auth.port";
+import { AUTH_PORT } from "../ports/auth.port";
+import { AuthService } from "./auth.service";
 
-describe('AuthService', () => {
+describe("AuthService", () => {
   let service: AuthService;
   let authPortSpy: jasmine.SpyObj<AuthPort>;
 
   beforeEach(() => {
-    authPortSpy = jasmine.createSpyObj<AuthPort>('AuthPort', ['login', 'register']);
+    authPortSpy = jasmine.createSpyObj<AuthPort>("AuthPort", [
+      "login",
+      "register",
+    ]);
 
     TestBed.configureTestingModule({
       providers: [
@@ -24,19 +33,19 @@ describe('AuthService', () => {
     service = TestBed.inject(AuthService);
   });
 
-  it('should delegate login to the auth port', () => {
+  it("should delegate login to the auth port", () => {
     const credentials: LoginCredentials = {
-      email: 'john@example.com',
-      password: 'Password123!',
+      email: "john@example.com",
+      password: "Password123!",
     };
     const session: AuthSession = {
-      accessToken: 'token',
+      accessToken: "token",
       expiresIn: 3600,
       user: {
-        id: '1',
+        id: "1",
         email: credentials.email,
-        firstName: 'John',
-        lastName: 'Doe',
+        firstName: "John",
+        lastName: "Doe",
         phone: null,
         isActive: true,
       },
@@ -51,15 +60,15 @@ describe('AuthService', () => {
     expect(authPortSpy.login).toHaveBeenCalledWith(credentials);
   });
 
-  it('should delegate register to the auth port', () => {
+  it("should delegate register to the auth port", () => {
     const payload: RegisterUserPayload = {
-      email: 'john@example.com',
-      password: 'Password123!',
-      firstName: 'John',
-      lastName: 'Doe',
+      email: "john@example.com",
+      password: "Password123!",
+      firstName: "John",
+      lastName: "Doe",
     };
     const createdUser: AuthUser = {
-      id: '1',
+      id: "1",
       email: payload.email,
       firstName: payload.firstName,
       lastName: payload.lastName,

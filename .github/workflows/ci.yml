@@ -21,6 +21,24 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test:ci
+
+      - name: Build
+        run: npm run build
+
   docker:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'

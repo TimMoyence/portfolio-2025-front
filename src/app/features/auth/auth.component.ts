@@ -1,9 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import { FormsModule, NgForm } from "@angular/forms";
-import { RegisterUserPayload } from "../../core/models/auth.model";
-import { LoginFormState } from "../../core/models/loginForm.model";
-import { SignupFormState } from "../../core/models/signupForm.model";
+import type { NgForm } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
+import type { RegisterUserPayload } from "../../core/models/auth.model";
+import type { LoginFormState } from "../../core/models/loginForm.model";
+import type { SignupFormState } from "../../core/models/signupForm.model";
 import { AuthService } from "../../core/services/auth.service";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";

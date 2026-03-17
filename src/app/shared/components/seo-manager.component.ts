@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit } from "@angular/core";
+import type { OnInit } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { of } from "rxjs";
 import { filter, map, mergeMap, switchMap } from "rxjs/operators";
@@ -8,7 +9,7 @@ import {
   SeoRegistryService,
   SeoResolvedConfig,
 } from "../../core/seo/seo-registry.service";
-import { SeoConfig } from "../../core/seo/seo.interface";
+import type { SeoConfig } from "../../core/seo/seo.interface";
 import { SeoService } from "../../core/seo/seo.service";
 
 @Component({
@@ -199,7 +200,10 @@ export class SeoManagerComponent implements OnInit {
     );
 
     if (matchedLocale) {
-      const relativePath = this.normalizeRelativePath(normalized, matchedLocale);
+      const relativePath = this.normalizeRelativePath(
+        normalized,
+        matchedLocale,
+      );
       if (this.isHomeAlias(relativePath)) {
         return {
           canonicalPath: `/${matchedLocale}`,
@@ -208,7 +212,9 @@ export class SeoManagerComponent implements OnInit {
       }
       return {
         canonicalPath:
-          relativePath === "/" ? `/${matchedLocale}` : `/${matchedLocale}${relativePath}`,
+          relativePath === "/"
+            ? `/${matchedLocale}`
+            : `/${matchedLocale}${relativePath}`,
         relativePath,
       };
     }
@@ -221,7 +227,10 @@ export class SeoManagerComponent implements OnInit {
     }
 
     return {
-      canonicalPath: normalized === "/" ? `/${activeLocale}` : `/${activeLocale}${normalized}`,
+      canonicalPath:
+        normalized === "/"
+          ? `/${activeLocale}`
+          : `/${activeLocale}${normalized}`,
       relativePath: normalized === "/" ? "/" : normalized,
     };
   }

@@ -1,71 +1,123 @@
-<nav class="fixed top-0 left-0 right-0 z-50 pt-4 px-6 transition-all duration-300" [ngClass]="
-            scrolled
-              ? 'bg-transparent backdrop-blur-sm'
-              : 'bg-scheme-background'
-          " role="navigation" aria-label="Navigation principale"
-  i18n-aria-label="navbar.landmark|Main navigation landmark@@navLandmark">
+<nav
+  class="fixed top-0 left-0 right-0 z-50 pt-4 px-6 transition-all duration-300"
+  [ngClass]="
+    scrolled ? 'bg-transparent backdrop-blur-sm' : 'bg-scheme-background'
+  "
+  role="navigation"
+  aria-label="Navigation principale"
+  i18n-aria-label="navbar.landmark|Main navigation landmark@@navLandmark"
+>
   <div
-    class="glass-card-dark bg-scheme-background  flex items-center justify-between p-3 px-6 rounded-full max-w-7xl mx-auto transition-all duration-300"
-    [ngClass]="{ 'shadow-lg': scrolled }">
+    class="glass-card-dark bg-scheme-background flex items-center justify-between p-3 px-6 rounded-full max-w-7xl mx-auto transition-all duration-300"
+    [ngClass]="{ 'shadow-lg': scrolled }"
+  >
     <div>
       <a class="flex flex-row items-center gap-3" href="#">
-        <img src="/assets/images/logo.webp" alt="Logo image" i18n-alt="Navbar.logo.alt|Navbar logo alt@@NavbarLogoAlt"
-          class="inline-block" loading="lazy" aria-hidden="true" style="width: 2rem; height: auto;" />
-        <p i18n-alt="navbar.title.company|Navbar company title@@NavbarCompanyTitle"
-          class="font-heading md:heading-h6 md:text-h6">Asili Design</p>
+        <img
+          src="/assets/images/logo.webp"
+          alt="Logo image"
+          i18n-alt="Navbar.logo.alt|Navbar logo alt@@NavbarLogoAlt"
+          class="inline-block"
+          loading="lazy"
+          aria-hidden="true"
+          style="width: 2rem; height: auto"
+        />
+        <p
+          i18n-alt="
+            navbar.title.company|Navbar company title@@NavbarCompanyTitle"
+          class="font-heading md:heading-h6 md:text-h6"
+        >
+          Asili Design
+        </p>
       </a>
     </div>
 
     <div class="hidden lg:flex items-center gap-5">
-      <ng-container *ngTemplateOutlet="navContent; context: { isMobile: false }">
+      <ng-container
+        *ngTemplateOutlet="navContent; context: { isMobile: false }"
+      >
       </ng-container>
     </div>
 
-    <button [attr.aria-expanded]="mobileMenuOpen" (click)="openMobileMenu()" #burgerButton type="button"
+    <button
+      [attr.aria-expanded]="mobileMenuOpen"
+      (click)="openMobileMenu()"
+      #burgerButton
+      type="button"
       class="lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-full p-2"
-      aria-haspopup="dialog" aria-controls="mobile-nav"
-      [attr.aria-label]="mobileMenuOpen ? closeMenuLabel : openMenuLabel">
+      aria-haspopup="dialog"
+      aria-controls="mobile-nav"
+      [attr.aria-label]="mobileMenuOpen ? closeMenuLabel : openMenuLabel"
+    >
       @if (mobileMenuOpen) {
-      <app-svg-icon [ariaLabel]="closeMenuIconLabel" name="close" [size]="1.7"></app-svg-icon>
+        <app-svg-icon
+          [ariaLabel]="closeMenuIconLabel"
+          name="close"
+          [size]="1.7"
+        ></app-svg-icon>
       } @else {
-      <app-svg-icon [ariaLabel]="openMenuIconLabel" name="burger-menu" [size]="1.7"></app-svg-icon>
+        <app-svg-icon
+          [ariaLabel]="openMenuIconLabel"
+          name="burger-menu"
+          [size]="1.7"
+        ></app-svg-icon>
       }
     </button>
   </div>
-
 </nav>
 @if (mobileMenuOpen) {
-<div id="mobile-nav" class="lg:hidden fixed inset-0 z-40" role="dialog" aria-modal="true"
-  aria-labelledby="mobile-nav-label">
-  <button type="button" class="absolute inset-0 bg-black/40 backdrop-blur-sm mobile-menu-backdrop"
-    [attr.aria-label]="closeMenuLabel" (click)="closeMobileMenu()"></button>
+  <div
+    id="mobile-nav"
+    class="lg:hidden fixed inset-0 z-40"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mobile-nav-label"
+  >
+    <button
+      type="button"
+      class="absolute inset-0 bg-black/40 backdrop-blur-sm mobile-menu-backdrop"
+      [attr.aria-label]="closeMenuLabel"
+      (click)="closeMobileMenu()"
+    ></button>
 
-  <div class="absolute top-[15%] w-full flex justify-center px-4 mobile-menu-panel">
-
-    <div #mobileMenuPanel
-      class="glass-card-dark rounded-2xl mt-2 py-3 px-4 w-80 border border-scheme-border bg-scheme-background">
-      <h2 id="mobile-nav-label" class="sr-only">{{ mobileNavHeading }}</h2>
-      <div class="mt-3 flex flex-col gap-4 justify-center items-center">
-        <ng-container *ngTemplateOutlet="navContent; context: { isMobile: true }"></ng-container>
+    <div
+      class="absolute top-[15%] w-full flex justify-center px-4 mobile-menu-panel"
+    >
+      <div
+        #mobileMenuPanel
+        class="glass-card-dark rounded-2xl mt-2 py-3 px-4 w-80 border border-scheme-border bg-scheme-background"
+      >
+        <h2 id="mobile-nav-label" class="sr-only">{{ mobileNavHeading }}</h2>
+        <div class="mt-3 flex flex-col gap-4 justify-center items-center">
+          <ng-container
+            *ngTemplateOutlet="navContent; context: { isMobile: true }"
+          ></ng-container>
+        </div>
       </div>
     </div>
   </div>
-</div>
 }
-
 
 <!-- SHARED NAV CONTENT -->
 <ng-template #navContent let-isMobile="isMobile">
-  <ul class="flex flex-col lg:flex-row items-center gap-5" [ngClass]="isMobile ? 'mt-2' : 'flex-row'">
+  <ul
+    class="flex flex-col lg:flex-row items-center gap-5"
+    [ngClass]="isMobile ? 'mt-2' : 'flex-row'"
+  >
     @for (item of navLinks; track $index) {
-    <li>
-      <a [routerLink]="item.href" routerLinkActive="font-medium" #rla="routerLinkActive"
-        [attr.aria-current]="rla.isActive ? 'page' : null" [id]="item.label + $index"
-        class="transition-colors duration-300 hover:text-scheme-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-        (click)="isMobile && closeMobileMenu()">
-        {{ item.label }}
-      </a>
-    </li>
+      <li>
+        <a
+          [routerLink]="item.href"
+          routerLinkActive="font-medium"
+          #rla="routerLinkActive"
+          [attr.aria-current]="rla.isActive ? 'page' : null"
+          [id]="item.label + $index"
+          class="transition-colors duration-300 hover:text-scheme-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          (click)="isMobile && closeMobileMenu()"
+        >
+          {{ item.label }}
+        </a>
+      </li>
     }
 
     <!-- ? DropdownSection for project menu to be added later -->
@@ -115,18 +167,36 @@
     } -->
   </ul>
 
-  <div class="flex items-center justify-center gap-5" [ngClass]="isMobile ? 'mt-4' : ''">
-    <button type="button" class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white
-      " title="Demander un devis" i18n-title="navbar.link.audit|Navbar primary link@@navLinkAudit:Audit"
-      [routerLink]="'/growth-audit'" (click)="isMobile && closeMobileMenu()">
-      <span i18n="navbar.link.audit|Navbar primary link@@navLinkAuditSpan:Audit">Audit</span>
+  <div
+    class="flex items-center justify-center gap-5"
+    [ngClass]="isMobile ? 'mt-4' : ''"
+  >
+    <button
+      type="button"
+      class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white"
+      title="Demander un devis"
+      i18n-title="navbar.link.audit|Navbar primary link@@navLinkAudit:Audit"
+      [routerLink]="'/growth-audit'"
+      (click)="isMobile && closeMobileMenu()"
+    >
+      <span i18n="navbar.link.audit|Navbar primary link@@navLinkAuditSpan:Audit"
+        >Audit</span
+      >
     </button>
 
-    <button type="button"
+    <button
+      type="button"
       class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
-      title="Me contacter" i18n-title="navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
-      [routerLink]="'/contact'" (click)="isMobile && closeMobileMenu()">
-      <span i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel">Contact</span>
+      title="Me contacter"
+      i18n-title="
+        navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
+      [routerLink]="'/contact'"
+      (click)="isMobile && closeMobileMenu()"
+    >
+      <span
+        i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel"
+        >Contact</span
+      >
     </button>
   </div>
 </ng-template>

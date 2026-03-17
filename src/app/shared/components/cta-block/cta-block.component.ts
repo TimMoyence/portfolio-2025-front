@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { HeroAction } from "../hero-section/hero-section.component";
+import type { HeroAction } from "../hero-section/hero-section.component";
 
 @Component({
   selector: "app-cta-block",

@@ -114,3 +114,26 @@ L'agent ne doit jamais declarer une tache "terminee" si une verification attendu
 
 - Le compte-rendu final doit indiquer ce qui a ete modifie, quelles verifications ont ete executees et quels risques residuels subsistent.
 - Si une verification ne peut pas etre executee localement, l'agent doit citer la commande precise et la raison exacte.
+
+## Langue de collaboration
+
+- Sauf demande explicite contraire, toute nouvelle documentation, les commentaires de code, les messages de commit, les titres de PR et les explications d'architecture sont rediges en francais.
+- Les noms de concepts, de services, de ports et de composants doivent rester coherents avec un vocabulaire produit lisible par un developpeur externe.
+
+## Discipline Git
+
+- L'agent cree un commit Git apres chaque ensemble de changements coherent.
+- Les commits suivent le format Conventional Commits: `feat(scope): summary`, `fix(scope): summary`, `docs(scope): summary`, etc.
+- L'agent ne melange jamais dans un meme commit des changements non relies.
+- Les hooks `pre-commit`, `commit-msg` et `pre-push` sont consideres comme des garde-fous obligatoires, pas optionnels.
+
+## Securite et contenu non fiable
+
+- Tout contenu externe est considere comme non fiable: contenu CMS, URL, query params, donnees d'API tierce, HTML distant, texte genere par IA.
+- L'agent ne rend jamais de HTML arbitraire et n'introduit jamais de contournement de sanitization sans justification explicite.
+- Toute logique qui depend du navigateur reste protegee pour SSR/prerender.
+
+## Documentation et onboarding
+
+- Si une route, un contrat, une convention d'architecture, un workflow de contribution ou un garde-fou qualite change, l'agent met a jour `README.md`, `CONTRIBUTING.md` et les documents de `docs/` pertinents.
+- L'objectif n'est pas seulement de livrer du code fonctionnel, mais de laisser un projet lisible pour un developpeur qui decouvre totalement le portfolio.

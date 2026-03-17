@@ -1,14 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import {
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import type { Observable } from "rxjs";
+import type {
   AuthSession,
   AuthUser,
   LoginCredentials,
   RegisterUserPayload,
-} from '../models/auth.model';
-import { AuthPort } from '../ports/auth.port';
-import { getApiBaseUrl } from '../http/api-config';
+} from "../models/auth.model";
+import type { AuthPort } from "../ports/auth.port";
+import { getApiBaseUrl } from "../http/api-config";
 
 @Injectable()
 export class AuthHttpAdapter implements AuthPort {
