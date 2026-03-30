@@ -2,6 +2,8 @@ import { DOCUMENT, isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import type { OnChanges, SimpleChanges } from "@angular/core";
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostBinding,
   Inject,
@@ -17,9 +19,18 @@ import { catchError, map, take, tap } from "rxjs/operators";
   selector: "app-svg-icon",
   standalone: true,
   template: "",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SvgIconComponent implements OnChanges {
   private static cache = new Map<string, string>();
+
+  /**
+   * Vide le cache statique d'icones SVG.
+   * Utile pour le nettoyage entre tests ou pour forcer le rechargement de toutes les icones.
+   */
+  static clearCache(): void {
+    SvgIconComponent.cache.clear();
+  }
   private readonly isBrowser: boolean;
 
   @Input({ required: true }) name!: string;
@@ -41,6 +52,7 @@ export class SvgIconComponent implements OnChanges {
   constructor(
     private readonly http: HttpClient,
     private readonly sanitizer: DomSanitizer,
+    private readonly cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private readonly document: Document,
     @Inject(PLATFORM_ID) platformId: object,
   ) {
@@ -76,9 +88,11 @@ export class SvgIconComponent implements OnChanges {
         map((raw) => this.prepareSvg(raw)),
         tap((html) => {
           this.svgContent = this.sanitizer.bypassSecurityTrustHtml(html);
+          this.cdr.markForCheck();
         }),
         catchError(() => {
           this.svgContent = null;
+          this.cdr.markForCheck();
           return of(null);
         }),
       )
