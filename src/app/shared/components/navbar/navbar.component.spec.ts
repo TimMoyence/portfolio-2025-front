@@ -6,6 +6,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { PLATFORM_ID } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
+import { AUTH_PORT } from "../../../core/ports/auth.port";
 import { NavbarComponent } from "./navbar.component";
 
 describe("NavbarComponent", () => {
@@ -21,6 +22,14 @@ describe("NavbarComponent", () => {
           { provide: ActivatedRoute, useValue: {} },
           provideHttpClient(withInterceptorsFromDi()),
           provideHttpClientTesting(),
+          {
+            provide: AUTH_PORT,
+            useValue: {
+              login: () => {},
+              register: () => {},
+              me: () => {},
+            },
+          },
         ],
       }).compileComponents();
 
@@ -59,6 +68,14 @@ describe("NavbarComponent", () => {
           { provide: ActivatedRoute, useValue: {} },
           provideHttpClient(withInterceptorsFromDi()),
           provideHttpClientTesting(),
+          {
+            provide: AUTH_PORT,
+            useValue: {
+              login: () => {},
+              register: () => {},
+              me: () => {},
+            },
+          },
         ],
       }).compileComponents();
 

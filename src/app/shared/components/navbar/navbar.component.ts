@@ -8,8 +8,10 @@ import {
   Inject,
   PLATFORM_ID,
   ViewChild,
+  inject,
 } from "@angular/core";
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
+import { AuthStateService } from "../../../core/services/auth-state.service";
 import type { NavLink } from "../../models/navbar.model";
 import { A11yDialogService } from "../../services/a11y-dialog.service";
 import { SvgIconComponent } from "../svg-icon.component";
@@ -43,6 +45,9 @@ export class NavbarComponent implements OnInit {
   readonly mobileNavHeading = $localize`:navbar.menu.heading|Mobile nav heading@@navMenuHeading:Menu principal`;
   readonly closeMenuIconLabel = $localize`:navbar.menu.icon.close|Icon label@@navMenuCloseIcon:Fermer le menu`;
   readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
+  readonly authState = inject(AuthStateService);
+  private readonly router = inject(Router);
+
   scrolled = false;
   mobileMenuOpen = false;
 
@@ -76,6 +81,12 @@ export class NavbarComponent implements OnInit {
   @HostListener("window:resize", [])
   onWindowResize() {
     this.updateIsMobileState();
+  }
+
+  logout(): void {
+    this.authState.logout();
+    this.closeMobileMenu();
+    void this.router.navigate(["/"]);
   }
 
   @HostListener("document:keydown", ["$event"])

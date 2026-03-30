@@ -10,6 +10,8 @@ import { FormsModule } from "@angular/forms";
 import type { RegisterUserPayload } from "../../core/models/auth.model";
 import type { LoginFormState } from "../../core/models/loginForm.model";
 import type { SignupFormState } from "../../core/models/signupForm.model";
+import { Router } from "@angular/router";
+import { AuthStateService } from "../../core/services/auth-state.service";
 import { AuthService } from "../../core/services/auth.service";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
@@ -36,6 +38,8 @@ type LoginFormKey = keyof LoginFormState;
 })
 export class AuthComponent {
   private readonly authService = inject(AuthService);
+  private readonly authState = inject(AuthStateService);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly defaultSignupState: SignupFormState = {
     email: "",
@@ -202,7 +206,9 @@ export class AuthComponent {
     handleFormSubmit(this.authService.login(this.loginForm), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
       onSuccess: (session) => {
+        this.authState.login(session);
         this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
+        void this.router.navigate(["/"]);
       },
       onError: (message) => {
         this.loginErrorMessage = message;

@@ -151,5 +151,24 @@
         >Contact</span
       >
     </button>
+
+    @if (authState.isLoggedIn()) {
+      <button
+        type="button"
+        class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-red-300 text-red-600 bg-red-50 px-4 py-2 text-sm"
+        (click)="logout(); isMobile && closeMobileMenu()"
+      >
+        Logout
+      </button>
+    } @else {
+      <button
+        type="button"
+        class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background px-4 py-2 text-sm"
+        [routerLink]="'/login'"
+        (click)="isMobile && closeMobileMenu()"
+      >
+        Login
+      </button>
+    }
   </div>
 </ng-template>
