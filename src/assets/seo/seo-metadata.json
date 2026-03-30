@@ -229,6 +229,28 @@
       }
     },
     {
+      "id": "commonbudgetTM",
+      "path": "/commonbudgetTM",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.3,
+      "lastmod": "2026-03-16",
+      "locales": {
+        "fr": {
+          "title": "commonbudgetTM — Dashboard budget partagé",
+          "description": "Prototype Angular de suivi du compte commun avec catégories, contributions et tableau éditable.",
+          "ogTitle": "commonbudgetTM",
+          "ogDescription": "Visualiser les dépenses du compte commun, suivre les contributions et corriger les catégories."
+        },
+        "en": {
+          "title": "commonbudgetTM — Shared budget dashboard",
+          "description": "Angular prototype for tracking a shared account with categories, contributions, and an editable transaction table.",
+          "ogTitle": "commonbudgetTM",
+          "ogDescription": "Review shared-account spending, track contributions, and adjust categories in one dashboard."
+        }
+      }
+    },
+    {
       "id": "terms",
       "path": "/terms",
       "index": true,
