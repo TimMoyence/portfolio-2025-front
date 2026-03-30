@@ -64,6 +64,7 @@ describe("AuthComponent", () => {
         lastName: "Doe",
         phone: "+33 6 12 34 56 78",
         isActive: true,
+        roles: [],
       }),
     );
 
@@ -112,6 +113,7 @@ describe("AuthComponent", () => {
         lastName: "Doe",
         phone: null,
         isActive: true,
+        roles: [],
       },
     };
     authService.login.and.returnValue(of(session));

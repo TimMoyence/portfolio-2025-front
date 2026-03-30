@@ -24,6 +24,10 @@ export class AuthHttpAdapter implements AuthPort {
   }
 
   register(payload: RegisterUserPayload): Observable<AuthUser> {
-    return this.http.post<AuthUser>(`${this.baseUrl}/users`, payload);
+    return this.http.post<AuthUser>(`${this.baseUrl}/auth/register`, payload);
+  }
+
+  me(): Observable<AuthUser> {
+    return this.http.get<AuthUser>(`${this.baseUrl}/auth/me`);
   }
 }

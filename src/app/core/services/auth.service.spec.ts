@@ -48,6 +48,7 @@ describe("AuthService", () => {
         lastName: "Doe",
         phone: null,
         isActive: true,
+        roles: [],
       },
     };
 
@@ -74,6 +75,7 @@ describe("AuthService", () => {
       lastName: payload.lastName,
       phone: null,
       isActive: true,
+      roles: [],
     };
 
     authPortSpy.register.and.returnValue(of(createdUser));

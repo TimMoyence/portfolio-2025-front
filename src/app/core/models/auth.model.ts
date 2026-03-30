@@ -5,6 +5,7 @@ export interface AuthUser {
   lastName: string;
   phone: string | null;
   isActive: boolean;
+  roles: string[];
   createdAt?: string;
   updatedAt?: string;
   updatedOrCreatedBy?: string | null;

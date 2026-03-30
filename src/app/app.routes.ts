@@ -1,4 +1,6 @@
 import type { Routes } from "@angular/router";
+import { authGuard } from "./core/guards/auth.guard";
+import { roleGuard } from "./core/guards/role.guard";
 
 export const routes: Routes = [
   {
@@ -108,6 +110,7 @@ export const routes: Routes = [
   },
   {
     path: "commonbudgetTM",
+    canActivate: [authGuard, roleGuard("budget")],
     loadComponent: () =>
       import("./features/common-budget-tm/common-budget-tm.component").then(
         (m) => m.CommonBudgetTmComponent,

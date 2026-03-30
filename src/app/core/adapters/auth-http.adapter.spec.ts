@@ -54,6 +54,7 @@ describe("AuthHttpAdapter", () => {
         lastName: "Doe",
         phone: null,
         isActive: true,
+        roles: [],
       },
     };
 
@@ -83,6 +84,7 @@ describe("AuthHttpAdapter", () => {
       lastName: payload.lastName,
       phone: payload.phone ?? null,
       isActive: true,
+      roles: [],
     };
 
     adapter.register(payload).subscribe((createdUser) => {

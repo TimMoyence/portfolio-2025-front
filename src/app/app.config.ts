@@ -18,6 +18,7 @@ import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adap
 import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
 import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
 import { APP_CONFIG } from "./core/config/app-config.token";
+import { authInterceptor } from "./core/http/interceptors/auth.interceptor";
 import { errorInterceptor } from "./core/http/interceptors/error.interceptor";
 import { requestIdInterceptor } from "./core/http/interceptors/request-id.interceptor";
 import { AUTH_PORT } from "./core/ports/auth.port";
@@ -38,7 +39,11 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimations(),
     provideHttpClient(
-      withInterceptors([requestIdInterceptor, errorInterceptor]),
+      withInterceptors([
+        authInterceptor,
+        requestIdInterceptor,
+        errorInterceptor,
+      ]),
       withFetch(),
     ),
 
