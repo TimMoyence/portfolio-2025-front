@@ -7,6 +7,7 @@ import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import { of } from "rxjs";
 import type { AuthSession } from "../../core/models/auth.model";
+import { AUTH_PORT } from "../../core/ports/auth.port";
 import { AuthService } from "../../core/services/auth.service";
 import { AuthComponent } from "./auth.component";
 
@@ -16,6 +17,8 @@ describe("AuthComponent", () => {
   let authService: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
+    localStorage.removeItem("portfolio_jwt");
+
     authService = jasmine.createSpyObj<AuthService>("AuthService", [
       "register",
       "login",
@@ -30,6 +33,10 @@ describe("AuthComponent", () => {
         {
           provide: AuthService,
           useValue: authService,
+        },
+        {
+          provide: AUTH_PORT,
+          useValue: { login: () => {}, register: () => {}, me: () => {} },
         },
       ],
     }).compileComponents();

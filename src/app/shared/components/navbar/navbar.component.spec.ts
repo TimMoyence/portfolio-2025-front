@@ -5,7 +5,7 @@ import {
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { PLATFORM_ID } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, provideRouter } from "@angular/router";
 import { AUTH_PORT } from "../../../core/ports/auth.port";
 import { NavbarComponent } from "./navbar.component";
 
@@ -15,19 +15,22 @@ describe("NavbarComponent", () => {
     let fixture: ComponentFixture<NavbarComponent>;
 
     beforeEach(async () => {
+      localStorage.removeItem("portfolio_jwt");
+
       await TestBed.configureTestingModule({
         imports: [NavbarComponent],
         providers: [
           { provide: PLATFORM_ID, useValue: "browser" },
+          provideRouter([]),
           { provide: ActivatedRoute, useValue: {} },
           provideHttpClient(withInterceptorsFromDi()),
           provideHttpClientTesting(),
           {
             provide: AUTH_PORT,
             useValue: {
-              login: () => {},
-              register: () => {},
-              me: () => {},
+              login: () => ({ subscribe: () => {} }),
+              register: () => ({ subscribe: () => {} }),
+              me: () => ({ subscribe: () => {} }),
             },
           },
         ],
@@ -71,9 +74,9 @@ describe("NavbarComponent", () => {
           {
             provide: AUTH_PORT,
             useValue: {
-              login: () => {},
-              register: () => {},
-              me: () => {},
+              login: () => ({ subscribe: () => {} }),
+              register: () => ({ subscribe: () => {} }),
+              me: () => ({ subscribe: () => {} }),
             },
           },
         ],

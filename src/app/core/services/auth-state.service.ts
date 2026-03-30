@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from "@angular/common";
-import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
+import { Injectable, PLATFORM_ID, inject } from "@angular/core";
 import { computed, signal } from "@angular/core";
 import type { AuthSession, AuthUser } from "../models/auth.model";
 import { AUTH_PORT, type AuthPort } from "../ports/auth.port";
@@ -12,7 +12,10 @@ const TOKEN_KEY = "portfolio_jwt";
  */
 @Injectable({ providedIn: "root" })
 export class AuthStateService {
-  private readonly isBrowser: boolean;
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly authPort = inject(AUTH_PORT, {
+    optional: true,
+  }) as AuthPort | null;
 
   private readonly _token = signal<string | null>(null);
   private readonly _user = signal<AuthUser | null>(null);
@@ -21,11 +24,7 @@ export class AuthStateService {
   readonly user = this._user.asReadonly();
   readonly isLoggedIn = computed(() => !!this._token());
 
-  constructor(
-    @Inject(PLATFORM_ID) platformId: object,
-    @Inject(AUTH_PORT) private readonly authPort: AuthPort,
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
+  constructor() {
     this.restoreToken();
   }
 
@@ -52,7 +51,7 @@ export class AuthStateService {
   /** Restaure la session depuis le token en localStorage via GET /auth/me. */
   restoreSession(): void {
     const token = this._token();
-    if (!token) return;
+    if (!token || !this.authPort) return;
 
     this.authPort.me().subscribe({
       next: (user) => this._user.set(user),
@@ -61,7 +60,7 @@ export class AuthStateService {
   }
 
   private restoreToken(): void {
-    if (!this.isBrowser) return;
+    if (!this.isBrowser || !this.authPort) return;
     const saved = localStorage.getItem(TOKEN_KEY);
     if (saved) {
       this._token.set(saved);
