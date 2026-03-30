@@ -107,6 +107,16 @@ export const routes: Routes = [
     },
   },
   {
+    path: "commonbudgetTM",
+    loadComponent: () =>
+      import("./features/common-budget-tm/common-budget-tm.component").then(
+        (m) => m.CommonBudgetTmComponent,
+      ),
+    data: {
+      seoKey: "commonbudgetTM",
+    },
+  },
+  {
     path: "**",
     loadComponent: () =>
       import("./features/not-found/not-found.component").then(
