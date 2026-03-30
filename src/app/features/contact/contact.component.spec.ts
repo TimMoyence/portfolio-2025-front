@@ -1,7 +1,8 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideRouter } from "@angular/router";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { of } from "rxjs";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import { CONTACT_PORT } from "../../core/ports/contact.port";
@@ -14,8 +15,11 @@ describe("ContactComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContactComponent, RouterTestingModule, HttpClientTestingModule],
+      imports: [ContactComponent],
       providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
         {
           provide: APP_CONFIG,
           useValue: environment,

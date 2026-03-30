@@ -1,7 +1,8 @@
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
+import { provideRouter } from "@angular/router";
 import { PresentationComponent } from "./presentation.component";
 
 describe("PresentationComponent", () => {
@@ -10,10 +11,11 @@ describe("PresentationComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        PresentationComponent,
-        RouterTestingModule,
-        HttpClientTestingModule,
+      imports: [PresentationComponent],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
       ],
     }).compileComponents();
 

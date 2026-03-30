@@ -1,12 +1,16 @@
 <div class="flex flex-col text-scheme-text">
   <app-hero-section-home></app-hero-section-home>
-  <app-services-section
-    [kicker]="servicesSection.kicker"
-    [title]="servicesSection.title"
-    [leadParagraphs]="servicesSection.leadParagraphs"
-    [services]="servicesSection.services"
-    [cta]="servicesSection.cta"
-  ></app-services-section>
+  @defer (on viewport) {
+    <app-services-section
+      [kicker]="servicesSection.kicker"
+      [title]="servicesSection.title"
+      [leadParagraphs]="servicesSection.leadParagraphs"
+      [services]="servicesSection.services"
+      [cta]="servicesSection.cta"
+    ></app-services-section>
+  } @placeholder {
+    <div class="h-96"></div>
+  }
   <app-projects-accordion></app-projects-accordion>
   <app-mission-section></app-mission-section>
   <app-cta-contact

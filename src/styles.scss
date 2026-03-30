@@ -30,6 +30,6 @@
 }
 
 :focus {
-  outline: 2px solid var(--mm);
+  outline: 2px solid theme("colors.scheme-accent");
   outline-offset: 4px;
 }

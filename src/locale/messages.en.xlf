@@ -5971,5 +5971,143 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Limited availability: 5 audits per week.</target>
       </segment>
     </unit>
+    <unit id="authErrorPhone">
+      <segment>
+        <source>Merci d'entrer un numéro de téléphone valide.</source>
+        <target>Please enter a valid phone number.</target>
+      </segment>
+    </unit>
+    <unit id="auditProgressLabel">
+      <segment>
+        <source>Progression de l'audit</source>
+        <target>Audit progress</target>
+      </segment>
+    </unit>
+    <unit id="auditResumeTitle">
+      <segment>
+        <source>Résumé de votre audit</source>
+        <target>Your audit summary</target>
+      </segment>
+    </unit>
+    <unit id="notFoundImageAlt">
+      <segment>
+        <source>Illustration erreur 404</source>
+        <target>404 error illustration</target>
+      </segment>
+    </unit>
+    <unit id="servicesItemTestingIconAlt">
+      <segment>
+        <source>Tester icon</source>
+        <target>Testing icon</target>
+      </segment>
+    </unit>
+    <unit id="auditPhaseTechnicalPages">
+      <segment>
+        <source>Scan technique des pages</source>
+        <target>Technical page scan</target>
+      </segment>
+    </unit>
+    <unit id="auditPhasePageAiRecaps">
+      <segment>
+        <source>Micro-audits IA page par page</source>
+        <target>AI micro-audits page by page</target>
+      </segment>
+    </unit>
+    <unit id="auditPhaseSynthesis">
+      <segment>
+        <source>Synthèse finale IA</source>
+        <target>Final AI synthesis</target>
+      </segment>
+    </unit>
+    <unit id="auditTaskTechnicalScan">
+      <segment>
+        <source>Scan technique</source>
+        <target>Technical scan</target>
+      </segment>
+    </unit>
+    <unit id="auditTaskPageAiRecap">
+      <segment>
+        <source>Analyse IA de page</source>
+        <target>AI page analysis</target>
+      </segment>
+    </unit>
+    <unit id="auditTaskSynthesis">
+      <segment>
+        <source>Synthèse IA</source>
+        <target>AI synthesis</target>
+      </segment>
+    </unit>
+    <unit id="auditSectionSummary">
+      <segment>
+        <source>Résumé</source>
+        <target>Summary</target>
+      </segment>
+    </unit>
+    <unit id="auditSectionExecutive">
+      <segment>
+        <source>Executive</source>
+        <target>Executive</target>
+      </segment>
+    </unit>
+    <unit id="auditSectionPriority">
+      <segment>
+        <source>Priorités</source>
+        <target>Priorities</target>
+      </segment>
+    </unit>
+    <unit id="auditSectionExecution">
+      <segment>
+        <source>Exécution</source>
+        <target>Execution</target>
+      </segment>
+    </unit>
+    <unit id="auditSectionClientComms">
+      <segment>
+        <source>Message client</source>
+        <target>Client message</target>
+      </segment>
+    </unit>
+    <unit id="auditStepPending">
+      <segment>
+        <source>Audit en attente...</source>
+        <target>Audit pending...</target>
+      </segment>
+    </unit>
+    <unit id="auditStepCompleted">
+      <segment>
+        <source>Audit terminé</source>
+        <target>Audit completed</target>
+      </segment>
+    </unit>
+    <unit id="auditErrorFailed">
+      <segment>
+        <source>L'audit a échoué.</source>
+        <target>The audit failed.</target>
+      </segment>
+    </unit>
+    <unit id="auditErrorConnectionLost">
+      <segment>
+        <source>Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.</source>
+        <target>Connection lost during the audit. Reload the page to check the result.</target>
+      </segment>
+    </unit>
+    <unit id="auditErrorSummaryFetch">
+      <segment>
+        <source>Impossible de récupérer le résumé de l'audit pour le moment.</source>
+        <target>Unable to retrieve the audit summary at this time.</target>
+      </segment>
+    </unit>
+    <unit id="NavbarCompanyTitle">
+      <segment>
+        <source>Asili Design</source>
+        <target>Asili Design</target>
+      </segment>
+    </unit>
+    <unit id="contactFormRoleLegend">
+      <segment>
+        <source>Sélectionnez votre rôle</source>
+        <target>Select your role</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

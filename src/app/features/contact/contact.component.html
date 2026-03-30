@@ -42,42 +42,41 @@
 
             <label
               [for]="field.key"
-              class="absolute left-3 px-1 bg-white text-gray-700 text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+              class="absolute left-3 px-1 bg-scheme-surface text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
               [ngClass]="
                 contactForm[field.key]
                   ? '-top-3 text-sm md:text-base text-scheme-accent'
-                  : 'top-2 text-sm text-gray-500'
+                  : 'top-2 text-sm text-scheme-text-muted'
               "
               [class.text-red-500]="
                 control.invalid && (control.touched || isContactSubmitted)
               "
             >
               {{ field.label }}
-              <span
-                *ngIf="!field.required"
-                i18n="auth.field.optional@@authFieldOptional"
-                >(facultatif)</span
-              >
-            </label>
-
-            <p
-              *ngIf="control.invalid && (control.touched || isContactSubmitted)"
-              class="mt-1 text-sm md:text-base text-red-500"
-            >
-              @if (control.errors?.["required"]) {
-                <span i18n="auth.error.required@@authErrorRequired"
-                  >Ce champ est obligatoire.</span
-                >
-              } @else if (control.errors?.["email"]) {
-                <span i18n="auth.error.email@@authErrorEmail"
-                  >Merci d’entrer une adresse email valide.</span
-                >
-              } @else {
-                <span i18n="auth.error.generic@@authErrorGeneric"
-                  >Valeur invalide.</span
+              @if (!field.required) {
+                <span i18n="auth.field.optional@@authFieldOptional"
+                  >(facultatif)</span
                 >
               }
-            </p>
+            </label>
+
+            @if (control.invalid && (control.touched || isContactSubmitted)) {
+              <p class="mt-1 text-sm md:text-base text-red-500">
+                @if (control.errors?.["required"]) {
+                  <span i18n="auth.error.required@@authErrorRequired"
+                    >Ce champ est obligatoire.</span
+                  >
+                } @else if (control.errors?.["email"]) {
+                  <span i18n="auth.error.email@@authErrorEmail"
+                    >Merci d’entrer une adresse email valide.</span
+                  >
+                } @else {
+                  <span i18n="auth.error.generic@@authErrorGeneric"
+                    >Valeur invalide.</span
+                  >
+                }
+              </p>
+            }
           </div>
         }
       </div>
@@ -85,7 +84,7 @@
       <div class="grid w-full gap-2">
         <label
           for="subject"
-          class="font-medium text-gray-500"
+          class="font-medium text-scheme-text-muted"
           i18n="@@contactFormSubject"
         >
           Sujet de votre demande
@@ -93,7 +92,7 @@
 
         <!-- Wrapper owns border + bg -->
         <div
-          class="rounded-form border border-scheme-border bg-white w-full font-medium text-gray-500 flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
+          class="rounded-form border border-scheme-border bg-scheme-surface w-full font-medium text-scheme-text-muted flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
           [class.border-red-500]="
             subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)
           "
@@ -104,7 +103,7 @@
             required
             [(ngModel)]="contactForm.subject"
             #subjectCtrl="ngModel"
-            class="relative z-10 w-full appearance-none bg-transparent px-3 py-2 pr-12 font-medium text-gray-500 focus:outline-none"
+            class="relative z-10 w-full appearance-none bg-transparent px-3 py-2 pr-12 font-medium text-scheme-text-muted focus:outline-none"
           >
             <option value="" disabled i18n="@@contactFormSubjectPlaceholder">
               Sélectionnez un sujet
@@ -116,35 +115,37 @@
           </select>
         </div>
 
-        <p
-          *ngIf="
-            subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)
-          "
-          class="text-sm md:text-base text-red-500"
-          i18n="auth.error.required@@authErrorRequired"
-        >
-          Ce champ est obligatoire.
-        </p>
+        @if (
+          subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)
+        ) {
+          <p
+            class="text-sm md:text-base text-red-500"
+            i18n="auth.error.required@@authErrorRequired"
+          >
+            Ce champ est obligatoire.
+          </p>
+        }
       </div>
 
       <!-- Rôle -->
       <div class="grid w-full items-center py-3 md:py-4">
         <span
-          class="mb-3 md:mb-4 font-medium text-gray-500"
+          class="mb-3 md:mb-4 font-medium text-scheme-text-muted"
           i18n="@@contactFormRole"
           >Qui êtes-vous ?</span
         >
         <fieldset class="space-y-3 grid grid-cols-2 gap-x-3 gap-y-5">
+          <legend class="sr-only" i18n="@@contactFormRoleLegend">
+            Sélectionnez votre rôle
+          </legend>
           @for (role of contactInfo.roles; track $index) {
-            <legend class="sr-only">{{ role }}</legend>
-
             <div>
               <label
                 for="{{ role }}"
-                class="flex items-center justify-between space-x-2 gap-2 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600"
+                class="flex items-center justify-between space-x-2 gap-2 rounded border border-scheme-border bg-scheme-surface p-3 text-sm font-medium shadow-sm transition-colors hover:bg-scheme-surface-hover has-checked:border-scheme-accent has-checked:ring-1 has-checked:ring-scheme-accent"
               >
                 <div>
-                  <p class="text-gray-500">{{ role }}</p>
+                  <p class="text-scheme-text-muted">{{ role }}</p>
                 </div>
                 <input
                   [(ngModel)]="contactForm.role"
@@ -153,24 +154,23 @@
                   required
                   [value]="role"
                   id="{{ role }}"
-                  class="size-5 border-gray-300"
+                  class="size-5 border-scheme-border"
                 />
               </label>
             </div>
           }
         </fieldset>
 
-        <p
-          *ngIf="
-            contactFormRef.controls['role']?.invalid &&
-            (contactFormRef.controls['role']?.touched || isContactSubmitted)
-          "
-          class="mt-1 text-sm md:text-base text-red-500"
-        >
-          <span i18n="auth.error.required@@authErrorRequired"
-            >Ce champ est obligatoire.</span
-          >
-        </p>
+        @if (
+          contactFormRef.controls["role"]?.invalid &&
+          (contactFormRef.controls["role"]?.touched || isContactSubmitted)
+        ) {
+          <p class="mt-1 text-sm md:text-base text-red-500">
+            <span i18n="auth.error.required@@authErrorRequired"
+              >Ce champ est obligatoire.</span
+            >
+          </p>
+        }
       </div>
 
       <!-- Message -->
@@ -191,11 +191,11 @@
 
         <label
           for="message"
-          class="absolute left-3 px-1 bg-white text-gray-700 text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+          class="absolute left-3 px-1 bg-scheme-surface text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
           [ngClass]="
             contactForm.message
               ? '-top-3 text-sm md:text-base text-scheme-accent'
-              : 'top-2 text-sm text-gray-500'
+              : 'top-2 text-sm text-scheme-text-muted'
           "
           [class.text-red-500]="
             messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)
@@ -205,17 +205,16 @@
           Votre message
         </label>
 
-        <p
-          *ngIf="
-            messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)
-          "
-          class="mt-1 text-sm md:text-base text-red-500"
-        >
-          <span i18n="auth.error.required@@authErrorRequired"
-            >Ce champ est obligatoire et doit contenir au moins 10
-            caractères.</span
-          >
-        </p>
+        @if (
+          messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)
+        ) {
+          <p class="mt-1 text-sm md:text-base text-red-500">
+            <span i18n="auth.error.required@@authErrorRequired"
+              >Ce champ est obligatoire et doit contenir au moins 10
+              caractères.</span
+            >
+          </p>
+        }
       </div>
 
       <!-- Terms -->
@@ -229,18 +228,17 @@
           [(ngModel)]="contactForm.terms"
           #termsCtrl="ngModel"
         />
-        <span class="text-gray-700" i18n="@@contactFormTerms"
+        <span class="text-scheme-text" i18n="@@contactFormTerms"
           >J'accepte les conditions</span
         >
       </label>
-      <p
-        *ngIf="termsCtrl.invalid && (termsCtrl.touched || isContactSubmitted)"
-        class="mt-1 text-sm md:text-base text-red-500"
-      >
-        <span i18n="auth.error.required@@authErrorRequired"
-          >Ce champ est obligatoire.</span
-        >
-      </p>
+      @if (termsCtrl.invalid && (termsCtrl.touched || isContactSubmitted)) {
+        <p class="mt-1 text-sm md:text-base text-red-500">
+          <span i18n="auth.error.required@@authErrorRequired"
+            >Ce champ est obligatoire.</span
+          >
+        </p>
+      }
 
       <!-- Submit -->
       <div class="grid col-span-1 md:col-span-2 gap-4">
@@ -252,24 +250,26 @@
           [disabled]="isContactLoading || !contactFormRef.form.valid"
           [attr.aria-busy]="isContactLoading"
         >
-          <ng-container *ngIf="!isContactLoading; else contactLoading">
+          @if (!isContactLoading) {
             <span i18n="@@contactFormSubmit">Envoyer</span>
-          </ng-container>
+          } @else {
+            <span i18n="@@contactFormLoading">Envoi en cours...</span>
+          }
         </button>
 
-        <ng-template #contactLoading>
-          <span i18n="@@contactFormLoading">Envoi en cours...</span>
-        </ng-template>
-
-        <p *ngIf="contactErrorMessage" class="text-sm text-red-500">
-          {{ contactErrorMessage }}
-        </p>
-        <p *ngIf="contactSuccessMessage" class="text-sm text-green-600">
-          {{ contactSuccessMessage }}
-        </p>
+        @if (contactErrorMessage) {
+          <p class="text-sm text-red-500">
+            {{ contactErrorMessage }}
+          </p>
+        }
+        @if (contactSuccessMessage) {
+          <p class="text-sm text-green-600">
+            {{ contactSuccessMessage }}
+          </p>
+        }
 
         <p
-          class="text-sm md:text-base text-gray-600"
+          class="text-sm md:text-base text-scheme-text-muted"
           i18n="@@contactFormResponseTime"
         >
           Réponse sous 48h ouvrées.

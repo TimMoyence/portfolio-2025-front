@@ -1,19 +1,51 @@
 import { TestBed } from "@angular/core/testing";
+import type { NgForm } from "@angular/forms";
 import { of } from "rxjs";
 import type { AuditStreamEvent } from "../../core/models/audit-request.model";
 import { AuditRequestService } from "../../core/services/audit-request.service";
 import { GrowthAuditComponent } from "./growth-audit.component";
 
-const emitStreamEvent = (
+/**
+ * Cree un mock minimal de NgForm compatible avec GrowthAuditComponent.submit().
+ * Utilise jasmine.createSpyObj avec proprietes pour eviter `as unknown as`.
+ */
+function buildValidForm(): NgForm {
+  return jasmine.createSpyObj<NgForm>("NgForm", ["resetForm"], {
+    valid: true,
+  });
+}
+
+/**
+ * Soumet le formulaire d'audit en configurant le stream pour emettre l'evenement donne.
+ * Teste le composant via son interface publique (submit → startStream → handleStreamEvent).
+ */
+function submitAndStream(
   component: GrowthAuditComponent,
+  auditServiceMock: {
+    submit: jasmine.Spy;
+    stream: jasmine.Spy;
+  },
   event: AuditStreamEvent,
-): void => {
-  (
-    component as unknown as {
-      handleStreamEvent(streamEvent: AuditStreamEvent): void;
-    }
-  ).handleStreamEvent(event);
-};
+  auditId: string,
+): void {
+  auditServiceMock.submit.and.returnValue(
+    of({
+      message: "ok",
+      httpCode: 201,
+      auditId,
+      status: "PENDING",
+    }),
+  );
+  auditServiceMock.stream.and.returnValue(of<AuditStreamEvent>(event));
+
+  component.auditFormState = {
+    websiteName: "https://example.com",
+    contactMethod: "EMAIL",
+    contactValue: "test@example.com",
+  };
+
+  component.submit(buildValidForm());
+}
 
 describe("GrowthAuditComponent", () => {
   const auditServiceMock = {
@@ -45,6 +77,10 @@ describe("GrowthAuditComponent", () => {
   };
 
   beforeEach(async () => {
+    auditServiceMock.submit.calls.reset();
+    auditServiceMock.getSummary.calls.reset();
+    auditServiceMock.stream.calls.reset();
+
     await TestBed.configureTestingModule({
       imports: [GrowthAuditComponent],
       providers: [{ provide: AuditRequestService, useValue: auditServiceMock }],
@@ -55,31 +91,36 @@ describe("GrowthAuditComponent", () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
 
-    emitStreamEvent(component, {
-      type: "progress",
-      data: {
-        auditId: "audit-1",
-        status: "RUNNING",
-        progress: 72,
-        step: "Recap IA des pages",
-        details: {
-          phase: "synthesis",
-          iaTask: "synthesis",
-          iaSubTask: "prioritySection",
-          currentUrl: "https://example.com/pricing",
-          recentCompletedUrls: [
-            "https://example.com/",
-            "https://example.com/about",
-          ],
-          sectionStatuses: {
-            summary: "completed",
-            prioritySection: "started",
+    submitAndStream(
+      component,
+      auditServiceMock,
+      {
+        type: "progress",
+        data: {
+          auditId: "audit-1",
+          status: "RUNNING",
+          progress: 72,
+          step: "Recap IA des pages",
+          details: {
+            phase: "synthesis",
+            iaTask: "synthesis",
+            iaSubTask: "prioritySection",
+            currentUrl: "https://example.com/pricing",
+            recentCompletedUrls: [
+              "https://example.com/",
+              "https://example.com/about",
+            ],
+            sectionStatuses: {
+              summary: "completed",
+              prioritySection: "started",
+            },
           },
+          done: false,
+          updatedAt: "2026-02-19T09:00:00.000Z",
         },
-        done: false,
-        updatedAt: "2026-02-19T09:00:00.000Z",
       },
-    });
+      "audit-1",
+    );
 
     fixture.detectChanges();
 
@@ -97,18 +138,23 @@ describe("GrowthAuditComponent", () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
 
-    emitStreamEvent(component, {
-      type: "progress",
-      data: {
-        auditId: "audit-2",
-        status: "RUNNING",
-        progress: 45,
-        step: "Analyse des pages",
-        details: { done: 3, total: 10 },
-        done: false,
-        updatedAt: "2026-02-19T09:00:00.000Z",
+    submitAndStream(
+      component,
+      auditServiceMock,
+      {
+        type: "progress",
+        data: {
+          auditId: "audit-2",
+          status: "RUNNING",
+          progress: 45,
+          step: "Analyse des pages",
+          details: { done: 3, total: 10 },
+          done: false,
+          updatedAt: "2026-02-19T09:00:00.000Z",
+        },
       },
-    });
+      "audit-2",
+    );
 
     fixture.detectChanges();
 
@@ -121,21 +167,26 @@ describe("GrowthAuditComponent", () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
 
-    emitStreamEvent(component, {
-      type: "progress",
-      data: {
-        auditId: "audit-3",
-        status: "RUNNING",
-        progress: 30,
-        step: "Analyse",
-        details: {
-          foo: "bar",
-          nested: { ok: true },
+    submitAndStream(
+      component,
+      auditServiceMock,
+      {
+        type: "progress",
+        data: {
+          auditId: "audit-3",
+          status: "RUNNING",
+          progress: 30,
+          step: "Analyse",
+          details: {
+            foo: "bar",
+            nested: { ok: true },
+          },
+          done: false,
+          updatedAt: "2026-02-19T09:00:00.000Z",
         },
-        done: false,
-        updatedAt: "2026-02-19T09:00:00.000Z",
       },
-    });
+      "audit-3",
+    );
 
     fixture.detectChanges();
 

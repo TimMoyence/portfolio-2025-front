@@ -1,6 +1,7 @@
+import { isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
+import { EMPTY, Observable } from "rxjs";
 import { getApiBaseUrl } from "../http/api-config";
 import type {
   AuditCompletedEvent,
@@ -16,8 +17,14 @@ import type { AuditRequestPort } from "../ports/audit-request.port";
 @Injectable()
 export class AuditRequestHttpAdapter implements AuditRequestPort {
   private readonly baseUrl = getApiBaseUrl();
+  private readonly isBrowser: boolean;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    @Inject(PLATFORM_ID) platformId: object,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   submit(payload: AuditRequestPayload): Observable<AuditCreateResponse> {
     return this.http.post<AuditCreateResponse>(
@@ -33,6 +40,9 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
   }
 
   stream(auditId: string): Observable<AuditStreamEvent> {
+    // Guard SSR : EventSource n'est pas disponible cote serveur
+    if (!this.isBrowser) return EMPTY;
+
     return new Observable<AuditStreamEvent>((subscriber) => {
       const streamUrl = `${this.baseUrl}audits/${encodeURIComponent(auditId)}/stream`;
       const source = new EventSource(streamUrl);

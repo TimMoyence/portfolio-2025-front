@@ -23,8 +23,7 @@
           style="width: 2rem; height: auto"
         />
         <p
-          i18n-alt="
-            navbar.title.company|Navbar company title@@NavbarCompanyTitle"
+          i18n="navbar.title.company|Navbar company title@@NavbarCompanyTitle"
           class="font-heading md:heading-h6 md:text-h6"
         >
           Asili Design
@@ -119,52 +118,6 @@
         </a>
       </li>
     }
-
-    <!-- ? DropdownSection for project menu to be added later -->
-    <!-- @for (dropdown of dropdownSections(); track $index) {
-    <li class="relative"
-      (mouseenter)="!isMobile && currentlyHovered.set(dropdown.label); openDropdownMenuAndToggleInMobile(dropdown.label)"
-      (mouseleave)="!isMobile && currentlyHovered.set(null); closeOnDesktopDropdownMenu(dropdown.label)">
-      <button type="button"
-        class="flex w-full items-center justify-center text-left text-regular gap-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-        [attr.aria-expanded]="dropdown.isOpen" aria-haspopup="true" [attr.aria-controls]="'nav-section-' + $index"
-        [attr.data-dropdown-trigger]="dropdown.label" (click)="openDropdownMenuAndToggleInMobile(dropdown.label)">
-        {{ dropdown.label }}
-        <app-svg-icon name="chevron-down" [size]="1.7" [ariaLabel]="dropdownChevronLabel"></app-svg-icon>
-      </button>
-
-      @if (dropdown.isOpen) {
-      <div [id]="'nav-section-' + $index"
-        class="z-50 overflow-hidden rounded-card border border-scheme-border bg-scheme-background text-scheme-text"
-        [attr.data-dropdown-panel]="dropdown.label" [ngClass]="
-              isMobile
-                ? 'mt-1 w-60 p-4'
-                : 'mt-4 md:absolute lg:w-80 lg:p-6'
-            ">
-        <ul class="grid grid-cols-1 gap-y-2 py-3 lg:gap-y-4 lg:py-0">
-          @for (items of dropdown.items; track $index) {
-          <li>
-            <a [routerLink]="items.href"
-              class="grid auto-cols-fr grid-cols-[max-content_1fr] items-start gap-x-3 py-2 lg:py-1 hover:text-scheme-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              (click)="isMobile && closeMobileMenu()">
-              <div class="flex flex-col items-center justify-center">
-                <app-svg-icon [name]="items.icon" [size]="1.5"
-                  [aria-label]="getIconAriaLabel(items.title)"></app-svg-icon>
-              </div>
-              <div class="flex flex-col items-start justify-center">
-                <p class="text-regular font-semibold">{{ items.title }}</p>
-                <p class="text-small block">
-                  {{ items.description }}
-                </p>
-              </div>
-            </a>
-          </li>
-          }
-        </ul>
-      </div>
-      }
-    </li>
-    } -->
   </ul>
 
   <div

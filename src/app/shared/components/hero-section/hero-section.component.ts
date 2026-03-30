@@ -61,7 +61,7 @@ export interface HeroAction {
                       ? 'inline-flex items-center justify-center bg-scheme-accent rounded-button font-semibold text-scheme-on-accent hover:bg-scheme-accent-hover active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus'
                       : '',
                     action.variant === 'secondary'
-                      ? 'hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small bg-white hover:bg-scheme-accent-hover active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus'
+                      ? 'hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small bg-scheme-surface hover:bg-scheme-accent-hover active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus'
                       : '',
                     action.variant === 'ghost' || !action.variant
                       ? 'inline-flex items-center justify-center gap-2 font-semibold underline rounded-button hover:text-scheme-accent-hover focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus'

@@ -16,17 +16,25 @@ import type {
   AuditSummaryResponse,
 } from "../../core/models/audit-request.model";
 import { AuditRequestService } from "../../core/services/audit-request.service";
+import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import {
+  type AuditSectionBadge,
+  buildSectionBadges,
+  extractRecord,
+  extractString,
+  extractStringArray,
+  formatPhaseLabel,
+  formatProgressStep,
+  formatSummaryText,
+  formatSubTaskLabel,
+  formatTaskLabel,
+  sectionBadgeClass as sectionBadgeClassFn,
+} from "./growth-audit-format.utils";
 
 interface AuditPillar {
   title: string;
   description: string;
-}
-
-interface AuditSectionBadge {
-  key: string;
-  label: string;
-  status: string;
 }
 
 @Component({
@@ -154,7 +162,7 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   get formattedSummaryText(): string {
-    return this.formatSummaryText(this.auditSummary?.summaryText);
+    return formatSummaryText(this.auditSummary?.summaryText);
   }
 
   private getLocaleUrlPrefix(): "fr" | "en" {
@@ -215,15 +223,14 @@ export class GrowthAuditComponent implements OnDestroy {
         this.successMessage = this.formLabels.success;
         this.auditId = response.auditId;
         this.auditProgress = 0;
-        this.auditStep = "Audit en attente...";
+        this.auditStep = $localize`:growthAudit.step.pending|Audit pending step@@auditStepPending:Audit en attente...`;
         this.resetAuditTimeline();
         this.isAuditRunning = true;
         this.reconnectAttempts = 0;
         this.startStream(response.auditId);
       },
       error: (error: unknown) => {
-        this.errorMessage =
-          this.extractErrorMessage(error) || this.formLabels.error;
+        this.errorMessage = extractErrorMessage(error) ?? this.formLabels.error;
       },
       complete: () => {
         this.isSubmitting = false;
@@ -259,7 +266,7 @@ export class GrowthAuditComponent implements OnDestroy {
 
     if (event.type === "progress") {
       this.auditProgress = event.data.progress ?? 0;
-      this.auditStep = this.formatProgressStep(event.data);
+      this.auditStep = formatProgressStep(event.data);
       this.applyProgressDetails(event.data.details);
       this.isAuditRunning = true;
       this.cdr.markForCheck();
@@ -268,7 +275,7 @@ export class GrowthAuditComponent implements OnDestroy {
 
     if (event.type === "completed") {
       this.auditProgress = event.data.progress ?? 100;
-      this.auditStep = "Audit terminé";
+      this.auditStep = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
       this.resetAuditTimeline();
       this.isAuditRunning = false;
       this.auditSummary = {
@@ -287,7 +294,9 @@ export class GrowthAuditComponent implements OnDestroy {
 
     this.isAuditRunning = false;
     this.resetAuditTimeline();
-    this.errorMessage = event.data.error || "L'audit a échoué.";
+    this.errorMessage =
+      event.data.error ||
+      $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
     this.cdr.markForCheck();
   }
 
@@ -297,7 +306,7 @@ export class GrowthAuditComponent implements OnDestroy {
         if (summary.ready || summary.status === "COMPLETED") {
           this.auditSummary = summary;
           this.auditProgress = summary.progress;
-          this.auditStep = "Audit terminé";
+          this.auditStep = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
           this.resetAuditTimeline();
           this.isAuditRunning = false;
           this.errorMessage = undefined;
@@ -308,7 +317,7 @@ export class GrowthAuditComponent implements OnDestroy {
         if (summary.status === "FAILED") {
           this.isAuditRunning = false;
           this.resetAuditTimeline();
-          this.errorMessage = "L'audit a échoué.";
+          this.errorMessage = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
           this.cdr.markForCheck();
           return;
         }
@@ -321,34 +330,16 @@ export class GrowthAuditComponent implements OnDestroy {
 
         this.isAuditRunning = false;
         this.resetAuditTimeline();
-        this.errorMessage =
-          "Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.";
+        this.errorMessage = $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`;
         this.cdr.markForCheck();
       },
       error: () => {
         this.isAuditRunning = false;
         this.resetAuditTimeline();
-        this.errorMessage =
-          "Impossible de récupérer le résumé de l'audit pour le moment.";
+        this.errorMessage = $localize`:growthAudit.error.summaryFetch|Summary fetch error@@auditErrorSummaryFetch:Impossible de récupérer le résumé de l'audit pour le moment.`;
         this.cdr.markForCheck();
       },
     });
-  }
-
-  private extractErrorMessage(error: unknown): string | undefined {
-    const nestedMessage = (error as { error?: { message?: string | string[] } })
-      ?.error?.message;
-
-    if (Array.isArray(nestedMessage)) {
-      return nestedMessage.join(" ");
-    }
-
-    if (typeof nestedMessage === "string") {
-      return nestedMessage;
-    }
-
-    const topLevelMessage = (error as { message?: string })?.message;
-    return typeof topLevelMessage === "string" ? topLevelMessage : undefined;
   }
 
   private stopStream(): void {
@@ -356,138 +347,35 @@ export class GrowthAuditComponent implements OnDestroy {
     this.streamSub = undefined;
   }
 
-  private formatProgressStep(event: {
-    step?: string | null;
-    details?: Record<string, unknown>;
-  }): string {
-    const base = event.step ?? "Audit en cours...";
-    if (/\(\d+\/\d+\)/.test(base)) {
-      return base;
-    }
-    const details = event.details;
-    if (!details) return base;
-
-    const done = Number(details["done"]);
-    const total = Number(details["total"]);
-    if (!Number.isFinite(done) || !Number.isFinite(total) || total <= 0) {
-      return base;
-    }
-
-    return `${base} (${Math.max(0, done)}/${Math.max(1, total)})`;
-  }
-
   private applyProgressDetails(details?: Record<string, unknown>): void {
-    const payload = this.extractRecord(details);
+    const payload = extractRecord(details);
     if (!payload) {
       this.resetAuditTimeline();
       return;
     }
 
-    const phase = this.extractString(payload["phase"]);
-    this.auditPhaseLabel = this.formatPhaseLabel(phase);
-    this.auditCurrentUrl = this.extractString(payload["currentUrl"]);
-    this.auditIaTask = this.formatTaskLabel(
-      this.extractString(payload["iaTask"]),
+    const phase = extractString(payload["phase"]);
+    this.auditPhaseLabel = formatPhaseLabel(phase);
+    this.auditCurrentUrl = extractString(payload["currentUrl"]);
+    this.auditIaTask = formatTaskLabel(extractString(payload["iaTask"]));
+    this.auditIaSubTask = formatSubTaskLabel(
+      extractString(payload["iaSubTask"]),
     );
-    this.auditIaSubTask = this.formatSubTaskLabel(
-      this.extractString(payload["iaSubTask"]),
-    );
-    this.auditRecentCompletedUrls = this.extractStringArray(
+    this.auditRecentCompletedUrls = extractStringArray(
       payload["recentCompletedUrls"],
     ).slice(-5);
 
-    const statuses = this.extractRecord(payload["sectionStatuses"]) ?? {};
-    const section = this.extractString(payload["section"]);
-    const sectionStatus = this.extractString(payload["sectionStatus"]);
+    const statuses = extractRecord(payload["sectionStatuses"]) ?? {};
+    const section = extractString(payload["section"]);
+    const sectionStatus = extractString(payload["sectionStatus"]);
     if (section && sectionStatus) {
       statuses[section] = sectionStatus;
     }
-    this.auditSectionBadges = this.buildSectionBadges(statuses);
-  }
-
-  private buildSectionBadges(
-    statuses: Record<string, unknown>,
-  ): AuditSectionBadge[] {
-    const sections = [
-      "summary",
-      "executiveSection",
-      "prioritySection",
-      "executionSection",
-      "clientCommsSection",
-    ];
-
-    return sections
-      .map((key) => ({
-        key,
-        label: this.formatSectionLabel(key),
-        status: this.extractString(statuses[key]) || "pending",
-      }))
-      .filter((entry) => entry.status !== "pending");
-  }
-
-  private formatPhaseLabel(phase: string): string {
-    if (!phase) return "";
-    switch (phase) {
-      case "technical_pages":
-        return "Scan technique des pages";
-      case "page_ai_recaps":
-        return "Micro-audits IA page par page";
-      case "synthesis":
-        return "Synthèse finale IA";
-      default:
-        return phase.replaceAll("_", " ");
-    }
-  }
-
-  private formatTaskLabel(task: string): string {
-    if (!task) return "";
-    switch (task) {
-      case "technical_scan":
-        return "Scan technique";
-      case "page_ai_recap":
-        return "Analyse IA de page";
-      case "synthesis":
-        return "Synthèse IA";
-      default:
-        return task.replaceAll("_", " ");
-    }
-  }
-
-  private formatSubTaskLabel(subTask: string): string {
-    if (!subTask) return "";
-    return subTask.replaceAll("_", " ");
-  }
-
-  private formatSectionLabel(section: string): string {
-    switch (section) {
-      case "summary":
-        return "Résumé";
-      case "executiveSection":
-        return "Executive";
-      case "prioritySection":
-        return "Priorités";
-      case "executionSection":
-        return "Exécution";
-      case "clientCommsSection":
-        return "Message client";
-      default:
-        return section;
-    }
+    this.auditSectionBadges = buildSectionBadges(statuses);
   }
 
   sectionBadgeClass(status: string): string {
-    switch (status) {
-      case "completed":
-        return "bg-emerald-100 text-emerald-700 border-emerald-200";
-      case "failed":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "fallback":
-        return "bg-amber-100 text-amber-800 border-amber-200";
-      case "started":
-        return "bg-sky-100 text-sky-800 border-sky-200";
-      default:
-        return "bg-slate-100 text-slate-700 border-slate-200";
-    }
+    return sectionBadgeClassFn(status);
   }
 
   private resetAuditTimeline(): void {
@@ -497,67 +385,5 @@ export class GrowthAuditComponent implements OnDestroy {
     this.auditIaSubTask = "";
     this.auditRecentCompletedUrls = [];
     this.auditSectionBadges = [];
-  }
-
-  private extractRecord(value: unknown): Record<string, unknown> | null {
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      return null;
-    }
-    return value as Record<string, unknown>;
-  }
-
-  private extractString(value: unknown): string {
-    return typeof value === "string" ? value.trim() : "";
-  }
-
-  private extractStringArray(value: unknown): string[] {
-    if (!Array.isArray(value)) return [];
-    return value
-      .map((entry) => this.extractString(entry))
-      .filter((entry) => entry.length > 0);
-  }
-
-  private formatSummaryText(summaryText: string | null | undefined): string {
-    if (!summaryText) return "";
-
-    const sectionLabels =
-      "(Contexte|Context|Blocages?|Blockers?|Impacts?\\s+business|Business\\s+impact|Priorit[eé]s?\\s+imm[eé]diates?|Immediate\\s+priorities)";
-    const prioritiesLabel =
-      "(Priorit[eé]s?\\s+imm[eé]diates?|Immediate\\s+priorities)";
-
-    return (
-      summaryText
-        // Normalize newlines
-        .replace(/\r\n?/g, "\n")
-
-        // Remove common markdown emphasis
-        .replace(/\*\*([^*]+)\*\*/g, "$1")
-        .replace(/__([^_]+)__/g, "$1")
-
-        // IMPORTANT: keep \n, only normalize spaces/tabs
-        .replace(/[ \t]+/g, " ")
-        .replace(/ *\n */g, "\n")
-        .trim()
-
-        // Put each recognized section on its own paragraph (blank line before label)
-        // " ... Contexte :" => "...\n\nContexte :"
-        .replace(
-          new RegExp(`([^\\n])\\s+${sectionLabels}\\s*:`, "gi"),
-          "$1\n\n$2 :",
-        )
-
-        // If "Priorités immédiates : 1)" or "Priorités immédiates : 1." => newline after colon
-        .replace(
-          new RegExp(`${prioritiesLabel}\\s*:\\s*(\\d+[).])`, "gi"),
-          "$1 :\n$2",
-        )
-
-        // One item per line for BOTH "1)" and "1."
-        .replace(/\s+(\d+[).])\s*/g, "\n$1 ")
-
-        // Clean up too many blank lines
-        .replace(/\n{3,}/g, "\n\n")
-        .trim()
-    );
   }
 }

@@ -1,6 +1,12 @@
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import type { AfterViewInit } from "@angular/core";
-import { Component, ElementRef, Renderer2 } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import {
+  Component,
+  ElementRef,
+  Inject,
+  PLATFORM_ID,
+  Renderer2,
+} from "@angular/core";
 
 @Component({
   selector: "app-scroll-animation",
@@ -13,6 +19,7 @@ export class ScrollAnimationComponent implements AfterViewInit {
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
+    @Inject(PLATFORM_ID) private readonly platformId: object,
   ) {}
 
   ngAfterViewInit() {
@@ -20,6 +27,9 @@ export class ScrollAnimationComponent implements AfterViewInit {
   }
 
   private initScrollAnimation() {
+    // Guard SSR : les API window/document ne sont pas disponibles cote serveur
+    if (!isPlatformBrowser(this.platformId)) return;
+
     // Add reveal class to all elements that should animate on scroll
     const revealElements = this.el.nativeElement.querySelectorAll(".reveal");
 

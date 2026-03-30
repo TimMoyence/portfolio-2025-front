@@ -1,7 +1,8 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideRouter } from "@angular/router";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import { of } from "rxjs";
@@ -21,13 +22,11 @@ describe("AuthComponent", () => {
     ]);
 
     await TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        AuthComponent,
-        RouterTestingModule,
-        HttpClientTestingModule,
-      ],
+      imports: [FormsModule, AuthComponent],
       providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
         {
           provide: AuthService,
           useValue: authService,
@@ -40,11 +39,12 @@ describe("AuthComponent", () => {
     fixture.detectChanges();
   });
 
+  /** Cree un mock type de NgForm via jasmine.createSpyObj (PE-012). */
   const buildForm = (invalid: boolean): NgForm =>
-    ({
+    jasmine.createSpyObj<NgForm>("NgForm", ["resetForm"], {
       invalid,
-      resetForm: jasmine.createSpy("resetForm"),
-    }) as unknown as NgForm;
+      valid: !invalid,
+    });
 
   it("should call the auth service when sign up form is valid and passwords match", () => {
     const form = buildForm(false);

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { SvgIconComponent } from "../../../../shared/components/svg-icon.component";
 
@@ -39,7 +39,7 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
               >
                 <a
                   [routerLink]="'/presentation'"
-                  class="transition-colors bg-white hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
+                  class="transition-colors bg-scheme-surface hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
                   i18n="hero.cta.about|Hero about CTA@@heroCtaAbout"
                 >
                   Découvrir l’approche
@@ -80,5 +80,6 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroSectionComponent {}

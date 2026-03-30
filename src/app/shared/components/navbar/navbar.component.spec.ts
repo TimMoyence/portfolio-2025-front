@@ -1,122 +1,91 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { PLATFORM_ID } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
+import { NavbarComponent } from "./navbar.component";
 
-// import { NavbarComponent } from './navbar.component';
+describe("NavbarComponent", () => {
+  describe("en contexte navigateur", () => {
+    let component: NavbarComponent;
+    let fixture: ComponentFixture<NavbarComponent>;
 
-// describe('NavbarComponent', () => {
-//   let component: NavbarComponent;
-//   let fixture: ComponentFixture<NavbarComponent>;
-//   let mockMatches = false;
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [NavbarComponent],
+        providers: [
+          { provide: PLATFORM_ID, useValue: "browser" },
+          { provide: ActivatedRoute, useValue: {} },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+        ],
+      }).compileComponents();
 
-//   const createMediaQueryList = (matches: boolean): MediaQueryList =>
-//     ({
-//       matches,
-//       media: '',
-//       onchange: null,
-//       addListener: () => undefined,
-//       removeListener: () => undefined,
-//       addEventListener: () => undefined,
-//       removeEventListener: () => undefined,
-//       dispatchEvent: () => false,
-//     } as MediaQueryList);
+      fixture = TestBed.createComponent(NavbarComponent);
+      component = fixture.componentInstance;
+    });
 
-//   beforeEach(async () => {
-//     mockMatches = false;
+    it("devrait se creer", () => {
+      fixture.detectChanges();
+      expect(component).toBeTruthy();
+    });
 
-//     await TestBed.configureTestingModule({
-//       imports: [NavbarComponent],
-//     }).compileComponents();
+    it("devrait mettre scrolled a true quand scrollY > 50", () => {
+      // Simule un scroll
+      spyOnProperty(window, "scrollY", "get").and.returnValue(100);
+      component.onWindowScroll();
+      expect(component.scrolled).toBeTrue();
+    });
 
-//     if (!window.matchMedia) {
-//       (window as any).matchMedia = () => createMediaQueryList(false);
-//     }
+    it("devrait mettre scrolled a false quand scrollY <= 50", () => {
+      spyOnProperty(window, "scrollY", "get").and.returnValue(10);
+      component.onWindowScroll();
+      expect(component.scrolled).toBeFalse();
+    });
+  });
 
-//     spyOn(window, 'matchMedia').and.callFake(() =>
-//       createMediaQueryList(mockMatches),
-//     );
+  describe("en contexte serveur (SSR)", () => {
+    let component: NavbarComponent;
+    let fixture: ComponentFixture<NavbarComponent>;
 
-//     fixture = TestBed.createComponent(NavbarComponent);
-//     component = fixture.componentInstance;
-//   });
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [NavbarComponent],
+        providers: [
+          { provide: PLATFORM_ID, useValue: "server" },
+          { provide: ActivatedRoute, useValue: {} },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+        ],
+      }).compileComponents();
 
-//   it('should create', () => {
-//     fixture.detectChanges();
+      fixture = TestBed.createComponent(NavbarComponent);
+      component = fixture.componentInstance;
+    });
 
-//     expect(component).toBeTruthy();
-//   });
+    it("devrait se creer en SSR", () => {
+      fixture.detectChanges();
+      expect(component).toBeTruthy();
+    });
 
-//   // it('should render the expected navigation links', () => {
-//   //   fixture.detectChanges();
+    it("onWindowScroll ne devrait pas crasher en SSR", () => {
+      expect(() => component.onWindowScroll()).not.toThrow();
+    });
 
-//   //   const linkTexts = Array.from(
-//   //     fixture.nativeElement.querySelectorAll('nav a'),
-//   //   ).map((link: Element) => link.textContent?.trim());
+    it("handleGlobalKeydown ne devrait pas crasher en SSR", () => {
+      const event = new KeyboardEvent("keydown", { key: "Escape" });
+      expect(() => component.handleGlobalKeydown(event)).not.toThrow();
+    });
 
-//   //   expect(linkTexts).toEqual(['Accueil', 'Cours', 'Présentation']);
-//   // });
+    it("openMobileMenu ne devrait pas crasher en SSR", () => {
+      expect(() => component.openMobileMenu()).not.toThrow();
+    });
 
-//   it('should toggle the mobile menu visibility', () => {
-//     mockMatches = true;
-//     fixture.detectChanges();
-
-//     const toggleButton = fixture.nativeElement.querySelector(
-//       '[data-testid="mobile-toggle"]',
-//     ) as HTMLButtonElement;
-//     const navContainer = fixture.nativeElement.querySelector(
-//       '#navbar-links',
-//     ) as HTMLElement;
-
-//     toggleButton.click();
-//     fixture.detectChanges();
-
-//     expect(component.isMobileMenuOpen).toBeTrue();
-//     expect(navContainer.classList.contains('hidden')).toBeFalse();
-
-//     toggleButton.click();
-//     fixture.detectChanges();
-
-//     expect(component.isMobileMenuOpen).toBeFalse();
-//     expect(navContainer.classList.contains('hidden')).toBeTrue();
-//   });
-
-//   it('should open and close dropdowns on desktop hover', () => {
-//     fixture.detectChanges();
-
-//     const dropdownContainer = fixture.nativeElement.querySelector(
-//       '[data-testid="dropdown-container-0"]',
-//     ) as HTMLElement;
-
-//     dropdownContainer.dispatchEvent(new Event('mouseenter'));
-//     fixture.detectChanges();
-
-//     expect(component.isDropdownOpen).toBeTrue();
-//     expect(dropdownContainer.textContent).toContain('PresQ');
-
-//     dropdownContainer.dispatchEvent(new Event('mouseleave'));
-//     fixture.detectChanges();
-
-//     expect(component.isDropdownOpen).toBeFalse();
-//   });
-
-//   it('should toggle the dropdown on mobile via button click', () => {
-//     mockMatches = true;
-//     fixture.detectChanges();
-
-//     const mobileToggle = fixture.nativeElement.querySelector(
-//       '[data-testid="mobile-toggle"]',
-//     ) as HTMLButtonElement;
-//     mobileToggle.click();
-//     fixture.detectChanges();
-
-//     const dropdownButton = fixture.nativeElement.querySelector(
-//       '[data-testid="dropdown-button-0"]',
-//     ) as HTMLButtonElement;
-
-//     dropdownButton.click();
-//     fixture.detectChanges();
-//     expect(component.isDropdownOpen).toBeTrue();
-
-//     dropdownButton.click();
-//     fixture.detectChanges();
-//     expect(component.isDropdownOpen).toBeFalse();
-//   });
-// });
+    it("closeMobileMenu ne devrait pas crasher en SSR", () => {
+      expect(() => component.closeMobileMenu()).not.toThrow();
+    });
+  });
+});

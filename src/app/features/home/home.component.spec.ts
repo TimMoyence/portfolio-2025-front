@@ -1,7 +1,12 @@
 import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import {
+  DeferBlockBehavior,
+  DeferBlockState,
+  TestBed,
+} from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { HomeComponent } from "./home.component";
 
 describe("HomeComponent", () => {
@@ -10,7 +15,13 @@ describe("HomeComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeComponent, RouterTestingModule, HttpClientTestingModule],
+      imports: [HomeComponent],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
+      deferBlockBehavior: DeferBlockBehavior.Manual,
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
@@ -22,7 +33,13 @@ describe("HomeComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should render the composed sections including contact and footer", () => {
+  it("should render the composed sections including contact and footer", async () => {
+    const deferBlocks = await fixture.getDeferBlocks();
+    for (const block of deferBlocks) {
+      await block.render(DeferBlockState.Complete);
+    }
+    fixture.detectChanges();
+
     const compiled: HTMLElement = fixture.nativeElement;
     expect(compiled.querySelector("app-hero-section-home")).not.toBeNull();
     expect(compiled.querySelector("app-services-section")).not.toBeNull();

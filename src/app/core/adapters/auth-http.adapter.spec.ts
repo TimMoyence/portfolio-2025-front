@@ -1,7 +1,8 @@
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from "@angular/common/http/testing";
+import { provideHttpClient } from "@angular/common/http";
 import { TestBed } from "@angular/core/testing";
 import { environment } from "../../../environments/environnement";
 import { APP_CONFIG } from "../config/app-config.token";
@@ -19,8 +20,9 @@ describe("AuthHttpAdapter", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         AuthHttpAdapter,
         {
           provide: APP_CONFIG,

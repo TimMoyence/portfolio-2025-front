@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
   LOCALE_ID,
@@ -11,6 +12,7 @@ import { RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import type { ContactFormState } from "../../core/models/contact.model";
 import { ContactService } from "../../core/services/contact.service";
+import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 
@@ -36,6 +38,7 @@ export class ContactComponent {
   private readonly appConfig = inject(APP_CONFIG);
   private readonly localeId = inject(LOCALE_ID);
   private readonly contactService = inject(ContactService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly hero = {
     label: $localize`:contact.hero.label@@contactHeroLabel:Connexion`,
@@ -139,18 +142,19 @@ export class ContactComponent {
           this.contactErrorMessage = response.message;
         else
           this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => {
-        const serverMessage = this.extractErrorMessage(error);
         this.contactErrorMessage =
-          serverMessage ||
-          this.readErrorMessage(error) ||
+          extractErrorMessage(error) ??
           $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`;
+        this.cdr.markForCheck();
       },
       complete: () => {
         this.contactForm = { ...this.defaultContactFormState };
         form.resetForm(this.contactForm);
         this.isContactSubmitted = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -175,21 +179,5 @@ export class ContactComponent {
       termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
       termsMethod: form.termsMethod ?? "contact_form_checkbox",
     };
-  }
-
-  private extractErrorMessage(error: unknown): string | undefined {
-    const nestedMessage = (error as { error?: { message?: string | string[] } })
-      ?.error?.message;
-
-    if (Array.isArray(nestedMessage)) {
-      return nestedMessage.join(" ");
-    }
-
-    return typeof nestedMessage === "string" ? nestedMessage : undefined;
-  }
-
-  private readErrorMessage(error: unknown): string | undefined {
-    const message = (error as { message?: string })?.message;
-    return typeof message === "string" ? message : undefined;
   }
 }

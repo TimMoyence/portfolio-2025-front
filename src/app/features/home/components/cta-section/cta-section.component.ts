@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
   selector: "app-cta-section",
@@ -66,5 +66,6 @@ import { Component } from "@angular/core";
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CtaSectionComponent {}

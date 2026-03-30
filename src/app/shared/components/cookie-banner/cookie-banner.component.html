@@ -1,6 +1,6 @@
 @if (isVisible) {
   <section
-    class="cookie-banner fixed inset-x-0 bottom-0 z-50 border-t border-scheme-border bg-white/95 backdrop-blur"
+    class="cookie-banner fixed inset-x-0 bottom-0 z-50 border-t border-scheme-border bg-scheme-surface/95 backdrop-blur"
   >
     <div
       class="container flex flex-col gap-4 px-[5%] py-4 md:flex-row md:items-center md:justify-between"
@@ -14,7 +14,7 @@
       <div class="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          class="rounded-button border border-scheme-border bg-white px-4 py-2 text-sm font-semibold text-scheme-text transition-colors hover:bg-scheme-accent-hover"
+          class="rounded-button border border-scheme-border bg-scheme-surface px-4 py-2 text-sm font-semibold text-scheme-text transition-colors hover:bg-scheme-accent-hover"
           (click)="acceptEssentialOnly()"
         >
           {{ content.essentialOnly }}

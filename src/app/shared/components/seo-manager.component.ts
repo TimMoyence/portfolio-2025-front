@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import type { OnInit } from "@angular/core";
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { of } from "rxjs";
 import { filter, map, mergeMap, switchMap } from "rxjs/operators";
@@ -18,6 +18,7 @@ import { SeoService } from "../../core/seo/seo.service";
   imports: [CommonModule],
   template: ``,
   styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeoManagerComponent implements OnInit {
   private readonly appConfig = inject(APP_CONFIG);

@@ -72,7 +72,7 @@ export type ServicesCta = {
           <div class="mt-3 flex flex-wrap items-center gap-4 md:mt-9 lg:mt-10">
             <a
               [routerLink]="cta.href"
-              class="transition-colors bg-white hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
+              class="transition-colors bg-scheme-surface hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
             >
               {{ cta.label }}
               @if (cta.iconName) {

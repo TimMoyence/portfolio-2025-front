@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { SvgIconComponent } from "../svg-icon.component";
 
 @Component({
@@ -94,6 +94,7 @@ import { SvgIconComponent } from "../svg-icon.component";
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductShowcaseComponent {
   readonly features = [

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -21,18 +21,24 @@ import { CommonModule } from "@angular/common";
   `,
   styles: [
     `
+      :host {
+        --skip-bg: theme("colors.scheme-surface");
+        --skip-text: theme("colors.scheme-text");
+        --skip-ring: theme("colors.scheme-accent");
+      }
+
       .skip-link {
         position: absolute;
         top: 0.5rem;
         left: 0.5rem;
         padding: 0.5rem 1rem;
-        background: #ffffff;
-        color: #000;
+        background: var(--skip-bg);
+        color: var(--skip-text);
         border-radius: 999px;
         z-index: 9999;
         font-weight: 600;
         text-decoration: none;
-        box-shadow: 0 0 0 2px #000;
+        box-shadow: 0 0 0 2px var(--skip-ring);
         /* Hidden by default */
         transform: translateY(-200%);
         transition: transform 0.15s ease-out;
@@ -44,5 +50,6 @@ import { CommonModule } from "@angular/common";
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SkipLinkComponent {}

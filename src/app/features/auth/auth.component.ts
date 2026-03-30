@@ -1,11 +1,17 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+} from "@angular/core";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import type { RegisterUserPayload } from "../../core/models/auth.model";
 import type { LoginFormState } from "../../core/models/loginForm.model";
 import type { SignupFormState } from "../../core/models/signupForm.model";
 import { AuthService } from "../../core/services/auth.service";
+import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import { SvgIconComponent } from "../../shared/components/svg-icon.component";
@@ -26,9 +32,11 @@ type LoginFormKey = keyof LoginFormState;
   ],
   templateUrl: "./auth.component.html",
   styleUrl: "./auth.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
   private readonly authService = inject(AuthService);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly defaultSignupState: SignupFormState = {
     email: "",
     password: "",
@@ -170,13 +178,16 @@ export class AuthComponent {
       next: (user) => {
         this.signupSuccessMessage = $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Compte créé pour ${user.firstName} ${user.lastName}.`;
         this.resetSignupForm(form);
+        this.cdr.markForCheck();
       },
       error: (error) => {
-        this.signupErrorMessage = this.extractErrorMessage(error);
+        this.signupErrorMessage = this.getErrorMessage(error);
         this.isSignupLoading = false;
+        this.cdr.markForCheck();
       },
       complete: () => {
         this.isSignupLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -192,23 +203,26 @@ export class AuthComponent {
 
     this.authService.login(this.loginForm).subscribe({
       next: (session) => {
-        // TODO : Intégrer la gestion de session & token & integrer la redirection vers le bon endroit
+        // La gestion de session et de token est assurée côté backend (cookie httpOnly).
+        // La redirection post-login sera ajoutée quand les pages protégées seront disponibles.
         this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
+        this.cdr.markForCheck();
       },
       error: (error) => {
-        this.loginErrorMessage = this.extractErrorMessage(error);
+        this.loginErrorMessage = this.getErrorMessage(error);
         this.isLoginLoading = false;
+        this.cdr.markForCheck();
       },
       complete: () => {
         this.isLoginLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleGoogleAuth(context: AuthTab): void {
-    console.log(
-      $localize`:auth.google.triggered|Console message for Google auth@@authGoogleTriggered:Google auth triggered for ${context}`,
-    );
+    // TODO : Implémenter l'authentification Google (OAuth2)
   }
 
   private resetSignupForm(form: NgForm): void {
@@ -217,19 +231,10 @@ export class AuthComponent {
     this.isSignupSubmitted = false;
   }
 
-  private extractErrorMessage(error: unknown): string {
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "error" in error &&
-      typeof (error as { error: { message?: string } }).error === "object"
-    ) {
-      const apiError = (error as { error: { message?: string } }).error;
-      if (apiError?.message) {
-        return apiError.message;
-      }
-    }
-
-    return $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`;
+  private getErrorMessage(error: unknown): string {
+    return (
+      extractErrorMessage(error) ??
+      $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`
+    );
   }
 }

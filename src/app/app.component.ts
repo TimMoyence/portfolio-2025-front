@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { FooterComponent } from "./shared/components/footer/footer.component";
 import { CookieBannerComponent } from "./shared/components/cookie-banner/cookie-banner.component";
@@ -28,8 +28,14 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
         <div class="pt-32 lg:pt-36 bg-scheme-background"></div>
         <router-outlet></router-outlet>
       </main>
-      <app-footer></app-footer>
-      <app-cookie-banner></app-cookie-banner>
+      @defer (on viewport) {
+        <app-footer></app-footer>
+      } @placeholder {
+        <div class="h-48"></div>
+      }
+      @defer (on idle) {
+        <app-cookie-banner></app-cookie-banner>
+      }
     </div>
   `,
   styles: [
@@ -39,6 +45,7 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = "portfolio-app";

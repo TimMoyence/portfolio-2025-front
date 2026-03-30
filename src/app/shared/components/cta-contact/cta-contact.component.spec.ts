@@ -1,4 +1,5 @@
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
 import type { ContactMethod } from "../../models/contact.model";
@@ -9,7 +10,8 @@ describe("ContactCtaComponent", () => {
   let fixture: ComponentFixture<ContactCtaComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContactCtaComponent, HttpClientTestingModule],
+      imports: [ContactCtaComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContactCtaComponent);
@@ -22,7 +24,7 @@ describe("ContactCtaComponent", () => {
   });
 
   it("should display the heading and lead paragraph when provided", () => {
-    component.leadParagraphs = ["Première phrase"];
+    fixture.componentRef.setInput("leadParagraphs", ["Première phrase"]);
     fixture.detectChanges();
     const compiled: HTMLElement = fixture.nativeElement;
     expect(compiled.textContent).toContain(component.title);

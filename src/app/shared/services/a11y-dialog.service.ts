@@ -1,9 +1,15 @@
-import { Injectable } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 
 @Injectable({
   providedIn: "root",
 })
 export class A11yDialogService {
+  private readonly isBrowser: boolean;
+
+  constructor(@Inject(PLATFORM_ID) platformId: object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
   /**
    * Remember the element that had focus before opening a dialog / mobile menu.
    */
@@ -13,6 +19,7 @@ export class A11yDialogService {
    * Save the currently focused element so we can restore focus after closing.
    */
   saveFocus(): void {
+    if (!this.isBrowser) return;
     const activeElement = document.activeElement as HTMLElement | null;
     if (activeElement) {
       this.lastFocusedElement = activeElement;
@@ -68,6 +75,7 @@ export class A11yDialogService {
 
     const first = focusableElements[0];
     const last = focusableElements[focusableElements.length - 1];
+    if (!this.isBrowser) return;
     const current = document.activeElement as HTMLElement | null;
 
     if (event.shiftKey) {

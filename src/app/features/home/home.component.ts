@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import type { ServiceItem } from "../../shared/components/services-section/services-section.component";
 import { ServicesSectionComponent } from "../../shared/components/services-section/services-section.component";
@@ -22,6 +22,7 @@ import { ProjectsAccordionComponent } from "./components/projects-accordion/proj
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
   readonly servicesSection = {

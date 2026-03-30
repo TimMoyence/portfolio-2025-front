@@ -148,6 +148,8 @@ export class CookieConsentService {
   }
 
   private writeConsent(state: CookieConsentState): void {
+    // Defense en profondeur : guard SSR meme si saveConsent() verifie deja isBrowser
+    if (!this.isBrowser) return;
     const value = encodeURIComponent(JSON.stringify(state));
     const maxAgeDays = this.appConfig.gdpr?.cookieMaxAgeDays ?? 365;
     const maxAge = maxAgeDays * 24 * 60 * 60;

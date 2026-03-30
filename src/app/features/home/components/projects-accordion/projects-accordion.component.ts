@@ -1,6 +1,14 @@
 import { CommonModule, isPlatformBrowser } from "@angular/common";
 import type { OnInit } from "@angular/core";
-import { Component, HostListener, Inject, PLATFORM_ID } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  inject,
+  Inject,
+  PLATFORM_ID,
+} from "@angular/core";
 
 type Project = {
   id: string;
@@ -115,6 +123,7 @@ type Project = {
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsAccordionComponent implements OnInit {
   readonly projects: Project[] = [
@@ -151,6 +160,8 @@ export class ProjectsAccordionComponent implements OnInit {
   activeIndex: number | null = 0;
   isMobile = false;
 
+  private readonly cdr = inject(ChangeDetectorRef);
+
   constructor(@Inject(PLATFORM_ID) private readonly platformId: object) {}
 
   ngOnInit(): void {
@@ -164,6 +175,8 @@ export class ProjectsAccordionComponent implements OnInit {
 
   setActiveIndex(index: number): void {
     this.activeIndex = index;
+    this.cdr.markForCheck();
+    if (!this.canUseWindow) return;
     const el = document.getElementById("tab-" + index);
     el?.focus();
   }
@@ -202,6 +215,7 @@ export class ProjectsAccordionComponent implements OnInit {
       this.activeIndex = 0;
     }
     this.isMobile = matches;
+    this.cdr.markForCheck();
   }
 
   private get canUseWindow(): boolean {

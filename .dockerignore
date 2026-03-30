@@ -3,6 +3,8 @@ dist
 .angular
 .git
 .gitignore
+.env
+.env.*
 npm-debug.log*
 yarn-error.log*
 coverage

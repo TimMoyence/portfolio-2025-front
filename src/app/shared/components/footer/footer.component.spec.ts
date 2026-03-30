@@ -1,4 +1,5 @@
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
 import { FooterComponent } from "./footer.component";
@@ -9,7 +10,8 @@ describe("FooterComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FooterComponent, HttpClientTestingModule],
+      imports: [FooterComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FooterComponent);
