@@ -91,7 +91,7 @@ describe("AuthHttpAdapter", () => {
       expect(createdUser).toEqual(user);
     });
 
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/users`);
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/register`);
     expect(req.request.method).toBe("POST");
     expect(req.request.body).toEqual(payload);
     req.flush(user);
