@@ -24,7 +24,7 @@ RUN groupadd --gid 1001 nodeuser \
 
 # 2) Install production dependencies only
 COPY --chown=nodeuser:nodeuser package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
 
 # 3) Copy built output
 COPY --from=build --chown=nodeuser:nodeuser /app/dist ./dist
