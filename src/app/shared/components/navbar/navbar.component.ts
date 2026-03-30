@@ -1,6 +1,14 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import type { ElementRef, OnInit } from "@angular/core";
-import { Component, HostListener, signal, ViewChild } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+  ViewChild,
+} from "@angular/core";
 import { RouterModule } from "@angular/router";
 import type { NavLink } from "../../models/navbar.model";
 import { A11yDialogService } from "../../services/a11y-dialog.service";
@@ -12,6 +20,7 @@ import { SvgIconComponent } from "../svg-icon.component";
   imports: [CommonModule, RouterModule, SvgIconComponent],
   templateUrl: "./navbar.component.html",
   styleUrls: ["./navbar.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent implements OnInit {
   readonly navLinks: NavLink[] = [
@@ -34,86 +43,10 @@ export class NavbarComponent implements OnInit {
   readonly mobileNavHeading = $localize`:navbar.menu.heading|Mobile nav heading@@navMenuHeading:Menu principal`;
   readonly closeMenuIconLabel = $localize`:navbar.menu.icon.close|Icon label@@navMenuCloseIcon:Fermer le menu`;
   readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
-  readonly dropdownChevronLabel = $localize`:navbar.dropdown.chevron|Chevron icon label@@navDropdownChevron:Ouvrir ou fermer la section`;
-
-  // ?  Dropdown sections for the project menu
-  // ? Add it when I have the page to present the project in detail
-  // dropdownSections = signal<DropdownSection[]>([
-  //   {
-  //     label: $localize`:navbar.dropdown.projects.label|Dropdown section@@navDropdownProjectsLabel:Projets`,
-  //     isOpen: false,
-  //     items: [
-  //       {
-  //         title: $localize`:navbar.dropdown.projects.presq.title|Project link@@navDropdownPresqTitle:Projet Vincent`,
-  //         description: $localize`:navbar.dropdown.projects.presq.desc|Project description@@navDropdownPresqDesc:Solution web personnalisée`,
-  //         icon: 'planet',
-  //         iconAlt: $localize`:navbar.dropdown.projects.presq.iconAlt|Icon alt text@@navDropdownPresqIconAlt:Icône pour un projet client`,
-  //         href: '/client-project',
-  //       },
-  //       {
-  //         title: $localize`:navbar.dropdown.projects.sebastian.title|Project link@@navDropdownSebastianTitle:Louisons`,
-  //         description: $localize`:navbar.dropdown.projects.sebastian.desc|Project description@@navDropdownSebastianDesc:Site sur mesure pour Louisons`,
-  //         icon: 'sebastian',
-  //         iconAlt: $localize`:navbar.dropdown.projects.sebastian.iconAlt|Icon alt text@@navDropdownSebastianIconAlt:Icône pour un projet vitrine`,
-  //         href: '/client-project',
-  //       },
-  //       {
-  //         title: $localize`:navbar.dropdown.projects.personal.title|Project link@@navDropdownPersonalTitle:Portfolio`,
-  //         description: $localize`:navbar.dropdown.projects.personal.desc|Project description@@navDropdownPersonalDesc:Explorations numériques et expériences`,
-  //         icon: 'perso',
-  //         iconAlt: $localize`:navbar.dropdown.projects.personal.iconAlt|Icon alt text@@navDropdownPersonalIconAlt:Icône représentant l'espace personnel`,
-  //         href: '/presentation',
-  //       },
-  //       {
-  //         title: $localize`:navbar.dropdown.projects.professional.title|Project link@@navDropdownProfessionalTitle:Projets clients`,
-  //         description: $localize`:navbar.dropdown.projects.professional.desc|Project description@@navDropdownProfessionalDesc:Sites web pour clients et entreprises`,
-  //         icon: 'business',
-  //         iconAlt: $localize`:navbar.dropdown.projects.professional.iconAlt|Icon alt text@@navDropdownProfessionalIconAlt:Icône représentant le professionnel`,
-  //         href: '/client-project',
-  //       },
-  //     ],
-  //   },
-  //   // {
-  //   //   label: $localize`:navbar.dropdown.dev.label|Dropdown section@@navDropdownDevLabel:Développement`,
-  //   //   isOpen: false,
-  //   //   items: [
-  //   //     {
-  //   //       title: $localize`:navbar.dropdown.dev.appMuseum.title|Project link@@navDropdownAppMuseumTitle:App museum`,
-  //   //       description: $localize`:navbar.dropdown.dev.appMuseum.desc|Project description@@navDropdownAppMuseumDesc:Expérience muséale interactive et immersive`,
-  //   //       icon: 'museum',
-  //   //       iconAlt: $localize`:navbar.dropdown.dev.appMuseum.iconAlt|Icon alt text@@navDropdownAppMuseumIconAlt:Icône représentant l'application museum`,
-  //   //       href: '/offer',
-  //   //     },
-  //   //     {
-  //   //       title: $localize`:navbar.dropdown.dev.weekAway.title|Project link@@navDropdownWeekAwayTitle:Week Away`,
-  //   //       description: $localize`:navbar.dropdown.dev.weekAway.desc|Project description@@navDropdownWeekAwayDesc:Planification de voyages simplifiée`,
-  //   //       icon: 'travel',
-  //   //       iconAlt: $localize`:navbar.dropdown.dev.weekAway.iconAlt|Icon alt text@@navDropdownWeekAwayIconAlt:Icône représentant Week Away`,
-  //   //       href: '/offer',
-  //   //     },
-  //   //     {
-  //   //       title: $localize`:navbar.dropdown.dev.deathCounter.title|Project link@@navDropdownDeathCounterTitle:Death Counter`,
-  //   //       description: $localize`:navbar.dropdown.dev.deathCounter.desc|Project description@@navDropdownDeathCounterDesc:Jeu de stratégie et de défi`,
-  //   //       icon: 'death-counter',
-  //   //       iconAlt: $localize`:navbar.dropdown.dev.deathCounter.iconAlt|Icon alt text@@navDropdownDeathCounterIconAlt:Icône représentant Death Counter`,
-  //   //       href: '/presentation',
-  //   //     },
-  //   //     {
-  //   //       title: $localize`:navbar.dropdown.dev.assassin.title|Project link@@navDropdownAssassinTitle:Assassin`,
-  //   //       description: $localize`:navbar.dropdown.dev.assassin.desc|Project description@@navDropdownAssassinDesc:Enquête narrative et mystère`,
-  //   //       icon: 'assassin',
-  //   //       iconAlt: $localize`:navbar.dropdown.dev.assassin.iconAlt|Icon alt text@@navDropdownAssassinIconAlt:Icône représentant Assassin`,
-  //   //       href: '/presentation',
-  //   //     },
-  //   //   ],
-  //   // },
-  // ]);
-
   scrolled = false;
   mobileMenuOpen = false;
 
   isMobile = false;
-  currentlyHovered = signal<string | null>(null);
 
   @ViewChild("mobileMenuPanel", { static: false })
   mobileMenuPanel?: ElementRef<HTMLElement>;
@@ -121,14 +54,23 @@ export class NavbarComponent implements OnInit {
   @ViewChild("burgerButton", { static: false })
   burgerButton?: ElementRef<HTMLButtonElement>;
 
-  constructor(private a11yDialog: A11yDialogService) {}
+  constructor(
+    private a11yDialog: A11yDialogService,
+    private readonly cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private readonly platformId: object,
+  ) {}
   ngOnInit(): void {
     this.updateIsMobileState();
   }
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const wasScrolled = this.scrolled;
     this.scrolled = window.scrollY > 50;
+    if (this.scrolled !== wasScrolled) {
+      this.cdr.markForCheck();
+    }
   }
 
   @HostListener("window:resize", [])
@@ -138,6 +80,7 @@ export class NavbarComponent implements OnInit {
 
   @HostListener("document:keydown", ["$event"])
   handleGlobalKeydown(event: KeyboardEvent): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const activeElement = document.activeElement as HTMLElement | null;
     const isSpace =
       event.key === " " || event.key === "Spacebar" || event.code === "Space";
@@ -167,46 +110,15 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  // ? Gestion of the dropdown menus
-  // openDropdownMenuAndToggleInMobile(label: string): void {
-  //   if (!this.isMobile) this.currentlyHovered.set(label);
-
-  //   this.dropdownSections.update((sections) =>
-  //     sections.map((section) => {
-  //       if (section.label !== label) {
-  //         // Close other sections
-  //         return { ...section, isOpen: false };
-  //       }
-
-  //       return {
-  //         ...section,
-  //         isOpen: this.isMobile ? !section.isOpen : true,
-  //       };
-  //     }),
-  //   );
-  // }
-
-  // closeOnDesktopDropdownMenu(label: string): void {
-  //   if (this.isMobile) return;
-  //   setTimeout(() => {
-  //     if (this.currentlyHovered() === label) {
-  //       return;
-  //     }
-  //     this.dropdownSections.update((sections) =>
-  //       sections.map((section) =>
-  //         section.label === label ? { ...section, isOpen: false } : section,
-  //       ),
-  //     );
-  //   }, 150);
-  // }
-
   /**
    * Called on the burger button click.
    */
   openMobileMenu(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     if (this.mobileMenuOpen) return this.closeMobileMenu();
 
     this.mobileMenuOpen = true;
+    this.cdr.markForCheck();
     document.body.style.overflow = "hidden";
 
     // Save current focus (usually the burger button)
@@ -223,24 +135,17 @@ export class NavbarComponent implements OnInit {
    * Called by the close button, backdrop click or Esc key.
    */
   closeMobileMenu(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.mobileMenuOpen = false;
+    this.cdr.markForCheck();
     document.body.style.overflow = "";
-
-    // ? Close all dropdowns when menu closes
-    // this.dropdownSections.update((sections) =>
-    //   sections.map((s) => ({ ...s, isOpen: false })),
-    // );
 
     // Restore focus to what opened the menu (e.g. burger button)
     this.a11yDialog.restoreFocus();
   }
 
-  getIconAriaLabel(title: string): string {
-    return $localize`:navbar.icon.dynamicLabel|Icon label with item title@@navbarIconLabel:Icône pour ${title}:navItemTitle:.`;
-  }
-
   private updateIsMobileState(): void {
-    if (typeof window === "undefined") return;
+    if (!isPlatformBrowser(this.platformId)) return;
 
     const isMobileViewport = window.innerWidth < 1024;
 
@@ -251,10 +156,7 @@ export class NavbarComponent implements OnInit {
     if (!this.isMobile) {
       this.mobileMenuOpen = false;
       document.body.style.overflow = "";
-      // ? Close all dropdowns when switching to desktop
-      // this.dropdownSections.update((sections) =>
-      //   sections.map((section) => ({ ...section, isOpen: false })),
-      // );
     }
+    this.cdr.markForCheck();
   }
 }
