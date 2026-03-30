@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import type { HeroAction } from "../../shared/components/hero-section/hero-section.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { PROJECT_IMAGES } from "../../shared/data/portfolio-projects";
 import { CtaSectionComponent } from "../home/components/cta-section/cta-section.component";
 
 interface PortfolioCard {
@@ -84,7 +85,7 @@ export class PresentationComponent {
 `,
         $localize`:presentation.portfolio.card.assistant.desc@@presentationPortfolioCardAssistantDesc2:Le projet explore l’usage de l’intelligence artificielle comme outil d’aide à la décision, dans un cadre maîtrisé.`,
       ],
-      image: "./assets/images/projects/Assistant-IA-Geev.webp",
+      image: PROJECT_IMAGES.assistantIaGeev,
       alt: $localize`:presentation.portfolio.card.assistant.alt@@presentationPortfolioCardAssistantAlt:Capture du projet Assistant IA Geev`,
       tags: [
         $localize`:presentation.portfolio.tag.ai@@presentationPortfolioTagAi:Intelligence artificielle`,
@@ -98,7 +99,7 @@ export class PresentationComponent {
         $localize`:presentation.portfolio.card.test.desc@@presentationPortfolioCardTestDesc1:Exploration d’un système d’aide à la planification reposant sur l’intelligence artificielle, visant à automatiser et fluidifier la prise de rendez-vous.`,
         $localize`:presentation.portfolio.card.test.desc@@presentationPortfolioCardTestDesc2:Le projet s’inscrit dans une démarche d’optimisation des processus, sans remplacer l’intervention humaine.`,
       ],
-      image: "./assets/images/projects/prototype-planification-assistée.webp",
+      image: PROJECT_IMAGES.planificationAssistee,
       alt: $localize`:presentation.portfolio.card.test.alt@@presentationPortfolioCardTestAlt:Capture du projet Test IA Geev`,
       tags: [
         $localize`:presentation.portfolio.tag.optimisation@@presentationPortfolioTagOptimisation:Optimisation`,
@@ -112,7 +113,7 @@ export class PresentationComponent {
         $localize`:presentation.portfolio.card.beecoming.desc@@presentationPortfolioCardBeecomingDesc1:Application de suivi et de structuration de la production pour la filière cognac, de la vigne à la mise en bouteille.`,
         $localize`:presentation.portfolio.card.beecoming.desc@@presentationPortfolioCardBeecomingDesc2:L’objectif est de centraliser les informations, améliorer la traçabilité et accompagner les usages métier au quotidien.`,
       ],
-      image: "./assets/images/projects/GDC-presentation.webp",
+      image: PROJECT_IMAGES.gestionChais,
       alt: $localize`:presentation.portfolio.card.beecoming.alt@@presentationPortfolioCardBeecomingAlt:Capture du projet App Beecoming`,
       tags: [
         $localize`:presentation.portfolio.tag.traceability@@presentationPortfolioTagTraceability:Traçabilité`,
@@ -126,7 +127,7 @@ export class PresentationComponent {
         $localize`:presentation.portfolio.card.louisons.desc@@presentationPortfolioCardLouisonsDesc1:Création d’un site web personnalisé intégrant des fonctionnalités sur mesure pour répondre à des besoins spécifiques.`,
         $localize`:presentation.portfolio.card.louisons.desc@@presentationPortfolioCardLouisonsDesc2:Le projet met l’accent sur la simplicité d’usage, la cohérence visuelle et l’adaptation au contexte client.`,
       ],
-      image: "./assets/images/projects/Louisson-masseuse.webp",
+      image: PROJECT_IMAGES.louissonMasseuse,
       alt: $localize`:presentation.portfolio.card.louisons.alt@@presentationPortfolioCardLouisonsAlt:Capture du projet Louisons`,
       tags: [
         $localize`:presentation.portfolio.tag.web@@presentationPortfolioTagWeb:Web`,
@@ -140,7 +141,7 @@ export class PresentationComponent {
         $localize`:presentation.portfolio.card.vincent.desc@@presentationPortfolioCardVincentDesc1:Développement d’une solution web adaptée à des besoins spécifiques, avec une attention particulière portée à la clarté, à l’usage et à la personnalisation.`,
         $localize`:presentation.portfolio.card.vincent.desc@@presentationPortfolioCardVincentDesc2:Le projet illustre une approche sur mesure, pensée pour s’intégrer naturellement dans l’activité du client.`,
       ],
-      image: "./assets/images/projects/Atlanticbike.webp",
+      image: PROJECT_IMAGES.atlanticBike,
       alt: $localize`:presentation.portfolio.card.vincent.alt@@presentationPortfolioCardVincentAlt:Capture du projet Vincent`,
       tags: [
         $localize`:presentation.portfolio.tag.websolution@@presentationPortfolioTagWebsolution:Solution web`,
@@ -154,7 +155,7 @@ export class PresentationComponent {
         $localize`:presentation.portfolio.card.Automation.desc@@presentationPortfolioCardAutomationDesc1:Mise en place d’un processus automatisé pour la génération et l’envoi de communications de validation sur une plateforme e-learning.`,
         $localize`:presentation.portfolio.card.Automation.desc@@presentationPortfolioCardAutomationDesc2:L’objectif est de fiabiliser les échanges, réduire les tâches manuelles et faciliter le passage à l’échelle.`,
       ],
-      image: "./assets/images/projects/Automation-validation.webp",
+      image: PROJECT_IMAGES.automationValidation,
       alt: $localize`:presentation.portfolio.card.Automation.alt@@presentationPortfolioCardAutomationAlt:Capture du projet Automation`,
       tags: [
         $localize`:presentation.portfolio.tag.automation@@presentationPortfolioTagAutomation:Automation`,
@@ -168,8 +169,7 @@ export class PresentationComponent {
         $localize`:presentation.portfolio.card.others.desc@@presentationPortfolioCardOthersDesc1:Projet de modélisation et d’analyse de données visant à anticiper l’apparition de risques sanitaires à partir de données épidémiologiques.`,
         $localize`:presentation.portfolio.card.others.desc@@presentationPortfolioCardOthersDesc:L’objectif était d’explorer l’usage de modèles d’intelligence artificielle comme outil d’aide à la prévision et à la décision, dans un cadre analytique structuré.`,
       ],
-      image:
-        "./assets/images/projects/Modélisation-prédictive-risques-sanitaires.webp",
+      image: PROJECT_IMAGES.modelisationPredictive,
       alt: $localize`:presentation.portfolio.card.others.alt@@presentationPortfolioCardOthersAlt:Illustration d'autres projets`,
       tags: [
         $localize`:presentation.portfolio.tag.analyse@@presentationPortfolioTagAnalyse:Analyse de données`,
@@ -184,7 +184,7 @@ export class PresentationComponent {
         $localize`:presentation.portfolio.card.Assistante.desc@@presentationPortfolioCardAssistanteDesc1:Conception d’un prototype d’assistant numérique destiné à accompagner les guides de musée dans leur médiation.`,
         $localize`:presentation.portfolio.card.Assistante.desc@@presentationPortfolioCardAssistanteDesc2:Le projet explore une utilisation mesurée de l’IA comme soutien à l’expertise humaine, sans s’y substituer.`,
       ],
-      image: "./assets/images/projects/Assistant-mediation-culturelle.webp",
+      image: PROJECT_IMAGES.assistantMediation,
       alt: $localize`:presentation.portfolio.card.Assistante.alt@@presentationPortfolioCardAssistanteAlt:Illustration d'un assistant pour médiation culturelle`,
       tags: [
         $localize`:presentation.portfolio.tag.Mediation@@presentationPortfolioTagMediation:Médiation`,

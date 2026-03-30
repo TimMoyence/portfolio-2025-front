@@ -1,4 +1,4 @@
-import { DOCUMENT, isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import type { OnChanges, SimpleChanges } from "@angular/core";
 import {
@@ -53,7 +53,6 @@ export class SvgIconComponent implements OnChanges {
     private readonly http: HttpClient,
     private readonly sanitizer: DomSanitizer,
     private readonly cdr: ChangeDetectorRef,
-    @Inject(DOCUMENT) private readonly document: Document,
     @Inject(PLATFORM_ID) platformId: object,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -106,18 +105,60 @@ export class SvgIconComponent implements OnChanges {
       .pipe(tap((raw) => SvgIconComponent.cache.set(name, raw)));
   }
 
+  /**
+   * Supprime les elements et attributs dangereux d'un SVG parse
+   * (scripts, event handlers, iframes, etc.) pour prevenir les attaques XSS.
+   */
+  private sanitizeSvgElement(root: Element): void {
+    const dangerousTags = [
+      "script",
+      "iframe",
+      "object",
+      "embed",
+      "foreignobject",
+      "use",
+    ];
+    for (const tag of dangerousTags) {
+      root.querySelectorAll(tag).forEach((el) => el.remove());
+    }
+
+    const allElements = root.querySelectorAll("*");
+    const eventHandlerPattern = /^on/i;
+    allElements.forEach((el) => {
+      for (const attr of Array.from(el.attributes)) {
+        if (eventHandlerPattern.test(attr.name)) {
+          el.removeAttribute(attr.name);
+        }
+        if (
+          attr.name === "href" &&
+          attr.value.trim().toLowerCase().startsWith("javascript:")
+        ) {
+          el.removeAttribute(attr.name);
+        }
+        if (
+          attr.name === "xlink:href" &&
+          attr.value.trim().toLowerCase().startsWith("javascript:")
+        ) {
+          el.removeAttribute(attr.name);
+        }
+      }
+    });
+  }
+
   private prepareSvg(raw: string | null): string {
     if (!raw) {
       return "";
     }
 
-    const container = this.document.createElement("div");
-    container.innerHTML = raw.trim();
-    const svgElement = container.querySelector("svg");
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(raw.trim(), "image/svg+xml");
+    const svgElement = doc.querySelector("svg");
 
-    if (!svgElement) {
+    if (!svgElement || doc.querySelector("parsererror")) {
       return "";
     }
+
+    this.sanitizeSvgElement(svgElement);
 
     if (this.fill != "keep") {
       const targetFill = (this.fill ?? "currentColor").toString();

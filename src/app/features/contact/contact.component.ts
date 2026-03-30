@@ -12,7 +12,7 @@ import { RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import type { ContactFormState } from "../../core/models/contact.model";
 import { ContactService } from "../../core/services/contact.service";
-import { extractErrorMessage } from "../../shared/utils/http-error.utils";
+import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 
@@ -136,25 +136,21 @@ export class ContactComponent {
 
     const payload = this.normalizeContactPayload(this.contactForm);
 
-    this.contactService.contact(payload).subscribe({
-      next: (response) => {
+    handleFormSubmit(this.contactService.contact(payload), this.cdr, {
+      fallbackError: $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`,
+      onSuccess: (response) => {
         if (response.httpCode !== 201)
           this.contactErrorMessage = response.message;
         else
           this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
-        this.cdr.markForCheck();
       },
-      error: (error: unknown) => {
-        this.contactErrorMessage =
-          extractErrorMessage(error) ??
-          $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`;
-        this.cdr.markForCheck();
+      onError: (message) => {
+        this.contactErrorMessage = message;
       },
-      complete: () => {
+      onComplete: () => {
         this.contactForm = { ...this.defaultContactFormState };
         form.resetForm(this.contactForm);
         this.isContactSubmitted = false;
-        this.cdr.markForCheck();
       },
     });
   }

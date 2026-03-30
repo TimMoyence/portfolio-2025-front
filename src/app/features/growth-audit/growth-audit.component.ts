@@ -1,9 +1,10 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import type { OnDestroy } from "@angular/core";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  PLATFORM_ID,
   inject,
 } from "@angular/core";
 import type { NgForm } from "@angular/forms";
@@ -16,7 +17,7 @@ import type {
   AuditSummaryResponse,
 } from "../../core/models/audit-request.model";
 import { AuditRequestService } from "../../core/services/audit-request.service";
-import { extractErrorMessage } from "../../shared/utils/http-error.utils";
+import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import {
   type AuditSectionBadge,
@@ -48,6 +49,7 @@ interface AuditPillar {
 export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService = inject(AuditRequestService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   readonly localeUrlPrefix = this.getLocaleUrlPrefix();
 
   private streamSub?: Subscription;
@@ -166,7 +168,7 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   private getLocaleUrlPrefix(): "fr" | "en" {
-    if (typeof window === "undefined") {
+    if (!this.isBrowser) {
       return "fr";
     }
 
@@ -213,8 +215,9 @@ export class GrowthAuditComponent implements OnDestroy {
       contactValue: this.auditFormState.contactValue.trim(),
     };
 
-    this.auditService.submit(payload).subscribe({
-      next: (response) => {
+    handleFormSubmit(this.auditService.submit(payload), this.cdr, {
+      fallbackError: this.formLabels.error,
+      onSuccess: (response) => {
         if (response.httpCode !== 201 || !response.auditId) {
           this.errorMessage = response.message || this.formLabels.error;
           return;
@@ -229,10 +232,10 @@ export class GrowthAuditComponent implements OnDestroy {
         this.reconnectAttempts = 0;
         this.startStream(response.auditId);
       },
-      error: (error: unknown) => {
-        this.errorMessage = extractErrorMessage(error) ?? this.formLabels.error;
+      onError: (message) => {
+        this.errorMessage = message;
       },
-      complete: () => {
+      onComplete: () => {
         this.isSubmitting = false;
         this.isSubmitted = false;
         this.auditFormState = {
@@ -241,7 +244,6 @@ export class GrowthAuditComponent implements OnDestroy {
           contactValue: "",
         };
         form.resetForm(this.auditFormState);
-        this.cdr.markForCheck();
       },
     });
   }

@@ -11,7 +11,7 @@ import type { RegisterUserPayload } from "../../core/models/auth.model";
 import type { LoginFormState } from "../../core/models/loginForm.model";
 import type { SignupFormState } from "../../core/models/signupForm.model";
 import { AuthService } from "../../core/services/auth.service";
-import { extractErrorMessage } from "../../shared/utils/http-error.utils";
+import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import { SvgIconComponent } from "../../shared/components/svg-icon.component";
@@ -174,20 +174,18 @@ export class AuthComponent {
 
     this.isSignupLoading = true;
 
-    this.authService.register(payload).subscribe({
-      next: (user) => {
+    handleFormSubmit(this.authService.register(payload), this.cdr, {
+      fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
+      onSuccess: (user) => {
         this.signupSuccessMessage = $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Compte créé pour ${user.firstName} ${user.lastName}.`;
         this.resetSignupForm(form);
-        this.cdr.markForCheck();
       },
-      error: (error) => {
-        this.signupErrorMessage = this.getErrorMessage(error);
+      onError: (message) => {
+        this.signupErrorMessage = message;
         this.isSignupLoading = false;
-        this.cdr.markForCheck();
       },
-      complete: () => {
+      onComplete: () => {
         this.isSignupLoading = false;
-        this.cdr.markForCheck();
       },
     });
   }
@@ -201,21 +199,17 @@ export class AuthComponent {
 
     this.isLoginLoading = true;
 
-    this.authService.login(this.loginForm).subscribe({
-      next: (session) => {
-        // La gestion de session et de token est assurée côté backend (cookie httpOnly).
-        // La redirection post-login sera ajoutée quand les pages protégées seront disponibles.
+    handleFormSubmit(this.authService.login(this.loginForm), this.cdr, {
+      fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
+      onSuccess: (session) => {
         this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
-        this.cdr.markForCheck();
       },
-      error: (error) => {
-        this.loginErrorMessage = this.getErrorMessage(error);
+      onError: (message) => {
+        this.loginErrorMessage = message;
         this.isLoginLoading = false;
-        this.cdr.markForCheck();
       },
-      complete: () => {
+      onComplete: () => {
         this.isLoginLoading = false;
-        this.cdr.markForCheck();
       },
     });
   }
@@ -229,12 +223,5 @@ export class AuthComponent {
     this.signupForm = { ...this.defaultSignupState };
     form.resetForm(this.signupForm);
     this.isSignupSubmitted = false;
-  }
-
-  private getErrorMessage(error: unknown): string {
-    return (
-      extractErrorMessage(error) ??
-      $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`
-    );
   }
 }
