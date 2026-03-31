@@ -12,7 +12,7 @@ import {
 } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { AuthStateService } from "../../../core/services/auth-state.service";
-import type { NavLink } from "../../models/navbar.model";
+import type { DropdownSection, NavLink } from "../../models/navbar.model";
 import { A11yDialogService } from "../../services/a11y-dialog.service";
 import { SvgIconComponent } from "../svg-icon.component";
 
@@ -39,6 +39,35 @@ export class NavbarComponent implements OnInit {
       href: "/offer",
     },
   ];
+
+  /** Dropdown "L'Atelier" regroupant les side-projects. */
+  readonly atelierDropdown: DropdownSection = {
+    label: $localize`:navbar.atelier.label|Atelier dropdown label@@navAtelierLabel:L'Atelier`,
+    isOpen: false,
+    items: [
+      {
+        title: $localize`:navbar.atelier.meteo.title|@@navAtelierMeteoTitle:Météo`,
+        description: $localize`:navbar.atelier.meteo.desc|@@navAtelierMeteoDesc:Explorez la météo en temps réel`,
+        icon: "cloud",
+        iconAlt: "Météo",
+        href: "/atelier/meteo",
+      },
+      {
+        title: $localize`:navbar.atelier.budget.title|@@navAtelierBudgetTitle:Budget`,
+        description: $localize`:navbar.atelier.budget.desc|@@navAtelierBudgetDesc:Gérez votre budget à deux`,
+        icon: "business",
+        iconAlt: "Budget",
+        href: "/atelier/budget",
+      },
+      {
+        title: $localize`:navbar.atelier.sebastian.title|@@navAtelierSebastianTitle:Sebastian`,
+        description: $localize`:navbar.atelier.sebastian.desc|@@navAtelierSebastianDesc:Votre majordome personnel`,
+        icon: "comedy_mask",
+        iconAlt: "Sebastian",
+        href: "/atelier/sebastian",
+      },
+    ],
+  };
 
   readonly openMenuLabel = $localize`:navbar.menu.open|Burger button label@@navMenuOpen:Ouvrir le menu principal`;
   readonly closeMenuLabel = $localize`:navbar.menu.close|Burger button label@@navMenuClose:Fermer le menu principal`;
@@ -89,6 +118,28 @@ export class NavbarComponent implements OnInit {
     void this.router.navigate(["/"]);
   }
 
+  /** Ouvre ou ferme le dropdown Atelier. */
+  toggleAtelierDropdown(): void {
+    this.atelierDropdown.isOpen = !this.atelierDropdown.isOpen;
+    this.cdr.markForCheck();
+  }
+
+  /** Ouvre le dropdown Atelier. */
+  openAtelierDropdown(): void {
+    if (!this.atelierDropdown.isOpen) {
+      this.atelierDropdown.isOpen = true;
+      this.cdr.markForCheck();
+    }
+  }
+
+  /** Ferme le dropdown Atelier s'il est ouvert. */
+  closeAtelierDropdown(): void {
+    if (this.atelierDropdown.isOpen) {
+      this.atelierDropdown.isOpen = false;
+      this.cdr.markForCheck();
+    }
+  }
+
   @HostListener("document:keydown", ["$event"])
   handleGlobalKeydown(event: KeyboardEvent): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -104,7 +155,14 @@ export class NavbarComponent implements OnInit {
       return;
     }
 
-    // 2) When mobile menu is open: ESC and Tab inside dialog
+    // 2) ESC closes the Atelier dropdown if open
+    if (this.atelierDropdown.isOpen && event.key === "Escape") {
+      event.preventDefault();
+      this.closeAtelierDropdown();
+      return;
+    }
+
+    // 3) When mobile menu is open: ESC and Tab inside dialog
     if (this.mobileMenuOpen) {
       if (event.key === "Escape") {
         event.preventDefault();

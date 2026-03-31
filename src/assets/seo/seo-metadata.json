@@ -229,24 +229,68 @@
       }
     },
     {
-      "id": "commonbudgetTM",
-      "path": "/commonbudgetTM",
-      "index": false,
+      "id": "weather",
+      "path": "/atelier/meteo",
+      "index": true,
       "changefreq": "monthly",
-      "priority": 0.3,
-      "lastmod": "2026-03-16",
+      "priority": 0.5,
+      "lastmod": "2026-03-31",
       "locales": {
         "fr": {
-          "title": "commonbudgetTM — Dashboard budget partagé",
-          "description": "Prototype Angular de suivi du compte commun avec catégories, contributions et tableau éditable.",
-          "ogTitle": "commonbudgetTM",
-          "ogDescription": "Visualiser les dépenses du compte commun, suivre les contributions et corriger les catégories."
+          "title": "Météo — L'Atelier",
+          "description": "Application météo en temps réel avec prévisions détaillées, inspirée d'Apple Weather.",
+          "ogTitle": "Météo — L'Atelier",
+          "ogDescription": "Consultez la météo en temps réel avec une interface élégante et des prévisions détaillées."
         },
         "en": {
-          "title": "commonbudgetTM — Shared budget dashboard",
-          "description": "Angular prototype for tracking a shared account with categories, contributions, and an editable transaction table.",
-          "ogTitle": "commonbudgetTM",
-          "ogDescription": "Review shared-account spending, track contributions, and adjust categories in one dashboard."
+          "title": "Weather — L'Atelier",
+          "description": "Real-time weather app with detailed forecasts, inspired by Apple Weather.",
+          "ogTitle": "Weather — L'Atelier",
+          "ogDescription": "Check real-time weather with an elegant interface and detailed forecasts."
+        }
+      }
+    },
+    {
+      "id": "budget",
+      "path": "/atelier/budget",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.4,
+      "lastmod": "2026-03-31",
+      "locales": {
+        "fr": {
+          "title": "Budget — L'Atelier",
+          "description": "Outil de gestion de budget partagé pour couple avec import CSV, catégorisation automatique et suivi des contributions.",
+          "ogTitle": "Budget — L'Atelier",
+          "ogDescription": "Gérez votre budget commun : import CSV, auto-catégorisation et suivi des contributions."
+        },
+        "en": {
+          "title": "Budget — L'Atelier",
+          "description": "Shared couple budget management tool with CSV import, auto-categorization, and contribution tracking.",
+          "ogTitle": "Budget — L'Atelier",
+          "ogDescription": "Manage your shared budget: CSV import, auto-categorization, and contribution tracking."
+        }
+      }
+    },
+    {
+      "id": "sebastian",
+      "path": "/atelier/sebastian",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.4,
+      "lastmod": "2026-03-31",
+      "locales": {
+        "fr": {
+          "title": "Sebastian — L'Atelier",
+          "description": "Tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps.",
+          "ogTitle": "Sebastian — L'Atelier",
+          "ogDescription": "Suivez votre consommation, fixez des objectifs et visualisez vos progrès avec Sebastian."
+        },
+        "en": {
+          "title": "Sebastian — L'Atelier",
+          "description": "Personal consumption tracker with goals, charts, and time tracking.",
+          "ogTitle": "Sebastian — L'Atelier",
+          "ogDescription": "Track your consumption, set goals, and visualize progress with Sebastian."
         }
       }
     },

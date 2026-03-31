@@ -453,6 +453,54 @@
       </segment>
     </unit>
 
+    <unit id="authGoogleNotConfigured">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.ts</note>
+        <note category="description">Google auth not configured</note>
+        <note category="meaning">auth.google.notConfigured</note>
+      </notes>
+      <segment>
+        <source>L'authentification Google n'est pas configurée.</source>
+        <target>Google authentication is not configured.</target>
+      </segment>
+    </unit>
+
+    <unit id="authGoogleLoadError">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.ts</note>
+        <note category="description">Google GIS script load error</note>
+        <note category="meaning">auth.google.loadError</note>
+      </notes>
+      <segment>
+        <source>Impossible de charger Google Sign-In.</source>
+        <target>Unable to load Google Sign-In.</target>
+      </segment>
+    </unit>
+
+    <unit id="authGoogleError">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.ts</note>
+        <note category="description">Google auth generic error</note>
+        <note category="meaning">auth.google.error</note>
+      </notes>
+      <segment>
+        <source>Échec de l'authentification Google.</source>
+        <target>Google authentication failed.</target>
+      </segment>
+    </unit>
+
+    <unit id="navAuthLabel">
+      <notes>
+        <note category="location">src/app/shared/components/navbar/navbar.component.html</note>
+        <note category="description">Auth button label</note>
+        <note category="meaning">navbar.auth.label</note>
+      </notes>
+      <segment>
+        <source>Espace utilisateur</source>
+        <target>User area</target>
+      </segment>
+    </unit>
+
     <unit id="authHeroLabel">
       <notes>
         <note category="location">src/app/features/auth/auth.component.ts:58</note>
@@ -6107,6 +6155,652 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Sélectionnez votre rôle</source>
         <target>Select your role</target>
+      </segment>
+    </unit>
+    <!-- Navbar — L'Atelier dropdown -->
+    <unit id="navAtelierLabel">
+      <segment>
+        <source>L'Atelier</source>
+        <target>The Workshop</target>
+      </segment>
+    </unit>
+    <unit id="navAtelierMeteoTitle">
+      <segment>
+        <source>Météo</source>
+        <target>Weather</target>
+      </segment>
+    </unit>
+    <unit id="navAtelierMeteoDesc">
+      <segment>
+        <source>Explorez la météo en temps réel</source>
+        <target>Explore real-time weather</target>
+      </segment>
+    </unit>
+    <unit id="navAtelierBudgetTitle">
+      <segment>
+        <source>Budget</source>
+        <target>Budget</target>
+      </segment>
+    </unit>
+    <unit id="navAtelierBudgetDesc">
+      <segment>
+        <source>Gérez votre budget à deux</source>
+        <target>Manage your shared budget</target>
+      </segment>
+    </unit>
+    <unit id="navAtelierSebastianTitle">
+      <segment>
+        <source>Sebastian</source>
+        <target>Sebastian</target>
+      </segment>
+    </unit>
+    <unit id="navAtelierSebastianDesc">
+      <segment>
+        <source>Votre majordome personnel</source>
+        <target>Your personal butler</target>
+      </segment>
+    </unit>
+    <!-- Weather presentation -->
+    <unit id="weatherHeroLabel">
+      <segment>
+        <source>Side-project</source>
+        <target>Side project</target>
+      </segment>
+    </unit>
+    <unit id="weatherHeroTitle">
+      <segment>
+        <source>Météo</source>
+        <target>Weather</target>
+      </segment>
+    </unit>
+    <unit id="weatherHeroDescription">
+      <segment>
+        <source>Une application météo minimaliste avec des données en temps réel, conçue comme un exercice de style Angular.</source>
+        <target>A minimalist weather app with real-time data, designed as an Angular style exercise.</target>
+      </segment>
+    </unit>
+    <unit id="weatherHeroActionLogin">
+      <segment>
+        <source>Se connecter</source>
+        <target>Log in</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresentationSectionTitle">
+      <segment>
+        <source>Consultez la météo en temps réel</source>
+        <target>Check real-time weather</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresentationSectionDesc">
+      <segment>
+        <source>Accédez à des prévisions détaillées, des données en direct et une interface élégante inspirée d'Apple Weather. Connectez-vous pour débloquer l'application.</source>
+        <target>Access detailed forecasts, live data, and an elegant Apple Weather-inspired interface. Log in to unlock the app.</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresentationCta">
+      <segment>
+        <source>Se connecter</source>
+        <target>Log in</target>
+      </segment>
+    </unit>
+    <!-- Weather app -->
+    <unit id="weatherAppTitle">
+      <segment>
+        <source>Météo</source>
+        <target>Weather</target>
+      </segment>
+    </unit>
+    <unit id="weatherSearchPlaceholder">
+      <segment>
+        <source>Rechercher une ville...</source>
+        <target>Search for a city...</target>
+      </segment>
+    </unit>
+    <unit id="weatherLoading">
+      <segment>
+        <source>Chargement...</source>
+        <target>Loading...</target>
+      </segment>
+    </unit>
+    <unit id="weatherErrorLoading">
+      <segment>
+        <source>Erreur lors du chargement des prévisions.</source>
+        <target>Error loading forecast.</target>
+      </segment>
+    </unit>
+    <unit id="weatherInitialHint">
+      <segment>
+        <source>Recherchez une ville pour afficher la météo</source>
+        <target>Search for a city to display the weather</target>
+      </segment>
+    </unit>
+    <unit id="weatherCurrentFeelsLike">
+      <segment>
+        <source>Ressenti</source>
+        <target>Feels like</target>
+      </segment>
+    </unit>
+    <unit id="weatherCurrentWind">
+      <segment>
+        <source>Vent</source>
+        <target>Wind</target>
+      </segment>
+    </unit>
+    <unit id="weatherHourlyTitle">
+      <segment>
+        <source>Prévisions horaires</source>
+        <target>Hourly forecast</target>
+      </segment>
+    </unit>
+    <unit id="weatherDailyTitle">
+      <segment>
+        <source>Prévisions sur 7 jours</source>
+        <target>7-day forecast</target>
+      </segment>
+    </unit>
+    <unit id="weatherDailyToday">
+      <segment>
+        <source>Aujourd'hui</source>
+        <target>Today</target>
+      </segment>
+    </unit>
+    <!-- Weather level system -->
+    <unit id="weatherLevelSelectorAria">
+      <segment>
+        <source>Sélecteur de niveau météo</source>
+        <target>Weather level selector</target>
+      </segment>
+    </unit>
+    <unit id="weatherLevelDiscovery">
+      <segment>
+        <source>Découverte</source>
+        <target>Discovery</target>
+      </segment>
+    </unit>
+    <unit id="weatherLevelCurious">
+      <segment>
+        <source>Curieux</source>
+        <target>Curious</target>
+      </segment>
+    </unit>
+    <unit id="weatherLevelExpert">
+      <segment>
+        <source>Expert</source>
+        <target>Expert</target>
+      </segment>
+    </unit>
+    <unit id="weatherTransitionMessage">
+      <segment>
+        <source>Des donnees avancees sont disponibles.</source>
+        <target>Advanced data is available.</target>
+      </segment>
+    </unit>
+    <unit id="weatherTransitionActivateCurious">
+      <segment>
+        <source>Activer le mode Curieux</source>
+        <target>Enable Curious mode</target>
+      </segment>
+    </unit>
+    <unit id="weatherTransitionActivateExpert">
+      <segment>
+        <source>Activer le mode Expert</source>
+        <target>Enable Expert mode</target>
+      </segment>
+    </unit>
+    <unit id="weatherTransitionDismiss">
+      <segment>
+        <source>Fermer la suggestion</source>
+        <target>Dismiss suggestion</target>
+      </segment>
+    </unit>
+    <!-- Budget presentation -->
+    <unit id="budgetHeroLabel">
+      <segment>
+        <source>Side-project</source>
+        <target>Side project</target>
+      </segment>
+    </unit>
+    <unit id="budgetHeroTitle">
+      <segment>
+        <source>Budget</source>
+        <target>Budget</target>
+      </segment>
+    </unit>
+    <unit id="budgetHeroDescription">
+      <segment>
+        <source>Un outil de gestion de budget partagé pour couple, avec import CSV, catégorisation automatique et suivi des contributions.</source>
+        <target>A shared couple budget management tool with CSV import, auto-categorization, and contribution tracking.</target>
+      </segment>
+    </unit>
+    <unit id="budgetHeroActionLogin">
+      <segment>
+        <source>Se connecter</source>
+        <target>Log in</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresentationSectionTitle">
+      <segment>
+        <source>Gérez vos finances à deux</source>
+        <target>Manage your finances as a couple</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresentationSectionDesc">
+      <segment>
+        <source>Importez vos relevés CSV, visualisez les dépenses par catégorie et suivez les contributions de chaque membre du couple. Auto-catégorisation intelligente et tableau éditable inclus.</source>
+        <target>Import your CSV statements, view spending by category, and track each partner's contributions. Smart auto-categorization and editable table included.</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresentationCta">
+      <segment>
+        <source>Se connecter</source>
+        <target>Log in</target>
+      </segment>
+    </unit>
+    <!-- Sebastian presentation -->
+    <unit id="sebastianHeroLabel">
+      <segment>
+        <source>Side-project</source>
+        <target>Side project</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHeroTitle">
+      <segment>
+        <source>Sebastian</source>
+        <target>Sebastian</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHeroDescription">
+      <segment>
+        <source>Un tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps. Votre majordome numérique.</source>
+        <target>A personal consumption tracker with goals, charts, and time tracking. Your digital butler.</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHeroActionLogin">
+      <segment>
+        <source>Se connecter</source>
+        <target>Log in</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresentationSectionTitle">
+      <segment>
+        <source>Votre majordome personnel</source>
+        <target>Your personal butler</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresentationSectionDesc">
+      <segment>
+        <source>Suivez votre consommation personnelle (café, alcool), définissez des objectifs et visualisez vos progrès avec des graphiques interactifs. Sebastian vous aide à garder le contrôle.</source>
+        <target>Track your personal consumption (coffee, alcohol), set goals, and visualize your progress with interactive charts. Sebastian helps you stay in control.</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresentationCta">
+      <segment>
+        <source>Se connecter</source>
+        <target>Log in</target>
+      </segment>
+    </unit>
+
+    <!-- Cartes meteo Curieux (Phase 2B) -->
+    <unit id="weatherUvTitle">
+      <segment>
+        <source>Indice UV</source>
+        <target>UV Index</target>
+      </segment>
+    </unit>
+    <unit id="weatherUvLow">
+      <segment>
+        <source>Faible</source>
+        <target>Low</target>
+      </segment>
+    </unit>
+    <unit id="weatherUvModerate">
+      <segment>
+        <source>Modéré</source>
+        <target>Moderate</target>
+      </segment>
+    </unit>
+    <unit id="weatherUvHigh">
+      <segment>
+        <source>Élevé</source>
+        <target>High</target>
+      </segment>
+    </unit>
+    <unit id="weatherUvVeryHigh">
+      <segment>
+        <source>Très élevé</source>
+        <target>Very high</target>
+      </segment>
+    </unit>
+    <unit id="weatherUvExtreme">
+      <segment>
+        <source>Extrême</source>
+        <target>Extreme</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiTitle">
+      <segment>
+        <source>Qualité de l'air</source>
+        <target>Air Quality</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiUnavailable">
+      <segment>
+        <source>Données indisponibles</source>
+        <target>Data unavailable</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiGood">
+      <segment>
+        <source>Bon</source>
+        <target>Good</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiFair">
+      <segment>
+        <source>Correct</source>
+        <target>Fair</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiModerate">
+      <segment>
+        <source>Modéré</source>
+        <target>Moderate</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiPoor">
+      <segment>
+        <source>Mauvais</source>
+        <target>Poor</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiVeryPoor">
+      <segment>
+        <source>Très mauvais</source>
+        <target>Very poor</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiExtremelyPoor">
+      <segment>
+        <source>Extrêmement mauvais</source>
+        <target>Extremely poor</target>
+      </segment>
+    </unit>
+    <unit id="weatherPressureTitle">
+      <segment>
+        <source>Pression atmosphérique</source>
+        <target>Atmospheric Pressure</target>
+      </segment>
+    </unit>
+    <unit id="weatherPressureUnavailable">
+      <segment>
+        <source>Données indisponibles</source>
+        <target>Data unavailable</target>
+      </segment>
+    </unit>
+    <unit id="weatherPressureRising">
+      <segment>
+        <source>En hausse</source>
+        <target>Rising</target>
+      </segment>
+    </unit>
+    <unit id="weatherPressureFalling">
+      <segment>
+        <source>En baisse</source>
+        <target>Falling</target>
+      </segment>
+    </unit>
+    <unit id="weatherPressureStable">
+      <segment>
+        <source>Stable</source>
+        <target>Stable</target>
+      </segment>
+    </unit>
+    <unit id="weatherWindTitle">
+      <segment>
+        <source>Vent</source>
+        <target>Wind</target>
+      </segment>
+    </unit>
+    <unit id="weatherWindGusts">
+      <segment>
+        <source>Rafales</source>
+        <target>Gusts</target>
+      </segment>
+    </unit>
+    <unit id="weatherSunTitle">
+      <segment>
+        <source>Lever &amp; coucher du soleil</source>
+        <target>Sunrise &amp; Sunset</target>
+      </segment>
+    </unit>
+    <unit id="weatherSunUnavailable">
+      <segment>
+        <source>Données indisponibles</source>
+        <target>Data unavailable</target>
+      </segment>
+    </unit>
+    <unit id="weatherHumidityTitle">
+      <segment>
+        <source>Humidité</source>
+        <target>Humidity</target>
+      </segment>
+    </unit>
+    <unit id="weatherHumidityDewPoint">
+      <segment>
+        <source>Point de rosée</source>
+        <target>Dew point</target>
+      </segment>
+    </unit>
+    <unit id="weatherHumidityDry">
+      <segment>
+        <source>Sec</source>
+        <target>Dry</target>
+      </segment>
+    </unit>
+    <unit id="weatherHumidityComfortable">
+      <segment>
+        <source>Confortable</source>
+        <target>Comfortable</target>
+      </segment>
+    </unit>
+    <unit id="weatherHumidityHumid">
+      <segment>
+        <source>Humide</source>
+        <target>Humid</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudTitle">
+      <segment>
+        <source>Couverture nuageuse</source>
+        <target>Cloud Cover</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudVisibility">
+      <segment>
+        <source>Visibilité</source>
+        <target>Visibility</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudClear">
+      <segment>
+        <source>Dégagé</source>
+        <target>Clear</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudFewClouds">
+      <segment>
+        <source>Peu nuageux</source>
+        <target>Few clouds</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudPartlyCloudy">
+      <segment>
+        <source>Partiellement nuageux</source>
+        <target>Partly cloudy</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudMostlyCloudy">
+      <segment>
+        <source>Très nuageux</source>
+        <target>Mostly cloudy</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudOvercast">
+      <segment>
+        <source>Couvert</source>
+        <target>Overcast</target>
+      </segment>
+    </unit>
+
+    <!-- Cartes meteo Expert (Phase 3) -->
+    <unit id="weatherModelComparisonTitle">
+      <segment>
+        <source>Comparaison des modèles</source>
+        <target>Model Comparison</target>
+      </segment>
+    </unit>
+    <unit id="weatherModelComparisonMetric">
+      <segment>
+        <source>Métrique</source>
+        <target>Metric</target>
+      </segment>
+    </unit>
+    <unit id="weatherModelComparisonAvgTemp">
+      <segment>
+        <source>Temp. moy. 24h</source>
+        <target>Avg. temp. 24h</target>
+      </segment>
+    </unit>
+    <unit id="weatherModelComparisonTotalPrecip">
+      <segment>
+        <source>Précip. totales 24h</source>
+        <target>Total precip. 24h</target>
+      </segment>
+    </unit>
+    <unit id="weatherModelComparisonDivergence">
+      <segment>
+        <source>Les modèles divergent significativement (> 3 °C).</source>
+        <target>Models diverge significantly (> 3 °C).</target>
+      </segment>
+    </unit>
+    <unit id="weatherModelComparisonUnavailable">
+      <segment>
+        <source>Données indisponibles</source>
+        <target>Data unavailable</target>
+      </segment>
+    </unit>
+    <unit id="weatherSpaghettiPlotTitle">
+      <segment>
+        <source>Comparaison des modèles (courbes)</source>
+        <target>Model Comparison (curves)</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeTitle">
+      <segment>
+        <source>CAPE (instabilité)</source>
+        <target>CAPE (instability)</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeTooltipTitle">
+      <segment>
+        <source>Qu'est-ce que le CAPE ?</source>
+        <target>What is CAPE?</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeTooltipContent">
+      <segment>
+        <source>CAPE mesure l'énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents.</source>
+        <target>CAPE measures the energy available for thunderstorms. The higher the value, the more violent the storms can be.</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeUnavailable">
+      <segment>
+        <source>Données indisponibles</source>
+        <target>Data unavailable</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeStable">
+      <segment>
+        <source>Stable</source>
+        <target>Stable</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeMarginal">
+      <segment>
+        <source>Instabilité marginale</source>
+        <target>Marginal instability</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeModerate">
+      <segment>
+        <source>Instabilité modérée</source>
+        <target>Moderate instability</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeStrong">
+      <segment>
+        <source>Instabilité forte</source>
+        <target>Strong instability</target>
+      </segment>
+    </unit>
+    <unit id="weatherCapeExtreme">
+      <segment>
+        <source>Instabilité extrême</source>
+        <target>Extreme instability</target>
+      </segment>
+    </unit>
+    <unit id="weatherHistoricalTitle">
+      <segment>
+        <source>Historique (30 jours)</source>
+        <target>Historical (30 days)</target>
+      </segment>
+    </unit>
+    <unit id="weatherHistoricalMax">
+      <segment>
+        <source>Max</source>
+        <target>Max</target>
+      </segment>
+    </unit>
+    <unit id="weatherHistoricalMin">
+      <segment>
+        <source>Min</source>
+        <target>Min</target>
+      </segment>
+    </unit>
+    <unit id="weatherHistoricalMean">
+      <segment>
+        <source>Moyenne</source>
+        <target>Mean</target>
+      </segment>
+    </unit>
+    <unit id="weatherHistoricalCurrent">
+      <segment>
+        <source>Actuelle</source>
+        <target>Current</target>
+      </segment>
+    </unit>
+    <unit id="weatherDataExportTitle">
+      <segment>
+        <source>Export des données</source>
+        <target>Data Export</target>
+      </segment>
+    </unit>
+    <unit id="weatherDataExportCsv">
+      <segment>
+        <source>Exporter CSV</source>
+        <target>Export CSV</target>
+      </segment>
+    </unit>
+    <unit id="weatherDataExportJson">
+      <segment>
+        <source>Exporter JSON</source>
+        <target>Export JSON</target>
+      </segment>
+    </unit>
+    <unit id="weatherDataExportRadarPlaceholder">
+      <segment>
+        <source>Carte radar — bientôt disponible</source>
+        <target>Radar map — coming soon</target>
       </segment>
     </unit>
   </file>

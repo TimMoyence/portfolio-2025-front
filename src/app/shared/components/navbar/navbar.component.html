@@ -120,6 +120,89 @@
     }
   </ul>
 
+  <!-- Dropdown L'Atelier — desktop -->
+  @if (!isMobile) {
+    <div class="relative" (mouseleave)="closeAtelierDropdown()">
+      <button
+        type="button"
+        (click)="toggleAtelierDropdown()"
+        (mouseenter)="openAtelierDropdown()"
+        [attr.aria-expanded]="atelierDropdown.isOpen"
+        aria-haspopup="true"
+        class="flex items-center gap-1 transition-colors duration-300 hover:text-scheme-accent"
+      >
+        <span>{{ atelierDropdown.label }}</span>
+        <app-svg-icon
+          name="chevron-down"
+          [size]="0.8"
+          [ngClass]="{ 'rotate-180': atelierDropdown.isOpen }"
+          class="transition-transform duration-200"
+        ></app-svg-icon>
+      </button>
+      @if (atelierDropdown.isOpen) {
+        <div class="absolute top-full left-0 pt-2 z-50">
+          <div
+            class="w-72 rounded-xl border border-scheme-border bg-scheme-background p-3 shadow-lg"
+          >
+            @for (item of atelierDropdown.items; track item.href) {
+              <a
+                [routerLink]="item.href"
+                (click)="closeAtelierDropdown()"
+                class="flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-scheme-surface"
+              >
+                <app-svg-icon [name]="item.icon" [size]="1.3"></app-svg-icon>
+                <div>
+                  <p class="font-medium text-scheme-text">{{ item.title }}</p>
+                  <p class="text-xs text-scheme-text-muted">
+                    {{ item.description }}
+                  </p>
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Dropdown L'Atelier — mobile -->
+  @if (isMobile) {
+    <div class="w-full">
+      <button
+        type="button"
+        (click)="toggleAtelierDropdown()"
+        class="flex w-full items-center justify-between py-2"
+      >
+        <span>{{ atelierDropdown.label }}</span>
+        <app-svg-icon
+          name="chevron-down"
+          [size]="0.8"
+          [ngClass]="{ 'rotate-180': atelierDropdown.isOpen }"
+          class="transition-transform duration-200"
+        ></app-svg-icon>
+      </button>
+      @if (atelierDropdown.isOpen) {
+        <div class="flex flex-col gap-2 pl-4 mt-2">
+          @for (item of atelierDropdown.items; track item.href) {
+            <a
+              [routerLink]="item.href"
+              (click)="closeMobileMenu(); closeAtelierDropdown()"
+              class="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-scheme-surface"
+            >
+              <app-svg-icon [name]="item.icon" [size]="1.2"></app-svg-icon>
+              <div>
+                <p class="text-sm font-medium">{{ item.title }}</p>
+                <p class="text-xs text-scheme-text-muted">
+                  {{ item.description }}
+                </p>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  }
+
   <div
     class="flex items-center justify-center gap-5"
     [ngClass]="isMobile ? 'mt-4' : ''"
@@ -163,11 +246,13 @@
     } @else {
       <button
         type="button"
-        class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background px-4 py-2 text-sm"
+        class="rounded-full transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background p-2"
         [routerLink]="'/login'"
         (click)="isMobile && closeMobileMenu()"
+        [attr.aria-label]="'Espace utilisateur'"
+        i18n-aria-label="navbar.auth.label|Auth button label@@navAuthLabel"
       >
-        Login
+        <app-svg-icon name="person" [size]="1.3"></app-svg-icon>
       </button>
     }
   </div>

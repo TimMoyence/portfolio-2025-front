@@ -12,6 +12,21 @@ import type {
   LoginCredentials,
   RegisterUserPayload,
 } from "../models/auth.model";
+
+/** Session fictive reutilisable pour les tests. */
+const mockSession: AuthSession = {
+  accessToken: "tok",
+  expiresIn: 3600,
+  user: {
+    id: "id",
+    email: "john@example.com",
+    firstName: "John",
+    lastName: "Doe",
+    phone: null,
+    isActive: true,
+    roles: [],
+  },
+};
 import { AuthHttpAdapter } from "./auth-http.adapter";
 
 describe("AuthHttpAdapter", () => {
@@ -95,5 +110,16 @@ describe("AuthHttpAdapter", () => {
     expect(req.request.method).toBe("POST");
     expect(req.request.body).toEqual(payload);
     req.flush(user);
+  });
+
+  it("should POST idToken to /auth/google", () => {
+    adapter.googleAuth("google-id-token").subscribe((result) => {
+      expect(result).toEqual(mockSession);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/google`);
+    expect(req.request.method).toBe("POST");
+    expect(req.request.body).toEqual({ idToken: "google-id-token" });
+    req.flush(mockSession);
   });
 });

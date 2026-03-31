@@ -56,6 +56,26 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
   - tests de regression pour les bugs UI deja observes.
 - Pour les changements purement visuels, l'agent couvre au minimum la logique et les etats critiques et documente ce qui a ete verifie manuellement si necessaire.
 
+## Factories de test obligatoires (DRY)
+
+- **Interdit de dupliquer les objets mock/stub dans chaque fichier `.spec.ts`.**
+- Toutes les factories partagees vivent dans `src/testing/factories/`.
+- Creer ou reutiliser une factory pour chaque objet mock recurrent :
+  - `buildAuthUser(overrides?)` — objet `AuthUser` avec valeurs par defaut
+  - `createAuthPortStub()` — stub complet du port auth
+  - `createWeatherPortStub()` — stub complet du port weather
+  - `setupTestBed(overrides?)` — orchestrateur configurant le TestBed avec les providers courants (AUTH_PORT, APP_CONFIG, Router, HttpClient)
+- Chaque nouveau port cree sa propre factory de stub dans `src/testing/factories/`.
+- Pattern builder avec overrides pour les cas specifiques :
+  ```typescript
+  // OK
+  const user = buildAuthUser({ email: "test@example.com", roles: ["budget"] });
+  const authStub = createAuthPortStub();
+  // INTERDIT
+  const authStub = { login: () => {}, register: () => {}, me: () => {} }; // copie dans chaque spec
+  ```
+- Si une factory n'existe pas encore, l'agent la cree avant d'ecrire les tests.
+
 ## Regles de code
 
 - JSDoc obligatoire sur :

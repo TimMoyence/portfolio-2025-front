@@ -22,4 +22,9 @@ export class AuthService {
   register(payload: RegisterUserPayload): Observable<AuthUser> {
     return this.authPort.register(payload);
   }
+
+  /** Authentifie l'utilisateur via un jeton Google Identity Services. */
+  googleAuth(idToken: string): Observable<AuthSession> {
+    return this.authPort.googleAuth(idToken);
+  }
 }

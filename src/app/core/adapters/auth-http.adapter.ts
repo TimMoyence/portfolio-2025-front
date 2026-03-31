@@ -30,4 +30,11 @@ export class AuthHttpAdapter implements AuthPort {
   me(): Observable<AuthUser> {
     return this.http.get<AuthUser>(`${this.baseUrl}/auth/me`);
   }
+
+  /** Envoie le jeton Google au backend pour authentification OAuth. */
+  googleAuth(idToken: string): Observable<AuthSession> {
+    return this.http.post<AuthSession>(`${this.baseUrl}/auth/google`, {
+      idToken,
+    });
+  }
 }

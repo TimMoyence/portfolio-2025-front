@@ -1,9 +1,12 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   inject,
+  PLATFORM_ID,
+  ViewChild,
 } from "@angular/core";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
@@ -11,8 +14,10 @@ import type { RegisterUserPayload } from "../../core/models/auth.model";
 import type { LoginFormState } from "../../core/models/loginForm.model";
 import type { SignupFormState } from "../../core/models/signupForm.model";
 import { Router } from "@angular/router";
+import { APP_CONFIG } from "../../core/config/app-config.token";
 import { AuthStateService } from "../../core/services/auth-state.service";
 import { AuthService } from "../../core/services/auth.service";
+import { loadGoogleGis } from "../../core/utils/google-gis";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
@@ -41,6 +46,11 @@ export class AuthComponent {
   private readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  @ViewChild("googleButtonContainer", { static: false })
+  googleButtonContainer?: ElementRef<HTMLDivElement>;
+  private readonly appConfig = inject(APP_CONFIG);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly defaultSignupState: SignupFormState = {
     email: "",
     password: "",
@@ -220,9 +230,66 @@ export class AuthComponent {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleGoogleAuth(context: AuthTab): void {
-    // TODO : Implémenter l'authentification Google (OAuth2)
+  /** Lance le flux d'authentification Google via GIS One Tap. */
+  async handleGoogleAuth(context: AuthTab): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const clientId = this.appConfig.googleClientId;
+    if (!clientId) {
+      this.setGoogleError(
+        context,
+        $localize`:auth.google.notConfigured@@authGoogleNotConfigured:L'authentification Google n'est pas configurée.`,
+      );
+      return;
+    }
+
+    try {
+      await loadGoogleGis();
+    } catch {
+      this.setGoogleError(
+        context,
+        $localize`:auth.google.loadError@@authGoogleLoadError:Impossible de charger Google Sign-In.`,
+      );
+      return;
+    }
+
+    google.accounts.id.initialize({
+      client_id: clientId,
+      callback: (response) => this.onGoogleCredential(response, context),
+      context: context === "sign-up" ? "signup" : "signin",
+    });
+
+    google.accounts.id.prompt();
+  }
+
+  /** Traite la reponse du jeton Google apres authentification. */
+  private onGoogleCredential(
+    response: google.accounts.id.CredentialResponse,
+    context: AuthTab,
+  ): void {
+    this.authService.googleAuth(response.credential).subscribe({
+      next: (session) => {
+        this.authState.login(session);
+        void this.router.navigate(["/"]);
+      },
+      error: (err) => {
+        const message =
+          err?.error?.message ??
+          $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`;
+        this.setGoogleError(context, message);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  /** Affiche un message d'erreur Google dans le contexte (inscription ou connexion). */
+  private setGoogleError(context: AuthTab, message: string): void {
+    if (context === "sign-up") {
+      this.signupErrorMessage = message;
+    } else {
+      this.loginErrorMessage = message;
+    }
+    this.cdr.markForCheck();
   }
 
   private resetSignupForm(form: NgForm): void {

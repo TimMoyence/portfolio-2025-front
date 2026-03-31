@@ -1,6 +1,4 @@
 import type { Routes } from "@angular/router";
-import { authGuard } from "./core/guards/auth.guard";
-import { roleGuard } from "./core/guards/role.guard";
 
 export const routes: Routes = [
   {
@@ -109,15 +107,39 @@ export const routes: Routes = [
     },
   },
   {
-    path: "commonbudgetTM",
-    canActivate: [authGuard, roleGuard("budget")],
+    path: "atelier/meteo",
     loadComponent: () =>
-      import("./features/common-budget-tm/common-budget-tm.component").then(
-        (m) => m.CommonBudgetTmComponent,
+      import("./features/weather/weather.component").then(
+        (m) => m.WeatherComponent,
       ),
     data: {
-      seoKey: "commonbudgetTM",
+      seoKey: "weather",
     },
+  },
+  {
+    path: "atelier/budget",
+    loadComponent: () =>
+      import("./features/budget/budget.component").then(
+        (m) => m.BudgetComponent,
+      ),
+    data: {
+      seoKey: "budget",
+    },
+  },
+  {
+    path: "atelier/sebastian",
+    loadComponent: () =>
+      import("./features/sebastian/sebastian.component").then(
+        (m) => m.SebastianComponent,
+      ),
+    data: {
+      seoKey: "sebastian",
+    },
+  },
+  {
+    path: "commonbudgetTM",
+    redirectTo: "atelier/budget",
+    pathMatch: "full" as const,
   },
   {
     path: "**",

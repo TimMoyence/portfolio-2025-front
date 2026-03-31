@@ -3,6 +3,7 @@ export interface AppConfig {
   appName: string;
   apiBaseUrl: string;
   baseUrl: string;
+  googleClientId?: string;
   external: {
     presqUrl: string;
     sebastianUrl: string;

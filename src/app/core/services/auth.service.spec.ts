@@ -18,6 +18,7 @@ describe("AuthService", () => {
     authPortSpy = jasmine.createSpyObj<AuthPort>("AuthPort", [
       "login",
       "register",
+      "googleAuth",
     ]);
 
     TestBed.configureTestingModule({
@@ -85,5 +86,29 @@ describe("AuthService", () => {
     });
 
     expect(authPortSpy.register).toHaveBeenCalledWith(payload);
+  });
+
+  it("should delegate googleAuth to the auth port", () => {
+    const session: AuthSession = {
+      accessToken: "google-token",
+      expiresIn: 3600,
+      user: {
+        id: "2",
+        email: "google@example.com",
+        firstName: "Google",
+        lastName: "User",
+        phone: null,
+        isActive: true,
+        roles: [],
+      },
+    };
+
+    authPortSpy.googleAuth.and.returnValue(of(session));
+
+    service.googleAuth("id-token-from-google").subscribe((result) => {
+      expect(result).toEqual(session);
+    });
+
+    expect(authPortSpy.googleAuth).toHaveBeenCalledWith("id-token-from-google");
   });
 });

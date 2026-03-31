@@ -17,6 +17,7 @@ import { AuthHttpAdapter } from "./core/adapters/auth-http.adapter";
 import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adapter";
 import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
 import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
+import { WeatherHttpAdapter } from "./core/adapters/weather-http.adapter";
 import { APP_CONFIG } from "./core/config/app-config.token";
 import { authInterceptor } from "./core/http/interceptors/auth.interceptor";
 import { errorInterceptor } from "./core/http/interceptors/error.interceptor";
@@ -25,6 +26,7 @@ import { AUTH_PORT } from "./core/ports/auth.port";
 import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
 import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
 import { CONTACT_PORT } from "./core/ports/contact.port";
+import { WEATHER_PORT } from "./core/ports/weather.port";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -66,6 +68,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: COOKIE_CONSENT_PORT,
       useClass: CookieConsentHttpAdapter,
+    },
+    {
+      provide: WEATHER_PORT,
+      useClass: WeatherHttpAdapter,
     },
   ],
 };

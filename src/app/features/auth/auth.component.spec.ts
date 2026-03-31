@@ -7,8 +7,10 @@ import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import { of } from "rxjs";
 import type { AuthSession } from "../../core/models/auth.model";
+import { APP_CONFIG } from "../../core/config/app-config.token";
 import { AUTH_PORT } from "../../core/ports/auth.port";
 import { AuthService } from "../../core/services/auth.service";
+import { environment } from "../../../environments/environnement";
 import { AuthComponent } from "./auth.component";
 
 describe("AuthComponent", () => {
@@ -22,6 +24,7 @@ describe("AuthComponent", () => {
     authService = jasmine.createSpyObj<AuthService>("AuthService", [
       "register",
       "login",
+      "googleAuth",
     ]);
 
     await TestBed.configureTestingModule({
@@ -36,7 +39,16 @@ describe("AuthComponent", () => {
         },
         {
           provide: AUTH_PORT,
-          useValue: { login: () => {}, register: () => {}, me: () => {} },
+          useValue: {
+            login: () => {},
+            register: () => {},
+            me: () => {},
+            googleAuth: () => {},
+          },
+        },
+        {
+          provide: APP_CONFIG,
+          useValue: environment,
         },
       ],
     }).compileComponents();

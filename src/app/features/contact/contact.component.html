@@ -162,8 +162,9 @@
         </fieldset>
 
         @if (
-          contactFormRef.controls["role"]?.invalid &&
-          (contactFormRef.controls["role"]?.touched || isContactSubmitted)
+          contactFormRef.controls["role"] &&
+          contactFormRef.controls["role"].invalid &&
+          (contactFormRef.controls["role"].touched || isContactSubmitted)
         ) {
           <p class="mt-1 text-sm md:text-base text-red-500">
             <span i18n="auth.error.required@@authErrorRequired"
