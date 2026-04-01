@@ -1,5 +1,6 @@
 import type { Routes } from "@angular/router";
 import { authGuard } from "./core/guards/auth.guard";
+import { roleGuard } from "./core/guards/role.guard";
 
 export const routes: Routes = [
   {
@@ -150,6 +151,7 @@ export const routes: Routes = [
   },
   {
     path: "atelier/budget",
+    canActivate: [authGuard, roleGuard("budget")],
     loadComponent: () =>
       import("./features/budget/budget.component").then(
         (m) => m.BudgetComponent,
