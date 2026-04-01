@@ -1,5 +1,10 @@
 import { isPlatformBrowser } from "@angular/common";
-import { Injectable, PLATFORM_ID, inject } from "@angular/core";
+import {
+  afterNextRender,
+  Injectable,
+  PLATFORM_ID,
+  inject,
+} from "@angular/core";
 import { computed, signal } from "@angular/core";
 import type { AuthSession, AuthUser } from "../models/auth.model";
 import { AUTH_PORT, type AuthPort } from "../ports/auth.port";
@@ -9,6 +14,7 @@ const TOKEN_KEY = "portfolio_jwt";
 /**
  * Service central de gestion de l'etat d'authentification.
  * Stocke le token JWT en localStorage et expose des signals reactifs.
+ * Utilise afterNextRender pour restaurer la session apres l'hydratation SSR.
  */
 @Injectable({ providedIn: "root" })
 export class AuthStateService {
@@ -25,7 +31,10 @@ export class AuthStateService {
   readonly isLoggedIn = computed(() => !!this._token());
 
   constructor() {
-    this.restoreToken();
+    // afterNextRender garantit l'execution cote client apres l'hydratation SSR
+    afterNextRender(() => {
+      this.restoreToken();
+    });
   }
 
   login(session: AuthSession): void {
