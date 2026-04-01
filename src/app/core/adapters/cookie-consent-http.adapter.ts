@@ -14,7 +14,7 @@ export class CookieConsentHttpAdapter implements CookieConsentPort {
 
   recordConsent(payload: CookieConsentPayload): Observable<MessageResponse> {
     return this.http.post<MessageResponse>(
-      `${this.baseUrl}cookie-consents`,
+      `${this.baseUrl}/cookie-consents`,
       payload,
     );
   }

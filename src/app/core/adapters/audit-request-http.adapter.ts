@@ -28,14 +28,14 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
 
   submit(payload: AuditRequestPayload): Observable<AuditCreateResponse> {
     return this.http.post<AuditCreateResponse>(
-      `${this.baseUrl}audits`,
+      `${this.baseUrl}/audits`,
       payload,
     );
   }
 
   getSummary(auditId: string): Observable<AuditSummaryResponse> {
     return this.http.get<AuditSummaryResponse>(
-      `${this.baseUrl}audits/${encodeURIComponent(auditId)}/summary`,
+      `${this.baseUrl}/audits/${encodeURIComponent(auditId)}/summary`,
     );
   }
 
@@ -44,7 +44,7 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
     if (!this.isBrowser) return EMPTY;
 
     return new Observable<AuditStreamEvent>((subscriber) => {
-      const streamUrl = `${this.baseUrl}audits/${encodeURIComponent(auditId)}/stream`;
+      const streamUrl = `${this.baseUrl}/audits/${encodeURIComponent(auditId)}/stream`;
       const source = new EventSource(streamUrl);
 
       const parsePayload = (raw: MessageEvent): unknown => {

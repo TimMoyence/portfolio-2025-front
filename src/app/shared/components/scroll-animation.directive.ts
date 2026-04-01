@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from "@angular/common";
-import type { AfterViewInit } from "@angular/core";
+import type { AfterViewInit, OnDestroy } from "@angular/core";
 import {
   Component,
   ElementRef,
@@ -8,6 +8,10 @@ import {
   Renderer2,
 } from "@angular/core";
 
+/**
+ * Composant d'animation au scroll.
+ * Ajoute la classe `active` aux elements `.reveal` quand ils entrent dans le viewport.
+ */
 @Component({
   selector: "app-scroll-animation",
   standalone: true,
@@ -15,7 +19,9 @@ import {
   template: ` <ng-content></ng-content> `,
   styles: [],
 })
-export class ScrollAnimationComponent implements AfterViewInit {
+export class ScrollAnimationComponent implements AfterViewInit, OnDestroy {
+  private scrollHandler: (() => void) | null = null;
+
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
@@ -26,14 +32,19 @@ export class ScrollAnimationComponent implements AfterViewInit {
     this.initScrollAnimation();
   }
 
+  ngOnDestroy() {
+    if (this.scrollHandler) {
+      window.removeEventListener("scroll", this.scrollHandler);
+      this.scrollHandler = null;
+    }
+  }
+
   private initScrollAnimation() {
-    // Guard SSR : les API window/document ne sont pas disponibles cote serveur
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Add reveal class to all elements that should animate on scroll
     const revealElements = this.el.nativeElement.querySelectorAll(".reveal");
 
-    const checkScroll = () => {
+    this.scrollHandler = () => {
       for (let i = 0; i < revealElements.length; i++) {
         const elementTop = revealElements[i].getBoundingClientRect().top;
         const elementVisible = 150;
@@ -46,10 +57,7 @@ export class ScrollAnimationComponent implements AfterViewInit {
       }
     };
 
-    // Initial check
-    checkScroll();
-
-    // Add scroll event listener
-    window.addEventListener("scroll", checkScroll);
+    this.scrollHandler();
+    window.addEventListener("scroll", this.scrollHandler);
   }
 }
