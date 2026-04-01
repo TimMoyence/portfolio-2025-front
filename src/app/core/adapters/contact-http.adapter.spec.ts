@@ -59,7 +59,7 @@ describe("ContactHttpAdapter", () => {
       expect(result).toEqual(response);
     });
 
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}contacts`);
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/contacts`);
     expect(req.request.method).toBe("POST");
     expect(req.request.body).toEqual(payload);
     req.flush(response);
@@ -83,7 +83,7 @@ describe("ContactHttpAdapter", () => {
       },
     });
 
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}contacts`);
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/contacts`);
     req.flush("Validation error", {
       status: 422,
       statusText: "Unprocessable Entity",

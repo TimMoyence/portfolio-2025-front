@@ -14,7 +14,7 @@ export class ContactHttpAdapter implements ContactPort {
 
   contact(credentials: ContactFormState): Observable<MessageResponse> {
     return this.http.post<MessageResponse>(
-      `${this.baseUrl}contacts`,
+      `${this.baseUrl}/contacts`,
       credentials,
     );
   }

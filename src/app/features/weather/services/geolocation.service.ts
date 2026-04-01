@@ -47,17 +47,17 @@ export class GeolocationService {
         lat: pos.coords.latitude,
         lon: pos.coords.longitude,
       })),
-      map(({ lat, lon }) => {
-        this.reverseGeocode(lat, lon).subscribe();
-        return {
-          id: -1,
-          name: $localize`:weather.geo.myPosition|@@weatherGeoMyPosition:Ma position`,
-          latitude: lat,
-          longitude: lon,
-          country: "",
-          country_code: "",
-        } satisfies CityResult;
-      }),
+      map(
+        ({ lat, lon }) =>
+          ({
+            id: -1,
+            name: $localize`:weather.geo.myPosition|@@weatherGeoMyPosition:Ma position`,
+            latitude: lat,
+            longitude: lon,
+            country: "",
+            country_code: "",
+          }) satisfies CityResult,
+      ),
     );
   }
 

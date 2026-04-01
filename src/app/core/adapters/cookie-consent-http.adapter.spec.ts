@@ -58,7 +58,7 @@ describe("CookieConsentHttpAdapter", () => {
       expect(result).toEqual(response);
     });
 
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}cookie-consents`);
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/cookie-consents`);
     expect(req.request.method).toBe("POST");
     expect(req.request.body).toEqual(payload);
     req.flush(response);
@@ -86,7 +86,7 @@ describe("CookieConsentHttpAdapter", () => {
       },
     });
 
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}cookie-consents`);
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/cookie-consents`);
     req.flush("Internal Server Error", {
       status: 500,
       statusText: "Internal Server Error",
