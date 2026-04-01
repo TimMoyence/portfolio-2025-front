@@ -33,6 +33,11 @@ export interface BudgetPort {
     payload: CreateBudgetCategoryPayload,
   ): Observable<BudgetCategoryModel>;
   getCategories(groupId: string): Observable<BudgetCategoryModel[]>;
+  /** Met a jour la categorie d'une entree. */
+  updateEntry(
+    entryId: string,
+    categoryId: string | null,
+  ): Observable<BudgetEntryModel>;
   shareBudget(
     payload: ShareBudgetPayload,
   ): Observable<{ shared: true; userId: string }>;
