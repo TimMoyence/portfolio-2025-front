@@ -245,6 +245,16 @@ export class CommonBudgetTmComponent {
       ...current,
       [event.id]: nextCategory,
     }));
+
+    // Persister le changement de categorie en base
+    const cat = this.apiCategories().find((c) => c.name === nextCategory);
+    if (cat) {
+      firstValueFrom(this.budgetPort.updateEntry(event.id, cat.id)).catch(
+        () => {
+          /* fallback silencieux — l'override local reste actif */
+        },
+      );
+    }
   }
 
   onShareEmailChange(value: string): void {

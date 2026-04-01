@@ -103,6 +103,17 @@ export class BudgetHttpAdapter implements BudgetPort {
     );
   }
 
+  /** Met a jour la categorie d'une entree. */
+  updateEntry(
+    entryId: string,
+    categoryId: string | null,
+  ): Observable<BudgetEntryModel> {
+    return this.http.patch<BudgetEntryModel>(
+      `${this.baseUrl}/budget/entries/${entryId}`,
+      { categoryId },
+    );
+  }
+
   /** Partage le budget avec un autre utilisateur. */
   shareBudget(
     payload: ShareBudgetPayload,
