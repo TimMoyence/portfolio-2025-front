@@ -177,6 +177,16 @@ function rebaseFrontendBranch(opts, env) {
       }
     }
   }
+
+  // Sauvegarder le travail local avant rebase (commit + push)
+  const status = run('git', ['status', '--porcelain'], { cwd: FRONT_DIR, captureOutput: true, dryRun: opts.dryRun, env, description: 'Verification changements locaux' }).stdout.trim();
+  if (status.length > 0) {
+    console.log('  Changements locaux detectes — sauvegarde avant rebase...');
+    run('git', ['add', '-A'], { cwd: FRONT_DIR, dryRun: opts.dryRun, env, description: 'Stage tous les changements locaux' });
+    run('git', ['commit', '-m', 'chore(budget): sauvegarde automatique avant rebase sur master'], { cwd: FRONT_DIR, dryRun: opts.dryRun, env, description: 'Commit de sauvegarde pre-rebase', allowFailure: true });
+    run('git', ['push', '-u', 'origin', 'Commonbudget'], { cwd: FRONT_DIR, dryRun: opts.dryRun, env, description: 'Push sauvegarde vers origin', allowFailure: true });
+  }
+
   run('git', ['rebase', 'origin/master'], { cwd: FRONT_DIR, dryRun: opts.dryRun, env, description: 'Rebase Commonbudget sur origin/master' });
 }
 
