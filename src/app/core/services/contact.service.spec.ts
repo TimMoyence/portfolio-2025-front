@@ -1,19 +1,19 @@
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
-import type { ContactFormState } from "../models/contact.model";
 import type { MessageResponse } from "../models/message.response";
-import type { ContactPort } from "../ports/contact.port";
 import { CONTACT_PORT } from "../ports/contact.port";
 import { ContactService } from "./contact.service";
+import {
+  buildContactPayload,
+  createContactPortStub,
+} from "../../../testing/factories/contact.factory";
 
 describe("ContactService", () => {
   let service: ContactService;
-  let contactPortSpy: jasmine.SpyObj<ContactPort>;
+  let contactPortSpy: ReturnType<typeof createContactPortStub>;
 
   beforeEach(() => {
-    contactPortSpy = jasmine.createSpyObj<ContactPort>("ContactPort", [
-      "contact",
-    ]);
+    contactPortSpy = createContactPortStub();
 
     TestBed.configureTestingModule({
       providers: [
@@ -29,15 +29,7 @@ describe("ContactService", () => {
   });
 
   it("should delegate contact to the contact port", () => {
-    const payload: ContactFormState = {
-      email: "john@example.com",
-      firstName: "John",
-      lastName: "Doe",
-      subject: "Collaboration",
-      message: "Bonjour, je souhaite collaborer.",
-      role: "developer",
-      terms: true,
-    };
+    const payload = buildContactPayload();
     const response: MessageResponse = {
       message: "Message envoyé avec succès.",
       httpCode: 201,

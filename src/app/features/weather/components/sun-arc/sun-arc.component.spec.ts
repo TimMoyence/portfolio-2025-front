@@ -1,6 +1,7 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
 import { LOCALE_ID } from "@angular/core";
+import { WeatherLevelService } from "../../services/weather-level.service";
 import { SunArcComponent } from "./sun-arc.component";
 
 describe("SunArcComponent", () => {
@@ -10,7 +11,16 @@ describe("SunArcComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SunArcComponent],
-      providers: [{ provide: LOCALE_ID, useValue: "fr-FR" }],
+      providers: [
+        { provide: LOCALE_ID, useValue: "fr-FR" },
+        {
+          provide: WeatherLevelService,
+          useValue: {
+            isTooltipSeen: () => true,
+            markTooltipSeen: () => {},
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SunArcComponent);

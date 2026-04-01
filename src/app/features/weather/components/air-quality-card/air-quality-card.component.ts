@@ -6,6 +6,7 @@ import {
   input,
 } from "@angular/core";
 import type { AirQualityData } from "../../../../core/models/weather.model";
+import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
 
 /**
  * Carte de qualite de l'air avec indice AQI europeen et polluants principaux.
@@ -14,17 +15,26 @@ import type { AirQualityData } from "../../../../core/models/weather.model";
 @Component({
   selector: "app-air-quality-card",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LearningTooltipComponent],
   template: `
     <div
       class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
     >
-      <h3
-        class="mb-3 text-sm font-medium text-white/70"
-        i18n="weather.aqi.title|@@weatherAqiTitle"
-      >
-        Qualité de l'air
-      </h3>
+      <div class="mb-3 flex items-center justify-between">
+        <h3
+          class="text-sm font-medium text-white/70"
+          i18n="weather.aqi.title|@@weatherAqiTitle"
+        >
+          Qualité de l'air
+        </h3>
+        <app-learning-tooltip
+          id="air-quality"
+          i18n-title="weather.aqi.tooltip.title|@@weatherAqiTooltipTitle"
+          title="Qualité de l'air"
+          i18n-content="weather.aqi.tooltip.content|@@weatherAqiTooltipContent"
+          content="L'indice AQI européen combine les niveaux de particules fines (PM2.5, PM10) et d'ozone (O₃). En dessous de 20 l'air est bon, au-dessus de 60 les personnes sensibles doivent limiter les efforts en extérieur."
+        />
+      </div>
 
       @if (airQuality(); as aq) {
         <div class="flex items-baseline gap-2">

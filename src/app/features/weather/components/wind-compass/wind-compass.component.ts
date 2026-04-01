@@ -5,6 +5,7 @@ import {
   computed,
   input,
 } from "@angular/core";
+import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
 
 /**
  * Boussole de vent SVG avec directions cardinales en francais,
@@ -13,17 +14,27 @@ import {
 @Component({
   selector: "app-wind-compass",
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, LearningTooltipComponent],
   template: `
     <div
       class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
     >
-      <h3
-        class="mb-3 text-sm font-medium text-white/70"
-        i18n="weather.wind.title|@@weatherWindTitle"
-      >
-        Vent
-      </h3>
+      <div class="mb-3 flex items-center justify-between">
+        <h3
+          class="text-sm font-medium text-white/70"
+          i18n="weather.wind.title|@@weatherWindTitle"
+        >
+          Vent
+        </h3>
+        <app-learning-tooltip
+          id="wind"
+          i18n-title="weather.wind.tooltip.title|@@weatherWindTooltipTitle"
+          title="Vent"
+          i18n-content="
+            weather.wind.tooltip.content|@@weatherWindTooltipContent"
+          content="La vitesse du vent est mesurée à 10 m du sol. La direction indique d'où vient le vent (un vent de Nord souffle du nord vers le sud). Les rafales sont des accélérations brèves pouvant dépasser le double de la vitesse moyenne."
+        />
+      </div>
 
       <div class="flex flex-col items-center">
         <!-- Boussole SVG -->

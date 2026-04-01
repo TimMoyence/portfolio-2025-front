@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { WeatherLevelService } from "../../services/weather-level.service";
 import { WindCompassComponent } from "./wind-compass.component";
 
 describe("WindCompassComponent", () => {
@@ -9,6 +10,15 @@ describe("WindCompassComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WindCompassComponent],
+      providers: [
+        {
+          provide: WeatherLevelService,
+          useValue: {
+            isTooltipSeen: () => true,
+            markTooltipSeen: () => {},
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WindCompassComponent);

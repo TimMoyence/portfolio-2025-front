@@ -1,6 +1,7 @@
 import type {
   AirQualityData,
   CityResult,
+  DailyForecast,
   EnsembleData,
   ForecastResponse,
   HistoricalData,
@@ -39,6 +40,49 @@ export function buildCityResult(overrides?: Partial<CityResult>): CityResult {
     longitude: 2.35,
     country: "France",
     country_code: "FR",
+    ...overrides,
+  };
+}
+
+/**
+ * Construit un objet DailyForecast avec 7 jours de donnees par defaut.
+ * Accepte des surcharges partielles pour les cas de test specifiques.
+ */
+export function buildDailyForecast(
+  overrides?: Partial<DailyForecast>,
+): DailyForecast {
+  return {
+    time: [
+      "2026-03-31",
+      "2026-04-01",
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+    ],
+    weather_code: [0, 1, 2, 3, 61, 80, 95],
+    temperature_2m_max: [20, 18, 16, 14, 12, 15, 17],
+    temperature_2m_min: [10, 8, 7, 6, 5, 7, 9],
+    sunrise: [
+      "2026-03-31T06:30",
+      "2026-04-01T06:28",
+      "2026-04-02T06:26",
+      "2026-04-03T06:24",
+      "2026-04-04T06:22",
+      "2026-04-05T06:20",
+      "2026-04-06T06:18",
+    ],
+    sunset: [
+      "2026-03-31T19:30",
+      "2026-04-01T19:32",
+      "2026-04-02T19:34",
+      "2026-04-03T19:36",
+      "2026-04-04T19:38",
+      "2026-04-05T19:40",
+      "2026-04-06T19:42",
+    ],
+    precipitation_sum: [0, 0, 0, 0, 5.2, 10.1, 0.3],
     ...overrides,
   };
 }

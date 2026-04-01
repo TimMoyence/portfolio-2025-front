@@ -3,11 +3,11 @@ import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { of } from "rxjs";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import { CONTACT_PORT } from "../../core/ports/contact.port";
 import { ContactComponent } from "./contact.component";
 import { environment } from "../../../environments/environnement";
+import { createContactPortStubWithDefault } from "../../../testing/factories/contact.factory";
 
 describe("ContactComponent", () => {
   let component: ContactComponent;
@@ -26,9 +26,7 @@ describe("ContactComponent", () => {
         },
         {
           provide: CONTACT_PORT,
-          useValue: {
-            contact: () => of({ message: "ok" }),
-          },
+          useValue: createContactPortStubWithDefault(),
         },
       ],
     }).compileComponents();

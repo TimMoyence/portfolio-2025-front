@@ -1,25 +1,21 @@
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
-import type {
-  AuditCreateResponse,
-  AuditRequestPayload,
-  AuditStreamEvent,
-  AuditSummaryResponse,
-} from "../models/audit-request.model";
-import type { AuditRequestPort } from "../ports/audit-request.port";
+import type { AuditStreamEvent } from "../models/audit-request.model";
 import { AUDIT_REQUEST_PORT } from "../ports/audit-request.port";
 import { AuditRequestService } from "./audit-request.service";
+import {
+  buildAuditRequestPayload,
+  buildAuditCreateResponse,
+  buildAuditSummaryResponse,
+  createAuditRequestPortStub,
+} from "../../../testing/factories/audit-request.factory";
 
 describe("AuditRequestService", () => {
   let service: AuditRequestService;
-  let auditPortSpy: jasmine.SpyObj<AuditRequestPort>;
+  let auditPortSpy: ReturnType<typeof createAuditRequestPortStub>;
 
   beforeEach(() => {
-    auditPortSpy = jasmine.createSpyObj<AuditRequestPort>("AuditRequestPort", [
-      "submit",
-      "getSummary",
-      "stream",
-    ]);
+    auditPortSpy = createAuditRequestPortStub();
 
     TestBed.configureTestingModule({
       providers: [
@@ -35,18 +31,10 @@ describe("AuditRequestService", () => {
   });
 
   it("should delegate submit to the audit port", () => {
-    const payload: AuditRequestPayload = {
-      websiteName: "example.com",
-      contactMethod: "EMAIL",
-      contactValue: "test@example.com",
-      locale: "fr",
-    };
-    const response: AuditCreateResponse = {
+    const payload = buildAuditRequestPayload();
+    const response = buildAuditCreateResponse({
       message: "Audit créé avec succès.",
-      httpCode: 201,
-      auditId: "audit-1",
-      status: "PENDING",
-    };
+    });
 
     auditPortSpy.submit.and.returnValue(of(response));
 
@@ -58,8 +46,7 @@ describe("AuditRequestService", () => {
   });
 
   it("should delegate getSummary to the audit port", () => {
-    const summary: AuditSummaryResponse = {
-      auditId: "audit-1",
+    const summary = buildAuditSummaryResponse({
       ready: true,
       status: "COMPLETED",
       progress: 100,
@@ -67,7 +54,7 @@ describe("AuditRequestService", () => {
       keyChecks: { https: true },
       quickWins: ["Ajouter des données structurées"],
       pillarScores: { seo: 80 },
-    };
+    });
 
     auditPortSpy.getSummary.and.returnValue(of(summary));
 

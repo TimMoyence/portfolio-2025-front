@@ -6,7 +6,7 @@
       : 'bg-scheme-background'
   "
 >
-  <div class="mx-auto max-w-6xl space-y-4">
+  <div class="mx-auto max-w-6xl space-y-6">
     <!-- Titre -->
     <div class="text-center">
       <h1
@@ -28,7 +28,10 @@
 
     <!-- Selecteur de niveau -->
     <div class="flex justify-center mt-2">
-      <app-level-selector [darkMode]="hasForecast()" />
+      <app-level-selector
+        [darkMode]="hasForecast()"
+        (levelChanged)="onLevelChanged($event)"
+      />
     </div>
 
     <!-- Suggestion de transition de niveau -->

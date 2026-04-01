@@ -8,6 +8,7 @@ import {
   PLATFORM_ID,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
+import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
 
 /**
  * Arc solaire SVG montrant la trajectoire du soleil entre lever et coucher.
@@ -17,16 +18,26 @@ import { isPlatformBrowser } from "@angular/common";
 @Component({
   selector: "app-sun-arc",
   standalone: true,
+  imports: [LearningTooltipComponent],
   template: `
     <div
       class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
     >
-      <h3
-        class="mb-3 text-sm font-medium text-white/70"
-        i18n="weather.sun.title|@@weatherSunTitle"
-      >
-        Lever & coucher du soleil
-      </h3>
+      <div class="mb-3 flex items-center justify-between">
+        <h3
+          class="text-sm font-medium text-white/70"
+          i18n="weather.sun.title|@@weatherSunTitle"
+        >
+          Lever & coucher du soleil
+        </h3>
+        <app-learning-tooltip
+          id="sun-arc"
+          i18n-title="weather.sun.tooltip.title|@@weatherSunTooltipTitle"
+          title="Lever & coucher du soleil"
+          i18n-content="weather.sun.tooltip.content|@@weatherSunTooltipContent"
+          content="L'arc montre la trajectoire du soleil dans le ciel. Le point jaune indique sa position actuelle. La durée du jour varie selon la saison : environ 16h en été et 8h en hiver en France métropolitaine."
+        />
+      </div>
 
       @if (sunrise() && sunset()) {
         <div class="flex flex-col items-center">
