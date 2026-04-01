@@ -24,6 +24,11 @@ export class BudgetHttpAdapter implements BudgetPort {
 
   constructor(private readonly http: HttpClient) {}
 
+  /** Recupere les groupes de budget du user connecte. */
+  getGroups(): Observable<BudgetGroup[]> {
+    return this.http.get<BudgetGroup[]>(`${this.baseUrl}/budget/groups`);
+  }
+
   /** Cree un nouveau groupe de budget. */
   createGroup(name: string): Observable<BudgetGroup> {
     return this.http.post<BudgetGroup>(`${this.baseUrl}/budget/groups`, {

@@ -13,6 +13,8 @@ import type {
 
 /** Port d'acces aux donnees du budget partage. */
 export interface BudgetPort {
+  /** Recupere les groupes de budget du user connecte. */
+  getGroups(): Observable<BudgetGroup[]>;
   createGroup(name: string): Observable<BudgetGroup>;
   createEntry(payload: CreateBudgetEntryPayload): Observable<BudgetEntryModel>;
   getEntries(

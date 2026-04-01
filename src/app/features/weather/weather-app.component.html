@@ -28,7 +28,7 @@
 
     <!-- Selecteur de niveau -->
     <div class="flex justify-center mt-2">
-      <app-level-selector />
+      <app-level-selector [darkMode]="hasForecast()" />
     </div>
 
     <!-- Suggestion de transition de niveau -->
@@ -37,6 +37,7 @@
     <!-- Barre de villes favorites -->
     @if (favoriteCities().length > 0 || selectedCity()) {
       <app-favorite-cities-bar
+        [darkMode]="hasForecast()"
         [favorites]="favoriteCities()"
         [selectedCity]="selectedCity()"
         (favoriteSelected)="onCitySelected($event)"
@@ -46,16 +47,25 @@
     }
 
     <!-- Recherche de ville -->
-    <app-city-search (citySelected)="onCitySelected($event)" />
+    <app-city-search
+      [darkMode]="hasForecast()"
+      (citySelected)="onCitySelected($event)"
+    />
 
     <!-- Chargement -->
     @if (loading()) {
       <div class="flex items-center justify-center py-12">
         <div
-          class="h-10 w-10 animate-spin rounded-full border-4 border-white/20 border-t-white"
+          class="h-10 w-10 animate-spin rounded-full border-4"
+          [ngClass]="
+            hasForecast()
+              ? 'border-white/20 border-t-white'
+              : 'border-scheme-border border-t-scheme-accent'
+          "
         ></div>
         <span
-          class="ml-3 text-white/70"
+          class="ml-3"
+          [ngClass]="hasForecast() ? 'text-white/70' : 'text-scheme-text-muted'"
           i18n="weather.loading|@@weatherLoading"
         >
           Chargement...
@@ -66,7 +76,7 @@
     <!-- Erreur -->
     @if (error(); as errorMsg) {
       <div
-        class="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-center backdrop-blur-md"
+        class="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-center"
       >
         <div class="flex items-center justify-center gap-2">
           <img
@@ -74,7 +84,7 @@
             alt=""
             class="h-8 w-8"
           />
-          <p class="text-red-200">{{ errorMsg }}</p>
+          <p class="text-red-600">{{ errorMsg }}</p>
         </div>
       </div>
     }

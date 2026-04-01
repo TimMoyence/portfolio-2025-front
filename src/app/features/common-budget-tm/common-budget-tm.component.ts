@@ -12,6 +12,7 @@ import { firstValueFrom } from "rxjs";
 import type {
   BudgetCategoryModel,
   BudgetEntryModel,
+  BudgetGroup,
 } from "../../core/models/budget.model";
 import { BUDGET_PORT } from "../../core/ports/budget.port";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
@@ -264,8 +265,17 @@ export class CommonBudgetTmComponent {
       );
       this.shareMessage.set(`Budget partage avec ${email} !`);
       this.shareEmail.set("");
-    } catch {
-      this.shareMessage.set("Erreur : utilisateur introuvable ou deja membre.");
+    } catch (error: unknown) {
+      const msg = (error as { error?: { message?: string } })?.error?.message;
+      if (msg && msg.includes("Aucun compte")) {
+        this.shareMessage.set(
+          `Aucun compte pour ${email}. Demandez-lui de s'inscrire d'abord sur le site.`,
+        );
+      } else {
+        this.shareMessage.set(
+          "Erreur lors du partage. Verifiez l'email et reessayez.",
+        );
+      }
     }
   }
 
@@ -383,9 +393,19 @@ export class CommonBudgetTmComponent {
     }
     this.loading.set(true);
     try {
-      const group = await firstValueFrom(
-        this.budgetPort.createGroup("Budget couple T&M"),
-      );
+      let groups: BudgetGroup[] = [];
+      try {
+        groups = await firstValueFrom(this.budgetPort.getGroups());
+      } catch {
+        // getGroups failed, will create below
+      }
+
+      const group =
+        groups.length > 0
+          ? groups[0]
+          : await firstValueFrom(
+              this.budgetPort.createGroup("Budget couple T&M"),
+            );
       this.groupId.set(group.id);
 
       const cats = await firstValueFrom(

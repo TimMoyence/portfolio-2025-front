@@ -25,6 +25,16 @@ describe("BudgetHttpAdapter", () => {
 
   afterEach(() => httpMock.verify());
 
+  it("devrait recuperer les groupes", () => {
+    adapter.getGroups().subscribe((groups) => {
+      expect(groups.length).toBe(1);
+    });
+
+    const req = httpMock.expectOne(`${baseUrl}/budget/groups`);
+    expect(req.request.method).toBe("GET");
+    req.flush([{ id: "g1", name: "Budget T&M", ownerId: "u1", createdAt: "" }]);
+  });
+
   it("devrait creer un groupe", () => {
     adapter.createGroup("Budget T&M").subscribe((g) => {
       expect(g.name).toBe("Budget T&M");

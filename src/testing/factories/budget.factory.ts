@@ -78,6 +78,7 @@ export function buildBudgetSummary(
 /** Cree un stub complet du port budget avec des spies Jasmine. */
 export function createBudgetPortStub(): Record<keyof BudgetPort, jasmine.Spy> {
   return {
+    getGroups: jasmine.createSpy("getGroups"),
     createGroup: jasmine.createSpy("createGroup"),
     createEntry: jasmine.createSpy("createEntry"),
     getEntries: jasmine.createSpy("getEntries"),
