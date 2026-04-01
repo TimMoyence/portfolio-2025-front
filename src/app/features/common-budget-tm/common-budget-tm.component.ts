@@ -59,6 +59,8 @@ export class CommonBudgetTmComponent {
   readonly groupId = signal<string | null>(null);
   readonly apiCategories = signal<BudgetCategoryModel[]>([]);
   readonly loading = signal(false);
+  readonly shareEmail = signal("");
+  readonly shareMessage = signal("");
 
   categories: string[] = [];
 
@@ -242,6 +244,29 @@ export class CommonBudgetTmComponent {
       ...current,
       [event.id]: nextCategory,
     }));
+  }
+
+  onShareEmailChange(value: string): void {
+    this.shareEmail.set(value);
+  }
+
+  async shareBudgetWith(): Promise<void> {
+    const gid = this.groupId();
+    const email = this.shareEmail().trim();
+    if (!gid || !email) {
+      this.shareMessage.set("Veuillez entrer un email valide.");
+      return;
+    }
+
+    try {
+      await firstValueFrom(
+        this.budgetPort.shareBudget({ groupId: gid, targetEmail: email }),
+      );
+      this.shareMessage.set(`Budget partage avec ${email} !`);
+      this.shareEmail.set("");
+    } catch {
+      this.shareMessage.set("Erreur : utilisateur introuvable ou deja membre.");
+    }
   }
 
   onSearchChange(value: string): void {

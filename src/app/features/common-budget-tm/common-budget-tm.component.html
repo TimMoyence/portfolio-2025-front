@@ -81,6 +81,36 @@
               Reset sample
             </button>
           </div>
+
+          @if (groupId()) {
+            <div class="mt-4 border-t border-white/40 pt-4">
+              <p
+                class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
+              >
+                Partager le budget
+              </p>
+              <div class="mt-2 flex gap-2">
+                <input
+                  class="flex-1 rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-sm text-slate-900"
+                  type="email"
+                  placeholder="email@exemple.com"
+                  [value]="shareEmail()"
+                  (input)="onShareEmailChange(readTextInput($event))"
+                  (keydown.enter)="shareBudgetWith()"
+                />
+                <button
+                  type="button"
+                  class="rounded-xl bg-[#0f7b65] px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                  (click)="shareBudgetWith()"
+                >
+                  Inviter
+                </button>
+              </div>
+              @if (shareMessage()) {
+                <p class="mt-2 text-xs text-slate-600">{{ shareMessage() }}</p>
+              }
+            </div>
+          }
         </div>
       </div>
     </div>
