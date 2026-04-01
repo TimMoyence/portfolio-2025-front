@@ -60,11 +60,11 @@ L'integration backend est deja faite sur master. Apres le rebase, le composant `
 
 ### Ce qui reste a faire :
 
-1. **Bouton "Partager avec Maria"** — Ajouter un bouton dans le dashboard qui appelle `BUDGET_PORT.shareBudget({ groupId, targetEmail })`. Le port et l'adapter sont prets dans `core/ports/budget.port.ts`.
+1. **Resolution des conflits de rebase** — Le rebase de la branche Commonbudget sur master peut generer des conflits dans `common-budget-tm.component.ts` car le fichier a ete refactorise pour utiliser l'API. Resoudre en gardant la version master pour toute la logique API, et en integrant les ajouts UI de Maria.
 
-2. **Resolution des conflits de rebase** — Le rebase de la branche Commonbudget sur master peut generer des conflits dans `common-budget-tm.component.ts` car le fichier a ete refactorise pour utiliser l'API. Resoudre en gardant la version master pour toute la logique API, et en integrant les ajouts UI de Maria.
+2. **Tests** — Ecrire les tests pour les nouveaux composants/services ajoutes par Maria. Utiliser les factories de `src/testing/factories/budget.factory.ts` (buildBudgetEntry, buildBudgetCategory, createBudgetPortStub).
 
-3. **Tests** — Ecrire les tests pour les nouveaux composants/services ajoutes par Maria. Utiliser les factories de `src/testing/factories/budget.factory.ts` (buildBudgetEntry, buildBudgetCategory, createBudgetPortStub).
+3. **Ameliorations UI** — Dashboard ameliore, graphes, filtres avances, categories personnalisables (a decider avec Maria).
 
 ## Architecture deja en place
 
