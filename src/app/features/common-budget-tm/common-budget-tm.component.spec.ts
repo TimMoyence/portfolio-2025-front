@@ -14,7 +14,10 @@ describe("CommonBudgetTmComponent", () => {
 
   beforeEach(async () => {
     budgetPortStub = createBudgetPortStub();
-    // Default: createGroup fails so we fall back to sample data
+    // Default: getGroups fails so we fall back to sample data
+    budgetPortStub.getGroups.and.returnValue(
+      throwError(() => new Error("API unreachable")),
+    );
     budgetPortStub.createGroup.and.returnValue(
       throwError(() => new Error("API unreachable")),
     );
@@ -41,7 +44,7 @@ describe("CommonBudgetTmComponent", () => {
 
   it("should load from API when available", async () => {
     const group = buildBudgetGroup();
-    budgetPortStub.createGroup.and.returnValue(of(group));
+    budgetPortStub.getGroups.and.returnValue(of([group]));
     budgetPortStub.getCategories.and.returnValue(of([]));
     budgetPortStub.getEntries.and.returnValue(of([]));
 
