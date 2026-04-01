@@ -28,7 +28,7 @@
 
     <!-- Selecteur de niveau -->
     <div class="flex justify-center mt-2">
-      <app-level-selector />
+      <app-level-selector [darkMode]="hasForecast()" />
     </div>
 
     <!-- Suggestion de transition de niveau -->
@@ -37,6 +37,7 @@
     <!-- Barre de villes favorites -->
     @if (favoriteCities().length > 0 || selectedCity()) {
       <app-favorite-cities-bar
+        [darkMode]="hasForecast()"
         [favorites]="favoriteCities()"
         [selectedCity]="selectedCity()"
         (favoriteSelected)="onCitySelected($event)"
@@ -46,7 +47,10 @@
     }
 
     <!-- Recherche de ville -->
-    <app-city-search (citySelected)="onCitySelected($event)" />
+    <app-city-search
+      [darkMode]="hasForecast()"
+      (citySelected)="onCitySelected($event)"
+    />
 
     <!-- Chargement -->
     @if (loading()) {

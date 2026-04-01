@@ -28,7 +28,12 @@ import type {
         <button
           type="button"
           (click)="toggleFavorite()"
-          class="flex-shrink-0 rounded-lg border border-white/20 bg-white/10 p-2 text-white/70 transition-colors hover:bg-white/20"
+          class="flex-shrink-0 rounded-lg border p-2 transition-colors"
+          [ngClass]="
+            darkMode()
+              ? 'border-white/20 bg-white/10 text-white/70 hover:bg-white/20'
+              : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
+          "
           [class.text-yellow-400]="isCurrentFavorite()"
           [attr.aria-label]="
             isCurrentFavorite() ? removeFromFavoritesLabel : addToFavoritesLabel
@@ -56,11 +61,15 @@ import type {
         <button
           type="button"
           (click)="onCityClick(city)"
-          class="flex-shrink-0 rounded-full border px-3 py-1.5 text-sm backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-white"
+          class="flex-shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors"
           [ngClass]="
             isSelected(city)
-              ? 'border-white/50 bg-white/20 text-white'
-              : 'border-white/20 bg-white/10 text-white/80'
+              ? darkMode()
+                ? 'border-white/50 bg-white/20 text-white'
+                : 'border-scheme-accent bg-scheme-accent/10 text-scheme-accent'
+              : darkMode()
+                ? 'border-white/20 bg-white/10 text-white/80 hover:bg-white/20'
+                : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
           "
         >
           {{ city.name }}
@@ -71,6 +80,9 @@ import type {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FavoriteCitiesBarComponent {
+  /** Mode sombre (fond gradient) ou clair (fond blanc). */
+  readonly darkMode = input(true);
+
   /** Liste des villes favorites. */
   readonly favorites = input<FavoriteCity[]>([]);
 

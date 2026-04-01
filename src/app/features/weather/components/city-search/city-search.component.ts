@@ -6,6 +6,7 @@ import {
   EventEmitter,
   HostListener,
   inject,
+  input,
   OnDestroy,
   OnInit,
   Output,
@@ -38,7 +39,8 @@ import { GeolocationService } from "../../services/geolocation.service";
       <div class="relative flex gap-2">
         <div class="relative flex-1">
           <svg
-            class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/60"
+            class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5"
+            [ngClass]="darkMode() ? 'text-white/60' : 'text-scheme-text-muted'"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -58,7 +60,12 @@ import { GeolocationService } from "../../services/geolocation.service";
             i18n-placeholder="
               weather.search.placeholder|@@weatherSearchPlaceholder"
             placeholder="Rechercher une ville..."
-            class="w-full rounded-xl border border-white/20 bg-white/10 py-3 pl-10 pr-4 text-white placeholder-white/50 backdrop-blur-md outline-none transition-colors focus:border-white/40 focus:bg-white/15"
+            class="w-full rounded-xl border py-3 pl-10 pr-4 outline-none transition-colors"
+            [ngClass]="
+              darkMode()
+                ? 'border-white/20 bg-white/10 text-white placeholder-white/50 backdrop-blur-md focus:border-white/40 focus:bg-white/15'
+                : 'border-scheme-border bg-scheme-surface text-scheme-text placeholder-scheme-text-muted focus:border-scheme-accent'
+            "
             autocomplete="off"
             role="combobox"
             aria-controls="city-search-listbox"
@@ -69,7 +76,12 @@ import { GeolocationService } from "../../services/geolocation.service";
         </div>
         <button
           type="button"
-          class="flex-shrink-0 rounded-xl border border-white/20 bg-white/10 p-3 text-white/70 backdrop-blur-md transition-colors hover:bg-white/20 hover:text-white disabled:opacity-40"
+          class="flex-shrink-0 rounded-xl border p-3 transition-colors disabled:opacity-40"
+          [ngClass]="
+            darkMode()
+              ? 'border-white/20 bg-white/10 text-white/70 backdrop-blur-md hover:bg-white/20 hover:text-white'
+              : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border hover:text-scheme-text'
+          "
           (click)="locateMe()"
           [disabled]="locating()"
           i18n-aria-label="weather.geo.button|@@weatherGeoButton"
@@ -102,7 +114,12 @@ import { GeolocationService } from "../../services/geolocation.service";
 
       @if (showDropdown() && results().length > 0) {
         <ul
-          class="absolute z-10 mt-2 w-full overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl"
+          class="absolute z-10 mt-2 w-full overflow-hidden rounded-xl border"
+          [ngClass]="
+            darkMode()
+              ? 'border-white/20 bg-white/10 backdrop-blur-xl'
+              : 'border-scheme-border bg-scheme-background shadow-lg'
+          "
           id="city-search-listbox"
           role="listbox"
         >
@@ -110,13 +127,23 @@ import { GeolocationService } from "../../services/geolocation.service";
             <li
               role="option"
               [attr.aria-selected]="false"
-              class="cursor-pointer px-4 py-3 text-white transition-colors hover:bg-white/20"
+              class="cursor-pointer px-4 py-3 transition-colors"
+              [ngClass]="
+                darkMode()
+                  ? 'text-white hover:bg-white/20'
+                  : 'text-scheme-text hover:bg-scheme-surface'
+              "
               (click)="selectCity(city)"
               (keydown.enter)="selectCity(city)"
               tabindex="0"
             >
               <span class="font-medium">{{ city.name }}</span>
-              <span class="ml-1 text-sm text-white/60">
+              <span
+                class="ml-1 text-sm"
+                [ngClass]="
+                  darkMode() ? 'text-white/60' : 'text-scheme-text-muted'
+                "
+              >
                 @if (city.admin1) {
                   {{ city.admin1 }},
                 }
@@ -131,6 +158,9 @@ import { GeolocationService } from "../../services/geolocation.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CitySearchComponent implements OnInit, OnDestroy {
+  /** Mode sombre (fond gradient) ou clair (fond blanc). */
+  readonly darkMode = input(true);
+
   /** Evenement emis lorsqu'une ville est selectionnee. */
   @Output() readonly citySelected = new EventEmitter<CityResult>();
 

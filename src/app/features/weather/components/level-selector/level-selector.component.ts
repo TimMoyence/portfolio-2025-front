@@ -1,7 +1,9 @@
+import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   output,
 } from "@angular/core";
 import type { WeatherLevel } from "../../../../core/models/weather.model";
@@ -21,9 +23,15 @@ interface LevelTab {
 @Component({
   selector: "app-level-selector",
   standalone: true,
+  imports: [CommonModule],
   template: `
     <nav
-      class="inline-flex rounded-xl border border-white/20 bg-white/10 p-1 backdrop-blur-md"
+      class="inline-flex rounded-xl border p-1"
+      [ngClass]="
+        darkMode()
+          ? 'border-white/20 bg-white/10 backdrop-blur-md'
+          : 'border-scheme-border bg-scheme-surface'
+      "
       role="tablist"
       [attr.aria-label]="ariaLabel"
     >
@@ -33,10 +41,14 @@ interface LevelTab {
           role="tab"
           [attr.aria-selected]="levelService.level() === tab.value"
           class="rounded-lg px-4 py-1.5 text-sm font-medium transition-all"
-          [class]="
+          [ngClass]="
             levelService.level() === tab.value
-              ? 'bg-white/25 text-white shadow-sm'
-              : 'text-white/60 hover:text-white/80'
+              ? darkMode()
+                ? 'bg-white/25 text-white shadow-sm'
+                : 'bg-scheme-accent text-white shadow-sm'
+              : darkMode()
+                ? 'text-white/60 hover:text-white/80'
+                : 'text-scheme-text-muted hover:text-scheme-text'
           "
           (click)="onLevelChange(tab.value)"
         >
@@ -48,6 +60,9 @@ interface LevelTab {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LevelSelectorComponent {
+  /** Mode sombre (fond gradient) ou clair (fond blanc). */
+  readonly darkMode = input(true);
+
   readonly levelService = inject(WeatherLevelService);
 
   /** Emis lorsqu'un nouveau niveau est selectionne. */

@@ -265,8 +265,17 @@ export class CommonBudgetTmComponent {
       );
       this.shareMessage.set(`Budget partage avec ${email} !`);
       this.shareEmail.set("");
-    } catch {
-      this.shareMessage.set("Erreur : utilisateur introuvable ou deja membre.");
+    } catch (error: unknown) {
+      const msg = (error as { error?: { message?: string } })?.error?.message;
+      if (msg && msg.includes("Aucun compte")) {
+        this.shareMessage.set(
+          `Aucun compte pour ${email}. Demandez-lui de s'inscrire d'abord sur le site.`,
+        );
+      } else {
+        this.shareMessage.set(
+          "Erreur lors du partage. Verifiez l'email et reessayez.",
+        );
+      }
     }
   }
 
