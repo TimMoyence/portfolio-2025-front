@@ -1,3 +1,70 @@
 :host {
   display: block;
 }
+
+/* ---- Slide-in animation ---- */
+:host ::ng-deep .slide-in-hidden {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+:host ::ng-deep .slide-in-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+
+/* Staggered delays for grid cards */
+:host ::ng-deep .slide-in-visible:nth-child(2) {
+  transition-delay: 0.08s;
+}
+:host ::ng-deep .slide-in-visible:nth-child(3) {
+  transition-delay: 0.16s;
+}
+:host ::ng-deep .slide-in-visible:nth-child(4) {
+  transition-delay: 0.24s;
+}
+:host ::ng-deep .slide-in-visible:nth-child(5) {
+  transition-delay: 0.32s;
+}
+:host ::ng-deep .slide-in-visible:nth-child(6) {
+  transition-delay: 0.4s;
+}
+:host ::ng-deep .slide-in-visible:nth-child(7) {
+  transition-delay: 0.48s;
+}
+
+/* ---- Count-up temperature ---- */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.temp-count-up {
+  animation: countUp 0.5s ease-out;
+}
+
+/* ---- Chevron pulse (transition prompt) ---- */
+@keyframes chevronPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 0.6;
+  }
+}
+
+:host ::ng-deep .chevron-pulse {
+  animation: chevronPulse 1.5s ease-in-out infinite;
+}

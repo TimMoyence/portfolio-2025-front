@@ -1,10 +1,15 @@
 import { Inject, Injectable } from "@angular/core";
 import type { Observable } from "rxjs";
 import type {
+  AuthActionMessage,
   AuthSession,
   AuthUser,
+  ChangePasswordPayload,
+  ForgotPasswordPayload,
   LoginCredentials,
   RegisterUserPayload,
+  ResetPasswordPayload,
+  SetPasswordPayload,
 } from "../models/auth.model";
 import { AUTH_PORT } from "../ports/auth.port";
 import type { AuthPort } from "../ports/auth.port";
@@ -26,5 +31,23 @@ export class AuthService {
   /** Authentifie l'utilisateur via un jeton Google Identity Services. */
   googleAuth(idToken: string): Observable<AuthSession> {
     return this.authPort.googleAuth(idToken);
+  }
+
+  requestPasswordReset(
+    payload: ForgotPasswordPayload,
+  ): Observable<AuthActionMessage> {
+    return this.authPort.requestPasswordReset(payload);
+  }
+
+  resetPassword(payload: ResetPasswordPayload): Observable<AuthActionMessage> {
+    return this.authPort.resetPassword(payload);
+  }
+
+  setPassword(payload: SetPasswordPayload): Observable<AuthUser> {
+    return this.authPort.setPassword(payload);
+  }
+
+  changePassword(payload: ChangePasswordPayload): Observable<AuthUser> {
+    return this.authPort.changePassword(payload);
   }
 }

@@ -30,3 +30,8 @@
 .mobile-menu-backdrop {
   animation: mobileBackdropFadeIn 0.18s ease-out;
 }
+
+/* User dropdown animation (reuses same keyframes) */
+:host ::ng-deep .user-dropdown-panel {
+  animation: mobileMenuSlideDown 0.15s ease-out;
+}

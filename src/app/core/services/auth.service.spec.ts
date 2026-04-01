@@ -1,13 +1,15 @@
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
-import type {
-  AuthSession,
-  AuthUser,
-  LoginCredentials,
-  RegisterUserPayload,
-} from "../models/auth.model";
 import type { AuthPort } from "../ports/auth.port";
 import { AUTH_PORT } from "../ports/auth.port";
+import {
+  buildAuthSession,
+  buildAuthUser,
+  buildForgotPasswordPayload,
+  buildLoginCredentials,
+  buildResetPasswordPayload,
+  buildSetPasswordPayload,
+} from "../../../testing/factories/auth.factory";
 import { AuthService } from "./auth.service";
 
 describe("AuthService", () => {
@@ -19,6 +21,9 @@ describe("AuthService", () => {
       "login",
       "register",
       "googleAuth",
+      "requestPasswordReset",
+      "resetPassword",
+      "setPassword",
     ]);
 
     TestBed.configureTestingModule({
@@ -35,23 +40,10 @@ describe("AuthService", () => {
   });
 
   it("should delegate login to the auth port", () => {
-    const credentials: LoginCredentials = {
-      email: "john@example.com",
-      password: "Password123!",
-    };
-    const session: AuthSession = {
-      accessToken: "token",
-      expiresIn: 3600,
-      user: {
-        id: "1",
-        email: credentials.email,
-        firstName: "John",
-        lastName: "Doe",
-        phone: null,
-        isActive: true,
-        roles: [],
-      },
-    };
+    const credentials = buildLoginCredentials({ email: "john@example.com" });
+    const session = buildAuthSession({
+      user: buildAuthUser({ email: credentials.email }),
+    });
 
     authPortSpy.login.and.returnValue(of(session));
 
@@ -63,21 +55,17 @@ describe("AuthService", () => {
   });
 
   it("should delegate register to the auth port", () => {
-    const payload: RegisterUserPayload = {
+    const payload = {
       email: "john@example.com",
       password: "Password123!",
       firstName: "John",
       lastName: "Doe",
     };
-    const createdUser: AuthUser = {
-      id: "1",
+    const createdUser = buildAuthUser({
       email: payload.email,
       firstName: payload.firstName,
       lastName: payload.lastName,
-      phone: null,
-      isActive: true,
-      roles: [],
-    };
+    });
 
     authPortSpy.register.and.returnValue(of(createdUser));
 
@@ -89,19 +77,10 @@ describe("AuthService", () => {
   });
 
   it("should delegate googleAuth to the auth port", () => {
-    const session: AuthSession = {
+    const session = buildAuthSession({
       accessToken: "google-token",
-      expiresIn: 3600,
-      user: {
-        id: "2",
-        email: "google@example.com",
-        firstName: "Google",
-        lastName: "User",
-        phone: null,
-        isActive: true,
-        roles: [],
-      },
-    };
+      user: buildAuthUser({ email: "google@example.com" }),
+    });
 
     authPortSpy.googleAuth.and.returnValue(of(session));
 
@@ -110,5 +89,47 @@ describe("AuthService", () => {
     });
 
     expect(authPortSpy.googleAuth).toHaveBeenCalledWith("id-token-from-google");
+  });
+
+  it("should delegate requestPasswordReset to the auth port", () => {
+    const payload = buildForgotPasswordPayload({ email: "john@example.com" });
+    const response = {
+      message:
+        "Si un compte existe avec cet email, un lien de reinitialisation a ete envoye.",
+    };
+
+    authPortSpy.requestPasswordReset.and.returnValue(of(response));
+
+    service.requestPasswordReset(payload).subscribe((result) => {
+      expect(result).toEqual(response);
+    });
+
+    expect(authPortSpy.requestPasswordReset).toHaveBeenCalledWith(payload);
+  });
+
+  it("should delegate resetPassword to the auth port", () => {
+    const payload = buildResetPasswordPayload();
+    const response = { message: "Mot de passe reinitialise avec succes." };
+
+    authPortSpy.resetPassword.and.returnValue(of(response));
+
+    service.resetPassword(payload).subscribe((result) => {
+      expect(result).toEqual(response);
+    });
+
+    expect(authPortSpy.resetPassword).toHaveBeenCalledWith(payload);
+  });
+
+  it("should delegate setPassword to the auth port", () => {
+    const payload = buildSetPasswordPayload();
+    const updatedUser = buildAuthUser({ id: "user-1" });
+
+    authPortSpy.setPassword.and.returnValue(of(updatedUser));
+
+    service.setPassword(payload).subscribe((result) => {
+      expect(result).toEqual(updatedUser);
+    });
+
+    expect(authPortSpy.setPassword).toHaveBeenCalledWith(payload);
   });
 });

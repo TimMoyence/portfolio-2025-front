@@ -13,7 +13,7 @@ import { FormsModule } from "@angular/forms";
 import type { RegisterUserPayload } from "../../core/models/auth.model";
 import type { LoginFormState } from "../../core/models/loginForm.model";
 import type { SignupFormState } from "../../core/models/signupForm.model";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import { AuthStateService } from "../../core/services/auth-state.service";
 import { AuthService } from "../../core/services/auth.service";
@@ -33,6 +33,7 @@ type LoginFormKey = keyof LoginFormState;
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     SvgIconComponent,
     ContactCtaComponent,
     HeroSectionComponent,

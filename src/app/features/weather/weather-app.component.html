@@ -2,7 +2,7 @@
   class="min-h-screen bg-gradient-to-br px-4 py-8"
   [class]="backgroundClasses()"
 >
-  <div class="mx-auto max-w-4xl space-y-6">
+  <div class="mx-auto max-w-6xl space-y-6">
     <!-- Titre -->
     <div class="text-center">
       <h1
@@ -25,6 +25,17 @@
 
     <!-- Suggestion de transition de niveau -->
     <app-transition-prompt />
+
+    <!-- Barre de villes favorites -->
+    @if (favoriteCities().length > 0 || selectedCity()) {
+      <app-favorite-cities-bar
+        [favorites]="favoriteCities()"
+        [selectedCity]="selectedCity()"
+        (favoriteSelected)="onCitySelected($event)"
+        (addFavorite)="addFavorite($event)"
+        (removeFavorite)="removeFavorite($event)"
+      />
+    }
 
     <!-- Recherche de ville -->
     <app-city-search (citySelected)="onCitySelected($event)" />
@@ -62,54 +73,90 @@
 
     <!-- Previsions (Decouverte+) : toujours visibles -->
     @if (forecast(); as data) {
-      <app-current-conditions [current]="data.current" />
-      <app-hourly-chart [hourly]="data.hourly" />
-      <app-daily-forecast [daily]="data.daily" />
+      <div appSlideIn>
+        <app-current-conditions [current]="data.current" />
+      </div>
+      <div appSlideIn>
+        <app-hourly-chart [hourly]="data.hourly" />
+      </div>
+      <div appSlideIn>
+        <app-daily-forecast [daily]="data.daily" />
+      </div>
 
-      <!-- Curieux+ : cartes avancees -->
+      <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
       @if (levelService.level() !== "discovery") {
-        <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2">
-          <app-uv-index-card [uvIndex]="data.current.uv_index ?? 0" />
-          <app-air-quality-card [airQuality]="airQuality()" />
-          <app-pressure-card
-            [pressure]="data.current.pressure_msl ?? null"
-            [hourlyPressure]="data.hourly.pressure_msl ?? null"
-          />
-          <app-wind-compass
-            [speed]="data.current.wind_speed_10m"
-            [direction]="data.current.wind_direction_10m ?? 0"
-            [gusts]="data.current.wind_gusts_10m ?? null"
-          />
-          <app-sun-arc
-            [sunrise]="data.daily.sunrise?.[0] ?? ''"
-            [sunset]="data.daily.sunset?.[0] ?? ''"
-          />
-          <app-humidity-card
-            [humidity]="data.current.relative_humidity_2m ?? 0"
-            [dewPoint]="data.current.dew_point_2m ?? null"
-          />
-          <app-cloud-visibility-card
-            [cloudCover]="data.current.cloud_cover ?? 0"
-            [visibility]="data.current.visibility ?? null"
-          />
+        <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3">
+          <div appSlideIn>
+            <app-uv-index-card [uvIndex]="data.current.uv_index ?? 0" />
+          </div>
+          <div appSlideIn>
+            <app-air-quality-card [airQuality]="airQuality()" />
+          </div>
+          <div appSlideIn>
+            <app-pressure-card
+              [pressure]="data.current.pressure_msl ?? null"
+              [hourlyPressure]="data.hourly.pressure_msl ?? null"
+            />
+          </div>
+          <div appSlideIn>
+            <app-wind-compass
+              [speed]="data.current.wind_speed_10m"
+              [direction]="data.current.wind_direction_10m ?? 0"
+              [gusts]="data.current.wind_gusts_10m ?? null"
+            />
+          </div>
+          <div appSlideIn>
+            <app-sun-arc
+              [sunrise]="data.daily.sunrise[0]"
+              [sunset]="data.daily.sunset[0]"
+            />
+          </div>
+          <div appSlideIn>
+            <app-humidity-card
+              [humidity]="data.current.relative_humidity_2m ?? 0"
+              [dewPoint]="data.current.dew_point_2m ?? null"
+            />
+          </div>
+          <div appSlideIn>
+            <app-cloud-visibility-card
+              [cloudCover]="data.current.cloud_cover ?? 0"
+              [visibility]="data.current.visibility ?? null"
+            />
+          </div>
         </div>
+
+        <!-- Carte radar -->
+        @if (selectedCity(); as city) {
+          <div appSlideIn>
+            <app-radar-map
+              [latitude]="city.latitude"
+              [longitude]="city.longitude"
+            />
+          </div>
+        }
       }
 
-      <!-- Expert : cartes expertes (Phase 3) -->
+      <!-- Expert : cartes expertes -->
       @if (levelService.level() === "expert") {
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <app-model-comparison [ensemble]="ensemble()" class="md:col-span-2" />
-          <app-spaghetti-plot [ensemble]="ensemble()" class="md:col-span-2" />
-          <app-cape-card [cape]="extractCape()" />
-          <app-historical-comparison
-            [historical]="historical()"
-            [currentTemp]="forecast()?.current?.temperature_2m ?? 0"
-          />
-          <app-data-export
-            [forecast]="forecast()"
-            [ensemble]="ensemble()"
-            class="md:col-span-2"
-          />
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+          <div appSlideIn class="md:col-span-2 lg:col-span-3">
+            <app-model-comparison [ensemble]="ensemble()" />
+          </div>
+          <div appSlideIn class="md:col-span-2 lg:col-span-3">
+            <app-spaghetti-plot [ensemble]="ensemble()" />
+          </div>
+          <div appSlideIn>
+            <app-cape-card [cape]="extractCape()" />
+          </div>
+          <div appSlideIn>
+            <app-historical-comparison
+              [historical]="historical()"
+              [currentTemp]="forecast()?.current?.temperature_2m ?? 0"
+            />
+          </div>
+          <div appSlideIn class="md:col-span-2 lg:col-span-3">
+            <app-data-export [forecast]="forecast()" [ensemble]="ensemble()" />
+          </div>
         </div>
       }
     }
