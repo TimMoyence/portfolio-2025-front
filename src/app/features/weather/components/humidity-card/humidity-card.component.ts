@@ -4,6 +4,7 @@ import {
   computed,
   input,
 } from "@angular/core";
+import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
 
 /**
  * Carte d'humidite avec indicateur de progression circulaire CSS
@@ -12,16 +13,28 @@ import {
 @Component({
   selector: "app-humidity-card",
   standalone: true,
+  imports: [LearningTooltipComponent],
   template: `
     <div
       class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
     >
-      <h3
-        class="mb-3 text-sm font-medium text-white/70"
-        i18n="weather.humidity.title|@@weatherHumidityTitle"
-      >
-        Humidité
-      </h3>
+      <div class="mb-3 flex items-center justify-between">
+        <h3
+          class="text-sm font-medium text-white/70"
+          i18n="weather.humidity.title|@@weatherHumidityTitle"
+        >
+          Humidité
+        </h3>
+        <app-learning-tooltip
+          id="humidity"
+          i18n-title="
+            weather.humidity.tooltip.title|@@weatherHumidityTooltipTitle"
+          title="Humidité"
+          i18n-content="
+            weather.humidity.tooltip.content|@@weatherHumidityTooltipContent"
+          content="L'humidité relative indique le pourcentage de vapeur d'eau dans l'air par rapport au maximum possible. Le point de rosée est la température à laquelle l'air devient saturé : plus il est proche de la température réelle, plus l'air semble moite."
+        />
+      </div>
 
       <div class="flex items-center gap-4">
         <!-- Indicateur circulaire -->

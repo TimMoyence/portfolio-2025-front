@@ -4,6 +4,7 @@ import {
   computed,
   input,
 } from "@angular/core";
+import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
 
 /**
  * Carte de pression atmospherique avec tendance calculee
@@ -12,16 +13,28 @@ import {
 @Component({
   selector: "app-pressure-card",
   standalone: true,
+  imports: [LearningTooltipComponent],
   template: `
     <div
       class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
     >
-      <h3
-        class="mb-3 text-sm font-medium text-white/70"
-        i18n="weather.pressure.title|@@weatherPressureTitle"
-      >
-        Pression atmosphérique
-      </h3>
+      <div class="mb-3 flex items-center justify-between">
+        <h3
+          class="text-sm font-medium text-white/70"
+          i18n="weather.pressure.title|@@weatherPressureTitle"
+        >
+          Pression atmosphérique
+        </h3>
+        <app-learning-tooltip
+          id="pressure"
+          i18n-title="
+            weather.pressure.tooltip.title|@@weatherPressureTooltipTitle"
+          title="Pression atmosphérique"
+          i18n-content="
+            weather.pressure.tooltip.content|@@weatherPressureTooltipContent"
+          content="La pression atmosphérique est le poids de l'air au-dessus de vous, mesurée en hectopascals (hPa). Une pression en hausse annonce généralement du beau temps, une baisse rapide signale l'arrivée d'une perturbation."
+        />
+      </div>
 
       @if (pressure() !== null) {
         <div class="flex items-baseline gap-2">

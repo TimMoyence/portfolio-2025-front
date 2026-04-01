@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { WeatherLevelService } from "../../services/weather-level.service";
 import { UvIndexCardComponent } from "./uv-index-card.component";
 
 describe("UvIndexCardComponent", () => {
@@ -9,6 +10,15 @@ describe("UvIndexCardComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UvIndexCardComponent],
+      providers: [
+        {
+          provide: WeatherLevelService,
+          useValue: {
+            isTooltipSeen: () => true,
+            markTooltipSeen: () => {},
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UvIndexCardComponent);

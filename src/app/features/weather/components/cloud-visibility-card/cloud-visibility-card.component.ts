@@ -5,6 +5,7 @@ import {
   computed,
   input,
 } from "@angular/core";
+import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
 
 /**
  * Carte de couverture nuageuse et visibilite.
@@ -13,17 +14,27 @@ import {
 @Component({
   selector: "app-cloud-visibility-card",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LearningTooltipComponent],
   template: `
     <div
       class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
     >
-      <h3
-        class="mb-3 text-sm font-medium text-white/70"
-        i18n="weather.cloud.title|@@weatherCloudTitle"
-      >
-        Couverture nuageuse
-      </h3>
+      <div class="mb-3 flex items-center justify-between">
+        <h3
+          class="text-sm font-medium text-white/70"
+          i18n="weather.cloud.title|@@weatherCloudTitle"
+        >
+          Couverture nuageuse
+        </h3>
+        <app-learning-tooltip
+          id="cloud-cover"
+          i18n-title="weather.cloud.tooltip.title|@@weatherCloudTooltipTitle"
+          title="Couverture nuageuse"
+          i18n-content="
+            weather.cloud.tooltip.content|@@weatherCloudTooltipContent"
+          content="La couverture nuageuse indique le pourcentage du ciel masqué par les nuages. La visibilité mesure la distance maximale à laquelle on distingue un objet : elle diminue avec le brouillard, la pluie ou les particules en suspension."
+        />
+      </div>
 
       <div class="flex items-center gap-4">
         <img [src]="cloudIcon()" alt="" class="h-12 w-12 drop-shadow-md" />

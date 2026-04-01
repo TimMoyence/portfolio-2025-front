@@ -14,6 +14,7 @@ import type {
   FavoriteCity,
   ForecastResponse,
   HistoricalData,
+  WeatherLevel,
 } from "../../core/models/weather.model";
 import { WeatherService } from "../../core/services/weather.service";
 import { AirQualityCardComponent } from "./components/air-quality-card/air-quality-card.component";
@@ -159,6 +160,27 @@ export class WeatherAppComponent implements OnInit {
 
     // Charge les donnees Expert (ensemble + historique) pour le niveau expert
     if (this.levelService.level() === "expert") {
+      this.loadExpertData(city.latitude, city.longitude);
+    }
+  }
+
+  /** Charge les donnees supplementaires lors d'un changement de niveau. */
+  onLevelChanged(level: WeatherLevel): void {
+    const city = this.selectedCity();
+    if (!city) return;
+
+    if (level !== "discovery" && !this.airQuality()) {
+      this.weatherService
+        .getAirQuality(city.latitude, city.longitude)
+        .subscribe({
+          next: (data) => this.airQuality.set(data),
+          error: () => {
+            /* Echec silencieux : la carte affichera "Donnees indisponibles" */
+          },
+        });
+    }
+
+    if (level === "expert" && !this.ensemble()) {
       this.loadExpertData(city.latitude, city.longitude);
     }
   }

@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { WeatherLevelService } from "../../services/weather-level.service";
 import { HumidityCardComponent } from "./humidity-card.component";
 
 describe("HumidityCardComponent", () => {
@@ -9,6 +10,15 @@ describe("HumidityCardComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HumidityCardComponent],
+      providers: [
+        {
+          provide: WeatherLevelService,
+          useValue: {
+            isTooltipSeen: () => true,
+            markTooltipSeen: () => {},
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HumidityCardComponent);

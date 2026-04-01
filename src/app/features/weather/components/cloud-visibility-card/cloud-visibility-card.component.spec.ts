@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { WeatherLevelService } from "../../services/weather-level.service";
 import { CloudVisibilityCardComponent } from "./cloud-visibility-card.component";
 
 describe("CloudVisibilityCardComponent", () => {
@@ -9,6 +10,15 @@ describe("CloudVisibilityCardComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CloudVisibilityCardComponent],
+      providers: [
+        {
+          provide: WeatherLevelService,
+          useValue: {
+            isTooltipSeen: () => true,
+            markTooltipSeen: () => {},
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CloudVisibilityCardComponent);

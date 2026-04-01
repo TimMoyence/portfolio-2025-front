@@ -20,7 +20,7 @@ module.exports = {
         // --------------------
         // COLOR SCHEME (UI TOKENS)
         // --------------------
-        "scheme-background": "#e8f4f3",
+        "scheme-background": "#ffffff",
         "scheme-surface": "#ffffff",
         "scheme-surface-hover": "#f6fbfa",
 
