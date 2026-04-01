@@ -4,6 +4,12 @@ import { of } from "rxjs";
 import type { AuditStreamEvent } from "../../core/models/audit-request.model";
 import { AuditRequestService } from "../../core/services/audit-request.service";
 import { GrowthAuditComponent } from "./growth-audit.component";
+import {
+  buildAuditCreateResponse,
+  buildAuditSummaryResponse,
+  buildAuditStreamHeartbeat,
+  createAuditRequestServiceStub,
+} from "../../../testing/factories/audit-request.factory";
 
 /**
  * Cree un mock minimal de NgForm compatible avec GrowthAuditComponent.submit().
@@ -21,20 +27,12 @@ function buildValidForm(): NgForm {
  */
 function submitAndStream(
   component: GrowthAuditComponent,
-  auditServiceMock: {
-    submit: jasmine.Spy;
-    stream: jasmine.Spy;
-  },
+  auditServiceMock: jasmine.SpyObj<AuditRequestService>,
   event: AuditStreamEvent,
   auditId: string,
 ): void {
   auditServiceMock.submit.and.returnValue(
-    of({
-      message: "ok",
-      httpCode: 201,
-      auditId,
-      status: "PENDING",
-    }),
+    of(buildAuditCreateResponse({ auditId, httpCode: 201 })),
   );
   auditServiceMock.stream.and.returnValue(of<AuditStreamEvent>(event));
 
@@ -48,38 +46,20 @@ function submitAndStream(
 }
 
 describe("GrowthAuditComponent", () => {
-  const auditServiceMock = {
-    submit: jasmine.createSpy("submit").and.returnValue(
-      of({
-        message: "ok",
-        httpCode: 201,
-        auditId: "audit-id",
-        status: "PENDING",
-      }),
-    ),
-    getSummary: jasmine.createSpy("getSummary").and.returnValue(
-      of({
-        auditId: "audit-id",
-        ready: false,
-        status: "RUNNING",
-        progress: 10,
-        summaryText: null,
-        keyChecks: {},
-        quickWins: [],
-        pillarScores: {},
-      }),
-    ),
-    stream: jasmine
-      .createSpy("stream")
-      .and.returnValue(
-        of<AuditStreamEvent>({ type: "heartbeat", data: { ts: "now" } }),
-      ),
-  };
+  const auditServiceMock = createAuditRequestServiceStub();
 
   beforeEach(async () => {
     auditServiceMock.submit.calls.reset();
     auditServiceMock.getSummary.calls.reset();
     auditServiceMock.stream.calls.reset();
+
+    auditServiceMock.submit.and.returnValue(
+      of(buildAuditCreateResponse({ auditId: "audit-id" })),
+    );
+    auditServiceMock.getSummary.and.returnValue(
+      of(buildAuditSummaryResponse()),
+    );
+    auditServiceMock.stream.and.returnValue(of(buildAuditStreamHeartbeat()));
 
     await TestBed.configureTestingModule({
       imports: [GrowthAuditComponent],
