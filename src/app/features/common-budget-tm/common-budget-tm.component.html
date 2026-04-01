@@ -275,7 +275,7 @@
               (change)="onCategoryFilterChange(readSelectValue($event))"
             >
               <option value="ALL">All categories</option>
-              @for (category of categories; track category) {
+              @for (category of categories(); track category) {
                 <option [value]="category">{{ category }}</option>
               }
             </select>
@@ -313,7 +313,7 @@
     <div class="mt-8">
       <app-budget-transactions-table
         [transactions]="transactionViews()"
-        [categories]="categories"
+        [categories]="categories()"
         (categoryChanged)="onCategoryChange($event)"
       />
     </div>

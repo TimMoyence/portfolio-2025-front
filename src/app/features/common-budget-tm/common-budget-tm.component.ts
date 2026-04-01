@@ -4,7 +4,6 @@ import {
   Component,
   PLATFORM_ID,
   computed,
-  effect,
   inject,
   signal,
 } from "@angular/core";
@@ -15,6 +14,7 @@ import type {
   BudgetGroup,
 } from "../../core/models/budget.model";
 import { BUDGET_PORT } from "../../core/ports/budget.port";
+import { BudgetFormatService } from "../../core/services/budget-format.service";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
 import { BudgetSummaryCardComponent } from "./components/budget-summary-card/budget-summary-card.component";
 import {
@@ -39,6 +39,13 @@ type BudgetTransaction = {
 
 const MONTHS: BudgetMonth[] = ["March", "April", "May", "June"];
 
+const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
+  March: 3,
+  April: 4,
+  May: 5,
+  June: 6,
+};
+
 @Component({
   selector: "app-common-budget-tm",
   standalone: true,
@@ -56,6 +63,7 @@ export class CommonBudgetTmComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly browser = isPlatformBrowser(this.platformId);
   private readonly budgetPort = inject(BUDGET_PORT);
+  private readonly fmt = inject(BudgetFormatService);
 
   readonly groupId = signal<string | null>(null);
   readonly apiCategories = signal<BudgetCategoryModel[]>([]);
@@ -63,11 +71,7 @@ export class CommonBudgetTmComponent {
   readonly shareEmail = signal("");
   readonly shareMessage = signal("");
 
-  categories: string[] = [];
-
-  private readonly categoriesEffect = effect(() => {
-    this.categories = this.apiCategories().map((c) => c.name);
-  });
+  readonly categories = computed(() => this.apiCategories().map((c) => c.name));
   readonly months = MONTHS;
   readonly selectedMonth = signal<BudgetMonth>("March");
   readonly searchTerm = signal("");
@@ -78,6 +82,7 @@ export class CommonBudgetTmComponent {
   readonly timSalary = signal("");
   readonly mariaSalary = signal("");
   readonly budgetValidationMessage = signal("");
+  readonly currentYear = signal(new Date().getFullYear());
 
   private readonly baseTransactions = signal<BudgetTransaction[]>([]);
   private readonly overrides = signal<Record<string, string>>({});
@@ -128,20 +133,20 @@ export class CommonBudgetTmComponent {
   readonly transactionViews = computed<BudgetTransactionView[]>(() =>
     this.filteredTransactions().map((transaction) => ({
       id: transaction.id,
-      dateLabel: this.formatDate(
+      dateLabel: this.fmt.formatDate(
         transaction.completedDate || transaction.startedDate,
       ),
       description: transaction.description,
       type: transaction.type,
       state: transaction.state,
-      amountLabel: this.formatSignedCurrency(transaction.amount),
+      amountLabel: this.fmt.formatSignedCurrency(transaction.amount),
       isExpense: transaction.amount < 0,
       category: transaction.category,
     })),
   );
 
   readonly totalExpenses = computed(() =>
-    this.formatCurrency(
+    this.fmt.formatCurrency(
       Math.abs(
         this.transactions()
           .filter((transaction) => transaction.amount < 0)
@@ -151,7 +156,7 @@ export class CommonBudgetTmComponent {
   );
 
   readonly totalIncoming = computed(() =>
-    this.formatCurrency(
+    this.fmt.formatCurrency(
       this.transactions()
         .filter((transaction) => transaction.amount > 0)
         .reduce((sum, transaction) => sum + transaction.amount, 0),
@@ -159,7 +164,7 @@ export class CommonBudgetTmComponent {
   );
 
   readonly timContribution = computed(() =>
-    this.formatCurrency(
+    this.fmt.formatCurrency(
       this.transactions()
         .filter((transaction) =>
           this.normalizeText(transaction.description).includes("tim moyence"),
@@ -169,7 +174,7 @@ export class CommonBudgetTmComponent {
   );
 
   readonly mariaContribution = computed(() =>
-    this.formatCurrency(
+    this.fmt.formatCurrency(
       this.transactions()
         .filter((transaction) =>
           this.normalizeText(transaction.description).includes(
@@ -181,7 +186,7 @@ export class CommonBudgetTmComponent {
   );
 
   readonly pocketsTotal = computed(() =>
-    this.formatCurrency(
+    this.fmt.formatCurrency(
       Math.abs(
         this.transactions()
           .filter(
@@ -211,9 +216,9 @@ export class CommonBudgetTmComponent {
         const leftValue = planValue - total;
         return {
           name,
-          plan: planValue > 0 ? this.formatCurrency(planValue) : "-",
-          fact: this.formatCurrency(total),
-          left: planValue > 0 ? this.formatCurrency(leftValue) : "-",
+          plan: planValue > 0 ? this.fmt.formatCurrency(planValue) : "-",
+          fact: this.fmt.formatCurrency(total),
+          left: planValue > 0 ? this.fmt.formatCurrency(leftValue) : "-",
           isLeftNegative: planValue > 0 && leftValue < 0,
           budgetType: this.getBudgetType(name),
         };
@@ -222,25 +227,26 @@ export class CommonBudgetTmComponent {
 
   readonly totalSalary = computed(
     () =>
-      this.parseAmount(this.timSalary()) + this.parseAmount(this.mariaSalary()),
+      this.fmt.parseAmount(this.timSalary()) +
+      this.fmt.parseAmount(this.mariaSalary()),
   );
 
   readonly timSalaryShare = computed(() =>
-    this.formatPercentage(
-      this.parseAmount(this.timSalary()),
+    this.fmt.formatPercentage(
+      this.fmt.parseAmount(this.timSalary()),
       this.totalSalary(),
     ),
   );
 
   readonly mariaSalaryShare = computed(() =>
-    this.formatPercentage(
-      this.parseAmount(this.mariaSalary()),
+    this.fmt.formatPercentage(
+      this.fmt.parseAmount(this.mariaSalary()),
       this.totalSalary(),
     ),
   );
 
   onCategoryChange(event: { id: string; category: string }): void {
-    const nextCategory = this.normalizeCategory(event.category);
+    const nextCategory = event.category;
     this.overrides.update((current) => ({
       ...current,
       [event.id]: nextCategory,
@@ -442,8 +448,8 @@ export class CommonBudgetTmComponent {
     }
 
     const month = this.selectedMonth();
-    const monthIndex = this.months.indexOf(month) + 3; // March=3, April=4, etc.
-    const year = 2026;
+    const monthIndex = MONTH_NUMBER_MAP[month];
+    const year = this.currentYear();
 
     try {
       const entries = await firstValueFrom(
@@ -560,103 +566,9 @@ export class CommonBudgetTmComponent {
         type: row["Type"] ?? "",
         state: row["State"] ?? "",
         amount,
-        category: this.normalizeCategory(this.inferCategory(row, amount)),
+        category: "Autres",
       };
     });
-  }
-
-  private inferCategory(row: CsvRow, amount: number): string {
-    const description = this.normalizeText(row["Description"] ?? "");
-    const type = this.normalizeText(row["Type"] ?? "");
-
-    if (amount > 0) {
-      if (
-        description.includes("tim moyence") ||
-        description.includes("maria naumenko")
-      ) {
-        return "Contribution";
-      }
-      if (description.includes("pocket withdrawal")) {
-        return "Pockets";
-      }
-    }
-
-    if (
-      description.includes("loick babin") ||
-      description.includes("les voutes")
-    ) {
-      return "Loyer";
-    }
-    if (description.includes("edf")) {
-      return "Electricité & Internet";
-    }
-    if (description.includes("free telecom")) {
-      return "Forfait telephone Tim & Maria";
-    }
-    if (
-      description.includes("internet") ||
-      description.includes("bbox") ||
-      description.includes("orange") ||
-      description.includes("sfr") ||
-      description.includes("bouygues")
-    ) {
-      return "Electricité & Internet";
-    }
-    if (description.includes("maif")) {
-      return "Assur. Habitation";
-    }
-    if (description.includes("citiz")) {
-      return "Voiture utilisation";
-    }
-    if (
-      description.includes("amazon") ||
-      description.includes("netflix") ||
-      description.includes("ororo")
-    ) {
-      return "Netflix & Amazon & Ororo";
-    }
-    if (
-      description.includes("carrefour") ||
-      description.includes("e.leclerc") ||
-      description.includes("picard") ||
-      description.includes("ly kim hak") ||
-      description.includes("qu4tre qu4rts") ||
-      description.includes("anom cafe club") ||
-      description.includes("lidl") ||
-      description.includes("casado primeurs") ||
-      description.includes("bio coop") ||
-      description.includes("le destin fromager") ||
-      description.includes("bigazzi") ||
-      description.includes("babel bread")
-    ) {
-      return "Courses";
-    }
-    if (description.includes("pharmacie")) {
-      return "Achat pour la beauté";
-    }
-    if (description.includes("uber") || description.includes("kmlocal")) {
-      return "Voiture utilisation";
-    }
-    if (
-      description.includes("pub") ||
-      description.includes("kitchen") ||
-      description.includes("restaurant") ||
-      description.includes("darwi") ||
-      description.includes("cassonade") ||
-      description.includes("arlu")
-    ) {
-      return "Restaurant";
-    }
-    if (
-      description.includes("fleurs") ||
-      description.includes("garcia aurore")
-    ) {
-      return "Gifts";
-    }
-    if (type.includes("transfer") && description.includes("pocket")) {
-      return "Pockets";
-    }
-    return "Autres";
   }
 
   private normalizeText(value: string): string {
@@ -664,52 +576,6 @@ export class CommonBudgetTmComponent {
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-  }
-
-  private formatCurrency(value: number): string {
-    return new Intl.NumberFormat("fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
-
-  private formatSignedCurrency(value: number): string {
-    return `${value > 0 ? "+" : ""}${this.formatCurrency(value)}`;
-  }
-
-  private formatDate(value: string): string {
-    if (!value) {
-      return "-";
-    }
-
-    const date = new Date(value.replace(" ", "T"));
-    if (Number.isNaN(date.getTime())) {
-      return value;
-    }
-
-    return new Intl.DateTimeFormat("fr-FR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(date);
-  }
-
-  private parseAmount(value: string): number {
-    const normalized = value.replace(",", ".").trim();
-    const parsed = Number.parseFloat(normalized);
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-
-  private formatPercentage(part: number, total: number): string {
-    if (total <= 0) {
-      return "0%";
-    }
-
-    return new Intl.NumberFormat("fr-FR", {
-      style: "percent",
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }).format(part / total);
   }
 
   private getBudgetType(categoryName: string): "FIXED" | "VARIABLE" {
@@ -765,17 +631,5 @@ export class CommonBudgetTmComponent {
 
       return sum + Math.abs(transaction.amount);
     }, 0);
-  }
-
-  private normalizeCategory(category: string): string {
-    if (category === "Cinema, concerts") {
-      return "Entertainment";
-    }
-
-    if (category === "Assurance habitation") {
-      return "Assur. Habitation";
-    }
-
-    return category;
   }
 }
