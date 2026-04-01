@@ -106,10 +106,13 @@ export class WeatherAppComponent implements OnInit {
   /** Service de gestion du niveau d'experience. */
   readonly levelService = inject(WeatherLevelService);
 
+  /** Indique si des previsions sont chargees (pour le style du fond). */
+  readonly hasForecast = computed(() => !!this.forecast());
+
   /** Classes CSS de gradient dynamique basees sur le code meteo courant. */
   readonly backgroundClasses = computed(() => {
     const data = this.forecast();
-    if (!data) return "from-blue-900 via-indigo-900 to-purple-900";
+    if (!data) return "";
     return weatherCodeToBackground(data.current.weather_code);
   });
 

@@ -25,7 +25,7 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
     <div class="min-h-screen text-scheme-text">
       <app-navbar></app-navbar>
       <main id="main-content" role="main">
-        <div class="pt-32 lg:pt-36 bg-scheme-background"></div>
+        <div class="pt-20 lg:pt-24 bg-scheme-background"></div>
         <router-outlet></router-outlet>
       </main>
       @defer (on viewport) {

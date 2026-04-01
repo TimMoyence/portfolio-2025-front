@@ -4,9 +4,16 @@ import {
   Component,
   PLATFORM_ID,
   computed,
+  effect,
   inject,
   signal,
 } from "@angular/core";
+import { firstValueFrom } from "rxjs";
+import type {
+  BudgetCategoryModel,
+  BudgetEntryModel,
+} from "../../core/models/budget.model";
+import { BUDGET_PORT } from "../../core/ports/budget.port";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
 import { BudgetSummaryCardComponent } from "./components/budget-summary-card/budget-summary-card.component";
 import {
@@ -18,27 +25,6 @@ import { COMMON_BUDGET_SAMPLE_CSV } from "./common-budget-sample";
 type CsvRow = Record<string, string>;
 type BudgetMonth = "March" | "April" | "May" | "June";
 
-type BudgetCategory =
-  | "Loyer"
-  | "Electricité & Internet"
-  | "Forfait telephone Tim & Maria"
-  | "Assur. Habitation"
-  | "Voiture forfait"
-  | "Salle de sport"
-  | "Netflix & Amazon & Ororo"
-  | "Courses"
-  | "Voiture utilisation"
-  | "Achat pour la maison"
-  | "Achat pour la beauté"
-  | "Luna"
-  | "Restaurant"
-  | "Entertainment"
-  | "Gifts"
-  | "Autres"
-  | "Pockets"
-  | "Contribution"
-  | "Transfer / Savings";
-
 type BudgetTransaction = {
   id: string;
   startedDate: string;
@@ -47,87 +33,9 @@ type BudgetTransaction = {
   type: string;
   state: string;
   amount: number;
-  category: BudgetCategory;
+  category: string;
 };
 
-const CATEGORY_OPTIONS: BudgetCategory[] = [
-  "Loyer",
-  "Electricité & Internet",
-  "Forfait telephone Tim & Maria",
-  "Assur. Habitation",
-  "Voiture forfait",
-  "Salle de sport",
-  "Netflix & Amazon & Ororo",
-  "Courses",
-  "Voiture utilisation",
-  "Achat pour la maison",
-  "Achat pour la beauté",
-  "Luna",
-  "Restaurant",
-  "Entertainment",
-  "Gifts",
-  "Autres",
-  "Pockets",
-  "Contribution",
-  "Transfer / Savings",
-];
-
-const CATEGORY_BUDGET_TYPE: Partial<
-  Record<BudgetCategory, "FIXED" | "VARIABLE">
-> = {
-  Pockets: "VARIABLE",
-  Autres: "VARIABLE",
-  Loyer: "FIXED",
-  Courses: "VARIABLE",
-  "Electricité & Internet": "VARIABLE",
-  Restaurant: "VARIABLE",
-  "Voiture utilisation": "VARIABLE",
-  Entertainment: "VARIABLE",
-  "Netflix & Amazon & Ororo": "FIXED",
-  "Forfait telephone Tim & Maria": "FIXED",
-  Gifts: "VARIABLE",
-  "Achat pour la beauté": "VARIABLE",
-  "Assur. Habitation": "FIXED",
-};
-
-const CATEGORY_PLAN_VALUES: Partial<Record<BudgetCategory, number>> = {
-  Loyer: 735,
-  Courses: 600,
-  "Voiture utilisation": 50,
-  "Achat pour la maison": 100,
-  Luna: 75,
-  Restaurant: 500,
-  Entertainment: 50,
-  Gifts: 50,
-  "Netflix & Amazon & Ororo": 31,
-  "Voiture forfait": 20,
-  "Forfait telephone Tim & Maria": 32,
-  "Salle de sport": 45,
-  "Assur. Habitation": 16.74,
-};
-
-const DISPLAY_CATEGORIES: BudgetCategory[] = [
-  "Loyer",
-  "Electricité & Internet",
-  "Forfait telephone Tim & Maria",
-  "Assur. Habitation",
-  "Voiture forfait",
-  "Salle de sport",
-  "Netflix & Amazon & Ororo",
-  "Courses",
-  "Voiture utilisation",
-  "Achat pour la maison",
-  "Achat pour la beauté",
-  "Luna",
-  "Restaurant",
-  "Entertainment",
-  "Gifts",
-  "Autres",
-  "Pockets",
-];
-
-const OVERRIDES_KEY = "commonbudgettm-category-overrides";
-const SALARY_KEY = "commonbudgettm-salaries";
 const MONTHS: BudgetMonth[] = ["March", "April", "May", "June"];
 
 @Component({
@@ -146,12 +54,23 @@ const MONTHS: BudgetMonth[] = ["March", "April", "May", "June"];
 export class CommonBudgetTmComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly browser = isPlatformBrowser(this.platformId);
+  private readonly budgetPort = inject(BUDGET_PORT);
 
-  readonly categories = CATEGORY_OPTIONS;
+  readonly groupId = signal<string | null>(null);
+  readonly apiCategories = signal<BudgetCategoryModel[]>([]);
+  readonly loading = signal(false);
+  readonly shareEmail = signal("");
+  readonly shareMessage = signal("");
+
+  categories: string[] = [];
+
+  private readonly categoriesEffect = effect(() => {
+    this.categories = this.apiCategories().map((c) => c.name);
+  });
   readonly months = MONTHS;
   readonly selectedMonth = signal<BudgetMonth>("March");
   readonly searchTerm = signal("");
-  readonly categoryFilter = signal<BudgetCategory | "ALL">("ALL");
+  readonly categoryFilter = signal<string>("ALL");
   readonly stateFilter = signal<"ALL" | "COMPLETED" | "PENDING">("ALL");
   readonly budgetTypeFilter = signal<"ALL" | "FIXED" | "VARIABLE">("ALL");
   readonly sourceLabel = signal("Embedded March 1-15 sample");
@@ -159,18 +78,19 @@ export class CommonBudgetTmComponent {
   readonly mariaSalary = signal("");
   readonly budgetValidationMessage = signal("");
 
-  private readonly baseTransactions = signal<BudgetTransaction[]>(
-    this.toTransactions(this.parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
-  );
-  private readonly overrides = signal<Record<string, BudgetCategory>>(
-    this.loadOverrides(),
-  );
+  private readonly baseTransactions = signal<BudgetTransaction[]>([]);
+  private readonly overrides = signal<Record<string, string>>({});
   private readonly salaryByMonth = signal<
     Record<BudgetMonth, { tim: string; maria: string }>
-  >(this.loadSalaryByMonth());
+  >({
+    March: { tim: "", maria: "" },
+    April: { tim: "", maria: "" },
+    May: { tim: "", maria: "" },
+    June: { tim: "", maria: "" },
+  });
 
   constructor() {
-    this.applyMonthState("March");
+    this.initBudget();
   }
 
   readonly transactions = computed(() =>
@@ -319,14 +239,34 @@ export class CommonBudgetTmComponent {
   );
 
   onCategoryChange(event: { id: string; category: string }): void {
-    const nextCategory = this.normalizeCategory(
-      event.category as BudgetCategory | "Cinema, concerts",
-    );
+    const nextCategory = this.normalizeCategory(event.category);
     this.overrides.update((current) => ({
       ...current,
       [event.id]: nextCategory,
     }));
-    this.persistOverrides();
+  }
+
+  onShareEmailChange(value: string): void {
+    this.shareEmail.set(value);
+  }
+
+  async shareBudgetWith(): Promise<void> {
+    const gid = this.groupId();
+    const email = this.shareEmail().trim();
+    if (!gid || !email) {
+      this.shareMessage.set("Veuillez entrer un email valide.");
+      return;
+    }
+
+    try {
+      await firstValueFrom(
+        this.budgetPort.shareBudget({ groupId: gid, targetEmail: email }),
+      );
+      this.shareMessage.set(`Budget partage avec ${email} !`);
+      this.shareEmail.set("");
+    } catch {
+      this.shareMessage.set("Erreur : utilisateur introuvable ou deja membre.");
+    }
   }
 
   onSearchChange(value: string): void {
@@ -334,7 +274,7 @@ export class CommonBudgetTmComponent {
   }
 
   onCategoryFilterChange(value: string): void {
-    this.categoryFilter.set(value as BudgetCategory | "ALL");
+    this.categoryFilter.set(value);
   }
 
   onStateFilterChange(value: string): void {
@@ -359,7 +299,16 @@ export class CommonBudgetTmComponent {
     }
 
     this.selectedMonth.set(month);
-    this.applyMonthState(month);
+
+    const savedSalaries = this.salaryByMonth()[month] ?? {
+      tim: "",
+      maria: "",
+    };
+    this.timSalary.set(savedSalaries.tim);
+    this.mariaSalary.set(savedSalaries.maria);
+    this.budgetValidationMessage.set("");
+
+    this.loadEntries();
   }
 
   validateBudgetCalculation(): void {
@@ -371,7 +320,6 @@ export class CommonBudgetTmComponent {
       },
     };
     this.salaryByMonth.set(nextState);
-    this.persistSalaryByMonth();
     this.budgetValidationMessage.set(
       `Saved for ${this.selectedMonth()}: Tim ${this.timSalaryShare()} and Maria ${this.mariaSalaryShare()}.`,
     );
@@ -397,16 +345,118 @@ export class CommonBudgetTmComponent {
     }
 
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       const csv = String(reader.result ?? "");
-      this.baseTransactions.set(this.toTransactions(this.parseCsv(csv)));
-      this.sourceLabel.set(`${this.selectedMonth()} - ${file.name}`);
+      const gid = this.groupId();
+
+      if (gid) {
+        try {
+          const entries = await firstValueFrom(
+            this.budgetPort.importEntries({ groupId: gid, csvContent: csv }),
+          );
+          this.baseTransactions.set(this.apiEntriesToTransactions(entries));
+          this.sourceLabel.set(
+            `${this.selectedMonth()} - ${file.name} (${entries.length} imported)`,
+          );
+        } catch {
+          // Fallback to local parsing
+          this.baseTransactions.set(this.toTransactions(this.parseCsv(csv)));
+          this.sourceLabel.set(
+            `${this.selectedMonth()} - ${file.name} (local parse)`,
+          );
+        }
+      } else {
+        this.baseTransactions.set(this.toTransactions(this.parseCsv(csv)));
+        this.sourceLabel.set(`${this.selectedMonth()} - ${file.name}`);
+      }
     };
     reader.readAsText(file);
   }
 
   resetToSample(): void {
-    this.applyMonthState(this.selectedMonth());
+    this.loadEntries();
+  }
+
+  private async initBudget(): Promise<void> {
+    if (!this.browser) {
+      return;
+    }
+    this.loading.set(true);
+    try {
+      const group = await firstValueFrom(
+        this.budgetPort.createGroup("Budget couple T&M"),
+      );
+      this.groupId.set(group.id);
+
+      const cats = await firstValueFrom(
+        this.budgetPort.getCategories(group.id),
+      );
+      this.apiCategories.set(cats);
+
+      await this.loadEntries();
+    } catch {
+      // Fallback to sample data if API is unreachable
+      this.baseTransactions.set(
+        this.toTransactions(this.parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
+      );
+      this.sourceLabel.set("Fallback - Embedded sample");
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  private async loadEntries(): Promise<void> {
+    const gid = this.groupId();
+    if (!gid) {
+      return;
+    }
+
+    const month = this.selectedMonth();
+    const monthIndex = this.months.indexOf(month) + 3; // March=3, April=4, etc.
+    const year = 2026;
+
+    try {
+      const entries = await firstValueFrom(
+        this.budgetPort.getEntries(gid, { month: monthIndex, year }),
+      );
+
+      if (entries.length > 0) {
+        this.baseTransactions.set(this.apiEntriesToTransactions(entries));
+        this.sourceLabel.set(`${month} - ${entries.length} entries from API`);
+      } else {
+        // No entries yet for this month — show empty or sample
+        if (month === "March") {
+          this.baseTransactions.set(
+            this.toTransactions(this.parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
+          );
+          this.sourceLabel.set("March - Embedded sample (no API data yet)");
+        } else {
+          this.baseTransactions.set([]);
+          this.sourceLabel.set(`${month} - No data yet`);
+        }
+      }
+    } catch {
+      this.baseTransactions.set([]);
+      this.sourceLabel.set(`${month} - Error loading entries`);
+    }
+  }
+
+  private apiEntriesToTransactions(
+    entries: BudgetEntryModel[],
+  ): BudgetTransaction[] {
+    return entries.map((entry) => {
+      const cat = this.apiCategories().find((c) => c.id === entry.categoryId);
+      return {
+        id: entry.id,
+        startedDate: entry.date,
+        completedDate: entry.date,
+        description: entry.description,
+        type: entry.type,
+        state: entry.state,
+        amount: entry.amount,
+        category: cat?.name ?? "Autres",
+      };
+    });
   }
 
   private parseCsv(csvText: string): CsvRow[] {
@@ -485,10 +535,7 @@ export class CommonBudgetTmComponent {
     });
   }
 
-  private inferCategory(
-    row: CsvRow,
-    amount: number,
-  ): BudgetCategory | "Cinema, concerts" {
+  private inferCategory(row: CsvRow, amount: number): string {
     const description = this.normalizeText(row["Description"] ?? "");
     const type = this.normalizeText(row["Type"] ?? "");
 
@@ -635,16 +682,18 @@ export class CommonBudgetTmComponent {
     }).format(part / total);
   }
 
-  private getBudgetType(category: BudgetCategory): "FIXED" | "VARIABLE" {
-    return CATEGORY_BUDGET_TYPE[category] ?? "VARIABLE";
+  private getBudgetType(categoryName: string): "FIXED" | "VARIABLE" {
+    const cat = this.apiCategories().find((c) => c.name === categoryName);
+    return (cat?.budgetType as "FIXED" | "VARIABLE") ?? "VARIABLE";
   }
 
-  private getPlanValue(category: BudgetCategory): number {
-    return CATEGORY_PLAN_VALUES[category] ?? 0;
+  private getPlanValue(categoryName: string): number {
+    const cat = this.apiCategories().find((c) => c.name === categoryName);
+    return cat ? Number(cat.budgetLimit) : 0;
   }
 
-  private getCategoryFacts(): BudgetCategory[] {
-    const categories = new Set<BudgetCategory>();
+  private getCategoryFacts(): string[] {
+    const categories = new Set<string>();
 
     this.transactions().forEach((transaction) => {
       if (transaction.category === "Contribution") {
@@ -666,9 +715,10 @@ export class CommonBudgetTmComponent {
       }
     });
 
-    DISPLAY_CATEGORIES.forEach((category) => {
-      if (this.getPlanValue(category) > 0) {
-        categories.add(category);
+    // Add categories with a budget limit from the API
+    this.apiCategories().forEach((cat) => {
+      if (cat.budgetLimit > 0) {
+        categories.add(cat.name);
       }
     });
 
@@ -677,7 +727,7 @@ export class CommonBudgetTmComponent {
     return Array.from(categories);
   }
 
-  private getCategoryFact(category: BudgetCategory): number {
+  private getCategoryFact(category: string): number {
     return this.transactions().reduce((sum, transaction) => {
       if (transaction.category !== category || transaction.amount >= 0) {
         return sum;
@@ -687,9 +737,7 @@ export class CommonBudgetTmComponent {
     }, 0);
   }
 
-  private normalizeCategory(
-    category: BudgetCategory | "Cinema, concerts" | "Assurance habitation",
-  ): BudgetCategory {
+  private normalizeCategory(category: string): string {
     if (category === "Cinema, concerts") {
       return "Entertainment";
     }
@@ -699,85 +747,5 @@ export class CommonBudgetTmComponent {
     }
 
     return category;
-  }
-
-  private applyMonthState(month: BudgetMonth): void {
-    if (month === "March") {
-      this.baseTransactions.set(
-        this.toTransactions(this.parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
-      );
-      this.sourceLabel.set("March - Embedded March 1-15 sample");
-    } else {
-      this.baseTransactions.set([]);
-      this.sourceLabel.set(`${month} - No data yet`);
-    }
-
-    const savedSalaries = this.salaryByMonth()[month] ?? { tim: "", maria: "" };
-    this.timSalary.set(savedSalaries.tim);
-    this.mariaSalary.set(savedSalaries.maria);
-    this.budgetValidationMessage.set("");
-  }
-
-  private loadSalaryByMonth(): Record<
-    BudgetMonth,
-    { tim: string; maria: string }
-  > {
-    const fallback: Record<BudgetMonth, { tim: string; maria: string }> = {
-      March: { tim: "", maria: "" },
-      April: { tim: "", maria: "" },
-      May: { tim: "", maria: "" },
-      June: { tim: "", maria: "" },
-    };
-
-    if (!this.browser) {
-      return fallback;
-    }
-
-    try {
-      return {
-        ...fallback,
-        ...JSON.parse(localStorage.getItem(SALARY_KEY) ?? "{}"),
-      };
-    } catch {
-      return fallback;
-    }
-  }
-
-  private loadOverrides(): Record<string, BudgetCategory> {
-    if (!this.browser) {
-      return {};
-    }
-
-    try {
-      const raw = JSON.parse(
-        localStorage.getItem(OVERRIDES_KEY) ?? "{}",
-      ) as Record<
-        string,
-        BudgetCategory | "Cinema, concerts" | "Assurance habitation"
-      >;
-
-      return Object.fromEntries(
-        Object.entries(raw).map(([key, value]) => [
-          key,
-          this.normalizeCategory(value),
-        ]),
-      );
-    } catch {
-      return {};
-    }
-  }
-
-  private persistOverrides(): void {
-    if (!this.browser) {
-      return;
-    }
-    localStorage.setItem(OVERRIDES_KEY, JSON.stringify(this.overrides()));
-  }
-
-  private persistSalaryByMonth(): void {
-    if (!this.browser) {
-      return;
-    }
-    localStorage.setItem(SALARY_KEY, JSON.stringify(this.salaryByMonth()));
   }
 }

@@ -106,10 +106,9 @@ describe("WeatherAppComponent", () => {
     expect(component.forecast()).toBeNull();
   });
 
-  it("devrait retourner le gradient par defaut sans previsions", () => {
-    expect(component.backgroundClasses()).toBe(
-      "from-blue-900 via-indigo-900 to-purple-900",
-    );
+  it("devrait retourner un fond neutre sans previsions", () => {
+    expect(component.backgroundClasses()).toBe("");
+    expect(component.hasForecast()).toBeFalse();
   });
 
   it("devrait calculer le gradient dynamique selon le code meteo", () => {

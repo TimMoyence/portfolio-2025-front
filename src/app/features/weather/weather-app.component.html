@@ -1,25 +1,33 @@
 <section
-  class="min-h-screen bg-gradient-to-br px-4 py-8"
-  [class]="backgroundClasses()"
+  class="min-h-screen px-4 pt-4 pb-8"
+  [ngClass]="
+    hasForecast()
+      ? 'bg-gradient-to-br ' + backgroundClasses()
+      : 'bg-scheme-background'
+  "
 >
-  <div class="mx-auto max-w-6xl space-y-6">
+  <div class="mx-auto max-w-6xl space-y-4">
     <!-- Titre -->
     <div class="text-center">
       <h1
-        class="text-3xl font-bold text-white md:text-4xl"
+        class="text-3xl font-bold md:text-4xl"
+        [ngClass]="hasForecast() ? 'text-white' : 'text-scheme-text'"
         i18n="weather.app.title|@@weatherAppTitle"
       >
         Météo
       </h1>
       @if (selectedCity(); as city) {
-        <p class="mt-1 text-lg text-white/70">
+        <p
+          class="mt-1 text-lg"
+          [ngClass]="hasForecast() ? 'text-white/70' : 'text-scheme-text-muted'"
+        >
           {{ city.name }}, {{ city.country }}
         </p>
       }
     </div>
 
     <!-- Selecteur de niveau -->
-    <div class="flex justify-center">
+    <div class="flex justify-center mt-2">
       <app-level-selector />
     </div>
 
@@ -164,7 +172,7 @@
     <!-- Etat initial -->
     @if (!forecast() && !loading() && !error()) {
       <div
-        class="flex flex-col items-center justify-center py-16 text-white/50"
+        class="flex flex-col items-center justify-center py-16 text-scheme-text-muted"
       >
         <img
           src="/assets/images/meteo/soleil-et-nuage.png"
