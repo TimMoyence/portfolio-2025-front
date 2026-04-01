@@ -1,6 +1,15 @@
 import { of } from "rxjs";
-import type { AuthUser } from "../../app/core/models/auth.model";
+import type {
+  AuthSession,
+  AuthUser,
+  ChangePasswordPayload,
+  ForgotPasswordPayload,
+  LoginCredentials,
+  ResetPasswordPayload,
+  SetPasswordPayload,
+} from "../../app/core/models/auth.model";
 import type { AuthPort } from "../../app/core/ports/auth.port";
+import type { AuthService } from "../../app/core/services/auth.service";
 
 /**
  * Construit un objet AuthUser avec des valeurs par defaut.
@@ -19,6 +28,71 @@ export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
   };
 }
 
+/** Construit une session auth avec des valeurs par defaut. */
+export function buildAuthSession(
+  overrides?: Partial<AuthSession>,
+): AuthSession {
+  return {
+    accessToken: "jwt-token",
+    expiresIn: 3600,
+    user: buildAuthUser(),
+    ...overrides,
+  };
+}
+
+/** Construit des credentials de login. */
+export function buildLoginCredentials(
+  overrides?: Partial<LoginCredentials>,
+): LoginCredentials {
+  return {
+    email: "test@example.com",
+    password: "Password123!",
+    ...overrides,
+  };
+}
+
+/** Construit un payload forgot-password. */
+export function buildForgotPasswordPayload(
+  overrides?: Partial<ForgotPasswordPayload>,
+): ForgotPasswordPayload {
+  return {
+    email: "test@example.com",
+    ...overrides,
+  };
+}
+
+/** Construit un payload reset-password. */
+export function buildResetPasswordPayload(
+  overrides?: Partial<ResetPasswordPayload>,
+): ResetPasswordPayload {
+  return {
+    token: "4f7ab9f3f7b3d0eaa77a4b5b0dcaea31695f15de22f22e53f35b98b0aaf3112c",
+    newPassword: "NewPassword123!",
+    ...overrides,
+  };
+}
+
+/** Construit un payload set-password. */
+export function buildSetPasswordPayload(
+  overrides?: Partial<SetPasswordPayload>,
+): SetPasswordPayload {
+  return {
+    newPassword: "NewPassword123!",
+    ...overrides,
+  };
+}
+
+/** Construit un payload change-password. */
+export function buildChangePasswordPayload(
+  overrides?: Partial<ChangePasswordPayload>,
+): ChangePasswordPayload {
+  return {
+    currentPassword: "OldPassword123!",
+    newPassword: "NewPassword456!",
+    ...overrides,
+  };
+}
+
 /**
  * Cree un stub complet du port auth avec des spies Jasmine.
  * Les spies retournent of(null) par defaut pour eviter les erreurs
@@ -30,5 +104,33 @@ export function createAuthPortStub(): Record<keyof AuthPort, jasmine.Spy> {
     register: jasmine.createSpy("register").and.returnValue(of(null)),
     me: jasmine.createSpy("me").and.returnValue(of(null)),
     googleAuth: jasmine.createSpy("googleAuth").and.returnValue(of(null)),
+    requestPasswordReset: jasmine
+      .createSpy("requestPasswordReset")
+      .and.returnValue(of({ message: "ok" })),
+    resetPassword: jasmine
+      .createSpy("resetPassword")
+      .and.returnValue(of({ message: "ok" })),
+    setPassword: jasmine
+      .createSpy("setPassword")
+      .and.returnValue(of(buildAuthUser())),
+    changePassword: jasmine
+      .createSpy("changePassword")
+      .and.returnValue(of(buildAuthUser())),
   };
+}
+
+/**
+ * Cree un SpyObj complet d'AuthService.
+ * Les spies retournent of(null) par defaut.
+ */
+export function createAuthServiceStub(): jasmine.SpyObj<AuthService> {
+  return jasmine.createSpyObj<AuthService>("AuthService", [
+    "login",
+    "register",
+    "googleAuth",
+    "requestPasswordReset",
+    "resetPassword",
+    "setPassword",
+    "changePassword",
+  ]);
 }

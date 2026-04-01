@@ -1,4 +1,5 @@
 import type { Routes } from "@angular/router";
+import { authGuard } from "./core/guards/auth.guard";
 
 export const routes: Routes = [
   {
@@ -28,6 +29,37 @@ export const routes: Routes = [
       import("./features/auth/auth.component").then((m) => m.AuthComponent),
     data: {
       seoKey: "register",
+    },
+  },
+  {
+    path: "forgot-password",
+    loadComponent: () =>
+      import("./features/auth/forgot-password.component").then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+    data: {
+      seoKey: "forgot-password",
+    },
+  },
+  {
+    path: "reset-password",
+    loadComponent: () =>
+      import("./features/auth/reset-password.component").then(
+        (m) => m.ResetPasswordComponent,
+      ),
+    data: {
+      seoKey: "reset-password",
+    },
+  },
+  {
+    path: "profil",
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import("./features/profile/profile.component").then(
+        (m) => m.ProfileComponent,
+      ),
+    data: {
+      seoKey: "profile",
     },
   },
   {

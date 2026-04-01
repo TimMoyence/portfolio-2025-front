@@ -1,0 +1,292 @@
+<app-hero-section
+  [label]="hero.label"
+  [title]="hero.title"
+  [description]="hero.description"
+  titleLevel="h1"
+  align="left"
+></app-hero-section>
+
+<section class="px-[5%] py-8 md:py-10 lg:py-12 bg-scheme-background">
+  <div class="container max-w-2xl space-y-6">
+    @if (authState.user(); as user) {
+      <!-- Informations personnelles -->
+      <article
+        class="rounded-form border border-scheme-border bg-scheme-surface p-6 space-y-2"
+      >
+        <h2 class="heading-h5 text-h5" i18n="@@profileIdentityTitle">
+          Informations personnelles
+        </h2>
+        <p class="text-sm text-scheme-text">
+          <strong i18n="@@profileFirstNameLabel">Prenom :</strong>
+          {{ user.firstName }}
+        </p>
+        <p class="text-sm text-scheme-text">
+          <strong i18n="@@profileLastNameLabel">Nom :</strong>
+          {{ user.lastName }}
+        </p>
+        <p class="text-sm text-scheme-text">
+          <strong i18n="@@profileEmailLabel">Email :</strong> {{ user.email }}
+        </p>
+      </article>
+
+      <!-- Definir un mot de passe (Google-only) -->
+      @if (user.hasPassword !== true) {
+        <article
+          class="rounded-form border border-scheme-border bg-scheme-surface p-6"
+        >
+          <h2 class="heading-h5 text-h5 mb-4" i18n="@@profileSetPasswordTitle">
+            Definir un mot de passe
+          </h2>
+
+          <form
+            #setPasswordForm="ngForm"
+            (ngSubmit)="setPassword(setPasswordForm)"
+            class="space-y-4"
+          >
+            <div class="space-y-2">
+              <label
+                for="newPassword"
+                class="block text-sm text-scheme-text"
+                i18n="@@profileSetPasswordLabel"
+                >Nouveau mot de passe</label
+              >
+              <input
+                id="newPassword"
+                name="newPassword"
+                type="password"
+                required
+                minlength="12"
+                [(ngModel)]="newPassword"
+                #newPasswordCtrl="ngModel"
+                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
+                [class.border-red-500]="
+                  newPasswordCtrl.invalid &&
+                  (newPasswordCtrl.touched || setPasswordSubmitted)
+                "
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="setPasswordLoading"
+              [attr.aria-busy]="setPasswordLoading"
+            >
+              @if (!setPasswordLoading) {
+                <span i18n="@@profileSetPasswordSubmit">Enregistrer</span>
+              } @else {
+                <span i18n="@@profileSetPasswordLoading"
+                  >Enregistrement...</span
+                >
+              }
+            </button>
+
+            @if (setPasswordSuccess) {
+              <p class="text-sm text-green-600">{{ setPasswordSuccess }}</p>
+            }
+            @if (setPasswordError) {
+              <p class="text-sm text-red-500">{{ setPasswordError }}</p>
+            }
+          </form>
+        </article>
+      }
+
+      <!-- Changer le mot de passe -->
+      @if (user.hasPassword === true) {
+        <article
+          class="rounded-form border border-scheme-border bg-scheme-surface p-6"
+        >
+          <h2
+            class="heading-h5 text-h5 mb-4"
+            i18n="@@profileChangePasswordTitle"
+          >
+            Changer le mot de passe
+          </h2>
+
+          <form
+            #changePasswordForm="ngForm"
+            (ngSubmit)="changePassword(changePasswordForm)"
+            class="space-y-4"
+          >
+            <div class="space-y-2">
+              <label
+                for="currentPassword"
+                class="block text-sm text-scheme-text"
+                i18n="@@profileCurrentPasswordLabel"
+                >Mot de passe actuel</label
+              >
+              <input
+                id="currentPassword"
+                name="currentPassword"
+                type="password"
+                required
+                [(ngModel)]="currentPassword"
+                #currentPasswordCtrl="ngModel"
+                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
+                [class.border-red-500]="
+                  currentPasswordCtrl.invalid &&
+                  (currentPasswordCtrl.touched || changePasswordSubmitted)
+                "
+              />
+            </div>
+            <div class="space-y-2">
+              <label
+                for="changeNewPassword"
+                class="block text-sm text-scheme-text"
+                i18n="@@profileNewPasswordLabel"
+                >Nouveau mot de passe</label
+              >
+              <input
+                id="changeNewPassword"
+                name="changeNewPassword"
+                type="password"
+                required
+                minlength="12"
+                [(ngModel)]="changeNewPassword"
+                #changeNewPasswordCtrl="ngModel"
+                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
+                [class.border-red-500]="
+                  changeNewPasswordCtrl.invalid &&
+                  (changeNewPasswordCtrl.touched || changePasswordSubmitted)
+                "
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="changePasswordLoading"
+              [attr.aria-busy]="changePasswordLoading"
+            >
+              @if (!changePasswordLoading) {
+                <span i18n="@@profileChangePasswordSubmit">Modifier</span>
+              } @else {
+                <span i18n="@@profileChangePasswordLoading"
+                  >Modification...</span
+                >
+              }
+            </button>
+
+            @if (changePasswordSuccess) {
+              <p class="text-sm text-green-600">{{ changePasswordSuccess }}</p>
+            }
+            @if (changePasswordError) {
+              <p class="text-sm text-red-500">{{ changePasswordError }}</p>
+            }
+          </form>
+        </article>
+      }
+
+      <!-- Section meteo (si role weather) -->
+      @if (authState.hasRole("weather")) {
+        <article
+          class="rounded-form border border-scheme-border bg-scheme-surface p-6 space-y-4"
+        >
+          <h2 class="heading-h5 text-h5" i18n="@@profileWeatherTitle">
+            Preferences meteo
+          </h2>
+
+          <!-- Niveau + progression -->
+          <div class="space-y-2">
+            <p class="text-sm text-scheme-text">
+              <strong i18n="@@profileWeatherLevelLabel">Niveau :</strong>
+              {{ levelLabel(levelService.level()) }}
+            </p>
+            <div class="w-full bg-scheme-border rounded-full h-2">
+              @if (levelService.level() === "discovery") {
+                <div
+                  class="bg-scheme-accent h-2 rounded-full transition-all duration-500"
+                  [style.width.%]="
+                    (levelService.daysUsed() / 7) * 100 > 100
+                      ? 100
+                      : (levelService.daysUsed() / 7) * 100
+                  "
+                ></div>
+              } @else if (levelService.level() === "curious") {
+                <div
+                  class="bg-scheme-accent h-2 rounded-full transition-all duration-500"
+                  [style.width.%]="
+                    (levelService.daysUsed() / 30) * 100 > 100
+                      ? 100
+                      : (levelService.daysUsed() / 30) * 100
+                  "
+                ></div>
+              } @else {
+                <div
+                  class="bg-scheme-accent h-2 rounded-full"
+                  style="width: 100%"
+                ></div>
+              }
+            </div>
+            <p class="text-xs text-scheme-text-muted">
+              {{ levelService.daysUsed() }}
+              <span i18n="@@profileWeatherDaysUsed">jours d'utilisation</span>
+              @if (levelService.showTransitionPrompt()) {
+                &mdash;
+                <span
+                  class="text-scheme-accent font-medium"
+                  i18n="@@profileWeatherTransitionReady"
+                  >Pret pour le niveau suivant !</span
+                >
+              }
+            </p>
+          </div>
+
+          <!-- Villes favorites -->
+          <div class="space-y-2">
+            <h3
+              class="text-sm font-medium text-scheme-text"
+              i18n="@@profileWeatherFavoritesTitle"
+            >
+              Villes favorites
+            </h3>
+            @if (weatherLoading) {
+              <p
+                class="text-xs text-scheme-text-muted"
+                i18n="@@profileWeatherLoading"
+              >
+                Chargement...
+              </p>
+            } @else if (favoriteCities.length === 0) {
+              <p
+                class="text-xs text-scheme-text-muted"
+                i18n="@@profileWeatherNoFavorites"
+              >
+                Aucune ville favorite. Ajoutez-en depuis l'app meteo.
+              </p>
+            } @else {
+              <ul class="space-y-1">
+                @for (city of favoriteCities; track city.latitude) {
+                  <li
+                    class="flex items-center justify-between rounded-lg border border-scheme-border px-3 py-2 text-sm"
+                  >
+                    <span>{{ city.name }}, {{ city.country }}</span>
+                    <button
+                      type="button"
+                      (click)="removeFavoriteCity(city)"
+                      class="text-red-500 hover:text-red-700 text-xs"
+                      [attr.aria-label]="
+                        'Supprimer ' + city.name + ' des favoris'
+                      "
+                      i18n-aria-label="@@profileWeatherRemoveFavoriteAriaLabel"
+                    >
+                      <span i18n="@@profileWeatherRemoveFavorite"
+                        >Supprimer</span
+                      >
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        </article>
+      }
+    }
+
+    <p class="text-sm text-scheme-text-muted">
+      <a routerLink="/" class="underline" i18n="@@profileBackHome"
+        >Retour a l'accueil</a
+      >
+    </p>
+  </div>
+</section>

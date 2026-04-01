@@ -6803,5 +6803,383 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Radar map — coming soon</target>
       </segment>
     </unit>
+    <unit id="navProfileLabel">
+      <segment>
+        <source>Profil</source>
+        <target>Profile</target>
+      </segment>
+    </unit>
+    <unit id="navLogoutLabel">
+      <segment>
+        <source>Déconnexion</source>
+        <target>Log out</target>
+      </segment>
+    </unit>
+    <unit id="authLoginForgotPassword">
+      <segment>
+        <source>Mot de passe oublié ?</source>
+        <target>Forgot password?</target>
+      </segment>
+    </unit>
+    <unit id="authForgotHeroLabel">
+      <segment>
+        <source>Sécurité</source>
+        <target>Security</target>
+      </segment>
+    </unit>
+    <unit id="authForgotHeroTitle">
+      <segment>
+        <source>Mot de passe oublié</source>
+        <target>Forgot password</target>
+      </segment>
+    </unit>
+    <unit id="authForgotHeroDescription">
+      <segment>
+        <source>Entrez votre email pour recevoir un lien de réinitialisation.</source>
+        <target>Enter your email to receive a reset link.</target>
+      </segment>
+    </unit>
+    <unit id="authForgotErrorGeneric">
+      <segment>
+        <source>Impossible d&apos;envoyer le lien pour le moment.</source>
+        <target>Unable to send the reset link right now.</target>
+      </segment>
+    </unit>
+    <unit id="authForgotEmailLabel">
+      <segment>
+        <source>Email</source>
+        <target>Email</target>
+      </segment>
+    </unit>
+    <unit id="authForgotBackToLogin">
+      <segment>
+        <source>Retour à la connexion</source>
+        <target>Back to login</target>
+      </segment>
+    </unit>
+    <unit id="authForgotEmailError">
+      <segment>
+        <source>Veuillez renseigner un email valide.</source>
+        <target>Please enter a valid email.</target>
+      </segment>
+    </unit>
+    <unit id="authForgotSubmit">
+      <segment>
+        <source>Envoyer le lien</source>
+        <target>Send reset link</target>
+      </segment>
+    </unit>
+    <unit id="authForgotLoading">
+      <segment>
+        <source>Envoi en cours...</source>
+        <target>Sending...</target>
+      </segment>
+    </unit>
+    <unit id="authResetHeroLabel">
+      <segment>
+        <source>Sécurité</source>
+        <target>Security</target>
+      </segment>
+    </unit>
+    <unit id="authResetHeroTitle">
+      <segment>
+        <source>Réinitialiser le mot de passe</source>
+        <target>Reset password</target>
+      </segment>
+    </unit>
+    <unit id="authResetHeroDescription">
+      <segment>
+        <source>Choisissez un nouveau mot de passe robuste pour sécuriser votre compte.</source>
+        <target>Choose a strong new password to secure your account.</target>
+      </segment>
+    </unit>
+    <unit id="authResetErrorMissingToken">
+      <segment>
+        <source>Le lien de réinitialisation est invalide ou incomplet.</source>
+        <target>The reset link is invalid or incomplete.</target>
+      </segment>
+    </unit>
+    <unit id="authResetErrorMismatch">
+      <segment>
+        <source>Les mots de passe ne correspondent pas.</source>
+        <target>Passwords do not match.</target>
+      </segment>
+    </unit>
+    <unit id="authResetErrorGeneric">
+      <segment>
+        <source>Impossible de réinitialiser le mot de passe.</source>
+        <target>Unable to reset the password.</target>
+      </segment>
+    </unit>
+    <unit id="authResetPasswordLabel">
+      <segment>
+        <source>Nouveau mot de passe</source>
+        <target>New password</target>
+      </segment>
+    </unit>
+    <unit id="authResetConfirmLabel">
+      <segment>
+        <source>Confirmer le mot de passe</source>
+        <target>Confirm password</target>
+      </segment>
+    </unit>
+    <unit id="authResetBackToLogin">
+      <segment>
+        <source>Retour à la connexion</source>
+        <target>Back to login</target>
+      </segment>
+    </unit>
+    <unit id="authResetSubmit">
+      <segment>
+        <source>Enregistrer le nouveau mot de passe</source>
+        <target>Save new password</target>
+      </segment>
+    </unit>
+    <unit id="authResetLoading">
+      <segment>
+        <source>Mise à jour en cours...</source>
+        <target>Updating...</target>
+      </segment>
+    </unit>
+    <unit id="profileHeroLabel">
+      <segment>
+        <source>Espace utilisateur</source>
+        <target>User area</target>
+      </segment>
+    </unit>
+    <unit id="profileHeroTitle">
+      <segment>
+        <source>Votre profil</source>
+        <target>Your profile</target>
+      </segment>
+    </unit>
+    <unit id="profileHeroDescription">
+      <segment>
+        <source>Gérez vos informations personnelles et vos paramètres de sécurité.</source>
+        <target>Manage your personal information and security settings.</target>
+      </segment>
+    </unit>
+    <unit id="profilePasswordErrorGeneric">
+      <segment>
+        <source>Impossible de définir le mot de passe pour le moment.</source>
+        <target>Unable to set a password right now.</target>
+      </segment>
+    </unit>
+    <unit id="profilePasswordSuccess">
+      <segment>
+        <source>Mot de passe défini avec succès.</source>
+        <target>Password set successfully.</target>
+      </segment>
+    </unit>
+    <unit id="profileBackHome">
+      <segment>
+        <source>Retour à l&apos;accueil</source>
+        <target>Back to home</target>
+      </segment>
+    </unit>
+    <unit id="profileIdentityTitle">
+      <segment>
+        <source>Informations personnelles</source>
+        <target>Personal information</target>
+      </segment>
+    </unit>
+    <unit id="profileFirstNameLabel">
+      <segment>
+        <source>Prénom :</source>
+        <target>First name:</target>
+      </segment>
+    </unit>
+    <unit id="profileLastNameLabel">
+      <segment>
+        <source>Nom :</source>
+        <target>Last name:</target>
+      </segment>
+    </unit>
+    <unit id="profileEmailLabel">
+      <segment>
+        <source>Email :</source>
+        <target>Email:</target>
+      </segment>
+    </unit>
+    <unit id="profileSetPasswordTitle">
+      <segment>
+        <source>Définir un mot de passe</source>
+        <target>Set a password</target>
+      </segment>
+    </unit>
+    <unit id="profileSetPasswordLabel">
+      <segment>
+        <source>Nouveau mot de passe</source>
+        <target>New password</target>
+      </segment>
+    </unit>
+    <unit id="profileSetPasswordSubmit">
+      <segment>
+        <source>Enregistrer</source>
+        <target>Save</target>
+      </segment>
+    </unit>
+    <unit id="profileSetPasswordLoading">
+      <segment>
+        <source>Enregistrement...</source>
+        <target>Saving...</target>
+      </segment>
+    </unit>
+    <unit id="profileChangePasswordTitle">
+      <segment>
+        <source>Changer le mot de passe</source>
+        <target>Change password</target>
+      </segment>
+    </unit>
+    <unit id="profileCurrentPasswordLabel">
+      <segment>
+        <source>Mot de passe actuel</source>
+        <target>Current password</target>
+      </segment>
+    </unit>
+    <unit id="profileNewPasswordLabel">
+      <segment>
+        <source>Nouveau mot de passe</source>
+        <target>New password</target>
+      </segment>
+    </unit>
+    <unit id="profileChangePasswordSubmit">
+      <segment>
+        <source>Modifier</source>
+        <target>Change</target>
+      </segment>
+    </unit>
+    <unit id="profileChangePasswordLoading">
+      <segment>
+        <source>Modification...</source>
+        <target>Changing...</target>
+      </segment>
+    </unit>
+    <unit id="profileChangePasswordErrorGeneric">
+      <segment>
+        <source>Impossible de changer le mot de passe pour le moment.</source>
+        <target>Unable to change password right now.</target>
+      </segment>
+    </unit>
+    <unit id="profileChangePasswordSuccess">
+      <segment>
+        <source>Mot de passe modifie avec succes.</source>
+        <target>Password changed successfully.</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherTitle">
+      <segment>
+        <source>Preferences meteo</source>
+        <target>Weather preferences</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherLevelLabel">
+      <segment>
+        <source>Niveau :</source>
+        <target>Level:</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherLevelDiscovery">
+      <segment>
+        <source>Decouverte</source>
+        <target>Discovery</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherLevelCurious">
+      <segment>
+        <source>Curieux</source>
+        <target>Curious</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherLevelExpert">
+      <segment>
+        <source>Expert</source>
+        <target>Expert</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherDaysUsed">
+      <segment>
+        <source>jours d&apos;utilisation</source>
+        <target>days of usage</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherTransitionReady">
+      <segment>
+        <source>Pret pour le niveau suivant !</source>
+        <target>Ready for the next level!</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherFavoritesTitle">
+      <segment>
+        <source>Villes favorites</source>
+        <target>Favorite cities</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherLoading">
+      <segment>
+        <source>Chargement...</source>
+        <target>Loading...</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherNoFavorites">
+      <segment>
+        <source>Aucune ville favorite. Ajoutez-en depuis l&apos;app meteo.</source>
+        <target>No favorite cities. Add some from the weather app.</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherRemoveFavorite">
+      <segment>
+        <source>Supprimer</source>
+        <target>Remove</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherRemoveFavoriteAriaLabel">
+      <segment>
+        <source>Supprimer des favoris</source>
+        <target>Remove from favorites</target>
+      </segment>
+    </unit>
+    <unit id="navUserMenuLabel">
+      <segment>
+        <source>Menu utilisateur</source>
+        <target>User menu</target>
+      </segment>
+    </unit>
+    <unit id="weatherGeoMyPosition">
+      <segment>
+        <source>Ma position</source>
+        <target>My location</target>
+      </segment>
+    </unit>
+    <unit id="weatherGeoButton">
+      <segment>
+        <source>Me localiser</source>
+        <target>Locate me</target>
+      </segment>
+    </unit>
+    <unit id="weatherGeoButtonTitle">
+      <segment>
+        <source>Me localiser</source>
+        <target>Locate me</target>
+      </segment>
+    </unit>
+    <unit id="weatherFavoritesAdd">
+      <segment>
+        <source>Ajouter aux favoris</source>
+        <target>Add to favorites</target>
+      </segment>
+    </unit>
+    <unit id="weatherFavoritesRemove">
+      <segment>
+        <source>Retirer des favoris</source>
+        <target>Remove from favorites</target>
+      </segment>
+    </unit>
+    <unit id="weatherRadarTitle">
+      <segment>
+        <source>Carte radar</source>
+        <target>Radar map</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

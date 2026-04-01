@@ -19,6 +19,21 @@ import {
   selector: "app-current-conditions",
   standalone: true,
   imports: [CommonModule],
+  styles: `
+    @keyframes countUp {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .temp-count-up {
+      animation: countUp 0.5s ease-out;
+    }
+  `,
   template: `
     @if (current()) {
       <div
@@ -35,7 +50,7 @@ import {
           </div>
 
           <div class="flex flex-col items-center sm:items-start">
-            <p class="text-6xl font-light text-white">
+            <p class="text-6xl font-light text-white temp-count-up">
               {{ current()!.temperature_2m | number: "1.0-0" }}°
             </p>
             <div class="mt-2 flex flex-wrap gap-4 text-sm text-white/70">

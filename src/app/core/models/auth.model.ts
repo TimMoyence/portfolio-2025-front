@@ -6,6 +6,7 @@ export interface AuthUser {
   phone: string | null;
   isActive: boolean;
   roles: string[];
+  hasPassword?: boolean;
   createdAt?: string;
   updatedAt?: string;
   updatedOrCreatedBy?: string | null;
@@ -28,4 +29,26 @@ export interface RegisterUserPayload {
   firstName: string;
   lastName: string;
   phone?: string | null;
+}
+
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ResetPasswordPayload {
+  token: string;
+  newPassword: string;
+}
+
+export interface SetPasswordPayload {
+  newPassword: string;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface AuthActionMessage {
+  message: string;
 }

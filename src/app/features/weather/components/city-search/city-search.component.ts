@@ -23,6 +23,7 @@ import {
 } from "rxjs/operators";
 import type { CityResult } from "../../../../core/models/weather.model";
 import { WeatherService } from "../../../../core/services/weather.service";
+import { GeolocationService } from "../../services/geolocation.service";
 
 /**
  * Composant de recherche de ville.
@@ -34,36 +35,69 @@ import { WeatherService } from "../../../../core/services/weather.service";
   imports: [CommonModule, FormsModule],
   template: `
     <div class="relative w-full max-w-md mx-auto" #searchContainer>
-      <div class="relative">
-        <svg
-          class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/60"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      <div class="relative flex gap-2">
+        <div class="relative flex-1">
+          <svg
+            class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/60"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <input
+            type="text"
+            [ngModel]="query()"
+            (ngModelChange)="onQueryChange($event)"
+            i18n-placeholder="
+              weather.search.placeholder|@@weatherSearchPlaceholder"
+            placeholder="Rechercher une ville..."
+            class="w-full rounded-xl border border-white/20 bg-white/10 py-3 pl-10 pr-4 text-white placeholder-white/50 backdrop-blur-md outline-none transition-colors focus:border-white/40 focus:bg-white/15"
+            autocomplete="off"
+            role="combobox"
+            aria-controls="city-search-listbox"
+            [attr.aria-expanded]="showDropdown()"
+            aria-haspopup="listbox"
+            aria-autocomplete="list"
           />
-        </svg>
-        <input
-          type="text"
-          [ngModel]="query()"
-          (ngModelChange)="onQueryChange($event)"
-          i18n-placeholder="
-            weather.search.placeholder|@@weatherSearchPlaceholder"
-          placeholder="Rechercher une ville..."
-          class="w-full rounded-xl border border-white/20 bg-white/10 py-3 pl-10 pr-4 text-white placeholder-white/50 backdrop-blur-md outline-none transition-colors focus:border-white/40 focus:bg-white/15"
-          autocomplete="off"
-          role="combobox"
-          aria-controls="city-search-listbox"
-          [attr.aria-expanded]="showDropdown()"
-          aria-haspopup="listbox"
-          aria-autocomplete="list"
-        />
+        </div>
+        <button
+          type="button"
+          class="flex-shrink-0 rounded-xl border border-white/20 bg-white/10 p-3 text-white/70 backdrop-blur-md transition-colors hover:bg-white/20 hover:text-white disabled:opacity-40"
+          (click)="locateMe()"
+          [disabled]="locating()"
+          i18n-aria-label="weather.geo.button|@@weatherGeoButton"
+          [attr.aria-label]="'Me localiser'"
+          i18n-title="weather.geo.button|@@weatherGeoButtonTitle"
+          title="Me localiser"
+        >
+          @if (locating()) {
+            <div
+              class="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"
+            ></div>
+          } @else {
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0013 3.06V1h-2v2.06A8.994 8.994 0 003.06 11H1v2h2.06A8.994 8.994 0 0011 20.94V23h2v-2.06A8.994 8.994 0 0020.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"
+              />
+            </svg>
+          }
+        </button>
       </div>
 
       @if (showDropdown() && results().length > 0) {
@@ -105,8 +139,10 @@ export class CitySearchComponent implements OnInit, OnDestroy {
   readonly query = signal("");
   readonly results = signal<CityResult[]>([]);
   readonly showDropdown = signal(false);
+  readonly locating = signal(false);
 
   private readonly weatherService = inject(WeatherService);
+  private readonly geolocationService = inject(GeolocationService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
@@ -154,6 +190,29 @@ export class CitySearchComponent implements OnInit, OnDestroy {
     this.showDropdown.set(false);
     this.results.set([]);
     this.citySelected.emit(city);
+  }
+
+  /** Localise l'utilisateur via le navigateur et emet la ville. */
+  locateMe(): void {
+    this.locating.set(true);
+    this.geolocationService.locate().subscribe({
+      next: (city) => {
+        // Enrichit le nom via reverse geocoding
+        this.geolocationService
+          .reverseGeocode(city.latitude, city.longitude)
+          .subscribe((name) => {
+            if (name) {
+              city = { ...city, name };
+            }
+            this.query.set(city.name);
+            this.locating.set(false);
+            this.citySelected.emit(city);
+          });
+      },
+      error: () => {
+        this.locating.set(false);
+      },
+    });
   }
 
   /** Ferme le menu deroulant lors d'un clic exterieur. */

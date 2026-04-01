@@ -36,8 +36,15 @@ describe("DataExportComponent", () => {
     fixture.componentRef.setInput("forecast", buildForecastResponse());
     fixture.detectChanges();
 
-    // Verifier que l'export ne lance pas d'exception
+    const anchor = jasmine.createSpyObj("a", ["click"]);
+    spyOn(document, "createElement").and.returnValue(anchor);
+    spyOn(URL, "createObjectURL").and.returnValue("blob:fake");
+    spyOn(URL, "revokeObjectURL");
+
     expect(() => component.exportCsv()).not.toThrow();
+    expect(anchor.download).toBe("meteo-export.csv");
+    expect(anchor.click).toHaveBeenCalled();
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:fake");
   });
 
   it("devrait exporter le JSON sans erreur avec des donnees", () => {
@@ -45,7 +52,15 @@ describe("DataExportComponent", () => {
     fixture.componentRef.setInput("ensemble", buildEnsembleData());
     fixture.detectChanges();
 
+    const anchor = jasmine.createSpyObj("a", ["click"]);
+    spyOn(document, "createElement").and.returnValue(anchor);
+    spyOn(URL, "createObjectURL").and.returnValue("blob:fake");
+    spyOn(URL, "revokeObjectURL");
+
     expect(() => component.exportJson()).not.toThrow();
+    expect(anchor.download).toBe("meteo-export.json");
+    expect(anchor.click).toHaveBeenCalled();
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:fake");
   });
 
   it("devrait ne rien faire lors de l'export CSV sans donnees", () => {

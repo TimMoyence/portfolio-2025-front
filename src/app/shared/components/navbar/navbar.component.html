@@ -236,13 +236,87 @@
     </button>
 
     @if (authState.isLoggedIn()) {
-      <button
-        type="button"
-        class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-red-300 text-red-600 bg-red-50 px-4 py-2 text-sm"
-        (click)="logout(); isMobile && closeMobileMenu()"
-      >
-        Logout
-      </button>
+      <!-- Dropdown profil — desktop -->
+      @if (!isMobile) {
+        <div class="relative" (mouseleave)="closeUserDropdown()">
+          <button
+            type="button"
+            (click)="toggleUserDropdown()"
+            [attr.aria-expanded]="userDropdownOpen"
+            aria-haspopup="true"
+            class="rounded-full transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background p-2"
+            [attr.aria-label]="'Menu utilisateur'"
+            i18n-aria-label="
+              navbar.user.label|User dropdown label@@navUserMenuLabel"
+          >
+            <app-svg-icon name="person" [size]="1.3"></app-svg-icon>
+          </button>
+          @if (userDropdownOpen) {
+            <div class="absolute top-full right-0 pt-2 z-50">
+              <div
+                class="w-64 rounded-xl border border-scheme-border bg-scheme-background p-3 shadow-lg"
+              >
+                @if (authState.user(); as u) {
+                  <div class="px-3 pb-3 border-b border-scheme-border">
+                    <p class="font-medium text-scheme-text text-sm">
+                      {{ u.firstName }} {{ u.lastName }}
+                    </p>
+                    <p class="text-xs text-scheme-text-muted truncate">
+                      {{ u.email }}
+                    </p>
+                  </div>
+                }
+                <a
+                  routerLink="/profil"
+                  (click)="closeUserDropdown()"
+                  class="flex items-center gap-3 rounded-lg p-3 mt-1 transition-colors hover:bg-scheme-surface"
+                >
+                  <app-svg-icon name="person" [size]="1.1"></app-svg-icon>
+                  <span class="text-sm" i18n="@@navProfileLabel">Profil</span>
+                </a>
+                <button
+                  type="button"
+                  (click)="logout()"
+                  class="flex w-full items-center gap-3 rounded-lg p-3 transition-colors hover:bg-red-50 text-red-600"
+                >
+                  <app-svg-icon name="close" [size]="1.1"></app-svg-icon>
+                  <span class="text-sm" i18n="@@navLogoutLabel"
+                    >Déconnexion</span
+                  >
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+      <!-- Menu profil — mobile -->
+      @if (isMobile) {
+        <div class="w-full border-t border-scheme-border pt-3 mt-2">
+          @if (authState.user(); as u) {
+            <p class="text-sm font-medium text-scheme-text text-center mb-2">
+              {{ u.firstName }} {{ u.lastName }}
+            </p>
+          }
+          <div class="flex flex-col gap-2 items-center">
+            <a
+              routerLink="/profil"
+              (click)="closeMobileMenu()"
+              class="flex items-center gap-2 rounded-lg p-2 transition-colors hover:bg-scheme-surface text-sm"
+            >
+              <app-svg-icon name="person" [size]="1.1"></app-svg-icon>
+              <span i18n="@@navProfileLabel">Profil</span>
+            </a>
+            <button
+              type="button"
+              (click)="logout()"
+              class="flex items-center gap-2 rounded-lg p-2 transition-colors hover:bg-red-50 text-red-600 text-sm"
+            >
+              <app-svg-icon name="close" [size]="1.1"></app-svg-icon>
+              <span i18n="@@navLogoutLabel">Déconnexion</span>
+            </button>
+          </div>
+        </div>
+      }
     } @else {
       <button
         type="button"

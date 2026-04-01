@@ -11,6 +11,7 @@ import type {
   AirQualityData,
   CityResult,
   EnsembleData,
+  FavoriteCity,
   ForecastResponse,
   HistoricalData,
 } from "../../core/models/weather.model";
@@ -22,6 +23,8 @@ import { CloudVisibilityCardComponent } from "./components/cloud-visibility-card
 import { CurrentConditionsComponent } from "./components/current-conditions/current-conditions.component";
 import { DailyForecastComponent } from "./components/daily-forecast/daily-forecast.component";
 import { DataExportComponent } from "./components/data-export/data-export.component";
+import { FavoriteCitiesBarComponent } from "./components/favorite-cities-bar/favorite-cities-bar.component";
+import { RadarMapComponent } from "./components/radar-map/radar-map.component";
 import { HistoricalComparisonComponent } from "./components/historical-comparison/historical-comparison.component";
 import { HourlyChartComponent } from "./components/hourly-chart/hourly-chart.component";
 import { HumidityCardComponent } from "./components/humidity-card/humidity-card.component";
@@ -33,6 +36,7 @@ import { SunArcComponent } from "./components/sun-arc/sun-arc.component";
 import { TransitionPromptComponent } from "./components/transition-prompt/transition-prompt.component";
 import { UvIndexCardComponent } from "./components/uv-index-card/uv-index-card.component";
 import { WindCompassComponent } from "./components/wind-compass/wind-compass.component";
+import { SlideInDirective } from "../../shared/directives/slide-in.directive";
 import { WeatherLevelService } from "./services/weather-level.service";
 import { weatherCodeToBackground } from "./utils/weather-code-background";
 
@@ -64,6 +68,9 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     CapeCardComponent,
     HistoricalComparisonComponent,
     DataExportComponent,
+    FavoriteCitiesBarComponent,
+    RadarMapComponent,
+    SlideInDirective,
   ],
   templateUrl: "./weather-app.component.html",
   styleUrl: "./weather-app.component.scss",
@@ -91,6 +98,9 @@ export class WeatherAppComponent implements OnInit {
   /** Message d'erreur eventuel. */
   readonly error = signal<string | null>(null);
 
+  /** Villes favorites de l'utilisateur. */
+  readonly favoriteCities = signal<FavoriteCity[]>([]);
+
   private readonly weatherService = inject(WeatherService);
 
   /** Service de gestion du niveau d'experience. */
@@ -106,6 +116,7 @@ export class WeatherAppComponent implements OnInit {
   ngOnInit(): void {
     this.levelService.loadPreferences();
     this.levelService.recordUsage();
+    this.loadFavorites();
   }
 
   /** Charge les previsions meteo pour la ville selectionnee. */
@@ -161,6 +172,43 @@ export class WeatherAppComponent implements OnInit {
     if (!gfs?.hourly.cape?.length) return null;
 
     return gfs.hourly.cape[0];
+  }
+
+  /** Ajoute une ville aux favoris et synchronise avec le backend. */
+  addFavorite(city: FavoriteCity): void {
+    const current = this.favoriteCities();
+    if (
+      current.some(
+        (c) => c.latitude === city.latitude && c.longitude === city.longitude,
+      )
+    )
+      return;
+    const updated = [...current, city];
+    this.favoriteCities.set(updated);
+    this.weatherService
+      .updatePreferences({ favoriteCities: updated })
+      .subscribe();
+  }
+
+  /** Retire une ville des favoris et synchronise avec le backend. */
+  removeFavorite(city: FavoriteCity): void {
+    const updated = this.favoriteCities().filter(
+      (c) => c.latitude !== city.latitude || c.longitude !== city.longitude,
+    );
+    this.favoriteCities.set(updated);
+    this.weatherService
+      .updatePreferences({ favoriteCities: updated })
+      .subscribe();
+  }
+
+  /** Charge les villes favorites depuis le backend. */
+  private loadFavorites(): void {
+    this.weatherService.getPreferences().subscribe({
+      next: (prefs) => this.favoriteCities.set(prefs.favoriteCities ?? []),
+      error: () => {
+        /* Preferences indisponibles : pas de favoris */
+      },
+    });
   }
 
   /**

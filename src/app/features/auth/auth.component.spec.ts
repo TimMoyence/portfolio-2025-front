@@ -11,6 +11,11 @@ import { APP_CONFIG } from "../../core/config/app-config.token";
 import { AUTH_PORT } from "../../core/ports/auth.port";
 import { AuthService } from "../../core/services/auth.service";
 import { environment } from "../../../environments/environnement";
+import {
+  buildAuthSession,
+  buildAuthUser,
+  createAuthPortStub,
+} from "../../../testing/factories/auth.factory";
 import { AuthComponent } from "./auth.component";
 
 describe("AuthComponent", () => {
@@ -39,12 +44,7 @@ describe("AuthComponent", () => {
         },
         {
           provide: AUTH_PORT,
-          useValue: {
-            login: () => {},
-            register: () => {},
-            me: () => {},
-            googleAuth: () => {},
-          },
+          useValue: createAuthPortStub(),
         },
         {
           provide: APP_CONFIG,
@@ -76,15 +76,16 @@ describe("AuthComponent", () => {
       phone: "  +33 6 12 34 56 78  ",
     };
     authService.register.and.returnValue(
-      of({
-        id: "1",
-        email: "john@example.com",
-        firstName: "John",
-        lastName: "Doe",
-        phone: "+33 6 12 34 56 78",
-        isActive: true,
-        roles: [],
-      }),
+      of(
+        buildAuthUser({
+          id: "1",
+          email: "john@example.com",
+          firstName: "John",
+          lastName: "Doe",
+          phone: "+33 6 12 34 56 78",
+          roles: [],
+        }),
+      ),
     );
 
     component.handleSignupSubmit(form);
@@ -122,19 +123,18 @@ describe("AuthComponent", () => {
       email: "john@example.com",
       password: "Password123!",
     };
-    const session: AuthSession = {
+    const session: AuthSession = buildAuthSession({
       accessToken: "token",
       expiresIn: 3600,
-      user: {
+      user: buildAuthUser({
         id: "1",
         email: "john@example.com",
         firstName: "John",
         lastName: "Doe",
         phone: null,
-        isActive: true,
         roles: [],
-      },
-    };
+      }),
+    });
     authService.login.and.returnValue(of(session));
 
     component.handleLoginSubmit(form);

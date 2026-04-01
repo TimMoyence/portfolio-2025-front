@@ -79,6 +79,7 @@ export class NavbarComponent implements OnInit {
 
   scrolled = false;
   mobileMenuOpen = false;
+  userDropdownOpen = false;
 
   isMobile = false;
 
@@ -113,9 +114,24 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
+    this.closeUserDropdown();
     this.authState.logout();
     this.closeMobileMenu();
     void this.router.navigate(["/"]);
+  }
+
+  /** Ouvre ou ferme le dropdown utilisateur. */
+  toggleUserDropdown(): void {
+    this.userDropdownOpen = !this.userDropdownOpen;
+    this.cdr.markForCheck();
+  }
+
+  /** Ferme le dropdown utilisateur s'il est ouvert. */
+  closeUserDropdown(): void {
+    if (this.userDropdownOpen) {
+      this.userDropdownOpen = false;
+      this.cdr.markForCheck();
+    }
   }
 
   /** Ouvre ou ferme le dropdown Atelier. */
@@ -155,11 +171,18 @@ export class NavbarComponent implements OnInit {
       return;
     }
 
-    // 2) ESC closes the Atelier dropdown if open
-    if (this.atelierDropdown.isOpen && event.key === "Escape") {
-      event.preventDefault();
-      this.closeAtelierDropdown();
-      return;
+    // 2) ESC closes dropdowns if open
+    if (event.key === "Escape") {
+      if (this.userDropdownOpen) {
+        event.preventDefault();
+        this.closeUserDropdown();
+        return;
+      }
+      if (this.atelierDropdown.isOpen) {
+        event.preventDefault();
+        this.closeAtelierDropdown();
+        return;
+      }
     }
 
     // 3) When mobile menu is open: ESC and Tab inside dialog
