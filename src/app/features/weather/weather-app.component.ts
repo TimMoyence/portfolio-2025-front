@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   inject,
   OnInit,
   signal,
@@ -40,6 +41,8 @@ import { TransitionPromptComponent } from "./components/transition-prompt/transi
 import { UvIndexCardComponent } from "./components/uv-index-card/uv-index-card.component";
 import { WindCompassComponent } from "./components/wind-compass/wind-compass.component";
 import { SlideInDirective } from "../../shared/directives/slide-in.directive";
+import { ChartSkeletonComponent } from "./components/skeleton/chart-skeleton.component";
+import { WeatherCardSkeletonComponent } from "./components/skeleton/weather-card-skeleton.component";
 import { WeatherLevelService } from "./services/weather-level.service";
 import { weatherCodeToBackground } from "./utils/weather-code-background";
 
@@ -74,6 +77,8 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     FavoriteCitiesBarComponent,
     RadarMapComponent,
     SlideInDirective,
+    ChartSkeletonComponent,
+    WeatherCardSkeletonComponent,
   ],
   templateUrl: "./weather-app.component.html",
   styleUrl: "./weather-app.component.scss",
@@ -119,6 +124,27 @@ export class WeatherAppComponent implements OnInit {
     if (!data) return "";
     return weatherCodeToBackground(data.current.weather_code);
   });
+
+  /** Gradient precedent pour le crossfade de fond. */
+  readonly previousBackground = signal("");
+
+  /** Indique que le fond est en transition (crossfade). */
+  readonly backgroundTransitioning = signal(false);
+
+  constructor() {
+    // Crossfade : quand le gradient change, on anime la transition
+    effect(() => {
+      const current = this.backgroundClasses();
+      const prev = this.previousBackground();
+      if (current && current !== prev) {
+        this.backgroundTransitioning.set(true);
+        setTimeout(() => {
+          this.previousBackground.set(current);
+          this.backgroundTransitioning.set(false);
+        }, 1200);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.levelService.loadPreferences();

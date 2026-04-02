@@ -43,7 +43,7 @@ const MODEL_COLORS: Record<string, string> = {
       >
         Comparaison des modèles (courbes)
       </h3>
-      <div class="relative h-64 w-full">
+      <div class="relative h-40 w-full md:h-64">
         <canvas #chartCanvas></canvas>
       </div>
     </div>
