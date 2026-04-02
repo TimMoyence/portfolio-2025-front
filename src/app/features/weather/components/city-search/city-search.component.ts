@@ -15,8 +15,9 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Subject, Subscription } from "rxjs";
+import { map, of, Subject, Subscription } from "rxjs";
 import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -34,6 +35,7 @@ import { GeolocationService } from "../../services/geolocation.service";
   selector: "app-city-search",
   standalone: true,
   imports: [CommonModule, FormsModule],
+  host: { class: "block" },
   template: `
     <div class="relative w-full max-w-md mx-auto" #searchContainer>
       <div class="relative flex gap-2">
@@ -225,24 +227,28 @@ export class CitySearchComponent implements OnInit, OnDestroy {
   /** Localise l'utilisateur via le navigateur et emet la ville. */
   locateMe(): void {
     this.locating.set(true);
-    this.geolocationService.locate().subscribe({
-      next: (city) => {
-        // Enrichit le nom via reverse geocoding
-        this.geolocationService
-          .reverseGeocode(city.latitude, city.longitude)
-          .subscribe((name) => {
-            if (name) {
-              city = { ...city, name };
-            }
-            this.query.set(city.name);
-            this.locating.set(false);
-            this.citySelected.emit(city);
-          });
-      },
-      error: () => {
-        this.locating.set(false);
-      },
-    });
+    this.geolocationService
+      .locate()
+      .pipe(
+        switchMap((city) =>
+          this.geolocationService
+            .reverseGeocode(city.latitude, city.longitude)
+            .pipe(
+              map((name) => (name ? { ...city, name } : city)),
+              catchError(() => of(city)),
+            ),
+        ),
+      )
+      .subscribe({
+        next: (city) => {
+          this.query.set(city.name);
+          this.locating.set(false);
+          this.citySelected.emit(city);
+        },
+        error: () => {
+          this.locating.set(false);
+        },
+      });
   }
 
   /** Ferme le menu deroulant lors d'un clic exterieur. */

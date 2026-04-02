@@ -3,10 +3,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import type {
   AirQualityData,
   CityResult,
@@ -103,6 +105,7 @@ export class WeatherAppComponent implements OnInit {
   readonly favoriteCities = signal<FavoriteCity[]>([]);
 
   private readonly weatherService = inject(WeatherService);
+  private readonly destroyRef = inject(DestroyRef);
 
   /** Service de gestion du niveau d'experience. */
   readonly levelService = inject(WeatherLevelService);
@@ -132,24 +135,28 @@ export class WeatherAppComponent implements OnInit {
     this.ensemble.set(null);
     this.historical.set(null);
 
-    this.weatherService.getForecast(city.latitude, city.longitude).subscribe({
-      next: (data) => {
-        this.forecast.set(data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(
-          err?.error?.message ??
-            $localize`:weather.error.loading|@@weatherErrorLoading:Erreur lors du chargement des prévisions.`,
-        );
-        this.loading.set(false);
-      },
-    });
+    this.weatherService
+      .getForecast(city.latitude, city.longitude)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.forecast.set(data);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.error.set(
+            err?.error?.message ??
+              $localize`:weather.error.loading|@@weatherErrorLoading:Erreur lors du chargement des prévisions.`,
+          );
+          this.loading.set(false);
+        },
+      });
 
     // Charge la qualite de l'air en parallele pour les niveaux Curieux+
     if (this.levelService.level() !== "discovery") {
       this.weatherService
         .getAirQuality(city.latitude, city.longitude)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (data) => this.airQuality.set(data),
           error: () => {
@@ -172,6 +179,7 @@ export class WeatherAppComponent implements OnInit {
     if (level !== "discovery" && !this.airQuality()) {
       this.weatherService
         .getAirQuality(city.latitude, city.longitude)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (data) => this.airQuality.set(data),
           error: () => {
@@ -212,6 +220,7 @@ export class WeatherAppComponent implements OnInit {
     this.favoriteCities.set(updated);
     this.weatherService
       .updatePreferences({ favoriteCities: updated })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
@@ -223,17 +232,21 @@ export class WeatherAppComponent implements OnInit {
     this.favoriteCities.set(updated);
     this.weatherService
       .updatePreferences({ favoriteCities: updated })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
   /** Charge les villes favorites depuis le backend. */
   private loadFavorites(): void {
-    this.weatherService.getPreferences().subscribe({
-      next: (prefs) => this.favoriteCities.set(prefs.favoriteCities ?? []),
-      error: () => {
-        /* Preferences indisponibles : pas de favoris */
-      },
-    });
+    this.weatherService
+      .getPreferences()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (prefs) => this.favoriteCities.set(prefs.favoriteCities ?? []),
+        error: () => {
+          /* Preferences indisponibles : pas de favoris */
+        },
+      });
   }
 
   /**
@@ -242,12 +255,15 @@ export class WeatherAppComponent implements OnInit {
    */
   private loadExpertData(latitude: number, longitude: number): void {
     // Donnees ensemble multi-modeles
-    this.weatherService.getEnsemble(latitude, longitude).subscribe({
-      next: (data) => this.ensemble.set(data),
-      error: () => {
-        /* Echec silencieux : les cartes afficheront "Donnees indisponibles" */
-      },
-    });
+    this.weatherService
+      .getEnsemble(latitude, longitude)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => this.ensemble.set(data),
+        error: () => {
+          /* Echec silencieux : les cartes afficheront "Donnees indisponibles" */
+        },
+      });
 
     // Donnees historiques : 30 derniers jours
     const today = new Date();
@@ -265,6 +281,7 @@ export class WeatherAppComponent implements OnInit {
         formatDate(startDate),
         formatDate(endDate),
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => this.historical.set(data),
         error: () => {

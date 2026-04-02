@@ -14,26 +14,54 @@ describe("SeoService", () => {
    * Simule head, querySelector, querySelectorAll, et createElement.
    */
   function createMockDocument(): Document {
-    const appendedLinks: HTMLElement[] = [];
+    const appendedChildren: Record<string, unknown>[] = [];
 
     const head = {
       appendChild: jasmine
         .createSpy("appendChild")
-        .and.callFake((el: HTMLElement) => appendedLinks.push(el)),
+        .and.callFake((el: Record<string, unknown>) =>
+          appendedChildren.push(el),
+        ),
+      querySelector: jasmine
+        .createSpy("head.querySelector")
+        .and.callFake((selector: string) => {
+          if (selector === 'script[type="application/ld+json"]') {
+            return (
+              appendedChildren.find(
+                (el) => el["type"] === "application/ld+json",
+              ) ?? null
+            );
+          }
+          return null;
+        }),
+      /** Expose les enfants ajoutes au head pour les assertions dans les tests. */
+      get children(): Record<string, unknown>[] {
+        return appendedChildren;
+      },
     };
 
     const mockDoc = {
       head,
-      createElement: jasmine.createSpy("createElement").and.callFake(() => {
-        const attrs: Record<string, string> = {};
-        return {
-          setAttribute: (key: string, value: string) => {
-            attrs[key] = value;
-          },
-          getAttribute: (key: string) => attrs[key] ?? null,
-          attrs,
-        };
-      }),
+      createElement: jasmine
+        .createSpy("createElement")
+        .and.callFake((tag: string) => {
+          const attrs: Record<string, string> = {};
+          const el: Record<string, unknown> = {
+            tagName: tag.toUpperCase(),
+            setAttribute: (key: string, value: string) => {
+              attrs[key] = value;
+            },
+            getAttribute: (key: string) => attrs[key] ?? null,
+            attrs,
+            type: "",
+            textContent: "",
+            remove: jasmine.createSpy("remove").and.callFake(() => {
+              const idx = appendedChildren.indexOf(el);
+              if (idx !== -1) appendedChildren.splice(idx, 1);
+            }),
+          };
+          return el;
+        }),
       querySelector: jasmine.createSpy("querySelector").and.returnValue(null),
       querySelectorAll: jasmine
         .createSpy("querySelectorAll")
@@ -315,6 +343,91 @@ describe("SeoService", () => {
         expect(existingNode2.remove).toHaveBeenCalled();
       });
     });
+
+    describe("JSON-LD", () => {
+      it("devrait injecter un script JSON-LD dans le head quand jsonLd est fourni", () => {
+        const jsonLdData = {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Tim",
+        };
+
+        service.updateSeoMetadata({
+          title: "Test",
+          description: "Desc",
+          jsonLd: jsonLdData,
+        });
+
+        const appendSpy = (
+          mockDocument.head as unknown as { appendChild: jasmine.Spy }
+        ).appendChild;
+        const appendedArgs = appendSpy.calls
+          .allArgs()
+          .map((args: unknown[]) => args[0] as Record<string, unknown>);
+        const scriptEl = appendedArgs.find(
+          (el) => el["type"] === "application/ld+json",
+        );
+
+        expect(scriptEl).toBeTruthy();
+        expect(scriptEl!["textContent"]).toBe(JSON.stringify(jsonLdData));
+      });
+
+      it("ne devrait pas injecter de script JSON-LD si jsonLd est absent", () => {
+        service.updateSeoMetadata({
+          title: "Test",
+          description: "Desc",
+        });
+
+        const appendSpy = (
+          mockDocument.head as unknown as { appendChild: jasmine.Spy }
+        ).appendChild;
+        const appendedArgs = appendSpy.calls
+          .allArgs()
+          .map((args: unknown[]) => args[0] as Record<string, unknown>);
+        const scriptEl = appendedArgs.find(
+          (el) => el["type"] === "application/ld+json",
+        );
+
+        expect(scriptEl).toBeUndefined();
+      });
+
+      it("devrait supprimer le script JSON-LD existant avant d en creer un nouveau", () => {
+        const jsonLdA = {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "A",
+        };
+        const jsonLdB = {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "B",
+        };
+
+        service.updateSeoMetadata({
+          title: "Test",
+          description: "Desc",
+          jsonLd: jsonLdA,
+        });
+
+        service.updateSeoMetadata({
+          title: "Test",
+          description: "Desc",
+          jsonLd: jsonLdB,
+        });
+
+        const headChildren = (
+          mockDocument.head as unknown as {
+            children: Record<string, unknown>[];
+          }
+        ).children;
+        const jsonLdScripts = headChildren.filter(
+          (el) => el["type"] === "application/ld+json",
+        );
+
+        expect(jsonLdScripts.length).toBe(1);
+        expect(jsonLdScripts[0]["textContent"]).toBe(JSON.stringify(jsonLdB));
+      });
+    });
   });
 
   describe("avec document null (SSR sans DOM)", () => {
@@ -336,6 +449,29 @@ describe("SeoService", () => {
 
       expect(localTitleSpy.setTitle).not.toHaveBeenCalled();
       expect(localMetaSpy.updateTag).not.toHaveBeenCalled();
+    });
+
+    it("ne devrait pas throw si jsonLd est fourni avec document null", () => {
+      const localMetaSpy = jasmine.createSpyObj<Meta>("Meta", ["updateTag"]);
+      const localTitleSpy = jasmine.createSpyObj<Title>("Title", ["setTitle"]);
+
+      const svc = new SeoService(
+        localMetaSpy,
+        localTitleSpy,
+        null as unknown as Document,
+      );
+
+      expect(() =>
+        svc.updateSeoMetadata({
+          title: "Titre",
+          description: "Description",
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: "Tim",
+          },
+        }),
+      ).not.toThrow();
     });
   });
 });

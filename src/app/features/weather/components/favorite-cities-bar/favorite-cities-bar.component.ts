@@ -21,6 +21,7 @@ import type {
   selector: "app-favorite-cities-bar",
   standalone: true,
   imports: [CommonModule],
+  host: { class: "block" },
   template: `
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
       <!-- Bouton etoile : ajouter/retirer la ville courante -->

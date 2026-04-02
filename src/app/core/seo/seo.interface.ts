@@ -13,4 +13,6 @@ export interface SeoConfig {
   twitterImage?: string;
   canonicalUrl?: string;
   hreflangs?: Record<string, string>;
+  /** Donnees structurees JSON-LD a injecter dans le head (schema.org). */
+  jsonLd?: Record<string, unknown>;
 }

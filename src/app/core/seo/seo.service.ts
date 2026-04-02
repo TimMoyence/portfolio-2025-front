@@ -96,5 +96,27 @@ export class SeoService {
         this.document.head.appendChild(link);
       }
     }
+
+    this.updateJsonLd(config);
+  }
+
+  /**
+   * Injecte ou met a jour les donnees structurees JSON-LD dans le head.
+   * Supprime le script existant avant d'en creer un nouveau (SSR-safe).
+   */
+  private updateJsonLd(config: SeoConfig): void {
+    if (!this.document) return;
+
+    const existing = this.document.head.querySelector(
+      'script[type="application/ld+json"]',
+    );
+    if (existing) existing.remove();
+
+    if (config.jsonLd) {
+      const script = this.document.createElement("script");
+      script.type = "application/ld+json";
+      script.textContent = JSON.stringify(config.jsonLd);
+      this.document.head.appendChild(script);
+    }
   }
 }
