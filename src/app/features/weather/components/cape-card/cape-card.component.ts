@@ -5,7 +5,7 @@ import {
   computed,
   input,
 } from "@angular/core";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { MetricCardComponent } from "../metric-card/metric-card.component";
 
 /**
  * Carte CAPE (Convective Available Potential Energy).
@@ -15,27 +15,20 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
 @Component({
   selector: "app-cape-card",
   standalone: true,
-  imports: [DecimalPipe, LearningTooltipComponent],
+  imports: [DecimalPipe, MetricCardComponent],
   template: `
-    <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+    <app-metric-card
+      tooltipId="cape-explanation"
+      i18n-tooltipTitle="weather.cape.tooltip.title|@@weatherCapeTooltipTitle"
+      tooltipTitle="Qu'est-ce que le CAPE ?"
+      i18n-tooltipContent="
+        weather.cape.tooltip.content|@@weatherCapeTooltipContent"
+      tooltipContent="CAPE mesure l'énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents."
+      [unavailable]="cape() === null"
     >
-      <div class="mb-3 flex items-center gap-2">
-        <h3
-          class="text-sm font-medium text-white/70"
-          i18n="weather.cape.title|@@weatherCapeTitle"
-        >
-          CAPE (instabilité)
-        </h3>
-        <app-learning-tooltip
-          id="cape-explanation"
-          i18n-title="weather.cape.tooltip.title|@@weatherCapeTooltipTitle"
-          title="Qu'est-ce que le CAPE ?"
-          i18n-content="
-            weather.cape.tooltip.content|@@weatherCapeTooltipContent"
-          content="CAPE mesure l'énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents."
-        />
-      </div>
+      <span cardTitle i18n="weather.cape.title|@@weatherCapeTitle"
+        >CAPE (instabilité)</span
+      >
 
       @if (cape() !== null) {
         <div class="flex items-baseline gap-2">
@@ -74,15 +67,8 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
           <span>2000</span>
           <span>3000+</span>
         </div>
-      } @else {
-        <p
-          class="text-sm text-white/40"
-          i18n="weather.cape.unavailable|@@weatherCapeUnavailable"
-        >
-          Données indisponibles
-        </p>
       }
-    </div>
+    </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

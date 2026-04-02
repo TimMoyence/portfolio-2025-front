@@ -4,7 +4,7 @@ import {
   computed,
   input,
 } from "@angular/core";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { MetricCardComponent } from "../metric-card/metric-card.component";
 
 /**
  * Carte d'humidite avec indicateur de progression circulaire CSS
@@ -13,28 +13,20 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
 @Component({
   selector: "app-humidity-card",
   standalone: true,
-  imports: [LearningTooltipComponent],
+  imports: [MetricCardComponent],
   template: `
-    <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+    <app-metric-card
+      tooltipId="humidity"
+      i18n-tooltipTitle="
+        weather.humidity.tooltip.title|@@weatherHumidityTooltipTitle"
+      tooltipTitle="Humidité"
+      i18n-tooltipContent="
+        weather.humidity.tooltip.content|@@weatherHumidityTooltipContent"
+      tooltipContent="L'humidité relative indique le pourcentage de vapeur d'eau dans l'air par rapport au maximum possible. Le point de rosée est la température à laquelle l'air devient saturé : plus il est proche de la température réelle, plus l'air semble moite."
     >
-      <div class="mb-3 flex items-center justify-between">
-        <h3
-          class="text-sm font-medium text-white/70"
-          i18n="weather.humidity.title|@@weatherHumidityTitle"
-        >
-          Humidité
-        </h3>
-        <app-learning-tooltip
-          id="humidity"
-          i18n-title="
-            weather.humidity.tooltip.title|@@weatherHumidityTooltipTitle"
-          title="Humidité"
-          i18n-content="
-            weather.humidity.tooltip.content|@@weatherHumidityTooltipContent"
-          content="L'humidité relative indique le pourcentage de vapeur d'eau dans l'air par rapport au maximum possible. Le point de rosée est la température à laquelle l'air devient saturé : plus il est proche de la température réelle, plus l'air semble moite."
-        />
-      </div>
+      <span cardTitle i18n="weather.humidity.title|@@weatherHumidityTitle"
+        >Humidité</span
+      >
 
       <div class="flex items-center gap-4">
         <!-- Indicateur circulaire -->
@@ -95,7 +87,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
           }
         </div>
       </div>
-    </div>
+    </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

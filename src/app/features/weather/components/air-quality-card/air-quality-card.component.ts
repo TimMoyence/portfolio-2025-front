@@ -6,7 +6,7 @@ import {
   input,
 } from "@angular/core";
 import type { AirQualityData } from "../../../../core/models/weather.model";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { MetricCardComponent } from "../metric-card/metric-card.component";
 
 /**
  * Carte de qualite de l'air avec indice AQI europeen et polluants principaux.
@@ -15,26 +15,20 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
 @Component({
   selector: "app-air-quality-card",
   standalone: true,
-  imports: [CommonModule, LearningTooltipComponent],
+  imports: [CommonModule, MetricCardComponent],
   template: `
-    <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+    <app-metric-card
+      tooltipId="air-quality"
+      i18n-tooltipTitle="weather.aqi.tooltip.title|@@weatherAqiTooltipTitle"
+      tooltipTitle="Qualité de l'air"
+      i18n-tooltipContent="
+        weather.aqi.tooltip.content|@@weatherAqiTooltipContent"
+      tooltipContent="L'indice AQI européen combine les niveaux de particules fines (PM2.5, PM10) et d'ozone (O₃). En dessous de 20 l'air est bon, au-dessus de 60 les personnes sensibles doivent limiter les efforts en extérieur."
+      [unavailable]="!airQuality()"
     >
-      <div class="mb-3 flex items-center justify-between">
-        <h3
-          class="text-sm font-medium text-white/70"
-          i18n="weather.aqi.title|@@weatherAqiTitle"
-        >
-          Qualité de l'air
-        </h3>
-        <app-learning-tooltip
-          id="air-quality"
-          i18n-title="weather.aqi.tooltip.title|@@weatherAqiTooltipTitle"
-          title="Qualité de l'air"
-          i18n-content="weather.aqi.tooltip.content|@@weatherAqiTooltipContent"
-          content="L'indice AQI européen combine les niveaux de particules fines (PM2.5, PM10) et d'ozone (O₃). En dessous de 20 l'air est bon, au-dessus de 60 les personnes sensibles doivent limiter les efforts en extérieur."
-        />
-      </div>
+      <span cardTitle i18n="weather.aqi.title|@@weatherAqiTitle"
+        >Qualité de l'air</span
+      >
 
       @if (airQuality(); as aq) {
         <div class="flex items-baseline gap-2">
@@ -67,15 +61,8 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
             O₃ : {{ aq.current.ozone | number: "1.0-1" }} µg/m³
           </span>
         </div>
-      } @else {
-        <p
-          class="text-sm text-white/40"
-          i18n="weather.aqi.unavailable|@@weatherAqiUnavailable"
-        >
-          Données indisponibles
-        </p>
       }
-    </div>
+    </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

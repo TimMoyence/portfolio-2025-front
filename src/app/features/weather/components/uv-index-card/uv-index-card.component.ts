@@ -5,7 +5,7 @@ import {
   computed,
   input,
 } from "@angular/core";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { MetricCardComponent } from "../metric-card/metric-card.component";
 
 /**
  * Carte d'indice UV avec jauge coloree horizontale.
@@ -14,26 +14,16 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
 @Component({
   selector: "app-uv-index-card",
   standalone: true,
-  imports: [DecimalPipe, LearningTooltipComponent],
+  imports: [DecimalPipe, MetricCardComponent],
   template: `
-    <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+    <app-metric-card
+      tooltipId="uv-index"
+      i18n-tooltipTitle="weather.uv.tooltip.title|@@weatherUvTooltipTitle"
+      tooltipTitle="Indice UV"
+      i18n-tooltipContent="weather.uv.tooltip.content|@@weatherUvTooltipContent"
+      tooltipContent="L'indice UV mesure l'intensité du rayonnement ultraviolet solaire. Plus il est élevé, plus le risque de coup de soleil est rapide. À partir de 3, crème solaire et lunettes recommandées. Au-delà de 8, limitez l'exposition entre 11h et 16h."
     >
-      <div class="mb-3 flex items-center justify-between">
-        <h3
-          class="text-sm font-medium text-white/70"
-          i18n="weather.uv.title|@@weatherUvTitle"
-        >
-          Indice UV
-        </h3>
-        <app-learning-tooltip
-          id="uv-index"
-          i18n-title="weather.uv.tooltip.title|@@weatherUvTooltipTitle"
-          title="Indice UV"
-          i18n-content="weather.uv.tooltip.content|@@weatherUvTooltipContent"
-          content="L'indice UV mesure l'intensité du rayonnement ultraviolet solaire. Plus il est élevé, plus le risque de coup de soleil est rapide. À partir de 3, crème solaire et lunettes recommandées. Au-delà de 8, limitez l'exposition entre 11h et 16h."
-        />
-      </div>
+      <span cardTitle i18n="weather.uv.title|@@weatherUvTitle">Indice UV</span>
 
       <div class="flex items-baseline gap-2">
         <span class="text-3xl font-light text-white">
@@ -71,7 +61,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
         <span>8</span>
         <span>11+</span>
       </div>
-    </div>
+    </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
