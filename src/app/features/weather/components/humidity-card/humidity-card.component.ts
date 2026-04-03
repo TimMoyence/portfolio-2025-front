@@ -2,9 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from "@angular/core";
+import { UnitPipe } from "../../pipes/unit.pipe";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { SparklineComponent } from "../sparkline/sparkline.component";
 
 /**
  * Carte d'humidite avec indicateur de progression circulaire CSS
@@ -13,7 +17,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 @Component({
   selector: "app-humidity-card",
   standalone: true,
-  imports: [MetricCardComponent],
+  imports: [MetricCardComponent, SparklineComponent, UnitPipe],
   template: `
     <app-metric-card
       tooltipId="humidity"
@@ -82,21 +86,36 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
               <span i18n="weather.humidity.dewPoint|@@weatherHumidityDewPoint"
                 >Point de rosée</span
               >
-              : {{ dewPoint() }}°C
+              : {{ dewPoint() | unit: unitService.temperatureUnit() }}
             </span>
           }
         </div>
       </div>
+
+      @if (hourlyHumidity().length > 1) {
+        <div class="mt-2">
+          <app-sparkline
+            [data]="hourlyHumidity()"
+            [color]="'rgba(147, 197, 253, 0.8)'"
+          />
+        </div>
+      }
     </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HumidityCardComponent {
+  /** Service de preferences d'unites. */
+  readonly unitService = inject(UnitPreferencesService);
+
   /** Pourcentage d'humidite relative. */
   readonly humidity = input<number>(0);
 
   /** Temperature du point de rosee en degres Celsius. */
   readonly dewPoint = input<number | null>(null);
+
+  /** Donnees horaires d'humidite pour le sparkline. */
+  readonly hourlyHumidity = input<number[]>([]);
 
   /** stroke-dasharray pour l'indicateur circulaire (perimetre = 100). */
   readonly dashArray = computed(() => {

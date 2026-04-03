@@ -7181,5 +7181,191 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Radar map</target>
       </segment>
     </unit>
+    <unit id="weatherAqiTooltipTitle">
+      <segment>
+        <source>Qualité de l'air</source>
+        <target>Air quality</target>
+      </segment>
+    </unit>
+    <unit id="weatherAqiTooltipContent">
+      <segment>
+        <source>L'indice AQI européen combine les niveaux de particules fines (PM2.5, PM10) et d'ozone (O₃). En dessous de 20 l'air est bon, au-dessus de 60 les personnes sensibles doivent limiter les efforts en extérieur.</source>
+        <target>The European Air Quality Index (AQI) measures air pollution from 0 (good) to 500+ (hazardous). Values above 100 may affect sensitive individuals. PM2.5 and PM10 are fine particulate matter, ozone irritates the respiratory tract.</target>
+      </segment>
+    </unit>
+    <unit id="weatherCardUnavailable">
+      <segment>
+        <source> Données indisponibles </source>
+        <target> Data unavailable </target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudTooltipTitle">
+      <segment>
+        <source>Couverture nuageuse</source>
+        <target>Cloud cover &amp; visibility</target>
+      </segment>
+    </unit>
+    <unit id="weatherCloudTooltipContent">
+      <segment>
+        <source>La couverture nuageuse indique le pourcentage du ciel masqué par les nuages. La visibilité mesure la distance maximale à laquelle on distingue un objet : elle diminue avec le brouillard, la pluie ou les particules en suspension.</source>
+        <target>Cloud cover indicates the percentage of sky hidden by clouds. Visibility represents the maximum distance at which an object can be clearly seen, reduced by fog, rain, or pollution.</target>
+      </segment>
+    </unit>
+    <unit id="weatherCurrentHumidity">
+      <segment>
+        <source> Humidité </source>
+        <target> Humidity </target>
+      </segment>
+    </unit>
+    <unit id="weatherCurrentPrecip">
+      <segment>
+        <source> Pluie </source>
+        <target> Rain </target>
+      </segment>
+    </unit>
+    <unit id="weatherCurrentVisibility">
+      <segment>
+        <source> Visibilité </source>
+        <target> Visibility </target>
+      </segment>
+    </unit>
+    <unit id="weatherDaily14Days">
+      <segment>
+        <source> 14 jours </source>
+        <target> 14 days </target>
+      </segment>
+    </unit>
+    <unit id="weatherDaily7Days">
+      <segment>
+        <source> 7 jours </source>
+        <target> 7 days </target>
+      </segment>
+    </unit>
+    <unit id="weatherDailyToggleAria">
+      <segment>
+        <source>Nombre de jours de prévisions</source>
+        <target>Number of forecast days</target>
+      </segment>
+    </unit>
+    <unit id="weatherDayDetailGusts">
+      <segment>
+        <source>Rafales</source>
+        <target>Gusts</target>
+      </segment>
+    </unit>
+    <unit id="weatherDayDetailPrecip">
+      <segment>
+        <source> Précipitations </source>
+        <target> Precipitation </target>
+      </segment>
+    </unit>
+    <unit id="weatherDayDetailSun">
+      <segment>
+        <source> Soleil </source>
+        <target> Sun </target>
+      </segment>
+    </unit>
+    <unit id="weatherDayDetailUv">
+      <segment>
+        <source> UV max </source>
+        <target> UV max </target>
+      </segment>
+    </unit>
+    <unit id="weatherDayDetailWind">
+      <segment>
+        <source> Vent max </source>
+        <target> Max wind </target>
+      </segment>
+    </unit>
+    <unit id="weatherHumidityTooltipTitle">
+      <segment>
+        <source>Humidité</source>
+        <target>Humidity</target>
+      </segment>
+    </unit>
+    <unit id="weatherHumidityTooltipContent">
+      <segment>
+        <source>L'humidité relative indique le pourcentage de vapeur d'eau dans l'air par rapport au maximum possible. Le point de rosée est la température à laquelle l'air devient saturé : plus il est proche de la température réelle, plus l'air semble moite.</source>
+        <target>Relative humidity indicates the percentage of water vapor in the air compared to its maximum capacity. The dew point is the temperature at which air becomes saturated: the closer it is to the actual temperature, the more muggy the air feels.</target>
+      </segment>
+    </unit>
+    <unit id="weatherPressureTooltipTitle">
+      <segment>
+        <source>Pression atmosphérique</source>
+        <target>Atmospheric pressure</target>
+      </segment>
+    </unit>
+    <unit id="weatherPressureTooltipContent">
+      <segment>
+        <source>La pression atmosphérique est le poids de l'air au-dessus de vous, mesurée en hectopascals (hPa). Une pression en hausse annonce généralement du beau temps, une baisse rapide signale l'arrivée d'une perturbation.</source>
+        <target>Atmospheric pressure is the weight of the air above you, measured in hectopascals (hPa). Rising pressure generally signals fair weather, while a rapid drop indicates an approaching weather system.</target>
+      </segment>
+    </unit>
+    <unit id="weatherSunTooltipTitle">
+      <segment>
+        <source>Lever &amp; coucher du soleil</source>
+        <target>Sunrise &amp; sunset</target>
+      </segment>
+    </unit>
+    <unit id="weatherSunTooltipContent">
+      <segment>
+        <source>L'arc montre la trajectoire du soleil dans le ciel. Le point jaune indique sa position actuelle. La durée du jour varie selon la saison : environ 16h en été et 8h en hiver en France métropolitaine.</source>
+        <target>The arc shows the sun's path across the sky. The yellow dot indicates its current position. Day length varies by season: about 16h in summer and 8h in winter in metropolitan France.</target>
+      </segment>
+    </unit>
+    <unit id="weatherUnitsButtonAria">
+      <segment>
+        <source>Paramètres d'unités</source>
+        <target>Unit settings</target>
+      </segment>
+    </unit>
+    <unit id="weatherUnitsPressure">
+      <segment>
+        <source> Pression </source>
+        <target> Pressure </target>
+      </segment>
+    </unit>
+    <unit id="weatherUnitsSpeed">
+      <segment>
+        <source> Vitesse </source>
+        <target> Speed </target>
+      </segment>
+    </unit>
+    <unit id="weatherUnitsTemperature">
+      <segment>
+        <source> Température </source>
+        <target> Temperature </target>
+      </segment>
+    </unit>
+    <unit id="weatherUnitsTitle">
+      <segment>
+        <source>Unités de mesure</source>
+        <target>Units of measurement</target>
+      </segment>
+    </unit>
+    <unit id="weatherUvTooltipTitle">
+      <segment>
+        <source>Indice UV</source>
+        <target>UV index</target>
+      </segment>
+    </unit>
+    <unit id="weatherUvTooltipContent">
+      <segment>
+        <source>L'indice UV mesure l'intensité du rayonnement ultraviolet solaire. Plus il est élevé, plus le risque de coup de soleil est rapide. À partir de 3, crème solaire et lunettes recommandées. Au-delà de 8, limitez l'exposition entre 11h et 16h.</source>
+        <target>The UV index measures the intensity of solar ultraviolet radiation. The higher it is, the faster you can get sunburnt. From 3, sunscreen and sunglasses are recommended. Above 8, limit exposure between 11am and 4pm.</target>
+      </segment>
+    </unit>
+    <unit id="weatherWindTooltipTitle">
+      <segment>
+        <source>Vent</source>
+        <target>Wind</target>
+      </segment>
+    </unit>
+    <unit id="weatherWindTooltipContent">
+      <segment>
+        <source>La vitesse du vent est mesurée à 10 m du sol. La direction indique d'où vient le vent (un vent de Nord souffle du nord vers le sud). Les rafales sont des accélérations brèves pouvant dépasser le double de la vitesse moyenne.</source>
+        <target>Wind speed is measured at 10m above ground. The direction indicates where the wind comes from (a north wind blows from north to south). Gusts are brief accelerations that can exceed twice the average speed.</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

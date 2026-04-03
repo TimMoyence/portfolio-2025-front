@@ -1,5 +1,12 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { of } from "rxjs";
+import { WEATHER_PORT } from "../../../../core/ports/weather.port";
+import {
+  buildWeatherPreferences,
+  createWeatherPortStub,
+} from "../../../../../testing/factories/weather.factory";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { WeatherLevelService } from "../../services/weather-level.service";
 import { WindCompassComponent } from "./wind-compass.component";
 
@@ -8,9 +15,18 @@ describe("WindCompassComponent", () => {
   let fixture: ComponentFixture<WindCompassComponent>;
 
   beforeEach(async () => {
+    const weatherPortStub = createWeatherPortStub();
+    weatherPortStub.getPreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+    weatherPortStub.updatePreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+
     await TestBed.configureTestingModule({
       imports: [WindCompassComponent],
       providers: [
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
         {
           provide: WeatherLevelService,
           useValue: {
@@ -55,5 +71,15 @@ describe("WindCompassComponent", () => {
     const el: HTMLElement = fixture.nativeElement;
     expect(el.textContent).toContain("Rafales");
     expect(el.textContent).toContain("30");
+  });
+
+  it("devrait afficher la vitesse en mph quand la preference est mph", () => {
+    const unitService = TestBed.inject(UnitPreferencesService);
+    unitService.setSpeedUnit("mph");
+    fixture.componentRef.setInput("speed", 100);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent;
+    expect(text).toContain("62"); // 100 * 0.621371 ≈ 62
+    expect(text).toContain("mph");
   });
 });

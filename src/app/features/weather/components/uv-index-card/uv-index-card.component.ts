@@ -6,6 +6,7 @@ import {
   input,
 } from "@angular/core";
 import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { SparklineComponent } from "../sparkline/sparkline.component";
 
 /**
  * Carte d'indice UV avec jauge coloree horizontale.
@@ -14,7 +15,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 @Component({
   selector: "app-uv-index-card",
   standalone: true,
-  imports: [DecimalPipe, MetricCardComponent],
+  imports: [DecimalPipe, MetricCardComponent, SparklineComponent],
   template: `
     <app-metric-card
       tooltipId="uv-index"
@@ -61,6 +62,15 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
         <span>8</span>
         <span>11+</span>
       </div>
+
+      @if (hourlyUv().length > 1) {
+        <div class="mt-2">
+          <app-sparkline
+            [data]="hourlyUv()"
+            [color]="'rgba(250, 204, 21, 0.8)'"
+          />
+        </div>
+      }
     </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,6 +78,9 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 export class UvIndexCardComponent {
   /** Valeur de l'indice UV courant. */
   readonly uvIndex = input<number>(0);
+
+  /** Donnees horaires d'UV pour le sparkline. */
+  readonly hourlyUv = input<number[]>([]);
 
   /** Label de risque UV en francais selon l'echelle OMS. */
   readonly riskLabel = computed(() => {

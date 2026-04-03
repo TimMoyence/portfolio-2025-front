@@ -239,18 +239,25 @@
                           state</note>
         <note priority="1" from="meaning">auth.login.loading</note>
       </trans-unit>
+      <trans-unit id="authLoginForgotPassword" datatype="html">
+        <source>Mot de passe oublié ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">397,399</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="385129033471599880" datatype="html">
         <source>Connectez-vous avec Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">396,397</context>
+          <context context-type="linenumber">404,405</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authLoginGoogle" datatype="html">
         <source> Connectez-vous avec Google </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">410,412</context>
+          <context context-type="linenumber">418,420</context>
         </context-group>
         <note priority="1" from="description">Login with Google</note>
         <note priority="1" from="meaning">auth.login.google</note>
@@ -259,7 +266,7 @@
         <source>Accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">auth.hero.label</note>
       </trans-unit>
@@ -267,7 +274,7 @@
         <source>Connexion ou inscription</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">auth.hero.title</note>
       </trans-unit>
@@ -275,7 +282,7 @@
         <source>Rejoignez votre espace sécurisé pour suivre vos projets et vos échanges.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">auth.hero.description</note>
       </trans-unit>
@@ -283,7 +290,7 @@
         <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
@@ -300,7 +307,7 @@
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
@@ -317,7 +324,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.firstName</note>
@@ -326,7 +333,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.lastName</note>
@@ -335,7 +342,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.email</note>
@@ -344,7 +351,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.password</note>
@@ -353,7 +360,7 @@
         <source>Verification de mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.passwordConfirm</note>
@@ -362,7 +369,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.phone</note>
@@ -371,7 +378,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.email</note>
@@ -380,7 +387,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.password</note>
@@ -389,7 +396,7 @@
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <note priority="1" from="description">Signup error message</note>
         <note priority="1" from="meaning">auth.signup.error.passwordMismatch</note>
@@ -398,11 +405,11 @@
         <source>Une erreur est survenue. Veuillez réessayer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">218</context>
         </context-group>
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
@@ -411,7 +418,7 @@
         <source>Compte créé pour <x id="PH" equiv-text="user.firstName"/> <x id="PH_1" equiv-text="user.lastName"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">195</context>
         </context-group>
         <note priority="1" from="description">Signup success message</note>
         <note priority="1" from="meaning">auth.signup.success</note>
@@ -420,7 +427,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">221</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -429,7 +436,7 @@
         <source>L&apos;authentification Google n&apos;est pas configurée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <note priority="1" from="description">auth.google.notConfigured</note>
       </trans-unit>
@@ -437,7 +444,7 @@
         <source>Impossible de charger Google Sign-In.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">251</context>
+          <context context-type="linenumber">252</context>
         </context-group>
         <note priority="1" from="description">auth.google.loadError</note>
       </trans-unit>
@@ -445,9 +452,163 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">278</context>
+          <context context-type="linenumber">279</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
+      </trans-unit>
+      <trans-unit id="authForgotEmailLabel" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.html</context>
+          <context context-type="linenumber">17,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authForgotEmailError" datatype="html">
+        <source> Veuillez renseigner un email valide. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authForgotSubmit" datatype="html">
+        <source>Envoyer le lien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authForgotLoading" datatype="html">
+        <source>Envoi en cours...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.html</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authForgotBackToLogin" datatype="html">
+        <source>Retour à la connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.html</context>
+          <context context-type="linenumber">62,65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authForgotHeroLabel" datatype="html">
+        <source>Sécurité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">auth.forgot.hero.label</note>
+      </trans-unit>
+      <trans-unit id="authForgotHeroTitle" datatype="html">
+        <source>Mot de passe oublié</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">auth.forgot.hero.title</note>
+      </trans-unit>
+      <trans-unit id="authForgotHeroDescription" datatype="html">
+        <source>Entrez votre email pour recevoir un lien de réinitialisation.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">auth.forgot.hero.description</note>
+      </trans-unit>
+      <trans-unit id="authForgotErrorGeneric" datatype="html">
+        <source>Impossible d&apos;envoyer le lien pour le moment.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">auth.forgot.error.generic</note>
+      </trans-unit>
+      <trans-unit id="authResetPasswordLabel" datatype="html">
+        <source>Nouveau mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.html</context>
+          <context context-type="linenumber">17,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authResetConfirmLabel" datatype="html">
+        <source>Confirmer le mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.html</context>
+          <context context-type="linenumber">39,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authResetSubmit" datatype="html">
+        <source>Enregistrer le nouveau mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.html</context>
+          <context context-type="linenumber">65,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authResetLoading" datatype="html">
+        <source>Mise à jour en cours...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.html</context>
+          <context context-type="linenumber">68,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authResetBackToLogin" datatype="html">
+        <source>Retour à la connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.html</context>
+          <context context-type="linenumber">82,85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authResetHeroLabel" datatype="html">
+        <source>Sécurité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">auth.reset.hero.label</note>
+      </trans-unit>
+      <trans-unit id="authResetHeroTitle" datatype="html">
+        <source>Réinitialiser le mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">auth.reset.hero.title</note>
+      </trans-unit>
+      <trans-unit id="authResetHeroDescription" datatype="html">
+        <source>Choisissez un nouveau mot de passe robuste pour sécuriser votre compte.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">auth.reset.hero.description</note>
+      </trans-unit>
+      <trans-unit id="authResetErrorMissingToken" datatype="html">
+        <source>Le lien de réinitialisation est invalide ou incomplet.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">auth.reset.error.missingToken</note>
+      </trans-unit>
+      <trans-unit id="authResetErrorMismatch" datatype="html">
+        <source>Les mots de passe ne correspondent pas.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">auth.reset.error.mismatch</note>
+      </trans-unit>
+      <trans-unit id="authResetErrorGeneric" datatype="html">
+        <source>Impossible de réinitialiser le mot de passe.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">auth.reset.error.generic</note>
       </trans-unit>
       <trans-unit id="budgetPresentationSectionTitle" datatype="html">
         <source> Gérez vos finances à deux </source>
@@ -4051,6 +4212,240 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">privacy.meta.lastUpdated</note>
       </trans-unit>
+      <trans-unit id="profileIdentityTitle" datatype="html">
+        <source> Informations personnelles </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileFirstNameLabel" datatype="html">
+        <source>Prenom :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileLastNameLabel" datatype="html">
+        <source>Nom :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">24,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEmailLabel" datatype="html">
+        <source>Email :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileSetPasswordTitle" datatype="html">
+        <source> Definir un mot de passe </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">38,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileSetPasswordLabel" datatype="html">
+        <source>Nouveau mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileSetPasswordSubmit" datatype="html">
+        <source>Enregistrer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">76,78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileSetPasswordLoading" datatype="html">
+        <source>Enregistrement...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">79,81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileChangePasswordTitle" datatype="html">
+        <source> Changer le mot de passe </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">103,106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileCurrentPasswordLabel" datatype="html">
+        <source>Mot de passe actuel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">116,118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileNewPasswordLabel" datatype="html">
+        <source>Nouveau mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">137,139</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileChangePasswordSubmit" datatype="html">
+        <source>Modifier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">162,164</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileChangePasswordLoading" datatype="html">
+        <source>Modification...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">165,168</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherTitle" datatype="html">
+        <source> Preferences meteo </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">186,189</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherLevelLabel" datatype="html">
+        <source>Niveau :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">192,193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherDaysUsed" datatype="html">
+        <source>jours d&apos;utilisation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">223,224</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherTransitionReady" datatype="html">
+        <source>Pret pour le niveau suivant !</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">229,232</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherFavoritesTitle" datatype="html">
+        <source> Villes favorites </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">241,243</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherLoading" datatype="html">
+        <source> Chargement... </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">248,250</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherNoFavorites" datatype="html">
+        <source> Aucune ville favorite. Ajoutez-en depuis l&apos;app meteo. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">255,257</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileWeatherRemoveFavorite" datatype="html">
+        <source>Supprimer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">274,276</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileBackHome" datatype="html">
+        <source>Retour a l&apos;accueil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">288,292</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileHeroLabel" datatype="html">
+        <source>Espace utilisateur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">profile.hero.label</note>
+      </trans-unit>
+      <trans-unit id="profileHeroTitle" datatype="html">
+        <source>Votre profil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">profile.hero.title</note>
+      </trans-unit>
+      <trans-unit id="profileHeroDescription" datatype="html">
+        <source>Gerez vos informations personnelles et vos parametres de securite.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">profile.hero.description</note>
+      </trans-unit>
+      <trans-unit id="profilePasswordErrorGeneric" datatype="html">
+        <source>Impossible de definir le mot de passe pour le moment.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <note priority="1" from="description">profile.password.error.generic</note>
+      </trans-unit>
+      <trans-unit id="profilePasswordSuccess" datatype="html">
+        <source>Mot de passe defini avec succes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <note priority="1" from="description">profile.password.success</note>
+      </trans-unit>
+      <trans-unit id="profileChangePasswordErrorGeneric" datatype="html">
+        <source>Impossible de changer le mot de passe pour le moment.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">profile.changePassword.error.generic</note>
+      </trans-unit>
+      <trans-unit id="profileChangePasswordSuccess" datatype="html">
+        <source>Mot de passe modifie avec succes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">profile.changePassword.success</note>
+      </trans-unit>
+      <trans-unit id="profileWeatherLevelDiscovery" datatype="html">
+        <source>Decouverte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <note priority="1" from="description">profile.weather.level.discovery</note>
+      </trans-unit>
+      <trans-unit id="profileWeatherLevelCurious" datatype="html">
+        <source>Curieux</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <note priority="1" from="description">profile.weather.level.curious</note>
+      </trans-unit>
+      <trans-unit id="profileWeatherLevelExpert" datatype="html">
+        <source>Expert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+        <note priority="1" from="description">profile.weather.level.expert</note>
+      </trans-unit>
       <trans-unit id="sebastianPresentationSectionTitle" datatype="html">
         <source> Votre majordome personnel </source>
         <context-group purpose="location">
@@ -4258,27 +4653,35 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">terms.meta.lastUpdated</note>
       </trans-unit>
-      <trans-unit id="weatherAqiTitle" datatype="html">
-        <source> Qualité de l&apos;air </source>
+      <trans-unit id="weatherAqiTooltipTitle" datatype="html">
+        <source>Qualité de l&apos;air</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">18,21</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.aqi.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherAqiTooltipContent" datatype="html">
+        <source>L&apos;indice AQI européen combine les niveaux de particules fines (PM2.5, PM10) et d&apos;ozone (O₃). En dessous de 20 l&apos;air est bon, au-dessus de 60 les personnes sensibles doivent limiter les efforts en extérieur.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.aqi.tooltip.content</note>
+      </trans-unit>
+      <trans-unit id="weatherAqiTitle" datatype="html">
+        <source>Qualité de l&apos;air</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
+          <context context-type="linenumber">30,33</context>
         </context-group>
         <note priority="1" from="meaning">weather.aqi.title</note>
-      </trans-unit>
-      <trans-unit id="weatherAqiUnavailable" datatype="html">
-        <source> Données indisponibles </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">48,53</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.aqi.unavailable</note>
       </trans-unit>
       <trans-unit id="weatherAqiGood" datatype="html">
         <source>Bon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="meaning">weather.aqi.good</note>
       </trans-unit>
@@ -4286,7 +4689,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Correct</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="meaning">weather.aqi.fair</note>
       </trans-unit>
@@ -4294,7 +4697,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Modéré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="meaning">weather.aqi.moderate</note>
       </trans-unit>
@@ -4302,7 +4705,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Mauvais</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="meaning">weather.aqi.poor</note>
       </trans-unit>
@@ -4310,7 +4713,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Très mauvais</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="meaning">weather.aqi.veryPoor</note>
       </trans-unit>
@@ -4318,23 +4721,111 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Extrêmement mauvais</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/air-quality-card/air-quality-card.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="meaning">weather.aqi.extremelyPoor</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeTooltipTitle" datatype="html">
+        <source>Qu&apos;est-ce que le CAPE ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeTooltipContent" datatype="html">
+        <source>CAPE mesure l&apos;énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.tooltip.content</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeTitle" datatype="html">
+        <source>CAPE (instabilité)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">30,34</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.title</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeStable" datatype="html">
+        <source>Stable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.stable</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeMarginal" datatype="html">
+        <source>Instabilité marginale</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.marginal</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeModerate" datatype="html">
+        <source>Instabilité modérée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.moderate</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeStrong" datatype="html">
+        <source>Instabilité forte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.strong</note>
+      </trans-unit>
+      <trans-unit id="weatherCapeExtreme" datatype="html">
+        <source>Instabilité extrême</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cape-card/cape-card.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cape.extreme</note>
       </trans-unit>
       <trans-unit id="weatherSearchPlaceholder" datatype="html">
         <source>Rechercher une ville...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/city-search/city-search.component.ts</context>
-          <context context-type="linenumber">58,59</context>
+          <context context-type="linenumber">64,65</context>
         </context-group>
         <note priority="1" from="meaning">weather.search.placeholder</note>
       </trans-unit>
-      <trans-unit id="weatherCloudTitle" datatype="html">
-        <source> Couverture nuageuse </source>
+      <trans-unit id="weatherGeoButtonTitle" datatype="html">
+        <source>Me localiser</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/city-search/city-search.component.ts</context>
+          <context context-type="linenumber">92,95</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.geo.button</note>
+      </trans-unit>
+      <trans-unit id="weatherCloudTooltipTitle" datatype="html">
+        <source>Couverture nuageuse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
-          <context context-type="linenumber">17,20</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cloud.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherCloudTooltipContent" datatype="html">
+        <source>La couverture nuageuse indique le pourcentage du ciel masqué par les nuages. La visibilité mesure la distance maximale à laquelle on distingue un objet : elle diminue avec le brouillard, la pluie ou les particules en suspension.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.cloud.tooltip.content</note>
+      </trans-unit>
+      <trans-unit id="weatherCloudTitle" datatype="html">
+        <source>Couverture nuageuse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
+          <context context-type="linenumber">28,31</context>
         </context-group>
         <note priority="1" from="meaning">weather.cloud.title</note>
       </trans-unit>
@@ -4342,7 +4833,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Visibilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
-          <context context-type="linenumber">39,41</context>
+          <context context-type="linenumber">47,49</context>
         </context-group>
         <note priority="1" from="meaning">weather.cloud.visibility</note>
       </trans-unit>
@@ -4350,7 +4841,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Dégagé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="meaning">weather.cloud.clear</note>
       </trans-unit>
@@ -4358,7 +4849,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Peu nuageux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="meaning">weather.cloud.fewClouds</note>
       </trans-unit>
@@ -4366,7 +4857,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Partiellement nuageux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="meaning">weather.cloud.partlyCloudy</note>
       </trans-unit>
@@ -4374,7 +4865,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Très nuageux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="meaning">weather.cloud.mostlyCloudy</note>
       </trans-unit>
@@ -4382,55 +4873,314 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Couvert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/cloud-visibility-card/cloud-visibility-card.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="meaning">weather.cloud.overcast</note>
       </trans-unit>
       <trans-unit id="weatherCurrentFeelsLike" datatype="html">
-        <source> Ressenti <x id="INTERPOLATION" equiv-text="{{ current()!.apparent_temperature | number: &quot;1.0-0&quot; }}"/>° </source>
+        <source> Ressenti <x id="INTERPOLATION" equiv-text="{{
+                  current()!.apparent_temperature
+                    | unit: unitService.temperatureUnit()
+                }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
-          <context context-type="linenumber">43,45</context>
+          <context context-type="linenumber">66,71</context>
         </context-group>
         <note priority="1" from="meaning">weather.current.feelsLike</note>
       </trans-unit>
       <trans-unit id="weatherCurrentWind" datatype="html">
-        <source> Vent <x id="INTERPOLATION" equiv-text="{{ current()!.wind_speed_10m | number: &quot;1.0-0&quot; }}"/> km/h </source>
+        <source> Vent <x id="INTERPOLATION" equiv-text="{{ current()!.wind_speed_10m | unit: unitService.speedUnit() }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
-          <context context-type="linenumber">47,48</context>
+          <context context-type="linenumber">73,75</context>
         </context-group>
         <note priority="1" from="meaning">weather.current.wind</note>
       </trans-unit>
+      <trans-unit id="weatherCurrentPrecip" datatype="html">
+        <source> Pluie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
+          <context context-type="linenumber">92,94</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.current.precip</note>
+      </trans-unit>
+      <trans-unit id="weatherCurrentHumidity" datatype="html">
+        <source> Humidité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
+          <context context-type="linenumber">109,111</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.current.humidity</note>
+      </trans-unit>
+      <trans-unit id="weatherCurrentVisibility" datatype="html">
+        <source> Visibilité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
+          <context context-type="linenumber">121,123</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.current.visibility</note>
+      </trans-unit>
       <trans-unit id="weatherDailyTitle" datatype="html">
-        <source> Prévisions sur 7 jours </source>
+        <source> Prévisions journalières </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">38,41</context>
+          <context context-type="linenumber">52,55</context>
         </context-group>
         <note priority="1" from="meaning">weather.daily.title</note>
+      </trans-unit>
+      <trans-unit id="weatherDailyToggleAria" datatype="html">
+        <source>Nombre de jours de prévisions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.daily.toggle.aria</note>
+      </trans-unit>
+      <trans-unit id="weatherDaily7Days" datatype="html">
+        <source> 7 jours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
+          <context context-type="linenumber">75,78</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.daily.7days</note>
+      </trans-unit>
+      <trans-unit id="weatherDaily14Days" datatype="html">
+        <source> 14 jours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
+          <context context-type="linenumber">90,93</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.daily.14days</note>
       </trans-unit>
       <trans-unit id="weatherDailyToday" datatype="html">
         <source>Aujourd&apos;hui</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">250</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="meaning">weather.daily.today</note>
+      </trans-unit>
+      <trans-unit id="weatherDataExportTitle" datatype="html">
+        <source> Export des données </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/data-export/data-export.component.ts</context>
+          <context context-type="linenumber">31,35</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dataExport.title</note>
+      </trans-unit>
+      <trans-unit id="weatherDataExportCsv" datatype="html">
+        <source> Exporter CSV </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/data-export/data-export.component.ts</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dataExport.csv</note>
+      </trans-unit>
+      <trans-unit id="weatherDataExportJson" datatype="html">
+        <source> Exporter JSON </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/data-export/data-export.component.ts</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dataExport.json</note>
+      </trans-unit>
+      <trans-unit id="weatherDataExportRadarPlaceholder" datatype="html">
+        <source> Carte radar — bientôt disponible </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/data-export/data-export.component.ts</context>
+          <context context-type="linenumber">62,67</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dataExport.radarPlaceholder</note>
+      </trans-unit>
+      <trans-unit id="weatherDayDetailUv" datatype="html">
+        <source> UV max </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dayDetail.uv</note>
+      </trans-unit>
+      <trans-unit id="weatherDayDetailWind" datatype="html">
+        <source> Vent max </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">93,95</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dayDetail.wind</note>
+      </trans-unit>
+      <trans-unit id="weatherDayDetailGusts" datatype="html">
+        <source>Rafales</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">101,103</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dayDetail.gusts</note>
+      </trans-unit>
+      <trans-unit id="weatherDayDetailPrecip" datatype="html">
+        <source> Précipitations </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">114,116</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dayDetail.precip</note>
+      </trans-unit>
+      <trans-unit id="weatherDayDetailSun" datatype="html">
+        <source> Soleil </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">128,130</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.dayDetail.sun</note>
+      </trans-unit>
+      <trans-unit id="weatherUvLow" datatype="html">
+        <source>Faible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.uv.low</note>
+      </trans-unit>
+      <trans-unit id="weatherUvModerate" datatype="html">
+        <source>Modéré</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.uv.moderate</note>
+      </trans-unit>
+      <trans-unit id="weatherUvHigh" datatype="html">
+        <source>Élevé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.uv.high</note>
+      </trans-unit>
+      <trans-unit id="weatherUvVeryHigh" datatype="html">
+        <source>Très élevé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.uv.veryHigh</note>
+      </trans-unit>
+      <trans-unit id="weatherUvExtreme" datatype="html">
+        <source>Extrême</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.uv.extreme</note>
+      </trans-unit>
+      <trans-unit id="weatherFavoritesAdd" datatype="html">
+        <source>Ajouter aux favoris</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.favorites.add</note>
+      </trans-unit>
+      <trans-unit id="weatherFavoritesRemove" datatype="html">
+        <source>Retirer des favoris</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.favorites.remove</note>
+      </trans-unit>
+      <trans-unit id="weatherHistoricalTitle" datatype="html">
+        <source> Historique (30 jours) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/historical-comparison/historical-comparison.component.ts</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.historical.title</note>
+      </trans-unit>
+      <trans-unit id="weatherHistoricalMax" datatype="html">
+        <source>Max</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/historical-comparison/historical-comparison.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.historical.max</note>
+      </trans-unit>
+      <trans-unit id="weatherHistoricalMin" datatype="html">
+        <source>Min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/historical-comparison/historical-comparison.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.historical.min</note>
+      </trans-unit>
+      <trans-unit id="weatherHistoricalMean" datatype="html">
+        <source>Moyenne</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/historical-comparison/historical-comparison.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.historical.mean</note>
+      </trans-unit>
+      <trans-unit id="weatherHistoricalCurrent" datatype="html">
+        <source>Actuelle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/historical-comparison/historical-comparison.component.ts</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.historical.current</note>
       </trans-unit>
       <trans-unit id="weatherHourlyTitle" datatype="html">
         <source> Prévisions horaires </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/hourly-chart/hourly-chart.component.ts</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="linenumber">42,44</context>
         </context-group>
         <note priority="1" from="meaning">weather.hourly.title</note>
       </trans-unit>
-      <trans-unit id="weatherHumidityTitle" datatype="html">
-        <source> Humidité </source>
+      <trans-unit id="weatherHumidityTooltipTitle" datatype="html">
+        <source>Humidité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/humidity-card/humidity-card.component.ts</context>
-          <context context-type="linenumber">15,18</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.humidity.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherHumidityTooltipContent" datatype="html">
+        <source>L&apos;humidité relative indique le pourcentage de vapeur d&apos;eau dans l&apos;air par rapport au maximum possible. Le point de rosée est la température à laquelle l&apos;air devient saturé : plus il est proche de la température réelle, plus l&apos;air semble moite.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/humidity-card/humidity-card.component.ts</context>
+          <context context-type="linenumber">29,31</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.humidity.tooltip.content</note>
+      </trans-unit>
+      <trans-unit id="weatherHumidityTitle" datatype="html">
+        <source>Humidité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/humidity-card/humidity-card.component.ts</context>
+          <context context-type="linenumber">32,35</context>
         </context-group>
         <note priority="1" from="meaning">weather.humidity.title</note>
       </trans-unit>
@@ -4438,7 +5188,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Point de rosée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/humidity-card/humidity-card.component.ts</context>
-          <context context-type="linenumber">54,57</context>
+          <context context-type="linenumber">87,89</context>
         </context-group>
         <note priority="1" from="meaning">weather.humidity.dewPoint</note>
       </trans-unit>
@@ -4446,7 +5196,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Sec</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/humidity-card/humidity-card.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="meaning">weather.humidity.dry</note>
       </trans-unit>
@@ -4454,7 +5204,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Confortable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/humidity-card/humidity-card.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <note priority="1" from="meaning">weather.humidity.comfortable</note>
       </trans-unit>
@@ -4462,7 +5212,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Humide</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/humidity-card/humidity-card.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="meaning">weather.humidity.humid</note>
       </trans-unit>
@@ -4470,7 +5220,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Sélecteur de niveau météo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/level-selector/level-selector.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="meaning">weather.level.selector.aria</note>
       </trans-unit>
@@ -4478,7 +5228,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Découverte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/level-selector/level-selector.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="meaning">weather.level.discovery</note>
       </trans-unit>
@@ -4486,7 +5236,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Curieux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/level-selector/level-selector.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="meaning">weather.level.curious</note>
       </trans-unit>
@@ -4494,31 +5244,95 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Expert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/level-selector/level-selector.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="meaning">weather.level.expert</note>
       </trans-unit>
-      <trans-unit id="weatherPressureTitle" datatype="html">
-        <source> Pression atmosphérique </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
-          <context context-type="linenumber">15,19</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.pressure.title</note>
-      </trans-unit>
-      <trans-unit id="weatherPressureUnavailable" datatype="html">
+      <trans-unit id="weatherCardUnavailable" datatype="html">
         <source> Données indisponibles </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
-          <context context-type="linenumber">34,39</context>
+          <context context-type="sourcefile">src/app/features/weather/components/metric-card/metric-card.component.ts</context>
+          <context context-type="linenumber">100,105</context>
         </context-group>
-        <note priority="1" from="meaning">weather.pressure.unavailable</note>
+        <note priority="1" from="meaning">weather.card.unavailable</note>
+      </trans-unit>
+      <trans-unit id="weatherModelComparisonTitle" datatype="html">
+        <source> Comparaison des modèles </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/model-comparison/model-comparison.component.ts</context>
+          <context context-type="linenumber">27,31</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.modelComparison.title</note>
+      </trans-unit>
+      <trans-unit id="weatherModelComparisonMetric" datatype="html">
+        <source> Métrique </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/model-comparison/model-comparison.component.ts</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.modelComparison.metric</note>
+      </trans-unit>
+      <trans-unit id="weatherModelComparisonAvgTemp" datatype="html">
+        <source> Temp. moy. 24h </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/model-comparison/model-comparison.component.ts</context>
+          <context context-type="linenumber">59,61</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.modelComparison.avgTemp</note>
+      </trans-unit>
+      <trans-unit id="weatherModelComparisonTotalPrecip" datatype="html">
+        <source> Précip. totales 24h </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/model-comparison/model-comparison.component.ts</context>
+          <context context-type="linenumber">78,80</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.modelComparison.totalPrecip</note>
+      </trans-unit>
+      <trans-unit id="weatherModelComparisonDivergence" datatype="html">
+        <source> Les modèles divergent significativement (&gt; 3 °C). </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/model-comparison/model-comparison.component.ts</context>
+          <context context-type="linenumber">96,101</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.modelComparison.divergence</note>
+      </trans-unit>
+      <trans-unit id="weatherModelComparisonUnavailable" datatype="html">
+        <source> Données indisponibles </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/model-comparison/model-comparison.component.ts</context>
+          <context context-type="linenumber">105,110</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.modelComparison.unavailable</note>
+      </trans-unit>
+      <trans-unit id="weatherPressureTooltipTitle" datatype="html">
+        <source>Pression atmosphérique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pressure.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherPressureTooltipContent" datatype="html">
+        <source>La pression atmosphérique est le poids de l&apos;air au-dessus de vous, mesurée en hectopascals (hPa). Une pression en hausse annonce généralement du beau temps, une baisse rapide signale l&apos;arrivée d&apos;une perturbation.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pressure.tooltip.content</note>
+      </trans-unit>
+      <trans-unit id="weatherPressureTitle" datatype="html">
+        <source>Pression atmosphérique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pressure.title</note>
       </trans-unit>
       <trans-unit id="weatherPressureRising" datatype="html">
         <source>En hausse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="meaning">weather.pressure.rising</note>
       </trans-unit>
@@ -4526,7 +5340,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>En baisse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="meaning">weather.pressure.falling</note>
       </trans-unit>
@@ -4534,23 +5348,55 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Stable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/pressure-card/pressure-card.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="meaning">weather.pressure.stable</note>
+      </trans-unit>
+      <trans-unit id="weatherRadarTitle" datatype="html">
+        <source> Carte radar </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.radar.title</note>
+      </trans-unit>
+      <trans-unit id="weatherSpaghettiPlotTitle" datatype="html">
+        <source> Comparaison des modèles (courbes) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/spaghetti-plot/spaghetti-plot.component.ts</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.spaghettiPlot.title</note>
       </trans-unit>
       <trans-unit id="weatherSunTitle" datatype="html">
         <source> Lever &amp; coucher du soleil </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/sun-arc/sun-arc.component.ts</context>
-          <context context-type="linenumber">25,28</context>
+          <context context-type="linenumber">31,33</context>
         </context-group>
         <note priority="1" from="meaning">weather.sun.title</note>
+      </trans-unit>
+      <trans-unit id="weatherSunTooltipTitle" datatype="html">
+        <source>Lever &amp; coucher du soleil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/sun-arc/sun-arc.component.ts</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.sun.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherSunTooltipContent" datatype="html">
+        <source>L&apos;arc montre la trajectoire du soleil dans le ciel. Le point jaune indique sa position actuelle. La durée du jour varie selon la saison : environ 16h en été et 8h en hiver en France métropolitaine.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/sun-arc/sun-arc.component.ts</context>
+          <context context-type="linenumber">38,43</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.sun.tooltip.content</note>
       </trans-unit>
       <trans-unit id="weatherSunUnavailable" datatype="html">
         <source> Données indisponibles </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/sun-arc/sun-arc.component.ts</context>
-          <context context-type="linenumber">89,94</context>
+          <context context-type="linenumber">119,124</context>
         </context-group>
         <note priority="1" from="meaning">weather.sun.unavailable</note>
       </trans-unit>
@@ -4558,7 +5404,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Des donnees avancees sont disponibles. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/transition-prompt/transition-prompt.component.ts</context>
-          <context context-type="linenumber">29,32</context>
+          <context context-type="linenumber">30,33</context>
         </context-group>
         <note priority="1" from="meaning">weather.transition.message</note>
       </trans-unit>
@@ -4566,7 +5412,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Activer le mode Curieux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/transition-prompt/transition-prompt.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="meaning">weather.transition.activate.curious</note>
       </trans-unit>
@@ -4574,7 +5420,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Activer le mode Expert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/transition-prompt/transition-prompt.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="meaning">weather.transition.activate.expert</note>
       </trans-unit>
@@ -4582,63 +5428,95 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer la suggestion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/transition-prompt/transition-prompt.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="meaning">weather.transition.dismiss</note>
       </trans-unit>
-      <trans-unit id="weatherUvTitle" datatype="html">
-        <source> Indice UV </source>
+      <trans-unit id="weatherUnitsButtonAria" datatype="html">
+        <source>Paramètres d&apos;unités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/unit-selector/unit-selector.component.ts</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.units.button.aria</note>
+      </trans-unit>
+      <trans-unit id="weatherUnitsTemperature" datatype="html">
+        <source> Température </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/unit-selector/unit-selector.component.ts</context>
+          <context context-type="linenumber">71,74</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.units.temperature</note>
+      </trans-unit>
+      <trans-unit id="weatherUnitsSpeed" datatype="html">
+        <source> Vitesse </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/unit-selector/unit-selector.component.ts</context>
+          <context context-type="linenumber">104,107</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.units.speed</note>
+      </trans-unit>
+      <trans-unit id="weatherUnitsPressure" datatype="html">
+        <source> Pression </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/unit-selector/unit-selector.component.ts</context>
+          <context context-type="linenumber">135,138</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.units.pressure</note>
+      </trans-unit>
+      <trans-unit id="weatherUnitsTitle" datatype="html">
+        <source>Unités de mesure</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/unit-selector/unit-selector.component.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.units.title</note>
+      </trans-unit>
+      <trans-unit id="weatherUvTooltipTitle" datatype="html">
+        <source>Indice UV</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
-          <context context-type="linenumber">17,20</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.uv.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherUvTooltipContent" datatype="html">
+        <source>L&apos;indice UV mesure l&apos;intensité du rayonnement ultraviolet solaire. Plus il est élevé, plus le risque de coup de soleil est rapide. À partir de 3, crème solaire et lunettes recommandées. Au-delà de 8, limitez l&apos;exposition entre 11h et 16h.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.uv.tooltip.content</note>
+      </trans-unit>
+      <trans-unit id="weatherUvTitle" datatype="html">
+        <source>Indice UV</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
         <note priority="1" from="meaning">weather.uv.title</note>
       </trans-unit>
-      <trans-unit id="weatherUvLow" datatype="html">
-        <source>Faible</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.uv.low</note>
-      </trans-unit>
-      <trans-unit id="weatherUvModerate" datatype="html">
-        <source>Modéré</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.uv.moderate</note>
-      </trans-unit>
-      <trans-unit id="weatherUvHigh" datatype="html">
-        <source>Élevé</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.uv.high</note>
-      </trans-unit>
-      <trans-unit id="weatherUvVeryHigh" datatype="html">
-        <source>Très élevé</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.uv.veryHigh</note>
-      </trans-unit>
-      <trans-unit id="weatherUvExtreme" datatype="html">
-        <source>Extrême</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/uv-index-card/uv-index-card.component.ts</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.uv.extreme</note>
-      </trans-unit>
-      <trans-unit id="weatherWindTitle" datatype="html">
-        <source> Vent </source>
+      <trans-unit id="weatherWindTooltipTitle" datatype="html">
+        <source>Vent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/wind-compass/wind-compass.component.ts</context>
-          <context context-type="linenumber">17,20</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.wind.tooltip.title</note>
+      </trans-unit>
+      <trans-unit id="weatherWindTooltipContent" datatype="html">
+        <source>La vitesse du vent est mesurée à 10 m du sol. La direction indique d&apos;où vient le vent (un vent de Nord souffle du nord vers le sud). Les rafales sont des accélérations brèves pouvant dépasser le double de la vitesse moyenne.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/wind-compass/wind-compass.component.ts</context>
+          <context context-type="linenumber">28,30</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.wind.tooltip.content</note>
+      </trans-unit>
+      <trans-unit id="weatherWindTitle" datatype="html">
+        <source>Vent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/wind-compass/wind-compass.component.ts</context>
+          <context context-type="linenumber">30,32</context>
         </context-group>
         <note priority="1" from="meaning">weather.wind.title</note>
       </trans-unit>
@@ -4646,31 +5524,31 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Rafales</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/wind-compass/wind-compass.component.ts</context>
-          <context context-type="linenumber">49,50</context>
+          <context context-type="linenumber">122,123</context>
         </context-group>
         <note priority="1" from="meaning">weather.wind.gusts</note>
+      </trans-unit>
+      <trans-unit id="weatherGeoMyPosition" datatype="html">
+        <source>Ma position</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/services/geolocation.service.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.geo.myPosition</note>
       </trans-unit>
       <trans-unit id="weatherAppTitle" datatype="html">
         <source> Météo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.html</context>
-          <context context-type="linenumber">12,14</context>
+          <context context-type="linenumber">24,26</context>
         </context-group>
         <note priority="1" from="meaning">weather.app.title</note>
-      </trans-unit>
-      <trans-unit id="weatherLoading" datatype="html">
-        <source> Chargement... </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-app.component.html</context>
-          <context context-type="linenumber">42,46</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.loading</note>
       </trans-unit>
       <trans-unit id="weatherInitialHint" datatype="html">
         <source> Recherchez une ville pour afficher la météo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.html</context>
-          <context context-type="linenumber">117,122</context>
+          <context context-type="linenumber">227,232</context>
         </context-group>
         <note priority="1" from="meaning">weather.initial.hint</note>
       </trans-unit>
@@ -4678,7 +5556,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Erreur lors du chargement des prévisions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">212</context>
         </context-group>
         <note priority="1" from="meaning">weather.error.loading</note>
       </trans-unit>
@@ -4963,6 +5841,28 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">Contact CTA label</note>
         <note priority="1" from="meaning">navbar.cta.contact.label</note>
       </trans-unit>
+      <trans-unit id="navProfileLabel" datatype="html">
+        <source>Profil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">275,277</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">307,309</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navLogoutLabel" datatype="html">
+        <source>Déconnexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">284,286</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">315,316</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="navLinkPresentation" datatype="html">
         <source>Présentation</source>
         <context-group purpose="location">
@@ -5226,107 +6126,6 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.office.value</note>
-      </trans-unit>
-      <!-- Cartes meteo Expert (Phase 3) -->
-      <trans-unit id="weatherModelComparisonTitle" datatype="html">
-        <source>Comparaison des modèles</source>
-        <note priority="1" from="meaning">weather.modelComparison.title</note>
-      </trans-unit>
-      <trans-unit id="weatherModelComparisonMetric" datatype="html">
-        <source>Métrique</source>
-        <note priority="1" from="meaning">weather.modelComparison.metric</note>
-      </trans-unit>
-      <trans-unit id="weatherModelComparisonAvgTemp" datatype="html">
-        <source>Temp. moy. 24h</source>
-        <note priority="1" from="meaning">weather.modelComparison.avgTemp</note>
-      </trans-unit>
-      <trans-unit id="weatherModelComparisonTotalPrecip" datatype="html">
-        <source>Précip. totales 24h</source>
-        <note priority="1" from="meaning">weather.modelComparison.totalPrecip</note>
-      </trans-unit>
-      <trans-unit id="weatherModelComparisonDivergence" datatype="html">
-        <source>Les modèles divergent significativement (&gt; 3 °C).</source>
-        <note priority="1" from="meaning">weather.modelComparison.divergence</note>
-      </trans-unit>
-      <trans-unit id="weatherModelComparisonUnavailable" datatype="html">
-        <source>Données indisponibles</source>
-        <note priority="1" from="meaning">weather.modelComparison.unavailable</note>
-      </trans-unit>
-      <trans-unit id="weatherSpaghettiPlotTitle" datatype="html">
-        <source>Comparaison des modèles (courbes)</source>
-        <note priority="1" from="meaning">weather.spaghettiPlot.title</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeTitle" datatype="html">
-        <source>CAPE (instabilité)</source>
-        <note priority="1" from="meaning">weather.cape.title</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeTooltipTitle" datatype="html">
-        <source>Qu'est-ce que le CAPE ?</source>
-        <note priority="1" from="meaning">weather.cape.tooltip.title</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeTooltipContent" datatype="html">
-        <source>CAPE mesure l'énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents.</source>
-        <note priority="1" from="meaning">weather.cape.tooltip.content</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeUnavailable" datatype="html">
-        <source>Données indisponibles</source>
-        <note priority="1" from="meaning">weather.cape.unavailable</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeStable" datatype="html">
-        <source>Stable</source>
-        <note priority="1" from="meaning">weather.cape.stable</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeMarginal" datatype="html">
-        <source>Instabilité marginale</source>
-        <note priority="1" from="meaning">weather.cape.marginal</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeModerate" datatype="html">
-        <source>Instabilité modérée</source>
-        <note priority="1" from="meaning">weather.cape.moderate</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeStrong" datatype="html">
-        <source>Instabilité forte</source>
-        <note priority="1" from="meaning">weather.cape.strong</note>
-      </trans-unit>
-      <trans-unit id="weatherCapeExtreme" datatype="html">
-        <source>Instabilité extrême</source>
-        <note priority="1" from="meaning">weather.cape.extreme</note>
-      </trans-unit>
-      <trans-unit id="weatherHistoricalTitle" datatype="html">
-        <source>Historique (30 jours)</source>
-        <note priority="1" from="meaning">weather.historical.title</note>
-      </trans-unit>
-      <trans-unit id="weatherHistoricalMax" datatype="html">
-        <source>Max</source>
-        <note priority="1" from="meaning">weather.historical.max</note>
-      </trans-unit>
-      <trans-unit id="weatherHistoricalMin" datatype="html">
-        <source>Min</source>
-        <note priority="1" from="meaning">weather.historical.min</note>
-      </trans-unit>
-      <trans-unit id="weatherHistoricalMean" datatype="html">
-        <source>Moyenne</source>
-        <note priority="1" from="meaning">weather.historical.mean</note>
-      </trans-unit>
-      <trans-unit id="weatherHistoricalCurrent" datatype="html">
-        <source>Actuelle</source>
-        <note priority="1" from="meaning">weather.historical.current</note>
-      </trans-unit>
-      <trans-unit id="weatherDataExportTitle" datatype="html">
-        <source>Export des données</source>
-        <note priority="1" from="meaning">weather.dataExport.title</note>
-      </trans-unit>
-      <trans-unit id="weatherDataExportCsv" datatype="html">
-        <source>Exporter CSV</source>
-        <note priority="1" from="meaning">weather.dataExport.csv</note>
-      </trans-unit>
-      <trans-unit id="weatherDataExportJson" datatype="html">
-        <source>Exporter JSON</source>
-        <note priority="1" from="meaning">weather.dataExport.json</note>
-      </trans-unit>
-      <trans-unit id="weatherDataExportRadarPlaceholder" datatype="html">
-        <source>Carte radar — bientôt disponible</source>
-        <note priority="1" from="meaning">weather.dataExport.radarPlaceholder</note>
       </trans-unit>
     </body>
   </file>

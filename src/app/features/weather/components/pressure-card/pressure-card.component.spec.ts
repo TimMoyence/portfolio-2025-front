@@ -1,5 +1,12 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { of } from "rxjs";
+import { WEATHER_PORT } from "../../../../core/ports/weather.port";
+import {
+  buildWeatherPreferences,
+  createWeatherPortStub,
+} from "../../../../../testing/factories/weather.factory";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { WeatherLevelService } from "../../services/weather-level.service";
 import { PressureCardComponent } from "./pressure-card.component";
 
@@ -8,9 +15,18 @@ describe("PressureCardComponent", () => {
   let fixture: ComponentFixture<PressureCardComponent>;
 
   beforeEach(async () => {
+    const weatherPortStub = createWeatherPortStub();
+    weatherPortStub.getPreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+    weatherPortStub.updatePreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+
     await TestBed.configureTestingModule({
       imports: [PressureCardComponent],
       providers: [
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
         {
           provide: WeatherLevelService,
           useValue: {
@@ -63,5 +79,14 @@ describe("PressureCardComponent", () => {
     fixture.detectChanges();
     expect(component.trend()).toBe("falling");
     expect(component.trendArrow()).toBe("↓");
+  });
+
+  it("devrait afficher la pression en inHg quand la preference est inhg", () => {
+    const unitService = TestBed.inject(UnitPreferencesService);
+    unitService.setPressureUnit("inhg");
+    fixture.componentRef.setInput("pressure", 1013);
+    fixture.detectChanges();
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.textContent).toContain("inHg");
   });
 });

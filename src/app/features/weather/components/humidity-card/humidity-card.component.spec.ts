@@ -1,5 +1,11 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { of } from "rxjs";
+import { WEATHER_PORT } from "../../../../core/ports/weather.port";
+import {
+  createWeatherPortStub,
+  buildWeatherPreferences,
+} from "../../../../../testing/factories/weather.factory";
 import { WeatherLevelService } from "../../services/weather-level.service";
 import { HumidityCardComponent } from "./humidity-card.component";
 
@@ -8,6 +14,15 @@ describe("HumidityCardComponent", () => {
   let fixture: ComponentFixture<HumidityCardComponent>;
 
   beforeEach(async () => {
+    const weatherPortStub = createWeatherPortStub();
+    weatherPortStub.getPreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+    weatherPortStub.updatePreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+    weatherPortStub.recordUsage.and.returnValue(of(void 0));
+
     await TestBed.configureTestingModule({
       imports: [HumidityCardComponent],
       providers: [
@@ -18,6 +33,7 @@ describe("HumidityCardComponent", () => {
             markTooltipSeen: () => {},
           },
         },
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
       ],
     }).compileComponents();
 

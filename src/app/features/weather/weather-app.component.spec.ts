@@ -40,6 +40,8 @@ describe("WeatherAppComponent", () => {
       of(buildWeatherPreferences()),
     );
     weatherPortStub.recordUsage.and.returnValue(of(undefined));
+    weatherPortStub.getDetailedCurrent.and.returnValue(of(null));
+    weatherPortStub.getDetailedForecast.and.returnValue(of(null));
 
     authPortStub.login.and.returnValue(of(null));
     authPortStub.register.and.returnValue(of(null));
@@ -91,7 +93,12 @@ describe("WeatherAppComponent", () => {
     expect(component.selectedCity()).toEqual(city);
     expect(component.forecast()).toEqual(buildForecastResponse());
     expect(component.loading()).toBeFalse();
-    expect(weatherPortStub.getForecast).toHaveBeenCalledWith(48.85, 2.35);
+    expect(weatherPortStub.getForecast).toHaveBeenCalledWith(
+      48.85,
+      2.35,
+      undefined,
+      7,
+    );
   });
 
   it("devrait gerer les erreurs de chargement", () => {

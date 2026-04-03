@@ -128,6 +128,13 @@ export interface HistoricalData {
   };
 }
 
+/** Preferences d'unites de mesure de l'utilisateur. */
+export interface UnitPreferences {
+  temperature: "celsius" | "fahrenheit";
+  speed: "kmh" | "mph";
+  pressure: "hpa" | "inhg";
+}
+
 /** Preferences meteo de l'utilisateur, synchronisees avec le backend. */
 export interface WeatherPreferences {
   id: string;
@@ -137,4 +144,78 @@ export interface WeatherPreferences {
   daysUsed: number;
   lastUsedAt: string | null;
   tooltipsSeen: string[];
+  units?: UnitPreferences;
+}
+
+/** Donnees meteo detaillees courantes (source OpenWeatherMap). */
+export interface DetailedCurrentWeather {
+  temperature: number;
+  feelsLike: number;
+  minTemp: number;
+  maxTemp: number;
+  humidity: number;
+  seaLevelPressure: number;
+  groundLevelPressure: number;
+  windSpeed: number;
+  windGust: number;
+  windDirection: number;
+  cloudCover: number;
+  visibility: number;
+  rain1h: number;
+  snow1h: number;
+  precipitationProbability: number;
+  conditionId: number;
+  conditionName: string;
+  conditionText: string;
+  conditionIcon: string;
+  sunrise: string;
+  sunset: string;
+  isDaytime: boolean;
+  partOfDay: "d" | "n";
+  timezoneOffset: number;
+}
+
+/** Element horaire detaille (source OpenWeatherMap, 3h). */
+export interface DetailedHourlyItem {
+  time: string;
+  temperature: number;
+  feelsLike: number;
+  humidity: number;
+  seaLevelPressure: number;
+  groundLevelPressure: number;
+  windSpeed: number;
+  windGust: number;
+  windDirection: number;
+  cloudCover: number;
+  visibility: number;
+  rain3h: number;
+  snow3h: number;
+  precipitationProbability: number;
+  conditionId: number;
+  conditionName: string;
+  conditionText: string;
+  conditionIcon: string;
+  partOfDay: "d" | "n";
+}
+
+/** Element journalier detaille (source OpenWeatherMap). */
+export interface DetailedDailyItem {
+  date: string;
+  minTemp: number;
+  maxTemp: number;
+  conditionId: number;
+  conditionName: string;
+  conditionText: string;
+  conditionIcon: string;
+}
+
+/** Resultat des previsions detaillees (source OpenWeatherMap). */
+export interface DetailedForecastResult {
+  cityName: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  timezoneOffset: number;
+  hourly: DetailedHourlyItem[];
+  daily: DetailedDailyItem[];
 }

@@ -83,6 +83,10 @@ export function buildDailyForecast(
       "2026-04-06T19:42",
     ],
     precipitation_sum: [0, 0, 0, 0, 5.2, 10.1, 0.3],
+    uv_index_max: [5, 4, 3, 2, 1, 3, 6],
+    wind_speed_10m_max: [20, 18, 15, 22, 30, 25, 12],
+    wind_gusts_10m_max: [35, 30, 25, 38, 50, 40, 20],
+    wind_direction_10m_dominant: [180, 200, 220, 90, 270, 315, 45],
     ...overrides,
   };
 }
@@ -249,5 +253,7 @@ export function createWeatherPortStub(): Record<
     getAirQuality: jasmine.createSpy("getAirQuality"),
     getEnsemble: jasmine.createSpy("getEnsemble"),
     getHistorical: jasmine.createSpy("getHistorical"),
+    getDetailedCurrent: jasmine.createSpy("getDetailedCurrent"),
+    getDetailedForecast: jasmine.createSpy("getDetailedForecast"),
   };
 }

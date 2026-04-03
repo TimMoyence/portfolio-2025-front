@@ -1,11 +1,14 @@
-import { DecimalPipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from "@angular/core";
+import { UnitPipe } from "../../pipes/unit.pipe";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { SparklineComponent } from "../sparkline/sparkline.component";
 
 /**
  * Boussole de vent SVG avec directions cardinales en francais,
@@ -14,7 +17,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 @Component({
   selector: "app-wind-compass",
   standalone: true,
-  imports: [DecimalPipe, MetricCardComponent],
+  imports: [MetricCardComponent, SparklineComponent, UnitPipe],
   template: `
     <app-metric-card
       tooltipId="wind"
@@ -101,7 +104,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
             text-anchor="middle"
             class="fill-white text-[16px] font-light"
           >
-            {{ speed() | number: "1.0-0" }}
+            {{ displaySpeedValue() }}
           </text>
           <text
             x="60"
@@ -109,7 +112,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
             text-anchor="middle"
             class="fill-white/50 text-[8px]"
           >
-            km/h
+            {{ displaySpeedUnit() }}
           </text>
         </svg>
 
@@ -117,7 +120,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
         @if (gusts() !== null) {
           <p class="mt-2 text-sm text-white/60">
             <span i18n="weather.wind.gusts|@@weatherWindGusts">Rafales</span> :
-            {{ gusts()! | number: "1.0-0" }} km/h
+            {{ gusts()! | unit: unitService.speedUnit() }}
           </p>
         }
 
@@ -126,11 +129,23 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
           {{ cardinalDirection() }} ({{ direction() }}°)
         </p>
       </div>
+
+      @if (hourlyWind().length > 1) {
+        <div class="mt-2">
+          <app-sparkline
+            [data]="hourlyWind()"
+            [color]="'rgba(74, 222, 128, 0.8)'"
+          />
+        </div>
+      }
     </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WindCompassComponent {
+  /** Service de preferences d'unites. */
+  readonly unitService = inject(UnitPreferencesService);
+
   /** Vitesse du vent en km/h. */
   readonly speed = input<number>(0);
 
@@ -140,10 +155,25 @@ export class WindCompassComponent {
   /** Rafales de vent en km/h. */
   readonly gusts = input<number | null>(null);
 
+  /** Donnees horaires de vitesse de vent pour le sparkline. */
+  readonly hourlyWind = input<number[]>([]);
+
   /** Transformation SVG pour orienter la fleche selon la direction du vent. */
   readonly arrowTransform = computed(
     () => `rotate(${this.direction()}, 60, 60)`,
   );
+
+  /** Valeur de vitesse convertie pour l'affichage SVG. */
+  readonly displaySpeedValue = computed(() => {
+    const unit = this.unitService.speedUnit();
+    const val = this.speed();
+    return unit === "mph" ? Math.round(val * 0.621371) : Math.round(val);
+  });
+
+  /** Suffixe d'unite de vitesse pour l'affichage SVG. */
+  readonly displaySpeedUnit = computed(() => {
+    return this.unitService.speedUnit() === "mph" ? "mph" : "km/h";
+  });
 
   /** Direction cardinale en francais (N, NE, E, SE, S, SO, O, NO). */
   readonly cardinalDirection = computed(() => {

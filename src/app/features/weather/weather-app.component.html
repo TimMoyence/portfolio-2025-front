@@ -33,12 +33,13 @@
       }
     </div>
 
-    <!-- Selecteur de niveau -->
-    <div class="flex justify-center mt-2">
+    <!-- Selecteur de niveau + unites -->
+    <div class="flex justify-center items-center gap-2 mt-2">
       <app-level-selector
         [darkMode]="hasForecast()"
         (levelChanged)="onLevelChanged($event)"
       />
+      <app-unit-selector />
     </div>
 
     <!-- Suggestion de transition de niveau -->
@@ -92,20 +93,51 @@
     <!-- Previsions (Decouverte+) : toujours visibles -->
     @if (forecast(); as data) {
       <div appSlideIn>
-        <app-current-conditions [current]="data.current" />
+        <app-current-conditions
+          [current]="data.current"
+          [detailed]="detailedCurrent()"
+        />
       </div>
       <div appSlideIn>
-        <app-hourly-chart [hourly]="data.hourly" />
+        @defer (on viewport) {
+          <app-hourly-chart [hourly]="data.hourly" />
+        } @placeholder {
+          <app-chart-skeleton />
+        }
       </div>
       <div appSlideIn>
-        <app-daily-forecast [daily]="data.daily" />
+        <app-daily-forecast
+          [daily]="data.daily"
+          [hourly]="data.hourly"
+          [selectedDayIndex]="selectedDayIndex()"
+          (daySelected)="onDaySelected($event)"
+          (forecastDaysChange)="onForecastDaysChange($event)"
+        />
       </div>
+
+      <!-- Bottom sheet mobile pour le detail d'un jour -->
+      @if (isMobile() && selectedDayIndex() !== null) {
+        <app-bottom-sheet
+          [open]="selectedDayIndex() !== null"
+          [title]="'Détail du jour'"
+          (openChange)="$event ? null : selectedDayIndex.set(null)"
+        >
+          <app-day-detail-panel
+            [daily]="data.daily"
+            [dayIndex]="selectedDayIndex()!"
+            [hourly]="data.hourly"
+          />
+        </app-bottom-sheet>
+      }
 
       <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
       @if (levelService.level() !== "discovery") {
         <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3">
           <div appSlideIn>
-            <app-uv-index-card [uvIndex]="data.current.uv_index ?? 0" />
+            <app-uv-index-card
+              [uvIndex]="data.current.uv_index ?? 0"
+              [hourlyUv]="data.hourly.uv_index ?? []"
+            />
           </div>
           <div appSlideIn>
             <app-air-quality-card [airQuality]="airQuality()" />
@@ -121,6 +153,7 @@
               [speed]="data.current.wind_speed_10m"
               [direction]="data.current.wind_direction_10m ?? 0"
               [gusts]="data.current.wind_gusts_10m ?? null"
+              [hourlyWind]="data.hourly.wind_speed_10m ?? []"
             />
           </div>
           <div appSlideIn>
@@ -133,6 +166,7 @@
             <app-humidity-card
               [humidity]="data.current.relative_humidity_2m ?? 0"
               [dewPoint]="data.current.dew_point_2m ?? null"
+              [hourlyHumidity]="data.hourly.relative_humidity_2m ?? []"
             />
           </div>
           <div appSlideIn>

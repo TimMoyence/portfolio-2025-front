@@ -1,5 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
+import type {
+  DetailedCurrentWeather,
+  DetailedForecastResult,
+} from "../models/weather.model";
 import { WEATHER_PORT } from "../ports/weather.port";
 import {
   buildEnsembleData,
@@ -57,7 +61,12 @@ describe("WeatherService", () => {
       expect(result).toEqual(response);
     });
 
-    expect(weatherPortStub.getForecast).toHaveBeenCalledWith(48.85, 2.35);
+    expect(weatherPortStub.getForecast).toHaveBeenCalledWith(
+      48.85,
+      2.35,
+      undefined,
+      undefined,
+    );
   });
 
   it("devrait deleguer getPreferences au port meteo", () => {
@@ -118,6 +127,34 @@ describe("WeatherService", () => {
       2.35,
       "2026-03-01",
       "2026-03-30",
+    );
+  });
+
+  it("devrait deleguer getDetailedCurrent au port", () => {
+    const mockData = {} as DetailedCurrentWeather;
+    weatherPortStub.getDetailedCurrent.and.returnValue(of(mockData));
+
+    service.getDetailedCurrent(48.85, 2.35).subscribe((data) => {
+      expect(data).toBe(mockData);
+    });
+
+    expect(weatherPortStub.getDetailedCurrent).toHaveBeenCalledWith(
+      48.85,
+      2.35,
+    );
+  });
+
+  it("devrait deleguer getDetailedForecast au port", () => {
+    const mockData = {} as DetailedForecastResult;
+    weatherPortStub.getDetailedForecast.and.returnValue(of(mockData));
+
+    service.getDetailedForecast(48.85, 2.35).subscribe((data) => {
+      expect(data).toBe(mockData);
+    });
+
+    expect(weatherPortStub.getDetailedForecast).toHaveBeenCalledWith(
+      48.85,
+      2.35,
     );
   });
 });

@@ -2,9 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from "@angular/core";
+import { UnitPipe } from "../../pipes/unit.pipe";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { SparklineComponent } from "../sparkline/sparkline.component";
 
 /**
  * Carte de pression atmospherique avec tendance calculee
@@ -13,7 +17,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 @Component({
   selector: "app-pressure-card",
   standalone: true,
-  imports: [MetricCardComponent],
+  imports: [MetricCardComponent, SparklineComponent, UnitPipe],
   template: `
     <app-metric-card
       tooltipId="pressure"
@@ -31,9 +35,8 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 
       <div class="flex items-baseline gap-2">
         <span class="text-3xl font-light text-white">
-          {{ pressure() }}
+          {{ pressure() | unit: unitService.pressureUnit() }}
         </span>
-        <span class="text-sm text-white/70">hPa</span>
         <span class="text-lg" [class]="trendColor()">
           {{ trendArrow() }}
         </span>
@@ -42,11 +45,22 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
       <p class="mt-2 text-sm text-white/50">
         {{ trendDescription() }}
       </p>
+
+      @if (hourlyPressure(); as hp) {
+        @if (hp.length > 1) {
+          <div class="mt-2">
+            <app-sparkline [data]="hp" [color]="'rgba(168, 162, 158, 0.8)'" />
+          </div>
+        }
+      }
     </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PressureCardComponent {
+  /** Service de preferences d'unites. */
+  readonly unitService = inject(UnitPreferencesService);
+
   /** Pression courante en hPa. */
   readonly pressure = input<number | null>(null);
 
