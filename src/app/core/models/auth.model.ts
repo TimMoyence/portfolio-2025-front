@@ -49,6 +49,12 @@ export interface ChangePasswordPayload {
   newPassword: string;
 }
 
+export interface UpdateProfilePayload {
+  firstName?: string;
+  lastName?: string;
+  phone?: string | null;
+}
+
 export interface AuthActionMessage {
   message: string;
 }

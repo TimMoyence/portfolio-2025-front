@@ -1,8 +1,12 @@
 import { CommonModule } from "@angular/common";
-import type { OnDestroy, OnInit } from "@angular/core";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterModule } from "@angular/router";
-import type { Subscription } from "rxjs";
 import { CookieConsentService } from "../../../core/services/cookie-consent.service";
 
 @Component({
@@ -13,9 +17,10 @@ import { CookieConsentService } from "../../../core/services/cookie-consent.serv
   styleUrl: "./cookie-banner.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CookieBannerComponent implements OnInit, OnDestroy {
+export class CookieBannerComponent {
   isVisible = false;
-  private subscription?: Subscription;
+  private readonly consentService = inject(CookieConsentService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly content = {
     message: $localize`:cookie.banner.message|Cookie banner message@@cookieBannerMessage:Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.`,
@@ -24,17 +29,13 @@ export class CookieBannerComponent implements OnInit, OnDestroy {
     essentialOnly: $localize`:cookie.banner.essentialOnly|Cookie banner essential only@@cookieBannerEssentialOnly:Essentiels uniquement`,
   };
 
-  constructor(private readonly consentService: CookieConsentService) {}
-
-  ngOnInit(): void {
+  constructor() {
     this.updateVisibility();
-    this.subscription = this.consentService.consentChanges$.subscribe(() => {
-      this.updateVisibility();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.consentService.consentChanges$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.updateVisibility();
+      });
   }
 
   acceptAll(): void {

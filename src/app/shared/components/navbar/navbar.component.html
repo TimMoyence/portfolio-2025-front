@@ -244,12 +244,24 @@
             (click)="toggleUserDropdown()"
             [attr.aria-expanded]="userDropdownOpen"
             aria-haspopup="true"
-            class="rounded-full transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background p-2"
+            class="rounded-full transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background flex items-center justify-center"
+            [ngStyle]="
+              userInitials() ? { width: '2.4rem', height: '2.4rem' } : {}
+            "
+            [class.p-2]="!userInitials()"
             [attr.aria-label]="'Menu utilisateur'"
             i18n-aria-label="
               navbar.user.label|User dropdown label@@navUserMenuLabel"
           >
-            <app-svg-icon name="person" [size]="1.3"></app-svg-icon>
+            @if (userInitials()) {
+              <span
+                class="flex items-center justify-center w-full h-full rounded-full text-white text-xs font-bold select-none"
+                [ngStyle]="{ 'background-color': avatarColor() }"
+                >{{ userInitials() }}</span
+              >
+            } @else {
+              <app-svg-icon name="person" [size]="1.3"></app-svg-icon>
+            }
           </button>
           @if (userDropdownOpen) {
             <div class="absolute top-full right-0 pt-2 z-50">
@@ -257,13 +269,24 @@
                 class="w-64 rounded-xl border border-scheme-border bg-scheme-background p-3 shadow-lg"
               >
                 @if (authState.user(); as u) {
-                  <div class="px-3 pb-3 border-b border-scheme-border">
-                    <p class="font-medium text-scheme-text text-sm">
-                      {{ u.firstName }} {{ u.lastName }}
-                    </p>
-                    <p class="text-xs text-scheme-text-muted truncate">
-                      {{ u.email }}
-                    </p>
+                  <div
+                    class="flex items-center gap-3 px-3 pb-3 border-b border-scheme-border"
+                  >
+                    @if (userInitials()) {
+                      <span
+                        class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-white text-sm font-bold select-none"
+                        [ngStyle]="{ 'background-color': avatarColor() }"
+                        >{{ userInitials() }}</span
+                      >
+                    }
+                    <div class="min-w-0">
+                      <p class="font-medium text-scheme-text text-sm">
+                        {{ u.firstName }} {{ u.lastName }}
+                      </p>
+                      <p class="text-xs text-scheme-text-muted truncate">
+                        {{ u.email }}
+                      </p>
+                    </div>
                   </div>
                 }
                 <a
@@ -293,9 +316,18 @@
       @if (isMobile) {
         <div class="w-full border-t border-scheme-border pt-3 mt-2">
           @if (authState.user(); as u) {
-            <p class="text-sm font-medium text-scheme-text text-center mb-2">
-              {{ u.firstName }} {{ u.lastName }}
-            </p>
+            <div class="flex items-center justify-center gap-2 mb-2">
+              @if (userInitials()) {
+                <span
+                  class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full text-white text-xs font-bold select-none"
+                  [ngStyle]="{ 'background-color': avatarColor() }"
+                  >{{ userInitials() }}</span
+                >
+              }
+              <p class="text-sm font-medium text-scheme-text">
+                {{ u.firstName }} {{ u.lastName }}
+              </p>
+            </div>
           }
           <div class="flex flex-col gap-2 items-center">
             <a

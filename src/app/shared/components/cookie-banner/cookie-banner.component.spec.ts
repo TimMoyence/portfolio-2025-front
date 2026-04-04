@@ -119,21 +119,21 @@ describe("CookieBannerComponent", () => {
     );
   });
 
-  it("devrait se desinscrire a la destruction du composant", () => {
+  it("devrait ne plus reagir aux changements apres destruction", () => {
     consentServiceStub.shouldShowBanner.and.returnValue(true);
 
     const fixture = TestBed.createComponent(CookieBannerComponent);
-    const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- acces au champ prive pour verifier le unsubscribe
-    const subscription = (component as any).subscription;
-    expect(subscription).toBeTruthy();
-    spyOn(subscription, "unsubscribe").and.callThrough();
+    expect(fixture.componentInstance.isVisible).toBeTrue();
 
     fixture.destroy();
 
-    expect(subscription.unsubscribe).toHaveBeenCalled();
+    consentServiceStub.shouldShowBanner.and.returnValue(false);
+    consentServiceStub.consentChanges$.next(null);
+
+    // Apres destruction, isVisible ne devrait plus etre mis a jour
+    expect(fixture.componentInstance.isVisible).toBeTrue();
   });
 
   it("devrait mettre a jour la visibilite lors d'un changement de consentement", () => {

@@ -1,6 +1,11 @@
 import { CommonModule } from "@angular/common";
-import type { OnInit } from "@angular/core";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { of } from "rxjs";
 import { filter, map, mergeMap, switchMap } from "rxjs/operators";
@@ -20,16 +25,15 @@ import { SeoService } from "../../core/seo/seo.service";
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SeoManagerComponent implements OnInit {
+export class SeoManagerComponent {
   private readonly appConfig = inject(APP_CONFIG);
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private seoService: SeoService,
-    private seoRegistry: SeoRegistryService,
-  ) {}
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly seoService = inject(SeoService);
+  private readonly seoRegistry = inject(SeoRegistryService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
+  constructor() {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -60,6 +64,7 @@ export class SeoManagerComponent implements OnInit {
             .getSeoByPath(currentUrl)
             .pipe(map((resolved) => ({ data, resolved, currentUrl })));
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(({ data, resolved, currentUrl }) => {
         if (resolved?.seo) {

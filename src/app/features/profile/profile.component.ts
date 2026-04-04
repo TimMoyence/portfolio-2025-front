@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
+  signal,
 } from "@angular/core";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
@@ -36,6 +37,15 @@ export class ProfileComponent implements OnInit {
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  /* — Edition du profil — */
+  isEditing = signal(false);
+  editFirstName = "";
+  editLastName = "";
+  editPhone = "";
+  editProfileLoading = false;
+  editProfileSuccess?: string;
+  editProfileError?: string;
+
   /* — Set password (Google-only) — */
   newPassword = "";
   setPasswordSubmitted = false;
@@ -65,6 +75,58 @@ export class ProfileComponent implements OnInit {
     if (this.authState.hasRole("weather")) {
       this.loadWeatherPreferences();
     }
+  }
+
+  /* ========================= EDIT PROFILE ========================= */
+
+  /** Active le mode edition en pre-remplissant les champs avec les valeurs actuelles. */
+  startEditing(): void {
+    const user = this.authState.user();
+    if (!user) return;
+    this.editFirstName = user.firstName;
+    this.editLastName = user.lastName;
+    this.editPhone = user.phone ?? "";
+    this.editProfileSuccess = undefined;
+    this.editProfileError = undefined;
+    this.isEditing.set(true);
+  }
+
+  /** Annule l'edition et revient en mode lecture. */
+  cancelEditing(): void {
+    this.isEditing.set(false);
+    this.editProfileSuccess = undefined;
+    this.editProfileError = undefined;
+  }
+
+  /** Enregistre les modifications du profil via le port auth. */
+  saveProfile(): void {
+    this.editProfileLoading = true;
+    this.editProfileSuccess = undefined;
+    this.editProfileError = undefined;
+
+    handleFormSubmit(
+      this.authService.updateProfile({
+        firstName: this.editFirstName,
+        lastName: this.editLastName,
+        phone: this.editPhone || null,
+      }),
+      this.cdr,
+      {
+        fallbackError: $localize`:profile.edit.error.generic@@profileEditErrorGeneric:Impossible de mettre a jour le profil pour le moment.`,
+        onSuccess: (updatedUser) => {
+          this.authState.updateUser(updatedUser);
+          this.editProfileSuccess = $localize`:profile.edit.success@@profileEditSuccess:Profil mis a jour avec succes.`;
+          this.isEditing.set(false);
+        },
+        onError: (message) => {
+          this.editProfileError = message;
+          this.editProfileLoading = false;
+        },
+        onComplete: () => {
+          this.editProfileLoading = false;
+        },
+      },
+    );
   }
 
   /* ========================= SET PASSWORD ========================= */

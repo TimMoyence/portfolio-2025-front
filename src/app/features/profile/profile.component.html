@@ -11,22 +11,136 @@
     @if (authState.user(); as user) {
       <!-- Informations personnelles -->
       <article
-        class="rounded-form border border-scheme-border bg-scheme-surface p-6 space-y-2"
+        class="rounded-form border border-scheme-border bg-scheme-surface p-6 space-y-4"
       >
-        <h2 class="heading-h5 text-h5" i18n="@@profileIdentityTitle">
-          Informations personnelles
-        </h2>
-        <p class="text-sm text-scheme-text">
-          <strong i18n="@@profileFirstNameLabel">Prenom :</strong>
-          {{ user.firstName }}
-        </p>
-        <p class="text-sm text-scheme-text">
-          <strong i18n="@@profileLastNameLabel">Nom :</strong>
-          {{ user.lastName }}
-        </p>
-        <p class="text-sm text-scheme-text">
-          <strong i18n="@@profileEmailLabel">Email :</strong> {{ user.email }}
-        </p>
+        <div class="flex items-center justify-between">
+          <h2 class="heading-h5 text-h5" i18n="@@profileIdentityTitle">
+            Informations personnelles
+          </h2>
+          @if (!isEditing()) {
+            <button
+              type="button"
+              (click)="startEditing()"
+              class="text-sm text-scheme-accent hover:underline"
+              i18n="@@profileEditButton"
+            >
+              Modifier
+            </button>
+          }
+        </div>
+
+        @if (!isEditing()) {
+          <!-- Mode lecture -->
+          <div class="space-y-2">
+            <p class="text-sm text-scheme-text">
+              <strong i18n="@@profileFirstNameLabel">Prenom :</strong>
+              {{ user.firstName }}
+            </p>
+            <p class="text-sm text-scheme-text">
+              <strong i18n="@@profileLastNameLabel">Nom :</strong>
+              {{ user.lastName }}
+            </p>
+            <p class="text-sm text-scheme-text">
+              <strong i18n="@@profileEmailLabel">Email :</strong>
+              {{ user.email }}
+            </p>
+            @if (user.phone) {
+              <p class="text-sm text-scheme-text">
+                <strong i18n="@@profilePhoneLabel">Telephone :</strong>
+                {{ user.phone }}
+              </p>
+            }
+          </div>
+        } @else {
+          <!-- Mode edition -->
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label
+                for="editFirstName"
+                class="block text-sm text-scheme-text"
+                i18n="@@profileEditFirstNameLabel"
+                >Prenom</label
+              >
+              <input
+                id="editFirstName"
+                name="editFirstName"
+                type="text"
+                [(ngModel)]="editFirstName"
+                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
+              />
+            </div>
+            <div class="space-y-2">
+              <label
+                for="editLastName"
+                class="block text-sm text-scheme-text"
+                i18n="@@profileEditLastNameLabel"
+                >Nom</label
+              >
+              <input
+                id="editLastName"
+                name="editLastName"
+                type="text"
+                [(ngModel)]="editLastName"
+                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
+              />
+            </div>
+            <div class="space-y-2">
+              <label
+                for="editPhone"
+                class="block text-sm text-scheme-text"
+                i18n="@@profileEditPhoneLabel"
+                >Telephone</label
+              >
+              <input
+                id="editPhone"
+                name="editPhone"
+                type="tel"
+                [(ngModel)]="editPhone"
+                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
+              />
+            </div>
+            <p class="text-xs text-scheme-text-muted">
+              <strong i18n="@@profileEmailLabel">Email :</strong>
+              {{ user.email }}
+              <span class="text-scheme-text-muted" i18n="@@profileEmailReadonly"
+                >(non modifiable)</span
+              >
+            </p>
+            <div class="flex gap-3">
+              <button
+                type="button"
+                (click)="saveProfile()"
+                class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
+                [disabled]="editProfileLoading"
+                [attr.aria-busy]="editProfileLoading"
+              >
+                @if (!editProfileLoading) {
+                  <span i18n="@@profileEditSaveButton">Enregistrer</span>
+                } @else {
+                  <span i18n="@@profileEditSavingButton"
+                    >Enregistrement...</span
+                  >
+                }
+              </button>
+              <button
+                type="button"
+                (click)="cancelEditing()"
+                class="inline-flex items-center justify-center rounded-button border border-scheme-border bg-scheme-background px-5 py-2 text-scheme-text"
+                [disabled]="editProfileLoading"
+                i18n="@@profileEditCancelButton"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        }
+
+        @if (editProfileSuccess) {
+          <p class="text-sm text-green-600">{{ editProfileSuccess }}</p>
+        }
+        @if (editProfileError) {
+          <p class="text-sm text-red-500">{{ editProfileError }}</p>
+        }
       </article>
 
       <!-- Definir un mot de passe (Google-only) -->

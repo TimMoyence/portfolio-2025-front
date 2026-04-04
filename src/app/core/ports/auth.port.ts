@@ -10,6 +10,7 @@ import type {
   RegisterUserPayload,
   ResetPasswordPayload,
   SetPasswordPayload,
+  UpdateProfilePayload,
 } from "../models/auth.model";
 
 export interface AuthPort {
@@ -24,6 +25,8 @@ export interface AuthPort {
   resetPassword(payload: ResetPasswordPayload): Observable<AuthActionMessage>;
   setPassword(payload: SetPasswordPayload): Observable<AuthUser>;
   changePassword(payload: ChangePasswordPayload): Observable<AuthUser>;
+  /** Met a jour les informations du profil utilisateur (nom, prenom, telephone). */
+  updateProfile(payload: UpdateProfilePayload): Observable<AuthUser>;
 }
 
 export const AUTH_PORT = new InjectionToken<AuthPort>("AUTH_PORT");

@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   effect,
   HostListener,
   Inject,
@@ -79,6 +80,28 @@ export class NavbarComponent {
   readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
   private readonly breakpointService = inject(BreakpointService);
+
+  /** Initiales de l'utilisateur connecte (ex: "TM" pour Tim Moyence). */
+  readonly userInitials = computed(() => {
+    const user = this.authState.user();
+    if (!user?.firstName && !user?.lastName) return "";
+    const first = (user.firstName ?? "").charAt(0).toUpperCase();
+    const last = (user.lastName ?? "").charAt(0).toUpperCase();
+    return `${first}${last}`;
+  });
+
+  /** Couleur d'avatar derivee d'un hash simple du nom complet. */
+  readonly avatarColor = computed(() => {
+    const user = this.authState.user();
+    if (!user) return "#6b7280"; // gray fallback
+    const name = `${user.firstName ?? ""}${user.lastName ?? ""}`;
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = Math.abs(hash) % 360;
+    return `hsl(${hue}, 55%, 45%)`;
+  });
 
   scrolled = false;
   mobileMenuOpen = false;

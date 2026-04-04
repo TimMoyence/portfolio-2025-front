@@ -11,6 +11,7 @@ import type {
   RegisterUserPayload,
   ResetPasswordPayload,
   SetPasswordPayload,
+  UpdateProfilePayload,
 } from "../models/auth.model";
 import type { AuthPort } from "../ports/auth.port";
 import { getApiBaseUrl } from "../http/api-config";
@@ -71,5 +72,10 @@ export class AuthHttpAdapter implements AuthPort {
       `${this.baseUrl}/auth/change-password`,
       payload,
     );
+  }
+
+  /** Met a jour les informations du profil utilisateur. */
+  updateProfile(payload: UpdateProfilePayload): Observable<AuthUser> {
+    return this.http.patch<AuthUser>(`${this.baseUrl}/auth/profile`, payload);
   }
 }

@@ -57,6 +57,11 @@ export class AuthStateService {
     return this._user()?.roles?.includes(role) ?? false;
   }
 
+  /** Met a jour l'utilisateur courant dans le state (apres un PATCH profil par ex.). */
+  updateUser(user: AuthUser): void {
+    this._user.set(user);
+  }
+
   /** Restaure la session depuis le token en localStorage via GET /auth/me. */
   restoreSession(): void {
     const token = this._token();

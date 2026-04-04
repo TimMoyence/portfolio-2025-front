@@ -147,4 +147,22 @@ describe("AuthHttpAdapter", () => {
     expect(req.request.body).toEqual(payload);
     req.flush(user);
   });
+
+  it("should PATCH profile data to /auth/profile", () => {
+    const payload = { firstName: "Pierre", lastName: "Martin", phone: null };
+    const user = buildAuthUser({
+      firstName: "Pierre",
+      lastName: "Martin",
+      phone: null,
+    });
+
+    adapter.updateProfile(payload).subscribe((result) => {
+      expect(result).toEqual(user);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/profile`);
+    expect(req.request.method).toBe("PATCH");
+    expect(req.request.body).toEqual(payload);
+    req.flush(user);
+  });
 });

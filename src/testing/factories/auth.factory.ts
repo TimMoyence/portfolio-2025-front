@@ -115,5 +115,8 @@ export function createAuthPortStub(): Record<keyof AuthPort, jasmine.Spy> {
     changePassword: jasmine
       .createSpy("changePassword")
       .and.returnValue(of(buildAuthUser())),
+    updateProfile: jasmine
+      .createSpy("updateProfile")
+      .and.returnValue(of(buildAuthUser())),
   };
 }
