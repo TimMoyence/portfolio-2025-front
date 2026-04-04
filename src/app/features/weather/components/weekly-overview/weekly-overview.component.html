@@ -1,0 +1,348 @@
+<div
+  class="rounded-2xl border border-white/20 bg-white/10 p-4 md:p-6 backdrop-blur-md"
+>
+  <!-- Header -->
+  <div class="mb-3 flex items-center justify-between">
+    <h3
+      class="text-lg font-semibold text-white"
+      i18n="weather.overview.title|@@weatherOverviewTitle"
+    >
+      Prévisions
+    </h3>
+    <nav
+      class="inline-flex rounded-xl border border-white/20 bg-white/10 p-0.5 backdrop-blur-md"
+      role="tablist"
+      aria-label="Granularité"
+      i18n-aria-label="
+        weather.overview.granularity.aria|@@weatherOverviewGranularityAria"
+    >
+      @for (option of granularityOptions; track option.value) {
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="granularity() === option.value"
+          class="rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
+          [ngClass]="
+            granularity() === option.value
+              ? 'bg-white/25 text-white shadow-sm'
+              : 'text-white/60 hover:text-white/80'
+          "
+          (click)="setGranularity(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </nav>
+  </div>
+
+  <!-- ========== MODE JOUR ========== -->
+  @if (granularity() === "day" && dayRows().length > 0) {
+    <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-white/20">
+      <table
+        class="w-full text-sm text-white border-separate border-spacing-y-0.5"
+      >
+        <thead>
+          <tr class="text-[11px] uppercase tracking-wider text-white/50">
+            <th
+              class="py-2 pr-3 text-left font-medium"
+              i18n="weather.table.day|@@weatherTableDay"
+            >
+              Jour
+            </th>
+            <th class="py-2 w-9"></th>
+            <th
+              class="py-2 px-2 text-right font-medium"
+              i18n="weather.table.min|@@weatherTableMin"
+            >
+              Min
+            </th>
+            <th
+              class="py-2 px-2 text-right font-medium"
+              i18n="weather.table.max|@@weatherTableMax"
+            >
+              Max
+            </th>
+            <th
+              class="py-2 px-2 text-right font-medium"
+              i18n="weather.table.rain|@@weatherTableRain"
+            >
+              Pluie
+            </th>
+            <th
+              class="py-2 px-2 text-right font-medium"
+              i18n="weather.table.wind|@@weatherTableWind"
+            >
+              Vent
+            </th>
+            <!-- Curious+ -->
+            @if (isCurious()) {
+              <th
+                class="py-2 px-2 text-right font-medium"
+                i18n="weather.table.humidity|@@weatherTableHumidity"
+              >
+                Hum.
+              </th>
+            }
+            <!-- Expert -->
+            @if (isExpert()) {
+              <th
+                class="py-2 px-2 text-right font-medium"
+                i18n="weather.table.gusts|@@weatherTableGusts"
+              >
+                Raf.
+              </th>
+              <th
+                class="py-2 px-2 text-right font-medium"
+                i18n="weather.table.pressure|@@weatherTablePressure"
+              >
+                Pression
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of dayRows(); track row.dayLabel; let i = $index) {
+            <tr
+              class="group transition-colors rounded-lg"
+              [ngClass]="i % 2 === 0 ? 'bg-white/[0.03]' : ''"
+            >
+              <td
+                class="py-3 pr-3 font-medium whitespace-nowrap rounded-l-lg group-hover:bg-white/5"
+              >
+                {{ row.dayLabel }}
+              </td>
+              <td class="py-3 group-hover:bg-white/5">
+                <img
+                  [src]="row.icon"
+                  alt=""
+                  class="h-8 w-8 drop-shadow-lg mx-auto"
+                />
+              </td>
+              <td
+                class="py-3 px-2 text-right font-semibold rounded-md group-hover:bg-white/5"
+                [style.background]="tempColor(row.tempMin, 0.25)"
+              >
+                {{ row.tempMin | unit: unitService.temperatureUnit() }}
+              </td>
+              <td
+                class="py-3 px-2 text-right font-semibold rounded-md group-hover:bg-white/5"
+                [style.background]="tempColor(row.tempMax, 0.25)"
+              >
+                {{ row.tempMax | unit: unitService.temperatureUnit() }}
+              </td>
+              <td
+                class="py-3 px-2 text-right group-hover:bg-white/5"
+                [ngClass]="
+                  row.precipitationSum > 0
+                    ? 'text-blue-300 font-medium'
+                    : 'text-white/30'
+                "
+              >
+                {{
+                  row.precipitationSum > 0
+                    ? (row.precipitationSum | number: "1.0-1") + " mm"
+                    : "—"
+                }}
+              </td>
+              <td
+                class="py-3 px-2 text-right whitespace-nowrap group-hover:bg-white/5"
+              >
+                @if (row.windDir !== null) {
+                  <span
+                    class="inline-block text-white/50 mr-0.5"
+                    [style.transform]="'rotate(' + (row.windDir + 180) + 'deg)'"
+                    >↑</span
+                  >
+                }
+                {{ row.windMax | number: "1.0-0" }}
+                <span class="text-white/40 text-xs"> km/h</span>
+              </td>
+              <!-- Curious+ -->
+              @if (isCurious()) {
+                <td
+                  class="py-3 px-2 text-right text-white/60 group-hover:bg-white/5"
+                >
+                  {{ row.humidity !== null ? row.humidity + " %" : "—" }}
+                </td>
+              }
+              <!-- Expert -->
+              @if (isExpert()) {
+                <td
+                  class="py-3 px-2 text-right text-white/60 group-hover:bg-white/5"
+                >
+                  {{
+                    row.gustsMax !== null
+                      ? (row.gustsMax | number: "1.0-0") + " km/h"
+                      : "—"
+                  }}
+                </td>
+                <td
+                  class="py-3 px-2 text-right text-white/60 rounded-r-lg group-hover:bg-white/5"
+                >
+                  {{ row.pressure !== null ? row.pressure + " hPa" : "—" }}
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- ========== MODE 3H / 1H ========== -->
+  @if (granularity() !== "day" && slotGroups().length > 0) {
+    <div
+      class="overflow-x-auto overflow-y-auto max-h-[72vh] scrollbar-thin scrollbar-thumb-white/20"
+    >
+      <table
+        class="w-full text-sm text-white border-separate border-spacing-y-px"
+      >
+        <thead class="sticky top-0 z-10">
+          <tr
+            class="text-[11px] uppercase tracking-wider text-white/50 bg-white/10 backdrop-blur-xl"
+          >
+            <th
+              class="py-2 pr-2 text-left font-medium rounded-l-lg"
+              i18n="weather.table.day|@@weatherTableDay"
+            >
+              Jour
+            </th>
+            <th
+              class="py-2 px-1 text-left font-medium"
+              i18n="weather.table.hour|@@weatherTableHour"
+            >
+              Heure
+            </th>
+            <th class="py-2 w-8"></th>
+            <th
+              class="py-2 px-2 text-right font-medium"
+              i18n="weather.table.temp|@@weatherTableTemp"
+            >
+              Temp.
+            </th>
+            <th
+              class="py-2 px-2 text-right font-medium"
+              i18n="weather.table.rain|@@weatherTableRain"
+            >
+              Pluie
+            </th>
+            <th
+              class="py-2 px-2 text-right font-medium"
+              i18n="weather.table.wind|@@weatherTableWind"
+            >
+              Vent
+            </th>
+            <!-- Curious+ -->
+            @if (isCurious()) {
+              <th
+                class="py-2 px-2 text-right font-medium"
+                i18n="weather.table.humidity|@@weatherTableHumidity"
+              >
+                Hum.
+              </th>
+            }
+            <!-- Expert -->
+            @if (isExpert()) {
+              <th
+                class="py-2 px-2 text-right font-medium"
+                i18n="weather.table.gusts|@@weatherTableGusts"
+              >
+                Raf.
+              </th>
+              <th
+                class="py-2 px-2 text-right font-medium rounded-r-lg"
+                i18n="weather.table.pressure|@@weatherTablePressure"
+              >
+                Pression
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (group of slotGroups(); track group.dayLabel) {
+            <!-- Separateur jour -->
+            <tr>
+              <td
+                [attr.colspan]="isCurious() ? (isExpert() ? 9 : 7) : 6"
+                class="pt-3 pb-1 text-xs font-semibold text-white/70 border-b border-white/15"
+              >
+                {{ group.dayLabel }}
+              </td>
+            </tr>
+            @for (slot of group.slots; track slot.label; let j = $index) {
+              <tr
+                class="group transition-colors"
+                [ngClass]="j % 2 === 0 ? 'bg-white/[0.03]' : ''"
+              >
+                <td class="py-2 pr-2"></td>
+                <td class="py-2 px-1 text-white/60 font-mono text-xs">
+                  {{ formatTime(slot.label) }}
+                </td>
+                <td class="py-2">
+                  <img
+                    [src]="weatherCodeToIcon(slot.dominantWeatherCode)"
+                    alt=""
+                    class="h-6 w-6 drop-shadow mx-auto"
+                  />
+                </td>
+                <td
+                  class="py-2 px-2 text-right font-semibold rounded-md"
+                  [style.background]="tempColor(slot.avgTemp, 0.3)"
+                >
+                  {{ slot.avgTemp | unit: unitService.temperatureUnit() }}
+                </td>
+                <td
+                  class="py-2 px-2 text-right"
+                  [ngClass]="
+                    slot.totalPrecipitation > 0
+                      ? 'text-blue-300 font-medium'
+                      : 'text-white/30'
+                  "
+                >
+                  {{
+                    slot.totalPrecipitation > 0
+                      ? (slot.totalPrecipitation | number: "1.0-1") + " mm"
+                      : "—"
+                  }}
+                </td>
+                <td class="py-2 px-2 text-right whitespace-nowrap">
+                  @if (slot.windDirection !== null) {
+                    <span
+                      class="inline-block text-white/50 text-xs mr-0.5"
+                      [style.transform]="
+                        'rotate(' + (slot.windDirection + 180) + 'deg)'
+                      "
+                      >↑</span
+                    >
+                  }
+                  {{ slot.maxWind | number: "1.0-0" }}
+                </td>
+                <!-- Curious+ -->
+                @if (isCurious()) {
+                  <td class="py-2 px-2 text-right text-white/50">
+                    {{
+                      slot.avgHumidity !== null ? slot.avgHumidity + " %" : "—"
+                    }}
+                  </td>
+                }
+                <!-- Expert -->
+                @if (isExpert()) {
+                  <td class="py-2 px-2 text-right text-white/50">
+                    {{
+                      slot.maxGusts !== null
+                        ? (slot.maxGusts | number: "1.0-0")
+                        : "—"
+                    }}
+                  </td>
+                  <td class="py-2 px-2 text-right text-white/50">
+                    {{ slot.avgPressure !== null ? slot.avgPressure : "—" }}
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

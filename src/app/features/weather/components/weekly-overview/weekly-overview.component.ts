@@ -5,12 +5,15 @@ import {
   computed,
   inject,
   input,
+  LOCALE_ID,
   output,
   signal,
 } from "@angular/core";
 import type {
+  DailyForecast,
   HourlyForecast,
   OverviewGranularity,
+  WeatherLevel,
 } from "../../../../core/models/weather.model";
 import { UnitPipe } from "../../pipes/unit.pipe";
 import { UnitPreferencesService } from "../../services/unit-preferences.service";
@@ -20,100 +23,47 @@ import {
 } from "../../utils/weekly-overview";
 import { weatherCodeToIcon } from "../../utils/weather-icons";
 
+/** Ligne affichee dans le tableau pour le mode "day". */
+interface DayRow {
+  dayLabel: string;
+  icon: string;
+  tempMin: number;
+  tempMax: number;
+  precipitationSum: number;
+  windMax: number;
+  gustsMax: number | null;
+  windDir: number | null;
+  humidity: number | null;
+  pressure: number | null;
+}
+
+/** Groupe de lignes 3h/1h rattachees a un meme jour. */
+interface SlotGroup {
+  dayLabel: string;
+  slots: WeatherTimeSlot[];
+}
+
 /**
- * Vue d'ensemble hebdomadaire avec granularite configurable.
- * Affiche les donnees horaires groupees par jour, 3h ou 1h
- * selon la preference de l'utilisateur.
+ * Tableau de previsions unifie avec design glassmorphism.
+ * Remplace daily-forecast + ancien weekly-overview.
+ * Colonnes progressives selon le niveau (discovery → curious → expert).
  */
 @Component({
   selector: "app-weekly-overview",
   standalone: true,
   imports: [CommonModule, UnitPipe],
-  template: `
-    <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-md"
-    >
-      <!-- Header avec titre et selecteur de granularite -->
-      <div class="mb-4 flex items-center justify-between">
-        <h3
-          class="text-lg font-semibold text-white"
-          i18n="weather.overview.title|@@weatherOverviewTitle"
-        >
-          Vue d'ensemble
-        </h3>
-
-        <nav
-          class="inline-flex rounded-xl border border-white/20 bg-white/10 p-0.5 backdrop-blur-md"
-          role="tablist"
-          aria-label="Granularité de la vue d'ensemble"
-          i18n-aria-label="
-            weather.overview.granularity.aria|@@weatherOverviewGranularityAria"
-        >
-          @for (option of granularityOptions; track option.value) {
-            <button
-              type="button"
-              role="tab"
-              [attr.aria-selected]="granularity() === option.value"
-              class="rounded-lg px-3 py-1 text-xs font-medium transition-all"
-              [ngClass]="
-                granularity() === option.value
-                  ? 'bg-white/25 text-white shadow-sm'
-                  : 'text-white/60 hover:text-white/80'
-              "
-              (click)="setGranularity(option.value)"
-            >
-              {{ option.label }}
-            </button>
-          }
-        </nav>
-      </div>
-
-      <!-- Liste des creneaux -->
-      @if (slots().length > 0) {
-        <div
-          class="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-white/20"
-        >
-          @for (slot of slots(); track slot.label) {
-            <div
-              class="flex flex-shrink-0 snap-center flex-col items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 p-3 min-w-[100px] transition-all hover:bg-white/10"
-            >
-              <span class="text-xs font-medium text-white/80">
-                {{ formatLabel(slot) }}
-              </span>
-              <img
-                [src]="weatherCodeToIcon(slot.dominantWeatherCode)"
-                [alt]="formatLabel(slot)"
-                class="h-8 w-8 drop-shadow"
-              />
-              <div class="flex flex-col items-center gap-0.5 text-xs">
-                <span class="font-medium text-white">
-                  {{ slot.maxTemp | unit: unitService.temperatureUnit() }}
-                </span>
-                @if (slot.hourCount > 1) {
-                  <span class="text-white/50">
-                    {{ slot.minTemp | unit: unitService.temperatureUnit() }}
-                  </span>
-                }
-              </div>
-              @if (slot.totalPrecipitation > 0) {
-                <span class="text-[10px] text-blue-300">
-                  {{ slot.totalPrecipitation | number: "1.0-1" }}mm
-                </span>
-              }
-              <span class="text-[10px] text-white/40">
-                {{ slot.maxWind | number: "1.0-0" }} km/h
-              </span>
-            </div>
-          }
-        </div>
-      }
-    </div>
-  `,
+  templateUrl: "./weekly-overview.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeeklyOverviewComponent {
   /** Donnees horaires brutes a grouper. */
   readonly hourly = input<HourlyForecast | null>(null);
+
+  /** Donnees journalieres pour le mode "Jour". */
+  readonly daily = input<DailyForecast | null>(null);
+
+  /** Niveau d'experience de l'utilisateur. */
+  readonly level = input<WeatherLevel>("discovery");
 
   /** Granularite initiale (synchronisee depuis les preferences). */
   readonly initialGranularity = input<OverviewGranularity>("day");
@@ -125,8 +75,9 @@ export class WeeklyOverviewComponent {
   readonly granularity = signal<OverviewGranularity>("day");
 
   readonly unitService = inject(UnitPreferencesService);
+  private readonly localeId = inject(LOCALE_ID);
 
-  /** Options de granularite affichees dans le selecteur. */
+  /** Options de granularite. */
   readonly granularityOptions: { value: OverviewGranularity; label: string }[] =
     [
       { value: "day", label: "Jour" },
@@ -134,15 +85,95 @@ export class WeeklyOverviewComponent {
       { value: "1h", label: "1h" },
     ];
 
-  /** Creneaux calcules a partir des donnees horaires et de la granularite. */
+  /** Expose weatherCodeToIcon pour le template. */
+  readonly weatherCodeToIcon = weatherCodeToIcon;
+
+  /** Niveau curious ou expert. */
+  readonly isCurious = computed(
+    () => this.level() === "curious" || this.level() === "expert",
+  );
+
+  /** Niveau expert. */
+  readonly isExpert = computed(() => this.level() === "expert");
+
+  /** Creneaux horaires groupes (pour modes 3h/1h). */
   readonly slots = computed<WeatherTimeSlot[]>(() => {
     const h = this.hourly();
     if (!h) return [];
     return groupHourlyByGranularity(h, this.granularity());
   });
 
-  /** Expose weatherCodeToIcon pour le template. */
-  readonly weatherCodeToIcon = weatherCodeToIcon;
+  /** Lignes du tableau en mode "Jour" (depuis DailyForecast). */
+  readonly dayRows = computed<DayRow[]>(() => {
+    const d = this.daily();
+    const h = this.hourly();
+    if (!d) return [];
+
+    const hourlyByDay = h ? groupHourlyByGranularity(h, "day") : [];
+
+    return d.time.map((time, i) => {
+      const date = new Date(time);
+      const dayLabel =
+        i === 0
+          ? $localize`:weather.daily.today|@@weatherDailyToday:Aujourd'hui`
+          : date.toLocaleDateString(this.localeId, {
+              weekday: "short",
+              day: "numeric",
+            });
+
+      const hourlySlot = hourlyByDay[i] ?? null;
+
+      return {
+        dayLabel: dayLabel.charAt(0).toUpperCase() + dayLabel.slice(1),
+        icon: weatherCodeToIcon(d.weather_code[i]),
+        tempMin: d.temperature_2m_min[i],
+        tempMax: d.temperature_2m_max[i],
+        precipitationSum: d.precipitation_sum[i],
+        windMax: d.wind_speed_10m_max?.[i] ?? hourlySlot?.maxWind ?? 0,
+        gustsMax: d.wind_gusts_10m_max?.[i] ?? hourlySlot?.maxGusts ?? null,
+        windDir:
+          d.wind_direction_10m_dominant?.[i] ??
+          hourlySlot?.windDirection ??
+          null,
+        humidity: hourlySlot?.avgHumidity ?? null,
+        pressure: hourlySlot?.avgPressure ?? null,
+      };
+    });
+  });
+
+  /** Groupe les slots 3h/1h par jour pour le rowspan du tableau. */
+  readonly slotGroups = computed<SlotGroup[]>(() => {
+    const allSlots = this.slots();
+    if (allSlots.length === 0) return [];
+
+    const groups: SlotGroup[] = [];
+    let currentDay = "";
+    let currentGroup: WeatherTimeSlot[] = [];
+
+    for (const slot of allSlots) {
+      const day = slot.label.slice(0, 10);
+      if (day !== currentDay) {
+        if (currentGroup.length > 0) {
+          groups.push({
+            dayLabel: this.formatDayLabel(currentDay),
+            slots: currentGroup,
+          });
+        }
+        currentDay = day;
+        currentGroup = [slot];
+      } else {
+        currentGroup.push(slot);
+      }
+    }
+    if (currentGroup.length > 0) {
+      groups.push({
+        dayLabel: this.formatDayLabel(currentDay),
+        slots: currentGroup,
+      });
+    }
+
+    return groups;
+  });
 
   /** Change la granularite et emet l'evenement. */
   setGranularity(value: OverviewGranularity): void {
@@ -151,18 +182,67 @@ export class WeeklyOverviewComponent {
     this.granularityChange.emit(value);
   }
 
-  /** Formate le label d'un creneau pour l'affichage. */
-  formatLabel(slot: WeatherTimeSlot): string {
-    const g = this.granularity();
-    if (g === "day") {
-      const date = new Date(slot.label);
-      return date.toLocaleDateString("fr-FR", {
-        weekday: "short",
-        day: "numeric",
-      });
+  /** Formate l'heure d'un slot (HH:mm). */
+  formatTime(label: string): string {
+    return label.slice(11, 16);
+  }
+
+  /**
+   * Couleur de fond temperature — gradient froid→chaud.
+   * Bleu (#3b82f6) → Cyan → Vert → Jaune → Orange → Rouge (#ef4444).
+   */
+  tempColor(temp: number, alpha: number): string {
+    const t = Math.max(-10, Math.min(40, temp));
+    const ratio = (t + 10) / 50;
+
+    let r: number, g: number, b: number;
+    if (ratio < 0.2) {
+      const p = ratio / 0.2;
+      r = Math.round(59 + 6 * p);
+      g = Math.round(130 + 70 * p);
+      b = Math.round(246 - 20 * p);
+    } else if (ratio < 0.4) {
+      const p = (ratio - 0.2) / 0.2;
+      r = Math.round(65 + 100 * p);
+      g = Math.round(200 + 55 * p);
+      b = Math.round(226 - 170 * p);
+    } else if (ratio < 0.6) {
+      const p = (ratio - 0.4) / 0.2;
+      r = Math.round(165 + 90 * p);
+      g = 255;
+      b = Math.round(56 - 20 * p);
+    } else if (ratio < 0.8) {
+      const p = (ratio - 0.6) / 0.2;
+      r = 255;
+      g = Math.round(255 - 120 * p);
+      b = Math.round(36 - 20 * p);
+    } else {
+      const p = (ratio - 0.8) / 0.2;
+      r = Math.round(255 - 16 * p);
+      g = Math.round(135 - 67 * p);
+      b = Math.round(16 + 52 * p);
     }
-    // 3h ou 1h : afficher l'heure
-    const time = slot.label.slice(11, 16); // "HH:mm"
-    return time;
+
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  /** Formate un label de jour a partir d'une date ISO. */
+  private formatDayLabel(isoDate: string): string {
+    const date = new Date(isoDate);
+    const today = new Date();
+    const isToday =
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate();
+
+    if (isToday) {
+      return $localize`:weather.daily.today|@@weatherDailyToday:Aujourd'hui`;
+    }
+
+    const label = date.toLocaleDateString(this.localeId, {
+      weekday: "short",
+      day: "numeric",
+    });
+    return label.charAt(0).toUpperCase() + label.slice(1);
   }
 }

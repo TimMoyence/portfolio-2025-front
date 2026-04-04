@@ -114,6 +114,17 @@
         </div>
       }
 
+      <!-- Tableau unifié prévisions (remplace daily-forecast + weekly-overview) -->
+      <div appSlideIn>
+        <app-weekly-overview
+          [hourly]="data.hourly"
+          [daily]="data.daily"
+          [level]="levelService.level()"
+          [initialGranularity]="overviewGranularity()"
+          (granularityChange)="onGranularityChange($event)"
+        />
+      </div>
+
       <div appSlideIn>
         @defer (on viewport) {
           <app-hourly-chart [hourly]="data.hourly" />
@@ -121,37 +132,6 @@
           <app-chart-skeleton />
         }
       </div>
-      <div appSlideIn>
-        <app-daily-forecast
-          [daily]="data.daily"
-          [hourly]="data.hourly"
-          [selectedDayIndex]="selectedDayIndex()"
-          (daySelected)="onDaySelected($event)"
-          (forecastDaysChange)="onForecastDaysChange($event)"
-        />
-      </div>
-      <div appSlideIn>
-        <app-weekly-overview
-          [hourly]="data.hourly"
-          [initialGranularity]="overviewGranularity()"
-          (granularityChange)="onGranularityChange($event)"
-        />
-      </div>
-
-      <!-- Bottom sheet mobile pour le detail d'un jour -->
-      @if (isMobile() && selectedDayIndex() !== null) {
-        <app-bottom-sheet
-          [open]="selectedDayIndex() !== null"
-          [title]="'Détail du jour'"
-          (openChange)="$event ? null : selectedDayIndex.set(null)"
-        >
-          <app-day-detail-panel
-            [daily]="data.daily"
-            [dayIndex]="selectedDayIndex()!"
-            [hourly]="data.hourly"
-          />
-        </app-bottom-sheet>
-      }
 
       <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
       @if (levelService.level() !== "discovery") {

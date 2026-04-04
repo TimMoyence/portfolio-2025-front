@@ -82,6 +82,13 @@ describe("groupHourlyByGranularity", () => {
     it("devrait avoir le bon nombre d'heures aggregees", () => {
       expect(slots[0].hourCount).toBe(24);
     });
+
+    it("devrait retourner null pour les champs optionnels absents", () => {
+      expect(slots[0].maxGusts).toBeNull();
+      expect(slots[0].windDirection).toBeNull();
+      expect(slots[0].avgHumidity).toBeNull();
+      expect(slots[0].avgPressure).toBeNull();
+    });
   });
 
   describe("granularite '3h'", () => {
@@ -135,6 +142,28 @@ describe("groupHourlyByGranularity", () => {
 
     it("devrait avoir un hourCount de 1", () => {
       expect(slots[0].hourCount).toBe(1);
+    });
+  });
+
+  describe("champs optionnels presents", () => {
+    it("devrait calculer humidite, pression, rafales et direction", () => {
+      const rich: HourlyForecast = {
+        time: ["2026-04-01T00:00", "2026-04-01T01:00", "2026-04-01T02:00"],
+        temperature_2m: [10, 12, 14],
+        weather_code: [0, 0, 0],
+        wind_speed_10m: [5, 10, 15],
+        precipitation: [0, 0, 0],
+        wind_gusts_10m: [10, 20, 30],
+        wind_direction_10m: [180, 180, 90],
+        relative_humidity_2m: [60, 70, 80],
+        pressure_msl: [1013, 1015, 1017],
+      };
+      const slots = groupHourlyByGranularity(rich, "3h");
+      expect(slots.length).toBe(1);
+      expect(slots[0].maxGusts).toBe(30);
+      expect(slots[0].windDirection).toBe(180); // mode
+      expect(slots[0].avgHumidity).toBe(70);
+      expect(slots[0].avgPressure).toBe(1015);
     });
   });
 

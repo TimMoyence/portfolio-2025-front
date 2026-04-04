@@ -19,6 +19,14 @@ export interface WeatherTimeSlot {
   dominantWeatherCode: number;
   /** Vitesse maximale du vent sur le creneau. */
   maxWind: number;
+  /** Rafales maximales du vent sur le creneau. */
+  maxGusts: number | null;
+  /** Direction dominante du vent (degres). */
+  windDirection: number | null;
+  /** Humidite moyenne (%). */
+  avgHumidity: number | null;
+  /** Pression moyenne (hPa). */
+  avgPressure: number | null;
   /** Nombre d'heures aggregees dans ce creneau. */
   hourCount: number;
 }
@@ -44,6 +52,10 @@ export function groupHourlyByGranularity(
       totalPrecipitation: hourly.precipitation[i],
       dominantWeatherCode: hourly.weather_code[i],
       maxWind: hourly.wind_speed_10m[i],
+      maxGusts: hourly.wind_gusts_10m?.[i] ?? null,
+      windDirection: hourly.wind_direction_10m?.[i] ?? null,
+      avgHumidity: hourly.relative_humidity_2m?.[i] ?? null,
+      avgPressure: hourly.pressure_msl?.[i] ?? null,
       hourCount: 1,
     }));
   }
@@ -55,6 +67,18 @@ export function groupHourlyByGranularity(
     const precips = indices.map((i) => hourly.precipitation[i]);
     const codes = indices.map((i) => hourly.weather_code[i]);
     const winds = indices.map((i) => hourly.wind_speed_10m[i]);
+    const gusts = hourly.wind_gusts_10m
+      ? indices.map((i) => hourly.wind_gusts_10m![i])
+      : null;
+    const dirs = hourly.wind_direction_10m
+      ? indices.map((i) => hourly.wind_direction_10m![i])
+      : null;
+    const humidities = hourly.relative_humidity_2m
+      ? indices.map((i) => hourly.relative_humidity_2m![i])
+      : null;
+    const pressures = hourly.pressure_msl
+      ? indices.map((i) => hourly.pressure_msl![i])
+      : null;
 
     return {
       label:
@@ -67,6 +91,14 @@ export function groupHourlyByGranularity(
       totalPrecipitation: precips.reduce((a, b) => a + b, 0),
       dominantWeatherCode: modeStat(codes),
       maxWind: Math.max(...winds),
+      maxGusts: gusts ? Math.max(...gusts) : null,
+      windDirection: dirs ? modeStat(dirs) : null,
+      avgHumidity: humidities
+        ? Math.round(humidities.reduce((a, b) => a + b, 0) / humidities.length)
+        : null,
+      avgPressure: pressures
+        ? Math.round(pressures.reduce((a, b) => a + b, 0) / pressures.length)
+        : null,
       hourCount: indices.length,
     };
   });
