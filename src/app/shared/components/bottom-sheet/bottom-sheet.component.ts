@@ -1,5 +1,4 @@
 import { animate, style, transition, trigger } from "@angular/animations";
-import { isPlatformBrowser } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,10 +7,9 @@ import {
   inject,
   input,
   output,
-  PLATFORM_ID,
-  signal,
   viewChild,
 } from "@angular/core";
+import { BreakpointService } from "../../../core/services/breakpoint.service";
 
 /**
  * Bottom sheet generique mobile-first.
@@ -146,13 +144,10 @@ export class BottomSheetComponent {
   /** Emis quand l'etat ouvert/ferme change (two-way binding). */
   readonly openChange = output<boolean>();
 
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly breakpointService = inject(BreakpointService);
 
-  /** Detecte si on est en mode mobile (< 768px). */
-  readonly isMobile = computed(() => {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    return this._isMobile();
-  });
+  /** Detecte si on est en mode mobile (< 768px). Delegue au BreakpointService. */
+  readonly isMobile = this.breakpointService.isMobile;
 
   /** Classes CSS du panel selon le mode mobile/desktop. */
   readonly panelClasses = computed(() => {
@@ -161,20 +156,10 @@ export class BottomSheetComponent {
       : "rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md";
   });
 
-  private readonly _isMobile = signal(false);
-
   readonly panelRef = viewChild<ElementRef<HTMLElement>>("panelRef");
 
   private dragStartY = 0;
   private currentTranslateY = 0;
-
-  constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      const mq = window.matchMedia("(max-width: 768px)");
-      this._isMobile.set(mq.matches);
-      mq.addEventListener("change", (e) => this._isMobile.set(e.matches));
-    }
-  }
 
   /** Ferme le bottom sheet. */
   close(): void {

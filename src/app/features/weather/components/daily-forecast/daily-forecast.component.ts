@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,9 +7,9 @@ import {
   input,
   LOCALE_ID,
   output,
-  PLATFORM_ID,
   signal,
 } from "@angular/core";
+import { BreakpointService } from "../../../../core/services/breakpoint.service";
 import type {
   DailyForecast,
   HourlyForecast,
@@ -219,22 +219,10 @@ export class DailyForecastComponent {
   readonly unitService = inject(UnitPreferencesService);
 
   private readonly localeId = inject(LOCALE_ID);
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly breakpointService = inject(BreakpointService);
 
-  /** Detecte si on est en mode mobile (< 768px). */
-  private readonly _isMobile = signal(false);
-  readonly isMobile = computed(() => {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    return this._isMobile();
-  });
-
-  constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      const mq = window.matchMedia("(max-width: 768px)");
-      this._isMobile.set(mq.matches);
-      mq.addEventListener("change", (e) => this._isMobile.set(e.matches));
-    }
-  }
+  /** Detecte si on est en mode mobile (< 768px). Delegue au BreakpointService. */
+  readonly isMobile = this.breakpointService.isMobile;
 
   /** Liste formatee des jours a afficher. */
   readonly days = computed<DayItem[]>(() => {

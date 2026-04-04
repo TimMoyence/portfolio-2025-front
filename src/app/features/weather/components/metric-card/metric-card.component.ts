@@ -1,5 +1,4 @@
 import { animate, style, transition, trigger } from "@angular/animations";
-import { isPlatformBrowser } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,9 +6,8 @@ import {
   inject,
   input,
   model,
-  PLATFORM_ID,
-  signal,
 } from "@angular/core";
+import { BreakpointService } from "../../../../core/services/breakpoint.service";
 import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
 
 /**
@@ -126,20 +124,12 @@ export class MetricCardComponent {
   /** Variante de taille : compact (mobile), default, wide (full-width). */
   readonly variant = input<"default" | "compact" | "wide">("default");
 
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly isMobile = signal(false);
-
-  constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      const mq = window.matchMedia("(max-width: 768px)");
-      this.isMobile.set(mq.matches);
-      mq.addEventListener("change", (e) => this.isMobile.set(e.matches));
-    }
-  }
+  private readonly breakpointService = inject(BreakpointService);
 
   /** Variante effective tenant compte du mobile. */
   readonly effectiveVariant = computed(() => {
-    if (this.isMobile() && this.variant() === "default") return "compact";
+    if (this.breakpointService.isMobile() && this.variant() === "default")
+      return "compact";
     return this.variant();
   });
 

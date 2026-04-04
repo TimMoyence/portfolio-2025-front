@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,10 +7,10 @@ import {
   effect,
   inject,
   OnInit,
-  PLATFORM_ID,
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { BreakpointService } from "../../core/services/breakpoint.service";
 import type {
   AirQualityData,
   CityResult,
@@ -21,7 +21,8 @@ import type {
   HistoricalData,
   WeatherLevel,
 } from "../../core/models/weather.model";
-import { WeatherService } from "../../core/services/weather.service";
+import type { WeatherPort } from "../../core/ports/weather.port";
+import { WEATHER_PORT } from "../../core/ports/weather.port";
 import { AirQualityCardComponent } from "./components/air-quality-card/air-quality-card.component";
 import { CapeCardComponent } from "./components/cape-card/cape-card.component";
 import { CitySearchComponent } from "./components/city-search/city-search.component";
@@ -91,6 +92,7 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
   ],
   templateUrl: "./weather-app.component.html",
   styleUrl: "./weather-app.component.scss",
+  providers: [WeatherLevelService, UnitPreferencesService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherAppComponent implements OnInit {
@@ -127,9 +129,9 @@ export class WeatherAppComponent implements OnInit {
   /** Nombre de jours de prevision demandes (7 ou 14). */
   readonly forecastDays = signal<7 | 14>(7);
 
-  private readonly weatherService = inject(WeatherService);
+  private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly breakpointService = inject(BreakpointService);
 
   /** Service de gestion du niveau d'experience. */
   readonly levelService = inject(WeatherLevelService);
@@ -137,12 +139,8 @@ export class WeatherAppComponent implements OnInit {
   /** Service de gestion des preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
-  /** Detecte si on est en mode mobile (< 768px). */
-  private readonly _isMobile = signal(false);
-  readonly isMobile = computed(() => {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    return this._isMobile();
-  });
+  /** Detecte si on est en mode mobile (< 768px). Delegue au BreakpointService. */
+  readonly isMobile = this.breakpointService.isMobile;
 
   /** Indique si des previsions sont chargees (pour le style du fond). */
   readonly hasForecast = computed(() => !!this.forecast());
@@ -161,13 +159,6 @@ export class WeatherAppComponent implements OnInit {
   readonly backgroundTransitioning = signal(false);
 
   constructor() {
-    // Detection mobile
-    if (isPlatformBrowser(this.platformId)) {
-      const mq = window.matchMedia("(max-width: 768px)");
-      this._isMobile.set(mq.matches);
-      mq.addEventListener("change", (e) => this._isMobile.set(e.matches));
-    }
-
     // Crossfade : quand le gradient change, on anime la transition
     effect(() => {
       const current = this.backgroundClasses();
@@ -199,7 +190,12 @@ export class WeatherAppComponent implements OnInit {
     this.detailedCurrent.set(null);
 
     this.weatherService
-      .getForecast(city.latitude, city.longitude, this.forecastDays())
+      .getForecast(
+        city.latitude,
+        city.longitude,
+        undefined,
+        this.forecastDays(),
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => {
@@ -336,7 +332,7 @@ export class WeatherAppComponent implements OnInit {
     const city = this.selectedCity();
     if (city) {
       this.weatherService
-        .getForecast(city.latitude, city.longitude, days)
+        .getForecast(city.latitude, city.longitude, undefined, days)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (data) => this.forecast.set(data),

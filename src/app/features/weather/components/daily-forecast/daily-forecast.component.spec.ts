@@ -8,6 +8,8 @@ import {
   createWeatherPortStub,
   buildWeatherPreferences,
 } from "../../../../../testing/factories/weather.factory";
+import { WeatherLevelService } from "../../services/weather-level.service";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { DailyForecastComponent } from "./daily-forecast.component";
 
 describe("DailyForecastComponent", () => {
@@ -29,6 +31,8 @@ describe("DailyForecastComponent", () => {
       providers: [
         { provide: PLATFORM_ID, useValue: "browser" },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        WeatherLevelService,
+        UnitPreferencesService,
       ],
     }).compileComponents();
 

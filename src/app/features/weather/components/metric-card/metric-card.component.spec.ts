@@ -8,6 +8,8 @@ import {
   buildWeatherPreferences,
   createWeatherPortStub,
 } from "../../../../../testing/factories/weather.factory";
+import { WeatherLevelService } from "../../services/weather-level.service";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { MetricCardComponent } from "./metric-card.component";
 
 /**
@@ -60,6 +62,8 @@ describe("MetricCardComponent", () => {
       providers: [
         { provide: PLATFORM_ID, useValue: "browser" },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        WeatherLevelService,
+        UnitPreferencesService,
       ],
     }).compileComponents();
 
@@ -139,6 +143,8 @@ describe("MetricCardComponent", () => {
         providers: [
           { provide: PLATFORM_ID, useValue: "server" },
           { provide: WEATHER_PORT, useValue: ssrWeatherPortStub },
+          WeatherLevelService,
+          UnitPreferencesService,
         ],
       }).compileComponents();
 

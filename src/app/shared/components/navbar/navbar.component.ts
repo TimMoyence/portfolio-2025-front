@@ -1,9 +1,10 @@
 import { CommonModule, isPlatformBrowser } from "@angular/common";
-import type { ElementRef, OnInit } from "@angular/core";
+import type { ElementRef } from "@angular/core";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  effect,
   HostListener,
   Inject,
   PLATFORM_ID,
@@ -11,6 +12,7 @@ import {
   inject,
 } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
+import { BreakpointService } from "../../../core/services/breakpoint.service";
 import { AuthStateService } from "../../../core/services/auth-state.service";
 import type { DropdownSection, NavLink } from "../../models/navbar.model";
 import { A11yDialogService } from "../../services/a11y-dialog.service";
@@ -24,7 +26,7 @@ import { SvgIconComponent } from "../svg-icon.component";
   styleUrls: ["./navbar.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   readonly navLinks: NavLink[] = [
     {
       label: $localize`:navbar.link.presentation|Navbar primary link@@navLinkPresentation:Présentation`,
@@ -76,12 +78,16 @@ export class NavbarComponent implements OnInit {
   readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
   readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
+  private readonly breakpointService = inject(BreakpointService);
 
   scrolled = false;
   mobileMenuOpen = false;
   userDropdownOpen = false;
 
-  isMobile = false;
+  /** Delegue au BreakpointService (< 1024px). */
+  get isMobile(): boolean {
+    return this.breakpointService.isTabletOrBelow();
+  }
 
   @ViewChild("mobileMenuPanel", { static: false })
   mobileMenuPanel?: ElementRef<HTMLElement>;
@@ -93,9 +99,18 @@ export class NavbarComponent implements OnInit {
     private a11yDialog: A11yDialogService,
     private readonly cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private readonly platformId: object,
-  ) {}
-  ngOnInit(): void {
-    this.updateIsMobileState();
+  ) {
+    // Ferme le menu mobile si on passe en mode desktop
+    effect(() => {
+      const mobile = this.isMobile;
+      if (!mobile && this.mobileMenuOpen) {
+        this.mobileMenuOpen = false;
+        if (isPlatformBrowser(this.platformId)) {
+          document.body.style.overflow = "";
+        }
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   @HostListener("window:scroll", [])
@@ -106,11 +121,6 @@ export class NavbarComponent implements OnInit {
     if (this.scrolled !== wasScrolled) {
       this.cdr.markForCheck();
     }
-  }
-
-  @HostListener("window:resize", [])
-  onWindowResize() {
-    this.updateIsMobileState();
   }
 
   logout(): void {
@@ -234,21 +244,5 @@ export class NavbarComponent implements OnInit {
 
     // Restore focus to what opened the menu (e.g. burger button)
     this.a11yDialog.restoreFocus();
-  }
-
-  private updateIsMobileState(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    const isMobileViewport = window.innerWidth < 1024;
-
-    if (this.isMobile === isMobileViewport) return;
-
-    this.isMobile = isMobileViewport;
-
-    if (!this.isMobile) {
-      this.mobileMenuOpen = false;
-      document.body.style.overflow = "";
-    }
-    this.cdr.markForCheck();
   }
 }
