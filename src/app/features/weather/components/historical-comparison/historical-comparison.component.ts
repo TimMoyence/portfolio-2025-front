@@ -36,7 +36,7 @@ Chart.register(...registerables, Filler);
       >
         Historique (30 jours)
       </h3>
-      <div class="relative h-64 w-full">
+      <div class="relative h-40 w-full md:h-64">
         <canvas #chartCanvas></canvas>
       </div>
     </div>

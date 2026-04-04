@@ -1,4 +1,5 @@
 import { computed, inject, Injectable, signal } from "@angular/core";
+import { take } from "rxjs/operators";
 import type { WeatherLevel } from "../../../core/models/weather.model";
 import { WeatherService } from "../../../core/services/weather.service";
 
@@ -38,30 +39,36 @@ export class WeatherLevelService {
   /** Charge les preferences depuis le backend. */
   loadPreferences(): void {
     this.loading.set(true);
-    this.weatherService.getPreferences().subscribe({
-      next: (prefs) => {
-        this.level.set(prefs.level);
-        this.daysUsed.set(prefs.daysUsed);
-        this.tooltipsSeen.set(prefs.tooltipsSeen);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.loading.set(false);
-      },
-    });
+    this.weatherService
+      .getPreferences()
+      .pipe(take(1))
+      .subscribe({
+        next: (prefs) => {
+          this.level.set(prefs.level);
+          this.daysUsed.set(prefs.daysUsed);
+          this.tooltipsSeen.set(prefs.tooltipsSeen);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+        },
+      });
   }
 
   /** Change le niveau et synchronise avec le backend. */
   setLevel(level: WeatherLevel): void {
     this.level.set(level);
-    this.weatherService.updatePreferences({ level }).subscribe({
-      next: (prefs) => {
-        this.level.set(prefs.level);
-      },
-      error: () => {
-        /* Le signal est deja mis a jour optimistiquement */
-      },
-    });
+    this.weatherService
+      .updatePreferences({ level })
+      .pipe(take(1))
+      .subscribe({
+        next: (prefs) => {
+          this.level.set(prefs.level);
+        },
+        error: () => {
+          /* Le signal est deja mis a jour optimistiquement */
+        },
+      });
   }
 
   /** Marque un tooltip comme vu et synchronise avec le backend. */
@@ -73,6 +80,7 @@ export class WeatherLevelService {
     this.tooltipsSeen.set(updated);
     this.weatherService
       .updatePreferences({ tooltipsSeen: updated })
+      .pipe(take(1))
       .subscribe();
   }
 
@@ -83,6 +91,6 @@ export class WeatherLevelService {
 
   /** Enregistre l'utilisation quotidienne aupres du backend. */
   recordUsage(): void {
-    this.weatherService.recordUsage().subscribe();
+    this.weatherService.recordUsage().pipe(take(1)).subscribe();
   }
 }

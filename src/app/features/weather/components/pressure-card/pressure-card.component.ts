@@ -2,9 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from "@angular/core";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { UnitPipe } from "../../pipes/unit.pipe";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
+import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { SparklineComponent } from "../sparkline/sparkline.component";
 
 /**
  * Carte de pression atmospherique avec tendance calculee
@@ -13,56 +17,50 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
 @Component({
   selector: "app-pressure-card",
   standalone: true,
-  imports: [LearningTooltipComponent],
+  imports: [MetricCardComponent, SparklineComponent, UnitPipe],
   template: `
-    <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+    <app-metric-card
+      tooltipId="pressure"
+      i18n-tooltipTitle="
+        weather.pressure.tooltip.title|@@weatherPressureTooltipTitle"
+      tooltipTitle="Pression atmosphérique"
+      i18n-tooltipContent="
+        weather.pressure.tooltip.content|@@weatherPressureTooltipContent"
+      tooltipContent="La pression atmosphérique est le poids de l'air au-dessus de vous, mesurée en hectopascals (hPa). Une pression en hausse annonce généralement du beau temps, une baisse rapide signale l'arrivée d'une perturbation."
+      [unavailable]="pressure() === null"
     >
-      <div class="mb-3 flex items-center justify-between">
-        <h3
-          class="text-sm font-medium text-white/70"
-          i18n="weather.pressure.title|@@weatherPressureTitle"
-        >
-          Pression atmosphérique
-        </h3>
-        <app-learning-tooltip
-          id="pressure"
-          i18n-title="
-            weather.pressure.tooltip.title|@@weatherPressureTooltipTitle"
-          title="Pression atmosphérique"
-          i18n-content="
-            weather.pressure.tooltip.content|@@weatherPressureTooltipContent"
-          content="La pression atmosphérique est le poids de l'air au-dessus de vous, mesurée en hectopascals (hPa). Une pression en hausse annonce généralement du beau temps, une baisse rapide signale l'arrivée d'une perturbation."
-        />
+      <span cardTitle i18n="weather.pressure.title|@@weatherPressureTitle"
+        >Pression atmosphérique</span
+      >
+
+      <div class="flex items-baseline gap-2">
+        <span class="text-3xl font-light text-white">
+          {{ pressure() | unit: unitService.pressureUnit() }}
+        </span>
+        <span class="text-lg" [class]="trendColor()">
+          {{ trendArrow() }}
+        </span>
       </div>
 
-      @if (pressure() !== null) {
-        <div class="flex items-baseline gap-2">
-          <span class="text-3xl font-light text-white">
-            {{ pressure() }}
-          </span>
-          <span class="text-sm text-white/70">hPa</span>
-          <span class="text-lg" [class]="trendColor()">
-            {{ trendArrow() }}
-          </span>
-        </div>
+      <p class="mt-2 text-sm text-white/50">
+        {{ trendDescription() }}
+      </p>
 
-        <p class="mt-2 text-sm text-white/50">
-          {{ trendDescription() }}
-        </p>
-      } @else {
-        <p
-          class="text-sm text-white/40"
-          i18n="weather.pressure.unavailable|@@weatherPressureUnavailable"
-        >
-          Données indisponibles
-        </p>
+      @if (hourlyPressure(); as hp) {
+        @if (hp.length > 1) {
+          <div class="mt-2">
+            <app-sparkline [data]="hp" [color]="'rgba(168, 162, 158, 0.8)'" />
+          </div>
+        }
       }
-    </div>
+    </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PressureCardComponent {
+  /** Service de preferences d'unites. */
+  readonly unitService = inject(UnitPreferencesService);
+
   /** Pression courante en hPa. */
   readonly pressure = input<number | null>(null);
 

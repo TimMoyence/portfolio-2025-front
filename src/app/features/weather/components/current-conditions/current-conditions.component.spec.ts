@@ -1,5 +1,11 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { of } from "rxjs";
+import { WEATHER_PORT } from "../../../../core/ports/weather.port";
+import {
+  createWeatherPortStub,
+  buildWeatherPreferences,
+} from "../../../../../testing/factories/weather.factory";
 import { CurrentConditionsComponent } from "./current-conditions.component";
 
 describe("CurrentConditionsComponent", () => {
@@ -7,8 +13,18 @@ describe("CurrentConditionsComponent", () => {
   let fixture: ComponentFixture<CurrentConditionsComponent>;
 
   beforeEach(async () => {
+    const weatherPortStub = createWeatherPortStub();
+    weatherPortStub.getPreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+    weatherPortStub.updatePreferences.and.returnValue(
+      of(buildWeatherPreferences()),
+    );
+    weatherPortStub.recordUsage.and.returnValue(of(void 0));
+
     await TestBed.configureTestingModule({
       imports: [CurrentConditionsComponent],
+      providers: [{ provide: WEATHER_PORT, useValue: weatherPortStub }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CurrentConditionsComponent);

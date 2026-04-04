@@ -64,13 +64,25 @@
           "title": "Accueil — Tim Moyence Portfolio",
           "description": "Explore my professional services.",
           "ogTitle": "Accueil de Tim Moyence",
-          "ogDescription": "Découvrez mes services professionnels et mes réalisations en développement web."
+          "ogDescription": "Découvrez mes services professionnels et mes réalisations en développement web.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Tim Moyence — Portfolio",
+            "url": "https://www.tim-music.net"
+          }
         },
         "en": {
           "title": "Home — Tim Moyence Portfolio",
           "description": "Explore my professional services.",
           "ogTitle": "Home of Tim Moyence",
-          "ogDescription": "Discover my professional services and web development work."
+          "ogDescription": "Discover my professional services and web development work.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Tim Moyence — Portfolio",
+            "url": "https://www.tim-music.net"
+          }
         }
       }
     },
@@ -86,13 +98,27 @@
           "title": "Présentation — Tim Moyence Portfolio",
           "description": "Découvrez mon parcours et mes compétences en développement web.",
           "ogTitle": "Présentation de Tim Moyence",
-          "ogDescription": "Parcours, compétences et approche pour créer des expériences web modernes."
+          "ogDescription": "Parcours, compétences et approche pour créer des expériences web modernes.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Tim Moyence",
+            "url": "https://www.tim-music.net",
+            "jobTitle": "Développeur Full-Stack"
+          }
         },
         "en": {
           "title": "About — Tim Moyence Portfolio",
           "description": "Discover my background and web development skills.",
           "ogTitle": "About Tim Moyence",
-          "ogDescription": "Background, skills, and approach to building modern web experiences."
+          "ogDescription": "Background, skills, and approach to building modern web experiences.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Tim Moyence",
+            "url": "https://www.tim-music.net",
+            "jobTitle": "Développeur Full-Stack"
+          }
         }
       }
     },

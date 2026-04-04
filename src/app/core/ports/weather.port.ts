@@ -2,6 +2,8 @@ import { InjectionToken } from "@angular/core";
 import type { Observable } from "rxjs";
 import type {
   AirQualityData,
+  DetailedCurrentWeather,
+  DetailedForecastResult,
   EnsembleData,
   ForecastResponse,
   GeocodingResponse,
@@ -23,6 +25,7 @@ export interface WeatherPort {
     latitude: number,
     longitude: number,
     timezone?: string,
+    forecastDays?: number,
   ): Observable<ForecastResponse>;
 
   /** Recuperation des preferences meteo de l'utilisateur. */
@@ -31,7 +34,10 @@ export interface WeatherPort {
   /** Mise a jour partielle des preferences meteo. */
   updatePreferences(
     data: Partial<
-      Pick<WeatherPreferences, "level" | "favoriteCities" | "tooltipsSeen">
+      Pick<
+        WeatherPreferences,
+        "level" | "favoriteCities" | "tooltipsSeen" | "units"
+      >
     >,
   ): Observable<WeatherPreferences>;
 
@@ -54,6 +60,18 @@ export interface WeatherPort {
     startDate: string,
     endDate: string,
   ): Observable<HistoricalData>;
+
+  /** Recuperation des donnees meteo detaillees courantes (OpenWeatherMap). */
+  getDetailedCurrent(
+    latitude: number,
+    longitude: number,
+  ): Observable<DetailedCurrentWeather>;
+
+  /** Recuperation des previsions detaillees (OpenWeatherMap). */
+  getDetailedForecast(
+    latitude: number,
+    longitude: number,
+  ): Observable<DetailedForecastResult>;
 }
 
 export const WEATHER_PORT = new InjectionToken<WeatherPort>("WEATHER_PORT");

@@ -1,11 +1,14 @@
-import { DecimalPipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from "@angular/core";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { UnitPipe } from "../../pipes/unit.pipe";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
+import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { SparklineComponent } from "../sparkline/sparkline.component";
 
 /**
  * Boussole de vent SVG avec directions cardinales en francais,
@@ -14,27 +17,17 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
 @Component({
   selector: "app-wind-compass",
   standalone: true,
-  imports: [DecimalPipe, LearningTooltipComponent],
+  imports: [MetricCardComponent, SparklineComponent, UnitPipe],
   template: `
-    <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+    <app-metric-card
+      tooltipId="wind"
+      i18n-tooltipTitle="weather.wind.tooltip.title|@@weatherWindTooltipTitle"
+      tooltipTitle="Vent"
+      i18n-tooltipContent="
+        weather.wind.tooltip.content|@@weatherWindTooltipContent"
+      tooltipContent="La vitesse du vent est mesurée à 10 m du sol. La direction indique d'où vient le vent (un vent de Nord souffle du nord vers le sud). Les rafales sont des accélérations brèves pouvant dépasser le double de la vitesse moyenne."
     >
-      <div class="mb-3 flex items-center justify-between">
-        <h3
-          class="text-sm font-medium text-white/70"
-          i18n="weather.wind.title|@@weatherWindTitle"
-        >
-          Vent
-        </h3>
-        <app-learning-tooltip
-          id="wind"
-          i18n-title="weather.wind.tooltip.title|@@weatherWindTooltipTitle"
-          title="Vent"
-          i18n-content="
-            weather.wind.tooltip.content|@@weatherWindTooltipContent"
-          content="La vitesse du vent est mesurée à 10 m du sol. La direction indique d'où vient le vent (un vent de Nord souffle du nord vers le sud). Les rafales sont des accélérations brèves pouvant dépasser le double de la vitesse moyenne."
-        />
-      </div>
+      <span cardTitle i18n="weather.wind.title|@@weatherWindTitle">Vent</span>
 
       <div class="flex flex-col items-center">
         <!-- Boussole SVG -->
@@ -111,7 +104,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
             text-anchor="middle"
             class="fill-white text-[16px] font-light"
           >
-            {{ speed() | number: "1.0-0" }}
+            {{ displaySpeedValue() }}
           </text>
           <text
             x="60"
@@ -119,7 +112,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
             text-anchor="middle"
             class="fill-white/50 text-[8px]"
           >
-            km/h
+            {{ displaySpeedUnit() }}
           </text>
         </svg>
 
@@ -127,7 +120,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
         @if (gusts() !== null) {
           <p class="mt-2 text-sm text-white/60">
             <span i18n="weather.wind.gusts|@@weatherWindGusts">Rafales</span> :
-            {{ gusts()! | number: "1.0-0" }} km/h
+            {{ gusts()! | unit: unitService.speedUnit() }}
           </p>
         }
 
@@ -136,11 +129,23 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
           {{ cardinalDirection() }} ({{ direction() }}°)
         </p>
       </div>
-    </div>
+
+      @if (hourlyWind().length > 1) {
+        <div class="mt-2">
+          <app-sparkline
+            [data]="hourlyWind()"
+            [color]="'rgba(74, 222, 128, 0.8)'"
+          />
+        </div>
+      }
+    </app-metric-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WindCompassComponent {
+  /** Service de preferences d'unites. */
+  readonly unitService = inject(UnitPreferencesService);
+
   /** Vitesse du vent en km/h. */
   readonly speed = input<number>(0);
 
@@ -150,10 +155,25 @@ export class WindCompassComponent {
   /** Rafales de vent en km/h. */
   readonly gusts = input<number | null>(null);
 
+  /** Donnees horaires de vitesse de vent pour le sparkline. */
+  readonly hourlyWind = input<number[]>([]);
+
   /** Transformation SVG pour orienter la fleche selon la direction du vent. */
   readonly arrowTransform = computed(
     () => `rotate(${this.direction()}, 60, 60)`,
   );
+
+  /** Valeur de vitesse convertie pour l'affichage SVG. */
+  readonly displaySpeedValue = computed(() => {
+    const unit = this.unitService.speedUnit();
+    const val = this.speed();
+    return unit === "mph" ? Math.round(val * 0.621371) : Math.round(val);
+  });
+
+  /** Suffixe d'unite de vitesse pour l'affichage SVG. */
+  readonly displaySpeedUnit = computed(() => {
+    return this.unitService.speedUnit() === "mph" ? "mph" : "km/h";
+  });
 
   /** Direction cardinale en francais (N, NE, E, SE, S, SO, O, NO). */
   readonly cardinalDirection = computed(() => {

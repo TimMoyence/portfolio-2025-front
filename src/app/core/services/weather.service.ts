@@ -2,6 +2,8 @@ import { Inject, Injectable } from "@angular/core";
 import type { Observable } from "rxjs";
 import type {
   AirQualityData,
+  DetailedCurrentWeather,
+  DetailedForecastResult,
   EnsembleData,
   ForecastResponse,
   GeocodingResponse,
@@ -32,8 +34,14 @@ export class WeatherService {
   getForecast(
     latitude: number,
     longitude: number,
+    forecastDays?: number,
   ): Observable<ForecastResponse> {
-    return this.weatherPort.getForecast(latitude, longitude);
+    return this.weatherPort.getForecast(
+      latitude,
+      longitude,
+      undefined,
+      forecastDays,
+    );
   }
 
   /** Recuperation des preferences meteo de l'utilisateur. */
@@ -44,7 +52,10 @@ export class WeatherService {
   /** Mise a jour partielle des preferences meteo. */
   updatePreferences(
     data: Partial<
-      Pick<WeatherPreferences, "level" | "favoriteCities" | "tooltipsSeen">
+      Pick<
+        WeatherPreferences,
+        "level" | "favoriteCities" | "tooltipsSeen" | "units"
+      >
     >,
   ): Observable<WeatherPreferences> {
     return this.weatherPort.updatePreferences(data);
@@ -81,5 +92,21 @@ export class WeatherService {
       startDate,
       endDate,
     );
+  }
+
+  /** Donnees meteo detaillees courantes (OpenWeatherMap). */
+  getDetailedCurrent(
+    latitude: number,
+    longitude: number,
+  ): Observable<DetailedCurrentWeather> {
+    return this.weatherPort.getDetailedCurrent(latitude, longitude);
+  }
+
+  /** Previsions detaillees (OpenWeatherMap). */
+  getDetailedForecast(
+    latitude: number,
+    longitude: number,
+  ): Observable<DetailedForecastResult> {
+    return this.weatherPort.getDetailedForecast(latitude, longitude);
   }
 }

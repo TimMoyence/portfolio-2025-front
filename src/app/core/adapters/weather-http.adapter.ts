@@ -4,6 +4,8 @@ import type { Observable } from "rxjs";
 import { getApiBaseUrl } from "../http/api-config";
 import type {
   AirQualityData,
+  DetailedCurrentWeather,
+  DetailedForecastResult,
   EnsembleData,
   ForecastResponse,
   GeocodingResponse,
@@ -42,13 +44,18 @@ export class WeatherHttpAdapter implements WeatherPort {
     latitude: number,
     longitude: number,
     timezone = "auto",
+    forecastDays?: number,
   ): Observable<ForecastResponse> {
+    const params: Record<string, string> = {
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
+      timezone,
+    };
+    if (forecastDays) {
+      params["forecastDays"] = forecastDays.toString();
+    }
     return this.http.get<ForecastResponse>(`${this.baseUrl}/weather/forecast`, {
-      params: {
-        latitude: latitude.toString(),
-        longitude: longitude.toString(),
-        timezone,
-      },
+      params,
     });
   }
 
@@ -62,7 +69,10 @@ export class WeatherHttpAdapter implements WeatherPort {
   /** Mise a jour partielle des preferences meteo. */
   updatePreferences(
     data: Partial<
-      Pick<WeatherPreferences, "level" | "favoriteCities" | "tooltipsSeen">
+      Pick<
+        WeatherPreferences,
+        "level" | "favoriteCities" | "tooltipsSeen" | "units"
+      >
     >,
   ): Observable<WeatherPreferences> {
     return this.http.patch<WeatherPreferences>(
@@ -120,5 +130,37 @@ export class WeatherHttpAdapter implements WeatherPort {
         endDate,
       },
     });
+  }
+
+  /** Donnees meteo detaillees courantes (OpenWeatherMap). */
+  getDetailedCurrent(
+    latitude: number,
+    longitude: number,
+  ): Observable<DetailedCurrentWeather> {
+    return this.http.get<DetailedCurrentWeather>(
+      `${this.baseUrl}/weather/current-detailed`,
+      {
+        params: {
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
+        },
+      },
+    );
+  }
+
+  /** Previsions detaillees (OpenWeatherMap). */
+  getDetailedForecast(
+    latitude: number,
+    longitude: number,
+  ): Observable<DetailedForecastResult> {
+    return this.http.get<DetailedForecastResult>(
+      `${this.baseUrl}/weather/forecast-detailed`,
+      {
+        params: {
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
+        },
+      },
+    );
   }
 }

@@ -15,6 +15,7 @@ import { WeatherLevelService } from "../../services/weather-level.service";
 @Component({
   selector: "app-transition-prompt",
   standalone: true,
+  host: { class: "block" },
   template: `
     @if (levelService.showTransitionPrompt() && !dismissed()) {
       <div

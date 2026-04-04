@@ -1,15 +1,20 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  effect,
   inject,
   OnInit,
+  PLATFORM_ID,
   signal,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import type {
   AirQualityData,
   CityResult,
+  DetailedCurrentWeather,
   EnsembleData,
   FavoriteCity,
   ForecastResponse,
@@ -23,6 +28,7 @@ import { CitySearchComponent } from "./components/city-search/city-search.compon
 import { CloudVisibilityCardComponent } from "./components/cloud-visibility-card/cloud-visibility-card.component";
 import { CurrentConditionsComponent } from "./components/current-conditions/current-conditions.component";
 import { DailyForecastComponent } from "./components/daily-forecast/daily-forecast.component";
+import { DayDetailPanelComponent } from "./components/day-detail-panel/day-detail-panel.component";
 import { DataExportComponent } from "./components/data-export/data-export.component";
 import { FavoriteCitiesBarComponent } from "./components/favorite-cities-bar/favorite-cities-bar.component";
 import { RadarMapComponent } from "./components/radar-map/radar-map.component";
@@ -35,9 +41,14 @@ import { PressureCardComponent } from "./components/pressure-card/pressure-card.
 import { SpaghettiPlotComponent } from "./components/spaghetti-plot/spaghetti-plot.component";
 import { SunArcComponent } from "./components/sun-arc/sun-arc.component";
 import { TransitionPromptComponent } from "./components/transition-prompt/transition-prompt.component";
+import { UnitSelectorComponent } from "./components/unit-selector/unit-selector.component";
 import { UvIndexCardComponent } from "./components/uv-index-card/uv-index-card.component";
 import { WindCompassComponent } from "./components/wind-compass/wind-compass.component";
+import { BottomSheetComponent } from "../../shared/components/bottom-sheet/bottom-sheet.component";
 import { SlideInDirective } from "../../shared/directives/slide-in.directive";
+import { ChartSkeletonComponent } from "./components/skeleton/chart-skeleton.component";
+import { WeatherCardSkeletonComponent } from "./components/skeleton/weather-card-skeleton.component";
+import { UnitPreferencesService } from "./services/unit-preferences.service";
 import { WeatherLevelService } from "./services/weather-level.service";
 import { weatherCodeToBackground } from "./utils/weather-code-background";
 
@@ -55,8 +66,10 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     CurrentConditionsComponent,
     HourlyChartComponent,
     DailyForecastComponent,
+    DayDetailPanelComponent,
     LevelSelectorComponent,
     TransitionPromptComponent,
+    UnitSelectorComponent,
     UvIndexCardComponent,
     AirQualityCardComponent,
     PressureCardComponent,
@@ -71,7 +84,10 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     DataExportComponent,
     FavoriteCitiesBarComponent,
     RadarMapComponent,
+    BottomSheetComponent,
     SlideInDirective,
+    ChartSkeletonComponent,
+    WeatherCardSkeletonComponent,
   ],
   templateUrl: "./weather-app.component.html",
   styleUrl: "./weather-app.component.scss",
@@ -90,6 +106,9 @@ export class WeatherAppComponent implements OnInit {
   /** Donnees historiques journalieres chargees depuis l'API. */
   readonly historical = signal<HistoricalData | null>(null);
 
+  /** Donnees meteo detaillees courantes (source OpenWeatherMap). */
+  readonly detailedCurrent = signal<DetailedCurrentWeather | null>(null);
+
   /** Ville actuellement selectionnee. */
   readonly selectedCity = signal<CityResult | null>(null);
 
@@ -102,10 +121,28 @@ export class WeatherAppComponent implements OnInit {
   /** Villes favorites de l'utilisateur. */
   readonly favoriteCities = signal<FavoriteCity[]>([]);
 
+  /** Index du jour selectionne pour le detail (bottom sheet mobile / expand desktop). */
+  readonly selectedDayIndex = signal<number | null>(null);
+
+  /** Nombre de jours de prevision demandes (7 ou 14). */
+  readonly forecastDays = signal<7 | 14>(7);
+
   private readonly weatherService = inject(WeatherService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly platformId = inject(PLATFORM_ID);
 
   /** Service de gestion du niveau d'experience. */
   readonly levelService = inject(WeatherLevelService);
+
+  /** Service de gestion des preferences d'unites. */
+  readonly unitService = inject(UnitPreferencesService);
+
+  /** Detecte si on est en mode mobile (< 768px). */
+  private readonly _isMobile = signal(false);
+  readonly isMobile = computed(() => {
+    if (!isPlatformBrowser(this.platformId)) return false;
+    return this._isMobile();
+  });
 
   /** Indique si des previsions sont chargees (pour le style du fond). */
   readonly hasForecast = computed(() => !!this.forecast());
@@ -116,6 +153,34 @@ export class WeatherAppComponent implements OnInit {
     if (!data) return "";
     return weatherCodeToBackground(data.current.weather_code);
   });
+
+  /** Gradient precedent pour le crossfade de fond. */
+  readonly previousBackground = signal("");
+
+  /** Indique que le fond est en transition (crossfade). */
+  readonly backgroundTransitioning = signal(false);
+
+  constructor() {
+    // Detection mobile
+    if (isPlatformBrowser(this.platformId)) {
+      const mq = window.matchMedia("(max-width: 768px)");
+      this._isMobile.set(mq.matches);
+      mq.addEventListener("change", (e) => this._isMobile.set(e.matches));
+    }
+
+    // Crossfade : quand le gradient change, on anime la transition
+    effect(() => {
+      const current = this.backgroundClasses();
+      const prev = this.previousBackground();
+      if (current && current !== prev) {
+        this.backgroundTransitioning.set(true);
+        setTimeout(() => {
+          this.previousBackground.set(current);
+          this.backgroundTransitioning.set(false);
+        }, 1200);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.levelService.loadPreferences();
@@ -131,29 +196,45 @@ export class WeatherAppComponent implements OnInit {
     this.airQuality.set(null);
     this.ensemble.set(null);
     this.historical.set(null);
+    this.detailedCurrent.set(null);
 
-    this.weatherService.getForecast(city.latitude, city.longitude).subscribe({
-      next: (data) => {
-        this.forecast.set(data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(
-          err?.error?.message ??
-            $localize`:weather.error.loading|@@weatherErrorLoading:Erreur lors du chargement des prévisions.`,
-        );
-        this.loading.set(false);
-      },
-    });
+    this.weatherService
+      .getForecast(city.latitude, city.longitude, this.forecastDays())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.forecast.set(data);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.error.set(
+            err?.error?.message ??
+              $localize`:weather.error.loading|@@weatherErrorLoading:Erreur lors du chargement des prévisions.`,
+          );
+          this.loading.set(false);
+        },
+      });
 
     // Charge la qualite de l'air en parallele pour les niveaux Curieux+
     if (this.levelService.level() !== "discovery") {
       this.weatherService
         .getAirQuality(city.latitude, city.longitude)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (data) => this.airQuality.set(data),
           error: () => {
             /* Echec silencieux : la carte affichera "Donnees indisponibles" */
+          },
+        });
+
+      // Charge les donnees OWM detaillees en parallele (Curieux+)
+      this.weatherService
+        .getDetailedCurrent(city.latitude, city.longitude)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (data) => this.detailedCurrent.set(data),
+          error: () => {
+            /* Echec silencieux */
           },
         });
     }
@@ -172,12 +253,27 @@ export class WeatherAppComponent implements OnInit {
     if (level !== "discovery" && !this.airQuality()) {
       this.weatherService
         .getAirQuality(city.latitude, city.longitude)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (data) => this.airQuality.set(data),
           error: () => {
             /* Echec silencieux : la carte affichera "Donnees indisponibles" */
           },
         });
+    }
+
+    if (level !== "discovery" && !this.detailedCurrent()) {
+      if (city) {
+        this.weatherService
+          .getDetailedCurrent(city.latitude, city.longitude)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: (data) => this.detailedCurrent.set(data),
+            error: () => {
+              /* Echec silencieux */
+            },
+          });
+      }
     }
 
     if (level === "expert" && !this.ensemble()) {
@@ -212,6 +308,7 @@ export class WeatherAppComponent implements OnInit {
     this.favoriteCities.set(updated);
     this.weatherService
       .updatePreferences({ favoriteCities: updated })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
@@ -223,17 +320,47 @@ export class WeatherAppComponent implements OnInit {
     this.favoriteCities.set(updated);
     this.weatherService
       .updatePreferences({ favoriteCities: updated })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
+  }
+
+  /** Gere la selection d'un jour pour afficher le detail. */
+  onDaySelected(index: number): void {
+    // Si meme jour, toggle la selection
+    this.selectedDayIndex.set(this.selectedDayIndex() === index ? null : index);
+  }
+
+  /** Met a jour le nombre de jours de prevision et recharge les donnees. */
+  onForecastDaysChange(days: number): void {
+    this.forecastDays.set(days as 7 | 14);
+    const city = this.selectedCity();
+    if (city) {
+      this.weatherService
+        .getForecast(city.latitude, city.longitude, days)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (data) => this.forecast.set(data),
+          error: () => {
+            /* Echec silencieux : les previsions actuelles restent affichees */
+          },
+        });
+    }
   }
 
   /** Charge les villes favorites depuis le backend. */
   private loadFavorites(): void {
-    this.weatherService.getPreferences().subscribe({
-      next: (prefs) => this.favoriteCities.set(prefs.favoriteCities ?? []),
-      error: () => {
-        /* Preferences indisponibles : pas de favoris */
-      },
-    });
+    this.weatherService
+      .getPreferences()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (prefs) => {
+          this.favoriteCities.set(prefs.favoriteCities ?? []);
+          this.unitService.loadFromPreferences(prefs);
+        },
+        error: () => {
+          /* Preferences indisponibles : pas de favoris */
+        },
+      });
   }
 
   /**
@@ -242,12 +369,15 @@ export class WeatherAppComponent implements OnInit {
    */
   private loadExpertData(latitude: number, longitude: number): void {
     // Donnees ensemble multi-modeles
-    this.weatherService.getEnsemble(latitude, longitude).subscribe({
-      next: (data) => this.ensemble.set(data),
-      error: () => {
-        /* Echec silencieux : les cartes afficheront "Donnees indisponibles" */
-      },
-    });
+    this.weatherService
+      .getEnsemble(latitude, longitude)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => this.ensemble.set(data),
+        error: () => {
+          /* Echec silencieux : les cartes afficheront "Donnees indisponibles" */
+        },
+      });
 
     // Donnees historiques : 30 derniers jours
     const today = new Date();
@@ -265,6 +395,7 @@ export class WeatherAppComponent implements OnInit {
         formatDate(startDate),
         formatDate(endDate),
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => this.historical.set(data),
         error: () => {

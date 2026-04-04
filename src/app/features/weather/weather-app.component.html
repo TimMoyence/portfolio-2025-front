@@ -1,12 +1,19 @@
-<section
-  class="min-h-screen px-4 pt-4 pb-8"
-  [ngClass]="
-    hasForecast()
-      ? 'bg-gradient-to-br ' + backgroundClasses()
-      : 'bg-scheme-background'
-  "
->
-  <div class="mx-auto max-w-6xl space-y-6">
+<section class="relative min-h-screen px-4 pt-4 pb-8 overflow-hidden">
+  <!-- Fond avec crossfade : ancien gradient en dessous, nouveau au-dessus avec fade-in -->
+  @if (hasForecast()) {
+    <div
+      class="absolute inset-0 bg-gradient-to-br"
+      [ngClass]="previousBackground() || backgroundClasses()"
+    ></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-br transition-opacity duration-[1200ms] ease-in-out"
+      [ngClass]="backgroundClasses()"
+      [class.opacity-0]="backgroundTransitioning()"
+    ></div>
+  } @else {
+    <div class="absolute inset-0 bg-scheme-background"></div>
+  }
+  <div class="relative z-10 mx-auto max-w-6xl space-y-6">
     <!-- Titre -->
     <div class="text-center">
       <h1
@@ -26,12 +33,13 @@
       }
     </div>
 
-    <!-- Selecteur de niveau -->
-    <div class="flex justify-center mt-2">
+    <!-- Selecteur de niveau + unites -->
+    <div class="flex justify-center items-center gap-2 mt-2">
       <app-level-selector
         [darkMode]="hasForecast()"
         (levelChanged)="onLevelChanged($event)"
       />
+      <app-unit-selector />
     </div>
 
     <!-- Suggestion de transition de niveau -->
@@ -55,24 +63,14 @@
       (citySelected)="onCitySelected($event)"
     />
 
-    <!-- Chargement -->
+    <!-- Chargement : skeleton loaders -->
     @if (loading()) {
-      <div class="flex items-center justify-center py-12">
-        <div
-          class="h-10 w-10 animate-spin rounded-full border-4"
-          [ngClass]="
-            hasForecast()
-              ? 'border-white/20 border-t-white'
-              : 'border-scheme-border border-t-scheme-accent'
-          "
-        ></div>
-        <span
-          class="ml-3"
-          [ngClass]="hasForecast() ? 'text-white/70' : 'text-scheme-text-muted'"
-          i18n="weather.loading|@@weatherLoading"
-        >
-          Chargement...
-        </span>
+      <app-chart-skeleton />
+      <app-chart-skeleton />
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <app-weather-card-skeleton />
+        }
       </div>
     }
 
@@ -95,20 +93,51 @@
     <!-- Previsions (Decouverte+) : toujours visibles -->
     @if (forecast(); as data) {
       <div appSlideIn>
-        <app-current-conditions [current]="data.current" />
+        <app-current-conditions
+          [current]="data.current"
+          [detailed]="detailedCurrent()"
+        />
       </div>
       <div appSlideIn>
-        <app-hourly-chart [hourly]="data.hourly" />
+        @defer (on viewport) {
+          <app-hourly-chart [hourly]="data.hourly" />
+        } @placeholder {
+          <app-chart-skeleton />
+        }
       </div>
       <div appSlideIn>
-        <app-daily-forecast [daily]="data.daily" />
+        <app-daily-forecast
+          [daily]="data.daily"
+          [hourly]="data.hourly"
+          [selectedDayIndex]="selectedDayIndex()"
+          (daySelected)="onDaySelected($event)"
+          (forecastDaysChange)="onForecastDaysChange($event)"
+        />
       </div>
+
+      <!-- Bottom sheet mobile pour le detail d'un jour -->
+      @if (isMobile() && selectedDayIndex() !== null) {
+        <app-bottom-sheet
+          [open]="selectedDayIndex() !== null"
+          [title]="'Détail du jour'"
+          (openChange)="$event ? null : selectedDayIndex.set(null)"
+        >
+          <app-day-detail-panel
+            [daily]="data.daily"
+            [dayIndex]="selectedDayIndex()!"
+            [hourly]="data.hourly"
+          />
+        </app-bottom-sheet>
+      }
 
       <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
       @if (levelService.level() !== "discovery") {
         <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3">
           <div appSlideIn>
-            <app-uv-index-card [uvIndex]="data.current.uv_index ?? 0" />
+            <app-uv-index-card
+              [uvIndex]="data.current.uv_index ?? 0"
+              [hourlyUv]="data.hourly.uv_index ?? []"
+            />
           </div>
           <div appSlideIn>
             <app-air-quality-card [airQuality]="airQuality()" />
@@ -124,6 +153,7 @@
               [speed]="data.current.wind_speed_10m"
               [direction]="data.current.wind_direction_10m ?? 0"
               [gusts]="data.current.wind_gusts_10m ?? null"
+              [hourlyWind]="data.hourly.wind_speed_10m ?? []"
             />
           </div>
           <div appSlideIn>
@@ -136,6 +166,7 @@
             <app-humidity-card
               [humidity]="data.current.relative_humidity_2m ?? 0"
               [dewPoint]="data.current.dew_point_2m ?? null"
+              [hourlyHumidity]="data.hourly.relative_humidity_2m ?? []"
             />
           </div>
           <div appSlideIn>
