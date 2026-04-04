@@ -22,20 +22,20 @@ import {
   BudgetTransactionView,
 } from "./components/budget-transactions-table/budget-transactions-table.component";
 import { COMMON_BUDGET_SAMPLE_CSV } from "./common-budget-sample";
+import {
+  getBudgetType,
+  getCategoryFact,
+  getCategoryFacts,
+  getPlanValue,
+} from "./utils/budget-category.utils";
+import {
+  parseCsv,
+  toTransactions,
+  type BudgetTransaction,
+} from "./utils/budget-csv-parser.utils";
+import { normalizeText } from "./utils/text.utils";
 
-type CsvRow = Record<string, string>;
 type BudgetMonth = "March" | "April" | "May" | "June";
-
-type BudgetTransaction = {
-  id: string;
-  startedDate: string;
-  completedDate: string;
-  description: string;
-  type: string;
-  state: string;
-  amount: number;
-  category: string;
-};
 
 const MONTHS: BudgetMonth[] = ["March", "April", "May", "June"];
 
@@ -107,23 +107,24 @@ export class CommonBudgetTmComponent {
   );
 
   readonly filteredTransactions = computed(() => {
-    const search = this.normalizeText(this.searchTerm());
+    const search = normalizeText(this.searchTerm());
     const category = this.categoryFilter();
     const state = this.stateFilter();
-    const budgetType = this.budgetTypeFilter();
+    const budgetTypeValue = this.budgetTypeFilter();
+    const cats = this.apiCategories();
 
     return this.transactions().filter((transaction) => {
       const matchesSearch =
-        !search || this.normalizeText(transaction.description).includes(search);
+        !search || normalizeText(transaction.description).includes(search);
       const matchesCategory =
         category === "ALL" || transaction.category === category;
       const matchesState = state === "ALL" || transaction.state === state;
       const matchesBudgetType =
-        budgetType === "ALL" ||
-        (budgetType === "FIXED" &&
-          this.getBudgetType(transaction.category) === "FIXED") ||
-        (budgetType === "VARIABLE" &&
-          this.getBudgetType(transaction.category) === "VARIABLE");
+        budgetTypeValue === "ALL" ||
+        (budgetTypeValue === "FIXED" &&
+          getBudgetType(transaction.category, cats) === "FIXED") ||
+        (budgetTypeValue === "VARIABLE" &&
+          getBudgetType(transaction.category, cats) === "VARIABLE");
       return (
         matchesSearch && matchesCategory && matchesState && matchesBudgetType
       );
@@ -167,7 +168,7 @@ export class CommonBudgetTmComponent {
     this.fmt.formatCurrency(
       this.transactions()
         .filter((transaction) =>
-          this.normalizeText(transaction.description).includes("tim moyence"),
+          normalizeText(transaction.description).includes("tim moyence"),
         )
         .reduce((sum, transaction) => sum + Math.max(transaction.amount, 0), 0),
     ),
@@ -177,9 +178,7 @@ export class CommonBudgetTmComponent {
     this.fmt.formatCurrency(
       this.transactions()
         .filter((transaction) =>
-          this.normalizeText(transaction.description).includes(
-            "maria naumenko",
-          ),
+          normalizeText(transaction.description).includes("maria naumenko"),
         )
         .reduce((sum, transaction) => sum + Math.max(transaction.amount, 0), 0),
     ),
@@ -198,32 +197,35 @@ export class CommonBudgetTmComponent {
     ),
   );
 
-  readonly categoryTotals = computed(() =>
-    this.getCategoryFacts()
+  readonly categoryTotals = computed(() => {
+    const txs = this.transactions();
+    const cats = this.apiCategories();
+
+    return getCategoryFacts(txs, cats)
       .sort((left, right) => {
-        const leftType = this.getBudgetType(left);
-        const rightType = this.getBudgetType(right);
+        const leftType = getBudgetType(left, cats);
+        const rightType = getBudgetType(right, cats);
 
         if (leftType !== rightType) {
           return leftType === "FIXED" ? -1 : 1;
         }
 
-        return this.getCategoryFact(right) - this.getCategoryFact(left);
+        return getCategoryFact(right, txs) - getCategoryFact(left, txs);
       })
       .map((name) => {
-        const total = this.getCategoryFact(name);
-        const planValue = this.getPlanValue(name);
-        const leftValue = planValue - total;
+        const total = getCategoryFact(name, txs);
+        const plan = getPlanValue(name, cats);
+        const leftValue = plan - total;
         return {
           name,
-          plan: planValue > 0 ? this.fmt.formatCurrency(planValue) : "-",
+          plan: plan > 0 ? this.fmt.formatCurrency(plan) : "-",
           fact: this.fmt.formatCurrency(total),
-          left: planValue > 0 ? this.fmt.formatCurrency(leftValue) : "-",
-          isLeftNegative: planValue > 0 && leftValue < 0,
-          budgetType: this.getBudgetType(name),
+          left: plan > 0 ? this.fmt.formatCurrency(leftValue) : "-",
+          isLeftNegative: plan > 0 && leftValue < 0,
+          budgetType: getBudgetType(name, cats),
         };
-      }),
-  );
+      });
+  });
 
   readonly totalSalary = computed(
     () =>
@@ -386,13 +388,13 @@ export class CommonBudgetTmComponent {
           );
         } catch {
           // Fallback to local parsing
-          this.baseTransactions.set(this.toTransactions(this.parseCsv(csv)));
+          this.baseTransactions.set(toTransactions(parseCsv(csv)));
           this.sourceLabel.set(
             `${this.selectedMonth()} - ${file.name} (local parse)`,
           );
         }
       } else {
-        this.baseTransactions.set(this.toTransactions(this.parseCsv(csv)));
+        this.baseTransactions.set(toTransactions(parseCsv(csv)));
         this.sourceLabel.set(`${this.selectedMonth()} - ${file.name}`);
       }
     };
@@ -433,7 +435,7 @@ export class CommonBudgetTmComponent {
     } catch {
       // Fallback to sample data if API is unreachable
       this.baseTransactions.set(
-        this.toTransactions(this.parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
+        toTransactions(parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
       );
       this.sourceLabel.set("Fallback - Embedded sample");
     } finally {
@@ -463,7 +465,7 @@ export class CommonBudgetTmComponent {
         // No entries yet for this month — show empty or sample
         if (month === "March") {
           this.baseTransactions.set(
-            this.toTransactions(this.parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
+            toTransactions(parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
           );
           this.sourceLabel.set("March - Embedded sample (no API data yet)");
         } else {
@@ -493,143 +495,5 @@ export class CommonBudgetTmComponent {
         category: cat?.name ?? "Autres",
       };
     });
-  }
-
-  private parseCsv(csvText: string): CsvRow[] {
-    const rows: string[][] = [];
-    let current = "";
-    let row: string[] = [];
-    let inQuotes = false;
-
-    for (let index = 0; index < csvText.length; index += 1) {
-      const character = csvText[index];
-      const next = csvText[index + 1];
-
-      if (character === '"') {
-        if (inQuotes && next === '"') {
-          current += '"';
-          index += 1;
-        } else {
-          inQuotes = !inQuotes;
-        }
-        continue;
-      }
-
-      if (character === "," && !inQuotes) {
-        row.push(current);
-        current = "";
-        continue;
-      }
-
-      if ((character === "\n" || character === "\r") && !inQuotes) {
-        if (character === "\r" && next === "\n") {
-          index += 1;
-        }
-        row.push(current);
-        rows.push(row);
-        row = [];
-        current = "";
-        continue;
-      }
-
-      current += character;
-    }
-
-    if (current || row.length) {
-      row.push(current);
-      rows.push(row);
-    }
-
-    const [headers = [], ...dataRows] = rows.filter((entry) =>
-      entry.some((cell) => cell !== ""),
-    );
-
-    return dataRows.map((dataRow) => {
-      const mappedRow: CsvRow = {};
-      headers.forEach((header, index) => {
-        mappedRow[header] = dataRow[index] ?? "";
-      });
-      return mappedRow;
-    });
-  }
-
-  private toTransactions(rows: CsvRow[]): BudgetTransaction[] {
-    return rows.map((row) => {
-      const description = (row["Description"] ?? "").trim();
-      const startedDate = row["Started Date"] ?? "";
-      const amount = Number.parseFloat(row["Amount"] ?? "0");
-      return {
-        id: `${startedDate}|${description}|${row["Amount"]}|${row["Type"]}`,
-        startedDate,
-        completedDate: row["Completed Date"] ?? "",
-        description,
-        type: row["Type"] ?? "",
-        state: row["State"] ?? "",
-        amount,
-        category: "Autres",
-      };
-    });
-  }
-
-  private normalizeText(value: string): string {
-    return value
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-  }
-
-  private getBudgetType(categoryName: string): "FIXED" | "VARIABLE" {
-    const cat = this.apiCategories().find((c) => c.name === categoryName);
-    return (cat?.budgetType as "FIXED" | "VARIABLE") ?? "VARIABLE";
-  }
-
-  private getPlanValue(categoryName: string): number {
-    const cat = this.apiCategories().find((c) => c.name === categoryName);
-    return cat ? Number(cat.budgetLimit) : 0;
-  }
-
-  private getCategoryFacts(): string[] {
-    const categories = new Set<string>();
-
-    this.transactions().forEach((transaction) => {
-      if (transaction.category === "Contribution") {
-        return;
-      }
-
-      if (
-        transaction.category === "Transfer / Savings" &&
-        transaction.amount >= 0
-      ) {
-        return;
-      }
-
-      if (
-        transaction.amount < 0 &&
-        transaction.category !== "Transfer / Savings"
-      ) {
-        categories.add(transaction.category);
-      }
-    });
-
-    // Add categories with a budget limit from the API
-    this.apiCategories().forEach((cat) => {
-      if (cat.budgetLimit > 0) {
-        categories.add(cat.name);
-      }
-    });
-
-    categories.add("Pockets");
-
-    return Array.from(categories);
-  }
-
-  private getCategoryFact(category: string): number {
-    return this.transactions().reduce((sum, transaction) => {
-      if (transaction.category !== category || transaction.amount >= 0) {
-        return sum;
-      }
-
-      return sum + Math.abs(transaction.amount);
-    }, 0);
   }
 }
