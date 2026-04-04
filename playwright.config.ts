@@ -13,6 +13,12 @@ export default defineConfig({
   retries: process.env["CI"] ? 2 : 0,
   workers: process.env["CI"] ? 1 : undefined,
   reporter: "html",
+  snapshotPathTemplate: "e2e/__screenshots__/{testFilePath}/{arg}{ext}",
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.01,
+    },
+  },
   use: {
     baseURL: "http://localhost:4200",
     trace: "on-first-retry",

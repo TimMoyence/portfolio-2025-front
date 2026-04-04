@@ -54,3 +54,6 @@ src/assets/figma/Asili Design Mobile/Les sites clients • Mobile.png
 src/assets/figma/Asili Design Mobile/Offre de service • Mobile.png
 src/assets/figma/Asili Design Mobile/Présentation en tant que développeur web • Mobile.png
 .gitnexus
+
+# Playwright — resultats temporaires (diffs, traces)
+e2e/test-results/

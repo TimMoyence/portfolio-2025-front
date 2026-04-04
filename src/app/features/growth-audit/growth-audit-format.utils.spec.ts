@@ -51,6 +51,14 @@ describe("growth-audit-format.utils", () => {
     it("devrait traduire page_ai_recap", () => {
       expect(formatTaskLabel("page_ai_recap")).toBe("Analyse IA de page");
     });
+
+    it("devrait traduire synthesis", () => {
+      expect(formatTaskLabel("synthesis")).toBeTruthy();
+    });
+
+    it("devrait remplacer les underscores pour une valeur inconnue", () => {
+      expect(formatTaskLabel("custom_task")).toBe("custom task");
+    });
   });
 
   describe("formatSubTaskLabel", () => {
@@ -72,6 +80,18 @@ describe("growth-audit-format.utils", () => {
       expect(formatSectionLabel("executiveSection")).toBe("Executive");
     });
 
+    it("devrait traduire prioritySection", () => {
+      expect(formatSectionLabel("prioritySection")).toBeTruthy();
+    });
+
+    it("devrait traduire executionSection", () => {
+      expect(formatSectionLabel("executionSection")).toBeTruthy();
+    });
+
+    it("devrait traduire clientCommsSection", () => {
+      expect(formatSectionLabel("clientCommsSection")).toBeTruthy();
+    });
+
     it("devrait retourner la cle brute pour une section inconnue", () => {
       expect(formatSectionLabel("unknownSection")).toBe("unknownSection");
     });
@@ -84,6 +104,14 @@ describe("growth-audit-format.utils", () => {
 
     it("devrait retourner les classes pour failed", () => {
       expect(sectionBadgeClass("failed")).toContain("bg-red-100");
+    });
+
+    it("devrait retourner les classes pour fallback", () => {
+      expect(sectionBadgeClass("fallback")).toContain("bg-amber-100");
+    });
+
+    it("devrait retourner les classes pour started", () => {
+      expect(sectionBadgeClass("started")).toContain("bg-sky-100");
     });
 
     it("devrait retourner les classes par defaut", () => {
@@ -165,6 +193,24 @@ describe("growth-audit-format.utils", () => {
 
     it("devrait utiliser le fallback si pas de step", () => {
       expect(formatProgressStep({})).toBe("Audit en cours...");
+    });
+
+    it("devrait ignorer les details avec valeurs non-numeriques", () => {
+      expect(
+        formatProgressStep({
+          step: "Scan",
+          details: { done: "abc", total: "def" },
+        }),
+      ).toBe("Scan");
+    });
+
+    it("devrait ignorer les details avec total a zero", () => {
+      expect(
+        formatProgressStep({
+          step: "Scan",
+          details: { done: 0, total: 0 },
+        }),
+      ).toBe("Scan");
     });
   });
 

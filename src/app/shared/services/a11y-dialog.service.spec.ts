@@ -28,9 +28,107 @@ describe("A11yDialogService", () => {
       service.saveFocus();
       service.restoreFocus();
 
-      // Pas d'erreur, le focus a ete restaure
       expect(document.activeElement).toBe(btn);
       document.body.removeChild(btn);
+    });
+
+    it("restoreFocus ne devrait rien faire si aucun focus sauvegarde", () => {
+      expect(() => service.restoreFocus()).not.toThrow();
+    });
+
+    it("focusFirstDescendant devrait focus le premier element focusable", () => {
+      const container = document.createElement("div");
+      const btn = document.createElement("button");
+      btn.textContent = "Click";
+      container.appendChild(btn);
+      document.body.appendChild(container);
+
+      service.focusFirstDescendant(container);
+      expect(document.activeElement).toBe(btn);
+
+      document.body.removeChild(container);
+    });
+
+    it("focusFirstDescendant ne devrait rien faire si container est null", () => {
+      expect(() => service.focusFirstDescendant(null)).not.toThrow();
+    });
+
+    it("focusFirstDescendant ne devrait rien faire si container est undefined", () => {
+      expect(() =>
+        service.focusFirstDescendant(undefined as unknown as HTMLElement),
+      ).not.toThrow();
+    });
+
+    it("trapFocus devrait cycler le focus vers le premier element quand Tab atteint le dernier", () => {
+      const container = document.createElement("div");
+      const btn1 = document.createElement("button");
+      btn1.textContent = "First";
+      const btn2 = document.createElement("button");
+      btn2.textContent = "Last";
+      container.appendChild(btn1);
+      container.appendChild(btn2);
+      document.body.appendChild(container);
+
+      btn2.focus();
+      const event = new KeyboardEvent("keydown", {
+        key: "Tab",
+        cancelable: true,
+      });
+      service.trapFocus(event, container);
+
+      expect(document.activeElement).toBe(btn1);
+      document.body.removeChild(container);
+    });
+
+    it("trapFocus devrait cycler le focus vers le dernier element quand Shift+Tab atteint le premier", () => {
+      const container = document.createElement("div");
+      const btn1 = document.createElement("button");
+      btn1.textContent = "First";
+      const btn2 = document.createElement("button");
+      btn2.textContent = "Last";
+      container.appendChild(btn1);
+      container.appendChild(btn2);
+      document.body.appendChild(container);
+
+      btn1.focus();
+      const event = new KeyboardEvent("keydown", {
+        key: "Tab",
+        shiftKey: true,
+        cancelable: true,
+      });
+      service.trapFocus(event, container);
+
+      expect(document.activeElement).toBe(btn2);
+      document.body.removeChild(container);
+    });
+
+    it("trapFocus ne devrait rien faire pour une touche autre que Tab", () => {
+      const container = document.createElement("div");
+      const btn = document.createElement("button");
+      container.appendChild(btn);
+      document.body.appendChild(container);
+      btn.focus();
+
+      const event = new KeyboardEvent("keydown", { key: "Escape" });
+      service.trapFocus(event, container);
+
+      expect(document.activeElement).toBe(btn);
+      document.body.removeChild(container);
+    });
+
+    it("trapFocus ne devrait rien faire si container est null", () => {
+      const event = new KeyboardEvent("keydown", { key: "Tab" });
+      expect(() => service.trapFocus(event, null)).not.toThrow();
+    });
+
+    it("trapFocus ne devrait rien faire si le container est vide", () => {
+      const container = document.createElement("div");
+      document.body.appendChild(container);
+
+      const event = new KeyboardEvent("keydown", { key: "Tab" });
+      expect(() => service.trapFocus(event, container)).not.toThrow();
+
+      document.body.removeChild(container);
     });
   });
 

@@ -1,7 +1,7 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { AUTH_PORT } from "../../core/ports/auth.port";
 import { createAuthPortStub } from "../../../testing/factories/auth.factory";
 import { ForgotPasswordComponent } from "./forgot-password.component";
@@ -42,5 +42,28 @@ describe("ForgotPasswordComponent", () => {
       email: "john@example.com",
     });
     expect(component.successMessage).toBe("Lien envoye");
+  });
+
+  it("ne devrait pas appeler le service si le formulaire est invalide", () => {
+    component.submit({ invalid: true } as never);
+
+    expect(authService.requestPasswordReset).not.toHaveBeenCalled();
+    expect(component.submitted).toBeTrue();
+  });
+
+  it("devrait afficher le message d erreur en cas d echec", () => {
+    authService.requestPasswordReset.and.returnValue(
+      new Observable((sub) =>
+        sub.error({ error: { message: "Utilisateur inconnu" } }),
+      ),
+    );
+
+    component.email = "unknown@example.com";
+    component.submit({
+      invalid: false,
+      resetForm: jasmine.createSpy("resetForm"),
+    } as never);
+
+    expect(component.errorMessage).toBe("Utilisateur inconnu");
   });
 });
