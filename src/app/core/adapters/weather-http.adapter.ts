@@ -10,6 +10,7 @@ import type {
   ForecastResponse,
   GeocodingResponse,
   HistoricalData,
+  WeatherAlertResult,
   WeatherPreferences,
 } from "../models/weather.model";
 import type { WeatherPort } from "../ports/weather.port";
@@ -71,7 +72,11 @@ export class WeatherHttpAdapter implements WeatherPort {
     data: Partial<
       Pick<
         WeatherPreferences,
-        "level" | "favoriteCities" | "tooltipsSeen" | "units"
+        | "level"
+        | "favoriteCities"
+        | "tooltipsSeen"
+        | "units"
+        | "defaultCityIndex"
       >
     >,
   ): Observable<WeatherPreferences> {
@@ -162,5 +167,18 @@ export class WeatherHttpAdapter implements WeatherPort {
         },
       },
     );
+  }
+
+  /** Alertes meteo synthetiques. */
+  getAlerts(
+    latitude: number,
+    longitude: number,
+  ): Observable<WeatherAlertResult> {
+    return this.http.get<WeatherAlertResult>(`${this.baseUrl}/weather/alerts`, {
+      params: {
+        latitude: latitude.toString(),
+        longitude: longitude.toString(),
+      },
+    });
   }
 }

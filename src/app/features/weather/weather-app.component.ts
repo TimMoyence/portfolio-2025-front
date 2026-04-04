@@ -19,6 +19,7 @@ import type {
   FavoriteCity,
   ForecastResponse,
   HistoricalData,
+  WeatherAlert,
   WeatherLevel,
 } from "../../core/models/weather.model";
 import type { WeatherPort } from "../../core/ports/weather.port";
@@ -32,6 +33,7 @@ import { DailyForecastComponent } from "./components/daily-forecast/daily-foreca
 import { DayDetailPanelComponent } from "./components/day-detail-panel/day-detail-panel.component";
 import { DataExportComponent } from "./components/data-export/data-export.component";
 import { FavoriteCitiesBarComponent } from "./components/favorite-cities-bar/favorite-cities-bar.component";
+import { WeatherAlertsCardComponent } from "./components/weather-alerts-card/weather-alerts-card.component";
 import { RadarMapComponent } from "./components/radar-map/radar-map.component";
 import { HistoricalComparisonComponent } from "./components/historical-comparison/historical-comparison.component";
 import { HourlyChartComponent } from "./components/hourly-chart/hourly-chart.component";
@@ -84,6 +86,7 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     HistoricalComparisonComponent,
     DataExportComponent,
     FavoriteCitiesBarComponent,
+    WeatherAlertsCardComponent,
     RadarMapComponent,
     BottomSheetComponent,
     SlideInDirective,
@@ -110,6 +113,12 @@ export class WeatherAppComponent implements OnInit {
 
   /** Donnees meteo detaillees courantes (source OpenWeatherMap). */
   readonly detailedCurrent = signal<DetailedCurrentWeather | null>(null);
+
+  /** Alertes meteo pour la ville selectionnee. */
+  readonly alerts = signal<WeatherAlert[]>([]);
+
+  /** Index de la ville favorite par defaut (chargement automatique). */
+  readonly defaultCityIndex = signal<number | null>(null);
 
   /** Ville actuellement selectionnee. */
   readonly selectedCity = signal<CityResult | null>(null);
@@ -188,6 +197,18 @@ export class WeatherAppComponent implements OnInit {
     this.ensemble.set(null);
     this.historical.set(null);
     this.detailedCurrent.set(null);
+    this.alerts.set([]);
+
+    // Charge les alertes meteo en parallele (tous niveaux)
+    this.weatherService
+      .getAlerts(city.latitude, city.longitude)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => this.alerts.set(data.alerts),
+        error: () => {
+          /* Echec silencieux : les alertes ne sont pas essentielles */
+        },
+      });
 
     this.weatherService
       .getForecast(
@@ -320,6 +341,15 @@ export class WeatherAppComponent implements OnInit {
       .subscribe();
   }
 
+  /** Definit ou retire la ville favorite par defaut. */
+  setDefaultCity(index: number | null): void {
+    this.defaultCityIndex.set(index);
+    this.weatherService
+      .updatePreferences({ defaultCityIndex: index })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
   /** Gere la selection d'un jour pour afficher le detail. */
   onDaySelected(index: number): void {
     // Si meme jour, toggle la selection
@@ -352,6 +382,24 @@ export class WeatherAppComponent implements OnInit {
         next: (prefs) => {
           this.favoriteCities.set(prefs.favoriteCities ?? []);
           this.unitService.loadFromPreferences(prefs);
+          this.defaultCityIndex.set(prefs.defaultCityIndex ?? null);
+          // Chargement automatique de la ville par defaut
+          const idx = prefs.defaultCityIndex;
+          if (
+            idx !== null &&
+            idx !== undefined &&
+            prefs.favoriteCities?.[idx]
+          ) {
+            const fav = prefs.favoriteCities[idx];
+            this.onCitySelected({
+              id: 0,
+              name: fav.name,
+              latitude: fav.latitude,
+              longitude: fav.longitude,
+              country: fav.country,
+              country_code: "",
+            });
+          }
         },
         error: () => {
           /* Preferences indisponibles : pas de favoris */

@@ -6,6 +6,7 @@ import {
   EventEmitter,
   input,
   Output,
+  output,
 } from "@angular/core";
 import type {
   CityResult,
@@ -58,23 +59,56 @@ import type {
       }
 
       <!-- Chips des villes favorites -->
-      @for (city of favorites(); track city.name) {
-        <button
-          type="button"
-          (click)="onCityClick(city)"
-          class="flex-shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors"
-          [ngClass]="
-            isSelected(city)
-              ? darkMode()
-                ? 'border-white/50 bg-white/20 text-white'
-                : 'border-scheme-accent bg-scheme-accent/10 text-scheme-accent'
-              : darkMode()
-                ? 'border-white/20 bg-white/10 text-white/80 hover:bg-white/20'
+      @for (city of favorites(); track city.name; let i = $index) {
+        <div class="flex-shrink-0 flex items-center gap-0.5">
+          <button
+            type="button"
+            (click)="onCityClick(city)"
+            class="rounded-l-full border border-r-0 px-3 py-1.5 text-sm transition-colors"
+            [ngClass]="
+              isSelected(city)
+                ? darkMode()
+                  ? 'border-white/50 bg-white/20 text-white'
+                  : 'border-scheme-accent bg-scheme-accent/10 text-scheme-accent'
+                : darkMode()
+                  ? 'border-white/20 bg-white/10 text-white/80 hover:bg-white/20'
+                  : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
+            "
+          >
+            {{ city.name }}
+          </button>
+          <button
+            type="button"
+            (click)="toggleDefault(i)"
+            class="rounded-r-full border px-1.5 py-1.5 text-xs transition-colors"
+            [ngClass]="
+              darkMode()
+                ? 'border-white/20 bg-white/10 text-white/60 hover:bg-white/20'
                 : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
-          "
-        >
-          {{ city.name }}
-        </button>
+            "
+            [class.text-yellow-400]="defaultCityIndex() === i"
+            [attr.aria-label]="
+              defaultCityIndex() === i
+                ? defaultCityRemoveLabel
+                : defaultCitySetLabel
+            "
+          >
+            <svg
+              class="h-3 w-3"
+              [attr.fill]="defaultCityIndex() === i ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+              />
+            </svg>
+          </button>
+        </div>
       }
     </div>
   `,
@@ -99,8 +133,16 @@ export class FavoriteCitiesBarComponent {
   /** Emet la suppression d'une ville des favoris. */
   @Output() readonly removeFavorite = new EventEmitter<FavoriteCity>();
 
+  /** Index de la ville favorite par defaut. */
+  readonly defaultCityIndex = input<number | null>(null);
+
+  /** Emet le changement de ville par defaut. */
+  readonly defaultCityChange = output<number | null>();
+
   readonly addToFavoritesLabel = $localize`:weather.favorites.add|@@weatherFavoritesAdd:Ajouter aux favoris`;
   readonly removeFromFavoritesLabel = $localize`:weather.favorites.remove|@@weatherFavoritesRemove:Retirer des favoris`;
+  readonly defaultCitySetLabel = $localize`:weather.favorites.setDefault|@@weatherFavoritesSetDefault:Definir comme ville par defaut`;
+  readonly defaultCityRemoveLabel = $localize`:weather.favorites.removeDefault|@@weatherFavoritesRemoveDefault:Retirer la ville par defaut`;
 
   /** Verifie si la ville courante est deja en favori. */
   readonly isCurrentFavorite = computed(() => {
@@ -131,6 +173,15 @@ export class FavoriteCitiesBarComponent {
       country: city.country,
       country_code: "",
     });
+  }
+
+  /** Definit ou retire la ville par defaut parmi les favoris. */
+  toggleDefault(index: number): void {
+    if (this.defaultCityIndex() === index) {
+      this.defaultCityChange.emit(null);
+    } else {
+      this.defaultCityChange.emit(index);
+    }
   }
 
   /** Ajoute ou retire la ville courante des favoris. */

@@ -8,6 +8,7 @@ import type {
   ForecastResponse,
   GeocodingResponse,
   HistoricalData,
+  WeatherAlertResult,
   WeatherPreferences,
 } from "../models/weather.model";
 
@@ -36,7 +37,11 @@ export interface WeatherPort {
     data: Partial<
       Pick<
         WeatherPreferences,
-        "level" | "favoriteCities" | "tooltipsSeen" | "units"
+        | "level"
+        | "favoriteCities"
+        | "tooltipsSeen"
+        | "units"
+        | "defaultCityIndex"
       >
     >,
   ): Observable<WeatherPreferences>;
@@ -72,6 +77,12 @@ export interface WeatherPort {
     latitude: number,
     longitude: number,
   ): Observable<DetailedForecastResult>;
+
+  /** Recuperation des alertes meteo synthetiques. */
+  getAlerts(
+    latitude: number,
+    longitude: number,
+  ): Observable<WeatherAlertResult>;
 }
 
 export const WEATHER_PORT = new InjectionToken<WeatherPort>("WEATHER_PORT");

@@ -51,9 +51,11 @@
         [darkMode]="hasForecast()"
         [favorites]="favoriteCities()"
         [selectedCity]="selectedCity()"
+        [defaultCityIndex]="defaultCityIndex()"
         (favoriteSelected)="onCitySelected($event)"
         (addFavorite)="addFavorite($event)"
         (removeFavorite)="removeFavorite($event)"
+        (defaultCityChange)="setDefaultCity($event)"
       />
     }
 
@@ -98,6 +100,14 @@
           [detailed]="detailedCurrent()"
         />
       </div>
+
+      <!-- Alertes meteo -->
+      @if (alerts().length > 0) {
+        <div appSlideIn>
+          <app-weather-alerts-card [alerts]="alerts()" />
+        </div>
+      }
+
       <div appSlideIn>
         @defer (on viewport) {
           <app-hourly-chart [hourly]="data.hourly" />
@@ -153,7 +163,7 @@
               [speed]="data.current.wind_speed_10m"
               [direction]="data.current.wind_direction_10m ?? 0"
               [gusts]="data.current.wind_gusts_10m ?? null"
-              [hourlyWind]="data.hourly.wind_speed_10m ?? []"
+              [hourlyWind]="data.hourly.wind_speed_10m"
             />
           </div>
           <div appSlideIn>
@@ -192,19 +202,31 @@
       @if (levelService.level() === "expert") {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
           <div appSlideIn class="md:col-span-2 lg:col-span-3">
-            <app-model-comparison [ensemble]="ensemble()" />
+            @defer (on viewport) {
+              <app-model-comparison [ensemble]="ensemble()" />
+            } @placeholder {
+              <app-chart-skeleton />
+            }
           </div>
           <div appSlideIn class="md:col-span-2 lg:col-span-3">
-            <app-spaghetti-plot [ensemble]="ensemble()" />
+            @defer (on viewport) {
+              <app-spaghetti-plot [ensemble]="ensemble()" />
+            } @placeholder {
+              <app-chart-skeleton />
+            }
           </div>
           <div appSlideIn>
             <app-cape-card [cape]="extractCape()" />
           </div>
           <div appSlideIn>
-            <app-historical-comparison
-              [historical]="historical()"
-              [currentTemp]="forecast()?.current?.temperature_2m ?? 0"
-            />
+            @defer (on viewport) {
+              <app-historical-comparison
+                [historical]="historical()"
+                [currentTemp]="forecast()?.current?.temperature_2m ?? 0"
+              />
+            } @placeholder {
+              <app-chart-skeleton />
+            }
           </div>
           <div appSlideIn class="md:col-span-2 lg:col-span-3">
             <app-data-export [forecast]="forecast()" [ensemble]="ensemble()" />

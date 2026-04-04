@@ -5112,6 +5112,22 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="meaning">weather.favorites.remove</note>
       </trans-unit>
+      <trans-unit id="weatherFavoritesSetDefault" datatype="html">
+        <source>Definir comme ville par defaut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.favorites.setDefault</note>
+      </trans-unit>
+      <trans-unit id="weatherFavoritesRemoveDefault" datatype="html">
+        <source>Retirer la ville par defaut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.favorites.removeDefault</note>
+      </trans-unit>
       <trans-unit id="weatherHistoricalTitle" datatype="html">
         <source> Historique (30 jours) </source>
         <context-group purpose="location">

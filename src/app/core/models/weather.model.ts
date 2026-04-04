@@ -145,6 +145,7 @@ export interface WeatherPreferences {
   lastUsedAt: string | null;
   tooltipsSeen: string[];
   units?: UnitPreferences;
+  defaultCityIndex: number | null;
 }
 
 /** Donnees meteo detaillees courantes (source OpenWeatherMap). */
@@ -218,4 +219,22 @@ export interface DetailedForecastResult {
   timezoneOffset: number;
   hourly: DetailedHourlyItem[];
   daily: DetailedDailyItem[];
+}
+
+/** Severite d'une alerte meteo. */
+export type AlertSeverity = "minor" | "moderate" | "severe" | "extreme";
+
+/** Alerte meteo synthetique. */
+export interface WeatherAlert {
+  type: string;
+  severity: AlertSeverity;
+  headline: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+}
+
+/** Resultat des alertes meteo. */
+export interface WeatherAlertResult {
+  alerts: WeatherAlert[];
 }

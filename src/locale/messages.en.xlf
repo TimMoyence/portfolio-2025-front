@@ -7175,6 +7175,18 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Remove from favorites</target>
       </segment>
     </unit>
+    <unit id="weatherFavoritesSetDefault">
+      <segment>
+        <source>Definir comme ville par defaut</source>
+        <target>Set as default city</target>
+      </segment>
+    </unit>
+    <unit id="weatherFavoritesRemoveDefault">
+      <segment>
+        <source>Retirer la ville par defaut</source>
+        <target>Remove default city</target>
+      </segment>
+    </unit>
     <unit id="weatherRadarTitle">
       <segment>
         <source>Carte radar</source>

@@ -1,3 +1,4 @@
+import { of } from "rxjs";
 import type {
   AirQualityData,
   CityResult,
@@ -5,6 +6,7 @@ import type {
   EnsembleData,
   ForecastResponse,
   HistoricalData,
+  WeatherAlertResult,
   WeatherPreferences,
 } from "../../app/core/models/weather.model";
 import type { WeatherPort } from "../../app/core/ports/weather.port";
@@ -24,6 +26,7 @@ export function buildWeatherPreferences(
     daysUsed: 0,
     lastUsedAt: null,
     tooltipsSeen: [],
+    defaultCityIndex: null,
     ...overrides,
   };
 }
@@ -237,6 +240,16 @@ export function buildHistoricalData(
 }
 
 /**
+ * Construit un objet WeatherAlertResult avec des valeurs par defaut.
+ * Accepte des surcharges partielles pour les cas de test specifiques.
+ */
+export function buildWeatherAlertResult(
+  overrides?: Partial<WeatherAlertResult>,
+): WeatherAlertResult {
+  return { alerts: [], ...overrides };
+}
+
+/**
  * Cree un stub complet du port meteo avec des spies Jasmine.
  * Chaque methode est un spy independant, non configure par defaut.
  */
@@ -255,5 +268,8 @@ export function createWeatherPortStub(): Record<
     getHistorical: jasmine.createSpy("getHistorical"),
     getDetailedCurrent: jasmine.createSpy("getDetailedCurrent"),
     getDetailedForecast: jasmine.createSpy("getDetailedForecast"),
+    getAlerts: jasmine
+      .createSpy("getAlerts")
+      .and.returnValue(of({ alerts: [] })),
   };
 }

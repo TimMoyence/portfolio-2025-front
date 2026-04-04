@@ -75,6 +75,8 @@ describe("WeatherAppComponent", () => {
     expect(component.error()).toBeNull();
     expect(component.ensemble()).toBeNull();
     expect(component.historical()).toBeNull();
+    expect(component.alerts()).toEqual([]);
+    expect(component.defaultCityIndex()).toBeNull();
   });
 
   it("devrait charger les preferences au demarrage", () => {
