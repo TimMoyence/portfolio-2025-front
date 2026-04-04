@@ -9,8 +9,11 @@ import type {
   BudgetSummary,
   CreateBudgetCategoryPayload,
   CreateBudgetEntryPayload,
+  CreateRecurringEntryPayload,
   ImportBudgetEntriesPayload,
+  RecurringEntryModel,
   ShareBudgetPayload,
+  UpdateRecurringEntryPayload,
 } from "../models/budget.model";
 import type { BudgetPort } from "../ports/budget.port";
 
@@ -120,6 +123,66 @@ export class BudgetHttpAdapter implements BudgetPort {
   ): Observable<{ shared: true; userId: string }> {
     return this.http.post<{ shared: true; userId: string }>(
       `${this.baseUrl}/budget/share`,
+      payload,
+    );
+  }
+
+  /** Met a jour une categorie (ex: budgetLimit). */
+  updateCategory(
+    categoryId: string,
+    payload: Partial<{ budgetLimit: number }>,
+  ): Observable<BudgetCategoryModel> {
+    return this.http.patch<BudgetCategoryModel>(
+      `${this.baseUrl}/budget/categories/${categoryId}`,
+      payload,
+    );
+  }
+
+  /** Exporte le budget en PDF. */
+  exportPdf(groupId: string, month: number, year: number): Observable<Blob> {
+    const params = new HttpParams()
+      .set("groupId", groupId)
+      .set("month", month)
+      .set("year", year);
+    return this.http.get(`${this.baseUrl}/budget/export/pdf`, {
+      params,
+      responseType: "blob",
+    });
+  }
+
+  /** Recupere les entrees recurrentes d'un groupe. */
+  getRecurringEntries(groupId: string): Observable<RecurringEntryModel[]> {
+    const params = new HttpParams().set("groupId", groupId);
+    return this.http.get<RecurringEntryModel[]>(
+      `${this.baseUrl}/budget/recurring-entries`,
+      { params },
+    );
+  }
+
+  /** Cree une entree recurrente. */
+  createRecurringEntry(
+    payload: CreateRecurringEntryPayload,
+  ): Observable<RecurringEntryModel> {
+    return this.http.post<RecurringEntryModel>(
+      `${this.baseUrl}/budget/recurring-entries`,
+      payload,
+    );
+  }
+
+  /** Supprime une entree recurrente. */
+  deleteRecurringEntry(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/budget/recurring-entries/${id}`,
+    );
+  }
+
+  /** Met a jour une entree recurrente. */
+  updateRecurringEntry(
+    id: string,
+    payload: UpdateRecurringEntryPayload,
+  ): Observable<RecurringEntryModel> {
+    return this.http.patch<RecurringEntryModel>(
+      `${this.baseUrl}/budget/recurring-entries/${id}`,
       payload,
     );
   }

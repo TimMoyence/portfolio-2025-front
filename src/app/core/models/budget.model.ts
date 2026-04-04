@@ -83,3 +83,46 @@ export interface ShareBudgetPayload {
   groupId: string;
   targetEmail: string;
 }
+
+/** Frequence d'une entree recurrente. */
+export type Frequency = "MONTHLY" | "WEEKLY" | "BIWEEKLY";
+
+/** Entree recurrente de budget. */
+export interface RecurringEntryModel {
+  id: string;
+  groupId: string;
+  categoryId: string | null;
+  description: string;
+  amount: number;
+  type: BudgetType;
+  frequency: Frequency;
+  dayOfMonth: number | null;
+  dayOfWeek: number | null;
+  startDate: string;
+  endDate: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+/** Payload pour creer une entree recurrente. */
+export interface CreateRecurringEntryPayload {
+  groupId: string;
+  categoryId?: string;
+  description: string;
+  amount: number;
+  type: BudgetType;
+  frequency: Frequency;
+  dayOfMonth?: number;
+  dayOfWeek?: number;
+  startDate: string;
+  endDate?: string;
+}
+
+/** Payload pour mettre a jour une entree recurrente. */
+export interface UpdateRecurringEntryPayload {
+  isActive?: boolean;
+  description?: string;
+  amount?: number;
+  frequency?: Frequency;
+  dayOfWeek?: number | null;
+}

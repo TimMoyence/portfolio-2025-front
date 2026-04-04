@@ -16,6 +16,10 @@ import type {
 import { BUDGET_PORT } from "../../core/ports/budget.port";
 import { BudgetFormatService } from "../../core/services/budget-format.service";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
+import { BudgetChartComponent } from "./components/budget-chart/budget-chart.component";
+import { BudgetExportComponent } from "./components/budget-export/budget-export.component";
+import { BudgetGoalsComponent } from "./components/budget-goals/budget-goals.component";
+import { BudgetRecurringComponent } from "./components/budget-recurring/budget-recurring.component";
 import { BudgetSummaryCardComponent } from "./components/budget-summary-card/budget-summary-card.component";
 import {
   BudgetTransactionsTableComponent,
@@ -53,6 +57,10 @@ const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
     CommonModule,
     BudgetSummaryCardComponent,
     BudgetCategoryTotalsComponent,
+    BudgetChartComponent,
+    BudgetExportComponent,
+    BudgetGoalsComponent,
+    BudgetRecurringComponent,
     BudgetTransactionsTableComponent,
   ],
   templateUrl: "./common-budget-tm.component.html",
@@ -226,6 +234,8 @@ export class CommonBudgetTmComponent {
         };
       });
   });
+
+  readonly monthNumber = computed(() => MONTH_NUMBER_MAP[this.selectedMonth()]);
 
   readonly totalSalary = computed(
     () =>

@@ -6180,6 +6180,265 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Log in</target>
       </segment>
     </unit>
+    <!-- Budget app -->
+    <unit id="budgetShareTitle">
+      <segment>
+        <source>Partager le budget</source>
+        <target>Share the budget</target>
+      </segment>
+    </unit>
+    <unit id="budgetShareInviteBtn">
+      <segment>
+        <source>Inviter</source>
+        <target>Invite</target>
+      </segment>
+    </unit>
+    <unit id="budgetChartDoughnutTitle">
+      <segment>
+        <source>Répartition des dépenses</source>
+        <target>Expense breakdown</target>
+      </segment>
+    </unit>
+    <unit id="budgetChartBarTitle">
+      <segment>
+        <source>Budget vs Réel</source>
+        <target>Budget vs Actual</target>
+      </segment>
+    </unit>
+    <unit id="budgetExportInProgress">
+      <segment>
+        <source>Export en cours...</source>
+        <target>Exporting...</target>
+      </segment>
+    </unit>
+    <unit id="budgetExportBtn">
+      <segment>
+        <source>Exporter en PDF</source>
+        <target>Export to PDF</target>
+      </segment>
+    </unit>
+    <unit id="budgetGoalsEyebrow">
+      <segment>
+        <source>Objectifs</source>
+        <target>Goals</target>
+      </segment>
+    </unit>
+    <unit id="budgetGoalsTitle">
+      <segment>
+        <source>Suivi par catégorie</source>
+        <target>Tracking by category</target>
+      </segment>
+    </unit>
+    <unit id="budgetGoalsEmpty">
+      <segment>
+        <source>Aucune catégorie avec un objectif défini.</source>
+        <target>No category with a defined goal.</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringEyebrow">
+      <segment>
+        <source>Automatisation</source>
+        <target>Automation</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringTitle">
+      <segment>
+        <source>Entrées récurrentes</source>
+        <target>Recurring entries</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringCancelBtn">
+      <segment>
+        <source>Annuler</source>
+        <target>Cancel</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringAddBtn">
+      <segment>
+        <source>Ajouter une entrée récurrente</source>
+        <target>Add a recurring entry</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormDescription">
+      <segment>
+        <source>Description</source>
+        <target>Description</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormAmount">
+      <segment>
+        <source>Montant</source>
+        <target>Amount</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormFrequency">
+      <segment>
+        <source>Fréquence</source>
+        <target>Frequency</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFreqMonthly">
+      <segment>
+        <source>Mensuelle</source>
+        <target>Monthly</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFreqWeekly">
+      <segment>
+        <source>Hebdomadaire</source>
+        <target>Weekly</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFreqBiweekly">
+      <segment>
+        <source>Bimensuelle</source>
+        <target>Biweekly</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormType">
+      <segment>
+        <source>Type</source>
+        <target>Type</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringTypeFixed">
+      <segment>
+        <source>Fixe</source>
+        <target>Fixed</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringTypeVariable">
+      <segment>
+        <source>Variable</source>
+        <target>Variable</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormCategory">
+      <segment>
+        <source>Catégorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringCategoryNone">
+      <segment>
+        <source>Aucune</source>
+        <target>None</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormDayOfMonth">
+      <segment>
+        <source>Jour du mois</source>
+        <target>Day of month</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormDayOfWeek">
+      <segment>
+        <source>Jour de la semaine</source>
+        <target>Day of week</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDaySunday">
+      <segment>
+        <source>Dimanche</source>
+        <target>Sunday</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDayMonday">
+      <segment>
+        <source>Lundi</source>
+        <target>Monday</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDayTuesday">
+      <segment>
+        <source>Mardi</source>
+        <target>Tuesday</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDayWednesday">
+      <segment>
+        <source>Mercredi</source>
+        <target>Wednesday</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDayThursday">
+      <segment>
+        <source>Jeudi</source>
+        <target>Thursday</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDayFriday">
+      <segment>
+        <source>Vendredi</source>
+        <target>Friday</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDaySaturday">
+      <segment>
+        <source>Samedi</source>
+        <target>Saturday</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormStartDate">
+      <segment>
+        <source>Date de début</source>
+        <target>Start date</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringFormEndDate">
+      <segment>
+        <source>Date de fin (optionnel)</source>
+        <target>End date (optional)</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringCreateBtn">
+      <segment>
+        <source>Créer</source>
+        <target>Create</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringColDescription">
+      <segment>
+        <source>Description</source>
+        <target>Description</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringColAmount">
+      <segment>
+        <source>Montant</source>
+        <target>Amount</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringColFrequency">
+      <segment>
+        <source>Fréquence</source>
+        <target>Frequency</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringColCategory">
+      <segment>
+        <source>Catégorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringColActive">
+      <segment>
+        <source>Actif</source>
+        <target>Active</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringDeleteBtn">
+      <segment>
+        <source>Supprimer</source>
+        <target>Delete</target>
+      </segment>
+    </unit>
+    <unit id="budgetRecurringEmpty">
+      <segment>
+        <source>Aucune entrée récurrente configurée.</source>
+        <target>No recurring entry configured.</target>
+      </segment>
+    </unit>
     <!-- Sebastian presentation -->
     <unit id="sebastianHeroLabel">
       <segment>
@@ -6921,6 +7180,72 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Supprimer des favoris</source>
         <target>Remove from favorites</target>
+      </segment>
+    </unit>
+    <unit id="profileEditButton">
+      <segment>
+        <source>Modifier</source>
+        <target>Edit</target>
+      </segment>
+    </unit>
+    <unit id="profilePhoneLabel">
+      <segment>
+        <source>Telephone :</source>
+        <target>Phone:</target>
+      </segment>
+    </unit>
+    <unit id="profileEditFirstNameLabel">
+      <segment>
+        <source>Prenom</source>
+        <target>First name</target>
+      </segment>
+    </unit>
+    <unit id="profileEditLastNameLabel">
+      <segment>
+        <source>Nom</source>
+        <target>Last name</target>
+      </segment>
+    </unit>
+    <unit id="profileEditPhoneLabel">
+      <segment>
+        <source>Telephone</source>
+        <target>Phone</target>
+      </segment>
+    </unit>
+    <unit id="profileEmailReadonly">
+      <segment>
+        <source>(non modifiable)</source>
+        <target>(read-only)</target>
+      </segment>
+    </unit>
+    <unit id="profileEditSaveButton">
+      <segment>
+        <source>Enregistrer</source>
+        <target>Save</target>
+      </segment>
+    </unit>
+    <unit id="profileEditSavingButton">
+      <segment>
+        <source>Enregistrement...</source>
+        <target>Saving...</target>
+      </segment>
+    </unit>
+    <unit id="profileEditCancelButton">
+      <segment>
+        <source>Annuler</source>
+        <target>Cancel</target>
+      </segment>
+    </unit>
+    <unit id="profileEditErrorGeneric">
+      <segment>
+        <source>Impossible de mettre a jour le profil pour le moment.</source>
+        <target>Unable to update profile at this time.</target>
+      </segment>
+    </unit>
+    <unit id="profileEditSuccess">
+      <segment>
+        <source>Profil mis a jour avec succes.</source>
+        <target>Profile updated successfully.</target>
       </segment>
     </unit>
     <unit id="navUserMenuLabel">

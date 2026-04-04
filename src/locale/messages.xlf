@@ -266,7 +266,7 @@
         <source>Accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">auth.hero.label</note>
       </trans-unit>
@@ -274,7 +274,7 @@
         <source>Connexion ou inscription</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">auth.hero.title</note>
       </trans-unit>
@@ -282,7 +282,7 @@
         <source>Rejoignez votre espace sécurisé pour suivre vos projets et vos échanges.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">auth.hero.description</note>
       </trans-unit>
@@ -290,11 +290,11 @@
         <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
@@ -307,11 +307,11 @@
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
@@ -324,7 +324,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.firstName</note>
@@ -333,7 +333,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.lastName</note>
@@ -342,7 +342,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.email</note>
@@ -351,7 +351,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.password</note>
@@ -360,7 +360,7 @@
         <source>Verification de mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.passwordConfirm</note>
@@ -369,7 +369,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.phone</note>
@@ -378,7 +378,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.email</note>
@@ -387,7 +387,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.password</note>
@@ -396,7 +396,7 @@
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Signup error message</note>
         <note priority="1" from="meaning">auth.signup.error.passwordMismatch</note>
@@ -405,11 +405,11 @@
         <source>Une erreur est survenue. Veuillez réessayer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">219</context>
         </context-group>
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
@@ -418,7 +418,7 @@
         <source>Compte créé pour <x id="PH" equiv-text="user.firstName"/> <x id="PH_1" equiv-text="user.lastName"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">196</context>
         </context-group>
         <note priority="1" from="description">Signup success message</note>
         <note priority="1" from="meaning">auth.signup.success</note>
@@ -427,7 +427,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">222</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -436,7 +436,7 @@
         <source>L&apos;authentification Google n&apos;est pas configurée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">243</context>
         </context-group>
         <note priority="1" from="description">auth.google.notConfigured</note>
       </trans-unit>
@@ -444,7 +444,7 @@
         <source>Impossible de charger Google Sign-In.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">253</context>
         </context-group>
         <note priority="1" from="description">auth.google.loadError</note>
       </trans-unit>
@@ -452,12 +452,9 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">280</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
-      </trans-unit>
-      <trans-unit id="authGoogleTriggered" datatype="html">
-        <source>Google auth triggered for <x id="PH" equiv-text="context"/></source>
       </trans-unit>
       <trans-unit id="authForgotEmailLabel" datatype="html">
         <source>Email</source>
@@ -498,7 +495,7 @@
         <source>Sécurité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <note priority="1" from="description">auth.forgot.hero.label</note>
       </trans-unit>
@@ -506,7 +503,7 @@
         <source>Mot de passe oublié</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <note priority="1" from="description">auth.forgot.hero.title</note>
       </trans-unit>
@@ -514,7 +511,7 @@
         <source>Entrez votre email pour recevoir un lien de réinitialisation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <note priority="1" from="description">auth.forgot.hero.description</note>
       </trans-unit>
@@ -522,7 +519,7 @@
         <source>Impossible d&apos;envoyer le lien pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">auth.forgot.error.generic</note>
       </trans-unit>
@@ -565,7 +562,7 @@
         <source>Sécurité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <note priority="1" from="description">auth.reset.hero.label</note>
       </trans-unit>
@@ -573,7 +570,7 @@
         <source>Réinitialiser le mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <note priority="1" from="description">auth.reset.hero.title</note>
       </trans-unit>
@@ -581,7 +578,7 @@
         <source>Choisissez un nouveau mot de passe robuste pour sécuriser votre compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">auth.reset.hero.description</note>
       </trans-unit>
@@ -589,11 +586,11 @@
         <source>Le lien de réinitialisation est invalide ou incomplet.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">auth.reset.error.missingToken</note>
       </trans-unit>
@@ -601,7 +598,7 @@
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">auth.reset.error.mismatch</note>
       </trans-unit>
@@ -609,7 +606,7 @@
         <source>Impossible de réinitialiser le mot de passe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">auth.reset.error.generic</note>
       </trans-unit>
@@ -765,9 +762,6 @@ Chaque projet répond à un besoin précis et s’inscrit dans une logique d’u
           <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">clientProjects.projects.maria.actions.details</note>
-      </trans-unit>
-      <trans-unit id="clientProjects.projects.maria.actions.contact" datatype="html">
-        <source>Contact</source>
       </trans-unit>
       <trans-unit id="clientProjects.projects.maria.card.kicker" datatype="html">
         <source>Objectif et fonctionnalités principales</source>
@@ -1250,6 +1244,314 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">clientProjects.projects.louison.card.bullets.4</note>
       </trans-unit>
+      <trans-unit id="budgetShareTitle" datatype="html">
+        <source> Partager le budget </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">91,92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetShareInviteBtn" datatype="html">
+        <source>Inviter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">107,109</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetChartDoughnutTitle" datatype="html">
+        <source> Répartition des dépenses </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-chart/budget-chart.component.ts</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetChartBarTitle" datatype="html">
+        <source>Budget vs Réel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-chart/budget-chart.component.ts</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetExportInProgress" datatype="html">
+        <source>Export en cours...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-export/budget-export.component.ts</context>
+          <context context-type="linenumber">30,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetExportBtn" datatype="html">
+        <source>Exporter en PDF</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-export/budget-export.component.ts</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetGoalsEyebrow" datatype="html">
+        <source> Objectifs </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-goals/budget-goals.component.ts</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetGoalsTitle" datatype="html">
+        <source> Suivi par catégorie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-goals/budget-goals.component.ts</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetGoalsEmpty" datatype="html">
+        <source> Aucune catégorie avec un objectif défini. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-goals/budget-goals.component.ts</context>
+          <context context-type="linenumber">98,100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringEyebrow" datatype="html">
+        <source> Automatisation </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringTitle" datatype="html">
+        <source> Entrées récurrentes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringCancelBtn" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">49,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringAddBtn" datatype="html">
+        <source>Ajouter une entrée récurrente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormDescription" datatype="html">
+        <source> Description <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
+              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
+              type=&quot;text&quot;
+              [value]=&quot;formDescription()&quot;
+              (input)=&quot;formDescription.set(readInput($event))&quot;
+            /&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">65,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormAmount" datatype="html">
+        <source> Montant <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
+              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
+              type=&quot;number&quot;
+              step=&quot;0.01&quot;
+              [value]=&quot;formAmount()&quot;
+              (input)=&quot;formAmount.set(toNumber(readInput($event)))&quot;
+            /&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">74,82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormFrequency" datatype="html">
+        <source>Fréquence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">84,86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormType" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">96,98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormCategory" datatype="html">
+        <source>Catégorie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">107,109</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormDayOfMonth" datatype="html">
+        <source> Jour du mois <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
+                class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
+                type=&quot;number&quot;
+                min=&quot;1&quot;
+                max=&quot;31&quot;
+                [value]=&quot;formDayOfMonth()&quot;
+                (input)=&quot;formDayOfMonth.set(toNumber(readInput($event)))&quot;
+              /&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">121,130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormDayOfWeek" datatype="html">
+        <source>Jour de la semaine</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">134,136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormStartDate" datatype="html">
+        <source> Date de début <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
+              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
+              type=&quot;date&quot;
+              [value]=&quot;formStartDate()&quot;
+              (input)=&quot;formStartDate.set(readInput($event))&quot;
+            /&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">147,154</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringFormEndDate" datatype="html">
+        <source> Date de fin (optionnel) <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
+              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
+              type=&quot;date&quot;
+              [value]=&quot;formEndDate()&quot;
+              (input)=&quot;formEndDate.set(readInput($event))&quot;
+            /&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">156,163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringCreateBtn" datatype="html">
+        <source>Créer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">170,172</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringColDescription" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">182,183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringColAmount" datatype="html">
+        <source>Montant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">183,184</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringColFrequency" datatype="html">
+        <source>Fréquence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">184,185</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringColCategory" datatype="html">
+        <source>Catégorie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">185,186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringColActive" datatype="html">
+        <source>Actif</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">186,188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDeleteBtn" datatype="html">
+        <source>Supprimer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">219,221</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringEmpty" datatype="html">
+        <source> Aucune entrée récurrente configurée. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">224,226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringCategoryNone" datatype="html">
+        <source>Aucune</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">341</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDaySunday" datatype="html">
+        <source>Dimanche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">345</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDayMonday" datatype="html">
+        <source>Lundi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">346</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDayTuesday" datatype="html">
+        <source>Mardi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">347</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDayWednesday" datatype="html">
+        <source>Mercredi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">348</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDayThursday" datatype="html">
+        <source>Jeudi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">349</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDayFriday" datatype="html">
+        <source>Vendredi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">350</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringDaySaturday" datatype="html">
+        <source>Samedi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">351</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringTypeFixed" datatype="html">
+        <source>Fixe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">367</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetRecurringTypeVariable" datatype="html">
+        <source>Variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
+          <context context-type="linenumber">368</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="contactFormHeading" datatype="html">
         <source> Formulaire de contact </source>
         <context-group purpose="location">
@@ -1331,7 +1633,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Connexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">contact.hero.label</note>
       </trans-unit>
@@ -1339,7 +1641,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Parler de votre situation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">contact.hero.title</note>
       </trans-unit>
@@ -1347,7 +1649,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Un premier échange pour comprendre votre contexte,clarifier votre besoin et envisager la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <note priority="1" from="description">contact.hero.description</note>
       </trans-unit>
@@ -1355,7 +1657,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">contact.form.label</note>
       </trans-unit>
@@ -1363,7 +1665,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">contact.form.description</note>
       </trans-unit>
@@ -1371,7 +1673,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Développeur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.developer</note>
       </trans-unit>
@@ -1379,7 +1681,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Manager</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.manager</note>
       </trans-unit>
@@ -1387,7 +1689,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Entrepreneur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.entrepreneur</note>
       </trans-unit>
@@ -1395,7 +1697,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>CTO</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.cto</note>
       </trans-unit>
@@ -1403,7 +1705,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Freelance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.freelance</note>
       </trans-unit>
@@ -1411,18 +1713,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Autre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.other</note>
-      </trans-unit>
-      <trans-unit id="contactFormRoleStudent" datatype="html">
-        <source>Étudiant</source>
       </trans-unit>
       <trans-unit id="contactFormSubjectFirst" datatype="html">
         <source>Premier contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.first</note>
       </trans-unit>
@@ -1430,7 +1729,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Demande de devis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.second</note>
       </trans-unit>
@@ -1438,7 +1737,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Urgent - Besoin rapide</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.third</note>
       </trans-unit>
@@ -1446,7 +1745,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.firstName</note>
       </trans-unit>
@@ -1454,7 +1753,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.lastName</note>
       </trans-unit>
@@ -1462,7 +1761,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.email</note>
       </trans-unit>
@@ -1470,7 +1769,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.phone</note>
       </trans-unit>
@@ -1478,7 +1777,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Merci de vérifier les champs en rouge.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.invalid</note>
       </trans-unit>
@@ -1486,7 +1785,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Une erreur est survenue. Veuillez réessayer plus tard.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.generic</note>
       </trans-unit>
@@ -1494,7 +1793,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Message envoyé. Je reviens vers vous rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">contact.form.success</note>
       </trans-unit>
@@ -2016,9 +2315,6 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">290,292</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="auditHighlightsTitle" datatype="html">
-        <source>Ce que vous recevez</source>
-      </trans-unit>
       <trans-unit id="auditStepsTitle" datatype="html">
         <source> Comment ça fonctionne </source>
         <context-group purpose="location">
@@ -2030,7 +2326,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Audit gratuit (IA + humain, 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">audit.hero.label</note>
       </trans-unit>
@@ -2038,7 +2334,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Audit de croissance en 15 points</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="description">audit.hero.title</note>
       </trans-unit>
@@ -2046,7 +2342,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, signaux de conversion). Ensuite, sous 24h, je réalise l’audit moi-même et je vous envoie une vidéo + une scorecard claire + des recommandations concrètes pour gagner en visibilité et en clients.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">audit.hero.description</note>
       </trans-unit>
@@ -2054,7 +2350,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>1. Vous laissez vos infos</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.title</note>
       </trans-unit>
@@ -2062,7 +2358,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Nom du site ou URL + contact (email ou téléphone).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.desc</note>
       </trans-unit>
@@ -2070,7 +2366,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>2. Audit instantané (IA)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.title</note>
       </trans-unit>
@@ -2078,7 +2374,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Je scanne vos pages (SEO, performance, conversion) et je sors un premier diagnostic rapide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.desc</note>
       </trans-unit>
@@ -2086,7 +2382,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>3. Audit humain sous 24h</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.title</note>
       </trans-unit>
@@ -2094,7 +2390,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Je reprends l’analyse moi-même, je priorise, et je vous envoie une vidéo + une scorecard + un plan d’actions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.desc</note>
       </trans-unit>
@@ -2102,7 +2398,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Vidéo personnalisée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.video</note>
       </trans-unit>
@@ -2110,7 +2406,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Scorecard claire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.score</note>
       </trans-unit>
@@ -2118,7 +2414,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Quick wins + priorités (impact/effort)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.wins</note>
       </trans-unit>
@@ -2126,24 +2422,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Aucun engagement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.noObligation</note>
-      </trans-unit>
-      <trans-unit id="auditAsideTitle" datatype="html">
-        <source>Pourquoi c'est utile</source>
-      </trans-unit>
-      <trans-unit id="auditAsideBody" datatype="html">
-        <source>Je vous montre exactement pourquoi votre site ne transforme pas vos visiteurs en clients — et ce qu'il faut corriger en moins d'une semaine.</source>
-      </trans-unit>
-      <trans-unit id="auditAsideLimit" datatype="html">
-        <source>Disponibilités limitées : 5 audits par semaine.</source>
       </trans-unit>
       <trans-unit id="auditPillarConversionTitle" datatype="html">
         <source>Conversion &amp; clarté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.title</note>
       </trans-unit>
@@ -2151,18 +2438,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Proposition de valeur, CTA, friction contact, mobile.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarConversionTime" datatype="html">
-        <source>5–7 min</source>
       </trans-unit>
       <trans-unit id="auditPillarPerformanceTitle" datatype="html">
         <source>Vitesse &amp; performance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.title</note>
       </trans-unit>
@@ -2170,18 +2454,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>PageSpeed, poids images, Core Web Vitals.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarPerformanceTime" datatype="html">
-        <source>5–8 min</source>
       </trans-unit>
       <trans-unit id="auditPillarSeoTitle" datatype="html">
         <source>SEO fondations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">112</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.title</note>
       </trans-unit>
@@ -2189,18 +2470,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Titres, H1, meta, indexation, SEO local.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarSeoTime" datatype="html">
-        <source>7–10 min</source>
       </trans-unit>
       <trans-unit id="auditPillarTrustTitle" datatype="html">
         <source>Crédibilité &amp; confiance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.title</note>
       </trans-unit>
@@ -2208,18 +2486,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Preuves sociales, portfolio, signaux de confiance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarTrustTime" datatype="html">
-        <source>5–7 min</source>
       </trans-unit>
       <trans-unit id="auditPillarTechTitle" datatype="html">
         <source>Tech &amp; scalabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.title</note>
       </trans-unit>
@@ -2227,18 +2502,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>CMS, sécurité, erreurs, maintenabilité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarTechTime" datatype="html">
-        <source>7–10 min</source>
       </trans-unit>
       <trans-unit id="auditFormTitle" datatype="html">
         <source>Demander un audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">audit.form.title</note>
       </trans-unit>
@@ -2246,7 +2518,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">audit.form.description</note>
       </trans-unit>
@@ -2254,7 +2526,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Nom du site ou URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <note priority="1" from="description">audit.form.websiteLabel</note>
       </trans-unit>
@@ -2262,7 +2534,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>ex. https://votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">audit.form.websitePlaceholder</note>
       </trans-unit>
@@ -2270,7 +2542,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Méthode de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactMethodLabel</note>
       </trans-unit>
@@ -2278,7 +2550,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">131</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactEmail</note>
       </trans-unit>
@@ -2286,7 +2558,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactPhone</note>
       </trans-unit>
@@ -2294,7 +2566,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Coordonnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactValueLabel</note>
       </trans-unit>
@@ -2302,7 +2574,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>ex. hello@votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">audit.form.emailPlaceholder</note>
       </trans-unit>
@@ -2310,7 +2582,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>ex. +33 6 98 50 32 82</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">audit.form.phonePlaceholder</note>
       </trans-unit>
@@ -2318,7 +2590,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Demander mon audit (scan IA immédiat + audit humain sous 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <note priority="1" from="description">audit.form.submit</note>
       </trans-unit>
@@ -2326,7 +2598,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Merci ! Scan IA lancé — audit humain envoyé sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <note priority="1" from="description">audit.form.success</note>
       </trans-unit>
@@ -2334,7 +2606,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Impossible d&apos;envoyer la demande. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">audit.form.error</note>
       </trans-unit>
@@ -2342,7 +2614,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Audit en attente...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">230</context>
         </context-group>
         <note priority="1" from="description">Audit pending step</note>
         <note priority="1" from="meaning">growthAudit.step.pending</note>
@@ -2351,11 +2623,11 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Audit terminé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">280</context>
+          <context context-type="linenumber">281</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">311</context>
+          <context context-type="linenumber">312</context>
         </context-group>
         <note priority="1" from="description">Audit completed step</note>
         <note priority="1" from="meaning">growthAudit.step.completed</note>
@@ -2364,11 +2636,11 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>L&apos;audit a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">301</context>
+          <context context-type="linenumber">302</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">322</context>
+          <context context-type="linenumber">323</context>
         </context-group>
         <note priority="1" from="description">Audit failed message</note>
         <note priority="1" from="meaning">growthAudit.error.failed</note>
@@ -2377,7 +2649,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Connexion interrompue pendant l&apos;audit. Rechargez la page pour vérifier le résultat.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">335</context>
+          <context context-type="linenumber">336</context>
         </context-group>
         <note priority="1" from="description">Connection lost during audit</note>
         <note priority="1" from="meaning">growthAudit.error.connectionLost</note>
@@ -2386,7 +2658,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Impossible de récupérer le résumé de l&apos;audit pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">341</context>
+          <context context-type="linenumber">342</context>
         </context-group>
         <note priority="1" from="description">Summary fetch error</note>
         <note priority="1" from="meaning">growthAudit.error.summaryFetch</note>
@@ -2785,9 +3057,6 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">Service icon alt</note>
         <note priority="1" from="meaning">services.item.evolution.testing.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="servicesItemtestingIconAlt" datatype="html">
-        <source>Tester icon</source>
       </trans-unit>
       <trans-unit id="servicesItemEvolutionAndMaintenanceTitle" datatype="html">
         <source>Faire évoluer</source>
@@ -4255,161 +4524,228 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Informations personnelles </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">17,19</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEditButton" datatype="html">
+        <source> Modifier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">27,28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileFirstNameLabel" datatype="html">
         <source>Prenom :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">20,21</context>
+          <context context-type="linenumber">36,37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileLastNameLabel" datatype="html">
         <source>Nom :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">24,25</context>
+          <context context-type="linenumber">40,41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEmailLabel" datatype="html">
         <source>Email :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">28,29</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">103,104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profilePhoneLabel" datatype="html">
+        <source>Telephone :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEditFirstNameLabel" datatype="html">
+        <source>Prenom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">62,64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEditLastNameLabel" datatype="html">
+        <source>Nom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEditPhoneLabel" datatype="html">
+        <source>Telephone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">92,94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEmailReadonly" datatype="html">
+        <source>(non modifiable)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">106,108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEditSaveButton" datatype="html">
+        <source>Enregistrer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">118,120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEditSavingButton" datatype="html">
+        <source>Enregistrement...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">121,123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEditCancelButton" datatype="html">
+        <source> Annuler </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">132,133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordTitle" datatype="html">
         <source> Definir un mot de passe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">38,41</context>
+          <context context-type="linenumber">152,155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordLabel" datatype="html">
         <source>Nouveau mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">51,53</context>
+          <context context-type="linenumber">165,167</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordSubmit" datatype="html">
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">76,78</context>
+          <context context-type="linenumber">190,192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordLoading" datatype="html">
         <source>Enregistrement...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">79,81</context>
+          <context context-type="linenumber">193,195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordTitle" datatype="html">
         <source> Changer le mot de passe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">103,106</context>
+          <context context-type="linenumber">217,220</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileCurrentPasswordLabel" datatype="html">
         <source>Mot de passe actuel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">116,118</context>
+          <context context-type="linenumber">230,232</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileNewPasswordLabel" datatype="html">
         <source>Nouveau mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">137,139</context>
+          <context context-type="linenumber">251,253</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordSubmit" datatype="html">
         <source>Modifier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">162,164</context>
+          <context context-type="linenumber">276,278</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordLoading" datatype="html">
         <source>Modification...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">165,168</context>
+          <context context-type="linenumber">279,282</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherTitle" datatype="html">
         <source> Preferences meteo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">186,189</context>
+          <context context-type="linenumber">300,303</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherLevelLabel" datatype="html">
         <source>Niveau :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">192,193</context>
+          <context context-type="linenumber">306,307</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherDaysUsed" datatype="html">
         <source>jours d&apos;utilisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">223,224</context>
+          <context context-type="linenumber">337,338</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherTransitionReady" datatype="html">
         <source>Pret pour le niveau suivant !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">229,232</context>
+          <context context-type="linenumber">343,346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherFavoritesTitle" datatype="html">
         <source> Villes favorites </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">241,243</context>
+          <context context-type="linenumber">355,357</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherLoading" datatype="html">
         <source> Chargement... </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">248,250</context>
+          <context context-type="linenumber">362,364</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherNoFavorites" datatype="html">
         <source> Aucune ville favorite. Ajoutez-en depuis l&apos;app meteo. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">255,257</context>
+          <context context-type="linenumber">369,371</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileWeatherRemoveFavorite" datatype="html">
         <source>Supprimer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">274,276</context>
+          <context context-type="linenumber">388,390</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileBackHome" datatype="html">
         <source>Retour a l&apos;accueil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">288,292</context>
+          <context context-type="linenumber">402,406</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileHeroLabel" datatype="html">
         <source>Espace utilisateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <note priority="1" from="description">profile.hero.label</note>
       </trans-unit>
@@ -4417,7 +4753,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Votre profil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">profile.hero.title</note>
       </trans-unit>
@@ -4425,15 +4761,31 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Gerez vos informations personnelles et vos parametres de securite.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">profile.hero.description</note>
+      </trans-unit>
+      <trans-unit id="profileEditErrorGeneric" datatype="html">
+        <source>Impossible de mettre a jour le profil pour le moment.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">profile.edit.error.generic</note>
+      </trans-unit>
+      <trans-unit id="profileEditSuccess" datatype="html">
+        <source>Profil mis a jour avec succes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">profile.edit.success</note>
       </trans-unit>
       <trans-unit id="profilePasswordErrorGeneric" datatype="html">
         <source>Impossible de definir le mot de passe pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">profile.password.error.generic</note>
       </trans-unit>
@@ -4441,7 +4793,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Mot de passe defini avec succes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">profile.password.success</note>
       </trans-unit>
@@ -4449,7 +4801,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Impossible de changer le mot de passe pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">profile.changePassword.error.generic</note>
       </trans-unit>
@@ -4457,7 +4809,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Mot de passe modifie avec succes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">profile.changePassword.success</note>
       </trans-unit>
@@ -4465,7 +4817,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Decouverte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">216</context>
         </context-group>
         <note priority="1" from="description">profile.weather.level.discovery</note>
       </trans-unit>
@@ -4473,7 +4825,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Curieux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <note priority="1" from="description">profile.weather.level.curious</note>
       </trans-unit>
@@ -4481,12 +4833,9 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Expert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">218</context>
         </context-group>
         <note priority="1" from="description">profile.weather.level.expert</note>
-      </trans-unit>
-      <trans-unit id="profileWeatherRemoveFavoriteAriaLabel" datatype="html">
-        <source>Supprimer des favoris</source>
       </trans-unit>
       <trans-unit id="sebastianPresentationSectionTitle" datatype="html">
         <source> Votre majordome personnel </source>
@@ -4835,7 +5184,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Rechercher une ville...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/city-search/city-search.component.ts</context>
-          <context context-type="linenumber">64,65</context>
+          <context context-type="linenumber">65,66</context>
         </context-group>
         <note priority="1" from="meaning">weather.search.placeholder</note>
       </trans-unit>
@@ -4843,7 +5192,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Me localiser</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/city-search/city-search.component.ts</context>
-          <context context-type="linenumber">92,95</context>
+          <context context-type="linenumber">93,96</context>
         </context-group>
         <note priority="1" from="meaning">weather.geo.button</note>
       </trans-unit>
@@ -4998,7 +5347,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Aujourd&apos;hui</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">250</context>
+          <context context-type="linenumber">238</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
@@ -5142,7 +5491,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ajouter aux favoris</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <note priority="1" from="meaning">weather.favorites.add</note>
       </trans-unit>
@@ -5150,7 +5499,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Retirer des favoris</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="meaning">weather.favorites.remove</note>
       </trans-unit>
@@ -5158,7 +5507,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Definir comme ville par defaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <note priority="1" from="meaning">weather.favorites.setDefault</note>
       </trans-unit>
@@ -5166,7 +5515,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Retirer la ville par defaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/favorite-cities-bar/favorite-cities-bar.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="meaning">weather.favorites.removeDefault</note>
       </trans-unit>
@@ -5310,7 +5659,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Données indisponibles </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/metric-card/metric-card.component.ts</context>
-          <context context-type="linenumber">100,105</context>
+          <context context-type="linenumber">98,103</context>
         </context-group>
         <note priority="1" from="meaning">weather.card.unavailable</note>
       </trans-unit>
@@ -5606,7 +5955,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Recherchez une ville pour afficher la météo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.html</context>
-          <context context-type="linenumber">227,232</context>
+          <context context-type="linenumber">249,254</context>
         </context-group>
         <note priority="1" from="meaning">weather.initial.hint</note>
       </trans-unit>
@@ -5614,7 +5963,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Erreur lors du chargement des prévisions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">229</context>
         </context-group>
         <note priority="1" from="meaning">weather.error.loading</note>
       </trans-unit>
@@ -5674,26 +6023,11 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="meaning">weather.hero.action.login</note>
       </trans-unit>
-      <trans-unit id="weatherAqiUnavailable" datatype="html">
-        <source>Données indisponibles</source>
-      </trans-unit>
-      <trans-unit id="weatherCapeUnavailable" datatype="html">
-        <source>Données indisponibles</source>
-      </trans-unit>
-      <trans-unit id="weatherGeoButton" datatype="html">
-        <source>Me localiser</source>
-      </trans-unit>
-      <trans-unit id="weatherLoading" datatype="html">
-        <source>Chargement...</source>
-      </trans-unit>
-      <trans-unit id="weatherPressureUnavailable" datatype="html">
-        <source>Données indisponibles</source>
-      </trans-unit>
       <trans-unit id="cookieBannerMessage" datatype="html">
         <source>Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <note priority="1" from="description">Cookie banner message</note>
         <note priority="1" from="meaning">cookie.banner.message</note>
@@ -5702,7 +6036,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Paramètres des cookies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <note priority="1" from="description">Cookie banner settings link</note>
         <note priority="1" from="meaning">cookie.banner.settings</note>
@@ -5711,7 +6045,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Tout accepter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <note priority="1" from="description">Cookie banner accept all</note>
         <note priority="1" from="meaning">cookie.banner.acceptAll</note>
@@ -5720,7 +6054,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Essentiels uniquement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">Cookie banner essential only</note>
         <note priority="1" from="meaning">cookie.banner.essentialOnly</note>
@@ -5824,9 +6158,6 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
       </trans-unit>
-      <trans-unit id="footerSocialInstagram" datatype="html">
-        <source>Instagram</source>
-      </trans-unit>
       <trans-unit id="footerLegalTerms" datatype="html">
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
@@ -5853,12 +6184,6 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.cookiesSettings</note>
-      </trans-unit>
-      <trans-unit id="footerLegalCookiesFr" datatype="html">
-        <source>Paramètres de cookies</source>
-      </trans-unit>
-      <trans-unit id="footerLegalCookiesEn" datatype="html">
-        <source>Cookies Settings</source>
       </trans-unit>
       <trans-unit id="navLandmark" datatype="html">
         <source>Navigation principale</source>
@@ -5927,29 +6252,29 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Profil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">275,277</context>
+          <context context-type="linenumber">298,300</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">307,309</context>
+          <context context-type="linenumber">339,341</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navLogoutLabel" datatype="html">
         <source>Déconnexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">284,286</context>
+          <context context-type="linenumber">307,309</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">315,316</context>
+          <context context-type="linenumber">347,348</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navLinkPresentation" datatype="html">
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.presentation</note>
@@ -5958,7 +6283,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.projects</note>
@@ -5967,7 +6292,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Offres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.offer</note>
@@ -5976,7 +6301,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>L&apos;Atelier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Atelier dropdown label</note>
         <note priority="1" from="meaning">navbar.atelier.label</note>
@@ -5985,7 +6310,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Météo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.meteo.title</note>
       </trans-unit>
@@ -5993,7 +6318,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Explorez la météo en temps réel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.meteo.desc</note>
       </trans-unit>
@@ -6001,7 +6326,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Budget</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.budget.title</note>
       </trans-unit>
@@ -6009,7 +6334,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Gérez votre budget à deux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.budget.desc</note>
       </trans-unit>
@@ -6017,7 +6342,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Sebastian</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.title</note>
       </trans-unit>
@@ -6025,7 +6350,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Votre majordome personnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.desc</note>
       </trans-unit>
@@ -6033,7 +6358,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.open</note>
@@ -6042,7 +6367,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.close</note>
@@ -6051,7 +6376,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="description">Mobile nav heading</note>
         <note priority="1" from="meaning">navbar.menu.heading</note>
@@ -6060,7 +6385,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.close</note>
@@ -6069,31 +6394,16 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>
-      </trans-unit>
-      <trans-unit id="navAuthLabel" datatype="html">
-        <source>Espace utilisateur</source>
-      </trans-unit>
-      <trans-unit id="navDropdownChevron" datatype="html">
-        <source>Ouvrir ou fermer la section</source>
-      </trans-unit>
-      <trans-unit id="navLinkOffer:Offres" datatype="html">
-        <source>Demander un devis</source>
-      </trans-unit>
-      <trans-unit id="navUserMenuLabel" datatype="html">
-        <source>Menu utilisateur</source>
-      </trans-unit>
-      <trans-unit id="navbarIconLabel" datatype="html">
-        <source>Icône pour <x id="navItemTitle" equiv-text="title"/>.</source>
       </trans-unit>
       <trans-unit id="seoDefaultTitle" datatype="html">
         <source>Professional Portfolio | Web Developer &amp; Designer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <note priority="1" from="description">Fallback SEO title</note>
         <note priority="1" from="meaning">seo.default.title</note>
@@ -6102,7 +6412,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Fallback SEO description</note>
         <note priority="1" from="meaning">seo.default.description</note>
@@ -6111,7 +6421,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>web development</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.webDev</note>
@@ -6120,7 +6430,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>portfolio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.portfolio</note>
@@ -6129,7 +6439,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>frontend</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.frontend</note>
@@ -6138,7 +6448,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>backend</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.backend</note>
@@ -6147,7 +6457,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>full stack</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.fullstack</note>
@@ -6156,58 +6466,10 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>developer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.developer</note>
-      </trans-unit>
-      <trans-unit id="routeHomeSeoTitle" datatype="html">
-        <source>Accueil — Tim Moyence Portfolio</source>
-      </trans-unit>
-      <trans-unit id="routeHomeSeoDescription" datatype="html">
-        <source>Explore my professional services.</source>
-      </trans-unit>
-      <trans-unit id="routePresentationSeoTitle" datatype="html">
-        <source>Présentation — Tim Moyence Portfolio</source>
-      </trans-unit>
-      <trans-unit id="routePresentationSeoDescription" datatype="html">
-        <source>Découvrez mon parcours et mes compétences en développement web.</source>
-      </trans-unit>
-      <trans-unit id="routeClientProjectSeoTitle" datatype="html">
-        <source>Projets clients — Réalisations web</source>
-      </trans-unit>
-      <trans-unit id="routeClientProjectSeoDescription" datatype="html">
-        <source>Découvrez une sélection de projets clients réalisés.</source>
-      </trans-unit>
-      <trans-unit id="routeOfferSeoTitle" datatype="html">
-        <source>Offres — Services professionnels web</source>
-      </trans-unit>
-      <trans-unit id="routeOfferSeoDescription" datatype="html">
-        <source>Solutions numériques sur mesure et plans tarifaires.</source>
-      </trans-unit>
-      <trans-unit id="routeContactSeoTitle" datatype="html">
-        <source>Contact — Échanges et devis</source>
-      </trans-unit>
-      <trans-unit id="routeContactSeoDescription" datatype="html">
-        <source>Prenez contact pour discuter de vos projets numériques.</source>
-      </trans-unit>
-      <trans-unit id="routeLoginSeoTitle" datatype="html">
-        <source>Login — Pour acceder à votre compte</source>
-      </trans-unit>
-      <trans-unit id="routeLoginSeoDescription" datatype="html">
-        <source>You can't access this page without logging in.</source>
-      </trans-unit>
-      <trans-unit id="routeRegisterSeoTitle" datatype="html">
-        <source>Register — Pour acceder à votre compte</source>
-      </trans-unit>
-      <trans-unit id="routeRegisterSeoDescription" datatype="html">
-        <source>You can't access this page without registering.</source>
-      </trans-unit>
-      <trans-unit id="routeNotFoundSeoTitle" datatype="html">
-        <source>Page introuvable</source>
-      </trans-unit>
-      <trans-unit id="routeNotFoundSeoDescription" datatype="html">
-        <source>La page demandée est introuvable.</source>
       </trans-unit>
       <trans-unit id="skipLinkLabel" datatype="html">
         <source> Passer au contenu principal </source>
@@ -6271,9 +6533,6 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.office.value</note>
-      </trans-unit>
-      <trans-unit id="contactMapLinkAria" datatype="html">
-        <source>Voir l'emplacement sur la carte dans un nouvel onglet</source>
       </trans-unit>
     </body>
   </file>

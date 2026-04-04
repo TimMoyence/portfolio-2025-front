@@ -3,6 +3,7 @@ import type {
   BudgetEntryModel,
   BudgetGroup,
   BudgetSummary,
+  RecurringEntryModel,
 } from "../../app/core/models/budget.model";
 import type { BudgetPort } from "../../app/core/ports/budget.port";
 
@@ -75,6 +76,28 @@ export function buildBudgetSummary(
   };
 }
 
+/** Construit un objet RecurringEntryModel avec des valeurs par defaut. */
+export function buildRecurringEntry(
+  overrides?: Partial<RecurringEntryModel>,
+): RecurringEntryModel {
+  return {
+    id: "rec-1",
+    groupId: "group-1",
+    categoryId: "cat-1",
+    description: "Loyer",
+    amount: -950,
+    type: "FIXED",
+    frequency: "MONTHLY",
+    dayOfMonth: 1,
+    dayOfWeek: null,
+    startDate: "2026-01-01",
+    endDate: null,
+    isActive: true,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    ...overrides,
+  };
+}
+
 /** Cree un stub complet du port budget avec des spies Jasmine. */
 export function createBudgetPortStub(): Record<keyof BudgetPort, jasmine.Spy> {
   return {
@@ -88,5 +111,11 @@ export function createBudgetPortStub(): Record<keyof BudgetPort, jasmine.Spy> {
     getCategories: jasmine.createSpy("getCategories"),
     updateEntry: jasmine.createSpy("updateEntry"),
     shareBudget: jasmine.createSpy("shareBudget"),
+    updateCategory: jasmine.createSpy("updateCategory"),
+    exportPdf: jasmine.createSpy("exportPdf"),
+    getRecurringEntries: jasmine.createSpy("getRecurringEntries"),
+    createRecurringEntry: jasmine.createSpy("createRecurringEntry"),
+    deleteRecurringEntry: jasmine.createSpy("deleteRecurringEntry"),
+    updateRecurringEntry: jasmine.createSpy("updateRecurringEntry"),
   };
 }

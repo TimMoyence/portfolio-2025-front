@@ -86,6 +86,7 @@
             <div class="mt-4 border-t border-white/40 pt-4">
               <p
                 class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
+                i18n="@@budgetShareTitle"
               >
                 Partager le budget
               </p>
@@ -103,7 +104,7 @@
                   class="rounded-xl bg-[#0f7b65] px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
                   (click)="shareBudgetWith()"
                 >
-                  Inviter
+                  <span i18n="@@budgetShareInviteBtn">Inviter</span>
                 </button>
               </div>
               @if (shareMessage()) {
@@ -149,6 +150,14 @@
         title="Pockets"
         [value]="pocketsTotal()"
         caption="Money moved from the common account into pockets."
+      />
+    </div>
+
+    <!-- Charts -->
+    <div class="mt-8">
+      <app-budget-chart
+        [categoryTotals]="categoryTotals()"
+        [apiCategories]="apiCategories()"
       />
     </div>
 
@@ -310,6 +319,15 @@
       </section>
     </div>
 
+    <!-- Goals -->
+    <div class="mt-8">
+      <app-budget-goals
+        [categories]="apiCategories()"
+        [categoryTotals]="categoryTotals()"
+        [groupId]="groupId() ?? ''"
+      />
+    </div>
+
     <div class="mt-8">
       <app-budget-transactions-table
         [transactions]="transactionViews()"
@@ -317,5 +335,26 @@
         (categoryChanged)="onCategoryChange($event)"
       />
     </div>
+
+    <!-- Recurring entries -->
+    @if (groupId()) {
+      <div class="mt-8">
+        <app-budget-recurring
+          [groupId]="groupId()!"
+          [categories]="apiCategories()"
+        />
+      </div>
+    }
+
+    <!-- Export PDF -->
+    @if (groupId()) {
+      <div class="mt-8 flex justify-end">
+        <app-budget-export
+          [groupId]="groupId()!"
+          [month]="monthNumber()"
+          [year]="currentYear()"
+        />
+      </div>
+    }
   </div>
 </section>

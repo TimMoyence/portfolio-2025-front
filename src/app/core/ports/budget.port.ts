@@ -7,8 +7,11 @@ import type {
   BudgetSummary,
   CreateBudgetCategoryPayload,
   CreateBudgetEntryPayload,
+  CreateRecurringEntryPayload,
   ImportBudgetEntriesPayload,
+  RecurringEntryModel,
   ShareBudgetPayload,
+  UpdateRecurringEntryPayload,
 } from "../models/budget.model";
 
 /** Port d'acces aux donnees du budget partage. */
@@ -41,6 +44,26 @@ export interface BudgetPort {
   shareBudget(
     payload: ShareBudgetPayload,
   ): Observable<{ shared: true; userId: string }>;
+  /** Met a jour une categorie (ex: budgetLimit). */
+  updateCategory(
+    categoryId: string,
+    payload: Partial<{ budgetLimit: number }>,
+  ): Observable<BudgetCategoryModel>;
+  /** Exporte le budget en PDF. */
+  exportPdf(groupId: string, month: number, year: number): Observable<Blob>;
+  /** Recupere les entrees recurrentes d'un groupe. */
+  getRecurringEntries(groupId: string): Observable<RecurringEntryModel[]>;
+  /** Cree une entree recurrente. */
+  createRecurringEntry(
+    payload: CreateRecurringEntryPayload,
+  ): Observable<RecurringEntryModel>;
+  /** Supprime une entree recurrente. */
+  deleteRecurringEntry(id: string): Observable<void>;
+  /** Met a jour une entree recurrente. */
+  updateRecurringEntry(
+    id: string,
+    payload: UpdateRecurringEntryPayload,
+  ): Observable<RecurringEntryModel>;
 }
 
 export const BUDGET_PORT = new InjectionToken<BudgetPort>("BUDGET_PORT");
