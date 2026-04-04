@@ -16,8 +16,19 @@ const distRoot = resolve(serverDistFolder, "../..");
 // dist/portfolio-app/browser
 const browserDistFolder = resolve(distRoot, "browser");
 
-// index SSR propre à la locale: dist/portfolio-app/server/<locale>/index.server.html
-const indexHtml = join(serverDistFolder, "index.server.html");
+// index SSR propre a la locale: dist/portfolio-app/server/<locale>/index.server.html
+// Le container peut recevoir des requetes pour une autre locale (nginx, fallback),
+// donc on resout dynamiquement le bon index.server.html selon l'URL.
+const defaultIndexHtml = join(serverDistFolder, "index.server.html");
+const serverRoot = resolve(serverDistFolder, "..");
+
+/** Retourne le index.server.html correspondant a la locale de l'URL. */
+const resolveIndexHtml = (locale: string | null): string => {
+  if (!locale) return defaultIndexHtml;
+  const localeIndex = join(serverRoot, locale, "index.server.html");
+  if (fs.existsSync(localeIndex)) return localeIndex;
+  return defaultIndexHtml;
+};
 
 const app = express();
 const commonEngine = new CommonEngine();
@@ -268,34 +279,23 @@ app.use(express.static(browserDistFolder, { maxAge: "1y", index: false }));
 app.get("**", (req, res, next) => {
   const { protocol, originalUrl, headers } = req;
 
-  // Extraire le prefixe locale depuis l'URL pour APP_BASE_HREF.
-  // Le build Angular insere <base href="/fr/"> ou <base href="/en/"> dans le HTML,
-  // mais APP_BASE_HREF n'est utilise que cote SSR — le client lit le <base> du DOM.
-  // On doit donc aussi patcher le <base href> dans le HTML rendu.
+  // Extraire la locale depuis l'URL pour servir le bon index.server.html.
+  // Chaque locale a son propre bundle SSR (traductions, <base href>, lang).
+  // On resout dynamiquement pour eviter les problemes de cross-locale.
   const localeMatch = originalUrl.match(/^\/(fr|en)(?=\/|$)/);
   const urlLocale = localeMatch ? localeMatch[1] : null;
   const baseHref = urlLocale ? `/${urlLocale}` : "/";
+  const documentFilePath = resolveIndexHtml(urlLocale);
 
   commonEngine
     .render({
       bootstrap,
-      documentFilePath: indexHtml,
+      documentFilePath,
       url: `${protocol}://${headers.host}${originalUrl}`,
       publicPath: browserDistFolder,
       providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
     })
-    .then((html) => {
-      // Remplacer le <base href="..."> du HTML pour correspondre a la locale de l'URL.
-      // Sans cela, le client Angular hydrate avec le mauvais base href
-      // quand un container gere une locale differente de la sienne.
-      if (urlLocale) {
-        html = html.replace(
-          /<base href="\/(?:fr|en)\/">/,
-          `<base href="/${urlLocale}/">`,
-        );
-      }
-      res.send(html);
-    })
+    .then((html) => res.send(html))
     .catch((err) => next(err));
 });
 
