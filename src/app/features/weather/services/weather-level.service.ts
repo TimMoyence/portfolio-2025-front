@@ -1,16 +1,17 @@
 import { computed, inject, Injectable, signal } from "@angular/core";
 import { take } from "rxjs/operators";
 import type { WeatherLevel } from "../../../core/models/weather.model";
-import { WeatherService } from "../../../core/services/weather.service";
+import type { WeatherPort } from "../../../core/ports/weather.port";
+import { WEATHER_PORT } from "../../../core/ports/weather.port";
 
 /**
  * Service de gestion du niveau d'experience meteo.
  * Synchronise le niveau, les tooltips vus et l'utilisation quotidienne
- * avec le backend via le WeatherService.
+ * avec le backend via le port meteo.
  */
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class WeatherLevelService {
-  private readonly weatherService = inject(WeatherService);
+  private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
 
   /** Niveau d'experience actuel de l'utilisateur. */
   readonly level = signal<WeatherLevel>("discovery");

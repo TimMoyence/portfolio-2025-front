@@ -1,16 +1,17 @@
 import { inject, Injectable, signal } from "@angular/core";
 import { take } from "rxjs/operators";
 import type { WeatherPreferences } from "../../../core/models/weather.model";
-import { WeatherService } from "../../../core/services/weather.service";
+import type { WeatherPort } from "../../../core/ports/weather.port";
+import { WEATHER_PORT } from "../../../core/ports/weather.port";
 
 /**
  * Service de gestion des preferences d'unites de mesure.
  * Synchronise les choix d'unites (temperature, vitesse, pression)
- * avec le backend via le WeatherService.
+ * avec le backend via le port meteo.
  */
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class UnitPreferencesService {
-  private readonly weatherService = inject(WeatherService);
+  private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
 
   /** Unite de temperature selectionnee. */
   readonly temperatureUnit = signal<"celsius" | "fahrenheit">("celsius");

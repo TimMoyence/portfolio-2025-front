@@ -11,7 +11,8 @@ import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import type { ContactFormState } from "../../core/models/contact.model";
-import { ContactService } from "../../core/services/contact.service";
+import type { ContactPort } from "../../core/ports/contact.port";
+import { CONTACT_PORT } from "../../core/ports/contact.port";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
@@ -37,7 +38,7 @@ export class ContactComponent {
   contactSuccessMessage?: string;
   private readonly appConfig = inject(APP_CONFIG);
   private readonly localeId = inject(LOCALE_ID);
-  private readonly contactService = inject(ContactService);
+  private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
 
   readonly hero = {
@@ -136,7 +137,7 @@ export class ContactComponent {
 
     const payload = this.normalizeContactPayload(this.contactForm);
 
-    handleFormSubmit(this.contactService.contact(payload), this.cdr, {
+    handleFormSubmit(this.contactPort.contact(payload), this.cdr, {
       fallbackError: $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`,
       onSuccess: (response) => {
         if (response.httpCode !== 201)

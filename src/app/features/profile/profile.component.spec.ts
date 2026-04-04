@@ -3,14 +3,18 @@ import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { of } from "rxjs";
-import { AuthService } from "../../core/services/auth.service";
+import { AUTH_PORT } from "../../core/ports/auth.port";
+import { WEATHER_PORT } from "../../core/ports/weather.port";
 import { AuthStateService } from "../../core/services/auth-state.service";
-import { WeatherService } from "../../core/services/weather.service";
 import { WeatherLevelService } from "../weather/services/weather-level.service";
 import {
   buildAuthUser,
-  createAuthServiceStub,
+  createAuthPortStub,
 } from "../../../testing/factories/auth.factory";
+import {
+  createWeatherPortStub,
+  buildWeatherPreferences,
+} from "../../../testing/factories/weather.factory";
 import { ProfileComponent } from "./profile.component";
 
 function createAuthStateMock(
@@ -28,57 +32,48 @@ function createAuthStateMock(
   };
 }
 
-function createAuthServiceMock() {
-  return createAuthServiceStub();
-}
-
-function createWeatherServiceMock() {
-  return jasmine.createSpyObj<WeatherService>("WeatherService", {
-    getPreferences: of({
-      id: "1",
-      userId: "user-1",
-      level: "curious" as const,
-      favoriteCities: [
-        {
-          name: "Paris",
-          latitude: 48.85,
-          longitude: 2.35,
-          country: "France",
-        },
-      ],
-      daysUsed: 12,
-      lastUsedAt: null,
-      tooltipsSeen: [],
-    }),
-    updatePreferences: of({
-      id: "1",
-      userId: "user-1",
-      level: "curious" as const,
-      favoriteCities: [],
-      daysUsed: 12,
-      lastUsedAt: null,
-      tooltipsSeen: [],
-    }),
-  });
+function createWeatherPortMock() {
+  const stub = createWeatherPortStub();
+  stub.getPreferences.and.returnValue(
+    of(
+      buildWeatherPreferences({
+        level: "curious",
+        favoriteCities: [
+          {
+            name: "Paris",
+            latitude: 48.85,
+            longitude: 2.35,
+            country: "France",
+          },
+        ],
+        daysUsed: 12,
+      }),
+    ),
+  );
+  stub.updatePreferences.and.returnValue(
+    of(buildWeatherPreferences({ favoriteCities: [] })),
+  );
+  stub.recordUsage.and.returnValue(of(void 0));
+  return stub;
 }
 
 describe("ProfileComponent", () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: ReturnType<typeof createAuthPortStub>;
   let authState: ReturnType<typeof createAuthStateMock>;
 
   beforeEach(async () => {
-    authService = createAuthServiceMock();
+    authService = createAuthPortStub();
     authState = createAuthStateMock();
 
     await TestBed.configureTestingModule({
       imports: [ProfileComponent],
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: authService },
+        { provide: AUTH_PORT, useValue: authService },
         { provide: AuthStateService, useValue: authState },
-        { provide: WeatherService, useValue: createWeatherServiceMock() },
+        { provide: WEATHER_PORT, useValue: createWeatherPortMock() },
         WeatherLevelService,
       ],
     }).compileComponents();

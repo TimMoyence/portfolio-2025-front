@@ -8,7 +8,8 @@ import {
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { AuthService } from "../../core/services/auth.service";
+import type { AuthPort } from "../../core/ports/auth.port";
+import { AUTH_PORT } from "../../core/ports/auth.port";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 
@@ -21,7 +22,7 @@ import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForgotPasswordComponent {
-  private readonly authService = inject(AuthService);
+  private readonly authService: AuthPort = inject(AUTH_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
 
   email = "";

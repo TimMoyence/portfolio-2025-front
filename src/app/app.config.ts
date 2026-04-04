@@ -11,7 +11,7 @@ import {
   withComponentInputBinding,
   withInMemoryScrolling,
 } from "@angular/router";
-import { environment } from "../environments/environnement";
+import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
 import { AuthHttpAdapter } from "./core/adapters/auth-http.adapter";
 import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adapter";

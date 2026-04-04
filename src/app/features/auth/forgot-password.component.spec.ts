@@ -2,23 +2,23 @@ import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { of } from "rxjs";
-import { AuthService } from "../../core/services/auth.service";
-import { createAuthServiceStub } from "../../../testing/factories/auth.factory";
+import { AUTH_PORT } from "../../core/ports/auth.port";
+import { createAuthPortStub } from "../../../testing/factories/auth.factory";
 import { ForgotPasswordComponent } from "./forgot-password.component";
 
 describe("ForgotPasswordComponent", () => {
   let component: ForgotPasswordComponent;
   let fixture: ComponentFixture<ForgotPasswordComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: ReturnType<typeof createAuthPortStub>;
 
   beforeEach(async () => {
-    authService = createAuthServiceStub();
+    authService = createAuthPortStub();
 
     await TestBed.configureTestingModule({
       imports: [ForgotPasswordComponent],
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: authService },
+        { provide: AUTH_PORT, useValue: authService },
       ],
     }).compileComponents();
 

@@ -6,23 +6,23 @@ import {
   provideRouter,
 } from "@angular/router";
 import { of } from "rxjs";
-import { AuthService } from "../../core/services/auth.service";
-import { createAuthServiceStub } from "../../../testing/factories/auth.factory";
+import { AUTH_PORT } from "../../core/ports/auth.port";
+import { createAuthPortStub } from "../../../testing/factories/auth.factory";
 import { ResetPasswordComponent } from "./reset-password.component";
 
 describe("ResetPasswordComponent", () => {
   let component: ResetPasswordComponent;
   let fixture: ComponentFixture<ResetPasswordComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: ReturnType<typeof createAuthPortStub>;
 
   beforeEach(async () => {
-    authService = createAuthServiceStub();
+    authService = createAuthPortStub();
 
     await TestBed.configureTestingModule({
       imports: [ResetPasswordComponent],
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: authService },
+        { provide: AUTH_PORT, useValue: authService },
         {
           provide: ActivatedRoute,
           useValue: {

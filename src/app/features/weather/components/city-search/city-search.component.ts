@@ -24,7 +24,8 @@ import {
   switchMap,
 } from "rxjs/operators";
 import type { CityResult } from "../../../../core/models/weather.model";
-import { WeatherService } from "../../../../core/services/weather.service";
+import type { WeatherPort } from "../../../../core/ports/weather.port";
+import { WEATHER_PORT } from "../../../../core/ports/weather.port";
 import { GeolocationService } from "../../services/geolocation.service";
 
 /**
@@ -173,7 +174,7 @@ export class CitySearchComponent implements OnInit, OnDestroy {
   readonly showDropdown = signal(false);
   readonly locating = signal(false);
 
-  private readonly weatherService = inject(WeatherService);
+  private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly geolocationService = inject(GeolocationService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly searchSubject = new Subject<string>();

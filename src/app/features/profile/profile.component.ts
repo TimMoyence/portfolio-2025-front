@@ -10,9 +10,11 @@ import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import type { FavoriteCity } from "../../core/models/weather.model";
-import { AuthService } from "../../core/services/auth.service";
+import type { AuthPort } from "../../core/ports/auth.port";
+import { AUTH_PORT } from "../../core/ports/auth.port";
 import { AuthStateService } from "../../core/services/auth-state.service";
-import { WeatherService } from "../../core/services/weather.service";
+import type { WeatherPort } from "../../core/ports/weather.port";
+import { WEATHER_PORT } from "../../core/ports/weather.port";
 import { WeatherLevelService } from "../weather/services/weather-level.service";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
@@ -24,13 +26,14 @@ import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
   imports: [CommonModule, FormsModule, RouterModule, HeroSectionComponent],
   templateUrl: "./profile.component.html",
   styleUrl: "./profile.component.scss",
+  providers: [WeatherLevelService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent implements OnInit {
-  private readonly authService = inject(AuthService);
+  private readonly authService: AuthPort = inject(AUTH_PORT);
   readonly authState = inject(AuthStateService);
   readonly levelService = inject(WeatherLevelService);
-  private readonly weatherService = inject(WeatherService);
+  private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
 
   /* — Set password (Google-only) — */

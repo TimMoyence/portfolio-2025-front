@@ -16,7 +16,8 @@ import type { SignupFormState } from "../../core/models/signupForm.model";
 import { Router, RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import { AuthStateService } from "../../core/services/auth-state.service";
-import { AuthService } from "../../core/services/auth.service";
+import type { AuthPort } from "../../core/ports/auth.port";
+import { AUTH_PORT } from "../../core/ports/auth.port";
 import { loadGoogleGis } from "../../core/utils/google-gis";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
@@ -43,7 +44,7 @@ type LoginFormKey = keyof LoginFormState;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
-  private readonly authService = inject(AuthService);
+  private readonly authService: AuthPort = inject(AUTH_PORT);
   private readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);

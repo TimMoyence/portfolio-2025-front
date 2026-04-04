@@ -8,9 +8,9 @@ import { FormsModule } from "@angular/forms";
 import { of } from "rxjs";
 import type { AuthSession } from "../../core/models/auth.model";
 import { APP_CONFIG } from "../../core/config/app-config.token";
+import type { AuthPort } from "../../core/ports/auth.port";
 import { AUTH_PORT } from "../../core/ports/auth.port";
-import { AuthService } from "../../core/services/auth.service";
-import { environment } from "../../../environments/environnement";
+import { environment } from "../../../environments/environment";
 import {
   buildAuthSession,
   buildAuthUser,
@@ -21,16 +21,12 @@ import { AuthComponent } from "./auth.component";
 describe("AuthComponent", () => {
   let component: AuthComponent;
   let fixture: ComponentFixture<AuthComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: jasmine.SpyObj<AuthPort>;
 
   beforeEach(async () => {
     localStorage.removeItem("portfolio_jwt");
 
-    authService = jasmine.createSpyObj<AuthService>("AuthService", [
-      "register",
-      "login",
-      "googleAuth",
-    ]);
+    authService = createAuthPortStub();
 
     await TestBed.configureTestingModule({
       imports: [FormsModule, AuthComponent],
@@ -39,12 +35,8 @@ describe("AuthComponent", () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         {
-          provide: AuthService,
-          useValue: authService,
-        },
-        {
           provide: AUTH_PORT,
-          useValue: createAuthPortStub(),
+          useValue: authService,
         },
         {
           provide: APP_CONFIG,

@@ -9,7 +9,8 @@ import {
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { AuthService } from "../../core/services/auth.service";
+import type { AuthPort } from "../../core/ports/auth.port";
+import { AUTH_PORT } from "../../core/ports/auth.port";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 
@@ -22,7 +23,7 @@ import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
-  private readonly authService = inject(AuthService);
+  private readonly authService: AuthPort = inject(AUTH_PORT);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 

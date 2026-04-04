@@ -18,7 +18,10 @@ describe("UnitPreferencesService", () => {
     );
 
     TestBed.configureTestingModule({
-      providers: [{ provide: WEATHER_PORT, useValue: weatherPortStub }],
+      providers: [
+        UnitPreferencesService,
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
+      ],
     });
 
     service = TestBed.inject(UnitPreferencesService);

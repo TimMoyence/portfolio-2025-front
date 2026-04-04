@@ -2,13 +2,14 @@ import { TestBed } from "@angular/core/testing";
 import type { NgForm } from "@angular/forms";
 import { of } from "rxjs";
 import type { AuditStreamEvent } from "../../core/models/audit-request.model";
-import { AuditRequestService } from "../../core/services/audit-request.service";
+import type { AuditRequestPort } from "../../core/ports/audit-request.port";
+import { AUDIT_REQUEST_PORT } from "../../core/ports/audit-request.port";
 import { GrowthAuditComponent } from "./growth-audit.component";
 import {
   buildAuditCreateResponse,
   buildAuditSummaryResponse,
   buildAuditStreamHeartbeat,
-  createAuditRequestServiceStub,
+  createAuditRequestPortStub,
 } from "../../../testing/factories/audit-request.factory";
 
 /**
@@ -27,7 +28,7 @@ function buildValidForm(): NgForm {
  */
 function submitAndStream(
   component: GrowthAuditComponent,
-  auditServiceMock: jasmine.SpyObj<AuditRequestService>,
+  auditServiceMock: jasmine.SpyObj<AuditRequestPort>,
   event: AuditStreamEvent,
   auditId: string,
 ): void {
@@ -46,7 +47,7 @@ function submitAndStream(
 }
 
 describe("GrowthAuditComponent", () => {
-  const auditServiceMock = createAuditRequestServiceStub();
+  const auditServiceMock = createAuditRequestPortStub();
 
   beforeEach(async () => {
     auditServiceMock.submit.calls.reset();
@@ -63,7 +64,7 @@ describe("GrowthAuditComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [GrowthAuditComponent],
-      providers: [{ provide: AuditRequestService, useValue: auditServiceMock }],
+      providers: [{ provide: AUDIT_REQUEST_PORT, useValue: auditServiceMock }],
     }).compileComponents();
   });
 

@@ -6,7 +6,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import { CONTACT_PORT } from "../../core/ports/contact.port";
 import { ContactComponent } from "./contact.component";
-import { environment } from "../../../environments/environnement";
+import { environment } from "../../../environments/environment";
 import { createContactPortStubWithDefault } from "../../../testing/factories/contact.factory";
 
 describe("ContactComponent", () => {

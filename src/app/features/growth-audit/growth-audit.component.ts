@@ -16,7 +16,8 @@ import type {
   AuditStreamEvent,
   AuditSummaryResponse,
 } from "../../core/models/audit-request.model";
-import { AuditRequestService } from "../../core/services/audit-request.service";
+import type { AuditRequestPort } from "../../core/ports/audit-request.port";
+import { AUDIT_REQUEST_PORT } from "../../core/ports/audit-request.port";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import {
@@ -47,7 +48,7 @@ interface AuditPillar {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GrowthAuditComponent implements OnDestroy {
-  private readonly auditService = inject(AuditRequestService);
+  private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   readonly localeUrlPrefix = this.getLocaleUrlPrefix();
