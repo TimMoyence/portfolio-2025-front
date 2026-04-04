@@ -73,6 +73,9 @@ export interface ForecastResponse {
 /** Niveau d'experience meteo de l'utilisateur. */
 export type WeatherLevel = "discovery" | "curious" | "expert";
 
+/** Granularite de la vue d'ensemble hebdomadaire. */
+export type OverviewGranularity = "day" | "3h" | "1h";
+
 /** Ville favorite enregistree dans les preferences. */
 export interface FavoriteCity {
   name: string;
@@ -146,6 +149,7 @@ export interface WeatherPreferences {
   tooltipsSeen: string[];
   units?: UnitPreferences;
   defaultCityIndex: number | null;
+  overviewGranularity: OverviewGranularity;
 }
 
 /** Donnees meteo detaillees courantes (source OpenWeatherMap). */

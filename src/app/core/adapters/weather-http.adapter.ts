@@ -77,6 +77,7 @@ export class WeatherHttpAdapter implements WeatherPort {
         | "tooltipsSeen"
         | "units"
         | "defaultCityIndex"
+        | "overviewGranularity"
       >
     >,
   ): Observable<WeatherPreferences> {

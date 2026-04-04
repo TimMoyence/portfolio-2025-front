@@ -9,6 +9,7 @@ import {
   OnInit,
   PLATFORM_ID,
   signal,
+  ViewChild,
 } from "@angular/core";
 import { WeatherLevelService } from "../../services/weather-level.service";
 
@@ -36,7 +37,10 @@ import { WeatherLevelService } from "../../services/weather-level.service";
 
       @if (visible()) {
         <div
-          class="absolute bottom-full left-1/2 z-20 mb-2 w-64 -translate-x-1/2 rounded-xl border border-white/20 bg-white/15 p-4 shadow-xl backdrop-blur-xl transition-opacity"
+          #tooltipPanel
+          class="fixed z-50 rounded-xl border border-white/20 bg-white/15 p-4 shadow-xl backdrop-blur-xl transition-opacity"
+          [style.width]="'16rem'"
+          [style.max-width]="'min(16rem, calc(100vw - 2rem))'"
           [class.opacity-100]="visible()"
           role="tooltip"
         >
@@ -61,6 +65,8 @@ export class LearningTooltipComponent implements OnInit {
   /** Etat de visibilite du popover. */
   readonly visible = signal(false);
 
+  @ViewChild("tooltipPanel") tooltipPanel?: ElementRef<HTMLElement>;
+
   private readonly levelService = inject(WeatherLevelService);
   private readonly elementRef = inject(ElementRef);
   private readonly platformId = inject(PLATFORM_ID);
@@ -69,9 +75,9 @@ export class LearningTooltipComponent implements OnInit {
   ngOnInit(): void {
     if (!this.isBrowser) return;
 
-    // Auto-affichage bref pour les tooltips jamais vus
     if (!this.levelService.isTooltipSeen(this.id())) {
       this.visible.set(true);
+      requestAnimationFrame(() => this.positionTooltip());
       setTimeout(() => {
         this.visible.set(false);
         this.levelService.markTooltipSeen(this.id());
@@ -84,9 +90,46 @@ export class LearningTooltipComponent implements OnInit {
     event.stopPropagation();
     this.visible.update((v) => !v);
 
+    if (this.visible()) {
+      requestAnimationFrame(() => this.positionTooltip());
+    }
+
     if (!this.levelService.isTooltipSeen(this.id())) {
       this.levelService.markTooltipSeen(this.id());
     }
+  }
+
+  /** Positionne le tooltip par rapport au bouton, clamp dans le viewport. */
+  private positionTooltip(): void {
+    if (!this.isBrowser || !this.tooltipPanel) return;
+
+    const button = this.elementRef.nativeElement.querySelector("button");
+    if (!button) return;
+
+    const btnRect = button.getBoundingClientRect();
+    const panel = this.tooltipPanel.nativeElement;
+    const panelWidth = panel.offsetWidth;
+    const panelHeight = panel.offsetHeight;
+    const viewportWidth = window.innerWidth;
+    const margin = 8;
+
+    // Position centree au-dessus du bouton
+    let left = btnRect.left + btnRect.width / 2 - panelWidth / 2;
+    let top = btnRect.top - panelHeight - 8;
+
+    // Clamp horizontal pour rester dans le viewport
+    if (left < margin) left = margin;
+    if (left + panelWidth > viewportWidth - margin) {
+      left = viewportWidth - margin - panelWidth;
+    }
+
+    // Si pas de place au-dessus, flip en dessous
+    if (top < margin) {
+      top = btnRect.bottom + 8;
+    }
+
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
   }
 
   /** Ferme le popover lors d'un clic en dehors du composant. */

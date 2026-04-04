@@ -130,6 +130,13 @@
           (forecastDaysChange)="onForecastDaysChange($event)"
         />
       </div>
+      <div appSlideIn>
+        <app-weekly-overview
+          [hourly]="data.hourly"
+          [initialGranularity]="overviewGranularity()"
+          (granularityChange)="onGranularityChange($event)"
+        />
+      </div>
 
       <!-- Bottom sheet mobile pour le detail d'un jour -->
       @if (isMobile() && selectedDayIndex() !== null) {

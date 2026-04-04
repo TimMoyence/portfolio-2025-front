@@ -103,12 +103,13 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   /** Longitude du centre de la carte. */
   readonly longitude = input(2.35);
 
-  @ViewChild("mapContainer", { static: true })
+  @ViewChild("mapContainer", { static: false })
   mapContainer!: ElementRef<HTMLElement>;
 
   private map: import("leaflet").Map | null = null;
   private radarLayer: import("leaflet").TileLayer | null = null;
   private leaflet: typeof import("leaflet") | null = null;
+  private resizeObserver: ResizeObserver | null = null;
 
   constructor(@Inject(PLATFORM_ID) private readonly platformId: object) {}
 
@@ -128,6 +129,7 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
     this.map?.remove();
   }
 
@@ -155,6 +157,17 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     // Tuiles radar RainViewer
     await this.loadRadarLayer();
+
+    // Observe le redimensionnement du container (animation slide-in, layout shifts)
+    this.resizeObserver = new ResizeObserver(() => {
+      this.map?.invalidateSize();
+    });
+    this.resizeObserver.observe(this.mapContainer.nativeElement);
+
+    // Force le recalcul apres la fin de l'animation slide-in (~500ms)
+    setTimeout(() => {
+      this.map?.invalidateSize();
+    }, 600);
   }
 
   private async loadRadarLayer(): Promise<void> {
@@ -178,8 +191,8 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
           { opacity: 0.6, maxZoom: 18 },
         )
         .addTo(this.map);
-    } catch {
-      /* RainViewer indisponible : carte sans radar */
+    } catch (error) {
+      console.warn("[RadarMap] RainViewer indisponible :", error);
     }
   }
 }

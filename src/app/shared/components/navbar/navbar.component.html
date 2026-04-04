@@ -84,10 +84,10 @@
     >
       <div
         #mobileMenuPanel
-        class="glass-card-dark rounded-2xl mt-2 py-3 px-4 w-80 border border-scheme-border bg-scheme-background"
+        class="glass-card-dark rounded-2xl mt-2 py-4 px-5 w-full max-w-md border border-scheme-border bg-scheme-background"
       >
         <h2 id="mobile-nav-label" class="sr-only">{{ mobileNavHeading }}</h2>
-        <div class="mt-3 flex flex-col gap-4 justify-center items-center">
+        <div class="mt-3 flex flex-col gap-4 items-stretch">
           <ng-container
             *ngTemplateOutlet="navContent; context: { isMobile: true }"
           ></ng-container>
@@ -100,8 +100,8 @@
 <!-- SHARED NAV CONTENT -->
 <ng-template #navContent let-isMobile="isMobile">
   <ul
-    class="flex flex-col lg:flex-row items-center gap-5"
-    [ngClass]="isMobile ? 'mt-2' : 'flex-row'"
+    class="flex flex-col lg:flex-row gap-5"
+    [ngClass]="isMobile ? 'mt-2 items-start' : 'flex-row items-center'"
   >
     @for (item of navLinks; track $index) {
       <li>
@@ -112,6 +112,9 @@
           [attr.aria-current]="rla.isActive ? 'page' : null"
           [id]="item.label + $index"
           class="transition-colors duration-300 hover:text-scheme-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          [ngClass]="
+            isMobile ? 'block w-full py-3 border-b border-scheme-border/20' : ''
+          "
           (click)="isMobile && closeMobileMenu()"
         >
           {{ item.label }}
@@ -204,8 +207,11 @@
   }
 
   <div
-    class="flex items-center justify-center gap-5"
-    [ngClass]="isMobile ? 'mt-4' : ''"
+    [ngClass]="
+      isMobile
+        ? 'flex flex-col items-stretch gap-3 mt-4 w-full'
+        : 'flex items-center justify-center gap-5'
+    "
   >
     <button
       type="button"
@@ -316,7 +322,7 @@
       @if (isMobile) {
         <div class="w-full border-t border-scheme-border pt-3 mt-2">
           @if (authState.user(); as u) {
-            <div class="flex items-center justify-center gap-2 mb-2">
+            <div class="flex items-center gap-2 mb-2">
               @if (userInitials()) {
                 <span
                   class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full text-white text-xs font-bold select-none"
@@ -329,7 +335,7 @@
               </p>
             </div>
           }
-          <div class="flex flex-col gap-2 items-center">
+          <div class="flex flex-col gap-2">
             <a
               routerLink="/profil"
               (click)="closeMobileMenu()"

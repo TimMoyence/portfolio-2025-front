@@ -21,6 +21,7 @@ import type {
   FavoriteCity,
   ForecastResponse,
   HistoricalData,
+  OverviewGranularity,
   WeatherAlert,
   WeatherLevel,
 } from "../../core/models/weather.model";
@@ -34,6 +35,7 @@ import { CurrentConditionsComponent } from "./components/current-conditions/curr
 import { DailyForecastComponent } from "./components/daily-forecast/daily-forecast.component";
 import { DayDetailPanelComponent } from "./components/day-detail-panel/day-detail-panel.component";
 import { DataExportComponent } from "./components/data-export/data-export.component";
+import { WeeklyOverviewComponent } from "./components/weekly-overview/weekly-overview.component";
 import { FavoriteCitiesBarComponent } from "./components/favorite-cities-bar/favorite-cities-bar.component";
 import { WeatherAlertsCardComponent } from "./components/weather-alerts-card/weather-alerts-card.component";
 import { RadarMapComponent } from "./components/radar-map/radar-map.component";
@@ -88,6 +90,7 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     CapeCardComponent,
     HistoricalComparisonComponent,
     DataExportComponent,
+    WeeklyOverviewComponent,
     FavoriteCitiesBarComponent,
     WeatherAlertsCardComponent,
     RadarMapComponent,
@@ -140,6 +143,9 @@ export class WeatherAppComponent implements OnInit {
 
   /** Nombre de jours de prevision demandes (7 ou 14). */
   readonly forecastDays = signal<7 | 14>(7);
+
+  /** Granularite de la vue d'ensemble hebdomadaire. */
+  readonly overviewGranularity = signal<OverviewGranularity>("day");
 
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly destroyRef = inject(DestroyRef);
@@ -387,6 +393,15 @@ export class WeatherAppComponent implements OnInit {
     this.selectedDayIndex.set(this.selectedDayIndex() === index ? null : index);
   }
 
+  /** Met a jour la granularite de la vue d'ensemble et synchronise avec le backend. */
+  onGranularityChange(granularity: OverviewGranularity): void {
+    this.overviewGranularity.set(granularity);
+    this.weatherService
+      .updatePreferences({ overviewGranularity: granularity })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
   /** Met a jour le nombre de jours de prevision et recharge les donnees. */
   onForecastDaysChange(days: number): void {
     this.forecastDays.set(days as 7 | 14);
@@ -414,6 +429,7 @@ export class WeatherAppComponent implements OnInit {
           this.favoriteCities.set(prefs.favoriteCities ?? []);
           this.unitService.loadFromPreferences(prefs);
           this.defaultCityIndex.set(prefs.defaultCityIndex ?? null);
+          this.overviewGranularity.set(prefs.overviewGranularity ?? "day");
           // Chargement automatique de la ville par defaut
           const idx = prefs.defaultCityIndex;
           if (

@@ -42,6 +42,7 @@ export interface WeatherPort {
         | "tooltipsSeen"
         | "units"
         | "defaultCityIndex"
+        | "overviewGranularity"
       >
     >,
   ): Observable<WeatherPreferences>;

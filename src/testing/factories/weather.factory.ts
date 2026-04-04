@@ -27,6 +27,7 @@ export function buildWeatherPreferences(
     lastUsedAt: null,
     tooltipsSeen: [],
     defaultCityIndex: null,
+    overviewGranularity: "day",
     ...overrides,
   };
 }
