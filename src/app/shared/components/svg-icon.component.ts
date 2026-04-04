@@ -22,6 +22,9 @@ import { catchError, map, take, tap } from "rxjs/operators";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SvgIconComponent implements OnChanges {
+  /** Regex de validation du nom d'icone : uniquement lettres, chiffres et tirets. */
+  private static readonly VALID_NAME = /^[a-zA-Z0-9-]+$/;
+
   private static cache = new Map<string, string>();
 
   /**
@@ -74,6 +77,15 @@ export class SvgIconComponent implements OnChanges {
     this.size = Number(this.size);
 
     if (!this.name || !this.isBrowser) {
+      this.svgContent = null;
+      return;
+    }
+
+    // Validation du nom pour prevenir les injections de chemin (path traversal)
+    if (!SvgIconComponent.VALID_NAME.test(this.name)) {
+      console.warn(
+        `[SvgIconComponent] Nom d'icone invalide : "${this.name}". Seuls les caracteres alphanumeriques et tirets sont autorises.`,
+      );
       this.svgContent = null;
       return;
     }

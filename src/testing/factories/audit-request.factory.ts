@@ -5,7 +5,6 @@ import type {
   AuditSummaryResponse,
 } from "../../app/core/models/audit-request.model";
 import type { AuditRequestPort } from "../../app/core/ports/audit-request.port";
-import type { AuditRequestService } from "../../app/core/services/audit-request.service";
 
 /** Construit un payload AuditRequestPayload avec des valeurs par defaut. */
 export function buildAuditRequestPayload(
@@ -58,15 +57,6 @@ export function buildAuditStreamHeartbeat(): AuditStreamEvent {
 /** Cree un stub complet du port audit-request avec des spies Jasmine. */
 export function createAuditRequestPortStub(): jasmine.SpyObj<AuditRequestPort> {
   return jasmine.createSpyObj<AuditRequestPort>("AuditRequestPort", [
-    "submit",
-    "getSummary",
-    "stream",
-  ]);
-}
-
-/** Cree un stub complet d'AuditRequestService avec des spies Jasmine. */
-export function createAuditRequestServiceStub(): jasmine.SpyObj<AuditRequestService> {
-  return jasmine.createSpyObj<AuditRequestService>("AuditRequestService", [
     "submit",
     "getSummary",
     "stream",

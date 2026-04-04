@@ -9,7 +9,6 @@ import type {
   SetPasswordPayload,
 } from "../../app/core/models/auth.model";
 import type { AuthPort } from "../../app/core/ports/auth.port";
-import type { AuthService } from "../../app/core/services/auth.service";
 
 /**
  * Construit un objet AuthUser avec des valeurs par defaut.
@@ -117,20 +116,4 @@ export function createAuthPortStub(): Record<keyof AuthPort, jasmine.Spy> {
       .createSpy("changePassword")
       .and.returnValue(of(buildAuthUser())),
   };
-}
-
-/**
- * Cree un SpyObj complet d'AuthService.
- * Les spies retournent of(null) par defaut.
- */
-export function createAuthServiceStub(): jasmine.SpyObj<AuthService> {
-  return jasmine.createSpyObj<AuthService>("AuthService", [
-    "login",
-    "register",
-    "googleAuth",
-    "requestPasswordReset",
-    "resetPassword",
-    "setPassword",
-    "changePassword",
-  ]);
 }

@@ -185,6 +185,66 @@ describe("SvgIconComponent", () => {
     it("devrait avoir le role img", () => {
       expect(component.role).toBe("img");
     });
+
+    it("ne devrait pas charger un SVG si le name contient un path traversal (../)", () => {
+      spyOn(console, "warn");
+
+      component.name = "../etc/passwd";
+      component.ngOnChanges({
+        name: {
+          currentValue: "../etc/passwd",
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true,
+        },
+      });
+
+      httpMock.expectNone("assets/icons/../etc/passwd.svg");
+      expect(component.svgContent).toBeNull();
+      expect(console.warn).toHaveBeenCalledWith(
+        jasmine.stringContaining("Nom d'icone invalide"),
+      );
+    });
+
+    it("ne devrait pas charger un SVG si le name contient du HTML (<script>)", () => {
+      spyOn(console, "warn");
+
+      component.name = "<script>alert(1)</script>";
+      component.ngOnChanges({
+        name: {
+          currentValue: "<script>alert(1)</script>",
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true,
+        },
+      });
+
+      httpMock.expectNone("assets/icons/<script>alert(1)</script>.svg");
+      expect(component.svgContent).toBeNull();
+      expect(console.warn).toHaveBeenCalledWith(
+        jasmine.stringContaining("Nom d'icone invalide"),
+      );
+    });
+
+    it("ne devrait pas charger un SVG si le name contient des slashes", () => {
+      spyOn(console, "warn");
+
+      component.name = "icons/malicious";
+      component.ngOnChanges({
+        name: {
+          currentValue: "icons/malicious",
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true,
+        },
+      });
+
+      httpMock.expectNone("assets/icons/icons/malicious.svg");
+      expect(component.svgContent).toBeNull();
+      expect(console.warn).toHaveBeenCalledWith(
+        jasmine.stringContaining("Nom d'icone invalide"),
+      );
+    });
   });
 
   describe("en contexte serveur (SSR)", () => {
