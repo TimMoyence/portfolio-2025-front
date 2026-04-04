@@ -456,6 +456,9 @@
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
       </trans-unit>
+      <trans-unit id="authGoogleTriggered" datatype="html">
+        <source>Google auth triggered for <x id="PH" equiv-text="context"/></source>
+      </trans-unit>
       <trans-unit id="authForgotEmailLabel" datatype="html">
         <source>Email</source>
         <context-group purpose="location">
@@ -762,6 +765,9 @@ Chaque projet répond à un besoin précis et s’inscrit dans une logique d’u
           <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">clientProjects.projects.maria.actions.details</note>
+      </trans-unit>
+      <trans-unit id="clientProjects.projects.maria.actions.contact" datatype="html">
+        <source>Contact</source>
       </trans-unit>
       <trans-unit id="clientProjects.projects.maria.card.kicker" datatype="html">
         <source>Objectif et fonctionnalités principales</source>
@@ -1409,6 +1415,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">contact.form.role.other</note>
       </trans-unit>
+      <trans-unit id="contactFormRoleStudent" datatype="html">
+        <source>Étudiant</source>
+      </trans-unit>
       <trans-unit id="contactFormSubjectFirst" datatype="html">
         <source>Premier contact</source>
         <context-group purpose="location">
@@ -2007,6 +2016,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">290,292</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="auditHighlightsTitle" datatype="html">
+        <source>Ce que vous recevez</source>
+      </trans-unit>
       <trans-unit id="auditStepsTitle" datatype="html">
         <source> Comment ça fonctionne </source>
         <context-group purpose="location">
@@ -2118,6 +2130,15 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">audit.highlights.noObligation</note>
       </trans-unit>
+      <trans-unit id="auditAsideTitle" datatype="html">
+        <source>Pourquoi c'est utile</source>
+      </trans-unit>
+      <trans-unit id="auditAsideBody" datatype="html">
+        <source>Je vous montre exactement pourquoi votre site ne transforme pas vos visiteurs en clients — et ce qu'il faut corriger en moins d'une semaine.</source>
+      </trans-unit>
+      <trans-unit id="auditAsideLimit" datatype="html">
+        <source>Disponibilités limitées : 5 audits par semaine.</source>
+      </trans-unit>
       <trans-unit id="auditPillarConversionTitle" datatype="html">
         <source>Conversion &amp; clarté</source>
         <context-group purpose="location">
@@ -2133,6 +2154,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">104</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.desc</note>
+      </trans-unit>
+      <trans-unit id="auditPillarConversionTime" datatype="html">
+        <source>5–7 min</source>
       </trans-unit>
       <trans-unit id="auditPillarPerformanceTitle" datatype="html">
         <source>Vitesse &amp; performance</source>
@@ -2150,6 +2174,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.desc</note>
       </trans-unit>
+      <trans-unit id="auditPillarPerformanceTime" datatype="html">
+        <source>5–8 min</source>
+      </trans-unit>
       <trans-unit id="auditPillarSeoTitle" datatype="html">
         <source>SEO fondations</source>
         <context-group purpose="location">
@@ -2165,6 +2192,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">112</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.desc</note>
+      </trans-unit>
+      <trans-unit id="auditPillarSeoTime" datatype="html">
+        <source>7–10 min</source>
       </trans-unit>
       <trans-unit id="auditPillarTrustTitle" datatype="html">
         <source>Crédibilité &amp; confiance</source>
@@ -2182,6 +2212,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.desc</note>
       </trans-unit>
+      <trans-unit id="auditPillarTrustTime" datatype="html">
+        <source>5–7 min</source>
+      </trans-unit>
       <trans-unit id="auditPillarTechTitle" datatype="html">
         <source>Tech &amp; scalabilité</source>
         <context-group purpose="location">
@@ -2197,6 +2230,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.desc</note>
+      </trans-unit>
+      <trans-unit id="auditPillarTechTime" datatype="html">
+        <source>7–10 min</source>
       </trans-unit>
       <trans-unit id="auditFormTitle" datatype="html">
         <source>Demander un audit gratuit</source>
@@ -2749,6 +2785,9 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">Service icon alt</note>
         <note priority="1" from="meaning">services.item.evolution.testing.iconAlt</note>
+      </trans-unit>
+      <trans-unit id="servicesItemtestingIconAlt" datatype="html">
+        <source>Tester icon</source>
       </trans-unit>
       <trans-unit id="servicesItemEvolutionAndMaintenanceTitle" datatype="html">
         <source>Faire évoluer</source>
@@ -4446,6 +4485,9 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">profile.weather.level.expert</note>
       </trans-unit>
+      <trans-unit id="profileWeatherRemoveFavoriteAriaLabel" datatype="html">
+        <source>Supprimer des favoris</source>
+      </trans-unit>
       <trans-unit id="sebastianPresentationSectionTitle" datatype="html">
         <source> Votre majordome personnel </source>
         <context-group purpose="location">
@@ -5632,6 +5674,21 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="meaning">weather.hero.action.login</note>
       </trans-unit>
+      <trans-unit id="weatherAqiUnavailable" datatype="html">
+        <source>Données indisponibles</source>
+      </trans-unit>
+      <trans-unit id="weatherCapeUnavailable" datatype="html">
+        <source>Données indisponibles</source>
+      </trans-unit>
+      <trans-unit id="weatherGeoButton" datatype="html">
+        <source>Me localiser</source>
+      </trans-unit>
+      <trans-unit id="weatherLoading" datatype="html">
+        <source>Chargement...</source>
+      </trans-unit>
+      <trans-unit id="weatherPressureUnavailable" datatype="html">
+        <source>Données indisponibles</source>
+      </trans-unit>
       <trans-unit id="cookieBannerMessage" datatype="html">
         <source>Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.</source>
         <context-group purpose="location">
@@ -5767,6 +5824,9 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
       </trans-unit>
+      <trans-unit id="footerSocialInstagram" datatype="html">
+        <source>Instagram</source>
+      </trans-unit>
       <trans-unit id="footerLegalTerms" datatype="html">
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
@@ -5793,6 +5853,12 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.cookiesSettings</note>
+      </trans-unit>
+      <trans-unit id="footerLegalCookiesFr" datatype="html">
+        <source>Paramètres de cookies</source>
+      </trans-unit>
+      <trans-unit id="footerLegalCookiesEn" datatype="html">
+        <source>Cookies Settings</source>
       </trans-unit>
       <trans-unit id="navLandmark" datatype="html">
         <source>Navigation principale</source>
@@ -6008,6 +6074,21 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>
       </trans-unit>
+      <trans-unit id="navAuthLabel" datatype="html">
+        <source>Espace utilisateur</source>
+      </trans-unit>
+      <trans-unit id="navDropdownChevron" datatype="html">
+        <source>Ouvrir ou fermer la section</source>
+      </trans-unit>
+      <trans-unit id="navLinkOffer:Offres" datatype="html">
+        <source>Demander un devis</source>
+      </trans-unit>
+      <trans-unit id="navUserMenuLabel" datatype="html">
+        <source>Menu utilisateur</source>
+      </trans-unit>
+      <trans-unit id="navbarIconLabel" datatype="html">
+        <source>Icône pour <x id="navItemTitle" equiv-text="title"/>.</source>
+      </trans-unit>
       <trans-unit id="seoDefaultTitle" datatype="html">
         <source>Professional Portfolio | Web Developer &amp; Designer</source>
         <context-group purpose="location">
@@ -6080,6 +6161,54 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.developer</note>
       </trans-unit>
+      <trans-unit id="routeHomeSeoTitle" datatype="html">
+        <source>Accueil — Tim Moyence Portfolio</source>
+      </trans-unit>
+      <trans-unit id="routeHomeSeoDescription" datatype="html">
+        <source>Explore my professional services.</source>
+      </trans-unit>
+      <trans-unit id="routePresentationSeoTitle" datatype="html">
+        <source>Présentation — Tim Moyence Portfolio</source>
+      </trans-unit>
+      <trans-unit id="routePresentationSeoDescription" datatype="html">
+        <source>Découvrez mon parcours et mes compétences en développement web.</source>
+      </trans-unit>
+      <trans-unit id="routeClientProjectSeoTitle" datatype="html">
+        <source>Projets clients — Réalisations web</source>
+      </trans-unit>
+      <trans-unit id="routeClientProjectSeoDescription" datatype="html">
+        <source>Découvrez une sélection de projets clients réalisés.</source>
+      </trans-unit>
+      <trans-unit id="routeOfferSeoTitle" datatype="html">
+        <source>Offres — Services professionnels web</source>
+      </trans-unit>
+      <trans-unit id="routeOfferSeoDescription" datatype="html">
+        <source>Solutions numériques sur mesure et plans tarifaires.</source>
+      </trans-unit>
+      <trans-unit id="routeContactSeoTitle" datatype="html">
+        <source>Contact — Échanges et devis</source>
+      </trans-unit>
+      <trans-unit id="routeContactSeoDescription" datatype="html">
+        <source>Prenez contact pour discuter de vos projets numériques.</source>
+      </trans-unit>
+      <trans-unit id="routeLoginSeoTitle" datatype="html">
+        <source>Login — Pour acceder à votre compte</source>
+      </trans-unit>
+      <trans-unit id="routeLoginSeoDescription" datatype="html">
+        <source>You can't access this page without logging in.</source>
+      </trans-unit>
+      <trans-unit id="routeRegisterSeoTitle" datatype="html">
+        <source>Register — Pour acceder à votre compte</source>
+      </trans-unit>
+      <trans-unit id="routeRegisterSeoDescription" datatype="html">
+        <source>You can't access this page without registering.</source>
+      </trans-unit>
+      <trans-unit id="routeNotFoundSeoTitle" datatype="html">
+        <source>Page introuvable</source>
+      </trans-unit>
+      <trans-unit id="routeNotFoundSeoDescription" datatype="html">
+        <source>La page demandée est introuvable.</source>
+      </trans-unit>
       <trans-unit id="skipLinkLabel" datatype="html">
         <source> Passer au contenu principal </source>
         <context-group purpose="location">
@@ -6142,6 +6271,9 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.office.value</note>
+      </trans-unit>
+      <trans-unit id="contactMapLinkAria" datatype="html">
+        <source>Voir l'emplacement sur la carte dans un nouvel onglet</source>
       </trans-unit>
     </body>
   </file>
