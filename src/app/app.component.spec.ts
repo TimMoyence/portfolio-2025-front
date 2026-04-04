@@ -47,4 +47,38 @@ describe("AppComponent", () => {
     expect(compiled.querySelector("app-navbar")).not.toBeNull();
     expect(compiled.querySelector("router-outlet")).not.toBeNull();
   });
+
+  it("devrait afficher le skip-link d'accessibilite", () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const skipLink = compiled.querySelector("app-skip-link");
+    expect(skipLink).not.toBeNull();
+  });
+
+  it("devrait contenir un landmark main avec le bon role", () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const main = compiled.querySelector('main[role="main"]');
+    expect(main).not.toBeNull();
+    expect(main?.id).toBe("main-content");
+  });
+
+  it("devrait contenir le gestionnaire SEO", () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector("app-seo-manager")).not.toBeNull();
+  });
+
+  it("devrait afficher un placeholder pour le footer en attendant le defer", () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    // Le @defer (on viewport) n'est pas declenche en test unitaire,
+    // donc on verifie que le placeholder est bien present
+    const footerPlaceholder = compiled.querySelector(".h-48");
+    expect(footerPlaceholder).not.toBeNull();
+  });
 });
