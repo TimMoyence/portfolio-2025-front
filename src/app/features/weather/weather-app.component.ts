@@ -167,6 +167,17 @@ export class WeatherAppComponent implements OnInit {
   /** Indique que le fond est en transition (crossfade). */
   readonly backgroundTransitioning = signal(false);
 
+  /** Position de scroll pour l'effet parallax. */
+  readonly scrollY = signal(0);
+
+  /** Offset parallax calcule a partir du scroll (max 60px). */
+  readonly parallaxOffset = computed(() =>
+    Math.min(Math.round(this.scrollY() * 0.15), 60),
+  );
+
+  /** Indique que le contenu est en transition lors d'un changement de ville. */
+  readonly contentTransitioning = signal(false);
+
   constructor() {
     // Crossfade : quand le gradient change, on anime la transition
     effect(() => {
@@ -180,6 +191,15 @@ export class WeatherAppComponent implements OnInit {
         }, 1200);
       }
     });
+
+    // Parallax : ecoute le scroll pour l'effet de fond (SSR-safe)
+    if (this.isBrowser) {
+      const handler = (): void => this.scrollY.set(window.scrollY);
+      window.addEventListener("scroll", handler, { passive: true });
+      this.destroyRef.onDestroy(() =>
+        window.removeEventListener("scroll", handler),
+      );
+    }
   }
 
   ngOnInit(): void {
