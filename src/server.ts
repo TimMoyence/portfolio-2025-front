@@ -266,7 +266,13 @@ app.use(express.static(browserDistFolder, { maxAge: "1y", index: false }));
  * Handle all other requests by rendering the Angular application.
  */
 app.get("**", (req, res, next) => {
-  const { protocol, originalUrl, baseUrl, headers } = req;
+  const { protocol, originalUrl, headers } = req;
+
+  // Extraire le prefixe locale depuis l'URL pour APP_BASE_HREF.
+  // Sans cela, le base href du HTML (/fr/ ou /en/) entre en conflit
+  // avec un APP_BASE_HREF vide, causant des doubles prefixes au reload.
+  const localeMatch = originalUrl.match(/^\/(fr|en)(?=\/|$)/);
+  const baseHref = localeMatch ? `/${localeMatch[1]}` : "/";
 
   commonEngine
     .render({
@@ -274,7 +280,7 @@ app.get("**", (req, res, next) => {
       documentFilePath: indexHtml,
       url: `${protocol}://${headers.host}${originalUrl}`,
       publicPath: browserDistFolder,
-      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
+      providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
     })
     .then((html) => res.send(html))
     .catch((err) => next(err));
