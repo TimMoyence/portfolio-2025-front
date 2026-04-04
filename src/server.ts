@@ -269,10 +269,12 @@ app.get("**", (req, res, next) => {
   const { protocol, originalUrl, headers } = req;
 
   // Extraire le prefixe locale depuis l'URL pour APP_BASE_HREF.
-  // Sans cela, le base href du HTML (/fr/ ou /en/) entre en conflit
-  // avec un APP_BASE_HREF vide, causant des doubles prefixes au reload.
+  // Le build Angular insere <base href="/fr/"> ou <base href="/en/"> dans le HTML,
+  // mais APP_BASE_HREF n'est utilise que cote SSR — le client lit le <base> du DOM.
+  // On doit donc aussi patcher le <base href> dans le HTML rendu.
   const localeMatch = originalUrl.match(/^\/(fr|en)(?=\/|$)/);
-  const baseHref = localeMatch ? `/${localeMatch[1]}` : "/";
+  const urlLocale = localeMatch ? localeMatch[1] : null;
+  const baseHref = urlLocale ? `/${urlLocale}` : "/";
 
   commonEngine
     .render({
@@ -282,7 +284,18 @@ app.get("**", (req, res, next) => {
       publicPath: browserDistFolder,
       providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
     })
-    .then((html) => res.send(html))
+    .then((html) => {
+      // Remplacer le <base href="..."> du HTML pour correspondre a la locale de l'URL.
+      // Sans cela, le client Angular hydrate avec le mauvais base href
+      // quand un container gere une locale differente de la sienne.
+      if (urlLocale) {
+        html = html.replace(
+          /<base href="\/(?:fr|en)\/">/,
+          `<base href="/${urlLocale}/">`,
+        );
+      }
+      res.send(html);
+    })
     .catch((err) => next(err));
 });
 
