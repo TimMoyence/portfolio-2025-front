@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,6 +7,7 @@ import {
   effect,
   inject,
   OnInit,
+  PLATFORM_ID,
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -141,6 +142,7 @@ export class WeatherAppComponent implements OnInit {
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly breakpointService = inject(BreakpointService);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   /** Service de gestion du niveau d'experience. */
   readonly levelService = inject(WeatherLevelService);
