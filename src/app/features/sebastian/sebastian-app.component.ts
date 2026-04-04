@@ -1,4 +1,4 @@
-import { isPlatformBrowser, DatePipe } from "@angular/common";
+import { isPlatformBrowser, DatePipe, DecimalPipe } from "@angular/common";
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -36,7 +36,7 @@ Chart.register(...registerables);
 @Component({
   selector: "app-sebastian-app",
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, DecimalPipe],
   template: `
     <div
       class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 px-4 py-8 sm:px-6 lg:px-8"

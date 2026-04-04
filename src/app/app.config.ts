@@ -15,9 +15,10 @@ import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
 import { AuthHttpAdapter } from "./core/adapters/auth-http.adapter";
 import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adapter";
-import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
-import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
 import { BudgetHttpAdapter } from "./core/adapters/budget-http.adapter";
+import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
+import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
+import { SebastianHttpAdapter } from "./core/adapters/sebastian-http.adapter";
 import { WeatherHttpAdapter } from "./core/adapters/weather-http.adapter";
 import { APP_CONFIG } from "./core/config/app-config.token";
 import { authInterceptor } from "./core/http/interceptors/auth.interceptor";
@@ -25,9 +26,10 @@ import { errorInterceptor } from "./core/http/interceptors/error.interceptor";
 import { requestIdInterceptor } from "./core/http/interceptors/request-id.interceptor";
 import { AUTH_PORT } from "./core/ports/auth.port";
 import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
-import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
-import { CONTACT_PORT } from "./core/ports/contact.port";
 import { BUDGET_PORT } from "./core/ports/budget.port";
+import { CONTACT_PORT } from "./core/ports/contact.port";
+import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
+import { SEBASTIAN_PORT } from "./core/ports/sebastian.port";
 import { WEATHER_PORT } from "./core/ports/weather.port";
 
 export const appConfig: ApplicationConfig = {
@@ -78,6 +80,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: BUDGET_PORT,
       useClass: BudgetHttpAdapter,
+    },
+    {
+      provide: SEBASTIAN_PORT,
+      useClass: SebastianHttpAdapter,
     },
   ],
 };

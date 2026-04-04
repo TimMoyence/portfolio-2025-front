@@ -6534,6 +6534,131 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.office.value</note>
       </trans-unit>
+      <trans-unit id="sebastianTitle" datatype="html">
+        <source>Sebastian</source>
+        <note priority="1" from="description">Sebastian page title</note>
+        <note priority="1" from="meaning">sebastian.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianDescription" datatype="html">
+        <source>Votre majordome de suivi de consommation</source>
+        <note priority="1" from="description">Sebastian page description</note>
+        <note priority="1" from="meaning">sebastian.description</note>
+      </trans-unit>
+      <trans-unit id="sebastianQuickAddAlcohol" datatype="html">
+        <source>+1 Alcool 🍺</source>
+        <note priority="1" from="description">Quick add alcohol button</note>
+        <note priority="1" from="meaning">sebastian.quickAdd.alcohol</note>
+      </trans-unit>
+      <trans-unit id="sebastianQuickAddCoffee" datatype="html">
+        <source>+1 Café ☕</source>
+        <note priority="1" from="description">Quick add coffee button</note>
+        <note priority="1" from="meaning">sebastian.quickAdd.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianCounterAlcohol" datatype="html">
+        <source>Alcool aujourd&apos;hui</source>
+        <note priority="1" from="description">Alcohol today counter label</note>
+        <note priority="1" from="meaning">sebastian.counter.alcohol</note>
+      </trans-unit>
+      <trans-unit id="sebastianCounterCoffee" datatype="html">
+        <source>Café aujourd&apos;hui</source>
+        <note priority="1" from="description">Coffee today counter label</note>
+        <note priority="1" from="meaning">sebastian.counter.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianCounterGoal" datatype="html">
+        <source>Objectif</source>
+        <note priority="1" from="description">Counter goal label</note>
+        <note priority="1" from="meaning">sebastian.counter.goal</note>
+      </trans-unit>
+      <trans-unit id="sebastianCounterNoGoal" datatype="html">
+        <source>Aucun objectif défini</source>
+        <note priority="1" from="description">No goal defined message</note>
+        <note priority="1" from="meaning">sebastian.counter.noGoal</note>
+      </trans-unit>
+      <trans-unit id="sebastianStatsWeekTitle" datatype="html">
+        <source>Statistiques de la semaine</source>
+        <note priority="1" from="description">Weekly stats card title</note>
+        <note priority="1" from="meaning">sebastian.stats.weekTitle</note>
+      </trans-unit>
+      <trans-unit id="sebastianStatsVsPrevious" datatype="html">
+        <source>vs semaine précédente</source>
+        <note priority="1" from="description">Stats trend comparison label</note>
+        <note priority="1" from="meaning">sebastian.stats.vsPrevious</note>
+      </trans-unit>
+      <trans-unit id="sebastianLoading" datatype="html">
+        <source>Chargement...</source>
+        <note priority="1" from="description">Loading message</note>
+        <note priority="1" from="meaning">sebastian.loading</note>
+      </trans-unit>
+      <trans-unit id="sebastianChartWeekTitle" datatype="html">
+        <source>7 derniers jours</source>
+        <note priority="1" from="description">Weekly chart title</note>
+        <note priority="1" from="meaning">sebastian.chart.weekTitle</note>
+      </trans-unit>
+      <trans-unit id="sebastianChartMonthTitle" datatype="html">
+        <source>30 derniers jours</source>
+        <note priority="1" from="description">Monthly chart title</note>
+        <note priority="1" from="meaning">sebastian.chart.monthTitle</note>
+      </trans-unit>
+      <trans-unit id="sebastianHistoryTitle" datatype="html">
+        <source>Historique récent</source>
+        <note priority="1" from="description">History section title</note>
+        <note priority="1" from="meaning">sebastian.history.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianHistoryDelete" datatype="html">
+        <source>Supprimer</source>
+        <note priority="1" from="description">Delete entry button</note>
+        <note priority="1" from="meaning">sebastian.history.delete</note>
+      </trans-unit>
+      <trans-unit id="sebastianHistoryEmpty" datatype="html">
+        <source>Aucune entrée enregistrée</source>
+        <note priority="1" from="description">Empty history message</note>
+        <note priority="1" from="meaning">sebastian.history.empty</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsTitle" datatype="html">
+        <source>Objectifs</source>
+        <note priority="1" from="description">Goals section title</note>
+        <note priority="1" from="meaning">sebastian.goals.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsAlcohol" datatype="html">
+        <source>Alcool</source>
+        <note priority="1" from="description">Goals alcohol option</note>
+        <note priority="1" from="meaning">sebastian.goals.alcohol</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsCoffee" datatype="html">
+        <source>Café</source>
+        <note priority="1" from="description">Goals coffee option</note>
+        <note priority="1" from="meaning">sebastian.goals.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsQuantityPlaceholder" datatype="html">
+        <source>Quantité max</source>
+        <note priority="1" from="description">Goals quantity input placeholder</note>
+        <note priority="1" from="meaning">sebastian.goals.quantityPlaceholder</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsDaily" datatype="html">
+        <source>Quotidien</source>
+        <note priority="1" from="description">Goals daily period</note>
+        <note priority="1" from="meaning">sebastian.goals.daily</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsWeekly" datatype="html">
+        <source>Hebdomadaire</source>
+        <note priority="1" from="description">Goals weekly period</note>
+        <note priority="1" from="meaning">sebastian.goals.weekly</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsMonthly" datatype="html">
+        <source>Mensuel</source>
+        <note priority="1" from="description">Goals monthly period</note>
+        <note priority="1" from="meaning">sebastian.goals.monthly</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsAdd" datatype="html">
+        <source>Définir l&apos;objectif</source>
+        <note priority="1" from="description">Add goal button</note>
+        <note priority="1" from="meaning">sebastian.goals.add</note>
+      </trans-unit>
+      <trans-unit id="sebastianGoalsEmpty" datatype="html">
+        <source>Aucun objectif actif</source>
+        <note priority="1" from="description">No active goals message</note>
+        <note priority="1" from="meaning">sebastian.goals.empty</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

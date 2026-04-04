@@ -8,28 +8,39 @@ import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { of } from "rxjs";
 import { AUTH_PORT } from "../../core/ports/auth.port";
+import { SEBASTIAN_PORT } from "../../core/ports/sebastian.port";
 import { AuthStateService } from "../../core/services/auth-state.service";
 import {
   buildAuthSession,
   buildAuthUser,
   createAuthPortStub,
 } from "../../../testing/factories/auth.factory";
+import { createSebastianPortStub } from "../../../testing/factories/sebastian.factory";
 import { SebastianComponent } from "./sebastian.component";
 
 describe("SebastianComponent", () => {
   let component: SebastianComponent;
   let fixture: ComponentFixture<SebastianComponent>;
   let authPortStub: ReturnType<typeof createAuthPortStub>;
+  let sebastianPortStub: ReturnType<typeof createSebastianPortStub>;
   let authState: AuthStateService;
 
   beforeEach(async () => {
     authPortStub = createAuthPortStub();
+    sebastianPortStub = createSebastianPortStub();
 
     // Configuration par defaut des stubs pour eviter les erreurs de subscribe
     authPortStub.login.and.returnValue(of(null));
     authPortStub.register.and.returnValue(of(null));
     authPortStub.me.and.returnValue(of(null));
     authPortStub.googleAuth.and.returnValue(of(null));
+
+    // Configuration des stubs Sebastian pour le composant applicatif
+    sebastianPortStub.getEntries.and.returnValue(of([]));
+    sebastianPortStub.getGoals.and.returnValue(of([]));
+    sebastianPortStub.getStats.and.returnValue(
+      of({ period: "week", byCategory: [] }),
+    );
 
     await TestBed.configureTestingModule({
       imports: [SebastianComponent],
@@ -38,6 +49,7 @@ describe("SebastianComponent", () => {
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         { provide: AUTH_PORT, useValue: authPortStub },
+        { provide: SEBASTIAN_PORT, useValue: sebastianPortStub },
       ],
     }).compileComponents();
 

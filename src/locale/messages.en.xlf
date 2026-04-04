@@ -7296,6 +7296,24 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Remove default city</target>
       </segment>
     </unit>
+    <unit id="weatherRadarLegend">
+      <segment>
+        <source>Précipitations</source>
+        <target>Precipitation</target>
+      </segment>
+    </unit>
+    <unit id="weatherRadarLight">
+      <segment>
+        <source>Faible</source>
+        <target>Light</target>
+      </segment>
+    </unit>
+    <unit id="weatherRadarHeavy">
+      <segment>
+        <source>Fort</source>
+        <target>Heavy</target>
+      </segment>
+    </unit>
     <unit id="weatherRadarTitle">
       <segment>
         <source>Carte radar</source>
@@ -7486,6 +7504,156 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>La vitesse du vent est mesurée à 10 m du sol. La direction indique d'où vient le vent (un vent de Nord souffle du nord vers le sud). Les rafales sont des accélérations brèves pouvant dépasser le double de la vitesse moyenne.</source>
         <target>Wind speed is measured at 10m above ground. The direction indicates where the wind comes from (a north wind blows from north to south). Gusts are brief accelerations that can exceed twice the average speed.</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTitle">
+      <segment>
+        <source>Sebastian</source>
+        <target>Sebastian</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDescription">
+      <segment>
+        <source>Votre majordome de suivi de consommation</source>
+        <target>Your consumption tracking butler</target>
+      </segment>
+    </unit>
+    <unit id="sebastianQuickAddAlcohol">
+      <segment>
+        <source>+1 Alcool 🍺</source>
+        <target>+1 Alcohol 🍺</target>
+      </segment>
+    </unit>
+    <unit id="sebastianQuickAddCoffee">
+      <segment>
+        <source>+1 Café ☕</source>
+        <target>+1 Coffee ☕</target>
+      </segment>
+    </unit>
+    <unit id="sebastianCounterAlcohol">
+      <segment>
+        <source>Alcool aujourd'hui</source>
+        <target>Alcohol today</target>
+      </segment>
+    </unit>
+    <unit id="sebastianCounterCoffee">
+      <segment>
+        <source>Café aujourd'hui</source>
+        <target>Coffee today</target>
+      </segment>
+    </unit>
+    <unit id="sebastianCounterGoal">
+      <segment>
+        <source>Objectif</source>
+        <target>Goal</target>
+      </segment>
+    </unit>
+    <unit id="sebastianCounterNoGoal">
+      <segment>
+        <source>Aucun objectif défini</source>
+        <target>No goal defined</target>
+      </segment>
+    </unit>
+    <unit id="sebastianStatsWeekTitle">
+      <segment>
+        <source>Statistiques de la semaine</source>
+        <target>Weekly statistics</target>
+      </segment>
+    </unit>
+    <unit id="sebastianStatsVsPrevious">
+      <segment>
+        <source>vs semaine précédente</source>
+        <target>vs previous week</target>
+      </segment>
+    </unit>
+    <unit id="sebastianLoading">
+      <segment>
+        <source>Chargement...</source>
+        <target>Loading...</target>
+      </segment>
+    </unit>
+    <unit id="sebastianChartWeekTitle">
+      <segment>
+        <source>7 derniers jours</source>
+        <target>Last 7 days</target>
+      </segment>
+    </unit>
+    <unit id="sebastianChartMonthTitle">
+      <segment>
+        <source>30 derniers jours</source>
+        <target>Last 30 days</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHistoryTitle">
+      <segment>
+        <source>Historique récent</source>
+        <target>Recent history</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHistoryDelete">
+      <segment>
+        <source>Supprimer</source>
+        <target>Delete</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHistoryEmpty">
+      <segment>
+        <source>Aucune entrée enregistrée</source>
+        <target>No entries recorded</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsTitle">
+      <segment>
+        <source>Objectifs</source>
+        <target>Goals</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsAlcohol">
+      <segment>
+        <source>Alcool</source>
+        <target>Alcohol</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsCoffee">
+      <segment>
+        <source>Café</source>
+        <target>Coffee</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsQuantityPlaceholder">
+      <segment>
+        <source>Quantité max</source>
+        <target>Max quantity</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsDaily">
+      <segment>
+        <source>Quotidien</source>
+        <target>Daily</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsWeekly">
+      <segment>
+        <source>Hebdomadaire</source>
+        <target>Weekly</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsMonthly">
+      <segment>
+        <source>Mensuel</source>
+        <target>Monthly</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsAdd">
+      <segment>
+        <source>Définir l'objectif</source>
+        <target>Set goal</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalsEmpty">
+      <segment>
+        <source>Aucun objectif actif</source>
+        <target>No active goals</target>
       </segment>
     </unit>
   </file>
