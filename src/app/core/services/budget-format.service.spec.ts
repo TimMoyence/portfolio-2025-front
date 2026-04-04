@@ -1,10 +1,15 @@
+import { LOCALE_ID } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
 import { BudgetFormatService } from "./budget-format.service";
 
 describe("BudgetFormatService", () => {
   let service: BudgetFormatService;
 
   beforeEach(() => {
-    service = new BudgetFormatService();
+    TestBed.configureTestingModule({
+      providers: [{ provide: LOCALE_ID, useValue: "fr-FR" }],
+    });
+    service = TestBed.inject(BudgetFormatService);
   });
 
   it("devrait formater un montant en EUR", () => {

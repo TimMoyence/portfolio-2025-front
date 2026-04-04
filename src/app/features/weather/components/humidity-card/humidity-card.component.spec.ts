@@ -7,6 +7,7 @@ import {
   buildWeatherPreferences,
 } from "../../../../../testing/factories/weather.factory";
 import { WeatherLevelService } from "../../services/weather-level.service";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { HumidityCardComponent } from "./humidity-card.component";
 
 describe("HumidityCardComponent", () => {
@@ -34,6 +35,7 @@ describe("HumidityCardComponent", () => {
           },
         },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        UnitPreferencesService,
       ],
     }).compileComponents();
 

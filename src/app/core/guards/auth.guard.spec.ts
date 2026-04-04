@@ -6,7 +6,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { AUTH_PORT } from "../ports/auth.port";
 import { APP_CONFIG } from "../config/app-config.token";
 import { AuthStateService } from "../services/auth-state.service";
-import { environment } from "../../../environments/environnement";
+import { environment } from "../../../environments/environment";
 import {
   buildAuthSession,
   createAuthPortStub,

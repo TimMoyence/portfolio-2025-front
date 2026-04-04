@@ -11,6 +11,8 @@ import {
   buildWeatherPreferences,
   createWeatherPortStub,
 } from "../../../../../testing/factories/weather.factory";
+import { WeatherLevelService } from "../../services/weather-level.service";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { CapeCardComponent } from "./cape-card.component";
 
 describe("CapeCardComponent", () => {
@@ -41,6 +43,8 @@ describe("CapeCardComponent", () => {
         provideHttpClientTesting(),
         { provide: AUTH_PORT, useValue: authPortStub },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        WeatherLevelService,
+        UnitPreferencesService,
       ],
     }).compileComponents();
 

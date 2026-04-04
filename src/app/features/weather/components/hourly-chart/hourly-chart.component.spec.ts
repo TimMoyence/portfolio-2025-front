@@ -5,6 +5,7 @@ import {
   createWeatherPortStub,
   buildForecastResponse,
 } from "../../../../../testing/factories/weather.factory";
+import { WeatherLevelService } from "../../services/weather-level.service";
 import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { HourlyChartComponent } from "./hourly-chart.component";
 
@@ -16,7 +17,11 @@ describe("HourlyChartComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HourlyChartComponent],
-      providers: [{ provide: WEATHER_PORT, useValue: createWeatherPortStub() }],
+      providers: [
+        { provide: WEATHER_PORT, useValue: createWeatherPortStub() },
+        WeatherLevelService,
+        UnitPreferencesService,
+      ],
     }).compileComponents();
 
     unitService = TestBed.inject(UnitPreferencesService);

@@ -12,7 +12,7 @@ import { provideRouter, Router } from "@angular/router";
 import { AUTH_PORT } from "../../../core/ports/auth.port";
 import { APP_CONFIG } from "../../../core/config/app-config.token";
 import { AuthStateService } from "../../../core/services/auth-state.service";
-import { environment } from "../../../../environments/environnement";
+import { environment } from "../../../../environments/environment";
 import {
   buildAuthSession,
   createAuthPortStub,

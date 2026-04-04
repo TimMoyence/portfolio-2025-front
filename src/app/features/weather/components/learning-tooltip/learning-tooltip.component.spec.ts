@@ -23,7 +23,10 @@ describe("LearningTooltipComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [LearningTooltipComponent],
-      providers: [{ provide: WEATHER_PORT, useValue: weatherPortStub }],
+      providers: [
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
+        WeatherLevelService,
+      ],
     }).compileComponents();
 
     levelService = TestBed.inject(WeatherLevelService);

@@ -34,6 +34,7 @@ describe("PressureCardComponent", () => {
             markTooltipSeen: () => {},
           },
         },
+        UnitPreferencesService,
       ],
     }).compileComponents();
 

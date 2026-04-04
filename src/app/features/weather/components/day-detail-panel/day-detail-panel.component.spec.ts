@@ -7,6 +7,8 @@ import {
   createWeatherPortStub,
   buildWeatherPreferences,
 } from "../../../../../testing/factories/weather.factory";
+import { WeatherLevelService } from "../../services/weather-level.service";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { DayDetailPanelComponent } from "./day-detail-panel.component";
 
 describe("DayDetailPanelComponent", () => {
@@ -25,7 +27,11 @@ describe("DayDetailPanelComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [DayDetailPanelComponent],
-      providers: [{ provide: WEATHER_PORT, useValue: weatherPortStub }],
+      providers: [
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
+        WeatherLevelService,
+        UnitPreferencesService,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DayDetailPanelComponent);

@@ -4,7 +4,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { APP_CONFIG } from "./core/config/app-config.token";
 import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
-import { environment } from "../environments/environnement";
+import { environment } from "../environments/environment";
 import { AppComponent } from "./app.component";
 import { createCookieConsentPortStub } from "../testing/factories/cookie-consent.factory";
 

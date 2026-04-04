@@ -4,7 +4,7 @@ import {
 } from "@angular/common/http/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { TestBed } from "@angular/core/testing";
-import { environment } from "../../../environments/environnement";
+import { environment } from "../../../environments/environment";
 import { APP_CONFIG } from "../config/app-config.token";
 import type { ContactFormState } from "../models/contact.model";
 import type { MessageResponse } from "../models/message.response";

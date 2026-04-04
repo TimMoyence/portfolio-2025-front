@@ -6,6 +6,8 @@ import {
   createWeatherPortStub,
   buildWeatherPreferences,
 } from "../../../../../testing/factories/weather.factory";
+import { WeatherLevelService } from "../../services/weather-level.service";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { CurrentConditionsComponent } from "./current-conditions.component";
 
 describe("CurrentConditionsComponent", () => {
@@ -24,7 +26,11 @@ describe("CurrentConditionsComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [CurrentConditionsComponent],
-      providers: [{ provide: WEATHER_PORT, useValue: weatherPortStub }],
+      providers: [
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
+        WeatherLevelService,
+        UnitPreferencesService,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CurrentConditionsComponent);

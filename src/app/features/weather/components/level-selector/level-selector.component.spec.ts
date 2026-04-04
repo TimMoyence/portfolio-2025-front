@@ -20,7 +20,10 @@ describe("LevelSelectorComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [LevelSelectorComponent],
-      providers: [{ provide: WEATHER_PORT, useValue: weatherPortStub }],
+      providers: [
+        { provide: WEATHER_PORT, useValue: weatherPortStub },
+        WeatherLevelService,
+      ],
     }).compileComponents();
 
     levelService = TestBed.inject(WeatherLevelService);

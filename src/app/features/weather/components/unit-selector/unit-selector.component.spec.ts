@@ -8,6 +8,7 @@ import {
   buildWeatherPreferences,
   createWeatherPortStub,
 } from "../../../../../testing/factories/weather.factory";
+import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { UnitSelectorComponent } from "./unit-selector.component";
 
 describe("UnitSelectorComponent", () => {
@@ -26,6 +27,7 @@ describe("UnitSelectorComponent", () => {
       providers: [
         { provide: PLATFORM_ID, useValue: "browser" },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        UnitPreferencesService,
       ],
     }).compileComponents();
 
