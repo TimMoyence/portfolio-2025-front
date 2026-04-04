@@ -47,6 +47,10 @@ describe("CurrentConditionsComponent", () => {
     expect(component.description()).toBe("");
   });
 
+  it("devrait initialiser animatedTemp a 0", () => {
+    expect(component.animatedTemp()).toBe(0);
+  });
+
   it("devrait calculer l'icone et la description quand les donnees sont presentes", () => {
     fixture.componentRef.setInput("current", {
       time: "2026-03-31T12:00",
@@ -73,5 +77,52 @@ describe("CurrentConditionsComponent", () => {
 
     expect(component.icon()).toContain("nuage.png");
     expect(component.description()).toBe("Couvert");
+  });
+
+  it("devrait animer la temperature vers la valeur cible", (done) => {
+    fixture.componentRef.setInput("current", {
+      time: "2026-03-31T12:00",
+      temperature_2m: 18,
+      weather_code: 0,
+      wind_speed_10m: 12,
+      apparent_temperature: 16,
+    });
+    fixture.detectChanges();
+
+    // Apres la duree de l'animation (500ms + marge)
+    setTimeout(() => {
+      expect(component.animatedTemp()).toBe(18);
+      done();
+    }, 600);
+  });
+
+  it("devrait re-animer vers une nouvelle valeur quand la temperature change", (done) => {
+    fixture.componentRef.setInput("current", {
+      time: "2026-03-31T12:00",
+      temperature_2m: 18,
+      weather_code: 0,
+      wind_speed_10m: 12,
+      apparent_temperature: 16,
+    });
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      expect(component.animatedTemp()).toBe(18);
+
+      // Changement de temperature
+      fixture.componentRef.setInput("current", {
+        time: "2026-03-31T13:00",
+        temperature_2m: 22,
+        weather_code: 0,
+        wind_speed_10m: 10,
+        apparent_temperature: 20,
+      });
+      fixture.detectChanges();
+
+      setTimeout(() => {
+        expect(component.animatedTemp()).toBe(22);
+        done();
+      }, 600);
+    }, 600);
   });
 });

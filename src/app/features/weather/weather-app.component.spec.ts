@@ -18,6 +18,7 @@ import {
   buildWeatherPreferences,
   createWeatherPortStub,
 } from "../../../testing/factories/weather.factory";
+import { GeolocationService } from "./services/geolocation.service";
 import { WeatherAppComponent } from "./weather-app.component";
 
 describe("WeatherAppComponent", () => {
@@ -25,10 +26,15 @@ describe("WeatherAppComponent", () => {
   let fixture: ComponentFixture<WeatherAppComponent>;
   let weatherPortStub: ReturnType<typeof createWeatherPortStub>;
   let authPortStub: ReturnType<typeof createAuthPortStub>;
+  let geoServiceSpy: jasmine.SpyObj<GeolocationService>;
 
   beforeEach(async () => {
     weatherPortStub = createWeatherPortStub();
     authPortStub = createAuthPortStub();
+    geoServiceSpy = jasmine.createSpyObj("GeolocationService", [
+      "locate",
+      "reverseGeocode",
+    ]);
 
     // Configuration par defaut des stubs
     weatherPortStub.searchCity.and.returnValue(of({ results: [] }));
@@ -48,6 +54,11 @@ describe("WeatherAppComponent", () => {
     authPortStub.me.and.returnValue(of(null));
     authPortStub.googleAuth.and.returnValue(of(null));
 
+    // Par defaut, la geolocalisation echoue (pas de permission)
+    geoServiceSpy.locate.and.returnValue(
+      throwError(() => new Error("Geolocation non disponible")),
+    );
+
     await TestBed.configureTestingModule({
       imports: [WeatherAppComponent],
       providers: [
@@ -56,6 +67,7 @@ describe("WeatherAppComponent", () => {
         provideHttpClientTesting(),
         { provide: AUTH_PORT, useValue: authPortStub },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        { provide: GeolocationService, useValue: geoServiceSpy },
       ],
     }).compileComponents();
 
@@ -175,5 +187,91 @@ describe("WeatherAppComponent", () => {
 
   it("devrait retourner null pour extractCape sans donnees ensemble", () => {
     expect(component.extractCape()).toBeNull();
+  });
+
+  // --- Tests Phase 4 : parallax ---
+
+  it("devrait initialiser scrollY a 0", () => {
+    expect(component.scrollY()).toBe(0);
+  });
+
+  it("devrait calculer parallaxOffset avec un max de 60", () => {
+    component.scrollY.set(100);
+    expect(component.parallaxOffset()).toBe(15);
+
+    component.scrollY.set(500);
+    expect(component.parallaxOffset()).toBe(60);
+  });
+
+  // --- Tests Phase 4 : transition ville ---
+
+  it("devrait activer contentTransitioning quand on change de ville avec des donnees", () => {
+    // Charger une premiere ville
+    component.onCitySelected(buildCityResult());
+    expect(component.forecast()).toBeTruthy();
+
+    // Changer de ville → transition
+    component.onCitySelected(
+      buildCityResult({ name: "Lyon", latitude: 45.75, longitude: 4.85 }),
+    );
+    expect(component.contentTransitioning()).toBeTrue();
+  });
+
+  it("devrait ne pas activer contentTransitioning sans donnees prealables", () => {
+    // Premier chargement, pas de forecast encore
+    component.onCitySelected(buildCityResult());
+    expect(component.contentTransitioning()).toBeFalse();
+  });
+
+  // --- Tests Phase 4 : geolocalisation automatique ---
+
+  it("devrait tenter la geolocalisation si pas de ville par defaut", () => {
+    // getPreferences retourne deja des prefs sans defaultCityIndex
+    // la geolocalisation est appelee dans loadFavorites()
+    expect(geoServiceSpy.locate).toHaveBeenCalled();
+  });
+
+  it("devrait charger la meteo apres geolocalisation reussie", () => {
+    // Reconfigurer pour une geolocalisation reussie
+    const geoCity = buildCityResult({
+      id: -1,
+      name: "Ma position",
+      latitude: 43.6,
+      longitude: 1.44,
+      country: "",
+    });
+    geoServiceSpy.locate.and.returnValue(of(geoCity));
+    geoServiceSpy.reverseGeocode.and.returnValue(of("Toulouse"));
+
+    // Re-declencher loadFavorites via ngOnInit
+    component.ngOnInit();
+
+    // Verifie que la ville geolocisee a ete chargee
+    expect(geoServiceSpy.reverseGeocode).toHaveBeenCalledWith(43.6, 1.44);
+    expect(component.selectedCity()).toBeTruthy();
+    expect(component.selectedCity()?.name).toBe("Toulouse");
+  });
+
+  it("devrait ne pas appeler geoloc si ville par defaut existe", () => {
+    geoServiceSpy.locate.calls.reset();
+    weatherPortStub.getPreferences.and.returnValue(
+      of(
+        buildWeatherPreferences({
+          favoriteCities: [
+            {
+              name: "Paris",
+              latitude: 48.85,
+              longitude: 2.35,
+              country: "France",
+            },
+          ],
+          defaultCityIndex: 0,
+        }),
+      ),
+    );
+
+    component.ngOnInit();
+
+    expect(geoServiceSpy.locate).not.toHaveBeenCalled();
   });
 });

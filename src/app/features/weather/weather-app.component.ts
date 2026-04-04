@@ -11,6 +11,7 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { map, switchMap } from "rxjs";
 import { BreakpointService } from "../../core/services/breakpoint.service";
 import type {
   AirQualityData,
@@ -52,6 +53,7 @@ import { BottomSheetComponent } from "../../shared/components/bottom-sheet/botto
 import { SlideInDirective } from "../../shared/directives/slide-in.directive";
 import { ChartSkeletonComponent } from "./components/skeleton/chart-skeleton.component";
 import { WeatherCardSkeletonComponent } from "./components/skeleton/weather-card-skeleton.component";
+import { GeolocationService } from "./services/geolocation.service";
 import { UnitPreferencesService } from "./services/unit-preferences.service";
 import { WeatherLevelService } from "./services/weather-level.service";
 import { weatherCodeToBackground } from "./utils/weather-code-background";
@@ -142,6 +144,7 @@ export class WeatherAppComponent implements OnInit {
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly breakpointService = inject(BreakpointService);
+  private readonly geoService = inject(GeolocationService);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   /** Service de gestion du niveau d'experience. */
@@ -212,6 +215,12 @@ export class WeatherAppComponent implements OnInit {
 
   /** Charge les previsions meteo pour la ville selectionnee. */
   onCitySelected(city: CityResult): void {
+    // Transition animee si on a deja des donnees affichees
+    if (this.forecast()) {
+      this.contentTransitioning.set(true);
+      setTimeout(() => this.contentTransitioning.set(false), 300);
+    }
+
     this.selectedCity.set(city);
     this.loading.set(true);
     this.error.set(null);
@@ -421,10 +430,53 @@ export class WeatherAppComponent implements OnInit {
               country: fav.country,
               country_code: "",
             });
+          } else {
+            // Pas de ville par defaut → tenter la geolocalisation automatique
+            this.autoGeolocate();
           }
         },
         error: () => {
-          /* Preferences indisponibles : pas de favoris */
+          // Preferences indisponibles → tenter la geolocalisation
+          this.autoGeolocate();
+        },
+      });
+  }
+
+  /**
+   * Tente de geolociser l'utilisateur automatiquement.
+   * Reverse-geocode la position pour obtenir le nom de la ville,
+   * puis charge la meteo et sauvegarde la ville comme favori par defaut.
+   * SSR-safe : le GeolocationService retourne une erreur cote serveur.
+   */
+  private autoGeolocate(): void {
+    this.geoService
+      .locate()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap((city) =>
+          this.geoService.reverseGeocode(city.latitude, city.longitude).pipe(
+            map((name) => ({
+              ...city,
+              name: name ?? city.name,
+              country: name ? city.country : "",
+            })),
+          ),
+        ),
+      )
+      .subscribe({
+        next: (city) => {
+          this.onCitySelected(city);
+          const fav: FavoriteCity = {
+            name: city.name,
+            latitude: city.latitude,
+            longitude: city.longitude,
+            country: city.country,
+          };
+          this.addFavorite(fav);
+          this.setDefaultCity(0);
+        },
+        error: () => {
+          /* Geolocalisation refusee ou non disponible : ne rien faire */
         },
       });
   }

@@ -1,10 +1,14 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  effect,
   inject,
   input,
+  PLATFORM_ID,
+  signal,
 } from "@angular/core";
 import type {
   CurrentWeather,
@@ -20,6 +24,7 @@ import {
 /**
  * Composant d'affichage des conditions meteo actuelles.
  * Affiche la temperature, l'icone, la description, la temperature ressentie et le vent.
+ * Inclut un count-up anime sur la temperature principale.
  */
 @Component({
   selector: "app-current-conditions",
@@ -57,9 +62,7 @@ import {
 
           <div class="flex flex-col items-center sm:items-start">
             <p class="text-6xl font-light text-white temp-count-up">
-              {{
-                current()!.temperature_2m | unit: unitService.temperatureUnit()
-              }}
+              {{ animatedTemp() | unit: unitService.temperatureUnit() }}
             </p>
             <div class="mt-2 flex flex-wrap gap-4 text-sm text-white/70">
               <span i18n="weather.current.feelsLike|@@weatherCurrentFeelsLike">
@@ -132,6 +135,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrentConditionsComponent {
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly destroyRef = inject(DestroyRef);
+  private animFrameId: number | null = null;
+
   /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
@@ -140,6 +147,9 @@ export class CurrentConditionsComponent {
 
   /** Donnees meteo detaillees courantes (source OpenWeatherMap). */
   readonly detailed = input<DetailedCurrentWeather | null>(null);
+
+  /** Temperature animee pour le count-up (0 → valeur reelle en 500ms, easeOutCubic). */
+  readonly animatedTemp = signal(0);
 
   /** Chemin vers l'icone meteo correspondant au code WMO. */
   readonly icon = computed(() => {
@@ -154,4 +164,48 @@ export class CurrentConditionsComponent {
     if (!data) return "";
     return weatherCodeToDescription(data.weather_code);
   });
+
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.animFrameId !== null) cancelAnimationFrame(this.animFrameId);
+    });
+
+    effect(() => {
+      const data = this.current();
+      if (!data) return;
+      this.animateCountUp(data.temperature_2m);
+    });
+  }
+
+  /** Anime la temperature de la valeur actuelle vers la cible en 500ms avec easeOutCubic. */
+  private animateCountUp(target: number): void {
+    if (
+      !this.isBrowser ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      this.animatedTemp.set(target);
+      return;
+    }
+
+    if (this.animFrameId !== null) cancelAnimationFrame(this.animFrameId);
+
+    const start = this.animatedTemp();
+    const duration = 500;
+    const startTime = performance.now();
+
+    const animate = (now: number): void => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      this.animatedTemp.set(start + (target - start) * eased);
+
+      if (progress < 1) {
+        this.animFrameId = requestAnimationFrame(animate);
+      } else {
+        this.animFrameId = null;
+      }
+    };
+
+    this.animFrameId = requestAnimationFrame(animate);
+  }
 }

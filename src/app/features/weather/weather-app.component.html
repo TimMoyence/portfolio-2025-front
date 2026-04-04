@@ -1,14 +1,16 @@
 <section class="relative min-h-screen px-4 pt-4 pb-8 overflow-hidden">
-  <!-- Fond avec crossfade : ancien gradient en dessous, nouveau au-dessus avec fade-in -->
+  <!-- Fond avec crossfade + parallax : ancien gradient en dessous, nouveau au-dessus avec fade-in -->
   @if (hasForecast()) {
     <div
-      class="absolute inset-0 bg-gradient-to-br"
+      class="absolute -inset-y-16 inset-x-0 bg-gradient-to-br"
       [ngClass]="previousBackground() || backgroundClasses()"
+      [style.transform]="'translateY(' + parallaxOffset() + 'px)'"
     ></div>
     <div
-      class="absolute inset-0 bg-gradient-to-br transition-opacity duration-[1200ms] ease-in-out"
+      class="absolute -inset-y-16 inset-x-0 bg-gradient-to-br transition-opacity duration-[1200ms] ease-in-out"
       [ngClass]="backgroundClasses()"
       [class.opacity-0]="backgroundTransitioning()"
+      [style.transform]="'translateY(' + parallaxOffset() + 'px)'"
     ></div>
   } @else {
     <div class="absolute inset-0 bg-scheme-background"></div>
@@ -94,7 +96,11 @@
 
     <!-- Previsions (Decouverte+) : toujours visibles -->
     @if (forecast(); as data) {
-      <div appSlideIn>
+      <div
+        appSlideIn
+        class="content-transition"
+        [class.content-transitioning]="contentTransitioning()"
+      >
         <app-current-conditions
           [current]="data.current"
           [detailed]="detailedCurrent()"

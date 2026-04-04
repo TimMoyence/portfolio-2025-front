@@ -36,22 +36,6 @@
   transition-delay: 0.48s;
 }
 
-/* ---- Count-up temperature ---- */
-@keyframes countUp {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.temp-count-up {
-  animation: countUp 0.5s ease-out;
-}
-
 /* ---- Chevron pulse (transition prompt) ---- */
 @keyframes chevronPulse {
   0%,
@@ -67,4 +51,36 @@
 
 :host ::ng-deep .chevron-pulse {
   animation: chevronPulse 1.5s ease-in-out infinite;
+}
+
+/* ---- City transition (fade entre villes) ---- */
+.content-transition {
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
+}
+
+.content-transitioning {
+  opacity: 0.3;
+  transform: translateY(4px);
+}
+
+/* ---- Accessibilite : desactiver les animations si l'utilisateur le demande ---- */
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .slide-in-hidden {
+    opacity: 1;
+    transform: none;
+  }
+
+  :host ::ng-deep .slide-in-visible {
+    transition: none !important;
+  }
+
+  :host ::ng-deep .chevron-pulse {
+    animation: none !important;
+  }
+
+  .content-transition {
+    transition: none !important;
+  }
 }
