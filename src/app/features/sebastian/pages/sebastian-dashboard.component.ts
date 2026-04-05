@@ -4,6 +4,7 @@ import {
   inject,
   signal,
 } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import type {
   SebastianHealthScore,
   SebastianTrendData,
@@ -23,12 +24,30 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
 @Component({
   selector: "app-sebastian-dashboard",
   standalone: true,
-  imports: [SebastianScoreCardComponent, SebastianTrendChartComponent],
+  imports: [
+    SebastianScoreCardComponent,
+    SebastianTrendChartComponent,
+    RouterLink,
+  ],
   template: `
     <div class="space-y-6">
-      <!-- Score card -->
-      @if (healthScore()) {
-        <app-sebastian-score-card [score]="healthScore()!" />
+      <!-- Score card ou invitation a definir un objectif -->
+      @if (healthScore(); as score) {
+        @if (score.score === 0 && score.phase === 1) {
+          <div
+            class="rounded-card border border-scheme-border bg-scheme-surface p-6 text-center shadow-xs"
+          >
+            <p class="mb-3 text-scheme-text-muted">{{ score.message }}</p>
+            <a
+              routerLink="../objectifs"
+              class="inline-block rounded-button bg-scheme-accent px-6 py-2 font-semibold text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover"
+            >
+              Definir un objectif
+            </a>
+          </div>
+        } @else {
+          <app-sebastian-score-card [score]="score" />
+        }
       }
 
       <!-- Grille des graphiques de tendance -->
