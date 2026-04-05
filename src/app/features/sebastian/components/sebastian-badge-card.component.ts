@@ -21,18 +21,16 @@ import type { SebastianBadgeStatus } from "../../../core/models/sebastian.model"
       [class.border-scheme-border]="!badge().unlocked"
       [class.opacity-50]="!badge().unlocked"
     >
-      <!-- Icone placeholder -->
+      <!-- Icone badge PNG -->
       <div class="mb-3 flex items-center gap-3">
-        <div
+        <img
           data-testid="badge-icon"
-          class="flex h-[50px] w-[50px] items-center justify-center rounded-full text-medium font-bold"
-          [class.bg-scheme-accent]="badge().unlocked"
-          [class.text-scheme-on-accent]="badge().unlocked"
-          [class.bg-scheme-border]="!badge().unlocked"
-          [class.text-scheme-text-muted]="!badge().unlocked"
-        >
-          {{ initials() }}
-        </div>
+          [src]="iconPath()"
+          [alt]="badge().name"
+          class="h-[50px] w-[50px] object-contain"
+          [class.grayscale]="!badge().unlocked"
+          [class.opacity-40]="!badge().unlocked"
+        />
         <div class="min-w-0 flex-1">
           <h4 class="font-heading text-small font-semibold text-scheme-text">
             {{ badge().name }}
@@ -61,14 +59,10 @@ export class SebastianBadgeCardComponent {
   /** Statut du badge a afficher. */
   readonly badge = input.required<SebastianBadgeStatus>();
 
-  /** Initiales du nom du badge pour le placeholder d'icone. */
-  readonly initials = computed(() => {
-    const words = this.badge().name.split(" ");
-    if (words.length >= 2) {
-      return (words[0][0] + words[1][0]).toUpperCase();
-    }
-    return this.badge().name.slice(0, 2).toUpperCase();
-  });
+  /** Chemin vers l'icone PNG du badge. */
+  readonly iconPath = computed(
+    () => `assets/icons/badges/${this.badge().key}.png`,
+  );
 
   /** Date de deblocage formatee en dd/MM/yyyy. */
   readonly formattedDate = computed(() => {
