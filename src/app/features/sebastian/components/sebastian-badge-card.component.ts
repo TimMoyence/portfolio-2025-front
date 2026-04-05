@@ -21,17 +21,16 @@ import type { SebastianBadgeStatus } from "../../../core/models/sebastian.model"
       [class.border-scheme-border]="!badge().unlocked"
       [class.opacity-50]="!badge().unlocked"
     >
-      <!-- Icone placeholder -->
+      <!-- Icone badge -->
       <div class="mb-3 flex items-center gap-3">
         <div
           data-testid="badge-icon"
-          class="flex h-[50px] w-[50px] items-center justify-center rounded-full text-medium font-bold"
-          [class.bg-scheme-accent]="badge().unlocked"
-          [class.text-scheme-on-accent]="badge().unlocked"
+          class="flex h-[50px] w-[50px] items-center justify-center rounded-full text-2xl"
+          [class.bg-scheme-accent-focus]="badge().unlocked"
           [class.bg-scheme-border]="!badge().unlocked"
-          [class.text-scheme-text-muted]="!badge().unlocked"
+          [class.grayscale]="!badge().unlocked"
         >
-          {{ initials() }}
+          {{ emoji() }}
         </div>
         <div class="min-w-0 flex-1">
           <h4 class="font-heading text-small font-semibold text-scheme-text">
@@ -61,14 +60,24 @@ export class SebastianBadgeCardComponent {
   /** Statut du badge a afficher. */
   readonly badge = input.required<SebastianBadgeStatus>();
 
-  /** Initiales du nom du badge pour le placeholder d'icone. */
-  readonly initials = computed(() => {
-    const words = this.badge().name.split(" ");
-    if (words.length >= 2) {
-      return (words[0][0] + words[1][0]).toUpperCase();
-    }
-    return this.badge().name.slice(0, 2).toUpperCase();
-  });
+  /** Mapping emoji par cle de badge. */
+  private static readonly BADGE_EMOJIS: Record<string, string> = {
+    "first-log": "👣",
+    "zen-monk-7": "🧘",
+    "zen-monk-30": "🪷",
+    "espresso-machine": "☕",
+    "dry-week": "💧",
+    "goal-crusher": "💪",
+    "early-bird": "🌅",
+    "night-owl": "🦉",
+    "perfect-month": "⭐",
+    "comeback-kid": "🔥",
+  };
+
+  /** Emoji representant le badge. */
+  readonly emoji = computed(
+    () => SebastianBadgeCardComponent.BADGE_EMOJIS[this.badge().key] ?? "🏅",
+  );
 
   /** Date de deblocage formatee en dd/MM/yyyy. */
   readonly formattedDate = computed(() => {
