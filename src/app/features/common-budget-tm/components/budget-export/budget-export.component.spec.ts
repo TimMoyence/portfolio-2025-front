@@ -38,7 +38,16 @@ describe("BudgetExportComponent", () => {
   });
 
   it("devrait appeler le port pour exporter le PDF", async () => {
+    const anchor = jasmine.createSpyObj("a", ["click"]);
+    spyOn(document, "createElement").and.returnValue(anchor);
+    spyOn(URL, "createObjectURL").and.returnValue("blob:fake");
+    spyOn(URL, "revokeObjectURL");
+
     await component.exportPdf();
+
     expect(budgetPortStub.exportPdf).toHaveBeenCalledWith("group-1", 3, 2026);
+    expect(anchor.download).toBe("budget-2026-03.pdf");
+    expect(anchor.click).toHaveBeenCalled();
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:fake");
   });
 });

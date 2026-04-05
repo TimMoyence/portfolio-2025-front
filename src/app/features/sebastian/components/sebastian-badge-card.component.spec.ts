@@ -96,13 +96,13 @@ describe("SebastianBadgeCardComponent", () => {
     expect(content).toContain("streaks");
   });
 
-  it("devrait afficher un emoji dans l icone du badge", () => {
-    const icon: HTMLElement | null = fixture.nativeElement.querySelector(
+  it("devrait afficher l icone PNG du badge", () => {
+    const icon = fixture.nativeElement.querySelector(
       "[data-testid='badge-icon']",
-    );
+    ) as HTMLImageElement | null;
     expect(icon).toBeTruthy();
-    // L'emoji par defaut (cle inconnue) ou celui du catalogue
-    expect(icon!.textContent!.trim().length).toBeGreaterThan(0);
+    expect(icon!.src).toContain("assets/icons/badges/");
+    expect(icon!.src).toContain(".png");
   });
 
   it("devrait ne pas afficher la date pour un badge verrouille", () => {

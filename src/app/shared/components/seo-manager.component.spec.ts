@@ -29,7 +29,7 @@ describe("SeoManagerComponent", () => {
     appName: "test",
     apiBaseUrl: "http://localhost:3000/api/v1/portfolio25/",
     baseUrl: "https://example.com",
-    external: { presqUrl: "", sebastianUrl: "" },
+    external: { sebastianUrl: "" },
   };
 
   const baseSeoConfig: SeoConfig = {
