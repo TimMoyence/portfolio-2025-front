@@ -46,7 +46,15 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
             </a>
           </div>
         } @else {
-          <app-sebastian-score-card [score]="score" />
+          <div class="flex items-start justify-between gap-4">
+            <app-sebastian-score-card class="flex-1" [score]="score" />
+            <a
+              routerLink="../objectifs"
+              class="mt-2 whitespace-nowrap rounded-button border border-scheme-border px-4 py-2 text-sm text-scheme-text-muted transition-colors hover:bg-scheme-surface-hover"
+            >
+              Modifier les objectifs
+            </a>
+          </div>
         }
       }
 

@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 import { of } from "rxjs";
 import {
   buildSebastianHealthScore,
@@ -23,7 +24,10 @@ describe("SebastianDashboardComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [SebastianDashboardComponent],
-      providers: [{ provide: SEBASTIAN_PORT, useValue: portStub }],
+      providers: [
+        { provide: SEBASTIAN_PORT, useValue: portStub },
+        provideRouter([]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SebastianDashboardComponent);

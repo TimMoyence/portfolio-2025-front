@@ -21,17 +21,16 @@ import type { SebastianBadgeStatus } from "../../../core/models/sebastian.model"
       [class.border-scheme-border]="!badge().unlocked"
       [class.opacity-50]="!badge().unlocked"
     >
-      <!-- Icone badge -->
+      <!-- Icone badge PNG -->
       <div class="mb-3 flex items-center gap-3">
-        <div
+        <img
           data-testid="badge-icon"
-          class="flex h-[50px] w-[50px] items-center justify-center rounded-full text-2xl"
-          [class.bg-scheme-accent-focus]="badge().unlocked"
-          [class.bg-scheme-border]="!badge().unlocked"
+          [src]="iconPath()"
+          [alt]="badge().name"
+          class="h-[50px] w-[50px] object-contain"
           [class.grayscale]="!badge().unlocked"
-        >
-          {{ emoji() }}
-        </div>
+          [class.opacity-40]="!badge().unlocked"
+        />
         <div class="min-w-0 flex-1">
           <h4 class="font-heading text-small font-semibold text-scheme-text">
             {{ badge().name }}
@@ -60,23 +59,9 @@ export class SebastianBadgeCardComponent {
   /** Statut du badge a afficher. */
   readonly badge = input.required<SebastianBadgeStatus>();
 
-  /** Mapping emoji par cle de badge. */
-  private static readonly BADGE_EMOJIS: Record<string, string> = {
-    "first-log": "👣",
-    "zen-monk-7": "🧘",
-    "zen-monk-30": "🪷",
-    "espresso-machine": "☕",
-    "dry-week": "💧",
-    "goal-crusher": "💪",
-    "early-bird": "🌅",
-    "night-owl": "🦉",
-    "perfect-month": "⭐",
-    "comeback-kid": "🔥",
-  };
-
-  /** Emoji representant le badge. */
-  readonly emoji = computed(
-    () => SebastianBadgeCardComponent.BADGE_EMOJIS[this.badge().key] ?? "🏅",
+  /** Chemin vers l'icone PNG du badge. */
+  readonly iconPath = computed(
+    () => `assets/icons/badges/${this.badge().key}.png`,
   );
 
   /** Date de deblocage formatee en dd/MM/yyyy. */
