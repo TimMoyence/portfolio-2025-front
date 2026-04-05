@@ -22,7 +22,6 @@ import { SebastianHttpAdapter } from "./core/adapters/sebastian-http.adapter";
 import { WeatherHttpAdapter } from "./core/adapters/weather-http.adapter";
 import { APP_CONFIG } from "./core/config/app-config.token";
 import { authInterceptor } from "./core/http/interceptors/auth.interceptor";
-import { errorInterceptor } from "./core/http/interceptors/error.interceptor";
 import { requestIdInterceptor } from "./core/http/interceptors/request-id.interceptor";
 import { AUTH_PORT } from "./core/ports/auth.port";
 import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
@@ -45,11 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimations(),
     provideHttpClient(
-      withInterceptors([
-        authInterceptor,
-        requestIdInterceptor,
-        errorInterceptor,
-      ]),
+      withInterceptors([authInterceptor, requestIdInterceptor]),
       withFetch(),
     ),
 

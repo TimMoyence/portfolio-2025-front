@@ -11,7 +11,7 @@ describe("AuditRequestHttpAdapter", () => {
     appName: "test",
     apiBaseUrl: "http://localhost:3000/api/v1/portfolio25/",
     baseUrl: "http://localhost:4200",
-    external: { presqUrl: "", sebastianUrl: "" },
+    external: { sebastianUrl: "" },
   };
 
   describe("en contexte serveur (SSR)", () => {

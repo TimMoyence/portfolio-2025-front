@@ -5,7 +5,6 @@ export interface AppConfig {
   baseUrl: string;
   googleClientId?: string;
   external: {
-    presqUrl: string;
     sebastianUrl: string;
   };
   gdpr?: {
