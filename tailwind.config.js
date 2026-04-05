@@ -29,6 +29,8 @@ module.exports = {
 
         "scheme-border": "#0c090226",
 
+        "scheme-warning": "#f59e0b",
+
         "scheme-accent": "#4fb3a2",
 
         "scheme-accent-hover": "#3f9c8e",
