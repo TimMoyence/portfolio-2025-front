@@ -62,3 +62,97 @@ export interface CreateGoalPayload {
   targetQuantity: number;
   period: SebastianPeriod;
 }
+
+/** Periode pour les tendances. */
+export type SebastianTrendPeriod = "7d" | "30d";
+
+/** Periode pour les rapports. */
+export type SebastianReportPeriod = "week" | "month" | "quarter";
+
+/** Point de donnee pour les courbes de tendance. */
+export interface SebastianTrendDataPoint {
+  date: string;
+  alcohol: number;
+  coffee: number;
+}
+
+/** Objectifs journaliers derives. */
+export interface SebastianTrendObjectives {
+  alcohol: number;
+  coffee: number;
+}
+
+/** Resume des tendances. */
+export interface SebastianTrendSummary {
+  avgAlcohol: number;
+  avgCoffee: number;
+}
+
+/** Donnees de tendance pour les courbes. */
+export interface SebastianTrendData {
+  period: SebastianTrendPeriod;
+  dataPoints: SebastianTrendDataPoint[];
+  objectives: SebastianTrendObjectives;
+  summary: SebastianTrendSummary;
+}
+
+/** Decomposition du score de sante. */
+export interface SebastianScoreBreakdown {
+  goalAdherence: number;
+  trendBonus?: number;
+  streakBonus?: number;
+}
+
+/** Streaks par categorie. */
+export interface SebastianStreaks {
+  alcohol: number;
+  coffee: number;
+}
+
+/** Score de sante. */
+export interface SebastianHealthScore {
+  score: number;
+  phase: 1 | 2 | 3;
+  breakdown: SebastianScoreBreakdown;
+  streaks: SebastianStreaks;
+  message: string;
+}
+
+/** Statut d'un badge. */
+export interface SebastianBadgeStatus {
+  key: string;
+  name: string;
+  description: string;
+  category: string;
+  unlocked: boolean;
+  unlockedAt?: string;
+}
+
+/** Distribution par jour de semaine. */
+export interface SebastianDayDistribution {
+  dayOfWeek: number;
+  alcohol: number;
+  coffee: number;
+}
+
+/** Point du heatmap. */
+export interface SebastianHeatmapPoint {
+  date: string;
+  alcohol: number;
+  coffee: number;
+  combined: number;
+}
+
+/** Rapport de periode. */
+export interface SebastianPeriodReport {
+  period: SebastianReportPeriod;
+  startDate: string;
+  endDate: string;
+  totals: { alcohol: number; coffee: number };
+  dailyAvg: { alcohol: number; coffee: number };
+  best: { date: string; score: number };
+  worst: { date: string; score: number };
+  comparison: { alcoholDelta: number; coffeeDelta: number };
+  distribution: SebastianDayDistribution[];
+  heatmap: SebastianHeatmapPoint[];
+}

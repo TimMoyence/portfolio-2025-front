@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 import { of } from "rxjs";
 import {
   buildSebastianEntry,
@@ -41,7 +42,10 @@ describe("SebastianAppComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [SebastianAppComponent],
-      providers: [{ provide: SEBASTIAN_PORT, useValue: portStub }],
+      providers: [
+        provideRouter([]),
+        { provide: SEBASTIAN_PORT, useValue: portStub },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SebastianAppComponent);
@@ -73,6 +77,31 @@ describe("SebastianAppComponent", () => {
       fixture.nativeElement.querySelector("h1");
     expect(h1).toBeTruthy();
     expect(h1!.textContent!.trim()).toContain("Sebastian");
+  });
+
+  it("devrait afficher les boutons d'ajout rapide", () => {
+    const buttons: NodeListOf<HTMLButtonElement> =
+      fixture.nativeElement.querySelectorAll("section button");
+    expect(buttons.length).toBe(2);
+  });
+
+  it("devrait afficher les 5 onglets de navigation", () => {
+    const tabs: NodeListOf<HTMLAnchorElement> =
+      fixture.nativeElement.querySelectorAll("nav a");
+    expect(tabs.length).toBe(5);
+    const labels = Array.from(tabs).map((t) => t.textContent!.trim());
+    expect(labels).toEqual([
+      "Dashboard",
+      "Rapports",
+      "Badges",
+      "Historique",
+      "Objectifs",
+    ]);
+  });
+
+  it("devrait avoir un point de projection ng-content pour le router-outlet", () => {
+    const main = fixture.nativeElement.querySelector("main");
+    expect(main).toBeTruthy();
   });
 
   it("devrait appeler addEntry lors d'un ajout rapide cafe", () => {
@@ -111,58 +140,57 @@ describe("SebastianAppComponent", () => {
     expect(component.entries()[0].id).toBe("e-new");
   });
 
-  it("devrait supprimer une entree", () => {
-    portStub.deleteEntry.and.returnValue(of(void 0));
-
-    component.removeEntry("e1");
-
-    expect(portStub.deleteEntry).toHaveBeenCalledWith("e1");
-    expect(component.entries().find((e) => e.id === "e1")).toBeUndefined();
-  });
-
-  it("devrait ajouter un objectif", () => {
-    const newGoal = buildSebastianGoal({ id: "g-new" });
-    portStub.setGoal.and.returnValue(of(newGoal));
-
-    component.goalCategory = "coffee";
-    component.goalQuantity = 5;
-    component.goalPeriod = "daily";
-    component.addGoal();
-
-    expect(portStub.setGoal).toHaveBeenCalledWith({
-      category: "coffee",
-      targetQuantity: 5,
-      period: "daily",
-    });
-    expect(component.goals().length).toBe(2);
-  });
-
-  it("devrait supprimer un objectif", () => {
-    portStub.deleteGoal.and.returnValue(of(void 0));
-
-    component.removeGoal("g1");
-
-    expect(portStub.deleteGoal).toHaveBeenCalledWith("g1");
-    expect(component.goals().find((g) => g.id === "g1")).toBeUndefined();
-  });
-
-  it("devrait afficher les boutons d'ajout rapide", () => {
-    const buttons: NodeListOf<HTMLButtonElement> =
-      fixture.nativeElement.querySelectorAll("section button");
-    expect(buttons.length).toBe(2);
-  });
-
-  it("devrait afficher les entrees dans l'historique", () => {
-    fixture.detectChanges();
-    const historyItems = fixture.nativeElement.querySelectorAll(
-      "[class*='bg-white/5']",
+  it("devrait calculer le total alcool du jour", () => {
+    const today = new Date().toISOString().slice(0, 10);
+    portStub.getEntries.and.returnValue(
+      of([
+        buildSebastianEntry({
+          id: "a1",
+          category: "alcohol",
+          quantity: 2,
+          date: today,
+        }),
+        buildSebastianEntry({
+          id: "a2",
+          category: "alcohol",
+          quantity: 1,
+          date: today,
+        }),
+        buildSebastianEntry({ id: "c1", category: "coffee", date: today }),
+      ]),
     );
-    expect(historyItems.length).toBeGreaterThanOrEqual(2);
+
+    // Recharger les donnees
+    const freshFixture = TestBed.createComponent(SebastianAppComponent);
+    freshFixture.detectChanges();
+    expect(freshFixture.componentInstance.todayAlcohol()).toBe(3);
   });
 
-  it("devrait afficher les objectifs actifs", () => {
-    fixture.detectChanges();
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("3/jour");
+  it("devrait calculer la progression cafe par rapport a l objectif", () => {
+    const today = new Date().toISOString().slice(0, 10);
+    portStub.getEntries.and.returnValue(
+      of([
+        buildSebastianEntry({
+          id: "c1",
+          category: "coffee",
+          quantity: 2,
+          date: today,
+        }),
+      ]),
+    );
+    portStub.getGoals.and.returnValue(
+      of([
+        buildSebastianGoal({
+          category: "coffee",
+          period: "daily",
+          targetQuantity: 4,
+          isActive: true,
+        }),
+      ]),
+    );
+
+    const freshFixture = TestBed.createComponent(SebastianAppComponent);
+    freshFixture.detectChanges();
+    expect(freshFixture.componentInstance.coffeeProgress()).toBe(50);
   });
 });

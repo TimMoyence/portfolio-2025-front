@@ -3,11 +3,17 @@ import type { Observable } from "rxjs";
 import type {
   CreateEntryPayload,
   CreateGoalPayload,
+  SebastianBadgeStatus,
   SebastianCategory,
   SebastianEntry,
   SebastianGoal,
+  SebastianHealthScore,
+  SebastianPeriodReport,
+  SebastianReportPeriod,
   SebastianStats,
   SebastianStatsPeriod,
+  SebastianTrendData,
+  SebastianTrendPeriod,
 } from "../models/sebastian.model";
 
 /** Port d'acces aux donnees du majordome Sebastian. */
@@ -36,6 +42,21 @@ export interface SebastianPort {
 
   /** Supprime un objectif par son identifiant. */
   deleteGoal(id: string): Observable<void>;
+
+  /** Recupere les donnees de tendance pour une periode. */
+  getTrends(period: SebastianTrendPeriod): Observable<SebastianTrendData>;
+
+  /** Recupere le score de sante. */
+  getHealthScore(): Observable<SebastianHealthScore>;
+
+  /** Recupere les badges et leur statut. */
+  getBadges(): Observable<SebastianBadgeStatus[]>;
+
+  /** Recupere un rapport de periode. */
+  getPeriodReport(
+    period: SebastianReportPeriod,
+    startDate: string,
+  ): Observable<SebastianPeriodReport>;
 }
 
 export const SEBASTIAN_PORT = new InjectionToken<SebastianPort>(

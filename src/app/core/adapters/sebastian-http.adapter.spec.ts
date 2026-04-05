@@ -6,9 +6,13 @@ import { provideHttpClient } from "@angular/common/http";
 import { TestBed } from "@angular/core/testing";
 import { APP_CONFIG } from "../config/app-config.token";
 import {
+  buildSebastianBadgeStatus,
   buildSebastianEntry,
   buildSebastianGoal,
+  buildSebastianHealthScore,
+  buildSebastianPeriodReport,
   buildSebastianStats,
+  buildSebastianTrendData,
 } from "../../../testing/factories/sebastian.factory";
 import { SebastianHttpAdapter } from "./sebastian-http.adapter";
 
@@ -27,7 +31,7 @@ describe("SebastianHttpAdapter", () => {
           provide: APP_CONFIG,
           useValue: {
             apiBaseUrl: "http://localhost:3000/api/v1/portfolio25",
-            external: { sebastianUrl, presqUrl: "" },
+            external: { sebastianUrl },
           },
         },
       ],
@@ -150,6 +154,63 @@ describe("SebastianHttpAdapter", () => {
     const req = httpMock.expectOne(`${sebastianUrl}/goals/goal-1`);
     expect(req.request.method).toBe("DELETE");
     req.flush(null);
+  });
+
+  it("devrait envoyer un GET a l'endpoint stats/trends avec la periode", () => {
+    const trendData = buildSebastianTrendData();
+
+    adapter.getTrends("7d").subscribe((result) => {
+      expect(result).toEqual(trendData);
+    });
+
+    const req = httpMock.expectOne(
+      (r) =>
+        r.url === `${sebastianUrl}/stats/trends` &&
+        r.params.get("period") === "7d",
+    );
+    expect(req.request.method).toBe("GET");
+    req.flush(trendData);
+  });
+
+  it("devrait envoyer un GET a l'endpoint stats/health-score", () => {
+    const healthScore = buildSebastianHealthScore();
+
+    adapter.getHealthScore().subscribe((result) => {
+      expect(result).toEqual(healthScore);
+    });
+
+    const req = httpMock.expectOne(`${sebastianUrl}/stats/health-score`);
+    expect(req.request.method).toBe("GET");
+    req.flush(healthScore);
+  });
+
+  it("devrait envoyer un GET a l'endpoint badges", () => {
+    const badges = [buildSebastianBadgeStatus()];
+
+    adapter.getBadges().subscribe((result) => {
+      expect(result).toEqual(badges);
+    });
+
+    const req = httpMock.expectOne(`${sebastianUrl}/badges`);
+    expect(req.request.method).toBe("GET");
+    req.flush(badges);
+  });
+
+  it("devrait envoyer un GET a l'endpoint stats/report avec les parametres", () => {
+    const report = buildSebastianPeriodReport();
+
+    adapter.getPeriodReport("week", "2026-03-30").subscribe((result) => {
+      expect(result).toEqual(report);
+    });
+
+    const req = httpMock.expectOne(
+      (r) =>
+        r.url === `${sebastianUrl}/stats/report` &&
+        r.params.get("period") === "week" &&
+        r.params.get("startDate") === "2026-03-30",
+    );
+    expect(req.request.method).toBe("GET");
+    req.flush(report);
   });
 
   it("devrait propager les erreurs HTTP", () => {

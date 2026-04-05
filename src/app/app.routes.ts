@@ -169,6 +169,44 @@ export const routes: Routes = [
     data: {
       seoKey: "sebastian",
     },
+    children: [
+      { path: "", redirectTo: "dashboard", pathMatch: "full" },
+      {
+        path: "dashboard",
+        loadComponent: () =>
+          import("./features/sebastian/pages/sebastian-dashboard.component").then(
+            (m) => m.SebastianDashboardComponent,
+          ),
+      },
+      {
+        path: "rapports",
+        loadComponent: () =>
+          import("./features/sebastian/pages/sebastian-reports.component").then(
+            (m) => m.SebastianReportsComponent,
+          ),
+      },
+      {
+        path: "badges",
+        loadComponent: () =>
+          import("./features/sebastian/pages/sebastian-badges.component").then(
+            (m) => m.SebastianBadgesComponent,
+          ),
+      },
+      {
+        path: "historique",
+        loadComponent: () =>
+          import("./features/sebastian/pages/sebastian-history.component").then(
+            (m) => m.SebastianHistoryComponent,
+          ),
+      },
+      {
+        path: "objectifs",
+        loadComponent: () =>
+          import("./features/sebastian/pages/sebastian-goals.component").then(
+            (m) => m.SebastianGoalsComponent,
+          ),
+      },
+    ],
   },
   {
     path: "commonbudgetTM",

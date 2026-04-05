@@ -5,11 +5,17 @@ import { APP_CONFIG } from "../config/app-config.token";
 import type {
   CreateEntryPayload,
   CreateGoalPayload,
+  SebastianBadgeStatus,
   SebastianCategory,
   SebastianEntry,
   SebastianGoal,
+  SebastianHealthScore,
+  SebastianPeriodReport,
+  SebastianReportPeriod,
   SebastianStats,
   SebastianStatsPeriod,
+  SebastianTrendData,
+  SebastianTrendPeriod,
 } from "../models/sebastian.model";
 import type { SebastianPort } from "../ports/sebastian.port";
 
@@ -68,5 +74,35 @@ export class SebastianHttpAdapter implements SebastianPort {
   /** Supprime un objectif par son identifiant. */
   deleteGoal(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/goals/${id}`);
+  }
+
+  /** Recupere les donnees de tendance pour une periode. */
+  getTrends(period: SebastianTrendPeriod): Observable<SebastianTrendData> {
+    return this.http.get<SebastianTrendData>(`${this.baseUrl}/stats/trends`, {
+      params: { period },
+    });
+  }
+
+  /** Recupere le score de sante. */
+  getHealthScore(): Observable<SebastianHealthScore> {
+    return this.http.get<SebastianHealthScore>(
+      `${this.baseUrl}/stats/health-score`,
+    );
+  }
+
+  /** Recupere les badges et leur statut. */
+  getBadges(): Observable<SebastianBadgeStatus[]> {
+    return this.http.get<SebastianBadgeStatus[]>(`${this.baseUrl}/badges`);
+  }
+
+  /** Recupere un rapport de periode. */
+  getPeriodReport(
+    period: SebastianReportPeriod,
+    startDate: string,
+  ): Observable<SebastianPeriodReport> {
+    return this.http.get<SebastianPeriodReport>(
+      `${this.baseUrl}/stats/report`,
+      { params: { period, startDate } },
+    );
   }
 }
