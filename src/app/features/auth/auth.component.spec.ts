@@ -1,6 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
-import { provideRouter } from "@angular/router";
+import { ActivatedRoute, provideRouter, Router } from "@angular/router";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import type { NgForm } from "@angular/forms";
@@ -92,6 +92,33 @@ describe("AuthComponent", () => {
     expect(component.signupSuccessMessage).toContain("Compte créé");
   });
 
+  it("devrait basculer vers l onglet login apres inscription reussie", () => {
+    const form = buildForm(false);
+    component.activeTab = "sign-up";
+    component.signupForm = {
+      email: "john@example.com",
+      password: "Password123!",
+      verifPassword: "Password123!",
+      firstName: "John",
+      lastName: "Doe",
+      phone: "",
+    };
+    authService.register.and.returnValue(
+      of(
+        buildAuthUser({
+          id: "1",
+          email: "john@example.com",
+          firstName: "John",
+          lastName: "Doe",
+        }),
+      ),
+    );
+
+    component.handleSignupSubmit(form);
+
+    expect(component.activeTab).toBe("log-in");
+  });
+
   it("should not call auth service when passwords do not match", () => {
     const form = buildForm(false);
     component.signupForm = {
@@ -133,5 +160,45 @@ describe("AuthComponent", () => {
 
     expect(authService.login).toHaveBeenCalledWith(component.loginForm);
     expect(component.loginSuccessMessage).toContain("Bienvenue");
+  });
+
+  it("devrait rediriger vers returnUrl apres login si present", () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = spyOn(router, "navigateByUrl");
+    const route = TestBed.inject(ActivatedRoute);
+    spyOn(route.snapshot.queryParamMap, "get").and.callFake((key: string) =>
+      key === "returnUrl" ? "/profil" : null,
+    );
+
+    const form = buildForm(false);
+    component.loginForm = {
+      email: "john@example.com",
+      password: "Password123!",
+    };
+    authService.login.and.returnValue(
+      of(buildAuthSession({ user: buildAuthUser({ firstName: "John" }) })),
+    );
+
+    component.handleLoginSubmit(form);
+
+    expect(navigateSpy).toHaveBeenCalledWith("/profil");
+  });
+
+  it("devrait rediriger vers / si pas de returnUrl", () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = spyOn(router, "navigateByUrl");
+
+    const form = buildForm(false);
+    component.loginForm = {
+      email: "john@example.com",
+      password: "Password123!",
+    };
+    authService.login.and.returnValue(
+      of(buildAuthSession({ user: buildAuthUser({ firstName: "John" }) })),
+    );
+
+    component.handleLoginSubmit(form);
+
+    expect(navigateSpy).toHaveBeenCalledWith("/");
   });
 });

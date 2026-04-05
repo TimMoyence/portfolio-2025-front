@@ -46,12 +46,16 @@ describe("authGuard", () => {
     expect(result).toBeTrue();
   });
 
-  it("devrait rediriger vers /login si l utilisateur n est pas connecte", () => {
+  it("devrait rediriger vers /login avec returnUrl si l utilisateur n est pas connecte", () => {
+    const state = {
+      url: "/profil",
+    } as import("@angular/router").RouterStateSnapshot;
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({} as ActivatedRouteSnapshot, {} as never),
+      authGuard({} as ActivatedRouteSnapshot, state),
     );
 
     expect(result).toBeInstanceOf(UrlTree);
-    expect((result as UrlTree).toString()).toBe("/login");
+    const tree = result as UrlTree;
+    expect(tree.toString()).toBe("/login?returnUrl=%2Fprofil");
   });
 });

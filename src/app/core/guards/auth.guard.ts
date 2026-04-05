@@ -5,9 +5,9 @@ import { AuthStateService } from "../services/auth-state.service";
 
 /**
  * Guard fonctionnel qui redirige vers /login si l'utilisateur
- * n'est pas authentifie.
+ * n'est pas authentifie. Stocke l'URL demandee en queryParam returnUrl.
  */
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = (_route, state) => {
   const authState = inject(AuthStateService);
   const router = inject(Router);
 
@@ -15,5 +15,7 @@ export const authGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(["/login"]);
+  return router.createUrlTree(["/login"], {
+    queryParams: { returnUrl: state.url },
+  });
 };
