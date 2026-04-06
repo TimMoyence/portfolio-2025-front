@@ -68,15 +68,33 @@ import {
           >
             <div class="flex items-center gap-3">
               <span class="text-xl">{{
-                entry.category === "alcohol" ? "🍺" : "☕"
+                entry.drinkType === "wine"
+                  ? "🍷"
+                  : entry.drinkType === "champagne"
+                    ? "🍾"
+                    : entry.category === "alcohol"
+                      ? "🍺"
+                      : "☕"
               }}</span>
               <div>
-                <span class="font-medium text-scheme-text"
-                  >{{ entry.quantity }}
+                <span class="font-medium text-scheme-text">
+                  {{ entry.quantity }}
                   {{
-                    entry.category === "alcohol" ? "verre(s)" : "tasse(s)"
-                  }}</span
-                >
+                    entry.drinkType === "wine"
+                      ? "verre(s) de vin"
+                      : entry.drinkType === "champagne"
+                        ? "coupe(s) de champagne"
+                        : entry.category === "alcohol"
+                          ? "biere(s)"
+                          : "tasse(s)"
+                  }}
+                  @if (entry.alcoholDegree) {
+                    {{ entry.alcoholDegree }}°
+                  }
+                  @if (entry.volumeCl) {
+                    ({{ entry.volumeCl }}cl)
+                  }
+                </span>
                 <p class="text-xs text-scheme-text-muted">
                   {{ entry.date | date: "dd/MM/yyyy" }}
                   @if (entry.notes) {

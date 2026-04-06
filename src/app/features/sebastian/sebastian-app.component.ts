@@ -8,6 +8,7 @@ import {
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import type {
   SebastianCategory,
+  SebastianDrinkType,
   SebastianEntry,
   SebastianGoal,
   SebastianStats,
@@ -48,22 +49,36 @@ import {
         </header>
 
         <!-- Ajout rapide -->
-        <section class="mb-6 flex justify-center gap-4">
+        <section class="mb-6 flex flex-wrap justify-center gap-3">
           <button
             type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-6 py-3 text-lg font-semibold text-scheme-warning transition-all hover:bg-scheme-surface-hover"
+            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-scheme-warning transition-all hover:bg-scheme-surface-hover"
             [class.animate-pulse]="alcoholPulse()"
-            (click)="quickAdd('alcohol')"
-            i18n="sebastian.quickAdd.alcohol|@@sebastianQuickAddAlcohol"
+            (click)="quickAddDrink('beer')"
           >
-            +1 Alcool
+            +1 Biere
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-6 py-3 text-lg font-semibold text-scheme-accent-active transition-all hover:bg-scheme-surface-hover"
+            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-red-400 transition-all hover:bg-scheme-surface-hover"
+            [class.animate-pulse]="alcoholPulse()"
+            (click)="quickAddDrink('wine')"
+          >
+            +1 Vin
+          </button>
+          <button
+            type="button"
+            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-yellow-400 transition-all hover:bg-scheme-surface-hover"
+            [class.animate-pulse]="alcoholPulse()"
+            (click)="quickAddDrink('champagne')"
+          >
+            +1 Champagne
+          </button>
+          <button
+            type="button"
+            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-scheme-accent-active transition-all hover:bg-scheme-surface-hover"
             [class.animate-pulse]="coffeePulse()"
-            (click)="quickAdd('coffee')"
-            i18n="sebastian.quickAdd.coffee|@@sebastianQuickAddCoffee"
+            (click)="quickAddDrink('coffee')"
           >
             +1 Cafe
           </button>
@@ -233,16 +248,31 @@ export class SebastianAppComponent {
     this.loadData();
   }
 
-  /** Ajout rapide d'une consommation. */
-  quickAdd(category: SebastianCategory): void {
+  /** Valeurs par defaut pour chaque type de boisson. */
+  private readonly drinkDefaults: Record<
+    SebastianDrinkType,
+    { category: SebastianCategory; alcoholDegree: number; volumeCl: number }
+  > = {
+    beer: { category: "alcohol", alcoholDegree: 5, volumeCl: 25 },
+    wine: { category: "alcohol", alcoholDegree: 12, volumeCl: 12.5 },
+    champagne: { category: "alcohol", alcoholDegree: 12, volumeCl: 12.5 },
+    coffee: { category: "coffee", alcoholDegree: 0, volumeCl: 0 },
+  };
+
+  /** Ajout rapide d'une consommation par type de boisson. */
+  quickAddDrink(drinkType: SebastianDrinkType): void {
+    const defaults = this.drinkDefaults[drinkType];
     const payload = {
-      category,
+      category: defaults.category,
       quantity: 1,
       date: this.todayIso(),
+      drinkType,
+      alcoholDegree: defaults.alcoholDegree || undefined,
+      volumeCl: defaults.volumeCl || undefined,
     };
     this.port.addEntry(payload).subscribe((entry) => {
       this.entries.update((list) => [entry, ...list]);
-      this.triggerPulse(category);
+      this.triggerPulse(defaults.category);
     });
   }
 

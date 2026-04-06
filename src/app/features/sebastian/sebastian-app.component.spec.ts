@@ -82,7 +82,7 @@ describe("SebastianAppComponent", () => {
   it("devrait afficher les boutons d'ajout rapide", () => {
     const buttons: NodeListOf<HTMLButtonElement> =
       fixture.nativeElement.querySelectorAll("section button");
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(4);
   });
 
   it("devrait afficher les 5 onglets de navigation", () => {
@@ -108,7 +108,7 @@ describe("SebastianAppComponent", () => {
     const newEntry = buildSebastianEntry({ id: "e-new", category: "coffee" });
     portStub.addEntry.and.returnValue(of(newEntry));
 
-    component.quickAdd("coffee");
+    component.quickAddDrink("coffee");
 
     expect(portStub.addEntry).toHaveBeenCalledWith(
       jasmine.objectContaining({ category: "coffee", quantity: 1 }),
@@ -123,7 +123,7 @@ describe("SebastianAppComponent", () => {
     });
     portStub.addEntry.and.returnValue(of(newEntry));
 
-    component.quickAdd("alcohol");
+    component.quickAddDrink("beer");
 
     expect(portStub.addEntry).toHaveBeenCalledWith(
       jasmine.objectContaining({ category: "alcohol", quantity: 1 }),
@@ -134,7 +134,7 @@ describe("SebastianAppComponent", () => {
     const newEntry = buildSebastianEntry({ id: "e-new", category: "coffee" });
     portStub.addEntry.and.returnValue(of(newEntry));
 
-    component.quickAdd("coffee");
+    component.quickAddDrink("coffee");
 
     expect(component.entries().length).toBe(3);
     expect(component.entries()[0].id).toBe("e-new");

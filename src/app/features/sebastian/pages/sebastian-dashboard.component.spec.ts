@@ -3,6 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { of } from "rxjs";
 import {
+  buildSebastianBacResult,
   buildSebastianHealthScore,
   buildSebastianTrendData,
   createSebastianPortStub,
@@ -18,6 +19,7 @@ describe("SebastianDashboardComponent", () => {
   beforeEach(async () => {
     portStub = createSebastianPortStub();
     portStub.getHealthScore.and.returnValue(of(buildSebastianHealthScore()));
+    portStub.getBac.and.returnValue(of(buildSebastianBacResult()));
     portStub.getTrends.and.callFake((period: string) =>
       of(buildSebastianTrendData({ period: period as "7d" | "30d" })),
     );

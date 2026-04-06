@@ -3,12 +3,14 @@ import type { Observable } from "rxjs";
 import type {
   CreateEntryPayload,
   CreateGoalPayload,
+  SebastianBacResult,
   SebastianBadgeStatus,
   SebastianCategory,
   SebastianEntry,
   SebastianGoal,
   SebastianHealthScore,
   SebastianPeriodReport,
+  SebastianProfile,
   SebastianReportPeriod,
   SebastianStats,
   SebastianStatsPeriod,
@@ -57,6 +59,15 @@ export interface SebastianPort {
     period: SebastianReportPeriod,
     startDate: string,
   ): Observable<SebastianPeriodReport>;
+
+  /** Recupere le taux d'alcoolemie actuel. */
+  getBac(): Observable<SebastianBacResult>;
+
+  /** Recupere le profil BAC. */
+  getProfile(): Observable<SebastianProfile>;
+
+  /** Definit le profil BAC. */
+  setProfile(payload: SebastianProfile): Observable<SebastianProfile>;
 }
 
 export const SEBASTIAN_PORT = new InjectionToken<SebastianPort>(

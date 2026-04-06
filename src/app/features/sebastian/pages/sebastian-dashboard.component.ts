@@ -6,6 +6,7 @@ import {
 } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import type {
+  SebastianBacResult,
   SebastianHealthScore,
   SebastianTrendData,
 } from "../../../core/models/sebastian.model";
@@ -13,6 +14,7 @@ import {
   SEBASTIAN_PORT,
   type SebastianPort,
 } from "../../../core/ports/sebastian.port";
+import { SebastianBacCurveComponent } from "../components/sebastian-bac-curve.component";
 import { SebastianScoreCardComponent } from "../components/sebastian-score-card.component";
 import { SebastianTrendChartComponent } from "../components/sebastian-trend-chart.component";
 
@@ -25,6 +27,7 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
   selector: "app-sebastian-dashboard",
   standalone: true,
   imports: [
+    SebastianBacCurveComponent,
     SebastianScoreCardComponent,
     SebastianTrendChartComponent,
     RouterLink,
@@ -56,6 +59,39 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
             </a>
           </div>
         }
+      }
+
+      <!-- Taux d'alcoolemie -->
+      @if (bacResult(); as bac) {
+        <section
+          class="rounded-card border border-scheme-border bg-scheme-surface p-4 shadow-xs"
+        >
+          <h3 class="mb-3 font-heading text-h5 text-scheme-text">
+            Taux d'alcoolemie
+          </h3>
+          <div class="mb-3 flex items-center gap-4">
+            <span
+              class="text-3xl font-bold"
+              [class]="
+                bac.currentBac >= 0.5
+                  ? 'text-red-500'
+                  : bac.currentBac >= 0.25
+                    ? 'text-orange-400'
+                    : 'text-green-500'
+              "
+            >
+              {{ bac.currentBac.toFixed(2) }} g/L
+            </span>
+            @if (bac.estimatedSoberAt) {
+              <span class="text-sm text-scheme-text-muted">
+                Sobriete estimee : {{ formatTime(bac.estimatedSoberAt) }}
+              </span>
+            }
+          </div>
+          @if (bac.curve.length > 0) {
+            <app-sebastian-bac-curve [data]="bac" />
+          }
+        </section>
       }
 
       <!-- Grille des graphiques de tendance -->
@@ -100,6 +136,9 @@ export class SebastianDashboardComponent {
   /** Score de sante courant. */
   readonly healthScore = signal<SebastianHealthScore | null>(null);
 
+  /** Resultat BAC courant. */
+  readonly bacResult = signal<SebastianBacResult | null>(null);
+
   /** Tendances sur 7 jours. */
   readonly trends7d = signal<SebastianTrendData | null>(null);
 
@@ -110,14 +149,21 @@ export class SebastianDashboardComponent {
     this.loadData();
   }
 
-  /** Charge les donnees initiales (score, tendances 7d et 30d). */
+  /** Charge les donnees initiales (score, BAC, tendances 7d et 30d). */
   private loadData(): void {
     this.port
       .getHealthScore()
       .subscribe((score) => this.healthScore.set(score));
+    this.port.getBac().subscribe((bac) => this.bacResult.set(bac));
     this.port.getTrends("7d").subscribe((trends) => this.trends7d.set(trends));
     this.port
       .getTrends("30d")
       .subscribe((trends) => this.trends30d.set(trends));
+  }
+
+  /** Formate une date ISO en HH:MM. */
+  formatTime(iso: string): string {
+    const d = new Date(iso);
+    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   }
 }

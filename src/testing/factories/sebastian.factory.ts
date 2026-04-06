@@ -1,9 +1,11 @@
 import type {
+  SebastianBacResult,
   SebastianBadgeStatus,
   SebastianEntry,
   SebastianGoal,
   SebastianHealthScore,
   SebastianPeriodReport,
+  SebastianProfile,
   SebastianStats,
   SebastianTrendData,
 } from "../../app/core/models/sebastian.model";
@@ -25,6 +27,10 @@ export function buildSebastianEntry(
     date: "2026-04-04",
     notes: null,
     createdAt: "2026-04-04T08:00:00.000Z",
+    drinkType: null,
+    alcoholDegree: null,
+    volumeCl: null,
+    consumedAt: null,
     ...overrides,
   };
 }
@@ -171,5 +177,42 @@ export function createSebastianPortStub(): Record<
     getHealthScore: jasmine.createSpy("getHealthScore"),
     getBadges: jasmine.createSpy("getBadges"),
     getPeriodReport: jasmine.createSpy("getPeriodReport"),
+    getBac: jasmine.createSpy("getBac"),
+    getProfile: jasmine.createSpy("getProfile"),
+    setProfile: jasmine.createSpy("setProfile"),
+  };
+}
+
+/**
+ * Construit un objet SebastianBacResult avec des valeurs par defaut.
+ * Accepte des surcharges partielles pour les cas de test specifiques.
+ */
+export function buildSebastianBacResult(
+  overrides?: Partial<SebastianBacResult>,
+): SebastianBacResult {
+  return {
+    currentBac: 0.15,
+    curve: [
+      { time: "2026-04-06T18:00:00.000Z", bac: 0.0 },
+      { time: "2026-04-06T18:15:00.000Z", bac: 0.21 },
+      { time: "2026-04-06T18:30:00.000Z", bac: 0.17 },
+    ],
+    estimatedSoberAt: "2026-04-06T19:30:00.000Z",
+    legalLimit: 0.5,
+    ...overrides,
+  };
+}
+
+/**
+ * Construit un objet SebastianProfile avec des valeurs par defaut.
+ * Accepte des surcharges partielles pour les cas de test specifiques.
+ */
+export function buildSebastianProfile(
+  overrides?: Partial<SebastianProfile>,
+): SebastianProfile {
+  return {
+    weightKg: 70,
+    widmarkR: 0.68,
+    ...overrides,
   };
 }

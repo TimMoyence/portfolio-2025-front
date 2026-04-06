@@ -5,12 +5,14 @@ import { APP_CONFIG } from "../config/app-config.token";
 import type {
   CreateEntryPayload,
   CreateGoalPayload,
+  SebastianBacResult,
   SebastianBadgeStatus,
   SebastianCategory,
   SebastianEntry,
   SebastianGoal,
   SebastianHealthScore,
   SebastianPeriodReport,
+  SebastianProfile,
   SebastianReportPeriod,
   SebastianStats,
   SebastianStatsPeriod,
@@ -104,5 +106,20 @@ export class SebastianHttpAdapter implements SebastianPort {
       `${this.baseUrl}/stats/report`,
       { params: { period, startDate } },
     );
+  }
+
+  /** Recupere le taux d'alcoolemie actuel. */
+  getBac(): Observable<SebastianBacResult> {
+    return this.http.get<SebastianBacResult>(`${this.baseUrl}/bac`);
+  }
+
+  /** Recupere le profil BAC. */
+  getProfile(): Observable<SebastianProfile> {
+    return this.http.get<SebastianProfile>(`${this.baseUrl}/profile`);
+  }
+
+  /** Definit le profil BAC. */
+  setProfile(payload: SebastianProfile): Observable<SebastianProfile> {
+    return this.http.post<SebastianProfile>(`${this.baseUrl}/profile`, payload);
   }
 }

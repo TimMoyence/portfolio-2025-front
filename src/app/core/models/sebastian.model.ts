@@ -4,6 +4,9 @@ export type SebastianCategory = "alcohol" | "coffee";
 /** Unite de mesure par categorie. */
 export type SebastianUnit = "standard_drink" | "cup";
 
+/** Type de boisson pour le suivi v2. */
+export type SebastianDrinkType = "beer" | "wine" | "champagne" | "coffee";
+
 /** Periode pour les objectifs. */
 export type SebastianPeriod = "daily" | "weekly" | "monthly";
 
@@ -20,6 +23,10 @@ export interface SebastianEntry {
   date: string;
   notes: string | null;
   createdAt: string;
+  drinkType: SebastianDrinkType | null;
+  alcoholDegree: number | null;
+  volumeCl: number | null;
+  consumedAt: string | null;
 }
 
 /** Objectif de consommation. */
@@ -54,6 +61,29 @@ export interface CreateEntryPayload {
   quantity: number;
   date: string;
   notes?: string;
+  drinkType?: SebastianDrinkType;
+  alcoholDegree?: number;
+  volumeCl?: number;
+}
+
+/** Point de la courbe BAC. */
+export interface SebastianBacDataPoint {
+  time: string;
+  bac: number;
+}
+
+/** Resultat du calcul BAC. */
+export interface SebastianBacResult {
+  currentBac: number;
+  curve: SebastianBacDataPoint[];
+  estimatedSoberAt: string | null;
+  legalLimit: number;
+}
+
+/** Profil utilisateur pour le calcul BAC. */
+export interface SebastianProfile {
+  weightKg: number;
+  widmarkR: number;
 }
 
 /** Payload pour creer un objectif. */

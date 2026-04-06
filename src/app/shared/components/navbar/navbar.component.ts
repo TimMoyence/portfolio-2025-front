@@ -66,7 +66,7 @@ export class NavbarComponent {
       {
         title: $localize`:navbar.atelier.sebastian.title|@@navAtelierSebastianTitle:Sebastian`,
         description: $localize`:navbar.atelier.sebastian.desc|@@navAtelierSebastianDesc:Votre majordome personnel`,
-        icon: "comedy_mask",
+        icon: "sebastian",
         iconAlt: "Sebastian",
         href: "/atelier/sebastian",
       },
