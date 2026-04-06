@@ -79,7 +79,9 @@ describe("authInterceptor", () => {
       next: () => fail("devrait echouer"),
       error: () => {
         expect(authState.logout).toHaveBeenCalled();
-        expect(router.navigate).toHaveBeenCalledWith(["/login"]);
+        expect(router.navigate).toHaveBeenCalledWith(["/login"], {
+          queryParams: { returnUrl: router.url },
+        });
       },
     });
 
