@@ -68,7 +68,7 @@ export class AuthComponent {
     password: "",
   };
 
-  activeTab: AuthTab = "sign-up";
+  activeTab: AuthTab = this.resolveInitialTab();
   showPassword: boolean = false;
   isSignupSubmitted: boolean = false;
   isLoginSubmitted: boolean = false;
@@ -304,5 +304,11 @@ export class AuthComponent {
     this.signupForm = { ...this.defaultSignupState };
     form.resetForm(this.signupForm);
     this.isSignupSubmitted = false;
+  }
+
+  /** Determine l'onglet initial selon la route active (login par defaut). */
+  private resolveInitialTab(): AuthTab {
+    const seoKey = this.route.snapshot.data["seoKey"];
+    return seoKey === "register" ? "sign-up" : "log-in";
   }
 }

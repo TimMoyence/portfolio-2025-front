@@ -23,7 +23,8 @@ describe("AuthComponent", () => {
   let fixture: ComponentFixture<AuthComponent>;
   let authService: jasmine.SpyObj<AuthPort>;
 
-  beforeEach(async () => {
+  /** Configure le TestBed avec le seoKey donne et cree le composant. */
+  async function setupWithSeoKey(seoKey: string): Promise<void> {
     localStorage.removeItem("portfolio_jwt");
 
     authService = createAuthPortStub();
@@ -42,12 +43,29 @@ describe("AuthComponent", () => {
           provide: APP_CONFIG,
           useValue: environment,
         },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              data: { seoKey },
+              queryParamMap: { get: () => null },
+            },
+          },
+        },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AuthComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  }
+
+  beforeEach(async () => {
+    await setupWithSeoKey("login");
+  });
+
+  it("devrait afficher l onglet connexion par defaut sur /login", () => {
+    expect(component.activeTab).toBe("log-in");
   });
 
   /** Cree un mock type de NgForm via jasmine.createSpyObj (PE-012). */
@@ -200,5 +218,16 @@ describe("AuthComponent", () => {
     component.handleLoginSubmit(form);
 
     expect(navigateSpy).toHaveBeenCalledWith("/");
+  });
+
+  describe("route /register", () => {
+    beforeEach(async () => {
+      TestBed.resetTestingModule();
+      await setupWithSeoKey("register");
+    });
+
+    it("devrait afficher l onglet inscription par defaut sur /register", () => {
+      expect(component.activeTab).toBe("sign-up");
+    });
   });
 });
