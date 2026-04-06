@@ -1,8 +1,9 @@
 import { PLATFORM_ID } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
+import { TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { AUTH_PORT } from "../ports/auth.port";
+import { of } from "rxjs";
+import { AUTH_PORT, type AuthPort } from "../ports/auth.port";
 import { APP_CONFIG } from "../config/app-config.token";
 import { environment } from "../../../environments/environment";
 import {
@@ -82,6 +83,80 @@ describe("AuthStateService", () => {
       expect(service.hasRole("budget")).toBeTrue();
       expect(service.hasRole("admin")).toBeFalse();
     });
+
+    it("devrait stocker le refreshToken en localStorage au login", () => {
+      const session = buildAuthSession({ refreshToken: "rt-abc" });
+      service.login(session);
+
+      expect(localStorage.getItem("portfolio_refresh")).toBe("rt-abc");
+    });
+
+    it("devrait supprimer le refreshToken du localStorage au logout", () => {
+      service.login(buildAuthSession({ refreshToken: "rt-del" }));
+      expect(localStorage.getItem("portfolio_refresh")).toBe("rt-del");
+
+      service.logout();
+
+      expect(localStorage.getItem("portfolio_refresh")).toBeNull();
+    });
+
+    it("devrait planifier le refresh du token avant expiration", fakeAsync(() => {
+      const authPortStub = TestBed.inject(AUTH_PORT) as Record<
+        keyof AuthPort,
+        jasmine.Spy
+      >;
+      const renewedSession = buildAuthSession({
+        accessToken: "jwt-renewed",
+        refreshToken: "rt-renewed",
+        expiresIn: 3600,
+      });
+      authPortStub.refresh.and.returnValue(of(renewedSession));
+
+      // expiresIn = 60s, marge = 30s => delayMs = max((60-30)*1000, 5000) = 30000
+      service.login(
+        buildAuthSession({
+          accessToken: "jwt-initial",
+          refreshToken: "rt-initial",
+          expiresIn: 60,
+        }),
+      );
+
+      // Avancer de 30s => le refresh doit se declencher
+      tick(30_000);
+
+      expect(authPortStub.refresh).toHaveBeenCalledWith("rt-initial");
+      expect(service.token()).toBe("jwt-renewed");
+    }));
+
+    it("devrait appeler authPort.logout() avec le refresh token sur logoutFull", () => {
+      const authPortStub = TestBed.inject(AUTH_PORT) as Record<
+        keyof AuthPort,
+        jasmine.Spy
+      >;
+      service.login(buildAuthSession({ refreshToken: "rt-full" }));
+
+      service.logoutFull();
+
+      expect(authPortStub.logout).toHaveBeenCalledWith("rt-full");
+      expect(service.isLoggedIn()).toBeFalse();
+    });
+
+    it("devrait annuler le timer au logout", fakeAsync(() => {
+      const authPortStub = TestBed.inject(AUTH_PORT) as Record<
+        keyof AuthPort,
+        jasmine.Spy
+      >;
+
+      service.login(
+        buildAuthSession({ expiresIn: 120, refreshToken: "rt-cancel" }),
+      );
+      service.logout();
+
+      // Avancer au-dela du delai prevu => le refresh ne doit PAS se declencher
+      tick(120_000);
+
+      expect(authPortStub.refresh).not.toHaveBeenCalled();
+    }));
   });
 
   describe("en contexte SSR (serveur)", () => {
