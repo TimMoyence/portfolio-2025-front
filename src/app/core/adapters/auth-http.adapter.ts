@@ -78,4 +78,18 @@ export class AuthHttpAdapter implements AuthPort {
   updateProfile(payload: UpdateProfilePayload): Observable<AuthUser> {
     return this.http.patch<AuthUser>(`${this.baseUrl}/auth/profile`, payload);
   }
+
+  /** Rafraichit le JWT via le refresh token. */
+  refresh(refreshToken: string): Observable<AuthSession> {
+    return this.http.post<AuthSession>(`${this.baseUrl}/auth/refresh`, {
+      refreshToken,
+    });
+  }
+
+  /** Revoque le refresh token cote backend. */
+  logout(refreshToken: string): Observable<AuthActionMessage> {
+    return this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/logout`, {
+      refreshToken,
+    });
+  }
 }

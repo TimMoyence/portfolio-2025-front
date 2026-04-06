@@ -66,8 +66,8 @@ import { GeolocationService } from "../../services/geolocation.service";
             class="w-full rounded-xl border py-3 pl-10 pr-4 outline-none transition-colors"
             [ngClass]="
               darkMode()
-                ? 'border-white/20 bg-white/10 text-white placeholder-white/50 backdrop-blur-md focus:border-white/40 focus:bg-white/15'
-                : 'border-scheme-border bg-scheme-surface text-scheme-text placeholder-scheme-text-muted focus:border-scheme-accent'
+                ? 'border-white/20 bg-white/10 text-white placeholder-white/50 backdrop-blur-md focus-visible:border-white/40 focus-visible:bg-white/15'
+                : 'border-scheme-border bg-scheme-surface text-scheme-text placeholder-scheme-text-muted focus-visible:border-scheme-accent'
             "
             autocomplete="off"
             role="combobox"
@@ -114,6 +114,16 @@ import { GeolocationService } from "../../services/geolocation.service";
           }
         </button>
       </div>
+
+      @if (geoError(); as error) {
+        <p
+          class="mt-2 text-center text-sm"
+          [ngClass]="darkMode() ? 'text-red-300' : 'text-red-600'"
+          role="alert"
+        >
+          {{ error }}
+        </p>
+      }
 
       @if (showDropdown() && results().length > 0) {
         <ul
@@ -173,6 +183,7 @@ export class CitySearchComponent implements OnInit, OnDestroy {
   readonly results = signal<CityResult[]>([]);
   readonly showDropdown = signal(false);
   readonly locating = signal(false);
+  readonly geoError = signal<string | null>(null);
 
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly geolocationService = inject(GeolocationService);
@@ -227,7 +238,9 @@ export class CitySearchComponent implements OnInit, OnDestroy {
 
   /** Localise l'utilisateur via le navigateur et emet la ville. */
   locateMe(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.locating.set(true);
+    this.geoError.set(null);
     this.geolocationService
       .locate()
       .pipe(
@@ -246,8 +259,18 @@ export class CitySearchComponent implements OnInit, OnDestroy {
           this.locating.set(false);
           this.citySelected.emit(city);
         },
-        error: () => {
+        error: (err) => {
           this.locating.set(false);
+          const code = err?.code;
+          if (code === 1) {
+            this.geoError.set(
+              $localize`:weather.geo.denied|@@weatherGeoDenied:Géolocalisation refusée. Autorisez l'accès dans les paramètres du navigateur.`,
+            );
+          } else {
+            this.geoError.set(
+              $localize`:weather.geo.error|@@weatherGeoError:Impossible de vous localiser. Vérifiez vos paramètres.`,
+            );
+          }
         },
       });
   }

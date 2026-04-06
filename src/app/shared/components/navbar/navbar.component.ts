@@ -8,6 +8,7 @@ import {
   effect,
   HostListener,
   Inject,
+  LOCALE_ID,
   PLATFORM_ID,
   ViewChild,
   inject,
@@ -77,6 +78,7 @@ export class NavbarComponent {
   readonly mobileNavHeading = $localize`:navbar.menu.heading|Mobile nav heading@@navMenuHeading:Menu principal`;
   readonly closeMenuIconLabel = $localize`:navbar.menu.icon.close|Icon label@@navMenuCloseIcon:Fermer le menu`;
   readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
+  readonly currentLocale = inject(LOCALE_ID);
   readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
   private readonly breakpointService = inject(BreakpointService);
@@ -134,6 +136,20 @@ export class NavbarComponent {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  /** Retourne l'URL vers l'autre locale en conservant le chemin courant. */
+  getAlternateLocaleUrl(): string {
+    if (!isPlatformBrowser(this.platformId)) return "#";
+    const targetLocale = this.currentLocale.startsWith("fr") ? "en" : "fr";
+    const currentPath = window.location.pathname;
+    const pathWithoutLocale = currentPath.replace(/^\/(fr|en)/, "");
+    return `/${targetLocale}${pathWithoutLocale || ""}`;
+  }
+
+  /** Retourne le label de la langue alternative. */
+  getAlternateLocaleLabel(): string {
+    return this.currentLocale.startsWith("fr") ? "EN" : "FR";
   }
 
   @HostListener("window:scroll", [])

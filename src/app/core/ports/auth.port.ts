@@ -27,6 +27,10 @@ export interface AuthPort {
   changePassword(payload: ChangePasswordPayload): Observable<AuthUser>;
   /** Met a jour les informations du profil utilisateur (nom, prenom, telephone). */
   updateProfile(payload: UpdateProfilePayload): Observable<AuthUser>;
+  /** Rafraichit le JWT via le refresh token opaque. */
+  refresh(refreshToken: string): Observable<AuthSession>;
+  /** Revoque le refresh token cote backend (logout). */
+  logout(refreshToken: string): Observable<AuthActionMessage>;
 }
 
 export const AUTH_PORT = new InjectionToken<AuthPort>("AUTH_PORT");

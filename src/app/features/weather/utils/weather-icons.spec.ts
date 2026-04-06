@@ -84,13 +84,13 @@ describe("weatherCodeToIcon", () => {
   });
 });
 
-describe("weatherCodeToDescription", () => {
-  it("devrait retourner 'Ciel d\u00e9gag\u00e9' pour code 0", () => {
-    expect(weatherCodeToDescription(0)).toBe("Ciel d\u00e9gag\u00e9");
+describe("weatherCodeToDescription (re-export localisé)", () => {
+  it("devrait retourner 'Ciel dégagé' pour code 0", () => {
+    expect(weatherCodeToDescription(0)).toBe("Ciel dégagé");
   });
 
-  it("devrait retourner 'Principalement d\u00e9gag\u00e9' pour code 1", () => {
-    expect(weatherCodeToDescription(1)).toBe("Principalement d\u00e9gag\u00e9");
+  it("devrait retourner 'Principalement dégagé' pour code 1", () => {
+    expect(weatherCodeToDescription(1)).toBe("Principalement dégagé");
   });
 
   it("devrait retourner 'Partiellement nuageux' pour code 2", () => {
@@ -101,62 +101,55 @@ describe("weatherCodeToDescription", () => {
     expect(weatherCodeToDescription(3)).toBe("Couvert");
   });
 
-  it("devrait retourner 'Brouillard' pour codes 45-48", () => {
+  it("devrait retourner des descriptions de brouillard pour codes 45 et 48", () => {
     expect(weatherCodeToDescription(45)).toBe("Brouillard");
-    expect(weatherCodeToDescription(48)).toBe("Brouillard");
+    expect(weatherCodeToDescription(48)).toBe("Brouillard givrant");
   });
 
-  it("devrait retourner 'Bruine' pour codes 51-55", () => {
-    expect(weatherCodeToDescription(51)).toBe("Bruine");
-    expect(weatherCodeToDescription(55)).toBe("Bruine");
+  it("devrait retourner des descriptions de bruine pour codes 51-55", () => {
+    expect(weatherCodeToDescription(51)).toBe("Bruine légère");
+    expect(weatherCodeToDescription(55)).toBe("Bruine dense");
   });
 
-  it("devrait retourner 'Bruine vergla\u00e7ante' pour codes 56-57", () => {
-    expect(weatherCodeToDescription(56)).toBe("Bruine vergla\u00e7ante");
-    expect(weatherCodeToDescription(57)).toBe("Bruine vergla\u00e7ante");
+  it("devrait retourner des descriptions de bruine verglaçante pour codes 56-57", () => {
+    expect(weatherCodeToDescription(56)).toBe("Bruine verglaçante légère");
+    expect(weatherCodeToDescription(57)).toBe("Bruine verglaçante dense");
   });
 
-  it("devrait retourner 'Pluie' pour codes 61-63", () => {
-    expect(weatherCodeToDescription(61)).toBe("Pluie");
-    expect(weatherCodeToDescription(63)).toBe("Pluie");
+  it("devrait retourner des descriptions de pluie pour codes 61-65", () => {
+    expect(weatherCodeToDescription(61)).toBe("Pluie légère");
+    expect(weatherCodeToDescription(63)).toBe("Pluie modérée");
+    expect(weatherCodeToDescription(65)).toBe("Pluie forte");
   });
 
-  it("devrait retourner 'Forte pluie' pour codes 64-65", () => {
-    expect(weatherCodeToDescription(64)).toBe("Forte pluie");
-    expect(weatherCodeToDescription(65)).toBe("Forte pluie");
+  it("devrait retourner des descriptions de pluie verglaçante pour codes 66-67", () => {
+    expect(weatherCodeToDescription(66)).toBe("Pluie verglaçante légère");
+    expect(weatherCodeToDescription(67)).toBe("Pluie verglaçante forte");
   });
 
-  it("devrait retourner 'Pluie vergla\u00e7ante' pour codes 66-67", () => {
-    expect(weatherCodeToDescription(66)).toBe("Pluie vergla\u00e7ante");
+  it("devrait retourner des descriptions de neige pour codes 71-77", () => {
+    expect(weatherCodeToDescription(71)).toBe("Neige légère");
+    expect(weatherCodeToDescription(75)).toBe("Neige forte");
+    expect(weatherCodeToDescription(77)).toBe("Grains de neige");
   });
 
-  it("devrait retourner 'Neige' pour codes 71-75", () => {
-    expect(weatherCodeToDescription(71)).toBe("Neige");
-    expect(weatherCodeToDescription(75)).toBe("Neige");
+  it("devrait retourner des descriptions d'averses pour codes 80-82", () => {
+    expect(weatherCodeToDescription(80)).toBe("Averses légères");
+    expect(weatherCodeToDescription(82)).toBe("Averses violentes");
   });
 
-  it("devrait retourner 'Gr\u00e9sil' pour codes 76-77", () => {
-    expect(weatherCodeToDescription(76)).toBe("Gr\u00e9sil");
-    expect(weatherCodeToDescription(77)).toBe("Gr\u00e9sil");
+  it("devrait retourner des descriptions d'averses de neige pour codes 85-86", () => {
+    expect(weatherCodeToDescription(85)).toBe("Averses de neige légères");
+    expect(weatherCodeToDescription(86)).toBe("Averses de neige fortes");
   });
 
-  it("devrait retourner 'Averses' pour codes 80-82", () => {
-    expect(weatherCodeToDescription(80)).toBe("Averses");
-    expect(weatherCodeToDescription(82)).toBe("Averses");
-  });
-
-  it("devrait retourner 'Averses de neige' pour codes 85-86", () => {
-    expect(weatherCodeToDescription(85)).toBe("Averses de neige");
-    expect(weatherCodeToDescription(86)).toBe("Averses de neige");
-  });
-
-  it("devrait retourner 'Orage' pour codes 95-99", () => {
+  it("devrait retourner des descriptions d'orage pour codes 95-99", () => {
     expect(weatherCodeToDescription(95)).toBe("Orage");
-    expect(weatherCodeToDescription(99)).toBe("Orage");
+    expect(weatherCodeToDescription(99)).toBe("Orage avec grêle forte");
   });
 
-  it("devrait retourner 'Inconnu' pour un code non couvert", () => {
-    expect(weatherCodeToDescription(10)).toBe("Inconnu");
-    expect(weatherCodeToDescription(44)).toBe("Inconnu");
+  it("devrait retourner 'Conditions inconnues' pour un code non couvert", () => {
+    expect(weatherCodeToDescription(10)).toBe("Conditions inconnues");
+    expect(weatherCodeToDescription(44)).toBe("Conditions inconnues");
   });
 });

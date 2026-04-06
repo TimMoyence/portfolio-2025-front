@@ -141,6 +141,7 @@ export const routes: Routes = [
   },
   {
     path: "atelier/meteo",
+    canActivate: [authGuard, roleGuard("weather")],
     loadComponent: () =>
       import("./features/weather/weather.component").then(
         (m) => m.WeatherComponent,
@@ -162,6 +163,7 @@ export const routes: Routes = [
   },
   {
     path: "atelier/sebastian",
+    canActivate: [authGuard, roleGuard("sebastian")],
     loadComponent: () =>
       import("./features/sebastian/sebastian.component").then(
         (m) => m.SebastianComponent,

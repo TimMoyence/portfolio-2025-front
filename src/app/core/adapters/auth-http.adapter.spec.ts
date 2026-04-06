@@ -165,4 +165,30 @@ describe("AuthHttpAdapter", () => {
     expect(req.request.body).toEqual(payload);
     req.flush(user);
   });
+
+  it("should POST refreshToken to /auth/refresh", () => {
+    const session = buildAuthSession();
+
+    adapter.refresh("my-refresh-token").subscribe((result) => {
+      expect(result).toEqual(session);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/refresh`);
+    expect(req.request.method).toBe("POST");
+    expect(req.request.body).toEqual({ refreshToken: "my-refresh-token" });
+    req.flush(session);
+  });
+
+  it("should POST refreshToken to /auth/logout", () => {
+    const response = { message: "Deconnexion reussie." };
+
+    adapter.logout("my-refresh-token").subscribe((result) => {
+      expect(result).toEqual(response);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/logout`);
+    expect(req.request.method).toBe("POST");
+    expect(req.request.body).toEqual({ refreshToken: "my-refresh-token" });
+    req.flush(response);
+  });
 });

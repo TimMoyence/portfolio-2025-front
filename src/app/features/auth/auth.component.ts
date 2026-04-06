@@ -13,7 +13,7 @@ import { FormsModule } from "@angular/forms";
 import type { RegisterUserPayload } from "../../core/models/auth.model";
 import type { LoginFormState } from "../../core/models/loginForm.model";
 import type { SignupFormState } from "../../core/models/signupForm.model";
-import { Router, RouterModule } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import { AuthStateService } from "../../core/services/auth-state.service";
 import type { AuthPort } from "../../core/ports/auth.port";
@@ -47,6 +47,7 @@ export class AuthComponent {
   private readonly authService: AuthPort = inject(AUTH_PORT);
   private readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
   @ViewChild("googleButtonContainer", { static: false })
@@ -67,7 +68,7 @@ export class AuthComponent {
     password: "",
   };
 
-  activeTab: AuthTab = "sign-up";
+  activeTab: AuthTab = this.resolveInitialTab();
   showPassword: boolean = false;
   isSignupSubmitted: boolean = false;
   isLoginSubmitted: boolean = false;
@@ -195,6 +196,7 @@ export class AuthComponent {
       onSuccess: (user) => {
         this.signupSuccessMessage = $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Compte créé pour ${user.firstName} ${user.lastName}.`;
         this.resetSignupForm(form);
+        this.activeTab = "log-in";
       },
       onError: (message) => {
         this.signupErrorMessage = message;
@@ -220,7 +222,9 @@ export class AuthComponent {
       onSuccess: (session) => {
         this.authState.login(session);
         this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
-        void this.router.navigate(["/"]);
+        const returnUrl =
+          this.route.snapshot.queryParamMap.get("returnUrl") || "/";
+        void this.router.navigateByUrl(returnUrl);
       },
       onError: (message) => {
         this.loginErrorMessage = message;
@@ -272,7 +276,9 @@ export class AuthComponent {
     this.authService.googleAuth(response.credential).subscribe({
       next: (session) => {
         this.authState.login(session);
-        void this.router.navigate(["/"]);
+        const returnUrl =
+          this.route.snapshot.queryParamMap.get("returnUrl") || "/";
+        void this.router.navigateByUrl(returnUrl);
       },
       error: (err) => {
         const message =
@@ -298,5 +304,11 @@ export class AuthComponent {
     this.signupForm = { ...this.defaultSignupState };
     form.resetForm(this.signupForm);
     this.isSignupSubmitted = false;
+  }
+
+  /** Determine l'onglet initial selon la route active (login par defaut). */
+  private resolveInitialTab(): AuthTab {
+    const seoKey = this.route.snapshot.data["seoKey"];
+    return seoKey === "register" ? "sign-up" : "log-in";
   }
 }

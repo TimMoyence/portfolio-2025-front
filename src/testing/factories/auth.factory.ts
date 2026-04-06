@@ -34,6 +34,7 @@ export function buildAuthSession(
   return {
     accessToken: "jwt-token",
     expiresIn: 3600,
+    refreshToken: "refresh-token",
     user: buildAuthUser(),
     ...overrides,
   };
@@ -118,5 +119,9 @@ export function createAuthPortStub(): Record<keyof AuthPort, jasmine.Spy> {
     updateProfile: jasmine
       .createSpy("updateProfile")
       .and.returnValue(of(buildAuthUser())),
+    refresh: jasmine
+      .createSpy("refresh")
+      .and.returnValue(of(buildAuthSession())),
+    logout: jasmine.createSpy("logout").and.returnValue(of({ message: "ok" })),
   };
 }

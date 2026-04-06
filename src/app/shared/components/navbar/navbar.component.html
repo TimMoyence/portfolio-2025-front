@@ -43,7 +43,7 @@
       (click)="openMobileMenu()"
       #burgerButton
       type="button"
-      class="lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-full p-2"
+      class="lg:hidden rounded-full p-2"
       aria-haspopup="dialog"
       aria-controls="mobile-nav"
       [attr.aria-label]="mobileMenuOpen ? closeMenuLabel : openMenuLabel"
@@ -111,7 +111,7 @@
           #rla="routerLinkActive"
           [attr.aria-current]="rla.isActive ? 'page' : null"
           [id]="item.label + $index"
-          class="transition-colors duration-300 hover:text-scheme-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          class="transition-colors duration-300 hover:text-scheme-accent"
           [ngClass]="
             isMobile ? 'block w-full py-3 border-b border-scheme-border/20' : ''
           "
@@ -215,7 +215,7 @@
   >
     <button
       type="button"
-      class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white"
+      class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white"
       title="Demander un devis"
       i18n-title="navbar.link.audit|Navbar primary link@@navLinkAudit:Audit"
       [routerLink]="'/growth-audit'"
@@ -228,7 +228,7 @@
 
     <button
       type="button"
-      class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
+      class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
       title="Me contacter"
       i18n-title="
         navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
@@ -241,6 +241,15 @@
       >
     </button>
 
+    <!-- Sélecteur de langue FR/EN -->
+    <a
+      [href]="getAlternateLocaleUrl()"
+      class="rounded-button border border-scheme-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-scheme-text transition-colors hover:bg-scheme-surface-hover"
+      [attr.aria-label]="'Switch to ' + getAlternateLocaleLabel()"
+    >
+      {{ getAlternateLocaleLabel() }}
+    </a>
+
     @if (authState.isLoggedIn()) {
       <!-- Dropdown profil — desktop -->
       @if (!isMobile) {
@@ -250,7 +259,7 @@
             (click)="toggleUserDropdown()"
             [attr.aria-expanded]="userDropdownOpen"
             aria-haspopup="true"
-            class="rounded-full transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background flex items-center justify-center"
+            class="rounded-full transition-all duration-200 ease-in-out border border-scheme-border text-scheme-text bg-scheme-background flex items-center justify-center"
             [ngStyle]="
               userInitials() ? { width: '2.4rem', height: '2.4rem' } : {}
             "
@@ -358,7 +367,7 @@
     } @else {
       <button
         type="button"
-        class="rounded-full transition-all duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border border-scheme-border text-scheme-text bg-scheme-background p-2"
+        class="rounded-full transition-all duration-200 ease-in-out border border-scheme-border text-scheme-text bg-scheme-background p-2"
         [routerLink]="'/login'"
         (click)="isMobile && closeMobileMenu()"
         [attr.aria-label]="'Espace utilisateur'"
