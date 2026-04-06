@@ -3,7 +3,7 @@ import {
   withInterceptorsFromDi,
 } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { PLATFORM_ID } from "@angular/core";
+import { LOCALE_ID, PLATFORM_ID } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, provideRouter } from "@angular/router";
 import { AUTH_PORT } from "../../../core/ports/auth.port";
@@ -21,6 +21,7 @@ describe("NavbarComponent", () => {
         imports: [NavbarComponent],
         providers: [
           { provide: PLATFORM_ID, useValue: "browser" },
+          { provide: LOCALE_ID, useValue: "fr" },
           provideRouter([]),
           { provide: ActivatedRoute, useValue: {} },
           provideHttpClient(withInterceptorsFromDi()),
@@ -57,6 +58,15 @@ describe("NavbarComponent", () => {
       component.onWindowScroll();
       expect(component.scrolled).toBeFalse();
     });
+
+    it("getAlternateLocaleLabel devrait retourner EN quand la locale est fr", () => {
+      expect(component.getAlternateLocaleLabel()).toBe("EN");
+    });
+
+    it("getAlternateLocaleUrl devrait retourner une URL avec la locale alternative", () => {
+      const url = component.getAlternateLocaleUrl();
+      expect(url).toMatch(/^\/en/);
+    });
   });
 
   describe("en contexte serveur (SSR)", () => {
@@ -68,6 +78,7 @@ describe("NavbarComponent", () => {
         imports: [NavbarComponent],
         providers: [
           { provide: PLATFORM_ID, useValue: "server" },
+          { provide: LOCALE_ID, useValue: "fr" },
           { provide: ActivatedRoute, useValue: {} },
           provideHttpClient(withInterceptorsFromDi()),
           provideHttpClientTesting(),
@@ -106,6 +117,14 @@ describe("NavbarComponent", () => {
 
     it("closeMobileMenu ne devrait pas crasher en SSR", () => {
       expect(() => component.closeMobileMenu()).not.toThrow();
+    });
+
+    it("getAlternateLocaleUrl devrait retourner '#' en SSR", () => {
+      expect(component.getAlternateLocaleUrl()).toBe("#");
+    });
+
+    it("getAlternateLocaleLabel devrait fonctionner en SSR", () => {
+      expect(component.getAlternateLocaleLabel()).toBe("EN");
     });
   });
 });
