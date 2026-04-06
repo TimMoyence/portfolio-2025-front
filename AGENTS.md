@@ -162,7 +162,7 @@ L'agent ne doit jamais declarer une tache "terminee" si une verification attendu
 
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **portfolio-2025-front** (2210 symbols, 5483 relationships, 142 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **portfolio-2025-front** (2409 symbols, 6022 relationships, 172 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
