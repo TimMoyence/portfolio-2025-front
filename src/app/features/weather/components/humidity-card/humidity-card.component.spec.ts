@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { LOCALE_ID } from "@angular/core";
 import { of } from "rxjs";
 import { WEATHER_PORT } from "../../../../core/ports/weather.port";
 import {
@@ -35,6 +36,7 @@ describe("HumidityCardComponent", () => {
           },
         },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        { provide: LOCALE_ID, useValue: "fr" },
         UnitPreferencesService,
       ],
     }).compileComponents();
