@@ -25,15 +25,23 @@ export class AuthStateService {
 
   private readonly _token = signal<string | null>(null);
   private readonly _user = signal<AuthUser | null>(null);
+  private readonly _isInitialized = signal(false);
 
   readonly token = this._token.asReadonly();
   readonly user = this._user.asReadonly();
   readonly isLoggedIn = computed(() => !!this._token());
+  /** Indique si la restauration de session est terminee (true immediatement cote SSR). */
+  readonly isInitialized = this._isInitialized.asReadonly();
 
   constructor() {
+    // Cote serveur, pas de localStorage : on considere l'initialisation terminee
+    if (!this.isBrowser) {
+      this._isInitialized.set(true);
+    }
     // afterNextRender garantit l'execution cote client apres l'hydratation SSR
     afterNextRender(() => {
       this.restoreToken();
+      this._isInitialized.set(true);
     });
   }
 
