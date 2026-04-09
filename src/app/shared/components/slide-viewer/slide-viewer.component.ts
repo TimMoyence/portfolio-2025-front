@@ -32,7 +32,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
       <div class="relative">
         <!-- Barre de progression sticky -->
         <div
-          class="sticky top-0 z-10 flex items-center gap-2 overflow-x-auto border-b border-scheme-border bg-scheme-background/95 px-4 py-2 backdrop-blur-sm"
+          class="sticky top-20 lg:top-24 z-10 flex items-center gap-2 overflow-x-auto border-b border-scheme-border bg-scheme-background/95 px-4 py-2 backdrop-blur-sm"
         >
           <div class="flex flex-1 items-center gap-1 overflow-x-auto">
             @for (slide of slides(); track slide.id; let i = $index) {
@@ -72,7 +72,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
               [attr.data-slide-id]="slide.id"
               [attr.id]="'slide-anchor-' + i"
               [attr.aria-labelledby]="'slide-title-' + i"
-              class="scroll-mt-14 px-4 py-8 md:px-8"
+              class="scroll-mt-32 lg:scroll-mt-36 px-6 py-8 md:px-10"
             >
               <!-- Numéro + Titre -->
               <div class="mb-4 flex items-start gap-3">
@@ -236,7 +236,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
 
         <!-- CTA contact -->
         <div
-          class="border-t border-scheme-border px-4 py-10 text-center md:px-8"
+          class="border-t border-scheme-border px-6 py-10 text-center md:px-10"
         >
           <p class="mb-4 text-medium text-scheme-text-muted" i18n>
             Vous voulez proposer cette formation à vos équipes ?
