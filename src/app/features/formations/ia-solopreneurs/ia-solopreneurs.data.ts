@@ -3,6 +3,8 @@ import type { Slide } from "../../../shared/models/slide.model";
 export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   {
     id: "accroche",
+    emoji: "🚀",
+    accentClass: "from-teal-500/20 to-cyan-500/20",
     title: "127€/h vs 30€/h — le pouvoir de l'IA",
     bullets: [
       "Un solopreneur automatisé gagne en moyenne 127€/h contre 30€/h en manuel (McKinsey, 2025)",
@@ -14,6 +16,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "trois-cerveaux",
+    emoji: "🧠",
+    accentClass: "from-violet-500/20 to-purple-500/20",
     title: "Les 3 cerveaux IA — bien choisir",
     subtitle:
       "Les pros ne choisissent plus UN outil — ils utilisent le bon pour chaque tâche",
@@ -40,6 +44,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "contenu-texte",
+    emoji: "✍️",
+    accentClass: "from-blue-500/20 to-indigo-500/20",
     title: "Créer du contenu — Texte & Copywriting",
     bullets: [
       "ChatGPT / Claude — Articles, posts LinkedIn, emails clients, fiches produit",
@@ -51,6 +57,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "contenu-visuel",
+    emoji: "🎨",
+    accentClass: "from-pink-500/20 to-rose-500/20",
     title: "Créer du contenu — Visuel & Design",
     bullets: [
       "Canva AI (gratuit) — Génération d'images, suppression de fond, resize multi-format",
@@ -75,6 +83,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "contenu-video",
+    emoji: "🎬",
+    accentClass: "from-red-500/20 to-orange-500/20",
     title: "Créer du contenu — Vidéo",
     bullets: [
       "Descript — Éditer une vidéo comme un document Word. Économie : 10-15h/semaine",
@@ -86,6 +96,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "contenu-presentations",
+    emoji: "📊",
+    accentClass: "from-amber-500/20 to-yellow-500/20",
     title: "Créer du contenu — Présentations",
     bullets: [
       "Gamma.app — Génère des présentations pro en 60 secondes",
@@ -98,6 +110,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "automatiser-overview",
+    emoji: "⚡",
+    accentClass: "from-emerald-500/20 to-green-500/20",
     title: "Automatiser les tâches répétitives",
     subtitle: "Le vrai game-changer : l'IA qui AGIT à votre place",
     table: {
@@ -128,6 +142,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "automatiser-exemples",
+    emoji: "🔄",
+    accentClass: "from-emerald-500/20 to-green-500/20",
     title: "3 automatisations concrètes",
     bullets: [
       "1. Formulaire contact → email personnalisé + fiche Notion + rappel calendrier",
@@ -139,6 +155,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "business-productivite",
+    emoji: "📋",
+    accentClass: "from-sky-500/20 to-blue-500/20",
     title: "Gérer son business — Productivité",
     bullets: [
       "Notion AI — Notes, base de données, wiki d'entreprise, IA intégrée",
@@ -150,6 +168,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "business-crm",
+    emoji: "📧",
+    accentClass: "from-sky-500/20 to-blue-500/20",
     title: "Gérer son business — Email & Relation client",
     bullets: [
       "Alfred — Lit vos emails, priorise, rédige des réponses dans votre style, extrait les tâches",
@@ -162,6 +182,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "site-sans-coder",
+    emoji: "💻",
+    accentClass: "from-violet-500/20 to-purple-500/20",
     title: "Créer un site ou une app sans coder",
     subtitle: "La révolution 2026 : du prompt au produit en 5 minutes",
     table: {
@@ -185,6 +207,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "boite-a-outils",
+    emoji: "🧰",
+    accentClass: "from-teal-500/20 to-cyan-500/20",
     title: "La boîte à outils idéale du solopreneur",
     table: {
       headers: ["Niveau", "Outils", "Budget"],
@@ -214,6 +238,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "transition-pratique",
+    emoji: "🎯",
+    accentClass: "from-orange-500/20 to-amber-500/20",
     title: "Passons à la pratique",
     subtitle: "Lançons une offre complète en 10 minutes avec l'IA",
     bullets: [
@@ -224,6 +250,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "pratique-strategie",
+    emoji: "💡",
+    accentClass: "from-orange-500/20 to-amber-500/20",
     title: "Étape 1 — Stratégie avec ChatGPT",
     subtitle: "De l'idée au plan marketing en 30 secondes",
     bullets: [
@@ -236,6 +264,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "pratique-visuel",
+    emoji: "🖼️",
+    accentClass: "from-orange-500/20 to-amber-500/20",
     title: "Étape 2 — Visuel avec Ideogram",
     subtitle: "Un visuel professionnel avec texte intégré en 10 secondes",
     bullets: [
@@ -248,6 +278,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "pratique-landing",
+    emoji: "🌐",
+    accentClass: "from-orange-500/20 to-amber-500/20",
     title: "Étape 3 — Landing page avec Gamma",
     subtitle: "De l'idée à la page de vente en 60 secondes",
     bullets: [
@@ -260,6 +292,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "pratique-prompt",
+    emoji: "✨",
+    accentClass: "from-yellow-500/20 to-amber-500/20",
     title: "Votre tour — Générez votre pitch de vente",
     subtitle: "Entrez votre secteur et obtenez un prompt Gamma prêt à l'emploi",
     promptTemplate: {
@@ -274,6 +308,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "pratique-automatisation",
+    emoji: "🔗",
+    accentClass: "from-orange-500/20 to-amber-500/20",
     title: "Étape 4 — Automatisation avec Zapier",
     subtitle: "Connecter le tout pour que ça tourne sans vous",
     bullets: [
@@ -287,6 +323,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "pratique-notebooklm",
+    emoji: "🎙️",
+    accentClass: "from-purple-500/20 to-pink-500/20",
     title: "Bonus — Google NotebookLM",
     subtitle: "Transformez n'importe quel document en podcast IA",
     bullets: [
@@ -300,6 +338,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "recap",
+    emoji: "🎓",
+    accentClass: "from-teal-500/20 to-cyan-500/20",
     title: "Ce que l'IA fait — et ne fait pas",
     bullets: [
       "L'IA fait 80% du travail opérationnel : contenu, visuels, automatisations, support",
@@ -311,6 +351,8 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   },
   {
     id: "cta",
+    emoji: "🤝",
+    accentClass: "from-teal-500/20 to-emerald-500/20",
     title: "Allons plus loin ensemble",
     subtitle: "Envie d'intégrer l'IA dans votre activité ?",
     bullets: [

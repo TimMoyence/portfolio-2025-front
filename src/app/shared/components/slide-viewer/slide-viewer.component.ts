@@ -29,278 +29,373 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
   template: `
     @if (!isPresenting()) {
       <!-- ===== MODE SCROLL ===== -->
-      <div class="relative">
+      <div
+        class="relative min-h-screen bg-gradient-to-b from-scheme-background via-scheme-background to-scheme-accent/5"
+      >
         <!-- Barre de progression sticky -->
         <div
-          class="sticky top-20 lg:top-24 z-10 flex items-center gap-2 overflow-x-auto border-b border-scheme-border bg-scheme-background/95 px-4 py-2 backdrop-blur-sm"
+          class="sticky top-20 lg:top-24 z-10 border-b border-scheme-border/50 bg-scheme-background/80 backdrop-blur-md"
         >
-          <div class="flex flex-1 items-center gap-1 overflow-x-auto">
-            @for (slide of slides(); track slide.id; let i = $index) {
-              <button
-                type="button"
-                class="flex h-7 min-w-7 items-center justify-center rounded-button px-2 text-xs font-medium transition-colors"
-                [class]="
-                  currentSlideIndex() === i
-                    ? 'bg-scheme-accent text-scheme-on-accent'
-                    : 'text-scheme-text-muted hover:bg-scheme-surface-hover hover:text-scheme-text'
-                "
-                [attr.aria-label]="'Aller au slide ' + (i + 1)"
-                (click)="scrollToSlide(i)"
+          <div class="mx-auto max-w-6xl px-4 py-2.5">
+            <div class="flex items-center gap-3">
+              <!-- Progress bar -->
+              <div class="hidden md:flex flex-1 items-center gap-0.5">
+                @for (slide of slides(); track slide.id; let i = $index) {
+                  <button
+                    type="button"
+                    class="group relative flex-1 h-1.5 rounded-full transition-all duration-300"
+                    [class]="
+                      currentSlideIndex() >= i
+                        ? 'bg-scheme-accent'
+                        : 'bg-scheme-border/40 hover:bg-scheme-border'
+                    "
+                    [attr.aria-label]="
+                      'Aller au slide ' + (i + 1) + ': ' + slide.title
+                    "
+                    (click)="scrollToSlide(i)"
+                  >
+                    <span
+                      class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-scheme-text px-2 py-1 text-[10px] font-medium text-scheme-background opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      {{ i + 1 }}. {{ slide.title | slice: 0 : 30 }}
+                    </span>
+                  </button>
+                }
+              </div>
+              <!-- Mobile: counter -->
+              <span
+                class="md:hidden text-xs font-medium text-scheme-text-muted tabular-nums"
               >
-                {{ i + 1 }}
-              </button>
-            }
-          </div>
+                {{ currentSlideIndex() + 1 }} / {{ slides().length }}
+              </span>
 
-          @if (fullscreenSupported) {
-            <button
-              type="button"
-              class="ml-2 flex shrink-0 items-center gap-1.5 rounded-button bg-scheme-accent px-3 py-1.5 text-xs font-medium text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover"
-              (click)="enterPresentation()"
-              aria-label="Passer en mode présentation"
-            >
-              <app-svg-icon name="chevron-right" [size]="0.875" />
-              <span i18n>Mode présentation</span>
-            </button>
-          }
+              <div class="flex items-center gap-2">
+                @if (fullscreenSupported) {
+                  <button
+                    type="button"
+                    class="flex items-center gap-1.5 rounded-full bg-scheme-accent px-4 py-1.5 text-xs font-semibold text-scheme-on-accent shadow-sm transition-all hover:bg-scheme-accent-hover hover:shadow-md"
+                    (click)="enterPresentation()"
+                    aria-label="Passer en mode présentation"
+                  >
+                    <app-svg-icon name="chevron-right" [size]="0.8" />
+                    <span class="hidden sm:inline" i18n>Présenter</span>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Liste des slides -->
-        <div class="divide-y divide-scheme-border">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
           @for (slide of slides(); track slide.id; let i = $index) {
             <section
               [attr.data-slide-id]="slide.id"
               [attr.id]="'slide-anchor-' + i"
               [attr.aria-labelledby]="'slide-title-' + i"
-              class="scroll-mt-32 lg:scroll-mt-36 px-6 py-8 md:px-10"
+              class="scroll-mt-32 lg:scroll-mt-36 group/card"
             >
-              <!-- Numéro + Titre -->
-              <div class="mb-4 flex items-start gap-3">
-                <span
-                  class="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-button bg-scheme-accent/10 text-xs font-semibold text-scheme-accent"
-                  aria-hidden="true"
-                >
-                  {{ i + 1 }}
-                </span>
-                <div>
-                  <h2
-                    [attr.id]="'slide-title-' + i"
-                    data-slide-title
-                    class="font-heading text-h4 text-scheme-text"
-                  >
-                    {{ slide.title }}
-                  </h2>
-                  @if (slide.subtitle) {
-                    <p class="mt-0.5 text-medium text-scheme-text-muted">
-                      {{ slide.subtitle }}
-                    </p>
+              <div
+                class="relative overflow-hidden rounded-2xl border border-scheme-border/60 bg-scheme-surface shadow-sm transition-all duration-300 hover:shadow-md hover:border-scheme-border"
+                [class]="
+                  'bg-gradient-to-br ' +
+                  (slide.accentClass || 'from-transparent to-transparent')
+                "
+              >
+                <!-- Header du slide -->
+                <div class="relative px-6 pt-6 pb-4 sm:px-8 sm:pt-8">
+                  <div class="flex items-start gap-4">
+                    <!-- Emoji + numéro -->
+                    <div class="flex shrink-0 flex-col items-center gap-1">
+                      @if (slide.emoji) {
+                        <span
+                          class="text-3xl sm:text-4xl leading-none"
+                          aria-hidden="true"
+                          >{{ slide.emoji }}</span
+                        >
+                      }
+                      <span
+                        class="flex h-6 w-6 items-center justify-center rounded-full bg-scheme-accent/15 text-[10px] font-bold text-scheme-accent"
+                        aria-hidden="true"
+                      >
+                        {{ i + 1 }}
+                      </span>
+                    </div>
+
+                    <!-- Titre + sous-titre -->
+                    <div class="min-w-0 flex-1">
+                      <h2
+                        [attr.id]="'slide-title-' + i"
+                        data-slide-title
+                        class="font-heading text-h4 sm:text-h3 text-scheme-text leading-tight"
+                      >
+                        {{ slide.title }}
+                      </h2>
+                      @if (slide.subtitle) {
+                        <p
+                          class="mt-2 text-small sm:text-medium text-scheme-text-muted leading-relaxed"
+                        >
+                          {{ slide.subtitle }}
+                        </p>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Corps du slide -->
+                <div class="px-6 pb-6 sm:px-8 sm:pb-8 space-y-5">
+                  <!-- Bullets -->
+                  @if (slide.bullets && slide.bullets.length > 0) {
+                    <ul class="space-y-3">
+                      @for (bullet of slide.bullets; track $index) {
+                        <li
+                          class="flex items-start gap-3 text-small text-scheme-text"
+                        >
+                          <span
+                            class="mt-[7px] h-2 w-2 shrink-0 rounded-full bg-scheme-accent shadow-sm shadow-scheme-accent/30"
+                            aria-hidden="true"
+                          ></span>
+                          <span class="leading-relaxed">{{ bullet }}</span>
+                        </li>
+                      }
+                    </ul>
+                  }
+
+                  <!-- Table -->
+                  @if (slide.table) {
+                    <div class="overflow-x-auto -mx-2">
+                      <table class="w-full text-small">
+                        <thead>
+                          <tr>
+                            @for (header of slide.table.headers; track $index) {
+                              <th
+                                class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-scheme-accent bg-scheme-accent/5 first:rounded-tl-xl last:rounded-tr-xl"
+                              >
+                                {{ header }}
+                              </th>
+                            }
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (
+                            row of slide.table.rows;
+                            track $index;
+                            let last = $last
+                          ) {
+                            <tr
+                              class="border-t border-scheme-border/30 transition-colors hover:bg-scheme-surface-hover"
+                            >
+                              @for (
+                                cell of row;
+                                track $index;
+                                let first = $first
+                              ) {
+                                <td
+                                  class="px-4 py-3 text-scheme-text"
+                                  [class.font-medium]="first"
+                                  [class.rounded-bl-xl]="last && first"
+                                  [class.rounded-br-xl]="last && !first"
+                                >
+                                  {{ cell }}
+                                </td>
+                              }
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  }
+
+                  <!-- Prompt template (slide interactif) -->
+                  @if (slide.promptTemplate) {
+                    <div
+                      data-prompt-form
+                      class="relative overflow-hidden rounded-xl border-2 border-scheme-accent/30 bg-gradient-to-br from-scheme-accent/5 to-scheme-background p-5 sm:p-6"
+                    >
+                      <div
+                        class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-scheme-accent/10 blur-2xl"
+                      ></div>
+                      <label
+                        [attr.for]="'sector-input-' + i"
+                        class="mb-3 block text-sm font-semibold text-scheme-text"
+                      >
+                        {{ slide.promptTemplate.label }}
+                      </label>
+                      <div class="flex flex-col sm:flex-row gap-3">
+                        <input
+                          [attr.id]="'sector-input-' + i"
+                          type="text"
+                          [placeholder]="slide.promptTemplate.placeholder"
+                          [value]="sectorInput()"
+                          (input)="sectorInput.set($any($event.target).value)"
+                          class="flex-1 rounded-xl border border-scheme-border bg-scheme-background px-4 py-3 text-small text-scheme-text shadow-xs placeholder:text-scheme-text-muted/60 focus:border-scheme-accent focus:outline-none focus:ring-2 focus:ring-scheme-accent/20"
+                        />
+                        <button
+                          type="button"
+                          class="rounded-xl bg-scheme-accent px-6 py-3 text-sm font-semibold text-scheme-on-accent shadow-sm transition-all hover:bg-scheme-accent-hover hover:shadow-md active:scale-[0.98]"
+                          (click)="generatePrompt(slide.promptTemplate)"
+                          i18n
+                        >
+                          Générer le prompt
+                        </button>
+                      </div>
+                      @if (generatedPrompt()) {
+                        <div class="mt-4 space-y-3">
+                          <div
+                            class="max-h-48 overflow-y-auto rounded-xl border border-scheme-border bg-scheme-background p-4 text-small leading-relaxed text-scheme-text shadow-inner whitespace-pre-wrap"
+                          >
+                            {{ generatedPrompt() }}
+                          </div>
+                          <button
+                            type="button"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-scheme-accent/30 bg-scheme-accent/10 px-4 py-2 text-xs font-semibold text-scheme-accent transition-all hover:bg-scheme-accent/20"
+                            (click)="copyPrompt()"
+                          >
+                            @if (copied()) {
+                              <span i18n>Copié !</span>
+                            } @else {
+                              <span i18n>Copier le prompt</span>
+                            }
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+
+                  <!-- Notes dépliables -->
+                  @if (slide.notes) {
+                    <div class="border-t border-scheme-border/30 pt-4">
+                      <button
+                        type="button"
+                        class="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-scheme-text-muted transition-colors hover:bg-scheme-surface-hover hover:text-scheme-text"
+                        [attr.aria-expanded]="expandedNotes().has(i)"
+                        [attr.aria-controls]="'notes-' + i"
+                        (click)="toggleNotes(i)"
+                      >
+                        <app-svg-icon
+                          name="chevron-down"
+                          [size]="0.7"
+                          class="transition-transform duration-200"
+                          [class.rotate-180]="expandedNotes().has(i)"
+                        />
+                        <span i18n>Notes du formateur</span>
+                      </button>
+                      @if (expandedNotes().has(i)) {
+                        <div
+                          [attr.id]="'notes-' + i"
+                          class="mt-3 rounded-xl bg-scheme-text/[0.03] p-4 text-xs leading-relaxed text-scheme-text-muted"
+                        >
+                          {{ slide.notes }}
+                        </div>
+                      }
+                    </div>
                   }
                 </div>
               </div>
-
-              <!-- Bullets -->
-              @if (slide.bullets && slide.bullets.length > 0) {
-                <ul class="mb-4 space-y-2 pl-10">
-                  @for (bullet of slide.bullets; track bullet) {
-                    <li
-                      class="flex items-start gap-2 text-small text-scheme-text"
-                    >
-                      <span
-                        class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-scheme-accent"
-                        aria-hidden="true"
-                      ></span>
-                      {{ bullet }}
-                    </li>
-                  }
-                </ul>
-              }
-
-              <!-- Table -->
-              @if (slide.table) {
-                <div class="mb-4 overflow-x-auto pl-10">
-                  <table
-                    class="w-full border-collapse rounded-card text-small shadow-xs"
-                  >
-                    <thead>
-                      <tr class="bg-scheme-accent/10">
-                        @for (header of slide.table.headers; track header) {
-                          <th
-                            class="border border-scheme-border px-3 py-2 text-left font-semibold text-scheme-text"
-                          >
-                            {{ header }}
-                          </th>
-                        }
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @for (row of slide.table.rows; track $index) {
-                        <tr class="hover:bg-scheme-surface-hover">
-                          @for (cell of row; track $index) {
-                            <td
-                              class="border border-scheme-border px-3 py-2 text-scheme-text"
-                            >
-                              {{ cell }}
-                            </td>
-                          }
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              }
-
-              <!-- Prompt template -->
-              @if (slide.promptTemplate) {
-                <div
-                  data-prompt-form
-                  class="mb-4 ml-10 rounded-card border border-scheme-accent/30 bg-scheme-accent/5 p-4"
-                >
-                  <label
-                    [attr.for]="'sector-input-' + i"
-                    class="mb-1.5 block text-xs font-semibold text-scheme-text"
-                  >
-                    {{ slide.promptTemplate.label }}
-                  </label>
-                  <div class="flex gap-2">
-                    <input
-                      [attr.id]="'sector-input-' + i"
-                      type="text"
-                      [placeholder]="slide.promptTemplate.placeholder"
-                      [value]="sectorInput()"
-                      (input)="sectorInput.set($any($event.target).value)"
-                      class="flex-1 rounded-form border border-scheme-border bg-scheme-background px-3 py-2 text-small text-scheme-text placeholder:text-scheme-text-muted focus:border-scheme-accent focus:outline-none focus:ring-2 focus:ring-scheme-accent-focus"
-                    />
-                    <button
-                      type="button"
-                      class="rounded-button bg-scheme-accent px-4 py-2 text-xs font-medium text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover"
-                      (click)="generatePrompt(slide.promptTemplate)"
-                      i18n
-                    >
-                      Générer
-                    </button>
-                  </div>
-                  @if (generatedPrompt()) {
-                    <div class="mt-3">
-                      <div
-                        class="rounded-form border border-scheme-border bg-scheme-surface p-3 text-small text-scheme-text"
-                      >
-                        {{ generatedPrompt() }}
-                      </div>
-                      <button
-                        type="button"
-                        class="mt-2 text-xs text-scheme-accent hover:underline"
-                        (click)="copyPrompt()"
-                      >
-                        @if (copied()) {
-                          <span i18n>Copié !</span>
-                        } @else {
-                          <span i18n>Copier le prompt</span>
-                        }
-                      </button>
-                    </div>
-                  }
-                </div>
-              }
-
-              <!-- Notes -->
-              @if (slide.notes) {
-                <div class="ml-10">
-                  <button
-                    type="button"
-                    class="flex items-center gap-1 text-xs text-scheme-text-muted hover:text-scheme-text"
-                    [attr.aria-expanded]="expandedNotes().has(i)"
-                    [attr.aria-controls]="'notes-' + i"
-                    (click)="toggleNotes(i)"
-                  >
-                    <app-svg-icon
-                      name="chevron-down"
-                      [size]="0.75"
-                      class="transition-transform"
-                      [class.rotate-180]="expandedNotes().has(i)"
-                    />
-                    <span i18n>Notes du formateur</span>
-                  </button>
-                  @if (expandedNotes().has(i)) {
-                    <div
-                      [attr.id]="'notes-' + i"
-                      class="mt-2 rounded-card border border-scheme-border bg-scheme-surface-hover p-3 text-xs text-scheme-text-muted"
-                    >
-                      {{ slide.notes }}
-                    </div>
-                  }
-                </div>
-              }
             </section>
           }
         </div>
 
-        <!-- CTA contact -->
-        <div
-          class="border-t border-scheme-border px-6 py-10 text-center md:px-10"
-        >
-          <p class="mb-4 text-medium text-scheme-text-muted" i18n>
-            Vous voulez proposer cette formation à vos équipes ?
-          </p>
-          <a
-            routerLink="/contact"
-            class="inline-flex items-center gap-2 rounded-button bg-scheme-accent px-6 py-3 font-medium text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover"
-            i18n
-          >
-            Contactez-moi
-          </a>
+        <!-- CTA section -->
+        <div class="relative overflow-hidden border-t border-scheme-border/30">
+          <div
+            class="pointer-events-none absolute inset-0 bg-gradient-to-r from-scheme-accent/5 via-transparent to-purple-500/5"
+          ></div>
+          <div class="relative mx-auto max-w-4xl px-6 py-16 text-center">
+            <p
+              class="mb-2 text-sm font-semibold uppercase tracking-wider text-scheme-accent"
+              i18n
+            >
+              Prochaine étape
+            </p>
+            <h3 class="mb-4 font-heading text-h3 text-scheme-text" i18n>
+              Envie d'aller plus loin ?
+            </h3>
+            <p
+              class="mx-auto mb-8 max-w-xl text-medium text-scheme-text-muted"
+              i18n
+            >
+              Audit gratuit, conseil personnalisé ou développement sur mesure —
+              discutons de votre projet.
+            </p>
+            <a
+              routerLink="/contact"
+              class="inline-flex items-center gap-2 rounded-full bg-scheme-accent px-8 py-3.5 text-sm font-semibold text-scheme-on-accent shadow-md transition-all hover:bg-scheme-accent-hover hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]"
+              i18n
+            >
+              Contactez-moi
+            </a>
+          </div>
         </div>
       </div>
     } @else {
       <!-- ===== MODE PRÉSENTATION ===== -->
       <div
-        class="fixed inset-0 z-[100] flex flex-col bg-scheme-background"
+        class="fixed inset-0 z-[100] flex flex-col bg-gradient-to-br from-scheme-background via-scheme-background to-scheme-accent/10"
         role="region"
         aria-label="Mode présentation"
         (click)="handlePresentationClick($event)"
         (keydown.arrowRight)="nextSlide()"
         (keydown.arrowLeft)="prevSlide()"
       >
+        <!-- Décor gradient -->
+        <div
+          class="pointer-events-none absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-scheme-accent/5 blur-3xl"
+        ></div>
+        <div
+          class="pointer-events-none absolute -left-40 bottom-0 h-[400px] w-[400px] rounded-full bg-purple-500/5 blur-3xl"
+        ></div>
+
         <!-- Bouton fermer -->
         <button
           type="button"
-          class="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-button border border-scheme-border bg-scheme-background text-scheme-text-muted shadow-xs transition-colors hover:bg-scheme-surface-hover hover:text-scheme-text"
+          class="absolute right-6 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-scheme-border/50 bg-scheme-background/80 text-scheme-text-muted shadow-sm backdrop-blur-sm transition-all hover:bg-scheme-surface-hover hover:text-scheme-text hover:shadow-md"
           (click)="exitPresentation(); $event.stopPropagation()"
           aria-label="Quitter le mode présentation"
         >
-          <app-svg-icon name="close" [size]="1.25" />
+          <app-svg-icon name="close" [size]="1.1" />
         </button>
 
         <!-- Contenu du slide courant -->
         <div
-          class="flex flex-1 flex-col items-center justify-center overflow-y-auto px-8 py-16 md:px-16"
+          class="flex flex-1 flex-col items-center justify-center overflow-y-auto px-6 py-12 sm:px-12 md:px-20"
         >
           <div class="w-full max-w-3xl">
+            <!-- Emoji -->
+            @if (currentSlide().emoji) {
+              <span
+                class="mb-4 block text-5xl sm:text-6xl"
+                aria-hidden="true"
+                >{{ currentSlide().emoji }}</span
+              >
+            }
+
             <!-- Titre -->
             <h2
-              class="font-heading text-h2 text-scheme-text"
+              class="font-heading text-h2 sm:text-h1 text-scheme-text leading-tight"
               [attr.data-slide-title]="currentSlide().title"
             >
               {{ currentSlide().title }}
             </h2>
 
             @if (currentSlide().subtitle) {
-              <p class="mt-2 text-large text-scheme-text-muted">
+              <p class="mt-4 text-large text-scheme-text-muted leading-relaxed">
                 {{ currentSlide().subtitle }}
               </p>
             }
 
             <!-- Bullets -->
             @if (currentSlide().bullets && currentSlide().bullets!.length > 0) {
-              <ul class="mt-6 space-y-3">
-                @for (bullet of currentSlide().bullets; track bullet) {
+              <ul class="mt-8 space-y-4">
+                @for (bullet of currentSlide().bullets; track $index) {
                   <li
-                    class="flex items-start gap-3 text-medium text-scheme-text"
+                    class="flex items-start gap-4 text-medium sm:text-large text-scheme-text"
                   >
                     <span
-                      class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-scheme-accent"
+                      class="mt-2.5 h-2.5 w-2.5 shrink-0 rounded-full bg-scheme-accent shadow-sm shadow-scheme-accent/40"
                       aria-hidden="true"
                     ></span>
-                    {{ bullet }}
+                    <span class="leading-relaxed">{{ bullet }}</span>
                   </li>
                 }
               </ul>
@@ -308,18 +403,16 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
 
             <!-- Table -->
             @if (currentSlide().table) {
-              <div class="mt-6 overflow-x-auto">
-                <table
-                  class="w-full border-collapse rounded-card text-medium shadow-xs"
-                >
+              <div class="mt-8 overflow-x-auto">
+                <table class="w-full text-medium">
                   <thead>
-                    <tr class="bg-scheme-accent/10">
+                    <tr>
                       @for (
                         header of currentSlide().table!.headers;
-                        track header
+                        track $index
                       ) {
                         <th
-                          class="border border-scheme-border px-4 py-3 text-left font-semibold text-scheme-text"
+                          class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-scheme-accent bg-scheme-accent/5 first:rounded-tl-xl last:rounded-tr-xl"
                         >
                           {{ header }}
                         </th>
@@ -327,11 +420,18 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                     </tr>
                   </thead>
                   <tbody>
-                    @for (row of currentSlide().table!.rows; track $index) {
-                      <tr class="hover:bg-scheme-surface-hover">
-                        @for (cell of row; track $index) {
+                    @for (
+                      row of currentSlide().table!.rows;
+                      track $index;
+                      let last = $last
+                    ) {
+                      <tr
+                        class="border-t border-scheme-border/30 transition-colors hover:bg-scheme-surface-hover"
+                      >
+                        @for (cell of row; track $index; let first = $first) {
                           <td
-                            class="border border-scheme-border px-4 py-3 text-scheme-text"
+                            class="px-5 py-4 text-scheme-text"
+                            [class.font-medium]="first"
                           >
                             {{ cell }}
                           </td>
@@ -347,29 +447,29 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
             @if (currentSlide().promptTemplate) {
               <div
                 data-prompt-form
-                class="mt-6 rounded-card border border-scheme-accent/30 bg-scheme-accent/5 p-6"
+                class="mt-8 rounded-2xl border-2 border-scheme-accent/30 bg-gradient-to-br from-scheme-accent/5 to-scheme-background p-8"
                 (click)="$event.stopPropagation()"
                 (keydown)="$event.stopPropagation()"
                 tabindex="-1"
               >
                 <label
                   for="sector-input-presentation"
-                  class="mb-2 block text-small font-semibold text-scheme-text"
+                  class="mb-3 block text-medium font-semibold text-scheme-text"
                 >
                   {{ currentSlide().promptTemplate!.label }}
                 </label>
-                <div class="flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-3">
                   <input
                     id="sector-input-presentation"
                     type="text"
                     [placeholder]="currentSlide().promptTemplate!.placeholder"
                     [value]="sectorInput()"
                     (input)="sectorInput.set($any($event.target).value)"
-                    class="flex-1 rounded-form border border-scheme-border bg-scheme-background px-4 py-2 text-small text-scheme-text placeholder:text-scheme-text-muted focus:border-scheme-accent focus:outline-none focus:ring-2 focus:ring-scheme-accent-focus"
+                    class="flex-1 rounded-xl border border-scheme-border bg-scheme-background px-5 py-3 text-medium text-scheme-text placeholder:text-scheme-text-muted/60 focus:border-scheme-accent focus:outline-none focus:ring-2 focus:ring-scheme-accent/20"
                   />
                   <button
                     type="button"
-                    class="rounded-button bg-scheme-accent px-5 py-2 font-medium text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover"
+                    class="rounded-xl bg-scheme-accent px-8 py-3 font-semibold text-scheme-on-accent shadow-sm transition-all hover:bg-scheme-accent-hover hover:shadow-md"
                     (click)="generatePrompt(currentSlide().promptTemplate!)"
                     i18n
                   >
@@ -379,19 +479,19 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                 @if (generatedPrompt()) {
                   <div class="mt-4">
                     <div
-                      class="rounded-form border border-scheme-border bg-scheme-surface p-4 text-small text-scheme-text"
+                      class="max-h-56 overflow-y-auto rounded-xl border border-scheme-border bg-scheme-background p-5 text-small leading-relaxed text-scheme-text shadow-inner whitespace-pre-wrap"
                     >
                       {{ generatedPrompt() }}
                     </div>
                     <button
                       type="button"
-                      class="mt-2 text-xs text-scheme-accent hover:underline"
+                      class="mt-3 inline-flex items-center gap-1.5 rounded-full border border-scheme-accent/30 bg-scheme-accent/10 px-4 py-2 text-xs font-semibold text-scheme-accent transition-all hover:bg-scheme-accent/20"
                       (click)="copyPrompt()"
                     >
                       @if (copied()) {
                         <span i18n>Copié !</span>
                       } @else {
-                        <span i18n>Copier le prompt</span>
+                        <span i18n>Copier</span>
                       }
                     </button>
                   </div>
@@ -403,39 +503,59 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
 
         <!-- Barre de navigation bas -->
         <div
-          class="flex items-center justify-between border-t border-scheme-border px-6 py-3"
+          class="flex items-center justify-between border-t border-scheme-border/30 bg-scheme-background/80 px-6 py-4 backdrop-blur-sm"
           (click)="$event.stopPropagation()"
           (keydown)="$event.stopPropagation()"
           tabindex="-1"
         >
           <button
             type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border px-4 py-2 text-small text-scheme-text-muted shadow-xs transition-colors hover:bg-scheme-surface-hover hover:text-scheme-text disabled:cursor-not-allowed disabled:opacity-40"
+            class="flex items-center gap-2 rounded-full border border-scheme-border/50 px-5 py-2.5 text-sm text-scheme-text-muted transition-all hover:bg-scheme-surface-hover hover:text-scheme-text disabled:cursor-not-allowed disabled:opacity-30"
             [disabled]="currentSlideIndex() === 0"
             (click)="prevSlide()"
             aria-label="Slide précédent"
           >
-            <app-svg-icon name="chevron-left" [size]="1" />
-            <span i18n>Précédent</span>
+            <app-svg-icon name="chevron-left" [size]="0.9" />
+            <span class="hidden sm:inline" i18n>Précédent</span>
           </button>
 
-          <span
-            aria-live="polite"
-            aria-atomic="true"
-            class="text-small text-scheme-text-muted"
-          >
-            {{ currentSlideIndex() + 1 }} / {{ slides().length }}
-          </span>
+          <!-- Progress dots -->
+          <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center gap-1">
+              @for (slide of slides(); track slide.id; let i = $index) {
+                <button
+                  type="button"
+                  class="h-1.5 rounded-full transition-all duration-300"
+                  [class]="
+                    currentSlideIndex() === i
+                      ? 'w-6 bg-scheme-accent'
+                      : 'w-1.5 bg-scheme-border/60 hover:bg-scheme-border'
+                  "
+                  (click)="goToSlide(i)"
+                  [attr.aria-label]="'Slide ' + (i + 1)"
+                ></button>
+              }
+            </div>
+            <span
+              aria-live="polite"
+              aria-atomic="true"
+              class="text-sm font-medium tabular-nums text-scheme-text-muted"
+            >
+              {{ currentSlideIndex() + 1
+              }}<span class="text-scheme-border mx-1">/</span
+              >{{ slides().length }}
+            </span>
+          </div>
 
           <button
             type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border px-4 py-2 text-small text-scheme-text-muted shadow-xs transition-colors hover:bg-scheme-surface-hover hover:text-scheme-text disabled:cursor-not-allowed disabled:opacity-40"
+            class="flex items-center gap-2 rounded-full bg-scheme-accent px-5 py-2.5 text-sm font-medium text-scheme-on-accent shadow-sm transition-all hover:bg-scheme-accent-hover hover:shadow-md disabled:cursor-not-allowed disabled:opacity-30 disabled:bg-scheme-border disabled:shadow-none"
             [disabled]="currentSlideIndex() === slides().length - 1"
             (click)="nextSlide()"
             aria-label="Slide suivant"
           >
-            <span i18n>Suivant</span>
-            <app-svg-icon name="chevron-right" [size]="1" />
+            <span class="hidden sm:inline" i18n>Suivant</span>
+            <app-svg-icon name="chevron-right" [size]="0.9" />
           </button>
         </div>
       </div>

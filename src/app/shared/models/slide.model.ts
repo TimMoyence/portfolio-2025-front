@@ -17,6 +17,8 @@ export interface Slide {
   table?: SlideTable;
   visual?: "icon" | "image";
   visualRef?: string;
+  emoji?: string;
+  accentClass?: string;
   notes?: string;
   promptTemplate?: PromptTemplate;
 }
