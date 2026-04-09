@@ -9,8 +9,10 @@
 
   <div class="hero-inner">
     <!-- Texte -->
-    <div class="hero-text">
-      <div class="hero-kicker">
+    <div class="hero-text max-w-[520px]">
+      <div
+        class="hero-kicker inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-[0.08em] mb-6"
+      >
         <span class="hero-kicker-dot"></span>
         Sebastian
       </div>
@@ -18,11 +20,14 @@
         Gardez le <span class="accent-word">controle</span>
         sur vos habitudes
       </h1>
-      <p class="hero-desc" i18n="sebastian.pres.desc|@@sebastianPresDesc">
+      <p
+        class="hero-desc text-lg leading-7 font-light text-white/60 mb-10"
+        i18n="sebastian.pres.desc|@@sebastianPresDesc"
+      >
         Cafe, alcool — suivez votre consommation au quotidien, fixez vos limites
         et regardez votre score de sante evoluer.
       </p>
-      <div class="hero-actions">
+      <div class="hero-actions flex gap-3 flex-wrap">
         <a
           routerLink="/login"
           class="btn-gold"
@@ -258,16 +263,19 @@
 <!-- ══════════════════════════════════════════════════
      COMMENT CA MARCHE — 3 etapes
      ══════════════════════════════════════════════════ -->
-<section class="section-steps" id="how">
-  <div class="section-header" appSlideIn>
+<section class="section-steps py-28 px-[5%] bg-white" id="how">
+  <div
+    class="section-header text-center max-w-[600px] mx-auto mb-16"
+    appSlideIn
+  >
     <div
-      class="section-kicker"
+      class="section-kicker text-[0.78rem] font-bold tracking-[0.14em] uppercase mb-3"
       i18n="sebastian.pres.steps.kicker|@@sebastianPresStepsKicker"
     >
       Comment ca marche
     </div>
     <h2
-      class="section-title"
+      class="section-title font-heading italic font-black tracking-tight leading-tight"
       i18n="sebastian.pres.steps.title|@@sebastianPresStepsTitle"
     >
       Simple comme 1, 2, 3
@@ -338,9 +346,14 @@
 <!-- ══════════════════════════════════════════════════
      FEATURE 1 — Score de sante (grande jauge)
      ══════════════════════════════════════════════════ -->
-<section class="section-feat-score" id="features">
-  <div class="feat-score-inner">
-    <div class="feat-score-visual" appSlideIn>
+<section
+  class="section-feat-score py-28 px-[5%] bg-[#f8faf9] overflow-hidden"
+  id="features"
+>
+  <div
+    class="feat-score-inner max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+  >
+    <div class="feat-score-visual flex flex-col items-center" appSlideIn>
       <div class="feat-gauge-wrap">
         <svg class="gauge-svg" viewBox="0 0 100 100">
           <defs>
@@ -400,7 +413,7 @@
         atteints et votre regularite. Il evolue chaque jour — montez-le en
         gardant le controle, descendez-le en depassant vos limites.
       </p>
-      <div class="feat-score-metrics">
+      <div class="feat-score-metrics flex gap-8">
         <div class="metric">
           <div class="metric-value metric-value--gold">
             {{ healthScore.score }}
@@ -438,8 +451,10 @@
 <!-- ══════════════════════════════════════════════════
      FEATURE 2 — Suivi quotidien (cartes cafe / alcool)
      ══════════════════════════════════════════════════ -->
-<section class="section-feat-tracking">
-  <div class="feat-tracking-inner">
+<section class="section-feat-tracking py-28 px-[5%] bg-white overflow-hidden">
+  <div
+    class="feat-tracking-inner max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+  >
     <div class="feat-tracking-text" appSlideIn>
       <h2
         i18n="
@@ -454,17 +469,22 @@
         sont visibles d'un coup d'oeil — quand la barre approche la fin, vous
         savez qu'il est temps de lever le pied.
       </p>
-      <div class="fab-hint">
-        <div class="fab-preview" aria-hidden="true">+</div>
+      <div class="fab-hint flex items-center gap-4 mt-2">
+        <div
+          class="fab-preview inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#4fb3a2] text-white text-2xl font-bold shadow-[0_8px_24px_rgba(79,179,162,0.35)] shrink-0"
+          aria-hidden="true"
+        >
+          +
+        </div>
         <div>
           <div
-            class="fab-title"
+            class="fab-title font-heading italic font-extrabold text-[0.95rem]"
             i18n="sebastian.pres.fab.title|@@sebastianPresFabTitle"
           >
             Ajout rapide
           </div>
           <div
-            class="fab-subtitle"
+            class="fab-subtitle text-[0.78rem] text-[#54524d]"
             i18n="sebastian.pres.fab.desc|@@sebastianPresFabDesc"
           >
             Un tap sur le FAB, c'est loggue.
@@ -473,11 +493,17 @@
       </div>
     </div>
 
-    <div class="tracking-cards" appSlideIn>
+    <div class="tracking-cards flex flex-col gap-5" appSlideIn>
       <!-- Carte cafe -->
-      <div class="tracking-card">
-        <div class="tracking-card-header">
-          <div class="tracking-card-title">
+      <div
+        class="tracking-card border border-[#0c090226] rounded-card bg-white shadow-xs p-6 transition-all duration-300 hover:shadow-md hover:translate-x-1"
+      >
+        <div
+          class="tracking-card-header flex items-center justify-between mb-4"
+        >
+          <div
+            class="tracking-card-title flex items-center gap-2 font-heading italic font-extrabold text-base"
+          >
             <img
               src="assets/icons/badges/espresso-machine.png"
               alt=""
@@ -497,13 +523,17 @@
             }}</span
           >
         </div>
-        <div class="tracking-bar-track">
+        <div
+          class="tracking-bar-track h-2 rounded-full bg-black/[0.04] overflow-hidden mb-2"
+        >
           <div
             class="tracking-bar-fill tracking-bar-fill--coffee"
             [style.width]="coffeePercent()"
           ></div>
         </div>
-        <div class="tracking-bar-labels">
+        <div
+          class="tracking-bar-labels flex justify-between text-[0.68rem] text-[#54524d]"
+        >
           <span>0</span>
           <span
             i18n="
@@ -511,7 +541,7 @@
             >Limite : {{ dailyCounts.coffee.goal }} cafes</span
           >
         </div>
-        <div class="tracking-quick-btns">
+        <div class="tracking-quick-btns flex gap-2 mt-3">
           <button
             class="tracking-quick-btn tracking-quick-btn--coffee-btn"
             type="button"
@@ -530,9 +560,15 @@
       </div>
 
       <!-- Carte alcool -->
-      <div class="tracking-card">
-        <div class="tracking-card-header">
-          <div class="tracking-card-title">
+      <div
+        class="tracking-card border border-[#0c090226] rounded-card bg-white shadow-xs p-6 transition-all duration-300 hover:shadow-md hover:translate-x-1"
+      >
+        <div
+          class="tracking-card-header flex items-center justify-between mb-4"
+        >
+          <div
+            class="tracking-card-title flex items-center gap-2 font-heading italic font-extrabold text-base"
+          >
             <img
               src="assets/icons/badges/dry-week.png"
               alt=""
@@ -552,13 +588,17 @@
             }}</span
           >
         </div>
-        <div class="tracking-bar-track">
+        <div
+          class="tracking-bar-track h-2 rounded-full bg-black/[0.04] overflow-hidden mb-2"
+        >
           <div
             class="tracking-bar-fill tracking-bar-fill--alcohol"
             [style.width]="alcoholPercent()"
           ></div>
         </div>
-        <div class="tracking-bar-labels">
+        <div
+          class="tracking-bar-labels flex justify-between text-[0.68rem] text-[#54524d]"
+        >
           <span>0</span>
           <span
             i18n="
@@ -566,7 +606,7 @@
             >Limite : {{ dailyCounts.alcohol.goal }} verres</span
           >
         </div>
-        <div class="tracking-quick-btns">
+        <div class="tracking-quick-btns flex gap-2 mt-3">
           <button
             class="tracking-quick-btn tracking-quick-btn--beer"
             type="button"
@@ -590,8 +630,12 @@
 <!-- ══════════════════════════════════════════════════
      FEATURE 3 — Rapports / Heatmap
      ══════════════════════════════════════════════════ -->
-<section class="section-feat-reports">
-  <div class="feat-reports-inner">
+<section
+  class="section-feat-reports py-28 px-[5%] bg-[#f8faf9] overflow-hidden"
+>
+  <div
+    class="feat-reports-inner max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+  >
     <div appSlideIn>
       <!-- Heatmap -->
       <div class="heatmap-card">
@@ -686,7 +730,7 @@
         hebdomadaires et mensuels comparent vos periodes et montrent l'evolution
         dans le temps.
       </p>
-      <div class="trend-pills">
+      <div class="trend-pills flex gap-2 flex-wrap">
         <div class="trend-pill trend-pill--down">
           <span i18n="sebastian.pres.trend.alcohol|@@sebastianPresTrendAlcohol"
             >&#8595; -18% alcool vs. sem. derniere</span
@@ -705,22 +749,25 @@
 <!-- ══════════════════════════════════════════════════
      BADGE WALL — Les 10 badges
      ══════════════════════════════════════════════════ -->
-<section class="section-badges">
-  <div class="section-header" appSlideIn>
+<section class="section-badges py-28 px-[5%] bg-white overflow-hidden">
+  <div
+    class="section-header text-center max-w-[600px] mx-auto mb-16"
+    appSlideIn
+  >
     <div
-      class="section-kicker"
+      class="section-kicker text-[0.78rem] font-bold tracking-[0.14em] uppercase mb-3"
       i18n="sebastian.pres.badges.kicker|@@sebastianPresBadgesKicker"
     >
       Gamification
     </div>
     <h2
-      class="section-title"
+      class="section-title font-heading italic font-black tracking-tight leading-tight"
       i18n="sebastian.pres.badges.title|@@sebastianPresBadgesTitle"
     >
       Debloquez des badges
     </h2>
     <p
-      class="section-desc"
+      class="section-desc text-[1.05rem] leading-7 mt-4"
       i18n="sebastian.pres.badges.desc|@@sebastianPresBadgesDesc"
     >
       Chaque bonne habitude vous rapproche d'un nouveau badge. Survolez-les pour
@@ -728,7 +775,10 @@
     </p>
   </div>
 
-  <div class="badge-gallery" appSlideIn>
+  <div
+    class="badge-gallery max-w-[1000px] mx-auto grid grid-cols-5 gap-6"
+    appSlideIn
+  >
     @for (badge of badges; track badge.key) {
       <app-sebastian-badge-card [badge]="badge" />
     }

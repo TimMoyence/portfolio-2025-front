@@ -14,7 +14,10 @@
 
   <div class="hero-content">
     <!-- Ville -->
-    <p class="hero-city" i18n="weather.pres.city|@@weatherPresCity">
+    <p
+      class="hero-city text-[1.1rem] tracking-[0.02em] mb-1"
+      i18n="weather.pres.city|@@weatherPresCity"
+    >
       Paris, France
     </p>
 
@@ -27,7 +30,9 @@
     </div>
 
     <!-- Condition meteo avec icone -->
-    <div class="hero-condition">
+    <div
+      class="hero-condition inline-flex items-center gap-2 text-[1.15rem] font-light mb-2"
+    >
       <img
         src="assets/images/meteo/soleil-et-nuage.png"
         alt=""
@@ -40,7 +45,7 @@
     </div>
 
     <!-- Ressenti + vent -->
-    <div class="hero-meta">
+    <div class="hero-meta flex gap-6 justify-center text-[0.9rem] mb-8">
       <span i18n="weather.pres.feelslike|@@weatherPresFeelsLike"
         >Ressenti {{ current.apparent_temperature }}&deg;</span
       >
@@ -50,56 +55,65 @@
     </div>
 
     <!-- 4 cartes metriques glassmorphism -->
-    <div class="hero-metrics">
-      <div class="metric-card glass">
+    <div
+      class="hero-metrics grid grid-cols-4 gap-3 mb-10 max-w-[520px] mx-auto"
+    >
+      <div class="metric-card glass rounded-2xl p-4 text-center">
         <div
-          class="metric-label"
+          class="metric-label text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[rgba(255,255,255,0.5)] mb-1"
           i18n="weather.pres.metric.wind|@@weatherPresMetricWind"
         >
           Vent
         </div>
-        <div class="metric-value">
+        <div class="metric-value text-xl font-bold text-white leading-tight">
           {{ current.wind_speed_10m }}
-          <span class="metric-unit">km/h</span>
+          <span class="metric-unit text-[0.7rem] text-[rgba(255,255,255,0.5)]"
+            >km/h</span
+          >
         </div>
       </div>
-      <div class="metric-card glass">
+      <div class="metric-card glass rounded-2xl p-4 text-center">
         <div
-          class="metric-label"
+          class="metric-label text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[rgba(255,255,255,0.5)] mb-1"
           i18n="weather.pres.metric.humidity|@@weatherPresMetricHumidity"
         >
           Humidite
         </div>
-        <div class="metric-value">
-          {{ current.relative_humidity_2m }}<span class="metric-unit">%</span>
+        <div class="metric-value text-xl font-bold text-white leading-tight">
+          {{ current.relative_humidity_2m
+          }}<span class="metric-unit text-[0.7rem] text-[rgba(255,255,255,0.5)]"
+            >%</span
+          >
         </div>
       </div>
-      <div class="metric-card glass">
+      <div class="metric-card glass rounded-2xl p-4 text-center">
         <div
-          class="metric-label"
+          class="metric-label text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[rgba(255,255,255,0.5)] mb-1"
           i18n="weather.pres.metric.uv|@@weatherPresMetricUv"
         >
           UV
         </div>
-        <div class="metric-value">
+        <div class="metric-value text-xl font-bold text-white leading-tight">
           {{ current.uv_index }}
           <span
-            class="metric-unit"
+            class="metric-unit text-[0.7rem] text-[rgba(255,255,255,0.5)]"
             i18n="weather.pres.metric.uv.mod|@@weatherPresMetricUvMod"
             >mod.</span
           >
         </div>
       </div>
-      <div class="metric-card glass">
+      <div class="metric-card glass rounded-2xl p-4 text-center">
         <div
-          class="metric-label"
+          class="metric-label text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[rgba(255,255,255,0.5)] mb-1"
           i18n="weather.pres.metric.pressure|@@weatherPresMetricPressure"
         >
           Pression
         </div>
-        <div class="metric-value">
+        <div class="metric-value text-xl font-bold text-white leading-tight">
           {{ current.pressure_msl }}
-          <span class="metric-unit">hPa</span>
+          <span class="metric-unit text-[0.7rem] text-[rgba(255,255,255,0.5)]"
+            >hPa</span
+          >
         </div>
       </div>
     </div>
@@ -108,11 +122,14 @@
     <h1 class="hero-tagline" i18n="weather.pres.tagline|@@weatherPresTagline">
       Ne sortez plus sans savoir
     </h1>
-    <p class="hero-desc" i18n="weather.pres.desc|@@weatherPresDesc">
+    <p
+      class="hero-desc text-base font-light text-white/80 leading-relaxed max-w-[440px] mx-auto mb-8"
+      i18n="weather.pres.desc|@@weatherPresDesc"
+    >
       Previsions heure par heure, radar de precipitations et qualite de l'air.
       Tout pour planifier votre journee, en un coup d'oeil.
     </p>
-    <div class="hero-actions">
+    <div class="hero-actions flex gap-3 justify-center flex-wrap">
       <a
         routerLink="/login"
         class="btn-solid"
@@ -152,21 +169,21 @@
      FEATURE 1 : Previsions 7 jours — Bandeau scrollable
      ══════════════════════════════════════════════════ -->
 <section class="section-forecast" id="forecast">
-  <div class="section-header" appSlideIn>
+  <div class="section-header max-w-[560px] mb-12" appSlideIn>
     <div
-      class="section-kicker"
+      class="section-kicker text-[0.78rem] font-semibold tracking-[0.14em] uppercase text-[#38bdf8] mb-2"
       i18n="weather.pres.forecast.kicker|@@weatherPresForecastKicker"
     >
       Previsions
     </div>
     <h2
-      class="section-title"
+      class="section-title font-heading italic font-extrabold tracking-tight mb-3 leading-tight text-white"
       i18n="weather.pres.forecast.title|@@weatherPresForecastTitle"
     >
       Planifiez votre semaine
     </h2>
     <p
-      class="section-desc"
+      class="section-desc font-light text-[rgba(255,255,255,0.7)] leading-relaxed text-[1.05rem]"
       i18n="weather.pres.forecast.desc|@@weatherPresForecastDesc"
     >
       Visualisez les 7 prochains jours d'un coup d'oeil. Temperatures,
@@ -178,7 +195,10 @@
   <div class="day-strip" appSlideIn>
     @for (day of weekDays; track day.date) {
       <div class="day-card glass" [class.day-card--today]="day.isToday">
-        <span class="day-name">{{ day.label }}</span>
+        <span
+          class="day-name text-[0.78rem] font-semibold uppercase tracking-[0.05em]"
+          >{{ day.label }}</span
+        >
         <img
           class="day-icon"
           [src]="day.icon"
@@ -187,11 +207,18 @@
           height="40"
         />
         <div class="day-temps">
-          <span class="day-high">{{ day.tempMax }}&deg;</span>
-          <span class="day-low">{{ day.tempMin }}&deg;</span>
+          <span class="day-high text-[1.15rem] font-semibold text-white"
+            >{{ day.tempMax }}&deg;</span
+          >
+          <span
+            class="day-low text-[0.85rem] font-light text-[rgba(255,255,255,0.5)]"
+            >{{ day.tempMin }}&deg;</span
+          >
         </div>
         @if (day.precipSum > 1) {
-          <span class="day-precip">{{ day.precipSum | number: "1.0-0" }}%</span>
+          <span class="day-precip text-[0.68rem] text-blue-400 font-medium"
+            >{{ day.precipSum | number: "1.0-0" }}%</span
+          >
         }
       </div>
     }
@@ -203,21 +230,25 @@
      ══════════════════════════════════════════════════ -->
 <section class="section-radar">
   <div class="radar-container">
-    <div class="section-header" appSlideIn style="margin-left: 0">
+    <div
+      class="section-header max-w-[560px] mb-12"
+      appSlideIn
+      style="margin-left: 0"
+    >
       <div
-        class="section-kicker"
+        class="section-kicker text-[0.78rem] font-semibold tracking-[0.14em] uppercase text-[#38bdf8] mb-2"
         i18n="weather.pres.radar.kicker|@@weatherPresRadarKicker"
       >
         Radar
       </div>
       <h2
-        class="section-title"
+        class="section-title font-heading italic font-extrabold tracking-tight mb-3 leading-tight text-white"
         i18n="weather.pres.radar.title|@@weatherPresRadarTitle"
       >
         Voyez la pluie arriver
       </h2>
       <p
-        class="section-desc"
+        class="section-desc font-light text-[rgba(255,255,255,0.7)] leading-relaxed text-[1.05rem]"
         i18n="weather.pres.radar.desc|@@weatherPresRadarDesc"
       >
         Carte radar en temps reel. Suivez les precipitations, anticipez les
@@ -234,7 +265,7 @@
       <div class="radar-sweep"></div>
       <div class="radar-legend">
         <div
-          class="radar-legend-title"
+          class="radar-legend-title text-[0.6rem] font-semibold text-white/75 mb-1.5 uppercase tracking-[0.06em]"
           i18n="weather.pres.radar.legend|@@weatherPresRadarLegend"
         >
           Precipitations
@@ -247,7 +278,9 @@
           <span class="rl-5"></span>
           <span class="rl-6"></span>
         </div>
-        <div class="radar-legend-labels">
+        <div
+          class="radar-legend-labels flex justify-between text-[0.55rem] text-white/50"
+        >
           <span i18n="weather.pres.radar.low|@@weatherPresRadarLow"
             >Faible</span
           >
@@ -264,22 +297,25 @@
      FEATURE 3 : 3 niveaux — Decouverte progressive
      ══════════════════════════════════════════════════ -->
 <section class="section-levels">
-  <div class="levels-container">
-    <div class="section-header section-header--centered" appSlideIn>
+  <div class="levels-container max-w-[960px] mx-auto">
+    <div
+      class="section-header max-w-[560px] mb-12 text-center mx-auto"
+      appSlideIn
+    >
       <div
-        class="section-kicker"
+        class="section-kicker text-[0.78rem] font-semibold tracking-[0.14em] uppercase text-[#38bdf8] mb-2"
         i18n="weather.pres.levels.kicker|@@weatherPresLevelsKicker"
       >
         Personnalisation
       </div>
       <h2
-        class="section-title"
+        class="section-title font-heading italic font-extrabold tracking-tight mb-3 leading-tight text-white"
         i18n="weather.pres.levels.title|@@weatherPresLevelsTitle"
       >
         Votre meteo, votre niveau
       </h2>
       <p
-        class="section-desc"
+        class="section-desc font-light text-[rgba(255,255,255,0.7)] leading-relaxed text-[1.05rem]"
         i18n="weather.pres.levels.desc|@@weatherPresLevelsDesc"
       >
         Pas besoin d'etre meteorologue. Choisissez le niveau de detail qui vous
@@ -289,8 +325,13 @@
 
     <div class="levels-grid">
       <!-- Decouverte -->
-      <div class="level-card level-discovery glass" appSlideIn>
-        <div class="level-badge">
+      <div
+        class="level-card level-discovery glass rounded-[1.25rem] p-8 flex flex-col relative overflow-hidden"
+        appSlideIn
+      >
+        <div
+          class="level-badge inline-flex items-center gap-1.5 text-[0.72rem] font-bold uppercase tracking-[0.08em] py-1 px-3 rounded-full w-fit mb-5"
+        >
           <img
             src="assets/images/meteo/soleil.png"
             alt=""
@@ -308,7 +349,9 @@
           Temperature, conditions, previsions de la semaine. L'info qu'il vous
           faut pour choisir comment vous habiller.
         </p>
-        <ul class="level-features">
+        <ul
+          class="level-features list-none flex flex-col gap-[0.45rem] p-0 m-0"
+        >
           <li i18n="weather.pres.feat.temp|@@weatherPresFeatTemp">
             Temperature et ressenti
           </li>
@@ -325,8 +368,13 @@
       </div>
 
       <!-- Curieux -->
-      <div class="level-card level-curious glass" appSlideIn>
-        <div class="level-badge">
+      <div
+        class="level-card level-curious glass rounded-[1.25rem] p-8 flex flex-col relative overflow-hidden"
+        appSlideIn
+      >
+        <div
+          class="level-badge inline-flex items-center gap-1.5 text-[0.72rem] font-bold uppercase tracking-[0.08em] py-1 px-3 rounded-full w-fit mb-5"
+        >
           <img
             src="assets/images/meteo/tropiques.png"
             alt=""
@@ -344,7 +392,9 @@
           UV, qualite de l'air, pression, radar. Toutes les donnees qui font la
           difference pour vos activites.
         </p>
-        <ul class="level-features">
+        <ul
+          class="level-features list-none flex flex-col gap-[0.45rem] p-0 m-0"
+        >
           <li
             i18n="weather.pres.feat.all.discovery|@@weatherPresFeatAllDiscovery"
           >
@@ -366,8 +416,13 @@
       </div>
 
       <!-- Expert -->
-      <div class="level-card level-expert glass" appSlideIn>
-        <div class="level-badge">
+      <div
+        class="level-card level-expert glass rounded-[1.25rem] p-8 flex flex-col relative overflow-hidden"
+        appSlideIn
+      >
+        <div
+          class="level-badge inline-flex items-center gap-1.5 text-[0.72rem] font-bold uppercase tracking-[0.08em] py-1 px-3 rounded-full w-fit mb-5"
+        >
           <img
             src="assets/images/meteo/éclair-dans-un-nuage.png"
             alt=""
@@ -385,7 +440,9 @@
           Modeles de prevision, comparaison historique, CAPE, export de donnees.
           Pour ceux qui veulent tout comprendre.
         </p>
-        <ul class="level-features">
+        <ul
+          class="level-features list-none flex flex-col gap-[0.45rem] p-0 m-0"
+        >
           <li i18n="weather.pres.feat.all.curious|@@weatherPresFeatAllCurious">
             Tout le niveau Curieux
           </li>
@@ -412,49 +469,57 @@
      ══════════════════════════════════════════════════ -->
 <section class="section-wind">
   <div class="wind-layout">
-    <div class="section-header" appSlideIn style="margin-bottom: 0">
+    <div
+      class="section-header max-w-[560px] mb-12"
+      appSlideIn
+      style="margin-bottom: 0"
+    >
       <div
-        class="section-kicker"
+        class="section-kicker text-[0.78rem] font-semibold tracking-[0.14em] uppercase text-[#38bdf8] mb-2"
         i18n="weather.pres.wind.kicker|@@weatherPresWindKicker"
       >
         Vent &amp; Pression
       </div>
       <h2
-        class="section-title"
+        class="section-title font-heading italic font-extrabold tracking-tight mb-3 leading-tight text-white"
         i18n="weather.pres.wind.title|@@weatherPresWindTitle"
       >
         Sentez le vent tourner
       </h2>
       <p
-        class="section-desc"
+        class="section-desc font-light text-[rgba(255,255,255,0.7)] leading-relaxed text-[1.05rem]"
         i18n="weather.pres.wind.desc|@@weatherPresWindDesc"
       >
         Boussole interactive, rafales, direction — ideal avant une sortie en
         mer, une randonnee ou simplement savoir si votre terrasse sera agreable.
       </p>
-      <div class="wind-stats" appSlideIn>
-        <div class="wind-stat glass">
+      <div class="wind-stats flex gap-4 mt-6" appSlideIn>
+        <div class="wind-stat glass flex-1 rounded-xl p-3 text-center">
           <div
-            class="wind-stat-label"
+            class="wind-stat-label text-[0.65rem] font-semibold uppercase tracking-[0.06em] text-[rgba(255,255,255,0.5)] mb-1"
             i18n="weather.pres.wind.gusts|@@weatherPresWindGusts"
           >
             Rafales
           </div>
-          <div class="wind-stat-value">{{ current.wind_gusts_10m }} km/h</div>
+          <div class="wind-stat-value text-[1.15rem] font-semibold text-white">
+            {{ current.wind_gusts_10m }} km/h
+          </div>
         </div>
-        <div class="wind-stat glass">
+        <div class="wind-stat glass flex-1 rounded-xl p-3 text-center">
           <div
-            class="wind-stat-label"
+            class="wind-stat-label text-[0.65rem] font-semibold uppercase tracking-[0.06em] text-[rgba(255,255,255,0.5)] mb-1"
             i18n="weather.pres.wind.pressure|@@weatherPresWindPressure"
           >
             Pression
           </div>
-          <div class="wind-stat-value">{{ current.pressure_msl }} hPa</div>
+          <div class="wind-stat-value text-[1.15rem] font-semibold text-white">
+            {{ current.pressure_msl }} hPa
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="compass-wrap" appSlideIn>
+    <div class="flex justify-center" appSlideIn>
       <app-wind-compass
         [speed]="current.wind_speed_10m"
         [direction]="current.wind_direction_10m ?? 0"
@@ -470,7 +535,7 @@
      ══════════════════════════════════════════════════ -->
 <section class="section-air">
   <div class="air-layout">
-    <div class="air-cards" appSlideIn>
+    <div class="flex flex-col" appSlideIn>
       <app-uv-index-card
         [uvIndex]="current.uv_index ?? 0"
         [hourlyUv]="(hourly.uv_index ?? []).slice(0, 24)"
@@ -483,20 +548,27 @@
       </div>
     </div>
 
-    <div class="section-header" appSlideIn style="margin-bottom: 0">
+    <div
+      class="section-header max-w-[560px] mb-12"
+      appSlideIn
+      style="margin-bottom: 0"
+    >
       <div
-        class="section-kicker"
+        class="section-kicker text-[0.78rem] font-semibold tracking-[0.14em] uppercase text-[#38bdf8] mb-2"
         i18n="weather.pres.air.kicker|@@weatherPresAirKicker"
       >
         Qualite de l'air
       </div>
       <h2
-        class="section-title"
+        class="section-title font-heading italic font-extrabold tracking-tight mb-3 leading-tight text-white"
         i18n="weather.pres.air.title|@@weatherPresAirTitle"
       >
         Respirez en confiance
       </h2>
-      <p class="section-desc" i18n="weather.pres.air.desc|@@weatherPresAirDesc">
+      <p
+        class="section-desc font-light text-[rgba(255,255,255,0.7)] leading-relaxed text-[1.05rem]"
+        i18n="weather.pres.air.desc|@@weatherPresAirDesc"
+      >
         Indice AQI europeen, particules fines, ozone — pour savoir si c'est le
         bon jour pour courir, jouer dehors avec les enfants ou ouvrir les
         fenetres.
@@ -511,7 +583,7 @@
 <section class="section-cta">
   <div class="cta-inner">
     <img
-      class="cta-icon"
+      class="cta-icon w-16 h-16 mx-auto mb-6"
       appSlideIn
       src="assets/images/meteo/été.png"
       alt=""
@@ -519,14 +591,14 @@
       height="64"
     />
     <h2
-      class="cta-title"
+      class="cta-title font-heading italic font-extrabold tracking-tight mb-4 leading-tight text-white"
       appSlideIn
       i18n="weather.pres.cta.title|@@weatherPresCtaTitle"
     >
       Pret a ne plus etre surpris par la meteo ?
     </h2>
     <p
-      class="cta-desc"
+      class="cta-desc font-light text-[rgba(255,255,255,0.5)] leading-relaxed mb-10 text-[1.05rem]"
       appSlideIn
       i18n="weather.pres.cta.desc|@@weatherPresCtaDesc"
     >
@@ -542,7 +614,7 @@
       >
     </div>
     <p
-      class="cta-trust"
+      class="cta-trust mt-6 text-[0.78rem] text-[rgba(255,255,255,0.35)]"
       appSlideIn
       i18n="weather.pres.cta.trust|@@weatherPresCtaTrust"
     >
