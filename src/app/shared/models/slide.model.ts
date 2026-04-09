@@ -16,6 +16,8 @@ export interface Slide {
   bullets?: string[];
   table?: SlideTable;
   image?: string;
+  imageUrl?: string;
+  imageAlt?: string;
   notes?: string;
   promptTemplate?: PromptTemplate;
 }
