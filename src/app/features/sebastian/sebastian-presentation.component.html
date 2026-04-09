@@ -1,0 +1,810 @@
+<!-- ══════════════════════════════════════════════════
+     HERO — Live Dashboard Experience (100vh, dark lounge)
+     ══════════════════════════════════════════════════ -->
+<section class="hero" id="top">
+  <div class="noise-overlay"></div>
+  <div class="hero-glow-gold"></div>
+  <div class="hero-glow-teal"></div>
+  <div class="hero-glow-rose"></div>
+
+  <div class="hero-inner">
+    <!-- Texte -->
+    <div class="hero-text">
+      <div class="hero-kicker">
+        <span class="hero-kicker-dot"></span>
+        Sebastian
+      </div>
+      <h1 i18n="sebastian.pres.headline|@@sebastianPresHeadline">
+        Gardez le <span class="accent-word">controle</span>
+        sur vos habitudes
+      </h1>
+      <p class="hero-desc" i18n="sebastian.pres.desc|@@sebastianPresDesc">
+        Cafe, alcool — suivez votre consommation au quotidien, fixez vos limites
+        et regardez votre score de sante evoluer.
+      </p>
+      <div class="hero-actions">
+        <a
+          routerLink="/login"
+          class="btn-gold"
+          i18n="sebastian.pres.cta.start|@@sebastianPresCtaStart"
+          >Commencer gratuitement</a
+        >
+        <a
+          href="#how"
+          class="btn-outline-light"
+          i18n="sebastian.pres.cta.discover|@@sebastianPresCtaDiscover"
+          >Decouvrir &#8595;</a
+        >
+      </div>
+    </div>
+
+    <!-- Apercu du dashboard -->
+    <div class="hero-preview" appSlideIn>
+      <!-- Carte jauge principale -->
+      <div class="preview-card preview-gauge-card" #gaugeCard>
+        <div
+          class="preview-label"
+          i18n="sebastian.pres.gauge.label|@@sebastianPresGaugeLabel"
+        >
+          Score de sante
+        </div>
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient
+                id="gaugeGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+              >
+                <stop offset="0%" stop-color="#c49a47" />
+                <stop offset="100%" stop-color="#d4a854" />
+              </linearGradient>
+            </defs>
+            <circle class="gauge-track" cx="50" cy="50" r="45" />
+            <circle
+              class="gauge-glow"
+              cx="50"
+              cy="50"
+              r="45"
+              [attr.stroke-dashoffset]="gaugeOffset()"
+            />
+            <circle
+              class="gauge-arc gauge-arc--gold"
+              cx="50"
+              cy="50"
+              r="45"
+              [attr.stroke-dashoffset]="gaugeOffset()"
+            />
+          </svg>
+          <div class="gauge-center">
+            <span class="gauge-score">{{ gaugeValue() }}</span>
+            <span
+              class="gauge-score-label"
+              i18n="sebastian.pres.gauge.outof|@@sebastianPresGaugeOutOf"
+              >sur 100</span
+            >
+            <div class="gauge-status-badge">
+              <span class="gauge-status-dot"></span>
+              <span
+                i18n="sebastian.pres.gauge.status|@@sebastianPresGaugeStatus"
+                >Bonne forme</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons d'ajout rapide -->
+        <div class="quick-add">
+          <button
+            class="quick-btn quick-btn--beer"
+            type="button"
+            i18n-aria-label="
+              sebastian.pres.quick.beer.aria|@@sebastianPresQuickBeerAria"
+            aria-label="Ajouter une biere"
+          >
+            <span class="quick-btn-emoji" aria-hidden="true">&#127866;</span>
+            <span i18n="sebastian.pres.quick.beer|@@sebastianPresQuickBeer"
+              >+1 Biere</span
+            >
+          </button>
+          <button
+            class="quick-btn quick-btn--wine"
+            type="button"
+            i18n-aria-label="
+              sebastian.pres.quick.wine.aria|@@sebastianPresQuickWineAria"
+            aria-label="Ajouter un vin"
+          >
+            <span class="quick-btn-emoji" aria-hidden="true">&#127863;</span>
+            <span i18n="sebastian.pres.quick.wine|@@sebastianPresQuickWine"
+              >+1 Vin</span
+            >
+          </button>
+          <button
+            class="quick-btn quick-btn--coffee"
+            type="button"
+            i18n-aria-label="
+              sebastian.pres.quick.coffee.aria|@@sebastianPresQuickCoffeeAria"
+            aria-label="Ajouter un cafe"
+          >
+            <span class="quick-btn-emoji" aria-hidden="true">&#9749;</span>
+            <span i18n="sebastian.pres.quick.coffee|@@sebastianPresQuickCoffee"
+              >+1 Cafe</span
+            >
+          </button>
+        </div>
+
+        <!-- Barres de progression journalieres -->
+        <div class="daily-progress">
+          <div class="daily-row">
+            <span class="daily-icon" aria-hidden="true">&#9749;</span>
+            <span
+              class="daily-label"
+              i18n="sebastian.pres.daily.coffee|@@sebastianPresDailyCoffee"
+              >Cafe</span
+            >
+            <div class="daily-track">
+              <div
+                class="daily-fill daily-fill--coffee"
+                [style.width]="coffeePercent()"
+              ></div>
+            </div>
+            <span class="daily-value daily-value--coffee"
+              >{{ dailyCounts.coffee.current }}/{{
+                dailyCounts.coffee.goal
+              }}</span
+            >
+          </div>
+          <div class="daily-row">
+            <span class="daily-icon" aria-hidden="true">&#127863;</span>
+            <span
+              class="daily-label"
+              i18n="sebastian.pres.daily.alcohol|@@sebastianPresDailyAlcohol"
+              >Alcool</span
+            >
+            <div class="daily-track">
+              <div
+                class="daily-fill daily-fill--alcohol"
+                [style.width]="alcoholPercent()"
+              ></div>
+            </div>
+            <span class="daily-value daily-value--alcohol"
+              >{{ dailyCounts.alcohol.current }}/{{
+                dailyCounts.alcohol.goal
+              }}</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Carte BAC -->
+      <div class="preview-card preview-bac-card">
+        <div
+          class="preview-label"
+          i18n="sebastian.pres.bac.label|@@sebastianPresBacLabel"
+        >
+          Alcoolemie
+        </div>
+        <div class="bac-reading">
+          <div class="bac-number">{{ bac.currentBac }}</div>
+          <div class="bac-unit">g/L</div>
+          <div class="bac-timer">
+            <span aria-hidden="true">&#9201;</span>
+            <span i18n="sebastian.pres.bac.timer|@@sebastianPresBacTimer"
+              >Sobre dans 1h20</span
+            >
+          </div>
+        </div>
+        <svg
+          class="bac-curve"
+          viewBox="0 0 160 50"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            class="bac-area"
+            d="M0,45 Q20,8 45,15 T95,25 T160,45 L160,50 L0,50 Z"
+          />
+          <path class="bac-line" d="M0,45 Q20,8 45,15 T95,25 T160,45" />
+          <circle class="bac-dot" cx="45" cy="15" r="3" />
+        </svg>
+      </div>
+
+      <!-- Carte streak -->
+      <div class="preview-card preview-streak-card">
+        <div
+          class="preview-label"
+          i18n="sebastian.pres.streak.label|@@sebastianPresStreakLabel"
+        >
+          Serie en cours
+        </div>
+        <div class="streak-number">{{ healthScore.streaks.alcohol }}</div>
+        <div
+          class="streak-label"
+          i18n="sebastian.pres.streak.sublabel|@@sebastianPresStreakSublabel"
+        >
+          jours sous la limite
+        </div>
+        <div class="streak-dots">
+          @for (i of [1, 2, 3, 4, 5, 6, 7]; track i) {
+            <div
+              class="streak-dot"
+              [class.active]="i <= healthScore.streaks.alcohol"
+            ></div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de scroll -->
+  <div class="scroll-hint" aria-hidden="true">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+    </svg>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     COMMENT CA MARCHE — 3 etapes
+     ══════════════════════════════════════════════════ -->
+<section class="section-steps" id="how">
+  <div class="section-header" appSlideIn>
+    <div
+      class="section-kicker"
+      i18n="sebastian.pres.steps.kicker|@@sebastianPresStepsKicker"
+    >
+      Comment ca marche
+    </div>
+    <h2
+      class="section-title"
+      i18n="sebastian.pres.steps.title|@@sebastianPresStepsTitle"
+    >
+      Simple comme 1, 2, 3
+    </h2>
+  </div>
+
+  <div class="steps-grid">
+    <div class="step-card" appSlideIn>
+      <div class="step-number">1</div>
+      <div class="step-icon-wrap">
+        <img
+          src="assets/icons/badges/espresso-machine.png"
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+        />
+      </div>
+      <h3 i18n="sebastian.pres.step1.title|@@sebastianPresStep1Title">
+        Logguez en un tap
+      </h3>
+      <p i18n="sebastian.pres.step1.desc|@@sebastianPresStep1Desc">
+        Biere, vin, cafe — ajoutez votre consommation en une seconde avec les
+        boutons rapides.
+      </p>
+    </div>
+    <div class="step-card" appSlideIn>
+      <div class="step-number">2</div>
+      <div class="step-icon-wrap">
+        <img
+          src="assets/images/auto_graph.png"
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+        />
+      </div>
+      <h3 i18n="sebastian.pres.step2.title|@@sebastianPresStep2Title">
+        Suivez vos tendances
+      </h3>
+      <p i18n="sebastian.pres.step2.desc|@@sebastianPresStep2Desc">
+        Courbes, heatmaps, rapports hebdomadaires. Comprenez vos habitudes en un
+        coup d'oeil.
+      </p>
+    </div>
+    <div class="step-card" appSlideIn>
+      <div class="step-number">3</div>
+      <div class="step-icon-wrap">
+        <img
+          src="assets/icons/badges/goal-crusher.png"
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+        />
+      </div>
+      <h3 i18n="sebastian.pres.step3.title|@@sebastianPresStep3Title">
+        Atteignez vos objectifs
+      </h3>
+      <p i18n="sebastian.pres.step3.desc|@@sebastianPresStep3Desc">
+        Fixez vos limites quotidiennes, debloquez des badges et ameliorez votre
+        score de sante.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     FEATURE 1 — Score de sante (grande jauge)
+     ══════════════════════════════════════════════════ -->
+<section class="section-feat-score" id="features">
+  <div class="feat-score-inner">
+    <div class="feat-score-visual" appSlideIn>
+      <div class="feat-gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient
+              id="featGaugeGrad"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="0%"
+            >
+              <stop offset="0%" stop-color="#4fb3a2" />
+              <stop offset="60%" stop-color="#d4a854" />
+            </linearGradient>
+          </defs>
+          <circle
+            class="gauge-track gauge-track--light"
+            cx="50"
+            cy="50"
+            r="45"
+          />
+          <circle
+            class="gauge-arc gauge-arc--feat"
+            cx="50"
+            cy="50"
+            r="45"
+            [attr.stroke-dashoffset]="gaugeOffset()"
+          />
+        </svg>
+        <div class="gauge-center">
+          <span class="feat-gauge-score">{{ healthScore.score }}</span>
+          <span
+            class="feat-gauge-label"
+            i18n="sebastian.pres.feat.gauge.label|@@sebastianPresFeatGaugeLabel"
+            >Score de sante</span
+          >
+        </div>
+      </div>
+      <div class="feat-progress-bar">
+        <div class="feat-progress-label">
+          <span i18n="sebastian.pres.feat.progress|@@sebastianPresFeatProgress"
+            >Progression cette semaine</span
+          >
+          <span class="feat-progress-value">+4 pts</span>
+        </div>
+        <div class="feat-progress-track">
+          <div class="feat-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-score-text" appSlideIn>
+      <h2 i18n="sebastian.pres.feat.score.title|@@sebastianPresFeatScoreTitle">
+        Votre sante en un chiffre
+      </h2>
+      <p i18n="sebastian.pres.feat.score.desc|@@sebastianPresFeatScoreDesc">
+        Le Score de Sante agrege votre consommation quotidienne, vos objectifs
+        atteints et votre regularite. Il evolue chaque jour — montez-le en
+        gardant le controle, descendez-le en depassant vos limites.
+      </p>
+      <div class="feat-score-metrics">
+        <div class="metric">
+          <div class="metric-value metric-value--gold">
+            {{ healthScore.score }}
+          </div>
+          <div
+            class="metric-label"
+            i18n="sebastian.pres.metric.current|@@sebastianPresMetricCurrent"
+          >
+            Score actuel
+          </div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">+12</div>
+          <div
+            class="metric-label"
+            i18n="sebastian.pres.metric.vs|@@sebastianPresMetricVs"
+          >
+            vs. mois dernier
+          </div>
+        </div>
+        <div class="metric">
+          <div class="metric-value metric-value--warning">92</div>
+          <div
+            class="metric-label"
+            i18n="sebastian.pres.metric.record|@@sebastianPresMetricRecord"
+          >
+            Record personnel
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     FEATURE 2 — Suivi quotidien (cartes cafe / alcool)
+     ══════════════════════════════════════════════════ -->
+<section class="section-feat-tracking">
+  <div class="feat-tracking-inner">
+    <div class="feat-tracking-text" appSlideIn>
+      <h2
+        i18n="
+          sebastian.pres.feat.tracking.title|@@sebastianPresFeatTrackingTitle"
+      >
+        Sachez quand ralentir
+      </h2>
+      <p
+        i18n="sebastian.pres.feat.tracking.desc|@@sebastianPresFeatTrackingDesc"
+      >
+        Chaque cafe, chaque verre est comptabilise. Vos limites quotidiennes
+        sont visibles d'un coup d'oeil — quand la barre approche la fin, vous
+        savez qu'il est temps de lever le pied.
+      </p>
+      <div class="fab-hint">
+        <div class="fab-preview" aria-hidden="true">+</div>
+        <div>
+          <div
+            class="fab-title"
+            i18n="sebastian.pres.fab.title|@@sebastianPresFabTitle"
+          >
+            Ajout rapide
+          </div>
+          <div
+            class="fab-subtitle"
+            i18n="sebastian.pres.fab.desc|@@sebastianPresFabDesc"
+          >
+            Un tap sur le FAB, c'est loggue.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tracking-cards" appSlideIn>
+      <!-- Carte cafe -->
+      <div class="tracking-card">
+        <div class="tracking-card-header">
+          <div class="tracking-card-title">
+            <img
+              src="assets/icons/badges/espresso-machine.png"
+              alt=""
+              width="28"
+              height="28"
+              loading="lazy"
+            />
+            <span
+              i18n="
+                sebastian.pres.track.coffee.title|@@sebastianPresTrackCoffeeTitle"
+              >Cafe du jour</span
+            >
+          </div>
+          <span class="tracking-count tracking-count--coffee"
+            >{{ dailyCounts.coffee.current }}/{{
+              dailyCounts.coffee.goal
+            }}</span
+          >
+        </div>
+        <div class="tracking-bar-track">
+          <div
+            class="tracking-bar-fill tracking-bar-fill--coffee"
+            [style.width]="coffeePercent()"
+          ></div>
+        </div>
+        <div class="tracking-bar-labels">
+          <span>0</span>
+          <span
+            i18n="
+              sebastian.pres.track.coffee.limit|@@sebastianPresTrackCoffeeLimit"
+            >Limite : {{ dailyCounts.coffee.goal }} cafes</span
+          >
+        </div>
+        <div class="tracking-quick-btns">
+          <button
+            class="tracking-quick-btn tracking-quick-btn--coffee-btn"
+            type="button"
+            i18n="sebastian.pres.track.espresso|@@sebastianPresTrackEspresso"
+          >
+            +1 Espresso
+          </button>
+          <button
+            class="tracking-quick-btn tracking-quick-btn--coffee-btn"
+            type="button"
+            i18n="sebastian.pres.track.lungo|@@sebastianPresTrackLungo"
+          >
+            +1 Lungo
+          </button>
+        </div>
+      </div>
+
+      <!-- Carte alcool -->
+      <div class="tracking-card">
+        <div class="tracking-card-header">
+          <div class="tracking-card-title">
+            <img
+              src="assets/icons/badges/dry-week.png"
+              alt=""
+              width="28"
+              height="28"
+              loading="lazy"
+            />
+            <span
+              i18n="
+                sebastian.pres.track.alcohol.title|@@sebastianPresTrackAlcoholTitle"
+              >Alcool du jour</span
+            >
+          </div>
+          <span class="tracking-count tracking-count--alcohol"
+            >{{ dailyCounts.alcohol.current }}/{{
+              dailyCounts.alcohol.goal
+            }}</span
+          >
+        </div>
+        <div class="tracking-bar-track">
+          <div
+            class="tracking-bar-fill tracking-bar-fill--alcohol"
+            [style.width]="alcoholPercent()"
+          ></div>
+        </div>
+        <div class="tracking-bar-labels">
+          <span>0</span>
+          <span
+            i18n="
+              sebastian.pres.track.alcohol.limit|@@sebastianPresTrackAlcoholLimit"
+            >Limite : {{ dailyCounts.alcohol.goal }} verres</span
+          >
+        </div>
+        <div class="tracking-quick-btns">
+          <button
+            class="tracking-quick-btn tracking-quick-btn--beer"
+            type="button"
+            i18n="sebastian.pres.track.beer|@@sebastianPresTrackBeer"
+          >
+            +1 Biere ambree
+          </button>
+          <button
+            class="tracking-quick-btn tracking-quick-btn--wine"
+            type="button"
+            i18n="sebastian.pres.track.wine|@@sebastianPresTrackWine"
+          >
+            +1 Vin rose
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     FEATURE 3 — Rapports / Heatmap
+     ══════════════════════════════════════════════════ -->
+<section class="section-feat-reports">
+  <div class="feat-reports-inner">
+    <div appSlideIn>
+      <!-- Heatmap -->
+      <div class="heatmap-card">
+        <div class="heatmap-header">
+          <span
+            class="heatmap-title"
+            i18n="sebastian.pres.heatmap.title|@@sebastianPresHeatmapTitle"
+            >Activite — Mars 2026</span
+          >
+          <div class="heatmap-legend">
+            <span i18n="sebastian.pres.heatmap.low|@@sebastianPresHeatmapLow"
+              >Peu</span
+            >
+            <div
+              class="heatmap-legend-cell"
+              style="background: rgba(79, 179, 162, 0.1)"
+            ></div>
+            <div
+              class="heatmap-legend-cell"
+              style="background: rgba(79, 179, 162, 0.3)"
+            ></div>
+            <div
+              class="heatmap-legend-cell"
+              style="background: rgba(79, 179, 162, 0.6)"
+            ></div>
+            <div
+              class="heatmap-legend-cell"
+              style="background: rgba(79, 179, 162, 1)"
+            ></div>
+            <span i18n="sebastian.pres.heatmap.high|@@sebastianPresHeatmapHigh"
+              >Beaucoup</span
+            >
+          </div>
+        </div>
+        <div class="heatmap-days">
+          @for (label of heatmapDayLabels; track label) {
+            <span class="heatmap-day-label">{{ label }}</span>
+          }
+        </div>
+        <div class="heatmap-grid">
+          @for (point of heatmap; track point.date) {
+            <div
+              class="heatmap-cell"
+              [class.heatmap-cell--empty]="getHeatmapLevel(point) === 0"
+              [class.heatmap-cell--l1]="getHeatmapLevel(point) === 1"
+              [class.heatmap-cell--l2]="getHeatmapLevel(point) === 2"
+              [class.heatmap-cell--l3]="getHeatmapLevel(point) === 3"
+              [class.heatmap-cell--l4]="getHeatmapLevel(point) === 4"
+            ></div>
+          }
+        </div>
+      </div>
+
+      <!-- Trend chart hebdomadaire -->
+      <div class="trend-chart">
+        <div
+          class="trend-chart-header"
+          i18n="sebastian.pres.trend.title|@@sebastianPresTrendTitle"
+        >
+          Tendance hebdomadaire
+        </div>
+        <div class="trend-bars">
+          @for (point of trends.dataPoints; track point.date; let i = $index) {
+            <div class="trend-bar-group">
+              <div
+                class="trend-bar trend-bar--coffee"
+                [style.height.%]="
+                  (point.coffee / trends.objectives.coffee) * 80
+                "
+              ></div>
+              <div
+                class="trend-bar trend-bar--alcohol"
+                [style.height.%]="
+                  (point.alcohol / trends.objectives.alcohol) * 80
+                "
+              ></div>
+              <span class="trend-bar-label">{{ trendDayLabels[i] }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-reports-text" appSlideIn>
+      <h2
+        i18n="sebastian.pres.feat.reports.title|@@sebastianPresFeatReportsTitle"
+      >
+        Visualisez vos tendances
+      </h2>
+      <p i18n="sebastian.pres.feat.reports.desc|@@sebastianPresFeatReportsDesc">
+        La heatmap revele vos jours forts et vos jours faibles. Les rapports
+        hebdomadaires et mensuels comparent vos periodes et montrent l'evolution
+        dans le temps.
+      </p>
+      <div class="trend-pills">
+        <div class="trend-pill trend-pill--down">
+          <span i18n="sebastian.pres.trend.alcohol|@@sebastianPresTrendAlcohol"
+            >&#8595; -18% alcool vs. sem. derniere</span
+          >
+        </div>
+        <div class="trend-pill trend-pill--up">
+          <span i18n="sebastian.pres.trend.coffee|@@sebastianPresTrendCoffee"
+            >&#8593; +2 cafes vs. sem. derniere</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     BADGE WALL — Les 10 badges
+     ══════════════════════════════════════════════════ -->
+<section class="section-badges">
+  <div class="section-header" appSlideIn>
+    <div
+      class="section-kicker"
+      i18n="sebastian.pres.badges.kicker|@@sebastianPresBadgesKicker"
+    >
+      Gamification
+    </div>
+    <h2
+      class="section-title"
+      i18n="sebastian.pres.badges.title|@@sebastianPresBadgesTitle"
+    >
+      Debloquez des badges
+    </h2>
+    <p
+      class="section-desc"
+      i18n="sebastian.pres.badges.desc|@@sebastianPresBadgesDesc"
+    >
+      Chaque bonne habitude vous rapproche d'un nouveau badge. Survolez-les pour
+      voir ce qui vous attend.
+    </p>
+  </div>
+
+  <div class="badge-gallery" appSlideIn>
+    @for (badge of badges; track badge.key) {
+      <app-sebastian-badge-card [badge]="badge" />
+    }
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     CTA FINAL — Sombre, percutant
+     ══════════════════════════════════════════════════ -->
+<section class="section-cta">
+  <div class="noise-overlay"></div>
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <h2 appSlideIn i18n="sebastian.pres.cta.title|@@sebastianPresCtaTitle">
+      Pret a mieux vous connaitre ?
+    </h2>
+    <p appSlideIn i18n="sebastian.pres.cta.desc|@@sebastianPresCtaDesc">
+      Creez votre compte et commencez a suivre vos habitudes des aujourd'hui.
+      Votre score de sante n'attend que vous.
+    </p>
+    <div class="cta-badges-preview" appSlideIn>
+      <img
+        class="cta-badge-mini"
+        src="assets/icons/badges/first-log.png"
+        alt=""
+        width="36"
+        height="36"
+        loading="lazy"
+      />
+      <img
+        class="cta-badge-mini"
+        src="assets/icons/badges/espresso-machine.png"
+        alt=""
+        width="36"
+        height="36"
+        loading="lazy"
+      />
+      <img
+        class="cta-badge-mini"
+        src="assets/icons/badges/dry-week.png"
+        alt=""
+        width="36"
+        height="36"
+        loading="lazy"
+      />
+      <img
+        class="cta-badge-mini"
+        src="assets/icons/badges/goal-crusher.png"
+        alt=""
+        width="36"
+        height="36"
+        loading="lazy"
+      />
+      <img
+        class="cta-badge-mini"
+        src="assets/icons/badges/zen-monk-7.png"
+        alt=""
+        width="36"
+        height="36"
+        loading="lazy"
+      />
+    </div>
+    <div appSlideIn>
+      <a
+        routerLink="/login"
+        class="btn-gold"
+        i18n="sebastian.pres.cta.final|@@sebastianPresCtaFinal"
+        >Commencer gratuitement</a
+      >
+    </div>
+    <p
+      class="cta-trust"
+      appSlideIn
+      i18n="sebastian.pres.cta.trust|@@sebastianPresCtaTrust"
+    >
+      Gratuit — Aucune carte bancaire requise
+    </p>
+  </div>
+</section>
