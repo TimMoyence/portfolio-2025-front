@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser, SlicePipe } from "@angular/common";
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -24,7 +24,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
 @Component({
   selector: "app-slide-viewer",
   standalone: true,
-  imports: [SvgIconComponent, RouterModule],
+  imports: [SvgIconComponent, RouterModule, SlicePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (!isPresenting()) {
