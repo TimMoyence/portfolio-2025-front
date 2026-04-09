@@ -13,34 +13,40 @@ import {
 import { RouterModule } from "@angular/router";
 import { SvgIconComponent } from "../svg-icon.component";
 import type { PromptTemplate, Slide } from "../../models/slide.model";
+import { SlideHeroComponent } from "./templates/slide-hero.component";
+import { SlideSplitComponent } from "./templates/slide-split.component";
+import { SlideStatsComponent } from "./templates/slide-stats.component";
+import { SlideGridComponent } from "./templates/slide-grid.component";
+import { SlideComparisonComponent } from "./templates/slide-comparison.component";
+import { SlideQuoteComponent } from "./templates/slide-quote.component";
+import { SlideDemoComponent } from "./templates/slide-demo.component";
+import { SlideCtaComponent } from "./templates/slide-cta.component";
 
 /**
  * Composant de visualisation de slides en dual-mode :
  * - Mode scroll : tous les slides affichés verticalement avec snap scroll (100vh par slide)
  * - Mode présentation : vue plein écran focalisée sur le slide courant
+ *
+ * Délègue le rendu à 8 sous-composants template selon le layout de chaque slide.
  */
 @Component({
   selector: "app-slide-viewer",
   standalone: true,
-  imports: [SvgIconComponent, RouterModule, SlicePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-    `
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(24px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .slide-card {
-        animation: fadeInUp 0.5s ease-out both;
-      }
-    `,
+  imports: [
+    SvgIconComponent,
+    RouterModule,
+    SlicePipe,
+    SlideHeroComponent,
+    SlideSplitComponent,
+    SlideStatsComponent,
+    SlideGridComponent,
+    SlideComparisonComponent,
+    SlideQuoteComponent,
+    SlideDemoComponent,
+    SlideCtaComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: "./slide-viewer.component.scss",
   template: `
     @if (!isPresenting()) {
       <!-- ===== MODE SCROLL ===== -->
@@ -97,344 +103,87 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
         </div>
 
         <!-- Slides — snap scroll container -->
-        <div class="snap-y snap-mandatory">
+        <div class="scroll-container">
           @for (slide of slides(); track slide.id; let i = $index) {
             <section
               [attr.data-slide-id]="slide.id"
               [attr.id]="'slide-anchor-' + i"
               [attr.aria-labelledby]="'slide-title-' + i"
-              class="min-h-[calc(100vh-8rem)] lg:min-h-[calc(100vh-9rem)] snap-start flex flex-col py-4 px-4 sm:px-6 scroll-mt-32 lg:scroll-mt-36 slide-card bg-white"
-              [style.animation-delay]="i * 0.06 + 's'"
+              class="min-h-[calc(100vh-8rem)] lg:min-h-[calc(100vh-9rem)] snap-start flex flex-col scroll-mt-32 lg:scroll-mt-36"
             >
-              <div
-                class="w-full max-w-6xl mx-auto flex-1 flex flex-col min-h-0"
-              >
-                @if (slide.table || slide.promptTemplate) {
-                  <!-- Full-width layout for table/prompt slides -->
-                  <div
-                    class="flex-1 rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden flex flex-col"
-                  >
-                    <div
-                      class="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-10"
-                    >
-                      <span
-                        class="text-[11px] font-bold uppercase tracking-widest text-scheme-accent mb-2"
-                      >
-                        {{ i + 1 }}/{{ slides().length }}
-                      </span>
-                      <h2
-                        [attr.id]="'slide-title-' + i"
-                        data-slide-title
-                        class="font-heading text-h4 sm:text-h3 text-gray-900 leading-tight"
-                      >
-                        {{ slide.title }}
-                      </h2>
-                      @if (slide.subtitle) {
-                        <p class="mt-2 text-base text-gray-500 leading-relaxed">
-                          {{ slide.subtitle }}
-                        </p>
-                      }
-
-                      @if (slide.bullets && slide.bullets.length > 0) {
-                        <ul class="mt-5 space-y-3">
-                          @for (bullet of slide.bullets; track $index) {
-                            <li
-                              class="flex items-start gap-3 text-[15px] text-gray-700 leading-relaxed"
-                            >
-                              <span
-                                class="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-scheme-accent"
-                                aria-hidden="true"
-                              ></span>
-                              <span>{{ bullet }}</span>
-                            </li>
-                          }
-                        </ul>
-                      }
-
-                      @if (slide.table) {
-                        <div
-                          class="mt-5 overflow-x-auto rounded-xl border border-gray-100"
-                        >
-                          <table class="w-full text-sm">
-                            <thead>
-                              <tr class="bg-gray-50">
-                                @for (
-                                  header of slide.table.headers;
-                                  track $index
-                                ) {
-                                  <th
-                                    class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
-                                  >
-                                    {{ header }}
-                                  </th>
-                                }
-                              </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50">
-                              @for (row of slide.table.rows; track $index) {
-                                <tr
-                                  class="transition-colors hover:bg-gray-50/50"
-                                >
-                                  @for (
-                                    cell of row;
-                                    track $index;
-                                    let first = $first
-                                  ) {
-                                    <td
-                                      class="px-4 py-3 text-gray-700"
-                                      [class.font-medium]="first"
-                                      [class.text-gray-900]="first"
-                                    >
-                                      {{ cell }}
-                                    </td>
-                                  }
-                                </tr>
-                              }
-                            </tbody>
-                          </table>
-                        </div>
-                      }
-
-                      @if (slide.promptTemplate) {
-                        <div
-                          data-prompt-form
-                          class="mt-5 rounded-xl border-2 border-scheme-accent/20 bg-scheme-accent/[0.03] p-5 sm:p-6"
-                        >
-                          <label
-                            [attr.for]="'sector-input-' + i"
-                            class="mb-3 block text-sm font-semibold text-gray-900"
-                          >
-                            {{ slide.promptTemplate.label }}
-                          </label>
-                          <div class="flex flex-col sm:flex-row gap-3">
-                            <input
-                              [attr.id]="'sector-input-' + i"
-                              type="text"
-                              [placeholder]="slide.promptTemplate.placeholder"
-                              [value]="sectorInput()"
-                              (input)="
-                                sectorInput.set($any($event.target).value)
-                              "
-                              class="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-scheme-accent focus:outline-none focus:ring-2 focus:ring-scheme-accent/20"
-                            />
-                            <button
-                              type="button"
-                              class="rounded-xl bg-scheme-accent px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-scheme-accent-hover hover:shadow active:scale-[0.98]"
-                              (click)="generatePrompt(slide.promptTemplate)"
-                              i18n
-                            >
-                              Générer le prompt
-                            </button>
-                          </div>
-                          @if (generatedPrompt()) {
-                            <div class="mt-4 space-y-3">
-                              <div
-                                class="max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white p-4 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap"
-                              >
-                                {{ generatedPrompt() }}
-                              </div>
-                              <button
-                                type="button"
-                                class="inline-flex items-center gap-1.5 rounded-full border border-scheme-accent/30 bg-scheme-accent/10 px-4 py-2 text-xs font-semibold text-scheme-accent transition hover:bg-scheme-accent/20"
-                                (click)="copyPrompt()"
-                              >
-                                {{ copied() ? "Copié !" : "Copier le prompt" }}
-                              </button>
-                            </div>
-                          }
-                        </div>
-                      }
-
-                      @if (slide.notes) {
-                        <div class="mt-5 border-t border-gray-100 pt-4">
-                          <button
-                            type="button"
-                            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
-                            [attr.aria-expanded]="expandedNotes().has(i)"
-                            [attr.aria-controls]="'notes-' + i"
-                            (click)="toggleNotes(i)"
-                          >
-                            <app-svg-icon
-                              name="chevron-down"
-                              [size]="0.65"
-                              class="transition-transform duration-200"
-                              [class.rotate-180]="expandedNotes().has(i)"
-                            />
-                            <span i18n>Notes</span>
-                          </button>
-                          @if (expandedNotes().has(i)) {
-                            <div
-                              [attr.id]="'notes-' + i"
-                              class="mt-2 rounded-xl bg-gray-50 p-4 text-xs leading-relaxed text-gray-500"
-                            >
-                              {{ slide.notes }}
-                            </div>
-                          }
-                        </div>
-                      }
-                    </div>
-                  </div>
-                } @else {
-                  <!-- Split layout: content LEFT, image RIGHT -->
-                  <div
-                    class="flex-1 rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden flex flex-col md:flex-row"
-                  >
-                    <!-- Left: content 55% -->
-                    <div
-                      class="flex-1 md:w-[55%] md:flex-none flex flex-col justify-center p-6 sm:p-8 lg:p-10"
-                    >
-                      <span
-                        class="text-[11px] font-bold uppercase tracking-widest text-scheme-accent mb-2"
-                      >
-                        {{ i + 1 }}/{{ slides().length }}
-                      </span>
-                      <h2
-                        [attr.id]="'slide-title-' + i"
-                        data-slide-title
-                        class="font-heading text-h4 sm:text-h3 text-gray-900 leading-tight"
-                      >
-                        {{ slide.title }}
-                      </h2>
-                      @if (slide.subtitle) {
-                        <p class="mt-2 text-base text-gray-500 leading-relaxed">
-                          {{ slide.subtitle }}
-                        </p>
-                      }
-
-                      @if (slide.bullets && slide.bullets.length > 0) {
-                        <ul class="mt-5 space-y-3">
-                          @for (bullet of slide.bullets; track $index) {
-                            <li
-                              class="flex items-start gap-3 text-[15px] text-gray-700 leading-relaxed"
-                            >
-                              <span
-                                class="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-scheme-accent"
-                                aria-hidden="true"
-                              ></span>
-                              <span>{{ bullet }}</span>
-                            </li>
-                          }
-                        </ul>
-                      }
-
-                      @if (slide.notes) {
-                        <div class="mt-5 border-t border-gray-100 pt-4">
-                          <button
-                            type="button"
-                            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
-                            [attr.aria-expanded]="expandedNotes().has(i)"
-                            [attr.aria-controls]="'notes-' + i"
-                            (click)="toggleNotes(i)"
-                          >
-                            <app-svg-icon
-                              name="chevron-down"
-                              [size]="0.65"
-                              class="transition-transform duration-200"
-                              [class.rotate-180]="expandedNotes().has(i)"
-                            />
-                            <span i18n>Notes</span>
-                          </button>
-                          @if (expandedNotes().has(i)) {
-                            <div
-                              [attr.id]="'notes-' + i"
-                              class="mt-2 rounded-xl bg-gray-50 p-4 text-xs leading-relaxed text-gray-500"
-                            >
-                              {{ slide.notes }}
-                            </div>
-                          }
-                        </div>
-                      }
-                    </div>
-                    <!-- Right: image area 45%, dark background -->
-                    <div
-                      class="md:w-[45%] md:flex-none order-first md:order-last"
-                    >
-                      <!-- Mobile: horizontal strip -->
-                      <div
-                        class="md:hidden h-48 bg-gray-900 flex items-center justify-center"
-                      >
-                        @if (slide.imageUrl) {
-                          <img
-                            [src]="slide.imageUrl"
-                            [alt]="slide.imageAlt || slide.title"
-                            class="max-w-full max-h-full object-contain rounded-xl"
-                            loading="lazy"
-                          />
-                        } @else if (slide.image) {
-                          <img
-                            [src]="'/' + slide.image"
-                            alt=""
-                            class="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-lg"
-                            loading="lazy"
-                          />
-                        } @else {
-                          <span class="text-sm text-gray-600 font-medium">
-                            Image
-                          </span>
-                        }
-                      </div>
-                      <!-- Desktop: full height -->
-                      <div
-                        class="hidden md:flex h-full bg-gray-900 items-center justify-center p-8"
-                      >
-                        @if (slide.imageUrl) {
-                          <img
-                            [src]="slide.imageUrl"
-                            [alt]="slide.imageAlt || slide.title"
-                            class="max-w-full max-h-full object-contain rounded-xl"
-                            loading="lazy"
-                          />
-                        } @else if (slide.image) {
-                          <img
-                            [src]="'/' + slide.image"
-                            alt=""
-                            class="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-lg"
-                            loading="lazy"
-                          />
-                        } @else {
-                          <span class="text-sm text-gray-600 font-medium">
-                            Image
-                          </span>
-                        }
-                      </div>
-                    </div>
-                  </div>
+              @switch (slide.layout || "split") {
+                @case ("hero") {
+                  <app-slide-hero [slide]="slide" class="flex-1" />
                 }
-              </div>
+                @case ("split") {
+                  <app-slide-split
+                    [slide]="slide"
+                    [index]="i"
+                    [total]="slides().length"
+                    [expandedNotes]="expandedNotes()"
+                    [sectorInput]="sectorInput()"
+                    [generatedPrompt]="generatedPrompt()"
+                    [copied]="copied()"
+                    (toggleNotes)="toggleNotes($event)"
+                    (sectorChange)="sectorInput.set($event)"
+                    (generate)="generatePrompt($event)"
+                    (copyPrompt)="copyPrompt()"
+                    class="flex-1 px-4 sm:px-6 py-4"
+                  />
+                }
+                @case ("stats") {
+                  <app-slide-stats
+                    [slide]="slide"
+                    [index]="i"
+                    [total]="slides().length"
+                    class="flex-1"
+                  />
+                }
+                @case ("grid") {
+                  <app-slide-grid
+                    [slide]="slide"
+                    [index]="i"
+                    [total]="slides().length"
+                    class="flex-1"
+                  />
+                }
+                @case ("comparison") {
+                  <app-slide-comparison
+                    [slide]="slide"
+                    [index]="i"
+                    [total]="slides().length"
+                    [expandedNotes]="expandedNotes()"
+                    (toggleNotes)="toggleNotes($event)"
+                    class="flex-1 px-4 sm:px-6 py-4"
+                  />
+                }
+                @case ("quote") {
+                  <app-slide-quote [slide]="slide" class="flex-1" />
+                }
+                @case ("demo") {
+                  <app-slide-demo
+                    [slide]="slide"
+                    [index]="i"
+                    [total]="slides().length"
+                    [sectorInput]="sectorInput()"
+                    [generatedPrompt]="generatedPrompt()"
+                    [copied]="copied()"
+                    (sectorChange)="sectorInput.set($event)"
+                    (generate)="generatePrompt($event)"
+                    (copyPrompt)="copyPrompt()"
+                    class="flex-1"
+                  />
+                }
+                @case ("cta") {
+                  <app-slide-cta [slide]="slide" class="flex-1" />
+                }
+              }
             </section>
           }
-
-          <!-- CTA — dernière section snap -->
-          <section
-            class="min-h-[calc(100vh-8rem)] lg:min-h-[calc(100vh-9rem)] snap-start flex items-center justify-center bg-white"
-          >
-            <div class="px-6 py-16 text-center">
-              <p
-                class="mb-2 text-xs font-bold uppercase tracking-widest text-scheme-accent"
-                i18n
-              >
-                Prochaine étape
-              </p>
-              <h3 class="mb-4 font-heading text-h3 text-gray-900" i18n>
-                Envie d'aller plus loin ?
-              </h3>
-              <p class="mx-auto mb-8 max-w-lg text-base text-gray-500" i18n>
-                Audit gratuit, conseil personnalisé ou développement sur mesure
-                — discutons de votre projet.
-              </p>
-              <a
-                routerLink="/contact"
-                class="inline-flex items-center gap-2 rounded-full bg-scheme-accent px-8 py-3.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-scheme-accent-hover hover:shadow-lg active:scale-[0.98]"
-                i18n
-              >
-                Contactez-moi
-              </a>
-            </div>
-          </section>
         </div>
       </div>
     } @else {
-      <!-- ===== MODE PRÉSENTATION ===== -->
+      <!-- ===== MODE PRESENTATION ===== -->
       <div
         class="fixed inset-0 z-[100] flex flex-col bg-white"
         role="region"
@@ -453,228 +202,72 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
         </button>
 
         <div class="flex flex-1 overflow-y-auto">
-          @if (currentSlide().table || currentSlide().promptTemplate) {
-            <!-- Full-width layout for table/prompt in presentation mode -->
-            <div
-              class="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:px-16 md:px-24"
-            >
-              <div class="w-full max-w-4xl">
-                <h2
-                  class="font-heading text-h2 sm:text-h1 text-gray-900 leading-tight"
-                  [attr.data-slide-title]="currentSlide().title"
-                >
-                  {{ currentSlide().title }}
-                </h2>
-
-                @if (currentSlide().subtitle) {
-                  <p
-                    class="mt-4 text-lg sm:text-xl text-gray-500 leading-relaxed"
-                  >
-                    {{ currentSlide().subtitle }}
-                  </p>
-                }
-
-                @if (
-                  currentSlide().bullets && currentSlide().bullets!.length > 0
-                ) {
-                  <ul class="mt-8 space-y-5">
-                    @for (bullet of currentSlide().bullets; track $index) {
-                      <li class="flex items-start gap-4 text-lg text-gray-700">
-                        <span
-                          class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-scheme-accent"
-                          aria-hidden="true"
-                        ></span>
-                        <span class="leading-relaxed">{{ bullet }}</span>
-                      </li>
-                    }
-                  </ul>
-                }
-
-                @if (currentSlide().table) {
-                  <div
-                    class="mt-8 overflow-x-auto rounded-xl border border-gray-100"
-                  >
-                    <table class="w-full text-base">
-                      <thead>
-                        <tr class="bg-gray-50">
-                          @for (
-                            header of currentSlide().table!.headers;
-                            track $index
-                          ) {
-                            <th
-                              class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
-                            >
-                              {{ header }}
-                            </th>
-                          }
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-gray-50">
-                        @for (row of currentSlide().table!.rows; track $index) {
-                          <tr>
-                            @for (
-                              cell of row;
-                              track $index;
-                              let first = $first
-                            ) {
-                              <td
-                                class="px-5 py-4 text-gray-700"
-                                [class.font-medium]="first"
-                                [class.text-gray-900]="first"
-                              >
-                                {{ cell }}
-                              </td>
-                            }
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                }
-
-                @if (currentSlide().promptTemplate) {
-                  <div
-                    data-prompt-form
-                    class="mt-8 rounded-2xl border-2 border-scheme-accent/20 bg-scheme-accent/[0.03] p-6 sm:p-8"
-                    (click)="$event.stopPropagation()"
-                    (keydown)="$event.stopPropagation()"
-                    tabindex="-1"
-                  >
-                    <label
-                      for="sector-input-presentation"
-                      class="mb-3 block text-base font-semibold text-gray-900"
-                    >
-                      {{ currentSlide().promptTemplate!.label }}
-                    </label>
-                    <div class="flex flex-col sm:flex-row gap-3">
-                      <input
-                        id="sector-input-presentation"
-                        type="text"
-                        [placeholder]="
-                          currentSlide().promptTemplate!.placeholder
-                        "
-                        [value]="sectorInput()"
-                        (input)="sectorInput.set($any($event.target).value)"
-                        class="flex-1 rounded-xl border border-gray-200 bg-white px-5 py-3 text-base text-gray-900 placeholder:text-gray-400 focus:border-scheme-accent focus:outline-none focus:ring-2 focus:ring-scheme-accent/20"
-                      />
-                      <button
-                        type="button"
-                        class="rounded-xl bg-scheme-accent px-8 py-3 font-semibold text-white transition-all hover:bg-scheme-accent-hover"
-                        (click)="generatePrompt(currentSlide().promptTemplate!)"
-                        i18n
-                      >
-                        Générer
-                      </button>
-                    </div>
-                    @if (generatedPrompt()) {
-                      <div class="mt-4">
-                        <div
-                          class="max-h-56 overflow-y-auto rounded-xl border border-gray-200 bg-white p-5 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap"
-                        >
-                          {{ generatedPrompt() }}
-                        </div>
-                        <button
-                          type="button"
-                          class="mt-3 inline-flex items-center gap-1.5 rounded-full border border-scheme-accent/30 bg-scheme-accent/10 px-4 py-2 text-xs font-semibold text-scheme-accent transition hover:bg-scheme-accent/20"
-                          (click)="copyPrompt()"
-                        >
-                          {{ copied() ? "Copié !" : "Copier" }}
-                        </button>
-                      </div>
-                    }
-                  </div>
-                }
-              </div>
-            </div>
-          } @else {
-            <!-- Split layout in presentation mode -->
-            <div class="flex flex-1 flex-col md:flex-row items-center">
-              <!-- Content — LEFT 55% on desktop -->
-              <div
-                class="flex-1 md:w-[55%] md:flex-none flex flex-col justify-center px-8 py-10 sm:px-16 md:px-20"
-              >
-                <h2
-                  class="font-heading text-h2 sm:text-h1 text-gray-900 leading-tight"
-                  [attr.data-slide-title]="currentSlide().title"
-                >
-                  {{ currentSlide().title }}
-                </h2>
-
-                @if (currentSlide().subtitle) {
-                  <p
-                    class="mt-4 text-lg sm:text-xl text-gray-500 leading-relaxed"
-                  >
-                    {{ currentSlide().subtitle }}
-                  </p>
-                }
-
-                @if (
-                  currentSlide().bullets && currentSlide().bullets!.length > 0
-                ) {
-                  <ul class="mt-8 space-y-5">
-                    @for (bullet of currentSlide().bullets; track $index) {
-                      <li class="flex items-start gap-4 text-lg text-gray-700">
-                        <span
-                          class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-scheme-accent"
-                          aria-hidden="true"
-                        ></span>
-                        <span class="leading-relaxed">{{ bullet }}</span>
-                      </li>
-                    }
-                  </ul>
-                }
-              </div>
-
-              <!-- Image — RIGHT 45%, dark background -->
-              <div class="md:w-[45%] md:flex-none order-first md:order-last">
-                <!-- Mobile: horizontal strip -->
-                <div
-                  class="md:hidden h-48 bg-gray-900 flex items-center justify-center"
-                >
-                  @if (currentSlide().imageUrl) {
-                    <img
-                      [src]="currentSlide().imageUrl"
-                      [alt]="currentSlide().imageAlt || currentSlide().title"
-                      class="max-w-full max-h-full object-contain rounded-xl"
-                      loading="lazy"
-                    />
-                  } @else if (currentSlide().image) {
-                    <img
-                      [src]="'/' + currentSlide().image"
-                      alt=""
-                      class="w-32 h-32 sm:w-40 sm:h-40 object-contain drop-shadow-lg"
-                    />
-                  } @else {
-                    <span class="text-sm text-gray-600 font-medium">
-                      Image
-                    </span>
-                  }
-                </div>
-                <!-- Desktop: full height -->
-                <div
-                  class="hidden md:flex h-full bg-gray-900 items-center justify-center p-8"
-                >
-                  @if (currentSlide().imageUrl) {
-                    <img
-                      [src]="currentSlide().imageUrl"
-                      [alt]="currentSlide().imageAlt || currentSlide().title"
-                      class="max-w-full max-h-full object-contain rounded-xl"
-                      loading="lazy"
-                    />
-                  } @else if (currentSlide().image) {
-                    <img
-                      [src]="'/' + currentSlide().image"
-                      alt=""
-                      class="w-32 h-32 sm:w-40 sm:h-40 object-contain drop-shadow-lg"
-                    />
-                  } @else {
-                    <span class="text-sm text-gray-600 font-medium">
-                      Image
-                    </span>
-                  }
-                </div>
-              </div>
-            </div>
+          @switch (currentSlide().layout || "split") {
+            @case ("hero") {
+              <app-slide-hero [slide]="currentSlide()" class="flex-1" />
+            }
+            @case ("split") {
+              <app-slide-split
+                [slide]="currentSlide()"
+                [index]="currentSlideIndex()"
+                [total]="slides().length"
+                [expandedNotes]="expandedNotes()"
+                [sectorInput]="sectorInput()"
+                [generatedPrompt]="generatedPrompt()"
+                [copied]="copied()"
+                (toggleNotes)="toggleNotes($event)"
+                (sectorChange)="sectorInput.set($event)"
+                (generate)="generatePrompt($event)"
+                (copyPrompt)="copyPrompt()"
+                class="flex-1"
+              />
+            }
+            @case ("stats") {
+              <app-slide-stats
+                [slide]="currentSlide()"
+                [index]="currentSlideIndex()"
+                [total]="slides().length"
+                class="flex-1"
+              />
+            }
+            @case ("grid") {
+              <app-slide-grid
+                [slide]="currentSlide()"
+                [index]="currentSlideIndex()"
+                [total]="slides().length"
+                class="flex-1"
+              />
+            }
+            @case ("comparison") {
+              <app-slide-comparison
+                [slide]="currentSlide()"
+                [index]="currentSlideIndex()"
+                [total]="slides().length"
+                [expandedNotes]="expandedNotes()"
+                (toggleNotes)="toggleNotes($event)"
+                class="flex-1"
+              />
+            }
+            @case ("quote") {
+              <app-slide-quote [slide]="currentSlide()" class="flex-1" />
+            }
+            @case ("demo") {
+              <app-slide-demo
+                [slide]="currentSlide()"
+                [index]="currentSlideIndex()"
+                [total]="slides().length"
+                [sectorInput]="sectorInput()"
+                [generatedPrompt]="generatedPrompt()"
+                [copied]="copied()"
+                (sectorChange)="sectorInput.set($event)"
+                (generate)="generatePrompt($event)"
+                (copyPrompt)="copyPrompt()"
+                class="flex-1"
+              />
+            }
+            @case ("cta") {
+              <app-slide-cta [slide]="currentSlide()" class="flex-1" />
+            }
           }
         </div>
 
@@ -757,6 +350,20 @@ export class SlideViewerComponent {
       this.fullscreenSupported =
         typeof document !== "undefined" &&
         !!document.documentElement.requestFullscreen;
+
+      // Initialisation AOS pour les animations au scroll
+      if (isPlatformBrowser(this.platformId)) {
+        import("aos").then((AOS) => {
+          AOS.default.init({
+            duration: 800,
+            easing: "ease-out-cubic",
+            once: true,
+            offset: 50,
+          });
+          // Refresh après le rendu initial des slides
+          setTimeout(() => AOS.default.refresh(), 100);
+        });
+      }
 
       // IntersectionObserver pour synchroniser la progress bar avec le scroll
       const observer = new IntersectionObserver(

@@ -3,60 +3,94 @@ import type { Slide } from "../../../shared/models/slide.model";
 export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
   {
     id: "accroche",
-    image: "assets/images/auto_graph.png",
-    title: "L'IA, accélérateur de productivité",
+    layout: "hero",
+    imageUrl:
+      "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Main de robot interagissant avec un réseau neuronal lumineux",
+    title: "L'IA au service des solopreneurs",
     subtitle:
-      "88% des organisations utilisent déjà l'IA — McKinsey, novembre 2025",
-    bullets: [
-      "L'IA générative adoptée par 72% des entreprises en 2025, contre 33% en 2024 (McKinsey, « The state of AI »)",
-      "Gain de productivité de 20 à 40% pour les entreprises qui intègrent l'IA dans leurs processus (McKinsey, « A new future of work »)",
-      "Un stack complet d'outils IA coûte entre 0€ et 100€/mois — une fraction du coût d'un collaborateur",
+      "88% des organisations utilisent l'IA. 72% utilisent l'IA générative. Vous êtes prêt ?",
+  },
+  {
+    id: "stats-cles",
+    layout: "stats",
+    title: "Les chiffres qui comptent",
+    stats: [
+      {
+        value: "88%",
+        label: "des organisations utilisent l'IA",
+        source: "McKinsey, 2025",
+      },
+      {
+        value: "72%",
+        label: "utilisent l'IA générative (vs 33% en 2024)",
+        source: "McKinsey, 2025",
+      },
+      {
+        value: "+40%",
+        label: "de productivité pour les adopteurs",
+        source: "McKinsey, 2024",
+      },
+      {
+        value: "12-18h",
+        label: "économisées par semaine en moyenne",
+        source: "Zapier, 2025",
+      },
     ],
     notes:
-      "Sources vérifiées : McKinsey Global Institute, « The state of AI in early 2025 » (nov. 2025) — 88% des organisations utilisent l'IA, 72% l'IA générative. « A new future of work » (mai 2024) — +20 à 40% de productivité estimée. Gartner prévoit que 40% des applications d'entreprise intégreront des agents IA d'ici fin 2026, contre moins de 5% début 2025.",
+      "Sources : McKinsey « The state of AI in early 2025 » (nov. 2025). McKinsey « A new future of work » (mai 2024). Zapier « State of AI » (2025) — 68% des PME US utilisent l'IA, économie de 12-18h/semaine.",
   },
   {
     id: "trois-cerveaux",
-    image: "assets/images/smart_toy.png",
-    title: "ChatGPT, Claude, Gemini — bien choisir",
+    layout: "comparison",
+    imageUrl:
+      "https://images.pexels.com/photos/16544949/pexels-photo-16544949.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Personne utilisant ChatGPT sur un ordinateur portable",
+    title: "ChatGPT vs Claude vs Gemini",
     subtitle:
-      "Les pros ne choisissent plus UN outil — ils utilisent le bon pour chaque tâche",
+      "Chaque IA a ses forces — les pros utilisent la bonne pour chaque tâche",
     table: {
       headers: ["", "ChatGPT", "Claude", "Gemini"],
       rows: [
         [
           "Force",
           "Polyvalent, plugins, GPT Store",
-          "Qualité rédaction, docs longs",
-          "Google intégré, vidéo",
+          "Rédaction, docs longs (200K tokens)",
+          "Google Workspace, analyse vidéo",
         ],
         [
           "Idéal pour",
-          "Brainstorm, code, analyse",
+          "Brainstorm, code, analyse de données",
           "Rédaction pro, contrats, stratégie",
-          "Gmail/Drive/Agenda, vidéo",
+          "Gmail, Drive, Agenda, vidéo",
         ],
-        ["Prix", "20€/mois", "20€/mois", "20€/mois (ou gratuit)"],
+        ["Prix", "20€/mois (Plus)", "20€/mois (Pro)", "20€/mois ou gratuit"],
       ],
     },
     notes:
-      "ChatGPT (OpenAI) : le plus utilisé, vaste écosystème de plugins, GPT Store. Claude (Anthropic) : classé n°1 par les évaluateurs humains pour la rédaction business (rapports, analyses, propositions). Fenêtre de contexte de 200K tokens = peut analyser un document de 150 pages d'un coup. Gemini (Google) : seul modèle capable d'analyser de la vidéo nativement. Intégration native Google Workspace. Les 3 sont au même prix (20€/mois tier pro).",
+      "ChatGPT (OpenAI) : le plus utilisé, vaste écosystème. Claude (Anthropic) : n°1 rédaction business, 200K tokens. Gemini (Google) : seul à analyser la vidéo nativement.",
   },
   {
     id: "contenu-texte",
-    image: "assets/images/description.png",
+    layout: "split",
+    imageUrl:
+      "https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Espace de travail créatif avec laptop et calligraphie",
     title: "Créer du contenu — Texte & Copywriting",
     bullets: [
       "ChatGPT / Claude — Articles, posts LinkedIn, emails clients, fiches produit",
       "Astuce : ne jamais publier un texte IA brut",
-      "Donner son STYLE, ses EXEMPLES, son CONTEXTE → résultat personnel, pas générique",
+      "Donner son STYLE, ses EXEMPLES, son CONTEXTE → résultat personnel",
     ],
     notes:
-      "La clé pour obtenir du contenu qui ne 'sent' pas l'IA : fournir 2-3 exemples de votre style d'écriture dans le prompt, préciser le contexte (qui est votre audience, quel ton), et toujours relire et personnaliser. Exemple de prompt efficace : 'Tu es mon rédacteur. Voici 2 exemples de mes posts LinkedIn [exemples]. Rédige un post sur [sujet] dans le même style, même longueur, même ton.'",
+      "La clé : fournir 2-3 exemples de votre style dans le prompt, préciser le contexte (audience, ton), toujours relire et personnaliser.",
   },
   {
     id: "contenu-visuel",
-    image: "assets/images/edit.png",
+    layout: "split",
+    imageUrl:
+      "https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Créatrice travaillant sur laptop et tablette graphique",
     title: "Créer du contenu — Visuel & Design",
     bullets: [
       "Canva AI (gratuit) — Génération d'images, suppression de fond, resize multi-format",
@@ -77,40 +111,53 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
       ],
     },
     notes:
-      "Ideogram vs Midjourney : Ideogram écrase Midjourney sur le texte dans les images (95% vs 40% de précision). Midjourney reste supérieur pour le photoréalisme et les ambiances. Les pros en 2026 utilisent les deux : Midjourney pour l'esthétique, Ideogram pour le texte/branding. Canva AI est le couteau suisse : moins spécialisé mais fait tout correctement et gratuitement.",
+      "Ideogram écrase Midjourney sur le texte (95% vs 40%). Les pros utilisent les deux.",
   },
   {
     id: "contenu-video",
-    image: "assets/images/logiciel.png",
-    title: "Créer du contenu — Vidéo",
+    layout: "split",
+    imageUrl:
+      "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt:
+      "Visage avec projection de code numérique, concept de production digitale",
+    title: "Créer du contenu — Vidéo & Audio",
     bullets: [
       "Descript — Éditer une vidéo comme un document Word. Économie : 10-15h/semaine",
       "Opus Clip — Découpe un long format en shorts viraux automatiquement",
+      "ElevenLabs — Clonage vocal IA, voix off réalistes, valorisé 11 milliards",
       "Synthesia — Vidéos avec avatar IA (formation, onboarding, tutos clients)",
     ],
     notes:
-      "Descript est le plus gros gain de temps documenté : 10-15h/semaine pour les créateurs de contenu vidéo. On édite le texte de la transcription et la vidéo se coupe toute seule. Suppression automatique des 'euh', sous-titres auto. Opus Clip : parfait pour transformer un webinaire de 1h en 30 jours de contenu quotidien pour les réseaux. Synthesia : pas besoin de caméra ni d'acteur.",
+      "Descript : plus gros gain documenté, 10-15h/sem. ElevenLabs : $500M levés en fév. 2026, $11Md valorisation, 1M+ créateurs. Clonage vocal en 2 min d'audio.",
   },
   {
     id: "contenu-presentations",
-    image: "assets/images/chart.png",
-    title: "Créer du contenu — Présentations",
+    layout: "split",
+    imageUrl:
+      "https://images.pexels.com/photos/326513/pexels-photo-326513.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt:
+      "Espace de travail avec double écran montrant des maquettes de design",
+    title: "Présentations en 60 secondes",
     bullets: [
-      "Gamma.app — Génère des présentations pro en 60 secondes",
-      "70 millions d'utilisateurs, 100M€ de revenus annuels",
+      "Gamma.app — 70 millions d'utilisateurs, valorisé 2,1 milliards",
+      "Tapez un prompt, obtenez une présentation complète en moins d'une minute",
+      "Gamma Agent — recherche sur le web, restructure et donne du feedback design",
       "Gratuit pour démarrer, 10€/mois en premium",
-      "Nouveau : Gamma Agent — un partenaire IA qui recherche, restructure et design",
     ],
     notes:
-      "Gamma a levé 68M$ en Série B (a16z) à une valorisation de 2,1 milliards. Le Gamma Agent (v3.0, 2026) peut chercher sur le web, restructurer automatiquement le contenu, et fournir du feedback design en langage naturel. Alternative : Beautiful.ai, Presentations.AI.",
+      "Gamma a levé 68M$ (a16z). Le Gamma Agent (v3.0) peut chercher sur le web et restructurer le contenu.",
   },
   {
     id: "automatiser-overview",
-    image: "assets/images/gear.png",
-    title: "Automatiser les tâches répétitives",
-    subtitle: "Le vrai game-changer : l'IA qui AGIT à votre place",
+    layout: "comparison",
+    imageUrl:
+      "https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt:
+      "Suivi multi-écrans avec smartphone et ordinateur, données en temps réel",
+    title: "Automatiser — l'IA qui agit à votre place",
+    subtitle: "+760% de tâches IA sur Zapier en 2 ans",
     table: {
-      headers: ["Outil", "Difficulté", "Prix", "Cas d'usage"],
+      headers: ["Outil", "Difficulté", "Prix", "Exemple"],
       rows: [
         [
           "Zapier",
@@ -122,124 +169,178 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
           "Make.com",
           "Moyen",
           "9€/mois",
-          "Workflows complexes, boucles, branchements",
+          "Post LinkedIn → repost X + archivage",
         ],
         [
           "n8n",
-          "Avancé (open-source)",
+          "Avancé",
           "Gratuit (self-hosted)",
-          "Agents IA custom, LangChain intégré",
+          "Email → IA trie et pré-rédige",
         ],
       ],
     },
     notes:
-      "Les tâches IA sur Zapier ont augmenté de 760% en deux ans — c'est la catégorie la plus rapide de la plateforme. 68% des PME américaines utilisent l'IA régulièrement, avec une économie moyenne de 12 à 18h par semaine (Zapier, 2025). ROI moyen : l'automatisation IA se rentabilise en 1 à 3 mois pour la plupart des petites entreprises.",
+      "Zapier : +760% tâches IA en 2 ans. 68% des PME US utilisent l'IA. Économie moyenne 12-18h/semaine. ROI en 1-3 mois.",
   },
   {
     id: "automatiser-exemples",
-    image: "assets/images/reorganize.png",
+    layout: "grid",
+    imageUrl:
+      "https://images.pexels.com/photos/574069/pexels-photo-574069.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Code CSS affiché sur un écran de laptop, développement web",
     title: "3 automatisations concrètes",
-    bullets: [
-      "1. Formulaire contact → email personnalisé + fiche Notion + rappel calendrier",
-      "2. Post LinkedIn publié → repost Twitter + archivage Google Sheet + notification",
-      "3. Email devis reçu → IA analyse et catégorise → pré-rédige la réponse",
+    gridItems: [
+      {
+        title: "Prospection auto",
+        description:
+          "Formulaire contact → email personnalisé + fiche Notion + rappel calendrier",
+        badge: "Make.com",
+      },
+      {
+        title: "Contenu multicanal",
+        description:
+          "Post LinkedIn → repost Twitter + archivage Sheet + notification",
+        badge: "Zapier",
+      },
+      {
+        title: "Réponse IA",
+        description:
+          "Email devis reçu → IA analyse, catégorise, pré-rédige la réponse",
+        badge: "n8n + Claude",
+      },
     ],
     notes:
-      "Workflow 1 (Make.com) : Typeform/Google Forms → Make reçoit les données → envoie un email personnalisé via Gmail → crée une fiche dans Notion → programme un rappel dans Google Calendar. Temps de setup : ~2h. Workflow 2 (Zapier) : 100% gratuit sur le tier gratuit. Workflow 3 (n8n + Claude) : email → n8n extrait le contenu → envoie à Claude pour analyse → catégorise (urgent/standard/spam) → pré-rédige une réponse → notification Slack.",
+      "Workflow 1 : ~2h de setup. Workflow 2 : 100% gratuit. Workflow 3 : catégorisation automatique urgent/standard/spam.",
   },
   {
     id: "business-productivite",
-    image: "assets/images/business_center.png",
-    title: "Gérer son business — Productivité",
-    bullets: [
-      "Notion AI — Notes, base de données, wiki d'entreprise, IA intégrée",
-      "Microsoft Copilot — IA dans Word, Excel, PowerPoint, Outlook",
-      "Analyser un tableau Excel en langage naturel, créer un rapport depuis un document",
+    layout: "grid",
+    imageUrl:
+      "https://images.pexels.com/photos/2528118/pexels-photo-2528118.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Bureau minimaliste avec MacBook et iPad, outils numériques",
+    title: "Productivité au quotidien",
+    gridItems: [
+      {
+        title: "Notion AI",
+        description:
+          "Notes, base de données, wiki, gestion de projet — avec IA intégrée",
+        badge: "Gratuit+",
+      },
+      {
+        title: "Perplexity",
+        description:
+          "Moteur de recherche IA, 100M+ users/mois. Réponses sourcées, pas de liens",
+        badge: "20€/mois",
+      },
+      {
+        title: "Microsoft Copilot",
+        description:
+          "IA dans Word, Excel, PowerPoint, Outlook — en langage naturel",
+        badge: "30€/mois",
+      },
+      {
+        title: "Tidio",
+        description: "Chatbot IA sur votre site, répond 24/7, plug-and-play",
+        badge: "Gratuit+",
+      },
     ],
     notes:
-      "Notion AI : l'outil de productivité le plus populaire chez les solopreneurs. Combine prise de notes, base de données, gestion de projet et wiki, le tout avec une couche IA pour résumer, rédiger et planifier. Microsoft Copilot : si vous êtes dans l'écosystème Microsoft, c'est un accélérateur massif. Rédiger un email dans Outlook, analyser des données dans Excel, créer une présentation depuis un document Word — tout en langage naturel.",
+      "Perplexity : 100M+ users mensuels, shift vers les agents IA, +50% de revenus. Remplace Google pour la recherche sourcée.",
   },
   {
     id: "business-crm",
-    image: "assets/images/groups.png",
-    title: "Gérer son business — Email & Relation client",
+    layout: "split",
+    imageUrl:
+      "https://images.pexels.com/photos/7988219/pexels-photo-7988219.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Réunion professionnelle dans un bureau moderne",
+    title: "Email & Relation client",
     bullets: [
-      "Alfred — Lit vos emails, priorise, rédige des réponses dans votre style, extrait les tâches",
-      "Tidio — Chatbot IA sur votre site + réseaux sociaux, plug-and-play",
-      "Waalaxy — Automatisation LinkedIn + email, séquences multicanales",
-      "ActiveCampaign — CRM + email marketing + séquences automatisées",
+      "Alfred — Lit vos emails, priorise, rédige dans votre style, extrait les tâches",
+      "Waalaxy — Automatisation LinkedIn + email, séquences multicanales, populaire en France",
+      "ActiveCampaign — CRM + email marketing + séquences (lead → case study → tag 'chaud')",
+      "Crisp AI — Référence française du support client IA, centralise les échanges",
     ],
     notes:
-      "Alfred : assistant email IA qui apprend votre style d'écriture. Tidio : chatbot IA facile à installer, répond 24/7. Waalaxy : très populaire chez les freelances français, automatise la prospection LinkedIn + email. ActiveCampaign : combine CRM et email marketing. Exemple de séquence : lead s'inscrit → attend 2 jours → envoie une étude de cas → si clic, tag 'lead chaud'.",
+      "Crisp AI : référence française, centralise échanges, automatise les réponses fréquentes. Waalaxy : très populaire chez les freelances français.",
   },
   {
     id: "site-sans-coder",
-    image: "assets/images/computer.png",
-    title: "Créer un site ou une app sans coder",
-    subtitle: "La révolution 2026 : du prompt au produit en 5 minutes",
+    layout: "comparison",
+    imageUrl:
+      "https://images.pexels.com/photos/196658/pexels-photo-196658.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt:
+      "Poste de travail avec double écran iMac, design et développement",
+    title: "Du prompt au site web en 5 minutes",
+    subtitle: "La révolution no-code de 2026",
     table: {
       headers: ["Outil", "Force", "Prix"],
       rows: [
         [
           "Lovable",
-          "Full-stack (app + base de données)",
+          "Full-stack (app + BDD) — 6,6Md valorisation",
           "Gratuit limité, 20€/mois",
         ],
-        ["Bolt.new", "Prototypage rapide dans le navigateur", "Gratuit limité"],
+        ["Bolt.new", "Prototype rapide dans le navigateur", "Gratuit limité"],
         [
-          "v0.app (Vercel)",
-          "Composants UI pro-grade (Next.js)",
+          "v0.app",
+          "Composants UI pro-grade (Next.js, Vercel)",
           "Gratuit limité",
         ],
+        ["Figma Sites", "Design to website sans code", "Gratuit limité"],
       ],
     },
     notes:
-      "Lovable : valorisé 6,6 milliards d'euros, 200M€ de revenus annuels. Bolt.new : pas besoin de connaître React, ça marche directement dans le navigateur. v0.app : code de qualité professionnelle reconnu par les développeurs. Ces outils sont géniaux pour un MVP. Pour un site professionnel qui convertit, bien référencé, rapide, sécurisé — c'est là qu'un développeur expert fait la différence. L'IA génère du code, un expert génère des résultats.",
+      "Lovable : 200M€ ARR, 6,6Md valorisation. Figma Sites : nouveau, intègre IA pour design → publication directe.",
   },
   {
     id: "boite-a-outils",
-    image: "assets/images/diamond.png",
-    title: "La boîte à outils idéale du solopreneur",
+    layout: "comparison",
+    imageUrl:
+      "https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt:
+      "Équipe collaborant autour d'une table avec laptops et smartphones",
+    title: "Le stack idéal selon votre budget",
     table: {
       headers: ["Niveau", "Outils", "Budget"],
       rows: [
         [
           "Débutant",
-          "ChatGPT gratuit + Canva gratuit + Gamma gratuit + Zapier gratuit",
+          "ChatGPT gratuit + Canva gratuit + Gamma + Zapier",
           "0€/mois",
         ],
         [
           "Intermédiaire",
-          "ChatGPT Pro + Canva Pro + Make.com + Notion AI",
-          "~50€/mois",
+          "ChatGPT Pro + Canva Pro + Make.com + Notion AI + Perplexity",
+          "~60€/mois",
         ],
         [
           "Avancé",
-          "Claude Pro + ChatGPT Pro + Make.com + n8n + Descript",
-          "~80-100€/mois",
+          "Claude Pro + ChatGPT Pro + Make.com + ElevenLabs + Descript",
+          "~120€/mois",
         ],
       ],
     },
     bullets: [
-      "Règle d'or : commencer par 2-3 outils, les maîtriser, puis ajouter",
+      "Commencez par 2-3 outils, maîtrisez-les, puis ajoutez selon vos besoins",
     ],
     notes:
-      "Stack débutant (0€) : parfait pour tester et se familiariser. ChatGPT gratuit a des limites mais suffit pour commencer. Canva gratuit couvre 90% des besoins visuels. Stack intermédiaire (~50€) : pour les solopreneurs qui ont validé leur activité. Stack avancé (~80-100€) : pour maximiser la productivité. La règle d'or : ne pas tout installer d'un coup. Chaque outil doit résoudre un problème concret.",
+      "Ne pas tout installer d'un coup. Chaque outil doit résoudre un problème concret. Le stack débutant à 0€ couvre 80% des besoins.",
   },
   {
     id: "transition-pratique",
-    image: "assets/images/lightbulb.png",
+    layout: "hero",
+    imageUrl:
+      "https://images.pexels.com/photos/10401267/pexels-photo-10401267.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Intervenant donnant une présentation dynamique sur scène",
     title: "Démonstration en direct",
-    subtitle: "Deux outils, deux minutes, un résultat concret",
-    bullets: [
-      "On va utiliser Google NotebookLM pour transformer du contenu en podcast IA",
-      "Puis un prompt Gamma pour générer une présentation de vente — adaptée à votre secteur",
-      "Tout est gratuit et reproductible chez vous dès ce soir",
-    ],
+    subtitle: "Deux outils. Deux minutes. Un résultat concret.",
   },
   {
     id: "demo-notebooklm",
-    image: "assets/images/biotech.png",
+    layout: "split",
+    imageUrl:
+      "https://images.pexels.com/photos/33923596/pexels-photo-33923596.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Enregistrement podcast avec microphone professionnel en studio",
     title: "NotebookLM — Votre contenu devient un podcast",
     subtitle:
       "Uploadez n'importe quel document, NotebookLM génère une discussion audio de 10 minutes",
@@ -247,16 +348,16 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
       "Gratuit, par Google — propulsé par Gemini",
       "Deux voix IA naturelles analysent et discutent votre contenu",
       "Formats : Deep Dive, Briefing, Critique ou Débat",
-      "Nouveau (2026) : mode interactif — interrompez les hosts pour poser vos questions",
-      "Génère aussi des infographies, présentations et tableaux de données",
+      "Nouveau (2026) : mode interactif — interrompez les hosts pour vos questions",
     ],
     notes:
-      "notebooklm.google — totalement gratuit. Audio Overviews disponibles depuis sept. 2024. Le mode interactif ('raise your hand') permet d'interrompre la discussion pour poser des questions en temps réel. Depuis mars 2026, tourne sur Gemini 3. Cas d'usage business : transformer ses articles de blog en podcasts, créer des résumés audio de rapports clients, générer du contenu formation.",
+      "notebooklm.google — gratuit. Mode interactif « raise your hand » (2026). Depuis mars 2026, tourne sur Gemini 3.",
   },
   {
     id: "demo-gamma-prompt",
+    layout: "demo",
     title: "Votre tour — Générez votre pitch de vente",
-    subtitle: "Entrez votre secteur et obtenez un prompt Gamma prêt à l'emploi",
+    subtitle: "Tapez votre secteur, copiez le prompt, collez-le dans Gamma.app",
     promptTemplate: {
       label: "Votre secteur d'activité",
       placeholder:
@@ -265,32 +366,54 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
         "Tu es un consultant marketing expert en création d'offres pour les indépendants.\n\nMon secteur d'activité : {{sector}}\n\nCrée une présentation de vente complète et professionnelle avec :\n\n1. **Nom de l'offre** — Un nom accrocheur et mémorable\n2. **Promesse principale** — Une phrase qui résume la transformation client\n3. **3 bénéfices clés** — Ce que le client obtient concrètement\n4. **Structure de l'offre** — Les étapes ou modules inclus\n5. **Preuve sociale** — Un témoignage fictif mais réaliste\n6. **Tarif suggéré** — Avec ancrage de prix (valeur perçue vs prix réel)\n7. **Call-to-action** — Une phrase de clôture qui pousse à l'action\n8. **FAQ** — 3 objections courantes avec réponses\n\nStyle : professionnel, chaleureux, orienté résultats.\nFormat : présentation Gamma avec sections visuelles distinctes.",
     },
     notes:
-      "C'est le moment interactif de la présentation. En live : demander à un membre de l'audience de donner son secteur, le taper en direct, montrer le prompt généré, puis le coller dans Gamma. Pour les visiteurs web : ils peuvent taper leur propre secteur et copier le prompt pour l'utiliser eux-mêmes.",
+      "En live : demander à un participant son secteur, taper en direct, copier le prompt, ouvrir gamma.app et coller.",
   },
   {
-    id: "recap",
-    image: "assets/images/trending_up.png",
-    title: "Ce que l'IA fait — et ne fait pas",
-    bullets: [
-      "L'IA fait 80% du travail opérationnel : contenu, visuels, automatisations, support",
-      "L'IA ne remplace pas : votre connaissance du marché, votre relation client, votre stratégie",
-      "Les 20% restants font 80% de la différence — c'est là que l'expertise humaine crée la valeur",
+    id: "quote-recap",
+    layout: "quote",
+    imageUrl:
+      "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Main de robot interagissant avec un réseau neuronal lumineux",
+    title: "Le mot de la fin",
+    quote: "L'IA génère du contenu. Un expert génère des résultats.",
+    quoteAuthor: "— La règle d'or du solopreneur en 2026",
+  },
+  {
+    id: "recap-stats",
+    layout: "stats",
+    title: "Ce que l'IA change — et ce qu'elle ne change pas",
+    stats: [
+      {
+        value: "80%",
+        label: "du travail opérationnel accéléré par l'IA",
+      },
+      {
+        value: "20%",
+        label: "d'expertise humaine qui fait la différence",
+      },
+      {
+        value: "0€",
+        label: "pour démarrer avec un stack complet",
+      },
     ],
     notes:
-      "Message clé de la présentation : l'IA est un accélérateur extraordinaire, mais elle ne remplace pas la compréhension de votre marché, la relation de confiance avec vos clients, ni la stratégie de différenciation. Un site généré par IA en 5 minutes ne sera jamais aussi performant qu'un site conçu par un expert qui comprend le SEO, la performance, la sécurité et la conversion. L'IA génère du contenu, un expert génère des résultats.",
+      "L'IA accélère le contenu, les visuels, les automatisations, le support. Elle ne remplace pas la connaissance du marché, la relation client, la stratégie.",
   },
   {
     id: "cta",
-    image: "assets/images/person.png",
+    layout: "cta",
+    imageUrl:
+      "https://images.pexels.com/photos/7433848/pexels-photo-7433848.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt: "Réunion de conseil professionnelle dans un bureau moderne",
     title: "Allons plus loin ensemble",
     subtitle: "Envie d'intégrer l'IA dans votre activité ?",
     bullets: [
       "Audit gratuit de votre stack d'outils actuel",
-      "Conseil et accompagnement personnalisé",
+      "Accompagnement personnalisé pour intégrer l'IA",
       "Création de site web professionnel et optimisé",
       "Développement d'automatisations sur mesure",
     ],
     notes:
-      "Liens vers les outils mentionnés :\n- ChatGPT : chat.openai.com\n- Claude : claude.ai\n- Gemini : gemini.google.com\n- Canva : canva.com\n- Ideogram : ideogram.ai\n- Midjourney : midjourney.com\n- Gamma : gamma.app\n- Descript : descript.com\n- Opus Clip : opus.pro\n- Synthesia : synthesia.io\n- Zapier : zapier.com\n- Make.com : make.com\n- n8n : n8n.io\n- Notion : notion.so\n- Lovable : lovable.dev\n- Bolt.new : bolt.new\n- v0 : v0.app\n- NotebookLM : notebooklm.google\n- Tidio : tidio.com\n- Waalaxy : waalaxy.com\n- ActiveCampaign : activecampaign.com",
+      "Liens outils : ChatGPT (chat.openai.com), Claude (claude.ai), Gemini (gemini.google.com), Canva (canva.com), Ideogram (ideogram.ai), Gamma (gamma.app), Descript (descript.com), ElevenLabs (elevenlabs.io), Perplexity (perplexity.ai), Zapier (zapier.com), Make (make.com), n8n (n8n.io), Notion (notion.so), Lovable (lovable.dev), Bolt (bolt.new), v0 (v0.app), NotebookLM (notebooklm.google), Crisp (crisp.chat), Figma Sites (figma.com)",
   },
 ];

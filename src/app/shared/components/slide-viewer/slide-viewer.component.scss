@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.scroll-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+}
+
+.scroll-container > section {
+  scroll-snap-align: start;
+}
