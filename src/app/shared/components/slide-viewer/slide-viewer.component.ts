@@ -97,33 +97,35 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
         </div>
 
         <!-- Slides — snap scroll container -->
-        <div class="snap-y snap-mandatory overflow-y-auto h-screen">
+        <div class="snap-y snap-mandatory">
           @for (slide of slides(); track slide.id; let i = $index) {
             <section
               [attr.data-slide-id]="slide.id"
               [attr.id]="'slide-anchor-' + i"
               [attr.aria-labelledby]="'slide-title-' + i"
-              class="h-screen snap-start flex items-center justify-center px-4 sm:px-6 lg:px-8 scroll-mt-32 lg:scroll-mt-36 slide-card bg-white"
+              class="min-h-[calc(100vh-8rem)] lg:min-h-[calc(100vh-9rem)] snap-start flex flex-col py-4 px-4 sm:px-6 scroll-mt-32 lg:scroll-mt-36 slide-card bg-white"
               [style.animation-delay]="i * 0.06 + 's'"
             >
-              <div class="w-full max-w-6xl">
+              <div
+                class="w-full max-w-6xl mx-auto flex-1 flex flex-col min-h-0"
+              >
                 @if (slide.table || slide.promptTemplate) {
                   <!-- Full-width layout for table/prompt slides -->
                   <div
-                    class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow duration-300 hover:shadow-md"
+                    class="flex-1 rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden flex flex-col"
                   >
-                    <div class="px-6 pt-6 pb-4 sm:px-8 sm:pt-8">
-                      <div class="mb-1">
-                        <span
-                          class="text-[11px] font-bold uppercase tracking-widest text-scheme-accent"
-                        >
-                          {{ i + 1 }}/{{ slides().length }}
-                        </span>
-                      </div>
+                    <div
+                      class="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-10"
+                    >
+                      <span
+                        class="text-[11px] font-bold uppercase tracking-widest text-scheme-accent mb-2"
+                      >
+                        {{ i + 1 }}/{{ slides().length }}
+                      </span>
                       <h2
                         [attr.id]="'slide-title-' + i"
                         data-slide-title
-                        class="font-heading text-h3 text-gray-900 leading-tight"
+                        class="font-heading text-h4 sm:text-h3 text-gray-900 leading-tight"
                       >
                         {{ slide.title }}
                       </h2>
@@ -132,11 +134,9 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                           {{ slide.subtitle }}
                         </p>
                       }
-                    </div>
 
-                    <div class="px-6 pb-6 sm:px-8 sm:pb-8 space-y-5">
                       @if (slide.bullets && slide.bullets.length > 0) {
-                        <ul class="space-y-3">
+                        <ul class="mt-5 space-y-3">
                           @for (bullet of slide.bullets; track $index) {
                             <li
                               class="flex items-start gap-3 text-[15px] text-gray-700 leading-relaxed"
@@ -153,7 +153,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
 
                       @if (slide.table) {
                         <div
-                          class="overflow-x-auto rounded-xl border border-gray-100"
+                          class="mt-5 overflow-x-auto rounded-xl border border-gray-100"
                         >
                           <table class="w-full text-sm">
                             <thead>
@@ -198,7 +198,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                       @if (slide.promptTemplate) {
                         <div
                           data-prompt-form
-                          class="rounded-xl border-2 border-scheme-accent/20 bg-scheme-accent/[0.03] p-5 sm:p-6"
+                          class="mt-5 rounded-xl border-2 border-scheme-accent/20 bg-scheme-accent/[0.03] p-5 sm:p-6"
                         >
                           <label
                             [attr.for]="'sector-input-' + i"
@@ -246,7 +246,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                       }
 
                       @if (slide.notes) {
-                        <div class="border-t border-gray-100 pt-4">
+                        <div class="mt-5 border-t border-gray-100 pt-4">
                           <button
                             type="button"
                             class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
@@ -277,139 +277,124 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                 } @else {
                   <!-- Split layout: content LEFT, image RIGHT -->
                   <div
-                    class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow duration-300 hover:shadow-md"
+                    class="flex-1 rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden flex flex-col md:flex-row"
                   >
-                    <div class="flex flex-col md:flex-row md:min-h-[28rem]">
-                      <!-- Image area — mobile: top -->
-                      <div class="md:hidden h-48 sm:h-56 shrink-0">
-                        @if (slide.imageUrl) {
-                          <img
-                            [src]="slide.imageUrl"
-                            [alt]="slide.imageAlt || slide.title"
-                            class="w-full h-full object-cover rounded-t-2xl"
-                            loading="lazy"
-                          />
-                        } @else if (slide.image) {
-                          <div
-                            class="w-full h-full rounded-t-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                          >
-                            <img
-                              [src]="'/' + slide.image"
-                              alt=""
-                              class="w-20 h-20 object-contain opacity-30"
-                              loading="lazy"
-                            />
-                          </div>
-                        } @else {
-                          <div
-                            class="w-full h-full rounded-t-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                          >
-                            <span class="text-sm text-gray-300 font-medium">
-                              Image
-                            </span>
-                          </div>
-                        }
-                      </div>
-
-                      <!-- Content area — LEFT on desktop -->
-                      <div
-                        class="flex flex-col justify-center w-full md:w-[55%] px-6 py-6 sm:px-8 sm:py-8"
+                    <!-- Left: content 55% -->
+                    <div
+                      class="flex-1 md:w-[55%] md:flex-none flex flex-col justify-center p-6 sm:p-8 lg:p-10"
+                    >
+                      <span
+                        class="text-[11px] font-bold uppercase tracking-widest text-scheme-accent mb-2"
                       >
-                        <div class="mb-1">
-                          <span
-                            class="text-[11px] font-bold uppercase tracking-widest text-scheme-accent"
-                          >
-                            {{ i + 1 }}/{{ slides().length }}
-                          </span>
-                        </div>
-                        <h2
-                          [attr.id]="'slide-title-' + i"
-                          data-slide-title
-                          class="font-heading text-h3 text-gray-900 leading-tight"
-                        >
-                          {{ slide.title }}
-                        </h2>
-                        @if (slide.subtitle) {
-                          <p
-                            class="mt-2 text-base text-gray-500 leading-relaxed"
-                          >
-                            {{ slide.subtitle }}
-                          </p>
-                        }
+                        {{ i + 1 }}/{{ slides().length }}
+                      </span>
+                      <h2
+                        [attr.id]="'slide-title-' + i"
+                        data-slide-title
+                        class="font-heading text-h4 sm:text-h3 text-gray-900 leading-tight"
+                      >
+                        {{ slide.title }}
+                      </h2>
+                      @if (slide.subtitle) {
+                        <p class="mt-2 text-base text-gray-500 leading-relaxed">
+                          {{ slide.subtitle }}
+                        </p>
+                      }
 
-                        @if (slide.bullets && slide.bullets.length > 0) {
-                          <ul class="mt-5 space-y-3">
-                            @for (bullet of slide.bullets; track $index) {
-                              <li
-                                class="flex items-start gap-3 text-[15px] text-gray-700 leading-relaxed"
-                              >
-                                <span
-                                  class="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-scheme-accent"
-                                  aria-hidden="true"
-                                ></span>
-                                <span>{{ bullet }}</span>
-                              </li>
-                            }
-                          </ul>
-                        }
-
-                        @if (slide.notes) {
-                          <div class="mt-5 border-t border-gray-100 pt-4">
-                            <button
-                              type="button"
-                              class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
-                              [attr.aria-expanded]="expandedNotes().has(i)"
-                              [attr.aria-controls]="'notes-' + i"
-                              (click)="toggleNotes(i)"
+                      @if (slide.bullets && slide.bullets.length > 0) {
+                        <ul class="mt-5 space-y-3">
+                          @for (bullet of slide.bullets; track $index) {
+                            <li
+                              class="flex items-start gap-3 text-[15px] text-gray-700 leading-relaxed"
                             >
-                              <app-svg-icon
-                                name="chevron-down"
-                                [size]="0.65"
-                                class="transition-transform duration-200"
-                                [class.rotate-180]="expandedNotes().has(i)"
-                              />
-                              <span i18n>Notes</span>
-                            </button>
-                            @if (expandedNotes().has(i)) {
-                              <div
-                                [attr.id]="'notes-' + i"
-                                class="mt-2 rounded-xl bg-gray-50 p-4 text-xs leading-relaxed text-gray-500"
-                              >
-                                {{ slide.notes }}
-                              </div>
-                            }
-                          </div>
-                        }
-                      </div>
+                              <span
+                                class="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-scheme-accent"
+                                aria-hidden="true"
+                              ></span>
+                              <span>{{ bullet }}</span>
+                            </li>
+                          }
+                        </ul>
+                      }
 
-                      <!-- Image area — RIGHT on desktop -->
-                      <div class="hidden md:block md:w-[45%] p-4">
+                      @if (slide.notes) {
+                        <div class="mt-5 border-t border-gray-100 pt-4">
+                          <button
+                            type="button"
+                            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
+                            [attr.aria-expanded]="expandedNotes().has(i)"
+                            [attr.aria-controls]="'notes-' + i"
+                            (click)="toggleNotes(i)"
+                          >
+                            <app-svg-icon
+                              name="chevron-down"
+                              [size]="0.65"
+                              class="transition-transform duration-200"
+                              [class.rotate-180]="expandedNotes().has(i)"
+                            />
+                            <span i18n>Notes</span>
+                          </button>
+                          @if (expandedNotes().has(i)) {
+                            <div
+                              [attr.id]="'notes-' + i"
+                              class="mt-2 rounded-xl bg-gray-50 p-4 text-xs leading-relaxed text-gray-500"
+                            >
+                              {{ slide.notes }}
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                    <!-- Right: image area 45%, dark background -->
+                    <div
+                      class="md:w-[45%] md:flex-none order-first md:order-last"
+                    >
+                      <!-- Mobile: horizontal strip -->
+                      <div
+                        class="md:hidden h-48 bg-gray-900 flex items-center justify-center"
+                      >
                         @if (slide.imageUrl) {
                           <img
                             [src]="slide.imageUrl"
                             [alt]="slide.imageAlt || slide.title"
-                            class="w-full h-full object-cover rounded-2xl"
+                            class="max-w-full max-h-full object-contain rounded-xl"
                             loading="lazy"
                           />
                         } @else if (slide.image) {
-                          <div
-                            class="w-full h-full rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                          >
-                            <img
-                              [src]="'/' + slide.image"
-                              alt=""
-                              class="w-20 h-20 object-contain opacity-30"
-                              loading="lazy"
-                            />
-                          </div>
+                          <img
+                            [src]="'/' + slide.image"
+                            alt=""
+                            class="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-lg"
+                            loading="lazy"
+                          />
                         } @else {
-                          <div
-                            class="w-full h-full rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                          >
-                            <span class="text-sm text-gray-300 font-medium">
-                              Image
-                            </span>
-                          </div>
+                          <span class="text-sm text-gray-600 font-medium">
+                            Image
+                          </span>
+                        }
+                      </div>
+                      <!-- Desktop: full height -->
+                      <div
+                        class="hidden md:flex h-full bg-gray-900 items-center justify-center p-8"
+                      >
+                        @if (slide.imageUrl) {
+                          <img
+                            [src]="slide.imageUrl"
+                            [alt]="slide.imageAlt || slide.title"
+                            class="max-w-full max-h-full object-contain rounded-xl"
+                            loading="lazy"
+                          />
+                        } @else if (slide.image) {
+                          <img
+                            [src]="'/' + slide.image"
+                            alt=""
+                            class="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-lg"
+                            loading="lazy"
+                          />
+                        } @else {
+                          <span class="text-sm text-gray-600 font-medium">
+                            Image
+                          </span>
                         }
                       </div>
                     </div>
@@ -421,7 +406,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
 
           <!-- CTA — dernière section snap -->
           <section
-            class="h-screen snap-start flex items-center justify-center bg-white"
+            class="min-h-[calc(100vh-8rem)] lg:min-h-[calc(100vh-9rem)] snap-start flex items-center justify-center bg-white"
           >
             <div class="px-6 py-16 text-center">
               <p
@@ -494,7 +479,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                 ) {
                   <ul class="mt-8 space-y-5">
                     @for (bullet of currentSlide().bullets; track $index) {
-                      <li class="flex items-start gap-4 text-xl text-gray-700">
+                      <li class="flex items-start gap-4 text-lg text-gray-700">
                         <span
                           class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-scheme-accent"
                           aria-hidden="true"
@@ -604,39 +589,9 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
           } @else {
             <!-- Split layout in presentation mode -->
             <div class="flex flex-1 flex-col md:flex-row items-center">
-              <!-- Image area — mobile: top -->
-              <div class="md:hidden w-full h-48 sm:h-56 shrink-0">
-                @if (currentSlide().imageUrl) {
-                  <img
-                    [src]="currentSlide().imageUrl"
-                    [alt]="currentSlide().imageAlt || currentSlide().title"
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                } @else if (currentSlide().image) {
-                  <div
-                    class="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                  >
-                    <img
-                      [src]="'/' + currentSlide().image"
-                      alt=""
-                      class="w-24 h-24 object-contain opacity-30"
-                    />
-                  </div>
-                } @else {
-                  <div
-                    class="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                  >
-                    <span class="text-sm text-gray-300 font-medium">
-                      Image
-                    </span>
-                  </div>
-                }
-              </div>
-
-              <!-- Content — LEFT 50% on desktop -->
+              <!-- Content — LEFT 55% on desktop -->
               <div
-                class="flex flex-col justify-center w-full md:w-1/2 px-8 py-10 sm:px-16 md:px-20"
+                class="flex-1 md:w-[55%] md:flex-none flex flex-col justify-center px-8 py-10 sm:px-16 md:px-20"
               >
                 <h2
                   class="font-heading text-h2 sm:text-h1 text-gray-900 leading-tight"
@@ -658,7 +613,7 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                 ) {
                   <ul class="mt-8 space-y-5">
                     @for (bullet of currentSlide().bullets; track $index) {
-                      <li class="flex items-start gap-4 text-xl text-gray-700">
+                      <li class="flex items-start gap-4 text-lg text-gray-700">
                         <span
                           class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-scheme-accent"
                           aria-hidden="true"
@@ -670,36 +625,54 @@ import type { PromptTemplate, Slide } from "../../models/slide.model";
                 }
               </div>
 
-              <!-- Image — RIGHT 50% on desktop -->
-              <div
-                class="hidden md:flex md:w-1/2 h-full items-center justify-center p-8"
-              >
-                @if (currentSlide().imageUrl) {
-                  <img
-                    [src]="currentSlide().imageUrl"
-                    [alt]="currentSlide().imageAlt || currentSlide().title"
-                    class="w-full h-full object-cover rounded-2xl"
-                    loading="lazy"
-                  />
-                } @else if (currentSlide().image) {
-                  <div
-                    class="w-full h-full rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                  >
+              <!-- Image — RIGHT 45%, dark background -->
+              <div class="md:w-[45%] md:flex-none order-first md:order-last">
+                <!-- Mobile: horizontal strip -->
+                <div
+                  class="md:hidden h-48 bg-gray-900 flex items-center justify-center"
+                >
+                  @if (currentSlide().imageUrl) {
+                    <img
+                      [src]="currentSlide().imageUrl"
+                      [alt]="currentSlide().imageAlt || currentSlide().title"
+                      class="max-w-full max-h-full object-contain rounded-xl"
+                      loading="lazy"
+                    />
+                  } @else if (currentSlide().image) {
                     <img
                       [src]="'/' + currentSlide().image"
                       alt=""
-                      class="w-28 h-28 object-contain opacity-30"
+                      class="w-32 h-32 sm:w-40 sm:h-40 object-contain drop-shadow-lg"
                     />
-                  </div>
-                } @else {
-                  <div
-                    class="w-full h-full rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"
-                  >
-                    <span class="text-sm text-gray-300 font-medium">
+                  } @else {
+                    <span class="text-sm text-gray-600 font-medium">
                       Image
                     </span>
-                  </div>
-                }
+                  }
+                </div>
+                <!-- Desktop: full height -->
+                <div
+                  class="hidden md:flex h-full bg-gray-900 items-center justify-center p-8"
+                >
+                  @if (currentSlide().imageUrl) {
+                    <img
+                      [src]="currentSlide().imageUrl"
+                      [alt]="currentSlide().imageAlt || currentSlide().title"
+                      class="max-w-full max-h-full object-contain rounded-xl"
+                      loading="lazy"
+                    />
+                  } @else if (currentSlide().image) {
+                    <img
+                      [src]="'/' + currentSlide().image"
+                      alt=""
+                      class="w-32 h-32 sm:w-40 sm:h-40 object-contain drop-shadow-lg"
+                    />
+                  } @else {
+                    <span class="text-sm text-gray-600 font-medium">
+                      Image
+                    </span>
+                  }
+                </div>
               </div>
             </div>
           }
@@ -800,7 +773,7 @@ export class SlideViewerComponent {
             }
           }
         },
-        { threshold: 0.5 },
+        { threshold: 0.3, rootMargin: "-128px 0px 0px 0px" },
       );
 
       setTimeout(() => {
