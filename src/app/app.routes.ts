@@ -216,6 +216,26 @@ export const routes: Routes = [
     pathMatch: "full" as const,
   },
   {
+    path: "formations",
+    loadComponent: () =>
+      import("./features/formations/formations-list.component").then(
+        (m) => m.FormationsListComponent,
+      ),
+    data: {
+      seoKey: "formations",
+    },
+  },
+  {
+    path: "formations/ia-solopreneurs",
+    loadComponent: () =>
+      import("./features/formations/ia-solopreneurs/ia-solopreneurs.component").then(
+        (m) => m.IaSolopreneursComponent,
+      ),
+    data: {
+      seoKey: "formations-ia-solopreneurs",
+    },
+  },
+  {
     path: "**",
     loadComponent: () =>
       import("./features/not-found/not-found.component").then(

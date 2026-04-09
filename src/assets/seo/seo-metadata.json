@@ -387,6 +387,50 @@
       }
     },
     {
+      "id": "formations",
+      "path": "/formations",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.7,
+      "lastmod": "2026-04-09",
+      "locales": {
+        "fr": {
+          "title": "Formations gratuites — Tim Moyence",
+          "description": "Ressources et présentations gratuites sur l'IA, le marketing digital et le développement web pour solopreneurs et entrepreneurs.",
+          "ogTitle": "Formations gratuites — Tim Moyence",
+          "ogDescription": "Ressources et présentations gratuites sur l'IA pour solopreneurs et entrepreneurs."
+        },
+        "en": {
+          "title": "Free Courses — Tim Moyence",
+          "description": "Free resources and presentations on AI, digital marketing and web development for solopreneurs and entrepreneurs.",
+          "ogTitle": "Free Courses — Tim Moyence",
+          "ogDescription": "Free resources and presentations on AI for solopreneurs and entrepreneurs."
+        }
+      }
+    },
+    {
+      "id": "formations-ia-solopreneurs",
+      "path": "/formations/ia-solopreneurs",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-04-09",
+      "locales": {
+        "fr": {
+          "title": "L'IA au service des solopreneurs — Tim Moyence",
+          "description": "Panorama des meilleurs outils IA pour solopreneurs et micro-entrepreneurs. Outils, cas pratique et prompt Gamma offert.",
+          "ogTitle": "L'IA au service des solopreneurs — Tim Moyence",
+          "ogDescription": "Panorama des meilleurs outils IA pour solopreneurs. Outils, cas pratique et prompt Gamma offert."
+        },
+        "en": {
+          "title": "AI for Solopreneurs — Tim Moyence",
+          "description": "Overview of the best AI tools for solopreneurs and micro-entrepreneurs. Tools, practical case study and free Gamma prompt.",
+          "ogTitle": "AI for Solopreneurs — Tim Moyence",
+          "ogDescription": "Overview of the best AI tools for solopreneurs. Tools, practical case study and free Gamma prompt."
+        }
+      }
+    },
+    {
       "id": "not-found",
       "path": "/404",
       "index": false,
