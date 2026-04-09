@@ -7,8 +7,8 @@ import {
 } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import type {
+  CreateEntryPayload,
   SebastianCategory,
-  SebastianDrinkType,
   SebastianEntry,
   SebastianGoal,
   SebastianStats,
@@ -17,6 +17,7 @@ import {
   SEBASTIAN_PORT,
   type SebastianPort,
 } from "../../core/ports/sebastian.port";
+import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drink-sheet.component";
 
 /**
  * Shell du majordome Sebastian.
@@ -26,7 +27,7 @@ import {
 @Component({
   selector: "app-sebastian-app",
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, SebastianAddDrinkSheetComponent],
   template: `
     <div
       class="min-h-screen bg-scheme-background px-4 py-8 font-body sm:px-6 lg:px-8"
@@ -47,42 +48,6 @@ import {
             Votre majordome de suivi de consommation
           </p>
         </header>
-
-        <!-- Ajout rapide -->
-        <section class="mb-6 flex flex-wrap justify-center gap-3">
-          <button
-            type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-scheme-warning transition-all hover:bg-scheme-surface-hover"
-            [class.animate-pulse]="alcoholPulse()"
-            (click)="quickAddDrink('beer')"
-          >
-            +1 Biere
-          </button>
-          <button
-            type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-red-400 transition-all hover:bg-scheme-surface-hover"
-            [class.animate-pulse]="alcoholPulse()"
-            (click)="quickAddDrink('wine')"
-          >
-            +1 Vin
-          </button>
-          <button
-            type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-yellow-400 transition-all hover:bg-scheme-surface-hover"
-            [class.animate-pulse]="alcoholPulse()"
-            (click)="quickAddDrink('champagne')"
-          >
-            +1 Champagne
-          </button>
-          <button
-            type="button"
-            class="flex items-center gap-2 rounded-button border border-scheme-border bg-scheme-surface px-5 py-3 text-base font-semibold text-scheme-accent-active transition-all hover:bg-scheme-surface-hover"
-            [class.animate-pulse]="coffeePulse()"
-            (click)="quickAddDrink('coffee')"
-          >
-            +1 Cafe
-          </button>
-        </section>
 
         <!-- Compteurs journaliers -->
         <section class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -172,6 +137,26 @@ import {
         </main>
       </div>
     </div>
+
+    <!-- FAB Ajout -->
+    <div class="fixed bottom-6 right-6 z-40">
+      <button
+        type="button"
+        class="flex h-14 w-14 items-center justify-center rounded-full bg-scheme-accent text-2xl font-bold text-scheme-on-accent shadow-lg transition-transform hover:scale-110 hover:bg-scheme-accent-hover"
+        (click)="addSheetOpen.set(true)"
+        aria-label="Ajouter une consommation"
+      >
+        +
+      </button>
+    </div>
+
+    <!-- Bottom Sheet Ajout -->
+    <app-sebastian-add-drink-sheet
+      [open]="addSheetOpen()"
+      [recentEntries]="recentEntries()"
+      (openChange)="addSheetOpen.set($event)"
+      (addDrink)="onAddDrink($event)"
+    />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -195,6 +180,9 @@ export class SebastianAppComponent {
 
   /** Statistiques de la semaine. */
   readonly stats = signal<SebastianStats | null>(null);
+
+  /** Controle l'ouverture du bottom sheet d'ajout. */
+  readonly addSheetOpen = signal(false);
 
   /** Animations pulse apres ajout rapide. */
   readonly alcoholPulse = signal(false);
@@ -244,38 +232,30 @@ export class SebastianAppComponent {
     return Math.min(100, (this.todayCoffee() / goal.targetQuantity) * 100);
   });
 
+  /** 3 dernieres entrees distinctes par drinkType pour le quick-add. */
+  readonly recentEntries = computed(() => {
+    const seen = new Set<string>();
+    const recents: SebastianEntry[] = [];
+    for (const entry of this.entries()) {
+      const key = entry.drinkType ?? entry.category;
+      if (!seen.has(key)) {
+        seen.add(key);
+        recents.push(entry);
+      }
+      if (recents.length >= 3) break;
+    }
+    return recents;
+  });
+
   constructor() {
     this.loadData();
   }
 
-  /** Valeurs par defaut pour chaque type de boisson. */
-  private readonly drinkDefaults: Record<
-    SebastianDrinkType,
-    { category: SebastianCategory; alcoholDegree: number; volumeCl: number }
-  > = {
-    beer: { category: "alcohol", alcoholDegree: 5, volumeCl: 25 },
-    wine: { category: "alcohol", alcoholDegree: 12, volumeCl: 12.5 },
-    champagne: { category: "alcohol", alcoholDegree: 12, volumeCl: 12.5 },
-    cocktail: { category: "alcohol", alcoholDegree: 15, volumeCl: 20 },
-    spiritueux: { category: "alcohol", alcoholDegree: 40, volumeCl: 4 },
-    cidre: { category: "alcohol", alcoholDegree: 5, volumeCl: 25 },
-    coffee: { category: "coffee", alcoholDegree: 0, volumeCl: 0 },
-  };
-
-  /** Ajout rapide d'une consommation par type de boisson. */
-  quickAddDrink(drinkType: SebastianDrinkType): void {
-    const defaults = this.drinkDefaults[drinkType];
-    const payload = {
-      category: defaults.category,
-      quantity: 1,
-      date: this.todayIso(),
-      drinkType,
-      alcoholDegree: defaults.alcoholDegree || undefined,
-      volumeCl: defaults.volumeCl || undefined,
-    };
+  /** Callback quand le bottom sheet emet un ajout. */
+  onAddDrink(payload: CreateEntryPayload): void {
     this.port.addEntry(payload).subscribe((entry) => {
       this.entries.update((list) => [entry, ...list]);
-      this.triggerPulse(defaults.category);
+      this.triggerPulse(entry.category as SebastianCategory);
     });
   }
 

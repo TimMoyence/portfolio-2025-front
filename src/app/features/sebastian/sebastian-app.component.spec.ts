@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter } from "@angular/router";
 import { of } from "rxjs";
 import {
@@ -43,6 +44,7 @@ describe("SebastianAppComponent", () => {
     await TestBed.configureTestingModule({
       imports: [SebastianAppComponent],
       providers: [
+        provideAnimations(),
         provideRouter([]),
         { provide: SEBASTIAN_PORT, useValue: portStub },
       ],
@@ -79,10 +81,20 @@ describe("SebastianAppComponent", () => {
     expect(h1!.textContent!.trim()).toContain("Sebastian");
   });
 
-  it("devrait afficher les boutons d'ajout rapide", () => {
-    const buttons: NodeListOf<HTMLButtonElement> =
-      fixture.nativeElement.querySelectorAll("section button");
-    expect(buttons.length).toBe(4);
+  it("devrait afficher le FAB d ajout", () => {
+    const fab: HTMLButtonElement | null = fixture.nativeElement.querySelector(
+      '[aria-label="Ajouter une consommation"]',
+    );
+    expect(fab).toBeTruthy();
+  });
+
+  it("devrait ouvrir le bottom sheet au clic sur le FAB", () => {
+    const fab: HTMLButtonElement = fixture.nativeElement.querySelector(
+      '[aria-label="Ajouter une consommation"]',
+    );
+    fab.click();
+    fixture.detectChanges();
+    expect(component.addSheetOpen()).toBe(true);
   });
 
   it("devrait afficher les 5 onglets de navigation", () => {
@@ -104,40 +116,48 @@ describe("SebastianAppComponent", () => {
     expect(main).toBeTruthy();
   });
 
-  it("devrait appeler addEntry lors d'un ajout rapide cafe", () => {
-    const newEntry = buildSebastianEntry({ id: "e-new", category: "coffee" });
+  it("devrait ajouter une entree via onAddDrink", () => {
+    const newEntry = buildSebastianEntry({ id: "e-new", category: "alcohol" });
     portStub.addEntry.and.returnValue(of(newEntry));
 
-    component.quickAddDrink("coffee");
-
-    expect(portStub.addEntry).toHaveBeenCalledWith(
-      jasmine.objectContaining({ category: "coffee", quantity: 1 }),
-    );
-  });
-
-  it("devrait appeler addEntry lors d'un ajout rapide alcool", () => {
-    const newEntry = buildSebastianEntry({
-      id: "e-new",
+    component.onAddDrink({
       category: "alcohol",
-      unit: "standard_drink",
+      quantity: 1,
+      date: "2026-04-09",
+      drinkType: "beer",
+      alcoholDegree: 8,
+      volumeCl: 25,
     });
-    portStub.addEntry.and.returnValue(of(newEntry));
-
-    component.quickAddDrink("beer");
 
     expect(portStub.addEntry).toHaveBeenCalledWith(
-      jasmine.objectContaining({ category: "alcohol", quantity: 1 }),
+      jasmine.objectContaining({ drinkType: "beer", alcoholDegree: 8 }),
     );
+    expect(component.entries().length).toBe(3);
   });
 
-  it("devrait mettre a jour la liste apres ajout rapide", () => {
-    const newEntry = buildSebastianEntry({ id: "e-new", category: "coffee" });
-    portStub.addEntry.and.returnValue(of(newEntry));
+  it("devrait calculer les 3 recents distincts par drinkType", () => {
+    const today = new Date().toISOString().slice(0, 10);
+    portStub.getEntries.and.returnValue(
+      of([
+        buildSebastianEntry({ id: "a1", drinkType: "beer", date: today }),
+        buildSebastianEntry({ id: "a2", drinkType: "beer", date: today }),
+        buildSebastianEntry({ id: "a3", drinkType: "wine", date: today }),
+        buildSebastianEntry({ id: "a4", drinkType: "coffee", date: today }),
+        buildSebastianEntry({
+          id: "a5",
+          drinkType: "cocktail",
+          date: today,
+        }),
+      ]),
+    );
 
-    component.quickAddDrink("coffee");
-
-    expect(component.entries().length).toBe(3);
-    expect(component.entries()[0].id).toBe("e-new");
+    const freshFixture = TestBed.createComponent(SebastianAppComponent);
+    freshFixture.detectChanges();
+    expect(freshFixture.componentInstance.recentEntries().length).toBe(3);
+    const types = freshFixture.componentInstance
+      .recentEntries()
+      .map((e) => e.drinkType);
+    expect(types).toEqual(["beer", "wine", "coffee"]);
   });
 
   it("devrait calculer le total alcool du jour", () => {
