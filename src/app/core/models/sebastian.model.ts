@@ -5,7 +5,14 @@ export type SebastianCategory = "alcohol" | "coffee";
 export type SebastianUnit = "standard_drink" | "cup";
 
 /** Type de boisson pour le suivi v2. */
-export type SebastianDrinkType = "beer" | "wine" | "champagne" | "coffee";
+export type SebastianDrinkType =
+  | "beer"
+  | "wine"
+  | "champagne"
+  | "coffee"
+  | "cocktail"
+  | "spiritueux"
+  | "cidre";
 
 /** Periode pour les objectifs. */
 export type SebastianPeriod = "daily" | "weekly" | "monthly";
@@ -64,6 +71,7 @@ export interface CreateEntryPayload {
   drinkType?: SebastianDrinkType;
   alcoholDegree?: number;
   volumeCl?: number;
+  consumedAt?: string;
 }
 
 /** Point de la courbe BAC. */

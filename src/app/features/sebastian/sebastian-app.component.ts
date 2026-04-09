@@ -256,6 +256,9 @@ export class SebastianAppComponent {
     beer: { category: "alcohol", alcoholDegree: 5, volumeCl: 25 },
     wine: { category: "alcohol", alcoholDegree: 12, volumeCl: 12.5 },
     champagne: { category: "alcohol", alcoholDegree: 12, volumeCl: 12.5 },
+    cocktail: { category: "alcohol", alcoholDegree: 15, volumeCl: 20 },
+    spiritueux: { category: "alcohol", alcoholDegree: 40, volumeCl: 4 },
+    cidre: { category: "alcohol", alcoholDegree: 5, volumeCl: 25 },
     coffee: { category: "coffee", alcoholDegree: 0, volumeCl: 0 },
   };
 
