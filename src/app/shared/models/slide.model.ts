@@ -15,10 +15,7 @@ export interface Slide {
   subtitle?: string;
   bullets?: string[];
   table?: SlideTable;
-  visual?: "icon" | "image";
-  visualRef?: string;
-  emoji?: string;
-  accentClass?: string;
+  image?: string;
   notes?: string;
   promptTemplate?: PromptTemplate;
 }
