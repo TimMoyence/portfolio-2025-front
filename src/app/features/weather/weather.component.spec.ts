@@ -19,6 +19,8 @@ import {
   buildWeatherPreferences,
   createWeatherPortStub,
 } from "../../../testing/factories/weather.factory";
+import { UnitPreferencesService } from "./services/unit-preferences.service";
+import { WeatherLevelService } from "./services/weather-level.service";
 import { WeatherComponent } from "./weather.component";
 
 describe("WeatherComponent", () => {
@@ -52,6 +54,8 @@ describe("WeatherComponent", () => {
         provideHttpClientTesting(),
         { provide: AUTH_PORT, useValue: authPortStub },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        UnitPreferencesService,
+        WeatherLevelService,
       ],
     }).compileComponents();
 

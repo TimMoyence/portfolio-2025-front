@@ -73,6 +73,21 @@ export class NavbarComponent {
     ],
   };
 
+  /** Dropdown "Formations" regroupant les presentations et ressources. */
+  readonly formationsDropdown: DropdownSection = {
+    label: $localize`:navbar.formations.label|Formations dropdown label@@navFormationsLabel:Formations`,
+    isOpen: false,
+    items: [
+      {
+        title: $localize`:navbar.formations.ia.title|@@navFormationsIaTitle:IA pour Solopreneurs`,
+        description: $localize`:navbar.formations.ia.desc|@@navFormationsIaDesc:Panorama des outils IA pour entrepreneurs`,
+        icon: "sparkles",
+        iconAlt: "IA",
+        href: "/formations/ia-solopreneurs",
+      },
+    ],
+  };
+
   readonly openMenuLabel = $localize`:navbar.menu.open|Burger button label@@navMenuOpen:Ouvrir le menu principal`;
   readonly closeMenuLabel = $localize`:navbar.menu.close|Burger button label@@navMenuClose:Fermer le menu principal`;
   readonly mobileNavHeading = $localize`:navbar.menu.heading|Mobile nav heading@@navMenuHeading:Menu principal`;
@@ -205,6 +220,28 @@ export class NavbarComponent {
     }
   }
 
+  /** Ouvre ou ferme le dropdown Formations. */
+  toggleFormationsDropdown(): void {
+    this.formationsDropdown.isOpen = !this.formationsDropdown.isOpen;
+    this.cdr.markForCheck();
+  }
+
+  /** Ouvre le dropdown Formations. */
+  openFormationsDropdown(): void {
+    if (!this.formationsDropdown.isOpen) {
+      this.formationsDropdown.isOpen = true;
+      this.cdr.markForCheck();
+    }
+  }
+
+  /** Ferme le dropdown Formations s'il est ouvert. */
+  closeFormationsDropdown(): void {
+    if (this.formationsDropdown.isOpen) {
+      this.formationsDropdown.isOpen = false;
+      this.cdr.markForCheck();
+    }
+  }
+
   @HostListener("document:keydown", ["$event"])
   handleGlobalKeydown(event: KeyboardEvent): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -230,6 +267,11 @@ export class NavbarComponent {
       if (this.atelierDropdown.isOpen) {
         event.preventDefault();
         this.closeAtelierDropdown();
+        return;
+      }
+      if (this.formationsDropdown.isOpen) {
+        event.preventDefault();
+        this.closeFormationsDropdown();
         return;
       }
     }

@@ -1,0 +1,526 @@
+<!-- ══════════════════════════════════════════════════
+     HERO — Immersion dans l'app budget (100vh)
+     ══════════════════════════════════════════════════ -->
+<section class="hero" id="top">
+  <div class="noise-overlay"></div>
+
+  <div class="hero-inner">
+    <!-- Texte principal -->
+    <div class="hero-text max-w-[540px]">
+      <p
+        class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+        i18n="budget.pres.kicker|@@budgetPresKicker"
+      >
+        Common Budget T&amp;M
+      </p>
+      <h1
+        class="font-heading mt-4 text-5xl font-black leading-[1.08] md:text-7xl"
+        i18n="budget.pres.headline|@@budgetPresHeadline"
+      >
+        Fini les prises de
+        <span class="text-[#0f7b65]">tete</span> sur l'argent
+      </h1>
+      <p
+        class="mt-6 max-w-lg text-lg leading-8 text-slate-600"
+        i18n="budget.pres.desc|@@budgetPresDesc"
+      >
+        Gerez votre budget a deux en toute serenite. Contributions equitables,
+        suivi par categorie et import CSV intelligent.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          routerLink="/login"
+          class="btn-budget"
+          i18n="budget.pres.cta.start|@@budgetPresCtaStart"
+          >Commencer gratuitement</a
+        >
+        <a
+          href="#features"
+          class="btn-budget-outline"
+          i18n="budget.pres.cta.discover|@@budgetPresCtaDiscover"
+          >Decouvrir &#8595;</a
+        >
+      </div>
+    </div>
+
+    <!-- Apercu du dashboard -->
+    <div class="hero-preview" appSlideIn>
+      <div
+        class="rounded-[2rem] border border-black/10 bg-[linear-gradient(135deg,rgba(255,250,240,0.95),rgba(220,242,235,0.92))] p-6 shadow-[0_24px_60px_rgba(25,33,52,0.08)] md:p-8"
+      >
+        <!-- Barre de mois -->
+        <div class="flex flex-wrap gap-2">
+          @for (month of months; track month) {
+            <span
+              class="month-pill"
+              [class.month-pill--active]="month === activeMonth"
+              >{{ month }}</span
+            >
+          }
+        </div>
+
+        <div class="mt-6 grid gap-6 md:grid-cols-2">
+          <!-- Panneau gauche : donut + legende -->
+          <div class="flex flex-col items-center gap-4">
+            <div
+              class="donut"
+              [style.background]="conicGradient"
+              role="img"
+              i18n-aria-label="budget.pres.donut.aria|@@budgetPresDonutAria"
+              aria-label="Repartition des depenses par categorie"
+            >
+              <div class="donut-hole">
+                <span class="text-2xl font-black text-slate-950 md:text-3xl">{{
+                  summary.totalExpenses
+                }}</span>
+                <span
+                  class="text-xs text-slate-500"
+                  i18n="budget.pres.donut.label|@@budgetPresDonutLabel"
+                  >Depenses totales</span
+                >
+              </div>
+            </div>
+            <!-- Legende -->
+            <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+              @for (seg of donutSegments; track seg.name) {
+                <div class="flex items-center gap-2 text-sm text-slate-600">
+                  <span
+                    class="inline-block h-3 w-3 rounded-full"
+                    [style.backgroundColor]="seg.color"
+                  ></span>
+                  {{ seg.name }}
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Panneau droit : cartes summary -->
+          <div
+            class="flex flex-col gap-4 rounded-[1.75rem] border border-white/60 bg-white/70 p-4 backdrop-blur"
+          >
+            <app-budget-summary-card
+              eyebrow="Vue d'ensemble"
+              title="Depenses du mois"
+              [value]="summary.totalExpenses"
+              caption="Sur un budget total de 2 870 EUR"
+            />
+            <app-budget-summary-card
+              eyebrow="Revenus"
+              title="Entrees du mois"
+              [value]="summary.totalIncoming"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de scroll -->
+  <div class="scroll-hint" aria-hidden="true">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+    </svg>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     CONTRIBUTIONS — Barres de repartition
+     ══════════════════════════════════════════════════ -->
+<section class="section-contributions" id="contributions">
+  <div class="section-container">
+    <div class="section-header mb-10" appSlideIn>
+      <p
+        class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+        i18n="budget.pres.contrib.kicker|@@budgetPresContribKicker"
+      >
+        Contributions
+      </p>
+      <h2
+        class="mt-3 text-3xl font-black text-slate-950 md:text-4xl"
+        i18n="budget.pres.contrib.title|@@budgetPresContribTitle"
+      >
+        Chacun sa juste part
+      </h2>
+      <p
+        class="mt-4 max-w-xl text-base leading-7 text-slate-500"
+        i18n="budget.pres.contrib.desc|@@budgetPresContribDesc"
+      >
+        Les contributions sont calculees au prorata des revenus. Transparent,
+        equitable et automatique.
+      </p>
+    </div>
+
+    <div class="contrib-cards" appSlideIn>
+      <!-- Tim -->
+      <div
+        class="contrib-card rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
+      >
+        <div class="flex items-center justify-between">
+          <span class="text-lg font-bold text-slate-900">{{
+            contributions.tim.name
+          }}</span>
+          <span class="text-2xl font-black text-[#0f7b65]"
+            >{{ contributions.tim.percentage }}%</span
+          >
+        </div>
+        <div class="mt-4">
+          <div class="contrib-bar-track">
+            <div
+              class="contrib-bar-fill"
+              [style.width.%]="contributions.tim.percentage"
+            ></div>
+          </div>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">
+          {{ summary.timContribution }}
+          <span i18n="budget.pres.contrib.month|@@budgetPresContribMonth"
+            >/ mois</span
+          >
+        </p>
+      </div>
+
+      <!-- Maria -->
+      <div
+        class="contrib-card rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
+      >
+        <div class="flex items-center justify-between">
+          <span class="text-lg font-bold text-slate-900">{{
+            contributions.maria.name
+          }}</span>
+          <span class="text-2xl font-black text-[#0f7b65]"
+            >{{ contributions.maria.percentage }}%</span
+          >
+        </div>
+        <div class="mt-4">
+          <div class="contrib-bar-track">
+            <div
+              class="contrib-bar-fill contrib-bar-fill--secondary"
+              [style.width.%]="contributions.maria.percentage"
+            ></div>
+          </div>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">
+          {{ summary.mariaContribution }}
+          <span i18n="budget.pres.contrib.month2|@@budgetPresContribMonth2"
+            >/ mois</span
+          >
+        </p>
+      </div>
+
+      <!-- Combined salary -->
+      <div
+        class="col-span-full rounded-[1.5rem] border border-[#ddd5c7] bg-[#fffaf2] p-5"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p
+              class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500"
+              i18n="budget.pres.contrib.combined|@@budgetPresContribCombined"
+            >
+              Revenus combines
+            </p>
+            <p class="mt-1 text-3xl font-black text-slate-950">
+              {{ contributions.combined }} EUR
+            </p>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="text-center">
+              <p class="text-sm text-slate-500">Tim</p>
+              <p class="text-lg font-bold text-slate-900">
+                {{ contributions.tim.salary }} EUR
+              </p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-slate-500">Maria</p>
+              <p class="text-lg font-bold text-slate-900">
+                {{ contributions.maria.salary }} EUR
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     FEATURES — 4 fonctionnalites phares
+     ══════════════════════════════════════════════════ -->
+<section class="section-features" id="features">
+  <div class="section-container">
+    <div class="section-header mb-10 text-center mx-auto" appSlideIn>
+      <p
+        class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+        i18n="budget.pres.feat.kicker|@@budgetPresFeatKicker"
+      >
+        Fonctionnalites
+      </p>
+      <h2
+        class="mt-3 text-3xl font-black text-slate-950 md:text-4xl"
+        i18n="budget.pres.feat.title|@@budgetPresFeatTitle"
+      >
+        Tout ce qu'il faut pour gerer a deux
+      </h2>
+      <p
+        class="mt-4 max-w-2xl text-base leading-7 text-slate-500"
+        i18n="budget.pres.feat.desc|@@budgetPresFeatDesc"
+      >
+        Import intelligent, repartition equitable, categories personnalisables
+        et suivi en temps reel. Votre budget n'aura jamais ete aussi clair.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      @for (feat of features; track feat.title; let i = $index) {
+        <div
+          class="feature-card rounded-[1.75rem] border border-black/10 bg-white/95 p-8 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
+          appSlideIn
+        >
+          <img [src]="feat.icon" alt="" width="48" height="48" loading="lazy" />
+          <h3 class="mt-5 text-xl font-bold text-slate-900">
+            {{ feat.title }}
+          </h3>
+          <p class="mt-3 text-sm leading-6 text-slate-500">
+            {{ feat.description }}
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     APERCU — Dashboard fictif avec formulaire
+     ══════════════════════════════════════════════════ -->
+<section class="section-preview">
+  <div class="section-container">
+    <div class="preview-layout">
+      <div class="max-w-[480px]" appSlideIn>
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+          i18n="budget.pres.preview.kicker|@@budgetPresPreviewKicker"
+        >
+          Apercu
+        </p>
+        <h2
+          class="mt-3 text-3xl font-black text-slate-950 md:text-4xl"
+          i18n="budget.pres.preview.title|@@budgetPresPreviewTitle"
+        >
+          Un tableau de bord qui parle
+        </h2>
+        <p
+          class="mt-4 max-w-lg text-base leading-7 text-slate-500"
+          i18n="budget.pres.preview.desc|@@budgetPresPreviewDesc"
+        >
+          Ajoutez vos depenses en quelques secondes. Le formulaire reconnait les
+          categories, calcule les totaux et met a jour le donut en temps reel.
+        </p>
+      </div>
+
+      <!-- Formulaire fictif -->
+      <div
+        class="preview-form rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
+        appSlideIn
+      >
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+          i18n="budget.pres.form.kicker|@@budgetPresFormKicker"
+        >
+          Nouvelle depense
+        </p>
+        <div class="mt-4 grid gap-4">
+          <div>
+            <label
+              for="preview-desc"
+              class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500"
+              i18n="budget.pres.form.desc|@@budgetPresFormDesc"
+              >Description</label
+            >
+            <input
+              id="preview-desc"
+              type="text"
+              class="form-input mt-1"
+              value="Courses Carrefour"
+              readonly
+              tabindex="-1"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                for="preview-amount"
+                class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500"
+                i18n="budget.pres.form.amount|@@budgetPresFormAmount"
+                >Montant</label
+              >
+              <input
+                id="preview-amount"
+                type="text"
+                class="form-input mt-1"
+                value="87,50 EUR"
+                readonly
+                tabindex="-1"
+              />
+            </div>
+            <div>
+              <label
+                for="preview-category"
+                class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500"
+                i18n="budget.pres.form.category|@@budgetPresFormCategory"
+                >Categorie</label
+              >
+              <select
+                id="preview-category"
+                class="form-input mt-1"
+                disabled
+                tabindex="-1"
+              >
+                <option>Courses</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     TIMELINE — Comment ca marche
+     ══════════════════════════════════════════════════ -->
+<section class="section-timeline" id="how">
+  <div class="section-container">
+    <div class="section-header mb-10 text-center mx-auto" appSlideIn>
+      <p
+        class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+        i18n="budget.pres.timeline.kicker|@@budgetPresTimelineKicker"
+      >
+        Comment ca marche
+      </p>
+      <h2
+        class="mt-3 text-3xl font-black text-slate-950 md:text-4xl"
+        i18n="budget.pres.timeline.title|@@budgetPresTimelineTitle"
+      >
+        4 etapes, zero prise de tete
+      </h2>
+    </div>
+
+    <div class="timeline">
+      @for (step of timeline; track step.number) {
+        <div class="timeline-step" appSlideIn>
+          <div class="timeline-dot">
+            <span>{{ step.number }}</span>
+          </div>
+          <div class="timeline-content">
+            <img
+              [src]="step.icon"
+              alt=""
+              width="40"
+              height="40"
+              loading="lazy"
+            />
+            <h3 class="mt-3 text-lg font-bold text-slate-900">
+              {{ step.title }}
+            </h3>
+            <p class="mt-2 text-sm leading-6 text-slate-500">
+              {{ step.description }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     CATEGORIES — Tableau des depenses par categorie
+     ══════════════════════════════════════════════════ -->
+<section class="section-categories">
+  <div class="section-container">
+    <div class="section-header mb-10" appSlideIn>
+      <p
+        class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+        i18n="budget.pres.cat.kicker|@@budgetPresCatKicker"
+      >
+        Categories
+      </p>
+      <h2
+        class="mt-3 text-3xl font-black text-slate-950 md:text-4xl"
+        i18n="budget.pres.cat.title|@@budgetPresCatTitle"
+      >
+        Vos depenses en detail
+      </h2>
+    </div>
+
+    <div class="category-grid" appSlideIn>
+      @for (cat of categoryTotals; track cat.name) {
+        <div
+          class="category-card rounded-[1.75rem] border border-black/10 bg-white/95 p-5 shadow-[0_12px_30px_rgba(25,33,52,0.06)]"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-block h-4 w-4 rounded-full"
+              [style.backgroundColor]="cat.color"
+            ></span>
+            <span class="text-sm font-semibold text-slate-900">{{
+              cat.name
+            }}</span>
+          </div>
+          <div class="mt-3 flex items-end justify-between">
+            <span class="text-2xl font-black text-slate-950"
+              >{{ cat.spent }} EUR</span
+            >
+            <span class="text-xs text-slate-400">/ {{ cat.limit }} EUR</span>
+          </div>
+          <div class="category-bar-track mt-3">
+            <div
+              class="category-bar-fill"
+              [style.width.%]="cat.percent > 100 ? 100 : cat.percent"
+              [style.backgroundColor]="cat.color"
+              [class.category-bar-fill--over]="cat.percent > 100"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     CTA FINAL — Percutant, vert budget
+     ══════════════════════════════════════════════════ -->
+<section class="section-cta">
+  <div class="cta-inner">
+    <h2 appSlideIn i18n="budget.pres.cta.title|@@budgetPresCtaTitle">
+      Pret a reprendre le controle de vos finances ?
+    </h2>
+    <p appSlideIn i18n="budget.pres.cta.desc|@@budgetPresCtaDesc">
+      Creez votre budget partage en quelques minutes. Import CSV, categories
+      intelligentes et suivi en temps reel.
+    </p>
+    <div appSlideIn>
+      <a
+        routerLink="/login"
+        class="btn-budget"
+        i18n="budget.pres.cta.final|@@budgetPresCtaFinal"
+        >Commencer gratuitement</a
+      >
+    </div>
+    <p
+      class="cta-trust"
+      appSlideIn
+      i18n="budget.pres.cta.trust|@@budgetPresCtaTrust"
+    >
+      Gratuit — Aucune carte bancaire requise
+    </p>
+  </div>
+</section>

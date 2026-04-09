@@ -33,20 +33,49 @@
         <source> Déverrouillez votre potentiel avec un compte personnalisé </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">83,86</context>
+          <context context-type="linenumber">83,87</context>
         </context-group>
         <note priority="1" from="description">Signup panel description</note>
         <note priority="1" from="meaning">auth.signup.lead</note>
+      </trans-unit>
+      <trans-unit id="7215127729541696793" datatype="html">
+        <source>Inscrivez-vous avec Google</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">92,93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authSignupGoogle" datatype="html">
+        <source> Inscrivez-vous avec Google </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">105,109</context>
+        </context-group>
+        <note priority="1" from="description">Signup with Google</note>
+        <note priority="1" from="meaning">auth.signup.google</note>
+      </trans-unit>
+      <trans-unit id="authSeparatorOr" datatype="html">
+        <source>ou</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">116,117</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">326,327</context>
+        </context-group>
+        <note priority="1" from="description">Or separator</note>
+        <note priority="1" from="meaning">auth.separator.or</note>
       </trans-unit>
       <trans-unit id="authFieldOptional" datatype="html">
         <source>(facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">152,156</context>
+          <context context-type="linenumber">187,191</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">323,327</context>
+          <context context-type="linenumber">372,376</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -60,11 +89,11 @@
         <source>Ce champ est obligatoire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">165,168</context>
+          <context context-type="linenumber">200,203</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">336,339</context>
+          <context context-type="linenumber">385,388</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -99,14 +128,14 @@
         <note priority="1" from="meaning">auth.error.required</note>
       </trans-unit>
       <trans-unit id="authErrorEmail" datatype="html">
-        <source>Merci d’entrer une adresse email valide.</source>
+        <source>Merci d&apos;entrer une adresse email valide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">172,175</context>
+          <context context-type="linenumber">207,210</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">343,346</context>
+          <context context-type="linenumber">392,395</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -124,7 +153,7 @@
         <source>Le mot de passe doit contenir au moins 8 caractères.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">182,186</context>
+          <context context-type="linenumber">217,221</context>
         </context-group>
         <note priority="1" from="description">Password length
                               error</note>
@@ -134,11 +163,11 @@
         <source>Valeur invalide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">190,194</context>
+          <context context-type="linenumber">225,229</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">350,354</context>
+          <context context-type="linenumber">399,403</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -156,14 +185,14 @@
         <source>Créer compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">202,203</context>
+          <context context-type="linenumber">237,238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authSignupSubmit" datatype="html">
         <source>Créer compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">212,216</context>
+          <context context-type="linenumber">247,251</context>
         </context-group>
         <note priority="1" from="description">Signup submit
                           label</note>
@@ -173,33 +202,17 @@
         <source>Création en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">219,223</context>
+          <context context-type="linenumber">254,258</context>
         </context-group>
         <note priority="1" from="description">Signup loading
                           state</note>
         <note priority="1" from="meaning">auth.signup.loading</note>
       </trans-unit>
-      <trans-unit id="7215127729541696793" datatype="html">
-        <source>Inscrivez-vous avec Google</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">237,238</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="authSignupGoogle" datatype="html">
-        <source> Inscrivez-vous avec Google </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">251,253</context>
-        </context-group>
-        <note priority="1" from="description">Signup with Google</note>
-        <note priority="1" from="meaning">auth.signup.google</note>
-      </trans-unit>
       <trans-unit id="authLoginTitle" datatype="html">
         <source> Se connecter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">273,276</context>
+          <context context-type="linenumber">287,290</context>
         </context-group>
         <note priority="1" from="description">Login panel heading</note>
         <note priority="1" from="meaning">auth.login.title</note>
@@ -208,23 +221,39 @@
         <source> Votre espace de croissance commence </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">279,282</context>
+          <context context-type="linenumber">293,297</context>
         </context-group>
         <note priority="1" from="description">Login panel description</note>
         <note priority="1" from="meaning">auth.login.lead</note>
+      </trans-unit>
+      <trans-unit id="385129033471599880" datatype="html">
+        <source>Connectez-vous avec Google</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">302,303</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authLoginGoogle" datatype="html">
+        <source> Connectez-vous avec Google </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">315,317</context>
+        </context-group>
+        <note priority="1" from="description">Login with Google</note>
+        <note priority="1" from="meaning">auth.login.google</note>
       </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">363</context>
+          <context context-type="linenumber">412</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authLoginSubmit" datatype="html">
         <source>Log in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">371,374</context>
+          <context context-type="linenumber">420,423</context>
         </context-group>
         <note priority="1" from="description">Login submit label</note>
         <note priority="1" from="meaning">auth.login.submit</note>
@@ -233,7 +262,7 @@
         <source>Connexion en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">378,382</context>
+          <context context-type="linenumber">427,431</context>
         </context-group>
         <note priority="1" from="description">Login loading
                           state</note>
@@ -243,30 +272,14 @@
         <source>Mot de passe oublié ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">397,399</context>
+          <context context-type="linenumber">446,448</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="385129033471599880" datatype="html">
-        <source>Connectez-vous avec Google</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">404,405</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="authLoginGoogle" datatype="html">
-        <source> Connectez-vous avec Google </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">418,420</context>
-        </context-group>
-        <note priority="1" from="description">Login with Google</note>
-        <note priority="1" from="meaning">auth.login.google</note>
       </trans-unit>
       <trans-unit id="authHeroLabel" datatype="html">
         <source>Accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">auth.hero.label</note>
       </trans-unit>
@@ -274,7 +287,7 @@
         <source>Connexion ou inscription</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">auth.hero.title</note>
       </trans-unit>
@@ -282,7 +295,7 @@
         <source>Rejoignez votre espace sécurisé pour suivre vos projets et vos échanges.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="description">auth.hero.description</note>
       </trans-unit>
@@ -290,7 +303,7 @@
         <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
@@ -307,7 +320,7 @@
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
@@ -324,7 +337,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.firstName</note>
@@ -333,7 +346,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.lastName</note>
@@ -342,7 +355,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.email</note>
@@ -351,7 +364,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.password</note>
@@ -360,7 +373,7 @@
         <source>Verification de mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.passwordConfirm</note>
@@ -369,7 +382,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.phone</note>
@@ -378,7 +391,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.email</note>
@@ -387,7 +400,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.password</note>
@@ -396,7 +409,7 @@
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">Signup error message</note>
         <note priority="1" from="meaning">auth.signup.error.passwordMismatch</note>
@@ -405,11 +418,11 @@
         <source>Une erreur est survenue. Veuillez réessayer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">195</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">221</context>
         </context-group>
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
@@ -418,7 +431,7 @@
         <source>Compte créé pour <x id="PH" equiv-text="user.firstName"/> <x id="PH_1" equiv-text="user.lastName"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">Signup success message</note>
         <note priority="1" from="meaning">auth.signup.success</note>
@@ -427,7 +440,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -436,7 +449,7 @@
         <source>L&apos;authentification Google n&apos;est pas configurée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">247</context>
         </context-group>
         <note priority="1" from="description">auth.google.notConfigured</note>
       </trans-unit>
@@ -444,7 +457,7 @@
         <source>Impossible de charger Google Sign-In.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <note priority="1" from="description">auth.google.loadError</note>
       </trans-unit>
@@ -452,7 +465,7 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">280</context>
+          <context context-type="linenumber">286</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
       </trans-unit>
@@ -610,61 +623,253 @@
         </context-group>
         <note priority="1" from="description">auth.reset.error.generic</note>
       </trans-unit>
-      <trans-unit id="budgetPresentationSectionTitle" datatype="html">
-        <source> Gérez vos finances à deux </source>
+      <trans-unit id="budgetPresKicker" datatype="html">
+        <source> Common Budget T&amp;M </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.ts</context>
-          <context context-type="linenumber">29,32</context>
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">14,17</context>
         </context-group>
-        <note priority="1" from="meaning">budget.presentation.section.title</note>
+        <note priority="1" from="meaning">budget.pres.kicker</note>
       </trans-unit>
-      <trans-unit id="budgetPresentationSectionDesc" datatype="html">
-        <source> Importez vos relevés CSV, visualisez les dépenses par catégorie et suivez les contributions de chaque membre du couple. Auto-catégorisation intelligente et tableau éditable inclus. </source>
+      <trans-unit id="budgetPresHeadline" datatype="html">
+        <source> Fini les prises de <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-[#0f7b65]&quot;&gt;"/>tete<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> sur l&apos;argent </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.ts</context>
-          <context context-type="linenumber">36,41</context>
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">20,23</context>
         </context-group>
-        <note priority="1" from="meaning">budget.presentation.section.desc</note>
+        <note priority="1" from="meaning">budget.pres.headline</note>
       </trans-unit>
-      <trans-unit id="budgetPresentationCta" datatype="html">
-        <source> Se connecter </source>
+      <trans-unit id="budgetPresDesc" datatype="html">
+        <source> Gerez votre budget a deux en toute serenite. Contributions equitables, suivi par categorie et import CSV intelligent. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.ts</context>
-          <context context-type="linenumber">45,50</context>
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">27,30</context>
         </context-group>
-        <note priority="1" from="meaning">budget.presentation.cta</note>
+        <note priority="1" from="meaning">budget.pres.desc</note>
       </trans-unit>
-      <trans-unit id="budgetHeroLabel" datatype="html">
-        <source>Side-project</source>
+      <trans-unit id="budgetPresCtaStart" datatype="html">
+        <source>Commencer gratuitement</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">35,39</context>
         </context-group>
-        <note priority="1" from="meaning">budget.hero.label</note>
+        <note priority="1" from="meaning">budget.pres.cta.start</note>
       </trans-unit>
-      <trans-unit id="budgetHeroTitle" datatype="html">
-        <source>Budget</source>
+      <trans-unit id="budgetPresCtaDiscover" datatype="html">
+        <source>Decouvrir ↓</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">41,46</context>
         </context-group>
-        <note priority="1" from="meaning">budget.hero.title</note>
+        <note priority="1" from="meaning">budget.pres.cta.discover</note>
       </trans-unit>
-      <trans-unit id="budgetHeroDescription" datatype="html">
-        <source>Un outil de gestion de budget partagé pour couple, avec import CSV, catégorisation automatique et suivi des contributions.</source>
+      <trans-unit id="budgetPresDonutAria" datatype="html">
+        <source>Repartition des depenses par categorie</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">70,73</context>
         </context-group>
-        <note priority="1" from="meaning">budget.hero.description</note>
+        <note priority="1" from="meaning">budget.pres.donut.aria</note>
       </trans-unit>
-      <trans-unit id="budgetHeroActionLogin" datatype="html">
-        <source>Se connecter</source>
+      <trans-unit id="budgetPresDonutLabel" datatype="html">
+        <source>Depenses totales</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">79,82</context>
         </context-group>
-        <note priority="1" from="meaning">budget.hero.action.login</note>
+        <note priority="1" from="meaning">budget.pres.donut.label</note>
+      </trans-unit>
+      <trans-unit id="budgetPresContribKicker" datatype="html">
+        <source> Contributions </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">145,148</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.contrib.kicker</note>
+      </trans-unit>
+      <trans-unit id="budgetPresContribTitle" datatype="html">
+        <source> Chacun sa juste part </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">151,154</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.contrib.title</note>
+      </trans-unit>
+      <trans-unit id="budgetPresContribDesc" datatype="html">
+        <source> Les contributions sont calculees au prorata des revenus. Transparent, equitable et automatique. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">157,162</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.contrib.desc</note>
+      </trans-unit>
+      <trans-unit id="budgetPresContribMonth" datatype="html">
+        <source>/ mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">186,191</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.contrib.month</note>
+      </trans-unit>
+      <trans-unit id="budgetPresContribMonth2" datatype="html">
+        <source>/ mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">214,219</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.contrib.month2</note>
+      </trans-unit>
+      <trans-unit id="budgetPresContribCombined" datatype="html">
+        <source> Revenus combines </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">229,231</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.contrib.combined</note>
+      </trans-unit>
+      <trans-unit id="budgetPresFeatKicker" datatype="html">
+        <source> Fonctionnalites </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">265,268</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.feat.kicker</note>
+      </trans-unit>
+      <trans-unit id="budgetPresFeatTitle" datatype="html">
+        <source> Tout ce qu&apos;il faut pour gerer a deux </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">271,274</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.feat.title</note>
+      </trans-unit>
+      <trans-unit id="budgetPresFeatDesc" datatype="html">
+        <source> Import intelligent, repartition equitable, categories personnalisables et suivi en temps reel. Votre budget n&apos;aura jamais ete aussi clair. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">277,282</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.feat.desc</note>
+      </trans-unit>
+      <trans-unit id="budgetPresPreviewKicker" datatype="html">
+        <source> Apercu </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">312,315</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.preview.kicker</note>
+      </trans-unit>
+      <trans-unit id="budgetPresPreviewTitle" datatype="html">
+        <source> Un tableau de bord qui parle </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">318,321</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.preview.title</note>
+      </trans-unit>
+      <trans-unit id="budgetPresPreviewDesc" datatype="html">
+        <source> Ajoutez vos depenses en quelques secondes. Le formulaire reconnait les categories, calcule les totaux et met a jour le donut en temps reel. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">324,329</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.preview.desc</note>
+      </trans-unit>
+      <trans-unit id="budgetPresFormKicker" datatype="html">
+        <source> Nouvelle depense </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">338,340</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.form.kicker</note>
+      </trans-unit>
+      <trans-unit id="budgetPresFormDesc" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">346,349</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.form.desc</note>
+      </trans-unit>
+      <trans-unit id="budgetPresFormAmount" datatype="html">
+        <source>Montant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">363,366</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.form.amount</note>
+      </trans-unit>
+      <trans-unit id="budgetPresFormCategory" datatype="html">
+        <source>Categorie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">379,382</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.form.category</note>
+      </trans-unit>
+      <trans-unit id="budgetPresTimelineKicker" datatype="html">
+        <source> Comment ca marche </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">407,410</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.timeline.kicker</note>
+      </trans-unit>
+      <trans-unit id="budgetPresTimelineTitle" datatype="html">
+        <source> 4 etapes, zero prise de tete </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">413,418</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.timeline.title</note>
+      </trans-unit>
+      <trans-unit id="budgetPresCatKicker" datatype="html">
+        <source> Categories </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">454,457</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.cat.kicker</note>
+      </trans-unit>
+      <trans-unit id="budgetPresCatTitle" datatype="html">
+        <source> Vos depenses en detail </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">460,464</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.cat.title</note>
+      </trans-unit>
+      <trans-unit id="budgetPresCtaTitle" datatype="html">
+        <source> Pret a reprendre le controle de vos finances ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">504,506</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.cta.title</note>
+      </trans-unit>
+      <trans-unit id="budgetPresCtaDesc" datatype="html">
+        <source> Creez votre budget partage en quelques minutes. Import CSV, categories intelligentes et suivi en temps reel. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">507,512</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.cta.desc</note>
+      </trans-unit>
+      <trans-unit id="budgetPresCtaFinal" datatype="html">
+        <source>Commencer gratuitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">515,520</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.cta.final</note>
+      </trans-unit>
+      <trans-unit id="budgetPresCtaTrust" datatype="html">
+        <source> Gratuit — Aucune carte bancaire requise </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
+          <context context-type="linenumber">523,527</context>
+        </context-group>
+        <note priority="1" from="meaning">budget.pres.cta.trust</note>
       </trans-unit>
       <trans-unit id="clientProjects.hero.label" datatype="html">
         <source>Créatif</source>
@@ -1262,14 +1467,14 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source> Répartition des dépenses </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-chart/budget-chart.component.ts</context>
-          <context context-type="linenumber">31,33</context>
+          <context context-type="linenumber">34,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetChartBarTitle" datatype="html">
-        <source>Budget vs Réel</source>
+        <source> Budget vs Réel </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-chart/budget-chart.component.ts</context>
-          <context context-type="linenumber">36,37</context>
+          <context context-type="linenumber">43,45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetExportInProgress" datatype="html">
@@ -1297,14 +1502,14 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source> Suivi par catégorie </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-goals/budget-goals.component.ts</context>
-          <context context-type="linenumber">46,48</context>
+          <context context-type="linenumber">49,51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetGoalsEmpty" datatype="html">
         <source> Aucune catégorie avec un objectif défini. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-goals/budget-goals.component.ts</context>
-          <context context-type="linenumber">98,100</context>
+          <context context-type="linenumber">110,112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringEyebrow" datatype="html">
@@ -1318,21 +1523,21 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source> Entrées récurrentes </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">40,42</context>
+          <context context-type="linenumber">43,45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringCancelBtn" datatype="html">
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">49,51</context>
+          <context context-type="linenumber">52,54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringAddBtn" datatype="html">
         <source>Ajouter une entrée récurrente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">51,53</context>
+          <context context-type="linenumber">55,58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormDescription" datatype="html">
@@ -1344,7 +1549,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
             /&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">65,72</context>
+          <context context-type="linenumber">75,82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormAmount" datatype="html">
@@ -1357,28 +1562,28 @@ L’application est organisée autour de trois modules complémentaires, chacun 
             /&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">74,82</context>
+          <context context-type="linenumber">87,95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormFrequency" datatype="html">
         <source>Fréquence</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">84,86</context>
+          <context context-type="linenumber">97,99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormType" datatype="html">
         <source>Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">96,98</context>
+          <context context-type="linenumber">109,111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormCategory" datatype="html">
         <source>Catégorie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">107,109</context>
+          <context context-type="linenumber">122,124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormDayOfMonth" datatype="html">
@@ -1392,14 +1597,14 @@ L’application est organisée autour de trois modules complémentaires, chacun 
               /&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">121,130</context>
+          <context context-type="linenumber">139,148</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormDayOfWeek" datatype="html">
         <source>Jour de la semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">134,136</context>
+          <context context-type="linenumber">153,155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormStartDate" datatype="html">
@@ -1411,7 +1616,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
             /&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">147,154</context>
+          <context context-type="linenumber">170,177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringFormEndDate" datatype="html">
@@ -1423,133 +1628,133 @@ L’application est organisée autour de trois modules complémentaires, chacun 
             /&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">156,163</context>
+          <context context-type="linenumber">182,189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringCreateBtn" datatype="html">
         <source>Créer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">170,172</context>
+          <context context-type="linenumber">196,198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringColDescription" datatype="html">
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">182,183</context>
+          <context context-type="linenumber">208,209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringColAmount" datatype="html">
         <source>Montant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">183,184</context>
+          <context context-type="linenumber">209,210</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringColFrequency" datatype="html">
         <source>Fréquence</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">184,185</context>
+          <context context-type="linenumber">210,211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringColCategory" datatype="html">
         <source>Catégorie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">185,186</context>
+          <context context-type="linenumber">211,212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringColActive" datatype="html">
         <source>Actif</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">186,188</context>
+          <context context-type="linenumber">212,214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDeleteBtn" datatype="html">
         <source>Supprimer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">219,221</context>
+          <context context-type="linenumber">245,247</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringEmpty" datatype="html">
         <source> Aucune entrée récurrente configurée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">224,226</context>
+          <context context-type="linenumber">253,255</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringCategoryNone" datatype="html">
         <source>Aucune</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">341</context>
+          <context context-type="linenumber">372</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDaySunday" datatype="html">
         <source>Dimanche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">345</context>
+          <context context-type="linenumber">376</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDayMonday" datatype="html">
         <source>Lundi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">377</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDayTuesday" datatype="html">
         <source>Mardi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">347</context>
+          <context context-type="linenumber">378</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDayWednesday" datatype="html">
         <source>Mercredi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">348</context>
+          <context context-type="linenumber">379</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDayThursday" datatype="html">
         <source>Jeudi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">349</context>
+          <context context-type="linenumber">380</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDayFriday" datatype="html">
         <source>Vendredi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">381</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringDaySaturday" datatype="html">
         <source>Samedi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">351</context>
+          <context context-type="linenumber">382</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringTypeFixed" datatype="html">
         <source>Fixe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">367</context>
+          <context context-type="linenumber">398</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringTypeVariable" datatype="html">
         <source>Variable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">368</context>
+          <context context-type="linenumber">399</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormHeading" datatype="html">
@@ -4837,61 +5042,537 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">profile.weather.level.expert</note>
       </trans-unit>
-      <trans-unit id="sebastianPresentationSectionTitle" datatype="html">
-        <source> Votre majordome personnel </source>
+      <trans-unit id="sebastianTitle" datatype="html">
+        <source> Sebastian </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.ts</context>
-          <context context-type="linenumber">29,33</context>
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">42,45</context>
         </context-group>
-        <note priority="1" from="meaning">sebastian.presentation.section.title</note>
+        <note priority="1" from="meaning">sebastian.title</note>
       </trans-unit>
-      <trans-unit id="sebastianPresentationSectionDesc" datatype="html">
-        <source> Suivez votre consommation personnelle (café, alcool), définissez des objectifs et visualisez vos progrès avec des graphiques interactifs. Sebastian vous aide à garder le contrôle. </source>
+      <trans-unit id="sebastianDescription" datatype="html">
+        <source> Votre majordome de suivi de consommation </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.ts</context>
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">48,52</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.description</note>
+      </trans-unit>
+      <trans-unit id="sebastianCounterAlcohol" datatype="html">
+        <source>Alcool aujourd&apos;hui</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">62,64</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.counter.alcohol</note>
+      </trans-unit>
+      <trans-unit id="sebastianCounterGoal" datatype="html">
+        <source>Objectif</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">73,75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">105,107</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.counter.goal</note>
+      </trans-unit>
+      <trans-unit id="sebastianCounterCoffee" datatype="html">
+        <source>Cafe aujourd&apos;hui</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">94,96</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.counter.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresHeadline" datatype="html">
+        <source> Gardez le <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;accent-word&quot;&gt;"/>controle<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> sur vos habitudes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.headline</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresDesc" datatype="html">
+        <source> Cafe, alcool — suivez votre consommation au quotidien, fixez vos limites et regardez votre score de sante evoluer. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">22,25</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresCtaStart" datatype="html">
+        <source>Commencer gratuitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">30,34</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.cta.start</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresCtaDiscover" datatype="html">
+        <source>Decouvrir ↓</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
           <context context-type="linenumber">36,41</context>
         </context-group>
-        <note priority="1" from="meaning">sebastian.presentation.section.desc</note>
+        <note priority="1" from="meaning">sebastian.pres.cta.discover</note>
       </trans-unit>
-      <trans-unit id="sebastianPresentationCta" datatype="html">
-        <source> Se connecter </source>
+      <trans-unit id="sebastianPresGaugeLabel" datatype="html">
+        <source> Score de sante </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.ts</context>
-          <context context-type="linenumber">45,50</context>
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">49,52</context>
         </context-group>
-        <note priority="1" from="meaning">sebastian.presentation.cta</note>
+        <note priority="1" from="meaning">sebastian.pres.gauge.label</note>
       </trans-unit>
-      <trans-unit id="sebastianHeroLabel" datatype="html">
-        <source>Side-project</source>
+      <trans-unit id="sebastianPresGaugeOutOf" datatype="html">
+        <source>sur 100</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">86,88</context>
         </context-group>
-        <note priority="1" from="meaning">sebastian.hero.label</note>
+        <note priority="1" from="meaning">sebastian.pres.gauge.outof</note>
       </trans-unit>
-      <trans-unit id="sebastianHeroTitle" datatype="html">
-        <source>Sebastian</source>
+      <trans-unit id="sebastianPresGaugeStatus" datatype="html">
+        <source>Bonne forme</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">92,96</context>
         </context-group>
-        <note priority="1" from="meaning">sebastian.hero.title</note>
+        <note priority="1" from="meaning">sebastian.pres.gauge.status</note>
       </trans-unit>
-      <trans-unit id="sebastianHeroDescription" datatype="html">
-        <source>Un tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps. Votre majordome numérique.</source>
+      <trans-unit id="sebastianPresQuickBeerAria" datatype="html">
+        <source>Ajouter une biere</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
-        <note priority="1" from="meaning">sebastian.hero.description</note>
+        <note priority="1" from="meaning">sebastian.pres.quick.beer.aria</note>
       </trans-unit>
-      <trans-unit id="sebastianHeroActionLogin" datatype="html">
-        <source>Se connecter</source>
+      <trans-unit id="sebastianPresQuickBeer" datatype="html">
+        <source>+1 Biere</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">109,113</context>
         </context-group>
-        <note priority="1" from="meaning">sebastian.hero.action.login</note>
+        <note priority="1" from="meaning">sebastian.pres.quick.beer</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresQuickWineAria" datatype="html">
+        <source>Ajouter un vin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">117,119</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.quick.wine.aria</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresQuickWine" datatype="html">
+        <source>+1 Vin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">121,125</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.quick.wine</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresQuickCoffeeAria" datatype="html">
+        <source>Ajouter un cafe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">129,131</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.quick.coffee.aria</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresQuickCoffee" datatype="html">
+        <source>+1 Cafe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">133,138</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.quick.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresDailyCoffee" datatype="html">
+        <source>Cafe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">145,148</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.daily.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresDailyAlcohol" datatype="html">
+        <source>Alcool</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">164,167</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.daily.alcohol</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresBacLabel" datatype="html">
+        <source> Alcoolemie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">187,190</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.bac.label</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresBacTimer" datatype="html">
+        <source>Sobre dans 1h20</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">195,199</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.bac.timer</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStreakLabel" datatype="html">
+        <source> Serie en cours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">220,222</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.streak.label</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStreakSublabel" datatype="html">
+        <source> jours sous la limite </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">227,230</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.streak.sublabel</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStepsKicker" datatype="html">
+        <source> Comment ca marche </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">267,270</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.steps.kicker</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStepsTitle" datatype="html">
+        <source> Simple comme 1, 2, 3 </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">273,278</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.steps.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStep1Title" datatype="html">
+        <source> Logguez en un tap </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">290,292</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.step1.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStep1Desc" datatype="html">
+        <source> Biere, vin, cafe — ajoutez votre consommation en une seconde avec les boutons rapides. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">293,297</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.step1.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStep2Title" datatype="html">
+        <source> Suivez vos tendances </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">309,311</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.step2.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStep2Desc" datatype="html">
+        <source> Courbes, heatmaps, rapports hebdomadaires. Comprenez vos habitudes en un coup d&apos;oeil. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">312,316</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.step2.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStep3Title" datatype="html">
+        <source> Atteignez vos objectifs </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">328,330</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.step3.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresStep3Desc" datatype="html">
+        <source> Fixez vos limites quotidiennes, debloquez des badges et ameliorez votre score de sante. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">331,338</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.step3.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatGaugeLabel" datatype="html">
+        <source>Score de sante</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">377,381</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.gauge.label</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatProgress" datatype="html">
+        <source>Progression cette semaine</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">384,386</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.progress</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatScoreTitle" datatype="html">
+        <source> Votre sante en un chiffre </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">396,398</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.score.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatScoreDesc" datatype="html">
+        <source> Le Score de Sante agrege votre consommation quotidienne, vos objectifs atteints et votre regularite. Il evolue chaque jour — montez-le en gardant le controle, descendez-le en depassant vos limites. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">399,403</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.score.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresMetricCurrent" datatype="html">
+        <source> Score actuel </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">412,415</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.metric.current</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresMetricVs" datatype="html">
+        <source> vs. mois dernier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">421,424</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.metric.vs</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresMetricRecord" datatype="html">
+        <source> Record personnel </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">430,435</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.metric.record</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatTrackingTitle" datatype="html">
+        <source> Sachez quand ralentir </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">448,451</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.tracking.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatTrackingDesc" datatype="html">
+        <source> Chaque cafe, chaque verre est comptabilise. Vos limites quotidiennes sont visibles d&apos;un coup d&apos;oeil — quand la barre approche la fin, vous savez qu&apos;il est temps de lever le pied. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">453,457</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.tracking.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFabTitle" datatype="html">
+        <source> Ajout rapide </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">464,467</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.fab.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFabDesc" datatype="html">
+        <source> Un tap sur le FAB, c&apos;est loggue. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">470,474</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.fab.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackCoffeeTitle" datatype="html">
+        <source>Cafe du jour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">491,494</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.coffee.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackCoffeeLimit" datatype="html">
+        <source>Limite : <x id="INTERPOLATION" equiv-text="{{ dailyCounts.coffee.goal }}"/> cafes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">511,512</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.coffee.limit</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackEspresso" datatype="html">
+        <source> +1 Espresso </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">520,523</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.espresso</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackLungo" datatype="html">
+        <source> +1 Lungo </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">527,532</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.lungo</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackAlcoholTitle" datatype="html">
+        <source>Alcool du jour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">546,549</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.alcohol.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackAlcoholLimit" datatype="html">
+        <source>Limite : <x id="INTERPOLATION" equiv-text="{{ dailyCounts.alcohol.goal }}"/> verres</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">566,567</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.alcohol.limit</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackBeer" datatype="html">
+        <source> +1 Biere ambree </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">575,578</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.beer</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrackWine" datatype="html">
+        <source> +1 Vin rose </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">582,586</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.track.wine</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresHeatmapTitle" datatype="html">
+        <source>Activite — Mars 2026</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">602,605</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.heatmap.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresHeatmapLow" datatype="html">
+        <source>Peu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">606,609</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.heatmap.low</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresHeatmapHigh" datatype="html">
+        <source>Beaucoup</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">625,629</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.heatmap.high</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrendTitle" datatype="html">
+        <source> Tendance hebdomadaire </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">654,657</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.trend.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatReportsTitle" datatype="html">
+        <source> Visualisez vos tendances </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">682,684</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.reports.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresFeatReportsDesc" datatype="html">
+        <source> La heatmap revele vos jours forts et vos jours faibles. Les rapports hebdomadaires et mensuels comparent vos periodes et montrent l&apos;evolution dans le temps. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">685,689</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.feat.reports.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrendAlcohol" datatype="html">
+        <source>↓ -18% alcool vs. sem. derniere</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">692,695</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.trend.alcohol</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresTrendCoffee" datatype="html">
+        <source>↑ +2 cafes vs. sem. derniere</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">697,702</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.trend.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresBadgesKicker" datatype="html">
+        <source> Gamification </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">714,717</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.badges.kicker</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresBadgesTitle" datatype="html">
+        <source> Debloquez des badges </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">720,723</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.badges.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresBadgesDesc" datatype="html">
+        <source> Chaque bonne habitude vous rapproche d&apos;un nouveau badge. Survolez-les pour voir ce qui vous attend. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">726,731</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.badges.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresCtaTitle" datatype="html">
+        <source> Pret a mieux vous connaitre ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">746,748</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.cta.title</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresCtaDesc" datatype="html">
+        <source> Creez votre compte et commencez a suivre vos habitudes des aujourd&apos;hui. Votre score de sante n&apos;attend que vous. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">749,752</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.cta.desc</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresCtaFinal" datatype="html">
+        <source>Commencer gratuitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">799,804</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.cta.final</note>
+      </trans-unit>
+      <trans-unit id="sebastianPresCtaTrust" datatype="html">
+        <source> Gratuit — Aucune carte bancaire requise </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-presentation.component.html</context>
+          <context context-type="linenumber">807,811</context>
+        </context-group>
+        <note priority="1" from="meaning">sebastian.pres.cta.trust</note>
       </trans-unit>
       <trans-unit id="termsScopeTitle" datatype="html">
         <source> Objet et acceptation </source>
@@ -5196,6 +5877,22 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="meaning">weather.geo.button</note>
       </trans-unit>
+      <trans-unit id="weatherGeoDenied" datatype="html">
+        <source>Géolocalisation refusée. Autorisez l&apos;accès dans les paramètres du navigateur.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/city-search/city-search.component.ts</context>
+          <context context-type="linenumber">267</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.geo.denied</note>
+      </trans-unit>
+      <trans-unit id="weatherGeoError" datatype="html">
+        <source>Impossible de vous localiser. Vérifiez vos paramètres.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/city-search/city-search.component.ts</context>
+          <context context-type="linenumber">271</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.geo.error</note>
+      </trans-unit>
       <trans-unit id="weatherCloudTooltipTitle" datatype="html">
         <source>Couverture nuageuse</source>
         <context-group purpose="location">
@@ -5275,7 +5972,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
                 }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
-          <context context-type="linenumber">66,71</context>
+          <context context-type="linenumber">69,74</context>
         </context-group>
         <note priority="1" from="meaning">weather.current.feelsLike</note>
       </trans-unit>
@@ -5283,7 +5980,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Vent <x id="INTERPOLATION" equiv-text="{{ current()!.wind_speed_10m | unit: unitService.speedUnit() }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
-          <context context-type="linenumber">73,75</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
         <note priority="1" from="meaning">weather.current.wind</note>
       </trans-unit>
@@ -5291,7 +5988,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Pluie </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
-          <context context-type="linenumber">92,94</context>
+          <context context-type="linenumber">95,97</context>
         </context-group>
         <note priority="1" from="meaning">weather.current.precip</note>
       </trans-unit>
@@ -5299,7 +5996,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Humidité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
-          <context context-type="linenumber">109,111</context>
+          <context context-type="linenumber">112,114</context>
         </context-group>
         <note priority="1" from="meaning">weather.current.humidity</note>
       </trans-unit>
@@ -5307,7 +6004,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Visibilité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/current-conditions/current-conditions.component.ts</context>
-          <context context-type="linenumber">121,123</context>
+          <context context-type="linenumber">124,126</context>
         </context-group>
         <note priority="1" from="meaning">weather.current.visibility</note>
       </trans-unit>
@@ -5352,6 +6049,14 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
           <context context-type="linenumber">167</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts</context>
+          <context context-type="linenumber">239</context>
         </context-group>
         <note priority="1" from="meaning">weather.daily.today</note>
       </trans-unit>
@@ -5763,9 +6468,33 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Carte radar </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
-          <context context-type="linenumber">33,36</context>
+          <context context-type="linenumber">62,65</context>
         </context-group>
         <note priority="1" from="meaning">weather.radar.title</note>
+      </trans-unit>
+      <trans-unit id="weatherRadarLegend" datatype="html">
+        <source> Précipitations </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
+          <context context-type="linenumber">79,81</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.radar.legend</note>
+      </trans-unit>
+      <trans-unit id="weatherRadarLight" datatype="html">
+        <source>Faible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
+          <context context-type="linenumber">90,91</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.radar.light</note>
+      </trans-unit>
+      <trans-unit id="weatherRadarHeavy" datatype="html">
+        <source>Fort</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
+          <context context-type="linenumber">91,94</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.radar.heavy</note>
       </trans-unit>
       <trans-unit id="weatherSpaghettiPlotTitle" datatype="html">
         <source> Comparaison des modèles (courbes) </source>
@@ -5903,6 +6632,126 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="meaning">weather.uv.title</note>
       </trans-unit>
+      <trans-unit id="weatherOverviewTitle" datatype="html">
+        <source> Prévisions </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">10,13</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.overview.title</note>
+      </trans-unit>
+      <trans-unit id="weatherOverviewGranularityAria" datatype="html">
+        <source>Granularité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.overview.granularity.aria</note>
+      </trans-unit>
+      <trans-unit id="weatherTableDay" datatype="html">
+        <source> Jour </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">50,52</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">208,211</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.day</note>
+      </trans-unit>
+      <trans-unit id="weatherTableMin" datatype="html">
+        <source> Min </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">57,60</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.min</note>
+      </trans-unit>
+      <trans-unit id="weatherTableMax" datatype="html">
+        <source> Max </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.max</note>
+      </trans-unit>
+      <trans-unit id="weatherTableRain" datatype="html">
+        <source> Pluie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">69,72</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">227,230</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.rain</note>
+      </trans-unit>
+      <trans-unit id="weatherTableWind" datatype="html">
+        <source> Vent </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">75,77</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">233,235</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.wind</note>
+      </trans-unit>
+      <trans-unit id="weatherTableHumidity" datatype="html">
+        <source> Hum. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">83,86</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">241,244</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.humidity</note>
+      </trans-unit>
+      <trans-unit id="weatherTableGusts" datatype="html">
+        <source> Raf. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">92,94</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">250,252</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.gusts</note>
+      </trans-unit>
+      <trans-unit id="weatherTablePressure" datatype="html">
+        <source> Pression </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">98,101</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">256,259</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.pressure</note>
+      </trans-unit>
+      <trans-unit id="weatherTableHour" datatype="html">
+        <source> Heure </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">214,216</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.hour</note>
+      </trans-unit>
+      <trans-unit id="weatherTableTemp" datatype="html">
+        <source> Temp. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.html</context>
+          <context context-type="linenumber">221,224</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.table.temp</note>
+      </trans-unit>
       <trans-unit id="weatherWindTooltipTitle" datatype="html">
         <source>Vent</source>
         <context-group purpose="location">
@@ -5943,11 +6792,272 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="meaning">weather.geo.myPosition</note>
       </trans-unit>
+      <trans-unit id="wmo0" datatype="html">
+        <source>Ciel dégagé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Clear sky</note>
+        <note priority="1" from="meaning">weather.wmo.0</note>
+      </trans-unit>
+      <trans-unit id="wmo1" datatype="html">
+        <source>Principalement dégagé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Mainly clear</note>
+        <note priority="1" from="meaning">weather.wmo.1</note>
+      </trans-unit>
+      <trans-unit id="wmo2" datatype="html">
+        <source>Partiellement nuageux</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Partly cloudy</note>
+        <note priority="1" from="meaning">weather.wmo.2</note>
+      </trans-unit>
+      <trans-unit id="wmo3" datatype="html">
+        <source>Couvert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Overcast</note>
+        <note priority="1" from="meaning">weather.wmo.3</note>
+      </trans-unit>
+      <trans-unit id="wmo45" datatype="html">
+        <source>Brouillard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Fog</note>
+        <note priority="1" from="meaning">weather.wmo.45</note>
+      </trans-unit>
+      <trans-unit id="wmo48" datatype="html">
+        <source>Brouillard givrant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Depositing rime fog</note>
+        <note priority="1" from="meaning">weather.wmo.48</note>
+      </trans-unit>
+      <trans-unit id="wmo51" datatype="html">
+        <source>Bruine légère</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Light drizzle</note>
+        <note priority="1" from="meaning">weather.wmo.51</note>
+      </trans-unit>
+      <trans-unit id="wmo53" datatype="html">
+        <source>Bruine modérée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Moderate drizzle</note>
+        <note priority="1" from="meaning">weather.wmo.53</note>
+      </trans-unit>
+      <trans-unit id="wmo55" datatype="html">
+        <source>Bruine dense</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Dense drizzle</note>
+        <note priority="1" from="meaning">weather.wmo.55</note>
+      </trans-unit>
+      <trans-unit id="wmo56" datatype="html">
+        <source>Bruine verglaçante légère</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Light freezing drizzle</note>
+        <note priority="1" from="meaning">weather.wmo.56</note>
+      </trans-unit>
+      <trans-unit id="wmo57" datatype="html">
+        <source>Bruine verglaçante dense</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Dense freezing drizzle</note>
+        <note priority="1" from="meaning">weather.wmo.57</note>
+      </trans-unit>
+      <trans-unit id="wmo61" datatype="html">
+        <source>Pluie légère</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Slight rain</note>
+        <note priority="1" from="meaning">weather.wmo.61</note>
+      </trans-unit>
+      <trans-unit id="wmo63" datatype="html">
+        <source>Pluie modérée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Moderate rain</note>
+        <note priority="1" from="meaning">weather.wmo.63</note>
+      </trans-unit>
+      <trans-unit id="wmo65" datatype="html">
+        <source>Pluie forte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Heavy rain</note>
+        <note priority="1" from="meaning">weather.wmo.65</note>
+      </trans-unit>
+      <trans-unit id="wmo66" datatype="html">
+        <source>Pluie verglaçante légère</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Light freezing rain</note>
+        <note priority="1" from="meaning">weather.wmo.66</note>
+      </trans-unit>
+      <trans-unit id="wmo67" datatype="html">
+        <source>Pluie verglaçante forte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Heavy freezing rain</note>
+        <note priority="1" from="meaning">weather.wmo.67</note>
+      </trans-unit>
+      <trans-unit id="wmo71" datatype="html">
+        <source>Neige légère</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Slight snow</note>
+        <note priority="1" from="meaning">weather.wmo.71</note>
+      </trans-unit>
+      <trans-unit id="wmo73" datatype="html">
+        <source>Neige modérée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Moderate snow</note>
+        <note priority="1" from="meaning">weather.wmo.73</note>
+      </trans-unit>
+      <trans-unit id="wmo75" datatype="html">
+        <source>Neige forte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Heavy snow</note>
+        <note priority="1" from="meaning">weather.wmo.75</note>
+      </trans-unit>
+      <trans-unit id="wmo77" datatype="html">
+        <source>Grains de neige</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Snow grains</note>
+        <note priority="1" from="meaning">weather.wmo.77</note>
+      </trans-unit>
+      <trans-unit id="wmo80" datatype="html">
+        <source>Averses légères</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Slight rain showers</note>
+        <note priority="1" from="meaning">weather.wmo.80</note>
+      </trans-unit>
+      <trans-unit id="wmo81" datatype="html">
+        <source>Averses modérées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Moderate rain showers</note>
+        <note priority="1" from="meaning">weather.wmo.81</note>
+      </trans-unit>
+      <trans-unit id="wmo82" datatype="html">
+        <source>Averses violentes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Violent rain showers</note>
+        <note priority="1" from="meaning">weather.wmo.82</note>
+      </trans-unit>
+      <trans-unit id="wmo85" datatype="html">
+        <source>Averses de neige légères</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Slight snow showers</note>
+        <note priority="1" from="meaning">weather.wmo.85</note>
+      </trans-unit>
+      <trans-unit id="wmo86" datatype="html">
+        <source>Averses de neige fortes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Heavy snow showers</note>
+        <note priority="1" from="meaning">weather.wmo.86</note>
+      </trans-unit>
+      <trans-unit id="wmo95" datatype="html">
+        <source>Orage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Thunderstorm</note>
+        <note priority="1" from="meaning">weather.wmo.95</note>
+      </trans-unit>
+      <trans-unit id="wmo96" datatype="html">
+        <source>Orage avec grêle légère</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Thunderstorm with slight hail</note>
+        <note priority="1" from="meaning">weather.wmo.96</note>
+      </trans-unit>
+      <trans-unit id="wmo99" datatype="html">
+        <source>Orage avec grêle forte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Thunderstorm with heavy hail</note>
+        <note priority="1" from="meaning">weather.wmo.99</note>
+      </trans-unit>
+      <trans-unit id="wmoUnknown" datatype="html">
+        <source>Conditions inconnues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/utils/weather-descriptions.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Unknown conditions</note>
+        <note priority="1" from="meaning">weather.wmo.unknown</note>
+      </trans-unit>
       <trans-unit id="weatherAppTitle" datatype="html">
         <source> Météo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.html</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">26,28</context>
         </context-group>
         <note priority="1" from="meaning">weather.app.title</note>
       </trans-unit>
@@ -5955,7 +7065,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Recherchez une ville pour afficher la météo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.html</context>
-          <context context-type="linenumber">249,254</context>
+          <context context-type="linenumber">242,247</context>
         </context-group>
         <note priority="1" from="meaning">weather.initial.hint</note>
       </trans-unit>
@@ -5963,65 +7073,489 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Erreur lors du chargement des prévisions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <note priority="1" from="meaning">weather.error.loading</note>
       </trans-unit>
-      <trans-unit id="weatherPresentationSectionTitle" datatype="html">
-        <source> Consultez la météo en temps réel </source>
+      <trans-unit id="weatherPresCity" datatype="html">
+        <source> Paris, France </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.ts</context>
-          <context context-type="linenumber">29,33</context>
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">18,22</context>
         </context-group>
-        <note priority="1" from="meaning">weather.presentation.section.title</note>
+        <note priority="1" from="meaning">weather.pres.city</note>
       </trans-unit>
-      <trans-unit id="weatherPresentationSectionDesc" datatype="html">
-        <source> Accédez à des prévisions détaillées, des données en direct et une interface élégante inspirée d&apos;Apple Weather. Connectez-vous pour débloquer l&apos;application. </source>
+      <trans-unit id="weatherPresCondition" datatype="html">
+        <source>Partiellement nuageux</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.ts</context>
-          <context context-type="linenumber">36,41</context>
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">38,43</context>
         </context-group>
-        <note priority="1" from="meaning">weather.presentation.section.desc</note>
+        <note priority="1" from="meaning">weather.pres.condition</note>
       </trans-unit>
-      <trans-unit id="weatherPresentationCta" datatype="html">
-        <source> Se connecter </source>
+      <trans-unit id="weatherPresFeelsLike" datatype="html">
+        <source>Ressenti <x id="INTERPOLATION" equiv-text="{{ current.apparent_temperature }}"/>°</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.ts</context>
-          <context context-type="linenumber">45,50</context>
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">45,46</context>
         </context-group>
-        <note priority="1" from="meaning">weather.presentation.cta</note>
+        <note priority="1" from="meaning">weather.pres.feelslike</note>
       </trans-unit>
-      <trans-unit id="weatherHeroLabel" datatype="html">
-        <source>Side-project</source>
+      <trans-unit id="weatherPresWind" datatype="html">
+        <source>Vent <x id="INTERPOLATION" equiv-text="{{ current.wind_speed_10m }}"/> km/h</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">48,50</context>
         </context-group>
-        <note priority="1" from="meaning">weather.hero.label</note>
+        <note priority="1" from="meaning">weather.pres.wind</note>
       </trans-unit>
-      <trans-unit id="weatherHeroTitle" datatype="html">
-        <source>Météo</source>
+      <trans-unit id="weatherPresMetricWind" datatype="html">
+        <source> Vent </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">59,61</context>
         </context-group>
-        <note priority="1" from="meaning">weather.hero.title</note>
+        <note priority="1" from="meaning">weather.pres.metric.wind</note>
       </trans-unit>
-      <trans-unit id="weatherHeroDescription" datatype="html">
-        <source>Une application météo minimaliste avec des données en temps réel, conçue comme un exercice de style Angular.</source>
+      <trans-unit id="weatherPresMetricHumidity" datatype="html">
+        <source> Humidite </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">71,73</context>
         </context-group>
-        <note priority="1" from="meaning">weather.hero.description</note>
+        <note priority="1" from="meaning">weather.pres.metric.humidity</note>
       </trans-unit>
-      <trans-unit id="weatherHeroActionLogin" datatype="html">
-        <source>Se connecter</source>
+      <trans-unit id="weatherPresMetricUv" datatype="html">
+        <source> UV </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">82,84</context>
         </context-group>
-        <note priority="1" from="meaning">weather.hero.action.login</note>
+        <note priority="1" from="meaning">weather.pres.metric.uv</note>
+      </trans-unit>
+      <trans-unit id="weatherPresMetricUvMod" datatype="html">
+        <source>mod.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">89,93</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.metric.uv.mod</note>
+      </trans-unit>
+      <trans-unit id="weatherPresMetricPressure" datatype="html">
+        <source> Pression </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">98,100</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.metric.pressure</note>
+      </trans-unit>
+      <trans-unit id="weatherPresTagline" datatype="html">
+        <source> Ne sortez plus sans savoir </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">109,111</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.tagline</note>
+      </trans-unit>
+      <trans-unit id="weatherPresDesc" datatype="html">
+        <source> Previsions heure par heure, radar de precipitations et qualite de l&apos;air. Tout pour planifier votre journee, en un coup d&apos;oeil. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">112,115</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.desc</note>
+      </trans-unit>
+      <trans-unit id="weatherPresCtaStart" datatype="html">
+        <source>Commencer gratuitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">120,124</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.cta.start</note>
+      </trans-unit>
+      <trans-unit id="weatherPresCtaDiscover" datatype="html">
+        <source>Decouvrir ↓</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">126,131</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.cta.discover</note>
+      </trans-unit>
+      <trans-unit id="weatherPresForecastKicker" datatype="html">
+        <source> Previsions </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">160,163</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.forecast.kicker</note>
+      </trans-unit>
+      <trans-unit id="weatherPresForecastTitle" datatype="html">
+        <source> Planifiez votre semaine </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">166,169</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.forecast.title</note>
+      </trans-unit>
+      <trans-unit id="weatherPresForecastDesc" datatype="html">
+        <source> Visualisez les 7 prochains jours d&apos;un coup d&apos;oeil. Temperatures, precipitations, conditions — tout ce qu&apos;il faut pour ne jamais etre pris au depourvu. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">172,178</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.forecast.desc</note>
+      </trans-unit>
+      <trans-unit id="weatherPresRadarKicker" datatype="html">
+        <source> Radar </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">211,214</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.radar.kicker</note>
+      </trans-unit>
+      <trans-unit id="weatherPresRadarTitle" datatype="html">
+        <source> Voyez la pluie arriver </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">217,220</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.radar.title</note>
+      </trans-unit>
+      <trans-unit id="weatherPresRadarDesc" datatype="html">
+        <source> Carte radar en temps reel. Suivez les precipitations, anticipez les averses. Ideal avant une sortie velo ou une balade en famille. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">223,228</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.radar.desc</note>
+      </trans-unit>
+      <trans-unit id="weatherPresRadarLegend" datatype="html">
+        <source> Precipitations </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">240,242</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.radar.legend</note>
+      </trans-unit>
+      <trans-unit id="weatherPresRadarLow" datatype="html">
+        <source>Faible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">252,254</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.radar.low</note>
+      </trans-unit>
+      <trans-unit id="weatherPresRadarHigh" datatype="html">
+        <source>Fort</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">255,260</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.radar.high</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelsKicker" datatype="html">
+        <source> Personnalisation </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">273,276</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.levels.kicker</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelsTitle" datatype="html">
+        <source> Votre meteo, votre niveau </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">279,282</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.levels.title</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelsDesc" datatype="html">
+        <source> Pas besoin d&apos;etre meteorologue. Choisissez le niveau de detail qui vous convient, et evoluez quand vous etes pret. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">285,290</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.levels.desc</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelDiscovery" datatype="html">
+        <source>Decouverte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">301,304</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.discovery</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelDiscoveryH" datatype="html">
+        <source> L&apos;essentiel, simplement </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">305,307</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.discovery.h</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelDiscoveryP" datatype="html">
+        <source> Temperature, conditions, previsions de la semaine. L&apos;info qu&apos;il vous faut pour choisir comment vous habiller. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">308,311</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.discovery.p</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatTemp" datatype="html">
+        <source> Temperature et ressenti </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">313,315</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.temp</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeat7d" datatype="html">
+        <source> Previsions sur 7 jours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">316,318</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.7d</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatHourly" datatype="html">
+        <source> Graphique horaire </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">319,321</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.hourly</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatAlerts" datatype="html">
+        <source> Alertes meteo </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">322,327</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.alerts</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelCurious" datatype="html">
+        <source>Curieux</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">337,340</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.curious</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelCuriousH" datatype="html">
+        <source> Pour aller plus loin </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">341,343</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.curious.h</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelCuriousP" datatype="html">
+        <source> UV, qualite de l&apos;air, pression, radar. Toutes les donnees qui font la difference pour vos activites. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">344,347</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.curious.p</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatAllDiscovery" datatype="html">
+        <source> Tout le niveau Decouverte </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">351,353</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.all.discovery</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatUvAqi" datatype="html">
+        <source> Indice UV et qualite de l&apos;air </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">354,356</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.uv.aqi</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatCompass" datatype="html">
+        <source> Boussole de vent </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">357,359</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.compass</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatRadar" datatype="html">
+        <source> Radar de precipitations </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">360,362</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.radar</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatSun" datatype="html">
+        <source> Arc solaire lever / coucher </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">363,367</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.sun</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelExpert" datatype="html">
+        <source>Expert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">378,381</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.expert</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelExpertH" datatype="html">
+        <source> Donnees de passionne </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">382,384</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.expert.h</note>
+      </trans-unit>
+      <trans-unit id="weatherPresLevelExpertP" datatype="html">
+        <source> Modeles de prevision, comparaison historique, CAPE, export de donnees. Pour ceux qui veulent tout comprendre. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">385,388</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.level.expert.p</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatAllCurious" datatype="html">
+        <source> Tout le niveau Curieux </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">390,392</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.all.curious</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatSpaghetti" datatype="html">
+        <source> Spaghetti plot multi-modeles </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">393,395</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.spaghetti</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatHistorical" datatype="html">
+        <source> Comparaison historique 30 jours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">396,398</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.historical</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatCape" datatype="html">
+        <source> Indice CAPE (orages) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">399,401</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.cape</note>
+      </trans-unit>
+      <trans-unit id="weatherPresFeatExport" datatype="html">
+        <source> Export CSV / JSON </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">402,406</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.feat.export</note>
+      </trans-unit>
+      <trans-unit id="weatherPresWindKicker" datatype="html">
+        <source> Vent &amp; Pression </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">420,423</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.wind.kicker</note>
+      </trans-unit>
+      <trans-unit id="weatherPresWindTitle" datatype="html">
+        <source> Sentez le vent tourner </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">426,429</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.wind.title</note>
+      </trans-unit>
+      <trans-unit id="weatherPresWindDesc" datatype="html">
+        <source> Boussole interactive, rafales, direction — ideal avant une sortie en mer, une randonnee ou simplement savoir si votre terrasse sera agreable. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">432,435</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.wind.desc</note>
+      </trans-unit>
+      <trans-unit id="weatherPresWindGusts" datatype="html">
+        <source> Rafales </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">441,443</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.wind.gusts</note>
+      </trans-unit>
+      <trans-unit id="weatherPresWindPressure" datatype="html">
+        <source> Pression </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">450,452</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.wind.pressure</note>
+      </trans-unit>
+      <trans-unit id="weatherPresAirKicker" datatype="html">
+        <source> Qualite de l&apos;air </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">491,494</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.air.kicker</note>
+      </trans-unit>
+      <trans-unit id="weatherPresAirTitle" datatype="html">
+        <source> Respirez en confiance </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">497,499</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.air.title</note>
+      </trans-unit>
+      <trans-unit id="weatherPresAirDesc" datatype="html">
+        <source> Indice AQI europeen, particules fines, ozone — pour savoir si c&apos;est le bon jour pour courir, jouer dehors avec les enfants ou ouvrir les fenetres. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">500,506</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.air.desc</note>
+      </trans-unit>
+      <trans-unit id="weatherPresCtaTitle" datatype="html">
+        <source> Pret a ne plus etre surpris par la meteo ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">526,529</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.cta.title</note>
+      </trans-unit>
+      <trans-unit id="weatherPresCtaDesc" datatype="html">
+        <source> Retrouvez vos villes favorites, personnalisez votre niveau de detail et recevez les alertes qui comptent. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">533,538</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.cta.desc</note>
+      </trans-unit>
+      <trans-unit id="weatherPresCtaFinal" datatype="html">
+        <source>Commencer gratuitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">541,545</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.cta.final</note>
+      </trans-unit>
+      <trans-unit id="weatherPresCtaTrust" datatype="html">
+        <source> Gratuit — Aucune carte bancaire requise </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/weather-presentation.component.html</context>
+          <context context-type="linenumber">549,553</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.pres.cta.trust</note>
       </trans-unit>
       <trans-unit id="cookieBannerMessage" datatype="html">
         <source>Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.</source>
@@ -6216,7 +7750,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Demander un devis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">213,214</context>
+          <context context-type="linenumber">219,220</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.audit</note>
@@ -6225,7 +7759,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">219,225</context>
+          <context context-type="linenumber">225,231</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.audit</note>
@@ -6234,7 +7768,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Me contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">226,228</context>
+          <context context-type="linenumber">232,234</context>
         </context-group>
         <note priority="1" from="description">Contact CTA tooltip</note>
         <note priority="1" from="meaning">navbar.cta.contact.title</note>
@@ -6243,7 +7777,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">234,239</context>
+          <context context-type="linenumber">240,245</context>
         </context-group>
         <note priority="1" from="description">Contact CTA label</note>
         <note priority="1" from="meaning">navbar.cta.contact.label</note>
@@ -6252,29 +7786,29 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Profil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">298,300</context>
+          <context context-type="linenumber">313,315</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">339,341</context>
+          <context context-type="linenumber">354,356</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navLogoutLabel" datatype="html">
         <source>Déconnexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">307,309</context>
+          <context context-type="linenumber">322,324</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">347,348</context>
+          <context context-type="linenumber">362,363</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navLinkPresentation" datatype="html">
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.presentation</note>
@@ -6283,7 +7817,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.projects</note>
@@ -6292,7 +7826,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Offres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.offer</note>
@@ -6301,7 +7835,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>L&apos;Atelier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <note priority="1" from="description">Atelier dropdown label</note>
         <note priority="1" from="meaning">navbar.atelier.label</note>
@@ -6310,7 +7844,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Météo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.meteo.title</note>
       </trans-unit>
@@ -6318,7 +7852,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Explorez la météo en temps réel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.meteo.desc</note>
       </trans-unit>
@@ -6326,7 +7860,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Budget</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.budget.title</note>
       </trans-unit>
@@ -6334,7 +7868,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Gérez votre budget à deux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.budget.desc</note>
       </trans-unit>
@@ -6342,7 +7876,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Sebastian</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.title</note>
       </trans-unit>
@@ -6350,7 +7884,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Votre majordome personnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.desc</note>
       </trans-unit>
@@ -6358,7 +7892,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.open</note>
@@ -6367,7 +7901,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.close</note>
@@ -6376,7 +7910,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">Mobile nav heading</note>
         <note priority="1" from="meaning">navbar.menu.heading</note>
@@ -6385,7 +7919,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.close</note>
@@ -6394,7 +7928,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>
@@ -6533,131 +8067,6 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.office.value</note>
-      </trans-unit>
-      <trans-unit id="sebastianTitle" datatype="html">
-        <source>Sebastian</source>
-        <note priority="1" from="description">Sebastian page title</note>
-        <note priority="1" from="meaning">sebastian.title</note>
-      </trans-unit>
-      <trans-unit id="sebastianDescription" datatype="html">
-        <source>Votre majordome de suivi de consommation</source>
-        <note priority="1" from="description">Sebastian page description</note>
-        <note priority="1" from="meaning">sebastian.description</note>
-      </trans-unit>
-      <trans-unit id="sebastianQuickAddAlcohol" datatype="html">
-        <source>+1 Alcool 🍺</source>
-        <note priority="1" from="description">Quick add alcohol button</note>
-        <note priority="1" from="meaning">sebastian.quickAdd.alcohol</note>
-      </trans-unit>
-      <trans-unit id="sebastianQuickAddCoffee" datatype="html">
-        <source>+1 Café ☕</source>
-        <note priority="1" from="description">Quick add coffee button</note>
-        <note priority="1" from="meaning">sebastian.quickAdd.coffee</note>
-      </trans-unit>
-      <trans-unit id="sebastianCounterAlcohol" datatype="html">
-        <source>Alcool aujourd&apos;hui</source>
-        <note priority="1" from="description">Alcohol today counter label</note>
-        <note priority="1" from="meaning">sebastian.counter.alcohol</note>
-      </trans-unit>
-      <trans-unit id="sebastianCounterCoffee" datatype="html">
-        <source>Café aujourd&apos;hui</source>
-        <note priority="1" from="description">Coffee today counter label</note>
-        <note priority="1" from="meaning">sebastian.counter.coffee</note>
-      </trans-unit>
-      <trans-unit id="sebastianCounterGoal" datatype="html">
-        <source>Objectif</source>
-        <note priority="1" from="description">Counter goal label</note>
-        <note priority="1" from="meaning">sebastian.counter.goal</note>
-      </trans-unit>
-      <trans-unit id="sebastianCounterNoGoal" datatype="html">
-        <source>Aucun objectif défini</source>
-        <note priority="1" from="description">No goal defined message</note>
-        <note priority="1" from="meaning">sebastian.counter.noGoal</note>
-      </trans-unit>
-      <trans-unit id="sebastianStatsWeekTitle" datatype="html">
-        <source>Statistiques de la semaine</source>
-        <note priority="1" from="description">Weekly stats card title</note>
-        <note priority="1" from="meaning">sebastian.stats.weekTitle</note>
-      </trans-unit>
-      <trans-unit id="sebastianStatsVsPrevious" datatype="html">
-        <source>vs semaine précédente</source>
-        <note priority="1" from="description">Stats trend comparison label</note>
-        <note priority="1" from="meaning">sebastian.stats.vsPrevious</note>
-      </trans-unit>
-      <trans-unit id="sebastianLoading" datatype="html">
-        <source>Chargement...</source>
-        <note priority="1" from="description">Loading message</note>
-        <note priority="1" from="meaning">sebastian.loading</note>
-      </trans-unit>
-      <trans-unit id="sebastianChartWeekTitle" datatype="html">
-        <source>7 derniers jours</source>
-        <note priority="1" from="description">Weekly chart title</note>
-        <note priority="1" from="meaning">sebastian.chart.weekTitle</note>
-      </trans-unit>
-      <trans-unit id="sebastianChartMonthTitle" datatype="html">
-        <source>30 derniers jours</source>
-        <note priority="1" from="description">Monthly chart title</note>
-        <note priority="1" from="meaning">sebastian.chart.monthTitle</note>
-      </trans-unit>
-      <trans-unit id="sebastianHistoryTitle" datatype="html">
-        <source>Historique récent</source>
-        <note priority="1" from="description">History section title</note>
-        <note priority="1" from="meaning">sebastian.history.title</note>
-      </trans-unit>
-      <trans-unit id="sebastianHistoryDelete" datatype="html">
-        <source>Supprimer</source>
-        <note priority="1" from="description">Delete entry button</note>
-        <note priority="1" from="meaning">sebastian.history.delete</note>
-      </trans-unit>
-      <trans-unit id="sebastianHistoryEmpty" datatype="html">
-        <source>Aucune entrée enregistrée</source>
-        <note priority="1" from="description">Empty history message</note>
-        <note priority="1" from="meaning">sebastian.history.empty</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsTitle" datatype="html">
-        <source>Objectifs</source>
-        <note priority="1" from="description">Goals section title</note>
-        <note priority="1" from="meaning">sebastian.goals.title</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsAlcohol" datatype="html">
-        <source>Alcool</source>
-        <note priority="1" from="description">Goals alcohol option</note>
-        <note priority="1" from="meaning">sebastian.goals.alcohol</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsCoffee" datatype="html">
-        <source>Café</source>
-        <note priority="1" from="description">Goals coffee option</note>
-        <note priority="1" from="meaning">sebastian.goals.coffee</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsQuantityPlaceholder" datatype="html">
-        <source>Quantité max</source>
-        <note priority="1" from="description">Goals quantity input placeholder</note>
-        <note priority="1" from="meaning">sebastian.goals.quantityPlaceholder</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsDaily" datatype="html">
-        <source>Quotidien</source>
-        <note priority="1" from="description">Goals daily period</note>
-        <note priority="1" from="meaning">sebastian.goals.daily</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsWeekly" datatype="html">
-        <source>Hebdomadaire</source>
-        <note priority="1" from="description">Goals weekly period</note>
-        <note priority="1" from="meaning">sebastian.goals.weekly</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsMonthly" datatype="html">
-        <source>Mensuel</source>
-        <note priority="1" from="description">Goals monthly period</note>
-        <note priority="1" from="meaning">sebastian.goals.monthly</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsAdd" datatype="html">
-        <source>Définir l&apos;objectif</source>
-        <note priority="1" from="description">Add goal button</note>
-        <note priority="1" from="meaning">sebastian.goals.add</note>
-      </trans-unit>
-      <trans-unit id="sebastianGoalsEmpty" datatype="html">
-        <source>Aucun objectif actif</source>
-        <note priority="1" from="description">No active goals message</note>
-        <note priority="1" from="meaning">sebastian.goals.empty</note>
       </trans-unit>
     </body>
   </file>
