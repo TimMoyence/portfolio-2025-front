@@ -1,65 +1,98 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+} from "@angular/core";
 import { RouterModule } from "@angular/router";
-import type { HeroAction } from "../../shared/components/hero-section/hero-section.component";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { SlideInDirective } from "../../shared/directives/slide-in.directive";
+import { BudgetSummaryCardComponent } from "../common-budget-tm/components/budget-summary-card/budget-summary-card.component";
+import {
+  MOCK_ACTIVE_MONTH,
+  MOCK_CATEGORIES,
+  MOCK_CATEGORY_TOTALS,
+  MOCK_CONIC_GRADIENT,
+  MOCK_CONTRIBUTIONS,
+  MOCK_DONUT_SEGMENTS,
+  MOCK_FEATURES,
+  MOCK_MONTHS,
+  MOCK_SUMMARY,
+  MOCK_TIMELINE,
+} from "./budget-presentation-data";
 
 /**
- * Page de presentation de l'app budget pour les utilisateurs non authentifies.
- * Affiche un hero et un CTA vers la connexion.
+ * Page de presentation immersive de l'application budget.
+ * Affiche des donnees fictives realistes dans un design warm/nature
+ * avec donut chart CSS, barres de contributions et composants summary reels.
+ * Destinee aux utilisateurs non authentifies.
  */
 @Component({
   selector: "app-budget-presentation",
   standalone: true,
-  imports: [RouterModule, HeroSectionComponent],
-  template: `
-    <app-hero-section
-      [label]="hero.label"
-      [title]="hero.title"
-      [description]="hero.description"
-      [actions]="hero.actions"
-    ></app-hero-section>
-
-    <section class="bg-scheme-background px-[5%] pb-12 md:pb-18 lg:pb-22">
-      <div class="container max-w-3xl text-center">
-        <h2
-          class="font-heading heading-h4 text-h4 md:heading-h3 md:text-h3 mb-4"
-          i18n="
-            budget.presentation.section.title|@@budgetPresentationSectionTitle"
-        >
-          Gérez vos finances à deux
-        </h2>
-        <p
-          class="text-scheme-text-muted mb-8"
-          i18n="
-            budget.presentation.section.desc|@@budgetPresentationSectionDesc"
-        >
-          Importez vos relevés CSV, visualisez les dépenses par catégorie et
-          suivez les contributions de chaque membre du couple.
-          Auto-catégorisation intelligente et tableau éditable inclus.
-        </p>
-        <a
-          routerLink="/login"
-          class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-6 py-3 font-semibold text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover"
-          i18n="budget.presentation.cta|@@budgetPresentationCta"
-        >
-          Se connecter
-        </a>
-      </div>
-    </section>
-  `,
+  imports: [RouterModule, SlideInDirective, BudgetSummaryCardComponent],
+  templateUrl: "./budget-presentation.component.html",
+  styleUrl: "./budget-presentation.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BudgetPresentationComponent {
-  readonly hero = {
-    label: $localize`:budget.hero.label|@@budgetHeroLabel:Side-project`,
-    title: $localize`:budget.hero.title|@@budgetHeroTitle:Budget`,
-    description: $localize`:budget.hero.description|@@budgetHeroDescription:Un outil de gestion de budget partagé pour couple, avec import CSV, catégorisation automatique et suivi des contributions.`,
-    actions: [
-      {
-        label: $localize`:budget.hero.action.login|@@budgetHeroActionLogin:Se connecter`,
-        variant: "primary" as HeroAction["variant"],
-        href: "/login",
-      },
-    ],
-  };
+export class BudgetPresentationComponent implements OnInit {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
+
+  /** Categories de budget fictives (8). */
+  readonly categories = MOCK_CATEGORIES;
+
+  /** Totaux par categorie pour le donut et le tableau. */
+  readonly categoryTotals = MOCK_CATEGORY_TOTALS;
+
+  /** Metriques de synthese (depenses, revenus, contributions). */
+  readonly summary = MOCK_SUMMARY;
+
+  /** Contributions Tim / Maria. */
+  readonly contributions = MOCK_CONTRIBUTIONS;
+
+  /** Liste des mois en pilules. */
+  readonly months = MOCK_MONTHS;
+
+  /** Mois actif. */
+  readonly activeMonth = MOCK_ACTIVE_MONTH;
+
+  /** Segments du donut pre-calcules. */
+  readonly donutSegments = MOCK_DONUT_SEGMENTS;
+
+  /** Conic-gradient CSS pour le donut. */
+  readonly conicGradient = MOCK_CONIC_GRADIENT;
+
+  /** Fonctionnalites marketing. */
+  readonly features = MOCK_FEATURES;
+
+  /** Etapes de la timeline "Comment ca marche". */
+  readonly timeline = MOCK_TIMELINE;
+
+  /** Offset parallaxe du hero (en pixels). */
+  parallaxOffset = 0;
+
+  ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    let ticking = false;
+
+    const onScroll = (): void => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          this.parallaxOffset = Math.min(Math.round(window.scrollY * 0.12), 60);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener("scroll", onScroll);
+    });
+  }
 }
