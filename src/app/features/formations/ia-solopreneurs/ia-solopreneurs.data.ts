@@ -37,13 +37,28 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     subtitle: "16 outils, 30 minutes, on trie le bullshit du vraiment utile",
     speakerNotes:
       "Sondage à main levée : « Qui utilise déjà ChatGPT ? Et Claude ou Gemini ? » — calibrer le niveau du groupe.",
-    authorNote:
-      "L'accroche doit poser le cadre sans promesse. On est là pour faire le tri, pas pour vendre du rêve.",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question: "Qui utilise déjà l'IA au quotidien ?",
+          options: ["ChatGPT", "Claude", "Gemini", "Autre IA", "Aucune"],
+        },
+      ],
+      scroll: [
+        {
+          type: "reflection",
+          question:
+            "Quels outils IA utilisez-vous au quotidien ? Pour quelles tâches ?",
+          placeholder: "ex: ChatGPT pour mes emails, Canva pour mes visuels...",
+        },
+      ],
+    },
   },
   {
     id: "probleme",
     act: BLOCS.accrocher,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "stats",
     title: "Le constat : l'IA avance, avec ou sans vous",
     stats: [
@@ -65,24 +80,33 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     speakerNotes:
       "Question au public : « Qui passe plus de 3h par jour sur des tâches qu'un outil pourrait faire ? »",
-    sources: [
-      {
-        label: "McKinsey — The State of AI 2025",
-        url: "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai",
-      },
-      {
-        label: "Zapier — AI in Business",
-        url: "https://zapier.com/blog/ai-business/",
-      },
-    ],
-    authorNote:
-      "Stat originale '127$/h vs 31$/h' non retrouvée dans les rapports McKinsey. Remplacée par les stats macro vérifiables. Le ratio 4x est possiblement Upwork (freelancers IA gagnent +44%).",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question:
+            "Combien de temps passez-vous sur des tâches automatisables ?",
+          options: ["< 1h/jour", "1-3h/jour", "3h+/jour", "Aucune idée"],
+        },
+      ],
+      scroll: [
+        {
+          type: "self-rating",
+          question:
+            "Quel pourcentage de votre travail pourrait être automatisé ?",
+          min: 1,
+          max: 5,
+          labels: { min: "Presque rien", max: "Presque tout" },
+        },
+      ],
+    },
   },
   {
     id: "promesse",
     act: BLOCS.accrocher,
     fragmentCount: 0,
     layout: "hero",
+    visibility: "presentOnly",
     imageUrl:
       "https://images.pexels.com/photos/10401267/pexels-photo-10401267.jpeg?auto=compress&cs=tinysrgb&w=800",
     imageAlt: "Intervenant donnant une présentation dynamique sur scène",
@@ -95,9 +119,13 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
   {
     id: "contexte-marche",
     act: BLOCS.accrocher,
-    fragmentCount: 4,
+    fragmentCount: 0,
     layout: "split",
     visibility: "scrollOnly",
+    imageUrl:
+      "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=800",
+    imageAlt:
+      "Écran de marché boursier avec données et graphiques en temps réel",
     title: "Contexte : le marché IA en avril 2026",
     bullets: [
       "ChatGPT : 900M d'utilisateurs hebdo, 50M d'abonnés payants (OpenAI, fév. 2026)",
@@ -105,22 +133,16 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
       "Le marché des agents IA passe de 7,8Md$ à 52,6Md$ d'ici 2030 (Gartner)",
       "68% des PME US utilisent l'IA (QuickBooks, 2 200 PME)",
     ],
-    sources: [
-      {
-        label: "TechCrunch — ChatGPT 900M weekly users",
-        url: "https://techcrunch.com/2026/02/27/chatgpt-reaches-900m-weekly-active-users/",
-      },
-      {
-        label: "The AI Corner — Anthropic 30B ARR",
-        url: "https://www.the-ai-corner.com/p/anthropic-30b-arr-passed-openai-revenue-2026",
-      },
-      {
-        label: "QuickBooks — AI statistics for SMB",
-        url: "https://colorwhistle.com/artificial-intelligence-statistics-for-small-business/",
-      },
-    ],
-    authorNote:
-      "Cette slide donne le contexte macro pour ceux qui lisent en async. En présentation, les chiffres clés sont déjà dans la slide problème.",
+    interactions: {
+      scroll: [
+        {
+          type: "reflection",
+          question:
+            "Ces chiffres vous surprennent ? Quel impact sur votre secteur ?",
+          placeholder: "Décrivez ce que vous observez dans votre domaine...",
+        },
+      ],
+    },
   },
 
   // ── BLOC 2 — MONTRER (~12 min, 7 both + 2 scrollOnly) ───
@@ -128,7 +150,7 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
   {
     id: "culture-apprendre",
     act: BLOCS.montrer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "split",
     imageUrl:
       "https://images.pexels.com/photos/33923596/pexels-photo-33923596.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -142,21 +164,29 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     notes:
       "NotebookLM : tourne sur Gemini 3, mode interactif « raise your hand » (2026), Cinematic Video Overviews. Perplexity : valorisé 21Md$ (Series E, 2026). Fathom : attention, le gratuit est limité à 5 résumés IA — au-delà c'est 19$/mois.",
-    sources: [
-      { label: "NotebookLM", url: "https://notebooklm.google" },
-      {
-        label: "Perplexity AI stats",
-        url: "https://www.getpanto.ai/blog/perplexity-ai-statistics",
-      },
-      { label: "Fathom Pricing", url: "https://www.fathom.ai/pricing" },
-    ],
     speakerNotes:
       "Démo live NotebookLM si le temps le permet : uploader un PDF, lancer un Deep Dive. Le podcast sera prêt dans ~47 secondes.",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question: "Lequel testeriez-vous en premier ?",
+          options: ["NotebookLM", "Perplexity", "Fathom"],
+        },
+      ],
+      scroll: [
+        {
+          type: "checklist",
+          question: "Lesquels utilisez-vous déjà ?",
+          items: ["NotebookLM", "Perplexity", "Fathom", "Aucun des trois"],
+        },
+      ],
+    },
   },
   {
     id: "chat-produire",
     act: BLOCS.montrer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "comparison",
     imageUrl:
       "https://images.pexels.com/photos/16544949/pexels-photo-16544949.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -189,27 +219,27 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     },
     notes:
       "ChatGPT (OpenAI) : valorisé 852Md$, IPO visée fin 2026. Claude (Anthropic) : 30Md$ ARR, a dépassé OpenAI en CA — en dépensant 4x moins en entraînement. Fenêtre de contexte 1M tokens GA depuis mars 2026. Gemini (Google) : intégré dans Workspace, seul à analyser la vidéo nativement.",
-    sources: [
-      {
-        label: "OpenAI — 852Md$ valuation (Bloomberg)",
-        url: "https://www.bloomberg.com/news/articles/2026-03-31/openai-valued-at-852-billion",
-      },
-      {
-        label: "Anthropic 30Md$ ARR (SaaStr)",
-        url: "https://www.saastr.com/anthropic-just-passed-openai-in-revenue-while-spending-4x-less-to-train-their-models/",
-      },
-      {
-        label: "Claude 1M context GA",
-        url: "https://medium.com/@ivankolodiy/claudes-1m-context-window-is-finally-here",
-      },
-    ],
-    authorNote:
-      "Ne pas entrer dans la guerre des modèles. Le message : les 3 sont bons, utilisez celui qui colle à votre tâche. Pour le public B, insister sur Gemini/Workspace.",
+    interactions: {
+      scroll: [
+        {
+          type: "checklist",
+          question: "Lesquels utilisez-vous déjà ?",
+          items: ["ChatGPT", "Claude", "Gemini", "Aucun des trois"],
+        },
+        {
+          type: "reflection",
+          question:
+            "Pour quelle tâche quotidienne aimeriez-vous tester un de ces outils ?",
+          placeholder:
+            "ex: rédiger mes emails clients, résumer des articles, analyser des données...",
+        },
+      ],
+    },
   },
   {
     id: "creer",
     act: BLOCS.montrer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "split",
     imageUrl:
       "https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -222,27 +252,36 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     notes:
       "Ideogram 3.0 : Style References (jusqu'à 3 images), photoréalisme amélioré. Gamma : levée de 68M$ (a16z), 600K abonnés payants. ElevenLabs : Series D 500M$ (Sequoia, a16z), 330M$ ARR fin 2025.",
-    sources: [
-      {
-        label: "Ideogram 3.0",
-        url: "https://ideogram.ai/features/3.0",
-      },
-      {
-        label: "Gamma revenue (Sacra)",
-        url: "https://sacra.com/c/gamma/",
-      },
-      {
-        label: "ElevenLabs Series D (TechCrunch)",
-        url: "https://techcrunch.com/2026/02/04/elevenlabs-raises-500m-from-sequioia-at-a-11-billion-valuation/",
-      },
-    ],
     speakerNotes:
       "Montrer un exemple Ideogram avec du texte parfait vs un fail Midjourney/DALL-E sur du texte. Le contraste est parlant.",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question: "Quel contenu créez-vous le plus ?",
+          options: ["Images", "Présentations", "Audio/Vidéo", "Texte"],
+        },
+      ],
+      scroll: [
+        {
+          type: "checklist",
+          question: "Lesquels connaissez-vous ?",
+          items: [
+            "Ideogram",
+            "Gamma",
+            "ElevenLabs",
+            "Midjourney",
+            "DALL-E",
+            "Aucun",
+          ],
+        },
+      ],
+    },
   },
   {
     id: "automatiser",
     act: BLOCS.montrer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "comparison",
     imageUrl:
       "https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -275,24 +314,35 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     },
     notes:
       "Zapier : 3M+ utilisateurs, 100K+ clients payants. Make : 3,1M utilisateurs, 52,6M$ CA. n8n : 230K utilisateurs actifs, 3000 clients entreprise, Series C 180M$. Différence clé : 1 action Zapier = 1 tâche, 1 étape Make = 1 opération. À 10K opérations/mois, Make est 2x moins cher.",
-    sources: [
-      { label: "Zapier Pricing", url: "https://zapier.com/pricing" },
-      {
-        label: "Make.com Revenue (GetLatka)",
-        url: "https://getlatka.com/companies/make.com",
-      },
-      {
-        label: "n8n Series C (TechFundingNews)",
-        url: "https://techfundingnews.com/n8n-raises-180m-series-c-2-5-billion-valuation-automation-ai/",
-      },
-    ],
     speakerNotes:
       "Workflow concret : 'Un formulaire est rempli → email personnalisé + fiche Notion + rappel calendrier. Temps de setup : 2h. Temps humain ensuite : 0.' Pour l'audience A, mentionner n8n self-hosted + MCP.",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question: "Quel est votre niveau d'automatisation actuel ?",
+          options: [
+            "Tout à la main",
+            "Quelques apps connectées",
+            "Workflows automatisés",
+          ],
+        },
+      ],
+      scroll: [
+        {
+          type: "reflection",
+          question:
+            "Quelle tâche répétitive vous prend le plus de temps chaque semaine ?",
+          placeholder:
+            "ex: relancer des prospects, poster sur les réseaux, trier mes emails...",
+        },
+      ],
+    },
   },
   {
     id: "site-web",
     act: BLOCS.montrer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "split",
     imageUrl:
       "https://images.pexels.com/photos/326513/pexels-photo-326513.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -306,26 +356,24 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     notes:
       "Lovable : Series B 330M$, 100K+ projets/jour. Bolt : import Figma, modèle Opus 4.6 intégré. v0 : intégration Git, éditeur de code (fév. 2026). Ces outils ne remplacent pas un dev pour un projet complexe, mais pour une landing page ou un MVP c'est suffisant.",
-    sources: [
-      {
-        label: "Lovable stats (GetPanto)",
-        url: "https://www.getpanto.ai/blog/lovable-statistics",
-      },
-      { label: "Bolt.new Pricing", url: "https://bolt.new/pricing" },
-      {
-        label: "v0 Guide 2026 (NxCode)",
-        url: "https://www.nxcode.io/resources/news/v0-by-vercel-complete-guide-2026",
-      },
-    ],
     speakerNotes:
       "Pour l'audience B : insister sur Lovable (le plus simple). Pour l'audience A : montrer v0 et le code généré, c'est impressionnant.",
-    authorNote:
-      "Ne pas survendre. Ces outils font des landing pages et des MVPs. Pour un vrai produit, il faut un dev. Mais pour un solopreneur qui veut tester une idée, c'est game-changer.",
+    interactions: {
+      scroll: [
+        {
+          type: "reflection",
+          question:
+            "Avez-vous un site web ? Si oui, combien de temps a pris sa création ?",
+          placeholder:
+            "ex: oui, 3 mois avec une agence / non, trop cher / oui, WordPress en galère...",
+        },
+      ],
+    },
   },
   {
     id: "clients",
     act: BLOCS.montrer,
-    fragmentCount: 4,
+    fragmentCount: 0,
     layout: "grid",
     imageUrl:
       "https://images.pexels.com/photos/2528118/pexels-photo-2528118.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -360,22 +408,40 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     notes:
       "Workflow complet : Prospect répond sur LinkedIn (Waalaxy) → ajout auto dans Notion → Brevo envoie la séquence d'onboarding → visuels Canva. Via Zapier ou Make en connecteur. Coût total : ~29€/mois. Waalaxy : essai 14 jours. Notion Business (20$/mois) pour l'IA complète. Brevo (ex-Sendinblue) : entreprise française, conforme RGPD.",
-    sources: [
-      { label: "Waalaxy Pricing", url: "https://www.waalaxy.com/pricing" },
-      { label: "Notion AI Pricing", url: "https://www.notion.com/pricing" },
-      { label: "Brevo", url: "https://www.brevo.com" },
-      {
-        label: "Canva Users (Backlinko)",
-        url: "https://backlinko.com/canva-users",
-      },
-    ],
     speakerNotes:
       "Montrer le schéma Waalaxy → Notion → Brevo → Canva. Insister : le combo Brevo + Zapier/Make transforme des emails manuels en séquences automatiques.",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question: "Quel est votre plus gros défi client ?",
+          options: [
+            "Trouver des prospects",
+            "Convertir",
+            "Fidéliser",
+            "Communiquer",
+          ],
+        },
+      ],
+      scroll: [
+        {
+          type: "checklist",
+          question: "Lesquels utilisez-vous ?",
+          items: [
+            "Waalaxy",
+            "Notion AI",
+            "Brevo",
+            "Canva AI",
+            "Aucun des quatre",
+          ],
+        },
+      ],
+    },
   },
   {
     id: "stack-budget",
     act: BLOCS.montrer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "comparison",
     imageUrl:
       "https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -407,15 +473,24 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     notes:
       "Ne pas tout installer d'un coup. Chaque outil doit résoudre un problème concret. L'objectif n'est pas d'avoir le stack le plus gros mais le plus efficace.",
-    sources: [
-      {
-        label:
-          "Prix vérifiés avril 2026 — voir slides individuelles pour chaque outil",
-        url: "",
-      },
-    ],
-    authorNote:
-      "Les prix changent souvent. Vérifier avant chaque présentation. Les liens vers les pages pricing sont dans les sources de chaque slide outil.",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question: "Combien dépensez-vous actuellement en outils IA ?",
+          options: ["0€", "< 30€/mois", "30-100€/mois", "100€+/mois"],
+        },
+      ],
+      scroll: [
+        {
+          type: "self-rating",
+          question: "Où en êtes-vous dans votre adoption de l'IA ?",
+          min: 1,
+          max: 5,
+          labels: { min: "Je débute", max: "Stack complet en place" },
+        },
+      ],
+    },
   },
   {
     id: "outils-detail",
@@ -510,8 +585,32 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
         ],
       ],
     },
-    authorNote:
-      "Ce tableau est le cheat sheet de la formation. Il résume tout le bloc 2 pour ceux qui consultent en scroll.",
+    interactions: {
+      scroll: [
+        {
+          type: "checklist",
+          question: "Cochez les outils que vous connaissez déjà :",
+          items: [
+            "NotebookLM",
+            "Perplexity",
+            "Fathom",
+            "ChatGPT",
+            "Claude",
+            "Gemini",
+            "Ideogram",
+            "Gamma",
+            "ElevenLabs",
+            "Zapier",
+            "Make.com",
+            "n8n",
+            "Waalaxy",
+            "Notion AI",
+            "Brevo",
+            "Canva AI",
+          ],
+        },
+      ],
+    },
   },
   {
     id: "workflows-detail",
@@ -542,8 +641,16 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     notes:
       "Workflow 1 : ~2h de setup, gratuit avec Zapier. Workflow 2 : 100% automatisable. Workflow 3 : nécessite Perplexity Pro (20$/mois) pour les recherches automatisées.",
-    authorNote:
-      "Ces workflows sont les exemples les plus concrets de la formation. En scroll, ils servent de guide pas-à-pas pour ceux qui veulent implémenter après la présentation.",
+    interactions: {
+      scroll: [
+        {
+          type: "reflection",
+          question:
+            "Lequel de ces 3 workflows mettriez-vous en place en premier ? Pourquoi ?",
+          placeholder: "ex: la prospection automatisée, parce que...",
+        },
+      ],
+    },
   },
 
   // ── BLOC 3 — PRATIQUER (~10 min, 2 both + 1 presentOnly) ─
@@ -562,8 +669,15 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
       "Tout ce que je viens de dire ne vaut rien si vous ne le testez pas.",
     speakerNotes:
       "Pause. Laisser le silence. Puis : « On le fait. Maintenant. Ensemble. » Transition vers l'exercice interactif.",
-    authorNote:
-      "Cette slide n'existe qu'en présentation. En scroll, on passe directement à l'exercice.",
+    interactions: {
+      present: [
+        {
+          type: "countdown",
+          label: "Pensez à votre secteur d'activité...",
+          durationSeconds: 10,
+        },
+      ],
+    },
   },
   {
     id: "demo-gamma",
@@ -581,17 +695,20 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     },
     notes:
       "gamma.app — gratuit pour démarrer. Le prompt est conçu pour Gamma Agent (v3.0) qui peut chercher sur le web et restructurer le contenu. En 60 secondes vous avez un deck de 10 slides.",
-    sources: [{ label: "Gamma.app", url: "https://gamma.app" }],
     speakerNotes:
       "En live : demander à un participant son secteur, taper en direct, copier le prompt, ouvrir gamma.app et coller. Le résultat sort en ~60 secondes — c'est le moment wow de la présentation.",
   },
   {
     id: "recap-8020",
     act: BLOCS.pratiquer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "stats",
     title: "Ce que l'IA change — et ce qu'elle ne change pas",
     stats: [
+      {
+        value: "16",
+        label: "outils testés et comparés",
+      },
       {
         value: "80%",
         label: "du travail opérationnel accéléré par l'IA",
@@ -609,6 +726,31 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
       "L'IA accélère le contenu, les visuels, les automatisations, le support. Elle ne remplace pas la connaissance du marché, la relation client, la stratégie. Le message central : l'IA amplifie votre expertise, elle ne la remplace pas.",
     speakerNotes:
       "Insister : les 20% d'expertise humaine, c'est ce que VOUS apportez. L'IA sans votre connaissance métier produit du contenu générique. Avec, elle produit du contenu expert.",
+    interactions: {
+      present: [
+        {
+          type: "poll",
+          question: "Quel outil allez-vous tester en premier ?",
+          options: [
+            "ChatGPT/Claude",
+            "Gamma",
+            "Zapier/Make",
+            "NotebookLM",
+            "Autre",
+          ],
+        },
+      ],
+      scroll: [
+        {
+          type: "self-rating",
+          question:
+            "Après cette présentation, quel est votre niveau de confiance avec l'IA ?",
+          min: 1,
+          max: 5,
+          labels: { min: "Pas confiant", max: "Prêt à foncer" },
+        },
+      ],
+    },
   },
 
   // ── BLOC 4 — ANCRER (~4 min, 3 both + 1 presentOnly + 1 scrollOnly)
@@ -616,7 +758,7 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
   {
     id: "pieges",
     act: BLOCS.ancrer,
-    fragmentCount: 3,
+    fragmentCount: 0,
     layout: "grid",
     title: "Les 3 pièges à éviter",
     gridItems: [
@@ -641,13 +783,23 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     ],
     notes:
       "Ces 3 pièges sont les plus fréquents chez les débutants. Les mentionner renforce la crédibilité et différencie des formations 'l'IA c'est magique' sur YouTube.",
-    authorNote:
-      "Cette slide est cruciale pour la crédibilité auprès de l'audience A (tech). Sans elle, on ressemble à un vendeur de rêve.",
+    interactions: {
+      scroll: [
+        {
+          type: "reflection",
+          question:
+            "Avez-vous déjà été confronté à un de ces pièges ? Lequel, et comment l'avez-vous géré ?",
+          placeholder:
+            "ex: une hallucination de ChatGPT qui m'a fait envoyer un chiffre faux...",
+          rows: 4,
+        },
+      ],
+    },
   },
   {
     id: "citation",
     act: BLOCS.ancrer,
-    fragmentCount: 2,
+    fragmentCount: 0,
     layout: "quote",
     imageUrl:
       "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -680,7 +832,7 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
   {
     id: "one-more-thing",
     act: BLOCS.ancrer,
-    fragmentCount: 4,
+    fragmentCount: 0,
     layout: "split",
     visibility: "presentOnly",
     imageUrl:
@@ -698,42 +850,5 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
       "notebooklm.google — gratuit. Tourne sur Gemini 3. Cinematic Video réservé aux abonnés Google AI Ultra (250$/mois) mais le podcast est 100% gratuit.",
     speakerNotes:
       "Si le temps le permet, lancer la démo live. Sinon, montrer le podcast généré en début de session. C'est le 'One More Thing' à la Steve Jobs — finir sur un wow.",
-    authorNote:
-      "Cette slide n'existe qu'en mode présentation. En scroll, NotebookLM est déjà couvert dans le bloc Culture/Apprendre.",
-  },
-  {
-    id: "sources-biblio",
-    act: BLOCS.ancrer,
-    fragmentCount: 0,
-    layout: "split",
-    visibility: "scrollOnly",
-    title: "Sources et bibliographie",
-    bullets: [
-      "McKinsey — 'The State of AI in early 2025', enquête 1 993 participants, 105 pays",
-      "Zapier — 'AI in Business Statistics', 2025",
-      "Upwork — '2025 In-Demand Skills', janvier 2025",
-      "QuickBooks — Enquête 2 200 PME US, 2024-2025",
-      "Gartner — 'Strategic Technology Trends 2026'",
-    ],
-    sources: [
-      {
-        label: "McKinsey — The State of AI",
-        url: "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai",
-      },
-      {
-        label: "Zapier — AI in Business",
-        url: "https://zapier.com/blog/ai-business/",
-      },
-      {
-        label: "Upwork — In-Demand Skills",
-        url: "https://investors.upwork.com/news-releases/news-release-details/upwork-unveils-2025s-most-demand-skills",
-      },
-      {
-        label: "Gartner — AI agents 2026",
-        url: "https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026",
-      },
-    ],
-    authorNote:
-      "Toutes les statistiques de cette présentation sont vérifiées avec des sources primaires (avril 2026). Les prix des outils changent régulièrement — vérifier les pages pricing avant chaque présentation.",
   },
 ];
