@@ -51,6 +51,60 @@
     "ogImage": "/assets/images/logo.webp",
     "twitterCard": "summary_large_image"
   },
+  "global": {
+    "localBusiness": {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Asili Design",
+      "legalName": "Tim Moyence — Asili Design",
+      "url": "https://asilidesign.fr",
+      "telephone": "+33698503282",
+      "email": "moyencet@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Allée Serr",
+        "addressLocality": "Bordeaux",
+        "postalCode": "33100",
+        "addressCountry": "FR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 44.8353,
+        "longitude": -0.5728
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Bordeaux"
+      },
+      "priceRange": "$$",
+      "image": "https://asilidesign.fr/assets/images/logo.webp",
+      "founder": {
+        "@type": "Person",
+        "name": "Tim Moyence",
+        "jobTitle": "Développeur Full-Stack & Consultant Digital"
+      }
+    },
+    "siteNavigation": {
+      "@context": "https://schema.org",
+      "@type": "SiteNavigationElement",
+      "name": [
+        "Présentation",
+        "Projets",
+        "Offres",
+        "Formations",
+        "Audit gratuit",
+        "Contact"
+      ],
+      "url": [
+        "https://asilidesign.fr/fr/presentation",
+        "https://asilidesign.fr/fr/client-project",
+        "https://asilidesign.fr/fr/offer",
+        "https://asilidesign.fr/fr/formations",
+        "https://asilidesign.fr/fr/growth-audit",
+        "https://asilidesign.fr/fr/contact"
+      ]
+    }
+  },
   "pages": [
     {
       "id": "home",
@@ -58,7 +112,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1.0,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -68,8 +122,9 @@
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "Tim Moyence — Portfolio",
-            "url": "https://asilidesign.fr"
+            "name": "Asili Design — Tim Moyence",
+            "url": "https://asilidesign.fr",
+            "description": "Solutions digitales sur mesure pour entreprises et indépendants à Bordeaux"
           }
         },
         "en": {
@@ -80,8 +135,9 @@
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "Tim Moyence — Portfolio",
-            "url": "https://asilidesign.fr"
+            "name": "Asili Design — Tim Moyence",
+            "url": "https://asilidesign.fr",
+            "description": "Custom digital solutions for businesses and independents in Bordeaux"
           }
         }
       }
@@ -92,33 +148,63 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
-          "description": "Découvrez mon parcours et mes compétences en développement web.",
+          "description": "Développeur web freelance à Bordeaux — 3 ans d'expérience en Angular, NestJS et IA. Projets sur mesure pour TPE, PME et indépendants.",
           "ogTitle": "Présentation de Tim Moyence",
           "ogDescription": "Parcours, compétences et approche pour créer des expériences web modernes.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Tim Moyence",
-            "url": "https://asilidesign.fr",
-            "jobTitle": "Développeur Full-Stack"
-          }
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "name": "Asili Design",
+              "founder": {
+                "@type": "Person",
+                "name": "Tim Moyence",
+                "jobTitle": "Développeur Full-Stack & Consultant Digital",
+                "knowsAbout": [
+                  "Angular",
+                  "NestJS",
+                  "TypeScript",
+                  "Intelligence Artificielle",
+                  "Développement Web",
+                  "Accompagnement Digital"
+                ]
+              },
+              "areaServed": { "@type": "City", "name": "Bordeaux" },
+              "url": "https://asilidesign.fr/fr/presentation"
+            }
+          ]
         },
         "en": {
           "title": "About — Tim Moyence Portfolio",
-          "description": "Discover my background and web development skills.",
+          "description": "Freelance web developer in Bordeaux — 3 years experience with Angular, NestJS and AI. Custom projects for small businesses and independents.",
           "ogTitle": "About Tim Moyence",
           "ogDescription": "Background, skills, and approach to building modern web experiences.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Tim Moyence",
-            "url": "https://asilidesign.fr",
-            "jobTitle": "Développeur Full-Stack"
-          }
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "name": "Asili Design",
+              "founder": {
+                "@type": "Person",
+                "name": "Tim Moyence",
+                "jobTitle": "Full-Stack Developer & Digital Consultant",
+                "knowsAbout": [
+                  "Angular",
+                  "NestJS",
+                  "TypeScript",
+                  "Artificial Intelligence",
+                  "Web Development",
+                  "Digital Consulting"
+                ]
+              },
+              "areaServed": { "@type": "City", "name": "Bordeaux" },
+              "url": "https://asilidesign.fr/en/presentation"
+            }
+          ]
         }
       }
     },
@@ -128,19 +214,173 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
-          "description": "Solutions numériques sur mesure et plans tarifaires.",
+          "description": "Création de sites web, applications métier et accompagnement digital à Bordeaux. Devis personnalisé, interventions dès 50 €.",
           "ogTitle": "Offres de services web professionnels",
-          "ogDescription": "Solutions numériques personnalisées et plans tarifaires adaptés."
+          "ogDescription": "Solutions numériques personnalisées et plans tarifaires adaptés.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Service",
+              "serviceType": "Développement web sur mesure",
+              "provider": { "@type": "LocalBusiness", "name": "Asili Design" },
+              "areaServed": { "@type": "City", "name": "Bordeaux" },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Services de développement web",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "name": "Interventions ciblées",
+                    "description": "Corrections, ajustements et améliorations ponctuelles",
+                    "priceSpecification": {
+                      "@type": "PriceSpecification",
+                      "price": "50",
+                      "priceCurrency": "EUR",
+                      "minPrice": "50"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Projets structurants",
+                    "description": "Conception et développement de solutions complètes",
+                    "priceSpecification": {
+                      "@type": "PriceSpecification",
+                      "priceCurrency": "EUR",
+                      "minPrice": "2000",
+                      "maxPrice": "4000"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Accompagnement dans le temps",
+                    "description": "Évolutions, maintenance et conseil sur la durée"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Formation et coaching",
+                    "description": "Montée en compétences sur les outils digitaux et l'IA"
+                  }
+                ]
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Combien coûte un site web sur mesure à Bordeaux ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l'objet d'un devis personnalisé."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Quel est le délai pour créer un site web ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Les interventions ciblées ont des délais courts (quelques jours). Les projets structurants prennent généralement 2 à 6 semaines selon la complexité."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Proposez-vous un accompagnement après la livraison ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Oui, l'accompagnement dans le temps est un engagement mensuel adapté à votre rythme, incluant évolutions, maintenance et conseil."
+                  }
+                }
+              ]
+            }
+          ]
         },
         "en": {
           "title": "Offers — Professional web services",
-          "description": "Tailor-made digital solutions and pricing plans.",
+          "description": "Custom website creation, business applications and digital consulting in Bordeaux. Personalized quote, targeted interventions from €50.",
           "ogTitle": "Professional web service offers",
-          "ogDescription": "Customized digital solutions and tailored pricing plans."
+          "ogDescription": "Customized digital solutions and tailored pricing plans.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Service",
+              "serviceType": "Custom Web Development",
+              "provider": { "@type": "LocalBusiness", "name": "Asili Design" },
+              "areaServed": { "@type": "City", "name": "Bordeaux" },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Web development services",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "name": "Targeted interventions",
+                    "description": "Corrections, adjustments and one-off improvements",
+                    "priceSpecification": {
+                      "@type": "PriceSpecification",
+                      "price": "50",
+                      "priceCurrency": "EUR",
+                      "minPrice": "50"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Structural projects",
+                    "description": "Design and development of complete solutions",
+                    "priceSpecification": {
+                      "@type": "PriceSpecification",
+                      "priceCurrency": "EUR",
+                      "minPrice": "2000",
+                      "maxPrice": "4000"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Ongoing support",
+                    "description": "Evolutions, maintenance and long-term consulting"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Training and coaching",
+                    "description": "Skill development on digital tools and AI"
+                  }
+                ]
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "How much does a custom website cost in Bordeaux?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Structural projects are generally between €2,000 and €4,000. Targeted interventions start from €50. Each project receives a personalized quote."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How long does it take to build a website?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Targeted interventions have short timelines (a few days). Structural projects generally take 2 to 6 weeks depending on complexity."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you offer support after delivery?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, ongoing support is a monthly commitment adapted to your pace, including evolutions, maintenance and consulting."
+                  }
+                }
+              ]
+            }
+          ]
         }
       }
     },
@@ -150,19 +390,57 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
-          "description": "Prenez contact pour discuter de vos projets numériques.",
+          "description": "Contactez Asili Design à Bordeaux — échangeons sur votre projet web. Réponse sous 48h, premier échange sans engagement.",
           "ogTitle": "Contactez Tim Moyence",
-          "ogDescription": "Discutez de vos projets numériques et obtenez un devis personnalisé."
+          "ogDescription": "Discutez de vos projets numériques et obtenez un devis personnalisé.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact — Asili Design",
+            "url": "https://asilidesign.fr/fr/contact",
+            "mainEntity": {
+              "@type": "LocalBusiness",
+              "name": "Asili Design",
+              "telephone": "+33698503282",
+              "email": "moyencet@gmail.com",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Allée Serr",
+                "addressLocality": "Bordeaux",
+                "postalCode": "33100",
+                "addressCountry": "FR"
+              }
+            }
+          }
         },
         "en": {
           "title": "Contact — Discussion and quotes",
-          "description": "Get in touch to discuss your digital projects.",
+          "description": "Contact Asili Design in Bordeaux — let's discuss your web project. Reply within 48h, first exchange with no commitment.",
           "ogTitle": "Contact Tim Moyence",
-          "ogDescription": "Discuss your digital projects and get a personalized quote."
+          "ogDescription": "Discuss your digital projects and get a personalized quote.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact — Asili Design",
+            "url": "https://asilidesign.fr/en/contact",
+            "mainEntity": {
+              "@type": "LocalBusiness",
+              "name": "Asili Design",
+              "telephone": "+33698503282",
+              "email": "moyencet@gmail.com",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Allée Serr",
+                "addressLocality": "Bordeaux",
+                "postalCode": "33100",
+                "addressCountry": "FR"
+              }
+            }
+          }
         }
       }
     },
@@ -172,19 +450,115 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
+      "breadcrumb": [
+        { "name": "Accueil", "path": "/" },
+        { "name": "Projets", "path": "/client-project" }
+      ],
       "locales": {
         "fr": {
           "title": "Projets clients — Réalisations web",
-          "description": "Découvrez une sélection de projets clients réalisés.",
+          "description": "Réalisations web à Bordeaux : sites vitrines, applications métier, automatisations. Projets concrets pour TPE, artisans et indépendants.",
           "ogTitle": "Projets clients de Tim Moyence",
-          "ogDescription": "Une sélection de projets clients réussis, démontrant mes compétences en développement web."
+          "ogDescription": "Une sélection de projets clients réussis, démontrant mes compétences en développement web.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Projets clients — Asili Design",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "IFS Academy — Bot Telegram et automatisations",
+                  "description": "Automatisation complète autour d'un bot Telegram, Excel/Google Sheets comme base de données, et connecteurs pour piloter l'activité.",
+                  "url": "https://ifscourse.com/"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Application métier pour la filière cognac",
+                  "description": "Structuration et suivi de la production viticole et de transformation."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "AtlanticBike — Location et réparation de vélos",
+                  "description": "Site informatif et opérationnel pour une activité locale de location et réparation de vélos.",
+                  "url": "https://www.atlanticbike.fr/"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Louison — Site de présentation et réservation",
+                  "description": "Présence en ligne pour une activité de massage et bien-être.",
+                  "url": "https://www.louison-masseuse.com/accueil"
+                }
+              }
+            ]
+          }
         },
         "en": {
           "title": "Client projects — Web work",
-          "description": "Explore a selection of completed client projects.",
+          "description": "Web projects in Bordeaux: showcase sites, business applications, automation. Concrete projects for small businesses, artisans and independents.",
           "ogTitle": "Tim Moyence's client projects",
-          "ogDescription": "A selection of successful client projects showcasing my web development skills."
+          "ogDescription": "A selection of successful client projects showcasing my web development skills.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Client Projects — Asili Design",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "IFS Academy — Telegram Bot and Automations",
+                  "description": "Full automation around a Telegram bot, Excel/Google Sheets as database, and connectors to manage business activity.",
+                  "url": "https://ifscourse.com/"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Business application for the cognac industry",
+                  "description": "Structuring and tracking of wine and spirit production."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "AtlanticBike — Bike rental and repair",
+                  "description": "Informational and operational website for a local bike rental and repair business.",
+                  "url": "https://www.atlanticbike.fr/"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Louison — Presentation and booking site",
+                  "description": "Online presence for a massage and wellness business.",
+                  "url": "https://www.louison-masseuse.com/accueil"
+                }
+              }
+            ]
+          }
         }
       }
     },
@@ -194,7 +568,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.1,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Login — Pour acceder à votre compte",
@@ -216,7 +590,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.1,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Register — Pour acceder à votre compte",
@@ -238,7 +612,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-02-11",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Cookies & confidentialité — Paramètres",
@@ -260,7 +634,7 @@
       "index": false,
       "changefreq": "monthly",
       "priority": 0.5,
-      "lastmod": "2026-03-31",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Météo — L'Atelier",
@@ -282,7 +656,7 @@
       "index": false,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-03-31",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Budget — L'Atelier",
@@ -304,7 +678,7 @@
       "index": false,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-03-31",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Sebastian — L'Atelier",
@@ -326,17 +700,17 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-02-11",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Conditions de services — Moyence",
-          "description": "Conditions d'utilisation et accès aux services.",
+          "description": "Conditions générales d'utilisation du site Asili Design — services de développement web et conseil digital à Bordeaux.",
           "ogTitle": "Conditions de services",
           "ogDescription": "Consultez les conditions d'utilisation et les règles d'accès aux services."
         },
         "en": {
           "title": "Terms of service — Moyence",
-          "description": "Terms of use and service access conditions.",
+          "description": "General terms of use for the Asili Design website — web development and digital consulting services in Bordeaux.",
           "ogTitle": "Terms of service",
           "ogDescription": "Read the terms of use and service access conditions."
         }
@@ -348,17 +722,17 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-02-11",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Politique de confidentialité — Moyence",
-          "description": "Informations sur le traitement des données et la confidentialité.",
+          "description": "Politique de confidentialité d'Asili Design — traitement des données, cookies et droits RGPD. Bordeaux, France.",
           "ogTitle": "Politique de confidentialité",
           "ogDescription": "Découvrez comment les données sont collectées et protégées."
         },
         "en": {
           "title": "Privacy policy — Moyence",
-          "description": "Information about data processing and privacy.",
+          "description": "Asili Design privacy policy — data processing, cookies and GDPR rights. Bordeaux, France.",
           "ogTitle": "Privacy policy",
           "ogDescription": "Learn how data is collected and protected."
         }
@@ -370,19 +744,99 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-02-12",
+      "lastmod": "2026-04-10",
+      "breadcrumb": [
+        { "name": "Accueil", "path": "/" },
+        { "name": "Audit gratuit", "path": "/growth-audit" }
+      ],
       "locales": {
         "fr": {
           "title": "Audit gratuit SEO & croissance — 15 points",
-          "description": "Audit gratuit en 24h avec vidéo personnalisée et scorecard actionnable.",
+          "description": "Audit gratuit de votre site web en 24h — scan IA + analyse humaine. Vidéo personnalisée, scorecard 15 points et quick wins. Bordeaux.",
           "ogTitle": "Audit gratuit de croissance",
-          "ogDescription": "Recevez un diagnostic rapide : conversion, vitesse, SEO, confiance et tech."
+          "ogDescription": "Recevez un diagnostic rapide : conversion, vitesse, SEO, confiance et tech.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Service",
+              "name": "Audit de croissance gratuit — 15 points",
+              "description": "Audit gratuit en 24h : scan IA + audit humain, vidéo personnalisée et scorecard actionnable.",
+              "provider": { "@type": "LocalBusiness", "name": "Asili Design" },
+              "areaServed": { "@type": "City", "name": "Bordeaux" },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "description": "Audit gratuit limité à 5 par semaine"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Comment fonctionne l'audit gratuit ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Vous laissez vos infos, un premier scan IA analyse votre site, puis un audit humain est réalisé sous 24h avec vidéo personnalisée, scorecard claire et recommandations concrètes."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Que contient l'audit ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "L'audit couvre 5 piliers : conversion et clarté, vitesse et performance, fondations SEO, crédibilité et confiance, tech et scalabilité. Vous recevez une vidéo, une scorecard et des quick wins priorisés."
+                  }
+                }
+              ]
+            }
+          ]
         },
         "en": {
           "title": "Free SEO & growth audit — 15 points",
-          "description": "Free 24h audit with a personalized video and actionable scorecard.",
+          "description": "Free audit of your website in 24h — AI scan + human analysis. Personalized video, 15-point scorecard and quick wins. Bordeaux.",
           "ogTitle": "Free growth audit",
-          "ogDescription": "Get a fast diagnosis: conversion, speed, SEO, trust, and tech."
+          "ogDescription": "Get a fast diagnosis: conversion, speed, SEO, trust, and tech.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Service",
+              "name": "Free growth audit — 15 points",
+              "description": "Free audit in 24h: AI scan + human audit, personalized video and actionable scorecard.",
+              "provider": { "@type": "LocalBusiness", "name": "Asili Design" },
+              "areaServed": { "@type": "City", "name": "Bordeaux" },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "description": "Free audit limited to 5 per week"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "How does the free audit work?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You leave your info, a first AI scan analyzes your site, then a human audit is completed within 24h with a personalized video, clear scorecard and concrete recommendations."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What does the audit cover?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The audit covers 5 pillars: conversion and clarity, speed and performance, SEO foundations, credibility and trust, tech and scalability. You receive a video, a scorecard and prioritized quick wins."
+                  }
+                }
+              ]
+            }
+          ]
         }
       }
     },
@@ -392,19 +846,65 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-09",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
-          "description": "Ressources et présentations gratuites sur l'IA, le marketing digital et le développement web pour solopreneurs et entrepreneurs.",
+          "description": "Formations gratuites sur l'IA et le digital pour solopreneurs et entrepreneurs à Bordeaux. Présentations concrètes consultables en ligne.",
           "ogTitle": "Formations gratuites — Tim Moyence",
-          "ogDescription": "Ressources et présentations gratuites sur l'IA pour solopreneurs et entrepreneurs."
+          "ogDescription": "Ressources et présentations gratuites sur l'IA pour solopreneurs et entrepreneurs.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Formations gratuites — Asili Design",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "Course",
+                  "name": "L'IA au service des solopreneurs",
+                  "description": "Panorama des meilleurs outils IA pour entrepreneurs, suivi d'un cas pratique en live.",
+                  "provider": {
+                    "@type": "Organization",
+                    "name": "Asili Design"
+                  },
+                  "isAccessibleForFree": true,
+                  "duration": "PT30M",
+                  "url": "https://asilidesign.fr/fr/formations/ia-solopreneurs"
+                }
+              }
+            ]
+          }
         },
         "en": {
           "title": "Free Courses — Tim Moyence",
-          "description": "Free resources and presentations on AI, digital marketing and web development for solopreneurs and entrepreneurs.",
+          "description": "Free training on AI and digital for solopreneurs and entrepreneurs in Bordeaux. Concrete presentations available online.",
           "ogTitle": "Free Courses — Tim Moyence",
-          "ogDescription": "Free resources and presentations on AI for solopreneurs and entrepreneurs."
+          "ogDescription": "Free resources and presentations on AI for solopreneurs and entrepreneurs.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Free Courses — Asili Design",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "Course",
+                  "name": "AI for Solopreneurs",
+                  "description": "Overview of the best AI tools for entrepreneurs, followed by a live practical case study.",
+                  "provider": {
+                    "@type": "Organization",
+                    "name": "Asili Design"
+                  },
+                  "isAccessibleForFree": true,
+                  "duration": "PT30M",
+                  "url": "https://asilidesign.fr/en/formations/ia-solopreneurs"
+                }
+              }
+            ]
+          }
         }
       }
     },
@@ -414,19 +914,107 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-09",
+      "lastmod": "2026-04-10",
+      "breadcrumb": [
+        { "name": "Accueil", "path": "/" },
+        { "name": "Formations", "path": "/formations" },
+        {
+          "name": "L'IA au service des solopreneurs",
+          "path": "/formations/ia-solopreneurs"
+        }
+      ],
       "locales": {
         "fr": {
           "title": "L'IA au service des solopreneurs — Tim Moyence",
           "description": "Panorama des meilleurs outils IA pour solopreneurs et micro-entrepreneurs. Outils, cas pratique et prompt Gamma offert.",
           "ogTitle": "L'IA au service des solopreneurs — Tim Moyence",
-          "ogDescription": "Panorama des meilleurs outils IA pour solopreneurs. Outils, cas pratique et prompt Gamma offert."
+          "ogDescription": "Panorama des meilleurs outils IA pour solopreneurs. Outils, cas pratique et prompt Gamma offert.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              "name": "L'IA au service des solopreneurs",
+              "description": "Panorama des meilleurs outils IA pour solopreneurs et micro-entrepreneurs. 21 slides, cas pratique en live.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Asili Design",
+                "url": "https://asilidesign.fr"
+              },
+              "isAccessibleForFree": true,
+              "duration": "PT30M",
+              "courseMode": "online",
+              "inLanguage": "fr",
+              "url": "https://asilidesign.fr/fr/formations/ia-solopreneurs"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Quels outils IA sont présentés dans la formation ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "La formation couvre ChatGPT, Claude, Gemini pour le texte, Midjourney et Canva AI pour le visuel, les outils d'automatisation comme Zapier, et des outils de productivité comme Notion AI et Perplexity."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "La formation est-elle gratuite ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Oui, la formation est entièrement gratuite. Elle dure environ 30 minutes et comprend 21 slides consultables en ligne."
+                  }
+                }
+              ]
+            }
+          ]
         },
         "en": {
           "title": "AI for Solopreneurs — Tim Moyence",
           "description": "Overview of the best AI tools for solopreneurs and micro-entrepreneurs. Tools, practical case study and free Gamma prompt.",
           "ogTitle": "AI for Solopreneurs — Tim Moyence",
-          "ogDescription": "Overview of the best AI tools for solopreneurs. Tools, practical case study and free Gamma prompt."
+          "ogDescription": "Overview of the best AI tools for solopreneurs. Tools, practical case study and free Gamma prompt.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              "name": "AI for Solopreneurs",
+              "description": "Overview of the best AI tools for solopreneurs and micro-entrepreneurs. 21 slides, live practical case study.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Asili Design",
+                "url": "https://asilidesign.fr"
+              },
+              "isAccessibleForFree": true,
+              "duration": "PT30M",
+              "courseMode": "online",
+              "inLanguage": "en",
+              "url": "https://asilidesign.fr/en/formations/ia-solopreneurs"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What AI tools are covered in the course?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The course covers ChatGPT, Claude, Gemini for text, Midjourney and Canva AI for visuals, automation tools like Zapier, and productivity tools like Notion AI and Perplexity."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is the course free?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, the course is completely free. It lasts approximately 30 minutes and includes 21 slides available online."
+                  }
+                }
+              ]
+            }
+          ]
         }
       }
     },
@@ -436,7 +1024,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.0,
-      "lastmod": "2026-02-08",
+      "lastmod": "2026-04-10",
       "locales": {
         "fr": {
           "title": "Page introuvable",
