@@ -249,11 +249,11 @@ const buildJsonLdScripts = (
     const localeMeta =
       page.locales[locale] ?? page.locales[metadata.site.defaultLocale];
     if (localeMeta?.jsonLd) {
-      const blocks = Array.isArray(localeMeta.jsonLd)
+      const blocks: Record<string, unknown>[] = Array.isArray(localeMeta.jsonLd)
         ? localeMeta.jsonLd
         : [localeMeta.jsonLd];
       for (const block of blocks) {
-        addScript(block as Record<string, unknown>);
+        addScript(block);
       }
     }
 
