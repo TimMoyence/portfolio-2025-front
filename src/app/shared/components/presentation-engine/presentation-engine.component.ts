@@ -21,6 +21,7 @@ import type {
   PromptTemplate,
 } from "../../models/slide.model";
 import { FragmentService } from "../../services/fragment.service";
+import { InteractionSlotComponent } from "../interactions/interaction-slot.component";
 import { SlideRendererComponent } from "../slide-viewer/templates/slide-renderer.component";
 import { SvgIconComponent } from "../svg-icon.component";
 import { OverviewComponent } from "./overview.component";
@@ -56,6 +57,7 @@ interface ActGroup {
     SvgIconComponent,
     PresenterBarComponent,
     OverviewComponent,
+    InteractionSlotComponent,
   ],
   providers: [FragmentService],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,6 +95,13 @@ interface ActGroup {
                   (copyPrompt)="copyPrompt()"
                   class="flex-1 flex flex-col"
                 />
+                @if (slide.interactions) {
+                  <app-interaction-slot
+                    [interactions]="slide.interactions"
+                    [mode]="'scroll'"
+                    class="block px-6 pb-8"
+                  />
+                }
               </section>
             }
           }
@@ -161,7 +170,7 @@ interface ActGroup {
 
         <!-- Slide courante -->
         @if (currentSlide(); as slide) {
-          <div #slideContainer class="flex flex-1 overflow-y-auto">
+          <div #slideContainer class="flex flex-1 flex-col overflow-y-auto">
             <app-slide-renderer
               [slide]="slide"
               [index]="currentIndex()"
@@ -176,6 +185,13 @@ interface ActGroup {
               (copyPrompt)="copyPrompt()"
               class="flex-1 flex"
             />
+            @if (slide.interactions) {
+              <app-interaction-slot
+                [interactions]="slide.interactions"
+                [mode]="'present'"
+                class="block px-6 pb-4"
+              />
+            }
           </div>
         }
 
