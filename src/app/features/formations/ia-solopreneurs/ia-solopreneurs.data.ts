@@ -405,13 +405,13 @@ export const IA_SOLOPRENEURS_SLIDES: Slide[] = [
     imageUrl:
       "https://images.pexels.com/photos/7433848/pexels-photo-7433848.jpeg?auto=compress&cs=tinysrgb&w=800",
     imageAlt: "Réunion de conseil professionnelle dans un bureau moderne",
-    title: "Allons plus loin ensemble",
-    subtitle: "Envie d'intégrer l'IA dans votre activité ?",
+    title: "Recevez votre boite a outils IA",
+    subtitle:
+      "Les meilleurs outils, les prix, les budgets recommandes — dans votre inbox en 30 secondes.",
     bullets: [
-      "Audit gratuit de votre stack d'outils actuel",
-      "Accompagnement personnalisé pour intégrer l'IA",
-      "Création de site web professionnel et optimisé",
-      "Développement d'automatisations sur mesure",
+      "14 outils IA tries sur le volet, avec liens et prix",
+      "3 niveaux de budget : 0€, 50€ et 100€/mois",
+      "Pret a imprimer, 1 page cheat sheet",
     ],
     notes:
       "Liens outils : ChatGPT (chat.openai.com), Claude (claude.ai), Gemini (gemini.google.com), Canva (canva.com), Ideogram (ideogram.ai), Gamma (gamma.app), Descript (descript.com), ElevenLabs (elevenlabs.io), Perplexity (perplexity.ai), Zapier (zapier.com), Make (make.com), n8n (n8n.io), Notion (notion.so), Lovable (lovable.dev), Bolt (bolt.new), v0 (v0.app), NotebookLM (notebooklm.google), Crisp (crisp.chat), Figma Sites (figma.com)",

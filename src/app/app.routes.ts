@@ -236,6 +236,16 @@ export const routes: Routes = [
     },
   },
   {
+    path: "formations/ia-solopreneurs/toolkit",
+    loadComponent: () =>
+      import("./features/formations/ia-solopreneurs/toolkit/toolkit.component").then(
+        (m) => m.ToolkitComponent,
+      ),
+    data: {
+      seoKey: "formations-ia-solopreneurs-toolkit",
+    },
+  },
+  {
     path: "**",
     loadComponent: () =>
       import("./features/not-found/not-found.component").then(
