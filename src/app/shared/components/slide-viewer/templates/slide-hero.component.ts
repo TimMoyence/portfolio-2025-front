@@ -27,12 +27,21 @@ import type { Slide } from "../../../models/slide.model";
 
       <!-- Content -->
       <div class="relative z-10 px-6 py-16 max-w-4xl" data-aos="zoom-in">
-        <h2
-          data-slide-title
-          class="font-heading text-h1 text-white leading-tight"
-        >
-          {{ slide().title }}
-        </h2>
+        @if (headingLevel() === "h1") {
+          <h1
+            data-slide-title
+            class="font-heading text-h1 text-white leading-tight"
+          >
+            {{ slide().title }}
+          </h1>
+        } @else {
+          <h2
+            data-slide-title
+            class="font-heading text-h1 text-white leading-tight"
+          >
+            {{ slide().title }}
+          </h2>
+        }
         @if (slide().subtitle) {
           <p class="mt-4 text-lg sm:text-xl text-white/80 leading-relaxed">
             {{ slide().subtitle }}
@@ -51,4 +60,5 @@ import type { Slide } from "../../../models/slide.model";
 })
 export class SlideHeroComponent {
   readonly slide = input.required<Slide>();
+  readonly headingLevel = input<"h1" | "h2">("h2");
 }

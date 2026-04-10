@@ -37,7 +37,7 @@ interface ServiceSection {
 })
 export class OfferComponent {
   readonly hero = {
-    title: $localize`:offer.hero.title@@offer.hero.title:Des solutions digitales claires, pensées pour votre réalité métier`,
+    title: $localize`:offer.hero.title@@offer.hero.title:Nos offres de developpement web et d'accompagnement digital`,
     description: $localize`:offer.hero.description@@offer.hero.description:J’accompagne des entreprises et des indépendants dans la clarification, la structuration et l’évolution de leurs outils digitaux.\n\nWeb, automatisation et intelligence artificielle sont utilisés comme des leviers, jamais comme des finalités.`,
     actions: [
       {
