@@ -18,6 +18,7 @@ import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adap
 import { BudgetHttpAdapter } from "./core/adapters/budget-http.adapter";
 import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
 import { LeadMagnetHttpAdapter } from "./core/adapters/lead-magnet-http.adapter";
+import { PresentationHttpAdapter } from "./core/adapters/presentation-http.adapter";
 import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
 import { SebastianHttpAdapter } from "./core/adapters/sebastian-http.adapter";
 import { WeatherHttpAdapter } from "./core/adapters/weather-http.adapter";
@@ -29,6 +30,7 @@ import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
 import { BUDGET_PORT } from "./core/ports/budget.port";
 import { CONTACT_PORT } from "./core/ports/contact.port";
 import { LEAD_MAGNET_PORT } from "./core/ports/lead-magnet.port";
+import { PRESENTATION_PORT } from "./core/ports/presentation.port";
 import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
 import { SEBASTIAN_PORT } from "./core/ports/sebastian.port";
 import { WEATHER_PORT } from "./core/ports/weather.port";
@@ -85,6 +87,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: LEAD_MAGNET_PORT,
       useClass: LeadMagnetHttpAdapter,
+    },
+    {
+      provide: PRESENTATION_PORT,
+      useClass: PresentationHttpAdapter,
     },
   ],
 };

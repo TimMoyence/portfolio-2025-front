@@ -1,9 +1,14 @@
+import { isPlatformBrowser } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
+  inject,
   input,
+  PLATFORM_ID,
   signal,
+  viewChildren,
 } from "@angular/core";
 import type { PollInteraction } from "../../models/slide.model";
 
@@ -17,7 +22,7 @@ import type { PollInteraction } from "../../models/slide.model";
  * États : idle → voting → results
  * - idle : affiche la question et le bouton "Lancer le sondage"
  * - voting : affiche les options cliquables avec compteurs
- * - results : affiche les barres de résultats animées
+ * - results : affiche les barres de résultats animées (GSAP cascade)
  */
 @Component({
   selector: "app-poll-interaction",
@@ -46,7 +51,7 @@ import type { PollInteraction } from "../../models/slide.model";
             @for (option of poll().options; track option; let i = $index) {
               <button
                 type="button"
-                class="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 shadow-sm transition-all hover:border-scheme-accent/40 hover:bg-scheme-accent/5 active:scale-[0.98]"
+                class="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 shadow-sm transition-all hover:border-scheme-accent hover:shadow active:scale-[0.98]"
                 (click)="vote(i)"
               >
                 <span>{{ option }}</span>
@@ -69,21 +74,25 @@ import type { PollInteraction } from "../../models/slide.model";
         @case ("results") {
           <div class="space-y-3">
             @for (option of poll().options; track option; let i = $index) {
-              <div>
-                <div class="mb-1 flex items-center justify-between text-sm">
+              <div class="opacity-0" #resultRow>
+                <div class="mb-1.5 flex items-center justify-between text-sm">
                   <span class="font-medium text-gray-700">{{ option }}</span>
                   <span
                     class="tabular-nums text-xs font-bold text-scheme-accent"
                   >
-                    {{ votes()[i] }} — {{ percentages()[i] }}%
+                    {{ votes()[i] }} vote{{ votes()[i] > 1 ? "s" : "" }} —
+                    {{ percentages()[i] }}%
                   </span>
                 </div>
                 <div
-                  class="h-3 w-full overflow-hidden rounded-full bg-gray-100"
+                  class="h-4 w-full overflow-hidden rounded-full bg-gray-100"
                 >
                   <div
-                    class="h-full rounded-full bg-scheme-accent transition-all duration-700 ease-out"
-                    [style.width.%]="percentages()[i]"
+                    class="h-full rounded-full transition-none"
+                    [class.bg-scheme-accent]="isWinner(i)"
+                    [class.bg-gray-300]="!isWinner(i)"
+                    [style.width.%]="0"
+                    #resultBar
                   ></div>
                 </div>
               </div>
@@ -114,6 +123,13 @@ export class PollInteractionComponent {
   readonly state = signal<"idle" | "voting" | "results">("idle");
   readonly votes = signal<number[]>([]);
 
+  private readonly resultRows =
+    viewChildren<ElementRef<HTMLElement>>("resultRow");
+  private readonly resultBars =
+    viewChildren<ElementRef<HTMLElement>>("resultBar");
+
+  private readonly platformId = inject(PLATFORM_ID);
+
   /** Total des votes pour le calcul des pourcentages */
   private readonly totalVotes = computed(() =>
     this.votes().reduce((sum, v) => sum + v, 0),
@@ -125,6 +141,19 @@ export class PollInteractionComponent {
     if (total === 0) return this.votes().map(() => 0);
     return this.votes().map((v) => Math.round((v / total) * 100));
   });
+
+  /** Index du/des gagnant(s) (pourcentage max) */
+  private readonly maxPercentage = computed(() =>
+    Math.max(...this.percentages()),
+  );
+
+  /** True si cette option a le pourcentage le plus élevé */
+  isWinner(index: number): boolean {
+    return (
+      this.percentages()[index] === this.maxPercentage() &&
+      this.maxPercentage() > 0
+    );
+  }
 
   startVoting(): void {
     this.votes.set(this.poll().options.map(() => 0));
@@ -141,6 +170,44 @@ export class PollInteractionComponent {
 
   showResults(): void {
     this.state.set("results");
+
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Animation GSAP en cascade après le prochain rendu
+    queueMicrotask(() => {
+      const rows = this.resultRows().map((r) => r.nativeElement);
+      const bars = this.resultBars().map((b) => b.nativeElement);
+      const pcts = this.percentages();
+
+      import("gsap").then(({ default: gsapLib }) => {
+        // Fade-in cascade des lignes
+        gsapLib.fromTo(
+          rows,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            stagger: 0.1,
+            ease: "power2.out",
+          },
+        );
+
+        // Animation des barres en cascade
+        bars.forEach((bar, i) => {
+          gsapLib.fromTo(
+            bar,
+            { width: "0%" },
+            {
+              width: `${pcts[i]}%`,
+              duration: 0.8,
+              delay: 0.3 + i * 0.12,
+              ease: "power3.out",
+            },
+          );
+        });
+      });
+    });
   }
 
   reset(): void {
