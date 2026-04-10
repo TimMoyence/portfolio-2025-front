@@ -32,7 +32,7 @@ describe("OfferComponent", () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const heading = compiled.querySelector('[data-testid="hero-title"]');
     expect(heading?.textContent).toContain(
-      "Des solutions digitales claires, pensées pour votre réalité métier",
+      "Nos offres de developpement web et d'accompagnement digital",
     );
   });
 
