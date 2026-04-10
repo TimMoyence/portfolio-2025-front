@@ -206,6 +206,89 @@ const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   return `${lines.join("\n")}\n`;
 };
 
+/**
+ * Construit les balises <script type="application/ld+json"> a injecter dans le HTML.
+ * Inclut les schemas globaux (LocalBusiness, SiteNavigationElement) + les schemas
+ * specifiques a la page + les breadcrumbs.
+ */
+const buildJsonLdScripts = (
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+): string => {
+  const localeMatch = originalUrl.match(/^\/(fr|en)(?=\/|$)/);
+  const locale = localeMatch ? localeMatch[1] : metadata.site.defaultLocale;
+  const routePath = originalUrl
+    .replace(/^\/(fr|en)\/?/, "")
+    .split("?")[0]
+    .split("#")[0];
+  const normalizedRoute = routePath ? `/${routePath}` : "/";
+
+  const scripts: string[] = [];
+
+  const addScript = (data: Record<string, unknown>): void => {
+    const json = JSON.stringify(data).replace(/<\/script>/gi, "<\\/script>");
+    scripts.push(`<script type="application/ld+json">${json}</script>`);
+  };
+
+  // Schemas globaux (toutes les pages)
+  if (metadata.global?.localBusiness) {
+    addScript(metadata.global.localBusiness);
+  }
+  if (metadata.global?.siteNavigation) {
+    addScript(metadata.global.siteNavigation);
+  }
+
+  // Schema specifique a la page
+  const page = metadata.pages.find(
+    (p) =>
+      normalizePath(p.path) === normalizePath(normalizedRoute) ||
+      (normalizedRoute === "/" && p.id === "home"),
+  );
+
+  if (page) {
+    const localeMeta =
+      page.locales[locale] ?? page.locales[metadata.site.defaultLocale];
+    if (localeMeta?.jsonLd) {
+      const blocks = Array.isArray(localeMeta.jsonLd)
+        ? localeMeta.jsonLd
+        : [localeMeta.jsonLd];
+      for (const block of blocks) {
+        addScript(block as Record<string, unknown>);
+      }
+    }
+
+    // BreadcrumbList
+    if (page.breadcrumb && page.breadcrumb.length > 0) {
+      const baseUrl = metadata.site.baseUrl ?? "https://asilidesign.fr";
+      addScript({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: page.breadcrumb.map((entry, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: entry.name,
+          item: `${baseUrl}/${locale}${entry.path === "/" ? "" : entry.path}`,
+        })),
+      });
+    }
+  }
+
+  return scripts.join("\n");
+};
+
+/**
+ * Injecte les scripts JSON-LD dans le HTML avant </head>.
+ */
+const injectJsonLd = (
+  html: string,
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+): string => {
+  const scripts = buildJsonLdScripts(metadata, originalUrl);
+  if (!scripts) return html;
+  return html.replace("</head>", `${scripts}\n</head>`);
+};
+
 app.get("/sitemap.xml", (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
@@ -316,10 +399,15 @@ app.get("**", (req, res, next) => {
       prerendered.startsWith(browserDistFolder) &&
       fs.existsSync(prerendered)
     ) {
+      const metadata = loadSeoMetadata();
+      let html = fs.readFileSync(prerendered, "utf-8");
+      if (metadata) {
+        html = injectJsonLd(html, metadata, originalUrl);
+      }
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
       res.setHeader("X-Content-Type-Options", "nosniff");
-      return void res.sendFile(prerendered);
+      return void res.send(html);
     }
   }
 
@@ -335,6 +423,10 @@ app.get("**", (req, res, next) => {
       providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
     })
     .then((html) => {
+      const metadata = loadSeoMetadata();
+      if (metadata) {
+        html = injectJsonLd(html, metadata, originalUrl);
+      }
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
       res.setHeader("X-Content-Type-Options", "nosniff");
       res.send(html);
