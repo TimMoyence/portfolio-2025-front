@@ -34,6 +34,16 @@ describe("SeoService", () => {
           }
           return null;
         }),
+      querySelectorAll: jasmine
+        .createSpy("head.querySelectorAll")
+        .and.callFake((selector: string) => {
+          if (selector === 'script[type="application/ld+json"]') {
+            return appendedChildren.filter(
+              (el) => el["type"] === "application/ld+json",
+            );
+          }
+          return [];
+        }),
       /** Expose les enfants ajoutes au head pour les assertions dans les tests. */
       get children(): Record<string, unknown>[] {
         return appendedChildren;
@@ -389,6 +399,64 @@ describe("SeoService", () => {
         );
 
         expect(scriptEl).toBeUndefined();
+      });
+
+      it("devrait injecter un tableau de JSON-LD comme scripts separes", () => {
+        const jsonLdArray = [
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Test",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [],
+          },
+        ];
+
+        service.updateSeoMetadata({
+          title: "Test",
+          description: "Desc",
+          jsonLd: jsonLdArray,
+        });
+
+        const scripts = (
+          mockDocument.head as unknown as {
+            querySelectorAll: (s: string) => Record<string, unknown>[];
+          }
+        ).querySelectorAll('script[type="application/ld+json"]');
+        expect(scripts.length).toBe(2);
+        expect(JSON.parse(scripts[0]["textContent"] as string)).toEqual(
+          jsonLdArray[0],
+        );
+        expect(JSON.parse(scripts[1]["textContent"] as string)).toEqual(
+          jsonLdArray[1],
+        );
+      });
+
+      it("devrait supprimer les anciens JSON-LD avant injection", () => {
+        service.updateSeoMetadata({
+          title: "T1",
+          description: "D1",
+          jsonLd: { "@type": "WebSite" },
+        });
+
+        service.updateSeoMetadata({
+          title: "T2",
+          description: "D2",
+          jsonLd: [{ "@type": "FAQPage" }],
+        });
+
+        const scripts = (
+          mockDocument.head as unknown as {
+            querySelectorAll: (s: string) => Record<string, unknown>[];
+          }
+        ).querySelectorAll('script[type="application/ld+json"]');
+        expect(scripts.length).toBe(1);
+        expect(JSON.parse(scripts[0]["textContent"] as string)["@type"]).toBe(
+          "FAQPage",
+        );
       });
 
       it("devrait supprimer le script JSON-LD existant avant d en creer un nouveau", () => {

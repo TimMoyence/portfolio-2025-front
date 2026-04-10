@@ -102,20 +102,27 @@ export class SeoService {
 
   /**
    * Injecte ou met a jour les donnees structurees JSON-LD dans le head.
-   * Supprime le script existant avant d'en creer un nouveau (SSR-safe).
+   * Supprime tous les scripts JSON-LD existants avant d'en creer de nouveaux (SSR-safe).
+   * Accepte un seul bloc JSON-LD ou un tableau — chaque bloc est injecte dans son propre script.
    */
   private updateJsonLd(config: SeoConfig): void {
     if (!this.document) return;
 
-    const existing = this.document.head.querySelector(
-      'script[type="application/ld+json"]',
-    );
-    if (existing) existing.remove();
+    // Supprime tous les scripts JSON-LD existants (pas seulement le premier)
+    this.document.head
+      .querySelectorAll('script[type="application/ld+json"]')
+      .forEach((node) => node.remove());
 
-    if (config.jsonLd) {
+    if (!config.jsonLd) return;
+
+    const blocks = Array.isArray(config.jsonLd)
+      ? config.jsonLd
+      : [config.jsonLd];
+
+    for (const block of blocks) {
       const script = this.document.createElement("script");
       script.type = "application/ld+json";
-      script.textContent = JSON.stringify(config.jsonLd);
+      script.textContent = JSON.stringify(block);
       this.document.head.appendChild(script);
     }
   }
