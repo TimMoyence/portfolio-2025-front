@@ -32,6 +32,9 @@ export interface SlideGridItem {
   badge?: string;
 }
 
+/** Mode d'affichage du moteur de présentation. */
+export type PresentationMode = "scroll" | "present" | "overview";
+
 /** Acte narratif regroupant des slides dans une présentation */
 export interface Act {
   id: string;

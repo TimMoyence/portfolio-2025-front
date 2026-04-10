@@ -16,6 +16,7 @@ import {
 import gsap from "gsap";
 import type {
   Act,
+  PresentationMode,
   PresentationSlide,
   PromptTemplate,
 } from "../../models/slide.model";
@@ -24,9 +25,6 @@ import { SlideRendererComponent } from "../slide-viewer/templates/slide-renderer
 import { SvgIconComponent } from "../svg-icon.component";
 import { OverviewComponent } from "./overview.component";
 import { PresenterBarComponent } from "./presenter-bar.component";
-
-/** Mode d'affichage du moteur de presentation. */
-export type PresentationMode = "scroll" | "present" | "overview";
 
 /** Acte groupe avec ses slides pour la vue scroll. */
 interface ActGroup {
@@ -69,19 +67,12 @@ interface ActGroup {
         <!-- Liste verticale regroupee par acte -->
         <div class="snap-y snap-mandatory scroll-smooth overflow-y-auto">
           @for (group of acts(); track group.act.id; let i = $index) {
-            <header
-              class="border-b border-gray-200 bg-gray-50 px-4 sm:px-6 py-4"
-              [class.mt-8]="i > 0"
-              [class.border-t-4]="i > 0"
-              [class.border-t-scheme-accent]="i > 0"
-              data-aos="fade-up"
-            >
-              <h2
-                class="text-[11px] font-bold uppercase tracking-widest text-scheme-accent"
-              >
-                {{ group.act.label }}
-              </h2>
-            </header>
+            @if (i > 0) {
+              <div
+                class="mt-8 border-t-4 border-t-scheme-accent"
+                data-aos="fade-up"
+              ></div>
+            }
             @for (slide of group.slides; track slide.id) {
               <section
                 [attr.data-slide-id]="slide.id"
