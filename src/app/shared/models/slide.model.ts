@@ -59,12 +59,65 @@ export interface Slide {
   act?: string | Act;
   /** Notes pour le présentateur (non affichées au public, distinctes de `notes`) */
   speakerNotes?: string;
-  /** Source(s) vérifiable(s) affichée(s) en mode scroll uniquement. */
-  sources?: { label: string; url: string }[];
-  /** Note éditoriale de l'auteur, visible en mode scroll uniquement. */
-  authorNote?: string;
   /** Contrôle la visibilité de la slide selon le mode d'affichage. Par défaut 'both'. */
   visibility?: "both" | "presentOnly" | "scrollOnly";
+}
+
+// ── Interactions mode Present (présentateur clique, audience regarde l'écran) ──
+
+/** Sondage à main levée — le présentateur clique pour compter les votes */
+export interface PollInteraction {
+  type: "poll";
+  question: string;
+  options: string[];
+  /** Autorise la sélection de plusieurs options (défaut: false) */
+  multiSelect?: boolean;
+}
+
+/** Compte à rebours — pause dramatique avant de continuer */
+export interface CountdownInteraction {
+  type: "countdown";
+  label: string;
+  durationSeconds: number;
+}
+
+export type PresentInteraction = PollInteraction | CountdownInteraction;
+
+// ── Interactions mode Scroll (le lecteur interagit seul, à son rythme) ──
+
+/** Question ouverte introspective */
+export interface ReflectionInteraction {
+  type: "reflection";
+  question: string;
+  placeholder: string;
+  rows?: number;
+}
+
+/** Checklist interactive — "lesquels utilisez-vous déjà ?" */
+export interface ChecklistInteraction {
+  type: "checklist";
+  question: string;
+  items: string[];
+}
+
+/** Échelle d'auto-évaluation (slider ou radio) */
+export interface SelfRatingInteraction {
+  type: "self-rating";
+  question: string;
+  min: number;
+  max: number;
+  labels: { min: string; max: string };
+}
+
+export type ScrollInteraction =
+  | ReflectionInteraction
+  | ChecklistInteraction
+  | SelfRatingInteraction;
+
+/** Interactions par mode, servies par le backend et attachées à chaque slide */
+export interface SlideInteractions {
+  present?: PresentInteraction[];
+  scroll?: ScrollInteraction[];
 }
 
 /** Slide enrichie avec acte typé et support fragments pour le moteur de présentation */
@@ -72,4 +125,6 @@ export interface PresentationSlide extends Slide {
   act: Act;
   /** Nombre d'éléments révélés progressivement (0 = tout visible d'un coup) */
   fragmentCount: number;
+  /** Interactions par mode — present (présentateur) et scroll (lecteur) */
+  interactions?: SlideInteractions;
 }
