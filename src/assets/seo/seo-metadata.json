@@ -62,14 +62,14 @@
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
-          "description": "Explore my professional services.",
+          "description": "Découvrez mes services professionnels, réalisations et solutions digitales sur mesure. Tim Moyence, développeur web freelance à Bordeaux.",
           "ogTitle": "Accueil de Tim Moyence",
           "ogDescription": "Découvrez mes services professionnels et mes réalisations en développement web.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "Tim Moyence — Portfolio",
-            "url": "https://www.tim-music.net"
+            "url": "https://asilidesign.fr"
           }
         },
         "en": {
@@ -81,7 +81,7 @@
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "Tim Moyence — Portfolio",
-            "url": "https://www.tim-music.net"
+            "url": "https://asilidesign.fr"
           }
         }
       }
@@ -103,7 +103,7 @@
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Tim Moyence",
-            "url": "https://www.tim-music.net",
+            "url": "https://asilidesign.fr",
             "jobTitle": "Développeur Full-Stack"
           }
         },
@@ -116,7 +116,7 @@
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Tim Moyence",
-            "url": "https://www.tim-music.net",
+            "url": "https://asilidesign.fr",
             "jobTitle": "Développeur Full-Stack"
           }
         }
@@ -257,7 +257,7 @@
     {
       "id": "weather",
       "path": "/atelier/meteo",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.5,
       "lastmod": "2026-03-31",

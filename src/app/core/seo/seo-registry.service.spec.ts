@@ -72,7 +72,9 @@ describe("SeoRegistryService", () => {
 
       expect(result).not.toBeNull();
       expect(result!.seo.title).toBe("Accueil — Tim Moyence Portfolio");
-      expect(result!.seo.description).toBe("Explore my professional services.");
+      expect(result!.seo.description).toBe(
+        "Découvrez mes services professionnels, réalisations et solutions digitales sur mesure. Tim Moyence, développeur web freelance à Bordeaux.",
+      );
       expect(result!.index).toBeTrue();
       expect(result!.page.id).toBe("home");
     });

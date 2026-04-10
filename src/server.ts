@@ -31,7 +31,16 @@ const resolveIndexHtml = (locale: string | null): string => {
 };
 
 const app = express();
-const commonEngine = new CommonEngine();
+const commonEngine = new CommonEngine({
+  allowedHosts: [
+    "asilidesign.fr",
+    "www.asilidesign.fr",
+    "localhost",
+    "127.0.0.1",
+    "portfolio-web-fr",
+    "portfolio-web-en",
+  ],
+});
 
 const SEO_METADATA_CANDIDATES = [
   resolve(browserDistFolder, "fr/assets/seo/seo-metadata.json"),
@@ -207,6 +216,7 @@ app.get("/sitemap.xml", (req, res) => {
   const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
   const xml = buildSitemapXml(metadata, baseUrl);
   res.setHeader("Content-Type", "application/xml");
+  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
   res.send(xml);
 });
 
@@ -222,6 +232,7 @@ app.get("/robots.txt", (req, res) => {
   }
 
   const robots = buildRobotsTxt(metadata, baseUrl);
+  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
   res.type("text/plain").send(robots);
 });
 
@@ -285,6 +296,34 @@ app.get("**", (req, res, next) => {
   const localeMatch = originalUrl.match(/^\/(fr|en)(?=\/|$)/);
   const urlLocale = localeMatch ? localeMatch[1] : null;
   const baseHref = urlLocale ? `/${urlLocale}` : "/";
+
+  // Servir les fichiers HTML pre-rendus (SSG au build) si disponibles.
+  // Les fichiers pre-rendus contiennent le contenu complet (meta, texte, JSON-LD)
+  // et ne dependent pas du rendu SSR dynamique (CommonEngine) qui peut echouer
+  // silencieusement en production.
+  if (urlLocale) {
+    const routePath = originalUrl
+      .replace(/^\/(fr|en)\/?/, "")
+      .split("?")[0]
+      .split("#")[0];
+    const prerendered = resolve(
+      browserDistFolder,
+      urlLocale,
+      routePath || ".",
+      "index.html",
+    );
+    if (
+      prerendered.startsWith(browserDistFolder) &&
+      fs.existsSync(prerendered)
+    ) {
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      return void res.sendFile(prerendered);
+    }
+  }
+
+  // Fallback SSR dynamique pour les routes non pre-rendues.
   const documentFilePath = resolveIndexHtml(urlLocale);
 
   commonEngine
@@ -295,7 +334,11 @@ app.get("**", (req, res, next) => {
       publicPath: browserDistFolder,
       providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
     })
-    .then((html) => res.send(html))
+    .then((html) => {
+      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.send(html);
+    })
     .catch((err) => next(err));
 });
 
