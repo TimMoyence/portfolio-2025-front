@@ -7,6 +7,8 @@ export type SeoChangeFreq =
   | "yearly"
   | "never";
 
+export type JsonLdBlock = Record<string, unknown> | Record<string, unknown>[];
+
 export interface SeoLocaleMeta {
   title: string;
   description: string;
@@ -18,6 +20,12 @@ export interface SeoLocaleMeta {
   twitterTitle?: string;
   twitterDescription?: string;
   twitterImage?: string;
+  jsonLd?: JsonLdBlock;
+}
+
+export interface SeoBreadcrumbEntry {
+  name: string;
+  path: string;
 }
 
 export interface SeoPageEntry {
@@ -27,6 +35,7 @@ export interface SeoPageEntry {
   changefreq?: SeoChangeFreq;
   priority?: number;
   lastmod?: string;
+  breadcrumb?: SeoBreadcrumbEntry[];
   locales: Record<string, SeoLocaleMeta>;
 }
 
@@ -43,8 +52,14 @@ export interface SeoMetadataSite {
   homePath?: string;
 }
 
+export interface SeoMetadataGlobal {
+  localBusiness: Record<string, unknown>;
+  siteNavigation: Record<string, unknown>;
+}
+
 export interface SeoMetadataFile {
   site: SeoMetadataSite;
   defaults?: SeoMetadataDefaults;
+  global?: SeoMetadataGlobal;
   pages: SeoPageEntry[];
 }

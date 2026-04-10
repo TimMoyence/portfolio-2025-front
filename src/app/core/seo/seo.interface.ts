@@ -1,3 +1,5 @@
+import type { JsonLdBlock } from "./seo-metadata.model";
+
 export interface SeoConfig {
   title: string;
   description: string;
@@ -14,5 +16,5 @@ export interface SeoConfig {
   canonicalUrl?: string;
   hreflangs?: Record<string, string>;
   /** Donnees structurees JSON-LD a injecter dans le head (schema.org). */
-  jsonLd?: Record<string, unknown>;
+  jsonLd?: JsonLdBlock;
 }
