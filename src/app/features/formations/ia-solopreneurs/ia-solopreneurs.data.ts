@@ -74,14 +74,6 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     speakerNotes:
       "Question au public : « Qui passe plus de 3h par jour sur des tâches qu'un outil pourrait faire ? »",
     interactions: {
-      present: [
-        {
-          type: "poll",
-          question:
-            "Combien de temps passez-vous sur des tâches automatisables ?",
-          options: ["< 1h/jour", "1-3h/jour", "3h+/jour", "Aucune idée"],
-        },
-      ],
       scroll: [
         {
           type: "self-rating",
@@ -150,15 +142,6 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
       "NotebookLM : tourne sur Gemini 3, mode interactif « raise your hand » (2026), Cinematic Video Overviews. Perplexity : valorisé 21Md$ (Series E, 2026). Fathom : attention, le gratuit est limité à 5 résumés IA — au-delà c'est 19$/mois.",
     speakerNotes:
       "Démo live NotebookLM si le temps le permet : uploader un PDF, lancer un Deep Dive. Le podcast sera prêt dans ~47 secondes.",
-    interactions: {
-      present: [
-        {
-          type: "poll",
-          question: "Lequel testeriez-vous en premier ?",
-          options: ["NotebookLM", "Perplexity", "Fathom"],
-        },
-      ],
-    },
   },
   {
     id: "chat-produire",
@@ -215,15 +198,6 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
       "Ideogram 3.0 : Style References (jusqu'à 3 images), photoréalisme amélioré. Gamma : levée de 68M$ (a16z), 600K abonnés payants. ElevenLabs : Series D 500M$ (Sequoia, a16z), 330M$ ARR fin 2025.",
     speakerNotes:
       "Montrer un exemple Ideogram avec du texte parfait vs un fail Midjourney/DALL-E sur du texte. Le contraste est parlant.",
-    interactions: {
-      present: [
-        {
-          type: "poll",
-          question: "Quel contenu créez-vous le plus ?",
-          options: ["Images", "Présentations", "Audio/Vidéo", "Texte"],
-        },
-      ],
-    },
   },
   {
     id: "automatiser",
@@ -263,20 +237,6 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
       "Zapier : 3M+ utilisateurs, 100K+ clients payants. Make : 3,1M utilisateurs, 52,6M$ CA. n8n : 230K utilisateurs actifs, 3000 clients entreprise, Series C 180M$. Différence clé : 1 action Zapier = 1 tâche, 1 étape Make = 1 opération. À 10K opérations/mois, Make est 2x moins cher.",
     speakerNotes:
       "Workflow concret : 'Un formulaire est rempli → email personnalisé + fiche Notion + rappel calendrier. Temps de setup : 2h. Temps humain ensuite : 0.' Pour l'audience A, mentionner n8n self-hosted + MCP.",
-    interactions: {
-      present: [
-        {
-          type: "poll",
-          question: "Quel est votre niveau d'automatisation actuel ?",
-          options: [
-            "Tout à la main",
-            "Quelques apps connectées",
-            "Workflows automatisés",
-          ],
-        },
-      ],
-      scroll: [],
-    },
   },
   {
     id: "site-web",
@@ -390,13 +350,6 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     notes:
       "Ne pas tout installer d'un coup. Chaque outil doit résoudre un problème concret. L'objectif n'est pas d'avoir le stack le plus gros mais le plus efficace.",
     interactions: {
-      present: [
-        {
-          type: "poll",
-          question: "Combien dépensez-vous actuellement en outils IA ?",
-          options: ["0€", "< 30€/mois", "30-100€/mois", "100€+/mois"],
-        },
-      ],
       scroll: [
         {
           type: "self-rating",
