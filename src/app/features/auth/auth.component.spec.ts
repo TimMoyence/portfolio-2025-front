@@ -86,16 +86,10 @@ describe("AuthComponent", () => {
       phone: "  +33 6 12 34 56 78  ",
     };
     authService.register.and.returnValue(
-      of(
-        buildAuthUser({
-          id: "1",
-          email: "john@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          phone: "+33 6 12 34 56 78",
-          roles: [],
-        }),
-      ),
+      of({
+        message:
+          "Inscription reussie. Un email de verification a ete envoye a votre adresse.",
+      }),
     );
 
     component.handleSignupSubmit(form);
@@ -107,7 +101,7 @@ describe("AuthComponent", () => {
       lastName: "Doe",
       phone: "+33 6 12 34 56 78",
     });
-    expect(component.signupSuccessMessage).toContain("Compte créé");
+    expect(component.signupSuccessMessage).toContain("Inscription reussie");
   });
 
   it("devrait basculer vers l onglet login apres inscription reussie", () => {
@@ -122,14 +116,10 @@ describe("AuthComponent", () => {
       phone: "",
     };
     authService.register.and.returnValue(
-      of(
-        buildAuthUser({
-          id: "1",
-          email: "john@example.com",
-          firstName: "John",
-          lastName: "Doe",
-        }),
-      ),
+      of({
+        message:
+          "Inscription reussie. Un email de verification a ete envoye a votre adresse.",
+      }),
     );
 
     component.handleSignupSubmit(form);

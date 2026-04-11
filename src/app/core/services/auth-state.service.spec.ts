@@ -84,18 +84,9 @@ describe("AuthStateService", () => {
       expect(service.hasRole("admin")).toBeFalse();
     });
 
-    it("devrait stocker le refreshToken en localStorage au login", () => {
-      const session = buildAuthSession({ refreshToken: "rt-abc" });
+    it("ne devrait plus stocker de refreshToken en localStorage (cookie HttpOnly)", () => {
+      const session = buildAuthSession();
       service.login(session);
-
-      expect(localStorage.getItem("portfolio_refresh")).toBe("rt-abc");
-    });
-
-    it("devrait supprimer le refreshToken du localStorage au logout", () => {
-      service.login(buildAuthSession({ refreshToken: "rt-del" }));
-      expect(localStorage.getItem("portfolio_refresh")).toBe("rt-del");
-
-      service.logout();
 
       expect(localStorage.getItem("portfolio_refresh")).toBeNull();
     });
@@ -107,7 +98,6 @@ describe("AuthStateService", () => {
       >;
       const renewedSession = buildAuthSession({
         accessToken: "jwt-renewed",
-        refreshToken: "rt-renewed",
         expiresIn: 3600,
       });
       authPortStub.refresh.and.returnValue(of(renewedSession));
@@ -116,7 +106,6 @@ describe("AuthStateService", () => {
       service.login(
         buildAuthSession({
           accessToken: "jwt-initial",
-          refreshToken: "rt-initial",
           expiresIn: 60,
         }),
       );
@@ -124,20 +113,20 @@ describe("AuthStateService", () => {
       // Avancer de 30s => le refresh doit se declencher
       tick(30_000);
 
-      expect(authPortStub.refresh).toHaveBeenCalledWith("rt-initial");
+      expect(authPortStub.refresh).toHaveBeenCalled();
       expect(service.token()).toBe("jwt-renewed");
     }));
 
-    it("devrait appeler authPort.logout() avec le refresh token sur logoutFull", () => {
+    it("devrait appeler authPort.logout() sans parametre sur logoutFull (cookie HttpOnly)", () => {
       const authPortStub = TestBed.inject(AUTH_PORT) as Record<
         keyof AuthPort,
         jasmine.Spy
       >;
-      service.login(buildAuthSession({ refreshToken: "rt-full" }));
+      service.login(buildAuthSession());
 
       service.logoutFull();
 
-      expect(authPortStub.logout).toHaveBeenCalledWith("rt-full");
+      expect(authPortStub.logout).toHaveBeenCalledWith();
       expect(service.isLoggedIn()).toBeFalse();
     });
 
@@ -147,9 +136,7 @@ describe("AuthStateService", () => {
         jasmine.Spy
       >;
 
-      service.login(
-        buildAuthSession({ expiresIn: 120, refreshToken: "rt-cancel" }),
-      );
+      service.login(buildAuthSession({ expiresIn: 120 }));
       service.logout();
 
       // Avancer au-dela du delai prevu => le refresh ne doit PAS se declencher

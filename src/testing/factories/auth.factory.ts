@@ -27,14 +27,16 @@ export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
   };
 }
 
-/** Construit une session auth avec des valeurs par defaut. */
+/**
+ * Construit une session auth avec des valeurs par defaut.
+ * Le refresh token n'est plus dans le body — il est gere par cookie HttpOnly.
+ */
 export function buildAuthSession(
   overrides?: Partial<AuthSession>,
 ): AuthSession {
   return {
     accessToken: "jwt-token",
     expiresIn: 3600,
-    refreshToken: "refresh-token",
     user: buildAuthUser(),
     ...overrides,
   };
@@ -97,11 +99,14 @@ export function buildChangePasswordPayload(
  * Cree un stub complet du port auth avec des spies Jasmine.
  * Les spies retournent of(null) par defaut pour eviter les erreurs
  * de subscribe dans AuthStateService.restoreSession().
+ * refresh() et logout() n'acceptent plus de parametre (cookie HttpOnly).
  */
 export function createAuthPortStub(): Record<keyof AuthPort, jasmine.Spy> {
   return {
     login: jasmine.createSpy("login").and.returnValue(of(null)),
-    register: jasmine.createSpy("register").and.returnValue(of(null)),
+    register: jasmine
+      .createSpy("register")
+      .and.returnValue(of({ message: "Inscription reussie." })),
     me: jasmine.createSpy("me").and.returnValue(of(null)),
     googleAuth: jasmine.createSpy("googleAuth").and.returnValue(of(null)),
     requestPasswordReset: jasmine
@@ -123,5 +128,11 @@ export function createAuthPortStub(): Record<keyof AuthPort, jasmine.Spy> {
       .createSpy("refresh")
       .and.returnValue(of(buildAuthSession())),
     logout: jasmine.createSpy("logout").and.returnValue(of({ message: "ok" })),
+    verifyEmail: jasmine
+      .createSpy("verifyEmail")
+      .and.returnValue(of({ message: "Email verifie." })),
+    resendVerification: jasmine
+      .createSpy("resendVerification")
+      .and.returnValue(of({ message: "ok" })),
   };
 }

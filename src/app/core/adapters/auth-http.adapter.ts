@@ -9,6 +9,7 @@ import type {
   ForgotPasswordPayload,
   LoginCredentials,
   RegisterUserPayload,
+  ResendVerificationPayload,
   ResetPasswordPayload,
   SetPasswordPayload,
   UpdateProfilePayload,
@@ -26,11 +27,16 @@ export class AuthHttpAdapter implements AuthPort {
     return this.http.post<AuthSession>(
       `${this.baseUrl}/auth/login`,
       credentials,
+      { withCredentials: true },
     );
   }
 
-  register(payload: RegisterUserPayload): Observable<AuthUser> {
-    return this.http.post<AuthUser>(`${this.baseUrl}/auth/register`, payload);
+  /** Inscrit un nouvel utilisateur. Retourne un message (email de verification envoye). */
+  register(payload: RegisterUserPayload): Observable<AuthActionMessage> {
+    return this.http.post<AuthActionMessage>(
+      `${this.baseUrl}/auth/register`,
+      payload,
+    );
   }
 
   me(): Observable<AuthUser> {
@@ -39,9 +45,11 @@ export class AuthHttpAdapter implements AuthPort {
 
   /** Envoie le jeton Google au backend pour authentification OAuth. */
   googleAuth(idToken: string): Observable<AuthSession> {
-    return this.http.post<AuthSession>(`${this.baseUrl}/auth/google`, {
-      idToken,
-    });
+    return this.http.post<AuthSession>(
+      `${this.baseUrl}/auth/google`,
+      { idToken },
+      { withCredentials: true },
+    );
   }
 
   requestPasswordReset(
@@ -79,17 +87,39 @@ export class AuthHttpAdapter implements AuthPort {
     return this.http.patch<AuthUser>(`${this.baseUrl}/auth/profile`, payload);
   }
 
-  /** Rafraichit le JWT via le refresh token. */
-  refresh(refreshToken: string): Observable<AuthSession> {
-    return this.http.post<AuthSession>(`${this.baseUrl}/auth/refresh`, {
-      refreshToken,
-    });
+  /** Rafraichit le JWT via le cookie HttpOnly refresh_token (envoye automatiquement). */
+  refresh(): Observable<AuthSession> {
+    return this.http.post<AuthSession>(
+      `${this.baseUrl}/auth/refresh`,
+      {},
+      { withCredentials: true },
+    );
   }
 
-  /** Revoque le refresh token cote backend. */
-  logout(refreshToken: string): Observable<AuthActionMessage> {
-    return this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/logout`, {
-      refreshToken,
-    });
+  /** Revoque le refresh token et efface le cookie cote backend. */
+  logout(): Observable<AuthActionMessage> {
+    return this.http.post<AuthActionMessage>(
+      `${this.baseUrl}/auth/logout`,
+      {},
+      { withCredentials: true },
+    );
+  }
+
+  /** Verifie l'adresse email via le token recu par email. */
+  verifyEmail(token: string): Observable<AuthActionMessage> {
+    return this.http.get<AuthActionMessage>(
+      `${this.baseUrl}/auth/verify-email`,
+      { params: { token } },
+    );
+  }
+
+  /** Renvoie l'email de verification. */
+  resendVerification(
+    payload: ResendVerificationPayload,
+  ): Observable<AuthActionMessage> {
+    return this.http.post<AuthActionMessage>(
+      `${this.baseUrl}/auth/resend-verification`,
+      payload,
+    );
   }
 }

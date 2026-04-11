@@ -11,12 +11,13 @@ import type { AuthSession, AuthUser } from "../models/auth.model";
 import { AUTH_PORT, type AuthPort } from "../ports/auth.port";
 
 const TOKEN_KEY = "portfolio_jwt";
-const REFRESH_KEY = "portfolio_refresh";
 const REFRESH_MARGIN_S = 30;
 
 /**
  * Service central de gestion de l'etat d'authentification.
  * Stocke le token JWT en localStorage et expose des signals reactifs.
+ * Le refresh token est gere exclusivement par un cookie HttpOnly securise
+ * cote backend — il n'est jamais accessible en JavaScript.
  * Utilise afterNextRender pour restaurer la session apres l'hydratation SSR.
  */
 @Injectable({ providedIn: "root" })
@@ -30,7 +31,6 @@ export class AuthStateService {
 
   private readonly _token = signal<string | null>(null);
   private readonly _user = signal<AuthUser | null>(null);
-  private readonly _refreshToken = signal<string | null>(null);
   private readonly _isInitialized = signal(false);
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -57,10 +57,8 @@ export class AuthStateService {
   login(session: AuthSession): void {
     this._token.set(session.accessToken);
     this._user.set(session.user);
-    this._refreshToken.set(session.refreshToken);
     if (this.isBrowser) {
       localStorage.setItem(TOKEN_KEY, session.accessToken);
-      localStorage.setItem(REFRESH_KEY, session.refreshToken);
     }
     this.scheduleRefresh(session.expiresIn);
   }
@@ -72,9 +70,8 @@ export class AuthStateService {
 
   /** Logout complet : revoque le refresh token cote backend puis nettoie le state. */
   logoutFull(): void {
-    const rt = this._refreshToken();
-    if (rt && this.authPort) {
-      this.authPort.logout(rt).subscribe({ error: () => {} });
+    if (this.authPort) {
+      this.authPort.logout().subscribe({ error: () => {} });
     }
     this.clearState();
   }
@@ -109,9 +106,8 @@ export class AuthStateService {
   }
 
   private doRefresh(): void {
-    const rt = this._refreshToken();
-    if (!rt || !this.authPort) return;
-    this.authPort.refresh(rt).subscribe({
+    if (!this.authPort) return;
+    this.authPort.refresh().subscribe({
       next: (session) => this.login(session),
       error: () => this.logout(),
     });
@@ -128,22 +124,16 @@ export class AuthStateService {
     this.clearRefreshTimer();
     this._token.set(null);
     this._user.set(null);
-    this._refreshToken.set(null);
     if (this.isBrowser) {
       localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(REFRESH_KEY);
     }
   }
 
   private restoreToken(): void {
     if (!this.isBrowser || !this.authPort) return;
     const savedToken = localStorage.getItem(TOKEN_KEY);
-    const savedRefresh = localStorage.getItem(REFRESH_KEY);
     if (savedToken) {
       this._token.set(savedToken);
-      if (savedRefresh) {
-        this._refreshToken.set(savedRefresh);
-      }
       this.restoreSession();
     }
   }

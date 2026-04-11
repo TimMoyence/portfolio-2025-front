@@ -193,8 +193,10 @@ export class AuthComponent {
 
     handleFormSubmit(this.authService.register(payload), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
-      onSuccess: (user) => {
-        this.signupSuccessMessage = $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Compte créé pour ${user.firstName} ${user.lastName}.`;
+      onSuccess: (result) => {
+        this.signupSuccessMessage =
+          result.message ??
+          $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Inscription reussie. Verifiez votre email pour activer votre compte.`;
         this.resetSignupForm(form);
         this.activeTab = "log-in";
       },

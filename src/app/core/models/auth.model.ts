@@ -12,10 +12,14 @@ export interface AuthUser {
   updatedOrCreatedBy?: string | null;
 }
 
+/**
+ * Session d'authentification retournee par le backend.
+ * Le refresh token n'est plus inclus dans le body JSON — il est emis
+ * dans un cookie HttpOnly securise, gere automatiquement par le navigateur.
+ */
 export interface AuthSession {
   accessToken: string;
   expiresIn: number;
-  refreshToken: string;
   user: AuthUser;
 }
 
@@ -58,4 +62,8 @@ export interface UpdateProfilePayload {
 
 export interface AuthActionMessage {
   message: string;
+}
+
+export interface ResendVerificationPayload {
+  email: string;
 }

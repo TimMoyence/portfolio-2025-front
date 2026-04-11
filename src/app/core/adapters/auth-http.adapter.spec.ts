@@ -41,7 +41,7 @@ describe("AuthHttpAdapter", () => {
     httpMock.verify();
   });
 
-  it("should POST credentials to the login endpoint", () => {
+  it("should POST credentials to the login endpoint with credentials", () => {
     const credentials = buildLoginCredentials();
     const response = buildAuthSession({
       user: buildAuthUser({ email: credentials.email }),
@@ -54,10 +54,11 @@ describe("AuthHttpAdapter", () => {
     const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/login`);
     expect(req.request.method).toBe("POST");
     expect(req.request.body).toEqual(credentials);
+    expect(req.request.withCredentials).toBeTrue();
     req.flush(response);
   });
 
-  it("should POST payload to the register endpoint", () => {
+  it("should POST payload to the register endpoint and return a message", () => {
     const payload = {
       email: "john@example.com",
       password: "Password123!",
@@ -66,22 +67,19 @@ describe("AuthHttpAdapter", () => {
       phone: "+33123456789",
     };
 
-    const user = buildAuthUser({
-      id: "generated-id",
-      email: payload.email,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      phone: payload.phone,
-    });
+    const response = {
+      message:
+        "Inscription reussie. Un email de verification a ete envoye a votre adresse.",
+    };
 
-    adapter.register(payload).subscribe((createdUser) => {
-      expect(createdUser).toEqual(user);
+    adapter.register(payload).subscribe((result) => {
+      expect(result).toEqual(response);
     });
 
     const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/register`);
     expect(req.request.method).toBe("POST");
     expect(req.request.body).toEqual(payload);
-    req.flush(user);
+    req.flush(response);
   });
 
   it("should POST idToken to /auth/google", () => {
@@ -166,29 +164,31 @@ describe("AuthHttpAdapter", () => {
     req.flush(user);
   });
 
-  it("should POST refreshToken to /auth/refresh", () => {
+  it("should POST to /auth/refresh with credentials (cookie HttpOnly)", () => {
     const session = buildAuthSession();
 
-    adapter.refresh("my-refresh-token").subscribe((result) => {
+    adapter.refresh().subscribe((result) => {
       expect(result).toEqual(session);
     });
 
     const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/refresh`);
     expect(req.request.method).toBe("POST");
-    expect(req.request.body).toEqual({ refreshToken: "my-refresh-token" });
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.body).toEqual({});
     req.flush(session);
   });
 
-  it("should POST refreshToken to /auth/logout", () => {
+  it("should POST to /auth/logout with credentials (cookie HttpOnly)", () => {
     const response = { message: "Deconnexion reussie." };
 
-    adapter.logout("my-refresh-token").subscribe((result) => {
+    adapter.logout().subscribe((result) => {
       expect(result).toEqual(response);
     });
 
     const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/logout`);
     expect(req.request.method).toBe("POST");
-    expect(req.request.body).toEqual({ refreshToken: "my-refresh-token" });
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.body).toEqual({});
     req.flush(response);
   });
 });
