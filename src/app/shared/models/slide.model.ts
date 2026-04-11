@@ -64,6 +64,10 @@ export interface Slide {
   speakerNotes?: string;
   /** Contrôle la visibilité de la slide selon le mode d'affichage. Par défaut 'both'. */
   visibility?: "both" | "presentOnly" | "scrollOnly";
+  /** Source(s) verifiable(s) affichee(s) en mode scroll uniquement. */
+  sources?: { label: string; url: string }[];
+  /** Note editoriale de l'auteur, visible en mode scroll uniquement. */
+  authorNote?: string;
 }
 
 // ── Interactions mode Present (présentateur clique, audience regarde l'écran) ──
