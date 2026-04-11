@@ -110,6 +110,7 @@ export function createBudgetPortStub(): Record<keyof BudgetPort, jasmine.Spy> {
     createCategory: jasmine.createSpy("createCategory"),
     getCategories: jasmine.createSpy("getCategories"),
     updateEntry: jasmine.createSpy("updateEntry"),
+    deleteEntry: jasmine.createSpy("deleteEntry"),
     shareBudget: jasmine.createSpy("shareBudget"),
     updateCategory: jasmine.createSpy("updateCategory"),
     exportPdf: jasmine.createSpy("exportPdf"),

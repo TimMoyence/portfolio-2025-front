@@ -44,6 +44,8 @@ export interface BudgetPort {
   shareBudget(
     payload: ShareBudgetPayload,
   ): Observable<{ shared: true; userId: string }>;
+  /** Supprime une entree de budget. */
+  deleteEntry(entryId: string): Observable<void>;
   /** Met a jour une categorie (ex: budgetLimit). */
   updateCategory(
     categoryId: string,

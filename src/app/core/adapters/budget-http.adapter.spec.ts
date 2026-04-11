@@ -68,6 +68,14 @@ describe("BudgetHttpAdapter", () => {
     req.flush({ totalExpenses: 100, totalIncoming: 200, byCategory: [] });
   });
 
+  it("devrait supprimer une entree", () => {
+    adapter.deleteEntry("e1").subscribe();
+
+    const req = httpMock.expectOne(`${baseUrl}/budget/entries/e1`);
+    expect(req.request.method).toBe("DELETE");
+    req.flush(null);
+  });
+
   it("devrait partager le budget", () => {
     adapter
       .shareBudget({ groupId: "g1", targetEmail: "maria@test.com" })

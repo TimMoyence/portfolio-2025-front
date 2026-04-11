@@ -117,6 +117,11 @@ export class BudgetHttpAdapter implements BudgetPort {
     );
   }
 
+  /** Supprime une entree de budget. */
+  deleteEntry(entryId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/budget/entries/${entryId}`);
+  }
+
   /** Partage le budget avec un autre utilisateur. */
   shareBudget(
     payload: ShareBudgetPayload,
