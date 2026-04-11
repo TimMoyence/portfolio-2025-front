@@ -428,7 +428,7 @@
         <note priority="1" from="meaning">auth.genericError</note>
       </trans-unit>
       <trans-unit id="authSignupSuccess" datatype="html">
-        <source>Compte créé pour <x id="PH" equiv-text="user.firstName"/> <x id="PH_1" equiv-text="user.lastName"/>.</source>
+        <source>Inscription reussie. Verifiez votre email pour activer votre compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
           <context context-type="linenumber">197</context>

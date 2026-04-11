@@ -677,8 +677,8 @@
         <note category="meaning">auth.signup.success</note>
       </notes>
       <segment>
-        <source>Compte créé pour <ph id="0" equiv="PH" disp="user.firstName"/> <ph id="1" equiv="PH_1" disp="user.lastName"/>.</source>
-        <target>Account created for <ph id="0" equiv="PH" disp="user.firstName"/> <ph id="1" equiv="PH_1" disp="user.lastName"/>.</target>
+        <source>Inscription reussie. Verifiez votre email pour activer votre compte.</source>
+        <target>Sign-up successful. Check your email to activate your account.</target>
       </segment>
     </unit>
 
