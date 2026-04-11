@@ -68,7 +68,7 @@ interface ActGroup {
       <!-- ===== MODE SCROLL ===== -->
       <div class="bg-white">
         <!-- Liste verticale regroupee par acte -->
-        <div class="snap-y snap-mandatory scroll-smooth overflow-y-auto">
+        <div class="snap-y snap-mandatory scroll-smooth">
           @for (group of acts(); track group.act.id; let i = $index) {
             @if (i > 0) {
               <div
