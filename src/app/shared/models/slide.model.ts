@@ -101,6 +101,8 @@ export interface ChecklistInteraction {
   type: "checklist";
   question: string;
   items: string[];
+  /** Sous-titre explicatif affiché sous la question */
+  hint?: string;
   /** Champ du profil d'interaction a alimenter avec les items coches */
   profileField?: string;
 }
@@ -112,6 +114,8 @@ export interface SelfRatingInteraction {
   min: number;
   max: number;
   labels: { min: string; max: string };
+  /** Sous-titre explicatif affiché sous la question */
+  hint?: string;
   /** Champ du profil d'interaction a alimenter avec la valeur selectionnee */
   profileField?: string;
 }

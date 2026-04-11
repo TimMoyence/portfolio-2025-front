@@ -23,10 +23,15 @@ import type { SelfRatingInteraction } from "../../models/slide.model";
       class="mx-auto w-full max-w-2xl rounded-2xl border border-gray-200 bg-gray-50/50 p-5 sm:p-6 transition-colors"
       [class.border-scheme-accent]="selected() !== null"
     >
-      <p class="text-sm font-semibold text-gray-900 mb-4">
+      <p class="text-sm font-semibold text-gray-900 mb-1">
         <span class="mr-2 text-scheme-accent">&#9733;</span>
         {{ config().question }}
       </p>
+      @if (config().hint) {
+        <p class="text-xs text-gray-400 mb-4">{{ config().hint }}</p>
+      } @else {
+        <div class="mb-3"></div>
+      }
 
       <!-- Boutons radio visuels -->
       <div class="flex items-center justify-center gap-2 sm:gap-3">
