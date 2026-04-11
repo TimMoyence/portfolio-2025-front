@@ -26,15 +26,27 @@ Regle non negociable : un composant peut orchestrer de l'etat UI, mais pas embar
 
 Les routes principales exposees aujourd'hui sont :
 
-- `/` et `/home`
-- `/presentation`
-- `/offer`
-- `/contact`
-- `/client-project`
-- `/growth-audit`
-- `/login` et `/register`
-- `/cookie-settings`
-- `/terms` et `/privacy`
+- `/` — Home (landing page)
+- `/presentation` — Page a propos
+- `/offer` — Page des offres
+- `/contact` — Formulaire de contact
+- `/client-project` — Projets clients
+- `/growth-audit` — Audit SEO automatise
+- `/login` — Connexion
+- `/register` — Inscription
+- `/forgot-password` — Mot de passe oublie
+- `/reset-password` — Reinitialisation
+- `/profil` — Profil utilisateur (protege auth)
+- `/atelier/meteo` — App meteo (protege auth + role weather)
+- `/atelier/budget` — App budget (protege auth + role budget)
+- `/atelier/sebastian` — App Sebastian (protege auth + role sebastian) avec sous-routes : dashboard, rapports, badges, historique, objectifs
+- `/formations` — Liste des formations
+- `/formations/ia-solopreneurs` — Formation IA Solopreneurs (slides)
+- `/formations/ia-solopreneurs/toolkit` — Toolkit QR code
+- `/cookie-settings` — Parametres cookies
+- `/terms` — CGU
+- `/privacy` — Politique de confidentialite
+- `/**` — 404
 
 ## Prise en main rapide
 
