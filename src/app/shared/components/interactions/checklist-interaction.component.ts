@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   input,
+  output,
   signal,
 } from "@angular/core";
 import type { ChecklistInteraction } from "../../models/slide.model";
@@ -71,6 +72,9 @@ import type { ChecklistInteraction } from "../../models/slide.model";
 export class ChecklistInteractionComponent {
   readonly config = input.required<ChecklistInteraction>();
 
+  /** Emis apres chaque toggle avec l'ensemble des index coches. */
+  readonly selectionChanged = output<Set<number>>();
+
   readonly checked = signal<Set<number>>(new Set());
 
   readonly checkedCount = computed(() => this.checked().size);
@@ -85,5 +89,6 @@ export class ChecklistInteractionComponent {
       }
       return next;
     });
+    this.selectionChanged.emit(this.checked());
   }
 }

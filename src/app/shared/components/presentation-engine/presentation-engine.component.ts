@@ -21,6 +21,7 @@ import type {
   PromptTemplate,
 } from "../../models/slide.model";
 import { FragmentService } from "../../services/fragment.service";
+import { InteractionCollectorService } from "../../services/interaction-collector.service";
 import { InteractionSlotComponent } from "../interactions/interaction-slot.component";
 import { SlideRendererComponent } from "../slide-viewer/templates/slide-renderer.component";
 import { SvgIconComponent } from "../svg-icon.component";
@@ -322,6 +323,10 @@ export class PresentationEngineComponent {
 
   private readonly fragmentService = inject(FragmentService);
   private readonly platformId = inject(PLATFORM_ID);
+  /** Collecteur optionnel — present uniquement si un parent le fournit. */
+  private readonly collector = inject(InteractionCollectorService, {
+    optional: true,
+  });
 
   /** Identifiant de la derniere slide pour laquelle on a reinitialise les fragments. */
   private lastResetId: string | null = null;
@@ -390,6 +395,20 @@ export class PresentationEngineComponent {
         this.prefersReducedMotion = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
         ).matches;
+      }
+    });
+
+    // Synchronise le secteur et le prompt genere vers le collecteur d'interactions.
+    effect(() => {
+      const sector = this.sectorInput();
+      if (this.collector && sector) {
+        this.collector.setSector(sector);
+      }
+    });
+    effect(() => {
+      const prompt = this.generatedPrompt();
+      if (this.collector && prompt) {
+        this.collector.setGeneratedPrompt(prompt);
       }
     });
 

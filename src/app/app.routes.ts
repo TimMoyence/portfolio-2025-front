@@ -53,6 +53,16 @@ export const routes: Routes = [
     },
   },
   {
+    path: "verify-email",
+    loadComponent: () =>
+      import("./features/auth/verify-email.component").then(
+        (m) => m.VerifyEmailComponent,
+      ),
+    data: {
+      seoKey: "verify-email",
+    },
+  },
+  {
     path: "profil",
     canActivate: [authGuard],
     loadComponent: () =>
@@ -233,6 +243,16 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: "formations-ia-solopreneurs",
+    },
+  },
+  {
+    path: "formations/ia-solopreneurs/toolkit/:token",
+    loadComponent: () =>
+      import("./features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component").then(
+        (m) => m.ToolkitPrivateComponent,
+      ),
+    data: {
+      seoKey: "formations-ia-solopreneurs-toolkit-private",
     },
   },
   {

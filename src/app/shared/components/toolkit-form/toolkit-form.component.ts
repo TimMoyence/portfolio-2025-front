@@ -8,6 +8,7 @@ import {
 } from "@angular/core";
 import { LEAD_MAGNET_PORT } from "../../../core/ports/lead-magnet.port";
 import type { ToolkitRequest } from "../../../core/models/toolkit-request.model";
+import { InteractionCollectorService } from "../../services/interaction-collector.service";
 
 type FormState = "idle" | "loading" | "success" | "error";
 
@@ -24,9 +25,9 @@ type FormState = "idle" | "loading" | "success" | "error";
     @switch (state()) {
       @case ("success") {
         <div class="text-center py-6" data-toolkit-success>
-          <p class="text-lg font-medium text-scheme-accent">Envoye !</p>
+          <p class="text-lg font-medium text-scheme-accent">Envoyé !</p>
           <p class="mt-2 text-sm text-scheme-text-muted">
-            Verifiez votre boite mail ({{ submittedEmail() }})
+            Vérifiez votre boîte mail ({{ submittedEmail() }})
           </p>
         </div>
       }
@@ -37,7 +38,7 @@ type FormState = "idle" | "loading" | "success" | "error";
               type="text"
               [value]="firstName()"
               (input)="firstName.set($any($event.target).value)"
-              placeholder="Votre prenom"
+              placeholder="Votre prénom"
               class="w-full rounded-lg border border-scheme-border bg-scheme-background px-4 py-3 text-sm text-scheme-text focus:outline-none focus:ring-2 focus:ring-scheme-accent-focus"
               autocomplete="given-name"
               required
@@ -64,14 +65,14 @@ type FormState = "idle" | "loading" | "success" | "error";
               class="mt-0.5 accent-scheme-accent"
             />
             <span>
-              J'accepte que mes donnees soient utilisees pour recevoir la boite
-              a outils.
+              J'accepte que mes données soient utilisées pour recevoir la boîte
+              à outils.
             </span>
           </label>
 
           @if (state() === "error") {
             <p class="text-sm text-red-600" data-toolkit-error>
-              Une erreur est survenue. Reessayez.
+              Une erreur est survenue. Réessayez.
             </p>
           }
 
@@ -83,7 +84,7 @@ type FormState = "idle" | "loading" | "success" | "error";
             @if (state() === "loading") {
               <span>Envoi en cours...</span>
             } @else {
-              <span>Recevoir la boite a outils</span>
+              <span>Recevoir la boîte à outils</span>
             }
           </button>
         </form>
@@ -93,6 +94,10 @@ type FormState = "idle" | "loading" | "success" | "error";
 })
 export class ToolkitFormComponent {
   private readonly port = inject(LEAD_MAGNET_PORT);
+  /** Collecteur optionnel — present uniquement si un parent le fournit. */
+  private readonly collector = inject(InteractionCollectorService, {
+    optional: true,
+  });
 
   readonly firstName = signal("");
   readonly email = signal("");
@@ -123,6 +128,11 @@ export class ToolkitFormComponent {
       termsLocale: "fr",
       termsAcceptedAt: new Date().toISOString(),
     };
+
+    // Enrichit la requete avec le profil d'interaction si disponible
+    if (this.collector?.hasData()) {
+      request.profile = this.collector.profile();
+    }
 
     this.port.requestToolkit(request).subscribe({
       next: () => this.state.set("success"),

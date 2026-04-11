@@ -5,11 +5,12 @@ import type { LeadMagnetPort } from "../../app/core/ports/lead-magnet.port";
 export function createLeadMagnetPortStub(): jasmine.SpyObj<LeadMagnetPort> {
   const stub = jasmine.createSpyObj<LeadMagnetPort>("LeadMagnetPort", [
     "requestToolkit",
+    "getToolkitByToken",
   ]);
   stub.requestToolkit.and.returnValue(
     of({
       message: "Votre boite a outils a ete envoyee a test@example.com",
-      httpCode: 200,
+      accessToken: "fake-token-123",
     }),
   );
   return stub;
@@ -19,6 +20,7 @@ export function createLeadMagnetPortStub(): jasmine.SpyObj<LeadMagnetPort> {
 export function createLeadMagnetPortStubWithError(): jasmine.SpyObj<LeadMagnetPort> {
   const stub = jasmine.createSpyObj<LeadMagnetPort>("LeadMagnetPort", [
     "requestToolkit",
+    "getToolkitByToken",
   ]);
   stub.requestToolkit.and.returnValue(
     throwError(() => new Error("Network error")),

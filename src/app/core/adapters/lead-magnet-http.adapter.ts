@@ -2,8 +2,11 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import type { Observable } from "rxjs";
 import { getApiBaseUrl } from "../http/api-config";
-import type { MessageResponse } from "../models/message.response";
-import type { ToolkitRequest } from "../models/toolkit-request.model";
+import type { ToolkitPageData } from "../models/toolkit-page.model";
+import type {
+  ToolkitRequest,
+  ToolkitResponse,
+} from "../models/toolkit-request.model";
 import type { LeadMagnetPort } from "../ports/lead-magnet.port";
 
 /** Adaptateur HTTP pour le module lead-magnets. */
@@ -13,10 +16,16 @@ export class LeadMagnetHttpAdapter implements LeadMagnetPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  requestToolkit(request: ToolkitRequest): Observable<MessageResponse> {
-    return this.http.post<MessageResponse>(
+  requestToolkit(request: ToolkitRequest): Observable<ToolkitResponse> {
+    return this.http.post<ToolkitResponse>(
       `${this.baseUrl}/lead-magnets/formations-toolkit`,
       request,
+    );
+  }
+
+  getToolkitByToken(token: string): Observable<ToolkitPageData> {
+    return this.http.get<ToolkitPageData>(
+      `${this.baseUrl}/lead-magnets/toolkit/${token}`,
     );
   }
 }

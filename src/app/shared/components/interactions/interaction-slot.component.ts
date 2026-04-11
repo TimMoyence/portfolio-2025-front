@@ -1,8 +1,16 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from "@angular/core";
 import type {
+  ChecklistInteraction,
   PresentationMode,
+  SelfRatingInteraction,
   SlideInteractions,
 } from "../../models/slide.model";
+import { InteractionCollectorService } from "../../services/interaction-collector.service";
 import { ChecklistInteractionComponent } from "./checklist-interaction.component";
 import { CountdownInteractionComponent } from "./countdown-interaction.component";
 import { PollInteractionComponent } from "./poll-interaction.component";
@@ -41,10 +49,16 @@ import { SelfRatingInteractionComponent } from "./self-rating-interaction.compon
                   <app-reflection-interaction [config]="interaction" />
                 }
                 @case ("checklist") {
-                  <app-checklist-interaction [config]="interaction" />
+                  <app-checklist-interaction
+                    [config]="interaction"
+                    (selectionChanged)="onChecklist(interaction, $event)"
+                  />
                 }
                 @case ("self-rating") {
-                  <app-self-rating-interaction [config]="interaction" />
+                  <app-self-rating-interaction
+                    [config]="interaction"
+                    (valueSelected)="onSelfRating(interaction, $event)"
+                  />
                 }
               }
             }
@@ -82,4 +96,40 @@ export class InteractionSlotComponent {
   readonly interactions = input<SlideInteractions>();
   /** Mode d'affichage courant de la présentation */
   readonly mode = input.required<PresentationMode>();
+
+  /** Collecteur optionnel — present uniquement si un parent le fournit. */
+  private readonly collector = inject(InteractionCollectorService, {
+    optional: true,
+  });
+
+  /**
+   * Mappe la valeur d'un self-rating vers le champ du profil concerne.
+   * - `aiLevel` : 1-2 → debutant, 3 → intermediaire, 4-5 → avance
+   * - `budgetTier` : 1-2 → '0', 3 → '60', 4-5 → '120'
+   */
+  onSelfRating(interaction: SelfRatingInteraction, value: number): void {
+    if (!this.collector || !interaction.profileField) return;
+
+    if (interaction.profileField === "aiLevel") {
+      const level =
+        value <= 2 ? "debutant" : value <= 3 ? "intermediaire" : "avance";
+      this.collector.setAiLevel(level);
+    } else if (interaction.profileField === "budgetTier") {
+      const tier = value <= 2 ? "0" : value <= 3 ? "60" : "120";
+      this.collector.setBudgetTier(tier);
+    }
+  }
+
+  /**
+   * Mappe les index coches d'une checklist vers les identifiants d'outils.
+   * Utilise les items de la checklist pour resoudre les noms.
+   */
+  onChecklist(interaction: ChecklistInteraction, checked: Set<number>): void {
+    if (!this.collector || !interaction.profileField) return;
+
+    if (interaction.profileField === "toolsAlreadyUsed") {
+      const tools = [...checked].map((i) => interaction.items[i]);
+      this.collector.setToolsUsed(tools);
+    }
+  }
 }

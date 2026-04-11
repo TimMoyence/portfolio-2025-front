@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
+  output,
   signal,
 } from "@angular/core";
 import type { SelfRatingInteraction } from "../../models/slide.model";
@@ -73,6 +74,9 @@ import type { SelfRatingInteraction } from "../../models/slide.model";
 export class SelfRatingInteractionComponent {
   readonly config = input.required<SelfRatingInteraction>();
 
+  /** Emis lorsque le lecteur selectionne une valeur sur l'echelle. */
+  readonly valueSelected = output<number>();
+
   readonly selected = signal<number | null>(null);
 
   /** Génère le tableau de valeurs [min, min+1, ..., max] */
@@ -87,5 +91,6 @@ export class SelfRatingInteractionComponent {
 
   select(value: number): void {
     this.selected.set(value);
+    this.valueSelected.emit(value);
   }
 }

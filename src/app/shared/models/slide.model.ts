@@ -96,11 +96,13 @@ export interface ReflectionInteraction {
   rows?: number;
 }
 
-/** Checklist interactive — "lesquels utilisez-vous déjà ?" */
+/** Checklist interactive — "lesquels utilisez-vous deja ?" */
 export interface ChecklistInteraction {
   type: "checklist";
   question: string;
   items: string[];
+  /** Champ du profil d'interaction a alimenter avec les items coches */
+  profileField?: string;
 }
 
 /** Échelle d'auto-évaluation (slider ou radio) */
@@ -110,6 +112,8 @@ export interface SelfRatingInteraction {
   min: number;
   max: number;
   labels: { min: string; max: string };
+  /** Champ du profil d'interaction a alimenter avec la valeur selectionnee */
+  profileField?: string;
 }
 
 export type ScrollInteraction =
