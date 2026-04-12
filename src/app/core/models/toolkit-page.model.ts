@@ -37,6 +37,12 @@ export interface PromptEntry {
   level: string;
   prompt: string;
   tool: string;
+  /** Description courte de ce que le prompt produit. Optionnel. */
+  description?: string;
+  /** Exemple concret d'utilisation. Optionnel. */
+  example?: string;
+  /** Conseil d'iteration pour ameliorer la sortie. Optionnel. */
+  tip?: string;
 }
 
 /** Etape d'un workflow automatise. */
