@@ -368,6 +368,50 @@ app.get("/en/home", (_req, res) => {
 app.use(express.static(browserDistFolder, { maxAge: "1y", index: false }));
 
 /**
+ * Détecte les routes qui doivent être rendues côté client uniquement.
+ * Pour ces routes, le SSR classique redirige vers /login (le guard ne peut
+ * pas lire localStorage côté serveur), ce qui casse le reload. On sert à la
+ * place la coquille CSR (index.csr.html) : un HTML minimal avec les scripts
+ * Angular, qui laisse le client gérer le routing après hydratation.
+ *
+ * Les routes listées ici DOIVENT correspondre à celles marquées
+ * `RenderMode.Client` dans `src/app/app.routes.server.ts`.
+ */
+const CLIENT_ONLY_ROUTE_PATTERNS: RegExp[] = [
+  /^profil\/?$/,
+  /^atelier\/meteo\/app(\/|$)/,
+  /^atelier\/budget\/app(\/|$)/,
+  /^atelier\/sebastian\/app(\/|$)/,
+];
+
+/**
+ * Retourne true si la route doit être rendue côté client uniquement.
+ */
+const isClientOnlyRoute = (routePath: string): boolean => {
+  const normalized = routePath.replace(/^\//, "");
+  return CLIENT_ONLY_ROUTE_PATTERNS.some((pattern) => pattern.test(normalized));
+};
+
+/**
+ * Sert la coquille CSR (index.csr.html) pour les routes client-only.
+ * Le chemin est résolu dans le dossier de la locale correspondante.
+ * Si la coquille n'existe pas (ex. build dev sans locales), retourne null.
+ */
+const loadCsrShell = (locale: string | null): string | null => {
+  const candidates = [
+    locale ? resolve(browserDistFolder, locale, "index.csr.html") : null,
+    resolve(browserDistFolder, "index.csr.html"),
+  ].filter((p): p is string => p !== null);
+
+  for (const candidate of candidates) {
+    if (candidate.startsWith(browserDistFolder) && fs.existsSync(candidate)) {
+      return fs.readFileSync(candidate, "utf-8");
+    }
+  }
+  return null;
+};
+
+/**
  * Handle all other requests by rendering the Angular application.
  */
 app.get("**", (req, res, next) => {
@@ -408,6 +452,23 @@ app.get("**", (req, res, next) => {
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
       res.setHeader("X-Content-Type-Options", "nosniff");
       return void res.send(html);
+    }
+
+    // Routes client-only : servir la coquille CSR, pas de SSR.
+    // Le client gère le routing après hydratation (lecture du token localStorage).
+    if (isClientOnlyRoute(routePath)) {
+      const shell = loadCsrShell(urlLocale);
+      if (shell) {
+        // Corriger le <base href> pour la locale courante
+        const withBase = shell.replace(
+          /<base\s+href="[^"]*"\s*\/?>/,
+          `<base href="${baseHref}/" />`,
+        );
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.setHeader("Cache-Control", "private, no-store");
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        return void res.send(withBase);
+      }
     }
   }
 
