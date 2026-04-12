@@ -149,12 +149,13 @@ export const routes: Routes = [
       seoKey: "growth-audit",
     },
   },
+  // Pages publiques de presentation des ateliers (indexables, marketing).
+  // Affichent une marketing page invitant a s'inscrire / acceder a l'app.
   {
     path: "atelier/meteo",
-    canActivate: [authGuard, roleGuard("weather")],
     loadComponent: () =>
-      import("./features/weather/weather.component").then(
-        (m) => m.WeatherComponent,
+      import("./features/weather/weather-presentation.component").then(
+        (m) => m.WeatherPresentationComponent,
       ),
     data: {
       seoKey: "weather",
@@ -162,10 +163,9 @@ export const routes: Routes = [
   },
   {
     path: "atelier/budget",
-    canActivate: [authGuard, roleGuard("budget")],
     loadComponent: () =>
-      import("./features/budget/budget.component").then(
-        (m) => m.BudgetComponent,
+      import("./features/budget/budget-presentation.component").then(
+        (m) => m.BudgetPresentationComponent,
       ),
     data: {
       seoKey: "budget",
@@ -173,13 +173,47 @@ export const routes: Routes = [
   },
   {
     path: "atelier/sebastian",
-    canActivate: [authGuard, roleGuard("sebastian")],
     loadComponent: () =>
-      import("./features/sebastian/sebastian.component").then(
-        (m) => m.SebastianComponent,
+      import("./features/sebastian/sebastian-presentation.component").then(
+        (m) => m.SebastianPresentationComponent,
       ),
     data: {
       seoKey: "sebastian",
+    },
+  },
+
+  // Apps reelles, protegees par auth + role. Non indexables.
+  {
+    path: "atelier/meteo/app",
+    canActivate: [authGuard, roleGuard("weather")],
+    loadComponent: () =>
+      import("./features/weather/weather-app.component").then(
+        (m) => m.WeatherAppComponent,
+      ),
+    data: {
+      seoKey: "weather-app",
+    },
+  },
+  {
+    path: "atelier/budget/app",
+    canActivate: [authGuard, roleGuard("budget")],
+    loadComponent: () =>
+      import("./features/common-budget-tm/common-budget-tm.component").then(
+        (m) => m.CommonBudgetTmComponent,
+      ),
+    data: {
+      seoKey: "budget-app",
+    },
+  },
+  {
+    path: "atelier/sebastian/app",
+    canActivate: [authGuard, roleGuard("sebastian")],
+    loadComponent: () =>
+      import("./features/sebastian/sebastian-app.component").then(
+        (m) => m.SebastianAppComponent,
+      ),
+    data: {
+      seoKey: "sebastian-app",
     },
     children: [
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
@@ -222,7 +256,7 @@ export const routes: Routes = [
   },
   {
     path: "commonbudgetTM",
-    redirectTo: "atelier/budget",
+    redirectTo: "atelier/budget/app",
     pathMatch: "full" as const,
   },
   {

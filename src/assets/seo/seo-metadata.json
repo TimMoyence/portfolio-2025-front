@@ -631,7 +631,7 @@
     {
       "id": "weather",
       "path": "/atelier/meteo",
-      "index": false,
+      "index": true,
       "changefreq": "monthly",
       "priority": 0.5,
       "lastmod": "2026-04-10",
@@ -653,7 +653,7 @@
     {
       "id": "budget",
       "path": "/atelier/budget",
-      "index": false,
+      "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
       "lastmod": "2026-04-10",
@@ -675,7 +675,7 @@
     {
       "id": "sebastian",
       "path": "/atelier/sebastian",
-      "index": false,
+      "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
       "lastmod": "2026-04-10",
@@ -691,6 +691,63 @@
           "description": "Personal consumption tracker with goals, charts, and time tracking.",
           "ogTitle": "Sebastian — L'Atelier",
           "ogDescription": "Track your consumption, set goals, and visualize progress with Sebastian."
+        }
+      }
+    },
+    {
+      "id": "weather-app",
+      "path": "/atelier/meteo/app",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Météo — Application",
+          "description": "Application météo en temps réel.",
+          "ogTitle": "Météo — Application",
+          "ogDescription": "Application météo en temps réel."
+        },
+        "en": {
+          "title": "Weather — Application",
+          "description": "Real-time weather application.",
+          "ogTitle": "Weather — Application",
+          "ogDescription": "Real-time weather application."
+        }
+      }
+    },
+    {
+      "id": "budget-app",
+      "path": "/atelier/budget/app",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Budget — Application",
+          "description": "Outil de gestion de budget partagé.",
+          "ogTitle": "Budget — Application",
+          "ogDescription": "Outil de gestion de budget partagé."
+        },
+        "en": {
+          "title": "Budget — Application",
+          "description": "Shared budget management tool.",
+          "ogTitle": "Budget — Application",
+          "ogDescription": "Shared budget management tool."
+        }
+      }
+    },
+    {
+      "id": "sebastian-app",
+      "path": "/atelier/sebastian/app",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Sebastian — Application",
+          "description": "Tracker de consommation personnel.",
+          "ogTitle": "Sebastian — Application",
+          "ogDescription": "Tracker de consommation personnel."
+        },
+        "en": {
+          "title": "Sebastian — Application",
+          "description": "Personal consumption tracker.",
+          "ogTitle": "Sebastian — Application",
+          "ogDescription": "Personal consumption tracker."
         }
       }
     },

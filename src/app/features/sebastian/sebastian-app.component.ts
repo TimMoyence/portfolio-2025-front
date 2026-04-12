@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from "@angular/core";
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import type {
   CreateEntryPayload,
   SebastianCategory,
@@ -27,7 +27,12 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
 @Component({
   selector: "app-sebastian-app",
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, SebastianAddDrinkSheetComponent],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    SebastianAddDrinkSheetComponent,
+  ],
   template: `
     <div
       class="min-h-screen bg-scheme-background px-4 py-8 font-body sm:px-6 lg:px-8"
@@ -131,9 +136,9 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
           }
         </nav>
 
-        <!-- Contenu des pages enfant (projete depuis sebastian.component) -->
+        <!-- Contenu des pages enfant (router-outlet pour les routes nestees) -->
         <main>
-          <ng-content />
+          <router-outlet />
         </main>
       </div>
     </div>

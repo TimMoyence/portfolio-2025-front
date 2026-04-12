@@ -36,6 +36,9 @@ describe("app routes", () => {
       "atelier/meteo",
       "atelier/budget",
       "atelier/sebastian",
+      "atelier/meteo/app",
+      "atelier/budget/app",
+      "atelier/sebastian/app",
       "commonbudgetTM",
       "**",
     ];
@@ -48,17 +51,26 @@ describe("app routes", () => {
     }
   });
 
-  it("devrait protéger /atelier/budget avec authGuard et roleGuard budget", () => {
+  it("devrait laisser /atelier/budget public (presentation marketing)", () => {
     // Arrange
     const budgetRoute = routes.find((r) => r.path === "atelier/budget");
 
     // Assert
     expect(budgetRoute).toBeDefined();
-    expect(budgetRoute?.canActivate).toBeDefined();
-    expect(budgetRoute?.canActivate?.length).toBe(2);
-    expect(budgetRoute?.canActivate?.[0]).toBe(authGuard);
+    expect(budgetRoute?.canActivate).toBeUndefined();
+  });
+
+  it("devrait protéger /atelier/budget/app avec authGuard et roleGuard budget", () => {
+    // Arrange
+    const budgetAppRoute = routes.find((r) => r.path === "atelier/budget/app");
+
+    // Assert
+    expect(budgetAppRoute).toBeDefined();
+    expect(budgetAppRoute?.canActivate).toBeDefined();
+    expect(budgetAppRoute?.canActivate?.length).toBe(2);
+    expect(budgetAppRoute?.canActivate?.[0]).toBe(authGuard);
     // Le second guard est le résultat de roleGuard('budget') — une CanActivateFn
-    expect(typeof budgetRoute?.canActivate?.[1]).toBe("function");
+    expect(typeof budgetAppRoute?.canActivate?.[1]).toBe("function");
   });
 
   it("devrait rediriger /home vers /", () => {
@@ -71,7 +83,7 @@ describe("app routes", () => {
     expect(homeRedirect?.pathMatch).toBe("full");
   });
 
-  it("devrait rediriger /commonbudgetTM vers /atelier/budget", () => {
+  it("devrait rediriger /commonbudgetTM vers /atelier/budget/app", () => {
     // Arrange
     const commonBudgetRedirect = routes.find(
       (r) => r.path === "commonbudgetTM",
@@ -79,7 +91,7 @@ describe("app routes", () => {
 
     // Assert
     expect(commonBudgetRedirect).toBeDefined();
-    expect(commonBudgetRedirect?.redirectTo).toBe("atelier/budget");
+    expect(commonBudgetRedirect?.redirectTo).toBe("atelier/budget/app");
     expect(commonBudgetRedirect?.pathMatch).toBe("full");
   });
 
