@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   HostListener,
   inject,
   input,
@@ -13,38 +14,20 @@ import {
 import { RouterModule } from "@angular/router";
 import { SvgIconComponent } from "../svg-icon.component";
 import type { PromptTemplate, Slide } from "../../models/slide.model";
-import { SlideHeroComponent } from "./templates/slide-hero.component";
-import { SlideSplitComponent } from "./templates/slide-split.component";
-import { SlideStatsComponent } from "./templates/slide-stats.component";
-import { SlideGridComponent } from "./templates/slide-grid.component";
-import { SlideComparisonComponent } from "./templates/slide-comparison.component";
-import { SlideQuoteComponent } from "./templates/slide-quote.component";
-import { SlideDemoComponent } from "./templates/slide-demo.component";
-import { SlideCtaComponent } from "./templates/slide-cta.component";
+import { SlideRendererComponent } from "./templates/slide-renderer.component";
 
 /**
  * Composant de visualisation de slides en dual-mode :
  * - Mode scroll : tous les slides affichés verticalement avec snap scroll (100vh par slide)
  * - Mode présentation : vue plein écran focalisée sur le slide courant
  *
- * Délègue le rendu à 8 sous-composants template selon le layout de chaque slide.
+ * Délègue le rendu des layouts au `SlideRendererComponent` afin d'eviter la duplication
+ * du switch entre les deux modes.
  */
 @Component({
   selector: "app-slide-viewer",
   standalone: true,
-  imports: [
-    SvgIconComponent,
-    RouterModule,
-    SlicePipe,
-    SlideHeroComponent,
-    SlideSplitComponent,
-    SlideStatsComponent,
-    SlideGridComponent,
-    SlideComparisonComponent,
-    SlideQuoteComponent,
-    SlideDemoComponent,
-    SlideCtaComponent,
-  ],
+  imports: [SvgIconComponent, RouterModule, SlicePipe, SlideRendererComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: "./slide-viewer.component.scss",
   template: `
@@ -103,7 +86,7 @@ import { SlideCtaComponent } from "./templates/slide-cta.component";
         </div>
 
         <!-- Slides — snap scroll container -->
-        <div class="scroll-container">
+        <div class="snap-y snap-mandatory scroll-smooth overflow-y-auto">
           @for (slide of slides(); track slide.id; let i = $index) {
             <section
               [attr.data-slide-id]="slide.id"
@@ -111,73 +94,20 @@ import { SlideCtaComponent } from "./templates/slide-cta.component";
               [attr.aria-labelledby]="'slide-title-' + i"
               class="min-h-[calc(100vh-8rem)] lg:min-h-[calc(100vh-9rem)] snap-start flex flex-col scroll-mt-32 lg:scroll-mt-36"
             >
-              @switch (slide.layout || "split") {
-                @case ("hero") {
-                  <app-slide-hero [slide]="slide" class="flex-1" />
-                }
-                @case ("split") {
-                  <app-slide-split
-                    [slide]="slide"
-                    [index]="i"
-                    [total]="slides().length"
-                    [expandedNotes]="expandedNotes()"
-                    [sectorInput]="sectorInput()"
-                    [generatedPrompt]="generatedPrompt()"
-                    [copied]="copied()"
-                    (toggleNotes)="toggleNotes($event)"
-                    (sectorChange)="sectorInput.set($event)"
-                    (generate)="generatePrompt($event)"
-                    (copyPrompt)="copyPrompt()"
-                    class="flex-1 px-4 sm:px-6 py-4"
-                  />
-                }
-                @case ("stats") {
-                  <app-slide-stats
-                    [slide]="slide"
-                    [index]="i"
-                    [total]="slides().length"
-                    class="flex-1"
-                  />
-                }
-                @case ("grid") {
-                  <app-slide-grid
-                    [slide]="slide"
-                    [index]="i"
-                    [total]="slides().length"
-                    class="flex-1"
-                  />
-                }
-                @case ("comparison") {
-                  <app-slide-comparison
-                    [slide]="slide"
-                    [index]="i"
-                    [total]="slides().length"
-                    [expandedNotes]="expandedNotes()"
-                    (toggleNotes)="toggleNotes($event)"
-                    class="flex-1 px-4 sm:px-6 py-4"
-                  />
-                }
-                @case ("quote") {
-                  <app-slide-quote [slide]="slide" class="flex-1" />
-                }
-                @case ("demo") {
-                  <app-slide-demo
-                    [slide]="slide"
-                    [index]="i"
-                    [total]="slides().length"
-                    [sectorInput]="sectorInput()"
-                    [generatedPrompt]="generatedPrompt()"
-                    [copied]="copied()"
-                    (sectorChange)="sectorInput.set($event)"
-                    (generate)="generatePrompt($event)"
-                    (copyPrompt)="copyPrompt()"
-                    class="flex-1"
-                  />
-                }
-                @case ("cta") {
-                  <app-slide-cta [slide]="slide" class="flex-1" />
-                }
-              }
+              <app-slide-renderer
+                [slide]="slide"
+                [index]="i"
+                [total]="slides().length"
+                [expandedNotes]="expandedNotes()"
+                [sectorInput]="sectorInput()"
+                [generatedPrompt]="generatedPrompt()"
+                [copied]="copied()"
+                (toggleNotes)="toggleNotes($event)"
+                (sectorChange)="sectorInput.set($event)"
+                (generate)="generatePrompt($event)"
+                (copyPrompt)="copyPrompt()"
+                class="flex-1 flex flex-col"
+              />
             </section>
           }
         </div>
@@ -202,73 +132,20 @@ import { SlideCtaComponent } from "./templates/slide-cta.component";
         </button>
 
         <div class="flex flex-1 overflow-y-auto">
-          @switch (currentSlide().layout || "split") {
-            @case ("hero") {
-              <app-slide-hero [slide]="currentSlide()" class="flex-1" />
-            }
-            @case ("split") {
-              <app-slide-split
-                [slide]="currentSlide()"
-                [index]="currentSlideIndex()"
-                [total]="slides().length"
-                [expandedNotes]="expandedNotes()"
-                [sectorInput]="sectorInput()"
-                [generatedPrompt]="generatedPrompt()"
-                [copied]="copied()"
-                (toggleNotes)="toggleNotes($event)"
-                (sectorChange)="sectorInput.set($event)"
-                (generate)="generatePrompt($event)"
-                (copyPrompt)="copyPrompt()"
-                class="flex-1"
-              />
-            }
-            @case ("stats") {
-              <app-slide-stats
-                [slide]="currentSlide()"
-                [index]="currentSlideIndex()"
-                [total]="slides().length"
-                class="flex-1"
-              />
-            }
-            @case ("grid") {
-              <app-slide-grid
-                [slide]="currentSlide()"
-                [index]="currentSlideIndex()"
-                [total]="slides().length"
-                class="flex-1"
-              />
-            }
-            @case ("comparison") {
-              <app-slide-comparison
-                [slide]="currentSlide()"
-                [index]="currentSlideIndex()"
-                [total]="slides().length"
-                [expandedNotes]="expandedNotes()"
-                (toggleNotes)="toggleNotes($event)"
-                class="flex-1"
-              />
-            }
-            @case ("quote") {
-              <app-slide-quote [slide]="currentSlide()" class="flex-1" />
-            }
-            @case ("demo") {
-              <app-slide-demo
-                [slide]="currentSlide()"
-                [index]="currentSlideIndex()"
-                [total]="slides().length"
-                [sectorInput]="sectorInput()"
-                [generatedPrompt]="generatedPrompt()"
-                [copied]="copied()"
-                (sectorChange)="sectorInput.set($event)"
-                (generate)="generatePrompt($event)"
-                (copyPrompt)="copyPrompt()"
-                class="flex-1"
-              />
-            }
-            @case ("cta") {
-              <app-slide-cta [slide]="currentSlide()" class="flex-1" />
-            }
-          }
+          <app-slide-renderer
+            [slide]="currentSlide()"
+            [index]="currentSlideIndex()"
+            [total]="slides().length"
+            [expandedNotes]="expandedNotes()"
+            [sectorInput]="sectorInput()"
+            [generatedPrompt]="generatedPrompt()"
+            [copied]="copied()"
+            (toggleNotes)="toggleNotes($event)"
+            (sectorChange)="sectorInput.set($event)"
+            (generate)="generatePrompt($event)"
+            (copyPrompt)="copyPrompt()"
+            class="flex-1 flex"
+          />
         </div>
 
         <!-- Nav bas -->
@@ -344,6 +221,7 @@ export class SlideViewerComponent {
   );
 
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     afterNextRender(() => {
@@ -382,6 +260,7 @@ export class SlideViewerComponent {
         },
         { threshold: 0.3, rootMargin: "-128px 0px 0px 0px" },
       );
+      this.destroyRef.onDestroy(() => observer.disconnect());
 
       setTimeout(() => {
         const sections = document.querySelectorAll("[id^='slide-anchor-']");
@@ -490,6 +369,10 @@ export class SlideViewerComponent {
       case "Backspace":
         event.preventDefault();
         this.prevSlide();
+        break;
+      case "Escape":
+        event.preventDefault();
+        this.exitPresentation();
         break;
     }
   }

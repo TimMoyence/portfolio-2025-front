@@ -223,7 +223,9 @@ import type { PromptTemplate, Slide } from "../../../models/slide.model";
   styles: [
     `
       :host {
-        display: block;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
       }
     `,
   ],

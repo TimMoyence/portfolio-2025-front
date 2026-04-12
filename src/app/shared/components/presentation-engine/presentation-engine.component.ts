@@ -72,14 +72,14 @@ interface ActGroup {
           @for (group of acts(); track group.act.id; let i = $index) {
             @if (i > 0) {
               <div
-                class="mt-8 border-t-4 border-t-scheme-accent"
+                class="mt-4 sm:mt-8 border-t-4 border-t-scheme-accent"
                 data-aos="fade-up"
               ></div>
             }
             @for (slide of group.slides; track slide.id) {
               <section
                 [attr.data-slide-id]="slide.id"
-                class="min-h-[calc(100vh-8rem)] flex flex-col snap-start scroll-mt-32"
+                class="min-h-[60vh] sm:min-h-[calc(100vh-8rem)] flex flex-col snap-start scroll-mt-32"
                 data-aos="fade-up"
               >
                 <app-slide-renderer

@@ -111,49 +111,6 @@ import { SlideStatsComponent } from "./slide-stats.component";
         <app-slide-cta [slide]="slide()" class="flex-1" />
       }
     }
-
-    @if (slide().sources?.length) {
-      <div class="mt-4 border-t border-gray-100 pt-3">
-        <p
-          class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2"
-        >
-          Sources
-        </p>
-        <ul class="space-y-1">
-          @for (source of slide().sources; track source.url) {
-            <li class="text-xs text-gray-500">
-              @if (source.url) {
-                <a
-                  [href]="source.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-scheme-accent hover:underline"
-                >
-                  {{ source.label }}
-                </a>
-              } @else {
-                {{ source.label }}
-              }
-            </li>
-          }
-        </ul>
-      </div>
-    }
-
-    @if (slide().authorNote) {
-      <div
-        class="mt-3 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3"
-      >
-        <p
-          class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1"
-        >
-          Note de l'auteur
-        </p>
-        <p class="text-sm text-amber-800 leading-relaxed">
-          {{ slide().authorNote }}
-        </p>
-      </div>
-    }
   `,
   styles: [
     `

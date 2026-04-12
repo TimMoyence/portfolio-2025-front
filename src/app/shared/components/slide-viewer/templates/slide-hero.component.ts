@@ -11,7 +11,7 @@ import type { Slide } from "../../../models/slide.model";
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="relative min-h-full flex items-center justify-center text-center text-white overflow-hidden"
+      class="relative flex-1 flex items-center justify-center text-center text-white overflow-hidden min-h-[60vh] sm:min-h-[70vh]"
     >
       <!-- Background image -->
       @if (slide().imageUrl) {
@@ -53,7 +53,9 @@ import type { Slide } from "../../../models/slide.model";
   styles: [
     `
       :host {
-        display: block;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
       }
     `,
   ],
