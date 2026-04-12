@@ -21,7 +21,7 @@ export type BudgetCategoryTotal = {
       >
         <div>
           <p
-            class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+            class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
           >
             Categories
           </p>
@@ -36,7 +36,7 @@ export type BudgetCategoryTotal = {
       </div>
 
       <div
-        class="mt-6 overflow-hidden rounded-[1.5rem] border border-[#ddd5c7]"
+        class="mt-6 overflow-hidden rounded-[1.5rem] border border-budget-border"
       >
         <div
           class="grid grid-cols-[1.4fr_0.7fr_0.7fr_0.7fr] gap-4 bg-[#f7f1e8] px-4 py-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-500"
@@ -60,7 +60,7 @@ export type BudgetCategoryTotal = {
                   [class.bg-slate-900]="item.budgetType === 'FIXED'"
                   [class.text-white]="item.budgetType === 'FIXED'"
                   [class.bg-[#dff3ec]]="item.budgetType === 'VARIABLE'"
-                  [class.text-[#0f7b65]]="item.budgetType === 'VARIABLE'"
+                  [class.text-budget-accent]="item.budgetType === 'VARIABLE'"
                 >
                   {{ item.budgetType }}
                 </span>

@@ -37,7 +37,7 @@ export interface CategoryGoalView {
     >
       <div>
         <p
-          class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+          class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
           i18n="@@budgetGoalsEyebrow"
         >
           Objectifs

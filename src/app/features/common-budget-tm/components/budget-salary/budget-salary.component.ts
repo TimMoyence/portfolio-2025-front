@@ -23,7 +23,7 @@ import {
       >
         <div>
           <p
-            class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+            class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
           >
             Budget calculation
           </p>
@@ -70,7 +70,9 @@ import {
           >
         </label>
 
-        <div class="rounded-[1.5rem] border border-[#ddd5c7] bg-[#fffaf2] p-5">
+        <div
+          class="rounded-[1.5rem] border border-budget-border bg-budget-surface p-5"
+        >
           <p
             class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500"
           >
@@ -89,7 +91,7 @@ import {
       <div class="mt-6 flex flex-wrap items-center gap-4">
         <button
           type="button"
-          class="rounded-full bg-[#0f7b65] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+          class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
           (click)="validate.emit()"
         >
           Validate

@@ -28,7 +28,7 @@ export type BudgetTransactionView = {
       >
         <div>
           <p
-            class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+            class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
           >
             Transactions
           </p>
@@ -43,7 +43,7 @@ export type BudgetTransactionView = {
       </div>
 
       <div
-        class="mt-6 overflow-hidden rounded-[1.5rem] border border-[#ddd5c7]"
+        class="mt-6 overflow-hidden rounded-[1.5rem] border border-budget-border"
       >
         <div class="overflow-x-auto">
           <table class="min-w-full border-collapse">
@@ -77,7 +77,7 @@ export type BudgetTransactionView = {
                   <td
                     class="px-4 py-4 whitespace-nowrap font-bold"
                     [class.text-[#b4533d]]="transaction.isExpense"
-                    [class.text-[#0f7b65]]="!transaction.isExpense"
+                    [class.text-budget-accent]="!transaction.isExpense"
                   >
                     {{ transaction.amountLabel }}
                   </td>

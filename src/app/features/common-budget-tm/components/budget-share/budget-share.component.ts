@@ -31,7 +31,7 @@ import {
         />
         <button
           type="button"
-          class="rounded-xl bg-[#0f7b65] px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+          class="rounded-xl bg-budget-accent px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
           (click)="shareBudget.emit()"
         >
           <span i18n="@@budgetShareInviteBtn">Inviter</span>

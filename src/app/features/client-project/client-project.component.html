@@ -36,7 +36,7 @@
                   href="{{ action.href }}"
                   class="rounded-2xl button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                   [ngClass]="{
-                    'bg-background-secondary text-black border border-border-primary':
+                    'bg-scheme-surface text-black border border-scheme-border':
                       action.variant === 'secondary',
                     'bg-transparent border border-transparent text-black underline underline-offset-2':
                       action.variant === 'ghost',
@@ -53,7 +53,7 @@
         <!-- content -->
         @if (project.kind === "singleCard") {
           <div
-            class="rounded-2xl md:shadow-xl md:overflow-hidden grid grid-cols-1 overflow-hidden border border-border-primary bg-neutral-white md:grid-cols-2"
+            class="rounded-2xl md:shadow-xl md:overflow-hidden grid grid-cols-1 overflow-hidden border border-scheme-border bg-scheme-background md:grid-cols-2"
           >
             <div class="flex flex-col justify-center p-3 md:p-5 lg:p-8">
               <p class="mb-2 text-sm font-semibold">
@@ -70,7 +70,7 @@
             </div>
 
             <div
-              class="flex flex-col items-center justify-center bg-neutral-100"
+              class="flex flex-col items-center justify-center bg-scheme-surface"
             >
               <img
                 [src]="project.imageSrc"
@@ -86,7 +86,7 @@
           <div class="grid grid-cols-1 gap-8">
             @for (mod of project.modules; track mod.key) {
               <div
-                class="rounded-2xl md:shadow-xl md:overflow-hidden grid grid-cols-1 overflow-hidden border border-border-primary bg-neutral-white md:grid-cols-2"
+                class="rounded-2xl md:shadow-xl md:overflow-hidden grid grid-cols-1 overflow-hidden border border-scheme-border bg-scheme-background md:grid-cols-2"
               >
                 <div
                   class="order-1 flex flex-col justify-center p-6 md:p-8 lg:p-12"
@@ -124,7 +124,7 @@
                 </div>
 
                 <div
-                  class="order-2 flex flex-col items-center justify-center bg-neutral-100"
+                  class="order-2 flex flex-col items-center justify-center bg-scheme-surface"
                   [ngClass]="mod.reverse ? 'md:order-1' : ''"
                 >
                   <img

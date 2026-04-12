@@ -8,7 +8,7 @@
       >
         <div class="max-w-3xl">
           <p
-            class="text-sm font-semibold uppercase tracking-[0.28em] text-[#0f7b65]"
+            class="text-sm font-semibold uppercase tracking-[0.28em] text-budget-accent"
           >
             Common account dashboard
           </p>
@@ -34,7 +34,7 @@
               <button
                 type="button"
                 class="rounded-full px-4 py-2 text-sm font-semibold transition"
-                [class.bg-[#0f7b65]]="selectedMonth() === month"
+                [class.bg-budget-accent]="selectedMonth() === month"
                 [class.text-white]="selectedMonth() === month"
                 [class.bg-white]="selectedMonth() !== month"
                 [class.text-slate-800]="selectedMonth() !== month"
@@ -75,7 +75,7 @@
 
             <button
               type="button"
-              class="rounded-full bg-[#0f7b65] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+              class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
               (click)="resetToSample()"
             >
               Reset sample
@@ -101,7 +101,7 @@
                 />
                 <button
                   type="button"
-                  class="rounded-xl bg-[#0f7b65] px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                  class="rounded-xl bg-budget-accent px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
                   (click)="shareBudgetWith()"
                 >
                   <span i18n="@@budgetShareInviteBtn">Inviter</span>
@@ -169,7 +169,7 @@
       >
         <div>
           <p
-            class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+            class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
           >
             Budget calculation
           </p>
@@ -216,7 +216,9 @@
           >
         </label>
 
-        <div class="rounded-[1.5rem] border border-[#ddd5c7] bg-[#fffaf2] p-5">
+        <div
+          class="rounded-[1.5rem] border border-budget-border bg-budget-surface p-5"
+        >
           <p
             class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500"
           >
@@ -235,7 +237,7 @@
       <div class="mt-6 flex flex-wrap items-center gap-4">
         <button
           type="button"
-          class="rounded-full bg-[#0f7b65] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+          class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
           (click)="validateBudgetCalculation()"
         >
           Validate
@@ -254,7 +256,7 @@
         class="rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
       >
         <p
-          class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+          class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
         >
           Filters
         </p>

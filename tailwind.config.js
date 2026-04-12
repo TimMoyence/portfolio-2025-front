@@ -30,6 +30,9 @@ module.exports = {
         "scheme-border": "#0c090226",
 
         "scheme-warning": "#f59e0b",
+        "scheme-warning-subtle": "#fef3c7", // amber-100 (fond warning leger)
+        "scheme-error": "#ef4444", // red-500
+        "scheme-success": "#16a34a", // green-600
 
         "scheme-accent": "#4fb3a2",
 
@@ -37,6 +40,21 @@ module.exports = {
         "scheme-accent-active": "#2f7f74",
         "scheme-accent-focus": "#4fb3a233",
         "scheme-on-accent": "#ffffff",
+
+        // --------------------
+        // APP-SPECIFIC TOKENS
+        // (extraits des usages reels: budget / weather / sebastian)
+        // --------------------
+        "budget-accent": "#0f7b65",
+        "budget-surface": "#fffaf2",
+        "budget-border": "#ddd5c7",
+
+        "weather-sky": "#38bdf8",
+        "weather-surface": "#f8faf9",
+
+        "sebastian-gold": "#d4a854",
+        "sebastian-muted": "#54524d",
+        "sebastian-amber": "#b8965a",
       },
 
       // --------------------

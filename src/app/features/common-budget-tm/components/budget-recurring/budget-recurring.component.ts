@@ -31,7 +31,7 @@ import { BUDGET_PORT } from "../../../../core/ports/budget.port";
       >
         <div>
           <p
-            class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+            class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
             i18n="@@budgetRecurringEyebrow"
           >
             Automatisation
@@ -45,7 +45,7 @@ import { BUDGET_PORT } from "../../../../core/ports/budget.port";
         </div>
         <button
           type="button"
-          class="rounded-full bg-[#0f7b65] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+          class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
           (click)="toggleForm()"
         >
           @if (showForm()) {
@@ -66,7 +66,7 @@ import { BUDGET_PORT } from "../../../../core/ports/budget.port";
 
       @if (showForm()) {
         <div
-          class="mt-6 grid gap-4 rounded-[1.5rem] border border-[#ddd5c7] bg-[#fffaf2] p-5 md:grid-cols-2 lg:grid-cols-3"
+          class="mt-6 grid gap-4 rounded-[1.5rem] border border-budget-border bg-budget-surface p-5 md:grid-cols-2 lg:grid-cols-3"
         >
           <label
             class="grid gap-1 text-sm text-slate-600"
@@ -200,7 +200,7 @@ import { BUDGET_PORT } from "../../../../core/ports/budget.port";
       }
 
       <div
-        class="mt-6 overflow-hidden rounded-[1.5rem] border border-[#ddd5c7]"
+        class="mt-6 overflow-hidden rounded-[1.5rem] border border-budget-border"
       >
         <div
           class="grid grid-cols-[1.5fr_0.7fr_0.7fr_0.8fr_0.5fr_0.5fr] gap-4 bg-[#f7f1e8] px-4 py-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-500"

@@ -25,7 +25,7 @@ import type { BudgetMonth } from "../../../../core/services/budget-state.service
       >
         <div class="max-w-3xl">
           <p
-            class="text-sm font-semibold uppercase tracking-[0.28em] text-[#0f7b65]"
+            class="text-sm font-semibold uppercase tracking-[0.28em] text-budget-accent"
           >
             Common account dashboard
           </p>
@@ -51,7 +51,7 @@ import type { BudgetMonth } from "../../../../core/services/budget-state.service
               <button
                 type="button"
                 class="rounded-full px-4 py-2 text-sm font-semibold transition"
-                [class.bg-[#0f7b65]]="selectedMonth() === month"
+                [class.bg-budget-accent]="selectedMonth() === month"
                 [class.text-white]="selectedMonth() === month"
                 [class.bg-white]="selectedMonth() !== month"
                 [class.text-slate-800]="selectedMonth() !== month"
@@ -92,7 +92,7 @@ import type { BudgetMonth } from "../../../../core/services/budget-state.service
 
             <button
               type="button"
-              class="rounded-full bg-[#0f7b65] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+              class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
               (click)="resetSample.emit()"
             >
               Reset sample

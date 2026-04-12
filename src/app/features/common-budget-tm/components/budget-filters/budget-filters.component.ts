@@ -17,7 +17,7 @@ import {
       class="rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
     >
       <p
-        class="text-sm font-semibold uppercase tracking-[0.22em] text-[#0f7b65]"
+        class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
       >
         Filters
       </p>
