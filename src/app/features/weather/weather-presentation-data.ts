@@ -199,7 +199,15 @@ const WEATHER_ICONS: Record<number, string> = {
 };
 
 /** Noms de jours pour l'affichage du bandeau hebdomadaire. */
-const DAY_LABELS = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
+const DAY_LABELS = [
+  $localize`:@@weather-pres.day.sun:Dim.`,
+  $localize`:@@weather-pres.day.mon:Lun.`,
+  $localize`:@@weather-pres.day.tue:Mar.`,
+  $localize`:@@weather-pres.day.wed:Mer.`,
+  $localize`:@@weather-pres.day.thu:Jeu.`,
+  $localize`:@@weather-pres.day.fri:Ven.`,
+  $localize`:@@weather-pres.day.sat:Sam.`,
+];
 
 /** Element du bandeau de previsions hebdomadaire. */
 export interface WeekDay {
@@ -223,7 +231,10 @@ export function buildWeekDays(daily: DailyForecast): WeekDay[] {
     const dayIndex = d.getDay();
     return {
       date: dateStr,
-      label: i === 0 ? "Auj." : DAY_LABELS[dayIndex],
+      label:
+        i === 0
+          ? $localize`:@@weather-pres.day.today:Auj.`
+          : DAY_LABELS[dayIndex],
       icon: `assets/images/meteo/${WEATHER_ICONS[daily.weather_code[i]] ?? "nuage.png"}`,
       tempMax: daily.temperature_2m_max[i],
       tempMin: daily.temperature_2m_min[i],

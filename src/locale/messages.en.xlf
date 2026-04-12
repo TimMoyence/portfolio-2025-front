@@ -7656,5 +7656,1961 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>No active goals</target>
       </segment>
     </unit>
+
+    <!-- ============================================================ -->
+    <!-- formations-list.data.ts                                       -->
+    <!-- ============================================================ -->
+    <unit id="formations-list.ia-solo.title">
+      <segment>
+        <source>L'IA au service des solopreneurs</source>
+        <target>AI for solopreneurs</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.ia-solo.description">
+      <segment>
+        <source>16 outils IA triés, 30 minutes, cas pratique en live — on trie le bullshit du vraiment utile.</source>
+        <target>16 curated AI tools, 30 minutes, a live hands-on case — we sort the bullshit from what actually works.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.ia-solo.duration">
+      <segment>
+        <source>30 min</source>
+        <target>30 min</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.ia-solo.badge">
+      <segment>
+        <source>Gratuit</source>
+        <target>Free</target>
+      </segment>
+    </unit>
+
+    <!-- ============================================================ -->
+    <!-- budget-presentation-data.ts                                   -->
+    <!-- ============================================================ -->
+    <unit id="budget-pres.cat.logement">
+      <segment>
+        <source>Logement</source>
+        <target>Housing</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.cat.courses">
+      <segment>
+        <source>Courses</source>
+        <target>Groceries</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.cat.loisirs">
+      <segment>
+        <source>Loisirs</source>
+        <target>Leisure</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.cat.transport">
+      <segment>
+        <source>Transport</source>
+        <target>Transport</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.cat.sante">
+      <segment>
+        <source>Sante</source>
+        <target>Health</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.cat.abonnements">
+      <segment>
+        <source>Abonnements</source>
+        <target>Subscriptions</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.cat.epargne">
+      <segment>
+        <source>Epargne</source>
+        <target>Savings</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.cat.autres">
+      <segment>
+        <source>Autres</source>
+        <target>Other</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.month.jan">
+      <segment>
+        <source>Jan</source>
+        <target>Jan</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.month.fev">
+      <segment>
+        <source>Fev</source>
+        <target>Feb</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.month.mar">
+      <segment>
+        <source>Mar</source>
+        <target>Mar</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.month.avr">
+      <segment>
+        <source>Avr</source>
+        <target>Apr</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.month.mai">
+      <segment>
+        <source>Mai</source>
+        <target>May</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.month.jun">
+      <segment>
+        <source>Jun</source>
+        <target>Jun</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.0.title">
+      <segment>
+        <source>Suivi en temps reel</source>
+        <target>Real-time tracking</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.0.description">
+      <segment>
+        <source>Visualisez vos depenses au fur et a mesure. Graphiques par categorie, evolution mensuelle et alertes quand un budget est depasse.</source>
+        <target>See your spending as it happens. Category breakdowns, monthly trends, and alerts when a budget is exceeded.</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.1.title">
+      <segment>
+        <source>Contributions equitables</source>
+        <target>Fair contributions</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.1.description">
+      <segment>
+        <source>Chacun contribue au prorata de ses revenus. Le calcul est automatique, transparent et mis a jour chaque mois.</source>
+        <target>Each partner contributes proportionally to their income. The calculation is automatic, transparent, and updated every month.</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.2.title">
+      <segment>
+        <source>Import CSV intelligent</source>
+        <target>Smart CSV import</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.2.description">
+      <segment>
+        <source>Importez vos releves bancaires en un clic. L'auto-categorisation reconnait vos depenses recurrentes.</source>
+        <target>Import your bank statements in one click. Auto-categorization recognizes your recurring expenses.</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.3.title">
+      <segment>
+        <source>Auto-categorisation IA</source>
+        <target>AI auto-categorization</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.feature.3.description">
+      <segment>
+        <source>Les transactions sont classees automatiquement grace a l'intelligence artificielle. Fini le tri manuel.</source>
+        <target>Transactions are automatically classified with AI. No more manual sorting.</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.0.title">
+      <segment>
+        <source>Creez votre budget</source>
+        <target>Create your budget</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.0.description">
+      <segment>
+        <source>Definissez vos categories, limites mensuelles et partagez l'acces avec votre partenaire.</source>
+        <target>Set up your categories, monthly limits, and share access with your partner.</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.1.title">
+      <segment>
+        <source>Importez vos releves</source>
+        <target>Import your statements</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.1.description">
+      <segment>
+        <source>Glissez votre CSV bancaire. Les transactions sont triees et categorisees automatiquement.</source>
+        <target>Drop your bank CSV. Transactions are sorted and categorized automatically.</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.2.title">
+      <segment>
+        <source>Suivez vos objectifs</source>
+        <target>Track your goals</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.2.description">
+      <segment>
+        <source>Chaque categorie a sa jauge. Vous voyez en un clin d'oeil ou vous en etes.</source>
+        <target>Each category has its own gauge. You see where you stand at a glance.</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.3.title">
+      <segment>
+        <source>Analysez l'historique</source>
+        <target>Analyze your history</target>
+      </segment>
+    </unit>
+    <unit id="budget-pres.timeline.3.description">
+      <segment>
+        <source>Comparez mois par mois, identifiez les tendances et ajustez votre budget en consequence.</source>
+        <target>Compare month over month, spot trends, and adjust your budget accordingly.</target>
+      </segment>
+    </unit>
+
+    <!-- ============================================================ -->
+    <!-- weather-presentation-data.ts                                  -->
+    <!-- ============================================================ -->
+    <unit id="weather-pres.day.sun">
+      <segment>
+        <source>Dim.</source>
+        <target>Sun</target>
+      </segment>
+    </unit>
+    <unit id="weather-pres.day.mon">
+      <segment>
+        <source>Lun.</source>
+        <target>Mon</target>
+      </segment>
+    </unit>
+    <unit id="weather-pres.day.tue">
+      <segment>
+        <source>Mar.</source>
+        <target>Tue</target>
+      </segment>
+    </unit>
+    <unit id="weather-pres.day.wed">
+      <segment>
+        <source>Mer.</source>
+        <target>Wed</target>
+      </segment>
+    </unit>
+    <unit id="weather-pres.day.thu">
+      <segment>
+        <source>Jeu.</source>
+        <target>Thu</target>
+      </segment>
+    </unit>
+    <unit id="weather-pres.day.fri">
+      <segment>
+        <source>Ven.</source>
+        <target>Fri</target>
+      </segment>
+    </unit>
+    <unit id="weather-pres.day.sat">
+      <segment>
+        <source>Sam.</source>
+        <target>Sat</target>
+      </segment>
+    </unit>
+    <unit id="weather-pres.day.today">
+      <segment>
+        <source>Auj.</source>
+        <target>Today</target>
+      </segment>
+    </unit>
+
+    <!-- ============================================================ -->
+    <!-- sebastian-presentation-data.ts                                -->
+    <!-- ============================================================ -->
+    <unit id="sebastian-pres.health.message">
+      <segment>
+        <source>Bonne forme, continuez !</source>
+        <target>Looking good — keep it up!</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.first-log.name">
+      <segment>
+        <source>Premier Log</source>
+        <target>First Log</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.first-log.description">
+      <segment>
+        <source>Enregistrez votre premiere consommation</source>
+        <target>Log your first drink</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.dry-week.name">
+      <segment>
+        <source>Semaine Sobre</source>
+        <target>Dry Week</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.dry-week.description">
+      <segment>
+        <source>7 jours sans alcool</source>
+        <target>7 days alcohol-free</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.espresso-machine.name">
+      <segment>
+        <source>Maitre Barista</source>
+        <target>Master Barista</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.espresso-machine.description">
+      <segment>
+        <source>100 cafes enregistres</source>
+        <target>100 coffees logged</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.zen-monk-7.name">
+      <segment>
+        <source>Zen Monk 7</source>
+        <target>Zen Monk 7</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.zen-monk-7.description">
+      <segment>
+        <source>Score au-dessus de 80 pendant 7 jours</source>
+        <target>Score above 80 for 7 days</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.zen-monk-30.name">
+      <segment>
+        <source>Zen Monk 30</source>
+        <target>Zen Monk 30</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.zen-monk-30.description">
+      <segment>
+        <source>Score au-dessus de 80 pendant 30 jours</source>
+        <target>Score above 80 for 30 days</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.goal-crusher.name">
+      <segment>
+        <source>Goal Crusher</source>
+        <target>Goal Crusher</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.goal-crusher.description">
+      <segment>
+        <source>Respectez vos limites 7 jours d'affilee</source>
+        <target>Stay within your limits 7 days in a row</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.perfect-month.name">
+      <segment>
+        <source>Mois Parfait</source>
+        <target>Perfect Month</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.perfect-month.description">
+      <segment>
+        <source>Aucun depassement pendant 30 jours</source>
+        <target>No overruns for 30 days</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.early-bird.name">
+      <segment>
+        <source>Early Bird</source>
+        <target>Early Bird</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.early-bird.description">
+      <segment>
+        <source>Premier log avant 8h du matin</source>
+        <target>First log before 8 a.m.</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.night-owl.name">
+      <segment>
+        <source>Night Owl</source>
+        <target>Night Owl</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.night-owl.description">
+      <segment>
+        <source>Log apres minuit</source>
+        <target>Log after midnight</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.comeback-kid.name">
+      <segment>
+        <source>Comeback Kid</source>
+        <target>Comeback Kid</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.badge.comeback-kid.description">
+      <segment>
+        <source>Ameliorez votre score de 20 points en un mois</source>
+        <target>Improve your score by 20 points in a month</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.heatmap.day.mon">
+      <segment>
+        <source>L</source>
+        <target>M</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.heatmap.day.tue">
+      <segment>
+        <source>M</source>
+        <target>T</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.heatmap.day.wed">
+      <segment>
+        <source>M</source>
+        <target>W</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.heatmap.day.thu">
+      <segment>
+        <source>J</source>
+        <target>T</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.heatmap.day.fri">
+      <segment>
+        <source>V</source>
+        <target>F</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.heatmap.day.sat">
+      <segment>
+        <source>S</source>
+        <target>S</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.heatmap.day.sun">
+      <segment>
+        <source>D</source>
+        <target>S</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.trend.day.mon">
+      <segment>
+        <source>Lun</source>
+        <target>Mon</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.trend.day.tue">
+      <segment>
+        <source>Mar</source>
+        <target>Tue</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.trend.day.wed">
+      <segment>
+        <source>Mer</source>
+        <target>Wed</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.trend.day.thu">
+      <segment>
+        <source>Jeu</source>
+        <target>Thu</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.trend.day.fri">
+      <segment>
+        <source>Ven</source>
+        <target>Fri</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.trend.day.sat">
+      <segment>
+        <source>Sam</source>
+        <target>Sat</target>
+      </segment>
+    </unit>
+    <unit id="sebastian-pres.trend.day.sun">
+      <segment>
+        <source>Dim</source>
+        <target>Sun</target>
+      </segment>
+    </unit>
+
+    <!-- ============================================================ -->
+    <!-- ia-solopreneurs.data.ts                                       -->
+    <!-- ============================================================ -->
+    <unit id="ia-solo.bloc.accrocher">
+      <segment>
+        <source>Accrocher</source>
+        <target>Hook</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.bloc.montrer">
+      <segment>
+        <source>Montrer</source>
+        <target>Show</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.bloc.pratiquer">
+      <segment>
+        <source>Pratiquer</source>
+        <target>Practice</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.bloc.ancrer">
+      <segment>
+        <source>Ancrer</source>
+        <target>Anchor</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: accroche -->
+    <unit id="ia-solo.accroche.imageAlt">
+      <segment>
+        <source>Main de robot interagissant avec un réseau neuronal lumineux</source>
+        <target>Robotic hand interacting with a glowing neural network</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.title">
+      <segment>
+        <source>L'IA au service des solopreneurs</source>
+        <target>AI for solopreneurs</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.subtitle">
+      <segment>
+        <source>16 outils, 30 minutes, on trie le bullshit du vraiment utile</source>
+        <target>16 tools, 30 minutes, sorting the bullshit from what actually matters</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.speakerNotes">
+      <segment>
+        <source>Sondage à main levée : « Qui utilise déjà ChatGPT ? Et Claude ou Gemini ? » — calibrer le niveau du groupe.</source>
+        <target>Show of hands: "Who already uses ChatGPT? Claude or Gemini?" — calibrate the room's level.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.poll.question">
+      <segment>
+        <source>Qui utilise déjà l'IA au quotidien ?</source>
+        <target>Who already uses AI on a daily basis?</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.poll.option.0">
+      <segment>
+        <source>ChatGPT</source>
+        <target>ChatGPT</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.poll.option.1">
+      <segment>
+        <source>Claude</source>
+        <target>Claude</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.poll.option.2">
+      <segment>
+        <source>Gemini</source>
+        <target>Gemini</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.poll.option.3">
+      <segment>
+        <source>Autre IA</source>
+        <target>Another AI</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.accroche.poll.option.4">
+      <segment>
+        <source>Aucune</source>
+        <target>None</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: probleme -->
+    <unit id="ia-solo.probleme.title">
+      <segment>
+        <source>Le constat : l'IA avance, avec ou sans vous</source>
+        <target>The reality: AI is moving forward, with or without you</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.stats.0.label">
+      <segment>
+        <source>des organisations utilisent déjà l'IA</source>
+        <target>of organizations already use AI</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.stats.0.source">
+      <segment>
+        <source>McKinsey, 2025</source>
+        <target>McKinsey, 2025</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.stats.1.label">
+      <segment>
+        <source>utilisent l'IA générative (vs 33% un an avant)</source>
+        <target>use generative AI (vs 33% a year earlier)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.stats.1.source">
+      <segment>
+        <source>McKinsey, 2025</source>
+        <target>McKinsey, 2025</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.stats.2.label">
+      <segment>
+        <source>de tâches IA sur Zapier en 2 ans</source>
+        <target>growth in AI tasks on Zapier over 2 years</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.stats.2.source">
+      <segment>
+        <source>Zapier Blog, 2025</source>
+        <target>Zapier Blog, 2025</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.speakerNotes">
+      <segment>
+        <source>Question au public : « Qui passe plus de 3h par jour sur des tâches qu'un outil pourrait faire ? »</source>
+        <target>Ask the audience: "Who spends more than 3 hours a day on tasks a tool could handle?"</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.rating.question">
+      <segment>
+        <source>Où en êtes-vous avec l'IA ?</source>
+        <target>Where are you with AI?</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.rating.hint">
+      <segment>
+        <source>Votre réponse adapte le guide que vous recevrez par email.</source>
+        <target>Your answer tailors the guide you'll receive by email.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.rating.min">
+      <segment>
+        <source>Débutant</source>
+        <target>Beginner</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.probleme.rating.max">
+      <segment>
+        <source>Avancé</source>
+        <target>Advanced</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: promesse -->
+    <unit id="ia-solo.promesse.imageAlt">
+      <segment>
+        <source>Intervenant donnant une présentation dynamique sur scène</source>
+        <target>Speaker delivering a dynamic presentation on stage</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.promesse.title">
+      <segment>
+        <source>Ce qu'on va faire ensemble</source>
+        <target>What we'll do together</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.promesse.subtitle">
+      <segment>
+        <source>1. Tour d'horizon des outils qui comptent — 2. Ce qui marche vraiment au quotidien — 3. Un exercice pratique, vous repartez avec un résultat</source>
+        <target>1. A tour of the tools that matter — 2. What actually works day-to-day — 3. A hands-on exercise so you leave with a result</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.promesse.speakerNotes">
+      <segment>
+        <source>Annoncer la structure en 3 blocs. Rassurer : c'est pratique, pas un cours magistral.</source>
+        <target>Announce the 3-part structure. Reassure: this is hands-on, not a lecture.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: contexte-marche -->
+    <unit id="ia-solo.contexte-marche.imageAlt">
+      <segment>
+        <source>Écran de marché boursier avec données et graphiques en temps réel</source>
+        <target>Stock market screen with live data and charts</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.contexte-marche.title">
+      <segment>
+        <source>Contexte : le marché IA en avril 2026</source>
+        <target>Context: the AI market in April 2026</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.contexte-marche.bullets.0">
+      <segment>
+        <source>ChatGPT : 900M d'utilisateurs hebdo, 50M d'abonnés payants (OpenAI, fév. 2026)</source>
+        <target>ChatGPT: 900M weekly users, 50M paying subscribers (OpenAI, Feb. 2026)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.contexte-marche.bullets.1">
+      <segment>
+        <source>Anthropic (Claude) : 30Md$ ARR, a dépassé OpenAI (25Md$) pour la première fois (avril 2026)</source>
+        <target>Anthropic (Claude): $30B ARR, surpassed OpenAI ($25B) for the first time (April 2026)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.contexte-marche.bullets.2">
+      <segment>
+        <source>Le marché des agents IA passe de 7,8Md$ à 52,6Md$ d'ici 2030 (Gartner)</source>
+        <target>The AI agent market is set to grow from $7.8B to $52.6B by 2030 (Gartner)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.contexte-marche.bullets.3">
+      <segment>
+        <source>68% des PME US utilisent l'IA (QuickBooks, 2 200 PME)</source>
+        <target>68% of US small businesses use AI (QuickBooks, 2,200 SMBs)</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: culture-apprendre -->
+    <unit id="ia-solo.culture-apprendre.imageAlt">
+      <segment>
+        <source>Enregistrement podcast avec microphone professionnel en studio</source>
+        <target>Podcast recording with a professional studio microphone</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.title">
+      <segment>
+        <source>Apprenez plus vite que vos concurrents</source>
+        <target>Learn faster than your competitors</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.subtitle">
+      <segment>
+        <source>Votre veille passe de 3h à 20 min</source>
+        <target>Your daily research goes from 3 hours to 20 minutes</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.bullets.0">
+      <segment>
+        <source>NotebookLM — Uploadez un PDF, récupérez un podcast de 10 min avec deux voix IA qui l'analysent. Par Google, gratuit. Mode interactif : interrompez les hosts pour poser vos questions.</source>
+        <target>NotebookLM — Upload a PDF and get a 10-minute podcast with two AI voices analyzing it. From Google, free. Interactive mode: interrupt the hosts to ask your own questions.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.bullets.1">
+      <segment>
+        <source>Perplexity — Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses sourcées avec citations, pas de liens bleus à trier. Gratuit ou 20$/mois.</source>
+        <target>Perplexity — AI search engine. 100M+ monthly users. Sourced answers with citations, no blue links to sift through. Free or $20/month.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.bullets.2">
+      <segment>
+        <source>Fathom — Notes de réunion automatiques sur Zoom/Meet/Teams. Transcription + résumé + actions. 5 résumés IA/mois en gratuit, 19$/mois pour l'illimité.</source>
+        <target>Fathom — Automatic meeting notes on Zoom/Meet/Teams. Transcript + summary + action items. 5 AI summaries/month free, $19/month for unlimited.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.notes">
+      <segment>
+        <source>NotebookLM : tourne sur Gemini 3, mode interactif « raise your hand » (2026), Cinematic Video Overviews. Perplexity : valorisé 21Md$ (Series E, 2026). Fathom : attention, le gratuit est limité à 5 résumés IA — au-delà c'est 19$/mois.</source>
+        <target>NotebookLM: runs on Gemini 3, "raise your hand" interactive mode (2026), Cinematic Video Overviews. Perplexity: valued at $21B (Series E, 2026). Fathom: heads-up, the free plan caps at 5 AI summaries — beyond that it's $19/month.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.speakerNotes">
+      <segment>
+        <source>Démo live NotebookLM si le temps le permet : uploader un PDF, lancer un Deep Dive. Le podcast sera prêt dans ~47 secondes.</source>
+        <target>Live NotebookLM demo if time permits: upload a PDF, launch a Deep Dive. The podcast will be ready in ~47 seconds.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: chat-produire -->
+    <unit id="ia-solo.chat-produire.imageAlt">
+      <segment>
+        <source>Personne utilisant ChatGPT sur un ordinateur portable</source>
+        <target>Person using ChatGPT on a laptop</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.title">
+      <segment>
+        <source>ChatGPT, Claude, Gemini — lequel ouvrir en premier</source>
+        <target>ChatGPT, Claude, Gemini — which one to open first</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.subtitle">
+      <segment>
+        <source>Chaque IA a sa force. Les pros utilisent la bonne pour la bonne tâche.</source>
+        <target>Each AI has its own strength. Pros pick the right one for the right task.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.0.col.0">
+      <segment>
+        <source>Force</source>
+        <target>Strength</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.0.col.1">
+      <segment>
+        <source>Polyvalent, 900M users/sem, GPT Store</source>
+        <target>Versatile, 900M weekly users, GPT Store</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.0.col.2">
+      <segment>
+        <source>N°1 rédaction, 1M tokens de contexte</source>
+        <target>#1 for writing, 1M token context window</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.0.col.3">
+      <segment>
+        <source>Branché sur Google Workspace, analyse vidéo</source>
+        <target>Plugged into Google Workspace, video analysis</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.1.col.0">
+      <segment>
+        <source>Idéal pour</source>
+        <target>Best for</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.1.col.1">
+      <segment>
+        <source>Brainstorm, code, analyse de données</source>
+        <target>Brainstorming, code, data analysis</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.1.col.2">
+      <segment>
+        <source>Rédaction pro, contrats, docs longs</source>
+        <target>Pro writing, contracts, long documents</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.1.col.3">
+      <segment>
+        <source>Gmail, Drive, Agenda, résumé vidéo</source>
+        <target>Gmail, Drive, Calendar, video summaries</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.2.col.0">
+      <segment>
+        <source>Prix</source>
+        <target>Price</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.2.col.1">
+      <segment>
+        <source>Gratuit / 20$/mois (Plus)</source>
+        <target>Free / $20/month (Plus)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.2.col.2">
+      <segment>
+        <source>Gratuit / 20$/mois (Pro)</source>
+        <target>Free / $20/month (Pro)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.table.row.2.col.3">
+      <segment>
+        <source>Gratuit / 20$/mois (Pro)</source>
+        <target>Free / $20/month (Pro)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.notes">
+      <segment>
+        <source>ChatGPT (OpenAI) : valorisé 852Md$, IPO visée fin 2026. Claude (Anthropic) : 30Md$ ARR, a dépassé OpenAI en CA — en dépensant 4x moins en entraînement. Fenêtre de contexte 1M tokens GA depuis mars 2026. Gemini (Google) : intégré dans Workspace, seul à analyser la vidéo nativement.</source>
+        <target>ChatGPT (OpenAI): valued at $852B, IPO targeted late 2026. Claude (Anthropic): $30B ARR, has overtaken OpenAI in revenue — while spending 4x less on training. 1M token context window GA since March 2026. Gemini (Google): integrated into Workspace, the only one to analyze video natively.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: creer -->
+    <unit id="ia-solo.creer.imageAlt">
+      <segment>
+        <source>Espace de travail créatif avec laptop et calligraphie</source>
+        <target>Creative workspace with a laptop and calligraphy</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.title">
+      <segment>
+        <source>Du contenu pro en 10× moins de temps</source>
+        <target>Pro-grade content in 10× less time</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.bullets.0">
+      <segment>
+        <source>Ideogram — Génération d'images avec du texte lisible dedans. Aucun autre outil ne fait ça aussi bien. Gratuit (10 prompts/jour).</source>
+        <target>Ideogram — Image generation with legible text built in. No other tool does this as well. Free (10 prompts/day).</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.bullets.1">
+      <segment>
+        <source>Gamma — 70M d'utilisateurs. Tapez un prompt, récupérez une présentation complète en moins d'une minute. Gamma Agent restructure et donne du feedback design. Gratuit pour démarrer, 10$/mois.</source>
+        <target>Gamma — 70M users. Type a prompt, get a full presentation in under a minute. Gamma Agent restructures and gives design feedback. Free to start, $10/month.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.bullets.2">
+      <segment>
+        <source>ElevenLabs — Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix dans 29 langues. Gratuit (10 min) puis 5$/mois.</source>
+        <target>ElevenLabs — Ultra-realistic voice cloning. Valued at $11B. Your voice in 29 languages. Free (10 min) then $5/month.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.notes">
+      <segment>
+        <source>Ideogram 3.0 : Style References (jusqu'à 3 images), photoréalisme amélioré. Gamma : levée de 68M$ (a16z), 600K abonnés payants. ElevenLabs : Series D 500M$ (Sequoia, a16z), 330M$ ARR fin 2025.</source>
+        <target>Ideogram 3.0: Style References (up to 3 images), improved photorealism. Gamma: $68M raised (a16z), 600K paying subscribers. ElevenLabs: Series D $500M (Sequoia, a16z), $330M ARR end of 2025.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.speakerNotes">
+      <segment>
+        <source>Montrer un exemple Ideogram avec du texte parfait vs un fail Midjourney/DALL-E sur du texte. Le contraste est parlant.</source>
+        <target>Show an Ideogram example with perfect text vs a Midjourney/DALL-E text failure. The contrast speaks for itself.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: automatiser -->
+    <unit id="ia-solo.automatiser.imageAlt">
+      <segment>
+        <source>Suivi multi-écrans avec smartphone et ordinateur, données en temps réel</source>
+        <target>Multi-screen monitoring with smartphone and computer, real-time data</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.title">
+      <segment>
+        <source>Les tâches que vous faites encore à la main</source>
+        <target>The tasks you're still doing by hand</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.subtitle">
+      <segment>
+        <source>+760% de tâches IA sur Zapier en 2 ans</source>
+        <target>+760% AI tasks on Zapier in 2 years</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.header.0">
+      <segment>
+        <source>Outil</source>
+        <target>Tool</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.header.1">
+      <segment>
+        <source>Difficulté</source>
+        <target>Difficulty</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.header.2">
+      <segment>
+        <source>Prix</source>
+        <target>Price</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.header.3">
+      <segment>
+        <source>En une phrase</source>
+        <target>In one sentence</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.0.col.1">
+      <segment>
+        <source>Facile</source>
+        <target>Easy</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.0.col.2">
+      <segment>
+        <source>Gratuit (100 tâches/mois)</source>
+        <target>Free (100 tasks/month)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.0.col.3">
+      <segment>
+        <source>Branchez deux apps en 5 min, ça tourne tout seul</source>
+        <target>Connect two apps in 5 minutes, it runs on its own</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.1.col.1">
+      <segment>
+        <source>Moyen</source>
+        <target>Medium</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.1.col.2">
+      <segment>
+        <source>9€/mois (10K opérations)</source>
+        <target>€9/month (10K operations)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.1.col.3">
+      <segment>
+        <source>Plus flexible que Zapier, scénarios visuels complexes</source>
+        <target>More flexible than Zapier, complex visual scenarios</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.2.col.1">
+      <segment>
+        <source>Avancé</source>
+        <target>Advanced</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.2.col.2">
+      <segment>
+        <source>Gratuit (self-hosted)</source>
+        <target>Free (self-hosted)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.table.row.2.col.3">
+      <segment>
+        <source>Open source, illimité, valorisé 2,5Md$ — pour ceux qui aiment bidouiller</source>
+        <target>Open source, unlimited, valued at $2.5B — for those who love to tinker</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.notes">
+      <segment>
+        <source>Zapier : 3M+ utilisateurs, 100K+ clients payants. Make : 3,1M utilisateurs, 52,6M$ CA. n8n : 230K utilisateurs actifs, 3000 clients entreprise, Series C 180M$. Différence clé : 1 action Zapier = 1 tâche, 1 étape Make = 1 opération. À 10K opérations/mois, Make est 2x moins cher.</source>
+        <target>Zapier: 3M+ users, 100K+ paying customers. Make: 3.1M users, $52.6M revenue. n8n: 230K active users, 3,000 enterprise customers, Series C $180M. Key difference: 1 Zapier action = 1 task, 1 Make step = 1 operation. At 10K operations/month, Make is half the price.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.speakerNotes">
+      <segment>
+        <source>Workflow concret : 'Un formulaire est rempli → email personnalisé + fiche Notion + rappel calendrier. Temps de setup : 2h. Temps humain ensuite : 0.' Pour l'audience A, mentionner n8n self-hosted + MCP.</source>
+        <target>Concrete workflow: 'A form is submitted → personalized email + Notion record + calendar reminder. Setup time: 2 hours. Human time after that: 0.' For audience A, mention n8n self-hosted + MCP.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: site-web -->
+    <unit id="ia-solo.site-web.imageAlt">
+      <segment>
+        <source>Espace de travail avec double écran montrant des maquettes de design</source>
+        <target>Dual-monitor workspace showing design mockups</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.title">
+      <segment>
+        <source>Votre site en ligne ce soir, sans une ligne de code</source>
+        <target>Your website online tonight, without a single line of code</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.bullets.0">
+      <segment>
+        <source>Lovable — Du prompt au site full-stack. 8M d'utilisateurs, valorisé 6,6Md$. Gratuit (50 actions IA/jour).</source>
+        <target>Lovable — From prompt to full-stack website. 8M users, valued at $6.6B. Free (50 AI actions/day).</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.bullets.1">
+      <segment>
+        <source>Bolt.new — Même concept, tout dans le navigateur. Frontend, backend, déploiement. 25$/mois.</source>
+        <target>Bolt.new — Same concept, all in the browser. Frontend, backend, deployment. $25/month.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.bullets.2">
+      <segment>
+        <source>v0 — Par Vercel. Génère du React/Next.js/Tailwind. Plus technique, plus propre. Gratuit (5$ de crédits/mois) puis 20$/mois.</source>
+        <target>v0 — By Vercel. Generates React/Next.js/Tailwind. More technical, cleaner output. Free ($5 credits/month) then $20/month.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.notes">
+      <segment>
+        <source>Lovable : Series B 330M$, 100K+ projets/jour. Bolt : import Figma, modèle Opus 4.6 intégré. v0 : intégration Git, éditeur de code (fév. 2026). Ces outils ne remplacent pas un dev pour un projet complexe, mais pour une landing page ou un MVP c'est suffisant.</source>
+        <target>Lovable: Series B $330M, 100K+ projects/day. Bolt: Figma import, Opus 4.6 model built in. v0: Git integration, code editor (Feb. 2026). These tools won't replace a developer for a complex project, but for a landing page or an MVP they're enough.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.speakerNotes">
+      <segment>
+        <source>Pour l'audience B : insister sur Lovable (le plus simple). Pour l'audience A : montrer v0 et le code généré, c'est impressionnant.</source>
+        <target>For audience B: stress Lovable (the easiest). For audience A: show v0 and the generated code — it's impressive.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: clients -->
+    <unit id="ia-solo.clients.imageAlt">
+      <segment>
+        <source>Bureau minimaliste avec MacBook et iPad, outils numériques</source>
+        <target>Minimalist desk with MacBook and iPad, digital tools</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.title">
+      <segment>
+        <source>Prospecter → Convertir → Fidéliser</source>
+        <target>Prospect → Convert → Retain</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.subtitle">
+      <segment>
+        <source>Le cycle client complet, 4 outils, 29€/mois</source>
+        <target>The full customer cycle, 4 tools, €29/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.0.description">
+      <segment>
+        <source>Prospection LinkedIn automatisée. 300 invitations/mois, follow-up auto, détection de réponses.</source>
+        <target>Automated LinkedIn prospecting. 300 invites/month, auto follow-up, reply detection.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.0.badge">
+      <segment>
+        <source>Prospecter — 19€/mois</source>
+        <target>Prospect — €19/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.1.description">
+      <segment>
+        <source>CRM léger + pipeline visuel + agents custom qui bossent sur votre workspace 24/7.</source>
+        <target>Lightweight CRM + visual pipeline + custom agents working in your workspace 24/7.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.1.badge">
+      <segment>
+        <source>Convertir — 10$/mois</source>
+        <target>Convert — $10/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.2.description">
+      <segment>
+        <source>Email marketing IA, français, RGPD-friendly. Séquences automatisées. 300 emails/jour gratuits.</source>
+        <target>AI email marketing, French, GDPR-friendly. Automated sequences. 300 emails/day free.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.2.badge">
+      <segment>
+        <source>Fidéliser — Gratuit</source>
+        <target>Retain — Free</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.3.description">
+      <segment>
+        <source>Visuels pro pour vos emails, posts, newsletters. 220M+ d'utilisateurs. Le design sans designer.</source>
+        <target>Pro visuals for your emails, posts, newsletters. 220M+ users. Design without a designer.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.grid.3.badge">
+      <segment>
+        <source>Communiquer — Gratuit</source>
+        <target>Communicate — Free</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.notes">
+      <segment>
+        <source>Workflow complet : Prospect répond sur LinkedIn (Waalaxy) → ajout auto dans Notion → Brevo envoie la séquence d'onboarding → visuels Canva. Via Zapier ou Make en connecteur. Coût total : ~29€/mois. Waalaxy : essai 14 jours. Notion Business (20$/mois) pour l'IA complète. Brevo (ex-Sendinblue) : entreprise française, conforme RGPD.</source>
+        <target>Full workflow: Prospect replies on LinkedIn (Waalaxy) → auto-added to Notion → Brevo sends the onboarding sequence → Canva visuals. Connected via Zapier or Make. Total cost: ~€29/month. Waalaxy: 14-day trial. Notion Business ($20/month) for full AI. Brevo (formerly Sendinblue): French company, GDPR-compliant.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.speakerNotes">
+      <segment>
+        <source>Montrer le schéma Waalaxy → Notion → Brevo → Canva. Insister : le combo Brevo + Zapier/Make transforme des emails manuels en séquences automatiques.</source>
+        <target>Show the Waalaxy → Notion → Brevo → Canva diagram. Stress: the Brevo + Zapier/Make combo turns manual emails into automated sequences.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.poll.question">
+      <segment>
+        <source>Quel est votre plus gros défi client ?</source>
+        <target>What's your biggest customer challenge?</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.poll.option.0">
+      <segment>
+        <source>Trouver des prospects</source>
+        <target>Finding prospects</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.poll.option.1">
+      <segment>
+        <source>Convertir</source>
+        <target>Converting</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.poll.option.2">
+      <segment>
+        <source>Fidéliser</source>
+        <target>Retaining</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.clients.poll.option.3">
+      <segment>
+        <source>Communiquer</source>
+        <target>Communicating</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: stack-budget -->
+    <unit id="ia-solo.stack-budget.imageAlt">
+      <segment>
+        <source>Équipe collaborant autour d'une table avec laptops et smartphones</source>
+        <target>Team collaborating around a table with laptops and smartphones</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.title">
+      <segment>
+        <source>0€, 60€ ou 120€/mois : votre stack sur mesure</source>
+        <target>€0, €60 or €120/month: your custom stack</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.header.0">
+      <segment>
+        <source>Niveau</source>
+        <target>Level</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.header.1">
+      <segment>
+        <source>Outils</source>
+        <target>Tools</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.header.2">
+      <segment>
+        <source>Budget</source>
+        <target>Budget</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.0.col.0">
+      <segment>
+        <source>Débutant</source>
+        <target>Beginner</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.0.col.1">
+      <segment>
+        <source>ChatGPT gratuit + Canva gratuit + Gamma + Zapier (100 tâches) + Brevo + NotebookLM</source>
+        <target>Free ChatGPT + free Canva + Gamma + Zapier (100 tasks) + Brevo + NotebookLM</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.0.col.2">
+      <segment>
+        <source>0€/mois</source>
+        <target>€0/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.1.col.0">
+      <segment>
+        <source>Intermédiaire</source>
+        <target>Intermediate</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.1.col.1">
+      <segment>
+        <source>ChatGPT Plus (20$) + Canva Pro (15$) + Make (9€) + Notion AI (10$) + Perplexity Pro (20$)</source>
+        <target>ChatGPT Plus ($20) + Canva Pro ($15) + Make (€9) + Notion AI ($10) + Perplexity Pro ($20)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.1.col.2">
+      <segment>
+        <source>~60€/mois</source>
+        <target>~€60/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.2.col.0">
+      <segment>
+        <source>Avancé</source>
+        <target>Advanced</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.2.col.1">
+      <segment>
+        <source>Claude Pro (20$) + ChatGPT Plus (20$) + Make Pro (16€) + ElevenLabs (22$) + Fathom (19$) + Waalaxy (19€)</source>
+        <target>Claude Pro ($20) + ChatGPT Plus ($20) + Make Pro (€16) + ElevenLabs ($22) + Fathom ($19) + Waalaxy (€19)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.table.row.2.col.2">
+      <segment>
+        <source>~120€/mois</source>
+        <target>~€120/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.bullets.0">
+      <segment>
+        <source>Commencez par 2-3 outils, maîtrisez-les. Le stack à 0€ couvre 80% des besoins.</source>
+        <target>Start with 2-3 tools, master them. The €0 stack covers 80% of needs.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.notes">
+      <segment>
+        <source>Ne pas tout installer d'un coup. Chaque outil doit résoudre un problème concret. L'objectif n'est pas d'avoir le stack le plus gros mais le plus efficace.</source>
+        <target>Don't install everything at once. Each tool should solve a concrete problem. The goal isn't the biggest stack but the most effective one.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.rating.question">
+      <segment>
+        <source>Quel budget mensuel pour vos outils IA ?</source>
+        <target>What's your monthly budget for AI tools?</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.rating.hint">
+      <segment>
+        <source>On adaptera les recommandations de votre guide à votre budget.</source>
+        <target>We'll tailor the recommendations in your guide to your budget.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.rating.min">
+      <segment>
+        <source>0€</source>
+        <target>€0</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.rating.max">
+      <segment>
+        <source>120€+</source>
+        <target>€120+</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: outils-detail -->
+    <unit id="ia-solo.outils-detail.title">
+      <segment>
+        <source>Tableau récap : les 16 outils en un coup d'œil</source>
+        <target>Recap table: all 16 tools at a glance</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.table.header.0">
+      <segment>
+        <source>Outil</source>
+        <target>Tool</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.table.header.1">
+      <segment>
+        <source>Catégorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.table.header.2">
+      <segment>
+        <source>Prix</source>
+        <target>Price</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.table.header.3">
+      <segment>
+        <source>En une phrase</source>
+        <target>In one sentence</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.cat.apprendre">
+      <segment>
+        <source>Apprendre</source>
+        <target>Learn</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.cat.produire">
+      <segment>
+        <source>Produire</source>
+        <target>Produce</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.cat.creer">
+      <segment>
+        <source>Créer</source>
+        <target>Create</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.cat.automatiser">
+      <segment>
+        <source>Automatiser</source>
+        <target>Automate</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.cat.clients">
+      <segment>
+        <source>Clients</source>
+        <target>Customers</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.0.price">
+      <segment>
+        <source>Gratuit</source>
+        <target>Free</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.0.tagline">
+      <segment>
+        <source>PDF → podcast en 47 secondes</source>
+        <target>PDF → podcast in 47 seconds</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.1.price">
+      <segment>
+        <source>Gratuit / 20$/mois</source>
+        <target>Free / $20/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.1.tagline">
+      <segment>
+        <source>Recherche IA sourcée, 100M+ users/mois</source>
+        <target>Sourced AI search, 100M+ monthly users</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.2.price">
+      <segment>
+        <source>Gratuit (limité) / 19$/mois</source>
+        <target>Free (limited) / $19/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.2.tagline">
+      <segment>
+        <source>Notes de réunion automatiques</source>
+        <target>Automatic meeting notes</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.3.price">
+      <segment>
+        <source>Gratuit / 20$/mois</source>
+        <target>Free / $20/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.3.tagline">
+      <segment>
+        <source>Le couteau suisse, 900M users/semaine</source>
+        <target>The Swiss army knife, 900M weekly users</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.4.price">
+      <segment>
+        <source>Gratuit / 20$/mois</source>
+        <target>Free / $20/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.4.tagline">
+      <segment>
+        <source>N°1 rédaction, 1M tokens de contexte</source>
+        <target>#1 for writing, 1M token context window</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.5.price">
+      <segment>
+        <source>Gratuit / 20$/mois</source>
+        <target>Free / $20/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.5.tagline">
+      <segment>
+        <source>Branché Google Workspace, analyse vidéo</source>
+        <target>Plugged into Google Workspace, video analysis</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.6.price">
+      <segment>
+        <source>Gratuit (10/jour)</source>
+        <target>Free (10/day)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.6.tagline">
+      <segment>
+        <source>Images avec texte lisible, imbattable</source>
+        <target>Images with legible text, unbeatable</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.7.price">
+      <segment>
+        <source>Gratuit / 10$/mois</source>
+        <target>Free / $10/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.7.tagline">
+      <segment>
+        <source>Présentation complète en 60 secondes</source>
+        <target>A full presentation in 60 seconds</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.8.price">
+      <segment>
+        <source>Gratuit / 5$/mois</source>
+        <target>Free / $5/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.8.tagline">
+      <segment>
+        <source>Clonage vocal, 11Md$ valorisation</source>
+        <target>Voice cloning, $11B valuation</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.9.price">
+      <segment>
+        <source>Gratuit (100 tâches)</source>
+        <target>Free (100 tasks)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.9.tagline">
+      <segment>
+        <source>Branchez deux apps en 5 min</source>
+        <target>Connect two apps in 5 minutes</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.10.price">
+      <segment>
+        <source>9€/mois</source>
+        <target>€9/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.10.tagline">
+      <segment>
+        <source>Scénarios visuels, 10K opérations</source>
+        <target>Visual scenarios, 10K operations</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.11.price">
+      <segment>
+        <source>Gratuit (self-hosted)</source>
+        <target>Free (self-hosted)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.11.tagline">
+      <segment>
+        <source>Open source, illimité, pour les bidouilleurs</source>
+        <target>Open source, unlimited, for tinkerers</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.12.price">
+      <segment>
+        <source>19€/mois</source>
+        <target>€19/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.12.tagline">
+      <segment>
+        <source>Prospection LinkedIn automatisée</source>
+        <target>Automated LinkedIn prospecting</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.13.price">
+      <segment>
+        <source>10$/mois</source>
+        <target>$10/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.13.tagline">
+      <segment>
+        <source>CRM léger + agents custom</source>
+        <target>Lightweight CRM + custom agents</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.14.price">
+      <segment>
+        <source>Gratuit (300/jour)</source>
+        <target>Free (300/day)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.14.tagline">
+      <segment>
+        <source>Email marketing IA, français, RGPD</source>
+        <target>AI email marketing, French, GDPR</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.15.price">
+      <segment>
+        <source>Gratuit / 15$/mois</source>
+        <target>Free / $15/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.row.15.tagline">
+      <segment>
+        <source>Visuels pro, 220M+ utilisateurs</source>
+        <target>Pro visuals, 220M+ users</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.checklist.question">
+      <segment>
+        <source>Cochez les outils que vous connaissez déjà :</source>
+        <target>Check the tools you already know:</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.checklist.hint">
+      <segment>
+        <source>Votre guide mettra en avant ceux que vous n'avez pas encore testés.</source>
+        <target>Your guide will highlight the ones you haven't tried yet.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: workflows-detail -->
+    <unit id="ia-solo.workflows-detail.title">
+      <segment>
+        <source>3 workflows à mettre en place cette semaine</source>
+        <target>3 workflows to set up this week</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.0.title">
+      <segment>
+        <source>Prospection automatisée</source>
+        <target>Automated prospecting</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.0.description">
+      <segment>
+        <source>Waalaxy capte le lead LinkedIn → Zapier/Make crée la fiche Notion → Brevo envoie l'email de bienvenue → Rappel calendrier auto</source>
+        <target>Waalaxy captures the LinkedIn lead → Zapier/Make creates the Notion record → Brevo sends the welcome email → Calendar reminder auto-set</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.0.badge">
+      <segment>
+        <source>Make + Brevo</source>
+        <target>Make + Brevo</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.1.title">
+      <segment>
+        <source>Contenu multicanal</source>
+        <target>Multi-channel content</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.1.description">
+      <segment>
+        <source>Post LinkedIn rédigé avec Claude → visuel Canva AI → Zapier reposte sur X + archive dans Google Sheet + notification Slack</source>
+        <target>LinkedIn post written with Claude → Canva AI visual → Zapier reposts to X + archives to Google Sheets + Slack notification</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.1.badge">
+      <segment>
+        <source>Zapier + Claude</source>
+        <target>Zapier + Claude</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.2.title">
+      <segment>
+        <source>Veille automatique</source>
+        <target>Automated monitoring</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.2.description">
+      <segment>
+        <source>Perplexity recherche quotidienne sur votre secteur → résumé dans Notion → NotebookLM génère un brief audio de 5 min</source>
+        <target>Daily Perplexity search on your sector → summary in Notion → NotebookLM generates a 5-min audio brief</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.grid.2.badge">
+      <segment>
+        <source>Perplexity + NotebookLM</source>
+        <target>Perplexity + NotebookLM</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.workflows-detail.notes">
+      <segment>
+        <source>Workflow 1 : ~2h de setup, gratuit avec Zapier. Workflow 2 : 100% automatisable. Workflow 3 : nécessite Perplexity Pro (20$/mois) pour les recherches automatisées.</source>
+        <target>Workflow 1: ~2h setup, free with Zapier. Workflow 2: 100% automatable. Workflow 3: requires Perplexity Pro ($20/month) for scheduled searches.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: transition-pratique -->
+    <unit id="ia-solo.transition-pratique.title">
+      <segment>
+        <source>Stop. On pratique.</source>
+        <target>Stop. Let's practice.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.transition-pratique.subtitle">
+      <segment>
+        <source>Tout ce que je viens de dire ne vaut rien si vous ne le testez pas.</source>
+        <target>Everything I just said is worthless if you don't try it yourself.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.transition-pratique.speakerNotes">
+      <segment>
+        <source>Pause. Laisser le silence. Puis : « On le fait. Maintenant. Ensemble. » Transition vers l'exercice interactif.</source>
+        <target>Pause. Let the silence sit. Then: "We do it. Now. Together." Transition into the interactive exercise.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.transition-pratique.countdown.label">
+      <segment>
+        <source>Pensez à votre secteur d'activité...</source>
+        <target>Think about your line of work...</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: demo-gamma -->
+    <unit id="ia-solo.demo-gamma.title">
+      <segment>
+        <source>À vous — générez votre pitch de vente</source>
+        <target>Your turn — generate your sales pitch</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.demo-gamma.subtitle">
+      <segment>
+        <source>Tapez votre secteur, copiez le prompt, collez-le dans Gamma.app</source>
+        <target>Type your sector, copy the prompt, paste it into Gamma.app</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.demo-gamma.prompt.label">
+      <segment>
+        <source>Votre secteur d'activité</source>
+        <target>Your line of work</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.demo-gamma.prompt.placeholder">
+      <segment>
+        <source>ex: Coach sportif, Photographe, Consultant RH, Fleuriste...</source>
+        <target>e.g. Personal trainer, Photographer, HR consultant, Florist...</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.demo-gamma.prompt.template">
+      <segment>
+        <source>Tu es un consultant marketing expert en création d'offres pour les indépendants.\n\nMon secteur d'activité : {{sector}}\n\nCrée une présentation de vente complète et professionnelle avec :\n\n1. **Nom de l'offre** — Un nom accrocheur et mémorable\n2. **Promesse principale** — Une phrase qui résume la transformation client\n3. **3 bénéfices clés** — Ce que le client obtient concrètement\n4. **Structure de l'offre** — Les étapes ou modules inclus\n5. **Preuve sociale** — Un témoignage fictif mais réaliste\n6. **Tarif suggéré** — Avec ancrage de prix (valeur perçue vs prix réel)\n7. **Call-to-action** — Une phrase de clôture qui pousse à l'action\n8. **FAQ** — 3 objections courantes avec réponses\n\nStyle : professionnel, chaleureux, orienté résultats.\nFormat : présentation Gamma avec sections visuelles distinctes.</source>
+        <target>You are a marketing consultant who specializes in building offers for independent professionals.\n\nMy line of work: {{sector}}\n\nCreate a complete, professional sales presentation with:\n\n1. **Offer name** — A catchy, memorable name\n2. **Main promise** — A one-sentence summary of the client transformation\n3. **3 key benefits** — What the client concretely gets\n4. **Offer structure** — The steps or modules included\n5. **Social proof** — A fictional but realistic testimonial\n6. **Suggested price** — With price anchoring (perceived value vs actual price)\n7. **Call-to-action** — A closing line that drives action\n8. **FAQ** — 3 common objections with answers\n\nStyle: professional, warm, results-oriented.\nFormat: Gamma presentation with distinct visual sections.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.demo-gamma.notes">
+      <segment>
+        <source>gamma.app — gratuit pour démarrer. Le prompt est conçu pour Gamma Agent (v3.0) qui peut chercher sur le web et restructurer le contenu. En 60 secondes vous avez un deck de 10 slides.</source>
+        <target>gamma.app — free to start. The prompt is designed for Gamma Agent (v3.0), which can search the web and restructure the content. In 60 seconds you have a 10-slide deck.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.demo-gamma.speakerNotes">
+      <segment>
+        <source>En live : demander à un participant son secteur, taper en direct, copier le prompt, ouvrir gamma.app et coller. Le résultat sort en ~60 secondes — c'est le moment wow de la présentation.</source>
+        <target>Live: ask a participant for their sector, type it on the spot, copy the prompt, open gamma.app and paste. The result appears in ~60 seconds — this is the wow moment of the talk.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: recap-8020 -->
+    <unit id="ia-solo.recap-8020.title">
+      <segment>
+        <source>Ce que l'IA change — et ce qu'elle ne change pas</source>
+        <target>What AI changes — and what it doesn't</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.stats.0.label">
+      <segment>
+        <source>outils testés et comparés</source>
+        <target>tools tested and compared</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.stats.1.label">
+      <segment>
+        <source>du travail opérationnel accéléré par l'IA</source>
+        <target>of operational work accelerated by AI</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.stats.2.label">
+      <segment>
+        <source>d'expertise humaine qui fait la différence</source>
+        <target>human expertise that makes the difference</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.stats.3.label">
+      <segment>
+        <source>pour démarrer avec un stack complet</source>
+        <target>to get started with a full stack</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.notes">
+      <segment>
+        <source>L'IA accélère le contenu, les visuels, les automatisations, le support. Elle ne remplace pas la connaissance du marché, la relation client, la stratégie. Le message central : l'IA amplifie votre expertise, elle ne la remplace pas.</source>
+        <target>AI accelerates content, visuals, automation, and support. It doesn't replace market knowledge, customer relationships, or strategy. The core message: AI amplifies your expertise, it doesn't replace it.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.speakerNotes">
+      <segment>
+        <source>Insister : les 20% d'expertise humaine, c'est ce que VOUS apportez. L'IA sans votre connaissance métier produit du contenu générique. Avec, elle produit du contenu expert.</source>
+        <target>Drive it home: the 20% of human expertise is what YOU bring. AI without your domain knowledge produces generic content. With it, it produces expert content.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.poll.question">
+      <segment>
+        <source>Quel outil allez-vous tester en premier ?</source>
+        <target>Which tool will you try first?</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.poll.option.0">
+      <segment>
+        <source>ChatGPT/Claude</source>
+        <target>ChatGPT/Claude</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.poll.option.1">
+      <segment>
+        <source>Gamma</source>
+        <target>Gamma</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.poll.option.2">
+      <segment>
+        <source>Zapier/Make</source>
+        <target>Zapier/Make</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.poll.option.3">
+      <segment>
+        <source>NotebookLM</source>
+        <target>NotebookLM</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.recap-8020.poll.option.4">
+      <segment>
+        <source>Autre</source>
+        <target>Other</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: pieges -->
+    <unit id="ia-solo.pieges.title">
+      <segment>
+        <source>Les 3 pièges à éviter</source>
+        <target>The 3 pitfalls to avoid</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.0.title">
+      <segment>
+        <source>Hallucinations</source>
+        <target>Hallucinations</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.0.description">
+      <segment>
+        <source>L'IA invente des faits avec assurance. Vérifiez toujours les chiffres, les citations, les liens. Perplexity aide — il cite ses sources.</source>
+        <target>AI invents facts with confidence. Always verify the numbers, quotes, and links. Perplexity helps — it cites its sources.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.0.badge">
+      <segment>
+        <source>Vérifiez</source>
+        <target>Verify</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.1.title">
+      <segment>
+        <source>RGPD</source>
+        <target>GDPR</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.1.description">
+      <segment>
+        <source>Ne mettez JAMAIS de données personnelles clients dans un prompt. Pas de noms, pas d'emails, pas de numéros. Les conditions d'utilisation vous le disent.</source>
+        <target>NEVER put customer personal data into a prompt. No names, no emails, no phone numbers. The terms of service make this clear.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.1.badge">
+      <segment>
+        <source>Protégez</source>
+        <target>Protect</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.2.title">
+      <segment>
+        <source>Dépendance</source>
+        <target>Dependency</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.2.description">
+      <segment>
+        <source>L'IA amplifie votre expertise, elle ne la remplace pas. Si vous ne savez pas écrire un bon brief, ChatGPT ne le saura pas pour vous.</source>
+        <target>AI amplifies your expertise, it doesn't replace it. If you can't write a good brief, ChatGPT won't do it for you.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.grid.2.badge">
+      <segment>
+        <source>Gardez le contrôle</source>
+        <target>Stay in control</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.pieges.notes">
+      <segment>
+        <source>Ces 3 pièges sont les plus fréquents chez les débutants. Les mentionner renforce la crédibilité et différencie des formations 'l'IA c'est magique' sur YouTube.</source>
+        <target>These 3 pitfalls are the most common ones for beginners. Mentioning them builds credibility and sets you apart from the 'AI is magic' courses on YouTube.</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: citation -->
+    <unit id="ia-solo.citation.title">
+      <segment>
+        <source>Le mot de la fin</source>
+        <target>One last word</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.citation.quote">
+      <segment>
+        <source>L'IA génère du contenu. Un expert génère des résultats.</source>
+        <target>AI generates content. An expert generates results.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.citation.author">
+      <segment>
+        <source>— La règle d'or du solopreneur en 2026</source>
+        <target>— The solopreneur's golden rule in 2026</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: cta -->
+    <unit id="ia-solo.cta.imageAlt">
+      <segment>
+        <source>Réunion de conseil professionnelle dans un bureau moderne</source>
+        <target>Professional advisory meeting in a modern office</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cta.title">
+      <segment>
+        <source>Recevez votre guide IA personnalisé</source>
+        <target>Get your personalized AI guide</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cta.subtitle">
+      <segment>
+        <source>Prompts, workflows et templates adaptés à votre profil — dans votre inbox en 30 secondes.</source>
+        <target>Prompts, workflows, and templates tailored to your profile — in your inbox in 30 seconds.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cta.bullets.0">
+      <segment>
+        <source>Cheatsheet de décision : quel outil pour quelle tâche</source>
+        <target>Decision cheatsheet: which tool for which task</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cta.bullets.1">
+      <segment>
+        <source>Prompts prêts à copier adaptés à votre niveau</source>
+        <target>Copy-ready prompts tailored to your level</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cta.bullets.2">
+      <segment>
+        <source>3 workflows pas-à-pas (Zapier/Make) + templates</source>
+        <target>3 step-by-step workflows (Zapier/Make) + templates</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cta.notes">
+      <segment>
+        <source>QR code vers le formulaire de capture email. Le PDF est généré automatiquement (backend NestJS + PDFKit). C'est le lead magnet principal de la formation.</source>
+        <target>QR code linking to the email capture form. The PDF is generated automatically (NestJS backend + PDFKit). It's the main lead magnet for the course.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cta.speakerNotes">
+      <segment>
+        <source>Afficher le QR code, laisser 30 secondes. « Scannez, tapez votre email, vous recevez tout ce qu'on a vu aujourd'hui en PDF. »</source>
+        <target>Show the QR code, leave it up for 30 seconds. "Scan it, type your email, and you get everything we covered today as a PDF."</target>
+      </segment>
+    </unit>
+
+    <!-- Slide: one-more-thing -->
+    <unit id="ia-solo.one-more-thing.title">
+      <segment>
+        <source>Une dernière chose...</source>
+        <target>One more thing...</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.one-more-thing.subtitle">
+      <segment>
+        <source>NotebookLM — votre PDF devient un podcast avec deux hosts IA</source>
+        <target>NotebookLM — your PDF becomes a podcast with two AI hosts</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.one-more-thing.bullets.0">
+      <segment>
+        <source>Uploadez n'importe quel document</source>
+        <target>Upload any document</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.one-more-thing.bullets.1">
+      <segment>
+        <source>47 secondes plus tard : un podcast de 10 min, deux voix naturelles</source>
+        <target>47 seconds later: a 10-min podcast, two natural-sounding voices</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.one-more-thing.bullets.2">
+      <segment>
+        <source>Mode interactif : interrompez les hosts pour poser vos questions</source>
+        <target>Interactive mode: interrupt the hosts to ask your own questions</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.one-more-thing.bullets.3">
+      <segment>
+        <source>Nouveau 2026 : Cinematic Video Overviews — vos docs deviennent des vidéos</source>
+        <target>New in 2026: Cinematic Video Overviews — your docs become videos</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.one-more-thing.notes">
+      <segment>
+        <source>notebooklm.google — gratuit. Tourne sur Gemini 3. Cinematic Video réservé aux abonnés Google AI Ultra (250$/mois) mais le podcast est 100% gratuit.</source>
+        <target>notebooklm.google — free. Runs on Gemini 3. Cinematic Video is reserved for Google AI Ultra subscribers ($250/month) but the podcast is 100% free.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.one-more-thing.speakerNotes">
+      <segment>
+        <source>Si le temps le permet, lancer la démo live. Sinon, montrer le podcast généré en début de session. C'est le 'One More Thing' à la Steve Jobs — finir sur un wow.</source>
+        <target>If time allows, run the live demo. Otherwise, play the podcast generated at the start of the session. It's the Steve Jobs-style 'One More Thing' — end on a wow.</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

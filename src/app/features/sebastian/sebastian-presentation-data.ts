@@ -26,7 +26,7 @@ export const MOCK_HEALTH_SCORE: SebastianHealthScore = {
     alcohol: 5,
     coffee: 3,
   },
-  message: "Bonne forme, continuez !",
+  message: $localize`:@@sebastian-pres.health.message:Bonne forme, continuez !`,
 };
 
 /** Courbe BAC : 9 points de 20h00 a 00h00, pic a 0.38 puis decroissance. */
@@ -54,71 +54,71 @@ export const MOCK_BAC: SebastianBacResult = {
 export const MOCK_BADGES: SebastianBadgeStatus[] = [
   {
     key: "first-log",
-    name: "Premier Log",
-    description: "Enregistrez votre premiere consommation",
+    name: $localize`:@@sebastian-pres.badge.first-log.name:Premier Log`,
+    description: $localize`:@@sebastian-pres.badge.first-log.description:Enregistrez votre premiere consommation`,
     category: "onboarding",
     unlocked: false,
   },
   {
     key: "dry-week",
-    name: "Semaine Sobre",
-    description: "7 jours sans alcool",
+    name: $localize`:@@sebastian-pres.badge.dry-week.name:Semaine Sobre`,
+    description: $localize`:@@sebastian-pres.badge.dry-week.description:7 jours sans alcool`,
     category: "alcohol",
     unlocked: false,
   },
   {
     key: "espresso-machine",
-    name: "Maitre Barista",
-    description: "100 cafes enregistres",
+    name: $localize`:@@sebastian-pres.badge.espresso-machine.name:Maitre Barista`,
+    description: $localize`:@@sebastian-pres.badge.espresso-machine.description:100 cafes enregistres`,
     category: "coffee",
     unlocked: false,
   },
   {
     key: "zen-monk-7",
-    name: "Zen Monk 7",
-    description: "Score au-dessus de 80 pendant 7 jours",
+    name: $localize`:@@sebastian-pres.badge.zen-monk-7.name:Zen Monk 7`,
+    description: $localize`:@@sebastian-pres.badge.zen-monk-7.description:Score au-dessus de 80 pendant 7 jours`,
     category: "streaks",
     unlocked: false,
   },
   {
     key: "zen-monk-30",
-    name: "Zen Monk 30",
-    description: "Score au-dessus de 80 pendant 30 jours",
+    name: $localize`:@@sebastian-pres.badge.zen-monk-30.name:Zen Monk 30`,
+    description: $localize`:@@sebastian-pres.badge.zen-monk-30.description:Score au-dessus de 80 pendant 30 jours`,
     category: "streaks",
     unlocked: false,
   },
   {
     key: "goal-crusher",
-    name: "Goal Crusher",
-    description: "Respectez vos limites 7 jours d'affilee",
+    name: $localize`:@@sebastian-pres.badge.goal-crusher.name:Goal Crusher`,
+    description: $localize`:@@sebastian-pres.badge.goal-crusher.description:Respectez vos limites 7 jours d'affilee`,
     category: "goals",
     unlocked: false,
   },
   {
     key: "perfect-month",
-    name: "Mois Parfait",
-    description: "Aucun depassement pendant 30 jours",
+    name: $localize`:@@sebastian-pres.badge.perfect-month.name:Mois Parfait`,
+    description: $localize`:@@sebastian-pres.badge.perfect-month.description:Aucun depassement pendant 30 jours`,
     category: "goals",
     unlocked: false,
   },
   {
     key: "early-bird",
-    name: "Early Bird",
-    description: "Premier log avant 8h du matin",
+    name: $localize`:@@sebastian-pres.badge.early-bird.name:Early Bird`,
+    description: $localize`:@@sebastian-pres.badge.early-bird.description:Premier log avant 8h du matin`,
     category: "timing",
     unlocked: false,
   },
   {
     key: "night-owl",
-    name: "Night Owl",
-    description: "Log apres minuit",
+    name: $localize`:@@sebastian-pres.badge.night-owl.name:Night Owl`,
+    description: $localize`:@@sebastian-pres.badge.night-owl.description:Log apres minuit`,
     category: "timing",
     unlocked: false,
   },
   {
     key: "comeback-kid",
-    name: "Comeback Kid",
-    description: "Ameliorez votre score de 20 points en un mois",
+    name: $localize`:@@sebastian-pres.badge.comeback-kid.name:Comeback Kid`,
+    description: $localize`:@@sebastian-pres.badge.comeback-kid.description:Ameliorez votre score de 20 points en un mois`,
     category: "progress",
     unlocked: false,
   },
@@ -179,18 +179,26 @@ export const MOCK_DAILY_COUNTS = {
 } as const;
 
 /** Labels des jours de la semaine pour la heatmap. */
-export const HEATMAP_DAY_LABELS = ["L", "M", "M", "J", "V", "S", "D"] as const;
+export const HEATMAP_DAY_LABELS: readonly string[] = [
+  $localize`:@@sebastian-pres.heatmap.day.mon:L`,
+  $localize`:@@sebastian-pres.heatmap.day.tue:M`,
+  $localize`:@@sebastian-pres.heatmap.day.wed:M`,
+  $localize`:@@sebastian-pres.heatmap.day.thu:J`,
+  $localize`:@@sebastian-pres.heatmap.day.fri:V`,
+  $localize`:@@sebastian-pres.heatmap.day.sat:S`,
+  $localize`:@@sebastian-pres.heatmap.day.sun:D`,
+];
 
 /** Labels des jours pour le graphique de tendance hebdomadaire. */
-export const TREND_DAY_LABELS = [
-  "Lun",
-  "Mar",
-  "Mer",
-  "Jeu",
-  "Ven",
-  "Sam",
-  "Dim",
-] as const;
+export const TREND_DAY_LABELS: readonly string[] = [
+  $localize`:@@sebastian-pres.trend.day.mon:Lun`,
+  $localize`:@@sebastian-pres.trend.day.tue:Mar`,
+  $localize`:@@sebastian-pres.trend.day.wed:Mer`,
+  $localize`:@@sebastian-pres.trend.day.thu:Jeu`,
+  $localize`:@@sebastian-pres.trend.day.fri:Ven`,
+  $localize`:@@sebastian-pres.trend.day.sat:Sam`,
+  $localize`:@@sebastian-pres.trend.day.sun:Dim`,
+];
 
 /**
  * Calcule le niveau d'intensite d'un point heatmap (0-4)

@@ -11,7 +11,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-1",
     groupId: "grp-1",
-    name: "Logement",
+    name: $localize`:@@budget-pres.cat.logement:Logement`,
     color: "#0f7b65",
     icon: "apartment",
     budgetType: "FIXED",
@@ -21,7 +21,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-2",
     groupId: "grp-1",
-    name: "Courses",
+    name: $localize`:@@budget-pres.cat.courses:Courses`,
     color: "#F59E0B",
     icon: "shopping_cart",
     budgetType: "VARIABLE",
@@ -31,7 +31,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-3",
     groupId: "grp-1",
-    name: "Loisirs",
+    name: $localize`:@@budget-pres.cat.loisirs:Loisirs`,
     color: "#8B5CF6",
     icon: "sports_esports",
     budgetType: "VARIABLE",
@@ -41,7 +41,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-4",
     groupId: "grp-1",
-    name: "Transport",
+    name: $localize`:@@budget-pres.cat.transport:Transport`,
     color: "#EF4444",
     icon: "directions_car",
     budgetType: "FIXED",
@@ -51,7 +51,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-5",
     groupId: "grp-1",
-    name: "Sante",
+    name: $localize`:@@budget-pres.cat.sante:Sante`,
     color: "#EC4899",
     icon: "health_and_safety",
     budgetType: "VARIABLE",
@@ -61,7 +61,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-6",
     groupId: "grp-1",
-    name: "Abonnements",
+    name: $localize`:@@budget-pres.cat.abonnements:Abonnements`,
     color: "#3B82F6",
     icon: "subscriptions",
     budgetType: "FIXED",
@@ -71,7 +71,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-7",
     groupId: "grp-1",
-    name: "Epargne",
+    name: $localize`:@@budget-pres.cat.epargne:Epargne`,
     color: "#14B8A6",
     icon: "savings",
     budgetType: "FIXED",
@@ -81,7 +81,7 @@ export const MOCK_CATEGORIES: BudgetCategoryModel[] = [
   {
     id: "cat-8",
     groupId: "grp-1",
-    name: "Autres",
+    name: $localize`:@@budget-pres.cat.autres:Autres`,
     color: "#6366F1",
     icon: "more_horiz",
     budgetType: "VARIABLE",
@@ -102,31 +102,61 @@ export interface CategoryTotal {
 /** Totaux calcules a partir des categories. */
 export const MOCK_CATEGORY_TOTALS: CategoryTotal[] = [
   {
-    name: "Logement",
+    name: $localize`:@@budget-pres.cat.logement:Logement`,
     color: "#0f7b65",
     spent: 920,
     limit: 950,
     percent: 97,
   },
-  { name: "Courses", color: "#F59E0B", spent: 487, limit: 500, percent: 97 },
-  { name: "Loisirs", color: "#8B5CF6", spent: 284, limit: 300, percent: 95 },
   {
-    name: "Transport",
+    name: $localize`:@@budget-pres.cat.courses:Courses`,
+    color: "#F59E0B",
+    spent: 487,
+    limit: 500,
+    percent: 97,
+  },
+  {
+    name: $localize`:@@budget-pres.cat.loisirs:Loisirs`,
+    color: "#8B5CF6",
+    spent: 284,
+    limit: 300,
+    percent: 95,
+  },
+  {
+    name: $localize`:@@budget-pres.cat.transport:Transport`,
     color: "#EF4444",
     spent: 235,
     limit: 250,
     percent: 94,
   },
-  { name: "Sante", color: "#EC4899", spent: 126, limit: 150, percent: 84 },
   {
-    name: "Abonnements",
+    name: $localize`:@@budget-pres.cat.sante:Sante`,
+    color: "#EC4899",
+    spent: 126,
+    limit: 150,
+    percent: 84,
+  },
+  {
+    name: $localize`:@@budget-pres.cat.abonnements:Abonnements`,
     color: "#3B82F6",
     spent: 115,
     limit: 120,
     percent: 96,
   },
-  { name: "Epargne", color: "#14B8A6", spent: 400, limit: 400, percent: 100 },
-  { name: "Autres", color: "#6366F1", spent: 280, limit: 200, percent: 140 },
+  {
+    name: $localize`:@@budget-pres.cat.epargne:Epargne`,
+    color: "#14B8A6",
+    spent: 400,
+    limit: 400,
+    percent: 100,
+  },
+  {
+    name: $localize`:@@budget-pres.cat.autres:Autres`,
+    color: "#6366F1",
+    spent: 280,
+    limit: 200,
+    percent: 140,
+  },
 ];
 
 /** Metriques de synthese affichees dans les cartes summary. */
@@ -162,10 +192,17 @@ export const MOCK_CONTRIBUTIONS: ContributionData = {
 };
 
 /** Liste des mois affichee en pilules. */
-export const MOCK_MONTHS: string[] = ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun"];
+export const MOCK_MONTHS: string[] = [
+  $localize`:@@budget-pres.month.jan:Jan`,
+  $localize`:@@budget-pres.month.fev:Fev`,
+  $localize`:@@budget-pres.month.mar:Mar`,
+  $localize`:@@budget-pres.month.avr:Avr`,
+  $localize`:@@budget-pres.month.mai:Mai`,
+  $localize`:@@budget-pres.month.jun:Jun`,
+];
 
 /** Mois actif par defaut. */
-export const MOCK_ACTIVE_MONTH = "Avr";
+export const MOCK_ACTIVE_MONTH = $localize`:@@budget-pres.month.avr:Avr`;
 
 /** Segments du donut pour le conic-gradient CSS. */
 export interface DonutSegment {
@@ -228,27 +265,23 @@ export interface FeatureItem {
 export const MOCK_FEATURES: FeatureItem[] = [
   {
     icon: "assets/images/auto_graph.png",
-    title: "Suivi en temps reel",
-    description:
-      "Visualisez vos depenses au fur et a mesure. Graphiques par categorie, evolution mensuelle et alertes quand un budget est depasse.",
+    title: $localize`:@@budget-pres.feature.0.title:Suivi en temps reel`,
+    description: $localize`:@@budget-pres.feature.0.description:Visualisez vos depenses au fur et a mesure. Graphiques par categorie, evolution mensuelle et alertes quand un budget est depasse.`,
   },
   {
     icon: "assets/images/balance.png",
-    title: "Contributions equitables",
-    description:
-      "Chacun contribue au prorata de ses revenus. Le calcul est automatique, transparent et mis a jour chaque mois.",
+    title: $localize`:@@budget-pres.feature.1.title:Contributions equitables`,
+    description: $localize`:@@budget-pres.feature.1.description:Chacun contribue au prorata de ses revenus. Le calcul est automatique, transparent et mis a jour chaque mois.`,
   },
   {
     icon: "assets/images/folder_copy.png",
-    title: "Import CSV intelligent",
-    description:
-      "Importez vos releves bancaires en un clic. L'auto-categorisation reconnait vos depenses recurrentes.",
+    title: $localize`:@@budget-pres.feature.2.title:Import CSV intelligent`,
+    description: $localize`:@@budget-pres.feature.2.description:Importez vos releves bancaires en un clic. L'auto-categorisation reconnait vos depenses recurrentes.`,
   },
   {
     icon: "assets/images/smart_toy.png",
-    title: "Auto-categorisation IA",
-    description:
-      "Les transactions sont classees automatiquement grace a l'intelligence artificielle. Fini le tri manuel.",
+    title: $localize`:@@budget-pres.feature.3.title:Auto-categorisation IA`,
+    description: $localize`:@@budget-pres.feature.3.description:Les transactions sont classees automatiquement grace a l'intelligence artificielle. Fini le tri manuel.`,
   },
 ];
 
@@ -265,29 +298,25 @@ export const MOCK_TIMELINE: TimelineStep[] = [
   {
     number: 1,
     icon: "assets/images/edit_note.png",
-    title: "Creez votre budget",
-    description:
-      "Definissez vos categories, limites mensuelles et partagez l'acces avec votre partenaire.",
+    title: $localize`:@@budget-pres.timeline.0.title:Creez votre budget`,
+    description: $localize`:@@budget-pres.timeline.0.description:Definissez vos categories, limites mensuelles et partagez l'acces avec votre partenaire.`,
   },
   {
     number: 2,
     icon: "assets/images/inventory_2.png",
-    title: "Importez vos releves",
-    description:
-      "Glissez votre CSV bancaire. Les transactions sont triees et categorisees automatiquement.",
+    title: $localize`:@@budget-pres.timeline.1.title:Importez vos releves`,
+    description: $localize`:@@budget-pres.timeline.1.description:Glissez votre CSV bancaire. Les transactions sont triees et categorisees automatiquement.`,
   },
   {
     number: 3,
     icon: "assets/images/flag.png",
-    title: "Suivez vos objectifs",
-    description:
-      "Chaque categorie a sa jauge. Vous voyez en un clin d'oeil ou vous en etes.",
+    title: $localize`:@@budget-pres.timeline.2.title:Suivez vos objectifs`,
+    description: $localize`:@@budget-pres.timeline.2.description:Chaque categorie a sa jauge. Vous voyez en un clin d'oeil ou vous en etes.`,
   },
   {
     number: 4,
     icon: "assets/images/history.png",
-    title: "Analysez l'historique",
-    description:
-      "Comparez mois par mois, identifiez les tendances et ajustez votre budget en consequence.",
+    title: $localize`:@@budget-pres.timeline.3.title:Analysez l'historique`,
+    description: $localize`:@@budget-pres.timeline.3.description:Comparez mois par mois, identifiez les tendances et ajustez votre budget en consequence.`,
   },
 ];
