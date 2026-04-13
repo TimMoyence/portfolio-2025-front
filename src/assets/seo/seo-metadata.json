@@ -126,7 +126,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1.0,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -184,7 +184,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -322,7 +322,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
@@ -498,7 +498,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -558,7 +558,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "breadcrumb": [
         { "name": "Accueil", "path": "/" },
         { "name": "Projets", "path": "/client-project" }
@@ -676,7 +676,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.1,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Login — Pour acceder à votre compte",
@@ -698,7 +698,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.1,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Register — Pour acceder à votre compte",
@@ -720,7 +720,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Cookies & confidentialité — Paramètres",
@@ -742,7 +742,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.5,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Météo — L'Atelier",
@@ -764,7 +764,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Budget — L'Atelier",
@@ -786,7 +786,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Sebastian — L'Atelier",
@@ -865,7 +865,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Conditions de services — Moyence",
@@ -887,7 +887,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Politique de confidentialité — Moyence",
@@ -909,7 +909,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "breadcrumb": [
         { "name": "Accueil", "path": "/" },
         { "name": "Audit gratuit", "path": "/growth-audit" }
@@ -1011,7 +1011,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1079,7 +1079,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "breadcrumb": [
         { "name": "Accueil", "path": "/" },
         { "name": "Formations", "path": "/formations" },
@@ -1189,7 +1189,7 @@
       "index": false,
       "changefreq": "yearly",
       "priority": 0.0,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-04-13",
       "locales": {
         "fr": {
           "title": "Page introuvable",

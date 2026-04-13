@@ -39,9 +39,12 @@
           }
         </div>
       </div>
-      <div
-        class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center"
+      <address
+        class="mb-4 not-italic flex flex-col justify-start items-start md:justify-center md:items-center"
+        itemscope
+        itemtype="https://schema.org/LocalBusiness"
       >
+        <meta itemprop="name" content="Asili Design" />
         <div class="flex flex-col">
           <div class="grid auto-cols-fr grid-cols-1 gap-x-2 gap-y-3 py-2">
             @for (method of contactMethods; track $index) {
@@ -68,18 +71,21 @@
                       i18n-aria-label="
                         contact.method.linkAria|Aria label for contact method
                         link@@contactMethodLinkAria"
+                      [attr.itemprop]="method.schemaProp || null"
                     >
                       {{ method.value }}
                     </a>
                   } @else {
-                    <p>{{ method.value }}</p>
+                    <p [attr.itemprop]="method.schemaProp || null">
+                      {{ method.value }}
+                    </p>
                   }
                 </div>
               </div>
             }
           </div>
         </div>
-      </div>
+      </address>
       <div
         class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center"
       >

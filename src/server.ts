@@ -292,9 +292,74 @@ const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
 };
 
 /**
+ * Types de schema Schema.org dans lesquels il est pertinent d'injecter
+ * automatiquement un `dateModified` a partir de `page.lastmod`.
+ * Les types comme BreadcrumbList ou SiteNavigationElement ne portent
+ * pas naturellement cette notion.
+ */
+const FRESHNESS_ENABLED_TYPES = new Set([
+  "WebPage",
+  "ProfilePage",
+  "AboutPage",
+  "ContactPage",
+  "Article",
+  "BlogPosting",
+  "NewsArticle",
+  "CreativeWork",
+  "Course",
+  "Service",
+  "ProfessionalService",
+  "ItemList",
+  "FAQPage",
+  "WebSite",
+]);
+
+/**
+ * Enrichit un bloc JSON-LD avec des signaux de fraicheur (dateModified)
+ * et d'autorite (author) quand le type le permet. Ces champs sont cruciaux
+ * pour :
+ * - Perplexity (favorise le contenu < 6-18 mois)
+ * - ChatGPT (E-E-A-T : named authorship)
+ * - Google AI Overview (freshness as ranking signal)
+ */
+const enrichJsonLdBlock = (
+  block: Record<string, unknown>,
+  page: { lastmod?: string },
+): Record<string, unknown> => {
+  const type = block["@type"];
+  const typeStr = typeof type === "string" ? type : null;
+  if (!typeStr || !FRESHNESS_ENABLED_TYPES.has(typeStr)) return block;
+
+  const enriched: Record<string, unknown> = { ...block };
+
+  // dateModified depuis page.lastmod (cascade : block > page.lastmod)
+  if (!enriched["dateModified"] && page.lastmod) {
+    enriched["dateModified"] = page.lastmod;
+  }
+
+  // datePublished par defaut = dateModified si non fourni
+  if (!enriched["datePublished"] && enriched["dateModified"]) {
+    enriched["datePublished"] = enriched["dateModified"];
+  }
+
+  // author reference vers Person @id partage (sauf pour WebSite/LocalBusiness)
+  if (
+    !enriched["author"] &&
+    typeStr !== "WebSite" &&
+    typeStr !== "LocalBusiness" &&
+    typeStr !== "ProfessionalService"
+  ) {
+    enriched["author"] = { "@id": "https://asilidesign.fr/#person" };
+  }
+
+  return enriched;
+};
+
+/**
  * Construit les balises <script type="application/ld+json"> a injecter dans le HTML.
  * Inclut les schemas globaux (LocalBusiness, SiteNavigationElement) + les schemas
- * specifiques a la page + les breadcrumbs.
+ * specifiques a la page + les breadcrumbs. Enrichit automatiquement les blocs
+ * eligibles avec des signaux de fraicheur et d'autorite.
  */
 const buildJsonLdScripts = (
   metadata: SeoMetadataFile,
@@ -338,7 +403,7 @@ const buildJsonLdScripts = (
         ? localeMeta.jsonLd
         : [localeMeta.jsonLd];
       for (const block of blocks) {
-        addScript(block);
+        addScript(enrichJsonLdBlock(block, page));
       }
     }
 
