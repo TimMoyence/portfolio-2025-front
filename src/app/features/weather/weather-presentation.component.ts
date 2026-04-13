@@ -9,6 +9,8 @@ import {
 } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { SlideInDirective } from "../../shared/directives/slide-in.directive";
+import { UnitPreferencesService } from "./services/unit-preferences.service";
+import { WeatherLevelService } from "./services/weather-level.service";
 import { AirQualityCardComponent } from "./components/air-quality-card/air-quality-card.component";
 import { SunArcComponent } from "./components/sun-arc/sun-arc.component";
 import { UvIndexCardComponent } from "./components/uv-index-card/uv-index-card.component";
@@ -41,6 +43,7 @@ import type { WeekDay } from "./weather-presentation-data";
     UvIndexCardComponent,
     AirQualityCardComponent,
   ],
+  providers: [WeatherLevelService, UnitPreferencesService],
   templateUrl: "./weather-presentation.component.html",
   styleUrl: "./weather-presentation.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
