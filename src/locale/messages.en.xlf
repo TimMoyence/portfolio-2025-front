@@ -9612,5 +9612,1355 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>If time allows, run the live demo. Otherwise, play the podcast generated at the start of the session. It's the Steve Jobs-style 'One More Thing' — end on a wow.</target>
       </segment>
     </unit>
+    <unit id="authSeparatorOr">
+      <segment>
+        <source>ou</source>
+        <target>or</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailLoading">
+      <segment>
+        <source> Verification en cours... </source>
+        <target> Verification in progress... </target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailRedirect">
+      <segment>
+        <source> Vous allez etre redirige vers la page de connexion... </source>
+        <target> You will be redirected to the login page... </target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailBackToLogin">
+      <segment>
+        <source> Retour a la connexion </source>
+        <target> Back to login </target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailHeroLabel">
+      <segment>
+        <source>Verification</source>
+        <target>Verification</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailHeroTitle">
+      <segment>
+        <source>Verification de votre email</source>
+        <target>Verifying your email</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailHeroDescription">
+      <segment>
+        <source>Nous verifions votre adresse email...</source>
+        <target>We are verifying your email address...</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailErrorNoToken">
+      <segment>
+        <source>Aucun token de verification fourni.</source>
+        <target>No verification token provided.</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailErrorGeneric">
+      <segment>
+        <source>La verification a echoue. Le lien est peut-etre expire.</source>
+        <target>Verification failed. The link may have expired.</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresKicker">
+      <segment>
+        <source> Common Budget T&amp;M </source>
+        <target> Common Budget T&amp;M </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresHeadline">
+      <segment>
+        <source> Fini les prises de <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-budget-accent&quot;&gt;"/>tete<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> sur l&apos;argent </source>
+        <target> No more <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-budget-accent&quot;&gt;"/>headaches<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> over money </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresDesc">
+      <segment>
+        <source> Gerez votre budget a deux en toute serenite. Contributions equitables, suivi par categorie et import CSV intelligent. </source>
+        <target> Manage your budget together, stress-free. Fair contributions, category tracking and smart CSV import. </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCtaStart">
+      <segment>
+        <source>Commencer gratuitement</source>
+        <target>Get started for free</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCtaDiscover">
+      <segment>
+        <source>Decouvrir ↓</source>
+        <target>Discover ↓</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresDonutAria">
+      <segment>
+        <source>Repartition des depenses par categorie</source>
+        <target>Expense breakdown by category</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresDonutLabel">
+      <segment>
+        <source>Depenses totales</source>
+        <target>Total expenses</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresContribKicker">
+      <segment>
+        <source> Contributions </source>
+        <target> Contributions </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresContribTitle">
+      <segment>
+        <source> Chacun sa juste part </source>
+        <target> Everyone pays their fair share </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresContribDesc">
+      <segment>
+        <source> Les contributions sont calculees au prorata des revenus. Transparent, equitable et automatique. </source>
+        <target> Contributions are calculated pro-rata from each partner's income. Transparent, fair and automatic. </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresContribMonth">
+      <segment>
+        <source>/ mois</source>
+        <target>/ month</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresContribMonth2">
+      <segment>
+        <source>/ mois</source>
+        <target>/ month</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresContribCombined">
+      <segment>
+        <source> Revenus combines </source>
+        <target> Combined income </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresFeatKicker">
+      <segment>
+        <source> Fonctionnalites </source>
+        <target> Features </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresFeatTitle">
+      <segment>
+        <source> Tout ce qu&apos;il faut pour gerer a deux </source>
+        <target> Everything you need to manage money together </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresFeatDesc">
+      <segment>
+        <source> Import intelligent, repartition equitable, categories personnalisables et suivi en temps reel. Votre budget n&apos;aura jamais ete aussi clair. </source>
+        <target> Smart import, fair splitting, customizable categories and real-time tracking. Your budget has never been this clear. </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresPreviewKicker">
+      <segment>
+        <source> Apercu </source>
+        <target> Preview </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresPreviewTitle">
+      <segment>
+        <source> Un tableau de bord qui parle </source>
+        <target> A dashboard that speaks for itself </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresPreviewDesc">
+      <segment>
+        <source> Ajoutez vos depenses en quelques secondes. Le formulaire reconnait les categories, calcule les totaux et met a jour le donut en temps reel. </source>
+        <target> Add your expenses in seconds. The form recognizes categories, computes totals and updates the donut chart in real time. </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresFormKicker">
+      <segment>
+        <source> Nouvelle depense </source>
+        <target> New expense </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresFormDesc">
+      <segment>
+        <source>Description</source>
+        <target>Description</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresFormAmount">
+      <segment>
+        <source>Montant</source>
+        <target>Amount</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresFormCategory">
+      <segment>
+        <source>Categorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresTimelineKicker">
+      <segment>
+        <source> Comment ca marche </source>
+        <target> How it works </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresTimelineTitle">
+      <segment>
+        <source> 4 etapes, zero prise de tete </source>
+        <target> 4 steps, zero headaches </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCatKicker">
+      <segment>
+        <source> Categories </source>
+        <target> Categories </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCatTitle">
+      <segment>
+        <source> Vos depenses en detail </source>
+        <target> Your expenses in detail </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCtaTitle">
+      <segment>
+        <source> Pret a reprendre le controle de vos finances ? </source>
+        <target> Ready to take back control of your finances? </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCtaDesc">
+      <segment>
+        <source> Creez votre budget partage en quelques minutes. Import CSV, categories intelligentes et suivi en temps reel. </source>
+        <target> Create your shared budget in minutes. CSV import, smart categories and real-time tracking. </target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCtaFinal">
+      <segment>
+        <source>Commencer gratuitement</source>
+        <target>Get started for free</target>
+      </segment>
+    </unit>
+    <unit id="budgetPresCtaTrust">
+      <segment>
+        <source> Gratuit — Aucune carte bancaire requise </source>
+        <target> Free — No credit card required </target>
+      </segment>
+    </unit>
+    <unit id="formationsListLabel">
+      <segment>
+        <source><x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon name=&quot;sparkles&quot; [size]=&quot;0.85&quot;&gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/> Ressources gratuites </source>
+        <target><x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon name=&quot;sparkles&quot; [size]=&quot;0.85&quot;&gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/> Free resources </target>
+      </segment>
+    </unit>
+    <unit id="formationsListTitle">
+      <segment>
+        <source> Formations &amp; Présentations </source>
+        <target> Courses &amp; Presentations </target>
+      </segment>
+    </unit>
+    <unit id="formationsListSubtitle">
+      <segment>
+        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation. </source>
+        <target> Hands-on, practical presentations to help you get the most out of AI in your business. Read them online or run them in presentation mode. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListViewCta">
+      <segment>
+        <source> Consulter → </source>
+        <target> View → </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresHeadline">
+      <segment>
+        <source> Gardez le <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;accent-word&quot;&gt;"/>controle<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> sur vos habitudes </source>
+        <target> Stay in <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;accent-word&quot;&gt;"/>control<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> of your habits </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresDesc">
+      <segment>
+        <source> Cafe, alcool — suivez votre consommation au quotidien, fixez vos limites et regardez votre score de sante evoluer. </source>
+        <target> Coffee, alcohol — track your daily intake, set your own limits and watch your health score improve. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresCtaStart">
+      <segment>
+        <source>Commencer gratuitement</source>
+        <target>Get started for free</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresCtaDiscover">
+      <segment>
+        <source>Decouvrir ↓</source>
+        <target>Discover ↓</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresGaugeLabel">
+      <segment>
+        <source> Score de sante </source>
+        <target> Health score </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresGaugeOutOf">
+      <segment>
+        <source>sur 100</source>
+        <target>out of 100</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresGaugeStatus">
+      <segment>
+        <source>Bonne forme</source>
+        <target>Good shape</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresQuickBeerAria">
+      <segment>
+        <source>Ajouter une biere</source>
+        <target>Add a beer</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresQuickBeer">
+      <segment>
+        <source>+1 Biere</source>
+        <target>+1 Beer</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresQuickWineAria">
+      <segment>
+        <source>Ajouter un vin</source>
+        <target>Add a wine</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresQuickWine">
+      <segment>
+        <source>+1 Vin</source>
+        <target>+1 Wine</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresQuickCoffeeAria">
+      <segment>
+        <source>Ajouter un cafe</source>
+        <target>Add a coffee</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresQuickCoffee">
+      <segment>
+        <source>+1 Cafe</source>
+        <target>+1 Coffee</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresDailyCoffee">
+      <segment>
+        <source>Cafe</source>
+        <target>Coffee</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresDailyAlcohol">
+      <segment>
+        <source>Alcool</source>
+        <target>Alcohol</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresBacLabel">
+      <segment>
+        <source> Alcoolemie </source>
+        <target> Blood alcohol </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresBacTimer">
+      <segment>
+        <source>Sobre dans 1h20</source>
+        <target>Sober in 1h20</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStreakLabel">
+      <segment>
+        <source> Serie en cours </source>
+        <target> Current streak </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStreakSublabel">
+      <segment>
+        <source> jours sous la limite </source>
+        <target> days under the limit </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStepsKicker">
+      <segment>
+        <source> Comment ca marche </source>
+        <target> How it works </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStepsTitle">
+      <segment>
+        <source> Simple comme 1, 2, 3 </source>
+        <target> As simple as 1, 2, 3 </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStep1Title">
+      <segment>
+        <source> Logguez en un tap </source>
+        <target> Log in one tap </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStep1Desc">
+      <segment>
+        <source> Biere, vin, cafe — ajoutez votre consommation en une seconde avec les boutons rapides. </source>
+        <target> Beer, wine, coffee — add what you just had in a second with the quick buttons. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStep2Title">
+      <segment>
+        <source> Suivez vos tendances </source>
+        <target> Track your trends </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStep2Desc">
+      <segment>
+        <source> Courbes, heatmaps, rapports hebdomadaires. Comprenez vos habitudes en un coup d&apos;oeil. </source>
+        <target> Charts, heatmaps, weekly reports. Understand your habits at a glance. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStep3Title">
+      <segment>
+        <source> Atteignez vos objectifs </source>
+        <target> Reach your goals </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresStep3Desc">
+      <segment>
+        <source> Fixez vos limites quotidiennes, debloquez des badges et ameliorez votre score de sante. </source>
+        <target> Set your daily limits, unlock badges and improve your health score. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatGaugeLabel">
+      <segment>
+        <source>Score de sante</source>
+        <target>Health score</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatProgress">
+      <segment>
+        <source>Progression cette semaine</source>
+        <target>Progress this week</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatScoreTitle">
+      <segment>
+        <source> Votre sante en un chiffre </source>
+        <target> Your health in a single number </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatScoreDesc">
+      <segment>
+        <source> Le Score de Sante agrege votre consommation quotidienne, vos objectifs atteints et votre regularite. Il evolue chaque jour — montez-le en gardant le controle, descendez-le en depassant vos limites. </source>
+        <target> The Health Score aggregates your daily intake, the goals you hit and your consistency. It updates every day — push it up by staying in control, watch it drop when you go over your limits. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresMetricCurrent">
+      <segment>
+        <source> Score actuel </source>
+        <target> Current score </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresMetricVs">
+      <segment>
+        <source> vs. mois dernier </source>
+        <target> vs. last month </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresMetricRecord">
+      <segment>
+        <source> Record personnel </source>
+        <target> Personal best </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatTrackingTitle">
+      <segment>
+        <source> Sachez quand ralentir </source>
+        <target> Know when to slow down </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatTrackingDesc">
+      <segment>
+        <source> Chaque cafe, chaque verre est comptabilise. Vos limites quotidiennes sont visibles d&apos;un coup d&apos;oeil — quand la barre approche la fin, vous savez qu&apos;il est temps de lever le pied. </source>
+        <target> Every coffee, every drink counts. Your daily limits are visible at a glance — when the bar gets close to full, you know it's time to ease off. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFabTitle">
+      <segment>
+        <source> Ajout rapide </source>
+        <target> Quick add </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFabDesc">
+      <segment>
+        <source> Un tap sur le FAB, c&apos;est loggue. </source>
+        <target> One tap on the FAB and it's logged. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackCoffeeTitle">
+      <segment>
+        <source>Cafe du jour</source>
+        <target>Coffee today</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackCoffeeLimit">
+      <segment>
+        <source>Limite : <x id="INTERPOLATION" equiv-text="{{ dailyCounts.coffee.goal }}"/> cafes</source>
+        <target>Limit: <x id="INTERPOLATION" equiv-text="{{ dailyCounts.coffee.goal }}"/> coffees</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackEspresso">
+      <segment>
+        <source> +1 Espresso </source>
+        <target> +1 Espresso </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackLungo">
+      <segment>
+        <source> +1 Lungo </source>
+        <target> +1 Lungo </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackAlcoholTitle">
+      <segment>
+        <source>Alcool du jour</source>
+        <target>Alcohol today</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackAlcoholLimit">
+      <segment>
+        <source>Limite : <x id="INTERPOLATION" equiv-text="{{ dailyCounts.alcohol.goal }}"/> verres</source>
+        <target>Limit: <x id="INTERPOLATION" equiv-text="{{ dailyCounts.alcohol.goal }}"/> drinks</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackBeer">
+      <segment>
+        <source> +1 Biere ambree </source>
+        <target> +1 Amber beer </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrackWine">
+      <segment>
+        <source> +1 Vin rose </source>
+        <target> +1 Rosé wine </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresHeatmapTitle">
+      <segment>
+        <source>Activite — Mars 2026</source>
+        <target>Activity — March 2026</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresHeatmapLow">
+      <segment>
+        <source>Peu</source>
+        <target>Low</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresHeatmapHigh">
+      <segment>
+        <source>Beaucoup</source>
+        <target>High</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrendTitle">
+      <segment>
+        <source> Tendance hebdomadaire </source>
+        <target> Weekly trend </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatReportsTitle">
+      <segment>
+        <source> Visualisez vos tendances </source>
+        <target> Visualize your trends </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresFeatReportsDesc">
+      <segment>
+        <source> La heatmap revele vos jours forts et vos jours faibles. Les rapports hebdomadaires et mensuels comparent vos periodes et montrent l&apos;evolution dans le temps. </source>
+        <target> The heatmap reveals your strong and weak days. Weekly and monthly reports compare your periods and show how things evolve over time. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrendAlcohol">
+      <segment>
+        <source>↓ -18% alcool vs. sem. derniere</source>
+        <target>↓ -18% alcohol vs. last week</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresTrendCoffee">
+      <segment>
+        <source>↑ +2 cafes vs. sem. derniere</source>
+        <target>↑ +2 coffees vs. last week</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresBadgesKicker">
+      <segment>
+        <source> Gamification </source>
+        <target> Gamification </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresBadgesTitle">
+      <segment>
+        <source> Debloquez des badges </source>
+        <target> Unlock badges </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresBadgesDesc">
+      <segment>
+        <source> Chaque bonne habitude vous rapproche d&apos;un nouveau badge. Survolez-les pour voir ce qui vous attend. </source>
+        <target> Every good habit brings you closer to a new badge. Hover over them to see what's waiting. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresCtaTitle">
+      <segment>
+        <source> Pret a mieux vous connaitre ? </source>
+        <target> Ready to get to know yourself better? </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresCtaDesc">
+      <segment>
+        <source> Creez votre compte et commencez a suivre vos habitudes des aujourd&apos;hui. Votre score de sante n&apos;attend que vous. </source>
+        <target> Create your account and start tracking your habits today. Your health score is waiting. </target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresCtaFinal">
+      <segment>
+        <source>Commencer gratuitement</source>
+        <target>Get started for free</target>
+      </segment>
+    </unit>
+    <unit id="sebastianPresCtaTrust">
+      <segment>
+        <source> Gratuit — Aucune carte bancaire requise </source>
+        <target> Free — No credit card required </target>
+      </segment>
+    </unit>
+    <unit id="weatherGeoDenied">
+      <segment>
+        <source>Géolocalisation refusée. Autorisez l&apos;accès dans les paramètres du navigateur.</source>
+        <target>Location access denied. Allow access in your browser settings.</target>
+      </segment>
+    </unit>
+    <unit id="weatherGeoError">
+      <segment>
+        <source>Impossible de vous localiser. Vérifiez vos paramètres.</source>
+        <target>Unable to locate you. Please check your settings.</target>
+      </segment>
+    </unit>
+    <unit id="weatherOverviewTitle">
+      <segment>
+        <source> Prévisions </source>
+        <target> Forecasts </target>
+      </segment>
+    </unit>
+    <unit id="weatherOverviewGranularityAria">
+      <segment>
+        <source>Granularité</source>
+        <target>Granularity</target>
+      </segment>
+    </unit>
+    <unit id="weatherTableDay">
+      <segment>
+        <source> Jour </source>
+        <target> Day </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableMin">
+      <segment>
+        <source> Min </source>
+        <target> Min </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableMax">
+      <segment>
+        <source> Max </source>
+        <target> Max </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableRain">
+      <segment>
+        <source> Pluie </source>
+        <target> Rain </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableWind">
+      <segment>
+        <source> Vent </source>
+        <target> Wind </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableHumidity">
+      <segment>
+        <source> Hum. </source>
+        <target> Hum. </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableGusts">
+      <segment>
+        <source> Raf. </source>
+        <target> Gusts </target>
+      </segment>
+    </unit>
+    <unit id="weatherTablePressure">
+      <segment>
+        <source> Pression </source>
+        <target> Pressure </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableHour">
+      <segment>
+        <source> Heure </source>
+        <target> Hour </target>
+      </segment>
+    </unit>
+    <unit id="weatherTableTemp">
+      <segment>
+        <source> Temp. </source>
+        <target> Temp. </target>
+      </segment>
+    </unit>
+    <unit id="wmo0">
+      <segment>
+        <source>Ciel dégagé</source>
+        <target>Clear sky</target>
+      </segment>
+    </unit>
+    <unit id="wmo1">
+      <segment>
+        <source>Principalement dégagé</source>
+        <target>Mainly clear</target>
+      </segment>
+    </unit>
+    <unit id="wmo2">
+      <segment>
+        <source>Partiellement nuageux</source>
+        <target>Partly cloudy</target>
+      </segment>
+    </unit>
+    <unit id="wmo3">
+      <segment>
+        <source>Couvert</source>
+        <target>Overcast</target>
+      </segment>
+    </unit>
+    <unit id="wmo45">
+      <segment>
+        <source>Brouillard</source>
+        <target>Fog</target>
+      </segment>
+    </unit>
+    <unit id="wmo48">
+      <segment>
+        <source>Brouillard givrant</source>
+        <target>Depositing rime fog</target>
+      </segment>
+    </unit>
+    <unit id="wmo51">
+      <segment>
+        <source>Bruine légère</source>
+        <target>Light drizzle</target>
+      </segment>
+    </unit>
+    <unit id="wmo53">
+      <segment>
+        <source>Bruine modérée</source>
+        <target>Moderate drizzle</target>
+      </segment>
+    </unit>
+    <unit id="wmo55">
+      <segment>
+        <source>Bruine dense</source>
+        <target>Dense drizzle</target>
+      </segment>
+    </unit>
+    <unit id="wmo56">
+      <segment>
+        <source>Bruine verglaçante légère</source>
+        <target>Light freezing drizzle</target>
+      </segment>
+    </unit>
+    <unit id="wmo57">
+      <segment>
+        <source>Bruine verglaçante dense</source>
+        <target>Dense freezing drizzle</target>
+      </segment>
+    </unit>
+    <unit id="wmo61">
+      <segment>
+        <source>Pluie légère</source>
+        <target>Slight rain</target>
+      </segment>
+    </unit>
+    <unit id="wmo63">
+      <segment>
+        <source>Pluie modérée</source>
+        <target>Moderate rain</target>
+      </segment>
+    </unit>
+    <unit id="wmo65">
+      <segment>
+        <source>Pluie forte</source>
+        <target>Heavy rain</target>
+      </segment>
+    </unit>
+    <unit id="wmo66">
+      <segment>
+        <source>Pluie verglaçante légère</source>
+        <target>Light freezing rain</target>
+      </segment>
+    </unit>
+    <unit id="wmo67">
+      <segment>
+        <source>Pluie verglaçante forte</source>
+        <target>Heavy freezing rain</target>
+      </segment>
+    </unit>
+    <unit id="wmo71">
+      <segment>
+        <source>Neige légère</source>
+        <target>Slight snow</target>
+      </segment>
+    </unit>
+    <unit id="wmo73">
+      <segment>
+        <source>Neige modérée</source>
+        <target>Moderate snow</target>
+      </segment>
+    </unit>
+    <unit id="wmo75">
+      <segment>
+        <source>Neige forte</source>
+        <target>Heavy snow</target>
+      </segment>
+    </unit>
+    <unit id="wmo77">
+      <segment>
+        <source>Grains de neige</source>
+        <target>Snow grains</target>
+      </segment>
+    </unit>
+    <unit id="wmo80">
+      <segment>
+        <source>Averses légères</source>
+        <target>Slight rain showers</target>
+      </segment>
+    </unit>
+    <unit id="wmo81">
+      <segment>
+        <source>Averses modérées</source>
+        <target>Moderate rain showers</target>
+      </segment>
+    </unit>
+    <unit id="wmo82">
+      <segment>
+        <source>Averses violentes</source>
+        <target>Violent rain showers</target>
+      </segment>
+    </unit>
+    <unit id="wmo85">
+      <segment>
+        <source>Averses de neige légères</source>
+        <target>Slight snow showers</target>
+      </segment>
+    </unit>
+    <unit id="wmo86">
+      <segment>
+        <source>Averses de neige fortes</source>
+        <target>Heavy snow showers</target>
+      </segment>
+    </unit>
+    <unit id="wmo95">
+      <segment>
+        <source>Orage</source>
+        <target>Thunderstorm</target>
+      </segment>
+    </unit>
+    <unit id="wmo96">
+      <segment>
+        <source>Orage avec grêle légère</source>
+        <target>Thunderstorm with slight hail</target>
+      </segment>
+    </unit>
+    <unit id="wmo99">
+      <segment>
+        <source>Orage avec grêle forte</source>
+        <target>Thunderstorm with heavy hail</target>
+      </segment>
+    </unit>
+    <unit id="wmoUnknown">
+      <segment>
+        <source>Conditions inconnues</source>
+        <target>Unknown conditions</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCity">
+      <segment>
+        <source> Paris, France </source>
+        <target> Paris, France </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCondition">
+      <segment>
+        <source>Partiellement nuageux</source>
+        <target>Partly cloudy</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeelsLike">
+      <segment>
+        <source>Ressenti <x id="INTERPOLATION" equiv-text="{{ current.apparent_temperature }}"/>°</source>
+        <target>Feels like <x id="INTERPOLATION" equiv-text="{{ current.apparent_temperature }}"/>°</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresWind">
+      <segment>
+        <source>Vent <x id="INTERPOLATION" equiv-text="{{ current.wind_speed_10m }}"/> km/h</source>
+        <target>Wind <x id="INTERPOLATION" equiv-text="{{ current.wind_speed_10m }}"/> km/h</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresMetricWind">
+      <segment>
+        <source> Vent </source>
+        <target> Wind </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresMetricHumidity">
+      <segment>
+        <source> Humidite </source>
+        <target> Humidity </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresMetricUv">
+      <segment>
+        <source> UV </source>
+        <target> UV </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresMetricUvMod">
+      <segment>
+        <source>mod.</source>
+        <target>mod.</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresMetricPressure">
+      <segment>
+        <source> Pression </source>
+        <target> Pressure </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresTagline">
+      <segment>
+        <source> Ne sortez plus sans savoir </source>
+        <target> Never step outside without knowing </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresDesc">
+      <segment>
+        <source> Previsions heure par heure, radar de precipitations et qualite de l&apos;air. Tout pour planifier votre journee, en un coup d&apos;oeil. </source>
+        <target> Hourly forecasts, precipitation radar and air quality. Everything you need to plan your day, at a glance. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCtaStart">
+      <segment>
+        <source>Commencer gratuitement</source>
+        <target>Get started for free</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCtaDiscover">
+      <segment>
+        <source>Decouvrir ↓</source>
+        <target>Discover ↓</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresForecastKicker">
+      <segment>
+        <source> Previsions </source>
+        <target> Forecasts </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresForecastTitle">
+      <segment>
+        <source> Planifiez votre semaine </source>
+        <target> Plan your week </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresForecastDesc">
+      <segment>
+        <source> Visualisez les 7 prochains jours d&apos;un coup d&apos;oeil. Temperatures, precipitations, conditions — tout ce qu&apos;il faut pour ne jamais etre pris au depourvu. </source>
+        <target> See the next 7 days at a glance. Temperatures, precipitation, conditions — everything you need so you're never caught off guard. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresRadarKicker">
+      <segment>
+        <source> Radar </source>
+        <target> Radar </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresRadarTitle">
+      <segment>
+        <source> Voyez la pluie arriver </source>
+        <target> See the rain coming </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresRadarDesc">
+      <segment>
+        <source> Carte radar en temps reel. Suivez les precipitations, anticipez les averses. Ideal avant une sortie velo ou une balade en famille. </source>
+        <target> Real-time radar map. Track precipitation and anticipate showers. Perfect before a bike ride or a family walk. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresRadarLegend">
+      <segment>
+        <source> Precipitations </source>
+        <target> Precipitation </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresRadarLow">
+      <segment>
+        <source>Faible</source>
+        <target>Low</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresRadarHigh">
+      <segment>
+        <source>Fort</source>
+        <target>High</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelsKicker">
+      <segment>
+        <source> Personnalisation </source>
+        <target> Personalization </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelsTitle">
+      <segment>
+        <source> Votre meteo, votre niveau </source>
+        <target> Your weather, your level </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelsDesc">
+      <segment>
+        <source> Pas besoin d&apos;etre meteorologue. Choisissez le niveau de detail qui vous convient, et evoluez quand vous etes pret. </source>
+        <target> You don't need to be a meteorologist. Pick the level of detail that suits you, and move up when you're ready. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelDiscovery">
+      <segment>
+        <source>Decouverte</source>
+        <target>Discovery</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelDiscoveryH">
+      <segment>
+        <source> L&apos;essentiel, simplement </source>
+        <target> The essentials, simply </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelDiscoveryP">
+      <segment>
+        <source> Temperature, conditions, previsions de la semaine. L&apos;info qu&apos;il vous faut pour choisir comment vous habiller. </source>
+        <target> Temperature, conditions and the week's forecast. Just what you need to decide how to dress. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatTemp">
+      <segment>
+        <source> Temperature et ressenti </source>
+        <target> Temperature and feels-like </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeat7d">
+      <segment>
+        <source> Previsions sur 7 jours </source>
+        <target> 7-day forecast </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatHourly">
+      <segment>
+        <source> Graphique horaire </source>
+        <target> Hourly chart </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatAlerts">
+      <segment>
+        <source> Alertes meteo </source>
+        <target> Weather alerts </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelCurious">
+      <segment>
+        <source>Curieux</source>
+        <target>Curious</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelCuriousH">
+      <segment>
+        <source> Pour aller plus loin </source>
+        <target> To go further </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelCuriousP">
+      <segment>
+        <source> UV, qualite de l&apos;air, pression, radar. Toutes les donnees qui font la difference pour vos activites. </source>
+        <target> UV, air quality, pressure, radar. All the data that makes the difference for your activities. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatAllDiscovery">
+      <segment>
+        <source> Tout le niveau Decouverte </source>
+        <target> Everything in the Discovery level </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatUvAqi">
+      <segment>
+        <source> Indice UV et qualite de l&apos;air </source>
+        <target> UV index and air quality </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatCompass">
+      <segment>
+        <source> Boussole de vent </source>
+        <target> Wind compass </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatRadar">
+      <segment>
+        <source> Radar de precipitations </source>
+        <target> Precipitation radar </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatSun">
+      <segment>
+        <source> Arc solaire lever / coucher </source>
+        <target> Sunrise / sunset arc </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelExpert">
+      <segment>
+        <source>Expert</source>
+        <target>Expert</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelExpertH">
+      <segment>
+        <source> Donnees de passionne </source>
+        <target> Data for enthusiasts </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresLevelExpertP">
+      <segment>
+        <source> Modeles de prevision, comparaison historique, CAPE, export de donnees. Pour ceux qui veulent tout comprendre. </source>
+        <target> Forecast models, historical comparison, CAPE, data export. For those who want to understand everything. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatAllCurious">
+      <segment>
+        <source> Tout le niveau Curieux </source>
+        <target> Everything in the Curious level </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatSpaghetti">
+      <segment>
+        <source> Spaghetti plot multi-modeles </source>
+        <target> Multi-model spaghetti plot </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatHistorical">
+      <segment>
+        <source> Comparaison historique 30 jours </source>
+        <target> 30-day historical comparison </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatCape">
+      <segment>
+        <source> Indice CAPE (orages) </source>
+        <target> CAPE index (storms) </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresFeatExport">
+      <segment>
+        <source> Export CSV / JSON </source>
+        <target> CSV / JSON export </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresWindKicker">
+      <segment>
+        <source> Vent &amp; Pression </source>
+        <target> Wind &amp; Pressure </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresWindTitle">
+      <segment>
+        <source> Sentez le vent tourner </source>
+        <target> Feel the wind shift </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresWindDesc">
+      <segment>
+        <source> Boussole interactive, rafales, direction — ideal avant une sortie en mer, une randonnee ou simplement savoir si votre terrasse sera agreable. </source>
+        <target> Interactive compass, gusts, direction — perfect before a sailing trip, a hike or just to know if your patio will be pleasant. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresWindGusts">
+      <segment>
+        <source> Rafales </source>
+        <target> Gusts </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresWindPressure">
+      <segment>
+        <source> Pression </source>
+        <target> Pressure </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresAirKicker">
+      <segment>
+        <source> Qualite de l&apos;air </source>
+        <target> Air quality </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresAirTitle">
+      <segment>
+        <source> Respirez en confiance </source>
+        <target> Breathe with confidence </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresAirDesc">
+      <segment>
+        <source> Indice AQI europeen, particules fines, ozone — pour savoir si c&apos;est le bon jour pour courir, jouer dehors avec les enfants ou ouvrir les fenetres. </source>
+        <target> European AQI, fine particles, ozone — to know if it's a good day to go for a run, play outside with the kids or open the windows. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCtaTitle">
+      <segment>
+        <source> Pret a ne plus etre surpris par la meteo ? </source>
+        <target> Ready to never be surprised by the weather again? </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCtaDesc">
+      <segment>
+        <source> Retrouvez vos villes favorites, personnalisez votre niveau de detail et recevez les alertes qui comptent. </source>
+        <target> Save your favorite cities, customize your level of detail and get the alerts that matter. </target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCtaFinal">
+      <segment>
+        <source>Commencer gratuitement</source>
+        <target>Get started for free</target>
+      </segment>
+    </unit>
+    <unit id="weatherPresCtaTrust">
+      <segment>
+        <source> Gratuit — Aucune carte bancaire requise </source>
+        <target> Free — No credit card required </target>
+      </segment>
+    </unit>
+    <unit id="navFormationsLabel">
+      <segment>
+        <source>Formations</source>
+        <target>Courses</target>
+      </segment>
+    </unit>
+    <unit id="navFormationsIaTitle">
+      <segment>
+        <source>IA pour Solopreneurs</source>
+        <target>AI for Solopreneurs</target>
+      </segment>
+    </unit>
+    <unit id="navFormationsIaDesc">
+      <segment>
+        <source>Panorama des outils IA pour entrepreneurs</source>
+        <target>An overview of AI tools for entrepreneurs</target>
+      </segment>
+    </unit>
+    <unit id="overviewLabel">
+      <segment>
+        <source>Vue d&apos;ensemble de la presentation</source>
+        <target>Presentation overview</target>
+      </segment>
+    </unit>
+    <unit id="overviewTitle">
+      <segment>
+        <source> Vue d&apos;ensemble </source>
+        <target> Overview </target>
+      </segment>
+    </unit>
+    <unit id="overviewClose">
+      <segment>
+        <source>Fermer la vue d&apos;ensemble</source>
+        <target>Close the overview</target>
+      </segment>
+    </unit>
+    <unit id="presentationEngineSlidesCount">
+      <segment>
+        <source> <x id="INTERPOLATION" equiv-text="{{ activeSlides().length }}"/> slides — <x id="INTERPOLATION_1" equiv-text="{{ acts().length }}"/> actes </source>
+        <target> <x id="INTERPOLATION" equiv-text="{{ activeSlides().length }}"/> slides — <x id="INTERPOLATION_1" equiv-text="{{ acts().length }}"/> acts </target>
+      </segment>
+    </unit>
+    <unit id="presentationEngineEnter">
+      <segment>
+        <source>Mode présentation</source>
+        <target>Presentation mode</target>
+      </segment>
+    </unit>
+    <unit id="presentationEnginePresent">
+      <segment>
+        <source>Présenter</source>
+        <target>Present</target>
+      </segment>
+    </unit>
+    <unit id="presentationEngineRegion">
+      <segment>
+        <source>Mode présentation</source>
+        <target>Presentation mode</target>
+      </segment>
+    </unit>
+    <unit id="presentationEngineExit">
+      <segment>
+        <source>Quitter</source>
+        <target>Exit</target>
+      </segment>
+    </unit>
+    <unit id="presenterBarLabel">
+      <segment>
+        <source>Navigation de présentation</source>
+        <target>Presentation navigation</target>
+      </segment>
+    </unit>
+    <unit id="presenterBarPrev">
+      <segment>
+        <source>Slide précédente</source>
+        <target>Previous slide</target>
+      </segment>
+    </unit>
+    <unit id="presenterBarCounter">
+      <segment>
+        <source> Slide <x id="INTERPOLATION" equiv-text="{{ positionInAct() }}"/>/<x id="INTERPOLATION_1" equiv-text="{{ currentActSlides().length }}"/> </source>
+        <target> Slide <x id="INTERPOLATION" equiv-text="{{ positionInAct() }}"/>/<x id="INTERPOLATION_1" equiv-text="{{ currentActSlides().length }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="presenterBarNext">
+      <segment>
+        <source>Slide suivante</source>
+        <target>Next slide</target>
+      </segment>
+    </unit>
+    <unit id="8104421162933956065">
+      <segment>
+        <source>Notes</source>
+        <target>Notes</target>
+      </segment>
+    </unit>
+    <unit id="2633889716948605122">
+      <segment>
+        <source> Générer le prompt </source>
+        <target> Generate the prompt </target>
+      </segment>
+    </unit>
   </file>
 </xliff>
