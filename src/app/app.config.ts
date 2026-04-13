@@ -4,7 +4,11 @@ import {
   withInterceptors,
 } from "@angular/common/http";
 import type { ApplicationConfig } from "@angular/core";
-import { provideClientHydration } from "@angular/platform-browser";
+import {
+  provideClientHydration,
+  withEventReplay,
+  withHttpTransferCacheOptions,
+} from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import {
   provideRouter,
@@ -45,7 +49,13 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: "enabled",
       }),
     ),
-    provideClientHydration(),
+    provideClientHydration(
+      withEventReplay(),
+      withHttpTransferCacheOptions({
+        includePostRequests: false,
+        filter: (req) => !req.url.includes("/auth/"),
+      }),
+    ),
     provideAnimations(),
     provideHttpClient(
       withInterceptors([authInterceptor, requestIdInterceptor]),

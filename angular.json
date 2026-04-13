@@ -78,7 +78,7 @@
                   "minify": true,
                   "inlineCritical": true
                 },
-                "fonts": false
+                "fonts": true
               },
               "extractLicenses": true,
               "sourceMap": false
