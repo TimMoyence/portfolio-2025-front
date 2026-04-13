@@ -66,7 +66,11 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
               class="shadow-xl overflow-hidden rounded-image size-full h-[15rem] md:h-[20rem] lg:h-[30rem] object-cover"
               alt="Portrait de Tim, développeur web chez Asili Design"
               i18n-alt="hero.imageAlt|Hero portrait alt text@@heroImageAlt"
-              loading="lazy"
+              width="480"
+              height="480"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
             />
           </div>
         </div>

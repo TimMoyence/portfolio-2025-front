@@ -9,7 +9,13 @@ import { IA_SOLOPRENEURS_SLIDES } from "./ia-solopreneurs.data";
   imports: [PresentationEngineComponent],
   providers: [InteractionCollectorService],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<app-presentation-engine [slides]="slides" />',
+  template: `
+    <h1 class="sr-only" i18n="@@iaSolopreneursPageTitle">
+      Formation IA Solopreneurs — maîtriser l'intelligence artificielle pour
+      indépendants
+    </h1>
+    <app-presentation-engine [slides]="slides" />
+  `,
 })
 export class IaSolopreneursComponent {
   readonly slides = IA_SOLOPRENEURS_SLIDES;

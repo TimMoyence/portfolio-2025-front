@@ -179,6 +179,91 @@ const buildSitemapXml = (
   ].join("\n");
 };
 
+/**
+ * Construit le contenu llms.txt standard (https://llmstxt.org/).
+ * Ce fichier aide les LLMs (ChatGPT, Perplexity, Claude, Google AI Overview)
+ * a comprendre la structure et l'intention du site pour citer le contenu
+ * de maniere pertinente.
+ */
+const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
+  const defaultLocale = metadata.site.defaultLocale ?? "fr";
+  const indexablePages = metadata.pages.filter((page) => page.index !== false);
+
+  const resolveLocaleMeta = (
+    page: (typeof metadata.pages)[number],
+  ): { title: string; description: string } => {
+    const meta =
+      page.locales?.[defaultLocale] ?? Object.values(page.locales ?? {})[0];
+    return {
+      title: meta?.title ?? page.id,
+      description: meta?.description ?? "",
+    };
+  };
+
+  const buildLink = (page: (typeof metadata.pages)[number]): string => {
+    const path = page.id === "home" ? "/" : page.path;
+    const href = new URL(
+      buildLocalizedPath(defaultLocale, path),
+      baseUrl,
+    ).toString();
+    const { title, description } = resolveLocaleMeta(page);
+    const desc = description ? `: ${description}` : "";
+    return `- [${title}](${href})${desc}`;
+  };
+
+  const site = metadata.global?.localBusiness as
+    | { name?: string; description?: string; founder?: { name?: string } }
+    | undefined;
+  const siteName = site?.name ?? "Asili Design";
+  const siteDescription = site?.description ?? "";
+  const founderName = site?.founder?.name ?? "Tim Moyence";
+
+  const servicePages = indexablePages.filter((p) =>
+    [
+      "offer",
+      "growth-audit",
+      "formations",
+      "formations-ia-solopreneurs",
+    ].includes(p.id),
+  );
+  const aboutPages = indexablePages.filter((p) =>
+    ["presentation", "client-project"].includes(p.id),
+  );
+  const appPages = indexablePages.filter((p) =>
+    ["weather", "budget", "sebastian"].includes(p.id),
+  );
+  const contactPages = indexablePages.filter((p) => p.id === "contact");
+  const legalPages = indexablePages.filter((p) =>
+    ["terms", "privacy", "cookie-settings"].includes(p.id),
+  );
+
+  const section = (title: string, pages: typeof indexablePages): string[] => {
+    if (pages.length === 0) return [];
+    return [`## ${title}`, "", ...pages.map(buildLink), ""];
+  };
+
+  const homeMeta = indexablePages.find((p) => p.id === "home");
+  const homeTagline = homeMeta ? resolveLocaleMeta(homeMeta).description : "";
+
+  const lines: string[] = [
+    `# ${siteName}${founderName ? ` — ${founderName}` : ""}`,
+    "",
+    homeTagline
+      ? `> ${homeTagline}`
+      : siteDescription
+        ? `> ${siteDescription}`
+        : "",
+    "",
+    ...section("Services", servicePages),
+    ...section("A propos", aboutPages),
+    ...section("Applications metier", appPages),
+    ...section("Contact", contactPages),
+    ...section("Legal", legalPages),
+  ];
+
+  return lines.filter((line) => line !== undefined).join("\n") + "\n";
+};
+
 const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const locales = metadata.site.locales ?? [];
   const disallowPaths = new Set<string>();
@@ -317,6 +402,24 @@ app.get("/robots.txt", (req, res) => {
   const robots = buildRobotsTxt(metadata, baseUrl);
   res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
   res.type("text/plain").send(robots);
+});
+
+/**
+ * Sert le fichier llms.txt conforme au standard https://llmstxt.org/
+ * Permet aux LLMs (ChatGPT, Perplexity, Google AI Overview, Bing Copilot)
+ * de decouvrir la structure du site et son intention editoriale.
+ */
+app.get("/llms.txt", (req, res) => {
+  const metadata = loadSeoMetadata();
+  if (!metadata) {
+    res.status(404).type("text/plain").send("llms.txt not available");
+    return;
+  }
+
+  const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
+  const content = buildLlmsTxt(metadata, baseUrl);
+  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
+  res.type("text/plain").send(content);
 });
 
 /**

@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { RouterModule } from "@angular/router";
 import { CONTACT_METHODS } from "../../data/contact-methods";
 import type {
   FooterColumn,
@@ -11,7 +12,7 @@ import { SvgIconComponent } from "../svg-icon.component";
 @Component({
   selector: "app-footer",
   standalone: true,
-  imports: [CommonModule, SvgIconComponent],
+  imports: [CommonModule, RouterModule, SvgIconComponent],
   templateUrl: "./footer.component.html",
   styleUrls: ["./footer.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,

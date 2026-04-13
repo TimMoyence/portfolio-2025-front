@@ -87,7 +87,7 @@
           <ul data-testid="footer-column">
             @for (link of column.links; track $index) {
               <li class="text-small py-2 font-semibold">
-                <a [href]="link.href">{{ link.label }}</a>
+                <a [routerLink]="link.href">{{ link.label }}</a>
               </li>
             }
           </ul>
