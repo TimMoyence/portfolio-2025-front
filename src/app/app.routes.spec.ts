@@ -51,13 +51,16 @@ describe("app routes", () => {
     }
   });
 
-  it("devrait laisser /atelier/budget public (presentation marketing)", () => {
+  it("devrait rediriger /atelier/budget vers /app si autorise, sinon afficher la presentation", () => {
     // Arrange
     const budgetRoute = routes.find((r) => r.path === "atelier/budget");
 
-    // Assert
+    // Assert — le guard redirectIfAuthorizedGuard redirige les utilisateurs
+    // authentifies+autorises vers /app, sinon laisse passer vers la presentation.
     expect(budgetRoute).toBeDefined();
-    expect(budgetRoute?.canActivate).toBeUndefined();
+    expect(budgetRoute?.canActivate).toBeDefined();
+    expect(budgetRoute?.canActivate?.length).toBe(1);
+    expect(typeof budgetRoute?.canActivate?.[0]).toBe("function");
   });
 
   it("devrait protéger /atelier/budget/app avec authGuard et roleGuard budget", () => {

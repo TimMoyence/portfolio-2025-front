@@ -1,5 +1,6 @@
 import type { Routes } from "@angular/router";
 import { authGuard } from "./core/guards/auth.guard";
+import { redirectIfAuthorizedGuard } from "./core/guards/redirect-if-authorized.guard";
 import { roleGuard } from "./core/guards/role.guard";
 
 export const routes: Routes = [
@@ -153,6 +154,7 @@ export const routes: Routes = [
   // Affichent une marketing page invitant a s'inscrire / acceder a l'app.
   {
     path: "atelier/meteo",
+    canActivate: [redirectIfAuthorizedGuard("weather")],
     loadComponent: () =>
       import("./features/weather/weather-presentation.component").then(
         (m) => m.WeatherPresentationComponent,
@@ -163,6 +165,7 @@ export const routes: Routes = [
   },
   {
     path: "atelier/budget",
+    canActivate: [redirectIfAuthorizedGuard("budget")],
     loadComponent: () =>
       import("./features/budget/budget-presentation.component").then(
         (m) => m.BudgetPresentationComponent,
@@ -173,6 +176,7 @@ export const routes: Routes = [
   },
   {
     path: "atelier/sebastian",
+    canActivate: [redirectIfAuthorizedGuard("sebastian")],
     loadComponent: () =>
       import("./features/sebastian/sebastian-presentation.component").then(
         (m) => m.SebastianPresentationComponent,
