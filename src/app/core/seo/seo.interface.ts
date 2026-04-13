@@ -8,6 +8,8 @@ export interface SeoConfig {
   ogDescription?: string;
   ogImage?: string;
   ogUrl?: string;
+  /** Type Open Graph: website (defaut), article, profile, product... */
+  ogType?: "website" | "article" | "profile" | "product";
   robots?: string;
   twitterCard?: "summary" | "summary_large_image";
   twitterTitle?: string;

@@ -552,6 +552,7 @@ app.get("**", (req, res, next) => {
         html = injectJsonLd(html, metadata, originalUrl);
       }
       res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Content-Language", urlLocale);
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
       res.setHeader("X-Content-Type-Options", "nosniff");
       return void res.send(html);
@@ -568,6 +569,7 @@ app.get("**", (req, res, next) => {
           `<base href="${baseHref}/" />`,
         );
         res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.setHeader("Content-Language", urlLocale);
         res.setHeader("Cache-Control", "private, no-store");
         res.setHeader("X-Content-Type-Options", "nosniff");
         return void res.send(withBase);
@@ -591,6 +593,10 @@ app.get("**", (req, res, next) => {
       if (metadata) {
         html = injectJsonLd(html, metadata, originalUrl);
       }
+      res.setHeader(
+        "Content-Language",
+        urlLocale ?? metadata?.site.defaultLocale ?? "fr",
+      );
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
       res.setHeader("X-Content-Type-Options", "nosniff");
       res.send(html);

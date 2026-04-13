@@ -1,7 +1,16 @@
 import { DOCUMENT } from "@angular/common";
-import { Inject, Injectable } from "@angular/core";
+import { Inject, Injectable, LOCALE_ID } from "@angular/core";
 import { Meta, Title } from "@angular/platform-browser";
 import type { SeoConfig } from "./seo.interface";
+
+/** Map locale ID (ex: "fr", "en") → tag Open Graph (ex: "fr_FR", "en_US"). */
+const OG_LOCALE_MAP: Record<string, string> = {
+  fr: "fr_FR",
+  en: "en_US",
+};
+
+/** Compte Twitter / X associé au site, utilisé pour twitter:site et twitter:creator. */
+const TWITTER_HANDLE = "@timmoyence";
 
 @Injectable({
   providedIn: "root",
@@ -11,6 +20,7 @@ export class SeoService {
     private meta: Meta,
     private title: Title,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(LOCALE_ID) private localeId: string,
   ) {}
 
   updateSeoMetadata(config: SeoConfig): void {
@@ -41,13 +51,41 @@ export class SeoService {
     if (config.ogUrl)
       this.meta.updateTag({ property: "og:url", content: config.ogUrl });
 
-    this.meta.updateTag({ property: "og:type", content: "website" });
+    this.meta.updateTag({
+      property: "og:type",
+      content: config.ogType || "website",
+    });
+
+    // og:locale et og:locale:alternate pour signaler les langues aux crawlers sociaux
+    const currentLocale = this.resolveLocaleKey();
+    const currentOgLocale = OG_LOCALE_MAP[currentLocale] ?? OG_LOCALE_MAP["fr"];
+    this.meta.updateTag({ property: "og:locale", content: currentOgLocale });
+
+    // Supprime les anciennes balises og:locale:alternate avant d'ajouter les nouvelles
+    this.document
+      .querySelectorAll('meta[property="og:locale:alternate"]')
+      .forEach((node) => node.remove());
+    for (const [localeKey, ogLocale] of Object.entries(OG_LOCALE_MAP)) {
+      if (localeKey === currentLocale) continue;
+      const meta = this.document.createElement("meta");
+      meta.setAttribute("property", "og:locale:alternate");
+      meta.setAttribute("content", ogLocale);
+      this.document.head.appendChild(meta);
+    }
+
+    // og:site_name aide les moteurs IA à identifier la marque
+    this.meta.updateTag({
+      property: "og:site_name",
+      content: "Asili Design",
+    });
 
     // Twitter Card
     this.meta.updateTag({
       name: "twitter:card",
       content: config.twitterCard || "summary",
     });
+    this.meta.updateTag({ name: "twitter:site", content: TWITTER_HANDLE });
+    this.meta.updateTag({ name: "twitter:creator", content: TWITTER_HANDLE });
     this.meta.updateTag({
       name: "twitter:title",
       content: config.twitterTitle || config.ogTitle || config.title,
@@ -125,5 +163,13 @@ export class SeoService {
       script.textContent = JSON.stringify(block);
       this.document.head.appendChild(script);
     }
+  }
+
+  /**
+   * Extrait la cle de locale courte (fr/en) depuis le LOCALE_ID d'Angular.
+   * Angular peut fournir "fr", "fr-FR", "en", "en-US"... selon la configuration.
+   */
+  private resolveLocaleKey(): string {
+    return (this.localeId ?? "fr").toLowerCase().split("-")[0];
   }
 }

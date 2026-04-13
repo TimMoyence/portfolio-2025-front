@@ -508,6 +508,7 @@ describe("SeoService", () => {
         localMetaSpy,
         localTitleSpy,
         null as unknown as Document,
+        "fr",
       );
 
       svc.updateSeoMetadata({
@@ -527,6 +528,7 @@ describe("SeoService", () => {
         localMetaSpy,
         localTitleSpy,
         null as unknown as Document,
+        "fr",
       );
 
       expect(() =>

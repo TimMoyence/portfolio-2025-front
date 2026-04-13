@@ -149,7 +149,32 @@ export class SeoManagerComponent {
 
   private setDefaultSeo(currentUrl: string): void {
     const baseUrl = this.resolveBaseUrl();
-    const canonicalPath = this.buildCanonicalPath(currentUrl);
+    const canonicalState = this.resolveCanonicalState(currentUrl);
+    const canonicalUrl = this.buildAbsoluteUrl(
+      baseUrl,
+      canonicalState.canonicalPath,
+    );
+
+    // Genere les hreflangs meme en fallback pour que toutes les pages
+    // aient les liens alternatifs fr/en/x-default vers les moteurs de recherche.
+    const locales = this.seoRegistry.getLocales();
+    const hreflangs: Record<string, string> = {};
+    for (const locale of locales) {
+      const localizedPath =
+        canonicalState.relativePath === "/"
+          ? `/${locale}`
+          : `/${locale}${canonicalState.relativePath}`;
+      hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, localizedPath);
+    }
+    const defaultLocale = this.seoRegistry.getDefaultLocale();
+    if (defaultLocale && locales.includes(defaultLocale)) {
+      const defaultPath =
+        canonicalState.relativePath === "/"
+          ? `/${defaultLocale}`
+          : `/${defaultLocale}${canonicalState.relativePath}`;
+      hreflangs["x-default"] = this.buildAbsoluteUrl(baseUrl, defaultPath);
+    }
+
     const seoConfig: SeoConfig = {
       title: $localize`:seo.default.title|Fallback SEO title@@seoDefaultTitle:Professional Portfolio | Web Developer & Designer`,
       description: $localize`:seo.default.description|Fallback SEO description@@seoDefaultDescription:Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.`,
@@ -164,8 +189,9 @@ export class SeoManagerComponent {
       ogImage: `${baseUrl}/assets/images/logo.webp`,
       twitterCard: "summary_large_image",
       robots: "index, follow",
-      canonicalUrl: this.buildAbsoluteUrl(baseUrl, canonicalPath),
-      ogUrl: this.buildAbsoluteUrl(baseUrl, canonicalPath),
+      canonicalUrl,
+      ogUrl: canonicalUrl,
+      hreflangs,
     };
 
     this.seoService.updateSeoMetadata(seoConfig);
