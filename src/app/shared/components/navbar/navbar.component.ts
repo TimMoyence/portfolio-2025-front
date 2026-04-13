@@ -151,6 +151,16 @@ export class NavbarComponent {
         this.cdr.markForCheck();
       }
     });
+
+    // Force le re-render quand l'etat auth change.
+    // Necessaire car ngSkipHydration (ajoute par Angular SSR) empeche
+    // les signal reads dans les ngTemplateOutlet embedded views de
+    // declencher correctement markForCheck sur le composant hote.
+    effect(() => {
+      this.authState.isLoggedIn();
+      this.authState.user();
+      this.cdr.markForCheck();
+    });
   }
 
   /** Retourne l'URL vers l'autre locale en conservant le chemin courant. */

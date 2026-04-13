@@ -7,6 +7,7 @@ import { LOCALE_ID, PLATFORM_ID } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, provideRouter } from "@angular/router";
 import { AUTH_PORT } from "../../../core/ports/auth.port";
+import { AuthStateService } from "../../../core/services/auth-state.service";
 import { NavbarComponent } from "./navbar.component";
 
 describe("NavbarComponent", () => {
@@ -66,6 +67,44 @@ describe("NavbarComponent", () => {
     it("getAlternateLocaleUrl devrait retourner une URL avec la locale alternative", () => {
       const url = component.getAlternateLocaleUrl();
       expect(url).toMatch(/^\/en/);
+    });
+
+    it("devrait afficher le bouton login quand non connecte", () => {
+      fixture.detectChanges();
+      const nav = fixture.nativeElement as HTMLElement;
+      const loginBtn = nav.querySelector(
+        'button[aria-label="Espace utilisateur"]',
+      );
+      expect(loginBtn).toBeTruthy();
+    });
+
+    it("devrait afficher l'avatar apres login et masquer le bouton login", () => {
+      const authState = TestBed.inject(AuthStateService);
+      authState.login({
+        accessToken: "fake-jwt",
+        expiresIn: 3600,
+        user: {
+          id: "u1",
+          email: "test@example.com",
+          firstName: "Tim",
+          lastName: "Test",
+          phone: null,
+          isActive: true,
+          roles: ["weather", "budget"],
+        },
+      });
+      fixture.detectChanges();
+
+      const nav = fixture.nativeElement as HTMLElement;
+      const loginBtn = nav.querySelector(
+        'button[aria-label="Espace utilisateur"]',
+      );
+      expect(loginBtn).toBeNull();
+
+      const userMenuBtn = nav.querySelector(
+        'button[aria-label="Menu utilisateur"]',
+      );
+      expect(userMenuBtn).toBeTruthy();
     });
   });
 
