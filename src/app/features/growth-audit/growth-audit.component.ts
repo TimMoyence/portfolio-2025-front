@@ -19,6 +19,8 @@ import type {
 import type { AuditRequestPort } from "../../core/ports/audit-request.port";
 import { AUDIT_REQUEST_PORT } from "../../core/ports/audit-request.port";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
+import type { FaqItem } from "../../shared/components/faq-section/faq-section.component";
+import { FaqSectionComponent } from "../../shared/components/faq-section/faq-section.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import {
   type AuditSectionBadge,
@@ -42,7 +44,12 @@ interface AuditPillar {
 @Component({
   selector: "app-growth-audit",
   standalone: true,
-  imports: [CommonModule, FormsModule, HeroSectionComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HeroSectionComponent,
+    FaqSectionComponent,
+  ],
   templateUrl: "./growth-audit.component.html",
   styleUrl: "./growth-audit.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,6 +103,31 @@ export class GrowthAuditComponent implements OnDestroy {
         $localize`:audit.highlights.wins@@auditHighlightsWins:Quick wins + priorités (impact/effort)`,
         $localize`:audit.highlights.noObligation@@auditHighlightsNoObligation:Aucun engagement`,
       ],
+    },
+  ];
+
+  readonly faqTitle = $localize`:audit.faq.title@@auditFaqTitle:Questions fréquentes sur l'audit gratuit`;
+  readonly faqDescription = $localize`:audit.faq.description@@auditFaqDescription:Ce que vous devez savoir avant de demander votre audit de croissance en 15 points.`;
+  readonly faqItems: readonly FaqItem[] = [
+    {
+      question: $localize`:audit.faq.q1@@auditFaqQ1:Comment fonctionne l'audit gratuit en 24 heures ?`,
+      answer: $localize`:audit.faq.a1@@auditFaqA1:Vous laissez l'URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion). Puis, sous 24h, je reprends l'analyse moi-même et vous envoie une vidéo personnalisée, une scorecard claire et un plan d'actions priorisé par impact/effort.`,
+    },
+    {
+      question: $localize`:audit.faq.q2@@auditFaqQ2:Que contient concrètement l'audit en 15 points ?`,
+      answer: $localize`:audit.faq.a2@@auditFaqA2:L'audit couvre cinq piliers : conversion et clarté, vitesse et performance (Core Web Vitals), SEO fondations (titres, meta, indexation, SEO local), crédibilité et confiance, tech et scalabilité. Vous recevez une scorecard, des quick wins et des recommandations priorisées.`,
+    },
+    {
+      question: $localize`:audit.faq.q3@@auditFaqQ3:L'audit est-il vraiment gratuit ?`,
+      answer: $localize`:audit.faq.a3@@auditFaqA3:Oui, totalement. Aucun engagement, aucune carte bancaire demandée. Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h. L'objectif est de vous apporter de la valeur immédiatement, et de démarrer un échange pertinent si vous le souhaitez.`,
+    },
+    {
+      question: $localize`:audit.faq.q4@@auditFaqQ4:Qui réalise l'audit : une IA ou un humain ?`,
+      answer: $localize`:audit.faq.a4@@auditFaqA4:Les deux. Un premier scan automatisé tourne instantanément via un pipeline IA (Langchain + OpenAI). Ensuite, je réalise l'audit humain moi-même pour prioriser, contextualiser et formuler des recommandations concrètes adaptées à votre situation.`,
+    },
+    {
+      question: $localize`:audit.faq.q5@@auditFaqQ5:Pour quels types de sites l'audit est-il pertinent ?`,
+      answer: $localize`:audit.faq.a5@@auditFaqA5:L'audit est pertinent pour les sites vitrines, sites e-commerce, landing pages et applications métier web. Il est particulièrement adapté aux TPE, PME, indépendants et artisans qui veulent améliorer leur visibilité SEO et leur taux de conversion sans se perdre dans la technique.`,
     },
   ];
 

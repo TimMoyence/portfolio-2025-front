@@ -2,6 +2,8 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
+import type { FaqItem } from "../../shared/components/faq-section/faq-section.component";
+import { FaqSectionComponent } from "../../shared/components/faq-section/faq-section.component";
 import type { HeroAction } from "../../shared/components/hero-section/hero-section.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
 import type { ServiceItem } from "../../shared/components/services-section/services-section.component";
@@ -30,6 +32,7 @@ interface ServiceSection {
     CtaSectionComponent,
     ContactCtaComponent,
     ServicesSectionComponent,
+    FaqSectionComponent,
   ],
   templateUrl: "./offer.component.html",
   styleUrl: "./offer.component.scss",
@@ -255,4 +258,29 @@ export class OfferComponent {
       $localize`:offer.contact.lead.2@@offer.contact.lead.2:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
     ],
   };
+
+  readonly faqTitle = $localize`:offer.faq.title@@offerFaqTitle:Questions fréquentes sur mes services`;
+  readonly faqDescription = $localize`:offer.faq.description@@offerFaqDescription:Les questions qui reviennent le plus souvent lors d'un premier échange.`;
+  readonly faqItems: readonly FaqItem[] = [
+    {
+      question: $localize`:offer.faq.q1@@offerFaqQ1:Combien coûte un site web sur mesure à Bordeaux ?`,
+      answer: $localize`:offer.faq.a1@@offerFaqA1:Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l'objet d'un devis personnalisé selon le périmètre, le rythme et la complexité.`,
+    },
+    {
+      question: $localize`:offer.faq.q2@@offerFaqQ2:Quel est le délai pour créer un site web ?`,
+      answer: $localize`:offer.faq.a2@@offerFaqA2:Les interventions ciblées se livrent en quelques jours. Les projets structurants prennent généralement 2 à 6 semaines selon la complexité, les itérations et les validations.`,
+    },
+    {
+      question: $localize`:offer.faq.q3@@offerFaqQ3:Proposez-vous un accompagnement après la livraison ?`,
+      answer: $localize`:offer.faq.a3@@offerFaqA3:Oui, l'accompagnement dans le temps est un engagement mensuel adapté à votre rythme. Il inclut évolutions, maintenance, conseils et ajustements au fil des usages réels.`,
+    },
+    {
+      question: $localize`:offer.faq.q4@@offerFaqQ4:Travaillez-vous avec les TPE, PME et indépendants uniquement ?`,
+      answer: $localize`:offer.faq.a4@@offerFaqA4:Je collabore principalement avec des indépendants, TPE et PME à Bordeaux et en France. L'approche sobre et progressive est particulièrement adaptée aux structures qui veulent évoluer sans surcoût technique ni complexité inutile.`,
+    },
+    {
+      question: $localize`:offer.faq.q5@@offerFaqQ5:Quelles technologies utilisez-vous pour le développement web ?`,
+      answer: $localize`:offer.faq.a5@@offerFaqA5:Angular, NestJS, TypeScript, Node.js et PostgreSQL pour le cœur technique. Pour l'IA, j'utilise les LLMs (Claude, OpenAI) via des architectures RAG et des pipelines Langchain. Les choix sont toujours justifiés par l'usage, pas par la mode.`,
+    },
+  ];
 }

@@ -55,11 +55,13 @@
     "localBusiness": {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
+      "@id": "https://asilidesign.fr/#organization",
       "name": "Asili Design",
       "legalName": "Tim Moyence — Asili Design",
       "url": "https://asilidesign.fr",
       "telephone": "+33698503282",
       "email": "moyencet@gmail.com",
+      "description": "Agence digitale à Bordeaux spécialisée en développement web sur mesure, applications métier et accompagnement IA pour indépendants et TPE/PME.",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Allée Serr",
@@ -78,10 +80,22 @@
       },
       "priceRange": "$$",
       "image": "https://asilidesign.fr/assets/images/logo.webp",
+      "logo": "https://asilidesign.fr/assets/images/logo.webp",
+      "sameAs": [
+        "https://www.linkedin.com/in/tim-moyence",
+        "https://www.facebook.com/tim.moyence/"
+      ],
       "founder": {
         "@type": "Person",
+        "@id": "https://asilidesign.fr/#person",
         "name": "Tim Moyence",
-        "jobTitle": "Développeur Full-Stack & Consultant Digital"
+        "jobTitle": "Développeur Full-Stack & Consultant Digital",
+        "url": "https://asilidesign.fr/fr/presentation",
+        "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
+        "sameAs": [
+          "https://www.linkedin.com/in/tim-moyence",
+          "https://www.facebook.com/tim.moyence/"
+        ]
       }
     },
     "siteNavigation": {
@@ -122,9 +136,20 @@
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
+            "@id": "https://asilidesign.fr/#website",
             "name": "Asili Design — Tim Moyence",
             "url": "https://asilidesign.fr",
-            "description": "Solutions digitales sur mesure pour entreprises et indépendants à Bordeaux"
+            "description": "Solutions digitales sur mesure pour entreprises et indépendants à Bordeaux",
+            "inLanguage": ["fr-FR", "en-US"],
+            "publisher": { "@id": "https://asilidesign.fr/#organization" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://asilidesign.fr/fr/contact?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
           }
         },
         "en": {
@@ -135,9 +160,20 @@
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
+            "@id": "https://asilidesign.fr/#website",
             "name": "Asili Design — Tim Moyence",
             "url": "https://asilidesign.fr",
-            "description": "Custom digital solutions for businesses and independents in Bordeaux"
+            "description": "Custom digital solutions for businesses and independents in Bordeaux",
+            "inLanguage": ["fr-FR", "en-US"],
+            "publisher": { "@id": "https://asilidesign.fr/#organization" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://asilidesign.fr/en/contact?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
           }
         }
       }
@@ -158,21 +194,57 @@
           "jsonLd": [
             {
               "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              "name": "Asili Design",
-              "founder": {
+              "@type": "ProfilePage",
+              "@id": "https://asilidesign.fr/fr/presentation#profile",
+              "mainEntity": {
                 "@type": "Person",
+                "@id": "https://asilidesign.fr/#person",
                 "name": "Tim Moyence",
+                "givenName": "Tim",
+                "familyName": "Moyence",
                 "jobTitle": "Développeur Full-Stack & Consultant Digital",
+                "description": "Développeur web freelance à Bordeaux, 3 ans d'expérience en Angular, NestJS et IA. J'accompagne TPE, PME et indépendants dans la clarification, la structuration et l'évolution de leurs outils digitaux.",
+                "url": "https://asilidesign.fr/fr/presentation",
+                "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
+                "email": "moyencet@gmail.com",
+                "telephone": "+33698503282",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Bordeaux",
+                  "postalCode": "33100",
+                  "addressCountry": "FR"
+                },
+                "worksFor": {
+                  "@type": "Organization",
+                  "@id": "https://asilidesign.fr/#organization",
+                  "name": "Asili Design"
+                },
                 "knowsAbout": [
                   "Angular",
                   "NestJS",
                   "TypeScript",
+                  "Node.js",
                   "Intelligence Artificielle",
+                  "LLM",
+                  "RAG",
                   "Développement Web",
-                  "Accompagnement Digital"
+                  "SEO",
+                  "Accompagnement Digital",
+                  "Formation IA"
+                ],
+                "knowsLanguage": ["fr", "en"],
+                "sameAs": [
+                  "https://www.linkedin.com/in/tim-moyence",
+                  "https://www.facebook.com/tim.moyence/"
                 ]
-              },
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "@id": "https://asilidesign.fr/#organization",
+              "name": "Asili Design",
+              "founder": { "@id": "https://asilidesign.fr/#person" },
               "areaServed": { "@type": "City", "name": "Bordeaux" },
               "url": "https://asilidesign.fr/fr/presentation"
             }
@@ -186,21 +258,57 @@
           "jsonLd": [
             {
               "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              "name": "Asili Design",
-              "founder": {
+              "@type": "ProfilePage",
+              "@id": "https://asilidesign.fr/en/presentation#profile",
+              "mainEntity": {
                 "@type": "Person",
+                "@id": "https://asilidesign.fr/#person",
                 "name": "Tim Moyence",
+                "givenName": "Tim",
+                "familyName": "Moyence",
                 "jobTitle": "Full-Stack Developer & Digital Consultant",
+                "description": "Freelance web developer in Bordeaux, 3 years experience with Angular, NestJS and AI. I help small businesses and independents clarify, structure and scale their digital tools.",
+                "url": "https://asilidesign.fr/en/presentation",
+                "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
+                "email": "moyencet@gmail.com",
+                "telephone": "+33698503282",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Bordeaux",
+                  "postalCode": "33100",
+                  "addressCountry": "FR"
+                },
+                "worksFor": {
+                  "@type": "Organization",
+                  "@id": "https://asilidesign.fr/#organization",
+                  "name": "Asili Design"
+                },
                 "knowsAbout": [
                   "Angular",
                   "NestJS",
                   "TypeScript",
+                  "Node.js",
                   "Artificial Intelligence",
+                  "LLM",
+                  "RAG",
                   "Web Development",
-                  "Digital Consulting"
+                  "SEO",
+                  "Digital Consulting",
+                  "AI Training"
+                ],
+                "knowsLanguage": ["fr", "en"],
+                "sameAs": [
+                  "https://www.linkedin.com/in/tim-moyence",
+                  "https://www.facebook.com/tim.moyence/"
                 ]
-              },
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "@id": "https://asilidesign.fr/#organization",
+              "name": "Asili Design",
+              "founder": { "@id": "https://asilidesign.fr/#person" },
               "areaServed": { "@type": "City", "name": "Bordeaux" },
               "url": "https://asilidesign.fr/en/presentation"
             }
