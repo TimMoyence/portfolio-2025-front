@@ -1,4 +1,5 @@
 import { DOCUMENT } from "@angular/common";
+import { LOCALE_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { Meta, Title } from "@angular/platform-browser";
 import type { SeoConfig } from "./seo.interface";
@@ -95,6 +96,7 @@ describe("SeoService", () => {
           { provide: Meta, useValue: metaSpy },
           { provide: Title, useValue: titleSpy },
           { provide: DOCUMENT, useValue: mockDocument },
+          { provide: LOCALE_ID, useValue: "fr" },
         ],
       });
 
@@ -206,13 +208,14 @@ describe("SeoService", () => {
       });
 
       it("devrait creer les liens hreflang pour chaque locale", () => {
-        // 1 canonical + 2 hreflangs = 3 appels createElement
-        expect(mockDocument.createElement).toHaveBeenCalledTimes(3);
-        const appendSpy = (
-          mockDocument.head as unknown as { appendChild: jasmine.Spy }
-        ).appendChild;
-        // 1 canonical + 2 hreflangs = 3 appels appendChild
-        expect(appendSpy).toHaveBeenCalledTimes(3);
+        // On filtre par type de tag pour ignorer les <meta og:locale:alternate>
+        // crees systematiquement par updateSeoMetadata (une par locale alternative).
+        const createSpy = mockDocument.createElement as jasmine.Spy;
+        const linkCalls = createSpy.calls
+          .allArgs()
+          .filter((args) => args[0] === "link");
+        // 1 canonical + 2 hreflangs = 3 appels createElement("link")
+        expect(linkCalls.length).toBe(3);
       });
     });
 
@@ -292,14 +295,14 @@ describe("SeoService", () => {
       });
 
       it("ne devrait pas creer de lien canonical si absent", () => {
-        expect(mockDocument.createElement).not.toHaveBeenCalled();
+        // createElement peut etre appele pour <meta og:locale:alternate>,
+        // mais jamais pour <link> si aucun canonicalUrl n'est fourni.
+        expect(mockDocument.createElement).not.toHaveBeenCalledWith("link");
       });
 
       it("ne devrait pas creer de liens hreflang si absent", () => {
-        const appendSpy = (
-          mockDocument.head as unknown as { appendChild: jasmine.Spy }
-        ).appendChild;
-        expect(appendSpy).not.toHaveBeenCalled();
+        // Les hreflangs sont des <link>, distincts des <meta og:locale:alternate>.
+        expect(mockDocument.createElement).not.toHaveBeenCalledWith("link");
       });
     });
 
