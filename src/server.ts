@@ -487,6 +487,15 @@ app.get("/llms.txt", (req, res) => {
   res.type("text/plain").send(content);
 });
 
+/** Bing Webmaster Tools — verification XML */
+app.get("/BingSiteAuth.xml", (_req, res) => {
+  res
+    .type("application/xml")
+    .send(
+      `<?xml version="1.0"?>\n<users>\n\t<user>86F57D63382B5EEFCB5BFE5B78CCD868</user>\n</users>`,
+    );
+});
+
 /**
  *  Serve i18n static files correctly
  * - Do NOT serve index.html for asset requests
