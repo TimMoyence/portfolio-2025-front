@@ -31,6 +31,26 @@ const resolveIndexHtml = (locale: string | null): string => {
 };
 
 const app = express();
+
+/**
+ * Normalisation d'URL : collapse les slashes multiples et supprime
+ * le trailing slash (sauf racine /). Redirige en 301 si l'URL change.
+ */
+app.use((req, res, next) => {
+  const original = req.path;
+  let normalized = original.replace(/\/{2,}/g, "/");
+  if (normalized.length > 1 && normalized.endsWith("/")) {
+    normalized = normalized.replace(/\/+$/, "");
+  }
+  if (normalized !== original) {
+    const query = req.originalUrl.includes("?")
+      ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
+      : "";
+    return void res.redirect(301, normalized + query);
+  }
+  next();
+});
+
 const commonEngine = new CommonEngine({
   allowedHosts: [
     "asilidesign.fr",
@@ -224,6 +244,7 @@ const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
       "growth-audit",
       "formations",
       "formations-ia-solopreneurs",
+      "formations-ia-solopreneurs-toolkit",
     ].includes(p.id),
   );
   const aboutPages = indexablePages.filter((p) =>

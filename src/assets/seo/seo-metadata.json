@@ -126,7 +126,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1.0,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-03-30",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -184,7 +184,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-03-30",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -498,7 +498,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-04-04",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -558,7 +558,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-03-17",
       "breadcrumb": [
         { "name": "Accueil", "path": "/" },
         { "name": "Projets", "path": "/client-project" }
@@ -715,12 +715,88 @@
       }
     },
     {
+      "id": "forgot-password",
+      "path": "/forgot-password",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Mot de passe oublie — Asili Design",
+          "description": "Reinitialisation de votre mot de passe.",
+          "ogTitle": "Mot de passe oublie",
+          "ogDescription": "Reinitialisation de votre mot de passe."
+        },
+        "en": {
+          "title": "Forgot password — Asili Design",
+          "description": "Reset your password.",
+          "ogTitle": "Forgot password",
+          "ogDescription": "Reset your password."
+        }
+      }
+    },
+    {
+      "id": "reset-password",
+      "path": "/reset-password",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Nouveau mot de passe — Asili Design",
+          "description": "Definissez votre nouveau mot de passe.",
+          "ogTitle": "Nouveau mot de passe",
+          "ogDescription": "Definissez votre nouveau mot de passe."
+        },
+        "en": {
+          "title": "Reset password — Asili Design",
+          "description": "Set your new password.",
+          "ogTitle": "Reset password",
+          "ogDescription": "Set your new password."
+        }
+      }
+    },
+    {
+      "id": "verify-email",
+      "path": "/verify-email",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Verification email — Asili Design",
+          "description": "Verification de votre adresse email.",
+          "ogTitle": "Verification email",
+          "ogDescription": "Verification de votre adresse email."
+        },
+        "en": {
+          "title": "Verify email — Asili Design",
+          "description": "Email address verification.",
+          "ogTitle": "Verify email",
+          "ogDescription": "Email address verification."
+        }
+      }
+    },
+    {
+      "id": "profile",
+      "path": "/profil",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Mon profil — Asili Design",
+          "description": "Votre profil utilisateur.",
+          "ogTitle": "Mon profil",
+          "ogDescription": "Votre profil utilisateur."
+        },
+        "en": {
+          "title": "My profile — Asili Design",
+          "description": "Your user profile.",
+          "ogTitle": "My profile",
+          "ogDescription": "Your user profile."
+        }
+      }
+    },
+    {
       "id": "cookie-settings",
       "path": "/cookie-settings",
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-03-17",
       "locales": {
         "fr": {
           "title": "Cookies & confidentialité — Paramètres",
@@ -764,7 +840,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-04-09",
       "locales": {
         "fr": {
           "title": "Budget — L'Atelier",
@@ -786,7 +862,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-04-09",
       "locales": {
         "fr": {
           "title": "Sebastian — L'Atelier",
@@ -865,7 +941,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-02-12",
       "locales": {
         "fr": {
           "title": "Conditions de services — Moyence",
@@ -887,7 +963,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-02-12",
       "locales": {
         "fr": {
           "title": "Politique de confidentialité — Moyence",
@@ -1011,7 +1087,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-04-09",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1180,6 +1256,75 @@
               ]
             }
           ]
+        }
+      }
+    },
+    {
+      "id": "formations-ia-solopreneurs-toolkit",
+      "path": "/formations/ia-solopreneurs/toolkit",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.6,
+      "lastmod": "2026-04-10",
+      "breadcrumb": [
+        { "name": "Accueil", "path": "/" },
+        { "name": "Formations", "path": "/formations" },
+        {
+          "name": "L'IA au service des solopreneurs",
+          "path": "/formations/ia-solopreneurs"
+        },
+        {
+          "name": "Toolkit IA",
+          "path": "/formations/ia-solopreneurs/toolkit"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Toolkit IA pour solopreneurs — Boite a outils gratuite",
+          "description": "Recevez la boite a outils IA pour solopreneurs : outils, prix, budgets. Gratuit, dans votre inbox en 30 secondes.",
+          "ogTitle": "Toolkit IA pour solopreneurs",
+          "ogDescription": "Les meilleurs outils IA, les prix et les budgets — dans votre inbox en 30 secondes.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Toolkit IA pour solopreneurs",
+            "description": "Page de capture pour recevoir la boite a outils IA : outils, prix et budgets pour solopreneurs.",
+            "url": "https://asilidesign.fr/fr/formations/ia-solopreneurs/toolkit",
+            "isPartOf": { "@id": "https://asilidesign.fr/#website" }
+          }
+        },
+        "en": {
+          "title": "AI Toolkit for solopreneurs — Free toolbox",
+          "description": "Get the AI toolkit for solopreneurs: tools, pricing, budgets. Free, in your inbox in 30 seconds.",
+          "ogTitle": "AI Toolkit for solopreneurs",
+          "ogDescription": "The best AI tools, pricing and budgets — in your inbox in 30 seconds.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "AI Toolkit for solopreneurs",
+            "description": "Capture page to receive the AI toolkit: tools, pricing and budgets for solopreneurs.",
+            "url": "https://asilidesign.fr/en/formations/ia-solopreneurs/toolkit",
+            "isPartOf": { "@id": "https://asilidesign.fr/#website" }
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-ia-solopreneurs-toolkit-private",
+      "path": "/formations/ia-solopreneurs/toolkit/:token",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Votre Toolkit IA — Asili Design",
+          "description": "Votre boite a outils IA personnalisee.",
+          "ogTitle": "Votre Toolkit IA",
+          "ogDescription": "Acces a votre boite a outils IA personnalisee."
+        },
+        "en": {
+          "title": "Your AI Toolkit — Asili Design",
+          "description": "Your personalized AI toolbox.",
+          "ogTitle": "Your AI Toolkit",
+          "ogDescription": "Access your personalized AI toolbox."
         }
       }
     },
