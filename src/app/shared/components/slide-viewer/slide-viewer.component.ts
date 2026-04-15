@@ -36,7 +36,7 @@ import { SlideRendererComponent } from "./templates/slide-renderer.component";
       <div class="bg-white">
         <!-- Barre de progression sticky -->
         <div
-          class="sticky top-20 lg:top-24 z-10 border-b border-gray-100 bg-white shadow-sm"
+          class="sticky top-24 lg:top-28 z-10 border-b border-gray-100 bg-white shadow-sm"
         >
           <div class="mx-auto max-w-5xl px-4 sm:px-6 py-2.5">
             <div class="flex items-center gap-3">
