@@ -40,6 +40,7 @@ const app = express();
  * ou Cloudflare) ajoute systematiquement un trailing slash sur ces
  * chemins, ce qui cree une boucle 301 si on le retire.
  */
+// TODO: deriver la liste des locales depuis seo-metadata.json ou SSR_LOCALE
 const LOCALE_BARE_PATH = /^\/(fr|en)\/$/;
 app.use((req, res, next) => {
   const original = req.path;
