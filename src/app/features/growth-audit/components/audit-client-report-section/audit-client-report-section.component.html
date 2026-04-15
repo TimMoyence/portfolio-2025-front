@@ -1,0 +1,61 @@
+<section class="client-report flex flex-col gap-8">
+  <div class="client-report__summary">
+    <h2 class="font-heading heading-h3 text-h3 mb-3">Votre rapport d'audit</h2>
+    <p class="report__summary text-base md:text-lg text-scheme-text">
+      {{ clientReport.executiveSummary }}
+    </p>
+  </div>
+
+  <app-engine-coverage-matrix
+    [matrix]="clientReport.googleVsAiMatrix"
+  ></app-engine-coverage-matrix>
+
+  <div class="client-report__pillars">
+    <h3 class="font-heading heading-h4 text-h4 mb-3">Scorecard par pilier</h3>
+    <app-pillar-scorecard
+      [scorecard]="clientReport.pillarScorecard"
+    ></app-pillar-scorecard>
+  </div>
+
+  @if (clientReport.quickWins.length) {
+    <div class="client-report__quick-wins">
+      <h3 class="font-heading heading-h4 text-h4 mb-3">
+        Quick wins prioritaires
+      </h3>
+      <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        @for (win of clientReport.quickWins; track win.title) {
+          <div
+            data-testid="quick-win-card"
+            class="quick-win-card rounded-form border border-scheme-border bg-scheme-surface p-4 flex flex-col gap-2"
+          >
+            <p class="font-semibold text-base">{{ win.title }}</p>
+            <p class="text-sm text-scheme-text-muted">
+              {{ win.businessImpact }}
+            </p>
+            <span [class]="effortClass(win.effort)">
+              {{ effortLabel(win.effort) }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <div
+    class="client-report__cta rounded-form border border-scheme-border bg-scheme-surface p-6 flex flex-col gap-3 items-start"
+  >
+    <h3 class="font-heading heading-h4 text-h4">
+      {{ clientReport.cta.title }}
+    </h3>
+    <p class="text-sm md:text-base text-scheme-text">
+      {{ clientReport.cta.description }}
+    </p>
+    <button
+      type="button"
+      data-testid="cta-button"
+      class="mt-2 inline-flex items-center justify-center rounded-button bg-scheme-accent px-6 py-3 text-sm md:text-base font-semibold text-white transition-colors hover:bg-scheme-accent-hover"
+    >
+      {{ clientReport.cta.actionLabel }}
+    </button>
+  </div>
+</section>

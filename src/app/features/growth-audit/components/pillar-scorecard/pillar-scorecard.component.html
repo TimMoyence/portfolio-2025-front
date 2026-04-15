@@ -1,0 +1,31 @@
+<div
+  class="pillar-scorecard grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+>
+  @for (item of scorecard; track item.pillar) {
+    <div
+      data-testid="pillar-card"
+      class="pillar-card rounded-form border border-scheme-border bg-scheme-surface p-4 flex flex-col gap-2"
+    >
+      <p
+        class="pillar-card__name text-xs uppercase tracking-wide text-scheme-text-muted font-semibold"
+      >
+        {{ formatPillarName(item.pillar) }}
+      </p>
+      <div class="flex items-baseline gap-2">
+        <span class="pillar-card__score text-2xl font-semibold">
+          {{ item.score }}
+        </span>
+        <span class="pillar-card__target text-sm text-scheme-text-muted">
+          / cible {{ item.target }}
+        </span>
+      </div>
+      <span
+        data-testid="pillar-status"
+        [class]="statusClass(item.status)"
+        [attr.aria-label]="statusLabel(item.status)"
+      >
+        {{ statusLabel(item.status) }}
+      </span>
+    </div>
+  }
+</div>

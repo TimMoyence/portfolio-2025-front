@@ -10,6 +10,7 @@ import {
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import type { Subscription } from "rxjs";
+import type { ClientReport } from "../../core/models/audit-client-report.model";
 import type {
   AuditContactMethod,
   AuditRequestPayload,
@@ -22,6 +23,7 @@ import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import type { FaqItem } from "../../shared/components/faq-section/faq-section.component";
 import { FaqSectionComponent } from "../../shared/components/faq-section/faq-section.component";
 import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { AuditClientReportSectionComponent } from "./components/audit-client-report-section/audit-client-report-section.component";
 import {
   type AuditSectionBadge,
   buildSectionBadges,
@@ -49,6 +51,7 @@ interface AuditPillar {
     FormsModule,
     HeroSectionComponent,
     FaqSectionComponent,
+    AuditClientReportSectionComponent,
   ],
   templateUrl: "./growth-audit.component.html",
   styleUrl: "./growth-audit.component.scss",
@@ -72,6 +75,8 @@ export class GrowthAuditComponent implements OnDestroy {
   auditProgress = 0;
   auditStep = "";
   auditSummary?: AuditSummaryResponse;
+  /** Rapport client structuré produit par l'étape LLM (Phase 7+ backend). */
+  clientReport: ClientReport | null = null;
   auditPhaseLabel = "";
   auditCurrentUrl = "";
   auditIaTask = "";
@@ -232,6 +237,7 @@ export class GrowthAuditComponent implements OnDestroy {
     this.errorMessage = undefined;
     this.successMessage = undefined;
     this.auditSummary = undefined;
+    this.clientReport = null;
     this.stopStream();
 
     if (!form.valid) {
@@ -323,6 +329,7 @@ export class GrowthAuditComponent implements OnDestroy {
         quickWins: event.data.quickWins,
         pillarScores: event.data.pillarScores,
       };
+      this.clientReport = event.data.clientReport ?? null;
       this.cdr.markForCheck();
       return;
     }

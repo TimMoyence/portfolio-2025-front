@@ -1,0 +1,59 @@
+<div class="engine-matrix grid gap-4 grid-cols-1 md:grid-cols-2">
+  <div
+    data-testid="engine-card"
+    class="engine-card rounded-form border border-scheme-border bg-scheme-surface p-5 flex flex-col gap-3"
+  >
+    <p
+      class="text-xs uppercase tracking-wide text-scheme-text-muted font-semibold"
+    >
+      Visibilité Google
+    </p>
+    <div class="flex items-baseline gap-2">
+      <span class="engine-card__score text-4xl font-semibold">
+        {{ matrix.googleVisibility.score }}
+      </span>
+      <span class="text-sm text-scheme-text-muted">/100</span>
+    </div>
+    <div
+      class="engine-card__bar h-2 w-full rounded-full bg-scheme-background overflow-hidden"
+    >
+      <div
+        class="engine-card__bar-fill h-full rounded-full"
+        [class]="scoreClass(matrix.googleVisibility.score)"
+        [style.width.%]="matrix.googleVisibility.score"
+      ></div>
+    </div>
+    <p class="text-sm text-scheme-text">
+      {{ matrix.googleVisibility.summary }}
+    </p>
+  </div>
+
+  <div
+    data-testid="engine-card"
+    class="engine-card rounded-form border border-scheme-border bg-scheme-surface p-5 flex flex-col gap-3"
+  >
+    <p
+      class="text-xs uppercase tracking-wide text-scheme-text-muted font-semibold"
+    >
+      Visibilité IA
+    </p>
+    <div class="flex items-baseline gap-2">
+      <span class="engine-card__score text-4xl font-semibold">
+        {{ matrix.aiVisibility.score }}
+      </span>
+      <span class="text-sm text-scheme-text-muted">/100</span>
+    </div>
+    <div
+      class="engine-card__bar h-2 w-full rounded-full bg-scheme-background overflow-hidden"
+    >
+      <div
+        class="engine-card__bar-fill h-full rounded-full"
+        [class]="scoreClass(matrix.aiVisibility.score)"
+        [style.width.%]="matrix.aiVisibility.score"
+      ></div>
+    </div>
+    <p class="text-sm text-scheme-text">
+      {{ matrix.aiVisibility.summary }}
+    </p>
+  </div>
+</div>

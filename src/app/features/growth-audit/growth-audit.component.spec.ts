@@ -9,6 +9,7 @@ import {
   buildAuditCreateResponse,
   buildAuditSummaryResponse,
   buildAuditStreamHeartbeat,
+  buildClientReport,
   createAuditRequestPortStub,
 } from "../../../testing/factories/audit-request.factory";
 
@@ -142,6 +143,71 @@ describe("GrowthAuditComponent", () => {
     expect(component.auditStep).toContain("(3/10)");
     expect(component.auditCurrentUrl).toBe("");
     expect(component.auditSectionBadges).toEqual([]);
+  });
+
+  it("renders client report section when event contains clientReport", () => {
+    const fixture = TestBed.createComponent(GrowthAuditComponent);
+    const component = fixture.componentInstance;
+    const clientReport = buildClientReport();
+
+    submitAndStream(
+      component,
+      auditServiceMock,
+      {
+        type: "completed",
+        data: {
+          auditId: "audit-42",
+          status: "COMPLETED",
+          progress: 100,
+          done: true,
+          summaryText: "Résumé legacy",
+          keyChecks: {},
+          quickWins: [],
+          pillarScores: {},
+          clientReport,
+          updatedAt: "2026-04-15T09:00:00.000Z",
+        },
+      },
+      "audit-42",
+    );
+
+    fixture.detectChanges();
+
+    expect(component.clientReport).toEqual(clientReport);
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector("app-audit-client-report-section")).toBeTruthy();
+  });
+
+  it("falls back to legacy summary when clientReport is absent", () => {
+    const fixture = TestBed.createComponent(GrowthAuditComponent);
+    const component = fixture.componentInstance;
+
+    submitAndStream(
+      component,
+      auditServiceMock,
+      {
+        type: "completed",
+        data: {
+          auditId: "audit-43",
+          status: "COMPLETED",
+          progress: 100,
+          done: true,
+          summaryText: "Résumé de votre audit",
+          keyChecks: {},
+          quickWins: [],
+          pillarScores: { seo: 80 },
+          updatedAt: "2026-04-15T09:00:00.000Z",
+        },
+      },
+      "audit-43",
+    );
+
+    fixture.detectChanges();
+
+    expect(component.clientReport).toBeNull();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector("app-audit-client-report-section")).toBeNull();
+    expect(root.textContent).toContain("Résumé de votre audit");
   });
 
   it("does not crash on unknown details keys", () => {

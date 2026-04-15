@@ -1,3 +1,5 @@
+import type { ClientReport } from "./audit-client-report.model";
+
 export type AuditContactMethod = "EMAIL" | "PHONE";
 export type AuditProcessingStatus =
   | "PENDING"
@@ -49,6 +51,11 @@ export interface AuditCompletedEvent {
   keyChecks: Record<string, unknown>;
   quickWins: string[];
   pillarScores: Record<string, number>;
+  /**
+   * Synthèse client structurée produite par l'étape LLM.
+   * Optionnel pour rétro-compatibilité : ancien format sans clientReport.
+   */
+  clientReport?: ClientReport | null;
   updatedAt: string;
 }
 

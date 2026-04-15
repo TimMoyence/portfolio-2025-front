@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.engine-card__bar-fill {
+  transition: width 400ms ease-out;
+
+  &.engine-card__score--ok {
+    background-color: #22c55e;
+  }
+
+  &.engine-card__score--warning {
+    background-color: #f59e0b;
+  }
+
+  &.engine-card__score--critical {
+    background-color: #ef4444;
+  }
+}
