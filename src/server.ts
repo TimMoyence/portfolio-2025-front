@@ -527,6 +527,7 @@ app.use(
   express.static(resolve(browserDistFolder, "fr"), {
     maxAge: "1y",
     index: false,
+    redirect: false,
   }),
 );
 app.use(
@@ -534,6 +535,7 @@ app.use(
   express.static(resolve(browserDistFolder, "en"), {
     maxAge: "1y",
     index: false,
+    redirect: false,
   }),
 );
 
@@ -545,6 +547,7 @@ app.use(
   express.static(resolve(browserDistFolder, "fr/assets"), {
     maxAge: "1y",
     index: false,
+    redirect: false,
   }),
 );
 
@@ -563,7 +566,13 @@ app.get("/en/home", (_req, res) => {
  * Serve other static files (css/js/map/woff2/...) if any are at browser root
  * Important: index:false so it never returns HTML for missing files
  */
-app.use(express.static(browserDistFolder, { maxAge: "1y", index: false }));
+app.use(
+  express.static(browserDistFolder, {
+    maxAge: "1y",
+    index: false,
+    redirect: false,
+  }),
+);
 
 /**
  * Détecte les routes qui doivent être rendues côté client uniquement.
