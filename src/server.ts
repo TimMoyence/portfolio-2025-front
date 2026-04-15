@@ -34,12 +34,21 @@ const app = express();
 
 /**
  * Normalisation d'URL : collapse les slashes multiples et supprime
- * le trailing slash (sauf racine /). Redirige en 301 si l'URL change.
+ * le trailing slash (sauf racine / et chemins locale-seul /fr/, /en/).
+ *
+ * Les chemins /fr/ et /en/ sont exempts car le reverse-proxy (nginx
+ * ou Cloudflare) ajoute systematiquement un trailing slash sur ces
+ * chemins, ce qui cree une boucle 301 si on le retire.
  */
+const LOCALE_BARE_PATH = /^\/(fr|en)\/$/;
 app.use((req, res, next) => {
   const original = req.path;
   let normalized = original.replace(/\/{2,}/g, "/");
-  if (normalized.length > 1 && normalized.endsWith("/")) {
+  if (
+    normalized.length > 1 &&
+    normalized.endsWith("/") &&
+    !LOCALE_BARE_PATH.test(normalized)
+  ) {
     normalized = normalized.replace(/\/+$/, "");
   }
   if (normalized !== original) {
