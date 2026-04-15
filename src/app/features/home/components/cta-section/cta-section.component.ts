@@ -16,13 +16,13 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
         >
           <div class="flex flex-col justify-center p-8 md:p-12">
             <div>
-              <h3
+              <h2
                 id="start-project-heading"
                 class="font-heading heading-h3 text-h3 mb-5 font-bold md:mb-6"
                 i18n="cta.title|CTA heading@@ctaTitle"
               >
                 Parlons de votre projet
-              </h3>
+              </h2>
               <p class="text-medium" i18n="cta.lead|CTA description@@ctaLead">
                 Un premier échange, sans engagement, pour comprendre votre
                 contexte et vos priorités.

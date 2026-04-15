@@ -32,9 +32,9 @@ export type ServicesCta = {
             <p class="mb-3 font-semibold md:mb-4">
               {{ kicker }}
             </p>
-            <h3 class="font-heading heading-h3 text-h3">
+            <h2 class="font-heading heading-h3 text-h3">
               {{ title }}
-            </h3>
+            </h2>
           </div>
 
           <div>

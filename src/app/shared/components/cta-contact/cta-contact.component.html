@@ -10,12 +10,12 @@
       >
         Contact
       </p>
-      <h3
+      <h2
         class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
         id="contact-heading"
       >
         {{ title }}
-      </h3>
+      </h2>
       @for (p of leadParagraphs; track $index) {
         <p class="text-small" [ngClass]="$index > 0 ? 'pt-2' : ''">
           {{ p }}

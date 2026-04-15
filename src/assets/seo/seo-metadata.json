@@ -679,8 +679,8 @@
       "lastmod": "2026-04-13",
       "locales": {
         "fr": {
-          "title": "Login — Pour acceder à votre compte",
-          "description": "You can't access this page without logging in.",
+          "title": "Connexion — Acceder a votre compte",
+          "description": "Connectez-vous pour acceder a votre espace personnel.",
           "ogTitle": "Connexion à votre compte",
           "ogDescription": "Vous ne pouvez pas accéder à cette page sans vous connecter."
         },
@@ -701,8 +701,8 @@
       "lastmod": "2026-04-13",
       "locales": {
         "fr": {
-          "title": "Register — Pour acceder à votre compte",
-          "description": "You can't access this page without registering.",
+          "title": "Inscription — Creer votre compte",
+          "description": "Inscrivez-vous pour acceder aux outils et aux formations.",
           "ogTitle": "Inscrivez-vous à votre compte",
           "ogDescription": "Vous ne pouvez pas accéder à cette page sans vous inscrire."
         },
@@ -793,7 +793,7 @@
     {
       "id": "cookie-settings",
       "path": "/cookie-settings",
-      "index": true,
+      "index": false,
       "changefreq": "yearly",
       "priority": 0.2,
       "lastmod": "2026-03-17",

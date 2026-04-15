@@ -34,13 +34,13 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
             >
               Mission
             </p>
-            <h3
+            <h2
               id="presQ-heading"
               class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
               i18n="mission.title|Section heading@@missionTitle"
             >
               Pourquoi Asili ? Pourquoi cette approche ?
-            </h3>
+            </h2>
             <p
               class="text-sm md:text-base lg:text-medium"
               i18n="mission.lead|Section description@@missionLead"

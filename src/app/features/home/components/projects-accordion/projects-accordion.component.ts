@@ -78,11 +78,11 @@ type Project = {
                 >
                   {{ project.order }}
                 </p>
-                <h2
+                <h3
                   class="heading-h5 hidden [writing-mode:vertical-rl] lg:mx-auto lg:block lg:rotate-180 lg:font-bold"
                 >
                   {{ project.label }}
-                </h2>
+                </h3>
               </div>
               <div
                 class="flex flex-col lg:col-span-6 px-6 pt-4 pb-8 transition-all duration-300 ease-in-out md:px-10 md:pt-12 md:pb-12 lg:px-12 lg:pt-16 lg:pb-16 justify-end tab-panel"
@@ -92,11 +92,11 @@ type Project = {
                 [attr.aria-labelledby]="'tab-' + $index"
                 [attr.hidden]="activeIndex !== $index"
               >
-                <h4
+                <h3
                   class="font-heading heading-h3 text-h4 md:text-h3 mb-5 md:mb-6"
                 >
                   {{ project.title }}
-                </h4>
+                </h3>
                 <p class="text-small">
                   {{ project.description }}
                 </p>
