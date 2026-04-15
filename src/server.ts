@@ -37,7 +37,7 @@ const SUPPORTED_LOCALES = ["fr", "en"] as const;
 const LOCALE_PATTERN = SUPPORTED_LOCALES.join("|");
 
 /** Detecte un chemin locale-seul (/fr/, /en/) pour exempter de la normalisation. */
-const LOCALE_BARE_PATH = new RegExp(`^\\/(${LOCALE_PATTERN})\\/$/`);
+const LOCALE_BARE_PATH = new RegExp(`^\\/(${LOCALE_PATTERN})\\/$`);
 
 /** Extrait le prefixe locale d'une URL (/fr/..., /en/...). */
 const LOCALE_PREFIX_RE = new RegExp(`^\\/(${LOCALE_PATTERN})(?=\\/|$)`);
