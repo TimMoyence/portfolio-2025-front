@@ -155,9 +155,9 @@ jobs:
 
             cd "$WORKDIR"
             echo "${{ secrets.DEPLOY_REGISTRY_TOKEN }}" | docker login ghcr.io -u "${{ secrets.DEPLOY_REGISTRY_USER }}" --password-stdin || true
-                        
-            BACK_IMAGE="$BACK_IMAGE_VALUE" FRONT_IMAGE="$FRONT_IMAGE_VALUE" \
-            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" pull web-fr web-en
 
             BACK_IMAGE="$BACK_IMAGE_VALUE" FRONT_IMAGE="$FRONT_IMAGE_VALUE" \
-            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" up -d --no-deps web-fr web-en
+            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" --env-file "$WORKDIR/backend.env" pull web-fr web-en
+
+            BACK_IMAGE="$BACK_IMAGE_VALUE" FRONT_IMAGE="$FRONT_IMAGE_VALUE" \
+            docker compose -p "$PROJECT" -f "$COMPOSE_FILE" --env-file "$WORKDIR/backend.env" up -d --no-deps web-fr web-en
