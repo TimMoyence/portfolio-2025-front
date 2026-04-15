@@ -32,6 +32,19 @@ const resolveIndexHtml = (locale: string | null): string => {
 
 const app = express();
 
+/** Locales supportees — unique source de verite pour le routing SSR. */
+const SUPPORTED_LOCALES = ["fr", "en"] as const;
+const LOCALE_PATTERN = SUPPORTED_LOCALES.join("|");
+
+/** Detecte un chemin locale-seul (/fr/, /en/) pour exempter de la normalisation. */
+const LOCALE_BARE_PATH = new RegExp(`^\\/(${LOCALE_PATTERN})\\/$/`);
+
+/** Extrait le prefixe locale d'une URL (/fr/..., /en/...). */
+const LOCALE_PREFIX_RE = new RegExp(`^\\/(${LOCALE_PATTERN})(?=\\/|$)`);
+
+/** Supprime le prefixe locale d'un chemin (/fr/contact -> contact). */
+const STRIP_LOCALE_RE = new RegExp(`^\\/(${LOCALE_PATTERN})\\/?`);
+
 /**
  * Normalisation d'URL : collapse les slashes multiples et supprime
  * le trailing slash (sauf racine / et chemins locale-seul /fr/, /en/).
@@ -40,8 +53,6 @@ const app = express();
  * ou Cloudflare) ajoute systematiquement un trailing slash sur ces
  * chemins, ce qui cree une boucle 301 si on le retire.
  */
-// TODO: deriver la liste des locales depuis seo-metadata.json ou SSR_LOCALE
-const LOCALE_BARE_PATH = /^\/(fr|en)\/$/;
 app.use((req, res, next) => {
   const original = req.path;
   let normalized = original.replace(/\/{2,}/g, "/");
@@ -396,10 +407,10 @@ const buildJsonLdScripts = (
   metadata: SeoMetadataFile,
   originalUrl: string,
 ): string => {
-  const localeMatch = originalUrl.match(/^\/(fr|en)(?=\/|$)/);
+  const localeMatch = originalUrl.match(LOCALE_PREFIX_RE);
   const locale = localeMatch ? localeMatch[1] : metadata.site.defaultLocale;
   const routePath = originalUrl
-    .replace(/^\/(fr|en)\/?/, "")
+    .replace(STRIP_LOCALE_RE, "")
     .split("?")[0]
     .split("#")[0];
   const normalizedRoute = routePath ? `/${routePath}` : "/";
@@ -637,7 +648,7 @@ app.get("**", (req, res, next) => {
   // Extraire la locale depuis l'URL pour servir le bon index.server.html.
   // Chaque locale a son propre bundle SSR (traductions, <base href>, lang).
   // On resout dynamiquement pour eviter les problemes de cross-locale.
-  const localeMatch = originalUrl.match(/^\/(fr|en)(?=\/|$)/);
+  const localeMatch = originalUrl.match(LOCALE_PREFIX_RE);
   const urlLocale = localeMatch ? localeMatch[1] : null;
   const baseHref = urlLocale ? `/${urlLocale}` : "/";
 
@@ -647,7 +658,7 @@ app.get("**", (req, res, next) => {
   // silencieusement en production.
   if (urlLocale) {
     const routePath = originalUrl
-      .replace(/^\/(fr|en)\/?/, "")
+      .replace(STRIP_LOCALE_RE, "")
       .split("?")[0]
       .split("#")[0];
     const prerendered = resolve(
