@@ -422,7 +422,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
@@ -440,7 +440,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">245</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -449,7 +449,7 @@
         <source>L&apos;authentification Google n&apos;est pas configurée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">249</context>
+          <context context-type="linenumber">269</context>
         </context-group>
         <note priority="1" from="description">auth.google.notConfigured</note>
       </trans-unit>
@@ -457,7 +457,7 @@
         <source>Impossible de charger Google Sign-In.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">279</context>
         </context-group>
         <note priority="1" from="description">auth.google.loadError</note>
       </trans-unit>
@@ -465,7 +465,7 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">288</context>
+          <context context-type="linenumber">309</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
       </trans-unit>
@@ -2751,6 +2751,13 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="iaSolopreneursPageTitle" datatype="html">
+        <source> Formation IA Solopreneurs — maîtriser l&apos;intelligence artificielle pour indépendants </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="ia-solo.bloc.accrocher" datatype="html">
         <source>Accrocher</source>
         <context-group purpose="location">
@@ -4496,6 +4503,131 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
           <context context-type="linenumber">702</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.loading" datatype="html">
+        <source> Chargement de votre toolkit... </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">42,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.errorTitle" datatype="html">
+        <source> Impossible de charger le toolkit </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">57,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.errorDetail" datatype="html">
+        <source> Le lien est peut-etre expire ou invalide. Verifiez votre email ou refaites une demande. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.heroTitle" datatype="html">
+        <source> Votre boite a outils IA </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.heroGreeting" datatype="html">
+        <source> Bonjour <x id="INTERPOLATION" equiv-text="{{ toolkit.recap.firstName }}"/>, voici votre toolkit personnalise. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">86,87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.sectionCheatsheet" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>1.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Les 16 outils en un coup d&apos;oeil </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">98,99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.tableTool" datatype="html">
+        <source> Outil </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">111,112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.tableCategory" datatype="html">
+        <source> Categorie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">117,118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.tablePrice" datatype="html">
+        <source> Prix </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">123,124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.tableDescription" datatype="html">
+        <source> En une phrase </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">129,130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.sectionPrompts" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>2.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Prompts prets a copier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">172,173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.sectionWorkflows" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>3.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Workflows a mettre en place </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">221,222</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.sectionTemplates" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>4.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Templates reutilisables </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">273,274</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.sectionGamma" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Votre prompt Gamma personnalise </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">310,311</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.gammaCta" datatype="html">
+        <source> Collez ce prompt dans <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+                        href=&quot;https://gamma.app&quot;
+                        target=&quot;_blank&quot;
+                        rel=&quot;noopener noreferrer&quot;
+                        class=&quot;text-scheme-accent underline hover:no-underline&quot;
+                        &gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+                      &gt;"/> pour generer votre presentation en 60 secondes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">339,347</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.title" datatype="html">
+        <source> Recevez votre boite a outils IA </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.subtitle" datatype="html">
+        <source> Les meilleurs outils, les prix, les budgets — dans votre inbox en 30 secondes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="auditPhaseTechnicalPages" datatype="html">
         <source>Scan technique des pages</source>
         <context-group purpose="location">
@@ -4614,35 +4746,35 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Résumé de votre audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">251,253</context>
+          <context context-type="linenumber">257,259</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsTitle" datatype="html">
         <source> Audit rapide en 5 piliers </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">284,287</context>
+          <context context-type="linenumber">290,293</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsSubtitle" datatype="html">
         <source> Un diagnostic concret, actionnable et faisable en moins de 45 minutes. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">290,292</context>
+          <context context-type="linenumber">296,298</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditStepsTitle" datatype="html">
         <source> Comment ça fonctionne </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">307,309</context>
+          <context context-type="linenumber">313,315</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditHeroLabel" datatype="html">
         <source>Audit gratuit (IA + humain, 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="description">audit.hero.label</note>
       </trans-unit>
@@ -4650,7 +4782,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Audit de croissance en 15 points</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">audit.hero.title</note>
       </trans-unit>
@@ -4658,7 +4790,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, signaux de conversion). Ensuite, sous 24h, je réalise l’audit moi-même et je vous envoie une vidéo + une scorecard claire + des recommandations concrètes pour gagner en visibilité et en clients.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">audit.hero.description</note>
       </trans-unit>
@@ -4666,7 +4798,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>1. Vous laissez vos infos</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.title</note>
       </trans-unit>
@@ -4674,7 +4806,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Nom du site ou URL + contact (email ou téléphone).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.desc</note>
       </trans-unit>
@@ -4682,7 +4814,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>2. Audit instantané (IA)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">101</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.title</note>
       </trans-unit>
@@ -4690,7 +4822,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Je scanne vos pages (SEO, performance, conversion) et je sors un premier diagnostic rapide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.desc</note>
       </trans-unit>
@@ -4698,7 +4830,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>3. Audit humain sous 24h</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.title</note>
       </trans-unit>
@@ -4706,7 +4838,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Je reprends l’analyse moi-même, je priorise, et je vous envoie une vidéo + une scorecard + un plan d’actions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.desc</note>
       </trans-unit>
@@ -4714,7 +4846,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Vidéo personnalisée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.video</note>
       </trans-unit>
@@ -4722,7 +4854,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Scorecard claire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.score</note>
       </trans-unit>
@@ -4730,7 +4862,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Quick wins + priorités (impact/effort)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.wins</note>
       </trans-unit>
@@ -4738,15 +4870,111 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Aucun engagement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.noObligation</note>
+      </trans-unit>
+      <trans-unit id="auditFaqTitle" datatype="html">
+        <source>Questions fréquentes sur l&apos;audit gratuit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.title</note>
+      </trans-unit>
+      <trans-unit id="auditFaqDescription" datatype="html">
+        <source>Ce que vous devez savoir avant de demander votre audit de croissance en 15 points.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.description</note>
+      </trans-unit>
+      <trans-unit id="auditFaqQ1" datatype="html">
+        <source>Comment fonctionne l&apos;audit gratuit en 24 heures ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.q1</note>
+      </trans-unit>
+      <trans-unit id="auditFaqA1" datatype="html">
+        <source>Vous laissez l&apos;URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion). Puis, sous 24h, je reprends l&apos;analyse moi-même et vous envoie une vidéo personnalisée, une scorecard claire et un plan d&apos;actions priorisé par impact/effort.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.a1</note>
+      </trans-unit>
+      <trans-unit id="auditFaqQ2" datatype="html">
+        <source>Que contient concrètement l&apos;audit en 15 points ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.q2</note>
+      </trans-unit>
+      <trans-unit id="auditFaqA2" datatype="html">
+        <source>L&apos;audit couvre cinq piliers : conversion et clarté, vitesse et performance (Core Web Vitals), SEO fondations (titres, meta, indexation, SEO local), crédibilité et confiance, tech et scalabilité. Vous recevez une scorecard, des quick wins et des recommandations priorisées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.a2</note>
+      </trans-unit>
+      <trans-unit id="auditFaqQ3" datatype="html">
+        <source>L&apos;audit est-il vraiment gratuit ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.q3</note>
+      </trans-unit>
+      <trans-unit id="auditFaqA3" datatype="html">
+        <source>Oui, totalement. Aucun engagement, aucune carte bancaire demandée. Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h. L&apos;objectif est de vous apporter de la valeur immédiatement, et de démarrer un échange pertinent si vous le souhaitez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.a3</note>
+      </trans-unit>
+      <trans-unit id="auditFaqQ4" datatype="html">
+        <source>Qui réalise l&apos;audit : une IA ou un humain ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.q4</note>
+      </trans-unit>
+      <trans-unit id="auditFaqA4" datatype="html">
+        <source>Les deux. Un premier scan automatisé tourne instantanément via un pipeline IA (Langchain + OpenAI). Ensuite, je réalise l&apos;audit humain moi-même pour prioriser, contextualiser et formuler des recommandations concrètes adaptées à votre situation.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.a4</note>
+      </trans-unit>
+      <trans-unit id="auditFaqQ5" datatype="html">
+        <source>Pour quels types de sites l&apos;audit est-il pertinent ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.q5</note>
+      </trans-unit>
+      <trans-unit id="auditFaqA5" datatype="html">
+        <source>L&apos;audit est pertinent pour les sites vitrines, sites e-commerce, landing pages et applications métier web. Il est particulièrement adapté aux TPE, PME, indépendants et artisans qui veulent améliorer leur visibilité SEO et leur taux de conversion sans se perdre dans la technique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">audit.faq.a5</note>
       </trans-unit>
       <trans-unit id="auditPillarConversionTitle" datatype="html">
         <source>Conversion &amp; clarté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.title</note>
       </trans-unit>
@@ -4754,7 +4982,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Proposition de valeur, CTA, friction contact, mobile.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.desc</note>
       </trans-unit>
@@ -4762,7 +4990,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Vitesse &amp; performance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.title</note>
       </trans-unit>
@@ -4770,7 +4998,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>PageSpeed, poids images, Core Web Vitals.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.desc</note>
       </trans-unit>
@@ -4778,7 +5006,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>SEO fondations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.title</note>
       </trans-unit>
@@ -4786,7 +5014,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Titres, H1, meta, indexation, SEO local.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.desc</note>
       </trans-unit>
@@ -4794,7 +5022,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Crédibilité &amp; confiance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.title</note>
       </trans-unit>
@@ -4802,7 +5030,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Preuves sociales, portfolio, signaux de confiance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.desc</note>
       </trans-unit>
@@ -4810,7 +5038,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Tech &amp; scalabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.title</note>
       </trans-unit>
@@ -4818,7 +5046,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>CMS, sécurité, erreurs, maintenabilité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.desc</note>
       </trans-unit>
@@ -4826,7 +5054,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Demander un audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">audit.form.title</note>
       </trans-unit>
@@ -4834,7 +5062,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">audit.form.description</note>
       </trans-unit>
@@ -4842,7 +5070,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Nom du site ou URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">audit.form.websiteLabel</note>
       </trans-unit>
@@ -4850,7 +5078,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>ex. https://votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">audit.form.websitePlaceholder</note>
       </trans-unit>
@@ -4858,7 +5086,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Méthode de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactMethodLabel</note>
       </trans-unit>
@@ -4866,7 +5094,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactEmail</note>
       </trans-unit>
@@ -4874,7 +5102,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactPhone</note>
       </trans-unit>
@@ -4882,7 +5110,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Coordonnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactValueLabel</note>
       </trans-unit>
@@ -4890,7 +5118,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>ex. hello@votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">audit.form.emailPlaceholder</note>
       </trans-unit>
@@ -4898,7 +5126,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>ex. +33 6 98 50 32 82</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <note priority="1" from="description">audit.form.phonePlaceholder</note>
       </trans-unit>
@@ -4906,7 +5134,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Demander mon audit (scan IA immédiat + audit humain sous 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <note priority="1" from="description">audit.form.submit</note>
       </trans-unit>
@@ -4914,7 +5142,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Merci ! Scan IA lancé — audit humain envoyé sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">audit.form.success</note>
       </trans-unit>
@@ -4922,7 +5150,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Impossible d&apos;envoyer la demande. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <note priority="1" from="description">audit.form.error</note>
       </trans-unit>
@@ -4930,7 +5158,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Audit en attente...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">271</context>
         </context-group>
         <note priority="1" from="description">Audit pending step</note>
         <note priority="1" from="meaning">growthAudit.step.pending</note>
@@ -4939,11 +5167,11 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Audit terminé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">322</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">312</context>
+          <context context-type="linenumber">354</context>
         </context-group>
         <note priority="1" from="description">Audit completed step</note>
         <note priority="1" from="meaning">growthAudit.step.completed</note>
@@ -4952,11 +5180,11 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>L&apos;audit a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">302</context>
+          <context context-type="linenumber">344</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">323</context>
+          <context context-type="linenumber">365</context>
         </context-group>
         <note priority="1" from="description">Audit failed message</note>
         <note priority="1" from="meaning">growthAudit.error.failed</note>
@@ -4965,7 +5193,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Connexion interrompue pendant l&apos;audit. Rechargez la page pour vérifier le résultat.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">336</context>
+          <context context-type="linenumber">378</context>
         </context-group>
         <note priority="1" from="description">Connection lost during audit</note>
         <note priority="1" from="meaning">growthAudit.error.connectionLost</note>
@@ -4974,7 +5202,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Impossible de récupérer le résumé de l&apos;audit pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">384</context>
         </context-group>
         <note priority="1" from="description">Summary fetch error</note>
         <note priority="1" from="meaning">growthAudit.error.summaryFetch</note>
@@ -5438,15 +5666,6 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
           <context context-type="linenumber">36,37</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="notFoundImageAlt" datatype="html">
-        <source>Illustration erreur 404</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/not-found/not-found.component.ts</context>
-          <context context-type="linenumber">41,43</context>
-        </context-group>
-        <note priority="1" from="description">Image d&apos;erreur 404</note>
-        <note priority="1" from="meaning">notFound.imageAlt</note>
-      </trans-unit>
       <trans-unit id="offerServiceHeading" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ service.heading }}"/> </source>
         <context-group purpose="location">
@@ -5465,7 +5684,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Nos offres de developpement web et d&apos;accompagnement digital</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">offer.hero.title</note>
       </trans-unit>
@@ -5475,7 +5694,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
 Web, automatisation et intelligence artificielle sont utilisés comme des leviers, jamais comme des finalités.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <note priority="1" from="description">offer.hero.description</note>
       </trans-unit>
@@ -5483,7 +5702,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <note priority="1" from="description">offer.hero.actions.contact</note>
       </trans-unit>
@@ -5491,7 +5710,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">offer.hero.actions.presentation</note>
       </trans-unit>
@@ -5499,7 +5718,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">offer.packages.kicker</note>
       </trans-unit>
@@ -5507,7 +5726,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Les offres (où le cadre se construit ensemble)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <note priority="1" from="description">offer.packages.title</note>
       </trans-unit>
@@ -5515,7 +5734,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Chaque collaboration commence par une phase de compréhension.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="description">offer.packages.lead.1</note>
       </trans-unit>
@@ -5523,7 +5742,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Le périmètre, le rythme et le budget sont définis à partir du besoin réel, pas d’un catalogue de prestations.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="description">offer.packages.lead.2</note>
       </trans-unit>
@@ -5531,7 +5750,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Voici des ordres de grandeur, à titre indicatif.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <note priority="1" from="description">offer.packages.lead.3</note>
       </trans-unit>
@@ -5539,7 +5758,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Interventions ciblées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.targeted.title</note>
       </trans-unit>
@@ -5547,7 +5766,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>→ à partir de 50 €, délais courts</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.targeted.desc</note>
       </trans-unit>
@@ -5555,7 +5774,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Icône interventions ciblées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.targeted.iconAlt</note>
       </trans-unit>
@@ -5563,7 +5782,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Projets structurants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.structured.title</note>
       </trans-unit>
@@ -5571,7 +5790,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>budgets généralement compris entre 2 000 € et 4 000 €</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.structured.desc</note>
       </trans-unit>
@@ -5579,7 +5798,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Icône projets structurants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.structured.iconAlt</note>
       </trans-unit>
@@ -5587,7 +5806,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Accompagnement dans le temps</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.retainer.title</note>
       </trans-unit>
@@ -5595,7 +5814,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>engagements mensuels adaptés au rythme</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.retainer.desc</note>
       </trans-unit>
@@ -5603,7 +5822,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Icône accompagnement dans le temps</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.retainer.iconAlt</note>
       </trans-unit>
@@ -5611,7 +5830,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Formation et coaching</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.training.title</note>
       </trans-unit>
@@ -5619,7 +5838,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Développez votre connaissance d’internet, et des outils en ligne avec des services sur mesure conçus pour propulser vos collaborateurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.training.desc</note>
       </trans-unit>
@@ -5627,7 +5846,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Icône formation et coaching</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">offer.packages.items.training.iconAlt</note>
       </trans-unit>
@@ -5635,7 +5854,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Contactez-moi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">offer.packages.cta.label</note>
       </trans-unit>
@@ -5643,7 +5862,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Automatisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">112</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.automation.linkLabel</note>
       </trans-unit>
@@ -5651,7 +5870,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>fluidité, efficacité, allègement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.automation.kicker</note>
       </trans-unit>
@@ -5659,7 +5878,7 @@ Web, automatisation et intelligence artificielle sont utilisés comme des levier
         <source>Pour fluidifier l’existant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.automation.title</note>
       </trans-unit>
@@ -5671,7 +5890,7 @@ Simplifier ce qui ralentit votre quotidien.
 J’automatise des tâches et des flux existants pour gagner en fluidité, fiabilité et clarté, sans transformer votre organisation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.automation.body</note>
       </trans-unit>
@@ -5679,7 +5898,7 @@ J’automatise des tâches et des flux existants pour gagner en fluidité, fiabi
         <source>Illustration automatisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.automation.imageAlt</note>
       </trans-unit>
@@ -5687,7 +5906,7 @@ J’automatise des tâches et des flux existants pour gagner en fluidité, fiabi
         <source>Découvrir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.automation.actions.primary</note>
       </trans-unit>
@@ -5695,7 +5914,7 @@ J’automatise des tâches et des flux existants pour gagner en fluidité, fiabi
         <source>Outil métier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.businessTool.linkLabel</note>
       </trans-unit>
@@ -5703,7 +5922,7 @@ J’automatise des tâches et des flux existants pour gagner en fluidité, fiabi
         <source>structure, clarté, pilotage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.businessTool.kicker</note>
       </trans-unit>
@@ -5711,7 +5930,7 @@ J’automatise des tâches et des flux existants pour gagner en fluidité, fiabi
         <source>Pour structurer un usage clé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">131</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.businessTool.title</note>
       </trans-unit>
@@ -5723,7 +5942,7 @@ Un outil pensé pour votre manière de travailler.
 Je conçois des applications web sobres et utiles, centrées sur un usage métier clé, avec juste ce qu’il faut d’intelligence intégrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.businessTool.body</note>
       </trans-unit>
@@ -5731,7 +5950,7 @@ Je conçois des applications web sobres et utiles, centrées sur un usage métie
         <source>Illustration outil métier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.businessTool.imageAlt</note>
       </trans-unit>
@@ -5739,7 +5958,7 @@ Je conçois des applications web sobres et utiles, centrées sur un usage métie
         <source>Explorer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.businessTool.actions.primary</note>
       </trans-unit>
@@ -5747,7 +5966,7 @@ Je conçois des applications web sobres et utiles, centrées sur un usage métie
         <source>Évolutions &amp; accompagnement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.evolution.linkLabel</note>
       </trans-unit>
@@ -5755,7 +5974,7 @@ Je conçois des applications web sobres et utiles, centrées sur un usage métie
         <source>continuité, stabilité, suivi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.evolution.kicker</note>
       </trans-unit>
@@ -5763,7 +5982,7 @@ Je conçois des applications web sobres et utiles, centrées sur un usage métie
         <source>Faire vivre la solution dans le temps</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.evolution.title</note>
       </trans-unit>
@@ -5775,7 +5994,7 @@ Faire évoluer sans complexifier.
 J’accompagne les solutions dans le temps pour qu’elles restent alignées avec vos usages, vos priorités et votre rythme.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.evolution.body</note>
       </trans-unit>
@@ -5783,7 +6002,7 @@ J’accompagne les solutions dans le temps pour qu’elles restent alignées ave
         <source>Illustration évolutions et accompagnement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.evolution.imageAlt</note>
       </trans-unit>
@@ -5791,7 +6010,7 @@ J’accompagne les solutions dans le temps pour qu’elles restent alignées ave
         <source>Analyser</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.evolution.actions.primary</note>
       </trans-unit>
@@ -5799,7 +6018,7 @@ J’accompagne les solutions dans le temps pour qu’elles restent alignées ave
         <source>Accompagnement global</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">163</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.global.linkLabel</note>
       </trans-unit>
@@ -5807,7 +6026,7 @@ J’accompagne les solutions dans le temps pour qu’elles restent alignées ave
         <source>vision, cadrage, direction</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.global.kicker</note>
       </trans-unit>
@@ -5815,7 +6034,7 @@ J’accompagne les solutions dans le temps pour qu’elles restent alignées ave
         <source>Quand le besoin est large ou encore flou</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.global.title</note>
       </trans-unit>
@@ -5827,7 +6046,7 @@ Clarifier avant de construire.
 J’interviens lorsque le besoin est large ou flou, pour structurer les priorités, définir les bons leviers et poser un cadre clair avant toute décision.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.global.body</note>
       </trans-unit>
@@ -5835,7 +6054,7 @@ J’interviens lorsque le besoin est large ou flou, pour structurer les priorit�
         <source>Illustration accompagnement global</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.global.imageAlt</note>
       </trans-unit>
@@ -5843,7 +6062,7 @@ J’interviens lorsque le besoin est large ou flou, pour structurer les priorit�
         <source>Apprendre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">offer.approach.items.global.actions.primary</note>
       </trans-unit>
@@ -5851,7 +6070,7 @@ J’interviens lorsque le besoin est large ou flou, pour structurer les priorit�
         <source>Expertise technique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">187</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.tech.linkLabel</note>
       </trans-unit>
@@ -5859,7 +6078,7 @@ J’interviens lorsque le besoin est large ou flou, pour structurer les priorit�
         <source>Qualité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.tech.kicker</note>
       </trans-unit>
@@ -5867,7 +6086,7 @@ J’interviens lorsque le besoin est large ou flou, pour structurer les priorit�
         <source>Des choix techniques clairs et maîtrisés</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.tech.title</note>
       </trans-unit>
@@ -5877,7 +6096,7 @@ J’interviens lorsque le besoin est large ou flou, pour structurer les priorit�
 Les choix techniques sont expliqués sans jargons, assumés et adaptés au contexte et à votre usage réel, afin de garantir des outils compréhensibles, fiables et durables.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.tech.body</note>
       </trans-unit>
@@ -5885,7 +6104,7 @@ Les choix techniques sont expliqués sans jargons, assumés et adaptés au conte
         <source>Illustration expertise technique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">190</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.tech.imageAlt</note>
       </trans-unit>
@@ -5893,7 +6112,7 @@ Les choix techniques sont expliqués sans jargons, assumés et adaptés au conte
         <source>Discuter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.tech.actions.primary</note>
       </trans-unit>
@@ -5901,7 +6120,7 @@ Les choix techniques sont expliqués sans jargons, assumés et adaptés au conte
         <source>Relation de continuité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">205</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.continuity.linkLabel</note>
       </trans-unit>
@@ -5909,7 +6128,7 @@ Les choix techniques sont expliqués sans jargons, assumés et adaptés au conte
         <source>Accompagnement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">203</context>
+          <context context-type="linenumber">206</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.continuity.kicker</note>
       </trans-unit>
@@ -5917,7 +6136,7 @@ Les choix techniques sont expliqués sans jargons, assumés et adaptés au conte
         <source>Un accompagnement humain dans la durée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">207</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.continuity.title</note>
       </trans-unit>
@@ -5927,7 +6146,7 @@ Les choix techniques sont expliqués sans jargons, assumés et adaptés au conte
 Un accompagnement est proposé pour faire évoluer les outils dans le temps, en fonction des usages réels, des priorités et du rythme de l’activité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">208</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.continuity.body</note>
       </trans-unit>
@@ -5935,7 +6154,7 @@ Un accompagnement est proposé pour faire évoluer les outils dans le temps, en 
         <source>Illustration accompagnement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">210</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.continuity.imageAlt</note>
       </trans-unit>
@@ -5943,7 +6162,7 @@ Un accompagnement est proposé pour faire évoluer les outils dans le temps, en 
         <source>Discuter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">214</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.continuity.actions.primary</note>
       </trans-unit>
@@ -5951,7 +6170,7 @@ Un accompagnement est proposé pour faire évoluer les outils dans le temps, en 
         <source>Stratégie digitale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">222</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.strategy.linkLabel</note>
       </trans-unit>
@@ -5959,7 +6178,7 @@ Un accompagnement est proposé pour faire évoluer les outils dans le temps, en 
         <source>Performance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">223</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.strategy.kicker</note>
       </trans-unit>
@@ -5967,7 +6186,7 @@ Un accompagnement est proposé pour faire évoluer les outils dans le temps, en 
         <source>Décider avec méthode avant d’agir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.strategy.title</note>
       </trans-unit>
@@ -5977,7 +6196,7 @@ Un accompagnement est proposé pour faire évoluer les outils dans le temps, en 
 L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les leviers les plus pertinents pour produire un impact mesurable.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">225</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.strategy.body</note>
       </trans-unit>
@@ -5985,7 +6204,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Illustration stratégie digitale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.strategy.imageAlt</note>
       </trans-unit>
@@ -5993,7 +6212,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Discuter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">231</context>
         </context-group>
         <note priority="1" from="description">offer.principles.items.strategy.actions.primary</note>
       </trans-unit>
@@ -6001,7 +6220,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Prêt à clarifier et faire évoluer vos outils digitaux ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">240</context>
         </context-group>
         <note priority="1" from="description">offer.cta.title</note>
       </trans-unit>
@@ -6009,7 +6228,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">238</context>
+          <context context-type="linenumber">241</context>
         </context-group>
         <note priority="1" from="description">offer.cta.description</note>
       </trans-unit>
@@ -6017,7 +6236,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Me contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">244</context>
         </context-group>
         <note priority="1" from="description">offer.cta.actions.primary</note>
       </trans-unit>
@@ -6025,7 +6244,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Voir la présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">245</context>
+          <context context-type="linenumber">248</context>
         </context-group>
         <note priority="1" from="description">offer.cta.actions.secondary</note>
       </trans-unit>
@@ -6033,7 +6252,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">254</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <note priority="1" from="description">offer.contact.lead.1</note>
       </trans-unit>
@@ -6041,9 +6260,105 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">258</context>
         </context-group>
         <note priority="1" from="description">offer.contact.lead.2</note>
+      </trans-unit>
+      <trans-unit id="offerFaqTitle" datatype="html">
+        <source>Questions fréquentes sur mes services</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">262</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.title</note>
+      </trans-unit>
+      <trans-unit id="offerFaqDescription" datatype="html">
+        <source>Les questions qui reviennent le plus souvent lors d&apos;un premier échange.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">263</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.description</note>
+      </trans-unit>
+      <trans-unit id="offerFaqQ1" datatype="html">
+        <source>Combien coûte un site web sur mesure à Bordeaux ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">266</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.q1</note>
+      </trans-unit>
+      <trans-unit id="offerFaqA1" datatype="html">
+        <source>Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l&apos;objet d&apos;un devis personnalisé selon le périmètre, le rythme et la complexité.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">267</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.a1</note>
+      </trans-unit>
+      <trans-unit id="offerFaqQ2" datatype="html">
+        <source>Quel est le délai pour créer un site web ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">270</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.q2</note>
+      </trans-unit>
+      <trans-unit id="offerFaqA2" datatype="html">
+        <source>Les interventions ciblées se livrent en quelques jours. Les projets structurants prennent généralement 2 à 6 semaines selon la complexité, les itérations et les validations.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">271</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.a2</note>
+      </trans-unit>
+      <trans-unit id="offerFaqQ3" datatype="html">
+        <source>Proposez-vous un accompagnement après la livraison ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">274</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.q3</note>
+      </trans-unit>
+      <trans-unit id="offerFaqA3" datatype="html">
+        <source>Oui, l&apos;accompagnement dans le temps est un engagement mensuel adapté à votre rythme. Il inclut évolutions, maintenance, conseils et ajustements au fil des usages réels.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">275</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.a3</note>
+      </trans-unit>
+      <trans-unit id="offerFaqQ4" datatype="html">
+        <source>Travaillez-vous avec les TPE, PME et indépendants uniquement ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">278</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.q4</note>
+      </trans-unit>
+      <trans-unit id="offerFaqA4" datatype="html">
+        <source>Je collabore principalement avec des indépendants, TPE et PME à Bordeaux et en France. L&apos;approche sobre et progressive est particulièrement adaptée aux structures qui veulent évoluer sans surcoût technique ni complexité inutile.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">279</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.a4</note>
+      </trans-unit>
+      <trans-unit id="offerFaqQ5" datatype="html">
+        <source>Quelles technologies utilisez-vous pour le développement web ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">282</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.q5</note>
+      </trans-unit>
+      <trans-unit id="offerFaqA5" datatype="html">
+        <source>Angular, NestJS, TypeScript, Node.js et PostgreSQL pour le cœur technique. Pour l&apos;IA, j&apos;utilise les LLMs (Claude, OpenAI) via des architectures RAG et des pipelines Langchain. Les choix sont toujours justifiés par l&apos;usage, pas par la mode.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/offer/offer.component.ts</context>
+          <context context-type="linenumber">283</context>
+        </context-group>
+        <note priority="1" from="description">offer.faq.a5</note>
       </trans-unit>
       <trans-unit id="presentationTechHeading" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ technologySection.title }}"/> </source>
@@ -7157,7 +7472,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Sebastian </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">42,45</context>
+          <context context-type="linenumber">47,50</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.title</note>
       </trans-unit>
@@ -7165,7 +7480,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> Votre majordome de suivi de consommation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">48,52</context>
+          <context context-type="linenumber">53,57</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.description</note>
       </trans-unit>
@@ -7173,7 +7488,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Alcool aujourd&apos;hui</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">62,64</context>
+          <context context-type="linenumber">67,69</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.counter.alcohol</note>
       </trans-unit>
@@ -7181,11 +7496,11 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Objectif</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">73,75</context>
+          <context context-type="linenumber">78,80</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">105,107</context>
+          <context context-type="linenumber">110,112</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.counter.goal</note>
       </trans-unit>
@@ -7193,7 +7508,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Cafe aujourd&apos;hui</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">94,96</context>
+          <context context-type="linenumber">99,101</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.counter.coffee</note>
       </trans-unit>
@@ -10045,7 +10360,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> © 2025 Moyence. All rights reserved. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
-          <context context-type="linenumber">114,118</context>
+          <context context-type="linenumber">120,124</context>
         </context-group>
         <note priority="1" from="description">Footer copyright</note>
         <note priority="1" from="meaning">footer.copyright</note>
@@ -10054,7 +10369,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Accueil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.home</note>
@@ -10063,7 +10378,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.presentation</note>
@@ -10072,7 +10387,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.projects</note>
@@ -10081,7 +10396,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.services</note>
@@ -10090,7 +10405,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.facebook</note>
@@ -10099,7 +10414,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
@@ -10108,7 +10423,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.terms</note>
@@ -10117,7 +10432,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.privacy</note>
@@ -10126,7 +10441,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Paramètres de cookies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.cookiesSettings</note>
@@ -10458,7 +10773,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Professional Portfolio | Web Developer &amp; Designer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Fallback SEO title</note>
         <note priority="1" from="meaning">seo.default.title</note>
@@ -10467,7 +10782,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">Fallback SEO description</note>
         <note priority="1" from="meaning">seo.default.description</note>
@@ -10476,7 +10791,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>web development</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.webDev</note>
@@ -10485,7 +10800,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>portfolio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">183</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.portfolio</note>
@@ -10494,7 +10809,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>frontend</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">159</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.frontend</note>
@@ -10503,7 +10818,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>backend</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">185</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.backend</note>
@@ -10512,7 +10827,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>full stack</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.fullstack</note>
@@ -10521,7 +10836,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>developer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">187</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.developer</note>
@@ -10579,7 +10894,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data/contact-methods.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Contact method label</note>
         <note priority="1" from="meaning">contact.method.phone.label</note>
@@ -10588,7 +10903,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>+33 6 98 50 32 82</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data/contact-methods.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.phone.value</note>
@@ -10597,7 +10912,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Bureau</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data/contact-methods.ts</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <note priority="1" from="description">Contact method label</note>
         <note priority="1" from="meaning">contact.method.office.label</note>
@@ -10606,7 +10921,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Bordeaux, 33100, France</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data/contact-methods.ts</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.office.value</note>

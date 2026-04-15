@@ -35,7 +35,10 @@ type PageState = "loading" | "loaded" | "error";
             <div
               class="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-scheme-accent"
             ></div>
-            <p class="mt-4 text-sm text-scheme-text-muted">
+            <p
+              class="mt-4 text-sm text-scheme-text-muted"
+              i18n="@@formations.toolkitPrivate.loading"
+            >
               Chargement de votre toolkit...
             </p>
           </div>
@@ -47,10 +50,16 @@ type PageState = "loading" | "loaded" | "error";
           class="min-h-screen flex items-center justify-center bg-scheme-background px-4"
         >
           <div class="text-center max-w-md">
-            <p class="text-lg font-medium text-red-600">
+            <p
+              class="text-lg font-medium text-red-600"
+              i18n="@@formations.toolkitPrivate.errorTitle"
+            >
               Impossible de charger le toolkit
             </p>
-            <p class="mt-2 text-sm text-scheme-text-muted">
+            <p
+              class="mt-2 text-sm text-scheme-text-muted"
+              i18n="@@formations.toolkitPrivate.errorDetail"
+            >
               Le lien est peut-etre expire ou invalide. Verifiez votre email ou
               refaites une demande.
             </p>
@@ -64,10 +73,16 @@ type PageState = "loading" | "loaded" | "error";
             <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
               <!-- En-tete -->
               <div class="text-center mb-12">
-                <h1 class="font-heading text-h2 sm:text-h1 text-scheme-text">
+                <h1
+                  class="font-heading text-h2 sm:text-h1 text-scheme-text"
+                  i18n="@@formations.toolkitPrivate.heroTitle"
+                >
                   Votre boite a outils IA
                 </h1>
-                <p class="mt-3 text-base text-scheme-text-muted">
+                <p
+                  class="mt-3 text-base text-scheme-text-muted"
+                  i18n="@@formations.toolkitPrivate.heroGreeting"
+                >
                   Bonjour {{ toolkit.recap.firstName }}, voici votre toolkit
                   personnalise.
                 </p>
@@ -78,6 +93,7 @@ type PageState = "loading" | "loaded" | "error";
                 <section class="mb-12">
                   <h2
                     class="font-heading text-h4 text-scheme-text mb-6 flex items-center gap-2"
+                    i18n="@@formations.toolkitPrivate.sectionCheatsheet"
                   >
                     <span class="text-scheme-accent">1.</span> Les 16 outils en
                     un coup d'oeil
@@ -90,21 +106,25 @@ type PageState = "loading" | "loaded" | "error";
                         <tr>
                           <th
                             class="px-4 py-3 text-left font-semibold text-gray-700"
+                            i18n="@@formations.toolkitPrivate.tableTool"
                           >
                             Outil
                           </th>
                           <th
                             class="px-4 py-3 text-left font-semibold text-gray-700"
+                            i18n="@@formations.toolkitPrivate.tableCategory"
                           >
                             Categorie
                           </th>
                           <th
                             class="px-4 py-3 text-left font-semibold text-gray-700"
+                            i18n="@@formations.toolkitPrivate.tablePrice"
                           >
                             Prix
                           </th>
                           <th
                             class="px-4 py-3 text-left font-semibold text-gray-700"
+                            i18n="@@formations.toolkitPrivate.tableDescription"
                           >
                             En une phrase
                           </th>
@@ -147,6 +167,7 @@ type PageState = "loading" | "loaded" | "error";
                 <section class="mb-12">
                   <h2
                     class="font-heading text-h4 text-scheme-text mb-6 flex items-center gap-2"
+                    i18n="@@formations.toolkitPrivate.sectionPrompts"
                   >
                     <span class="text-scheme-accent">2.</span> Prompts prets a
                     copier
@@ -195,6 +216,7 @@ type PageState = "loading" | "loaded" | "error";
                 <section class="mb-12">
                   <h2
                     class="font-heading text-h4 text-scheme-text mb-6 flex items-center gap-2"
+                    i18n="@@formations.toolkitPrivate.sectionWorkflows"
                   >
                     <span class="text-scheme-accent">3.</span> Workflows a
                     mettre en place
@@ -246,6 +268,7 @@ type PageState = "loading" | "loaded" | "error";
                 <section class="mb-12">
                   <h2
                     class="font-heading text-h4 text-scheme-text mb-6 flex items-center gap-2"
+                    i18n="@@formations.toolkitPrivate.sectionTemplates"
                   >
                     <span class="text-scheme-accent">4.</span> Templates
                     reutilisables
@@ -282,6 +305,7 @@ type PageState = "loading" | "loaded" | "error";
                 <section class="mb-12">
                   <h2
                     class="font-heading text-h4 text-scheme-text mb-6 flex items-center gap-2"
+                    i18n="@@formations.toolkitPrivate.sectionGamma"
                   >
                     <span class="text-scheme-accent">5.</span> Votre prompt
                     Gamma personnalise
@@ -308,7 +332,10 @@ type PageState = "loading" | "loaded" | "error";
                         }}
                       </button>
                     </div>
-                    <p class="mt-3 text-xs text-scheme-text-muted">
+                    <p
+                      class="mt-3 text-xs text-scheme-text-muted"
+                      i18n="@@formations.toolkitPrivate.gammaCta"
+                    >
                       Collez ce prompt dans
                       <a
                         href="https://gamma.app"

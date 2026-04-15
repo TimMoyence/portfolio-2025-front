@@ -11,11 +11,13 @@ import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import type { Subscription } from "rxjs";
 import type { ClientReport } from "../../core/models/audit-client-report.model";
-import type {
-  AuditContactMethod,
-  AuditRequestPayload,
-  AuditStreamEvent,
-  AuditSummaryResponse,
+import {
+  type AuditContactMethod,
+  type AuditRequestPayload,
+  type AuditStreamEvent,
+  type AuditSummaryResponse,
+  type PillarKey,
+  PILLAR_KEYS,
 } from "../../core/models/audit-request.model";
 import type { AuditRequestPort } from "../../core/ports/audit-request.port";
 import { AUDIT_REQUEST_PORT } from "../../core/ports/audit-request.port";
@@ -191,12 +193,13 @@ export class GrowthAuditComponent implements OnDestroy {
       : this.formLabels.phonePlaceholder;
   }
 
-  get scoreEntries(): Array<{ key: string; score: number }> {
+  get scoreEntries(): Array<{ key: PillarKey; score: number }> {
     if (!this.auditSummary) return [];
-    return Object.entries(this.auditSummary.pillarScores).map(
-      ([key, score]) => ({
+    const scores = this.auditSummary.pillarScores;
+    return PILLAR_KEYS.filter((key) => Number.isFinite(scores[key])).map(
+      (key) => ({
         key,
-        score,
+        score: scores[key],
       }),
     );
   }

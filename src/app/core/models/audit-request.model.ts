@@ -7,6 +7,31 @@ export type AuditProcessingStatus =
   | "COMPLETED"
   | "FAILED";
 
+/**
+ * Cle litterale d'un pilier d'audit. Duplique du type backend
+ * `PillarKey` (scoring.service.ts) — aucune dependance cross-repo.
+ * Toute evolution cote backend doit etre resynchronisee ici manuellement.
+ */
+export type PillarKey =
+  | "seo"
+  | "performance"
+  | "technical"
+  | "trust"
+  | "conversion"
+  | "aiVisibility"
+  | "citationWorthiness";
+
+/** Liste ordonnee des 7 cles de piliers — source unique pour l'iteration typee. */
+export const PILLAR_KEYS: readonly PillarKey[] = [
+  "seo",
+  "performance",
+  "technical",
+  "trust",
+  "conversion",
+  "aiVisibility",
+  "citationWorthiness",
+] as const;
+
 export interface AuditRequestPayload {
   websiteName: string;
   contactMethod: AuditContactMethod;
@@ -29,6 +54,11 @@ export interface AuditSummaryResponse {
   summaryText: string | null;
   keyChecks: Record<string, unknown>;
   quickWins: string[];
+  /**
+   * Piliers scores par le backend. Type `Record<string, number>` a la boundary
+   * HTTP pour tolerer une eventuelle evolution de la liste cote serveur.
+   * Pour l'iteration typee, utiliser `PILLAR_KEYS`.
+   */
   pillarScores: Record<string, number>;
 }
 

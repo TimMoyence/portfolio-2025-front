@@ -16,10 +16,16 @@ import { ToolkitFormComponent } from "../../../../shared/components/toolkit-form
     >
       <div class="w-full max-w-md">
         <div class="text-center mb-8">
-          <h1 class="font-heading text-h3 text-scheme-text">
+          <h1
+            class="font-heading text-h3 text-scheme-text"
+            i18n="@@formations.toolkit.title"
+          >
             Recevez votre boite a outils IA
           </h1>
-          <p class="mt-3 text-sm text-scheme-text-muted leading-relaxed">
+          <p
+            class="mt-3 text-sm text-scheme-text-muted leading-relaxed"
+            i18n="@@formations.toolkit.subtitle"
+          >
             Les meilleurs outils, les prix, les budgets — dans votre inbox en 30
             secondes.
           </p>

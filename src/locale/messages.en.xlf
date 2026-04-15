@@ -10962,5 +10962,107 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target> Generate the prompt </target>
       </segment>
     </unit>
+    <unit id="formations.toolkit.title">
+      <segment>
+        <source>Recevez votre boite a outils IA</source>
+        <target>Get your AI toolkit</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.subtitle">
+      <segment>
+        <source>Les meilleurs outils, les prix, les budgets — dans votre inbox en 30 secondes.</source>
+        <target>The best tools, pricing and budgets — in your inbox in 30 seconds.</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.loading">
+      <segment>
+        <source>Chargement de votre toolkit...</source>
+        <target>Loading your toolkit...</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.errorTitle">
+      <segment>
+        <source>Impossible de charger le toolkit</source>
+        <target>Unable to load the toolkit</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.errorDetail">
+      <segment>
+        <source>Le lien est peut-etre expire ou invalide. Verifiez votre email ou refaites une demande.</source>
+        <target>The link may be expired or invalid. Check your email or request a new one.</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.heroTitle">
+      <segment>
+        <source>Votre boite a outils IA</source>
+        <target>Your AI toolkit</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.heroGreeting">
+      <segment>
+        <source>Bonjour <x id="INTERPOLATION" equiv-text="{{ toolkit.recap.firstName }}"/>, voici votre toolkit personnalise.</source>
+        <target>Hi <x id="INTERPOLATION" equiv-text="{{ toolkit.recap.firstName }}"/>, here is your personalized toolkit.</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.sectionCheatsheet">
+      <segment>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>1.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Les 16 outils en un coup d'oeil</source>
+        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>1.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> The 16 tools at a glance</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.tableTool">
+      <segment>
+        <source>Outil</source>
+        <target>Tool</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.tableCategory">
+      <segment>
+        <source>Categorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.tablePrice">
+      <segment>
+        <source>Prix</source>
+        <target>Price</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.tableDescription">
+      <segment>
+        <source>En une phrase</source>
+        <target>In one sentence</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.sectionPrompts">
+      <segment>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>2.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Prompts prets a copier</source>
+        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>2.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Ready-to-copy prompts</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.sectionWorkflows">
+      <segment>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>3.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Workflows a mettre en place</source>
+        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>3.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Workflows to set up</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.sectionTemplates">
+      <segment>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>4.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Templates reutilisables</source>
+        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>4.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Reusable templates</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.sectionGamma">
+      <segment>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Votre prompt Gamma personnalise</source>
+        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Your personalized Gamma prompt</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.gammaCta">
+      <segment>
+        <source>Collez ce prompt dans <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://gamma.app&quot;&gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> pour generer votre presentation en 60 secondes.</source>
+        <target>Paste this prompt into <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://gamma.app&quot;&gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to generate your presentation in 60 seconds.</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
