@@ -675,12 +675,19 @@ app.get("**", (req, res, next) => {
   // Fallback SSR dynamique pour les routes non pre-rendues.
   const documentFilePath = resolveIndexHtml(urlLocale);
 
+  // publicPath doit pointer vers le dossier de la locale pour que
+  // CommonEngine trouve les stylesheets hashees (styles-XXXX.css)
+  // qui sont dans browser/fr/ ou browser/en/, pas browser/.
+  const ssrPublicPath = urlLocale
+    ? resolve(browserDistFolder, urlLocale)
+    : browserDistFolder;
+
   commonEngine
     .render({
       bootstrap,
       documentFilePath,
       url: `${protocol}://${headers.host}${originalUrl}`,
-      publicPath: browserDistFolder,
+      publicPath: ssrPublicPath,
       providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
     })
     .then((html) => {
