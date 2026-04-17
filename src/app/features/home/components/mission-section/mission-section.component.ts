@@ -57,6 +57,31 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
               usageset à mettre en place des solutions compréhensibles, adaptées
               à la réalité terrain et pensées pour durer.
             </p>
+            <p
+              class="pt-2 md:pt-3 lg:pt-4 text-sm md:text-base lg:text-medium"
+              i18n="
+                mission.internalLinks|Internal linking paragraph (P6.4 topical
+                authority)@@missionInternalLinks"
+            >
+              Si vous êtes
+              <a
+                routerLink="/offer"
+                class="underline text-scheme-accent hover:text-scheme-accent-hover"
+                >une TPE/PME qui cherche un développeur Angular à Bordeaux</a
+              >, consultez mes
+              <a
+                routerLink="/formations"
+                class="underline text-scheme-accent hover:text-scheme-accent-hover"
+                >formations IA pour solopreneurs</a
+              >
+              ou lancez un
+              <a
+                routerLink="/growth-audit"
+                class="underline text-scheme-accent hover:text-scheme-accent-hover"
+                >audit SEO gratuit en 24h</a
+              >
+              pour diagnostiquer votre site.
+            </p>
             <div class="mt-6 text-xs flex md:mt-8">
               <a
                 [routerLink]="'/contact'"
