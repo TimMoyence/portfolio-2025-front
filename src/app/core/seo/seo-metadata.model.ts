@@ -55,6 +55,12 @@ export interface SeoMetadataSite {
 export interface SeoMetadataGlobal {
   localBusiness: Record<string, unknown>;
   siteNavigation: Record<string, unknown>;
+  /**
+   * Schema Person standalone injecte en top-level sur toutes les pages
+   * (P1.11). Referenciable via `@id=https://asilidesign.fr/#person` depuis
+   * `author`/`founder` des autres blocs.
+   */
+  person?: Record<string, unknown>;
 }
 
 export interface SeoMetadataFile {

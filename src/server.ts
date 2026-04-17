@@ -306,6 +306,28 @@ const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   return lines.filter((line) => line !== undefined).join("\n") + "\n";
 };
 
+/**
+ * User-agents des moteurs IA generatifs a whitelister explicitement (P1.7).
+ * L'Allow: / explicite produit un signal positif de crawlabilite pour
+ * ChatGPT, Perplexity, Google AI Overview et Bing Copilot. Les pages non
+ * indexables (`index:false`) restent disallowed globalement via le bloc
+ * `User-agent: *` en amont.
+ *
+ * @see https://platform.openai.com/docs/gptbot
+ * @see https://docs.anthropic.com/en/docs/claude-code/claudebot
+ * @see https://docs.perplexity.ai/guides/bots
+ * @see https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers
+ */
+const AI_USER_AGENTS: ReadonlyArray<string> = [
+  "GPTBot",
+  "ChatGPT-User",
+  "ClaudeBot",
+  "anthropic-ai",
+  "PerplexityBot",
+  "Google-Extended",
+  "CCBot",
+];
+
 const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const locales = metadata.site.locales ?? [];
   const disallowPaths = new Set<string>();
@@ -319,18 +341,86 @@ const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
     }
   }
 
-  const lines = ["User-agent: *"];
-  if (disallowPaths.size === 0) {
-    lines.push("Disallow:");
-  } else {
-    for (const path of disallowPaths) {
-      lines.push(`Disallow: ${path}`);
+  const buildAgentBlock = (agent: string): string[] => {
+    const block = [`User-agent: ${agent}`];
+    if (disallowPaths.size === 0) {
+      block.push("Allow: /");
+    } else {
+      for (const path of disallowPaths) {
+        block.push(`Disallow: ${path}`);
+      }
+      block.push("Allow: /");
     }
+    return block;
+  };
+
+  const lines: string[] = [];
+  lines.push(...buildAgentBlock("*"));
+  for (const agent of AI_USER_AGENTS) {
+    lines.push("");
+    lines.push(...buildAgentBlock(agent));
   }
 
   const sitemapUrl = new URL("/sitemap.xml", baseUrl).toString();
+  lines.push("");
   lines.push(`Sitemap: ${sitemapUrl}`);
   return `${lines.join("\n")}\n`;
+};
+
+/**
+ * Construit le contenu /llms-full.txt (P1.8). Extension proposee au
+ * standard llms.txt : agrege pour chaque page indexable son titre, sa
+ * description, son URL, son dateModified et ses mots-cles principaux.
+ * Les LLMs peuvent ainsi "charger" l'ensemble des pages clés en un
+ * seul fetch pour citer le site avec contexte.
+ */
+const buildLlmsFullTxt = (
+  metadata: SeoMetadataFile,
+  baseUrl: string,
+): string => {
+  const defaultLocale = metadata.site.defaultLocale ?? "fr";
+  const indexablePages = metadata.pages.filter((page) => page.index !== false);
+
+  const lines: string[] = [];
+  const site = metadata.global?.localBusiness as
+    | { name?: string; description?: string }
+    | undefined;
+  lines.push(`# ${site?.name ?? "Asili Design"} — llms-full`);
+  lines.push("");
+  lines.push(
+    "> Agregation complete du contenu indexable (title, description, URL,",
+  );
+  lines.push(
+    "> dateModified, mots-cles) pour ingestion par moteurs IA generatifs.",
+  );
+  lines.push(
+    "> Format non-standard — extension proposee au standard llmstxt.org.",
+  );
+  lines.push("");
+
+  for (const page of indexablePages) {
+    const meta =
+      page.locales[defaultLocale] ?? Object.values(page.locales ?? {})[0];
+    if (!meta) continue;
+    const path = page.id === "home" ? "/" : page.path;
+    const href = new URL(
+      buildLocalizedPath(defaultLocale, path),
+      baseUrl,
+    ).toString();
+
+    lines.push(`## ${meta.title}`);
+    lines.push("");
+    lines.push(`- URL: ${href}`);
+    if (page.lastmod) lines.push(`- Last modified: ${page.lastmod}`);
+    if (meta.keywords && meta.keywords.length > 0) {
+      lines.push(`- Keywords: ${meta.keywords.slice(0, 10).join(", ")}`);
+    }
+    lines.push("");
+    lines.push(meta.description);
+    lines.push("");
+  }
+
+  return lines.join("\n") + "\n";
 };
 
 /**
@@ -429,6 +519,13 @@ const buildJsonLdScripts = (
   if (metadata.global?.siteNavigation) {
     addScript(metadata.global.siteNavigation);
   }
+  // P1.11 : Person standalone top-level (Knowledge Panel eligibility).
+  // Exclure le duplicat sur /presentation ou Person existe deja comme
+  // mainEntity du ProfilePage (cf. seo-metadata.json).
+  const isPresentationRoute = normalizedRoute === "/presentation";
+  if (metadata.global?.person && !isPresentationRoute) {
+    addScript(metadata.global.person);
+  }
 
   // Schema specifique a la page
   const page = metadata.pages.find(
@@ -469,16 +566,90 @@ const buildJsonLdScripts = (
 };
 
 /**
- * Injecte les scripts JSON-LD dans le HTML avant </head>.
+ * Construit les balises `<link rel="canonical">` et `<link rel="alternate"
+ * hreflang="...">` pour la page courante. Corrige le bug P1.6 ou le HTML
+ * prerendu ne contenait aucun hreflang/canonical (ils etaient injectes
+ * seulement apres hydratation cote client, donc invisibles pour les
+ * crawlers SEO).
+ *
+ * Ne retourne rien si la page n'est pas indexable ou introuvable.
  */
-const injectJsonLd = (
+const buildSeoLinkTags = (
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+  baseUrl: string,
+): string => {
+  const locales = metadata.site.locales ?? [];
+  const defaultLocale = metadata.site.defaultLocale ?? locales[0] ?? "fr";
+
+  const routePath = originalUrl
+    .replace(STRIP_LOCALE_RE, "")
+    .split("?")[0]
+    .split("#")[0];
+  const normalizedRoute = routePath ? `/${routePath}` : "/";
+
+  const page = metadata.pages.find(
+    (p) =>
+      normalizePath(p.path) === normalizePath(normalizedRoute) ||
+      (normalizedRoute === "/" && p.id === "home"),
+  );
+
+  if (!page || page.index === false) return "";
+
+  const pagePath = page.id === "home" ? "/" : page.path;
+  const currentLocale =
+    originalUrl.match(LOCALE_PREFIX_RE)?.[1] ?? defaultLocale;
+  const tags: string[] = [];
+
+  const canonicalHref = new URL(
+    buildLocalizedPath(currentLocale, pagePath),
+    baseUrl,
+  ).toString();
+  tags.push(`<link rel="canonical" href="${canonicalHref}" />`);
+
+  for (const locale of locales) {
+    const href = new URL(
+      buildLocalizedPath(locale, pagePath),
+      baseUrl,
+    ).toString();
+    tags.push(`<link rel="alternate" hreflang="${locale}" href="${href}" />`);
+  }
+
+  const defaultHref = new URL(
+    buildLocalizedPath(defaultLocale, pagePath),
+    baseUrl,
+  ).toString();
+  tags.push(
+    `<link rel="alternate" hreflang="x-default" href="${defaultHref}" />`,
+  );
+
+  return tags.join("\n");
+};
+
+/**
+ * Injecte les balises SEO (<link canonical>, <link hreflang>, <script
+ * JSON-LD>) dans le HTML avant </head>. Supprime au passage les tags
+ * canonical/hreflang deja presents pour eviter les collisions quand le
+ * SSR dynamique les aurait partiellement generes cote client.
+ */
+const injectSeoHead = (
   html: string,
   metadata: SeoMetadataFile,
   originalUrl: string,
+  baseUrl: string,
 ): string => {
+  const links = buildSeoLinkTags(metadata, originalUrl, baseUrl);
   const scripts = buildJsonLdScripts(metadata, originalUrl);
-  if (!scripts) return html;
-  return html.replace("</head>", `${scripts}\n</head>`);
+  const combined = [links, scripts].filter((value) => value).join("\n");
+  if (!combined) return html;
+
+  let cleaned = html;
+  cleaned = cleaned.replace(/<link\s+rel="canonical"[^>]*>\s*/gi, "");
+  cleaned = cleaned.replace(
+    /<link\s+rel="alternate"\s+hreflang="[^"]*"[^>]*>\s*/gi,
+    "",
+  );
+  return cleaned.replace("</head>", `${combined}\n</head>`);
 };
 
 app.get("/sitemap.xml", (req, res) => {
@@ -525,6 +696,24 @@ app.get("/llms.txt", (req, res) => {
 
   const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
   const content = buildLlmsTxt(metadata, baseUrl);
+  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
+  res.type("text/plain").send(content);
+});
+
+/**
+ * Sert le fichier /llms-full.txt (P1.8) : agregation complete du contenu
+ * indexable pour les moteurs IA generatifs. Extension du standard llms.txt
+ * proposee pour faciliter l'ingestion multi-pages en un seul fetch.
+ */
+app.get("/llms-full.txt", (req, res) => {
+  const metadata = loadSeoMetadata();
+  if (!metadata) {
+    res.status(404).type("text/plain").send("llms-full.txt not available");
+    return;
+  }
+
+  const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
+  const content = buildLlmsFullTxt(metadata, baseUrl);
   res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
   res.type("text/plain").send(content);
 });
@@ -674,7 +863,8 @@ app.get("**", (req, res, next) => {
       const metadata = loadSeoMetadata();
       let html = fs.readFileSync(prerendered, "utf-8");
       if (metadata) {
-        html = injectJsonLd(html, metadata, originalUrl);
+        const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
+        html = injectSeoHead(html, metadata, originalUrl, baseUrl);
       }
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       res.setHeader("Content-Language", urlLocale);
@@ -723,7 +913,8 @@ app.get("**", (req, res, next) => {
     .then((html) => {
       const metadata = loadSeoMetadata();
       if (metadata) {
-        html = injectJsonLd(html, metadata, originalUrl);
+        const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
+        html = injectSeoHead(html, metadata, originalUrl, baseUrl);
       }
       res.setHeader(
         "Content-Language",

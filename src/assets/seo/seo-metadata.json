@@ -117,6 +117,49 @@
         "https://asilidesign.fr/fr/growth-audit",
         "https://asilidesign.fr/fr/contact"
       ]
+    },
+    "person": {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://asilidesign.fr/#person",
+      "name": "Tim Moyence",
+      "givenName": "Tim",
+      "familyName": "Moyence",
+      "jobTitle": "Développeur Full-Stack & Consultant Digital",
+      "description": "Développeur web freelance à Bordeaux, 3 ans d'expérience en Angular, NestJS et IA. J'accompagne TPE, PME et indépendants dans la clarification, la structuration et l'évolution de leurs outils digitaux.",
+      "url": "https://asilidesign.fr/fr/presentation",
+      "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
+      "email": "moyencet@gmail.com",
+      "telephone": "+33698503282",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bordeaux",
+        "postalCode": "33100",
+        "addressCountry": "FR"
+      },
+      "worksFor": {
+        "@type": "Organization",
+        "@id": "https://asilidesign.fr/#organization",
+        "name": "Asili Design"
+      },
+      "knowsAbout": [
+        "Angular",
+        "NestJS",
+        "TypeScript",
+        "Node.js",
+        "Intelligence Artificielle",
+        "LLM",
+        "RAG",
+        "Développement Web",
+        "SEO",
+        "Accompagnement Digital",
+        "Formation IA"
+      ],
+      "knowsLanguage": ["fr", "en"],
+      "sameAs": [
+        "https://www.linkedin.com/in/tim-moyence",
+        "https://www.facebook.com/tim.moyence/"
+      ]
     }
   },
   "pages": [
@@ -153,10 +196,10 @@
           }
         },
         "en": {
-          "title": "Home — Tim Moyence Portfolio",
-          "description": "Explore my professional services.",
-          "ogTitle": "Home of Tim Moyence",
-          "ogDescription": "Discover my professional services and web development work.",
+          "title": "Home — Tim Moyence, freelance web developer Bordeaux",
+          "description": "Freelance web developer in Bordeaux — custom Angular, NestJS and AI solutions for small businesses and independents. Discover projects, services and growth audit.",
+          "ogTitle": "Home of Tim Moyence — Asili Design",
+          "ogDescription": "Custom Angular, NestJS and AI solutions for small businesses and independents in Bordeaux.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
@@ -686,9 +729,9 @@
         },
         "en": {
           "title": "Log in — Access your account",
-          "description": "You can't access this page without logging in.",
-          "ogTitle": "Log in to your account",
-          "ogDescription": "You can't access this page without logging in."
+          "description": "Sign in to your Asili Design account to access training materials, growth audit reports, and your personal workspace.",
+          "ogTitle": "Log in to your Asili Design account",
+          "ogDescription": "Access training materials, growth audit reports and your personal dashboard."
         }
       }
     },
@@ -707,10 +750,10 @@
           "ogDescription": "Vous ne pouvez pas accéder à cette page sans vous inscrire."
         },
         "en": {
-          "title": "Sign up — Access your account",
-          "description": "You can't access this page without signing up.",
-          "ogTitle": "Sign up for your account",
-          "ogDescription": "You can't access this page without signing up."
+          "title": "Sign up — Create your Asili Design account",
+          "description": "Create your free Asili Design account to unlock training materials, receive growth audit reports and manage your personal workspace.",
+          "ogTitle": "Create your Asili Design account",
+          "ogDescription": "Unlock training materials, growth audit reports and your personal dashboard."
         }
       }
     },
