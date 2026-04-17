@@ -43,6 +43,8 @@ function submitAndStream(
     contactMethod: "EMAIL",
     contactValue: "test@example.com",
   };
+  // P0.4 : consentement RGPD obligatoire pour soumettre le formulaire.
+  component.rgpdConsent = true;
 
   component.submit(buildValidForm());
 }
@@ -240,5 +242,45 @@ describe("GrowthAuditComponent", () => {
     expect(component.auditPhaseLabel).toBe("");
     expect(component.auditCurrentUrl).toBe("");
     expect(component.auditRecentCompletedUrls).toEqual([]);
+  });
+
+  describe("P0.4 — consentement RGPD obligatoire", () => {
+    it("bloque la soumission si rgpdConsent est false", () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      const component = fixture.componentInstance;
+      component.auditFormState = {
+        websiteName: "https://example.com",
+        contactMethod: "EMAIL",
+        contactValue: "test@example.com",
+      };
+      component.rgpdConsent = false;
+
+      component.submit(buildValidForm());
+      fixture.detectChanges();
+
+      expect(auditServiceMock.submit).not.toHaveBeenCalled();
+      expect(component.errorMessage).toBe(component.formLabels.rgpdError);
+    });
+
+    it("laisse passer la soumission si rgpdConsent est true", () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      const component = fixture.componentInstance;
+      auditServiceMock.submit.and.returnValue(
+        of(buildAuditCreateResponse({ auditId: "audit-ok", httpCode: 201 })),
+      );
+
+      component.auditFormState = {
+        websiteName: "https://example.com",
+        contactMethod: "EMAIL",
+        contactValue: "test@example.com",
+      };
+      component.rgpdConsent = true;
+
+      component.submit(buildValidForm());
+      fixture.detectChanges();
+
+      expect(auditServiceMock.submit).toHaveBeenCalledTimes(1);
+      expect(component.errorMessage).toBeUndefined();
+    });
   });
 });
