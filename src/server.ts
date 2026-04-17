@@ -632,6 +632,19 @@ const buildSeoLinkTags = (
  * canonical/hreflang deja presents pour eviter les collisions quand le
  * SSR dynamique les aurait partiellement generes cote client.
  */
+/**
+ * Verifie si un chemin correspond a une route connue dans les metadata SEO.
+ * Utilise pour detecter les 404 cote SSR et envoyer le statut HTTP approprie
+ * (evite les soft-404 qui dupent les crawlers Google en 200+contenu not-found).
+ */
+const isKnownRoute = (
+  routePath: string,
+  metadata: SeoMetadataFile,
+): boolean => {
+  const normalized = routePath === "" ? "/" : routePath;
+  return metadata.pages.some((page) => page.path === normalized);
+};
+
 const injectSeoHead = (
   html: string,
   metadata: SeoMetadataFile,
@@ -862,6 +875,9 @@ app.get("**", (req, res, next) => {
     ) {
       const metadata = loadSeoMetadata();
       let html = fs.readFileSync(prerendered, "utf-8");
+      const normalizedRoutePath = routePath === "" ? "/" : `/${routePath}`;
+      const isNotFound =
+        metadata !== null && !isKnownRoute(normalizedRoutePath, metadata);
       if (metadata) {
         const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
         html = injectSeoHead(html, metadata, originalUrl, baseUrl);
@@ -870,6 +886,9 @@ app.get("**", (req, res, next) => {
       res.setHeader("Content-Language", urlLocale);
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
       res.setHeader("X-Content-Type-Options", "nosniff");
+      if (isNotFound) {
+        res.status(404);
+      }
       return void res.send(html);
     }
 

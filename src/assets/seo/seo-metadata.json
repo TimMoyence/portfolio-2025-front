@@ -197,7 +197,7 @@
         },
         "en": {
           "title": "Home — Tim Moyence, freelance web developer Bordeaux",
-          "description": "Freelance web developer in Bordeaux — custom Angular, NestJS and AI solutions for small businesses and independents. Discover projects, services and growth audit.",
+          "description": "Freelance web developer in Bordeaux — Angular, NestJS and AI solutions for small businesses and independents. Free growth audit available.",
           "ogTitle": "Home of Tim Moyence — Asili Design",
           "ogDescription": "Custom Angular, NestJS and AI solutions for small businesses and independents in Bordeaux.",
           "jsonLd": {
@@ -858,7 +858,7 @@
     {
       "id": "weather",
       "path": "/atelier/meteo",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.5,
       "lastmod": "2026-04-13",
@@ -880,7 +880,7 @@
     {
       "id": "budget",
       "path": "/atelier/budget",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.4,
       "lastmod": "2026-04-09",
@@ -902,7 +902,7 @@
     {
       "id": "sebastian",
       "path": "/atelier/sebastian",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.4,
       "lastmod": "2026-04-09",
