@@ -84,7 +84,10 @@ describe("SeoRegistryService", () => {
       const result = await firstValueFrom(service.getSeoByKey("home"));
 
       expect(result).not.toBeNull();
-      expect(result!.seo.title).toBe("Home — Tim Moyence Portfolio");
+      // P1.10 : titre EN enrichi pour respecter la cible 50-60 char.
+      expect(result!.seo.title).toBe(
+        "Home — Tim Moyence, freelance web developer Bordeaux",
+      );
     });
 
     it("devrait retourner null pour une cle inexistante", async () => {

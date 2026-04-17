@@ -45,6 +45,18 @@
         itemtype="https://schema.org/LocalBusiness"
       >
         <meta itemprop="name" content="Asili Design" />
+        <!-- P2.11 : adresse postale visible + structuree pour SEO local Bordeaux -->
+        <div
+          itemprop="address"
+          itemscope
+          itemtype="https://schema.org/PostalAddress"
+          class="text-sm md:text-base mb-2 md:text-center"
+        >
+          <span itemprop="streetAddress">Allée Serr</span>,
+          <span itemprop="postalCode">33100</span>
+          <span itemprop="addressLocality">Bordeaux</span>,
+          <span itemprop="addressCountry">France</span>
+        </div>
         <div class="flex flex-col">
           <div class="grid auto-cols-fr grid-cols-1 gap-x-2 gap-y-3 py-2">
             @for (method of contactMethods; track $index) {
@@ -113,11 +125,16 @@
       }
     </ul>
 
-    <p
-      class="md:text-center text-sm md:mt-2 sm:mt-1"
-      i18n="footer.copyright|Footer copyright@@footerCopyright"
-    >
-      © 2025 Moyence. All rights reserved.
+    <!-- P2.10 : time datetime visible pour signal fraicheur DOM (freshness ranking IA). -->
+    <p class="md:text-center text-sm md:mt-2 sm:mt-1">
+      <span i18n="footer.copyright|Footer copyright@@footerCopyright">
+        © 2025 Moyence. All rights reserved.
+      </span>
+      &middot;
+      <span i18n="footer.lastUpdated|Footer last updated@@footerLastUpdated">
+        Dernière mise à jour&nbsp;:
+      </span>
+      <time [attr.datetime]="siteLastUpdated">{{ siteLastUpdated }}</time>
     </p>
   </div>
 </footer>

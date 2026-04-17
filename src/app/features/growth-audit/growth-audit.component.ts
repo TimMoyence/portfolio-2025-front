@@ -88,8 +88,8 @@ export class GrowthAuditComponent implements OnDestroy {
 
   readonly hero = {
     label: $localize`:audit.hero.label@@auditHeroLabel:Audit gratuit (IA + humain, 24h)`,
-    title: $localize`:audit.hero.title@@auditHeroTitle:Audit de croissance en 15 points`,
-    description: $localize`:audit.hero.description@@auditHeroDescription:Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, signaux de conversion). Ensuite, sous 24h, je réalise l’audit moi-même et je vous envoie une vidéo + une scorecard claire + des recommandations concrètes pour gagner en visibilité et en clients.`,
+    title: $localize`:audit.hero.title@@auditHeroTitle:Audit Growth — scorecard 7 piliers`,
+    description: $localize`:audit.hero.description@@auditHeroDescription:Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, conversion, visibilité IA). Ensuite, sous 24h, je repasse l'audit moi-même et je vous envoie une scorecard claire, un rapport PDF détaillé et des recommandations concrètes priorisées par impact/effort.`,
   };
 
   readonly steps = [
@@ -99,13 +99,13 @@ export class GrowthAuditComponent implements OnDestroy {
     },
     {
       title: $localize`:audit.steps.two.title@@auditStepTwoTitle:2. Audit instantané (IA)`,
-      description: $localize`:audit.steps.two.desc@@auditStepTwoDesc:Je scanne vos pages (SEO, performance, conversion) et je sors un premier diagnostic rapide.`,
+      description: $localize`:audit.steps.two.desc@@auditStepTwoDesc:Je scanne vos pages (SEO, performance, conversion, visibilité IA) et je sors un premier diagnostic rapide.`,
     },
     {
       title: $localize`:audit.steps.three.title@@auditStepThreeTitle:3. Audit humain sous 24h`,
-      description: $localize`:audit.steps.three.desc@@auditStepThreeDesc:Je reprends l’analyse moi-même, je priorise, et je vous envoie une vidéo + une scorecard + un plan d’actions.`,
+      description: $localize`:audit.steps.three.desc@@auditStepThreeDesc:Je reprends l'analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d'actions concret.`,
       highlights: [
-        $localize`:audit.highlights.video@@auditHighlightsVideo:Vidéo personnalisée`,
+        $localize`:audit.highlights.pdf@@auditHighlightsPdf:Rapport PDF détaillé`,
         $localize`:audit.highlights.score@@auditHighlightsScore:Scorecard claire`,
         $localize`:audit.highlights.wins@@auditHighlightsWins:Quick wins + priorités (impact/effort)`,
         $localize`:audit.highlights.noObligation@@auditHighlightsNoObligation:Aucun engagement`,
@@ -114,15 +114,15 @@ export class GrowthAuditComponent implements OnDestroy {
   ];
 
   readonly faqTitle = $localize`:audit.faq.title@@auditFaqTitle:Questions fréquentes sur l'audit gratuit`;
-  readonly faqDescription = $localize`:audit.faq.description@@auditFaqDescription:Ce que vous devez savoir avant de demander votre audit de croissance en 15 points.`;
+  readonly faqDescription = $localize`:audit.faq.description@@auditFaqDescription:Ce que vous devez savoir avant de demander votre audit Growth — scorecard 7 piliers + recommandations priorisées.`;
   readonly faqItems: readonly FaqItem[] = [
     {
       question: $localize`:audit.faq.q1@@auditFaqQ1:Comment fonctionne l'audit gratuit en 24 heures ?`,
-      answer: $localize`:audit.faq.a1@@auditFaqA1:Vous laissez l'URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion). Puis, sous 24h, je reprends l'analyse moi-même et vous envoie une vidéo personnalisée, une scorecard claire et un plan d'actions priorisé par impact/effort.`,
+      answer: $localize`:audit.faq.a1@@auditFaqA1:Vous laissez l'URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion, visibilité IA). Puis, sous 24h, je reprends l'analyse moi-même et vous envoie une scorecard claire, un rapport PDF détaillé et un plan d'actions priorisé par impact/effort.`,
     },
     {
-      question: $localize`:audit.faq.q2@@auditFaqQ2:Que contient concrètement l'audit en 15 points ?`,
-      answer: $localize`:audit.faq.a2@@auditFaqA2:L'audit couvre cinq piliers : conversion et clarté, vitesse et performance (Core Web Vitals), SEO fondations (titres, meta, indexation, SEO local), crédibilité et confiance, tech et scalabilité. Vous recevez une scorecard, des quick wins et des recommandations priorisées.`,
+      question: $localize`:audit.faq.q2@@auditFaqQ2:Que contient concrètement l'audit Growth ?`,
+      answer: $localize`:audit.faq.a2@@auditFaqA2:L'audit couvre sept piliers : SEO fondations (titres, meta, indexation, SEO local), vitesse et performance (Core Web Vitals), tech et scalabilité, crédibilité et confiance, conversion et clarté, visibilité IA (ChatGPT / Perplexity / Gemini) et citabilité (llms.txt, FAQ, sources). Vous recevez une scorecard, des quick wins et des recommandations priorisées.`,
     },
     {
       question: $localize`:audit.faq.q3@@auditFaqQ3:L'audit est-il vraiment gratuit ?`,
@@ -175,6 +175,8 @@ export class GrowthAuditComponent implements OnDestroy {
     submit: $localize`:audit.form.submit@@auditFormSubmit:Demander mon audit (scan IA immédiat + audit humain sous 24h)`,
     success: $localize`:audit.form.success@@auditFormSuccess:Merci ! Scan IA lancé — audit humain envoyé sous 24h.`,
     error: $localize`:audit.form.error@@auditFormError:Impossible d'envoyer la demande. Réessayez dans un instant.`,
+    rgpdLabel: $localize`:audit.form.rgpdLabel@@auditFormRgpdLabel:J'accepte que mes coordonnées soient utilisées pour traiter ma demande d'audit (voir <a href="/fr/privacy" class="underline">politique de confidentialité</a>).`,
+    rgpdError: $localize`:audit.form.rgpdError@@auditFormRgpdError:Votre consentement RGPD est obligatoire pour lancer l'audit.`,
   };
 
   auditFormState: AuditRequestPayload = {
@@ -182,6 +184,9 @@ export class GrowthAuditComponent implements OnDestroy {
     contactMethod: "EMAIL" as AuditContactMethod,
     contactValue: "",
   };
+
+  /** Consentement RGPD explicite requis avant toute soumission (P0.4). */
+  rgpdConsent = false;
 
   get contactInputType(): "email" | "tel" {
     return this.auditFormState.contactMethod === "EMAIL" ? "email" : "tel";
@@ -243,6 +248,12 @@ export class GrowthAuditComponent implements OnDestroy {
     this.clientReport = null;
     this.stopStream();
 
+    if (!this.rgpdConsent) {
+      this.errorMessage = this.formLabels.rgpdError;
+      this.cdr.markForCheck();
+      return;
+    }
+
     if (!form.valid) {
       this.errorMessage = this.formLabels.error;
       this.cdr.markForCheck();
@@ -262,6 +273,9 @@ export class GrowthAuditComponent implements OnDestroy {
       onSuccess: (response) => {
         if (response.httpCode !== 201 || !response.auditId) {
           this.errorMessage = response.message || this.formLabels.error;
+          this.trackAuditEvent("audit_rejected", {
+            reason: response.message ?? "unknown",
+          });
           return;
         }
 
@@ -272,10 +286,16 @@ export class GrowthAuditComponent implements OnDestroy {
         this.resetAuditTimeline();
         this.isAuditRunning = true;
         this.reconnectAttempts = 0;
+        this.trackAuditEvent("audit_submitted", {
+          auditId: response.auditId,
+          contactMethod: payload.contactMethod,
+          locale: payload.locale,
+        });
         this.startStream(response.auditId);
       },
       onError: (message) => {
         this.errorMessage = message;
+        this.trackAuditEvent("audit_error", { reason: message });
       },
       onComplete: () => {
         this.isSubmitting = false;
@@ -285,9 +305,43 @@ export class GrowthAuditComponent implements OnDestroy {
           contactMethod: "EMAIL",
           contactValue: "",
         };
+        this.rgpdConsent = false;
         form.resetForm(this.auditFormState);
       },
     });
+  }
+
+  /**
+   * Emet un event Plausible si le script est charge cote client. No-op en
+   * SSR ou quand Plausible est absent (self-hosted optionnel). Le script
+   * est charge via `<script data-domain="asilidesign.fr" src="...">` dans
+   * `index.html` une fois le compte Plausible provisionne — ce hook est
+   * pret a emettre sans redeploy lorsque la config arrive.
+   */
+  private trackAuditEvent(
+    name:
+      | "audit_submitted"
+      | "audit_completed"
+      | "audit_failed"
+      | "audit_error"
+      | "audit_rejected",
+    props: Record<string, string>,
+  ): void {
+    if (!this.isBrowser) return;
+    const plausible = (
+      window as unknown as {
+        plausible?: (
+          event: string,
+          opts: { props: Record<string, string> },
+        ) => void;
+      }
+    ).plausible;
+    if (typeof plausible !== "function") return;
+    try {
+      plausible(name, { props });
+    } catch {
+      // Analytics ne doivent jamais faire remonter d'erreur UX.
+    }
   }
 
   ngOnDestroy(): void {
@@ -333,6 +387,10 @@ export class GrowthAuditComponent implements OnDestroy {
         pillarScores: event.data.pillarScores,
       };
       this.clientReport = event.data.clientReport ?? null;
+      this.trackAuditEvent("audit_completed", {
+        auditId: event.data.auditId,
+        status: event.data.status,
+      });
       this.cdr.markForCheck();
       return;
     }
@@ -342,6 +400,10 @@ export class GrowthAuditComponent implements OnDestroy {
     this.errorMessage =
       event.data.error ||
       $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
+    this.trackAuditEvent("audit_failed", {
+      auditId: event.data.auditId,
+      reason: event.data.error ?? "unknown",
+    });
     this.cdr.markForCheck();
   }
 

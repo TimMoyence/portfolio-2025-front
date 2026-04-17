@@ -75,7 +75,7 @@ export function buildClientReport(
       {
         title: "Pas de données structurées",
         impact: "Invisible pour les moteurs IA",
-        severity: "critical",
+        severity: "high",
       },
       {
         title: "Temps de chargement élevé",

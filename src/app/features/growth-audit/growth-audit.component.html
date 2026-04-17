@@ -144,10 +144,29 @@
           }
         </div>
       </div>
+      <label
+        class="flex items-start gap-2 text-sm md:text-base text-scheme-text"
+        for="rgpdConsent"
+      >
+        <input
+          id="rgpdConsent"
+          name="rgpdConsent"
+          type="checkbox"
+          required
+          [(ngModel)]="rgpdConsent"
+          class="mt-1 h-4 w-4 accent-scheme-accent"
+          #rgpdCtrl="ngModel"
+        />
+        <span [innerHTML]="formLabels.rgpdLabel"></span>
+      </label>
+      @if (!rgpdConsent && isSubmitted) {
+        <p class="text-sm text-red-500">{{ formLabels.rgpdError }}</p>
+      }
+
       <button
         type="submit"
         class="mt-2 inline-flex items-center justify-center rounded-button bg-scheme-accent px-6 py-3 text-sm md:text-base font-semibold text-white transition-colors hover:bg-scheme-accent-hover disabled:opacity-60"
-        [disabled]="isSubmitting || !auditForm.form.valid"
+        [disabled]="isSubmitting || !auditForm.form.valid || !rgpdConsent"
       >
         {{ formLabels.submit }}
       </button>
@@ -287,13 +306,14 @@
     class="border border-scheme-border col-span-12 md:col-span-6 bg-scheme-surface p-6"
   >
     <h2 class="font-heading heading-h3 text-h3 mb-2" i18n="@@auditPillarsTitle">
-      Audit rapide en 5 piliers
+      Audit Growth en 7 piliers
     </h2>
     <p
       class="text-sm md:text-base text-scheme-text-muted mb-4"
       i18n="@@auditPillarsSubtitle"
     >
-      Un diagnostic concret, actionnable et faisable en moins de 45 minutes.
+      Un diagnostic concret et actionnable, aligné avec les 7 piliers du rapport
+      livré.
     </p>
     <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
       @for (pillar of pillars; track pillar.title) {
