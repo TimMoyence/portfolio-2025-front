@@ -20,6 +20,19 @@ import { SvgIconComponent } from "../svg-icon.component";
 export class FooterComponent {
   readonly contactMethods = CONTACT_METHODS;
 
+  /**
+   * Derniere date de mise a jour du site, rendue en `<time datetime>` dans
+   * le footer (P2.10 — signal de fraicheur pour ranking IA). Alimente aussi
+   * le `dateModified` JSON-LD serveur via `enrichJsonLdBlock`.
+   */
+  readonly siteLastUpdated = "2026-04-17";
+
+  /**
+   * P2.12 : maillage interne enrichi pour topical authority. 8 liens au
+   * lieu de 4, couvrant les piliers metiers (Présentation, Projets,
+   * Services, Formations, Audit gratuit, Contact) + liens ateliers
+   * (Meteo, Budget) + lien Sebastian protege (filtre par le guard role).
+   */
   readonly navColumns: FooterColumn[] = [
     {
       links: [
@@ -38,6 +51,18 @@ export class FooterComponent {
         {
           label: $localize`:footer.nav.services|Footer nav link@@footerNavServices:Services`,
           href: "/offer",
+        },
+        {
+          label: $localize`:footer.nav.formations|Footer nav link@@footerNavFormations:Formations`,
+          href: "/formations",
+        },
+        {
+          label: $localize`:footer.nav.growthAudit|Footer nav link@@footerNavGrowthAudit:Audit gratuit`,
+          href: "/growth-audit",
+        },
+        {
+          label: $localize`:footer.nav.contact|Footer nav link@@footerNavContact:Contact`,
+          href: "/contact",
         },
       ],
     },
