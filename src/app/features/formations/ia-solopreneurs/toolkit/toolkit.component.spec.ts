@@ -1,5 +1,6 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 import { LEAD_MAGNET_PORT } from "../../../../core/ports/lead-magnet.port";
 import { createLeadMagnetPortStub } from "../../../../../testing/factories/lead-magnet.factory";
 import { ToolkitComponent } from "./toolkit.component";
@@ -13,6 +14,9 @@ describe("ToolkitComponent", () => {
       imports: [ToolkitComponent],
       providers: [
         { provide: LEAD_MAGNET_PORT, useValue: createLeadMagnetPortStub() },
+        // P1.9 : la page utilise RouterLink vers /fr/privacy — fournir un
+        // routeur vide pour satisfaire l'injection ActivatedRoute.
+        provideRouter([]),
       ],
     }).compileComponents();
 

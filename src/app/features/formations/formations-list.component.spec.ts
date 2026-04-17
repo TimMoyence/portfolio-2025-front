@@ -43,8 +43,10 @@ describe("FormationsListComponent", () => {
 
   it("devrait rendre une carte pour chaque formation", () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    const links = compiled.querySelectorAll("a[ng-reflect-router-link]");
-    expect(links.length).toBe(FORMATIONS.length);
+    // P1.9 : la page contient desormais aussi un lien vers /offer dans la
+    // FAQ. On cible uniquement les cartes (classe .group dans la grid).
+    const cards = compiled.querySelectorAll("a[ng-reflect-router-link].group");
+    expect(cards.length).toBe(FORMATIONS.length);
   });
 
   it("devrait afficher le titre de chaque formation dans sa carte", () => {

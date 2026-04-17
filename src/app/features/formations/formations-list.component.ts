@@ -40,13 +40,58 @@ import { FORMATIONS } from "./formations-list.data";
         >
           Des présentations concrètes et pratiques pour tirer le meilleur de
           l'IA dans votre activité. Consultables en ligne ou en mode
-          présentation.
+          présentation — pensées pour les solopreneurs, freelances et petites
+          équipes qui veulent des réponses actionnables, pas un cours
+          universitaire.
         </p>
       </div>
     </div>
 
+    <!-- Section pourquoi ces formations -->
+    <section
+      class="mx-auto max-w-4xl px-6 py-12"
+      aria-labelledby="formations-why-heading"
+    >
+      <h2
+        id="formations-why-heading"
+        class="mb-4 font-heading text-h3 text-scheme-text"
+        i18n="@@formationsListWhyTitle"
+      >
+        Pourquoi ces formations ?
+      </h2>
+      <p
+        class="mb-4 text-base md:text-large text-scheme-text leading-relaxed"
+        i18n="@@formationsListWhyPara1"
+      >
+        L'IA générative a changé le quotidien des indépendants en 18 mois :
+        ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI...
+        La vraie difficulté n'est plus de trouver un outil, c'est de savoir
+        lesquels garder et comment les intégrer sans perdre sa journée en prompt
+        engineering.
+      </p>
+      <p
+        class="mb-4 text-base md:text-large text-scheme-text leading-relaxed"
+        i18n="@@formationsListWhyPara2"
+      >
+        Chaque formation est basée sur ma pratique quotidienne : développeur
+        full-stack à Bordeaux, freelance depuis 3 ans, je teste les outils IA en
+        production sur mes propres projets et ceux de mes clients. Je partage ce
+        qui fonctionne, ce qui ne fonctionne pas et surtout les cas où l'IA fait
+        gagner 4-6 heures par semaine concrètement.
+      </p>
+      <p
+        class="mb-4 text-base md:text-large text-scheme-text leading-relaxed"
+        i18n="@@formationsListWhyPara3"
+      >
+        Format pensé pour être consultable en ligne (slides interactifs, quiz en
+        live, polls) ou en mode présentation si vous voulez les projeter en
+        atelier d'équipe. Tout est gratuit, sans inscription, sans email
+        obligatoire à part pour les compléments PDF.
+      </p>
+    </section>
+
     <!-- Grille de cartes -->
-    <div class="mx-auto -mt-8 max-w-5xl px-6 pb-20">
+    <div class="mx-auto max-w-5xl px-6 pb-20">
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         @for (formation of formations; track formation.slug) {
           <a
@@ -115,6 +160,95 @@ import { FORMATIONS } from "./formations-list.data";
         }
       </div>
     </div>
+
+    <!-- FAQ -->
+    <section
+      class="mx-auto max-w-4xl px-6 py-16 border-t border-scheme-border"
+      aria-labelledby="formations-faq-heading"
+    >
+      <h2
+        id="formations-faq-heading"
+        class="mb-6 font-heading text-h3 text-scheme-text"
+        i18n="@@formationsListFaqTitle"
+      >
+        Questions fréquentes
+      </h2>
+      <div class="space-y-6">
+        <div>
+          <h3
+            class="mb-2 font-heading text-h5 text-scheme-text"
+            i18n="@@formationsListFaq1Q"
+          >
+            Les formations sont-elles vraiment gratuites ?
+          </h3>
+          <p
+            class="text-base text-scheme-text-muted leading-relaxed"
+            i18n="@@formationsListFaq1A"
+          >
+            Oui — les slides, quiz et polls en ligne sont entièrement gratuits
+            et consultables sans inscription. Seuls certains compléments PDF
+            (toolkit, prompts library) demandent un email pour l'envoi, que vous
+            pouvez retirer à tout moment.
+          </p>
+        </div>
+        <div>
+          <h3
+            class="mb-2 font-heading text-h5 text-scheme-text"
+            i18n="@@formationsListFaq2Q"
+          >
+            Puis-je les utiliser en présentation d'équipe ?
+          </h3>
+          <p
+            class="text-base text-scheme-text-muted leading-relaxed"
+            i18n="@@formationsListFaq2A"
+          >
+            Absolument. Chaque formation a un mode "présentation" avec slides
+            plein écran, polls live pour interagir avec l'audience et quiz pour
+            valider la compréhension. Vous pouvez l'utiliser en atelier interne,
+            en conférence ou en accompagnement client — mentionnez juste la
+            source si vous le diffusez.
+          </p>
+        </div>
+        <div>
+          <h3
+            class="mb-2 font-heading text-h5 text-scheme-text"
+            i18n="@@formationsListFaq3Q"
+          >
+            À quelle fréquence sont-elles mises à jour ?
+          </h3>
+          <p
+            class="text-base text-scheme-text-muted leading-relaxed"
+            i18n="@@formationsListFaq3A"
+          >
+            Les outils IA évoluent vite. Chaque formation est relue tous les 3-4
+            mois pour enlever ce qui ne fonctionne plus, ajouter les nouveautés
+            qui tiennent la route et ajuster les budgets quand les grilles
+            tarifaires changent. Les mises à jour majeures sont annoncées dans
+            les slides concernés.
+          </p>
+        </div>
+        <div>
+          <h3
+            class="mb-2 font-heading text-h5 text-scheme-text"
+            i18n="@@formationsListFaq4Q"
+          >
+            Proposez-vous de l'accompagnement personnalisé ?
+          </h3>
+          <p
+            class="text-base text-scheme-text-muted leading-relaxed"
+            i18n="@@formationsListFaq4A"
+          >
+            Oui — au-delà des formations publiques, je fais aussi du coaching
+            individuel et de la formation intra-entreprise sur l'intégration IA
+            dans les workflows métier. Voir la
+            <a routerLink="/fr/offer" class="underline text-scheme-accent">
+              page offre
+            </a>
+            ou contactez-moi directement.
+          </p>
+        </div>
+      </div>
+    </section>
   `,
 })
 export class FormationsListComponent {
