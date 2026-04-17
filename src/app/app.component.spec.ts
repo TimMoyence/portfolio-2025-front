@@ -72,13 +72,14 @@ describe("AppComponent", () => {
     expect(compiled.querySelector("app-seo-manager")).not.toBeNull();
   });
 
-  it("devrait afficher un placeholder pour le footer en attendant le defer", () => {
+  it("devrait rendre le footer immediatement (pas de defer pour que SSR/prerender l'inclue)", () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    // Le @defer (on viewport) n'est pas declenche en test unitaire,
-    // donc on verifie que le placeholder est bien present
-    const footerPlaceholder = compiled.querySelector(".h-48");
-    expect(footerPlaceholder).not.toBeNull();
+    // Le footer contient <address itemprop> + <time datetime> + 7 liens
+    // internal linking qui doivent etre dans le HTML prerendu pour SEO.
+    // Il ne doit donc pas etre sous @defer (on viewport) (P6 fix).
+    const footerElement = compiled.querySelector("app-footer");
+    expect(footerElement).not.toBeNull();
   });
 });

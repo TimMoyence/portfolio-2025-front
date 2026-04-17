@@ -28,11 +28,14 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
         <div class="pt-24 lg:pt-28 bg-scheme-background"></div>
         <router-outlet></router-outlet>
       </main>
-      @defer (on viewport) {
-        <app-footer></app-footer>
-      } @placeholder {
-        <div class="h-48"></div>
-      }
+      <!--
+        Footer rendu sans @defer pour qu'il soit inclus dans le HTML
+        prerendu (SSR). Contient <address itemprop="PostalAddress"> et
+        <time datetime> critiques pour SEO/AI-Search (P2.10/P2.11 +
+        7 liens internal linking P2.12/P6.4). Le bundle footer est
+        leger, le gain de defer serait < 1KB et casse le prerender.
+      -->
+      <app-footer></app-footer>
       @defer (on idle) {
         <app-cookie-banner></app-cookie-banner>
       }
