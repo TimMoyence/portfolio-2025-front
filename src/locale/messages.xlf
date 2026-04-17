@@ -128,7 +128,7 @@
         <note priority="1" from="meaning">auth.error.required</note>
       </trans-unit>
       <trans-unit id="authErrorEmail" datatype="html">
-        <source>Merci d&apos;entrer une adresse email valide.</source>
+        <source>Merci d’entrer une adresse email valide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
           <context context-type="linenumber">207,210</context>
@@ -5545,7 +5545,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">66,73</context>
+          <context context-type="linenumber">91,98</context>
         </context-group>
         <note priority="1" from="description">Hero contact CTA</note>
         <note priority="1" from="meaning">hero.cta.contact</note>
@@ -5603,6 +5603,28 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         </context-group>
         <note priority="1" from="description">Section description</note>
         <note priority="1" from="meaning">mission.lead</note>
+      </trans-unit>
+      <trans-unit id="missionInternalLinks" datatype="html">
+        <source> Si vous êtes <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+                routerLink=&quot;/offer&quot;
+                class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;
+                &gt;"/>une TPE/PME qui cherche un développeur Angular à Bordeaux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+              &gt;"/>, consultez mes <x id="START_LINK_1" equiv-text="&lt;a
+                routerLink=&quot;/formations&quot;
+                class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;
+                &gt;"/>formations IA pour solopreneurs<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+              &gt;"/> ou lancez un <x id="START_LINK_2" equiv-text="&lt;a
+                routerLink=&quot;/growth-audit&quot;
+                class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;
+                &gt;"/>audit SEO gratuit en 24h<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+              &gt;"/> pour diagnostiquer votre site. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
+          <context context-type="linenumber">66,84</context>
+        </context-group>
+        <note priority="1" from="description">Internal linking paragraph (P6.4 topical
+                authority)</note>
+        <note priority="1" from="meaning">mission.internalLinks</note>
       </trans-unit>
       <trans-unit id="projectsKicker" datatype="html">
         <source> Projets </source>

@@ -1534,6 +1534,96 @@ The application is organized around three complementary modules, each tailored t
       </segment>
     </unit>
 
+    <unit id="contactFaqHeading">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:293,295</note>
+      </notes>
+      <segment>
+        <source> Questions fréquentes avant de me contacter </source>
+        <target> Frequently asked questions before getting in touch </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq1Q">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:301,303</note>
+      </notes>
+      <segment>
+        <source> Sous quel délai ai-je une réponse ? </source>
+        <target> How quickly will I get a reply? </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq1A">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:307,309</note>
+      </notes>
+      <segment>
+        <source> Je réponds sous 48h ouvrées, du lundi au vendredi. Les demandes reçues le week-end sont traitées le lundi matin. Pour les audits Growth, la synthèse IA arrive sous 5 minutes et l&apos;analyse humaine sous 24h. </source>
+        <target> I reply within 48 working hours, Monday to Friday. Requests received over the weekend are handled Monday morning. For Growth Audits, the AI summary arrives within 5 minutes and the human analysis within 24 hours. </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq2Q">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:317,319</note>
+      </notes>
+      <segment>
+        <source> Quels types de projets acceptez-vous ? </source>
+        <target> What types of projects do you take on? </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq2A">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:323,326</note>
+      </notes>
+      <segment>
+        <source> Applications web sur mesure (Angular, NestJS, TypeScript), audits SEO/IA, intégrations OpenAI / Langchain / agents IA, accompagnement d&apos;équipes sur l&apos;outillage IA. TPE, PME, solopreneurs et équipes de moins de 20 personnes en priorité. </source>
+        <target> Custom web applications (Angular, NestJS, TypeScript), SEO/AI audits, OpenAI / Langchain / AI agents integrations, and team coaching on AI tooling. Small businesses, SMEs, solopreneurs, and teams of fewer than 20 people are my priority. </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq3Q">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:334,336</note>
+      </notes>
+      <segment>
+        <source> Intervenez-vous en présentiel à Bordeaux ? </source>
+        <target> Do you work on-site in Bordeaux? </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq3A">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:340,343</note>
+      </notes>
+      <segment>
+        <source> Oui, sur Bordeaux et la métropole pour des ateliers d&apos;équipe ou des réunions de cadrage. Le reste du travail est en remote, avec des points Google Meet réguliers. Possibilité de déplacement au national pour les missions longues (devis personnalisé). </source>
+        <target> Yes, in Bordeaux and the surrounding metro area for team workshops or scoping meetings. The rest of the work is remote, with regular Google Meet check-ins. National travel is possible for long-term missions (custom quote). </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq4Q">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:351,353</note>
+      </notes>
+      <segment>
+        <source> Comment se déroule un premier contact ? </source>
+        <target> How does a first contact work? </target>
+      </segment>
+    </unit>
+
+    <unit id="contactFaq4A">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:357,360</note>
+      </notes>
+      <segment>
+        <source> Vous remplissez ce formulaire avec le sujet de votre demande. Je vous réponds sous 48h avec soit un devis direct (petit projet), soit une proposition d&apos;appel découverte de 30 minutes gratuit pour cadrer le besoin et vous envoyer une estimation précise. </source>
+        <target> You fill out this form with the subject of your request. I reply within 48 hours with either a direct quote (small project) or a proposal for a free 30-minute discovery call to scope the need and send you a precise estimate. </target>
+      </segment>
+    </unit>
+
     <unit id="contactFormSubject">
       <notes>
         <note category="location">src/app/features/contact/contact.component.html:50,53</note>
@@ -1887,8 +1977,8 @@ The application is organized around three complementary modules, each tailored t
     <note category="description">audit.hero.title</note>
   </notes>
   <segment>
-    <source>Audit de croissance en 15 points</source>
-    <target>15-Point Website Growth Audit</target>
+    <source>Audit Growth — scorecard 7 piliers</source>
+    <target>Growth Audit — 7-pillar scorecard</target>
   </segment>
 </unit>
 
@@ -1898,8 +1988,8 @@ The application is organized around three complementary modules, each tailored t
     <note category="description">audit.hero.description</note>
   </notes>
   <segment>
-    <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, signaux de conversion). Ensuite, sous 24h, je réalise l’audit moi-même et je vous envoie une vidéo + une scorecard claire + des recommandations concrètes pour gagner en visibilité et en clients.</source>
-    <target>Share your website → I first run an AI scan (page analysis, SEO, performance, and conversion signals). Then, within 24 hours, I personally review everything and send you a short video, a clear scorecard, and practical recommendations to improve visibility and generate more leads.</target>
+    <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, conversion, visibilité IA). Ensuite, sous 24h, je repasse l&apos;audit moi-même et je vous envoie une scorecard claire, un rapport PDF détaillé et des recommandations concrètes priorisées par impact/effort.</source>
+    <target>Share your website → I first run an AI scan (page analysis, SEO, performance, conversion, AI visibility). Then, within 24 hours, I personally review the audit and send you a clear scorecard, a detailed PDF report, and concrete recommendations prioritized by impact/effort.</target>
   </segment>
 </unit>
 
@@ -1942,8 +2032,8 @@ The application is organized around three complementary modules, each tailored t
     <note category="description">audit.steps.two.desc</note>
   </notes>
   <segment>
-    <source>Je scanne vos pages (SEO, performance, conversion) et je sors un premier diagnostic rapide.</source>
-    <target>I scan your pages (SEO, performance, and conversion) and generate a first quick diagnostic.</target>
+    <source>Je scanne vos pages (SEO, performance, conversion, visibilité IA) et je sors un premier diagnostic rapide.</source>
+    <target>I scan your pages (SEO, performance, conversion, AI visibility) and generate a first quick diagnostic.</target>
   </segment>
 </unit>
 
@@ -1964,19 +2054,19 @@ The application is organized around three complementary modules, each tailored t
     <note category="description">audit.steps.three.desc</note>
   </notes>
   <segment>
-    <source>Je reprends l’analyse moi-même, je priorise, et je vous envoie une vidéo + une scorecard + un plan d’actions.</source>
-    <target>I personally review the results, prioritize opportunities, and send you a short video, a clear scorecard, and an action plan.</target>
+    <source>Je reprends l&apos;analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d&apos;actions concret.</source>
+    <target>I personally review the analysis, prioritize opportunities, and send you the scorecard, the detailed PDF report, and a concrete action plan.</target>
   </segment>
 </unit>
 
-<unit id="auditHighlightsVideo">
+<unit id="auditHighlightsPdf">
   <notes>
     <note category="location">src/app/features/growth-audit/growth-audit.component.ts:70</note>
-    <note category="description">audit.highlights.video</note>
+    <note category="description">audit.highlights.pdf</note>
   </notes>
   <segment>
-    <source>Vidéo personnalisée</source>
-    <target>Personalized video</target>
+    <source>Rapport PDF détaillé</source>
+    <target>Detailed PDF report</target>
   </segment>
 </unit>
 
@@ -2010,6 +2100,138 @@ The application is organized around three complementary modules, each tailored t
   <segment>
     <source>Aucun engagement</source>
     <target>No obligation</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:116</note>
+    <note category="description">audit.faq.title</note>
+  </notes>
+  <segment>
+    <source>Questions fréquentes sur l&apos;audit gratuit</source>
+    <target>Frequently asked questions about the free audit</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqDescription">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:117</note>
+    <note category="description">audit.faq.description</note>
+  </notes>
+  <segment>
+    <source>Ce que vous devez savoir avant de demander votre audit Growth — scorecard 7 piliers + recommandations priorisées.</source>
+    <target>What you need to know before requesting your Growth Audit — 7-pillar scorecard + prioritized recommendations.</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqQ1">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:120</note>
+    <note category="description">audit.faq.q1</note>
+  </notes>
+  <segment>
+    <source>Comment fonctionne l&apos;audit gratuit en 24 heures ?</source>
+    <target>How does the free 24-hour audit work?</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqA1">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:121</note>
+    <note category="description">audit.faq.a1</note>
+  </notes>
+  <segment>
+    <source>Vous laissez l&apos;URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion, visibilité IA). Puis, sous 24h, je reprends l&apos;analyse moi-même et vous envoie une scorecard claire, un rapport PDF détaillé et un plan d&apos;actions priorisé par impact/effort.</source>
+    <target>You share your website URL and your contact details. A first AI scan analyzes your pages in under 5 minutes (SEO, performance, conversion signals, AI visibility). Then, within 24 hours, I personally review the analysis and send you a clear scorecard, a detailed PDF report, and an action plan prioritized by impact/effort.</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqQ2">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:124</note>
+    <note category="description">audit.faq.q2</note>
+  </notes>
+  <segment>
+    <source>Que contient concrètement l&apos;audit Growth ?</source>
+    <target>What does the Growth Audit actually include?</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqA2">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:125</note>
+    <note category="description">audit.faq.a2</note>
+  </notes>
+  <segment>
+    <source>L&apos;audit couvre sept piliers : SEO fondations (titres, meta, indexation, SEO local), vitesse et performance (Core Web Vitals), tech et scalabilité, crédibilité et confiance, conversion et clarté, visibilité IA (ChatGPT / Perplexity / Gemini) et citabilité (llms.txt, FAQ, sources). Vous recevez une scorecard, des quick wins et des recommandations priorisées.</source>
+    <target>The audit covers seven pillars: SEO foundations (titles, meta, indexation, local SEO), speed and performance (Core Web Vitals), tech and scalability, credibility and trust, conversion and clarity, AI visibility (ChatGPT / Perplexity / Gemini), and citability (llms.txt, FAQ, sources). You get a scorecard, quick wins, and prioritized recommendations.</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqQ3">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:128</note>
+    <note category="description">audit.faq.q3</note>
+  </notes>
+  <segment>
+    <source>L&apos;audit est-il vraiment gratuit ?</source>
+    <target>Is the audit really free?</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqA3">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:129</note>
+    <note category="description">audit.faq.a3</note>
+  </notes>
+  <segment>
+    <source>Oui, totalement. Aucun engagement, aucune carte bancaire demandée. Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h. L&apos;objectif est de vous apporter de la valeur immédiatement, et de démarrer un échange pertinent si vous le souhaitez.</source>
+    <target>Yes, completely. No commitment, no credit card required. I cap it at 5 audits per week to guarantee a proper human review within 24 hours. The goal is to deliver value immediately, and start a meaningful conversation if you&apos;re interested.</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqQ4">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:132</note>
+    <note category="description">audit.faq.q4</note>
+  </notes>
+  <segment>
+    <source>Qui réalise l&apos;audit : une IA ou un humain ?</source>
+    <target>Who performs the audit: an AI or a human?</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqA4">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:133</note>
+    <note category="description">audit.faq.a4</note>
+  </notes>
+  <segment>
+    <source>Les deux. Un premier scan automatisé tourne instantanément via un pipeline IA (Langchain + OpenAI). Ensuite, je réalise l&apos;audit humain moi-même pour prioriser, contextualiser et formuler des recommandations concrètes adaptées à votre situation.</source>
+    <target>Both. A first automated scan runs instantly through an AI pipeline (Langchain + OpenAI). Then I personally perform the human audit to prioritize, contextualize, and write concrete recommendations tailored to your situation.</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqQ5">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:136</note>
+    <note category="description">audit.faq.q5</note>
+  </notes>
+  <segment>
+    <source>Pour quels types de sites l&apos;audit est-il pertinent ?</source>
+    <target>Which types of websites is the audit suited for?</target>
+  </segment>
+</unit>
+
+<unit id="auditFaqA5">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:137</note>
+    <note category="description">audit.faq.a5</note>
+  </notes>
+  <segment>
+    <source>L&apos;audit est pertinent pour les sites vitrines, sites e-commerce, landing pages et applications métier web. Il est particulièrement adapté aux TPE, PME, indépendants et artisans qui veulent améliorer leur visibilité SEO et leur taux de conversion sans se perdre dans la technique.</source>
+    <target>The audit is relevant for showcase sites, e-commerce stores, landing pages, and business web applications. It&apos;s particularly well-suited to small businesses, SMEs, independents, and craftspeople who want to improve their SEO visibility and conversion rate without getting lost in the technical details.</target>
   </segment>
 </unit>
 
@@ -2266,6 +2488,28 @@ The application is organized around three complementary modules, each tailored t
   </segment>
 </unit>
 
+<unit id="auditFormRgpdLabel">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:178</note>
+    <note category="description">audit.form.rgpdLabel</note>
+  </notes>
+  <segment>
+    <source>J&apos;accepte que mes coordonnées soient utilisées pour traiter ma demande d&apos;audit (voir &lt;a href=&quot;/fr/privacy&quot; class=&quot;underline&quot;&gt;politique de confidentialité&lt;/a&gt;).</source>
+    <target>I agree that my contact details may be used to process my audit request (see &lt;a href=&quot;/en/privacy&quot; class=&quot;underline&quot;&gt;privacy policy&lt;/a&gt;).</target>
+  </segment>
+</unit>
+
+<unit id="auditFormRgpdError">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:179</note>
+    <note category="description">audit.form.rgpdError</note>
+  </notes>
+  <segment>
+    <source>Votre consentement RGPD est obligatoire pour lancer l&apos;audit.</source>
+    <target>Your GDPR consent is required to start the audit.</target>
+  </segment>
+</unit>
+
     <unit id="ctaTitle">
       <notes>
         <note category="location">src/app/features/home/components/cta-section/cta-section.component.ts:21,23</note>
@@ -2451,6 +2695,18 @@ The application is organized around three complementary modules, each tailored t
       <segment>
         <source> Mon rôle est d’aider à clarifier les besoins, à structurer les usageset à mettre en place des solutions compréhensibles, adaptées à la réalité terrain et pensées pour durer. </source>
         <target> My role is to help clarify needs, structure usage, and implement solutions that are easy to understand, grounded in real-world operations, and built to last. </target>
+      </segment>
+    </unit>
+
+    <unit id="missionInternalLinks">
+      <notes>
+        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:66,84</note>
+        <note category="description">Internal linking paragraph (P6.4 topical authority)</note>
+        <note category="meaning">mission.internalLinks</note>
+      </notes>
+      <segment>
+        <source> Si vous êtes <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/offer&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>une TPE/PME qui cherche un développeur Angular à Bordeaux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, consultez mes <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/formations&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>formations IA pour solopreneurs<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ou lancez un <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/growth-audit&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>audit SEO gratuit en 24h<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> pour diagnostiquer votre site. </source>
+        <target> If you are <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/offer&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>a small business or SME looking for an Angular developer in Bordeaux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, check out my <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/formations&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>AI training for solopreneurs<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or launch a <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/growth-audit&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>free 24-hour SEO audit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to diagnose your site. </target>
       </segment>
     </unit>
 
@@ -4687,6 +4943,18 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
 
+    <unit id="footerLastUpdated">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.html:135,137</note>
+        <note category="description">Footer last updated</note>
+        <note category="meaning">footer.lastUpdated</note>
+      </notes>
+      <segment>
+        <source> Dernière mise à jour : </source>
+        <target> Last updated: </target>
+      </segment>
+    </unit>
+
     <unit id="footerNavHome">
       <notes>
         <note category="location">src/app/shared/components/footer/footer.component.ts:43</note>
@@ -4732,6 +5000,42 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Services</source>
         <target>Services</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavFormations">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:59</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.formations</note>
+      </notes>
+      <segment>
+        <source>Formations</source>
+        <target>Courses</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavGrowthAudit">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:63</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.growthAudit</note>
+      </notes>
+      <segment>
+        <source>Audit gratuit</source>
+        <target>Free audit</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavContact">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:67</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.contact</note>
+      </notes>
+      <segment>
+        <source>Contact</source>
+        <target>Contact</target>
       </segment>
     </unit>
 
@@ -9866,8 +10170,86 @@ The goal is not to add features, but to choose the most relevant levers to gener
     </unit>
     <unit id="formationsListSubtitle">
       <segment>
-        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation. </source>
-        <target> Hands-on, practical presentations to help you get the most out of AI in your business. Read them online or run them in presentation mode. </target>
+        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation — pensées pour les solopreneurs, freelances et petites équipes qui veulent des réponses actionnables, pas un cours universitaire. </source>
+        <target> Hands-on, practical presentations to help you get the most out of AI in your business. Read them online or run them in presentation mode — designed for solopreneurs, freelancers, and small teams who want actionable answers, not a university course. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListWhyTitle">
+      <segment>
+        <source> Pourquoi ces formations ? </source>
+        <target> Why these courses? </target>
+      </segment>
+    </unit>
+    <unit id="formationsListWhyPara1">
+      <segment>
+        <source> L&apos;IA générative a changé le quotidien des indépendants en 18 mois : ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... La vraie difficulté n&apos;est plus de trouver un outil, c&apos;est de savoir lesquels garder et comment les intégrer sans perdre sa journée en prompt engineering. </source>
+        <target> Generative AI has transformed the daily life of independents in the past 18 months: ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... The real challenge is no longer finding a tool — it&apos;s knowing which ones to keep and how to integrate them without losing your day to prompt engineering. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListWhyPara2">
+      <segment>
+        <source> Chaque formation est basée sur ma pratique quotidienne : développeur full-stack à Bordeaux, freelance depuis 3 ans, je teste les outils IA en production sur mes propres projets et ceux de mes clients. Je partage ce qui fonctionne, ce qui ne fonctionne pas et surtout les cas où l&apos;IA fait gagner 4-6 heures par semaine concrètement. </source>
+        <target> Each course is based on my daily practice: full-stack developer in Bordeaux, freelance for 3 years, I test AI tools in production on my own projects and those of my clients. I share what works, what doesn&apos;t, and especially the cases where AI concretely saves 4-6 hours per week. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListWhyPara3">
+      <segment>
+        <source> Format pensé pour être consultable en ligne (slides interactifs, quiz en live, polls) ou en mode présentation si vous voulez les projeter en atelier d&apos;équipe. Tout est gratuit, sans inscription, sans email obligatoire à part pour les compléments PDF. </source>
+        <target> The format is designed to be consulted online (interactive slides, live quizzes, polls) or in presentation mode if you want to project them in a team workshop. Everything is free, no sign-up required, no mandatory email — except for the PDF add-ons. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaqTitle">
+      <segment>
+        <source> Questions fréquentes </source>
+        <target> Frequently asked questions </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq1Q">
+      <segment>
+        <source> Les formations sont-elles vraiment gratuites ? </source>
+        <target> Are the courses really free? </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq1A">
+      <segment>
+        <source> Oui — les slides, quiz et polls en ligne sont entièrement gratuits et consultables sans inscription. Seuls certains compléments PDF (toolkit, prompts library) demandent un email pour l&apos;envoi, que vous pouvez retirer à tout moment. </source>
+        <target> Yes — the slides, quizzes, and polls online are entirely free and accessible without sign-up. Only some PDF add-ons (toolkit, prompts library) require an email for delivery, which you can remove at any time. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq2Q">
+      <segment>
+        <source> Puis-je les utiliser en présentation d&apos;équipe ? </source>
+        <target> Can I use them for team presentations? </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq2A">
+      <segment>
+        <source> Absolument. Chaque formation a un mode &quot;présentation&quot; avec slides plein écran, polls live pour interagir avec l&apos;audience et quiz pour valider la compréhension. Vous pouvez l&apos;utiliser en atelier interne, en conférence ou en accompagnement client — mentionnez juste la source si vous le diffusez. </source>
+        <target> Absolutely. Each course has a &quot;presentation&quot; mode with full-screen slides, live polls to engage the audience, and quizzes to check understanding. You can use it for internal workshops, conferences, or client coaching — just credit the source if you share it publicly. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq3Q">
+      <segment>
+        <source> À quelle fréquence sont-elles mises à jour ? </source>
+        <target> How often are they updated? </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq3A">
+      <segment>
+        <source> Les outils IA évoluent vite. Chaque formation est relue tous les 3-4 mois pour enlever ce qui ne fonctionne plus, ajouter les nouveautés qui tiennent la route et ajuster les budgets quand les grilles tarifaires changent. Les mises à jour majeures sont annoncées dans les slides concernés. </source>
+        <target> AI tools evolve fast. Each course is reviewed every 3-4 months to remove what no longer works, add reliable new tools, and adjust budgets when pricing changes. Major updates are flagged in the relevant slides. </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq4Q">
+      <segment>
+        <source> Proposez-vous de l&apos;accompagnement personnalisé ? </source>
+        <target> Do you offer personalized coaching? </target>
+      </segment>
+    </unit>
+    <unit id="formationsListFaq4A">
+      <segment>
+        <source> Oui — au-delà des formations publiques, je fais aussi du coaching individuel et de la formation intra-entreprise sur l&apos;intégration IA dans les workflows métier. Voir la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> page offre <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ou contactez-moi directement. </source>
+        <target> Yes — beyond the public courses, I also offer one-to-one coaching and in-house training on integrating AI into business workflows. See the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> services page <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or contact me directly. </target>
       </segment>
     </unit>
     <unit id="formationsListViewCta">
@@ -10964,14 +11346,86 @@ The goal is not to add features, but to choose the most relevant levers to gener
     </unit>
     <unit id="formations.toolkit.title">
       <segment>
-        <source>Recevez votre boite a outils IA</source>
-        <target>Get your AI toolkit</target>
+        <source> Recevez votre boite a outils IA </source>
+        <target> Get your AI toolkit </target>
       </segment>
     </unit>
     <unit id="formations.toolkit.subtitle">
       <segment>
-        <source>Les meilleurs outils, les prix, les budgets — dans votre inbox en 30 secondes.</source>
-        <target>The best tools, pricing and budgets — in your inbox in 30 seconds.</target>
+        <source> Les meilleurs outils IA pour solopreneurs — triés, testés, avec prix, budgets mensuels estimés et cas d&apos;usage concrets. Livré dans votre boite mail en 30 secondes, gratuit et sans engagement. </source>
+        <target> The best AI tools for solopreneurs — curated, tested, with pricing, estimated monthly budgets, and concrete use cases. Delivered to your inbox in 30 seconds, free and with no commitment. </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.contentsTitle">
+      <segment>
+        <source> Ce que contient le toolkit </source>
+        <target> What&apos;s inside the toolkit </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.content1">
+      <segment>
+        <source> 16 outils IA sélectionnés pour la génération de contenu, l&apos;automatisation marketing, la création visuelle, la prospection commerciale et le support client — avec une fiche comparative pour chacun. </source>
+        <target> 16 AI tools selected for content generation, marketing automation, visual creation, sales prospecting, and customer support — with a comparison sheet for each. </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.content2">
+      <segment>
+        <source> Les budgets mensuels estimés par tier d&apos;usage (solo, équipe, agence) pour dimensionner votre stack IA sans surpayer — typiquement 30 à 150 € / mois pour un solopreneur. </source>
+        <target> Estimated monthly budgets by usage tier (solo, team, agency) to size your AI stack without overspending — typically €30 to €150 / month for a solopreneur. </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.content3">
+      <segment>
+        <source> 3 workflows concrets clé en main : rédaction de newsletters hebdo, réponse client multilingue, création de visuels LinkedIn — chacun avec prompt, outil recommandé et temps gagné. </source>
+        <target> 3 concrete turnkey workflows: writing weekly newsletters, multilingual customer replies, creating LinkedIn visuals — each with prompt, recommended tool, and time saved. </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.content4">
+      <segment>
+        <source> Les pièges à éviter : outils payants qui ne tiennent pas leurs promesses, RGPD sur les données, hallucinations IA sur la partie juridique et comptable. </source>
+        <target> The pitfalls to avoid: paid tools that don&apos;t deliver, GDPR on data, AI hallucinations on legal and accounting topics. </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.faqTitle">
+      <segment>
+        <source> Questions fréquentes </source>
+        <target> Frequently asked questions </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.faq1Q">
+      <segment>
+        <source> À qui s&apos;adresse ce toolkit ? </source>
+        <target> Who is this toolkit for? </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.faq1A">
+      <segment>
+        <source> Aux solopreneurs, freelances et indépendants qui veulent gagner du temps sans se noyer dans les dizaines d&apos;outils IA qui sortent chaque semaine. Niveau requis : zéro — les fiches expliquent pas à pas. </source>
+        <target> For solopreneurs, freelancers, and independents who want to save time without drowning in the dozens of AI tools released every week. Required level: zero — the sheets explain step by step. </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.faq2Q">
+      <segment>
+        <source> Pourquoi le toolkit est gratuit ? </source>
+        <target> Why is the toolkit free? </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.faq2A">
+      <segment>
+        <source> Parce que c&apos;est une version condensée des formations que je vends en intra-entreprise. L&apos;objectif est de démontrer la qualité du travail avant de proposer un accompagnement sur-mesure, si vous en avez besoin. </source>
+        <target> Because it&apos;s a condensed version of the in-house courses I sell to companies. The goal is to demonstrate the quality of the work before offering tailored coaching, if you need it. </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.faq3Q">
+      <segment>
+        <source> Comment le recevoir ? </source>
+        <target> How do I receive it? </target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.faq3A">
+      <segment>
+        <source> Laissez votre email dans le formulaire ci-dessus. Vous recevrez le PDF du toolkit dans la minute. Aucune newsletter automatique, aucun follow-up marketing : c&apos;est promis, et conforme RGPD. </source>
+        <target> Leave your email in the form above. You&apos;ll receive the toolkit PDF within the minute. No automated newsletter, no marketing follow-up: that&apos;s a promise, and fully GDPR-compliant. </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.loading">
