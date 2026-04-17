@@ -2594,9 +2594,29 @@ The application is organized around three complementary modules, each tailored t
       </segment>
     </unit>
 
+    <unit id="heroCtaAudit">
+      <notes>
+        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:41,49</note>
+        <note category="description">Hero growth audit CTA</note>
+        <note category="meaning">hero.cta.audit</note>
+      </notes>
+      <segment>
+        <source> Lancer mon audit gratuit <pc id="0" equivStart="START_TAG_APP_SVG_ICON" equivEnd="CLOSE_TAG_APP_SVG_ICON" type="other" dispStart="&lt;app-svg-icon
+                    name=&quot;chevron-right&quot;
+                    [size]=&quot;1.2&quot;
+                    aria-hidden=&quot;true&quot;
+                  &gt;" dispEnd="&lt;/app-svg-icon&gt;"></pc></source>
+        <target> Start my free audit <pc id="0" equivStart="START_TAG_APP_SVG_ICON" equivEnd="CLOSE_TAG_APP_SVG_ICON" type="other" dispStart="&lt;app-svg-icon
+                    name=&quot;chevron-right&quot;
+                    [size]=&quot;1.2&quot;
+                    aria-hidden=&quot;true&quot;
+                  &gt;" dispEnd="&lt;/app-svg-icon&gt;"></pc></target>
+      </segment>
+    </unit>
+
     <unit id="heroCtaAbout">
       <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:45,47</note>
+        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:51,54</note>
         <note category="description">Hero about CTA</note>
         <note category="meaning">hero.cta.about</note>
       </notes>
@@ -5441,10 +5461,10 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Accept all</target>
       </segment>
     </unit>
-    <unit id="cookieBannerEssentialOnly">
+    <unit id="cookieBannerRejectAll">
       <segment>
-        <source>Essentiels uniquement</source>
-        <target>Essential only</target>
+        <source>Tout refuser</source>
+        <target>Reject all</target>
       </segment>
     </unit>
     <unit id="cookieSettingsHeroLabel">

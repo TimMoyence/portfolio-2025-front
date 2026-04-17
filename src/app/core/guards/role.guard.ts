@@ -5,7 +5,10 @@ import { AuthStateService } from "../services/auth-state.service";
 
 /**
  * Factory de guard fonctionnel qui verifie que l'utilisateur
- * possede le role requis. Redirige vers / si le role manque.
+ * possede le role requis. Si le role manque, redirige vers /contact
+ * avec les query params `reason=access&app={role}` pour permettre a
+ * l'utilisateur de demander explicitement l'acces (vs redirection
+ * silencieuse vers / qui ne lui explique rien).
  *
  * Usage dans les routes :
  * ```ts
@@ -21,6 +24,8 @@ export function roleGuard(requiredRole: string): CanActivateFn {
       return true;
     }
 
-    return router.createUrlTree(["/"]);
+    return router.createUrlTree(["/contact"], {
+      queryParams: { reason: "access", app: requiredRole },
+    });
   };
 }

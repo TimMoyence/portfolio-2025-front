@@ -14,14 +14,14 @@
       <div class="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          class="rounded-button border border-scheme-border bg-scheme-surface px-4 py-2 text-sm font-semibold text-scheme-text transition-colors hover:bg-scheme-accent-hover"
-          (click)="acceptEssentialOnly()"
+          class="rounded-button border-2 border-scheme-text bg-scheme-surface px-4 py-2 text-sm font-semibold text-scheme-text transition-colors hover:bg-scheme-text hover:text-scheme-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-scheme-accent focus-visible:ring-offset-2"
+          (click)="rejectAll()"
         >
-          {{ content.essentialOnly }}
+          {{ content.rejectAll }}
         </button>
         <button
           type="button"
-          class="rounded-button bg-scheme-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-scheme-accent-hover"
+          class="rounded-button bg-scheme-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-scheme-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-scheme-accent focus-visible:ring-offset-2"
           (click)="acceptAll()"
         >
           {{ content.acceptAll }}

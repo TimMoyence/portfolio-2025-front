@@ -26,7 +26,7 @@ export class CookieBannerComponent {
     message: $localize`:cookie.banner.message|Cookie banner message@@cookieBannerMessage:Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.`,
     settingsLabel: $localize`:cookie.banner.settings|Cookie banner settings link@@cookieBannerSettings:Paramètres des cookies`,
     acceptAll: $localize`:cookie.banner.acceptAll|Cookie banner accept all@@cookieBannerAcceptAll:Tout accepter`,
-    essentialOnly: $localize`:cookie.banner.essentialOnly|Cookie banner essential only@@cookieBannerEssentialOnly:Essentiels uniquement`,
+    rejectAll: $localize`:cookie.banner.rejectAll|Cookie banner reject all@@cookieBannerRejectAll:Tout refuser`,
   };
 
   constructor() {
@@ -56,7 +56,7 @@ export class CookieBannerComponent {
       });
   }
 
-  acceptEssentialOnly(): void {
+  rejectAll(): void {
     this.consentService
       .saveConsent(
         {

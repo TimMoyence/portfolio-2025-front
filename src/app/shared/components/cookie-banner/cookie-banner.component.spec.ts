@@ -90,7 +90,7 @@ describe("CookieBannerComponent", () => {
     );
   });
 
-  it("devrait appeler acceptEssentialOnly au clic sur Essentiels uniquement", () => {
+  it("devrait appeler rejectAll au clic sur Tout refuser (CNIL compliant)", () => {
     consentServiceStub.shouldShowBanner.and.returnValue(true);
 
     const fixture = TestBed.createComponent(CookieBannerComponent);
@@ -99,13 +99,11 @@ describe("CookieBannerComponent", () => {
     const buttons = fixture.nativeElement.querySelectorAll(
       "button",
     ) as NodeListOf<HTMLButtonElement>;
-    const essentialBtn = Array.from(buttons).find((btn) =>
-      btn.textContent?.includes(
-        fixture.componentInstance.content.essentialOnly,
-      ),
+    const rejectAllBtn = Array.from(buttons).find((btn) =>
+      btn.textContent?.includes(fixture.componentInstance.content.rejectAll),
     );
-    expect(essentialBtn).toBeTruthy();
-    essentialBtn!.click();
+    expect(rejectAllBtn).toBeTruthy();
+    rejectAllBtn!.click();
 
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
       {

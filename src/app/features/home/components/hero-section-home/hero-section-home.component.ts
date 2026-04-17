@@ -35,27 +35,26 @@ import { SvgIconComponent } from "../../../../shared/components/svg-icon.compone
                 une approche sobre, progressive et adaptée aux usages réels.
               </p>
               <div
-                class=" col-span-full text-xs md:text-base lg:text-medium mt-4 flex flex-wrap items-center justify-center gap-2 md:mt-8 lg:mt-12"
+                class=" col-span-full text-xs md:text-base lg:text-medium mt-4 flex flex-wrap items-center justify-center gap-3 md:mt-8 lg:mt-12"
               >
                 <a
-                  [routerLink]="'/presentation'"
-                  class="transition-colors bg-scheme-surface hover:bg-scheme-accent active:bg-scheme-accent-active focus:outline-none focus:ring-4 focus:ring-scheme-accent-focus hidden md:inline-flex items-center justify-center rounded-button border border-scheme-border small px-5 py-2"
-                  i18n="hero.cta.about|Hero about CTA@@heroCtaAbout"
+                  [routerLink]="'/growth-audit'"
+                  class="inline-flex items-center justify-center gap-2 rounded-button bg-scheme-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-scheme-accent-hover active:bg-scheme-accent-active focus:outline-none focus-visible:ring-4 focus-visible:ring-scheme-accent-focus"
+                  i18n="hero.cta.audit|Hero growth audit CTA@@heroCtaAudit"
                 >
-                  Découvrir l’approche
-                </a>
-                <a
-                  [routerLink]="'/contact'"
-                  class="hover:text-scheme-accent-hover focus:outline-none
-                  focus:ring-4 focus:ring-scheme-accent-focus transition-colors inline-flex items-center justify-center gap-2 px-5 py-2 font-semibold underline"
-                  i18n="hero.cta.contact|Hero contact CTA@@heroCtaContact"
-                >
-                  Échanger sur votre contexte
+                  Lancer mon audit gratuit
                   <app-svg-icon
                     name="chevron-right"
                     [size]="1.2"
                     aria-hidden="true"
                   ></app-svg-icon>
+                </a>
+                <a
+                  [routerLink]="'/presentation'"
+                  class="inline-flex items-center justify-center rounded-button border border-scheme-border bg-transparent px-5 py-3 text-scheme-text transition-colors hover:bg-scheme-surface focus:outline-none focus-visible:ring-4 focus-visible:ring-scheme-accent-focus"
+                  i18n="hero.cta.about|Hero about CTA@@heroCtaAbout"
+                >
+                  Découvrir l’approche
                 </a>
               </div>
             </div>
