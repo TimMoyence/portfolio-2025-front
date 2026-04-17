@@ -2144,6 +2144,69 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">276,279</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="contactFaqHeading" datatype="html">
+        <source> Questions fréquentes avant de me contacter </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">293,295</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq1Q" datatype="html">
+        <source> Sous quel délai ai-je une réponse ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">301,303</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq1A" datatype="html">
+        <source> Je réponds sous 48h ouvrées, du lundi au vendredi. Les demandes reçues le week-end sont traitées le lundi matin. Pour les audits Growth, la synthèse IA arrive sous 5 minutes et l&apos;analyse humaine sous 24h. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">307,309</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq2Q" datatype="html">
+        <source> Quels types de projets acceptez-vous ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">317,319</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq2A" datatype="html">
+        <source> Applications web sur mesure (Angular, NestJS, TypeScript), audits SEO/IA, intégrations OpenAI / Langchain / agents IA, accompagnement d&apos;équipes sur l&apos;outillage IA. TPE, PME, solopreneurs et équipes de moins de 20 personnes en priorité. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">323,326</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq3Q" datatype="html">
+        <source> Intervenez-vous en présentiel à Bordeaux ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">334,336</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq3A" datatype="html">
+        <source> Oui, sur Bordeaux et la métropole pour des ateliers d&apos;équipe ou des réunions de cadrage. Le reste du travail est en remote, avec des points Google Meet réguliers. Possibilité de déplacement au national pour les missions longues (devis personnalisé). </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">340,343</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq4Q" datatype="html">
+        <source> Comment se déroule un premier contact ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">351,353</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="contactFaq4A" datatype="html">
+        <source> Vous remplissez ce formulaire avec le sujet de votre demande. Je vous réponds sous 48h avec soit un devis direct (petit projet), soit une proposition d&apos;appel découverte de 30 minutes gratuit pour cadrer le besoin et vous envoyer une estimation précise. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">357,360</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="contactHeroLabel" datatype="html">
         <source>Connexion</source>
         <context-group purpose="location">
@@ -2710,17 +2773,108 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
       </trans-unit>
       <trans-unit id="formationsListSubtitle" datatype="html">
-        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation. </source>
+        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation — pensées pour les solopreneurs, freelances et petites équipes qui veulent des réponses actionnables, pas un cours universitaire. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">41,44</context>
+          <context context-type="linenumber">41,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListWhyTitle" datatype="html">
+        <source> Pourquoi ces formations ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">60,63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListWhyPara1" datatype="html">
+        <source> L&apos;IA générative a changé le quotidien des indépendants en 18 mois : ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... La vraie difficulté n&apos;est plus de trouver un outil, c&apos;est de savoir lesquels garder et comment les intégrer sans perdre sa journée en prompt engineering. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">66,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListWhyPara2" datatype="html">
+        <source> Chaque formation est basée sur ma pratique quotidienne : développeur full-stack à Bordeaux, freelance depuis 3 ans, je teste les outils IA en production sur mes propres projets et ceux de mes clients. Je partage ce qui fonctionne, ce qui ne fonctionne pas et surtout les cas où l&apos;IA fait gagner 4-6 heures par semaine concrètement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">76,80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListWhyPara3" datatype="html">
+        <source> Format pensé pour être consultable en ligne (slides interactifs, quiz en live, polls) ou en mode présentation si vous voulez les projeter en atelier d&apos;équipe. Tout est gratuit, sans inscription, sans email obligatoire à part pour les compléments PDF. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">86,90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formationsListViewCta" datatype="html">
         <source> Consulter → </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">110,111</context>
+          <context context-type="linenumber">155,156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaqTitle" datatype="html">
+        <source> Questions fréquentes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">174,176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq1Q" datatype="html">
+        <source> Les formations sont-elles vraiment gratuites ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">182,184</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq1A" datatype="html">
+        <source> Oui — les slides, quiz et polls en ligne sont entièrement gratuits et consultables sans inscription. Seuls certains compléments PDF (toolkit, prompts library) demandent un email pour l&apos;envoi, que vous pouvez retirer à tout moment. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">188,191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq2Q" datatype="html">
+        <source> Puis-je les utiliser en présentation d&apos;équipe ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">199,201</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq2A" datatype="html">
+        <source> Absolument. Chaque formation a un mode &quot;présentation&quot; avec slides plein écran, polls live pour interagir avec l&apos;audience et quiz pour valider la compréhension. Vous pouvez l&apos;utiliser en atelier interne, en conférence ou en accompagnement client — mentionnez juste la source si vous le diffusez. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">205,209</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq3Q" datatype="html">
+        <source> À quelle fréquence sont-elles mises à jour ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">217,219</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq3A" datatype="html">
+        <source> Les outils IA évoluent vite. Chaque formation est relue tous les 3-4 mois pour enlever ce qui ne fonctionne plus, ajouter les nouveautés qui tiennent la route et ajuster les budgets quand les grilles tarifaires changent. Les mises à jour majeures sont annoncées dans les slides concernés. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">223,227</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq4Q" datatype="html">
+        <source> Proposez-vous de l&apos;accompagnement personnalisé ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">235,237</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formationsListFaq4A" datatype="html">
+        <source> Oui — au-delà des formations publiques, je fais aussi du coaching individuel et de la formation intra-entreprise sur l&apos;intégration IA dans les workflows métier. Voir la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> page offre <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ou contactez-moi directement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
+          <context context-type="linenumber">241,248</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.title" datatype="html">
@@ -4622,10 +4776,94 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.subtitle" datatype="html">
-        <source> Les meilleurs outils, les prix, les budgets — dans votre inbox en 30 secondes. </source>
+        <source> Les meilleurs outils IA pour solopreneurs — triés, testés, avec prix, budgets mensuels estimés et cas d&apos;usage concrets. Livré dans votre boite mail en 30 secondes, gratuit et sans engagement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
           <context context-type="linenumber">29,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.contentsTitle" datatype="html">
+        <source> Ce que contient le toolkit </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">50,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.content1" datatype="html">
+        <source> 16 outils IA sélectionnés pour la génération de contenu, l&apos;automatisation marketing, la création visuelle, la prospection commerciale et le support client — avec une fiche comparative pour chacun. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">56,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.content2" datatype="html">
+        <source> Les budgets mensuels estimés par tier d&apos;usage (solo, équipe, agence) pour dimensionner votre stack IA sans surpayer — typiquement 30 à 150 € / mois pour un solopreneur. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">62,65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.content3" datatype="html">
+        <source> 3 workflows concrets clé en main : rédaction de newsletters hebdo, réponse client multilingue, création de visuels LinkedIn — chacun avec prompt, outil recommandé et temps gagné. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">67,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.content4" datatype="html">
+        <source> Les pièges à éviter : outils payants qui ne tiennent pas leurs promesses, RGPD sur les données, hallucinations IA sur la partie juridique et comptable. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">72,75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.faqTitle" datatype="html">
+        <source> Questions fréquentes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">88,90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.faq1Q" datatype="html">
+        <source> À qui s&apos;adresse ce toolkit ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">96,98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.faq1A" datatype="html">
+        <source> Aux solopreneurs, freelances et indépendants qui veulent gagner du temps sans se noyer dans les dizaines d&apos;outils IA qui sortent chaque semaine. Niveau requis : zéro — les fiches expliquent pas à pas. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">102,104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.faq2Q" datatype="html">
+        <source> Pourquoi le toolkit est gratuit ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">113,115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.faq2A" datatype="html">
+        <source> Parce que c&apos;est une version condensée des formations que je vends en intra-entreprise. L&apos;objectif est de démontrer la qualité du travail avant de proposer un accompagnement sur-mesure, si vous en avez besoin. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">119,122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.faq3Q" datatype="html">
+        <source> Comment le recevoir ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">130,132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.faq3A" datatype="html">
+        <source> Laissez votre email dans le formulaire ci-dessus. Vous recevrez le PDF du toolkit dans la minute. Aucune newsletter automatique, aucun follow-up marketing : c&apos;est promis, et conforme RGPD. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">136,138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPhaseTechnicalPages" datatype="html">
@@ -4739,35 +4977,35 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Progression de l&apos;audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">172,174</context>
+          <context context-type="linenumber">191,193</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditResumeTitle" datatype="html">
         <source>Résumé de votre audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">257,259</context>
+          <context context-type="linenumber">276,278</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsTitle" datatype="html">
-        <source> Audit rapide en 5 piliers </source>
+        <source> Audit Growth en 7 piliers </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">290,293</context>
+          <context context-type="linenumber">309,312</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsSubtitle" datatype="html">
-        <source> Un diagnostic concret, actionnable et faisable en moins de 45 minutes. </source>
+        <source> Un diagnostic concret et actionnable, aligné avec les 7 piliers du rapport livré. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">296,298</context>
+          <context context-type="linenumber">315,318</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditStepsTitle" datatype="html">
         <source> Comment ça fonctionne </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">313,315</context>
+          <context context-type="linenumber">333,335</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditHeroLabel" datatype="html">
@@ -4779,7 +5017,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.hero.label</note>
       </trans-unit>
       <trans-unit id="auditHeroTitle" datatype="html">
-        <source>Audit de croissance en 15 points</source>
+        <source>Audit Growth — scorecard 7 piliers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">91</context>
@@ -4787,7 +5025,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.hero.title</note>
       </trans-unit>
       <trans-unit id="auditHeroDescription" datatype="html">
-        <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, signaux de conversion). Ensuite, sous 24h, je réalise l’audit moi-même et je vous envoie une vidéo + une scorecard claire + des recommandations concrètes pour gagner en visibilité et en clients.</source>
+        <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, conversion, visibilité IA). Ensuite, sous 24h, je repasse l&apos;audit moi-même et je vous envoie une scorecard claire, un rapport PDF détaillé et des recommandations concrètes priorisées par impact/effort.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">92</context>
@@ -4819,7 +5057,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.steps.two.title</note>
       </trans-unit>
       <trans-unit id="auditStepTwoDesc" datatype="html">
-        <source>Je scanne vos pages (SEO, performance, conversion) et je sors un premier diagnostic rapide.</source>
+        <source>Je scanne vos pages (SEO, performance, conversion, visibilité IA) et je sors un premier diagnostic rapide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">102</context>
@@ -4835,20 +5073,20 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.steps.three.title</note>
       </trans-unit>
       <trans-unit id="auditStepThreeDesc" datatype="html">
-        <source>Je reprends l’analyse moi-même, je priorise, et je vous envoie une vidéo + une scorecard + un plan d’actions.</source>
+        <source>Je reprends l&apos;analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d&apos;actions concret.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.desc</note>
       </trans-unit>
-      <trans-unit id="auditHighlightsVideo" datatype="html">
-        <source>Vidéo personnalisée</source>
+      <trans-unit id="auditHighlightsPdf" datatype="html">
+        <source>Rapport PDF détaillé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">108</context>
         </context-group>
-        <note priority="1" from="description">audit.highlights.video</note>
+        <note priority="1" from="description">audit.highlights.pdf</note>
       </trans-unit>
       <trans-unit id="auditHighlightsScore" datatype="html">
         <source>Scorecard claire</source>
@@ -4883,7 +5121,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.faq.title</note>
       </trans-unit>
       <trans-unit id="auditFaqDescription" datatype="html">
-        <source>Ce que vous devez savoir avant de demander votre audit de croissance en 15 points.</source>
+        <source>Ce que vous devez savoir avant de demander votre audit Growth — scorecard 7 piliers + recommandations priorisées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">117</context>
@@ -4899,7 +5137,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.faq.q1</note>
       </trans-unit>
       <trans-unit id="auditFaqA1" datatype="html">
-        <source>Vous laissez l&apos;URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion). Puis, sous 24h, je reprends l&apos;analyse moi-même et vous envoie une vidéo personnalisée, une scorecard claire et un plan d&apos;actions priorisé par impact/effort.</source>
+        <source>Vous laissez l&apos;URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion, visibilité IA). Puis, sous 24h, je reprends l&apos;analyse moi-même et vous envoie une scorecard claire, un rapport PDF détaillé et un plan d&apos;actions priorisé par impact/effort.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">121</context>
@@ -4907,7 +5145,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.faq.a1</note>
       </trans-unit>
       <trans-unit id="auditFaqQ2" datatype="html">
-        <source>Que contient concrètement l&apos;audit en 15 points ?</source>
+        <source>Que contient concrètement l&apos;audit Growth ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">124</context>
@@ -4915,7 +5153,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <note priority="1" from="description">audit.faq.q2</note>
       </trans-unit>
       <trans-unit id="auditFaqA2" datatype="html">
-        <source>L&apos;audit couvre cinq piliers : conversion et clarté, vitesse et performance (Core Web Vitals), SEO fondations (titres, meta, indexation, SEO local), crédibilité et confiance, tech et scalabilité. Vous recevez une scorecard, des quick wins et des recommandations priorisées.</source>
+        <source>L&apos;audit couvre sept piliers : SEO fondations (titres, meta, indexation, SEO local), vitesse et performance (Core Web Vitals), tech et scalabilité, crédibilité et confiance, conversion et clarté, visibilité IA (ChatGPT / Perplexity / Gemini) et citabilité (llms.txt, FAQ, sources). Vous recevez une scorecard, des quick wins et des recommandations priorisées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
           <context context-type="linenumber">125</context>
@@ -5154,11 +5392,27 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         </context-group>
         <note priority="1" from="description">audit.form.error</note>
       </trans-unit>
+      <trans-unit id="auditFormRgpdLabel" datatype="html">
+        <source>J&apos;accepte que mes coordonnées soient utilisées pour traiter ma demande d&apos;audit (voir &lt;a href=&quot;/fr/privacy&quot; class=&quot;underline&quot;&gt;politique de confidentialité&lt;/a&gt;).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">audit.form.rgpdLabel</note>
+      </trans-unit>
+      <trans-unit id="auditFormRgpdError" datatype="html">
+        <source>Votre consentement RGPD est obligatoire pour lancer l&apos;audit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">audit.form.rgpdError</note>
+      </trans-unit>
       <trans-unit id="auditStepPending" datatype="html">
         <source>Audit en attente...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">271</context>
+          <context context-type="linenumber">285</context>
         </context-group>
         <note priority="1" from="description">Audit pending step</note>
         <note priority="1" from="meaning">growthAudit.step.pending</note>
@@ -5167,11 +5421,11 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Audit terminé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">322</context>
+          <context context-type="linenumber">376</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">354</context>
+          <context context-type="linenumber">416</context>
         </context-group>
         <note priority="1" from="description">Audit completed step</note>
         <note priority="1" from="meaning">growthAudit.step.completed</note>
@@ -5180,11 +5434,11 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>L&apos;audit a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">344</context>
+          <context context-type="linenumber">402</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">365</context>
+          <context context-type="linenumber">427</context>
         </context-group>
         <note priority="1" from="description">Audit failed message</note>
         <note priority="1" from="meaning">growthAudit.error.failed</note>
@@ -5193,7 +5447,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Connexion interrompue pendant l&apos;audit. Rechargez la page pour vérifier le résultat.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">378</context>
+          <context context-type="linenumber">440</context>
         </context-group>
         <note priority="1" from="description">Connection lost during audit</note>
         <note priority="1" from="meaning">growthAudit.error.connectionLost</note>
@@ -5202,7 +5456,7 @@ Format : présentation Gamma avec sections visuelles distinctes.</source>
         <source>Impossible de récupérer le résumé de l&apos;audit pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">384</context>
+          <context context-type="linenumber">446</context>
         </context-group>
         <note priority="1" from="description">Summary fetch error</note>
         <note priority="1" from="meaning">growthAudit.error.summaryFetch</note>
@@ -10360,16 +10614,25 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source> © 2025 Moyence. All rights reserved. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
-          <context context-type="linenumber">120,124</context>
+          <context context-type="linenumber">131,134</context>
         </context-group>
         <note priority="1" from="description">Footer copyright</note>
         <note priority="1" from="meaning">footer.copyright</note>
+      </trans-unit>
+      <trans-unit id="footerLastUpdated" datatype="html">
+        <source> Dernière mise à jour : </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
+          <context context-type="linenumber">135,137</context>
+        </context-group>
+        <note priority="1" from="description">Footer last updated</note>
+        <note priority="1" from="meaning">footer.lastUpdated</note>
       </trans-unit>
       <trans-unit id="footerNavHome" datatype="html">
         <source>Accueil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.home</note>
@@ -10378,7 +10641,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.presentation</note>
@@ -10387,7 +10650,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.projects</note>
@@ -10396,16 +10659,43 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.services</note>
+      </trans-unit>
+      <trans-unit id="footerNavFormations" datatype="html">
+        <source>Formations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.formations</note>
+      </trans-unit>
+      <trans-unit id="footerNavGrowthAudit" datatype="html">
+        <source>Audit gratuit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.growthAudit</note>
+      </trans-unit>
+      <trans-unit id="footerNavContact" datatype="html">
+        <source>Contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.contact</note>
       </trans-unit>
       <trans-unit id="footerSocialFacebook" datatype="html">
         <source>Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.facebook</note>
@@ -10414,7 +10704,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
@@ -10423,7 +10713,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.terms</note>
@@ -10432,7 +10722,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.privacy</note>
@@ -10441,7 +10731,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Paramètres de cookies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.cookiesSettings</note>
