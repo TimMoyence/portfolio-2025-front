@@ -890,66 +890,156 @@
     {
       "id": "weather",
       "path": "/atelier/meteo",
-      "index": false,
+      "index": true,
       "changefreq": "monthly",
       "priority": 0.5,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-04-18",
       "locales": {
         "fr": {
           "title": "Météo — L'Atelier",
           "description": "Application météo en temps réel avec prévisions détaillées, inspirée d'Apple Weather.",
           "ogTitle": "Météo — L'Atelier",
-          "ogDescription": "Consultez la météo en temps réel avec une interface élégante et des prévisions détaillées."
+          "ogDescription": "Consultez la météo en temps réel avec une interface élégante et des prévisions détaillées.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Météo — L'Atelier",
+            "description": "Application météo en temps réel avec prévisions détaillées, inspirée d'Apple Weather.",
+            "applicationCategory": "WeatherApplication",
+            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "screenshot": "https://asilidesign.fr/assets/images/ateliers/meteo-screenshot.png",
+            "url": "https://asilidesign.fr/fr/atelier/meteo"
+          }
         },
         "en": {
           "title": "Weather — L'Atelier",
           "description": "Real-time weather app with detailed forecasts, inspired by Apple Weather.",
           "ogTitle": "Weather — L'Atelier",
-          "ogDescription": "Check real-time weather with an elegant interface and detailed forecasts."
+          "ogDescription": "Check real-time weather with an elegant interface and detailed forecasts.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Weather — L'Atelier",
+            "description": "Real-time weather app with detailed forecasts, inspired by Apple Weather.",
+            "applicationCategory": "WeatherApplication",
+            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "screenshot": "https://asilidesign.fr/assets/images/ateliers/meteo-screenshot.png",
+            "url": "https://asilidesign.fr/en/atelier/meteo"
+          }
         }
       }
     },
     {
       "id": "budget",
       "path": "/atelier/budget",
-      "index": false,
+      "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-04-09",
+      "lastmod": "2026-04-18",
       "locales": {
         "fr": {
           "title": "Budget — L'Atelier",
           "description": "Outil de gestion de budget partagé pour couple avec import CSV, catégorisation automatique et suivi des contributions.",
           "ogTitle": "Budget — L'Atelier",
-          "ogDescription": "Gérez votre budget commun : import CSV, auto-catégorisation et suivi des contributions."
+          "ogDescription": "Gérez votre budget commun : import CSV, auto-catégorisation et suivi des contributions.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Budget — L'Atelier",
+            "description": "Outil de gestion de budget partagé pour couple avec import CSV, catégorisation automatique et suivi des contributions.",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "screenshot": "https://asilidesign.fr/assets/images/ateliers/budget-screenshot.png",
+            "url": "https://asilidesign.fr/fr/atelier/budget"
+          }
         },
         "en": {
           "title": "Budget — L'Atelier",
           "description": "Shared couple budget management tool with CSV import, auto-categorization, and contribution tracking.",
           "ogTitle": "Budget — L'Atelier",
-          "ogDescription": "Manage your shared budget: CSV import, auto-categorization, and contribution tracking."
+          "ogDescription": "Manage your shared budget: CSV import, auto-categorization, and contribution tracking.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Budget — L'Atelier",
+            "description": "Shared couple budget management tool with CSV import, auto-categorization, and contribution tracking.",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "screenshot": "https://asilidesign.fr/assets/images/ateliers/budget-screenshot.png",
+            "url": "https://asilidesign.fr/en/atelier/budget"
+          }
         }
       }
     },
     {
       "id": "sebastian",
       "path": "/atelier/sebastian",
-      "index": false,
+      "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-04-09",
+      "lastmod": "2026-04-18",
       "locales": {
         "fr": {
           "title": "Sebastian — L'Atelier",
           "description": "Tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps.",
           "ogTitle": "Sebastian — L'Atelier",
-          "ogDescription": "Suivez votre consommation, fixez des objectifs et visualisez vos progrès avec Sebastian."
+          "ogDescription": "Suivez votre consommation, fixez des objectifs et visualisez vos progrès avec Sebastian.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Sebastian — L'Atelier",
+            "description": "Tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps.",
+            "applicationCategory": "HealthApplication",
+            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "screenshot": "https://asilidesign.fr/assets/images/ateliers/sebastian-screenshot.png",
+            "url": "https://asilidesign.fr/fr/atelier/sebastian"
+          }
         },
         "en": {
           "title": "Sebastian — L'Atelier",
           "description": "Personal consumption tracker with goals, charts, and time tracking.",
           "ogTitle": "Sebastian — L'Atelier",
-          "ogDescription": "Track your consumption, set goals, and visualize progress with Sebastian."
+          "ogDescription": "Track your consumption, set goals, and visualize progress with Sebastian.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Sebastian — L'Atelier",
+            "description": "Personal consumption tracker with goals, charts, and time tracking.",
+            "applicationCategory": "HealthApplication",
+            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "screenshot": "https://asilidesign.fr/assets/images/ateliers/sebastian-screenshot.png",
+            "url": "https://asilidesign.fr/en/atelier/sebastian"
+          }
         }
       }
     },

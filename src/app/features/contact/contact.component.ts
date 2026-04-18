@@ -5,10 +5,11 @@ import {
   Component,
   inject,
   LOCALE_ID,
+  OnInit,
 } from "@angular/core";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { APP_CONFIG } from "../../core/config/app-config.token";
 import type { ContactFormState } from "../../core/models/contact.model";
 import type { ContactPort } from "../../core/ports/contact.port";
@@ -31,7 +32,7 @@ import { HeroSectionComponent } from "../../shared/components/hero-section/hero-
   styleUrl: "./contact.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
   isContactLoading: boolean = false;
   isContactSubmitted: boolean = false;
   contactErrorMessage?: string;
@@ -40,6 +41,7 @@ export class ContactComponent {
   private readonly localeId = inject(LOCALE_ID);
   private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
 
   readonly hero = {
     label: $localize`:contact.hero.label@@contactHeroLabel:Connexion`,
@@ -87,6 +89,39 @@ export class ContactComponent {
   };
 
   contactForm: ContactFormState = { ...this.defaultContactFormState };
+
+  /**
+   * Prefill subject + message based on ?reason=access&app={role} query params.
+   * Called when a role-gated atelier landing (ex: /atelier/meteo) redirects a
+   * visitor without the required role — the destination context carries over
+   * into the contact form so the visitor doesn't re-type "Je veux acces a la
+   * meteo".
+   */
+  ngOnInit(): void {
+    const params = this.route.snapshot.queryParamMap;
+    const reason = params.get("reason");
+    const app = params.get("app");
+    if (reason === "access" && app) {
+      this.contactForm = {
+        ...this.contactForm,
+        subject: $localize`:contact.form.subject.access@@contactFormSubjectAccess:Demande d'accès application`,
+        message: this.buildAccessRequestMessage(app),
+      };
+    }
+  }
+
+  private buildAccessRequestMessage(app: string): string {
+    const normalizedApp = app.trim().toLowerCase();
+    const appLabel =
+      normalizedApp === "weather"
+        ? $localize`:contact.access.app.weather@@contactAccessAppWeather:l'application Météo`
+        : normalizedApp === "budget"
+          ? $localize`:contact.access.app.budget@@contactAccessAppBudget:l'application Budget`
+          : normalizedApp === "sebastian"
+            ? $localize`:contact.access.app.sebastian@@contactAccessAppSebastian:l'application Sebastian`
+            : $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'atelier ${normalizedApp}:app:`;
+    return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
+  }
 
   contactFields: {
     key: Extract<
