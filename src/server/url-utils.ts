@@ -23,11 +23,20 @@ export const normalizePath = (path: string): string => {
   return trimmed ? `/${trimmed}` : "/";
 };
 
-/** Construit un chemin localise (ex: "fr" + "/contact" -> "/fr/contact"). */
+/**
+ * Construit un chemin localise (ex: "fr" + "/contact" -> "/fr/contact").
+ *
+ * La racine locale est emise AVEC trailing slash (`/fr/`, `/en/`) pour
+ * coherence avec le comportement nginx en production : le reverse-proxy
+ * ajoute systematiquement un slash a `/fr` -> 301 -> `/fr/`. Sitemap et
+ * canonical doivent donc pointer directement sur `/fr/` pour eviter une
+ * contradiction canonique (`<loc>/fr</loc>` -> 301 -> page servie en
+ * `/fr/` dont le canonical pointerait a nouveau sur `/fr`).
+ */
 export const buildLocalizedPath = (locale: string, path: string): string => {
   const normalized = normalizePath(path);
   if (!locale) return normalized;
-  if (normalized === "/") return normalizePath(`/${locale}`);
+  if (normalized === "/") return `/${locale}/`;
   return normalizePath(`/${locale}${normalized}`);
 };
 
