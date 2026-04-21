@@ -7,13 +7,19 @@ import {
 import type {
   ChecklistInteraction,
   PresentationMode,
+  QuizInteraction,
   SelfRatingInteraction,
   SlideInteractions,
 } from "../../models/slide.model";
 import { InteractionCollectorService } from "../../services/interaction-collector.service";
+import {
+  quizValueToBudgetTier,
+  selfRatingToBudgetTier,
+} from "../../utils/budget-tier.mapper";
 import { ChecklistInteractionComponent } from "./checklist-interaction.component";
 import { CountdownInteractionComponent } from "./countdown-interaction.component";
 import { PollInteractionComponent } from "./poll-interaction.component";
+import { QuizInteractionComponent } from "./quiz-interaction.component";
 import { ReflectionInteractionComponent } from "./reflection-interaction.component";
 import { SelfRatingInteractionComponent } from "./self-rating-interaction.component";
 
@@ -34,6 +40,7 @@ import { SelfRatingInteractionComponent } from "./self-rating-interaction.compon
     ReflectionInteractionComponent,
     ChecklistInteractionComponent,
     SelfRatingInteractionComponent,
+    QuizInteractionComponent,
     CountdownInteractionComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +65,12 @@ import { SelfRatingInteractionComponent } from "./self-rating-interaction.compon
                   <app-self-rating-interaction
                     [config]="interaction"
                     (valueSelected)="onSelfRating(interaction, $event)"
+                  />
+                }
+                @case ("quiz") {
+                  <app-quiz-interaction
+                    [config]="interaction"
+                    (valueChanged)="onQuiz(interaction, $event)"
                   />
                 }
               }
@@ -105,7 +118,7 @@ export class InteractionSlotComponent {
   /**
    * Mappe la valeur d'un self-rating vers le champ du profil concerne.
    * - `aiLevel` : 1-2 → debutant, 3 → intermediaire, 4-5 → avance
-   * - `budgetTier` : 1-2 → '0', 3 → '60', 4-5 → '120'
+   * - `budgetTier` : delegue a `selfRatingToBudgetTier` (shared mapper)
    */
   onSelfRating(interaction: SelfRatingInteraction, value: number): void {
     if (!this.collector || !interaction.profileField) return;
@@ -115,8 +128,7 @@ export class InteractionSlotComponent {
         value <= 2 ? "debutant" : value <= 3 ? "intermediaire" : "avance";
       this.collector.setAiLevel(level);
     } else if (interaction.profileField === "budgetTier") {
-      const tier = value <= 2 ? "0" : value <= 3 ? "60" : "120";
-      this.collector.setBudgetTier(tier);
+      this.collector.setBudgetTier(selfRatingToBudgetTier(value));
     }
   }
 
@@ -130,6 +142,50 @@ export class InteractionSlotComponent {
     if (interaction.profileField === "toolsAlreadyUsed") {
       const tools = [...checked].map((i) => interaction.items[i]);
       this.collector.setToolsUsed(tools);
+    }
+  }
+
+  /**
+   * Distribue la valeur d'un quiz vers le champ du profil concerne.
+   *
+   * Mapping supporte :
+   * - `profileField === "sector"` : single-choice -> setSector(string)
+   * - `profileField === "aiLevel"` : single-choice (debutant/intermediaire/avance)
+   * - `profileField === "budget"` : single-choice, mappe "zero"|"small" → '0',
+   *   "medium" → '60', "large" → '120' pour rester aligne sur InteractionProfile.
+   * - `profileField === "toolsAlreadyUsed"` : multi-choice -> setToolsUsed(string[])
+   *
+   * Les autres `profileField` sont ignores : le tracking analytique
+   * consommera directement `valueChanged` si besoin (hors scope
+   * profil — evite de polluer InteractionProfile avec 30 champs).
+   */
+  onQuiz(interaction: QuizInteraction, value: string | string[]): void {
+    if (!this.collector) return;
+
+    switch (interaction.profileField) {
+      case "sector":
+        if (typeof value === "string") this.collector.setSector(value);
+        return;
+      case "aiLevel":
+        if (
+          typeof value === "string" &&
+          (value === "debutant" ||
+            value === "intermediaire" ||
+            value === "avance")
+        ) {
+          this.collector.setAiLevel(value);
+        }
+        return;
+      case "budget":
+        if (typeof value === "string") {
+          this.collector.setBudgetTier(quizValueToBudgetTier(value));
+        }
+        return;
+      case "toolsAlreadyUsed":
+        if (Array.isArray(value)) this.collector.setToolsUsed(value);
+        return;
+      default:
+        return;
     }
   }
 }

@@ -144,14 +144,14 @@ export const buildLlmsTxt = (
   const siteDescription = site?.description ?? "";
   const founderName = site?.founder?.name ?? "Tim Moyence";
 
-  const servicePages = indexablePages.filter((p) =>
-    [
-      "offer",
-      "growth-audit",
-      "formations",
-      "formations-ia-solopreneurs",
-      "formations-ia-solopreneurs-toolkit",
-    ].includes(p.id),
+  // Toutes les pages formations (hub + formations + toolkits) sont considerees
+  // comme services : prefixe "formations" absorbe les nouvelles formations
+  // ajoutees via la registry sans toucher cette liste.
+  const servicePages = indexablePages.filter(
+    (p) =>
+      ["offer", "growth-audit"].includes(p.id) ||
+      p.id === "formations" ||
+      p.id.startsWith("formations-"),
   );
   const aboutPages = indexablePages.filter((p) =>
     ["presentation", "client-project"].includes(p.id),

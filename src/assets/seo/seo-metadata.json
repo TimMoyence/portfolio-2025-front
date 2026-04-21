@@ -1724,6 +1724,299 @@
       }
     },
     {
+      "id": "formations-audit-seo-diy",
+      "path": "/formations/audit-seo-diy",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-04-21",
+      "breadcrumb": [
+        { "name": "Accueil", "path": "/" },
+        { "name": "Formations", "path": "/formations" },
+        { "name": "Audit SEO DIY", "path": "/formations/audit-seo-diy" }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Audit SEO DIY — 7 checks en 20 minutes avec 5 outils gratuits",
+          "description": "Formation gratuite de 20 minutes : 7 points a verifier sur votre site avec 5 outils SEO gratuits. Pour entrepreneurs et TPE, sans jargon.",
+          "ogTitle": "Audit SEO DIY — 7 checks en 20 minutes",
+          "ogDescription": "7 checks SEO concrets, 5 outils gratuits, 20 minutes — pour savoir si Google trouve vraiment votre site.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              "name": "Audit SEO DIY — 7 checks en 20 minutes avec 5 outils gratuits",
+              "description": "Formation gratuite de 20 minutes pour entrepreneurs et TPE qui veulent auditer leur site web sans payer un pro. Sept checks concrets avec 5 outils gratuits.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Asili Design",
+                "url": "https://asilidesign.fr"
+              },
+              "isAccessibleForFree": true,
+              "duration": "PT20M",
+              "courseMode": "online",
+              "inLanguage": "fr",
+              "url": "https://asilidesign.fr/fr/formations/audit-seo-diy",
+              "educationalLevel": "beginner",
+              "learningResourceType": "Tutorial",
+              "teaches": [
+                "Verifier en 30 secondes si Google a indexe votre site",
+                "Identifier les 3 problemes SEO qui coutent le plus de clients",
+                "Utiliser 5 outils SEO gratuits (Google Search Console, PageSpeed)",
+                "Produire un rapport d'audit d'une page imprimable",
+                "Savoir quand un audit DIY ne suffit plus"
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Puis-je faire cet audit sans competence technique ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Oui entierement. Chaque check utilise Google directement ou des outils en ligne avec un formulaire. Aucun terminal, aucun code, aucune configuration serveur."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Combien de temps avant de voir des resultats ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Les corrections techniques (indexation, vitesse) produisent des effets visibles en 2 a 4 semaines. Les ameliorations de contenu prennent 3 a 6 mois pour grimper dans les resultats."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Faut-il refaire un audit chaque mois ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Non. Un audit complet tous les 6 mois suffit. Entre deux, un check mensuel de 20 minutes sur Google Search Console detecte les problemes qui apparaissent."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Le SEO marche-t-il encore en 2026 avec l'essor des IA ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Oui, plus que jamais. Les IA citent preferentiellement les sites bien optimises. Le SEO 2026 = SEO classique (Google) + AEO (moteurs de reponse)."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Quand un audit DIY ne suffit-il plus ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Chute brutale de trafic (> 30%), migration de site, e-commerce > 500 pages, concurrence agressive sur mots-cles a fort CA. Dans ces cas, l'analyse depasse le DIY."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Dois-je payer Semrush ou Ahrefs ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pour une petite entreprise < 10 000 visites/mois, non. Les 5 outils gratuits couvrent 90% des besoins. Les SaaS payants deviennent utiles au-dela."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "en": {
+          "title": "DIY SEO Audit — 7 checks in 20 minutes with 5 free tools",
+          "description": "Free 20-minute training: 7 checks to run on your website with 5 free SEO tools. For entrepreneurs and small businesses, no jargon.",
+          "ogTitle": "DIY SEO Audit — 7 checks in 20 minutes",
+          "ogDescription": "7 concrete SEO checks, 5 free tools, 20 minutes — to know if Google actually finds your website.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              "name": "DIY SEO Audit — 7 checks in 20 minutes with 5 free tools",
+              "description": "Free 20-minute training for entrepreneurs and small businesses who want to audit their website without paying for a professional. Seven concrete checks with 5 free tools.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Asili Design",
+                "url": "https://asilidesign.fr"
+              },
+              "isAccessibleForFree": true,
+              "duration": "PT20M",
+              "courseMode": "online",
+              "inLanguage": "en",
+              "url": "https://asilidesign.fr/en/formations/audit-seo-diy",
+              "educationalLevel": "beginner",
+              "learningResourceType": "Tutorial",
+              "teaches": [
+                "Check in 30 seconds if Google has indexed your website",
+                "Identify the 3 SEO issues costing you the most customers",
+                "Use 5 free SEO tools (Google Search Console, PageSpeed)",
+                "Produce a one-page printable audit report",
+                "Know when a DIY audit is no longer enough"
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Can I run this audit without technical skills?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, entirely. Every check uses either Google directly or online tools with a form. No terminal, no code, no server configuration."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How long before I see results?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Technical fixes (indexing, speed) produce visible effects in 2 to 4 weeks. Content improvements take 3 to 6 months to climb in results."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Should I redo the audit every month?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. A full audit every 6 months is enough. In between, a monthly 20-minute check on Google Search Console detects emerging problems."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does SEO still work in 2026 with AI?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, more than ever. AIs preferentially cite well-optimised sites. 2026 SEO = classic SEO (Google) + AEO (answer engines)."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "When is a DIY audit no longer enough?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sudden traffic drop (> 30%), site migration, e-commerce with > 500 pages, aggressive competition on high-revenue keywords. These cases go beyond DIY."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Should I pay for Semrush or Ahrefs?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "For a small business with < 10,000 monthly visits, no. The 5 free tools cover 90% of needs. Paid SaaS become useful beyond that."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "formations-audit-seo-diy-toolkit",
+      "path": "/formations/audit-seo-diy/toolkit",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.6,
+      "lastmod": "2026-04-21",
+      "breadcrumb": [
+        { "name": "Accueil", "path": "/" },
+        { "name": "Formations", "path": "/formations" },
+        { "name": "Audit SEO DIY", "path": "/formations/audit-seo-diy" },
+        { "name": "Toolkit", "path": "/formations/audit-seo-diy/toolkit" }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Checklist audit SEO — Template de rapport et 5 outils gratuits",
+          "description": "Recevez la checklist imprimable des 7 checks SEO + le template de rapport Google Sheets + les liens des 5 outils gratuits. PDF en 30 secondes.",
+          "ogTitle": "Checklist audit SEO",
+          "ogDescription": "Checklist imprimable + rapport type + 5 outils gratuits — PDF dans votre inbox en 30 secondes.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Checklist audit SEO DIY",
+            "description": "Page de capture pour recevoir le kit complet audit SEO DIY : checklist imprimable, rapport Google Sheets, liens outils, script developpeur.",
+            "url": "https://asilidesign.fr/fr/formations/audit-seo-diy/toolkit",
+            "isPartOf": { "@id": "https://asilidesign.fr/#website" }
+          }
+        },
+        "en": {
+          "title": "SEO Audit Checklist — Report template and 5 free tools",
+          "description": "Get the printable 7-check SEO checklist + Google Sheets report template + the 5 free tool links. PDF in 30 seconds.",
+          "ogTitle": "SEO Audit Checklist",
+          "ogDescription": "Printable checklist + report template + 5 free tools — PDF in your inbox in 30 seconds.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "DIY SEO Audit Checklist",
+            "description": "Capture page to receive the full DIY SEO audit kit: printable checklist, Google Sheets report, tool links, developer briefing script.",
+            "url": "https://asilidesign.fr/en/formations/audit-seo-diy/toolkit",
+            "isPartOf": { "@id": "https://asilidesign.fr/#website" }
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-automatiser-avec-ia-toolkit",
+      "path": "/formations/automatiser-avec-ia/toolkit",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.6,
+      "lastmod": "2026-04-21",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Automatiser avec l'IA",
+          "path": "/formations/automatiser-avec-ia"
+        },
+        {
+          "name": "Toolkit",
+          "path": "/formations/automatiser-avec-ia/toolkit"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Toolkit Automatiser avec l'IA — 5 workflows prets a l'emploi",
+          "description": "Recevez les 5 workflows IA de la formation en PDF : devis, emails, reseaux sociaux, factures, veille. Gratuit, dans votre inbox en 30 secondes.",
+          "ogTitle": "Toolkit Automatiser avec l'IA",
+          "ogDescription": "5 workflows IA prets a l'emploi — PDF gratuit dans votre inbox en 30 secondes.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Toolkit Automatiser avec l'IA",
+            "description": "Page de capture pour recevoir les 5 workflows IA en PDF : prompts exacts, pieges a eviter, checklist de relecture.",
+            "url": "https://asilidesign.fr/fr/formations/automatiser-avec-ia/toolkit",
+            "isPartOf": {
+              "@id": "https://asilidesign.fr/#website"
+            }
+          }
+        },
+        "en": {
+          "title": "Automate with AI Toolkit — 5 ready-to-use workflows",
+          "description": "Get the 5 AI workflows from the training as a PDF: quotes, emails, social media, invoices, monitoring. Free, in your inbox in 30 seconds.",
+          "ogTitle": "Automate with AI Toolkit",
+          "ogDescription": "5 ready-to-use AI workflows — free PDF in your inbox in 30 seconds.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Automate with AI Toolkit",
+            "description": "Capture page to receive the 5 AI workflows as a PDF: exact prompts, pitfalls to avoid, review checklist.",
+            "url": "https://asilidesign.fr/en/formations/automatiser-avec-ia/toolkit",
+            "isPartOf": {
+              "@id": "https://asilidesign.fr/#website"
+            }
+          }
+        }
+      }
+    },
+    {
       "id": "not-found",
       "path": "/404",
       "index": false,

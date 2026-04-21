@@ -1,5 +1,6 @@
 import type { FormationConfig } from "./formation.types";
 import { assertValidFormationConfig } from "./formation.types";
+import { auditSeoDiyFormation } from "../audit-seo-diy/audit-seo-diy.config";
 import { automatiserAvecIaFormation } from "../automatiser-avec-ia/automatiser-avec-ia.config";
 import { iaSolopreneursFormation } from "../ia-solopreneurs/ia-solopreneurs.config";
 
@@ -15,6 +16,7 @@ import { iaSolopreneursFormation } from "../ia-solopreneurs/ia-solopreneurs.conf
 const ALL_FORMATIONS: ReadonlyArray<FormationConfig> = [
   iaSolopreneursFormation,
   automatiserAvecIaFormation,
+  auditSeoDiyFormation,
 ];
 
 // Validation defensive : echoue le build si une config est malformee.

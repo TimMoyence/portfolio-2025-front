@@ -166,7 +166,7 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     imageUrl:
       "https://images.pexels.com/photos/16544949/pexels-photo-16544949.jpeg?auto=compress&cs=tinysrgb&w=800",
     imageAlt: $localize`:@@ia-solo.chat-produire.imageAlt:Personne utilisant ChatGPT sur un ordinateur portable`,
-    title: $localize`:@@ia-solo.chat-produire.title:ChatGPT, Claude, Gemini — lequel ouvrir en premier`,
+    title: $localize`:@@ia-solo.chat-produire.title:ChatGPT, Claude, Gemini — lequel ouvrir en premier ?`,
     subtitle: $localize`:@@ia-solo.chat-produire.subtitle:Chaque IA a sa force. Les pros utilisent la bonne pour la bonne tâche.`,
     table: {
       headers: ["", "ChatGPT", "Claude", "Gemini"],
@@ -218,7 +218,7 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     imageUrl:
       "https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg?auto=compress&cs=tinysrgb&w=800",
     imageAlt: $localize`:@@ia-solo.automatiser.imageAlt:Suivi multi-écrans avec smartphone et ordinateur, données en temps réel`,
-    title: $localize`:@@ia-solo.automatiser.title:Les tâches que vous faites encore à la main`,
+    title: $localize`:@@ia-solo.automatiser.title:Quelles tâches faites-vous encore à la main ?`,
     subtitle: $localize`:@@ia-solo.automatiser.subtitle:+760% de tâches IA sur Zapier en 2 ans`,
     table: {
       headers: [
@@ -276,7 +276,7 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     imageUrl:
       "https://images.pexels.com/photos/2528118/pexels-photo-2528118.jpeg?auto=compress&cs=tinysrgb&w=800",
     imageAlt: $localize`:@@ia-solo.clients.imageAlt:Bureau minimaliste avec MacBook et iPad, outils numériques`,
-    title: $localize`:@@ia-solo.clients.title:Prospecter → Convertir → Fidéliser`,
+    title: $localize`:@@ia-solo.clients.title:Comment prospecter, convertir et fidéliser avec l'IA ?`,
     subtitle: $localize`:@@ia-solo.clients.subtitle:Le cycle client complet, 4 outils, 29€/mois`,
     gridItems: [
       {
@@ -326,7 +326,7 @@ export const IA_SOLOPRENEURS_SLIDES: PresentationSlide[] = [
     imageUrl:
       "https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800",
     imageAlt: $localize`:@@ia-solo.stack-budget.imageAlt:Équipe collaborant autour d'une table avec laptops et smartphones`,
-    title: $localize`:@@ia-solo.stack-budget.title:0€, 60€ ou 120€/mois : votre stack sur mesure`,
+    title: $localize`:@@ia-solo.stack-budget.title:Quel budget IA pour quel stack — 0€, 60€ ou 120€/mois ?`,
     table: {
       headers: [
         $localize`:@@ia-solo.stack-budget.table.header.0:Niveau`,

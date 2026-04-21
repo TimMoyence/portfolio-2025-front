@@ -71,7 +71,7 @@ export const AUTOMATISER_AVEC_IA_SLIDES: PresentationSlide[] = [
     act: ACTS.accrocher,
     fragmentCount: 0,
     layout: "stats",
-    title: $localize`:@@formations.automatiser-avec-ia.constat.title:Le constat : des heures perdues chaque semaine`,
+    title: $localize`:@@formations.automatiser-avec-ia.constat.title:Combien d'heures perdez-vous chaque semaine sur des taches automatisables ?`,
     stats: [
       {
         value: "13h",
@@ -187,7 +187,7 @@ export const AUTOMATISER_AVEC_IA_SLIDES: PresentationSlide[] = [
     act: ACTS.pratiquer,
     fragmentCount: 0,
     layout: "grid",
-    title: $localize`:@@formations.automatiser-avec-ia.pratiquer.title:Par ou commencer selon votre metier`,
+    title: $localize`:@@formations.automatiser-avec-ia.pratiquer.title:Par ou commencer selon votre metier ?`,
     gridItems: [
       {
         title: $localize`:@@formations.automatiser-avec-ia.pratiquer.items.0.title:Photographe`,
@@ -221,7 +221,7 @@ export const AUTOMATISER_AVEC_IA_SLIDES: PresentationSlide[] = [
     act: ACTS.pratiquer,
     fragmentCount: 0,
     layout: "cta",
-    title: $localize`:@@formations.automatiser-avec-ia.declencheur.title:L'action la plus utile pour cette semaine`,
+    title: $localize`:@@formations.automatiser-avec-ia.declencheur.title:Quelle action concrete lancez-vous cette semaine ?`,
     subtitle: $localize`:@@formations.automatiser-avec-ia.declencheur.subtitle:Recevez les 5 workflows complets (prompts + captures d'ecran par secteur) + mon email de support direct`,
     bullets: [
       $localize`:@@formations.automatiser-avec-ia.declencheur.bullets.0:PDF 12 pages avec captures d'ecran par etape`,
@@ -238,7 +238,7 @@ export const AUTOMATISER_AVEC_IA_SLIDES: PresentationSlide[] = [
     act: ACTS.ancrer,
     fragmentCount: 0,
     layout: "comparison",
-    title: $localize`:@@formations.automatiser-avec-ia.erreurs.title:Ce qui marche vs ce qui ne marche PAS`,
+    title: $localize`:@@formations.automatiser-avec-ia.erreurs.title:Pourquoi certains workflows IA echouent : 5 erreurs evitables`,
     table: {
       headers: [
         $localize`:@@formations.automatiser-avec-ia.erreurs.headers.0:Ce qui fonctionne`,

@@ -197,11 +197,51 @@ export const assertValidFormationConfig = (config: FormationConfig): void => {
     );
   };
 
+  const countWords = (text: string): number =>
+    text.trim().split(/\s+/).filter(Boolean).length;
+
+  const assertNonEmptyI18n = (label: string, value: I18nString): void => {
+    if (!value.fr.trim() || !value.en.trim()) {
+      fail(`${label} must be non-empty for both fr and en locales`);
+    }
+  };
+
+  if (config.configVersion !== 1) {
+    fail(
+      `configVersion must be 1, received ${String(config.configVersion)} — bump types and migration if breaking`,
+    );
+  }
   if (!/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(config.slug)) {
     fail("slug must be kebab-case (alpha-numeric with optional dashes)");
   }
+  const frWords = countWords(config.metadata.description.fr);
+  const enWords = countWords(config.metadata.description.en);
+  const AEO_MIN = 134;
+  const AEO_MAX = 167;
+  if (frWords < AEO_MIN || frWords > AEO_MAX) {
+    fail(
+      `metadata.description.fr has ${frWords} words — AEO requires ${AEO_MIN}-${AEO_MAX}`,
+    );
+  }
+  if (enWords < AEO_MIN || enWords > AEO_MAX) {
+    fail(
+      `metadata.description.en has ${enWords} words — AEO requires ${AEO_MIN}-${AEO_MAX}`,
+    );
+  }
+
+  assertNonEmptyI18n("metadata.title", config.metadata.title);
+  assertNonEmptyI18n("metadata.tagline", config.metadata.tagline);
+  assertNonEmptyI18n("metadata.heroImageAlt", config.metadata.heroImageAlt);
+
   if (config.slides.length === 0) {
     fail("slides must not be empty");
+  }
+  const slideIds = new Set<string>();
+  for (const slide of config.slides) {
+    if (slideIds.has(slide.id)) {
+      fail(`duplicate slide.id "${slide.id}" — slide ids must be unique`);
+    }
+    slideIds.add(slide.id);
   }
   if (
     !ISO8601_DURATION.test(config.metadata.duration) ||
@@ -232,6 +272,15 @@ export const assertValidFormationConfig = (config: FormationConfig): void => {
   if (publishDate > lastModified) {
     fail("metadata.publishDate must be <= metadata.lastModified");
   }
+  // Tolere +24h pour couvrir les fuseaux horaires (CI a J+0 UTC, auteur a J+0
+  // locale). Au-dela, c'est une erreur de saisie qui enverrait Google un
+  // signal de freshness trompeur.
+  const oneDayMs = 24 * 60 * 60 * 1000;
+  if (lastModified > Date.now() + oneDayMs) {
+    fail(
+      `metadata.lastModified "${config.metadata.lastModified}" is in the future — freshness signal would mislead search engines`,
+    );
+  }
   if (config.seo.faq.length < 5) {
     fail(
       `seo.faq currently has ${config.seo.faq.length} entries — require >= 5 for AEO FAQPage signals`,
@@ -251,6 +300,34 @@ export const assertValidFormationConfig = (config: FormationConfig): void => {
       fail(
         "leadMagnet.customizationAxes must declare at least one axis when leadMagnet.enabled",
       );
+    }
+  }
+
+  if (!config.conversion.primary.labelKey.trim()) {
+    fail("conversion.primary.labelKey must be non-empty");
+  }
+  if (!config.conversion.primary.href.trim()) {
+    fail("conversion.primary.href must be non-empty");
+  }
+  if (!config.conversion.primary.trackingId.trim()) {
+    fail("conversion.primary.trackingId must be non-empty");
+  }
+  if (!/^[a-z][a-z0-9]*(?:_[a-z0-9]+)*_?$/.test(config.analytics.eventPrefix)) {
+    fail(
+      `analytics.eventPrefix "${config.analytics.eventPrefix}" must be snake_case (e.g. "formation_ia_")`,
+    );
+  }
+
+  if (config.quiz) {
+    for (const q of config.quiz.questions) {
+      if (
+        (q.kind === "single-choice" || q.kind === "multi-choice") &&
+        (!q.options || q.options.length === 0)
+      ) {
+        fail(
+          `quiz question "${q.id}" of kind "${q.kind}" requires at least one option`,
+        );
+      }
     }
   }
 };

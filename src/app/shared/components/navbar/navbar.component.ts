@@ -85,6 +85,27 @@ export class NavbarComponent {
         iconAlt: "IA",
         href: "/formations/ia-solopreneurs",
       },
+      {
+        title: $localize`:navbar.formations.auto.title|@@navFormationsAutoTitle:Automatiser avec l'IA`,
+        description: $localize`:navbar.formations.auto.desc|@@navFormationsAutoDesc:5 workflows non-tech pour gagner 2h/semaine`,
+        icon: "sparkles",
+        iconAlt: "Automation",
+        href: "/formations/automatiser-avec-ia",
+      },
+      {
+        title: $localize`:navbar.formations.seo.title|@@navFormationsSeoTitle:Audit SEO DIY`,
+        description: $localize`:navbar.formations.seo.desc|@@navFormationsSeoDesc:7 checks en 20 min avec 5 outils gratuits`,
+        icon: "sparkles",
+        iconAlt: "SEO",
+        href: "/formations/audit-seo-diy",
+      },
+      {
+        title: $localize`:navbar.formations.all.title|@@navFormationsAllTitle:Toutes les formations`,
+        description: $localize`:navbar.formations.all.desc|@@navFormationsAllDesc:Voir le catalogue complet`,
+        icon: "sparkles",
+        iconAlt: "Liste",
+        href: "/formations",
+      },
     ],
   };
 

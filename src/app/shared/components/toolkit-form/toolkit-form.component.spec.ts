@@ -95,4 +95,70 @@ describe("ToolkitFormComponent", () => {
 
     expect(errorComponent.state()).toBe("error");
   });
+
+  it("transmet le formationSlug en @Input au port.requestToolkit", async () => {
+    fixture.componentRef.setInput("formationSlug", "automatiser-avec-ia");
+    component.firstName.set("Marie");
+    component.email.set("marie@example.com");
+    component.termsAccepted.set(true);
+    fixture.detectChanges();
+
+    component.onSubmit();
+    await fixture.whenStable();
+
+    expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
+    const payload = portStub.requestToolkit.calls.mostRecent().args[0];
+    expect(payload.formationSlug).toBe("automatiser-avec-ia");
+    expect(payload.email).toBe("marie@example.com");
+    expect(payload.firstName).toBe("Marie");
+  });
+
+  it("affiche l'email soumis dans le bloc succes (data-toolkit-success)", async () => {
+    component.firstName.set("Marie");
+    component.email.set("marie@example.com");
+    component.termsAccepted.set(true);
+    fixture.detectChanges();
+    component.onSubmit();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const successBlock: HTMLElement | null =
+      fixture.nativeElement.querySelector("[data-toolkit-success]");
+    expect(successBlock).not.toBeNull();
+    expect(successBlock?.textContent).toContain("marie@example.com");
+  });
+
+  it("affiche le bloc erreur (data-toolkit-error) quand l'envoi echoue", async () => {
+    const errorPort = createLeadMagnetPortStubWithError();
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [ToolkitFormComponent],
+      providers: [{ provide: LEAD_MAGNET_PORT, useValue: errorPort }],
+    }).compileComponents();
+
+    const f = TestBed.createComponent(ToolkitFormComponent);
+    f.detectChanges();
+    f.componentInstance.firstName.set("Marie");
+    f.componentInstance.email.set("marie@example.com");
+    f.componentInstance.termsAccepted.set(true);
+    f.detectChanges();
+    f.componentInstance.onSubmit();
+    await f.whenStable();
+    f.detectChanges();
+
+    const errorBlock = f.nativeElement.querySelector("[data-toolkit-error]");
+    expect(errorBlock).not.toBeNull();
+  });
+
+  it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {
+    component.firstName.set("Marie");
+    component.email.set("marie@example.com");
+    component.termsAccepted.set(true);
+    fixture.detectChanges();
+    component.onSubmit();
+    await fixture.whenStable();
+
+    const payload = portStub.requestToolkit.calls.mostRecent().args[0];
+    expect(payload.formationSlug).toBe("ia-solopreneurs");
+  });
 });

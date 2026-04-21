@@ -296,6 +296,26 @@ export const routes: Routes = [
       seoKey: "formations-ia-solopreneurs-toolkit",
     },
   },
+  {
+    path: "formations/automatiser-avec-ia/toolkit",
+    loadComponent: () =>
+      import("./features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component").then(
+        (m) => m.ToolkitAutoComponent,
+      ),
+    data: {
+      seoKey: "formations-automatiser-avec-ia-toolkit",
+    },
+  },
+  {
+    path: "formations/audit-seo-diy/toolkit",
+    loadComponent: () =>
+      import("./features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component").then(
+        (m) => m.ToolkitAuditSeoComponent,
+      ),
+    data: {
+      seoKey: "formations-audit-seo-diy-toolkit",
+    },
+  },
   // Routes generees automatiquement depuis la registry de formations.
   // Chaque `FormationConfig` publiee produit une route statique
   // `/formations/<slug>` qui instancie `FormationPageComponent`. Ces

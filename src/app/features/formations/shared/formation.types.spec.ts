@@ -23,7 +23,10 @@ describe("assertValidFormationConfig", () => {
     slug: "valid-slug",
     metadata: {
       title: { fr: "T FR", en: "T EN" },
-      description: { fr: "D FR", en: "D EN" },
+      description: {
+        fr: "Formation de test disponible en ligne pour valider les invariants du systeme de configuration des formations. Cette formation generique sert de socle commun a tous les tests unitaires du validateur. Elle permet de verifier que les contraintes de qualite sont respectees avant la publication de toute nouvelle formation. Le contenu aborde les principaux aspects de la validation des configurations incluant le format des identifiants de formation le nombre de diapositives la duree en format ISO 8601 les dates de publication et de modification les tags de categorisation la FAQ avec minimum cinq entrees les objectifs pedagogiques et les parametres du lead magnet. Chaque invariant est couvert par un test dedie garantissant une couverture exhaustive du validateur. La configuration valide sert de base pour les tests negatifs qui verifient le rejet des configurations incorrectes. Ce fichier de test est maintenu en parallele du code source.",
+        en: "Test formation available online to validate the invariants of the formation configuration system. This generic formation serves as a common base for all unit tests of the validator. It allows verification that quality constraints are respected before publishing any new formation. The content covers the main aspects of configuration validation including the format of formation identifiers the number of slides the duration in ISO 8601 format publication and modification dates categorization tags the FAQ with a minimum of five entries learning outcomes and lead magnet parameters. Each invariant is covered by a dedicated test ensuring exhaustive coverage of the validator. The valid configuration serves as a base for negative tests that verify the rejection of incorrect configurations. This test file is maintained in parallel with the source code to ensure the consistency of business rules.",
+      },
       tagline: { fr: "Tag FR", en: "Tag EN" },
       duration: "PT30M",
       level: "beginner",
@@ -209,6 +212,148 @@ describe("assertValidFormationConfig", () => {
           pdfTemplateId: "",
           emailDripId: "",
           customizationAxes: [],
+        },
+      }),
+    ).not.toThrow();
+  });
+
+  it("rejette un configVersion different de 1", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        configVersion: 2 as unknown as 1,
+      }),
+    ).toThrowError(/configVersion must be 1/);
+  });
+
+  it("rejette un I18nString vide sur metadata.title", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        metadata: {
+          ...baseConfig.metadata,
+          title: { fr: "T FR", en: "" },
+        },
+      }),
+    ).toThrowError(/metadata\.title/);
+  });
+
+  it("rejette un heroImageAlt vide (a11y)", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        metadata: {
+          ...baseConfig.metadata,
+          heroImageAlt: { fr: "", en: "alt en" },
+        },
+      }),
+    ).toThrowError(/heroImageAlt/);
+  });
+
+  it("rejette un tagline vide", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        metadata: {
+          ...baseConfig.metadata,
+          tagline: { fr: "   ", en: "Tag EN" },
+        },
+      }),
+    ).toThrowError(/metadata\.tagline/);
+  });
+
+  it("rejette des slide.id dupliques", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        slides: [slide, slide],
+      }),
+    ).toThrowError(/duplicate slide\.id/);
+  });
+
+  it("rejette un lastModified dans le futur au-dela de 24h", () => {
+    const farFuture = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        metadata: {
+          ...baseConfig.metadata,
+          publishDate: "2026-01-01",
+          lastModified: farFuture,
+        },
+      }),
+    ).toThrowError(/in the future/);
+  });
+
+  it("rejette une conversion.primary.href vide", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        conversion: {
+          primary: { labelKey: "k", href: "", trackingId: "tid" },
+        },
+      }),
+    ).toThrowError(/conversion\.primary\.href/);
+  });
+
+  it("rejette une conversion.primary.trackingId vide", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        conversion: {
+          primary: { labelKey: "k", href: "/", trackingId: "   " },
+        },
+      }),
+    ).toThrowError(/trackingId/);
+  });
+
+  it("rejette un analytics.eventPrefix non snake_case", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        analytics: {
+          ...baseConfig.analytics,
+          eventPrefix: "Formation-IA",
+        },
+      }),
+    ).toThrowError(/snake_case/);
+  });
+
+  it("rejette un quiz single-choice sans options", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        quiz: {
+          id: "q1",
+          questions: [
+            {
+              id: "q-secteur",
+              question: { fr: "Secteur ?", en: "Sector?" },
+              kind: "single-choice",
+              profileField: "sector",
+            },
+          ],
+        },
+      }),
+    ).toThrowError(/requires at least one option/);
+  });
+
+  it("accepte un quiz free-text sans options", () => {
+    expect(() =>
+      assertValidFormationConfig({
+        ...baseConfig,
+        quiz: {
+          id: "q1",
+          questions: [
+            {
+              id: "q-libre",
+              question: { fr: "Votre defi ?", en: "Your challenge?" },
+              kind: "free-text",
+              profileField: "challenge",
+            },
+          ],
         },
       }),
     ).not.toThrow();

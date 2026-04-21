@@ -90,8 +90,11 @@ describe("FormationsListComponent", () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const links = compiled.querySelectorAll("a");
     for (const formation of FORMATIONS) {
+      // On verifie le href genere par le router plutot que l'attribut debug
+      // ng-reflect-router-link, qui est tronque a 30 caracteres par Angular et
+      // ne contient pas les slugs longs comme "automatiser-avec-ia" (31 chars).
       const link = Array.from(links).find((a) =>
-        a.getAttribute("ng-reflect-router-link")?.includes(formation.slug),
+        a.getAttribute("href")?.includes(formation.slug),
       );
       expect(link)
         .withContext(

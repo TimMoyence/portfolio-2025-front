@@ -124,10 +124,51 @@ export interface SelfRatingInteraction {
   profileField?: string;
 }
 
+/**
+ * Option d'une question de quiz a choix. Le label est deja localise
+ * (chaine prete a afficher) contrairement a `QuizQuestion` dans
+ * `formation.types.ts` qui travaille avec des `I18nString` au niveau
+ * config. Les slides consomment le label deja resolu.
+ */
+export interface QuizInteractionOption {
+  /** Valeur stable stockee dans le profil d'interaction. */
+  value: string;
+  /** Libelle localise affiche dans le selecteur. */
+  label: string;
+}
+
+/**
+ * Question de quiz integree dans un slide. Sert a personnaliser le
+ * toolkit genere en aval (secteur, budget, niveau IA, etc.). La valeur
+ * selectionnee est injectee dans `InteractionCollectorService.profile`
+ * sous la cle `profileField`.
+ *
+ * Trois variantes :
+ * - `single-choice` : une seule option active (radio / select).
+ * - `multi-choice` : plusieurs options cumulables (checkbox).
+ * - `free-text` : champ texte libre (pas d'options).
+ */
+export interface QuizInteraction {
+  type: "quiz";
+  /** Identifiant unique au sein de la slide — sert de cle analytics. */
+  id: string;
+  question: string;
+  kind: "single-choice" | "multi-choice" | "free-text";
+  /** Sous-titre explicatif affiché sous la question */
+  hint?: string;
+  /** Options (obligatoires pour single/multi-choice, absentes en free-text). */
+  options?: QuizInteractionOption[];
+  /** Champ du profil d'interaction alimenté par la réponse. */
+  profileField: string;
+  /** Placeholder pour la variante `free-text`. */
+  placeholder?: string;
+}
+
 export type ScrollInteraction =
   | ReflectionInteraction
   | ChecklistInteraction
-  | SelfRatingInteraction;
+  | SelfRatingInteraction
+  | QuizInteraction;
 
 /** Interactions par mode, servies par le backend et attachées à chaque slide */
 export interface SlideInteractions {
