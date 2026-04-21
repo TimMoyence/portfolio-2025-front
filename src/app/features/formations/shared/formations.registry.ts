@@ -1,5 +1,6 @@
 import type { FormationConfig } from "./formation.types";
 import { assertValidFormationConfig } from "./formation.types";
+import { automatiserAvecIaFormation } from "../automatiser-avec-ia/automatiser-avec-ia.config";
 import { iaSolopreneursFormation } from "../ia-solopreneurs/ia-solopreneurs.config";
 
 /**
@@ -13,6 +14,7 @@ import { iaSolopreneursFormation } from "../ia-solopreneurs/ia-solopreneurs.conf
  */
 const ALL_FORMATIONS: ReadonlyArray<FormationConfig> = [
   iaSolopreneursFormation,
+  automatiserAvecIaFormation,
 ];
 
 // Validation defensive : echoue le build si une config est malformee.
@@ -24,6 +26,18 @@ for (const config of ALL_FORMATIONS) {
 const BY_SLUG = new Map<string, FormationConfig>(
   ALL_FORMATIONS.map((config) => [config.slug, config]),
 );
+
+// Protection contre les collisions de slug : echoue le build si deux
+// formations declarent le meme slug (issu du challenge S1 tech-lead).
+if (BY_SLUG.size !== ALL_FORMATIONS.length) {
+  const slugs = ALL_FORMATIONS.map((config) => config.slug);
+  const duplicates = slugs.filter(
+    (slug, index) => slugs.indexOf(slug) !== index,
+  );
+  throw new Error(
+    `[formations.registry] duplicate slug(s) detected: ${[...new Set(duplicates)].join(", ")}`,
+  );
+}
 
 /** Liste des formations publiees (status === 'published'). */
 export const publishedFormations = (): ReadonlyArray<FormationConfig> =>

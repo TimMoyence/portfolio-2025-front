@@ -42,5 +42,19 @@ describe("formations.registry", () => {
     expect(Array.isArray(slugs)).toBeTrue();
     expect(slugs.length).toBeGreaterThan(0);
     expect(slugs).toContain("ia-solopreneurs");
+    expect(slugs).toContain("automatiser-avec-ia");
+  });
+
+  it("expose la formation automatiser-avec-ia ajoutee en S2", () => {
+    const auto = findFormationBySlug("automatiser-avec-ia");
+    expect(auto).toBeDefined();
+    expect(auto?.metadata.category).toBe("automation");
+    expect(auto?.seo.learningResourceType).toBe("Workshop");
+  });
+
+  it("garantit l'unicite des slugs de la registry (protection collision)", () => {
+    const slugs = allFormations().map((config) => config.slug);
+    const uniqueSlugs = new Set(slugs);
+    expect(slugs.length).toBe(uniqueSlugs.size);
   });
 });

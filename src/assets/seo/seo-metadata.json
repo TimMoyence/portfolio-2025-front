@@ -567,7 +567,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-04-17",
+      "lastmod": "2026-04-18",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -1270,7 +1270,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-17",
+      "lastmod": "2026-04-21",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1338,7 +1338,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-17",
+      "lastmod": "2026-04-21",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1524,6 +1524,202 @@
           "description": "Your personalized AI toolbox.",
           "ogTitle": "Your AI Toolkit",
           "ogDescription": "Access your personalized AI toolbox."
+        }
+      }
+    },
+    {
+      "id": "formations-automatiser-avec-ia",
+      "path": "/formations/automatiser-avec-ia",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-04-21",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Automatiser avec l'IA",
+          "path": "/formations/automatiser-avec-ia"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Automatiser avec l'IA — 5 workflows pour entrepreneurs non-tech",
+          "description": "Formation gratuite de 25 minutes : 5 workflows IA testes en conditions reelles pour entrepreneurs, artisans et solopreneurs. Sans coder, sans abonnement paye.",
+          "ogTitle": "Automatiser avec l'IA — 5 workflows pour entrepreneurs non-tech",
+          "ogDescription": "5 workflows IA testes en conditions reelles : devis, emails, reseaux, factures, veille. Zero ligne de code.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              "name": "Automatiser avec l'IA — 5 workflows pour entrepreneurs non-tech",
+              "description": "Formation gratuite de 25 minutes qui montre 5 workflows IA concrets (devis, emails recurrents, reseaux sociaux, factures, veille hebdo) sans coder et sans abonnement paye.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Asili Design",
+                "url": "https://asilidesign.fr"
+              },
+              "isAccessibleForFree": true,
+              "duration": "PT25M",
+              "courseMode": "online",
+              "inLanguage": "fr",
+              "url": "https://asilidesign.fr/fr/formations/automatiser-avec-ia",
+              "educationalLevel": "beginner",
+              "learningResourceType": "Workshop",
+              "teaches": [
+                "Identifier 3 a 5 taches repetitives a automatiser",
+                "Mettre en place un workflow IA sans coder",
+                "Securiser le processus avec une checklist de relecture",
+                "Mesurer le gain de temps reel"
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Dois-je savoir coder pour suivre cette formation ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Non. Zero ligne de code, zero API, zero webhook. Tous les workflows utilisent des interfaces graphiques standard."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Combien ca coute vraiment ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Zero euro pour demarrer. Les cinq workflows tournent sur les versions gratuites de ChatGPT, Perplexity, Buffer et Google Docs."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Et si l'IA se trompe sur un devis ou un email ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "La regle : l'IA accelere, vous validez. Chaque workflow integre une etape de relecture explicite avec une checklist d'une minute."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Mes donnees clients sont-elles reutilisees par l'IA ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Par defaut oui sur les versions gratuites. Le toolkit indique comment desactiver l'entrainement en deux clics dans les parametres."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Combien de temps faut-il pour mettre en place un workflow ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Entre 15 et 30 minutes la premiere fois. Ensuite chaque usage prend moins de 3 minutes. ROI mesurable des la premiere semaine."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Puis-je obtenir un accompagnement personnalise ?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Oui. Apres la formation vous recevez un email direct auquel vous pouvez repondre : je lis toutes les reponses et je donne un feedback gratuit sur votre premier workflow. Pour un accompagnement structure (audit + mise en place), consulter la page offre."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "en": {
+          "title": "Automate with AI — 5 workflows for non-technical entrepreneurs",
+          "description": "Free 25-minute training: 5 AI workflows tested in real conditions for entrepreneurs, craftspeople and solopreneurs. No code, no paid subscription.",
+          "ogTitle": "Automate with AI — 5 workflows for non-technical entrepreneurs",
+          "ogDescription": "5 AI workflows tested in real conditions: quotes, emails, social, invoices, monitoring. Zero code.",
+          "jsonLd": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              "name": "Automate with AI — 5 workflows for non-technical entrepreneurs",
+              "description": "Free 25-minute training showing 5 concrete AI workflows (quotes, recurring emails, social media, invoices, weekly monitoring) without coding and without paid subscription.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Asili Design",
+                "url": "https://asilidesign.fr"
+              },
+              "isAccessibleForFree": true,
+              "duration": "PT25M",
+              "courseMode": "online",
+              "inLanguage": "en",
+              "url": "https://asilidesign.fr/en/formations/automatiser-avec-ia",
+              "educationalLevel": "beginner",
+              "learningResourceType": "Workshop",
+              "teaches": [
+                "Identify 3 to 5 repetitive tasks to automate",
+                "Set up an AI workflow without coding",
+                "Secure the process with a review checklist",
+                "Measure real time savings"
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Do I need to know how to code?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. Zero lines of code, no API, no webhook. Every workflow uses standard graphical interfaces."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How much does it really cost?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Zero euros to get started. The five workflows run on free versions of ChatGPT, Perplexity, Buffer and Google Docs."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What if AI makes a mistake on a quote or email?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The rule: AI accelerates, you validate. Every workflow includes an explicit review step with a one-minute checklist."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is my customer data reused by AI?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "By default yes on free versions. The toolkit shows how to disable training in two clicks in the settings."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How long does it take to set up a workflow?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Between 15 and 30 minutes the first time. Afterwards each use takes less than 3 minutes. ROI measurable within the first week."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I get personalised support?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. After the training you receive a direct email you can reply to: I read every reply and give free feedback on your first workflow. For structured support (audit + setup), see the offer page."
+                  }
+                }
+              ]
+            }
+          ]
         }
       }
     },
