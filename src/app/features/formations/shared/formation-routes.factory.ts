@@ -16,6 +16,12 @@ import { publishedFormations } from "./formations.registry";
  * — le composant resout la config via la registry sans depender de
  * `paramMap`. La DX reste identique pour ajouter une formation : creer
  * `{slug}.config.ts`, enregistrer dans la registry, rebuild.
+ *
+ * Le mode de rendu SSR (`Prerender`) est applique par la wildcard
+ * `**` dans `app.routes.server.ts` — inutile de le redeclarer par
+ * route ici, mais le contrat est documente pour eviter qu'une
+ * modification ulterieure du wildcard ne casse silencieusement le
+ * prerender des formations.
  */
 export const buildFormationRoutes = (): Route[] =>
   publishedFormations().map((config) => ({
