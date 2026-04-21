@@ -2,6 +2,7 @@ import type { Routes } from "@angular/router";
 import { authGuard } from "./core/guards/auth.guard";
 import { redirectIfAuthorizedGuard } from "./core/guards/redirect-if-authorized.guard";
 import { roleGuard } from "./core/guards/role.guard";
+import { buildFormationRoutes } from "./features/formations/shared/formation-routes.factory";
 
 export const routes: Routes = [
   {
@@ -273,16 +274,8 @@ export const routes: Routes = [
       seoKey: "formations",
     },
   },
-  {
-    path: "formations/ia-solopreneurs",
-    loadComponent: () =>
-      import("./features/formations/ia-solopreneurs/ia-solopreneurs.component").then(
-        (m) => m.IaSolopreneursComponent,
-      ),
-    data: {
-      seoKey: "formations-ia-solopreneurs",
-    },
-  },
+  // Routes specifiques toolkit — declarees AVANT `formations/:slug` pour
+  // prioriser le matching Angular Router (plus specifique d'abord).
   {
     path: "formations/ia-solopreneurs/toolkit/:token",
     loadComponent: () =>
@@ -303,6 +296,12 @@ export const routes: Routes = [
       seoKey: "formations-ia-solopreneurs-toolkit",
     },
   },
+  // Routes generees automatiquement depuis la registry de formations.
+  // Chaque `FormationConfig` publiee produit une route statique
+  // `/formations/<slug>` qui instancie `FormationPageComponent`. Ces
+  // routes sont statiques pour contourner le bug prerender Angular 19.2
+  // avec `getPrerenderParams` + i18n (angular-cli#29587).
+  ...buildFormationRoutes(),
   {
     path: "**",
     loadComponent: () =>
