@@ -85,4 +85,26 @@ describe("SlideDeckComponent", () => {
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
     expect(spy).toHaveBeenCalled();
   });
+
+  it("loadSwiperElement est appelé lors du toggle fullscreen", async () => {
+    const adapter = TestBed.inject(FullscreenAdapter);
+    const enterSpy = spyOn(adapter, "enter").and.resolveTo();
+    const loadSpy = spyOn(adapter, "loadSwiperElement").and.resolveTo();
+
+    const btn = deckEl.querySelector(
+      '[data-testid="slide-deck-fullscreen-toggle"]',
+    ) as HTMLButtonElement;
+    btn.click();
+    await Promise.resolve();
+    expect(loadSpy).toHaveBeenCalled();
+    expect(enterSpy).toHaveBeenCalled();
+  });
+
+  it("affiche un wrapper swiper quand mode = fullscreen", () => {
+    const service = TestBed.inject(SlideDeckService);
+    service.setMode("fullscreen");
+    fixture.detectChanges();
+    const swiper = deckEl.querySelector("swiper-container");
+    expect(swiper).toBeTruthy();
+  });
 });

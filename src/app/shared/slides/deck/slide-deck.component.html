@@ -1,5 +1,18 @@
 <div #deckRoot [class]="cssClasses()" tabindex="0">
-  <ng-content />
+  <ng-template #slidesContent><ng-content /></ng-template>
+
+  @if (service.mode() === "fullscreen") {
+    <swiper-container
+      navigation="true"
+      keyboard="true"
+      pagination="true"
+      [attr.initial-slide]="service.currentIndex()"
+    >
+      <ng-container *ngTemplateOutlet="slidesContent" />
+    </swiper-container>
+  } @else {
+    <ng-container *ngTemplateOutlet="slidesContent" />
+  }
 
   @if (allowFullscreen()) {
     <button

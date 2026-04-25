@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { NgTemplateOutlet, isPlatformBrowser } from "@angular/common";
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -28,6 +28,7 @@ import { SLIDE_DECK_CONFIG } from "./slide-deck.tokens";
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./slide-deck.component.html",
   styleUrl: "./slide-deck.component.scss",
+  imports: [NgTemplateOutlet],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SlideDeckComponent {
