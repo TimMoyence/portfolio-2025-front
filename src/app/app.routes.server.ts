@@ -39,6 +39,6 @@ export const serverRoutes: ServerRoute[] = [
 
   // Routes publiques (incluant les présentations atelier) — prérendues.
   // Les formations sont enregistrees en routes STATIQUES par slug dans
-  // `app.routes.ts` (via `buildFormationRoutes`), donc capturees ici.
+  // `app.routes.ts` (composants slide-driven dedies), donc capturees ici.
   { path: "**", renderMode: RenderMode.Prerender },
 ];

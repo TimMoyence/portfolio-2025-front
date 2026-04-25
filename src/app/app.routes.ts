@@ -2,7 +2,6 @@ import type { Routes } from "@angular/router";
 import { authGuard } from "./core/guards/auth.guard";
 import { redirectIfAuthorizedGuard } from "./core/guards/redirect-if-authorized.guard";
 import { roleGuard } from "./core/guards/role.guard";
-import { buildFormationRoutes } from "./features/formations/shared/formation-routes.factory";
 
 export const routes: Routes = [
   {
@@ -317,8 +316,9 @@ export const routes: Routes = [
     },
   },
   // Routes dediees aux formations migrees en composants slide-driven
-  // (Tasks 19/20/21). Declarees AVANT `buildFormationRoutes()` pour
-  // prendre la precedence sur la route auto-generee de meme path.
+  // (Tasks 19/20/21 — BIG BANG slide-engine). Chaque formation expose
+  // son propre composant standalone plutot que la generic page-driven
+  // historique (registry + buildFormationRoutes supprimes en Task 22).
   {
     path: "formations/ia-solopreneurs",
     loadComponent: () =>
@@ -349,12 +349,6 @@ export const routes: Routes = [
       seoKey: "formations-audit-seo-diy",
     },
   },
-  // Routes generees automatiquement depuis la registry de formations.
-  // Chaque `FormationConfig` publiee produit une route statique
-  // `/formations/<slug>` qui instancie `FormationPageComponent`. Ces
-  // routes sont statiques pour contourner le bug prerender Angular 19.2
-  // avec `getPrerenderParams` + i18n (angular-cli#29587).
-  ...buildFormationRoutes(),
   {
     path: "slides/library",
     loadComponent: () =>
