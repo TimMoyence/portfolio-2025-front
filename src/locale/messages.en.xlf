@@ -9316,8 +9316,8 @@ The goal is not to add features, but to choose the most relevant levers to gener
     <!-- Slide: outils-detail -->
     <unit id="ia-solo.outils-detail.title">
       <segment>
-        <source>Tableau récap : les 16 outils en un coup d'œil</source>
-        <target>Recap table: all 16 tools at a glance</target>
+        <source>16 outils IA pour solopreneurs en 2026 — récap rapide</source>
+        <target>16 AI tools for solopreneurs in 2026 — quick recap</target>
       </segment>
     </unit>
     <unit id="ia-solo.outils-detail.table.header.0">
@@ -13402,6 +13402,110 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Chargement…</source>
         <target>Loading…</target>
+      </segment>
+    </unit>
+
+    <!-- ia-solo: 3rd column Gemini (chat-produire) -->
+    <unit id="ia-solo.chat-produire.gemini.0">
+      <segment>
+        <source>Branché Google Workspace, analyse vidéo native</source>
+        <target>Plugged into Google Workspace, native video analysis</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.gemini.1">
+      <segment>
+        <source>Idéal pour Gmail/Drive/Agenda + résumé vidéo YouTube</source>
+        <target>Best for Gmail/Drive/Calendar + YouTube video summaries</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.gemini.2">
+      <segment>
+        <source>Gratuit / 20$/mois (Advanced)</source>
+        <target>Free / $20/month (Advanced)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.chat-produire.gemini.label">
+      <segment>
+        <source>Gemini (Google)</source>
+        <target>Gemini (Google)</target>
+      </segment>
+    </unit>
+
+    <!-- ia-solo: 3rd column n8n (automatiser) -->
+    <unit id="ia-solo.automatiser.n8n.0">
+      <segment>
+        <source>Open source self-hosted, valorisé 2,5Md$</source>
+        <target>Open source self-hosted, $2.5B valuation</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.n8n.1">
+      <segment>
+        <source>Idéal pour devs qui veulent contrôle total + MCP</source>
+        <target>Best for devs who want full control + MCP</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.n8n.2">
+      <segment>
+        <source>Gratuit (self-host) / 24€/mois (cloud)</source>
+        <target>Free (self-host) / €24/month (cloud)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.automatiser.n8n.label">
+      <segment>
+        <source>n8n</source>
+        <target>n8n</target>
+      </segment>
+    </unit>
+
+    <!-- ia-solo: intermediate tier 60€ (stack-budget) -->
+    <unit id="ia-solo.stack-budget.intermediaire.0">
+      <segment>
+        <source>ChatGPT Plus (20€) + Canva Pro (12€)</source>
+        <target>ChatGPT Plus (€20) + Canva Pro (€12)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.intermediaire.1">
+      <segment>
+        <source>Make.com (9€) + Notion AI (10€)</source>
+        <target>Make.com (€9) + Notion AI (€10)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.intermediaire.2">
+      <segment>
+        <source>Perplexity Pro (20€) — total ~70€/mois</source>
+        <target>Perplexity Pro (€20) — total ~€70/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.stack-budget.intermediaire.label">
+      <segment>
+        <source>Stack intermédiaire — ~60€/mois</source>
+        <target>Mid-range stack — ~€60/month</target>
+      </segment>
+    </unit>
+
+    <!-- ia-solo: 16 tools table headers -->
+    <unit id="ia-solo.outils-detail.headers.tool">
+      <segment>
+        <source>Outil</source>
+        <target>Tool</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.headers.category">
+      <segment>
+        <source>Catégorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.headers.price">
+      <segment>
+        <source>Prix</source>
+        <target>Price</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.outils-detail.headers.tagline">
+      <segment>
+        <source>Tagline</source>
+        <target>Tagline</target>
       </segment>
     </unit>
   </file>
