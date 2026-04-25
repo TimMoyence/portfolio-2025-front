@@ -13,6 +13,10 @@
     />
   </app-slide>
 
+  <app-slide id="poll-accroche">
+    <app-slide-poll slug="ia-solopreneurs" interactionId="poll-accroche" />
+  </app-slide>
+
   <app-slide id="probleme">
     <app-slide-stats
       title="Le constat : l'IA avance, avec ou sans vous"
@@ -21,7 +25,7 @@
     />
   </app-slide>
 
-  <app-slide id="promesse">
+  <app-slide id="promesse" visibility="present-only">
     <app-slide-hero
       title="Ce qu'on va faire ensemble"
       i18n-title="@@ia-solo.promesse.title"
@@ -32,7 +36,7 @@
     />
   </app-slide>
 
-  <app-slide id="contexte-marche">
+  <app-slide id="contexte-marche" visibility="scroll-only">
     <app-slide-image-left
       image="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=800"
       imageAlt="Écran de marché boursier avec données et graphiques en temps réel"
@@ -179,7 +183,16 @@
     />
   </app-slide>
 
-  <app-slide id="workflows-detail">
+  <app-slide id="outils-detail" visibility="scroll-only">
+    <app-slide-table
+      title="16 outils IA pour solopreneurs en 2026 — récap rapide"
+      i18n-title="@@ia-solo.outils-detail.title"
+      [headers]="outilsDetailHeaders"
+      [rows]="outilsDetailRows"
+    />
+  </app-slide>
+
+  <app-slide id="workflows-detail" visibility="scroll-only">
     <app-slide-grid
       title="3 workflows à mettre en place cette semaine"
       i18n-title="@@ia-solo.workflows-detail.title"
@@ -189,7 +202,7 @@
 
   <!-- ── BLOC 3 — PRATIQUER ──────────────────────────── -->
 
-  <app-slide id="transition-pratique">
+  <app-slide id="transition-pratique" visibility="present-only">
     <app-slide-hero
       title="Stop. On pratique."
       i18n-title="@@ia-solo.transition-pratique.title"
@@ -211,6 +224,10 @@
       i18n-title="@@ia-solo.recap-8020.title"
       [stats]="recap8020Stats"
     />
+  </app-slide>
+
+  <app-slide id="poll-recap-8020">
+    <app-slide-poll slug="ia-solopreneurs" interactionId="poll-recap-8020" />
   </app-slide>
 
   <!-- ── BLOC 4 — ANCRER ─────────────────────────────── -->
@@ -244,7 +261,7 @@
     />
   </app-slide>
 
-  <app-slide id="one-more-thing">
+  <app-slide id="one-more-thing" visibility="present-only">
     <app-slide-image-right
       image="https://images.pexels.com/photos/33923596/pexels-photo-33923596.jpeg?auto=compress&cs=tinysrgb&w=800"
       imageAlt="Enregistrement podcast avec microphone professionnel en studio"

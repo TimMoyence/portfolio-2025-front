@@ -13,6 +13,7 @@ import {
   SlideQuizComponent,
   SlideQuoteComponent,
   SlideStatsComponent,
+  SlideTableComponent,
 } from "../../../shared/slides";
 
 /**
@@ -39,6 +40,7 @@ import {
     SlideQuizComponent,
     SlidePollComponent,
     SlideCtaComponent,
+    SlideTableComponent,
   ],
   templateUrl: "./ia-solopreneurs.component.html",
   styleUrl: "./ia-solopreneurs.component.scss",
@@ -155,7 +157,13 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.chat-produire.claude.2:Gratuit / 20$/mois (Pro)`,
   ];
 
-  /** Comparison slide "automatiser" — gauche Zapier vs droite Make. */
+  protected readonly geminiItems = [
+    $localize`:@@ia-solo.chat-produire.gemini.0:Branché Google Workspace, analyse vidéo native`,
+    $localize`:@@ia-solo.chat-produire.gemini.1:Idéal pour Gmail/Drive/Agenda + résumé vidéo YouTube`,
+    $localize`:@@ia-solo.chat-produire.gemini.2:Gratuit / 20$/mois (Advanced)`,
+  ];
+
+  /** Comparison slide "automatiser" — Zapier vs Make vs n8n. */
   protected readonly zapierItems = [
     $localize`:@@ia-solo.automatiser.zapier.0:Difficulté : facile`,
     $localize`:@@ia-solo.automatiser.zapier.1:Gratuit (100 tâches/mois)`,
@@ -168,11 +176,23 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.automatiser.make.2:Plus flexible que Zapier, scénarios visuels complexes`,
   ];
 
-  /** Comparison slide "stack-budget" — gauche débutant vs droite avancé. */
+  protected readonly n8nItems = [
+    $localize`:@@ia-solo.automatiser.n8n.0:Open source self-hosted, valorisé 2,5Md$`,
+    $localize`:@@ia-solo.automatiser.n8n.1:Idéal pour devs qui veulent contrôle total + MCP`,
+    $localize`:@@ia-solo.automatiser.n8n.2:Gratuit (self-host) / 24€/mois (cloud)`,
+  ];
+
+  /** Comparison slide "stack-budget" — Débutant 0€ vs Intermédiaire 60€ vs Avancé 120€. */
   protected readonly stackBudgetDebutantItems = [
     $localize`:@@ia-solo.stack-budget.debutant.0:ChatGPT gratuit + Canva gratuit + Gamma`,
     $localize`:@@ia-solo.stack-budget.debutant.1:Zapier (100 tâches) + Brevo + NotebookLM`,
     $localize`:@@ia-solo.stack-budget.debutant.2:Budget : 0€/mois — couvre 80% des besoins`,
+  ];
+
+  protected readonly stackBudgetIntermediaireItems = [
+    $localize`:@@ia-solo.stack-budget.intermediaire.0:ChatGPT Plus (20€) + Canva Pro (12€)`,
+    $localize`:@@ia-solo.stack-budget.intermediaire.1:Make.com (9€) + Notion AI (10€)`,
+    $localize`:@@ia-solo.stack-budget.intermediaire.2:Perplexity Pro (20€) — total ~70€/mois`,
   ];
 
   protected readonly stackBudgetAvanceItems = [
@@ -181,7 +201,114 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.stack-budget.avance.2:Fathom (19$) + Waalaxy (19€) — ~120€/mois`,
   ];
 
-  /** Colonnes de comparaison "chat-produire" (ChatGPT vs Claude). */
+  /** Lignes du tableau récap "outils-detail" — 16 outils en mode scroll. */
+  protected readonly outilsDetailHeaders = [
+    $localize`:@@ia-solo.outils-detail.headers.tool:Outil`,
+    $localize`:@@ia-solo.outils-detail.headers.category:Catégorie`,
+    $localize`:@@ia-solo.outils-detail.headers.price:Prix`,
+    $localize`:@@ia-solo.outils-detail.headers.tagline:Tagline`,
+  ];
+
+  protected readonly outilsDetailRows = [
+    {
+      tool: "NotebookLM",
+      category: $localize`:@@ia-solo.outils-detail.cat.apprendre:Apprendre`,
+      price: $localize`:@@ia-solo.outils-detail.row.0.price:Gratuit`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.0.tagline:PDF → podcast en 47 secondes`,
+    },
+    {
+      tool: "Perplexity",
+      category: $localize`:@@ia-solo.outils-detail.cat.apprendre:Apprendre`,
+      price: $localize`:@@ia-solo.outils-detail.row.1.price:Gratuit / 20$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.1.tagline:Recherche IA sourcée, 100M+ users/mois`,
+    },
+    {
+      tool: "Fathom",
+      category: $localize`:@@ia-solo.outils-detail.cat.apprendre:Apprendre`,
+      price: $localize`:@@ia-solo.outils-detail.row.2.price:Gratuit (limité) / 19$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.2.tagline:Notes de réunion automatiques`,
+    },
+    {
+      tool: "ChatGPT",
+      category: $localize`:@@ia-solo.outils-detail.cat.produire:Produire`,
+      price: $localize`:@@ia-solo.outils-detail.row.3.price:Gratuit / 20$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.3.tagline:Le couteau suisse, 900M users/semaine`,
+    },
+    {
+      tool: "Claude",
+      category: $localize`:@@ia-solo.outils-detail.cat.produire:Produire`,
+      price: $localize`:@@ia-solo.outils-detail.row.4.price:Gratuit / 20$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.4.tagline:N°1 rédaction, 1M tokens de contexte`,
+    },
+    {
+      tool: "Gemini",
+      category: $localize`:@@ia-solo.outils-detail.cat.produire:Produire`,
+      price: $localize`:@@ia-solo.outils-detail.row.5.price:Gratuit / 20$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.5.tagline:Branché Google Workspace, analyse vidéo`,
+    },
+    {
+      tool: "Ideogram",
+      category: $localize`:@@ia-solo.outils-detail.cat.creer:Créer`,
+      price: $localize`:@@ia-solo.outils-detail.row.6.price:Gratuit (10/jour)`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.6.tagline:Images avec texte lisible, imbattable`,
+    },
+    {
+      tool: "Gamma",
+      category: $localize`:@@ia-solo.outils-detail.cat.creer:Créer`,
+      price: $localize`:@@ia-solo.outils-detail.row.7.price:Gratuit / 10$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.7.tagline:Présentation complète en 60 secondes`,
+    },
+    {
+      tool: "ElevenLabs",
+      category: $localize`:@@ia-solo.outils-detail.cat.creer:Créer`,
+      price: $localize`:@@ia-solo.outils-detail.row.8.price:Gratuit / 5$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.8.tagline:Clonage vocal, valorisé 11Md$`,
+    },
+    {
+      tool: "Zapier",
+      category: $localize`:@@ia-solo.outils-detail.cat.automatiser:Automatiser`,
+      price: $localize`:@@ia-solo.outils-detail.row.9.price:Gratuit (100 tâches)`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.9.tagline:Branchez deux apps en 5 min`,
+    },
+    {
+      tool: "Make.com",
+      category: $localize`:@@ia-solo.outils-detail.cat.automatiser:Automatiser`,
+      price: $localize`:@@ia-solo.outils-detail.row.10.price:9€/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.10.tagline:Scénarios visuels, 10K opérations`,
+    },
+    {
+      tool: "n8n",
+      category: $localize`:@@ia-solo.outils-detail.cat.automatiser:Automatiser`,
+      price: $localize`:@@ia-solo.outils-detail.row.11.price:Gratuit (self-hosted)`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.11.tagline:Open source, illimité, pour les bidouilleurs`,
+    },
+    {
+      tool: "Waalaxy",
+      category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
+      price: $localize`:@@ia-solo.outils-detail.row.12.price:19€/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.12.tagline:Prospection LinkedIn automatisée`,
+    },
+    {
+      tool: "Notion AI",
+      category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
+      price: $localize`:@@ia-solo.outils-detail.row.13.price:10$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.13.tagline:CRM léger + agents custom`,
+    },
+    {
+      tool: "Brevo",
+      category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
+      price: $localize`:@@ia-solo.outils-detail.row.14.price:Gratuit (300/jour)`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.14.tagline:Email marketing IA, français, RGPD`,
+    },
+    {
+      tool: "Canva AI",
+      category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
+      price: $localize`:@@ia-solo.outils-detail.row.15.price:Gratuit / 15$/mois`,
+      tagline: $localize`:@@ia-solo.outils-detail.row.15.tagline:Visuels pro, 220M+ utilisateurs`,
+    },
+  ];
+
+  /** Colonnes de comparaison "chat-produire" (ChatGPT, Claude, Gemini). */
   protected readonly chatProduireColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.chat-produire.left:ChatGPT (OpenAI)`,
@@ -193,9 +320,14 @@ export class IaSolopreneursComponent {
       tone: "success",
       items: this.claudeItems,
     },
+    {
+      label: $localize`:@@ia-solo.chat-produire.gemini.label:Gemini (Google)`,
+      tone: "warning",
+      items: this.geminiItems,
+    },
   ];
 
-  /** Colonnes de comparaison "automatiser" (Zapier vs Make). */
+  /** Colonnes de comparaison "automatiser" (Zapier, Make, n8n). */
   protected readonly automatiserColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.automatiser.zapier.label:Zapier`,
@@ -207,9 +339,14 @@ export class IaSolopreneursComponent {
       tone: "warning",
       items: this.makeItems,
     },
+    {
+      label: $localize`:@@ia-solo.automatiser.n8n.label:n8n`,
+      tone: "success",
+      items: this.n8nItems,
+    },
   ];
 
-  /** Colonnes de comparaison "stack-budget" (debutant vs avance). */
+  /** Colonnes de comparaison "stack-budget" (debutant 0€, intermediaire 60€, avance 120€). */
   protected readonly stackBudgetColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.stack-budget.debutant.label:Stack débutant — 0€/mois`,
@@ -217,8 +354,13 @@ export class IaSolopreneursComponent {
       items: this.stackBudgetDebutantItems,
     },
     {
+      label: $localize`:@@ia-solo.stack-budget.intermediaire.label:Stack intermédiaire — ~60€/mois`,
+      tone: "warning",
+      items: this.stackBudgetIntermediaireItems,
+    },
+    {
       label: $localize`:@@ia-solo.stack-budget.avance.label:Stack avancé — ~120€/mois`,
-      tone: "info",
+      tone: "danger",
       items: this.stackBudgetAvanceItems,
     },
   ];
