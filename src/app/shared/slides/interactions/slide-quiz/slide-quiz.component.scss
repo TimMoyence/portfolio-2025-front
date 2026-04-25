@@ -1,0 +1,68 @@
+.slide-quiz {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.slide-quiz__question {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  text-align: center;
+  margin: 0 0 2rem;
+}
+
+.slide-quiz__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.slide-quiz__option {
+  padding: 1rem 1.5rem;
+  background: var(--card-bg, #f9fafb);
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent, #2563eb);
+  }
+
+  &.is-selected {
+    border-color: var(--accent, #2563eb);
+    background: rgba(37, 99, 235, 0.08);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.85;
+  }
+}
+
+.slide-quiz__feedback {
+  margin-top: 1.5rem;
+  font-weight: 600;
+
+  &.is-correct {
+    color: #10b981;
+  }
+  &.is-incorrect {
+    color: #ef4444;
+  }
+}
+
+.slide-quiz__error {
+  color: #ef4444;
+  font-style: italic;
+}
