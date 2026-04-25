@@ -1,0 +1,16 @@
+<div class="slide-stats">
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+  <div class="slide-stats__grid">
+    @for (stat of stats(); track stat.label) {
+      <div class="slide-stats__item">
+        <div class="slide-stats__value">{{ stat.value }}</div>
+        <div class="slide-stats__label">{{ stat.label }}</div>
+        @if (stat.source) {
+          <div class="slide-stats__source">{{ stat.source }}</div>
+        }
+      </div>
+    }
+  </div>
+</div>
