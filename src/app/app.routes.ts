@@ -339,6 +339,16 @@ export const routes: Routes = [
       seoKey: "formations-automatiser-avec-ia",
     },
   },
+  {
+    path: "formations/audit-seo-diy",
+    loadComponent: () =>
+      import("./features/formations/audit-seo-diy/audit-seo-diy.component").then(
+        (m) => m.AuditSeoDiyComponent,
+      ),
+    data: {
+      seoKey: "formations-audit-seo-diy",
+    },
+  },
   // Routes generees automatiquement depuis la registry de formations.
   // Chaque `FormationConfig` publiee produit une route statique
   // `/formations/<slug>` qui instancie `FormationPageComponent`. Ces

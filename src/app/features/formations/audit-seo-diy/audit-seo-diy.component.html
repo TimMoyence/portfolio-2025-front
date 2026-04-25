@@ -1,0 +1,279 @@
+<app-slide-deck mode="scroll" [allowFullscreen]="true" theme="audit-seo-diy">
+  <!-- ── ACTE 1 — ACCROCHER ──────────────────────────── -->
+
+  <app-slide id="audit-seo-diy-accroche">
+    <app-slide-hero
+      title="Audit SEO pour entrepreneurs non-tech — 20 minutes, 7 points, sans jargon"
+      i18n-title="@@formations.audit-seo-diy.accroche.title"
+      subtitle="Comment savoir si votre site web vous rapporte des clients, ou s'il dort dans un tiroir de Google"
+      i18n-subtitle="@@formations.audit-seo-diy.accroche.subtitle"
+      bgImage="https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=1200"
+      bgImageAlt="Entrepreneure regardant les statistiques de visite de son site web sur un ordinateur portable"
+      i18n-bgImageAlt="@@formations.audit-seo-diy.accroche.imageAlt"
+    />
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-constat">
+    <app-slide-stats
+      title="Le constat : la majorite des sites d'entrepreneurs sont invisibles"
+      i18n-title="@@formations.audit-seo-diy.constat.title"
+      [stats]="constatStats"
+    />
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-promesse">
+    <app-slide-quote
+      quote="A la fin de ces 20 minutes, vous aurez une checklist imprimable des 7 points critiques a verifier sur votre site cette semaine. Pas de jargon, pas d'abonnement, pas de cookies espions."
+      i18n-quote="@@formations.audit-seo-diy.promesse.quote"
+      author="Tim Moyence — asilidesign.fr"
+      i18n-author="@@formations.audit-seo-diy.promesse.quoteAuthor"
+      role="Cette methode vient de 40+ audits reels pour des coachs, artisans, commercants. Les memes 7 points reviennent a chaque fois."
+      i18n-role="@@formations.audit-seo-diy.promesse.authorNote"
+    />
+  </app-slide>
+
+  <!-- ── ACTE 2 — MONTRER (5 checks) ─────────────────── -->
+
+  <app-slide id="audit-seo-diy-check1-indexation">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Page de resultats Google Search Console sur ecran"
+      i18n-imageAlt="@@formations.audit-seo-diy.check1.imageAlt"
+      title="Check 1 — Google sait-il que votre site existe ?"
+      i18n-title="@@formations.audit-seo-diy.check1.title"
+    >
+      <p i18n="@@formations.audit-seo-diy.check1.subtitle">
+        Sans indexation, votre site est invisible. Verification en 30 secondes,
+        gratuite.
+      </p>
+      <ul>
+        <li i18n="@@formations.audit-seo-diy.check1.bullets.0">
+          Tapez sur Google : "site:votrenomdedomaine.fr"
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check1.bullets.1">
+          Google affiche les pages qu'il a indexees — si la liste est vide ou
+          tres courte, alerte rouge
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check1.bullets.2">
+          Rendez-vous sur Google Search Console (gratuit) pour demander
+          l'indexation manuelle
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check1.bullets.3">
+          Cas verifie : 1 client sur 4 decouvre ici qu'il bloque
+          accidentellement Google via un fichier robots.txt mal configure
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-check2-titres">
+    <app-slide-image-right
+      image="https://images.pexels.com/photos/97077/pexels-photo-97077.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Onglets de navigateur web affichant des titres de pages"
+      i18n-imageAlt="@@formations.audit-seo-diy.check2.imageAlt"
+      title="Check 2 — Vos titres disent-ils 'je vends quoi, a qui' ?"
+      i18n-title="@@formations.audit-seo-diy.check2.title"
+    >
+      <p i18n="@@formations.audit-seo-diy.check2.subtitle">
+        Le titre SEO, c'est la devanture de votre magasin en ligne. Une faute
+        ici = perte de clics meme bien classe.
+      </p>
+      <ul>
+        <li i18n="@@formations.audit-seo-diy.check2.bullets.0">
+          Ouvrez chaque page importante de votre site, regardez l'onglet
+          navigateur
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check2.bullets.1">
+          Un bon titre : "Photographe mariage Lyon — Asilidesign" (metier +
+          ville + marque)
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check2.bullets.2">
+          Un mauvais titre : "Accueil" ou "Bienvenue sur notre site"
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check2.bullets.3">
+          Outil gratuit : l'extension SEO Meta in 1 Click sur Chrome affiche le
+          titre de chaque page en un clic
+        </li>
+      </ul>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-check3-vitesse">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/590020/pexels-photo-590020.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Tableau de bord avec graphiques de performance et de vitesse"
+      i18n-imageAlt="@@formations.audit-seo-diy.check3.imageAlt"
+      title="Check 3 — Votre site charge en moins de 3 secondes ?"
+      i18n-title="@@formations.audit-seo-diy.check3.title"
+    >
+      <p i18n="@@formations.audit-seo-diy.check3.subtitle">
+        Sur mobile, 1 seconde de plus = 7% de clients qui partent. Verification
+        gratuite en 2 clics.
+      </p>
+      <ul>
+        <li i18n="@@formations.audit-seo-diy.check3.bullets.0">
+          Rendez-vous sur pagespeed.web.dev (outil Google gratuit)
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check3.bullets.1">
+          Collez l'URL de votre page d'accueil — le test prend 30 secondes
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check3.bullets.2">
+          Verifiez : score mobile >= 70 (bon), entre 50-70 (ameliorable), &lt;
+          50 (urgence)
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check3.bullets.3">
+          Les 3 causes frequentes : images trop lourdes, trop de plugins
+          WordPress, pas de mise en cache
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-check4-mobile">
+    <app-slide-image-right
+      image="https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Personne consultant un site web sur smartphone"
+      i18n-imageAlt="@@formations.audit-seo-diy.check4.imageAlt"
+      title="Check 4 — Votre site est-il utilisable sur smartphone ?"
+      i18n-title="@@formations.audit-seo-diy.check4.title"
+    >
+      <p i18n="@@formations.audit-seo-diy.check4.subtitle">
+        60% des recherches locales se font sur mobile. Un site non-mobile = 60%
+        de clients perdus avant meme de voir votre offre.
+      </p>
+      <ul>
+        <li i18n="@@formations.audit-seo-diy.check4.bullets.0">
+          Ouvrez votre site sur votre propre smartphone
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check4.bullets.1">
+          Test simple : un visiteur peut-il commander/reserver/vous contacter
+          sans zoomer ni deroulement horizontal ?
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check4.bullets.2">
+          Bouton trop petit, texte qui deborde, formulaire inutilisable au pouce
+          = red flag
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check4.bullets.3">
+          Outil gratuit : search.google.com/test/mobile-friendly — verdict
+          Google en 20 secondes
+        </li>
+      </ul>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-check5-contenu">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Page web ouverte affichant une FAQ structuree"
+      i18n-imageAlt="@@formations.audit-seo-diy.check5.imageAlt"
+      title="Check 5 — Avez-vous du contenu qui repond aux questions clients ?"
+      i18n-title="@@formations.audit-seo-diy.check5.title"
+    >
+      <p i18n="@@formations.audit-seo-diy.check5.subtitle">
+        Les IA (ChatGPT, Perplexity, Google AI Overview) citent les sites qui
+        repondent clairement. Pas les sites-brochure.
+      </p>
+      <ul>
+        <li i18n="@@formations.audit-seo-diy.check5.bullets.0">
+          Listez les 10 questions que vos clients vous posent avant d'acheter
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check5.bullets.1">
+          Verifiez : chacune de ces questions a-t-elle une reponse claire
+          (50-100 mots) sur votre site ?
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check5.bullets.2">
+          Si non, creez une page FAQ ou un blog avec 1 question = 1 page dediee
+        </li>
+        <li i18n="@@formations.audit-seo-diy.check5.bullets.3">
+          Bonus IA-friendly : utilisez des titres H2 au format question
+          ("Combien coute un audit SEO ?")
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <!-- ── ACTE 3 — PRATIQUER ──────────────────────────── -->
+
+  <app-slide id="audit-seo-diy-pratique-procedure">
+    <app-slide-grid
+      title="L'ordre exact pour un audit efficace en 20 minutes"
+      i18n-title="@@formations.audit-seo-diy.pratique.title"
+      [items]="procedureItems"
+    />
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-pratique-outils">
+    <app-slide-grid
+      title="Les 5 outils gratuits que j'utilise vraiment"
+      i18n-title="@@formations.audit-seo-diy.outils.title"
+      [items]="outilsItems"
+    />
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-pratique-livrable">
+    <app-slide-cta
+      title="Le livrable : votre rapport d'audit sur une page"
+      i18n-title="@@formations.audit-seo-diy.livrable.title"
+      description="Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pre-rempli, format imprimable + Google Sheets dupliquable."
+      i18n-description="@@formations.audit-seo-diy.livrable.description"
+      ctaLabel="Recuperer le template d'audit"
+      i18n-ctaLabel="@@formations.audit-seo-diy.livrable.ctaLabel"
+      ctaHref="/formations/audit-seo-diy/toolkit"
+    />
+  </app-slide>
+
+  <!-- ── ACTE 4 — ANCRER ─────────────────────────────── -->
+
+  <app-slide id="audit-seo-diy-ancrer-quandaider">
+    <app-slide-image-right
+      image="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Reunion entre un client et un consultant SEO autour d'un ordinateur"
+      i18n-imageAlt="@@formations.audit-seo-diy.quandaider.imageAlt"
+      title="Quand un audit DIY n'est PAS suffisant"
+      i18n-title="@@formations.audit-seo-diy.quandaider.title"
+    >
+      <p i18n="@@formations.audit-seo-diy.quandaider.subtitle">
+        Cette formation couvre 80% des cas. Les 20% restants demandent une
+        analyse approfondie par un pro.
+      </p>
+      <ul>
+        <li i18n="@@formations.audit-seo-diy.quandaider.bullets.0">
+          Chute brutale de trafic (&gt; 30% sur un mois) — il y a une cause
+          technique ou penalite a identifier
+        </li>
+        <li i18n="@@formations.audit-seo-diy.quandaider.bullets.1">
+          Migration de site prevue — un audit prealable evite de perdre 100% du
+          trafic
+        </li>
+        <li i18n="@@formations.audit-seo-diy.quandaider.bullets.2">
+          Site e-commerce avec &gt; 500 pages — la massification change les
+          priorites d'audit
+        </li>
+        <li i18n="@@formations.audit-seo-diy.quandaider.bullets.3">
+          Concurrence agressive sur des mots-cles a fort CA — analyse
+          concurrentielle approfondie necessaire
+        </li>
+      </ul>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-ancrer-faq">
+    <app-slide-grid
+      title="Les questions qu'on me pose le plus souvent"
+      i18n-title="@@formations.audit-seo-diy.faq.title"
+      [items]="faqItems"
+    />
+  </app-slide>
+
+  <app-slide id="audit-seo-diy-ancrer-synthese">
+    <app-slide-cta
+      title="Recevez le kit audit SEO DIY complet"
+      i18n-title="@@formations.audit-seo-diy.synthese.title"
+      description="Checklist imprimable (7 checks + colonne OK/A corriger) + rapport type Google Sheets a dupliquer + script 'briefer un developpeur SEO' + alternative premium via Growth Audit (IA + humain)."
+      i18n-description="@@formations.audit-seo-diy.synthese.description"
+      ctaLabel="Telecharger le toolkit"
+      i18n-ctaLabel="@@formations.audit-seo-diy.synthese.ctaLabel"
+      ctaHref="/formations/audit-seo-diy/toolkit"
+    />
+  </app-slide>
+</app-slide-deck>

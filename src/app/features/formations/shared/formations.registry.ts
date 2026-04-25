@@ -1,21 +1,15 @@
 import type { FormationConfig } from "./formation.types";
 import { assertValidFormationConfig } from "./formation.types";
-import { auditSeoDiyFormation } from "../audit-seo-diy/audit-seo-diy.config";
 
 /**
- * Registre central des formations publiees. Ordre == ordre d'apparition
- * dans le hub. Chaque nouvelle formation s'ajoute ici en une ligne apres
- * creation de son `{slug}.config.ts`.
- *
- * Synchrone et compile-time : la registry est importee par
- * `getPrerenderParams` qui doit rester synchrone (contrainte Angular 19
- * SSR — `inject()` synchrone avant tout `await`).
- *
- * Note migration BIG BANG : les formations migrees vers des composants
- * slide-driven (ia-solopreneurs, automatiser-avec-ia, audit-seo-diy)
- * sortent de la registry au fur et a mesure des Tasks 19/20/21.
+ * Registre central des formations publiees. Vide depuis la migration
+ * BIG BANG slide-driven (Tasks 19/20/21) : les 3 formations historiques
+ * sont desormais declarees explicitement dans `app.routes.ts` via leur
+ * propre composant. Le registry et `buildFormationRoutes` seront retires
+ * dans la Task 22 — ce shim transitoire evite simplement les imports
+ * orphelins entre commits.
  */
-const ALL_FORMATIONS: ReadonlyArray<FormationConfig> = [auditSeoDiyFormation];
+const ALL_FORMATIONS: ReadonlyArray<FormationConfig> = [];
 
 // Validation defensive : echoue le build si une config est malformee.
 // Throw au niveau module ->  detecte en TypeCheck + prerender + SSR.
