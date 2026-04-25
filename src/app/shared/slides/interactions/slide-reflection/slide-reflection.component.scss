@@ -20,7 +20,7 @@
     min-height: 8rem;
 
     &:focus-visible {
-      outline: 2px solid var(--accent, #2563eb);
+      outline: 2px solid var(--accent, #4fb3a2);
     }
   }
 }
@@ -34,7 +34,7 @@
 .slide-reflection__save {
   align-self: center;
   padding: 0.75rem 2rem;
-  background: var(--accent, #2563eb);
+  background: var(--accent, #4fb3a2);
   color: white;
   border: none;
   border-radius: 9999px;
@@ -49,6 +49,6 @@
 
 .slide-reflection__saved {
   text-align: center;
-  color: #10b981;
+  color: #0f7b65;
   font-weight: 500;
 }

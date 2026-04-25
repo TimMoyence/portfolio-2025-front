@@ -5,7 +5,11 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, var(--accent, #2563eb), #4f46e5);
+  background: linear-gradient(
+    135deg,
+    var(--accent, #4fb3a2),
+    var(--accent-dark, #2f7f74)
+  );
   color: white;
 }
 
@@ -31,7 +35,7 @@
   display: inline-block;
   padding: 1rem 2.5rem;
   background: white;
-  color: var(--accent, #2563eb);
+  color: var(--accent, #4fb3a2);
   font-weight: 700;
   border-radius: 9999px;
   text-decoration: none;

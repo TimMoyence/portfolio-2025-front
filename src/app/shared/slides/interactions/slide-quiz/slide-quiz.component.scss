@@ -25,7 +25,7 @@
 
 .slide-quiz__option {
   padding: 1rem 1.5rem;
-  background: var(--card-bg, #f9fafb);
+  background: var(--card-bg, #f6fbfa);
   border: 2px solid transparent;
   border-radius: 0.75rem;
   text-align: left;
@@ -36,12 +36,12 @@
     transform 0.15s;
 
   &:hover:not(:disabled) {
-    border-color: var(--accent, #2563eb);
+    border-color: var(--accent, #4fb3a2);
   }
 
   &.is-selected {
-    border-color: var(--accent, #2563eb);
-    background: rgba(37, 99, 235, 0.08);
+    border-color: var(--accent, #4fb3a2);
+    background: rgba(79, 179, 162, 0.1);
   }
 
   &:disabled {
@@ -55,14 +55,14 @@
   font-weight: 600;
 
   &.is-correct {
-    color: #10b981;
+    color: #0f7b65;
   }
   &.is-incorrect {
-    color: #ef4444;
+    color: #b3261e;
   }
 }
 
 .slide-quiz__error {
-  color: #ef4444;
+  color: #b3261e;
   font-style: italic;
 }

@@ -29,7 +29,7 @@
 .slide-comparison__column {
   padding: 2rem;
   border-radius: 1rem;
-  background: var(--card-bg, #f9fafb);
+  background: var(--card-bg, #f6fbfa);
   border-top: 4px solid transparent;
 
   h3 {
@@ -54,35 +54,38 @@
     }
   }
 
-  // Palette semantique
+  // Palette semantique alignee design system (nuances de vert + accents).
+  // Danger garde un rouge pour signaler clairement une alerte (a11y),
+  // warning passe sur un vert profond chaleureux du DS, info sur le teal
+  // principal, success sur le vert profond budget-accent.
   &.tone-danger {
-    border-top-color: #ef4444;
+    border-top-color: #b3261e;
     h3 {
-      color: #ef4444;
+      color: #b3261e;
     }
   }
   &.tone-success {
-    border-top-color: #10b981;
+    border-top-color: #0f7b65;
     h3 {
-      color: #10b981;
+      color: #0f7b65;
     }
   }
   &.tone-info {
-    border-top-color: #3b82f6;
+    border-top-color: #4fb3a2;
     h3 {
-      color: #3b82f6;
+      color: #4fb3a2;
     }
   }
   &.tone-warning {
-    border-top-color: #f59e0b;
+    border-top-color: #2f7f74;
     h3 {
-      color: #f59e0b;
+      color: #2f7f74;
     }
   }
   &.tone-neutral {
     border-top-color: #9ca3af;
     h3 {
-      color: #4b5563;
+      color: #54524d;
     }
   }
 }
