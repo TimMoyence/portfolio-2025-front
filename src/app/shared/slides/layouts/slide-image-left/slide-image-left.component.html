@@ -6,6 +6,16 @@
     @if (title()) {
       <h2>{{ title() }}</h2>
     }
+    @for (p of paragraphs(); track $index) {
+      <p class="slide-image-left__paragraph">{{ p }}</p>
+    }
+    @if (items().length > 0) {
+      <ul class="slide-image-left__items">
+        @for (it of items(); track it) {
+          <li>{{ it }}</li>
+        }
+      </ul>
+    }
     <ng-content />
   </div>
 </div>
