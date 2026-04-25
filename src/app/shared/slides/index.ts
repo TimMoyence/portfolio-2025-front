@@ -29,6 +29,7 @@ export {
 export { SlideCtaComponent } from "./layouts/slide-cta/slide-cta.component";
 export {
   SlideTableComponent,
+  type TableColumn,
   type TableRow,
 } from "./layouts/slide-table/slide-table.component";
 

@@ -14,6 +14,7 @@ import {
   SlideQuoteComponent,
   SlideStatsComponent,
   SlideTableComponent,
+  type TableColumn,
 } from "../../../shared/slides";
 
 /**
@@ -201,12 +202,24 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.stack-budget.avance.2:Fathom (19$) + Waalaxy (19€) — ~120€/mois`,
   ];
 
-  /** Lignes du tableau récap "outils-detail" — 16 outils en mode scroll. */
-  protected readonly outilsDetailHeaders = [
-    $localize`:@@ia-solo.outils-detail.headers.tool:Outil`,
-    $localize`:@@ia-solo.outils-detail.headers.category:Catégorie`,
-    $localize`:@@ia-solo.outils-detail.headers.price:Prix`,
-    $localize`:@@ia-solo.outils-detail.headers.tagline:Tagline`,
+  /** Colonnes du tableau récap "outils-detail" — 16 outils en mode scroll. */
+  protected readonly outilsDetailColumns: TableColumn[] = [
+    {
+      key: "tool",
+      label: $localize`:@@ia-solo.outils-detail.headers.tool:Outil`,
+    },
+    {
+      key: "category",
+      label: $localize`:@@ia-solo.outils-detail.headers.category:Catégorie`,
+    },
+    {
+      key: "price",
+      label: $localize`:@@ia-solo.outils-detail.headers.price:Prix`,
+    },
+    {
+      key: "tagline",
+      label: $localize`:@@ia-solo.outils-detail.headers.tagline:Tagline`,
+    },
   ];
 
   protected readonly outilsDetailRows = [

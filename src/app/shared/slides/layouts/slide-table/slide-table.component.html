@@ -6,16 +6,16 @@
     <table>
       <thead>
         <tr>
-          @for (h of headers(); track h) {
-            <th scope="col">{{ h }}</th>
+          @for (col of columns(); track col.key) {
+            <th scope="col">{{ col.label }}</th>
           }
         </tr>
       </thead>
       <tbody>
         @for (row of rows(); track $index) {
           <tr>
-            @for (h of headers(); track h) {
-              <td>{{ cellValue(row, h) }}</td>
+            @for (col of columns(); track col.key) {
+              <td>{{ cellValue(row, col.key) }}</td>
             }
           </tr>
         }

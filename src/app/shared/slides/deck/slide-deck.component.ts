@@ -76,7 +76,8 @@ export class SlideDeckComponent implements AfterViewInit {
     });
   });
 
-  private observer: IntersectionObserver | null = null;
+  private scrollListener: (() => void) | null = null;
+  private rafId: number | null = null;
 
   constructor() {
     effect(() => {
@@ -106,41 +107,62 @@ export class SlideDeckComponent implements AfterViewInit {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    queueMicrotask(() => this.setupIntersectionObserver());
+    // Laisse le temps aux templates outlet'd de materialiser dans le DOM
+    // avant d'enregistrer la premiere slide + binder le scroll listener.
+    setTimeout(() => {
+      this.bootstrapInitialSlide();
+      this.attachScrollListener();
+    }, 0);
+  }
 
-    // Initial : si la liste a au moins une slide, marquer la première
-    // comme courante pour que le compteur affiche `1 / N`.
-    queueMicrotask(() => {
-      const list = this.visibleSlides();
-      if (list.length > 0 && this.service.current() === null) {
-        this.service.goTo(list[0].id());
+  private bootstrapInitialSlide(): void {
+    const list = this.visibleSlides();
+    if (list.length > 0 && this.service.current() === null) {
+      this.service.goTo(list[0].id());
+    }
+  }
+
+  private attachScrollListener(): void {
+    const root = this.deckRef().nativeElement;
+    const onScroll = () => {
+      if (this.rafId !== null) {
+        return;
+      }
+      this.rafId = requestAnimationFrame(() => {
+        this.rafId = null;
+        this.syncCurrentFromScroll();
+      });
+    };
+    root.addEventListener("scroll", onScroll, { passive: true });
+    this.scrollListener = () => root.removeEventListener("scroll", onScroll);
+    this.destroyRef.onDestroy(() => {
+      this.scrollListener?.();
+      if (this.rafId !== null) {
+        cancelAnimationFrame(this.rafId);
       }
     });
   }
 
-  private setupIntersectionObserver(): void {
+  /**
+   * Synchronise `currentId` selon la slide qui occupe la moitie du
+   * viewport. Plus fiable qu'un IntersectionObserver avec scroll-snap :
+   * on travaille sur `scrollTop` + `clientHeight` mesures, sans flicker.
+   */
+  private syncCurrentFromScroll(): void {
     const root = this.deckRef().nativeElement;
-    const sections = root.querySelectorAll<HTMLElement>("section.slide");
+    const sections = Array.from(
+      root.querySelectorAll<HTMLElement>("section.slide"),
+    );
     if (sections.length === 0) {
       return;
     }
-    this.observer?.disconnect();
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible && visible.target.id) {
-          this.service.goTo(visible.target.id);
-        }
-      },
-      {
-        root,
-        threshold: [0.4, 0.6],
-      },
+    const mid = root.scrollTop + root.clientHeight / 2;
+    const current = sections.find(
+      (s) => s.offsetTop <= mid && s.offsetTop + s.clientHeight > mid,
     );
-    sections.forEach((s) => this.observer?.observe(s));
-    this.destroyRef.onDestroy(() => this.observer?.disconnect());
+    if (current && current.id && current.id !== this.service.current()) {
+      this.service.goTo(current.id);
+    }
   }
 
   async toggleFullscreen(): Promise<void> {
@@ -211,8 +233,9 @@ export class SlideDeckComponent implements AfterViewInit {
   }
 
   /**
-   * Fait defiler vers la slide suivante (`+1`) ou precedente (`-1`).
-   * L'IntersectionObserver met ensuite a jour `currentId`.
+   * Fait defiler le deck vers la slide voisine (`+1` ou `-1`).
+   * Utilise `scrollTo` direct sur le container — plus fiable que
+   * `scrollIntoView` qui scroll le mauvais ancestor avec scroll-snap.
    */
   private scrollToSibling(direction: 1 | -1): void {
     const root = this.deckRef().nativeElement;
@@ -224,8 +247,13 @@ export class SlideDeckComponent implements AfterViewInit {
     }
     const currentId = this.service.current();
     const idx = currentId ? sections.findIndex((s) => s.id === currentId) : 0;
-    const target =
-      sections[Math.max(0, Math.min(sections.length - 1, idx + direction))];
-    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const targetIdx = Math.max(
+      0,
+      Math.min(sections.length - 1, idx + direction),
+    );
+    const target = sections[targetIdx];
+    if (target) {
+      root.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+    }
   }
 }

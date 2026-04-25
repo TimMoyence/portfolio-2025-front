@@ -1,12 +1,19 @@
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 /**
- * Une ligne de tableau pour `SlideTableComponent`.
- *
- * Cle = colonne (libre cote consommateur), valeur = contenu textuel a
- * afficher. Permet de presenter des donnees tabulaires denses (ex : 16
- * outils en 4 colonnes : Outil / Categorie / Prix / Tagline) sans
- * forcer une structure rigide cote layout.
+ * Definition d'une colonne de tableau : `key` est la cle stable cote
+ * data (matche les rows), `label` est le libelle affiche dans le `<th>`.
+ * Separation indispensable pour i18n (label peut varier entre locales)
+ * sans casser le lookup des cellules.
+ */
+export interface TableColumn {
+  key: string;
+  label: string;
+}
+
+/**
+ * Une ligne de tableau : record clés-valeurs ou les cles correspondent
+ * aux `TableColumn.key`. Les colonnes manquantes affichent "".
  */
 export type TableRow = Record<string, string>;
 
@@ -14,10 +21,9 @@ export type TableRow = Record<string, string>;
  * Layout de slide tabulaire pour donnees denses.
  *
  * Conçu pour le mode `visibility="scroll-only"` : un tableau de N
- * colonnes et M lignes, scroll horizontal sur mobile, alignements
- * design system (vert teal). Les `headers` definissent l'ordre et le
- * libelle des colonnes ; chaque `row` doit fournir une cle pour chaque
- * header (les cles non couvertes sont ignorees).
+ * colonnes et M lignes, scroll horizontal sur mobile, alignements DS
+ * (vert teal). Les `columns` definissent l'ordre + libelle (i18n) ;
+ * chaque `row` doit fournir une valeur pour chaque `key` de colonne.
  */
 @Component({
   selector: "app-slide-table",
@@ -28,15 +34,10 @@ export type TableRow = Record<string, string>;
 })
 export class SlideTableComponent {
   readonly title = input<string>("");
-  readonly headers = input.required<string[]>();
+  readonly columns = input.required<TableColumn[]>();
   readonly rows = input.required<TableRow[]>();
 
-  /**
-   * Recupere la valeur d'une cellule via la cle de header. Retourne
-   * une chaine vide si la cle n'existe pas — evite les `undefined`
-   * dans le DOM.
-   */
-  protected cellValue(row: TableRow, header: string): string {
-    return row[header] ?? "";
+  protected cellValue(row: TableRow, key: string): string {
+    return row[key] ?? "";
   }
 }
