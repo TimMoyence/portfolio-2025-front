@@ -316,6 +316,19 @@ export const routes: Routes = [
       seoKey: "formations-audit-seo-diy-toolkit",
     },
   },
+  // Routes dediees aux formations migrees en composants slide-driven
+  // (Tasks 19/20/21). Declarees AVANT `buildFormationRoutes()` pour
+  // prendre la precedence sur la route auto-generee de meme path.
+  {
+    path: "formations/ia-solopreneurs",
+    loadComponent: () =>
+      import("./features/formations/ia-solopreneurs/ia-solopreneurs.component").then(
+        (m) => m.IaSolopreneursComponent,
+      ),
+    data: {
+      seoKey: "formations-ia-solopreneurs",
+    },
+  },
   // Routes generees automatiquement depuis la registry de formations.
   // Chaque `FormationConfig` publiee produit une route statique
   // `/formations/<slug>` qui instancie `FormationPageComponent`. Ces

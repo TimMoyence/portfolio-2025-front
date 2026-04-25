@@ -2,7 +2,6 @@ import type { FormationConfig } from "./formation.types";
 import { assertValidFormationConfig } from "./formation.types";
 import { auditSeoDiyFormation } from "../audit-seo-diy/audit-seo-diy.config";
 import { automatiserAvecIaFormation } from "../automatiser-avec-ia/automatiser-avec-ia.config";
-import { iaSolopreneursFormation } from "../ia-solopreneurs/ia-solopreneurs.config";
 
 /**
  * Registre central des formations publiees. Ordre == ordre d'apparition
@@ -12,9 +11,12 @@ import { iaSolopreneursFormation } from "../ia-solopreneurs/ia-solopreneurs.conf
  * Synchrone et compile-time : la registry est importee par
  * `getPrerenderParams` qui doit rester synchrone (contrainte Angular 19
  * SSR — `inject()` synchrone avant tout `await`).
+ *
+ * Note migration BIG BANG : les formations migrees vers des composants
+ * slide-driven (ia-solopreneurs, automatiser-avec-ia, audit-seo-diy)
+ * sortent de la registry au fur et a mesure des Tasks 19/20/21.
  */
 const ALL_FORMATIONS: ReadonlyArray<FormationConfig> = [
-  iaSolopreneursFormation,
   automatiserAvecIaFormation,
   auditSeoDiyFormation,
 ];

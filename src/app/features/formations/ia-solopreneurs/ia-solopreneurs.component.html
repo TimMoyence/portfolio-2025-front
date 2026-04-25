@@ -1,0 +1,291 @@
+<app-slide-deck mode="scroll" [allowFullscreen]="true" theme="ia-solopreneurs">
+  <!-- ── BLOC 1 — ACCROCHER ────────────────────────────── -->
+
+  <app-slide id="accroche">
+    <app-slide-hero
+      title="L'IA au service des solopreneurs"
+      i18n-title="@@ia-solo.accroche.title"
+      subtitle="16 outils, 30 minutes, on trie le bullshit du vraiment utile"
+      i18n-subtitle="@@ia-solo.accroche.subtitle"
+      bgImage="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800"
+      bgImageAlt="Main de robot interagissant avec un réseau neuronal lumineux"
+      i18n-bgImageAlt="@@ia-solo.accroche.imageAlt"
+    />
+  </app-slide>
+
+  <app-slide id="probleme">
+    <app-slide-stats
+      title="Le constat : l'IA avance, avec ou sans vous"
+      i18n-title="@@ia-solo.probleme.title"
+      [stats]="problemeStats"
+    />
+  </app-slide>
+
+  <app-slide id="promesse">
+    <app-slide-hero
+      title="Ce qu'on va faire ensemble"
+      i18n-title="@@ia-solo.promesse.title"
+      subtitle="1. Tour d'horizon des outils qui comptent — 2. Ce qui marche vraiment au quotidien — 3. Un exercice pratique, vous repartez avec un résultat"
+      i18n-subtitle="@@ia-solo.promesse.subtitle"
+      bgImage="https://images.pexels.com/photos/10401267/pexels-photo-10401267.jpeg?auto=compress&cs=tinysrgb&w=800"
+      bgImageAlt="Intervenant donnant une présentation dynamique sur scène"
+      i18n-bgImageAlt="@@ia-solo.promesse.imageAlt"
+    />
+  </app-slide>
+
+  <app-slide id="contexte-marche">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Écran de marché boursier avec données et graphiques en temps réel"
+      i18n-imageAlt="@@ia-solo.contexte-marche.imageAlt"
+      title="Contexte : le marché IA en avril 2026"
+      i18n-title="@@ia-solo.contexte-marche.title"
+    >
+      <ul>
+        <li i18n="@@ia-solo.contexte-marche.bullets.0">
+          ChatGPT : 900M d'utilisateurs hebdo, 50M d'abonnés payants (OpenAI,
+          fév. 2026)
+        </li>
+        <li i18n="@@ia-solo.contexte-marche.bullets.1">
+          Anthropic (Claude) : 30Md$ ARR, a dépassé OpenAI (25Md$) pour la
+          première fois (avril 2026)
+        </li>
+        <li i18n="@@ia-solo.contexte-marche.bullets.2">
+          Le marché des agents IA passe de 7,8Md$ à 52,6Md$ d'ici 2030 (Gartner)
+        </li>
+        <li i18n="@@ia-solo.contexte-marche.bullets.3">
+          68% des PME US utilisent l'IA (QuickBooks, 2 200 PME)
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <!-- ── BLOC 2 — MONTRER ────────────────────────────── -->
+
+  <app-slide id="culture-apprendre">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/33923596/pexels-photo-33923596.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Enregistrement podcast avec microphone professionnel en studio"
+      i18n-imageAlt="@@ia-solo.culture-apprendre.imageAlt"
+      title="Apprenez plus vite que vos concurrents"
+      i18n-title="@@ia-solo.culture-apprendre.title"
+    >
+      <p i18n="@@ia-solo.culture-apprendre.subtitle">
+        Votre veille passe de 3h à 20 min
+      </p>
+      <ul>
+        <li i18n="@@ia-solo.culture-apprendre.bullets.0">
+          NotebookLM — Uploadez un PDF, récupérez un podcast de 10 min avec deux
+          voix IA qui l'analysent. Par Google, gratuit. Mode interactif :
+          interrompez les hosts pour poser vos questions.
+        </li>
+        <li i18n="@@ia-solo.culture-apprendre.bullets.1">
+          Perplexity — Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses
+          sourcées avec citations, pas de liens bleus à trier. Gratuit ou
+          20$/mois.
+        </li>
+        <li i18n="@@ia-solo.culture-apprendre.bullets.2">
+          Fathom — Notes de réunion automatiques sur Zoom/Meet/Teams.
+          Transcription + résumé + actions. 5 résumés IA/mois en gratuit,
+          19$/mois pour l'illimité.
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="chat-produire">
+    <app-slide-comparison
+      title="ChatGPT, Claude, Gemini — lequel ouvrir en premier ?"
+      i18n-title="@@ia-solo.chat-produire.title"
+      leftLabel="ChatGPT (OpenAI)"
+      i18n-leftLabel="@@ia-solo.chat-produire.left"
+      rightLabel="Claude (Anthropic)"
+      i18n-rightLabel="@@ia-solo.chat-produire.right"
+      [leftItems]="chatGptItems"
+      [rightItems]="claudeItems"
+    />
+  </app-slide>
+
+  <app-slide id="creer">
+    <app-slide-image-right
+      image="https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Espace de travail créatif avec laptop et calligraphie"
+      i18n-imageAlt="@@ia-solo.creer.imageAlt"
+      title="Du contenu pro en 10× moins de temps"
+      i18n-title="@@ia-solo.creer.title"
+    >
+      <ul>
+        <li i18n="@@ia-solo.creer.bullets.0">
+          Ideogram — Génération d'images avec du texte lisible dedans. Aucun
+          autre outil ne fait ça aussi bien. Gratuit (10 prompts/jour).
+        </li>
+        <li i18n="@@ia-solo.creer.bullets.1">
+          Gamma — 70M d'utilisateurs. Tapez un prompt, récupérez une
+          présentation complète en moins d'une minute. Gamma Agent restructure
+          et donne du feedback design. Gratuit pour démarrer, 10$/mois.
+        </li>
+        <li i18n="@@ia-solo.creer.bullets.2">
+          ElevenLabs — Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix
+          dans 29 langues. Gratuit (10 min) puis 5$/mois.
+        </li>
+      </ul>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="automatiser">
+    <app-slide-comparison
+      title="Quelles tâches faites-vous encore à la main ?"
+      i18n-title="@@ia-solo.automatiser.title"
+      leftLabel="Zapier"
+      i18n-leftLabel="@@ia-solo.automatiser.zapier.label"
+      rightLabel="Make.com"
+      i18n-rightLabel="@@ia-solo.automatiser.make.label"
+      [leftItems]="zapierItems"
+      [rightItems]="makeItems"
+    />
+  </app-slide>
+
+  <app-slide id="site-web">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/326513/pexels-photo-326513.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Espace de travail avec double écran montrant des maquettes de design"
+      i18n-imageAlt="@@ia-solo.site-web.imageAlt"
+      title="Votre site en ligne ce soir, sans une ligne de code"
+      i18n-title="@@ia-solo.site-web.title"
+    >
+      <ul>
+        <li i18n="@@ia-solo.site-web.bullets.0">
+          Lovable — Du prompt au site full-stack. 8M d'utilisateurs, valorisé
+          6,6Md$. Gratuit (50 actions IA/jour).
+        </li>
+        <li i18n="@@ia-solo.site-web.bullets.1">
+          Bolt.new — Même concept, tout dans le navigateur. Frontend, backend,
+          déploiement. 25$/mois.
+        </li>
+        <li i18n="@@ia-solo.site-web.bullets.2">
+          v0 — Par Vercel. Génère du React/Next.js/Tailwind. Plus technique,
+          plus propre. Gratuit (5$ de crédits/mois) puis 20$/mois.
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="clients">
+    <app-slide-grid
+      title="Comment prospecter, convertir et fidéliser avec l'IA ?"
+      i18n-title="@@ia-solo.clients.title"
+      [items]="clientsItems"
+    />
+  </app-slide>
+
+  <app-slide id="poll-clients">
+    <app-slide-poll slug="ia-solopreneurs" interactionId="poll-clients" />
+  </app-slide>
+
+  <app-slide id="stack-budget">
+    <app-slide-comparison
+      title="Quel budget IA pour quel stack — 0€, 60€ ou 120€/mois ?"
+      i18n-title="@@ia-solo.stack-budget.title"
+      leftLabel="Stack débutant — 0€/mois"
+      i18n-leftLabel="@@ia-solo.stack-budget.debutant.label"
+      rightLabel="Stack avancé — ~120€/mois"
+      i18n-rightLabel="@@ia-solo.stack-budget.avance.label"
+      [leftItems]="stackBudgetDebutantItems"
+      [rightItems]="stackBudgetAvanceItems"
+    />
+  </app-slide>
+
+  <app-slide id="workflows-detail">
+    <app-slide-grid
+      title="3 workflows à mettre en place cette semaine"
+      i18n-title="@@ia-solo.workflows-detail.title"
+      [items]="workflowsItems"
+    />
+  </app-slide>
+
+  <!-- ── BLOC 3 — PRATIQUER ──────────────────────────── -->
+
+  <app-slide id="transition-pratique">
+    <app-slide-hero
+      title="Stop. On pratique."
+      i18n-title="@@ia-solo.transition-pratique.title"
+      subtitle="Tout ce que je viens de dire ne vaut rien si vous ne le testez pas."
+      i18n-subtitle="@@ia-solo.transition-pratique.subtitle"
+      bgImage="https://images.pexels.com/photos/10401267/pexels-photo-10401267.jpeg?auto=compress&cs=tinysrgb&w=800"
+      bgImageAlt="Intervenant donnant une présentation dynamique sur scène"
+      i18n-bgImageAlt="@@ia-solo.promesse.imageAlt"
+    />
+  </app-slide>
+
+  <app-slide id="quiz-pratique">
+    <app-slide-quiz slug="ia-solopreneurs" interactionId="quiz-pratique" />
+  </app-slide>
+
+  <app-slide id="recap-8020">
+    <app-slide-stats
+      title="Ce que l'IA change — et ce qu'elle ne change pas"
+      i18n-title="@@ia-solo.recap-8020.title"
+      [stats]="recap8020Stats"
+    />
+  </app-slide>
+
+  <!-- ── BLOC 4 — ANCRER ─────────────────────────────── -->
+
+  <app-slide id="pieges">
+    <app-slide-grid
+      title="Les 3 pièges à éviter"
+      i18n-title="@@ia-solo.pieges.title"
+      [items]="piegesItems"
+    />
+  </app-slide>
+
+  <app-slide id="citation">
+    <app-slide-quote
+      quote="L'IA génère du contenu. Un expert génère des résultats."
+      i18n-quote="@@ia-solo.citation.quote"
+      author="La règle d'or du solopreneur en 2026"
+      i18n-author="@@ia-solo.citation.author"
+    />
+  </app-slide>
+
+  <app-slide id="cta-toolkit">
+    <app-slide-cta
+      title="Récupère le toolkit IA Solopreneurs"
+      i18n-title="@@ia-solo.cta.title"
+      description="Cheatsheet de décision (quel outil pour quelle tâche) + prompts prêts à copier adaptés à votre niveau + 3 workflows pas-à-pas (Zapier/Make) avec templates. Reçu en 30 secondes."
+      i18n-description="@@ia-solo.cta.description"
+      ctaLabel="Télécharger le toolkit"
+      i18n-ctaLabel="@@ia-solo.cta.ctaLabel"
+      ctaHref="/formations/ia-solopreneurs/toolkit"
+    />
+  </app-slide>
+
+  <app-slide id="one-more-thing">
+    <app-slide-image-right
+      image="https://images.pexels.com/photos/33923596/pexels-photo-33923596.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Enregistrement podcast avec microphone professionnel en studio"
+      i18n-imageAlt="@@ia-solo.culture-apprendre.imageAlt"
+      title="Une dernière chose..."
+      i18n-title="@@ia-solo.one-more-thing.title"
+    >
+      <p i18n="@@ia-solo.one-more-thing.subtitle">
+        NotebookLM — votre PDF devient un podcast avec deux hosts IA
+      </p>
+      <ul>
+        <li i18n="@@ia-solo.one-more-thing.bullets.0">
+          Uploadez n'importe quel document
+        </li>
+        <li i18n="@@ia-solo.one-more-thing.bullets.1">
+          47 secondes plus tard : un podcast de 10 min, deux voix naturelles
+        </li>
+        <li i18n="@@ia-solo.one-more-thing.bullets.2">
+          Mode interactif : interrompez les hosts pour poser vos questions
+        </li>
+        <li i18n="@@ia-solo.one-more-thing.bullets.3">
+          Nouveau 2026 : Cinematic Video Overviews — vos docs deviennent des
+          vidéos
+        </li>
+      </ul>
+    </app-slide-image-right>
+  </app-slide>
+</app-slide-deck>
