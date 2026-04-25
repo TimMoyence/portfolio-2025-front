@@ -11802,5 +11802,1607 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Paste this prompt into <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://gamma.app&quot;&gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to generate your presentation in 60 seconds.</target>
       </segment>
     </unit>
+        <!-- needs-translation -->
+    <unit id="contactFormSubjectAccess">
+      <segment>
+        <source>Demande d&apos;accès application</source>
+        <target>Demande d&apos;accès application</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="contactAccessAppWeather">
+      <segment>
+        <source>l&apos;application Météo</source>
+        <target>l&apos;application Météo</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="contactAccessAppBudget">
+      <segment>
+        <source>l&apos;application Budget</source>
+        <target>l&apos;application Budget</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="contactAccessAppSebastian">
+      <segment>
+        <source>l&apos;application Sebastian</source>
+        <target>l&apos;application Sebastian</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="contactAccessAppGeneric">
+      <segment>
+        <source>l&apos;atelier <x id="app" equiv-text="normalizedApp"/></source>
+        <target>l&apos;atelier <x id="app" equiv-text="normalizedApp"/></target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="contactAccessMessage">
+      <segment>
+        <source>Bonjour Tim, je souhaite un accès à <x id="appLabel" equiv-text="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</source>
+        <target>Bonjour Tim, je souhaite un accès à <x id="appLabel" equiv-text="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.accroche.title">
+      <segment>
+        <source>Audit SEO pour entrepreneurs non-tech — 20 minutes, 7 points, sans jargon</source>
+        <target>SEO audit for non-tech entrepreneurs — 20 minutes, 7 checks, no jargon</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.accroche.subtitle">
+      <segment>
+        <source>Comment savoir si votre site web vous rapporte des clients, ou s&apos;il dort dans un tiroir de Google</source>
+        <target>How to know if your website brings you clients, or if it's sleeping in a drawer of Google</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.accroche.imageAlt">
+      <segment>
+        <source>Entrepreneure regardant les statistiques de visite de son site web sur un ordinateur portable</source>
+        <target>Entrepreneur looking at her website analytics on a laptop</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.constat.title">
+      <segment>
+        <source>Le constat : la majorite des sites d&apos;entrepreneurs sont invisibles</source>
+        <target>The reality: most entrepreneurs' websites are invisible</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.promesse.quote">
+      <segment>
+        <source>A la fin de ces 20 minutes, vous aurez une checklist imprimable des 7 points critiques a verifier sur votre site cette semaine. Pas de jargon, pas d&apos;abonnement, pas de cookies espions.</source>
+        <target>A la fin de ces 20 minutes, vous aurez une checklist imprimable des 7 points critiques a verifier sur votre site cette semaine. Pas de jargon, pas d&apos;abonnement, pas de cookies espions.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.promesse.quoteAuthor">
+      <segment>
+        <source>Tim Moyence — asilidesign.fr</source>
+        <target>Tim Moyence — asilidesign.fr</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.promesse.authorNote">
+      <segment>
+        <source>Cette methode vient de 40+ audits reels pour des coachs, artisans, commercants. Les memes 7 points reviennent a chaque fois.</source>
+        <target>Cette methode vient de 40+ audits reels pour des coachs, artisans, commercants. Les memes 7 points reviennent a chaque fois.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check1.imageAlt">
+      <segment>
+        <source>Page de resultats Google Search Console sur ecran</source>
+        <target>Page de resultats Google Search Console sur ecran</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.check1.title">
+      <segment>
+        <source>Check 1 — Google sait-il que votre site existe ?</source>
+        <target>Check 1 — Does Google know your site exists?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check1.subtitle">
+      <segment>
+        <source> Sans indexation, votre site est invisible. Verification en 30 secondes, gratuite. </source>
+        <target> Sans indexation, votre site est invisible. Verification en 30 secondes, gratuite. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check1.bullets.0">
+      <segment>
+        <source> Tapez sur Google : &quot;site:votrenomdedomaine.fr&quot; </source>
+        <target> Tapez sur Google : &quot;site:votrenomdedomaine.fr&quot; </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check1.bullets.1">
+      <segment>
+        <source> Google affiche les pages qu&apos;il a indexees — si la liste est vide ou tres courte, alerte rouge </source>
+        <target> Google affiche les pages qu&apos;il a indexees — si la liste est vide ou tres courte, alerte rouge </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check1.bullets.2">
+      <segment>
+        <source> Rendez-vous sur Google Search Console (gratuit) pour demander l&apos;indexation manuelle </source>
+        <target> Rendez-vous sur Google Search Console (gratuit) pour demander l&apos;indexation manuelle </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check1.bullets.3">
+      <segment>
+        <source> Cas verifie : 1 client sur 4 decouvre ici qu&apos;il bloque accidentellement Google via un fichier robots.txt mal configure </source>
+        <target> Cas verifie : 1 client sur 4 decouvre ici qu&apos;il bloque accidentellement Google via un fichier robots.txt mal configure </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check2.imageAlt">
+      <segment>
+        <source>Onglets de navigateur web affichant des titres de pages</source>
+        <target>Onglets de navigateur web affichant des titres de pages</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.check2.title">
+      <segment>
+        <source>Check 2 — Vos titres disent-ils &apos;je vends quoi, a qui&apos; ?</source>
+        <target>Check 2 — Do your titles say 'what I sell, to whom'?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check2.subtitle">
+      <segment>
+        <source> Le titre SEO, c&apos;est la devanture de votre magasin en ligne. Une faute ici = perte de clics meme bien classe. </source>
+        <target> Le titre SEO, c&apos;est la devanture de votre magasin en ligne. Une faute ici = perte de clics meme bien classe. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check2.bullets.0">
+      <segment>
+        <source> Ouvrez chaque page importante de votre site, regardez l&apos;onglet navigateur </source>
+        <target> Ouvrez chaque page importante de votre site, regardez l&apos;onglet navigateur </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check2.bullets.1">
+      <segment>
+        <source> Un bon titre : &quot;Photographe mariage Lyon — Asilidesign&quot; (metier + ville + marque) </source>
+        <target> Un bon titre : &quot;Photographe mariage Lyon — Asilidesign&quot; (metier + ville + marque) </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check2.bullets.2">
+      <segment>
+        <source> Un mauvais titre : &quot;Accueil&quot; ou &quot;Bienvenue sur notre site&quot; </source>
+        <target> Un mauvais titre : &quot;Accueil&quot; ou &quot;Bienvenue sur notre site&quot; </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check2.bullets.3">
+      <segment>
+        <source> Outil gratuit : l&apos;extension SEO Meta in 1 Click sur Chrome affiche le titre de chaque page en un clic </source>
+        <target> Outil gratuit : l&apos;extension SEO Meta in 1 Click sur Chrome affiche le titre de chaque page en un clic </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check3.imageAlt">
+      <segment>
+        <source>Tableau de bord avec graphiques de performance et de vitesse</source>
+        <target>Tableau de bord avec graphiques de performance et de vitesse</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.check3.title">
+      <segment>
+        <source>Check 3 — Votre site charge en moins de 3 secondes ?</source>
+        <target>Check 3 — Is your site fast on mobile?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check3.subtitle">
+      <segment>
+        <source> Sur mobile, 1 seconde de plus = 7% de clients qui partent. Verification gratuite en 2 clics. </source>
+        <target> Sur mobile, 1 seconde de plus = 7% de clients qui partent. Verification gratuite en 2 clics. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check3.bullets.0">
+      <segment>
+        <source> Rendez-vous sur pagespeed.web.dev (outil Google gratuit) </source>
+        <target> Rendez-vous sur pagespeed.web.dev (outil Google gratuit) </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check3.bullets.1">
+      <segment>
+        <source> Collez l&apos;URL de votre page d&apos;accueil — le test prend 30 secondes </source>
+        <target> Collez l&apos;URL de votre page d&apos;accueil — le test prend 30 secondes </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check3.bullets.2">
+      <segment>
+        <source> Verifiez : score mobile &gt;= 70 (bon), entre 50-70 (ameliorable), &lt; 50 (urgence) </source>
+        <target> Verifiez : score mobile &gt;= 70 (bon), entre 50-70 (ameliorable), &lt; 50 (urgence) </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check3.bullets.3">
+      <segment>
+        <source> Les 3 causes frequentes : images trop lourdes, trop de plugins WordPress, pas de mise en cache </source>
+        <target> Les 3 causes frequentes : images trop lourdes, trop de plugins WordPress, pas de mise en cache </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check4.imageAlt">
+      <segment>
+        <source>Personne consultant un site web sur smartphone</source>
+        <target>Personne consultant un site web sur smartphone</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.check4.title">
+      <segment>
+        <source>Check 4 — Votre site est-il utilisable sur smartphone ?</source>
+        <target>Check 4 — Is your site usable on a smartphone?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check4.subtitle">
+      <segment>
+        <source> 60% des recherches locales se font sur mobile. Un site non-mobile = 60% de clients perdus avant meme de voir votre offre. </source>
+        <target> 60% des recherches locales se font sur mobile. Un site non-mobile = 60% de clients perdus avant meme de voir votre offre. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check4.bullets.0">
+      <segment>
+        <source> Ouvrez votre site sur votre propre smartphone </source>
+        <target> Ouvrez votre site sur votre propre smartphone </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check4.bullets.1">
+      <segment>
+        <source> Test simple : un visiteur peut-il commander/reserver/vous contacter sans zoomer ni deroulement horizontal ? </source>
+        <target> Test simple : un visiteur peut-il commander/reserver/vous contacter sans zoomer ni deroulement horizontal ? </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check4.bullets.2">
+      <segment>
+        <source> Bouton trop petit, texte qui deborde, formulaire inutilisable au pouce = red flag </source>
+        <target> Bouton trop petit, texte qui deborde, formulaire inutilisable au pouce = red flag </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check4.bullets.3">
+      <segment>
+        <source> Outil gratuit : search.google.com/test/mobile-friendly — verdict Google en 20 secondes </source>
+        <target> Outil gratuit : search.google.com/test/mobile-friendly — verdict Google en 20 secondes </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check5.imageAlt">
+      <segment>
+        <source>Page web ouverte affichant une FAQ structuree</source>
+        <target>Page web ouverte affichant une FAQ structuree</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.check5.title">
+      <segment>
+        <source>Check 5 — Avez-vous du contenu qui repond aux questions clients ?</source>
+        <target>Check 5 — Is your content rich enough?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check5.subtitle">
+      <segment>
+        <source> Les IA (ChatGPT, Perplexity, Google AI Overview) citent les sites qui repondent clairement. Pas les sites-brochure. </source>
+        <target> Les IA (ChatGPT, Perplexity, Google AI Overview) citent les sites qui repondent clairement. Pas les sites-brochure. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check5.bullets.0">
+      <segment>
+        <source> Listez les 10 questions que vos clients vous posent avant d&apos;acheter </source>
+        <target> Listez les 10 questions que vos clients vous posent avant d&apos;acheter </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check5.bullets.1">
+      <segment>
+        <source> Verifiez : chacune de ces questions a-t-elle une reponse claire (50-100 mots) sur votre site ? </source>
+        <target> Verifiez : chacune de ces questions a-t-elle une reponse claire (50-100 mots) sur votre site ? </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check5.bullets.2">
+      <segment>
+        <source> Si non, creez une page FAQ ou un blog avec 1 question = 1 page dediee </source>
+        <target> Si non, creez une page FAQ ou un blog avec 1 question = 1 page dediee </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.check5.bullets.3">
+      <segment>
+        <source> Bonus IA-friendly : utilisez des titres H2 au format question (&quot;Combien coute un audit SEO ?&quot;) </source>
+        <target> Bonus IA-friendly : utilisez des titres H2 au format question (&quot;Combien coute un audit SEO ?&quot;) </target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.pratique.title">
+      <segment>
+        <source>L&apos;ordre exact pour un audit efficace en 20 minutes</source>
+        <target>How to apply the method</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.outils.title">
+      <segment>
+        <source>Les 5 outils gratuits que j&apos;utilise vraiment</source>
+        <target>The 5 free tools you need</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.livrable.title">
+      <segment>
+        <source>Le livrable : votre rapport d&apos;audit sur une page</source>
+        <target>What you'll walk away with</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.livrable.description">
+      <segment>
+        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pre-rempli, format imprimable + Google Sheets dupliquable.</source>
+        <target>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pre-rempli, format imprimable + Google Sheets dupliquable.</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.livrable.ctaLabel">
+      <segment>
+        <source>Recuperer le template d&apos;audit</source>
+        <target>Get the toolkit</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.quandaider.imageAlt">
+      <segment>
+        <source>Reunion entre un client et un consultant SEO autour d&apos;un ordinateur</source>
+        <target>Reunion entre un client et un consultant SEO autour d&apos;un ordinateur</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.quandaider.title">
+      <segment>
+        <source>Quand un audit DIY n&apos;est PAS suffisant</source>
+        <target>When DIY isn't enough anymore</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.quandaider.subtitle">
+      <segment>
+        <source> Cette formation couvre 80% des cas. Les 20% restants demandent une analyse approfondie par un pro. </source>
+        <target> Cette formation couvre 80% des cas. Les 20% restants demandent une analyse approfondie par un pro. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.quandaider.bullets.0">
+      <segment>
+        <source> Chute brutale de trafic (&gt; 30% sur un mois) — il y a une cause technique ou penalite a identifier </source>
+        <target> Chute brutale de trafic (&gt; 30% sur un mois) — il y a une cause technique ou penalite a identifier </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.quandaider.bullets.1">
+      <segment>
+        <source> Migration de site prevue — un audit prealable evite de perdre 100% du trafic </source>
+        <target> Migration de site prevue — un audit prealable evite de perdre 100% du trafic </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.quandaider.bullets.2">
+      <segment>
+        <source> Site e-commerce avec &gt; 500 pages — la massification change les priorites d&apos;audit </source>
+        <target> Site e-commerce avec &gt; 500 pages — la massification change les priorites d&apos;audit </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.quandaider.bullets.3">
+      <segment>
+        <source> Concurrence agressive sur des mots-cles a fort CA — analyse concurrentielle approfondie necessaire </source>
+        <target> Concurrence agressive sur des mots-cles a fort CA — analyse concurrentielle approfondie necessaire </target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.faq.title">
+      <segment>
+        <source>Les questions qu&apos;on me pose le plus souvent</source>
+        <target>Questions I get asked the most</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.synthese.title">
+      <segment>
+        <source>Recevez le kit audit SEO DIY complet</source>
+        <target>Get the full DIY SEO audit toolkit</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.synthese.description">
+      <segment>
+        <source>Checklist imprimable (7 checks + colonne OK/A corriger) + rapport type Google Sheets a dupliquer + script &apos;briefer un developpeur SEO&apos; + alternative premium via Growth Audit (IA + humain).</source>
+        <target>Checklist imprimable (7 checks + colonne OK/A corriger) + rapport type Google Sheets a dupliquer + script &apos;briefer un developpeur SEO&apos; + alternative premium via Growth Audit (IA + humain).</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo-diy.synthese.ctaLabel">
+      <segment>
+        <source>Telecharger le toolkit</source>
+        <target>Download the toolkit</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.constat.stats.0.label">
+      <segment>
+        <source>des recherches Google ne donnent jamais un clic au dela du premier ecran</source>
+        <target>des recherches Google ne donnent jamais un clic au dela du premier ecran</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.constat.stats.0.source">
+      <segment>
+        <source>Sistrix, analyse 2025</source>
+        <target>Sistrix, analyse 2025</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.constat.stats.1.label">
+      <segment>
+        <source>des experiences en ligne commencent par une recherche — si vous n&apos;y etes pas, vous n&apos;existez pas</source>
+        <target>des experiences en ligne commencent par une recherche — si vous n&apos;y etes pas, vous n&apos;existez pas</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.constat.stats.1.source">
+      <segment>
+        <source>BrightEdge Research, 2024</source>
+        <target>BrightEdge Research, 2024</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.constat.stats.2.label">
+      <segment>
+        <source>suffisent pour reperer 80% des problemes SEO d&apos;un site de petite entreprise, avec les bons outils gratuits</source>
+        <target>suffisent pour reperer 80% des problemes SEO d&apos;un site de petite entreprise, avec les bons outils gratuits</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.constat.stats.2.source">
+      <segment>
+        <source>Benchmark asilidesign.fr, 2026</source>
+        <target>Benchmark asilidesign.fr, 2026</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item0.title">
+      <segment>
+        <source>Minutes 1-5 — Indexation</source>
+        <target>Minutes 1-5 — Indexation</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item0.description">
+      <segment>
+        <source>Commande &quot;site:&quot; + check Google Search Console. Zero indexation = priorite absolue.</source>
+        <target>Commande &quot;site:&quot; + check Google Search Console. Zero indexation = priorite absolue.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item1.title">
+      <segment>
+        <source>Minutes 6-10 — Titres + meta descriptions</source>
+        <target>Minutes 6-10 — Titres + meta descriptions</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item1.description">
+      <segment>
+        <source>Extension SEO Meta in 1 Click sur les 5 pages principales. Notez les titres pourris.</source>
+        <target>Extension SEO Meta in 1 Click sur les 5 pages principales. Notez les titres pourris.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item2.title">
+      <segment>
+        <source>Minutes 11-15 — Vitesse + mobile</source>
+        <target>Minutes 11-15 — Vitesse + mobile</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item2.description">
+      <segment>
+        <source>PageSpeed Insights + test mobile Google. Screenshot des scores.</source>
+        <target>PageSpeed Insights + test mobile Google. Screenshot des scores.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item3.title">
+      <segment>
+        <source>Minutes 16-20 — Contenu + FAQ</source>
+        <target>Minutes 16-20 — Contenu + FAQ</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.pratique.item3.description">
+      <segment>
+        <source>Listez 3 questions clients sans reponse sur votre site. Ce sont vos 3 prochains articles.</source>
+        <target>Listez 3 questions clients sans reponse sur votre site. Ce sont vos 3 prochains articles.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item0.title">
+      <segment>
+        <source>Google Search Console</source>
+        <target>Google Search Console</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item0.description">
+      <segment>
+        <source>Gratuit, officiel Google. Voir si vos pages sont indexees, les mots-cles qui vous amenent des clics, les erreurs techniques.</source>
+        <target>Gratuit, officiel Google. Voir si vos pages sont indexees, les mots-cles qui vous amenent des clics, les erreurs techniques.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item1.title">
+      <segment>
+        <source>PageSpeed Insights</source>
+        <target>PageSpeed Insights</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item1.description">
+      <segment>
+        <source>Gratuit, Google aussi. Score de vitesse mobile + desktop + recommandations concretes par ordre d&apos;importance.</source>
+        <target>Gratuit, Google aussi. Score de vitesse mobile + desktop + recommandations concretes par ordre d&apos;importance.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item2.title">
+      <segment>
+        <source>SEO Meta in 1 Click</source>
+        <target>SEO Meta in 1 Click</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item2.description">
+      <segment>
+        <source>Extension Chrome gratuite. Clic droit sur une page = vous voyez titre, meta description, H1, H2, images sans alt.</source>
+        <target>Extension Chrome gratuite. Clic droit sur une page = vous voyez titre, meta description, H1, H2, images sans alt.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item3.title">
+      <segment>
+        <source>Bing Webmaster Tools</source>
+        <target>Bing Webmaster Tools</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item3.description">
+      <segment>
+        <source>Gratuit. Moins utilise que Google, mais tres utile : ChatGPT Search s&apos;appuie sur Bing pour ses resultats web.</source>
+        <target>Gratuit. Moins utilise que Google, mais tres utile : ChatGPT Search s&apos;appuie sur Bing pour ses resultats web.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item4.title">
+      <segment>
+        <source>Ahrefs Webmaster Tools</source>
+        <target>Ahrefs Webmaster Tools</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.outils.item4.description">
+      <segment>
+        <source>Version gratuite reservee au proprietaire verifie. Voir les liens entrants vers votre site (backlinks) sans payer les 99 euro/mois d&apos;Ahrefs Pro.</source>
+        <target>Version gratuite reservee au proprietaire verifie. Voir les liens entrants vers votre site (backlinks) sans payer les 99 euro/mois d&apos;Ahrefs Pro.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item0.title">
+      <segment>
+        <source>Combien de temps avant de voir des resultats ?</source>
+        <target>Combien de temps avant de voir des resultats ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item0.description">
+      <segment>
+        <source>3 a 6 mois pour des effets visibles sur le trafic. Les correctifs techniques (indexation, vitesse) peuvent payer sous 2 semaines.</source>
+        <target>3 a 6 mois pour des effets visibles sur le trafic. Les correctifs techniques (indexation, vitesse) peuvent payer sous 2 semaines.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item1.title">
+      <segment>
+        <source>Dois-je refaire un audit chaque mois ?</source>
+        <target>Dois-je refaire un audit chaque mois ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item1.description">
+      <segment>
+        <source>Non. Un audit complet tous les 6 mois suffit. Entre-deux, un check rapide mensuel sur Google Search Console (20 min) detecte les problemes qui emergent.</source>
+        <target>Non. Un audit complet tous les 6 mois suffit. Entre-deux, un check rapide mensuel sur Google Search Console (20 min) detecte les problemes qui emergent.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item2.title">
+      <segment>
+        <source>Le SEO marche-t-il encore en 2026 avec les IA ?</source>
+        <target>Le SEO marche-t-il encore en 2026 avec les IA ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item2.description">
+      <segment>
+        <source>Oui, plus que jamais. Les IA (ChatGPT, Perplexity) citent les sites bien optimises. Le SEO 2026 = SEO classique + AEO (optimisation pour les moteurs de reponse).</source>
+        <target>Oui, plus que jamais. Les IA (ChatGPT, Perplexity) citent les sites bien optimises. Le SEO 2026 = SEO classique + AEO (optimisation pour les moteurs de reponse).</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item3.title">
+      <segment>
+        <source>Faut-il payer un outil comme Semrush ?</source>
+        <target>Faut-il payer un outil comme Semrush ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.audit-seo-diy.faq.item3.description">
+      <segment>
+        <source>Pour une petite entreprise, non. Les 5 outils gratuits couverts ici suffisent. Semrush/Ahrefs deviennent utiles au-dela de 10 k visites/mois.</source>
+        <target>Pour une petite entreprise, non. Les 5 outils gratuits couverts ici suffisent. Semrush/Ahrefs deviennent utiles au-dela de 10 k visites/mois.</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.accroche.title">
+      <segment>
+        <source>Automatiser avec l&apos;IA — sans coder, sans se perdre</source>
+        <target>Automate with AI — small businesses save 5h per week, on average</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.accroche.subtitle">
+      <segment>
+        <source>5 workflows testes qui font gagner 2 heures par jour aux entrepreneurs et TPE</source>
+        <target>Concrete workflows you can set up this week, no code, no jargon</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.accroche.imageAlt">
+      <segment>
+        <source>Entrepreneur concentre devant son ordinateur au milieu d&apos;une journee de travail</source>
+        <target>Entrepreneur configuring an AI automation on her laptop</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.constat.title">
+      <segment>
+        <source>Combien d&apos;heures perdez-vous chaque semaine sur des taches automatisables ?</source>
+        <target>The reality: AI is here, but most businesses use it like a fancy search engine</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.promesse.quote">
+      <segment>
+        <source>A la fin de ces 25 minutes, vous aurez identifie au moins un workflow concret que vous lancerez cette semaine. Pas besoin de coder, pas besoin d&apos;abonnement paye.</source>
+        <target>A la fin de ces 25 minutes, vous aurez identifie au moins un workflow concret que vous lancerez cette semaine. Pas besoin de coder, pas besoin d&apos;abonnement paye.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.promesse.quoteAuthor">
+      <segment>
+        <source>Tim Moyence — asilidesign.fr</source>
+        <target>Tim Moyence — asilidesign.fr</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.promesse.authorNote">
+      <segment>
+        <source>Les exemples viennent de ma pratique quotidienne et de celle de clients reels (coachs, photographes, artisans, commercants).</source>
+        <target>Les exemples viennent de ma pratique quotidienne et de celle de clients reels (coachs, photographes, artisans, commercants).</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w1.imageAlt">
+      <segment>
+        <source>Entrepreneur redigeant un devis sur ordinateur portable</source>
+        <target>Entrepreneur redigeant un devis sur ordinateur portable</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.w1.title">
+      <segment>
+        <source>Workflow 1 — Generer un devis en 3 minutes</source>
+        <target>Workflow 1 — Inbox triage</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w1.subtitle">
+      <segment>
+        <source> ChatGPT + un template Word. Aucun compte pro requis. </source>
+        <target> ChatGPT + un template Word. Aucun compte pro requis. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w1.bullets.0">
+      <segment>
+        <source> Vous dictez a ChatGPT : &quot;prestation X, duree Y, tarif horaire Z&quot; </source>
+        <target> Vous dictez a ChatGPT : &quot;prestation X, duree Y, tarif horaire Z&quot; </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w1.bullets.1">
+      <segment>
+        <source> L&apos;IA produit un texte formel + un tableau recapitulatif </source>
+        <target> L&apos;IA produit un texte formel + un tableau recapitulatif </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w1.bullets.2">
+      <segment>
+        <source> Vous copiez dans votre template Word/Google Docs existant </source>
+        <target> Vous copiez dans votre template Word/Google Docs existant </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w1.bullets.3">
+      <segment>
+        <source> Gain mesure : de 25 min a 3 min par devis </source>
+        <target> Gain mesure : de 25 min a 3 min par devis </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w2.imageAlt">
+      <segment>
+        <source>Personne triant des emails sur ordinateur portable</source>
+        <target>Personne triant des emails sur ordinateur portable</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.w2.title">
+      <segment>
+        <source>Workflow 2 — Reponses emails recurrentes</source>
+        <target>Workflow 2 — Meeting notes & action items</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w2.subtitle">
+      <segment>
+        <source> Gmail + une bibliotheque de reponses pre-ecrites par l&apos;IA. </source>
+        <target> Gmail + une bibliotheque de reponses pre-ecrites par l&apos;IA. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w2.bullets.0">
+      <segment>
+        <source> Vous listez vos 5 questions clients les plus frequentes </source>
+        <target> Vous listez vos 5 questions clients les plus frequentes </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w2.bullets.1">
+      <segment>
+        <source> ChatGPT genere une reponse type personnalisable pour chaque </source>
+        <target> ChatGPT genere une reponse type personnalisable pour chaque </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w2.bullets.2">
+      <segment>
+        <source> Vous les enregistrez comme &quot;reponses standard&quot; dans Gmail </source>
+        <target> Vous les enregistrez comme &quot;reponses standard&quot; dans Gmail </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w2.bullets.3">
+      <segment>
+        <source> Chaque email traite en 30 secondes au lieu de 5 minutes </source>
+        <target> Chaque email traite en 30 secondes au lieu de 5 minutes </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w3.imageAlt">
+      <segment>
+        <source>Smartphone affichant un calendrier de publications sur les reseaux sociaux</source>
+        <target>Smartphone affichant un calendrier de publications sur les reseaux sociaux</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.w3.title">
+      <segment>
+        <source>Workflow 3 — Publier sur les reseaux sans y penser</source>
+        <target>Workflow 3 — Content drafts at scale</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w3.subtitle">
+      <segment>
+        <source> Une seance de 30 min = un mois de contenu planifie. </source>
+        <target> Une seance de 30 min = un mois de contenu planifie. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w3.bullets.0">
+      <segment>
+        <source> Vous listez 4 themes de la semaine (une realisation, une astuce, un temoignage, un behind-the-scenes) </source>
+        <target> Vous listez 4 themes de la semaine (une realisation, une astuce, un temoignage, un behind-the-scenes) </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w3.bullets.1">
+      <segment>
+        <source> ChatGPT produit 4 textes + 4 idees d&apos;images </source>
+        <target> ChatGPT produit 4 textes + 4 idees d&apos;images </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w3.bullets.2">
+      <segment>
+        <source> Vous les programmez dans Buffer ou Metricool (gratuit jusqu&apos;a 3 reseaux) </source>
+        <target> Vous les programmez dans Buffer ou Metricool (gratuit jusqu&apos;a 3 reseaux) </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w3.bullets.3">
+      <segment>
+        <source> Publication automatique, vous reprenez la main pour repondre aux commentaires </source>
+        <target> Publication automatique, vous reprenez la main pour repondre aux commentaires </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w4.imageAlt">
+      <segment>
+        <source>Pile de factures papier a traiter sur un bureau</source>
+        <target>Pile de factures papier a traiter sur un bureau</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.w4.title">
+      <segment>
+        <source>Workflow 4 — Extraire les donnees des factures</source>
+        <target>Workflow 4 — Customer answers, faster</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w4.subtitle">
+      <segment>
+        <source> ChatGPT Vision : vous photographiez, l&apos;IA tape les lignes pour vous. </source>
+        <target> ChatGPT Vision : vous photographiez, l&apos;IA tape les lignes pour vous. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w4.bullets.0">
+      <segment>
+        <source> Vous glissez une photo de facture dans ChatGPT (version gratuite avec limite quotidienne) </source>
+        <target> Vous glissez une photo de facture dans ChatGPT (version gratuite avec limite quotidienne) </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w4.bullets.1">
+      <segment>
+        <source> L&apos;IA retourne un tableau avec montant HT, TVA, TTC, date, fournisseur </source>
+        <target> L&apos;IA retourne un tableau avec montant HT, TVA, TTC, date, fournisseur </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w4.bullets.2">
+      <segment>
+        <source> Copie-colle dans votre tableur / logiciel de compta </source>
+        <target> Copie-colle dans votre tableur / logiciel de compta </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w4.bullets.3">
+      <segment>
+        <source> 15 factures traitees en 10 minutes au lieu d&apos;une heure </source>
+        <target> 15 factures traitees en 10 minutes au lieu d&apos;une heure </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w5.imageAlt">
+      <segment>
+        <source>Tableau de veille avec articles et notes sur un mur de bureau</source>
+        <target>Tableau de veille avec articles et notes sur un mur de bureau</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.w5.title">
+      <segment>
+        <source>Workflow 5 — Veille hebdo automatique</source>
+        <target>Workflow 5 — Reporting on autopilot</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w5.subtitle">
+      <segment>
+        <source> Recevez chaque lundi un resume des nouveautes de votre secteur. </source>
+        <target> Recevez chaque lundi un resume des nouveautes de votre secteur. </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w5.bullets.0">
+      <segment>
+        <source> Vous definissez 3 sujets cles (ex : &quot;reglementation artisan BTP&quot;, &quot;nouvelles aides BPI&quot;) </source>
+        <target> Vous definissez 3 sujets cles (ex : &quot;reglementation artisan BTP&quot;, &quot;nouvelles aides BPI&quot;) </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w5.bullets.1">
+      <segment>
+        <source> Perplexity.ai fait la recherche web live et cite ses sources </source>
+        <target> Perplexity.ai fait la recherche web live et cite ses sources </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w5.bullets.2">
+      <segment>
+        <source> Vous enregistrez la conversation comme &quot;veille hebdo&quot; </source>
+        <target> Vous enregistrez la conversation comme &quot;veille hebdo&quot; </target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.w5.bullets.3">
+      <segment>
+        <source> 5 minutes le lundi = vous etes a jour sur toute la semaine </source>
+        <target> 5 minutes le lundi = vous etes a jour sur toute la semaine </target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.pratiquer.title">
+      <segment>
+        <source>Par ou commencer selon votre metier ?</source>
+        <target>Pick the workflows that fit your business</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.declencheur.title">
+      <segment>
+        <source>Quelle action concrete lancez-vous cette semaine ?</source>
+        <target>Where to start: the 3 levers that move the needle</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.declencheur.description">
+      <segment>
+        <source>PDF 12 pages avec captures d&apos;ecran par etape, prompts prets a copier-coller testes en conditions reelles, sequence email 5 jours (un workflow par jour) — repondez a n&apos;importe quel email, je lis tout sans bot.</source>
+        <target>PDF 12 pages avec captures d&apos;ecran par etape, prompts prets a copier-coller testes en conditions reelles, sequence email 5 jours (un workflow par jour) — repondez a n&apos;importe quel email, je lis tout sans bot.</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.declencheur.ctaLabel">
+      <segment>
+        <source>Recevoir le toolkit complet</source>
+        <target>Start now</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.erreurs.title">
+      <segment>
+        <source>Pourquoi certains workflows IA echouent : 5 erreurs evitables</source>
+        <target>Mistakes I see most often</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.headers.0">
+      <segment>
+        <source>Ce qui fonctionne</source>
+        <target>Ce qui fonctionne</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.headers.1">
+      <segment>
+        <source>A eviter au depart</source>
+        <target>A eviter au depart</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.faq.title">
+      <segment>
+        <source>3 questions qui reviennent</source>
+        <target>Questions I get asked the most</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.synthese.title">
+      <segment>
+        <source>La prochaine etape concrete</source>
+        <target>Get the AI automation playbook</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.synthese.description">
+      <segment>
+        <source>Aujourd&apos;hui : telecharger le toolkit + lire le workflow adapte a votre metier. Cette semaine : tester sur 1 tache reelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagne. Si ca marche : automatiser la 2e tache. Sinon : me repondre, on ajuste ensemble.</source>
+        <target>Aujourd&apos;hui : telecharger le toolkit + lire le workflow adapte a votre metier. Cette semaine : tester sur 1 tache reelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagne. Si ca marche : automatiser la 2e tache. Sinon : me repondre, on ajuste ensemble.</target>
+      </segment>
+    </unit>
+    <unit id="formations.automatiser-avec-ia.synthese.ctaLabel">
+      <segment>
+        <source>Telecharger le toolkit</source>
+        <target>Download the playbook</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.constat.stats.0.label">
+      <segment>
+        <source>par semaine en moyenne sur des taches automatisables (devis, emails, reseaux sociaux)</source>
+        <target>par semaine en moyenne sur des taches automatisables (devis, emails, reseaux sociaux)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.constat.stats.0.source">
+      <segment>
+        <source>Enquete BPI France / OpinionWay, 2025</source>
+        <target>Enquete BPI France / OpinionWay, 2025</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.constat.stats.1.label">
+      <segment>
+        <source>des dirigeants de TPE disent manquer de temps pour developper leur activite</source>
+        <target>des dirigeants de TPE disent manquer de temps pour developper leur activite</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.constat.stats.1.source">
+      <segment>
+        <source>CPME, barometre 2025</source>
+        <target>CPME, barometre 2025</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.constat.stats.2.label">
+      <segment>
+        <source>c&apos;est le budget IA necessaire pour demarrer — les 5 workflows montres tournent sur du gratuit</source>
+        <target>c&apos;est le budget IA necessaire pour demarrer — les 5 workflows montres tournent sur du gratuit</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.constat.stats.2.source">
+      <segment>
+        <source>Benchmark asilidesign.fr, 2026</source>
+        <target>Benchmark asilidesign.fr, 2026</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.0.title">
+      <segment>
+        <source>Photographe</source>
+        <target>Photographe</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.0.description">
+      <segment>
+        <source>Commencer par le workflow devis (W1). Chaque shooting a un cahier des charges similaire — l&apos;IA economise 20 min par demande client.</source>
+        <target>Commencer par le workflow devis (W1). Chaque shooting a un cahier des charges similaire — l&apos;IA economise 20 min par demande client.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.1.title">
+      <segment>
+        <source>Coach / Consultant</source>
+        <target>Coach / Consultant</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.1.description">
+      <segment>
+        <source>Workflow reseaux sociaux (W3). Capitaliser sur les notes de seances pour generer des posts authentiques sans y passer le week-end.</source>
+        <target>Workflow reseaux sociaux (W3). Capitaliser sur les notes de seances pour generer des posts authentiques sans y passer le week-end.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.2.title">
+      <segment>
+        <source>Artisan / BTP</source>
+        <target>Artisan / BTP</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.2.description">
+      <segment>
+        <source>Workflow factures (W4) + veille reglementaire (W5). Deux heures gagnees par semaine sur l&apos;administratif et les normes.</source>
+        <target>Workflow factures (W4) + veille reglementaire (W5). Deux heures gagnees par semaine sur l&apos;administratif et les normes.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.3.title">
+      <segment>
+        <source>Commerce de proximite</source>
+        <target>Commerce de proximite</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.3.description">
+      <segment>
+        <source>Workflow emails (W2) + reseaux (W3). Maintenir la relation clientele a frequence constante sans exploser le temps passe.</source>
+        <target>Workflow emails (W2) + reseaux (W3). Maintenir la relation clientele a frequence constante sans exploser le temps passe.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.4.title">
+      <segment>
+        <source>Conseil B2B</source>
+        <target>Conseil B2B</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.4.description">
+      <segment>
+        <source>Workflow devis (W1) + veille (W5). Reponse sous 24h aux appels d&apos;offres, veille pour nourrir les propositions.</source>
+        <target>Workflow devis (W1) + veille (W5). Reponse sous 24h aux appels d&apos;offres, veille pour nourrir les propositions.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.5.title">
+      <segment>
+        <source>Association / Solopreneur</source>
+        <target>Association / Solopreneur</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.pratiquer.items.5.description">
+      <segment>
+        <source>Tous les workflows en sequence : commencer par W2 (emails), le plus vite rentable. Puis W3, W1, W4, W5.</source>
+        <target>Tous les workflows en sequence : commencer par W2 (emails), le plus vite rentable. Puis W3, W1, W4, W5.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.faq.items.0.title">
+      <segment>
+        <source>Et si l&apos;IA se trompe ?</source>
+        <target>Et si l&apos;IA se trompe ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.faq.items.0.description">
+      <segment>
+        <source>Elle se trompe, c&apos;est une donnee. Chaque workflow contient une etape de relecture explicite. La regle : l&apos;IA accelere, vous validez.</source>
+        <target>Elle se trompe, c&apos;est une donnee. Chaque workflow contient une etape de relecture explicite. La regle : l&apos;IA accelere, vous validez.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.faq.items.1.title">
+      <segment>
+        <source>Mes donnees sont-elles reutilisees ?</source>
+        <target>Mes donnees sont-elles reutilisees ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.faq.items.1.description">
+      <segment>
+        <source>Oui par defaut. Le toolkit indique comment desactiver l&apos;entrainement sur vos echanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.</source>
+        <target>Oui par defaut. Le toolkit indique comment desactiver l&apos;entrainement sur vos echanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.faq.items.2.title">
+      <segment>
+        <source>Faut-il apprendre a coder ?</source>
+        <target>Faut-il apprendre a coder ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.faq.items.2.description">
+      <segment>
+        <source>Non. Zero ligne de code, zero API, zero webhook. Tout passe par des interfaces graphiques standards — si vous savez utiliser Word et Gmail, vous savez deja.</source>
+        <target>Non. Zero ligne de code, zero API, zero webhook. Tout passe par des interfaces graphiques standards — si vous savez utiliser Word et Gmail, vous savez deja.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.0.0">
+      <segment>
+        <source>Automatiser 1 tache a la fois, mesurer, puis en ajouter</source>
+        <target>Automatiser 1 tache a la fois, mesurer, puis en ajouter</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.1.0">
+      <segment>
+        <source>Relire systematiquement avant d&apos;envoyer au client</source>
+        <target>Relire systematiquement avant d&apos;envoyer au client</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.2.0">
+      <segment>
+        <source>Outils gratuits en phase de test (ChatGPT, Perplexity, Buffer free)</source>
+        <target>Outils gratuits en phase de test (ChatGPT, Perplexity, Buffer free)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.3.0">
+      <segment>
+        <source>Personnaliser l&apos;IA avec VOS exemples (3 emails, 3 posts)</source>
+        <target>Personnaliser l&apos;IA avec VOS exemples (3 emails, 3 posts)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.0.1">
+      <segment>
+        <source>Vouloir tout automatiser en une semaine — abandon garanti</source>
+        <target>Vouloir tout automatiser en une semaine — abandon garanti</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.1.1">
+      <segment>
+        <source>Confier des emails sensibles a l&apos;IA sans relecture</source>
+        <target>Confier des emails sensibles a l&apos;IA sans relecture</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.2.1">
+      <segment>
+        <source>Payer un abonnement avant d&apos;avoir valide le workflow</source>
+        <target>Payer un abonnement avant d&apos;avoir valide le workflow</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="formations.automatiser-avec-ia.erreurs.rows.3.1">
+      <segment>
+        <source>Accepter le ton robotique par defaut — on perd la personnalite</source>
+        <target>Accepter le ton robotique par defaut — on perd la personnalite</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.left">
+      <segment>
+        <source>ChatGPT (OpenAI)</source>
+        <target>ChatGPT (OpenAI)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.right">
+      <segment>
+        <source>Claude (Anthropic)</source>
+        <target>Claude (Anthropic)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.zapier.label">
+      <segment>
+        <source>Zapier</source>
+        <target>Zapier</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.make.label">
+      <segment>
+        <source>Make.com</source>
+        <target>Make.com</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.debutant.label">
+      <segment>
+        <source>Stack débutant — 0€/mois</source>
+        <target>Stack débutant — 0€/mois</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.avance.label">
+      <segment>
+        <source>Stack avancé — ~120€/mois</source>
+        <target>Stack avancé — ~120€/mois</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.cta.description">
+      <segment>
+        <source>Cheatsheet de décision (quel outil pour quelle tâche) + prompts prêts à copier adaptés à votre niveau + 3 workflows pas-à-pas (Zapier/Make) avec templates. Reçu en 30 secondes.</source>
+        <target>Cheatsheet de décision (quel outil pour quelle tâche) + prompts prêts à copier adaptés à votre niveau + 3 workflows pas-à-pas (Zapier/Make) avec templates. Reçu en 30 secondes.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.cta.ctaLabel">
+      <segment>
+        <source>Télécharger le toolkit</source>
+        <target>Télécharger le toolkit</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.cgpt.0">
+      <segment>
+        <source>Polyvalent, 900M users/sem, GPT Store</source>
+        <target>Polyvalent, 900M users/sem, GPT Store</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.cgpt.1">
+      <segment>
+        <source>Idéal pour brainstorm, code, analyse de données</source>
+        <target>Idéal pour brainstorm, code, analyse de données</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.cgpt.2">
+      <segment>
+        <source>Gratuit / 20$/mois (Plus)</source>
+        <target>Gratuit / 20$/mois (Plus)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.claude.0">
+      <segment>
+        <source>N°1 rédaction, 1M tokens de contexte</source>
+        <target>N°1 rédaction, 1M tokens de contexte</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.claude.1">
+      <segment>
+        <source>Idéal pour rédaction pro, contrats, docs longs</source>
+        <target>Idéal pour rédaction pro, contrats, docs longs</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.chat-produire.claude.2">
+      <segment>
+        <source>Gratuit / 20$/mois (Pro)</source>
+        <target>Gratuit / 20$/mois (Pro)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.zapier.0">
+      <segment>
+        <source>Difficulté : facile</source>
+        <target>Difficulté : facile</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.zapier.1">
+      <segment>
+        <source>Gratuit (100 tâches/mois)</source>
+        <target>Gratuit (100 tâches/mois)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.zapier.2">
+      <segment>
+        <source>Branchez deux apps en 5 min, ça tourne tout seul</source>
+        <target>Branchez deux apps en 5 min, ça tourne tout seul</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.make.0">
+      <segment>
+        <source>Difficulté : moyen</source>
+        <target>Difficulté : moyen</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.make.1">
+      <segment>
+        <source>9€/mois (10K opérations)</source>
+        <target>9€/mois (10K opérations)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.automatiser.make.2">
+      <segment>
+        <source>Plus flexible que Zapier, scénarios visuels complexes</source>
+        <target>Plus flexible que Zapier, scénarios visuels complexes</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.debutant.0">
+      <segment>
+        <source>ChatGPT gratuit + Canva gratuit + Gamma</source>
+        <target>ChatGPT gratuit + Canva gratuit + Gamma</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.debutant.1">
+      <segment>
+        <source>Zapier (100 tâches) + Brevo + NotebookLM</source>
+        <target>Zapier (100 tâches) + Brevo + NotebookLM</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.debutant.2">
+      <segment>
+        <source>Budget : 0€/mois — couvre 80% des besoins</source>
+        <target>Budget : 0€/mois — couvre 80% des besoins</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.avance.0">
+      <segment>
+        <source>Claude Pro (20$) + ChatGPT Plus (20$)</source>
+        <target>Claude Pro (20$) + ChatGPT Plus (20$)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.avance.1">
+      <segment>
+        <source>Make Pro (16€) + ElevenLabs (22$)</source>
+        <target>Make Pro (16€) + ElevenLabs (22$)</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="ia-solo.stack-budget.avance.2">
+      <segment>
+        <source>Fathom (19$) + Waalaxy (19€) — ~120€/mois</source>
+        <target>Fathom (19$) + Waalaxy (19€) — ~120€/mois</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqTitle">
+      <segment>
+        <source>Questions fréquentes sur mes services</source>
+        <target>Questions fréquentes sur mes services</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqDescription">
+      <segment>
+        <source>Les questions qui reviennent le plus souvent lors d&apos;un premier échange.</source>
+        <target>Les questions qui reviennent le plus souvent lors d&apos;un premier échange.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqQ1">
+      <segment>
+        <source>Combien coûte un site web sur mesure à Bordeaux ?</source>
+        <target>Combien coûte un site web sur mesure à Bordeaux ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqA1">
+      <segment>
+        <source>Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l&apos;objet d&apos;un devis personnalisé selon le périmètre, le rythme et la complexité.</source>
+        <target>Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l&apos;objet d&apos;un devis personnalisé selon le périmètre, le rythme et la complexité.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqQ2">
+      <segment>
+        <source>Quel est le délai pour créer un site web ?</source>
+        <target>Quel est le délai pour créer un site web ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqA2">
+      <segment>
+        <source>Les interventions ciblées se livrent en quelques jours. Les projets structurants prennent généralement 2 à 6 semaines selon la complexité, les itérations et les validations.</source>
+        <target>Les interventions ciblées se livrent en quelques jours. Les projets structurants prennent généralement 2 à 6 semaines selon la complexité, les itérations et les validations.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqQ3">
+      <segment>
+        <source>Proposez-vous un accompagnement après la livraison ?</source>
+        <target>Proposez-vous un accompagnement après la livraison ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqA3">
+      <segment>
+        <source>Oui, l&apos;accompagnement dans le temps est un engagement mensuel adapté à votre rythme. Il inclut évolutions, maintenance, conseils et ajustements au fil des usages réels.</source>
+        <target>Oui, l&apos;accompagnement dans le temps est un engagement mensuel adapté à votre rythme. Il inclut évolutions, maintenance, conseils et ajustements au fil des usages réels.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqQ4">
+      <segment>
+        <source>Travaillez-vous avec les TPE, PME et indépendants uniquement ?</source>
+        <target>Travaillez-vous avec les TPE, PME et indépendants uniquement ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqA4">
+      <segment>
+        <source>Je collabore principalement avec des indépendants, TPE et PME à Bordeaux et en France. L&apos;approche sobre et progressive est particulièrement adaptée aux structures qui veulent évoluer sans surcoût technique ni complexité inutile.</source>
+        <target>Je collabore principalement avec des indépendants, TPE et PME à Bordeaux et en France. L&apos;approche sobre et progressive est particulièrement adaptée aux structures qui veulent évoluer sans surcoût technique ni complexité inutile.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqQ5">
+      <segment>
+        <source>Quelles technologies utilisez-vous pour le développement web ?</source>
+        <target>Quelles technologies utilisez-vous pour le développement web ?</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="offerFaqA5">
+      <segment>
+        <source>Angular, NestJS, TypeScript, Node.js et PostgreSQL pour le cœur technique. Pour l&apos;IA, j&apos;utilise les LLMs (Claude, OpenAI) via des architectures RAG et des pipelines Langchain. Les choix sont toujours justifiés par l&apos;usage, pas par la mode.</source>
+        <target>Angular, NestJS, TypeScript, Node.js et PostgreSQL pour le cœur technique. Pour l&apos;IA, j&apos;utilise les LLMs (Claude, OpenAI) via des architectures RAG et des pipelines Langchain. Les choix sont toujours justifiés par l&apos;usage, pas par la mode.</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="navFormationsAutoTitle">
+      <segment>
+        <source>Automatiser avec l&apos;IA</source>
+        <target>Automatiser avec l&apos;IA</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="navFormationsAutoDesc">
+      <segment>
+        <source>5 workflows non-tech pour gagner 2h/semaine</source>
+        <target>5 workflows non-tech pour gagner 2h/semaine</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="navFormationsSeoTitle">
+      <segment>
+        <source>Audit SEO DIY</source>
+        <target>Audit SEO DIY</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="navFormationsSeoDesc">
+      <segment>
+        <source>7 checks en 20 min avec 5 outils gratuits</source>
+        <target>7 checks en 20 min avec 5 outils gratuits</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="navFormationsAllTitle">
+      <segment>
+        <source>Toutes les formations</source>
+        <target>Toutes les formations</target>
+      </segment>
+    </unit>
+      <!-- needs-translation -->
+    <unit id="navFormationsAllDesc">
+      <segment>
+        <source>Voir le catalogue complet</source>
+        <target>Voir le catalogue complet</target>
+      </segment>
+    </unit>
+    <unit id="slidePollError">
+      <segment>
+        <source> Impossible de charger le sondage. </source>
+        <target>Unable to load the poll at the moment.</target>
+      </segment>
+    </unit>
+    <unit id="slidePollLoading">
+      <segment>
+        <source>Chargement du sondage…</source>
+        <target>Loading…</target>
+      </segment>
+    </unit>
+    <unit id="slideQuizError">
+      <segment>
+        <source> Impossible de charger le quiz pour le moment. </source>
+        <target>Unable to load the quiz at the moment.</target>
+      </segment>
+    </unit>
+    <unit id="slideQuizCorrect">
+      <segment>
+        <source>Bonne réponse !</source>
+        <target>Correct answer!</target>
+      </segment>
+    </unit>
+    <unit id="slideQuizIncorrect">
+      <segment>
+        <source>Pas tout à fait. La bonne réponse est : <x id="INTERPOLATION" equiv-text="{{ q.options[q.correctIndex] }}"/></source>
+        <target>Not quite. The right answer is: …</target>
+      </segment>
+    </unit>
+    <unit id="slideQuizLoading">
+      <segment>
+        <source>Chargement…</source>
+        <target>Loading…</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionError">
+      <segment>
+        <source>Impossible de charger la question.</source>
+        <target>Unable to save your thought right now.</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionSave">
+      <segment>
+        <source> Garder cette réflexion </source>
+        <target>Keep this thought</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionSaved">
+      <segment>
+        <source> Réflexion enregistrée localement. </source>
+        <target>Saved locally.</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionLoading">
+      <segment>
+        <source>Chargement…</source>
+        <target>Loading…</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
