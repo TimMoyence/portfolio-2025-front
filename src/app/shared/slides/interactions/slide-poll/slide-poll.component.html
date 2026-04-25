@@ -1,33 +1,25 @@
-<div class="slide-poll">
-  @if (error()) {
-    <p class="slide-poll__error" i18n="@@slidePollError">
-      Impossible de charger le sondage.
-    </p>
-  } @else {
-    @if (poll(); as p) {
-      <h3 class="slide-poll__question">{{ p.question }}</h3>
-      <div class="slide-poll__options">
-        @for (opt of p.options; track opt; let i = $index) {
-          <button
-            type="button"
-            class="slide-poll__option"
-            [disabled]="hasVoted()"
-            (click)="vote(i)"
-          >
-            <span class="slide-poll__label">{{ opt }}</span>
-            @if (hasVoted()) {
-              <span class="slide-poll__pct">{{ percent(i) }}%</span>
-              <span
-                class="slide-poll__bar"
-                [attr.data-index]="i"
-                [style.width.%]="percent(i)"
-              ></span>
-            }
-          </button>
-        }
-      </div>
-    } @else {
-      <p i18n="@@slidePollLoading">Chargement du sondage…</p>
-    }
-  }
-</div>
+@if (poll(); as p) {
+  <div class="slide-poll">
+    <h3 class="slide-poll__question">{{ p.question }}</h3>
+    <div class="slide-poll__options">
+      @for (opt of p.options; track opt; let i = $index) {
+        <button
+          type="button"
+          class="slide-poll__option"
+          [disabled]="hasVoted()"
+          (click)="vote(i)"
+        >
+          <span class="slide-poll__label">{{ opt }}</span>
+          @if (hasVoted()) {
+            <span class="slide-poll__pct">{{ percent(i) }}%</span>
+            <span
+              class="slide-poll__bar"
+              [attr.data-index]="i"
+              [style.width.%]="percent(i)"
+            ></span>
+          }
+        </button>
+      }
+    </div>
+  </div>
+}

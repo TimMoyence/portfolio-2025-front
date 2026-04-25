@@ -1,6 +1,5 @@
 import { NgTemplateOutlet, isPlatformBrowser } from "@angular/common";
 import {
-  AfterContentInit,
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +17,7 @@ import {
 import { FullscreenAdapter } from "./fullscreen.adapter";
 import { SlideComponent } from "./slide.component";
 import { SlideDeckService, type SlideDeckMode } from "./slide-deck.service";
-import { SLIDE_DECK_CONFIG } from "./slide-deck.tokens";
+import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from "./slide-deck.tokens";
 
 /**
  * Wrapper principal du moteur de presentation. Gere le mode scroll/fullscreen,
@@ -40,8 +39,9 @@ import { SLIDE_DECK_CONFIG } from "./slide-deck.tokens";
   styleUrl: "./slide-deck.component.scss",
   imports: [NgTemplateOutlet],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [{ provide: SLIDE_DECK_HOST, useValue: true }],
 })
-export class SlideDeckComponent implements AfterContentInit {
+export class SlideDeckComponent {
   readonly mode = input<SlideDeckMode>("scroll");
   readonly allowFullscreen = input<boolean>(true);
   readonly theme = input<string>("default");
@@ -76,15 +76,6 @@ export class SlideDeckComponent implements AfterContentInit {
       return false;
     });
   });
-
-  ngAfterContentInit(): void {
-    // Empeche le double rendu : la slide standalone se rend via son
-    // template interne, mais des qu'elle est hostee par un deck, on
-    // delegue le rendu au deck (qui choisit scroll vs swiper-slide).
-    this.slides().forEach((slide) => {
-      slide.hostedByDeck = true;
-    });
-  }
 
   constructor() {
     // Initialise le mode depuis l'input

@@ -10,6 +10,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { SlideDeckService } from "./slide-deck.service";
+import { SLIDE_DECK_HOST } from "./slide-deck.tokens";
 
 /**
  * Visibilite d'une slide selon le mode courant du deck.
@@ -27,8 +28,9 @@ export type SlideVisibility = "both" | "scroll-only" | "present-only";
  * pour que `SlideDeckComponent` puisse le projeter dans un
  * `<swiper-slide>` direct en mode fullscreen — pre-requis Swiper Element.
  *
- * En usage standalone (sans deck parent), la slide rend son contenu
- * directement via le bloc `@if (!hostedByDeck)` final.
+ * Detection d'un deck parent via le token `SLIDE_DECK_HOST` (DI). Si
+ * present, la slide ne rend rien d'elle-meme (le deck rend les templates).
+ * Sinon, rendu standalone via `*ngTemplateOutlet`.
  */
 @Component({
   selector: "app-slide",
@@ -78,11 +80,16 @@ export class SlideComponent implements OnInit {
     viewChild.required<TemplateRef<unknown>>("slideContent");
 
   /**
-   * Bascule a `true` par `SlideDeckComponent.ngAfterContentInit` lorsque
-   * la slide est imbriquee dans un deck. Empeche le double rendu (slide
-   * standalone + slide projetee dans le deck).
+   * Resolu une seule fois a la construction via DI : `true` si un
+   * `SlideDeckComponent` ancetre fournit le token, `false` sinon.
+   * Lecture stable (pas de change detection requise).
    */
-  hostedByDeck = false;
+  protected readonly hostedByDeck = inject(SLIDE_DECK_HOST, {
+    optional: true,
+    skipSelf: true,
+  })
+    ? true
+    : false;
 
   private readonly deck = inject(SlideDeckService);
   private readonly destroyRef = inject(DestroyRef);

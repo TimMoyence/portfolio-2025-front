@@ -99,7 +99,7 @@ describe("SlideQuizComponent", () => {
     expect(feedback.classList).toContain("is-incorrect");
   }));
 
-  it("affiche un message d'erreur si le port échoue", fakeAsync(() => {
+  it("ne rend rien si le port échoue (degradation gracieuse)", fakeAsync(() => {
     (portStub.getInteractions as jasmine.Spy).and.returnValue(
       throwError(() => new Error("network")),
     );
@@ -107,7 +107,7 @@ describe("SlideQuizComponent", () => {
     fixture.detectChanges();
     tick();
     fixture.detectChanges();
-    const error = fixture.nativeElement.querySelector(".slide-quiz__error");
-    expect(error).toBeTruthy();
+    const root = fixture.nativeElement.querySelector(".slide-quiz");
+    expect(root).toBeNull();
   }));
 });
