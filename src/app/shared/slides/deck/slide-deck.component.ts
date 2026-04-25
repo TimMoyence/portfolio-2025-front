@@ -1,5 +1,6 @@
 import { NgTemplateOutlet, isPlatformBrowser } from "@angular/common";
 import {
+  AfterContentInit,
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
@@ -7,6 +8,7 @@ import {
   HostListener,
   PLATFORM_ID,
   computed,
+  contentChildren,
   effect,
   inject,
   input,
@@ -14,13 +16,21 @@ import {
   viewChild,
 } from "@angular/core";
 import { FullscreenAdapter } from "./fullscreen.adapter";
+import { SlideComponent } from "./slide.component";
 import { SlideDeckService, type SlideDeckMode } from "./slide-deck.service";
 import { SLIDE_DECK_CONFIG } from "./slide-deck.tokens";
 
 /**
- * Wrapper principal du moteur de présentation. Gère le mode scroll/fullscreen,
- * la navigation clavier (F, flèches, espace, échap), et émet slideChanged.
- * Mode scroll : CSS scroll-snap natif. Mode fullscreen : Swiper Element lazy.
+ * Wrapper principal du moteur de presentation. Gere le mode scroll/fullscreen,
+ * la navigation clavier (F, fleches, espace, echap), et emet `slideChanged`.
+ *
+ * Mode scroll : CSS scroll-snap natif, slides rendues directement via
+ * leur `TemplateRef`. Mode fullscreen : Swiper Element wrappe chaque slide
+ * dans un `<swiper-slide>` direct (pre-requis swiper.js).
+ *
+ * Resync sur sortie native du fullscreen (Esc, F11) via
+ * `document:fullscreenchange` — sinon le deck restait en mode `fullscreen`
+ * affichant Swiper alors que l'utilisateur etait revenu en page normale.
  */
 @Component({
   selector: "app-slide-deck",
@@ -31,13 +41,14 @@ import { SLIDE_DECK_CONFIG } from "./slide-deck.tokens";
   imports: [NgTemplateOutlet],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class SlideDeckComponent {
+export class SlideDeckComponent implements AfterContentInit {
   readonly mode = input<SlideDeckMode>("scroll");
   readonly allowFullscreen = input<boolean>(true);
   readonly theme = input<string>("default");
   readonly slideChanged = output<{ id: string; index: number }>();
 
   readonly deckRef = viewChild.required<ElementRef<HTMLElement>>("deckRoot");
+  readonly slides = contentChildren(SlideComponent);
 
   protected readonly service = inject(SlideDeckService);
   protected readonly fullscreen = inject(FullscreenAdapter);
@@ -48,13 +59,40 @@ export class SlideDeckComponent {
     () => `slide-deck mode-${this.service.mode()} theme-${this.theme()}`,
   );
 
+  /**
+   * Slides effectivement rendues selon le mode courant. Filtre via
+   * l'input `visibility` de `SlideComponent` :
+   * - `both` : toujours visible.
+   * - `scroll-only` : masque en mode fullscreen.
+   * - `present-only` : masque en mode scroll.
+   */
+  protected readonly visibleSlides = computed(() => {
+    const m = this.service.mode();
+    return this.slides().filter((slide) => {
+      const v = slide.visibility();
+      if (v === "both") return true;
+      if (m === "scroll" && v === "scroll-only") return true;
+      if (m === "fullscreen" && v === "present-only") return true;
+      return false;
+    });
+  });
+
+  ngAfterContentInit(): void {
+    // Empeche le double rendu : la slide standalone se rend via son
+    // template interne, mais des qu'elle est hostee par un deck, on
+    // delegue le rendu au deck (qui choisit scroll vs swiper-slide).
+    this.slides().forEach((slide) => {
+      slide.hostedByDeck = true;
+    });
+  }
+
   constructor() {
     // Initialise le mode depuis l'input
     effect(() => {
       this.service.setMode(this.mode());
     });
 
-    // Émet slideChanged dès qu'une slide devient courante
+    // Emet slideChanged des qu'une slide devient courante
     effect(() => {
       const id = this.service.current();
       const idx = this.service.currentIndex();
@@ -88,6 +126,26 @@ export class SlideDeckComponent {
     await this.fullscreen.loadSwiperElement();
     await enterPromise;
     this.service.setMode("fullscreen");
+  }
+
+  /**
+   * Resynchronise le mode quand le navigateur sort du fullscreen sans
+   * passer par `toggleFullscreen()` — typiquement via la touche Esc ou
+   * F11. Sans ca, on restait en `mode === "fullscreen"` avec Swiper
+   * actif alors que la page etait revenue en mode normal.
+   */
+  @HostListener("document:fullscreenchange")
+  @HostListener("document:webkitfullscreenchange")
+  protected onFullscreenChange(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    if (
+      document.fullscreenElement === null &&
+      this.service.mode() === "fullscreen"
+    ) {
+      this.service.setMode("scroll");
+    }
   }
 
   @HostListener("document:keydown", ["$event"])

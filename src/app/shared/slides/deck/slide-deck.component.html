@@ -1,6 +1,4 @@
 <div #deckRoot [class]="cssClasses()" tabindex="0">
-  <ng-template #slidesContent><ng-content /></ng-template>
-
   @if (service.mode() === "fullscreen") {
     <swiper-container
       navigation="true"
@@ -8,10 +6,16 @@
       pagination="true"
       [attr.initial-slide]="service.currentIndex()"
     >
-      <ng-container *ngTemplateOutlet="slidesContent" />
+      @for (slide of visibleSlides(); track slide.id()) {
+        <swiper-slide>
+          <ng-container *ngTemplateOutlet="slide.contentTemplate()" />
+        </swiper-slide>
+      }
     </swiper-container>
   } @else {
-    <ng-container *ngTemplateOutlet="slidesContent" />
+    @for (slide of visibleSlides(); track slide.id()) {
+      <ng-container *ngTemplateOutlet="slide.contentTemplate()" />
+    }
   }
 
   @if (allowFullscreen()) {
@@ -32,6 +36,6 @@
   }
 
   <div class="slide-deck-progress" aria-hidden="true">
-    <span>{{ service.currentIndex() + 1 }} / {{ service.total() }}</span>
+    <span>{{ service.currentIndex() + 1 }} / {{ visibleSlides().length }}</span>
   </div>
 </div>
