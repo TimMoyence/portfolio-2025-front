@@ -1,0 +1,9 @@
+<div class="slide-quote">
+  <blockquote>«&nbsp;{{ quote() }}&nbsp;»</blockquote>
+  @if (author()) {
+    <div class="slide-quote__author">{{ author() }}</div>
+  }
+  @if (role()) {
+    <div class="slide-quote__role">{{ role() }}</div>
+  }
+</div>
