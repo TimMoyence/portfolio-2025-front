@@ -1,0 +1,26 @@
+<div class="slide-grid">
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+  <div class="slide-grid__grid">
+    @for (item of items(); track item.title) {
+      @if (item.href) {
+        <a class="slide-grid__card" [href]="item.href">
+          @if (item.icon) {
+            <div class="slide-grid__icon">{{ item.icon }}</div>
+          }
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </a>
+      } @else {
+        <div class="slide-grid__card">
+          @if (item.icon) {
+            <div class="slide-grid__icon">{{ item.icon }}</div>
+          }
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      }
+    }
+  </div>
+</div>
