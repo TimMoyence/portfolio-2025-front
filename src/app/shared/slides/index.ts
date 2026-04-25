@@ -17,7 +17,11 @@ export {
   type SlideStat,
 } from "./layouts/slide-stats/slide-stats.component";
 export { SlideQuoteComponent } from "./layouts/slide-quote/slide-quote.component";
-export { SlideComparisonComponent } from "./layouts/slide-comparison/slide-comparison.component";
+export {
+  SlideComparisonComponent,
+  type ComparisonColumn,
+  type ComparisonTone,
+} from "./layouts/slide-comparison/slide-comparison.component";
 export {
   SlideGridComponent,
   type SlideGridItem,
