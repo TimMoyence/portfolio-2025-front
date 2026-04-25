@@ -1,0 +1,33 @@
+<div class="slide-video">
+  <div class="slide-video__media">
+    @if (type() === "native") {
+      <video
+        [src]="src()"
+        [poster]="poster() || null"
+        [autoplay]="autoplay()"
+        controls
+        playsinline
+        preload="metadata"
+      ></video>
+    } @else {
+      <iframe
+        [src]="safeIframeSrc()"
+        title="Vidéo intégrée"
+        frameborder="0"
+        allow="
+          accelerometer;
+          autoplay;
+          clipboard-write;
+          encrypted-media;
+          gyroscope;
+          picture-in-picture;
+        "
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    }
+  </div>
+  @if (caption()) {
+    <p class="slide-video__caption">{{ caption() }}</p>
+  }
+</div>

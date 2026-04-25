@@ -1,0 +1,35 @@
+.slide-video {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+.slide-video__media {
+  width: 100%;
+  max-width: 1200px;
+  aspect-ratio: 16 / 9;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+
+  video,
+  iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+.slide-video__caption {
+  font-size: 1rem;
+  color: var(--text-muted, #4b5563);
+  text-align: center;
+  max-width: 60rem;
+  margin: 0;
+}
