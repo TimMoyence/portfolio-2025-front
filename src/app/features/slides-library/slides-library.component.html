@@ -1,0 +1,102 @@
+<app-slide-deck mode="scroll" [allowFullscreen]="true" theme="library">
+  <app-slide id="hero">
+    <app-slide-hero
+      title="Slides Library"
+      subtitle="Catalogue interne — non indexe"
+      bgImage="/images/slides-library-hero.webp"
+      bgImageAlt="Bibliotheque de composants slide"
+    />
+  </app-slide>
+
+  <app-slide id="image-left">
+    <app-slide-image-left
+      image="/images/sample-left.webp"
+      imageAlt="Image demo gauche"
+      title="slide-image-left"
+    >
+      <p>Layout 50/50 image a gauche, contenu a droite.</p>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="image-right">
+    <app-slide-image-right
+      image="/images/sample-right.webp"
+      imageAlt="Image demo droite"
+      title="slide-image-right"
+    >
+      <p>Layout 50/50 contenu a gauche, image a droite.</p>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="video">
+    <app-slide-video
+      src="/videos/sample.mp4"
+      poster="/images/sample-poster.webp"
+      caption="slide-video : demonstration native"
+    />
+  </app-slide>
+
+  <app-slide id="stats">
+    <app-slide-stats
+      title="slide-stats"
+      [stats]="[
+        { value: '3', label: 'layouts', source: 'lib' },
+        { value: '9', label: 'composants slides' },
+        { value: '∞', label: 'compositions possibles' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="quote">
+    <app-slide-quote
+      quote="La meilleure architecture est celle que tu peux composer."
+      author="Auteur fictif"
+      role="Slides Library"
+    />
+  </app-slide>
+
+  <app-slide id="comparison">
+    <app-slide-comparison
+      title="slide-comparison"
+      leftLabel="Avant"
+      rightLabel="Apres"
+      [leftItems]="['data.ts', 'registry', 'page-generic']"
+      [rightItems]="['composants', 'composition', 'flexibilite']"
+    />
+  </app-slide>
+
+  <app-slide id="grid">
+    <app-slide-grid
+      title="slide-grid"
+      [items]="[
+        { title: 'Layout', description: 'Une carte par item' },
+        { title: 'Responsive', description: 'auto-fit minmax' },
+        { title: 'Lien optionnel', description: 'href facultatif' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="quiz">
+    <app-slide-quiz slug="ia-solopreneurs" interactionId="demo-quiz" />
+  </app-slide>
+
+  <app-slide id="poll">
+    <app-slide-poll slug="ia-solopreneurs" interactionId="demo-poll" />
+  </app-slide>
+
+  <app-slide id="reflection">
+    <app-slide-reflection
+      slug="ia-solopreneurs"
+      interactionId="demo-reflection"
+    />
+  </app-slide>
+
+  <app-slide id="cta">
+    <app-slide-cta
+      title="Pret a composer ?"
+      description="Importe les composants partages et compose ta presentation."
+      ctaLabel="Voir le code"
+      ctaHref="https://github.com/"
+    />
+  </app-slide>
+</app-slide-deck>

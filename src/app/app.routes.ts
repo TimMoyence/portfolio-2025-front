@@ -323,6 +323,17 @@ export const routes: Routes = [
   // avec `getPrerenderParams` + i18n (angular-cli#29587).
   ...buildFormationRoutes(),
   {
+    path: "slides/library",
+    loadComponent: () =>
+      import("./features/slides-library/slides-library.component").then(
+        (m) => m.SlidesLibraryComponent,
+      ),
+    data: {
+      seoKey: "slides-library",
+      robots: "noindex, nofollow",
+    },
+  },
+  {
     path: "**",
     loadComponent: () =>
       import("./features/not-found/not-found.component").then(
