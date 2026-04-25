@@ -21,6 +21,26 @@
   &.mode-fullscreen {
     overflow: hidden;
     height: 100vh;
+
+    swiper-container {
+      width: 100%;
+      height: 100%;
+      // Theme Swiper aligne sur le DS (boutons nav, pagination, ombres)
+      --swiper-theme-color: var(--accent, #4fb3a2);
+      --swiper-navigation-color: var(--accent, #4fb3a2);
+      --swiper-pagination-color: var(--accent, #4fb3a2);
+      --swiper-navigation-size: 28px;
+      --swiper-pagination-bullet-inactive-color: var(--text-muted, #54524d);
+      --swiper-pagination-bullet-inactive-opacity: 0.35;
+    }
+
+    swiper-slide {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      background: var(--card-bg, #ffffff);
+      overflow-y: auto;
+    }
   }
 }
 
