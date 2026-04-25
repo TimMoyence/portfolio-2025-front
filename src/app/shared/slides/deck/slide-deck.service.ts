@@ -43,19 +43,36 @@ export class SlideDeckService {
   }
 
   next(): void {
-    const idx = this.currentIndex();
-    if (idx < 0 || idx >= this.slides().length - 1) {
+    const list = this.slides();
+    if (list.length === 0) {
       return;
     }
-    this.currentId.set(this.slides()[idx + 1]);
+    const idx = this.currentIndex();
+    if (idx < 0) {
+      // Pas de slide courante : démarre sur la première
+      this.currentId.set(list[0]);
+      return;
+    }
+    if (idx >= list.length - 1) {
+      return;
+    }
+    this.currentId.set(list[idx + 1]);
   }
 
   previous(): void {
+    const list = this.slides();
+    if (list.length === 0) {
+      return;
+    }
     const idx = this.currentIndex();
+    if (idx < 0) {
+      this.currentId.set(list[0]);
+      return;
+    }
     if (idx <= 0) {
       return;
     }
-    this.currentId.set(this.slides()[idx - 1]);
+    this.currentId.set(list[idx - 1]);
   }
 
   setMode(mode: SlideDeckMode): void {

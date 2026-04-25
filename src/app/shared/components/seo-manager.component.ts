@@ -84,7 +84,7 @@ export class SeoManagerComponent {
         }
 
         // Default SEO config if none provided in route data
-        this.setDefaultSeo(currentUrl);
+        this.setDefaultSeo(currentUrl, data);
       });
   }
 
@@ -147,7 +147,10 @@ export class SeoManagerComponent {
     });
   }
 
-  private setDefaultSeo(currentUrl: string): void {
+  private setDefaultSeo(
+    currentUrl: string,
+    data: Record<string, unknown> = {},
+  ): void {
     const baseUrl = this.resolveBaseUrl();
     const canonicalState = this.resolveCanonicalState(currentUrl);
     const canonicalUrl = this.buildAbsoluteUrl(
@@ -188,7 +191,10 @@ export class SeoManagerComponent {
       ],
       ogImage: `${baseUrl}/assets/images/logo.webp`,
       twitterCard: "summary_large_image",
-      robots: "index, follow",
+      robots:
+        typeof data["robots"] === "string"
+          ? (data["robots"] as string)
+          : "index, follow",
       canonicalUrl,
       ogUrl: canonicalUrl,
       hreflangs,

@@ -60,6 +60,17 @@ export class SlideDeckComponent {
       const idx = this.service.currentIndex();
       if (id !== null && idx >= 0) {
         this.slideChanged.emit({ id, index: idx });
+        // Sync hash url pour deeplink + navigation clavier (skip SSR)
+        if (isPlatformBrowser(this.platformId)) {
+          const url = new URL(window.location.href);
+          if (url.hash !== `#${id}`) {
+            history.replaceState(
+              null,
+              "",
+              `${url.pathname}${url.search}#${id}`,
+            );
+          }
+        }
       }
     });
   }
