@@ -9,9 +9,14 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { catchError, of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
+import {
+  flattenInteractions,
+  type FlatInteraction,
+} from "../interactions.util";
 
 interface QuizInteraction {
-  id: string;
+  id?: string;
+  slideId?: string;
   type: "quiz";
   question: string;
   options: string[];
@@ -19,8 +24,9 @@ interface QuizInteraction {
 }
 
 /**
- * Affiche un quiz interactif chargé depuis PRESENTATION_PORT.
- * Le slug identifie la présentation, interactionId la question.
+ * Affiche un quiz interactif charge depuis `PRESENTATION_PORT`.
+ * Le `slug` identifie la presentation, `interactionId` la question
+ * (matche soit le `slideId` portant l'interaction, soit l'`id` legacy).
  */
 @Component({
   selector: "app-slide-quiz",
@@ -58,24 +64,21 @@ export class SlideQuizComponent {
   }
 
   private load(): void {
-    (
-      this.port.getInteractions(
-        this.slug(),
-      ) as unknown as import("rxjs").Observable<QuizInteraction[]>
-    )
+    flattenInteractions(this.port.getInteractions(this.slug()))
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(() => {
           this.error.set(true);
-          return of([] as QuizInteraction[]);
+          return of([] as FlatInteraction[]);
         }),
       )
       .subscribe((list) => {
+        const target = this.interactionId();
         const found = list.find(
-          (i) => i.id === this.interactionId() && i.type === "quiz",
+          (i) => i.type === "quiz" && (i.id === target || i.slideId === target),
         );
         if (found) {
-          this.quiz.set(found);
+          this.quiz.set(found as unknown as QuizInteraction);
         }
       });
   }

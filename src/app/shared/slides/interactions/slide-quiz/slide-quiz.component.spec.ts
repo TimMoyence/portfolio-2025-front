@@ -20,15 +20,21 @@ describe("SlideQuizComponent", () => {
   beforeEach(() => {
     portStub = {
       getInteractions: jasmine.createSpy("getInteractions").and.returnValue(
-        of([
-          {
-            id: "quiz-intro",
-            type: "quiz",
-            question: "Quel est le premier réflexe IA ?",
-            options: ["Délégation", "Automatisation", "Génération"],
-            correctIndex: 1,
+        of({
+          slug: "ia-solopreneurs",
+          interactions: {
+            "quiz-intro": {
+              scroll: [
+                {
+                  type: "quiz",
+                  question: "Quel est le premier réflexe IA ?",
+                  options: ["Délégation", "Automatisation", "Génération"],
+                  correctIndex: 1,
+                },
+              ],
+            },
           },
-        ]),
+        }),
       ),
     } as unknown as PresentationPort;
 

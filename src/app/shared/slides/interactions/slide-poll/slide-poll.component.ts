@@ -8,11 +8,16 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, of, type Observable } from "rxjs";
+import { catchError, of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
+import {
+  flattenInteractions,
+  type FlatInteraction,
+} from "../interactions.util";
 
 interface PollInteraction {
-  id: string;
+  id?: string;
+  slideId?: string;
   type: "poll";
   question: string;
   options: string[];
@@ -20,7 +25,8 @@ interface PollInteraction {
 
 /**
  * Affiche un sondage interactif avec vote local et barres de pourcentage.
- * Charge la définition depuis PRESENTATION_PORT par slug + interactionId.
+ * Charge la definition depuis `PRESENTATION_PORT` par `slug` + `interactionId`
+ * (matche soit le `slideId` portant l'interaction, soit l'`id` legacy).
  */
 @Component({
   selector: "app-slide-poll",
@@ -66,24 +72,21 @@ export class SlidePollComponent {
   }
 
   private load(): void {
-    (
-      this.port.getInteractions(this.slug()) as unknown as Observable<
-        PollInteraction[]
-      >
-    )
+    flattenInteractions(this.port.getInteractions(this.slug()))
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(() => {
           this.error.set(true);
-          return of([] as PollInteraction[]);
+          return of([] as FlatInteraction[]);
         }),
       )
       .subscribe((list) => {
+        const target = this.interactionId();
         const found = list.find(
-          (i) => i.id === this.interactionId() && i.type === "poll",
+          (i) => i.type === "poll" && (i.id === target || i.slideId === target),
         );
         if (found) {
-          this.poll.set(found);
+          this.poll.set(found as unknown as PollInteraction);
         }
       });
   }

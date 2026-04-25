@@ -15,14 +15,20 @@ describe("SlidePollComponent", () => {
   beforeEach(() => {
     const portStub = {
       getInteractions: () =>
-        of([
-          {
-            id: "poll-1",
-            type: "poll",
-            question: "Quel outil utilises-tu le plus ?",
-            options: ["ChatGPT", "Claude", "Gemini"],
+        of({
+          slug: "ia-solopreneurs",
+          interactions: {
+            "poll-1": {
+              present: [
+                {
+                  type: "poll",
+                  question: "Quel outil utilises-tu le plus ?",
+                  options: ["ChatGPT", "Claude", "Gemini"],
+                },
+              ],
+            },
           },
-        ]),
+        }),
     };
     TestBed.configureTestingModule({
       imports: [HostComponent],

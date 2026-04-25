@@ -17,14 +17,20 @@ describe("SlideReflectionComponent", () => {
   beforeEach(() => {
     const portStub = {
       getInteractions: () =>
-        of([
-          {
-            id: "reflect-1",
-            type: "reflection",
-            prompt: "Quelle tâche aimerais-tu déléguer à une IA ?",
-            placeholder: "Ex: relances email",
+        of({
+          slug: "ia-solopreneurs",
+          interactions: {
+            "reflect-1": {
+              scroll: [
+                {
+                  type: "reflection",
+                  question: "Quelle tâche aimerais-tu déléguer à une IA ?",
+                  placeholder: "Ex: relances email",
+                },
+              ],
+            },
           },
-        ]),
+        }),
     };
     TestBed.configureTestingModule({
       imports: [HostComponent],

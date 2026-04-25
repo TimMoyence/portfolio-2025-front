@@ -8,19 +8,26 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, of, type Observable } from "rxjs";
+import { catchError, of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
+import {
+  flattenInteractions,
+  type FlatInteraction,
+} from "../interactions.util";
 
 interface ReflectionInteraction {
-  id: string;
+  id?: string;
+  slideId?: string;
   type: "reflection";
-  prompt: string;
+  /** Texte de la question. Champ legacy `prompt` toujours supporte. */
+  question?: string;
+  prompt?: string;
   placeholder?: string;
 }
 
 /**
  * Affiche une question ouverte avec textarea + bouton de sauvegarde locale.
- * La saisie reste cliente — pas de transit réseau.
+ * La saisie reste cliente — pas de transit reseau.
  */
 @Component({
   selector: "app-slide-reflection",
@@ -60,25 +67,35 @@ export class SlideReflectionComponent {
     }
   }
 
+  /**
+   * Renvoie le texte de la question — l'API reelle utilise `question`,
+   * tandis que les stubs legacy de tests utilisent `prompt`. On expose
+   * un seul accessor pour la couche template.
+   */
+  protected promptText(): string {
+    const r = this.reflection();
+    if (r === null) return "";
+    return r.question ?? r.prompt ?? "";
+  }
+
   private load(): void {
-    (
-      this.port.getInteractions(this.slug()) as unknown as Observable<
-        ReflectionInteraction[]
-      >
-    )
+    flattenInteractions(this.port.getInteractions(this.slug()))
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(() => {
           this.error.set(true);
-          return of([] as ReflectionInteraction[]);
+          return of([] as FlatInteraction[]);
         }),
       )
       .subscribe((list) => {
+        const target = this.interactionId();
         const found = list.find(
-          (i) => i.id === this.interactionId() && i.type === "reflection",
+          (i) =>
+            i.type === "reflection" &&
+            (i.id === target || i.slideId === target),
         );
         if (found) {
-          this.reflection.set(found);
+          this.reflection.set(found as unknown as ReflectionInteraction);
         }
       });
   }

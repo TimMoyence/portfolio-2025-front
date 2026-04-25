@@ -3,7 +3,7 @@
     <p i18n="@@slideReflectionError">Impossible de charger la question.</p>
   } @else {
     @if (reflection(); as r) {
-      <h3 class="slide-reflection__prompt">{{ r.prompt }}</h3>
+      <h3 class="slide-reflection__prompt">{{ promptText() }}</h3>
       <textarea
         rows="6"
         [placeholder]="r.placeholder || ''"
