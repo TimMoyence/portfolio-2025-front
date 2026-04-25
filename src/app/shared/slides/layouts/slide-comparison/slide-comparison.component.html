@@ -1,0 +1,23 @@
+<div class="slide-comparison">
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+  <div class="slide-comparison__grid">
+    <div class="slide-comparison__column slide-comparison__column--left">
+      <h3>{{ leftLabel() }}</h3>
+      <ul>
+        @for (item of leftItems(); track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    </div>
+    <div class="slide-comparison__column slide-comparison__column--right">
+      <h3>{{ rightLabel() }}</h3>
+      <ul>
+        @for (item of rightItems(); track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
