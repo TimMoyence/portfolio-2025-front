@@ -1,0 +1,32 @@
+<div class="slide-reflection">
+  @if (error()) {
+    <p i18n="@@slideReflectionError">Impossible de charger la question.</p>
+  } @else {
+    @if (reflection(); as r) {
+      <h3 class="slide-reflection__prompt">{{ r.prompt }}</h3>
+      <textarea
+        rows="6"
+        [placeholder]="r.placeholder || ''"
+        [value]="value()"
+        (input)="onInput($any($event.target).value)"
+      ></textarea>
+      <button
+        type="button"
+        class="slide-reflection__save"
+        [class.is-disabled]="value().trim().length === 0"
+        [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
+        (click)="save()"
+        i18n="@@slideReflectionSave"
+      >
+        Garder cette réflexion
+      </button>
+      @if (saved()) {
+        <p class="slide-reflection__saved" i18n="@@slideReflectionSaved">
+          Réflexion enregistrée localement.
+        </p>
+      }
+    } @else {
+      <p i18n="@@slideReflectionLoading">Chargement…</p>
+    }
+  }
+</div>
