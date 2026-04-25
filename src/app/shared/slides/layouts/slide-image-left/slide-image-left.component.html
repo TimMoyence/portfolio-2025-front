@@ -1,0 +1,11 @@
+<div class="slide-image-left" [class]="'accent-' + accent()">
+  <div class="slide-image-left__media">
+    <img [src]="image()" [alt]="imageAlt()" loading="lazy" decoding="async" />
+  </div>
+  <div class="slide-image-left__content">
+    @if (title()) {
+      <h2>{{ title() }}</h2>
+    }
+    <ng-content />
+  </div>
+</div>
