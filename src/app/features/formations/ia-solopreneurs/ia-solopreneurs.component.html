@@ -25,8 +25,7 @@
     <app-slide-hero
       title="Ce qu'on va faire ensemble"
       i18n-title="@@ia-solo.promesse.title"
-      subtitle="1. Tour d'horizon des outils qui comptent — 2. Ce qui marche vraiment au quotidien — 3. Un exercice pratique, vous repartez avec un résultat"
-      i18n-subtitle="@@ia-solo.promesse.subtitle"
+      [bullets]="promesseBullets"
       bgImage="https://images.pexels.com/photos/10401267/pexels-photo-10401267.jpeg?auto=compress&cs=tinysrgb&w=800"
       bgImageAlt="Intervenant donnant une présentation dynamique sur scène"
       i18n-bgImageAlt="@@ia-solo.promesse.imageAlt"
@@ -97,12 +96,7 @@
     <app-slide-comparison
       title="ChatGPT, Claude, Gemini — lequel ouvrir en premier ?"
       i18n-title="@@ia-solo.chat-produire.title"
-      leftLabel="ChatGPT (OpenAI)"
-      i18n-leftLabel="@@ia-solo.chat-produire.left"
-      rightLabel="Claude (Anthropic)"
-      i18n-rightLabel="@@ia-solo.chat-produire.right"
-      [leftItems]="chatGptItems"
-      [rightItems]="claudeItems"
+      [columns]="chatProduireColumns"
     />
   </app-slide>
 
@@ -136,12 +130,7 @@
     <app-slide-comparison
       title="Quelles tâches faites-vous encore à la main ?"
       i18n-title="@@ia-solo.automatiser.title"
-      leftLabel="Zapier"
-      i18n-leftLabel="@@ia-solo.automatiser.zapier.label"
-      rightLabel="Make.com"
-      i18n-rightLabel="@@ia-solo.automatiser.make.label"
-      [leftItems]="zapierItems"
-      [rightItems]="makeItems"
+      [columns]="automatiserColumns"
     />
   </app-slide>
 
@@ -186,12 +175,7 @@
     <app-slide-comparison
       title="Quel budget IA pour quel stack — 0€, 60€ ou 120€/mois ?"
       i18n-title="@@ia-solo.stack-budget.title"
-      leftLabel="Stack débutant — 0€/mois"
-      i18n-leftLabel="@@ia-solo.stack-budget.debutant.label"
-      rightLabel="Stack avancé — ~120€/mois"
-      i18n-rightLabel="@@ia-solo.stack-budget.avance.label"
-      [leftItems]="stackBudgetDebutantItems"
-      [rightItems]="stackBudgetAvanceItems"
+      [columns]="stackBudgetColumns"
     />
   </app-slide>
 

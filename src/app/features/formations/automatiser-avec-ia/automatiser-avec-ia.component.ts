@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import {
+  type ComparisonColumn,
   SlideComparisonComponent,
   SlideComponent,
   SlideCtaComponent,
@@ -117,5 +118,19 @@ export class AutomatiserAvecIaComponent {
     $localize`:@@formations.automatiser-avec-ia.erreurs.rows.1.1:Confier des emails sensibles a l'IA sans relecture`,
     $localize`:@@formations.automatiser-avec-ia.erreurs.rows.2.1:Payer un abonnement avant d'avoir valide le workflow`,
     $localize`:@@formations.automatiser-avec-ia.erreurs.rows.3.1:Accepter le ton robotique par defaut — on perd la personnalite`,
+  ];
+
+  /** Colonnes de comparaison "erreurs" (fonctionne vs a eviter). */
+  protected readonly erreursColumns: ComparisonColumn[] = [
+    {
+      label: $localize`:@@formations.automatiser-avec-ia.erreurs.headers.0:Ce qui fonctionne`,
+      tone: "success",
+      items: this.fonctionneItems,
+    },
+    {
+      label: $localize`:@@formations.automatiser-avec-ia.erreurs.headers.1:A eviter au depart`,
+      tone: "danger",
+      items: this.aEviterItems,
+    },
   ];
 }

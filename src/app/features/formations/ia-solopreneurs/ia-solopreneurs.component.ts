@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import {
+  type ComparisonColumn,
   SlideComponent,
   SlideComparisonComponent,
   SlideCtaComponent,
@@ -43,6 +44,13 @@ import {
   styleUrl: "./ia-solopreneurs.component.scss",
 })
 export class IaSolopreneursComponent {
+  /** Bullets slide "promesse" — rendus en colonne dans le hero. */
+  protected readonly promesseBullets = [
+    $localize`:@@ia-solo.promesse.bullets.0:Tour d'horizon des outils qui comptent`,
+    $localize`:@@ia-solo.promesse.bullets.1:Ce qui marche vraiment au quotidien`,
+    $localize`:@@ia-solo.promesse.bullets.2:Un exercice pratique, vous repartez avec un résultat`,
+  ];
+
   /** Stats slide "probleme". */
   protected readonly problemeStats = [
     {
@@ -171,5 +179,47 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.stack-budget.avance.0:Claude Pro (20$) + ChatGPT Plus (20$)`,
     $localize`:@@ia-solo.stack-budget.avance.1:Make Pro (16€) + ElevenLabs (22$)`,
     $localize`:@@ia-solo.stack-budget.avance.2:Fathom (19$) + Waalaxy (19€) — ~120€/mois`,
+  ];
+
+  /** Colonnes de comparaison "chat-produire" (ChatGPT vs Claude). */
+  protected readonly chatProduireColumns: ComparisonColumn[] = [
+    {
+      label: $localize`:@@ia-solo.chat-produire.left:ChatGPT (OpenAI)`,
+      tone: "info",
+      items: this.chatGptItems,
+    },
+    {
+      label: $localize`:@@ia-solo.chat-produire.right:Claude (Anthropic)`,
+      tone: "success",
+      items: this.claudeItems,
+    },
+  ];
+
+  /** Colonnes de comparaison "automatiser" (Zapier vs Make). */
+  protected readonly automatiserColumns: ComparisonColumn[] = [
+    {
+      label: $localize`:@@ia-solo.automatiser.zapier.label:Zapier`,
+      tone: "info",
+      items: this.zapierItems,
+    },
+    {
+      label: $localize`:@@ia-solo.automatiser.make.label:Make.com`,
+      tone: "warning",
+      items: this.makeItems,
+    },
+  ];
+
+  /** Colonnes de comparaison "stack-budget" (debutant vs avance). */
+  protected readonly stackBudgetColumns: ComparisonColumn[] = [
+    {
+      label: $localize`:@@ia-solo.stack-budget.debutant.label:Stack débutant — 0€/mois`,
+      tone: "success",
+      items: this.stackBudgetDebutantItems,
+    },
+    {
+      label: $localize`:@@ia-solo.stack-budget.avance.label:Stack avancé — ~120€/mois`,
+      tone: "info",
+      items: this.stackBudgetAvanceItems,
+    },
   ];
 }

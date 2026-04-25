@@ -58,10 +58,18 @@
   <app-slide id="comparison">
     <app-slide-comparison
       title="slide-comparison"
-      leftLabel="Avant"
-      rightLabel="Apres"
-      [leftItems]="['data.ts', 'registry', 'page-generic']"
-      [rightItems]="['composants', 'composition', 'flexibilite']"
+      [columns]="[
+        {
+          label: 'Avant',
+          tone: 'danger',
+          items: ['data.ts', 'registry', 'page-generic'],
+        },
+        {
+          label: 'Apres',
+          tone: 'success',
+          items: ['composants', 'composition', 'flexibilite'],
+        },
+      ]"
     />
   </app-slide>
 
