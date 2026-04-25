@@ -329,6 +329,16 @@ export const routes: Routes = [
       seoKey: "formations-ia-solopreneurs",
     },
   },
+  {
+    path: "formations/automatiser-avec-ia",
+    loadComponent: () =>
+      import("./features/formations/automatiser-avec-ia/automatiser-avec-ia.component").then(
+        (m) => m.AutomatiserAvecIaComponent,
+      ),
+    data: {
+      seoKey: "formations-automatiser-avec-ia",
+    },
+  },
   // Routes generees automatiquement depuis la registry de formations.
   // Chaque `FormationConfig` publiee produit une route statique
   // `/formations/<slug>` qui instancie `FormationPageComponent`. Ces

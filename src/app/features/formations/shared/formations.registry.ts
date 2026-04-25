@@ -1,7 +1,6 @@
 import type { FormationConfig } from "./formation.types";
 import { assertValidFormationConfig } from "./formation.types";
 import { auditSeoDiyFormation } from "../audit-seo-diy/audit-seo-diy.config";
-import { automatiserAvecIaFormation } from "../automatiser-avec-ia/automatiser-avec-ia.config";
 
 /**
  * Registre central des formations publiees. Ordre == ordre d'apparition
@@ -16,10 +15,7 @@ import { automatiserAvecIaFormation } from "../automatiser-avec-ia/automatiser-a
  * slide-driven (ia-solopreneurs, automatiser-avec-ia, audit-seo-diy)
  * sortent de la registry au fur et a mesure des Tasks 19/20/21.
  */
-const ALL_FORMATIONS: ReadonlyArray<FormationConfig> = [
-  automatiserAvecIaFormation,
-  auditSeoDiyFormation,
-];
+const ALL_FORMATIONS: ReadonlyArray<FormationConfig> = [auditSeoDiyFormation];
 
 // Validation defensive : echoue le build si une config est malformee.
 // Throw au niveau module ->  detecte en TypeCheck + prerender + SSR.

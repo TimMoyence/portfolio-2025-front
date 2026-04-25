@@ -1,0 +1,250 @@
+<app-slide-deck
+  mode="scroll"
+  [allowFullscreen]="true"
+  theme="automatiser-avec-ia"
+>
+  <!-- ── ACTE 1 — ACCROCHER ──────────────────────────── -->
+
+  <app-slide id="auto-ia-accroche">
+    <app-slide-hero
+      title="Automatiser avec l'IA — sans coder, sans se perdre"
+      i18n-title="@@formations.automatiser-avec-ia.accroche.title"
+      subtitle="5 workflows testes qui font gagner 2 heures par jour aux entrepreneurs et TPE"
+      i18n-subtitle="@@formations.automatiser-avec-ia.accroche.subtitle"
+      bgImage="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1200"
+      bgImageAlt="Entrepreneur concentre devant son ordinateur au milieu d'une journee de travail"
+      i18n-bgImageAlt="@@formations.automatiser-avec-ia.accroche.imageAlt"
+    />
+  </app-slide>
+
+  <app-slide id="auto-ia-constat">
+    <app-slide-stats
+      title="Combien d'heures perdez-vous chaque semaine sur des taches automatisables ?"
+      i18n-title="@@formations.automatiser-avec-ia.constat.title"
+      [stats]="constatStats"
+    />
+  </app-slide>
+
+  <app-slide id="auto-ia-promesse">
+    <app-slide-quote
+      quote="A la fin de ces 25 minutes, vous aurez identifie au moins un workflow concret que vous lancerez cette semaine. Pas besoin de coder, pas besoin d'abonnement paye."
+      i18n-quote="@@formations.automatiser-avec-ia.promesse.quote"
+      author="Tim Moyence — asilidesign.fr"
+      i18n-author="@@formations.automatiser-avec-ia.promesse.quoteAuthor"
+      role="Les exemples viennent de ma pratique quotidienne et de celle de clients reels (coachs, photographes, artisans, commercants)."
+      i18n-role="@@formations.automatiser-avec-ia.promesse.authorNote"
+    />
+  </app-slide>
+
+  <!-- ── ACTE 2 — MONTRER ────────────────────────────── -->
+
+  <app-slide id="auto-ia-w1-devis">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Entrepreneur redigeant un devis sur ordinateur portable"
+      i18n-imageAlt="@@formations.automatiser-avec-ia.w1.imageAlt"
+      title="Workflow 1 — Generer un devis en 3 minutes"
+      i18n-title="@@formations.automatiser-avec-ia.w1.title"
+    >
+      <p i18n="@@formations.automatiser-avec-ia.w1.subtitle">
+        ChatGPT + un template Word. Aucun compte pro requis.
+      </p>
+      <ul>
+        <li i18n="@@formations.automatiser-avec-ia.w1.bullets.0">
+          Vous dictez a ChatGPT : "prestation X, duree Y, tarif horaire Z"
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w1.bullets.1">
+          L'IA produit un texte formel + un tableau recapitulatif
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w1.bullets.2">
+          Vous copiez dans votre template Word/Google Docs existant
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w1.bullets.3">
+          Gain mesure : de 25 min a 3 min par devis
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="auto-ia-w2-emails">
+    <app-slide-image-right
+      image="https://images.pexels.com/photos/4226140/pexels-photo-4226140.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Personne triant des emails sur ordinateur portable"
+      i18n-imageAlt="@@formations.automatiser-avec-ia.w2.imageAlt"
+      title="Workflow 2 — Reponses emails recurrentes"
+      i18n-title="@@formations.automatiser-avec-ia.w2.title"
+    >
+      <p i18n="@@formations.automatiser-avec-ia.w2.subtitle">
+        Gmail + une bibliotheque de reponses pre-ecrites par l'IA.
+      </p>
+      <ul>
+        <li i18n="@@formations.automatiser-avec-ia.w2.bullets.0">
+          Vous listez vos 5 questions clients les plus frequentes
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w2.bullets.1">
+          ChatGPT genere une reponse type personnalisable pour chaque
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w2.bullets.2">
+          Vous les enregistrez comme "reponses standard" dans Gmail
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w2.bullets.3">
+          Chaque email traite en 30 secondes au lieu de 5 minutes
+        </li>
+      </ul>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="auto-ia-w3-reseaux">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/265685/pexels-photo-265685.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Smartphone affichant un calendrier de publications sur les reseaux sociaux"
+      i18n-imageAlt="@@formations.automatiser-avec-ia.w3.imageAlt"
+      title="Workflow 3 — Publier sur les reseaux sans y penser"
+      i18n-title="@@formations.automatiser-avec-ia.w3.title"
+    >
+      <p i18n="@@formations.automatiser-avec-ia.w3.subtitle">
+        Une seance de 30 min = un mois de contenu planifie.
+      </p>
+      <ul>
+        <li i18n="@@formations.automatiser-avec-ia.w3.bullets.0">
+          Vous listez 4 themes de la semaine (une realisation, une astuce, un
+          temoignage, un behind-the-scenes)
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w3.bullets.1">
+          ChatGPT produit 4 textes + 4 idees d'images
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w3.bullets.2">
+          Vous les programmez dans Buffer ou Metricool (gratuit jusqu'a 3
+          reseaux)
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w3.bullets.3">
+          Publication automatique, vous reprenez la main pour repondre aux
+          commentaires
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="auto-ia-w4-factures">
+    <app-slide-image-right
+      image="https://images.pexels.com/photos/4386431/pexels-photo-4386431.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Pile de factures papier a traiter sur un bureau"
+      i18n-imageAlt="@@formations.automatiser-avec-ia.w4.imageAlt"
+      title="Workflow 4 — Extraire les donnees des factures"
+      i18n-title="@@formations.automatiser-avec-ia.w4.title"
+    >
+      <p i18n="@@formations.automatiser-avec-ia.w4.subtitle">
+        ChatGPT Vision : vous photographiez, l'IA tape les lignes pour vous.
+      </p>
+      <ul>
+        <li i18n="@@formations.automatiser-avec-ia.w4.bullets.0">
+          Vous glissez une photo de facture dans ChatGPT (version gratuite avec
+          limite quotidienne)
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w4.bullets.1">
+          L'IA retourne un tableau avec montant HT, TVA, TTC, date, fournisseur
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w4.bullets.2">
+          Copie-colle dans votre tableur / logiciel de compta
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w4.bullets.3">
+          15 factures traitees en 10 minutes au lieu d'une heure
+        </li>
+      </ul>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="auto-ia-w5-veille">
+    <app-slide-image-left
+      image="https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=800"
+      imageAlt="Tableau de veille avec articles et notes sur un mur de bureau"
+      i18n-imageAlt="@@formations.automatiser-avec-ia.w5.imageAlt"
+      title="Workflow 5 — Veille hebdo automatique"
+      i18n-title="@@formations.automatiser-avec-ia.w5.title"
+    >
+      <p i18n="@@formations.automatiser-avec-ia.w5.subtitle">
+        Recevez chaque lundi un resume des nouveautes de votre secteur.
+      </p>
+      <ul>
+        <li i18n="@@formations.automatiser-avec-ia.w5.bullets.0">
+          Vous definissez 3 sujets cles (ex : "reglementation artisan BTP",
+          "nouvelles aides BPI")
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w5.bullets.1">
+          Perplexity.ai fait la recherche web live et cite ses sources
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w5.bullets.2">
+          Vous enregistrez la conversation comme "veille hebdo"
+        </li>
+        <li i18n="@@formations.automatiser-avec-ia.w5.bullets.3">
+          5 minutes le lundi = vous etes a jour sur toute la semaine
+        </li>
+      </ul>
+    </app-slide-image-left>
+  </app-slide>
+
+  <!-- ── ACTE 3 — PRATIQUER ──────────────────────────── -->
+
+  <app-slide id="auto-ia-par-ou-commencer">
+    <app-slide-grid
+      title="Par ou commencer selon votre metier ?"
+      i18n-title="@@formations.automatiser-avec-ia.pratiquer.title"
+      [items]="parOuCommencerItems"
+    />
+  </app-slide>
+
+  <app-slide id="auto-ia-poll-secteur">
+    <app-slide-poll
+      slug="automatiser-avec-ia"
+      interactionId="auto-ia-poll-secteur"
+    />
+  </app-slide>
+
+  <app-slide id="auto-ia-declencheur">
+    <app-slide-cta
+      title="Quelle action concrete lancez-vous cette semaine ?"
+      i18n-title="@@formations.automatiser-avec-ia.declencheur.title"
+      description="PDF 12 pages avec captures d'ecran par etape, prompts prets a copier-coller testes en conditions reelles, sequence email 5 jours (un workflow par jour) — repondez a n'importe quel email, je lis tout sans bot."
+      i18n-description="
+        @@formations.automatiser-avec-ia.declencheur.description"
+      ctaLabel="Recevoir le toolkit complet"
+      i18n-ctaLabel="@@formations.automatiser-avec-ia.declencheur.ctaLabel"
+      ctaHref="/formations/automatiser-avec-ia/toolkit"
+    />
+  </app-slide>
+
+  <!-- ── ACTE 4 — ANCRER ─────────────────────────────── -->
+
+  <app-slide id="auto-ia-erreurs">
+    <app-slide-comparison
+      title="Pourquoi certains workflows IA echouent : 5 erreurs evitables"
+      i18n-title="@@formations.automatiser-avec-ia.erreurs.title"
+      leftLabel="Ce qui fonctionne"
+      i18n-leftLabel="@@formations.automatiser-avec-ia.erreurs.headers.0"
+      rightLabel="A eviter au depart"
+      i18n-rightLabel="@@formations.automatiser-avec-ia.erreurs.headers.1"
+      [leftItems]="fonctionneItems"
+      [rightItems]="aEviterItems"
+    />
+  </app-slide>
+
+  <app-slide id="auto-ia-faq-rapide">
+    <app-slide-grid
+      title="3 questions qui reviennent"
+      i18n-title="@@formations.automatiser-avec-ia.faq.title"
+      [items]="faqItems"
+    />
+  </app-slide>
+
+  <app-slide id="auto-ia-synthese">
+    <app-slide-cta
+      title="La prochaine etape concrete"
+      i18n-title="@@formations.automatiser-avec-ia.synthese.title"
+      description="Aujourd'hui : telecharger le toolkit + lire le workflow adapte a votre metier. Cette semaine : tester sur 1 tache reelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagne. Si ca marche : automatiser la 2e tache. Sinon : me repondre, on ajuste ensemble."
+      i18n-description="@@formations.automatiser-avec-ia.synthese.description"
+      ctaLabel="Telecharger le toolkit"
+      i18n-ctaLabel="@@formations.automatiser-avec-ia.synthese.ctaLabel"
+      ctaHref="/formations/automatiser-avec-ia/toolkit"
+    />
+  </app-slide>
+</app-slide-deck>
