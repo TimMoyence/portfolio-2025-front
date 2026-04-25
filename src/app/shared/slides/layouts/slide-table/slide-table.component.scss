@@ -1,0 +1,71 @@
+.slide-table {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+    margin: 0 0 2rem;
+  }
+}
+
+.slide-table__scroll {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: var(--card-bg, #f6fbfa);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    min-width: 640px;
+  }
+
+  thead {
+    background: var(--accent, #4fb3a2);
+    color: white;
+
+    th {
+      text-align: left;
+      padding: 0.85rem 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+
+      &:first-child {
+        border-top-left-radius: 1rem;
+      }
+      &:last-child {
+        border-top-right-radius: 1rem;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.15s;
+
+      &:hover {
+        background: rgba(79, 179, 162, 0.08);
+      }
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid rgba(12, 9, 2, 0.08);
+      vertical-align: top;
+      line-height: 1.45;
+
+      &:first-child {
+        font-weight: 600;
+      }
+    }
+  }
+}

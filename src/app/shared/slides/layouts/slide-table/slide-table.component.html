@@ -1,0 +1,25 @@
+<div class="slide-table">
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+  <div class="slide-table__scroll">
+    <table>
+      <thead>
+        <tr>
+          @for (h of headers(); track h) {
+            <th scope="col">{{ h }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track $index) {
+          <tr>
+            @for (h of headers(); track h) {
+              <td>{{ cellValue(row, h) }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

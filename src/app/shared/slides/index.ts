@@ -27,6 +27,10 @@ export {
   type SlideGridItem,
 } from "./layouts/slide-grid/slide-grid.component";
 export { SlideCtaComponent } from "./layouts/slide-cta/slide-cta.component";
+export {
+  SlideTableComponent,
+  type TableRow,
+} from "./layouts/slide-table/slide-table.component";
 
 // Interactions
 export { SlideQuizComponent } from "./interactions/slide-quiz/slide-quiz.component";
