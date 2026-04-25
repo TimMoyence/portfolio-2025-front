@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.slide-deck {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  outline: none;
+
+  &.mode-scroll {
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    height: 100vh;
+  }
+
+  &.mode-fullscreen {
+    overflow: hidden;
+    height: 100vh;
+    background: var(--slide-deck-bg, #000);
+  }
+}
+
+.slide-deck-fullscreen {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(0, 0, 0, 0.85);
+  }
+}
+
+.slide-deck-progress {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-deck.mode-scroll {
+    scroll-behavior: auto;
+  }
+}

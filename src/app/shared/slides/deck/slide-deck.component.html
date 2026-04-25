@@ -1,0 +1,24 @@
+<div #deckRoot [class]="cssClasses()" tabindex="0">
+  <ng-content />
+
+  @if (allowFullscreen()) {
+    <button
+      type="button"
+      class="slide-deck-fullscreen"
+      data-testid="slide-deck-fullscreen-toggle"
+      (click)="toggleFullscreen()"
+      [attr.aria-label]="
+        service.mode() === 'fullscreen'
+          ? 'Quitter le plein écran'
+          : 'Passer en plein écran'
+      "
+      i18n-aria-label="@@slideDeckFullscreenToggle"
+    >
+      <span aria-hidden="true">⛶</span>
+    </button>
+  }
+
+  <div class="slide-deck-progress" aria-hidden="true">
+    <span>{{ service.currentIndex() + 1 }} / {{ service.total() }}</span>
+  </div>
+</div>
