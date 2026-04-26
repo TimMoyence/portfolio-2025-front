@@ -9,7 +9,10 @@ export type { SlideDeckMode } from "./deck/slide-deck.service";
 
 // Layouts
 export { SlideHeroComponent } from "./layouts/slide-hero/slide-hero.component";
-export { SlideImageLeftComponent } from "./layouts/slide-image-left/slide-image-left.component";
+export {
+  SlideImageLeftComponent,
+  type RichListItem,
+} from "./layouts/slide-image-left/slide-image-left.component";
 export { SlideImageRightComponent } from "./layouts/slide-image-right/slide-image-right.component";
 export { SlideVideoComponent } from "./layouts/slide-video/slide-video.component";
 export {

@@ -72,27 +72,10 @@
       i18n-imageAlt="@@ia-solo.culture-apprendre.imageAlt"
       title="Apprenez plus vite que vos concurrents"
       i18n-title="@@ia-solo.culture-apprendre.title"
+      [subtitle]="cultureApprendreSubtitle"
+      [richItems]="cultureApprendreItems"
     >
-      <p i18n="@@ia-solo.culture-apprendre.subtitle">
-        Votre veille passe de 3h à 20 min
-      </p>
-      <ul>
-        <li i18n="@@ia-solo.culture-apprendre.bullets.0">
-          NotebookLM — Uploadez un PDF, récupérez un podcast de 10 min avec deux
-          voix IA qui l'analysent. Par Google, gratuit. Mode interactif :
-          interrompez les hosts pour poser vos questions.
-        </li>
-        <li i18n="@@ia-solo.culture-apprendre.bullets.1">
-          Perplexity — Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses
-          sourcées avec citations, pas de liens bleus à trier. Gratuit ou
-          20$/mois.
-        </li>
-        <li i18n="@@ia-solo.culture-apprendre.bullets.2">
-          Fathom — Notes de réunion automatiques sur Zoom/Meet/Teams.
-          Transcription + résumé + actions. 5 résumés IA/mois en gratuit,
-          19$/mois pour l'illimité.
-        </li>
-      </ul>
+      <ng-content />
     </app-slide-image-left>
   </app-slide>
 
@@ -111,22 +94,10 @@
       i18n-imageAlt="@@ia-solo.creer.imageAlt"
       title="Du contenu pro en 10× moins de temps"
       i18n-title="@@ia-solo.creer.title"
+      [subtitle]="creerSubtitle"
+      [richItems]="creerItems"
     >
-      <ul>
-        <li i18n="@@ia-solo.creer.bullets.0">
-          Ideogram — Génération d'images avec du texte lisible dedans. Aucun
-          autre outil ne fait ça aussi bien. Gratuit (10 prompts/jour).
-        </li>
-        <li i18n="@@ia-solo.creer.bullets.1">
-          Gamma — 70M d'utilisateurs. Tapez un prompt, récupérez une
-          présentation complète en moins d'une minute. Gamma Agent restructure
-          et donne du feedback design. Gratuit pour démarrer, 10$/mois.
-        </li>
-        <li i18n="@@ia-solo.creer.bullets.2">
-          ElevenLabs — Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix
-          dans 29 langues. Gratuit (10 min) puis 5$/mois.
-        </li>
-      </ul>
+      <ng-content />
     </app-slide-image-right>
   </app-slide>
 
@@ -145,21 +116,10 @@
       i18n-imageAlt="@@ia-solo.site-web.imageAlt"
       title="Votre site en ligne ce soir, sans une ligne de code"
       i18n-title="@@ia-solo.site-web.title"
+      [subtitle]="siteWebSubtitle"
+      [richItems]="siteWebItems"
     >
-      <ul>
-        <li i18n="@@ia-solo.site-web.bullets.0">
-          Lovable — Du prompt au site full-stack. 8M d'utilisateurs, valorisé
-          6,6Md$. Gratuit (50 actions IA/jour).
-        </li>
-        <li i18n="@@ia-solo.site-web.bullets.1">
-          Bolt.new — Même concept, tout dans le navigateur. Frontend, backend,
-          déploiement. 25$/mois.
-        </li>
-        <li i18n="@@ia-solo.site-web.bullets.2">
-          v0 — Par Vercel. Génère du React/Next.js/Tailwind. Plus technique,
-          plus propre. Gratuit (5$ de crédits/mois) puis 20$/mois.
-        </li>
-      </ul>
+      <ng-content />
     </app-slide-image-left>
   </app-slide>
 

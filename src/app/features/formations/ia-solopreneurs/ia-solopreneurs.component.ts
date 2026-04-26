@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import {
   type ComparisonColumn,
+  type RichListItem,
   SlideComponent,
   SlideComparisonComponent,
   SlideCtaComponent,
@@ -10,7 +11,6 @@ import {
   SlideImageLeftComponent,
   SlideImageRightComponent,
   SlidePollComponent,
-  SlideQuizComponent,
   SlideQuoteComponent,
   SlideStatsComponent,
   SlideTableComponent,
@@ -38,7 +38,6 @@ import {
     SlideGridComponent,
     SlideComparisonComponent,
     SlideQuoteComponent,
-    SlideQuizComponent,
     SlidePollComponent,
     SlideCtaComponent,
     SlideTableComponent,
@@ -110,6 +109,69 @@ export class IaSolopreneursComponent {
     {
       title: "Canva AI",
       description: $localize`:@@ia-solo.clients.grid.3.description:Visuels pro pour vos emails, posts, newsletters. 220M+ d'utilisateurs. Le design sans designer. (Communiquer — Gratuit)`,
+    },
+  ];
+
+  /** Slide "culture-apprendre" — outils pour apprendre/veille. */
+  protected readonly cultureApprendreSubtitle = $localize`:@@ia-solo.culture-apprendre.subtitle:Votre veille passe de 3h à 20 min`;
+
+  protected readonly cultureApprendreItems: RichListItem[] = [
+    {
+      title: "NotebookLM",
+      description: $localize`:@@ia-solo.culture-apprendre.items.0.description:Uploadez un PDF, récupérez un podcast de 10 min avec deux voix IA qui l'analysent. Mode interactif : interrompez les hosts pour poser vos questions.`,
+      meta: $localize`:@@ia-solo.culture-apprendre.items.0.meta:Gratuit (Google)`,
+    },
+    {
+      title: "Perplexity",
+      description: $localize`:@@ia-solo.culture-apprendre.items.1.description:Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses sourcées avec citations, pas de liens bleus à trier.`,
+      meta: $localize`:@@ia-solo.culture-apprendre.items.1.meta:Gratuit / 20$/mois`,
+    },
+    {
+      title: "Fathom",
+      description: $localize`:@@ia-solo.culture-apprendre.items.2.description:Notes de réunion automatiques sur Zoom/Meet/Teams. Transcription + résumé + actions. 5 résumés IA/mois en gratuit.`,
+      meta: $localize`:@@ia-solo.culture-apprendre.items.2.meta:Gratuit / 19$/mois`,
+    },
+  ];
+
+  /** Slide "creer" — outils pour produire du contenu. */
+  protected readonly creerSubtitle = $localize`:@@ia-solo.creer.subtitle:Texte, image, voix : 10× plus vite, qualité pro`;
+
+  protected readonly creerItems: RichListItem[] = [
+    {
+      title: "Ideogram",
+      description: $localize`:@@ia-solo.creer.items.0.description:Génération d'images avec du texte lisible dedans. Aucun autre outil ne fait ça aussi bien.`,
+      meta: $localize`:@@ia-solo.creer.items.0.meta:Gratuit (10/jour)`,
+    },
+    {
+      title: "Gamma",
+      description: $localize`:@@ia-solo.creer.items.1.description:70M d'utilisateurs. Tapez un prompt, récupérez une présentation complète en moins d'une minute. Gamma Agent restructure et donne du feedback design.`,
+      meta: $localize`:@@ia-solo.creer.items.1.meta:Gratuit / 10$/mois`,
+    },
+    {
+      title: "ElevenLabs",
+      description: $localize`:@@ia-solo.creer.items.2.description:Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix dans 29 langues.`,
+      meta: $localize`:@@ia-solo.creer.items.2.meta:Gratuit (10 min) / 5$/mois`,
+    },
+  ];
+
+  /** Slide "site-web" — outils no-code IA pour site full-stack. */
+  protected readonly siteWebSubtitle = $localize`:@@ia-solo.site-web.subtitle:Du prompt au site déployé, sans une ligne de code`;
+
+  protected readonly siteWebItems: RichListItem[] = [
+    {
+      title: "Lovable",
+      description: $localize`:@@ia-solo.site-web.items.0.description:Du prompt au site full-stack. 8M d'utilisateurs, valorisé 6,6Md$.`,
+      meta: $localize`:@@ia-solo.site-web.items.0.meta:Gratuit (50 actions IA/jour)`,
+    },
+    {
+      title: "Bolt.new",
+      description: $localize`:@@ia-solo.site-web.items.1.description:Même concept, tout dans le navigateur. Frontend, backend, déploiement.`,
+      meta: $localize`:@@ia-solo.site-web.items.1.meta:25$/mois`,
+    },
+    {
+      title: "v0",
+      description: $localize`:@@ia-solo.site-web.items.2.description:Par Vercel. Génère du React/Next.js/Tailwind. Plus technique, plus propre.`,
+      meta: $localize`:@@ia-solo.site-web.items.2.meta:Gratuit (5$ crédits) / 20$/mois`,
     },
   ];
 

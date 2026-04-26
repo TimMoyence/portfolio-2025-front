@@ -3,6 +3,9 @@
     @if (title()) {
       <h2>{{ title() }}</h2>
     }
+    @if (subtitle()) {
+      <p class="slide-image-right__subtitle">{{ subtitle() }}</p>
+    }
     @for (p of paragraphs(); track $index) {
       <p class="slide-image-right__paragraph">{{ p }}</p>
     }
@@ -10,6 +13,32 @@
       <ul class="slide-image-right__items">
         @for (it of items(); track it) {
           <li>{{ it }}</li>
+        }
+      </ul>
+    }
+    @if (richItems().length > 0) {
+      <ul class="slide-image-right__rich" role="list">
+        @for (it of richItems(); track it.title) {
+          <li class="slide-image-right__rich-item">
+            <div class="slide-image-right__rich-logo" aria-hidden="true">
+              @if (it.logo) {
+                <img [src]="it.logo" [alt]="''" loading="lazy" />
+              } @else {
+                <span>{{ initial(it.title) }}</span>
+              }
+            </div>
+            <div class="slide-image-right__rich-body">
+              <div class="slide-image-right__rich-head">
+                <strong>{{ it.title }}</strong>
+                @if (it.meta) {
+                  <span class="slide-image-right__rich-meta">{{
+                    it.meta
+                  }}</span>
+                }
+              </div>
+              <p>{{ it.description }}</p>
+            </div>
+          </li>
         }
       </ul>
     }
