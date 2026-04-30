@@ -1,0 +1,48 @@
+<div class="slide-image-left" [class]="'accent-' + accent()">
+  <div class="slide-image-left__media">
+    <img [src]="image()" [alt]="imageAlt()" loading="lazy" decoding="async" />
+  </div>
+  <div class="slide-image-left__content">
+    @if (title()) {
+      <h2>{{ title() }}</h2>
+    }
+    @if (subtitle()) {
+      <p class="slide-image-left__subtitle">{{ subtitle() }}</p>
+    }
+    @for (p of paragraphs(); track $index) {
+      <p class="slide-image-left__paragraph">{{ p }}</p>
+    }
+    @if (items().length > 0) {
+      <ul class="slide-image-left__items">
+        @for (it of items(); track it) {
+          <li>{{ it }}</li>
+        }
+      </ul>
+    }
+    @if (richItems().length > 0) {
+      <ul class="slide-image-left__rich" role="list">
+        @for (it of richItems(); track it.title) {
+          <li class="slide-image-left__rich-item">
+            <div class="slide-image-left__rich-logo" aria-hidden="true">
+              @if (it.logo) {
+                <img [src]="it.logo" [alt]="''" loading="lazy" />
+              } @else {
+                <span>{{ initial(it.title) }}</span>
+              }
+            </div>
+            <div class="slide-image-left__rich-body">
+              <div class="slide-image-left__rich-head">
+                <strong>{{ it.title }}</strong>
+                @if (it.meta) {
+                  <span class="slide-image-left__rich-meta">{{ it.meta }}</span>
+                }
+              </div>
+              <p>{{ it.description }}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+    <ng-content />
+  </div>
+</div>

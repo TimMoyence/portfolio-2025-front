@@ -1,0 +1,9 @@
+<div class="slide-cta">
+  <div class="slide-cta__content">
+    <h2>{{ title() }}</h2>
+    @if (description()) {
+      <p>{{ description() }}</p>
+    }
+    <a class="slide-cta__btn" [href]="ctaHref()">{{ ctaLabel() }}</a>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="slide-hero" [class]="'accent-' + accent()">
+  <div class="slide-hero__bg">
+    <img
+      [src]="bgImage()"
+      [alt]="bgImageAlt()"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="slide-hero__content">
+    <h1>{{ title() }}</h1>
+    @if (subtitle()) {
+      <p class="slide-hero__subtitle">{{ subtitle() }}</p>
+    }
+    @if (bullets().length > 0) {
+      <ol class="slide-hero__bullets">
+        @for (b of bullets(); track b) {
+          <li>{{ b }}</li>
+        }
+      </ol>
+    }
+    <ng-content />
+  </div>
+</div>

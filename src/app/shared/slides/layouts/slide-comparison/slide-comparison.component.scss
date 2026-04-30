@@ -1,0 +1,91 @@
+.slide-comparison {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 2rem;
+
+  h2 {
+    text-align: center;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    margin: 0 0 2.5rem;
+  }
+}
+
+.slide-comparison__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  }
+}
+
+.slide-comparison__column {
+  padding: 2rem;
+  border-radius: 1rem;
+  background: var(--card-bg, #f6fbfa);
+  border-top: 4px solid transparent;
+
+  h3 {
+    margin: 0 0 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      line-height: 1.5;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  // Palette semantique alignee design system (nuances de vert + accents).
+  // Danger garde un rouge pour signaler clairement une alerte (a11y),
+  // warning passe sur un vert profond chaleureux du DS, info sur le teal
+  // principal, success sur le vert profond budget-accent.
+  &.tone-danger {
+    border-top-color: #b3261e;
+    h3 {
+      color: #b3261e;
+    }
+  }
+  &.tone-success {
+    border-top-color: #0f7b65;
+    h3 {
+      color: #0f7b65;
+    }
+  }
+  &.tone-info {
+    border-top-color: #4fb3a2;
+    h3 {
+      color: #4fb3a2;
+    }
+  }
+  &.tone-warning {
+    border-top-color: #2f7f74;
+    h3 {
+      color: #2f7f74;
+    }
+  }
+  &.tone-neutral {
+    border-top-color: #9ca3af;
+    h3 {
+      color: #54524d;
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<div #deckRoot [class]="cssClasses()" tabindex="0">
+  @if (service.mode() === "fullscreen") {
+    <swiper-container
+      navigation="true"
+      keyboard="true"
+      pagination="true"
+      [attr.initial-slide]="service.currentIndex()"
+    >
+      @for (slide of visibleSlides(); track slide.id()) {
+        <swiper-slide>
+          <ng-container *ngTemplateOutlet="slide.contentTemplate()" />
+        </swiper-slide>
+      }
+    </swiper-container>
+  } @else {
+    @for (slide of visibleSlides(); track slide.id()) {
+      <ng-container *ngTemplateOutlet="slide.contentTemplate()" />
+    }
+  }
+
+  @if (allowFullscreen()) {
+    <button
+      type="button"
+      class="slide-deck-fullscreen"
+      data-testid="slide-deck-fullscreen-toggle"
+      (click)="toggleFullscreen()"
+      [attr.aria-label]="
+        service.mode() === 'fullscreen'
+          ? 'Quitter le plein écran'
+          : 'Passer en plein écran'
+      "
+      i18n-aria-label="@@slideDeckFullscreenToggle"
+    >
+      <span aria-hidden="true">⛶</span>
+    </button>
+  }
+
+  <div class="slide-deck-progress" aria-hidden="true">
+    <span>{{ service.currentIndex() + 1 }} / {{ visibleSlides().length }}</span>
+  </div>
+</div>

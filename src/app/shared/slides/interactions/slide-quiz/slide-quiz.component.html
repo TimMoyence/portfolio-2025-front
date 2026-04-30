@@ -1,0 +1,34 @@
+@if (quiz(); as q) {
+  <div class="slide-quiz">
+    <h3 class="slide-quiz__question">{{ q.question }}</h3>
+    <div class="slide-quiz__options">
+      @for (option of q.options; track option; let i = $index) {
+        <button
+          type="button"
+          class="slide-quiz__option"
+          [class.is-selected]="selectedIndex() === i"
+          [disabled]="selectedIndex() !== null"
+          (click)="select(i)"
+        >
+          {{ option }}
+        </button>
+      }
+    </div>
+    @if (selectedIndex() !== null) {
+      <p
+        class="slide-quiz__feedback"
+        [class.is-correct]="isCorrect()"
+        [class.is-incorrect]="!isCorrect()"
+      >
+        @if (isCorrect()) {
+          <ng-container i18n="@@slideQuizCorrect">Bonne réponse !</ng-container>
+        } @else {
+          <ng-container i18n="@@slideQuizIncorrect"
+            >Pas tout à fait. La bonne réponse est :
+            {{ q.options[q.correctIndex] }}</ng-container
+          >
+        }
+      </p>
+    }
+  </div>
+}
