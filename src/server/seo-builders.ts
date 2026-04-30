@@ -204,11 +204,23 @@ export const buildRobotsTxt = (
   const disallowPaths = new Set<string>();
 
   for (const page of metadata.pages) {
-    if (page.index === false) {
-      disallowPaths.add(normalizePath(page.path));
-      for (const locale of locales) {
-        disallowPaths.add(buildLocalizedPath(locale, page.path));
-      }
+    if (page.index !== false) continue;
+
+    // Skip route-parameter patterns ("/foo/:token") : the literal `:token`
+    // never matches a real URL, so the Disallow line is dead weight that
+    // pollutes robots.txt without restricting any crawl.
+    if (page.path.includes(":")) continue;
+
+    // Skip cookie-settings : la page RGPD doit rester crawlable pour que
+    // Google puisse lire son <meta name="robots" content="noindex">. Un
+    // Disallow bloque le crawl avant que le meta soit vu, ce qui declenche
+    // l'alerte GSC "Bloquée par robots.txt" alors que la page est noindex
+    // par design.
+    if (page.id === "cookie-settings") continue;
+
+    disallowPaths.add(normalizePath(page.path));
+    for (const locale of locales) {
+      disallowPaths.add(buildLocalizedPath(locale, page.path));
     }
   }
 
