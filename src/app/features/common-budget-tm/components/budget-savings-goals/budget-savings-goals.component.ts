@@ -154,7 +154,7 @@ import type {
           placeholder="Montant cible (€)"
         />
 
-        @if (formKind === "CATEGORY_LIMIT") {
+        @if (formKind() === "CATEGORY_LIMIT") {
           <select
             class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-budget-accent focus:outline-none"
             [(ngModel)]="formCategoryId"
