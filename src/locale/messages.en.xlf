@@ -6736,6 +6736,91 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Variable</target>
       </segment>
     </unit>
+    <!-- Transactions table -->
+    <unit id="budgetTransactionsEyebrow">
+      <segment>
+        <source>Transactions</source>
+        <target>Transactions</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsTitle">
+      <segment>
+        <source>Vérifiez et corrigez les catégories</source>
+        <target>Review and correct categories</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsDescription">
+      <segment>
+        <source>Chaque transaction peut être réassignée manuellement. Les totaux se mettent à jour immédiatement.</source>
+        <target>Every transaction can be reassigned manually. Totals update immediately.</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsColDate">
+      <segment>
+        <source>Date</source>
+        <target>Date</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsColDescription">
+      <segment>
+        <source>Description</source>
+        <target>Description</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsColType">
+      <segment>
+        <source>Type</source>
+        <target>Type</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsColState">
+      <segment>
+        <source>État</source>
+        <target>State</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsColAmount">
+      <segment>
+        <source>Montant</source>
+        <target>Amount</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsColCategory">
+      <segment>
+        <source>Catégorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsColActions">
+      <segment>
+        <source>Actions</source>
+        <target>Actions</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsChangeCategory">
+      <segment>
+        <source>Changer de catégorie</source>
+        <target>Change category</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsEmpty">
+      <segment>
+        <source>Aucune transaction ne correspond aux filtres en cours.</source>
+        <target>No transactions match the current filters.</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsDeleteAria">
+      <segment>
+        <source>Supprimer la transaction {$INTERPOLATION}</source>
+        <target>Delete transaction {$INTERPOLATION}</target>
+      </segment>
+    </unit>
+    <unit id="budgetTransactionsDeleteConfirm">
+      <segment>
+        <source>Supprimer cette transaction ?</source>
+        <target>Delete this transaction?</target>
+      </segment>
+    </unit>
     <!-- Months -->
     <unit id="budgetMonthMarch">
       <segment>

@@ -57,6 +57,47 @@ describe("CommonBudgetTmComponent", () => {
     expect(component.groupId()).toBe("group-1");
   });
 
+  describe("delete entry (B5)", () => {
+    it("calls port.deleteEntry with the entry id when user confirms", () => {
+      spyOn(window, "confirm").and.returnValue(true);
+      budgetPortStub.deleteEntry.and.returnValue(of(undefined));
+
+      component.onDeleteEntry("tx-99");
+
+      expect(budgetPortStub.deleteEntry).toHaveBeenCalledWith("tx-99");
+    });
+
+    it("does not call port.deleteEntry when user cancels", () => {
+      spyOn(window, "confirm").and.returnValue(false);
+
+      component.onDeleteEntry("tx-99");
+
+      expect(budgetPortStub.deleteEntry).not.toHaveBeenCalled();
+    });
+
+    it("rollbacks (reloads entries) when deleteEntry API call fails", async () => {
+      spyOn(window, "confirm").and.returnValue(true);
+      spyOn(console, "error");
+      const group = buildBudgetGroup();
+      // Setup: groupId resolved, deleteEntry fails, getEntries spy validates reload.
+      component.groupId.set(group.id);
+      budgetPortStub.deleteEntry.and.returnValue(
+        throwError(() => new Error("API down")),
+      );
+      budgetPortStub.getEntries.and.returnValue(of([]));
+      const initialGetEntriesCalls = budgetPortStub.getEntries.calls.count();
+
+      component.onDeleteEntry("tx-99");
+      await Promise.resolve();
+
+      expect(budgetPortStub.deleteEntry).toHaveBeenCalledWith("tx-99");
+      expect(budgetPortStub.getEntries.calls.count()).toBeGreaterThan(
+        initialGetEntriesCalls,
+      );
+      expect(console.error).toHaveBeenCalled();
+    });
+  });
+
   describe("loading state (B4)", () => {
     it("renders the loading indicator when loading() is true", () => {
       component.loading.set(true);

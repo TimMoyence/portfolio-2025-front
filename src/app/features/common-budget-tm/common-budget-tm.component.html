@@ -412,6 +412,7 @@
         [transactions]="transactionViews()"
         [categories]="categories()"
         (categoryChanged)="onCategoryChange($event)"
+        (deleteRequested)="onDeleteEntry($event)"
       />
     </div>
 

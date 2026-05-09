@@ -29,16 +29,23 @@ export type BudgetTransactionView = {
         <div>
           <p
             class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
+            i18n="@@budgetTransactionsEyebrow"
           >
             Transactions
           </p>
-          <h2 class="mt-3 text-2xl font-black text-slate-950">
-            Review and correct categories
+          <h2
+            class="mt-3 text-2xl font-black text-slate-950"
+            i18n="@@budgetTransactionsTitle"
+          >
+            Vérifiez et corrigez les catégories
           </h2>
         </div>
-        <p class="max-w-md text-sm leading-6 text-slate-500">
-          Every transaction can be reassigned manually. Totals update
-          immediately.
+        <p
+          class="max-w-md text-sm leading-6 text-slate-500"
+          i18n="@@budgetTransactionsDescription"
+        >
+          Chaque transaction peut être réassignée manuellement. Les totaux se
+          mettent à jour immédiatement.
         </p>
       </div>
 
@@ -49,12 +56,48 @@ export type BudgetTransactionView = {
           <table class="min-w-full border-collapse">
             <thead class="bg-[#f7f1e8] text-left text-sm text-slate-500">
               <tr>
-                <th class="px-4 py-3 font-semibold">Date</th>
-                <th class="px-4 py-3 font-semibold">Description</th>
-                <th class="px-4 py-3 font-semibold">Type</th>
-                <th class="px-4 py-3 font-semibold">State</th>
-                <th class="px-4 py-3 font-semibold">Amount</th>
-                <th class="px-4 py-3 font-semibold">Category</th>
+                <th
+                  class="px-4 py-3 font-semibold"
+                  i18n="@@budgetTransactionsColDate"
+                >
+                  Date
+                </th>
+                <th
+                  class="px-4 py-3 font-semibold"
+                  i18n="@@budgetTransactionsColDescription"
+                >
+                  Description
+                </th>
+                <th
+                  class="px-4 py-3 font-semibold"
+                  i18n="@@budgetTransactionsColType"
+                >
+                  Type
+                </th>
+                <th
+                  class="px-4 py-3 font-semibold"
+                  i18n="@@budgetTransactionsColState"
+                >
+                  État
+                </th>
+                <th
+                  class="px-4 py-3 font-semibold"
+                  i18n="@@budgetTransactionsColAmount"
+                >
+                  Montant
+                </th>
+                <th
+                  class="px-4 py-3 font-semibold"
+                  i18n="@@budgetTransactionsColCategory"
+                >
+                  Catégorie
+                </th>
+                <th
+                  class="px-4 py-3 font-semibold"
+                  i18n="@@budgetTransactionsColActions"
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody
@@ -82,8 +125,12 @@ export type BudgetTransactionView = {
                     {{ transaction.amountLabel }}
                   </td>
                   <td class="px-4 py-4">
-                    <label class="sr-only" [for]="'category-' + transaction.id">
-                      Change category
+                    <label
+                      class="sr-only"
+                      [for]="'category-' + transaction.id"
+                      i18n="@@budgetTransactionsChangeCategory"
+                    >
+                      Changer de catégorie
                     </label>
                     <select
                       class="min-w-[14rem] rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-sm text-slate-900"
@@ -105,11 +152,46 @@ export type BudgetTransactionView = {
                       }
                     </select>
                   </td>
+                  <td class="px-4 py-4 whitespace-nowrap">
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#d7cfbf] bg-white text-[#b4533d] transition hover:bg-[#fbe9e2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b4533d]"
+                      data-testid="delete-entry"
+                      [attr.aria-label]="
+                        deleteAriaLabel(transaction.description)
+                      "
+                      (click)="deleteRequested.emit(transaction.id)"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        <path
+                          d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+                        />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                      </svg>
+                    </button>
+                  </td>
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="6" class="px-4 py-10 text-center text-slate-500">
-                    No transactions match the current filters.
+                  <td
+                    colspan="7"
+                    class="px-4 py-10 text-center text-slate-500"
+                    i18n="@@budgetTransactionsEmpty"
+                  >
+                    Aucune transaction ne correspond aux filtres en cours.
                   </td>
                 </tr>
               }
@@ -125,9 +207,14 @@ export class BudgetTransactionsTableComponent {
   readonly transactions = input.required<BudgetTransactionView[]>();
   readonly categories = input.required<string[]>();
   readonly categoryChanged = output<{ id: string; category: string }>();
+  readonly deleteRequested = output<string>();
 
   readValue(event: Event): string {
     return (event.target as HTMLSelectElement).value;
+  }
+
+  deleteAriaLabel(description: string): string {
+    return $localize`:@@budgetTransactionsDeleteAria:Supprimer la transaction ${description}:description:`;
   }
 
   displayCategory(category: string): string {

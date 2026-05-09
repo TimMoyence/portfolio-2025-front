@@ -294,6 +294,39 @@ export class CommonBudgetTmComponent {
     }
   }
 
+  /**
+   * Supprime une entree budget apres confirmation utilisateur.
+   * - SSR-safe : window.confirm n'est appele que cote navigateur.
+   * - Optimistic UI : retire la transaction localement, puis tente
+   *   la suppression API. En cas d'echec API, on recharge depuis
+   *   le serveur pour rester coherent.
+   */
+  onDeleteEntry(entryId: string): void {
+    if (!this.browser) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      $localize`:@@budgetTransactionsDeleteConfirm:Supprimer cette transaction ?`,
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    this.baseTransactions.update((current) =>
+      current.filter((tx) => tx.id !== entryId),
+    );
+
+    firstValueFrom(this.budgetPort.deleteEntry(entryId)).catch(
+      (error: unknown) => {
+        // Rollback : on recharge l'etat serveur en cas d'echec API
+        // pour eviter une UI desynchronisee.
+        console.error("[budget] deleteEntry a echoue, rollback", error);
+        void this.loadEntries();
+      },
+    );
+  }
+
   onShareEmailChange(value: string): void {
     this.shareEmail.set(value);
   }
