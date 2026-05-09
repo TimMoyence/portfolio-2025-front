@@ -78,6 +78,7 @@ export class CommonBudgetTmComponent {
   readonly loading = signal(false);
   readonly shareEmail = signal("");
   readonly shareMessage = signal("");
+  readonly uploadStatus = signal("");
 
   readonly categories = computed(() => this.apiCategories().map((c) => c.name));
   readonly months = MONTHS;
@@ -173,23 +174,11 @@ export class CommonBudgetTmComponent {
   );
 
   readonly timContribution = computed(() =>
-    this.fmt.formatCurrency(
-      this.transactions()
-        .filter((transaction) =>
-          normalizeText(transaction.description).includes("tim moyence"),
-        )
-        .reduce((sum, transaction) => sum + Math.max(transaction.amount, 0), 0),
-    ),
+    this.fmt.formatCurrency(this.getContributionTotalFor("tim moyence")),
   );
 
   readonly mariaContribution = computed(() =>
-    this.fmt.formatCurrency(
-      this.transactions()
-        .filter((transaction) =>
-          normalizeText(transaction.description).includes("maria naumenko"),
-        )
-        .reduce((sum, transaction) => sum + Math.max(transaction.amount, 0), 0),
-    ),
+    this.fmt.formatCurrency(this.getContributionTotalFor("maria naumenko")),
   );
 
   readonly pocketsTotal = computed(() =>
@@ -234,6 +223,14 @@ export class CommonBudgetTmComponent {
         };
       });
   });
+
+  readonly fixedCategoryTotals = computed(() =>
+    this.categoryTotals().filter((item) => item.budgetType === "FIXED"),
+  );
+
+  readonly variableCategoryTotals = computed(() =>
+    this.categoryTotals().filter((item) => item.budgetType === "VARIABLE"),
+  );
 
   readonly monthNumber = computed(() => MONTH_NUMBER_MAP[this.selectedMonth()]);
 
@@ -315,6 +312,10 @@ export class CommonBudgetTmComponent {
     this.categoryFilter.set(value);
   }
 
+  onCategorySpotlight(category: string): void {
+    this.categoryFilter.set(category);
+  }
+
   onStateFilterChange(value: string): void {
     this.stateFilter.set(value as "ALL" | "COMPLETED" | "PENDING");
   }
@@ -345,6 +346,7 @@ export class CommonBudgetTmComponent {
     this.timSalary.set(savedSalaries.tim);
     this.mariaSalary.set(savedSalaries.maria);
     this.budgetValidationMessage.set("");
+    this.uploadStatus.set("");
 
     this.loadEntries();
   }
@@ -385,6 +387,16 @@ export class CommonBudgetTmComponent {
     const reader = new FileReader();
     reader.onload = async () => {
       const csv = String(reader.result ?? "");
+      const fallbackTransactions = toTransactions(parseCsv(csv));
+
+      if (!fallbackTransactions.length) {
+        this.uploadStatus.set(
+          `No transactions were found in ${file.name}. Check the CSV separator and headers.`,
+        );
+        input.value = "";
+        return;
+      }
+
       const gid = this.groupId();
 
       if (gid) {
@@ -396,17 +408,36 @@ export class CommonBudgetTmComponent {
           this.sourceLabel.set(
             `${this.selectedMonth()} - ${file.name} (${entries.length} imported)`,
           );
+          this.uploadStatus.set(
+            `${entries.length} transactions loaded from ${file.name}.`,
+          );
         } catch {
           // Fallback to local parsing
-          this.baseTransactions.set(toTransactions(parseCsv(csv)));
+          this.baseTransactions.set(fallbackTransactions);
           this.sourceLabel.set(
             `${this.selectedMonth()} - ${file.name} (local parse)`,
           );
+          this.uploadStatus.set(
+            `${fallbackTransactions.length} transactions loaded locally from ${file.name}.`,
+          );
         }
       } else {
-        this.baseTransactions.set(toTransactions(parseCsv(csv)));
+        this.baseTransactions.set(fallbackTransactions);
         this.sourceLabel.set(`${this.selectedMonth()} - ${file.name}`);
+        this.uploadStatus.set(
+          `${fallbackTransactions.length} transactions loaded from ${file.name}.`,
+        );
       }
+
+      this.searchTerm.set("");
+      this.categoryFilter.set("ALL");
+      this.stateFilter.set("ALL");
+      this.budgetTypeFilter.set("ALL");
+      input.value = "";
+    };
+    reader.onerror = () => {
+      this.uploadStatus.set(`Could not read ${file.name}.`);
+      input.value = "";
     };
     reader.readAsText(file);
   }
@@ -448,6 +479,7 @@ export class CommonBudgetTmComponent {
         toTransactions(parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
       );
       this.sourceLabel.set("Fallback - Embedded sample");
+      this.uploadStatus.set("");
     } finally {
       this.loading.set(false);
     }
@@ -471,6 +503,7 @@ export class CommonBudgetTmComponent {
       if (entries.length > 0) {
         this.baseTransactions.set(this.apiEntriesToTransactions(entries));
         this.sourceLabel.set(`${month} - ${entries.length} entries from API`);
+        this.uploadStatus.set("");
       } else {
         // No entries yet for this month — show empty or sample
         if (month === "March") {
@@ -482,11 +515,33 @@ export class CommonBudgetTmComponent {
           this.baseTransactions.set([]);
           this.sourceLabel.set(`${month} - No data yet`);
         }
+        this.uploadStatus.set("");
       }
     } catch {
       this.baseTransactions.set([]);
       this.sourceLabel.set(`${month} - Error loading entries`);
+      this.uploadStatus.set("");
     }
+  }
+
+  getCategoryLabel(category: string | "ALL"): string {
+    if (category === "ALL") {
+      return "All categories";
+    }
+
+    if (category === "Voiture utilisation") {
+      return "Voiture 🚗";
+    }
+
+    if (category === "Forfait telephone Tim & Maria") {
+      return "FREE Tim & Maria";
+    }
+
+    if (category === "Netflix & Amazon & Ororo") {
+      return "Subscriptions";
+    }
+
+    return category;
   }
 
   private apiEntriesToTransactions(
@@ -505,5 +560,64 @@ export class CommonBudgetTmComponent {
         category: cat?.name ?? "Autres",
       };
     });
+  }
+
+  private getContributionTotalFor(personNeedle: string): number {
+    const orderedTransactions = [...this.transactions()].sort(
+      (left, right) =>
+        this.getTransactionTimestamp(left) -
+        this.getTransactionTimestamp(right),
+    );
+
+    return orderedTransactions.reduce((sum, transaction, index) => {
+      if (transaction.amount <= 0) {
+        return sum;
+      }
+
+      if (!normalizeText(transaction.description).includes(personNeedle)) {
+        return sum;
+      }
+
+      const nextTransaction = orderedTransactions[index + 1];
+      if (this.isPocketPassThrough(transaction, nextTransaction)) {
+        return sum;
+      }
+
+      return sum + transaction.amount;
+    }, 0);
+  }
+
+  private getTransactionTimestamp(transaction: BudgetTransaction): number {
+    const value = transaction.completedDate || transaction.startedDate;
+    const date = new Date(value.replace(" ", "T"));
+    return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+  }
+
+  private isPocketPassThrough(
+    contribution: BudgetTransaction,
+    nextTransaction?: BudgetTransaction,
+  ): boolean {
+    if (!nextTransaction) {
+      return false;
+    }
+
+    if (nextTransaction.category !== "Pockets" || nextTransaction.amount >= 0) {
+      return false;
+    }
+
+    const sameAmount =
+      Math.abs(Math.abs(nextTransaction.amount) - contribution.amount) < 0.01;
+
+    if (!sameAmount) {
+      return false;
+    }
+
+    const contributionTime = this.getTransactionTimestamp(contribution);
+    const pocketTime = this.getTransactionTimestamp(nextTransaction);
+
+    return (
+      pocketTime >= contributionTime &&
+      pocketTime - contributionTime <= 5 * 60 * 1000
+    );
   }
 }

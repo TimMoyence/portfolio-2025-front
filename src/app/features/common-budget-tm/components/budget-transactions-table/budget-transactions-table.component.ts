@@ -100,7 +100,7 @@ export type BudgetTransactionView = {
                           [value]="category"
                           [selected]="category === transaction.category"
                         >
-                          {{ category }}
+                          {{ displayCategory(category) }}
                         </option>
                       }
                     </select>
@@ -128,5 +128,21 @@ export class BudgetTransactionsTableComponent {
 
   readValue(event: Event): string {
     return (event.target as HTMLSelectElement).value;
+  }
+
+  displayCategory(category: string): string {
+    if (category === "Voiture utilisation") {
+      return "Voiture 🚗";
+    }
+
+    if (category === "Forfait telephone Tim & Maria") {
+      return "FREE Tim & Maria";
+    }
+
+    if (category === "Netflix & Amazon & Ororo") {
+      return "Subscriptions";
+    }
+
+    return category;
   }
 }

@@ -82,6 +82,10 @@
             </button>
           </div>
 
+          @if (uploadStatus()) {
+            <p class="text-sm text-slate-600">{{ uploadStatus() }}</p>
+          }
+
           @if (groupId()) {
             <div class="mt-4 border-t border-white/40 pt-4">
               <p
@@ -250,7 +254,11 @@
     </section>
 
     <div class="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-      <app-budget-category-totals [totals]="categoryTotals()" />
+      <app-budget-category-totals
+        [fixedTotals]="fixedCategoryTotals()"
+        [variableTotals]="variableCategoryTotals()"
+        (categorySelected)="onCategorySpotlight($event)"
+      />
 
       <section
         class="rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
@@ -285,9 +293,11 @@
               [value]="categoryFilter()"
               (change)="onCategoryFilterChange(readSelectValue($event))"
             >
-              <option value="ALL">All categories</option>
+              <option value="ALL">{{ getCategoryLabel("ALL") }}</option>
               @for (category of categories(); track category) {
-                <option [value]="category">{{ category }}</option>
+                <option [value]="category">
+                  {{ getCategoryLabel(category) }}
+                </option>
               }
             </select>
           </label>

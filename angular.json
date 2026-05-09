@@ -84,11 +84,17 @@
               "sourceMap": false
             },
             "development": {
+              "server": false,
+              "prerender": false,
+              "ssr": false,
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
             },
             "en": {
+              "server": false,
+              "prerender": false,
+              "ssr": false,
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,

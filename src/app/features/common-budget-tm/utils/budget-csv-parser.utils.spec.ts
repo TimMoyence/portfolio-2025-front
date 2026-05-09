@@ -43,6 +43,19 @@ describe("parseCsv", () => {
 
     expect(result.length).toBe(0);
   });
+
+  it("devrait detecter les CSV separes par point-virgule", () => {
+    const csv = "Description;Amount;Started Date\nCarrefour;-85,50;2026-03-15";
+    const result = parseCsv(csv);
+
+    expect(result).toEqual([
+      {
+        Description: "Carrefour",
+        Amount: "-85,50",
+        "Started Date": "2026-03-15",
+      },
+    ]);
+  });
 });
 
 describe("toTransactions", () => {
@@ -61,7 +74,7 @@ describe("toTransactions", () => {
     expect(transactions[0].type).toBe("CARD_PAYMENT");
     expect(transactions[0].state).toBe("COMPLETED");
     expect(transactions[0].amount).toBe(-42.5);
-    expect(transactions[0].category).toBe("Autres");
+    expect(transactions[0].category).toBe("Courses");
   });
 
   it("devrait generer un identifiant deterministe", () => {
@@ -84,5 +97,26 @@ describe("toTransactions", () => {
     expect(transactions[0].type).toBe("");
     expect(transactions[0].state).toBe("");
     expect(transactions[0].amount).toBe(0);
+  });
+
+  it("devrait inferer les contributions positives", () => {
+    const rows = parseCsv(
+      "Started Date,Description,Amount,Type\n2026-03-01,Tim Moyence,1500,TRANSFER",
+    );
+
+    const transactions = toTransactions(rows);
+
+    expect(transactions[0].category).toBe("Contribution");
+  });
+
+  it("devrait reconnaitre les montants europeens et les alias de categories", () => {
+    const rows = parseCsv(
+      "Date;Description;Montant;Type;State\n2026-03-15;Basic Fit;-45,00;CARD_PAYMENT;COMPLETED",
+    );
+
+    const transactions = toTransactions(rows);
+
+    expect(transactions[0].amount).toBe(-45);
+    expect(transactions[0].category).toBe("Salle de sport");
   });
 });
