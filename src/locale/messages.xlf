@@ -1759,18 +1759,362 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">clientProjects.projects.louison.card.bullets.4</note>
       </trans-unit>
+      <trans-unit id="budgetDashboardEyebrow" datatype="html">
+        <source> Tableau de bord couple </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetDashboardDescription" datatype="html">
+        <source> Un cockpit budget léger pour Tim et Maria : importez un CSV, classez automatiquement les dépenses, ajustez manuellement les catégories, et gardez les contributions visibles d&apos;un coup d&apos;œil. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetDashboardDataSource" datatype="html">
+        <source> Source de données </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">57,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetDashboardUploadCsv" datatype="html">
+        <source> Importer un CSV </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">70,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetDashboardResetSample" datatype="html">
+        <source> Réinitialiser l&apos;exemple </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">86,88</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="budgetShareTitle" datatype="html">
         <source> Partager le budget </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
-          <context context-type="linenumber">91,92</context>
+          <context context-type="linenumber">100,101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSharePlaceholder" datatype="html">
+        <source>email@exemple.com</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">107,108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetShareInviteBtn" datatype="html">
         <source>Inviter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
-          <context context-type="linenumber">107,109</context>
+          <context context-type="linenumber">117,119</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummarySpendingEyebrow" datatype="html">
+        <source>Sortants</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">132,133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummarySpendingTitle" datatype="html">
+        <source>Total des dépenses</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">134,136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummarySpendingCaption" datatype="html">
+        <source>Toutes les transactions sortantes de la période chargée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">137,140</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryIncomingEyebrow" datatype="html">
+        <source>Entrants</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">141,142</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryIncomingTitle" datatype="html">
+        <source>Total des entrants</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">143,145</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryIncomingCaption" datatype="html">
+        <source>Virements, dépôts et contributions partagées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">146,149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryContributionEyebrow" datatype="html">
+        <source>Contribution</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">150,152</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">156,158</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryTransfersEyebrow" datatype="html">
+        <source>Virements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">162,163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryPocketsTitle" datatype="html">
+        <source>Pockets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">165,166</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryPocketsCaption" datatype="html">
+        <source>Argent transféré du compte commun vers les pockets.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">167,171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryEyebrow" datatype="html">
+        <source> Calcul du budget </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">190,192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryTitle" datatype="html">
+        <source> Ratio de contribution salariale </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">196,198</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryDescription" datatype="html">
+        <source> Saisissez les salaires de Tim et Maria pour calculer le pourcentage que chaque salaire représente dans le total combiné. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">203,206</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryTimLabel" datatype="html">
+        <source>Salaire de Tim</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">210,212</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryShareLabel" datatype="html">
+        <source>Part :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">221,222</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">238,239</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryMariaLabel" datatype="html">
+        <source>Salaire de Maria</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">227,229</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryCombinedLabel" datatype="html">
+        <source> Salaires combinés </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">250,252</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryCombinedHelp" datatype="html">
+        <source> Une règle rapide pour répartir équitablement les contributions au compte commun. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">259,262</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSalaryValidateBtn" datatype="html">
+        <source> Valider </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">272,275</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersEyebrow" datatype="html">
+        <source> Filtres </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">295,298</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersTitle" datatype="html">
+        <source> Affiner le tableau </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">301,303</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersDescription" datatype="html">
+        <source> Cherchez par marchand, isolez une catégorie, ou affichez uniquement les lignes en attente avant de corriger les classifications. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">307,311</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersSearchLabel" datatype="html">
+        <source>Rechercher dans la description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">313,315</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersSearchPlaceholder" datatype="html">
+        <source>Amazon, EDF, Carrefour…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">318,320</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersCategoryLabel" datatype="html">
+        <source>Catégorie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">325,327</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersStateLabel" datatype="html">
+        <source>État</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">341,343</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersStateAll" datatype="html">
+        <source> Tous les états </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">348,349</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersStateCompleted" datatype="html">
+        <source> Terminé </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">351,353</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersStatePending" datatype="html">
+        <source> En attente </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">354,356</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersTypeLabel" datatype="html">
+        <source>Fixe ou variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">360,362</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersTypeAll" datatype="html">
+        <source>Tous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">366,367</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersTypeFixed" datatype="html">
+        <source> Fixe </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">368,369</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersTypeVariable" datatype="html">
+        <source> Variable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.html</context>
+          <context context-type="linenumber">371,373</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryTimAdded" datatype="html">
+        <source>Tim a ajouté</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryTimLeftToAdd" datatype="html">
+        <source>Tim reste à ajouter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryMariaAdded" datatype="html">
+        <source>Maria a ajouté</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetSummaryMariaLeftToAdd" datatype="html">
+        <source>Maria reste à ajouter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetFiltersCategoryAll" datatype="html">
+        <source>Toutes les catégories</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">551</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetMonthMarch" datatype="html">
+        <source>Mars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">571</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetMonthApril" datatype="html">
+        <source>Avril</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">572</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetMonthMay" datatype="html">
+        <source>Mai</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">573</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetMonthJune" datatype="html">
+        <source>Juin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/common-budget-tm/common-budget-tm.component.ts</context>
+          <context context-type="linenumber">574</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetChartDoughnutTitle" datatype="html">
@@ -4473,7 +4817,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">212,213</context>
+          <context context-type="linenumber">172,173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.contexte-marche.imageAlt" datatype="html">
@@ -4526,7 +4870,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">267,268</context>
+          <context context-type="linenumber">227,228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.culture-apprendre.title" datatype="html">
@@ -4536,249 +4880,179 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">73,74</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ia-solo.culture-apprendre.subtitle" datatype="html">
-        <source> Votre veille passe de 3h à 20 min </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">77,80</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.culture-apprendre.bullets.0" datatype="html">
-        <source> NotebookLM — Uploadez un PDF, récupérez un podcast de 10 min avec deux voix IA qui l&apos;analysent. Par Google, gratuit. Mode interactif : interrompez les hosts pour poser vos questions. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">81,85</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.culture-apprendre.bullets.1" datatype="html">
-        <source> Perplexity — Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses sourcées avec citations, pas de liens bleus à trier. Gratuit ou 20$/mois. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">86,90</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.culture-apprendre.bullets.2" datatype="html">
-        <source> Fathom — Notes de réunion automatiques sur Zoom/Meet/Teams. Transcription + résumé + actions. 5 résumés IA/mois en gratuit, 19$/mois pour l&apos;illimité. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">91,95</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ia-solo.chat-produire.title" datatype="html">
         <source>ChatGPT, Claude, Gemini — lequel ouvrir en premier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">101,102</context>
+          <context context-type="linenumber">84,85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.creer.imageAlt" datatype="html">
         <source>Espace de travail créatif avec laptop et calligraphie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">110,111</context>
+          <context context-type="linenumber">93,94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.creer.title" datatype="html">
         <source>Du contenu pro en 10× moins de temps</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">112,113</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.creer.bullets.0" datatype="html">
-        <source> Ideogram — Génération d&apos;images avec du texte lisible dedans. Aucun autre outil ne fait ça aussi bien. Gratuit (10 prompts/jour). </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">117,120</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.creer.bullets.1" datatype="html">
-        <source> Gamma — 70M d&apos;utilisateurs. Tapez un prompt, récupérez une présentation complète en moins d&apos;une minute. Gamma Agent restructure et donne du feedback design. Gratuit pour démarrer, 10$/mois. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">121,124</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.creer.bullets.2" datatype="html">
-        <source> ElevenLabs — Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix dans 29 langues. Gratuit (10 min) puis 5$/mois. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">126,129</context>
+          <context context-type="linenumber">95,96</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.title" datatype="html">
         <source>Quelles tâches faites-vous encore à la main ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">135,136</context>
+          <context context-type="linenumber">106,107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.site-web.imageAlt" datatype="html">
         <source>Espace de travail avec double écran montrant des maquettes de design</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">144,145</context>
+          <context context-type="linenumber">115,116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.site-web.title" datatype="html">
         <source>Votre site en ligne ce soir, sans une ligne de code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">146,147</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.site-web.bullets.0" datatype="html">
-        <source> Lovable — Du prompt au site full-stack. 8M d&apos;utilisateurs, valorisé 6,6Md$. Gratuit (50 actions IA/jour). </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">151,154</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.site-web.bullets.1" datatype="html">
-        <source> Bolt.new — Même concept, tout dans le navigateur. Frontend, backend, déploiement. 25$/mois. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">155,158</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ia-solo.site-web.bullets.2" datatype="html">
-        <source> v0 — Par Vercel. Génère du React/Next.js/Tailwind. Plus technique, plus propre. Gratuit (5$ de crédits/mois) puis 20$/mois. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">159,162</context>
+          <context context-type="linenumber">117,118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.clients.title" datatype="html">
         <source>Comment prospecter, convertir et fidéliser avec l&apos;IA ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">168,169</context>
+          <context context-type="linenumber">128,129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.title" datatype="html">
         <source>Quel budget IA pour quel stack — 0€, 60€ ou 120€/mois ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">180,181</context>
+          <context context-type="linenumber">140,141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.title" datatype="html">
         <source>16 outils IA pour solopreneurs en 2026 — récap rapide</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">188,189</context>
+          <context context-type="linenumber">148,149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.workflows-detail.title" datatype="html">
         <source>3 workflows à mettre en place cette semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">197,198</context>
+          <context context-type="linenumber">157,158</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.transition-pratique.title" datatype="html">
         <source>Stop. On pratique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">207,208</context>
+          <context context-type="linenumber">167,168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.transition-pratique.subtitle" datatype="html">
         <source>Tout ce que je viens de dire ne vaut rien si vous ne le testez pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">209,210</context>
+          <context context-type="linenumber">169,170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.recap-8020.title" datatype="html">
         <source>Ce que l&apos;IA change — et ce qu&apos;elle ne change pas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">223,224</context>
+          <context context-type="linenumber">183,184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.pieges.title" datatype="html">
         <source>Les 3 pièges à éviter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">237,238</context>
+          <context context-type="linenumber">197,198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.citation.quote" datatype="html">
         <source>L&apos;IA génère du contenu. Un expert génère des résultats.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">245,246</context>
+          <context context-type="linenumber">205,206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.citation.author" datatype="html">
         <source>La règle d&apos;or du solopreneur en 2026</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">247,248</context>
+          <context context-type="linenumber">207,208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.cta.title" datatype="html">
         <source>Récupère le toolkit IA Solopreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">254,255</context>
+          <context context-type="linenumber">214,215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.cta.description" datatype="html">
         <source>Cheatsheet de décision (quel outil pour quelle tâche) + prompts prêts à copier adaptés à votre niveau + 3 workflows pas-à-pas (Zapier/Make) avec templates. Reçu en 30 secondes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">256,257</context>
+          <context context-type="linenumber">216,217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.cta.ctaLabel" datatype="html">
         <source>Télécharger le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">258,259</context>
+          <context context-type="linenumber">218,219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.one-more-thing.title" datatype="html">
         <source>Une dernière chose...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">269,270</context>
+          <context context-type="linenumber">229,230</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.one-more-thing.subtitle" datatype="html">
         <source> NotebookLM — votre PDF devient un podcast avec deux hosts IA </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">273,276</context>
+          <context context-type="linenumber">233,236</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.one-more-thing.bullets.0" datatype="html">
         <source> Uploadez n&apos;importe quel document </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">277,279</context>
+          <context context-type="linenumber">237,239</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.one-more-thing.bullets.1" datatype="html">
         <source> 47 secondes plus tard : un podcast de 10 min, deux voix naturelles </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">280,282</context>
+          <context context-type="linenumber">240,242</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.one-more-thing.bullets.2" datatype="html">
         <source> Mode interactif : interrompez les hosts pour poser vos questions </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">283,285</context>
+          <context context-type="linenumber">243,245</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.one-more-thing.bullets.3" datatype="html">
         <source> Nouveau 2026 : Cinematic Video Overviews — vos docs deviennent des vidéos </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.html</context>
-          <context context-type="linenumber">286,290</context>
+          <context context-type="linenumber">246,250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.promesse.bullets.0" datatype="html">
@@ -4900,671 +5174,818 @@ L’application est organisée autour de trois modules complémentaires, chacun 
           <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="ia-solo.culture-apprendre.subtitle" datatype="html">
+        <source>Votre veille passe de 3h à 20 min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.culture-apprendre.items.0.description" datatype="html">
+        <source>Uploadez un PDF, récupérez un podcast de 10 min avec deux voix IA qui l&apos;analysent. Mode interactif : interrompez les hosts pour poser vos questions.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.culture-apprendre.items.0.meta" datatype="html">
+        <source>Gratuit (Google)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.culture-apprendre.items.1.description" datatype="html">
+        <source>Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses sourcées avec citations, pas de liens bleus à trier.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.culture-apprendre.items.1.meta" datatype="html">
+        <source>Gratuit / 20$/mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.culture-apprendre.items.2.description" datatype="html">
+        <source>Notes de réunion automatiques sur Zoom/Meet/Teams. Transcription + résumé + actions. 5 résumés IA/mois en gratuit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.culture-apprendre.items.2.meta" datatype="html">
+        <source>Gratuit / 19$/mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.creer.subtitle" datatype="html">
+        <source>Texte, image, voix : 10× plus vite, qualité pro</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.creer.items.0.description" datatype="html">
+        <source>Génération d&apos;images avec du texte lisible dedans. Aucun autre outil ne fait ça aussi bien.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.creer.items.0.meta" datatype="html">
+        <source>Gratuit (10/jour)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.creer.items.1.description" datatype="html">
+        <source>70M d&apos;utilisateurs. Tapez un prompt, récupérez une présentation complète en moins d&apos;une minute. Gamma Agent restructure et donne du feedback design.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.creer.items.1.meta" datatype="html">
+        <source>Gratuit / 10$/mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.creer.items.2.description" datatype="html">
+        <source>Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix dans 29 langues.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.creer.items.2.meta" datatype="html">
+        <source>Gratuit (10 min) / 5$/mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.site-web.subtitle" datatype="html">
+        <source>Du prompt au site déployé, sans une ligne de code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.site-web.items.0.description" datatype="html">
+        <source>Du prompt au site full-stack. 8M d&apos;utilisateurs, valorisé 6,6Md$.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.site-web.items.0.meta" datatype="html">
+        <source>Gratuit (50 actions IA/jour)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.site-web.items.1.description" datatype="html">
+        <source>Même concept, tout dans le navigateur. Frontend, backend, déploiement.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.site-web.items.1.meta" datatype="html">
+        <source>25$/mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.site-web.items.2.description" datatype="html">
+        <source>Par Vercel. Génère du React/Next.js/Tailwind. Plus technique, plus propre.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ia-solo.site-web.items.2.meta" datatype="html">
+        <source>Gratuit (5$ crédits) / 20$/mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="ia-solo.workflows-detail.grid.0.title" datatype="html">
         <source>Prospection automatisée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.workflows-detail.grid.0.description" datatype="html">
         <source>Waalaxy capte le lead LinkedIn → Zapier/Make crée la fiche Notion → Brevo envoie l&apos;email de bienvenue → Rappel calendrier auto (Make + Brevo)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.workflows-detail.grid.1.title" datatype="html">
         <source>Contenu multicanal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.workflows-detail.grid.1.description" datatype="html">
         <source>Post LinkedIn rédigé avec Claude → visuel Canva AI → Zapier reposte sur X + archive dans Google Sheet + notification Slack (Zapier + Claude)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">186</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.workflows-detail.grid.2.title" datatype="html">
         <source>Veille automatique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.workflows-detail.grid.2.description" datatype="html">
         <source>Perplexity recherche quotidienne sur votre secteur → résumé dans Notion → NotebookLM génère un brief audio de 5 min (Perplexity + NotebookLM)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.pieges.grid.0.title" datatype="html">
         <source>Hallucinations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.pieges.grid.0.description" datatype="html">
         <source>L&apos;IA invente des faits avec assurance. Vérifiez toujours les chiffres, les citations, les liens. Perplexity aide — il cite ses sources. (Vérifiez)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.pieges.grid.1.title" datatype="html">
         <source>RGPD</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.pieges.grid.1.description" datatype="html">
         <source>Ne mettez JAMAIS de données personnelles clients dans un prompt. Pas de noms, pas d&apos;emails, pas de numéros. Les conditions d&apos;utilisation vous le disent. (Protégez)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">202</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.pieges.grid.2.title" datatype="html">
         <source>Dépendance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.pieges.grid.2.description" datatype="html">
         <source>L&apos;IA amplifie votre expertise, elle ne la remplace pas. Si vous ne savez pas écrire un bon brief, ChatGPT ne le saura pas pour vous. (Gardez le contrôle)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.cgpt.0" datatype="html">
         <source>Polyvalent, 900M users/sem, GPT Store</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.cgpt.1" datatype="html">
         <source>Idéal pour brainstorm, code, analyse de données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">213</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.cgpt.2" datatype="html">
         <source>Gratuit / 20$/mois (Plus)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.claude.0" datatype="html">
         <source>N°1 rédaction, 1M tokens de contexte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">218</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.claude.1" datatype="html">
         <source>Idéal pour rédaction pro, contrats, docs longs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.claude.2" datatype="html">
         <source>Gratuit / 20$/mois (Pro)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">220</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.gemini.0" datatype="html">
         <source>Branché Google Workspace, analyse vidéo native</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.gemini.1" datatype="html">
         <source>Idéal pour Gmail/Drive/Agenda + résumé vidéo YouTube</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">225</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.gemini.2" datatype="html">
         <source>Gratuit / 20$/mois (Advanced)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.zapier.0" datatype="html">
         <source>Difficulté : facile</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.zapier.1" datatype="html">
         <source>Gratuit (100 tâches/mois)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">232</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.zapier.2" datatype="html">
         <source>Branchez deux apps en 5 min, ça tourne tout seul</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">233</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.make.0" datatype="html">
         <source>Difficulté : moyen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.make.1" datatype="html">
         <source>9€/mois (10K opérations)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.make.2" datatype="html">
         <source>Plus flexible que Zapier, scénarios visuels complexes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">239</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.n8n.0" datatype="html">
         <source>Open source self-hosted, valorisé 2,5Md$</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.n8n.1" datatype="html">
         <source>Idéal pour devs qui veulent contrôle total + MCP</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">244</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.n8n.2" datatype="html">
         <source>Gratuit (self-host) / 24€/mois (cloud)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">245</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.debutant.0" datatype="html">
         <source>ChatGPT gratuit + Canva gratuit + Gamma</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.debutant.1" datatype="html">
         <source>Zapier (100 tâches) + Brevo + NotebookLM</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.debutant.2" datatype="html">
         <source>Budget : 0€/mois — couvre 80% des besoins</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">252</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.intermediaire.0" datatype="html">
         <source>ChatGPT Plus (20€) + Canva Pro (12€)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.intermediaire.1" datatype="html">
         <source>Make.com (9€) + Notion AI (10€)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">257</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.intermediaire.2" datatype="html">
         <source>Perplexity Pro (20€) — total ~70€/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">258</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.avance.0" datatype="html">
         <source>Claude Pro (20$) + ChatGPT Plus (20$)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.avance.1" datatype="html">
         <source>Make Pro (16€) + ElevenLabs (22$)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">263</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.avance.2" datatype="html">
         <source>Fathom (19$) + Waalaxy (19€) — ~120€/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">264</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.headers.tool" datatype="html">
         <source>Outil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.headers.category" datatype="html">
         <source>Catégorie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">275</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.headers.price" datatype="html">
         <source>Prix</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">279</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.headers.tagline" datatype="html">
         <source>Tagline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">209</context>
+          <context context-type="linenumber">283</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.cat.apprendre" datatype="html">
         <source>Apprendre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">290</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">296</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">302</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.0.price" datatype="html">
         <source>Gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">291</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.0.tagline" datatype="html">
         <source>PDF → podcast en 47 secondes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">292</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.1.price" datatype="html">
         <source>Gratuit / 20$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">297</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.1.tagline" datatype="html">
         <source>Recherche IA sourcée, 100M+ users/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">298</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.2.price" datatype="html">
         <source>Gratuit (limité) / 19$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">303</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.2.tagline" datatype="html">
         <source>Notes de réunion automatiques</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">304</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.cat.produire" datatype="html">
         <source>Produire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">233</context>
+          <context context-type="linenumber">308</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">314</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">245</context>
+          <context context-type="linenumber">320</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.3.price" datatype="html">
         <source>Gratuit / 20$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">309</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.3.tagline" datatype="html">
         <source>Le couteau suisse, 900M users/semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">235</context>
+          <context context-type="linenumber">310</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.4.price" datatype="html">
         <source>Gratuit / 20$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">315</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.4.tagline" datatype="html">
         <source>N°1 rédaction, 1M tokens de contexte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">316</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.5.price" datatype="html">
         <source>Gratuit / 20$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">321</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.5.tagline" datatype="html">
         <source>Branché Google Workspace, analyse vidéo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">247</context>
+          <context context-type="linenumber">322</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.cat.creer" datatype="html">
         <source>Créer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">251</context>
+          <context context-type="linenumber">326</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">257</context>
+          <context context-type="linenumber">332</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">338</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.6.price" datatype="html">
         <source>Gratuit (10/jour)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">327</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.6.tagline" datatype="html">
         <source>Images avec texte lisible, imbattable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">328</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.7.price" datatype="html">
         <source>Gratuit / 10$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">258</context>
+          <context context-type="linenumber">333</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.7.tagline" datatype="html">
         <source>Présentation complète en 60 secondes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">334</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.8.price" datatype="html">
         <source>Gratuit / 5$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">264</context>
+          <context context-type="linenumber">339</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.8.tagline" datatype="html">
         <source>Clonage vocal, valorisé 11Md$</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">265</context>
+          <context context-type="linenumber">340</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.cat.automatiser" datatype="html">
         <source>Automatiser</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">269</context>
+          <context context-type="linenumber">344</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">350</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">356</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.9.price" datatype="html">
         <source>Gratuit (100 tâches)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">270</context>
+          <context context-type="linenumber">345</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.9.tagline" datatype="html">
         <source>Branchez deux apps en 5 min</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">271</context>
+          <context context-type="linenumber">346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.10.price" datatype="html">
         <source>9€/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">276</context>
+          <context context-type="linenumber">351</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.10.tagline" datatype="html">
         <source>Scénarios visuels, 10K opérations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">277</context>
+          <context context-type="linenumber">352</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.11.price" datatype="html">
         <source>Gratuit (self-hosted)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">282</context>
+          <context context-type="linenumber">357</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.11.tagline" datatype="html">
         <source>Open source, illimité, pour les bidouilleurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">283</context>
+          <context context-type="linenumber">358</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.cat.clients" datatype="html">
         <source>Clients</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">287</context>
+          <context context-type="linenumber">362</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">368</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">299</context>
+          <context context-type="linenumber">374</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="linenumber">380</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.12.price" datatype="html">
         <source>19€/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">288</context>
+          <context context-type="linenumber">363</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.12.tagline" datatype="html">
         <source>Prospection LinkedIn automatisée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">289</context>
+          <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.13.price" datatype="html">
         <source>10$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">369</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.13.tagline" datatype="html">
         <source>CRM léger + agents custom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">370</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.14.price" datatype="html">
         <source>Gratuit (300/jour)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">300</context>
+          <context context-type="linenumber">375</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.14.tagline" datatype="html">
         <source>Email marketing IA, français, RGPD</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">301</context>
+          <context context-type="linenumber">376</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.15.price" datatype="html">
         <source>Gratuit / 15$/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">306</context>
+          <context context-type="linenumber">381</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.outils-detail.row.15.tagline" datatype="html">
         <source>Visuels pro, 220M+ utilisateurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">382</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.left" datatype="html">
         <source>ChatGPT (OpenAI)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">314</context>
+          <context context-type="linenumber">389</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.right" datatype="html">
         <source>Claude (Anthropic)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">394</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.chat-produire.gemini.label" datatype="html">
         <source>Gemini (Google)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">324</context>
+          <context context-type="linenumber">399</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.zapier.label" datatype="html">
         <source>Zapier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">333</context>
+          <context context-type="linenumber">408</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.make.label" datatype="html">
         <source>Make.com</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">338</context>
+          <context context-type="linenumber">413</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.automatiser.n8n.label" datatype="html">
         <source>n8n</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">418</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.debutant.label" datatype="html">
         <source>Stack débutant — 0€/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">352</context>
+          <context context-type="linenumber">427</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.intermediaire.label" datatype="html">
         <source>Stack intermédiaire — ~60€/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">357</context>
+          <context context-type="linenumber">432</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.stack-budget.avance.label" datatype="html">
         <source>Stack avancé — ~120€/mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts</context>
-          <context context-type="linenumber">362</context>
+          <context context-type="linenumber">437</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.loading" datatype="html">
@@ -12168,74 +12589,32 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">Contact method value</note>
         <note priority="1" from="meaning">contact.method.office.value</note>
       </trans-unit>
-      <trans-unit id="slidePollError" datatype="html">
-        <source> Impossible de charger le sondage. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/slides/interactions/slide-poll/slide-poll.component.html</context>
-          <context context-type="linenumber">4,7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="slidePollLoading" datatype="html">
-        <source>Chargement du sondage…</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/slides/interactions/slide-poll/slide-poll.component.html</context>
-          <context context-type="linenumber">30,34</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="slideQuizError" datatype="html">
-        <source> Impossible de charger le quiz pour le moment. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html</context>
-          <context context-type="linenumber">4,7</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="slideQuizCorrect" datatype="html">
         <source>Bonne réponse !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html</context>
-          <context context-type="linenumber">30,32</context>
+          <context context-type="linenumber">24,25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideQuizIncorrect" datatype="html">
         <source>Pas tout à fait. La bonne réponse est : <x id="INTERPOLATION" equiv-text="{{ q.options[q.correctIndex] }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html</context>
-          <context context-type="linenumber">34,36</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="slideQuizLoading" datatype="html">
-        <source>Chargement…</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html</context>
-          <context context-type="linenumber">41,45</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="slideReflectionError" datatype="html">
-        <source>Impossible de charger la question.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html</context>
-          <context context-type="linenumber">3,5</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideReflectionSave" datatype="html">
         <source> Garder cette réflexion </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html</context>
-          <context context-type="linenumber">21,23</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideReflectionSaved" datatype="html">
         <source> Réflexion enregistrée localement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html</context>
-          <context context-type="linenumber">25,28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="slideReflectionLoading" datatype="html">
-        <source>Chargement…</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html</context>
-          <context context-type="linenumber">29,33</context>
+          <context context-type="linenumber">22,26</context>
         </context-group>
       </trans-unit>
     </body>

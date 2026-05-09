@@ -56,4 +56,31 @@ describe("CommonBudgetTmComponent", () => {
 
     expect(component.groupId()).toBe("group-1");
   });
+
+  describe("i18n labels (FR source)", () => {
+    it("getCategoryLabel('ALL') returns the localized French label", () => {
+      expect(component.getCategoryLabel("ALL")).toBe("Toutes les catégories");
+    });
+
+    it("getMonthLabel returns French month names", () => {
+      expect(component.getMonthLabel("March")).toBe("Mars");
+      expect(component.getMonthLabel("April")).toBe("Avril");
+      expect(component.getMonthLabel("May")).toBe("Mai");
+      expect(component.getMonthLabel("June")).toBe("Juin");
+    });
+
+    it("mariaContributionLines exposes two FR-labelled entries", () => {
+      const lines = component.mariaContributionLines();
+      expect(lines.length).toBe(2);
+      expect(lines[0].label).toBe("Maria a ajouté");
+      expect(lines[1].label).toBe("Maria reste à ajouter");
+    });
+
+    it("timContributionLines exposes two FR-labelled entries", () => {
+      const lines = component.timContributionLines();
+      expect(lines.length).toBe(2);
+      expect(lines[0].label).toBe("Tim a ajouté");
+      expect(lines[1].label).toBe("Tim reste à ajouter");
+    });
+  });
 });

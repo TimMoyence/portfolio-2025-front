@@ -181,6 +181,28 @@ export class CommonBudgetTmComponent {
     this.fmt.formatCurrency(this.getContributionTotalFor("maria naumenko")),
   );
 
+  readonly timContributionLines = computed(() => [
+    {
+      label: $localize`:@@budgetSummaryTimAdded:Tim a ajouté`,
+      value: this.timContribution(),
+    },
+    {
+      label: $localize`:@@budgetSummaryTimLeftToAdd:Tim reste à ajouter`,
+      value: "",
+    },
+  ]);
+
+  readonly mariaContributionLines = computed(() => [
+    {
+      label: $localize`:@@budgetSummaryMariaAdded:Maria a ajouté`,
+      value: this.mariaContribution(),
+    },
+    {
+      label: $localize`:@@budgetSummaryMariaLeftToAdd:Maria reste à ajouter`,
+      value: "",
+    },
+  ]);
+
   readonly pocketsTotal = computed(() =>
     this.fmt.formatCurrency(
       Math.abs(
@@ -526,7 +548,7 @@ export class CommonBudgetTmComponent {
 
   getCategoryLabel(category: string | "ALL"): string {
     if (category === "ALL") {
-      return "All categories";
+      return $localize`:@@budgetFiltersCategoryAll:Toutes les catégories`;
     }
 
     if (category === "Voiture utilisation") {
@@ -542,6 +564,16 @@ export class CommonBudgetTmComponent {
     }
 
     return category;
+  }
+
+  getMonthLabel(month: BudgetMonth): string {
+    const labels: Record<BudgetMonth, string> = {
+      March: $localize`:@@budgetMonthMarch:Mars`,
+      April: $localize`:@@budgetMonthApril:Avril`,
+      May: $localize`:@@budgetMonthMay:Mai`,
+      June: $localize`:@@budgetMonthJune:Juin`,
+    };
+    return labels[month];
   }
 
   private apiEntriesToTransactions(
