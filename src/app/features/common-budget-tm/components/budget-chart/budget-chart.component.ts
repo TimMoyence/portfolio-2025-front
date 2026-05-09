@@ -68,16 +68,10 @@ export class BudgetChartComponent implements OnDestroy {
     }
 
     effect(() => {
-      // Lire les inputs pour declencher le tracking
       const totals = this.categoryTotals();
       this.apiCategories();
 
       if (this.isBrowser && totals.length > 0 && this.doughnutCanvas) {
-        // Detruire les charts existants avant de recreer
-        this.doughnutChart?.destroy();
-        this.barChart?.destroy();
-        this.doughnutChart = null;
-        this.barChart = null;
         this.renderCharts();
       }
     });
@@ -90,6 +84,14 @@ export class BudgetChartComponent implements OnDestroy {
 
   /** Instancie les graphiques Chart.js (import dynamique pour le tree-shaking). */
   private async renderCharts(): Promise<void> {
+    // Toujours detruire les charts existants avant de recreer pour eviter
+    // l'erreur "Canvas is already in use" en cas de re-render concurrent
+    // (afterNextRender + effect peuvent se declencher en parallele).
+    this.doughnutChart?.destroy();
+    this.barChart?.destroy();
+    this.doughnutChart = null;
+    this.barChart = null;
+
     const totals = this.categoryTotals();
     const cats = this.apiCategories();
     if (!totals.length) return;
@@ -98,6 +100,8 @@ export class BudgetChartComponent implements OnDestroy {
     chartJs.Chart.register(
       chartJs.ArcElement,
       chartJs.BarElement,
+      chartJs.DoughnutController,
+      chartJs.BarController,
       chartJs.CategoryScale,
       chartJs.LinearScale,
       chartJs.Tooltip,
