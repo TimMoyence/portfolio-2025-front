@@ -6461,50 +6461,300 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Dismiss suggestion</target>
       </segment>
     </unit>
-    <!-- Budget presentation -->
-    <unit id="budgetHeroLabel">
-      <segment>
-        <source>Side-project</source>
-        <target>Side project</target>
-      </segment>
-    </unit>
-    <unit id="budgetHeroTitle">
-      <segment>
-        <source>Budget</source>
-        <target>Budget</target>
-      </segment>
-    </unit>
-    <unit id="budgetHeroDescription">
-      <segment>
-        <source>Un outil de gestion de budget partagé pour couple, avec import CSV, catégorisation automatique et suivi des contributions.</source>
-        <target>A shared couple budget management tool with CSV import, auto-categorization, and contribution tracking.</target>
-      </segment>
-    </unit>
-    <unit id="budgetHeroActionLogin">
-      <segment>
-        <source>Se connecter</source>
-        <target>Log in</target>
-      </segment>
-    </unit>
-    <unit id="budgetPresentationSectionTitle">
-      <segment>
-        <source>Gérez vos finances à deux</source>
-        <target>Manage your finances as a couple</target>
-      </segment>
-    </unit>
-    <unit id="budgetPresentationSectionDesc">
-      <segment>
-        <source>Importez vos relevés CSV, visualisez les dépenses par catégorie et suivez les contributions de chaque membre du couple. Auto-catégorisation intelligente et tableau éditable inclus.</source>
-        <target>Import your CSV statements, view spending by category, and track each partner's contributions. Smart auto-categorization and editable table included.</target>
-      </segment>
-    </unit>
-    <unit id="budgetPresentationCta">
-      <segment>
-        <source>Se connecter</source>
-        <target>Log in</target>
-      </segment>
-    </unit>
     <!-- Budget app -->
+    <!-- Dashboard hero -->
+    <unit id="budgetDashboardEyebrow">
+      <segment>
+        <source>Tableau de bord couple</source>
+        <target>Couple dashboard</target>
+      </segment>
+    </unit>
+    <unit id="budgetDashboardDescription">
+      <segment>
+        <source>Un cockpit budget léger pour Tim et Maria : importez un CSV, classez automatiquement les dépenses, ajustez manuellement les catégories, et gardez les contributions visibles d'un coup d'œil.</source>
+        <target>A lightweight budget cockpit for Tim and Maria: upload a CSV, auto-classify expenses, adjust categories manually, and keep contributions visible at a glance.</target>
+      </segment>
+    </unit>
+    <unit id="budgetDashboardDataSource">
+      <segment>
+        <source>Source de données</source>
+        <target>Data source</target>
+      </segment>
+    </unit>
+    <unit id="budgetDashboardUploadCsv">
+      <segment>
+        <source>Importer un CSV</source>
+        <target>Upload CSV</target>
+      </segment>
+    </unit>
+    <unit id="budgetDashboardResetSample">
+      <segment>
+        <source>Réinitialiser l'exemple</source>
+        <target>Reset sample</target>
+      </segment>
+    </unit>
+    <unit id="budgetSharePlaceholder">
+      <segment>
+        <source>email@exemple.com</source>
+        <target>email@example.com</target>
+      </segment>
+    </unit>
+    <!-- Summary cards -->
+    <unit id="budgetSummarySpendingEyebrow">
+      <segment>
+        <source>Sortants</source>
+        <target>Spending</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummarySpendingTitle">
+      <segment>
+        <source>Total des dépenses</source>
+        <target>Total expenses</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummarySpendingCaption">
+      <segment>
+        <source>Toutes les transactions sortantes de la période chargée.</source>
+        <target>All outgoing transactions in the loaded period.</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryIncomingEyebrow">
+      <segment>
+        <source>Entrants</source>
+        <target>Incoming</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryIncomingTitle">
+      <segment>
+        <source>Total des entrants</source>
+        <target>Total incoming</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryIncomingCaption">
+      <segment>
+        <source>Virements, dépôts et contributions partagées.</source>
+        <target>Transfers, top-ups, and shared contributions.</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryContributionEyebrow">
+      <segment>
+        <source>Contribution</source>
+        <target>Contribution</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryTransfersEyebrow">
+      <segment>
+        <source>Virements</source>
+        <target>Transfers</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryPocketsTitle">
+      <segment>
+        <source>Pockets</source>
+        <target>Pockets</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryPocketsCaption">
+      <segment>
+        <source>Argent transféré du compte commun vers les pockets.</source>
+        <target>Money moved from the common account into pockets.</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryMariaAdded">
+      <segment>
+        <source>Maria a ajouté</source>
+        <target>Maria added</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryMariaLeftToAdd">
+      <segment>
+        <source>Maria reste à ajouter</source>
+        <target>Maria left to add</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryTimAdded">
+      <segment>
+        <source>Tim a ajouté</source>
+        <target>Tim added</target>
+      </segment>
+    </unit>
+    <unit id="budgetSummaryTimLeftToAdd">
+      <segment>
+        <source>Tim reste à ajouter</source>
+        <target>Tim left to add</target>
+      </segment>
+    </unit>
+    <!-- Salary section -->
+    <unit id="budgetSalaryEyebrow">
+      <segment>
+        <source>Calcul du budget</source>
+        <target>Budget calculation</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryTitle">
+      <segment>
+        <source>Ratio de contribution salariale</source>
+        <target>Salary contribution ratio</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryDescription">
+      <segment>
+        <source>Saisissez les salaires de Tim et Maria pour calculer le pourcentage que chaque salaire représente dans le total combiné.</source>
+        <target>Enter Tim and Maria salaries to calculate what percentage each salary represents from the combined total.</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryTimLabel">
+      <segment>
+        <source>Salaire de Tim</source>
+        <target>Tim salary</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryMariaLabel">
+      <segment>
+        <source>Salaire de Maria</source>
+        <target>Maria salary</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryShareLabel">
+      <segment>
+        <source>Part :</source>
+        <target>Share:</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryCombinedLabel">
+      <segment>
+        <source>Salaires combinés</source>
+        <target>Combined salaries</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryCombinedHelp">
+      <segment>
+        <source>Une règle rapide pour répartir équitablement les contributions au compte commun.</source>
+        <target>A quick rule for splitting contributions to the common account fairly.</target>
+      </segment>
+    </unit>
+    <unit id="budgetSalaryValidateBtn">
+      <segment>
+        <source>Valider</source>
+        <target>Validate</target>
+      </segment>
+    </unit>
+    <!-- Filters -->
+    <unit id="budgetFiltersEyebrow">
+      <segment>
+        <source>Filtres</source>
+        <target>Filters</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersTitle">
+      <segment>
+        <source>Affiner le tableau</source>
+        <target>Focus the table</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersDescription">
+      <segment>
+        <source>Cherchez par marchand, isolez une catégorie, ou affichez uniquement les lignes en attente avant de corriger les classifications.</source>
+        <target>Search by merchant, isolate a category, or show only pending rows before fixing classifications.</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersSearchLabel">
+      <segment>
+        <source>Rechercher dans la description</source>
+        <target>Search description</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersSearchPlaceholder">
+      <segment>
+        <source>Amazon, EDF, Carrefour…</source>
+        <target>Amazon, EDF, Carrefour…</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersCategoryLabel">
+      <segment>
+        <source>Catégorie</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersCategoryAll">
+      <segment>
+        <source>Toutes les catégories</source>
+        <target>All categories</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersStateLabel">
+      <segment>
+        <source>État</source>
+        <target>State</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersStateAll">
+      <segment>
+        <source>Tous les états</source>
+        <target>All states</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersStateCompleted">
+      <segment>
+        <source>Terminé</source>
+        <target>Completed</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersStatePending">
+      <segment>
+        <source>En attente</source>
+        <target>Pending</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersTypeLabel">
+      <segment>
+        <source>Fixe ou variable</source>
+        <target>Fixed or variable</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersTypeAll">
+      <segment>
+        <source>Tous</source>
+        <target>All</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersTypeFixed">
+      <segment>
+        <source>Fixe</source>
+        <target>Fixed</target>
+      </segment>
+    </unit>
+    <unit id="budgetFiltersTypeVariable">
+      <segment>
+        <source>Variable</source>
+        <target>Variable</target>
+      </segment>
+    </unit>
+    <!-- Months -->
+    <unit id="budgetMonthMarch">
+      <segment>
+        <source>Mars</source>
+        <target>March</target>
+      </segment>
+    </unit>
+    <unit id="budgetMonthApril">
+      <segment>
+        <source>Avril</source>
+        <target>April</target>
+      </segment>
+    </unit>
+    <unit id="budgetMonthMay">
+      <segment>
+        <source>Mai</source>
+        <target>May</target>
+      </segment>
+    </unit>
+    <unit id="budgetMonthJune">
+      <segment>
+        <source>Juin</source>
+        <target>June</target>
+      </segment>
+    </unit>
     <unit id="budgetShareTitle">
       <segment>
         <source>Partager le budget</source>
