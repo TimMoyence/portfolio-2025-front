@@ -72,16 +72,14 @@ describe("SlideDeckComponent", () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it("ArrowDown appelle next() sur le service", () => {
-    const service = TestBed.inject(SlideDeckService);
-    const spy = spyOn(service, "next");
+  it("ArrowDown declenche un scroll vers la slide suivante", () => {
+    const spy = spyOn(deckEl, "scrollTo");
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
     expect(spy).toHaveBeenCalled();
   });
 
-  it("ArrowUp appelle previous() sur le service", () => {
-    const service = TestBed.inject(SlideDeckService);
-    const spy = spyOn(service, "previous");
+  it("ArrowUp declenche un scroll vers la slide precedente", () => {
+    const spy = spyOn(deckEl, "scrollTo");
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
     expect(spy).toHaveBeenCalled();
   });

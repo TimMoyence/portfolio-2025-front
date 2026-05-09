@@ -1,197 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="fr">
   <file id="ngi18n" original="ng.template">
-    <unit id="routeHomeSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:15</note>
-        <note category="description">SEO title for home</note>
-        <note category="meaning">route.home.seo.title</note>
-      </notes>
-      <segment>
-        <source>Accueil — Tim Moyence Portfolio</source>
-        <target>Home — Tim Moyence Portfolio</target>
-      </segment>
-    </unit>
 
-    <unit id="routeHomeSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:16</note>
-        <note category="description">SEO description for home</note>
-        <note category="meaning">route.home.seo.description</note>
-      </notes>
-      <segment>
-        <source>Explore my professional services.</source>
-        <target>Explore my professional services.</target>
-      </segment>
-    </unit>
 
-    <unit id="routeLoginSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:27</note>
-        <note category="description">SEO title for login</note>
-        <note category="meaning">route.login.seo.title</note>
-      </notes>
-      <segment>
-        <source>Login — Pour acceder à votre compte</source>
-        <target>Log in — Access your account</target>
-      </segment>
-    </unit>
 
-    <unit id="routeLoginSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:28</note>
-        <note category="description">SEO description for login</note>
-        <note category="meaning">route.login.seo.description</note>
-      </notes>
-      <segment>
-        <source>You can&apos;t access this page without logging in.</source>
-        <target>You can&apos;t access this page without logging in.</target>
-      </segment>
-    </unit>
 
-    <unit id="routeRegisterSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:39</note>
-        <note category="description">SEO title for register</note>
-        <note category="meaning">route.register.seo.title</note>
-      </notes>
-      <segment>
-        <source>Register — Pour acceder à votre compte</source>
-        <target>Sign up — Access your account</target>
-      </segment>
-    </unit>
 
-    <unit id="routeRegisterSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:40</note>
-        <note category="description">SEO description for register</note>
-        <note category="meaning">route.register.seo.description</note>
-      </notes>
-      <segment>
-        <source>You can&apos;t access this page without registering.</source>
-        <target>You can&apos;t access this page without signing up.</target>
-      </segment>
-    </unit>
 
-    <unit id="routePresentationSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:53</note>
-        <note category="description">SEO title for presentation</note>
-        <note category="meaning">route.presentation.seo.title</note>
-      </notes>
-      <segment>
-        <source>Présentation — Tim Moyence Portfolio</source>
-        <target>About — Tim Moyence Portfolio</target>
-      </segment>
-    </unit>
 
-    <unit id="routePresentationSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:54</note>
-        <note category="description">SEO description for presentation</note>
-        <note category="meaning">route.presentation.seo.description</note>
-      </notes>
-      <segment>
-        <source>Découvrez mon parcours et mes compétences en développement web.</source>
-        <target>Discover my background and web development skills.</target>
-      </segment>
-    </unit>
 
-    <unit id="routeOfferSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:65</note>
-        <note category="description">SEO title for offer</note>
-        <note category="meaning">route.offer.seo.title</note>
-      </notes>
-      <segment>
-        <source>Offres — Services professionnels web</source>
-        <target>Offers — Professional web services</target>
-      </segment>
-    </unit>
 
-    <unit id="routeOfferSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:66</note>
-        <note category="description">SEO description for offer</note>
-        <note category="meaning">route.offer.seo.description</note>
-      </notes>
-      <segment>
-        <source>Solutions numériques sur mesure et plans tarifaires.</source>
-        <target>Tailor-made digital solutions and pricing plans.</target>
-      </segment>
-    </unit>
 
-    <unit id="routeContactSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:79</note>
-        <note category="description">SEO title for contact</note>
-        <note category="meaning">route.contact.seo.title</note>
-      </notes>
-      <segment>
-        <source>Contact — Échanges et devis</source>
-        <target>Contact — Discussion and quotes</target>
-      </segment>
-    </unit>
 
-    <unit id="routeContactSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:80</note>
-        <note category="description">SEO description for contact</note>
-        <note category="meaning">route.contact.seo.description</note>
-      </notes>
-      <segment>
-        <source>Prenez contact pour discuter de vos projets numériques.</source>
-        <target>Get in touch to discuss your digital projects.</target>
-      </segment>
-    </unit>
 
-    <unit id="routeClientProjectSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:93</note>
-        <note category="description">SEO title for client projects</note>
-        <note category="meaning">route.clientProject.seo.title</note>
-      </notes>
-      <segment>
-        <source>Projets clients — Réalisations web</source>
-        <target>Client projects — Web work</target>
-      </segment>
-    </unit>
 
-    <unit id="routeClientProjectSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:94</note>
-        <note category="description">SEO description for client projects</note>
-        <note category="meaning">route.clientProject.seo.description</note>
-      </notes>
-      <segment>
-        <source>Découvrez une sélection de projets clients réalisés.</source>
-        <target>Explore a selection of completed client projects.</target>
-      </segment>
-    </unit>
 
-    <unit id="routeNotFoundSeoTitle">
-      <notes>
-        <note category="location">src/app/app.routes.ts:107</note>
-        <note category="description">SEO title for 404</note>
-        <note category="meaning">route.notFound.seo.title</note>
-      </notes>
-      <segment>
-        <source>Page introuvable</source>
-        <target>Page not found</target>
-      </segment>
-    </unit>
 
-    <unit id="routeNotFoundSeoDescription">
-      <notes>
-        <note category="location">src/app/app.routes.ts:108</note>
-        <note category="description">SEO description for 404</note>
-        <note category="meaning">route.notFound.seo.description</note>
-      </notes>
-      <segment>
-        <source>La page demandée est introuvable.</source>
-        <target>The requested page could not be found.</target>
-      </segment>
-    </unit>
 
     <unit id="authTabSignup">
       <notes>
@@ -489,17 +313,6 @@
       </segment>
     </unit>
 
-    <unit id="navAuthLabel">
-      <notes>
-        <note category="location">src/app/shared/components/navbar/navbar.component.html</note>
-        <note category="description">Auth button label</note>
-        <note category="meaning">navbar.auth.label</note>
-      </notes>
-      <segment>
-        <source>Espace utilisateur</source>
-        <target>User area</target>
-      </segment>
-    </unit>
 
     <unit id="authHeroLabel">
       <notes>
@@ -694,17 +507,6 @@
       </segment>
     </unit>
 
-    <unit id="authGoogleTriggered">
-      <notes>
-        <note category="location">src/app/features/auth/auth.component.ts:209</note>
-        <note category="description">Console message for Google auth</note>
-        <note category="meaning">auth.google.triggered</note>
-      </notes>
-      <segment>
-        <source>Google auth triggered for <ph id="0" equiv="PH" disp="context"/></source>
-        <target>Google auth triggered for <ph id="0" equiv="PH" disp="context"/></target>
-      </segment>
-    </unit>
 
     <unit id="authGenericError">
       <notes>
@@ -852,16 +654,6 @@ Each project addresses a specific need and follows a logic of usability, clarity
       </segment>
     </unit>
 
-    <unit id="clientProjects.projects.maria.actions.contact">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:103</note>
-        <note category="description">clientProjects.projects.maria.actions.contact</note>
-      </notes>
-      <segment>
-        <source>Contact</source>
-        <target>Contact</target>
-      </segment>
-    </unit>
 
     <unit id="clientProjects.projects.maria.card.kicker">
       <notes>
@@ -1814,16 +1606,6 @@ The application is organized around three complementary modules, each tailored t
 </unit>
 
 
-    <unit id="contactFormRoleStudent">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:53</note>
-        <note category="description">contact.form.role.student</note>
-      </notes>
-      <segment>
-        <source>Étudiant</source>
-        <target>Student</target>
-      </segment>
-    </unit>
 
     <unit id="contactFormRoleFreelance">
       <notes>
@@ -3088,18 +2870,6 @@ The application is organized around three complementary modules, each tailored t
   <segment>
     <source>Mettre en place des campagnes de tests utilisateurs pour valider les choix effectués et ajuster la trajectoire si nécessaire.</source>
     <target>Run user testing campaigns to validate the choices made and adjust the direction if needed.</target>
-  </segment>
-</unit>
-
-<unit id="servicesItemtestingIconAlt">
-  <notes>
-    <note category="location">src/app/features/home/home.component.ts:53</note>
-    <note category="description">Service icon alt</note>
-    <note category="meaning">services.item.evolution.testing.iconAlt</note>
-  </notes>
-  <segment>
-    <source>Tester icon</source>
-    <target>Test icon</target>
   </segment>
 </unit>
 
@@ -4825,17 +4595,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
 
-    <unit id="contactMapLinkAria">
-      <notes>
-        <note category="location">src/app/shared/components/cta-contact/cta-contact.component.html:44,45</note>
-        <note category="description">Map link label</note>
-        <note category="meaning">contact.map.linkAria</note>
-      </notes>
-      <segment>
-        <source>Voir l&apos;emplacement sur la carte dans un nouvel onglet</source>
-        <target>View the location on the map in a new tab</target>
-      </segment>
-    </unit>
 
     <unit id="contactTitle">
       <notes>
@@ -5071,17 +4830,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
 
-    <unit id="footerSocialInstagram">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:69</note>
-        <note category="description">Footer social link</note>
-        <note category="meaning">footer.social.instagram</note>
-      </notes>
-      <segment>
-        <source>Instagram</source>
-        <target>Instagram</target>
-      </segment>
-    </unit>
 
     <unit id="footerSocialLinkedin">
       <notes>
@@ -5107,29 +4855,7 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
 
-    <unit id="footerLegalCookiesFr">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:86</note>
-        <note category="description">Footer legal link</note>
-        <note category="meaning">footer.legal.cookiesSettingsFr</note>
-      </notes>
-      <segment>
-        <source>Paramètres de cookies</source>
-        <target>Cookie settings</target>
-      </segment>
-    </unit>
 
-    <unit id="footerLegalCookiesEn">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:90</note>
-        <note category="description">Footer legal link</note>
-        <note category="meaning">footer.legal.cookiesSettingsEn</note>
-      </notes>
-      <segment>
-        <source>Cookies Settings</source>
-        <target>Cookie settings</target>
-      </segment>
-    </unit>
 
     <unit id="navLandmark">
       <notes>
@@ -5155,17 +4881,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
 
-    <unit id="navLinkOffer:Offres">
-      <notes>
-        <note category="location">src/app/shared/components/navbar/navbar.component.html:121</note>
-        <note category="description">Navbar primary link</note>
-        <note category="meaning">navbar.link.offer</note>
-      </notes>
-      <segment>
-        <source>Demander un devis</source>
-        <target>Request a quote</target>
-      </segment>
-    </unit>
 
 <unit id="navLinkOfferSpan">
   <notes>
@@ -5312,29 +5027,7 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
 
-    <unit id="navDropdownChevron">
-      <notes>
-        <note category="location">src/app/shared/components/navbar/navbar.component.ts:39</note>
-        <note category="description">Chevron icon label</note>
-        <note category="meaning">navbar.dropdown.chevron</note>
-      </notes>
-      <segment>
-        <source>Ouvrir ou fermer la section</source>
-        <target>Open or close this section</target>
-      </segment>
-    </unit>
 
-    <unit id="navbarIconLabel">
-      <notes>
-        <note category="location">src/app/shared/components/navbar/navbar.component.ts:241</note>
-        <note category="description">Icon label with item title</note>
-        <note category="meaning">navbar.icon.dynamicLabel</note>
-      </notes>
-      <segment>
-        <source>Icône pour <ph id="0" equiv="navItemTitle" disp="title"/>.</source>
-        <target>Icon for <ph id="0" equiv="navItemTitle" disp="title"/>.</target>
-      </segment>
-    </unit>
 
     <unit id="seoDefaultTitle">
       <notes>
@@ -6055,42 +5748,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Cookie settings</target>
       </segment>
     </unit>
-    <unit id="auditPillarConversionTime">
-      <segment>
-        <source>5–7 min</source>
-        <target>5–7 min</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarPerformanceTime">
-      <segment>
-        <source>5–8 min</source>
-        <target>5–8 min</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarSeoTime">
-      <segment>
-        <source>7–10 min</source>
-        <target>7–10 min</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarTrustTime">
-      <segment>
-        <source>5–7 min</source>
-        <target>5–7 min</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarTechTime">
-      <segment>
-        <source>7–10 min</source>
-        <target>7–10 min</target>
-      </segment>
-    </unit>
-    <unit id="auditHighlightsTitle">
-      <segment>
-        <source>Ce que vous recevez</source>
-        <target>What you get</target>
-      </segment>
-    </unit>
     <unit id="auditStepsTitle">
       <segment>
         <source>Comment ça fonctionne</source>
@@ -6107,24 +5764,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Un diagnostic concret, actionnable et faisable en moins de 45 minutes.</source>
         <target>A concrete, actionable diagnosis delivered in under 45 minutes.</target>
-      </segment>
-    </unit>
-    <unit id="auditAsideTitle">
-      <segment>
-        <source>Pourquoi c'est utile</source>
-        <target>Why it’s useful</target>
-      </segment>
-    </unit>
-    <unit id="auditAsideBody">
-      <segment>
-        <source>Je vous montre exactement pourquoi votre site ne transforme pas vos visiteurs en clients — et ce qu'il faut corriger en moins d'une semaine.</source>
-        <target>I show you exactly why your site isn’t turning visitors into clients — and what to fix in under a week.</target>
-      </segment>
-    </unit>
-    <unit id="auditAsideLimit">
-      <segment>
-        <source>Disponibilités limitées : 5 audits par semaine.</source>
-        <target>Limited availability: 5 audits per week.</target>
       </segment>
     </unit>
     <unit id="authErrorPhone">
@@ -6309,48 +5948,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
     <!-- Weather presentation -->
-    <unit id="weatherHeroLabel">
-      <segment>
-        <source>Side-project</source>
-        <target>Side project</target>
-      </segment>
-    </unit>
-    <unit id="weatherHeroTitle">
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
-    <unit id="weatherHeroDescription">
-      <segment>
-        <source>Une application météo minimaliste avec des données en temps réel, conçue comme un exercice de style Angular.</source>
-        <target>A minimalist weather app with real-time data, designed as an Angular style exercise.</target>
-      </segment>
-    </unit>
-    <unit id="weatherHeroActionLogin">
-      <segment>
-        <source>Se connecter</source>
-        <target>Log in</target>
-      </segment>
-    </unit>
-    <unit id="weatherPresentationSectionTitle">
-      <segment>
-        <source>Consultez la météo en temps réel</source>
-        <target>Check real-time weather</target>
-      </segment>
-    </unit>
-    <unit id="weatherPresentationSectionDesc">
-      <segment>
-        <source>Accédez à des prévisions détaillées, des données en direct et une interface élégante inspirée d'Apple Weather. Connectez-vous pour débloquer l'application.</source>
-        <target>Access detailed forecasts, live data, and an elegant Apple Weather-inspired interface. Log in to unlock the app.</target>
-      </segment>
-    </unit>
-    <unit id="weatherPresentationCta">
-      <segment>
-        <source>Se connecter</source>
-        <target>Log in</target>
-      </segment>
-    </unit>
     <!-- Weather app -->
     <unit id="weatherAppTitle">
       <segment>
@@ -6362,12 +5959,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Rechercher une ville...</source>
         <target>Search for a city...</target>
-      </segment>
-    </unit>
-    <unit id="weatherLoading">
-      <segment>
-        <source>Chargement...</source>
-        <target>Loading...</target>
       </segment>
     </unit>
     <unit id="weatherErrorLoading">
@@ -7105,48 +6696,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
     <!-- Sebastian presentation -->
-    <unit id="sebastianHeroLabel">
-      <segment>
-        <source>Side-project</source>
-        <target>Side project</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHeroTitle">
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHeroDescription">
-      <segment>
-        <source>Un tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps. Votre majordome numérique.</source>
-        <target>A personal consumption tracker with goals, charts, and time tracking. Your digital butler.</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHeroActionLogin">
-      <segment>
-        <source>Se connecter</source>
-        <target>Log in</target>
-      </segment>
-    </unit>
-    <unit id="sebastianPresentationSectionTitle">
-      <segment>
-        <source>Votre majordome personnel</source>
-        <target>Your personal butler</target>
-      </segment>
-    </unit>
-    <unit id="sebastianPresentationSectionDesc">
-      <segment>
-        <source>Suivez votre consommation personnelle (café, alcool), définissez des objectifs et visualisez vos progrès avec des graphiques interactifs. Sebastian vous aide à garder le contrôle.</source>
-        <target>Track your personal consumption (coffee, alcohol), set goals, and visualize your progress with interactive charts. Sebastian helps you stay in control.</target>
-      </segment>
-    </unit>
-    <unit id="sebastianPresentationCta">
-      <segment>
-        <source>Se connecter</source>
-        <target>Log in</target>
-      </segment>
-    </unit>
 
     <!-- Cartes meteo Curieux (Phase 2B) -->
     <unit id="weatherUvTitle">
@@ -7191,12 +6740,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Air Quality</target>
       </segment>
     </unit>
-    <unit id="weatherAqiUnavailable">
-      <segment>
-        <source>Données indisponibles</source>
-        <target>Data unavailable</target>
-      </segment>
-    </unit>
     <unit id="weatherAqiGood">
       <segment>
         <source>Bon</source>
@@ -7237,12 +6780,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Pression atmosphérique</source>
         <target>Atmospheric Pressure</target>
-      </segment>
-    </unit>
-    <unit id="weatherPressureUnavailable">
-      <segment>
-        <source>Données indisponibles</source>
-        <target>Data unavailable</target>
       </segment>
     </unit>
     <unit id="weatherPressureRising">
@@ -7419,12 +6956,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>CAPE mesure l'énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents.</source>
         <target>CAPE measures the energy available for thunderstorms. The higher the value, the more violent the storms can be.</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeUnavailable">
-      <segment>
-        <source>Données indisponibles</source>
-        <target>Data unavailable</target>
       </segment>
     </unit>
     <unit id="weatherCapeStable">
@@ -7841,12 +7372,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Remove</target>
       </segment>
     </unit>
-    <unit id="profileWeatherRemoveFavoriteAriaLabel">
-      <segment>
-        <source>Supprimer des favoris</source>
-        <target>Remove from favorites</target>
-      </segment>
-    </unit>
     <unit id="profileEditButton">
       <segment>
         <source>Modifier</source>
@@ -7913,22 +7438,10 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Profile updated successfully.</target>
       </segment>
     </unit>
-    <unit id="navUserMenuLabel">
-      <segment>
-        <source>Menu utilisateur</source>
-        <target>User menu</target>
-      </segment>
-    </unit>
     <unit id="weatherGeoMyPosition">
       <segment>
         <source>Ma position</source>
         <target>My location</target>
-      </segment>
-    </unit>
-    <unit id="weatherGeoButton">
-      <segment>
-        <source>Me localiser</source>
-        <target>Locate me</target>
       </segment>
     </unit>
     <unit id="weatherGeoButtonTitle">
@@ -8183,18 +7696,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Your consumption tracking butler</target>
       </segment>
     </unit>
-    <unit id="sebastianQuickAddAlcohol">
-      <segment>
-        <source>+1 Alcool 🍺</source>
-        <target>+1 Alcohol 🍺</target>
-      </segment>
-    </unit>
-    <unit id="sebastianQuickAddCoffee">
-      <segment>
-        <source>+1 Café ☕</source>
-        <target>+1 Coffee ☕</target>
-      </segment>
-    </unit>
     <unit id="sebastianCounterAlcohol">
       <segment>
         <source>Alcool aujourd'hui</source>
@@ -8211,114 +7712,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Objectif</source>
         <target>Goal</target>
-      </segment>
-    </unit>
-    <unit id="sebastianCounterNoGoal">
-      <segment>
-        <source>Aucun objectif défini</source>
-        <target>No goal defined</target>
-      </segment>
-    </unit>
-    <unit id="sebastianStatsWeekTitle">
-      <segment>
-        <source>Statistiques de la semaine</source>
-        <target>Weekly statistics</target>
-      </segment>
-    </unit>
-    <unit id="sebastianStatsVsPrevious">
-      <segment>
-        <source>vs semaine précédente</source>
-        <target>vs previous week</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLoading">
-      <segment>
-        <source>Chargement...</source>
-        <target>Loading...</target>
-      </segment>
-    </unit>
-    <unit id="sebastianChartWeekTitle">
-      <segment>
-        <source>7 derniers jours</source>
-        <target>Last 7 days</target>
-      </segment>
-    </unit>
-    <unit id="sebastianChartMonthTitle">
-      <segment>
-        <source>30 derniers jours</source>
-        <target>Last 30 days</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHistoryTitle">
-      <segment>
-        <source>Historique récent</source>
-        <target>Recent history</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHistoryDelete">
-      <segment>
-        <source>Supprimer</source>
-        <target>Delete</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHistoryEmpty">
-      <segment>
-        <source>Aucune entrée enregistrée</source>
-        <target>No entries recorded</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsTitle">
-      <segment>
-        <source>Objectifs</source>
-        <target>Goals</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsAlcohol">
-      <segment>
-        <source>Alcool</source>
-        <target>Alcohol</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsCoffee">
-      <segment>
-        <source>Café</source>
-        <target>Coffee</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsQuantityPlaceholder">
-      <segment>
-        <source>Quantité max</source>
-        <target>Max quantity</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsDaily">
-      <segment>
-        <source>Quotidien</source>
-        <target>Daily</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsWeekly">
-      <segment>
-        <source>Hebdomadaire</source>
-        <target>Weekly</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsMonthly">
-      <segment>
-        <source>Mensuel</source>
-        <target>Monthly</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsAdd">
-      <segment>
-        <source>Définir l'objectif</source>
-        <target>Set goal</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalsEmpty">
-      <segment>
-        <source>Aucun objectif actif</source>
-        <target>No active goals</target>
       </segment>
     </unit>
 
@@ -8851,30 +8244,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
     <!-- ============================================================ -->
     <!-- ia-solopreneurs.data.ts                                       -->
     <!-- ============================================================ -->
-    <unit id="ia-solo.bloc.accrocher">
-      <segment>
-        <source>Accrocher</source>
-        <target>Hook</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.bloc.montrer">
-      <segment>
-        <source>Montrer</source>
-        <target>Show</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.bloc.pratiquer">
-      <segment>
-        <source>Pratiquer</source>
-        <target>Practice</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.bloc.ancrer">
-      <segment>
-        <source>Ancrer</source>
-        <target>Anchor</target>
-      </segment>
-    </unit>
 
     <!-- Slide: accroche -->
     <unit id="ia-solo.accroche.imageAlt">
@@ -8893,48 +8262,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>16 outils, 30 minutes, on trie le bullshit du vraiment utile</source>
         <target>16 tools, 30 minutes, sorting the bullshit from what actually matters</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.accroche.speakerNotes">
-      <segment>
-        <source>Sondage à main levée : « Qui utilise déjà ChatGPT ? Et Claude ou Gemini ? » — calibrer le niveau du groupe.</source>
-        <target>Show of hands: "Who already uses ChatGPT? Claude or Gemini?" — calibrate the room's level.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.accroche.poll.question">
-      <segment>
-        <source>Qui utilise déjà l'IA au quotidien ?</source>
-        <target>Who already uses AI on a daily basis?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.accroche.poll.option.0">
-      <segment>
-        <source>ChatGPT</source>
-        <target>ChatGPT</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.accroche.poll.option.1">
-      <segment>
-        <source>Claude</source>
-        <target>Claude</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.accroche.poll.option.2">
-      <segment>
-        <source>Gemini</source>
-        <target>Gemini</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.accroche.poll.option.3">
-      <segment>
-        <source>Autre IA</source>
-        <target>Another AI</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.accroche.poll.option.4">
-      <segment>
-        <source>Aucune</source>
-        <target>None</target>
       </segment>
     </unit>
 
@@ -8981,36 +8308,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Zapier Blog, 2025</target>
       </segment>
     </unit>
-    <unit id="ia-solo.probleme.speakerNotes">
-      <segment>
-        <source>Question au public : « Qui passe plus de 3h par jour sur des tâches qu'un outil pourrait faire ? »</source>
-        <target>Ask the audience: "Who spends more than 3 hours a day on tasks a tool could handle?"</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.probleme.rating.question">
-      <segment>
-        <source>Où en êtes-vous avec l'IA ?</source>
-        <target>Where are you with AI?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.probleme.rating.hint">
-      <segment>
-        <source>Votre réponse adapte le guide que vous recevrez par email.</source>
-        <target>Your answer tailors the guide you'll receive by email.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.probleme.rating.min">
-      <segment>
-        <source>Débutant</source>
-        <target>Beginner</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.probleme.rating.max">
-      <segment>
-        <source>Avancé</source>
-        <target>Advanced</target>
-      </segment>
-    </unit>
 
     <!-- Slide: promesse -->
     <unit id="ia-solo.promesse.imageAlt">
@@ -9023,18 +8320,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Ce qu'on va faire ensemble</source>
         <target>What we'll do together</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.promesse.subtitle">
-      <segment>
-        <source>1. Tour d'horizon des outils qui comptent — 2. Ce qui marche vraiment au quotidien — 3. Un exercice pratique, vous repartez avec un résultat</source>
-        <target>1. A tour of the tools that matter — 2. What actually works day-to-day — 3. A hands-on exercise so you leave with a result</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.promesse.speakerNotes">
-      <segment>
-        <source>Annoncer la structure en 3 blocs. Rassurer : c'est pratique, pas un cours magistral.</source>
-        <target>Announce the 3-part structure. Reassure: this is hands-on, not a lecture.</target>
       </segment>
     </unit>
 
@@ -9095,132 +8380,12 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Your daily research goes from 3 hours to 20 minutes</target>
       </segment>
     </unit>
-    <unit id="ia-solo.culture-apprendre.bullets.0">
-      <segment>
-        <source>NotebookLM — Uploadez un PDF, récupérez un podcast de 10 min avec deux voix IA qui l'analysent. Par Google, gratuit. Mode interactif : interrompez les hosts pour poser vos questions.</source>
-        <target>NotebookLM — Upload a PDF and get a 10-minute podcast with two AI voices analyzing it. From Google, free. Interactive mode: interrupt the hosts to ask your own questions.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.culture-apprendre.bullets.1">
-      <segment>
-        <source>Perplexity — Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses sourcées avec citations, pas de liens bleus à trier. Gratuit ou 20$/mois.</source>
-        <target>Perplexity — AI search engine. 100M+ monthly users. Sourced answers with citations, no blue links to sift through. Free or $20/month.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.culture-apprendre.bullets.2">
-      <segment>
-        <source>Fathom — Notes de réunion automatiques sur Zoom/Meet/Teams. Transcription + résumé + actions. 5 résumés IA/mois en gratuit, 19$/mois pour l'illimité.</source>
-        <target>Fathom — Automatic meeting notes on Zoom/Meet/Teams. Transcript + summary + action items. 5 AI summaries/month free, $19/month for unlimited.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.culture-apprendre.notes">
-      <segment>
-        <source>NotebookLM : tourne sur Gemini 3, mode interactif « raise your hand » (2026), Cinematic Video Overviews. Perplexity : valorisé 21Md$ (Series E, 2026). Fathom : attention, le gratuit est limité à 5 résumés IA — au-delà c'est 19$/mois.</source>
-        <target>NotebookLM: runs on Gemini 3, "raise your hand" interactive mode (2026), Cinematic Video Overviews. Perplexity: valued at $21B (Series E, 2026). Fathom: heads-up, the free plan caps at 5 AI summaries — beyond that it's $19/month.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.culture-apprendre.speakerNotes">
-      <segment>
-        <source>Démo live NotebookLM si le temps le permet : uploader un PDF, lancer un Deep Dive. Le podcast sera prêt dans ~47 secondes.</source>
-        <target>Live NotebookLM demo if time permits: upload a PDF, launch a Deep Dive. The podcast will be ready in ~47 seconds.</target>
-      </segment>
-    </unit>
 
     <!-- Slide: chat-produire -->
-    <unit id="ia-solo.chat-produire.imageAlt">
-      <segment>
-        <source>Personne utilisant ChatGPT sur un ordinateur portable</source>
-        <target>Person using ChatGPT on a laptop</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.chat-produire.title">
       <segment>
         <source>ChatGPT, Claude, Gemini — lequel ouvrir en premier ?</source>
         <target>ChatGPT, Claude, Gemini — which one should you open first?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.subtitle">
-      <segment>
-        <source>Chaque IA a sa force. Les pros utilisent la bonne pour la bonne tâche.</source>
-        <target>Each AI has its own strength. Pros pick the right one for the right task.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.0.col.0">
-      <segment>
-        <source>Force</source>
-        <target>Strength</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.0.col.1">
-      <segment>
-        <source>Polyvalent, 900M users/sem, GPT Store</source>
-        <target>Versatile, 900M weekly users, GPT Store</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.0.col.2">
-      <segment>
-        <source>N°1 rédaction, 1M tokens de contexte</source>
-        <target>#1 for writing, 1M token context window</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.0.col.3">
-      <segment>
-        <source>Branché sur Google Workspace, analyse vidéo</source>
-        <target>Plugged into Google Workspace, video analysis</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.1.col.0">
-      <segment>
-        <source>Idéal pour</source>
-        <target>Best for</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.1.col.1">
-      <segment>
-        <source>Brainstorm, code, analyse de données</source>
-        <target>Brainstorming, code, data analysis</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.1.col.2">
-      <segment>
-        <source>Rédaction pro, contrats, docs longs</source>
-        <target>Pro writing, contracts, long documents</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.1.col.3">
-      <segment>
-        <source>Gmail, Drive, Agenda, résumé vidéo</source>
-        <target>Gmail, Drive, Calendar, video summaries</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.2.col.0">
-      <segment>
-        <source>Prix</source>
-        <target>Price</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.2.col.1">
-      <segment>
-        <source>Gratuit / 20$/mois (Plus)</source>
-        <target>Free / $20/month (Plus)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.2.col.2">
-      <segment>
-        <source>Gratuit / 20$/mois (Pro)</source>
-        <target>Free / $20/month (Pro)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.table.row.2.col.3">
-      <segment>
-        <source>Gratuit / 20$/mois (Pro)</source>
-        <target>Free / $20/month (Pro)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.chat-produire.notes">
-      <segment>
-        <source>ChatGPT (OpenAI) : valorisé 852Md$, IPO visée fin 2026. Claude (Anthropic) : 30Md$ ARR, a dépassé OpenAI en CA — en dépensant 4x moins en entraînement. Fenêtre de contexte 1M tokens GA depuis mars 2026. Gemini (Google) : intégré dans Workspace, seul à analyser la vidéo nativement.</source>
-        <target>ChatGPT (OpenAI): valued at $852B, IPO targeted late 2026. Claude (Anthropic): $30B ARR, has overtaken OpenAI in revenue — while spending 4x less on training. 1M token context window GA since March 2026. Gemini (Google): integrated into Workspace, the only one to analyze video natively.</target>
       </segment>
     </unit>
 
@@ -9237,144 +8402,12 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Pro-grade content in 10× less time</target>
       </segment>
     </unit>
-    <unit id="ia-solo.creer.bullets.0">
-      <segment>
-        <source>Ideogram — Génération d'images avec du texte lisible dedans. Aucun autre outil ne fait ça aussi bien. Gratuit (10 prompts/jour).</source>
-        <target>Ideogram — Image generation with legible text built in. No other tool does this as well. Free (10 prompts/day).</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.creer.bullets.1">
-      <segment>
-        <source>Gamma — 70M d'utilisateurs. Tapez un prompt, récupérez une présentation complète en moins d'une minute. Gamma Agent restructure et donne du feedback design. Gratuit pour démarrer, 10$/mois.</source>
-        <target>Gamma — 70M users. Type a prompt, get a full presentation in under a minute. Gamma Agent restructures and gives design feedback. Free to start, $10/month.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.creer.bullets.2">
-      <segment>
-        <source>ElevenLabs — Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix dans 29 langues. Gratuit (10 min) puis 5$/mois.</source>
-        <target>ElevenLabs — Ultra-realistic voice cloning. Valued at $11B. Your voice in 29 languages. Free (10 min) then $5/month.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.creer.notes">
-      <segment>
-        <source>Ideogram 3.0 : Style References (jusqu'à 3 images), photoréalisme amélioré. Gamma : levée de 68M$ (a16z), 600K abonnés payants. ElevenLabs : Series D 500M$ (Sequoia, a16z), 330M$ ARR fin 2025.</source>
-        <target>Ideogram 3.0: Style References (up to 3 images), improved photorealism. Gamma: $68M raised (a16z), 600K paying subscribers. ElevenLabs: Series D $500M (Sequoia, a16z), $330M ARR end of 2025.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.creer.speakerNotes">
-      <segment>
-        <source>Montrer un exemple Ideogram avec du texte parfait vs un fail Midjourney/DALL-E sur du texte. Le contraste est parlant.</source>
-        <target>Show an Ideogram example with perfect text vs a Midjourney/DALL-E text failure. The contrast speaks for itself.</target>
-      </segment>
-    </unit>
 
     <!-- Slide: automatiser -->
-    <unit id="ia-solo.automatiser.imageAlt">
-      <segment>
-        <source>Suivi multi-écrans avec smartphone et ordinateur, données en temps réel</source>
-        <target>Multi-screen monitoring with smartphone and computer, real-time data</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.automatiser.title">
       <segment>
         <source>Quelles tâches faites-vous encore à la main ?</source>
         <target>Which tasks are you still doing by hand?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.subtitle">
-      <segment>
-        <source>+760% de tâches IA sur Zapier en 2 ans</source>
-        <target>+760% AI tasks on Zapier in 2 years</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.header.0">
-      <segment>
-        <source>Outil</source>
-        <target>Tool</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.header.1">
-      <segment>
-        <source>Difficulté</source>
-        <target>Difficulty</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.header.2">
-      <segment>
-        <source>Prix</source>
-        <target>Price</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.header.3">
-      <segment>
-        <source>En une phrase</source>
-        <target>In one sentence</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.0.col.1">
-      <segment>
-        <source>Facile</source>
-        <target>Easy</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.0.col.2">
-      <segment>
-        <source>Gratuit (100 tâches/mois)</source>
-        <target>Free (100 tasks/month)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.0.col.3">
-      <segment>
-        <source>Branchez deux apps en 5 min, ça tourne tout seul</source>
-        <target>Connect two apps in 5 minutes, it runs on its own</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.1.col.1">
-      <segment>
-        <source>Moyen</source>
-        <target>Medium</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.1.col.2">
-      <segment>
-        <source>9€/mois (10K opérations)</source>
-        <target>€9/month (10K operations)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.1.col.3">
-      <segment>
-        <source>Plus flexible que Zapier, scénarios visuels complexes</source>
-        <target>More flexible than Zapier, complex visual scenarios</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.2.col.1">
-      <segment>
-        <source>Avancé</source>
-        <target>Advanced</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.2.col.2">
-      <segment>
-        <source>Gratuit (self-hosted)</source>
-        <target>Free (self-hosted)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.table.row.2.col.3">
-      <segment>
-        <source>Open source, illimité, valorisé 2,5Md$ — pour ceux qui aiment bidouiller</source>
-        <target>Open source, unlimited, valued at $2.5B — for those who love to tinker</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.notes">
-      <segment>
-        <source>Zapier : 3M+ utilisateurs, 100K+ clients payants. Make : 3,1M utilisateurs, 52,6M$ CA. n8n : 230K utilisateurs actifs, 3000 clients entreprise, Series C 180M$. Différence clé : 1 action Zapier = 1 tâche, 1 étape Make = 1 opération. À 10K opérations/mois, Make est 2x moins cher.</source>
-        <target>Zapier: 3M+ users, 100K+ paying customers. Make: 3.1M users, $52.6M revenue. n8n: 230K active users, 3,000 enterprise customers, Series C $180M. Key difference: 1 Zapier action = 1 task, 1 Make step = 1 operation. At 10K operations/month, Make is half the price.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.automatiser.speakerNotes">
-      <segment>
-        <source>Workflow concret : 'Un formulaire est rempli → email personnalisé + fiche Notion + rappel calendrier. Temps de setup : 2h. Temps humain ensuite : 0.' Pour l'audience A, mentionner n8n self-hosted + MCP.</source>
-        <target>Concrete workflow: 'A form is submitted → personalized email + Notion record + calendar reminder. Setup time: 2 hours. Human time after that: 0.' For audience A, mention n8n self-hosted + MCP.</target>
       </segment>
     </unit>
 
@@ -9391,54 +8424,12 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Your website online tonight, without a single line of code</target>
       </segment>
     </unit>
-    <unit id="ia-solo.site-web.bullets.0">
-      <segment>
-        <source>Lovable — Du prompt au site full-stack. 8M d'utilisateurs, valorisé 6,6Md$. Gratuit (50 actions IA/jour).</source>
-        <target>Lovable — From prompt to full-stack website. 8M users, valued at $6.6B. Free (50 AI actions/day).</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.site-web.bullets.1">
-      <segment>
-        <source>Bolt.new — Même concept, tout dans le navigateur. Frontend, backend, déploiement. 25$/mois.</source>
-        <target>Bolt.new — Same concept, all in the browser. Frontend, backend, deployment. $25/month.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.site-web.bullets.2">
-      <segment>
-        <source>v0 — Par Vercel. Génère du React/Next.js/Tailwind. Plus technique, plus propre. Gratuit (5$ de crédits/mois) puis 20$/mois.</source>
-        <target>v0 — By Vercel. Generates React/Next.js/Tailwind. More technical, cleaner output. Free ($5 credits/month) then $20/month.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.site-web.notes">
-      <segment>
-        <source>Lovable : Series B 330M$, 100K+ projets/jour. Bolt : import Figma, modèle Opus 4.6 intégré. v0 : intégration Git, éditeur de code (fév. 2026). Ces outils ne remplacent pas un dev pour un projet complexe, mais pour une landing page ou un MVP c'est suffisant.</source>
-        <target>Lovable: Series B $330M, 100K+ projects/day. Bolt: Figma import, Opus 4.6 model built in. v0: Git integration, code editor (Feb. 2026). These tools won't replace a developer for a complex project, but for a landing page or an MVP they're enough.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.site-web.speakerNotes">
-      <segment>
-        <source>Pour l'audience B : insister sur Lovable (le plus simple). Pour l'audience A : montrer v0 et le code généré, c'est impressionnant.</source>
-        <target>For audience B: stress Lovable (the easiest). For audience A: show v0 and the generated code — it's impressive.</target>
-      </segment>
-    </unit>
 
     <!-- Slide: clients -->
-    <unit id="ia-solo.clients.imageAlt">
-      <segment>
-        <source>Bureau minimaliste avec MacBook et iPad, outils numériques</source>
-        <target>Minimalist desk with MacBook and iPad, digital tools</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.clients.title">
       <segment>
         <source>Comment prospecter, convertir et fidéliser avec l'IA ?</source>
         <target>How do you prospect, convert and retain customers with AI?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.subtitle">
-      <segment>
-        <source>Le cycle client complet, 4 outils, 29€/mois</source>
-        <target>The full customer cycle, 4 tools, €29/month</target>
       </segment>
     </unit>
     <unit id="ia-solo.clients.grid.0.description">
@@ -9447,22 +8438,10 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Automated LinkedIn prospecting. 300 invites/month, auto follow-up, reply detection.</target>
       </segment>
     </unit>
-    <unit id="ia-solo.clients.grid.0.badge">
-      <segment>
-        <source>Prospecter — 19€/mois</source>
-        <target>Prospect — €19/month</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.clients.grid.1.description">
       <segment>
         <source>CRM léger + pipeline visuel + agents custom qui bossent sur votre workspace 24/7.</source>
         <target>Lightweight CRM + visual pipeline + custom agents working in your workspace 24/7.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.grid.1.badge">
-      <segment>
-        <source>Convertir — 10$/mois</source>
-        <target>Convert — $10/month</target>
       </segment>
     </unit>
     <unit id="ia-solo.clients.grid.2.description">
@@ -9471,186 +8450,18 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>AI email marketing, French, GDPR-friendly. Automated sequences. 300 emails/day free.</target>
       </segment>
     </unit>
-    <unit id="ia-solo.clients.grid.2.badge">
-      <segment>
-        <source>Fidéliser — Gratuit</source>
-        <target>Retain — Free</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.clients.grid.3.description">
       <segment>
         <source>Visuels pro pour vos emails, posts, newsletters. 220M+ d'utilisateurs. Le design sans designer.</source>
         <target>Pro visuals for your emails, posts, newsletters. 220M+ users. Design without a designer.</target>
       </segment>
     </unit>
-    <unit id="ia-solo.clients.grid.3.badge">
-      <segment>
-        <source>Communiquer — Gratuit</source>
-        <target>Communicate — Free</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.notes">
-      <segment>
-        <source>Workflow complet : Prospect répond sur LinkedIn (Waalaxy) → ajout auto dans Notion → Brevo envoie la séquence d'onboarding → visuels Canva. Via Zapier ou Make en connecteur. Coût total : ~29€/mois. Waalaxy : essai 14 jours. Notion Business (20$/mois) pour l'IA complète. Brevo (ex-Sendinblue) : entreprise française, conforme RGPD.</source>
-        <target>Full workflow: Prospect replies on LinkedIn (Waalaxy) → auto-added to Notion → Brevo sends the onboarding sequence → Canva visuals. Connected via Zapier or Make. Total cost: ~€29/month. Waalaxy: 14-day trial. Notion Business ($20/month) for full AI. Brevo (formerly Sendinblue): French company, GDPR-compliant.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.speakerNotes">
-      <segment>
-        <source>Montrer le schéma Waalaxy → Notion → Brevo → Canva. Insister : le combo Brevo + Zapier/Make transforme des emails manuels en séquences automatiques.</source>
-        <target>Show the Waalaxy → Notion → Brevo → Canva diagram. Stress: the Brevo + Zapier/Make combo turns manual emails into automated sequences.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.poll.question">
-      <segment>
-        <source>Quel est votre plus gros défi client ?</source>
-        <target>What's your biggest customer challenge?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.poll.option.0">
-      <segment>
-        <source>Trouver des prospects</source>
-        <target>Finding prospects</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.poll.option.1">
-      <segment>
-        <source>Convertir</source>
-        <target>Converting</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.poll.option.2">
-      <segment>
-        <source>Fidéliser</source>
-        <target>Retaining</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.clients.poll.option.3">
-      <segment>
-        <source>Communiquer</source>
-        <target>Communicating</target>
-      </segment>
-    </unit>
 
     <!-- Slide: stack-budget -->
-    <unit id="ia-solo.stack-budget.imageAlt">
-      <segment>
-        <source>Équipe collaborant autour d'une table avec laptops et smartphones</source>
-        <target>Team collaborating around a table with laptops and smartphones</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.stack-budget.title">
       <segment>
         <source>Quel budget IA pour quel stack — 0€, 60€ ou 120€/mois ?</source>
         <target>Which AI budget for which stack — €0, €60 or €120/month?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.header.0">
-      <segment>
-        <source>Niveau</source>
-        <target>Level</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.header.1">
-      <segment>
-        <source>Outils</source>
-        <target>Tools</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.header.2">
-      <segment>
-        <source>Budget</source>
-        <target>Budget</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.0.col.0">
-      <segment>
-        <source>Débutant</source>
-        <target>Beginner</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.0.col.1">
-      <segment>
-        <source>ChatGPT gratuit + Canva gratuit + Gamma + Zapier (100 tâches) + Brevo + NotebookLM</source>
-        <target>Free ChatGPT + free Canva + Gamma + Zapier (100 tasks) + Brevo + NotebookLM</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.0.col.2">
-      <segment>
-        <source>0€/mois</source>
-        <target>€0/month</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.1.col.0">
-      <segment>
-        <source>Intermédiaire</source>
-        <target>Intermediate</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.1.col.1">
-      <segment>
-        <source>ChatGPT Plus (20$) + Canva Pro (15$) + Make (9€) + Notion AI (10$) + Perplexity Pro (20$)</source>
-        <target>ChatGPT Plus ($20) + Canva Pro ($15) + Make (€9) + Notion AI ($10) + Perplexity Pro ($20)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.1.col.2">
-      <segment>
-        <source>~60€/mois</source>
-        <target>~€60/month</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.2.col.0">
-      <segment>
-        <source>Avancé</source>
-        <target>Advanced</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.2.col.1">
-      <segment>
-        <source>Claude Pro (20$) + ChatGPT Plus (20$) + Make Pro (16€) + ElevenLabs (22$) + Fathom (19$) + Waalaxy (19€)</source>
-        <target>Claude Pro ($20) + ChatGPT Plus ($20) + Make Pro (€16) + ElevenLabs ($22) + Fathom ($19) + Waalaxy (€19)</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.table.row.2.col.2">
-      <segment>
-        <source>~120€/mois</source>
-        <target>~€120/month</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.bullets.0">
-      <segment>
-        <source>Commencez par 2-3 outils, maîtrisez-les. Le stack à 0€ couvre 80% des besoins.</source>
-        <target>Start with 2-3 tools, master them. The €0 stack covers 80% of needs.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.notes">
-      <segment>
-        <source>Ne pas tout installer d'un coup. Chaque outil doit résoudre un problème concret. L'objectif n'est pas d'avoir le stack le plus gros mais le plus efficace.</source>
-        <target>Don't install everything at once. Each tool should solve a concrete problem. The goal isn't the biggest stack but the most effective one.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.rating.question">
-      <segment>
-        <source>Quel budget mensuel pour vos outils IA ?</source>
-        <target>What's your monthly budget for AI tools?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.rating.hint">
-      <segment>
-        <source>On adaptera les recommandations de votre guide à votre budget.</source>
-        <target>We'll tailor the recommendations in your guide to your budget.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.rating.min">
-      <segment>
-        <source>0€</source>
-        <target>€0</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.stack-budget.rating.max">
-      <segment>
-        <source>120€+</source>
-        <target>€120+</target>
       </segment>
     </unit>
 
@@ -9659,30 +8470,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>16 outils IA pour solopreneurs en 2026 — récap rapide</source>
         <target>16 AI tools for solopreneurs in 2026 — quick recap</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.outils-detail.table.header.0">
-      <segment>
-        <source>Outil</source>
-        <target>Tool</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.outils-detail.table.header.1">
-      <segment>
-        <source>Catégorie</source>
-        <target>Category</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.outils-detail.table.header.2">
-      <segment>
-        <source>Prix</source>
-        <target>Price</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.outils-detail.table.header.3">
-      <segment>
-        <source>En une phrase</source>
-        <target>In one sentence</target>
       </segment>
     </unit>
     <unit id="ia-solo.outils-detail.cat.apprendre">
@@ -9907,18 +8694,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Pro visuals, 220M+ users</target>
       </segment>
     </unit>
-    <unit id="ia-solo.outils-detail.checklist.question">
-      <segment>
-        <source>Cochez les outils que vous connaissez déjà :</source>
-        <target>Check the tools you already know:</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.outils-detail.checklist.hint">
-      <segment>
-        <source>Votre guide mettra en avant ceux que vous n'avez pas encore testés.</source>
-        <target>Your guide will highlight the ones you haven't tried yet.</target>
-      </segment>
-    </unit>
 
     <!-- Slide: workflows-detail -->
     <unit id="ia-solo.workflows-detail.title">
@@ -9939,12 +8714,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Waalaxy captures the LinkedIn lead → Zapier/Make creates the Notion record → Brevo sends the welcome email → Calendar reminder auto-set</target>
       </segment>
     </unit>
-    <unit id="ia-solo.workflows-detail.grid.0.badge">
-      <segment>
-        <source>Make + Brevo</source>
-        <target>Make + Brevo</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.workflows-detail.grid.1.title">
       <segment>
         <source>Contenu multicanal</source>
@@ -9957,12 +8726,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>LinkedIn post written with Claude → Canva AI visual → Zapier reposts to X + archives to Google Sheets + Slack notification</target>
       </segment>
     </unit>
-    <unit id="ia-solo.workflows-detail.grid.1.badge">
-      <segment>
-        <source>Zapier + Claude</source>
-        <target>Zapier + Claude</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.workflows-detail.grid.2.title">
       <segment>
         <source>Veille automatique</source>
@@ -9973,18 +8736,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Perplexity recherche quotidienne sur votre secteur → résumé dans Notion → NotebookLM génère un brief audio de 5 min</source>
         <target>Daily Perplexity search on your sector → summary in Notion → NotebookLM generates a 5-min audio brief</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.workflows-detail.grid.2.badge">
-      <segment>
-        <source>Perplexity + NotebookLM</source>
-        <target>Perplexity + NotebookLM</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.workflows-detail.notes">
-      <segment>
-        <source>Workflow 1 : ~2h de setup, gratuit avec Zapier. Workflow 2 : 100% automatisable. Workflow 3 : nécessite Perplexity Pro (20$/mois) pour les recherches automatisées.</source>
-        <target>Workflow 1: ~2h setup, free with Zapier. Workflow 2: 100% automatable. Workflow 3: requires Perplexity Pro ($20/month) for scheduled searches.</target>
       </segment>
     </unit>
 
@@ -10001,62 +8752,8 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Everything I just said is worthless if you don't try it yourself.</target>
       </segment>
     </unit>
-    <unit id="ia-solo.transition-pratique.speakerNotes">
-      <segment>
-        <source>Pause. Laisser le silence. Puis : « On le fait. Maintenant. Ensemble. » Transition vers l'exercice interactif.</source>
-        <target>Pause. Let the silence sit. Then: "We do it. Now. Together." Transition into the interactive exercise.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.transition-pratique.countdown.label">
-      <segment>
-        <source>Pensez à votre secteur d'activité...</source>
-        <target>Think about your line of work...</target>
-      </segment>
-    </unit>
 
     <!-- Slide: demo-gamma -->
-    <unit id="ia-solo.demo-gamma.title">
-      <segment>
-        <source>À vous — générez votre pitch de vente</source>
-        <target>Your turn — generate your sales pitch</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.demo-gamma.subtitle">
-      <segment>
-        <source>Tapez votre secteur, copiez le prompt, collez-le dans Gamma.app</source>
-        <target>Type your sector, copy the prompt, paste it into Gamma.app</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.demo-gamma.prompt.label">
-      <segment>
-        <source>Votre secteur d'activité</source>
-        <target>Your line of work</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.demo-gamma.prompt.placeholder">
-      <segment>
-        <source>ex: Coach sportif, Photographe, Consultant RH, Fleuriste...</source>
-        <target>e.g. Personal trainer, Photographer, HR consultant, Florist...</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.demo-gamma.prompt.template">
-      <segment>
-        <source>Tu es un consultant marketing expert en création d'offres pour les indépendants.\n\nMon secteur d'activité : {{sector}}\n\nCrée une présentation de vente complète et professionnelle avec :\n\n1. **Nom de l'offre** — Un nom accrocheur et mémorable\n2. **Promesse principale** — Une phrase qui résume la transformation client\n3. **3 bénéfices clés** — Ce que le client obtient concrètement\n4. **Structure de l'offre** — Les étapes ou modules inclus\n5. **Preuve sociale** — Un témoignage fictif mais réaliste\n6. **Tarif suggéré** — Avec ancrage de prix (valeur perçue vs prix réel)\n7. **Call-to-action** — Une phrase de clôture qui pousse à l'action\n8. **FAQ** — 3 objections courantes avec réponses\n\nStyle : professionnel, chaleureux, orienté résultats.\nFormat : présentation Gamma avec sections visuelles distinctes.</source>
-        <target>You are a marketing consultant who specializes in building offers for independent professionals.\n\nMy line of work: {{sector}}\n\nCreate a complete, professional sales presentation with:\n\n1. **Offer name** — A catchy, memorable name\n2. **Main promise** — A one-sentence summary of the client transformation\n3. **3 key benefits** — What the client concretely gets\n4. **Offer structure** — The steps or modules included\n5. **Social proof** — A fictional but realistic testimonial\n6. **Suggested price** — With price anchoring (perceived value vs actual price)\n7. **Call-to-action** — A closing line that drives action\n8. **FAQ** — 3 common objections with answers\n\nStyle: professional, warm, results-oriented.\nFormat: Gamma presentation with distinct visual sections.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.demo-gamma.notes">
-      <segment>
-        <source>gamma.app — gratuit pour démarrer. Le prompt est conçu pour Gamma Agent (v3.0) qui peut chercher sur le web et restructurer le contenu. En 60 secondes vous avez un deck de 10 slides.</source>
-        <target>gamma.app — free to start. The prompt is designed for Gamma Agent (v3.0), which can search the web and restructure the content. In 60 seconds you have a 10-slide deck.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.demo-gamma.speakerNotes">
-      <segment>
-        <source>En live : demander à un participant son secteur, taper en direct, copier le prompt, ouvrir gamma.app et coller. Le résultat sort en ~60 secondes — c'est le moment wow de la présentation.</source>
-        <target>Live: ask a participant for their sector, type it on the spot, copy the prompt, open gamma.app and paste. The result appears in ~60 seconds — this is the wow moment of the talk.</target>
-      </segment>
-    </unit>
 
     <!-- Slide: recap-8020 -->
     <unit id="ia-solo.recap-8020.title">
@@ -10089,54 +8786,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>to get started with a full stack</target>
       </segment>
     </unit>
-    <unit id="ia-solo.recap-8020.notes">
-      <segment>
-        <source>L'IA accélère le contenu, les visuels, les automatisations, le support. Elle ne remplace pas la connaissance du marché, la relation client, la stratégie. Le message central : l'IA amplifie votre expertise, elle ne la remplace pas.</source>
-        <target>AI accelerates content, visuals, automation, and support. It doesn't replace market knowledge, customer relationships, or strategy. The core message: AI amplifies your expertise, it doesn't replace it.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.recap-8020.speakerNotes">
-      <segment>
-        <source>Insister : les 20% d'expertise humaine, c'est ce que VOUS apportez. L'IA sans votre connaissance métier produit du contenu générique. Avec, elle produit du contenu expert.</source>
-        <target>Drive it home: the 20% of human expertise is what YOU bring. AI without your domain knowledge produces generic content. With it, it produces expert content.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.recap-8020.poll.question">
-      <segment>
-        <source>Quel outil allez-vous tester en premier ?</source>
-        <target>Which tool will you try first?</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.recap-8020.poll.option.0">
-      <segment>
-        <source>ChatGPT/Claude</source>
-        <target>ChatGPT/Claude</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.recap-8020.poll.option.1">
-      <segment>
-        <source>Gamma</source>
-        <target>Gamma</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.recap-8020.poll.option.2">
-      <segment>
-        <source>Zapier/Make</source>
-        <target>Zapier/Make</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.recap-8020.poll.option.3">
-      <segment>
-        <source>NotebookLM</source>
-        <target>NotebookLM</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.recap-8020.poll.option.4">
-      <segment>
-        <source>Autre</source>
-        <target>Other</target>
-      </segment>
-    </unit>
 
     <!-- Slide: pieges -->
     <unit id="ia-solo.pieges.title">
@@ -10157,12 +8806,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>AI invents facts with confidence. Always verify the numbers, quotes, and links. Perplexity helps — it cites its sources.</target>
       </segment>
     </unit>
-    <unit id="ia-solo.pieges.grid.0.badge">
-      <segment>
-        <source>Vérifiez</source>
-        <target>Verify</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.pieges.grid.1.title">
       <segment>
         <source>RGPD</source>
@@ -10173,12 +8816,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Ne mettez JAMAIS de données personnelles clients dans un prompt. Pas de noms, pas d'emails, pas de numéros. Les conditions d'utilisation vous le disent.</source>
         <target>NEVER put customer personal data into a prompt. No names, no emails, no phone numbers. The terms of service make this clear.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.pieges.grid.1.badge">
-      <segment>
-        <source>Protégez</source>
-        <target>Protect</target>
       </segment>
     </unit>
     <unit id="ia-solo.pieges.grid.2.title">
@@ -10193,26 +8830,8 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>AI amplifies your expertise, it doesn't replace it. If you can't write a good brief, ChatGPT won't do it for you.</target>
       </segment>
     </unit>
-    <unit id="ia-solo.pieges.grid.2.badge">
-      <segment>
-        <source>Gardez le contrôle</source>
-        <target>Stay in control</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.pieges.notes">
-      <segment>
-        <source>Ces 3 pièges sont les plus fréquents chez les débutants. Les mentionner renforce la crédibilité et différencie des formations 'l'IA c'est magique' sur YouTube.</source>
-        <target>These 3 pitfalls are the most common ones for beginners. Mentioning them builds credibility and sets you apart from the 'AI is magic' courses on YouTube.</target>
-      </segment>
-    </unit>
 
     <!-- Slide: citation -->
-    <unit id="ia-solo.citation.title">
-      <segment>
-        <source>Le mot de la fin</source>
-        <target>One last word</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.citation.quote">
       <segment>
         <source>L'IA génère du contenu. Un expert génère des résultats.</source>
@@ -10227,52 +8846,10 @@ The goal is not to add features, but to choose the most relevant levers to gener
     </unit>
 
     <!-- Slide: cta -->
-    <unit id="ia-solo.cta.imageAlt">
-      <segment>
-        <source>Réunion de conseil professionnelle dans un bureau moderne</source>
-        <target>Professional advisory meeting in a modern office</target>
-      </segment>
-    </unit>
     <unit id="ia-solo.cta.title">
       <segment>
         <source>Recevez votre guide IA personnalisé</source>
         <target>Get your personalized AI guide</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.cta.subtitle">
-      <segment>
-        <source>Prompts, workflows et templates adaptés à votre profil — dans votre inbox en 30 secondes.</source>
-        <target>Prompts, workflows, and templates tailored to your profile — in your inbox in 30 seconds.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.cta.bullets.0">
-      <segment>
-        <source>Cheatsheet de décision : quel outil pour quelle tâche</source>
-        <target>Decision cheatsheet: which tool for which task</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.cta.bullets.1">
-      <segment>
-        <source>Prompts prêts à copier adaptés à votre niveau</source>
-        <target>Copy-ready prompts tailored to your level</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.cta.bullets.2">
-      <segment>
-        <source>3 workflows pas-à-pas (Zapier/Make) + templates</source>
-        <target>3 step-by-step workflows (Zapier/Make) + templates</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.cta.notes">
-      <segment>
-        <source>QR code vers le formulaire de capture email. Le PDF est généré automatiquement (backend NestJS + PDFKit). C'est le lead magnet principal de la formation.</source>
-        <target>QR code linking to the email capture form. The PDF is generated automatically (NestJS backend + PDFKit). It's the main lead magnet for the course.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.cta.speakerNotes">
-      <segment>
-        <source>Afficher le QR code, laisser 30 secondes. « Scannez, tapez votre email, vous recevez tout ce qu'on a vu aujourd'hui en PDF. »</source>
-        <target>Show the QR code, leave it up for 30 seconds. "Scan it, type your email, and you get everything we covered today as a PDF."</target>
       </segment>
     </unit>
 
@@ -10311,18 +8888,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Nouveau 2026 : Cinematic Video Overviews — vos docs deviennent des vidéos</source>
         <target>New in 2026: Cinematic Video Overviews — your docs become videos</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.one-more-thing.notes">
-      <segment>
-        <source>notebooklm.google — gratuit. Tourne sur Gemini 3. Cinematic Video réservé aux abonnés Google AI Ultra (250$/mois) mais le podcast est 100% gratuit.</source>
-        <target>notebooklm.google — free. Runs on Gemini 3. Cinematic Video is reserved for Google AI Ultra subscribers ($250/month) but the podcast is 100% free.</target>
-      </segment>
-    </unit>
-    <unit id="ia-solo.one-more-thing.speakerNotes">
-      <segment>
-        <source>Si le temps le permet, lancer la démo live. Sinon, montrer le podcast généré en début de session. C'est le 'One More Thing' à la Steve Jobs — finir sur un wow.</source>
-        <target>If time allows, run the live demo. Otherwise, play the podcast generated at the start of the session. It's the Steve Jobs-style 'One More Thing' — end on a wow.</target>
       </segment>
     </unit>
     <unit id="authSeparatorOr">
@@ -11669,90 +10234,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>An overview of AI tools for entrepreneurs</target>
       </segment>
     </unit>
-    <unit id="overviewLabel">
-      <segment>
-        <source>Vue d&apos;ensemble de la presentation</source>
-        <target>Presentation overview</target>
-      </segment>
-    </unit>
-    <unit id="overviewTitle">
-      <segment>
-        <source> Vue d&apos;ensemble </source>
-        <target> Overview </target>
-      </segment>
-    </unit>
-    <unit id="overviewClose">
-      <segment>
-        <source>Fermer la vue d&apos;ensemble</source>
-        <target>Close the overview</target>
-      </segment>
-    </unit>
-    <unit id="presentationEngineSlidesCount">
-      <segment>
-        <source> <x id="INTERPOLATION" equiv-text="{{ activeSlides().length }}"/> slides — <x id="INTERPOLATION_1" equiv-text="{{ acts().length }}"/> actes </source>
-        <target> <x id="INTERPOLATION" equiv-text="{{ activeSlides().length }}"/> slides — <x id="INTERPOLATION_1" equiv-text="{{ acts().length }}"/> acts </target>
-      </segment>
-    </unit>
-    <unit id="presentationEngineEnter">
-      <segment>
-        <source>Mode présentation</source>
-        <target>Presentation mode</target>
-      </segment>
-    </unit>
-    <unit id="presentationEnginePresent">
-      <segment>
-        <source>Présenter</source>
-        <target>Present</target>
-      </segment>
-    </unit>
-    <unit id="presentationEngineRegion">
-      <segment>
-        <source>Mode présentation</source>
-        <target>Presentation mode</target>
-      </segment>
-    </unit>
-    <unit id="presentationEngineExit">
-      <segment>
-        <source>Quitter</source>
-        <target>Exit</target>
-      </segment>
-    </unit>
-    <unit id="presenterBarLabel">
-      <segment>
-        <source>Navigation de présentation</source>
-        <target>Presentation navigation</target>
-      </segment>
-    </unit>
-    <unit id="presenterBarPrev">
-      <segment>
-        <source>Slide précédente</source>
-        <target>Previous slide</target>
-      </segment>
-    </unit>
-    <unit id="presenterBarCounter">
-      <segment>
-        <source> Slide <x id="INTERPOLATION" equiv-text="{{ positionInAct() }}"/>/<x id="INTERPOLATION_1" equiv-text="{{ currentActSlides().length }}"/> </source>
-        <target> Slide <x id="INTERPOLATION" equiv-text="{{ positionInAct() }}"/>/<x id="INTERPOLATION_1" equiv-text="{{ currentActSlides().length }}"/> </target>
-      </segment>
-    </unit>
-    <unit id="presenterBarNext">
-      <segment>
-        <source>Slide suivante</source>
-        <target>Next slide</target>
-      </segment>
-    </unit>
-    <unit id="8104421162933956065">
-      <segment>
-        <source>Notes</source>
-        <target>Notes</target>
-      </segment>
-    </unit>
-    <unit id="2633889716948605122">
-      <segment>
-        <source> Générer le prompt </source>
-        <target> Generate the prompt </target>
-      </segment>
-    </unit>
     <unit id="formations.toolkit.title">
       <segment>
         <source> Recevez votre boite a outils IA </source>
@@ -12901,7 +11382,7 @@ The goal is not to add features, but to choose the most relevant levers to gener
     <unit id="formations.automatiser-avec-ia.w2.title">
       <segment>
         <source>Workflow 2 — Reponses emails recurrentes</source>
-        <target>Workflow 2 — Meeting notes & action items</target>
+        <target>Workflow 2 — Meeting notes &amp; action items</target>
       </segment>
     </unit>
       <!-- needs-translation -->
@@ -13685,24 +12166,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Voir le catalogue complet</target>
       </segment>
     </unit>
-    <unit id="slidePollError">
-      <segment>
-        <source> Impossible de charger le sondage. </source>
-        <target>Unable to load the poll at the moment.</target>
-      </segment>
-    </unit>
-    <unit id="slidePollLoading">
-      <segment>
-        <source>Chargement du sondage…</source>
-        <target>Loading…</target>
-      </segment>
-    </unit>
-    <unit id="slideQuizError">
-      <segment>
-        <source> Impossible de charger le quiz pour le moment. </source>
-        <target>Unable to load the quiz at the moment.</target>
-      </segment>
-    </unit>
     <unit id="slideQuizCorrect">
       <segment>
         <source>Bonne réponse !</source>
@@ -13715,18 +12178,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Not quite. The right answer is: …</target>
       </segment>
     </unit>
-    <unit id="slideQuizLoading">
-      <segment>
-        <source>Chargement…</source>
-        <target>Loading…</target>
-      </segment>
-    </unit>
-    <unit id="slideReflectionError">
-      <segment>
-        <source>Impossible de charger la question.</source>
-        <target>Unable to save your thought right now.</target>
-      </segment>
-    </unit>
     <unit id="slideReflectionSave">
       <segment>
         <source> Garder cette réflexion </source>
@@ -13737,12 +12188,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source> Réflexion enregistrée localement. </source>
         <target>Saved locally.</target>
-      </segment>
-    </unit>
-    <unit id="slideReflectionLoading">
-      <segment>
-        <source>Chargement…</source>
-        <target>Loading…</target>
       </segment>
     </unit>
 
@@ -13847,6 +12292,144 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Tagline</source>
         <target>Tagline</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.promesse.bullets.0">
+      <segment>
+        <source>Tour d'horizon des outils qui comptent</source>
+        <target>An overview of the tools that matter</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.promesse.bullets.1">
+      <segment>
+        <source>Ce qui marche vraiment au quotidien</source>
+        <target>What actually works day to day</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.promesse.bullets.2">
+      <segment>
+        <source>Un exercice pratique, vous repartez avec un résultat</source>
+        <target>A hands-on exercise — you leave with a tangible result</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.items.0.description">
+      <segment>
+        <source>Uploadez un PDF, récupérez un podcast de 10 min avec deux voix IA qui l'analysent. Mode interactif : interrompez les hosts pour poser vos questions.</source>
+        <target>Upload a PDF, get a 10-minute podcast with two AI voices analyzing it. Interactive mode: interrupt the hosts to ask your own questions.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.items.0.meta">
+      <segment>
+        <source>Gratuit (Google)</source>
+        <target>Free (Google)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.items.1.description">
+      <segment>
+        <source>Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses sourcées avec citations, pas de liens bleus à trier.</source>
+        <target>AI search engine. 100M+ monthly users. Sourced answers with citations, no blue links to sift through.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.items.1.meta">
+      <segment>
+        <source>Gratuit / 20$/mois</source>
+        <target>Free / $20/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.items.2.description">
+      <segment>
+        <source>Notes de réunion automatiques sur Zoom/Meet/Teams. Transcription + résumé + actions. 5 résumés IA/mois en gratuit.</source>
+        <target>Automatic meeting notes on Zoom/Meet/Teams. Transcription + summary + action items. 5 AI summaries/month on the free plan.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.culture-apprendre.items.2.meta">
+      <segment>
+        <source>Gratuit / 19$/mois</source>
+        <target>Free / $19/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.subtitle">
+      <segment>
+        <source>Texte, image, voix : 10× plus vite, qualité pro</source>
+        <target>Text, image, voice: 10× faster, pro quality</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.items.0.description">
+      <segment>
+        <source>Génération d'images avec du texte lisible dedans. Aucun autre outil ne fait ça aussi bien.</source>
+        <target>Image generation with readable text inside. No other tool does it this well.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.items.0.meta">
+      <segment>
+        <source>Gratuit (10/jour)</source>
+        <target>Free (10/day)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.items.1.description">
+      <segment>
+        <source>70M d'utilisateurs. Tapez un prompt, récupérez une présentation complète en moins d'une minute. Gamma Agent restructure et donne du feedback design.</source>
+        <target>70M users. Type a prompt, get a full presentation in under a minute. Gamma Agent restructures it and provides design feedback.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.items.1.meta">
+      <segment>
+        <source>Gratuit / 10$/mois</source>
+        <target>Free / $10/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.items.2.description">
+      <segment>
+        <source>Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix dans 29 langues.</source>
+        <target>Ultra-realistic voice cloning. Valued at $11B. Your voice in 29 languages.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.creer.items.2.meta">
+      <segment>
+        <source>Gratuit (10 min) / 5$/mois</source>
+        <target>Free (10 min) / $5/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.subtitle">
+      <segment>
+        <source>Du prompt au site déployé, sans une ligne de code</source>
+        <target>From prompt to deployed website, without writing a single line of code</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.items.0.description">
+      <segment>
+        <source>Du prompt au site full-stack. 8M d'utilisateurs, valorisé 6,6Md$.</source>
+        <target>From prompt to full-stack website. 8M users, valued at $6.6B.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.items.0.meta">
+      <segment>
+        <source>Gratuit (50 actions IA/jour)</source>
+        <target>Free (50 AI actions/day)</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.items.1.description">
+      <segment>
+        <source>Même concept, tout dans le navigateur. Frontend, backend, déploiement.</source>
+        <target>Same concept, all in the browser. Frontend, backend, deployment.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.items.1.meta">
+      <segment>
+        <source>25$/mois</source>
+        <target>$25/month</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.items.2.description">
+      <segment>
+        <source>Par Vercel. Génère du React/Next.js/Tailwind. Plus technique, plus propre.</source>
+        <target>By Vercel. Generates React/Next.js/Tailwind. More technical, more polished.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.site-web.items.2.meta">
+      <segment>
+        <source>Gratuit (5$ crédits) / 20$/mois</source>
+        <target>Free ($5 credits) / $20/month</target>
       </segment>
     </unit>
   </file>

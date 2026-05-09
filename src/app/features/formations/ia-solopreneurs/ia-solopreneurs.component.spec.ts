@@ -28,13 +28,6 @@ describe("IaSolopreneursComponent", () => {
     expect(hero.textContent).toContain("IA");
   });
 
-  it("rend au moins une slide quiz reliee a PRESENTATION_PORT", () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const quiz = fixture.nativeElement.querySelector("app-slide-quiz");
-    expect(quiz).toBeTruthy();
-  });
-
   it("rend la slide CTA toolkit en fin de presentation", () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
