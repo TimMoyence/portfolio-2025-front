@@ -6463,6 +6463,12 @@ The goal is not to add features, but to choose the most relevant levers to gener
     </unit>
     <!-- Budget app -->
     <!-- Dashboard hero -->
+    <unit id="budgetDashboardLoading">
+      <segment>
+        <source>Chargement de votre budget…</source>
+        <target>Loading your budget…</target>
+      </segment>
+    </unit>
     <unit id="budgetDashboardEyebrow">
       <segment>
         <source>Tableau de bord couple</source>

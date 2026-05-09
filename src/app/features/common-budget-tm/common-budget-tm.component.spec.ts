@@ -57,6 +57,29 @@ describe("CommonBudgetTmComponent", () => {
     expect(component.groupId()).toBe("group-1");
   });
 
+  describe("loading state (B4)", () => {
+    it("renders the loading indicator when loading() is true", () => {
+      component.loading.set(true);
+      fixture.detectChanges();
+
+      const loader = fixture.nativeElement.querySelector(
+        '[data-testid="budget-loading"]',
+      );
+      expect(loader).toBeTruthy();
+      expect(loader.getAttribute("role")).toBe("status");
+    });
+
+    it("hides the loading indicator when loading() is false", () => {
+      component.loading.set(false);
+      fixture.detectChanges();
+
+      const loader = fixture.nativeElement.querySelector(
+        '[data-testid="budget-loading"]',
+      );
+      expect(loader).toBeNull();
+    });
+  });
+
   describe("i18n labels (FR source)", () => {
     it("getCategoryLabel('ALL') returns the localized French label", () => {
       expect(component.getCategoryLabel("ALL")).toBe("Toutes les catégories");
