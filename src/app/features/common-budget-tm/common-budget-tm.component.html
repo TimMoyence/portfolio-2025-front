@@ -1,5 +1,25 @@
 <section class="common-budget-shell px-[5%] pb-20 pt-8">
   <div class="mx-auto max-w-7xl">
+    @if (loading()) {
+      <div
+        class="mb-6 flex items-center justify-center rounded-[2rem] border border-black/10 bg-white/95 px-6 py-12 shadow-[0_24px_60px_rgba(25,33,52,0.08)]"
+        data-testid="budget-loading"
+        role="status"
+        aria-live="polite"
+      >
+        <span
+          class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-budget-accent border-t-transparent"
+          aria-hidden="true"
+        ></span>
+        <span
+          class="ml-4 text-sm font-medium text-slate-700"
+          i18n="@@budgetDashboardLoading"
+        >
+          Chargement de votre budget…
+        </span>
+      </div>
+    }
+
     <div
       class="overflow-hidden rounded-[2rem] border border-black/10 bg-[linear-gradient(135deg,rgba(255,250,240,0.95),rgba(220,242,235,0.92))] px-6 py-8 shadow-[0_24px_60px_rgba(25,33,52,0.08)] md:px-10 md:py-12"
     >
@@ -9,8 +29,9 @@
         <div class="max-w-3xl">
           <p
             class="text-sm font-semibold uppercase tracking-[0.28em] text-budget-accent"
+            i18n="@@budgetDashboardEyebrow"
           >
-            Common account dashboard
+            Tableau de bord couple
           </p>
           <h1
             class="mt-4 max-w-[12ch] font-heading text-5xl font-black leading-[0.92] text-slate-950 md:text-7xl"
@@ -19,10 +40,11 @@
           </h1>
           <p
             class="mt-5 max-w-2xl text-base leading-7 text-slate-600 md:text-lg"
+            i18n="@@budgetDashboardDescription"
           >
-            A lightweight budget cockpit for Tim and Maria: upload a CSV,
-            auto-classify expenses, adjust categories manually, and keep
-            contributions visible at a glance.
+            Un cockpit budget léger pour Tim et Maria : importez un CSV, classez
+            automatiquement les dépenses, ajustez manuellement les catégories,
+            et gardez les contributions visibles d'un coup d'œil.
           </p>
         </div>
 
@@ -42,7 +64,7 @@
                 [class.border-slate-200]="selectedMonth() !== month"
                 (click)="selectMonth(month)"
               >
-                {{ month }}
+                {{ getMonthLabel(month) }}
               </button>
             }
           </div>
@@ -50,8 +72,9 @@
           <div>
             <p
               class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
+              i18n="@@budgetDashboardDataSource"
             >
-              Data source
+              Source de données
             </p>
             <p class="mt-2 text-sm font-medium text-slate-800">
               {{ sourceLabel() }}
@@ -62,8 +85,9 @@
             <label
               class="inline-flex cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5"
               for="budgetCsv"
+              i18n="@@budgetDashboardUploadCsv"
             >
-              Upload CSV
+              Importer un CSV
             </label>
             <input
               id="budgetCsv"
@@ -77,8 +101,9 @@
               type="button"
               class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
               (click)="resetToSample()"
+              i18n="@@budgetDashboardResetSample"
             >
-              Reset sample
+              Réinitialiser l'exemple
             </button>
           </div>
 
@@ -98,6 +123,7 @@
                 <input
                   class="flex-1 rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-sm text-slate-900"
                   type="email"
+                  i18n-placeholder="@@budgetSharePlaceholder"
                   placeholder="email@exemple.com"
                   [value]="shareEmail()"
                   (input)="onShareEmailChange(readTextInput($event))"
@@ -122,38 +148,43 @@
 
     <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
       <app-budget-summary-card
-        eyebrow="Spending"
-        title="Total expenses"
+        i18n-eyebrow="@@budgetSummarySpendingEyebrow"
+        eyebrow="Sortants"
+        i18n-title="@@budgetSummarySpendingTitle"
+        title="Total des dépenses"
         [value]="totalExpenses()"
-        caption="All outgoing transactions in the loaded period."
+        i18n-caption="@@budgetSummarySpendingCaption"
+        caption="Toutes les transactions sortantes de la période chargée."
       />
       <app-budget-summary-card
-        eyebrow="Incoming"
-        title="Total incoming"
+        i18n-eyebrow="@@budgetSummaryIncomingEyebrow"
+        eyebrow="Entrants"
+        i18n-title="@@budgetSummaryIncomingTitle"
+        title="Total des entrants"
         [value]="totalIncoming()"
-        caption="Includes transfers, top-ups, and shared contributions."
+        i18n-caption="@@budgetSummaryIncomingCaption"
+        caption="Virements, dépôts et contributions partagées."
       />
       <app-budget-summary-card
+        i18n-eyebrow="@@budgetSummaryContributionEyebrow"
         eyebrow="Contribution"
         title="Maria"
-        [lines]="[
-          { label: 'Maria added', value: mariaContribution() },
-          { label: 'Maria left to add', value: '' },
-        ]"
+        [lines]="mariaContributionLines()"
       />
       <app-budget-summary-card
+        i18n-eyebrow="@@budgetSummaryContributionEyebrow"
         eyebrow="Contribution"
         title="Tim"
-        [lines]="[
-          { label: 'Tim added', value: timContribution() },
-          { label: 'Tim left to add', value: '' },
-        ]"
+        [lines]="timContributionLines()"
       />
       <app-budget-summary-card
-        eyebrow="Transfers"
+        i18n-eyebrow="@@budgetSummaryTransfersEyebrow"
+        eyebrow="Virements"
+        i18n-title="@@budgetSummaryPocketsTitle"
         title="Pockets"
         [value]="pocketsTotal()"
-        caption="Money moved from the common account into pockets."
+        i18n-caption="@@budgetSummaryPocketsCaption"
+        caption="Argent transféré du compte commun vers les pockets."
       />
     </div>
 
@@ -174,22 +205,29 @@
         <div>
           <p
             class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
+            i18n="@@budgetSalaryEyebrow"
           >
-            Budget calculation
+            Calcul du budget
           </p>
-          <h2 class="mt-3 text-2xl font-black text-slate-950">
-            Salary contribution ratio
+          <h2
+            class="mt-3 text-2xl font-black text-slate-950"
+            i18n="@@budgetSalaryTitle"
+          >
+            Ratio de contribution salariale
           </h2>
         </div>
-        <p class="max-w-xl text-sm leading-6 text-slate-500">
-          Enter Tim and Maria salaries to calculate what percentage each salary
-          represents from the combined total.
+        <p
+          class="max-w-xl text-sm leading-6 text-slate-500"
+          i18n="@@budgetSalaryDescription"
+        >
+          Saisissez les salaires de Tim et Maria pour calculer le pourcentage
+          que chaque salaire représente dans le total combiné.
         </p>
       </div>
 
       <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr_0.9fr]">
         <label class="grid gap-2 text-sm text-slate-600">
-          Tim salary
+          <span i18n="@@budgetSalaryTimLabel">Salaire de Tim</span>
           <input
             class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
             type="number"
@@ -199,13 +237,14 @@
             [value]="timSalary()"
             (input)="onTimSalaryChange(readTextInput($event))"
           />
-          <span class="text-xs text-slate-500"
-            >Share: {{ timSalaryShare() }}</span
-          >
+          <span class="text-xs text-slate-500">
+            <span i18n="@@budgetSalaryShareLabel">Part :</span>
+            {{ timSalaryShare() }}
+          </span>
         </label>
 
         <label class="grid gap-2 text-sm text-slate-600">
-          Maria salary
+          <span i18n="@@budgetSalaryMariaLabel">Salaire de Maria</span>
           <input
             class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
             type="number"
@@ -215,9 +254,10 @@
             [value]="mariaSalary()"
             (input)="onMariaSalaryChange(readTextInput($event))"
           />
-          <span class="text-xs text-slate-500"
-            >Share: {{ mariaSalaryShare() }}</span
-          >
+          <span class="text-xs text-slate-500">
+            <span i18n="@@budgetSalaryShareLabel">Part :</span>
+            {{ mariaSalaryShare() }}
+          </span>
         </label>
 
         <div
@@ -225,15 +265,19 @@
         >
           <p
             class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500"
+            i18n="@@budgetSalaryCombinedLabel"
           >
-            Combined salaries
+            Salaires combinés
           </p>
           <p class="mt-3 text-3xl font-black text-slate-950">
             {{ totalSalary() | number: "1.0-2" }} €
           </p>
-          <p class="mt-3 text-sm leading-6 text-slate-500">
-            This gives you a quick rule for how to split contributions to the
-            common account.
+          <p
+            class="mt-3 text-sm leading-6 text-slate-500"
+            i18n="@@budgetSalaryCombinedHelp"
+          >
+            Une règle rapide pour répartir équitablement les contributions au
+            compte commun.
           </p>
         </div>
       </div>
@@ -243,8 +287,9 @@
           type="button"
           class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
           (click)="validateBudgetCalculation()"
+          i18n="@@budgetSalaryValidateBtn"
         >
-          Validate
+          Valider
         </button>
 
         @if (budgetValidationMessage()) {
@@ -265,29 +310,41 @@
       >
         <p
           class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
+          i18n="@@budgetFiltersEyebrow"
         >
-          Filters
+          Filtres
         </p>
-        <h2 class="mt-3 text-2xl font-black text-slate-950">Focus the table</h2>
-        <p class="mt-3 max-w-md text-sm leading-6 text-slate-500">
-          Search by merchant, keep only one category, or isolate pending rows
-          before you correct the classifications.
+        <h2
+          class="mt-3 text-2xl font-black text-slate-950"
+          i18n="@@budgetFiltersTitle"
+        >
+          Affiner le tableau
+        </h2>
+        <p
+          class="mt-3 max-w-md text-sm leading-6 text-slate-500"
+          i18n="@@budgetFiltersDescription"
+        >
+          Cherchez par marchand, isolez une catégorie, ou affichez uniquement
+          les lignes en attente avant de corriger les classifications.
         </p>
 
         <div class="mt-6 grid gap-4">
           <label class="grid gap-2 text-sm text-slate-600">
-            Search description
+            <span i18n="@@budgetFiltersSearchLabel"
+              >Rechercher dans la description</span
+            >
             <input
               class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
               type="search"
-              placeholder="Amazon, EDF, Carrefour..."
+              i18n-placeholder="@@budgetFiltersSearchPlaceholder"
+              placeholder="Amazon, EDF, Carrefour…"
               [value]="searchTerm()"
               (input)="onSearchChange(readTextInput($event))"
             />
           </label>
 
           <label class="grid gap-2 text-sm text-slate-600">
-            Category
+            <span i18n="@@budgetFiltersCategoryLabel">Catégorie</span>
             <select
               class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
               [value]="categoryFilter()"
@@ -303,28 +360,38 @@
           </label>
 
           <label class="grid gap-2 text-sm text-slate-600">
-            State
+            <span i18n="@@budgetFiltersStateLabel">État</span>
             <select
               class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
               [value]="stateFilter()"
               (change)="onStateFilterChange(readSelectValue($event))"
             >
-              <option value="ALL">All states</option>
-              <option value="COMPLETED">Completed</option>
-              <option value="PENDING">Pending</option>
+              <option value="ALL" i18n="@@budgetFiltersStateAll">
+                Tous les états
+              </option>
+              <option value="COMPLETED" i18n="@@budgetFiltersStateCompleted">
+                Terminé
+              </option>
+              <option value="PENDING" i18n="@@budgetFiltersStatePending">
+                En attente
+              </option>
             </select>
           </label>
 
           <label class="grid gap-2 text-sm text-slate-600">
-            Fixed or variable
+            <span i18n="@@budgetFiltersTypeLabel">Fixe ou variable</span>
             <select
               class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
               [value]="budgetTypeFilter()"
               (change)="onBudgetTypeFilterChange(readSelectValue($event))"
             >
-              <option value="ALL">All</option>
-              <option value="FIXED">Fixed</option>
-              <option value="VARIABLE">Variable</option>
+              <option value="ALL" i18n="@@budgetFiltersTypeAll">Tous</option>
+              <option value="FIXED" i18n="@@budgetFiltersTypeFixed">
+                Fixe
+              </option>
+              <option value="VARIABLE" i18n="@@budgetFiltersTypeVariable">
+                Variable
+              </option>
             </select>
           </label>
         </div>
@@ -345,6 +412,7 @@
         [transactions]="transactionViews()"
         [categories]="categories()"
         (categoryChanged)="onCategoryChange($event)"
+        (deleteRequested)="onDeleteEntry($event)"
       />
     </div>
 
