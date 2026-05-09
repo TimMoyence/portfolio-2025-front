@@ -382,12 +382,12 @@ export class BudgetRecurringComponent implements OnInit {
     { value: 6, label: $localize`:@@budgetRecurringDaySaturday:Samedi` },
   ];
 
-  /** Retourne le libelle de la frequence. */
+  /** Retourne le libelle localise de la frequence. */
   frequencyLabel(frequency: Frequency): string {
     const labels: Record<Frequency, string> = {
-      MONTHLY: "Mensuelle",
-      WEEKLY: "Hebdomadaire",
-      BIWEEKLY: "Bimensuelle",
+      MONTHLY: $localize`:@@budgetRecurringFreqMonthly:Mensuelle`,
+      WEEKLY: $localize`:@@budgetRecurringFreqWeekly:Hebdomadaire`,
+      BIWEEKLY: $localize`:@@budgetRecurringFreqBiweekly:Bimensuelle`,
     };
     return labels[frequency];
   }

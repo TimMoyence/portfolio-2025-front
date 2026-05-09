@@ -50,4 +50,12 @@ describe("BudgetRecurringComponent", () => {
     component.toggleForm();
     expect(component.showForm()).toBeTrue();
   });
+
+  describe("frequencyLabel (B6 — $localize)", () => {
+    it("retourne les libelles FR localises pour chaque frequence", () => {
+      expect(component.frequencyLabel("MONTHLY")).toBe("Mensuelle");
+      expect(component.frequencyLabel("WEEKLY")).toBe("Hebdomadaire");
+      expect(component.frequencyLabel("BIWEEKLY")).toBe("Bimensuelle");
+    });
+  });
 });
