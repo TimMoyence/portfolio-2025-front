@@ -1,7 +1,11 @@
 import type {
   BudgetCategoryModel,
   BudgetEntryModel,
+  BudgetGoal,
+  BudgetGoalWithProgress,
   BudgetGroup,
+  BudgetMember,
+  BudgetMemberContribution,
   BudgetSummary,
   RecurringEntryModel,
 } from "../../app/core/models/budget.model";
@@ -98,6 +102,67 @@ export function buildRecurringEntry(
   };
 }
 
+/** Construit un objet BudgetMember avec des valeurs par defaut. */
+export function buildBudgetMember(
+  overrides?: Partial<BudgetMember>,
+): BudgetMember {
+  return {
+    userId: "user-1",
+    email: "alice@example.com",
+    displayName: "Alice",
+    isOwner: true,
+    joinedAt: "2026-01-01T00:00:00.000Z",
+    ...overrides,
+  };
+}
+
+/** Construit un objet BudgetMemberContribution avec des valeurs par defaut. */
+export function buildBudgetMemberContribution(
+  overrides?: Partial<BudgetMemberContribution>,
+): BudgetMemberContribution {
+  return {
+    id: "contrib-1",
+    groupId: "group-1",
+    userId: "user-1",
+    month: 5,
+    year: 2026,
+    monthlySalary: 2500,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+    ...overrides,
+  };
+}
+
+/** Construit un objet BudgetGoal avec des valeurs par defaut. */
+export function buildBudgetGoal(overrides?: Partial<BudgetGoal>): BudgetGoal {
+  return {
+    id: "goal-1",
+    groupId: "group-1",
+    createdByUserId: "user-1",
+    name: "Epargne vacances",
+    kind: "SAVINGS",
+    targetAmount: 1000,
+    categoryId: null,
+    deadline: null,
+    isActive: true,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+    ...overrides,
+  };
+}
+
+/** Construit un objet BudgetGoalWithProgress avec des valeurs par defaut. */
+export function buildBudgetGoalWithProgress(
+  overrides?: Partial<BudgetGoalWithProgress>,
+): BudgetGoalWithProgress {
+  return {
+    ...buildBudgetGoal(),
+    currentAmount: 0,
+    progressPercent: 0,
+    ...overrides,
+  };
+}
+
 /** Cree un stub complet du port budget avec des spies Jasmine. */
 export function createBudgetPortStub(): Record<keyof BudgetPort, jasmine.Spy> {
   return {
@@ -118,5 +183,14 @@ export function createBudgetPortStub(): Record<keyof BudgetPort, jasmine.Spy> {
     createRecurringEntry: jasmine.createSpy("createRecurringEntry"),
     deleteRecurringEntry: jasmine.createSpy("deleteRecurringEntry"),
     updateRecurringEntry: jasmine.createSpy("updateRecurringEntry"),
+    getMembers: jasmine.createSpy("getMembers"),
+    removeMember: jasmine.createSpy("removeMember"),
+    getContributions: jasmine.createSpy("getContributions"),
+    upsertMyContribution: jasmine.createSpy("upsertMyContribution"),
+    getGoals: jasmine.createSpy("getGoals"),
+    createGoal: jasmine.createSpy("createGoal"),
+    updateGoal: jasmine.createSpy("updateGoal"),
+    deleteGoal: jasmine.createSpy("deleteGoal"),
+    getEntriesMonths: jasmine.createSpy("getEntriesMonths"),
   };
 }
