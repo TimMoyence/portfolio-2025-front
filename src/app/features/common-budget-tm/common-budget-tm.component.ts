@@ -11,15 +11,24 @@ import { firstValueFrom } from "rxjs";
 import type {
   BudgetCategoryModel,
   BudgetEntryModel,
+  BudgetGoalWithProgress,
   BudgetGroup,
+  BudgetMember,
+  BudgetMemberContribution,
+  CreateBudgetGoalPayload,
+  UpdateBudgetGoalPayload,
 } from "../../core/models/budget.model";
 import { BUDGET_PORT } from "../../core/ports/budget.port";
+import { AuthStateService } from "../../core/services/auth-state.service";
 import { BudgetFormatService } from "../../core/services/budget-format.service";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
 import { BudgetChartComponent } from "./components/budget-chart/budget-chart.component";
+import { BudgetContributionsPanelComponent } from "./components/budget-contributions-panel/budget-contributions-panel.component";
 import { BudgetExportComponent } from "./components/budget-export/budget-export.component";
 import { BudgetGoalsComponent } from "./components/budget-goals/budget-goals.component";
+import { BudgetMembersPanelComponent } from "./components/budget-members-panel/budget-members-panel.component";
 import { BudgetRecurringComponent } from "./components/budget-recurring/budget-recurring.component";
+import { BudgetSavingsGoalsComponent } from "./components/budget-savings-goals/budget-savings-goals.component";
 import { BudgetSummaryCardComponent } from "./components/budget-summary-card/budget-summary-card.component";
 import {
   BudgetTransactionsTableComponent,
@@ -60,6 +69,9 @@ const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
     BudgetChartComponent,
     BudgetExportComponent,
     BudgetGoalsComponent,
+    BudgetMembersPanelComponent,
+    BudgetContributionsPanelComponent,
+    BudgetSavingsGoalsComponent,
     BudgetRecurringComponent,
     BudgetTransactionsTableComponent,
   ],
@@ -72,6 +84,7 @@ export class CommonBudgetTmComponent {
   private readonly browser = isPlatformBrowser(this.platformId);
   private readonly budgetPort = inject(BUDGET_PORT);
   private readonly fmt = inject(BudgetFormatService);
+  private readonly authState = inject(AuthStateService);
 
   readonly groupId = signal<string | null>(null);
   readonly apiCategories = signal<BudgetCategoryModel[]>([]);
@@ -92,6 +105,13 @@ export class CommonBudgetTmComponent {
   readonly mariaSalary = signal("");
   readonly budgetValidationMessage = signal("");
   readonly currentYear = signal(new Date().getFullYear());
+  readonly members = signal<BudgetMember[]>([]);
+  readonly contributions = signal<BudgetMemberContribution[]>([]);
+  readonly previousMonthContributions = signal<BudgetMemberContribution[]>([]);
+  readonly savingsGoals = signal<BudgetGoalWithProgress[]>([]);
+  readonly currentUserId = computed<string>(
+    () => this.authState.user()?.id ?? "",
+  );
 
   private readonly baseTransactions = signal<BudgetTransaction[]>([]);
   private readonly overrides = signal<Record<string, string>>({});
@@ -404,6 +424,14 @@ export class CommonBudgetTmComponent {
     this.uploadStatus.set("");
 
     this.loadEntries();
+    const gid = this.groupId();
+    if (gid) {
+      this.loadMembersAndContributions(
+        gid,
+        MONTH_NUMBER_MAP[month],
+        this.currentYear(),
+      );
+    }
   }
 
   validateBudgetCalculation(): void {
@@ -528,6 +556,11 @@ export class CommonBudgetTmComponent {
       this.apiCategories.set(cats);
 
       await this.loadEntries();
+      this.loadMembersAndContributions(
+        group.id,
+        MONTH_NUMBER_MAP[this.selectedMonth()],
+        this.currentYear(),
+      );
     } catch {
       // Fallback to sample data if API is unreachable
       this.baseTransactions.set(
@@ -577,6 +610,119 @@ export class CommonBudgetTmComponent {
       this.sourceLabel.set(`${month} - Error loading entries`);
       this.uploadStatus.set("");
     }
+  }
+
+  /** Charge membres, contributions et objectifs depuis le backend pour le groupe courant. */
+  private loadMembersAndContributions(
+    groupId: string,
+    monthNumber: number,
+    year: number,
+  ): void {
+    this.budgetPort.getMembers(groupId).subscribe({
+      next: (members) => this.members.set(members),
+      error: () => this.members.set([]),
+    });
+
+    this.budgetPort.getContributions(groupId, monthNumber, year).subscribe({
+      next: (contribs) => this.contributions.set(contribs),
+      error: () => this.contributions.set([]),
+    });
+
+    const prevMonth = monthNumber === 1 ? 12 : monthNumber - 1;
+    const prevYear = monthNumber === 1 ? year - 1 : year;
+    this.budgetPort.getContributions(groupId, prevMonth, prevYear).subscribe({
+      next: (contribs) => this.previousMonthContributions.set(contribs),
+      error: () => this.previousMonthContributions.set([]),
+    });
+
+    this.budgetPort.getGoals(groupId, monthNumber, year).subscribe({
+      next: (goals) => this.savingsGoals.set(goals),
+      error: () => this.savingsGoals.set([]),
+    });
+  }
+
+  /** Handler pour BudgetMembersPanel.removeMember. */
+  onRemoveMember(userId: string): void {
+    const gid = this.groupId();
+    if (!gid) return;
+    this.budgetPort.removeMember(gid, userId).subscribe({
+      next: () => {
+        this.members.update((m) => m.filter((mm) => mm.userId !== userId));
+        this.contributions.update((c) =>
+          c.filter((cc) => cc.userId !== userId),
+        );
+      },
+      error: (err) => console.error("removeMember failed", err),
+    });
+  }
+
+  /** Handler pour BudgetMembersPanel.inviteMember. */
+  onInviteMember(email: string): void {
+    const gid = this.groupId();
+    if (!gid || !email) return;
+    this.budgetPort
+      .shareBudget({ groupId: gid, targetEmail: email })
+      .subscribe({
+        next: () => this.shareMessage.set(`Invitation envoyee a ${email}`),
+        error: (err) =>
+          this.shareMessage.set(`Echec invitation : ${(err as Error).message}`),
+      });
+  }
+
+  /** Handler pour BudgetContributionsPanel.mySalaryChange. */
+  onMySalaryChange(monthlySalary: number): void {
+    const gid = this.groupId();
+    if (!gid) return;
+    this.budgetPort
+      .upsertMyContribution({
+        groupId: gid,
+        month: this.monthNumber(),
+        year: this.currentYear(),
+        monthlySalary,
+      })
+      .subscribe({
+        next: (contrib) => {
+          this.contributions.update((list) => {
+            const filtered = list.filter((c) => c.userId !== contrib.userId);
+            return [...filtered, contrib];
+          });
+        },
+        error: (err) => console.error("upsertMyContribution failed", err),
+      });
+  }
+
+  /** Handler pour BudgetSavingsGoals.createGoal. */
+  onCreateSavingsGoal(payload: Omit<CreateBudgetGoalPayload, "groupId">): void {
+    const gid = this.groupId();
+    if (!gid) return;
+    this.budgetPort.createGoal({ ...payload, groupId: gid }).subscribe({
+      next: (goal) => this.savingsGoals.update((g) => [...g, goal]),
+      error: (err) => console.error("createGoal failed", err),
+    });
+  }
+
+  /** Handler pour BudgetSavingsGoals.updateGoal. */
+  onUpdateSavingsGoal(event: {
+    id: string;
+    payload: UpdateBudgetGoalPayload;
+  }): void {
+    this.budgetPort.updateGoal(event.id, event.payload).subscribe({
+      next: (updated) => {
+        this.savingsGoals.update((list) =>
+          list.map((g) => (g.id === updated.id ? updated : g)),
+        );
+      },
+      error: (err) => console.error("updateGoal failed", err),
+    });
+  }
+
+  /** Handler pour BudgetSavingsGoals.deleteGoal. */
+  onDeleteSavingsGoal(goalId: string): void {
+    this.budgetPort.deleteGoal(goalId).subscribe({
+      next: () =>
+        this.savingsGoals.update((list) => list.filter((g) => g.id !== goalId)),
+      error: (err) => console.error("deleteGoal failed", err),
+    });
   }
 
   getCategoryLabel(category: string | "ALL"): string {

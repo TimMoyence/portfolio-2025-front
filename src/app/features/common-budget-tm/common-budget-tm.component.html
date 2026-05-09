@@ -436,5 +436,37 @@
         />
       </div>
     }
+
+    <!-- Membres du groupe -->
+    <section class="mt-8">
+      <app-budget-members-panel
+        [members]="members()"
+        [currentUserId]="currentUserId()"
+        (removeMember)="onRemoveMember($event)"
+        (inviteMember)="onInviteMember($event)"
+      />
+    </section>
+
+    <!-- Contributions salariales -->
+    <section class="mt-8">
+      <app-budget-contributions-panel
+        [members]="members()"
+        [contributions]="contributions()"
+        [previousMonthContributions]="previousMonthContributions()"
+        [currentUserId]="currentUserId()"
+        (mySalaryChange)="onMySalaryChange($event)"
+      />
+    </section>
+
+    <!-- Objectifs d'epargne et plafonds -->
+    <section class="mt-8">
+      <app-budget-savings-goals
+        [goals]="savingsGoals()"
+        [categories]="apiCategories()"
+        (createGoal)="onCreateSavingsGoal($event)"
+        (updateGoal)="onUpdateSavingsGoal($event)"
+        (deleteGoal)="onDeleteSavingsGoal($event)"
+      />
+    </section>
   </div>
 </section>
