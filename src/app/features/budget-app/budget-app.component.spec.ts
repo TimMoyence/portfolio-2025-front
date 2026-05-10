@@ -5,11 +5,11 @@ import {
   buildBudgetGroup,
   createBudgetPortStub,
 } from "../../../testing/factories/budget.factory";
-import { CommonBudgetTmComponent } from "./common-budget-tm.component";
+import { BudgetAppComponent } from "./budget-app.component";
 
-describe("CommonBudgetTmComponent", () => {
-  let component: CommonBudgetTmComponent;
-  let fixture: ComponentFixture<CommonBudgetTmComponent>;
+describe("BudgetAppComponent", () => {
+  let component: BudgetAppComponent;
+  let fixture: ComponentFixture<BudgetAppComponent>;
   let budgetPortStub: ReturnType<typeof createBudgetPortStub>;
 
   beforeEach(async () => {
@@ -23,11 +23,11 @@ describe("CommonBudgetTmComponent", () => {
     );
 
     await TestBed.configureTestingModule({
-      imports: [CommonBudgetTmComponent],
+      imports: [BudgetAppComponent],
       providers: [{ provide: BUDGET_PORT, useValue: budgetPortStub }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CommonBudgetTmComponent);
+    fixture = TestBed.createComponent(BudgetAppComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -49,7 +49,7 @@ describe("CommonBudgetTmComponent", () => {
     budgetPortStub.getEntries.and.returnValue(of([]));
 
     // Re-create component to trigger fresh initBudget
-    fixture = TestBed.createComponent(CommonBudgetTmComponent);
+    fixture = TestBed.createComponent(BudgetAppComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();

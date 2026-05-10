@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { SlideInDirective } from "../../shared/directives/slide-in.directive";
-import { BudgetSummaryCardComponent } from "../common-budget-tm/components/budget-summary-card/budget-summary-card.component";
+import { BudgetSummaryCardComponent } from "../budget-app/components/budget-summary-card/budget-summary-card.component";
 import {
   MOCK_ACTIVE_MONTH,
   MOCK_CATEGORIES,

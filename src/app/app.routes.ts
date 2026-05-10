@@ -202,8 +202,8 @@ export const routes: Routes = [
     path: "atelier/budget/app",
     canActivate: [authGuard, roleGuard("budget")],
     loadComponent: () =>
-      import("./features/common-budget-tm/common-budget-tm.component").then(
-        (m) => m.CommonBudgetTmComponent,
+      import("./features/budget-app/budget-app.component").then(
+        (m) => m.BudgetAppComponent,
       ),
     data: {
       seoKey: "budget-app",

@@ -60,7 +60,7 @@ const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
 };
 
 @Component({
-  selector: "app-common-budget-tm",
+  selector: "app-budget-app",
   standalone: true,
   imports: [
     CommonModule,
@@ -75,11 +75,11 @@ const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
     BudgetRecurringComponent,
     BudgetTransactionsTableComponent,
   ],
-  templateUrl: "./common-budget-tm.component.html",
-  styleUrl: "./common-budget-tm.component.scss",
+  templateUrl: "./budget-app.component.html",
+  styleUrl: "./budget-app.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommonBudgetTmComponent {
+export class BudgetAppComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly browser = isPlatformBrowser(this.platformId);
   private readonly budgetPort = inject(BUDGET_PORT);
