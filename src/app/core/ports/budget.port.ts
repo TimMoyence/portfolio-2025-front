@@ -3,15 +3,21 @@ import type { Observable } from "rxjs";
 import type {
   BudgetCategoryModel,
   BudgetEntryModel,
+  BudgetGoalWithProgress,
   BudgetGroup,
+  BudgetMember,
+  BudgetMemberContribution,
   BudgetSummary,
   CreateBudgetCategoryPayload,
   CreateBudgetEntryPayload,
+  CreateBudgetGoalPayload,
   CreateRecurringEntryPayload,
   ImportBudgetEntriesPayload,
   RecurringEntryModel,
   ShareBudgetPayload,
+  UpdateBudgetGoalPayload,
   UpdateRecurringEntryPayload,
+  UpsertMyBudgetContributionPayload,
 } from "../models/budget.model";
 
 /** Port d'acces aux donnees du budget partage. */
@@ -66,6 +72,41 @@ export interface BudgetPort {
     id: string,
     payload: UpdateRecurringEntryPayload,
   ): Observable<RecurringEntryModel>;
+  /** Liste les membres enrichis d'un groupe budget. */
+  getMembers(groupId: string): Observable<BudgetMember[]>;
+  /** Retire un membre du groupe (owner uniquement). */
+  removeMember(groupId: string, userId: string): Observable<void>;
+  /** Recupere les contributions du groupe pour une periode. */
+  getContributions(
+    groupId: string,
+    month: number,
+    year: number,
+  ): Observable<BudgetMemberContribution[]>;
+  /** Upsert ma contribution mensuelle (le userId est extrait du JWT cote backend). */
+  upsertMyContribution(
+    payload: UpsertMyBudgetContributionPayload,
+  ): Observable<BudgetMemberContribution>;
+  /** Liste les objectifs d'un groupe avec progression actuelle. */
+  getGoals(
+    groupId: string,
+    month?: number,
+    year?: number,
+  ): Observable<BudgetGoalWithProgress[]>;
+  /** Cree un nouvel objectif de budget. */
+  createGoal(
+    payload: CreateBudgetGoalPayload,
+  ): Observable<BudgetGoalWithProgress>;
+  /** Met a jour un objectif. */
+  updateGoal(
+    id: string,
+    payload: UpdateBudgetGoalPayload,
+  ): Observable<BudgetGoalWithProgress>;
+  /** Supprime un objectif. */
+  deleteGoal(id: string): Observable<void>;
+  /** Liste les couples (month, year) ou des entrees existent dans le groupe. */
+  getEntriesMonths(
+    groupId: string,
+  ): Observable<Array<{ month: number; year: number }>>;
 }
 
 export const BUDGET_PORT = new InjectionToken<BudgetPort>("BUDGET_PORT");

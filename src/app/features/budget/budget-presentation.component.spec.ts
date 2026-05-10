@@ -30,8 +30,8 @@ describe("BudgetPresentationComponent", () => {
     expect(component.summary.totalExpenses).toBe("2 847 \u20AC");
   });
 
-  it("should expose Tim at 54%", () => {
-    expect(component.contributions.tim.percentage).toBe(54);
+  it("should expose first member at 54%", () => {
+    expect(component.contributions.members[0].percentage).toBe(54);
   });
 
   it("should have 6 months with Avr active", () => {
@@ -49,8 +49,12 @@ describe("BudgetPresentationComponent", () => {
     ).toBeTruthy();
   });
 
-  it("should expose Maria at 46%", () => {
-    expect(component.contributions.maria.percentage).toBe(46);
+  it("should expose second member at 46%", () => {
+    expect(component.contributions.members[1].percentage).toBe(46);
+  });
+
+  it("should expose 2 members in contributions", () => {
+    expect(component.contributions.members.length).toBe(2);
   });
 
   it("should expose combined salary of 5200", () => {

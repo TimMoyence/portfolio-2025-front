@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { SlideInDirective } from "../../shared/directives/slide-in.directive";
-import { BudgetSummaryCardComponent } from "../common-budget-tm/components/budget-summary-card/budget-summary-card.component";
+import { BudgetSummaryCardComponent } from "../budget-app/components/budget-summary-card/budget-summary-card.component";
 import {
   MOCK_ACTIVE_MONTH,
   MOCK_CATEGORIES,
@@ -50,7 +50,7 @@ export class BudgetPresentationComponent implements OnInit {
   /** Metriques de synthese (depenses, revenus, contributions). */
   readonly summary = MOCK_SUMMARY;
 
-  /** Contributions Tim / Maria. */
+  /** Contributions des membres du groupe budget. */
   readonly contributions = MOCK_CONTRIBUTIONS;
 
   /** Liste des mois en pilules. */

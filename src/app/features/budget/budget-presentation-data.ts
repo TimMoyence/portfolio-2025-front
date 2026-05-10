@@ -163,8 +163,6 @@ export const MOCK_CATEGORY_TOTALS: CategoryTotal[] = [
 export interface BudgetSummaryMetrics {
   totalExpenses: string;
   totalIncoming: string;
-  mariaContribution: string;
-  timContribution: string;
   pocketsTotal: string;
 }
 
@@ -172,22 +170,42 @@ export interface BudgetSummaryMetrics {
 export const MOCK_SUMMARY: BudgetSummaryMetrics = {
   totalExpenses: "2 847 \u20AC",
   totalIncoming: "4 120 \u20AC",
-  mariaContribution: "1 897 \u20AC",
-  timContribution: "2 223 \u20AC",
   pocketsTotal: "650 \u20AC",
 };
 
-/** Contributions de chaque membre du couple. */
+/** Contribution mensuelle d'un membre du groupe budget. */
+export interface MemberContribution {
+  name: string;
+  salary: number;
+  percentage: number;
+  monthlyContribution: string;
+  variant: "primary" | "secondary";
+}
+
+/** Contributions des membres d'un groupe budget. */
 export interface ContributionData {
-  tim: { name: string; salary: number; percentage: number };
-  maria: { name: string; salary: number; percentage: number };
+  members: MemberContribution[];
   combined: number;
 }
 
-/** Contributions Tim/Maria fictives. */
+/** Contributions fictives illustratives pour la demo marketing. */
 export const MOCK_CONTRIBUTIONS: ContributionData = {
-  tim: { name: "Tim", salary: 2800, percentage: 54 },
-  maria: { name: "Maria", salary: 2400, percentage: 46 },
+  members: [
+    {
+      name: "Alex",
+      salary: 2800,
+      percentage: 54,
+      monthlyContribution: "2 223 \u20AC",
+      variant: "primary",
+    },
+    {
+      name: "Sam",
+      salary: 2400,
+      percentage: 46,
+      monthlyContribution: "1 897 \u20AC",
+      variant: "secondary",
+    },
+  ],
   combined: 5200,
 };
 

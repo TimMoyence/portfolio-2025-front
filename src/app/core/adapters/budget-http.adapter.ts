@@ -5,15 +5,21 @@ import { getApiBaseUrl } from "../http/api-config";
 import type {
   BudgetCategoryModel,
   BudgetEntryModel,
+  BudgetGoalWithProgress,
   BudgetGroup,
+  BudgetMember,
+  BudgetMemberContribution,
   BudgetSummary,
   CreateBudgetCategoryPayload,
   CreateBudgetEntryPayload,
+  CreateBudgetGoalPayload,
   CreateRecurringEntryPayload,
   ImportBudgetEntriesPayload,
   RecurringEntryModel,
   ShareBudgetPayload,
+  UpdateBudgetGoalPayload,
   UpdateRecurringEntryPayload,
+  UpsertMyBudgetContributionPayload,
 } from "../models/budget.model";
 import type { BudgetPort } from "../ports/budget.port";
 
@@ -189,6 +195,98 @@ export class BudgetHttpAdapter implements BudgetPort {
     return this.http.patch<RecurringEntryModel>(
       `${this.baseUrl}/budget/recurring-entries/${id}`,
       payload,
+    );
+  }
+
+  /** Liste les membres enrichis d'un groupe budget. */
+  getMembers(groupId: string): Observable<BudgetMember[]> {
+    return this.http.get<BudgetMember[]>(
+      `${this.baseUrl}/budget/groups/${groupId}/members`,
+    );
+  }
+
+  /** Retire un membre du groupe (owner uniquement). */
+  removeMember(groupId: string, userId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/budget/groups/${groupId}/members/${userId}`,
+    );
+  }
+
+  /** Recupere les contributions pour une periode. */
+  getContributions(
+    groupId: string,
+    month: number,
+    year: number,
+  ): Observable<BudgetMemberContribution[]> {
+    const params = new HttpParams()
+      .set("groupId", groupId)
+      .set("month", month)
+      .set("year", year);
+    return this.http.get<BudgetMemberContribution[]>(
+      `${this.baseUrl}/budget/contributions`,
+      { params },
+    );
+  }
+
+  /** Upsert ma contribution mensuelle. */
+  upsertMyContribution(
+    payload: UpsertMyBudgetContributionPayload,
+  ): Observable<BudgetMemberContribution> {
+    return this.http.put<BudgetMemberContribution>(
+      `${this.baseUrl}/budget/contributions`,
+      payload,
+    );
+  }
+
+  /** Liste les objectifs avec progression actuelle. */
+  getGoals(
+    groupId: string,
+    month?: number,
+    year?: number,
+  ): Observable<BudgetGoalWithProgress[]> {
+    let params = new HttpParams().set("groupId", groupId);
+    if (month != null) params = params.set("month", month);
+    if (year != null) params = params.set("year", year);
+    return this.http.get<BudgetGoalWithProgress[]>(
+      `${this.baseUrl}/budget/goals`,
+      { params },
+    );
+  }
+
+  /** Cree un objectif. */
+  createGoal(
+    payload: CreateBudgetGoalPayload,
+  ): Observable<BudgetGoalWithProgress> {
+    return this.http.post<BudgetGoalWithProgress>(
+      `${this.baseUrl}/budget/goals`,
+      payload,
+    );
+  }
+
+  /** Met a jour un objectif. */
+  updateGoal(
+    id: string,
+    payload: UpdateBudgetGoalPayload,
+  ): Observable<BudgetGoalWithProgress> {
+    return this.http.patch<BudgetGoalWithProgress>(
+      `${this.baseUrl}/budget/goals/${id}`,
+      payload,
+    );
+  }
+
+  /** Supprime un objectif. */
+  deleteGoal(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/budget/goals/${id}`);
+  }
+
+  /** Liste les couples (month, year) ou des entrees existent. */
+  getEntriesMonths(
+    groupId: string,
+  ): Observable<Array<{ month: number; year: number }>> {
+    const params = new HttpParams().set("groupId", groupId);
+    return this.http.get<Array<{ month: number; year: number }>>(
+      `${this.baseUrl}/budget/entries/months`,
+      { params },
     );
   }
 }

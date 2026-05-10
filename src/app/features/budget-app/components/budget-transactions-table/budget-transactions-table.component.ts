@@ -222,8 +222,8 @@ export class BudgetTransactionsTableComponent {
       return "Voiture 🚗";
     }
 
-    if (category === "Forfait telephone Tim & Maria") {
-      return "FREE Tim & Maria";
+    if (category === "Forfait telephone partage") {
+      return "FREE partage";
     }
 
     if (category === "Netflix & Amazon & Ororo") {

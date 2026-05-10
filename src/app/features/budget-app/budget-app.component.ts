@@ -11,15 +11,27 @@ import { firstValueFrom } from "rxjs";
 import type {
   BudgetCategoryModel,
   BudgetEntryModel,
+  BudgetGoalWithProgress,
   BudgetGroup,
+  BudgetMember,
+  BudgetMemberContribution,
+  CreateBudgetGoalPayload,
+  UpdateBudgetGoalPayload,
 } from "../../core/models/budget.model";
 import { BUDGET_PORT } from "../../core/ports/budget.port";
+import { AuthStateService } from "../../core/services/auth-state.service";
 import { BudgetFormatService } from "../../core/services/budget-format.service";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
 import { BudgetChartComponent } from "./components/budget-chart/budget-chart.component";
+import { BudgetContributionsPanelComponent } from "./components/budget-contributions-panel/budget-contributions-panel.component";
+import { BudgetEmptyStateComponent } from "./components/budget-empty-state/budget-empty-state.component";
 import { BudgetExportComponent } from "./components/budget-export/budget-export.component";
 import { BudgetGoalsComponent } from "./components/budget-goals/budget-goals.component";
+import { BudgetMembersPanelComponent } from "./components/budget-members-panel/budget-members-panel.component";
+import { BudgetMonthPickerComponent } from "./components/budget-month-picker/budget-month-picker.component";
+import type { MonthYear } from "./components/budget-month-picker/budget-month-picker.component";
 import { BudgetRecurringComponent } from "./components/budget-recurring/budget-recurring.component";
+import { BudgetSavingsGoalsComponent } from "./components/budget-savings-goals/budget-savings-goals.component";
 import { BudgetSummaryCardComponent } from "./components/budget-summary-card/budget-summary-card.component";
 import {
   BudgetTransactionsTableComponent,
@@ -39,19 +51,8 @@ import {
 } from "./utils/budget-csv-parser.utils";
 import { normalizeText } from "./utils/text.utils";
 
-type BudgetMonth = "March" | "April" | "May" | "June";
-
-const MONTHS: BudgetMonth[] = ["March", "April", "May", "June"];
-
-const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
-  March: 3,
-  April: 4,
-  May: 5,
-  June: 6,
-};
-
 @Component({
-  selector: "app-common-budget-tm",
+  selector: "app-budget-app",
   standalone: true,
   imports: [
     CommonModule,
@@ -60,18 +61,24 @@ const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
     BudgetChartComponent,
     BudgetExportComponent,
     BudgetGoalsComponent,
+    BudgetMembersPanelComponent,
+    BudgetContributionsPanelComponent,
+    BudgetSavingsGoalsComponent,
     BudgetRecurringComponent,
     BudgetTransactionsTableComponent,
+    BudgetEmptyStateComponent,
+    BudgetMonthPickerComponent,
   ],
-  templateUrl: "./common-budget-tm.component.html",
-  styleUrl: "./common-budget-tm.component.scss",
+  templateUrl: "./budget-app.component.html",
+  styleUrl: "./budget-app.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommonBudgetTmComponent {
+export class BudgetAppComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly browser = isPlatformBrowser(this.platformId);
   private readonly budgetPort = inject(BUDGET_PORT);
   private readonly fmt = inject(BudgetFormatService);
+  private readonly authState = inject(AuthStateService);
 
   readonly groupId = signal<string | null>(null);
   readonly apiCategories = signal<BudgetCategoryModel[]>([]);
@@ -81,28 +88,34 @@ export class CommonBudgetTmComponent {
   readonly uploadStatus = signal("");
 
   readonly categories = computed(() => this.apiCategories().map((c) => c.name));
-  readonly months = MONTHS;
-  readonly selectedMonth = signal<BudgetMonth>("March");
+
+  /** Mois courant selectionne (1-12). */
+  readonly currentMonth = signal<number>(new Date().getMonth() + 1);
+
+  /** Annee courante selectionnee. */
+  readonly currentYear = signal<number>(new Date().getFullYear());
+
+  /** Mois disponibles recuperes depuis le backend pour le picker. */
+  readonly entriesMonths = signal<MonthYear[]>([]);
+
   readonly searchTerm = signal("");
   readonly categoryFilter = signal<string>("ALL");
   readonly stateFilter = signal<"ALL" | "COMPLETED" | "PENDING">("ALL");
   readonly budgetTypeFilter = signal<"ALL" | "FIXED" | "VARIABLE">("ALL");
-  readonly sourceLabel = signal("Embedded March 1-15 sample");
-  readonly timSalary = signal("");
-  readonly mariaSalary = signal("");
-  readonly budgetValidationMessage = signal("");
-  readonly currentYear = signal(new Date().getFullYear());
+  readonly sourceLabel = signal("Embedded sample");
+  readonly members = signal<BudgetMember[]>([]);
+  readonly contributions = signal<BudgetMemberContribution[]>([]);
+  readonly previousMonthContributions = signal<BudgetMemberContribution[]>([]);
+  readonly savingsGoals = signal<BudgetGoalWithProgress[]>([]);
+  readonly currentUserId = computed<string>(
+    () => this.authState.user()?.id ?? "",
+  );
 
   private readonly baseTransactions = signal<BudgetTransaction[]>([]);
   private readonly overrides = signal<Record<string, string>>({});
-  private readonly salaryByMonth = signal<
-    Record<BudgetMonth, { tim: string; maria: string }>
-  >({
-    March: { tim: "", maria: "" },
-    April: { tim: "", maria: "" },
-    May: { tim: "", maria: "" },
-    June: { tim: "", maria: "" },
-  });
+
+  /** Identifiant DOM du file picker CSV — utilise par onImportClick. */
+  readonly csvInputId = "budgetCsv";
 
   constructor() {
     this.initBudget();
@@ -114,6 +127,8 @@ export class CommonBudgetTmComponent {
       category: this.overrides()[transaction.id] ?? transaction.category,
     })),
   );
+
+  readonly entries = computed(() => this.baseTransactions());
 
   readonly filteredTransactions = computed(() => {
     const search = normalizeText(this.searchTerm());
@@ -173,36 +188,6 @@ export class CommonBudgetTmComponent {
     ),
   );
 
-  readonly timContribution = computed(() =>
-    this.fmt.formatCurrency(this.getContributionTotalFor("tim moyence")),
-  );
-
-  readonly mariaContribution = computed(() =>
-    this.fmt.formatCurrency(this.getContributionTotalFor("maria naumenko")),
-  );
-
-  readonly timContributionLines = computed(() => [
-    {
-      label: $localize`:@@budgetSummaryTimAdded:Tim a ajouté`,
-      value: this.timContribution(),
-    },
-    {
-      label: $localize`:@@budgetSummaryTimLeftToAdd:Tim reste à ajouter`,
-      value: "",
-    },
-  ]);
-
-  readonly mariaContributionLines = computed(() => [
-    {
-      label: $localize`:@@budgetSummaryMariaAdded:Maria a ajouté`,
-      value: this.mariaContribution(),
-    },
-    {
-      label: $localize`:@@budgetSummaryMariaLeftToAdd:Maria reste à ajouter`,
-      value: "",
-    },
-  ]);
-
   readonly pocketsTotal = computed(() =>
     this.fmt.formatCurrency(
       Math.abs(
@@ -254,26 +239,9 @@ export class CommonBudgetTmComponent {
     this.categoryTotals().filter((item) => item.budgetType === "VARIABLE"),
   );
 
-  readonly monthNumber = computed(() => MONTH_NUMBER_MAP[this.selectedMonth()]);
-
-  readonly totalSalary = computed(
-    () =>
-      this.fmt.parseAmount(this.timSalary()) +
-      this.fmt.parseAmount(this.mariaSalary()),
-  );
-
-  readonly timSalaryShare = computed(() =>
-    this.fmt.formatPercentage(
-      this.fmt.parseAmount(this.timSalary()),
-      this.totalSalary(),
-    ),
-  );
-
-  readonly mariaSalaryShare = computed(() =>
-    this.fmt.formatPercentage(
-      this.fmt.parseAmount(this.mariaSalary()),
-      this.totalSalary(),
-    ),
+  /** Vrai quand il n'y a ni mois disponibles ni entrees chargees. */
+  readonly isEmpty = computed(
+    () => this.entriesMonths().length === 0 && this.entries().length === 0,
   );
 
   onCategoryChange(event: { id: string; category: string }): void {
@@ -379,45 +347,24 @@ export class CommonBudgetTmComponent {
     this.budgetTypeFilter.set(value as "ALL" | "FIXED" | "VARIABLE");
   }
 
-  onTimSalaryChange(value: string): void {
-    this.timSalary.set(value);
-  }
-
-  onMariaSalaryChange(value: string): void {
-    this.mariaSalary.set(value);
-  }
-
-  selectMonth(month: BudgetMonth): void {
-    if (this.selectedMonth() === month) {
+  /** Appele par le BudgetMonthPickerComponent lors d'un changement de mois. */
+  onMonthChange(monthYear: MonthYear): void {
+    const sameMonth =
+      this.currentMonth() === monthYear.month &&
+      this.currentYear() === monthYear.year;
+    if (sameMonth) {
       return;
     }
 
-    this.selectedMonth.set(month);
-
-    const savedSalaries = this.salaryByMonth()[month] ?? {
-      tim: "",
-      maria: "",
-    };
-    this.timSalary.set(savedSalaries.tim);
-    this.mariaSalary.set(savedSalaries.maria);
-    this.budgetValidationMessage.set("");
+    this.currentMonth.set(monthYear.month);
+    this.currentYear.set(monthYear.year);
     this.uploadStatus.set("");
 
     this.loadEntries();
-  }
-
-  validateBudgetCalculation(): void {
-    const nextState = {
-      ...this.salaryByMonth(),
-      [this.selectedMonth()]: {
-        tim: this.timSalary(),
-        maria: this.mariaSalary(),
-      },
-    };
-    this.salaryByMonth.set(nextState);
-    this.budgetValidationMessage.set(
-      `Saved for ${this.selectedMonth()}: Tim ${this.timSalaryShare()} and Maria ${this.mariaSalaryShare()}.`,
-    );
+    const gid = this.groupId();
+    if (gid) {
+      this.loadMembersAndContributions(gid, monthYear.month, monthYear.year);
+    }
   }
 
   readTextInput(event: Event): string {
@@ -426,6 +373,21 @@ export class CommonBudgetTmComponent {
 
   readSelectValue(event: Event): string {
     return (event.target as HTMLSelectElement | null)?.value ?? "";
+  }
+
+  /**
+   * Declenche le file picker CSV natif.
+   * Appele par le CTA "Importer un CSV" du BudgetEmptyStateComponent.
+   * SSR-safe : verifie isPlatformBrowser avant d'acceder au DOM.
+   */
+  onImportClick(): void {
+    if (!this.browser) {
+      return;
+    }
+    const input = document.getElementById(
+      this.csvInputId,
+    ) as HTMLInputElement | null;
+    input?.click();
   }
 
   onFileSelected(event: Event): void {
@@ -453,6 +415,8 @@ export class CommonBudgetTmComponent {
       }
 
       const gid = this.groupId();
+      const month = this.currentMonth();
+      const year = this.currentYear();
 
       if (gid) {
         try {
@@ -461,7 +425,7 @@ export class CommonBudgetTmComponent {
           );
           this.baseTransactions.set(this.apiEntriesToTransactions(entries));
           this.sourceLabel.set(
-            `${this.selectedMonth()} - ${file.name} (${entries.length} imported)`,
+            `${month}/${year} - ${file.name} (${entries.length} imported)`,
           );
           this.uploadStatus.set(
             `${entries.length} transactions loaded from ${file.name}.`,
@@ -469,16 +433,14 @@ export class CommonBudgetTmComponent {
         } catch {
           // Fallback to local parsing
           this.baseTransactions.set(fallbackTransactions);
-          this.sourceLabel.set(
-            `${this.selectedMonth()} - ${file.name} (local parse)`,
-          );
+          this.sourceLabel.set(`${month}/${year} - ${file.name} (local parse)`);
           this.uploadStatus.set(
             `${fallbackTransactions.length} transactions loaded locally from ${file.name}.`,
           );
         }
       } else {
         this.baseTransactions.set(fallbackTransactions);
-        this.sourceLabel.set(`${this.selectedMonth()} - ${file.name}`);
+        this.sourceLabel.set(`${month}/${year} - ${file.name}`);
         this.uploadStatus.set(
           `${fallbackTransactions.length} transactions loaded from ${file.name}.`,
         );
@@ -527,7 +489,15 @@ export class CommonBudgetTmComponent {
       );
       this.apiCategories.set(cats);
 
+      // Charger les mois disponibles depuis le backend
+      this.loadEntriesMonths(group.id);
+
       await this.loadEntries();
+      this.loadMembersAndContributions(
+        group.id,
+        this.currentMonth(),
+        this.currentYear(),
+      );
     } catch {
       // Fallback to sample data if API is unreachable
       this.baseTransactions.set(
@@ -540,43 +510,157 @@ export class CommonBudgetTmComponent {
     }
   }
 
+  /** Charge la liste des mois avec entrees depuis le backend. */
+  private loadEntriesMonths(groupId: string): void {
+    this.budgetPort.getEntriesMonths(groupId).subscribe({
+      next: (months) => this.entriesMonths.set(months),
+      error: () => this.entriesMonths.set([]),
+    });
+  }
+
   private async loadEntries(): Promise<void> {
     const gid = this.groupId();
     if (!gid) {
       return;
     }
 
-    const month = this.selectedMonth();
-    const monthIndex = MONTH_NUMBER_MAP[month];
+    const month = this.currentMonth();
     const year = this.currentYear();
 
     try {
       const entries = await firstValueFrom(
-        this.budgetPort.getEntries(gid, { month: monthIndex, year }),
+        this.budgetPort.getEntries(gid, { month, year }),
       );
 
       if (entries.length > 0) {
         this.baseTransactions.set(this.apiEntriesToTransactions(entries));
-        this.sourceLabel.set(`${month} - ${entries.length} entries from API`);
+        this.sourceLabel.set(
+          `${month}/${year} - ${entries.length} entries from API`,
+        );
         this.uploadStatus.set("");
       } else {
-        // No entries yet for this month — show empty or sample
-        if (month === "March") {
-          this.baseTransactions.set(
-            toTransactions(parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
-          );
-          this.sourceLabel.set("March - Embedded sample (no API data yet)");
-        } else {
-          this.baseTransactions.set([]);
-          this.sourceLabel.set(`${month} - No data yet`);
-        }
+        this.baseTransactions.set([]);
+        this.sourceLabel.set(`${month}/${year} - No data yet`);
         this.uploadStatus.set("");
       }
     } catch {
       this.baseTransactions.set([]);
-      this.sourceLabel.set(`${month} - Error loading entries`);
+      this.sourceLabel.set(`${month}/${year} - Error loading entries`);
       this.uploadStatus.set("");
     }
+  }
+
+  /** Charge membres, contributions et objectifs depuis le backend pour le groupe courant. */
+  private loadMembersAndContributions(
+    groupId: string,
+    monthNumber: number,
+    year: number,
+  ): void {
+    this.budgetPort.getMembers(groupId).subscribe({
+      next: (members) => this.members.set(members),
+      error: () => this.members.set([]),
+    });
+
+    this.budgetPort.getContributions(groupId, monthNumber, year).subscribe({
+      next: (contribs) => this.contributions.set(contribs),
+      error: () => this.contributions.set([]),
+    });
+
+    const prevMonth = monthNumber === 1 ? 12 : monthNumber - 1;
+    const prevYear = monthNumber === 1 ? year - 1 : year;
+    this.budgetPort.getContributions(groupId, prevMonth, prevYear).subscribe({
+      next: (contribs) => this.previousMonthContributions.set(contribs),
+      error: () => this.previousMonthContributions.set([]),
+    });
+
+    this.budgetPort.getGoals(groupId, monthNumber, year).subscribe({
+      next: (goals) => this.savingsGoals.set(goals),
+      error: () => this.savingsGoals.set([]),
+    });
+  }
+
+  /** Handler pour BudgetMembersPanel.removeMember. */
+  onRemoveMember(userId: string): void {
+    const gid = this.groupId();
+    if (!gid) return;
+    this.budgetPort.removeMember(gid, userId).subscribe({
+      next: () => {
+        this.members.update((m) => m.filter((mm) => mm.userId !== userId));
+        this.contributions.update((c) =>
+          c.filter((cc) => cc.userId !== userId),
+        );
+      },
+      error: (err) => console.error("removeMember failed", err),
+    });
+  }
+
+  /** Handler pour BudgetMembersPanel.inviteMember. */
+  onInviteMember(email: string): void {
+    const gid = this.groupId();
+    if (!gid || !email) return;
+    this.budgetPort
+      .shareBudget({ groupId: gid, targetEmail: email })
+      .subscribe({
+        next: () => this.shareMessage.set(`Invitation envoyee a ${email}`),
+        error: (err) =>
+          this.shareMessage.set(`Echec invitation : ${(err as Error).message}`),
+      });
+  }
+
+  /** Handler pour BudgetContributionsPanel.mySalaryChange. */
+  onMySalaryChange(monthlySalary: number): void {
+    const gid = this.groupId();
+    if (!gid) return;
+    this.budgetPort
+      .upsertMyContribution({
+        groupId: gid,
+        month: this.currentMonth(),
+        year: this.currentYear(),
+        monthlySalary,
+      })
+      .subscribe({
+        next: (contrib) => {
+          this.contributions.update((list) => {
+            const filtered = list.filter((c) => c.userId !== contrib.userId);
+            return [...filtered, contrib];
+          });
+        },
+        error: (err) => console.error("upsertMyContribution failed", err),
+      });
+  }
+
+  /** Handler pour BudgetSavingsGoals.createGoal. */
+  onCreateSavingsGoal(payload: Omit<CreateBudgetGoalPayload, "groupId">): void {
+    const gid = this.groupId();
+    if (!gid) return;
+    this.budgetPort.createGoal({ ...payload, groupId: gid }).subscribe({
+      next: (goal) => this.savingsGoals.update((g) => [...g, goal]),
+      error: (err) => console.error("createGoal failed", err),
+    });
+  }
+
+  /** Handler pour BudgetSavingsGoals.updateGoal. */
+  onUpdateSavingsGoal(event: {
+    id: string;
+    payload: UpdateBudgetGoalPayload;
+  }): void {
+    this.budgetPort.updateGoal(event.id, event.payload).subscribe({
+      next: (updated) => {
+        this.savingsGoals.update((list) =>
+          list.map((g) => (g.id === updated.id ? updated : g)),
+        );
+      },
+      error: (err) => console.error("updateGoal failed", err),
+    });
+  }
+
+  /** Handler pour BudgetSavingsGoals.deleteGoal. */
+  onDeleteSavingsGoal(goalId: string): void {
+    this.budgetPort.deleteGoal(goalId).subscribe({
+      next: () =>
+        this.savingsGoals.update((list) => list.filter((g) => g.id !== goalId)),
+      error: (err) => console.error("deleteGoal failed", err),
+    });
   }
 
   getCategoryLabel(category: string | "ALL"): string {
@@ -588,25 +672,11 @@ export class CommonBudgetTmComponent {
       return "Voiture 🚗";
     }
 
-    if (category === "Forfait telephone Tim & Maria") {
-      return "FREE Tim & Maria";
-    }
-
     if (category === "Netflix & Amazon & Ororo") {
       return "Subscriptions";
     }
 
     return category;
-  }
-
-  getMonthLabel(month: BudgetMonth): string {
-    const labels: Record<BudgetMonth, string> = {
-      March: $localize`:@@budgetMonthMarch:Mars`,
-      April: $localize`:@@budgetMonthApril:Avril`,
-      May: $localize`:@@budgetMonthMay:Mai`,
-      June: $localize`:@@budgetMonthJune:Juin`,
-    };
-    return labels[month];
   }
 
   private apiEntriesToTransactions(
@@ -625,64 +695,5 @@ export class CommonBudgetTmComponent {
         category: cat?.name ?? "Autres",
       };
     });
-  }
-
-  private getContributionTotalFor(personNeedle: string): number {
-    const orderedTransactions = [...this.transactions()].sort(
-      (left, right) =>
-        this.getTransactionTimestamp(left) -
-        this.getTransactionTimestamp(right),
-    );
-
-    return orderedTransactions.reduce((sum, transaction, index) => {
-      if (transaction.amount <= 0) {
-        return sum;
-      }
-
-      if (!normalizeText(transaction.description).includes(personNeedle)) {
-        return sum;
-      }
-
-      const nextTransaction = orderedTransactions[index + 1];
-      if (this.isPocketPassThrough(transaction, nextTransaction)) {
-        return sum;
-      }
-
-      return sum + transaction.amount;
-    }, 0);
-  }
-
-  private getTransactionTimestamp(transaction: BudgetTransaction): number {
-    const value = transaction.completedDate || transaction.startedDate;
-    const date = new Date(value.replace(" ", "T"));
-    return Number.isNaN(date.getTime()) ? 0 : date.getTime();
-  }
-
-  private isPocketPassThrough(
-    contribution: BudgetTransaction,
-    nextTransaction?: BudgetTransaction,
-  ): boolean {
-    if (!nextTransaction) {
-      return false;
-    }
-
-    if (nextTransaction.category !== "Pockets" || nextTransaction.amount >= 0) {
-      return false;
-    }
-
-    const sameAmount =
-      Math.abs(Math.abs(nextTransaction.amount) - contribution.amount) < 0.01;
-
-    if (!sameAmount) {
-      return false;
-    }
-
-    const contributionTime = this.getTransactionTimestamp(contribution);
-    const pocketTime = this.getTransactionTimestamp(nextTransaction);
-
-    return (
-      pocketTime >= contributionTime &&
-      pocketTime - contributionTime <= 5 * 60 * 1000
-    );
   }
 }

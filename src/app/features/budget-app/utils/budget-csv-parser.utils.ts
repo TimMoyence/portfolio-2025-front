@@ -17,8 +17,8 @@ const CATEGORY_RULES: Array<{ keywords: string[]; categoryName: string }> = [
   { keywords: ["loick babin", "les voutes"], categoryName: "Loyer" },
   { keywords: ["edf"], categoryName: "Electricité & Internet" },
   {
-    keywords: ["free telecom", "mobile tim & maria"],
-    categoryName: "Forfait telephone Tim & Maria",
+    keywords: ["free telecom", "mobile partage"],
+    categoryName: "Forfait telephone partage",
   },
   {
     keywords: ["internet", "bbox", "orange", "sfr", "bouygues"],
@@ -189,8 +189,8 @@ function inferCategoryName(
 
   if (amount > 0) {
     if (
-      normalizedDescription.includes("tim moyence") ||
-      normalizedDescription.includes("maria naumenko")
+      normalizedDescription.startsWith("transfer from") ||
+      normalizedDescription.startsWith("payment from")
     ) {
       return "Contribution";
     }

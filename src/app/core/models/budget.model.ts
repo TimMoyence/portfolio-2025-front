@@ -126,3 +126,76 @@ export interface UpdateRecurringEntryPayload {
   frequency?: Frequency;
   dayOfWeek?: number | null;
 }
+
+/** Vue lecture d'un membre d'un groupe budget enrichi avec ses infos user. */
+export interface BudgetMember {
+  userId: string;
+  email: string;
+  displayName: string;
+  isOwner: boolean;
+  joinedAt: string;
+}
+
+/** Contribution mensuelle d'un membre a un budget partage. */
+export interface BudgetMemberContribution {
+  id: string;
+  groupId: string;
+  userId: string;
+  month: number;
+  year: number;
+  monthlySalary: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Type d'objectif de budget. */
+export type BudgetGoalKind = "SAVINGS" | "SPENDING_LIMIT" | "CATEGORY_LIMIT";
+
+/** Objectif de budget (epargne, plafond, plafond categorie). */
+export interface BudgetGoal {
+  id: string;
+  groupId: string;
+  createdByUserId: string;
+  name: string;
+  kind: BudgetGoalKind;
+  targetAmount: number;
+  categoryId: string | null;
+  deadline: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Goal enrichi de la progression actuelle calculee depuis les entries. */
+export interface BudgetGoalWithProgress extends BudgetGoal {
+  currentAmount: number;
+  progressPercent: number;
+}
+
+/** Payload pour creer un objectif de budget. */
+export interface CreateBudgetGoalPayload {
+  groupId: string;
+  name: string;
+  kind: BudgetGoalKind;
+  targetAmount: number;
+  categoryId?: string | null;
+  deadline?: string | null;
+}
+
+/** Payload pour mettre a jour un objectif de budget. */
+export interface UpdateBudgetGoalPayload {
+  name?: string;
+  kind?: BudgetGoalKind;
+  targetAmount?: number;
+  categoryId?: string | null;
+  deadline?: string | null;
+  isActive?: boolean;
+}
+
+/** Payload pour upsert ma contribution mensuelle. */
+export interface UpsertMyBudgetContributionPayload {
+  groupId: string;
+  month: number;
+  year: number;
+  monthlySalary: number;
+}
