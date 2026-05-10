@@ -1647,158 +1647,158 @@
         <source>Jan</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.month.fev" datatype="html">
         <source>Fev</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.month.mar" datatype="html">
         <source>Mar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.month.avr" datatype="html">
         <source>Avr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.month.mai" datatype="html">
         <source>Mai</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">218</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.month.jun" datatype="html">
         <source>Jun</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.0.title" datatype="html">
         <source>Suivi en temps reel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">268</context>
+          <context context-type="linenumber">286</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.0.description" datatype="html">
         <source>Visualisez vos depenses au fur et a mesure. Graphiques par categorie, evolution mensuelle et alertes quand un budget est depasse.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">269</context>
+          <context context-type="linenumber">287</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.1.title" datatype="html">
         <source>Contributions equitables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">291</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.1.description" datatype="html">
         <source>Chacun contribue au prorata de ses revenus. Le calcul est automatique, transparent et mis a jour chaque mois.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">274</context>
+          <context context-type="linenumber">292</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.2.title" datatype="html">
         <source>Import CSV intelligent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">278</context>
+          <context context-type="linenumber">296</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.2.description" datatype="html">
         <source>Importez vos releves bancaires en un clic. L&apos;auto-categorisation reconnait vos depenses recurrentes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">297</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.3.title" datatype="html">
         <source>Auto-categorisation IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">283</context>
+          <context context-type="linenumber">301</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.feature.3.description" datatype="html">
         <source>Les transactions sont classees automatiquement grace a l&apos;intelligence artificielle. Fini le tri manuel.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">302</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.0.title" datatype="html">
         <source>Creez votre budget</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">301</context>
+          <context context-type="linenumber">319</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.0.description" datatype="html">
         <source>Definissez vos categories, limites mensuelles et partagez l&apos;acces avec votre partenaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">302</context>
+          <context context-type="linenumber">320</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.1.title" datatype="html">
         <source>Importez vos releves</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">325</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.1.description" datatype="html">
         <source>Glissez votre CSV bancaire. Les transactions sont triees et categorisees automatiquement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">308</context>
+          <context context-type="linenumber">326</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.2.title" datatype="html">
         <source>Suivez vos objectifs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">313</context>
+          <context context-type="linenumber">331</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.2.description" datatype="html">
         <source>Chaque categorie a sa jauge. Vous voyez en un clin d&apos;oeil ou vous en etes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">314</context>
+          <context context-type="linenumber">332</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.3.title" datatype="html">
         <source>Analysez l&apos;historique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">337</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budget-pres.timeline.3.description" datatype="html">
         <source>Comparez mois par mois, identifiez les tendances et ajustez votre budget en consequence.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">320</context>
+          <context context-type="linenumber">338</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetPresKicker" datatype="html">
@@ -1885,23 +1885,15 @@
         <source>/ mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">186,191</context>
+          <context context-type="linenumber">189,195</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.contrib.month</note>
-      </trans-unit>
-      <trans-unit id="budgetPresContribMonth2" datatype="html">
-        <source>/ mois</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">214,219</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.contrib.month2</note>
       </trans-unit>
       <trans-unit id="budgetPresContribCombined" datatype="html">
         <source> Revenus combines </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">229,231</context>
+          <context context-type="linenumber">205,207</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.contrib.combined</note>
       </trans-unit>
@@ -1909,7 +1901,7 @@
         <source> Fonctionnalites </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">265,268</context>
+          <context context-type="linenumber">237,240</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.feat.kicker</note>
       </trans-unit>
@@ -1917,7 +1909,7 @@
         <source> Tout ce qu&apos;il faut pour gerer a deux </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">271,274</context>
+          <context context-type="linenumber">243,246</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.feat.title</note>
       </trans-unit>
@@ -1925,7 +1917,7 @@
         <source> Import intelligent, repartition equitable, categories personnalisables et suivi en temps reel. Votre budget n&apos;aura jamais ete aussi clair. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">277,282</context>
+          <context context-type="linenumber">249,254</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.feat.desc</note>
       </trans-unit>
@@ -1933,7 +1925,7 @@
         <source> Apercu </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">312,315</context>
+          <context context-type="linenumber">284,287</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.preview.kicker</note>
       </trans-unit>
@@ -1941,7 +1933,7 @@
         <source> Un tableau de bord qui parle </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">318,321</context>
+          <context context-type="linenumber">290,293</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.preview.title</note>
       </trans-unit>
@@ -1949,7 +1941,7 @@
         <source> Ajoutez vos depenses en quelques secondes. Le formulaire reconnait les categories, calcule les totaux et met a jour le donut en temps reel. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">324,329</context>
+          <context context-type="linenumber">296,301</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.preview.desc</note>
       </trans-unit>
@@ -1957,7 +1949,7 @@
         <source> Nouvelle depense </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">338,340</context>
+          <context context-type="linenumber">310,312</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.form.kicker</note>
       </trans-unit>
@@ -1965,7 +1957,7 @@
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">346,349</context>
+          <context context-type="linenumber">318,321</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.form.desc</note>
       </trans-unit>
@@ -1973,7 +1965,7 @@
         <source>Montant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">363,366</context>
+          <context context-type="linenumber">335,338</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.form.amount</note>
       </trans-unit>
@@ -1981,7 +1973,7 @@
         <source>Categorie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">379,382</context>
+          <context context-type="linenumber">351,354</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.form.category</note>
       </trans-unit>
@@ -1989,7 +1981,7 @@
         <source> Comment ca marche </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">407,410</context>
+          <context context-type="linenumber">379,382</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.timeline.kicker</note>
       </trans-unit>
@@ -1997,7 +1989,7 @@
         <source> 4 etapes, zero prise de tete </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">413,418</context>
+          <context context-type="linenumber">385,390</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.timeline.title</note>
       </trans-unit>
@@ -2005,7 +1997,7 @@
         <source> Categories </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">454,457</context>
+          <context context-type="linenumber">426,429</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.cat.kicker</note>
       </trans-unit>
@@ -2013,7 +2005,7 @@
         <source> Vos depenses en detail </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">460,464</context>
+          <context context-type="linenumber">432,436</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.cat.title</note>
       </trans-unit>
@@ -2021,7 +2013,7 @@
         <source> Pret a reprendre le controle de vos finances ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">504,506</context>
+          <context context-type="linenumber">476,478</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.cta.title</note>
       </trans-unit>
@@ -2029,7 +2021,7 @@
         <source> Creez votre budget partage en quelques minutes. Import CSV, categories intelligentes et suivi en temps reel. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">507,512</context>
+          <context context-type="linenumber">479,484</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.cta.desc</note>
       </trans-unit>
@@ -2037,7 +2029,7 @@
         <source>Commencer gratuitement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">515,520</context>
+          <context context-type="linenumber">487,492</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.cta.final</note>
       </trans-unit>
@@ -2045,7 +2037,7 @@
         <source> Gratuit — Aucune carte bancaire requise </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">523,527</context>
+          <context context-type="linenumber">495,499</context>
         </context-group>
         <note priority="1" from="meaning">budget.pres.cta.trust</note>
       </trans-unit>

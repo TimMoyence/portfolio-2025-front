@@ -50,7 +50,7 @@ export class BudgetPresentationComponent implements OnInit {
   /** Metriques de synthese (depenses, revenus, contributions). */
   readonly summary = MOCK_SUMMARY;
 
-  /** Contributions Tim / Maria. */
+  /** Contributions des membres du groupe budget. */
   readonly contributions = MOCK_CONTRIBUTIONS;
 
   /** Liste des mois en pilules. */

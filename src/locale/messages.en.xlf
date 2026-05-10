@@ -8957,12 +8957,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>/ month</target>
       </segment>
     </unit>
-    <unit id="budgetPresContribMonth2">
-      <segment>
-        <source>/ mois</source>
-        <target>/ month</target>
-      </segment>
-    </unit>
     <unit id="budgetPresContribCombined">
       <segment>
         <source> Revenus combines </source>
