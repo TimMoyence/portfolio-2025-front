@@ -6096,6 +6096,56 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Reset sample</target>
       </segment>
     </unit>
+    <!-- Empty state -->
+    <unit id="budgetEmptyStateTitle">
+      <segment>
+        <source> Aucune donnée pour ce mois </source>
+        <target>No data for this month</target>
+      </segment>
+    </unit>
+    <unit id="budgetEmptyStateDescription">
+      <segment>
+        <source> Importez un fichier CSV ou créez votre première entrée manuellement pour commencer à suivre votre budget. </source>
+        <target>Upload a CSV file or create your first entry manually to start tracking your budget.</target>
+      </segment>
+    </unit>
+    <unit id="budgetEmptyStateImportAriaLabel">
+      <segment>
+        <source>Importer un fichier CSV</source>
+        <target>Upload a CSV file</target>
+      </segment>
+    </unit>
+    <unit id="budgetEmptyStateImportBtn">
+      <segment>
+        <source> Importer un CSV </source>
+        <target>Upload CSV</target>
+      </segment>
+    </unit>
+    <unit id="budgetEmptyStateCreateAriaLabel">
+      <segment>
+        <source>Créer une entrée manuellement</source>
+        <target>Create an entry manually</target>
+      </segment>
+    </unit>
+    <unit id="budgetEmptyStateCreateBtn">
+      <segment>
+        <source> Créer une entrée manuellement </source>
+        <target>Create an entry manually</target>
+      </segment>
+    </unit>
+    <!-- Month picker -->
+    <unit id="budgetMonthPickerLabel">
+      <segment>
+        <source> Mois </source>
+        <target>Month</target>
+      </segment>
+    </unit>
+    <unit id="budgetMonthPickerAriaLabel">
+      <segment>
+        <source>Sélectionner un mois</source>
+        <target>Select a month</target>
+      </segment>
+    </unit>
     <unit id="budgetSharePlaceholder">
       <segment>
         <source>email@exemple.com</source>
@@ -6334,30 +6384,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
     <!-- Months -->
-    <unit id="budgetMonthMarch">
-      <segment>
-        <source>Mars</source>
-        <target>March</target>
-      </segment>
-    </unit>
-    <unit id="budgetMonthApril">
-      <segment>
-        <source>Avril</source>
-        <target>April</target>
-      </segment>
-    </unit>
-    <unit id="budgetMonthMay">
-      <segment>
-        <source>Mai</source>
-        <target>May</target>
-      </segment>
-    </unit>
-    <unit id="budgetMonthJune">
-      <segment>
-        <source>Juin</source>
-        <target>June</target>
-      </segment>
-    </unit>
     <unit id="budgetShareTitle">
       <segment>
         <source>Partager le budget</source>

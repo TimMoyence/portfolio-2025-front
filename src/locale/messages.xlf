@@ -719,245 +719,217 @@
         <source> Source de données </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">78,80</context>
+          <context context-type="linenumber">68,70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetDashboardUploadCsv" datatype="html">
         <source> Importer un CSV </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">81,83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetDashboardResetSample" datatype="html">
         <source> Réinitialiser l&apos;exemple </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">107,109</context>
+          <context context-type="linenumber">97,99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetShareTitle" datatype="html">
         <source> Partager le budget </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">121,122</context>
+          <context context-type="linenumber">111,112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSharePlaceholder" datatype="html">
         <source>email@exemple.com</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">128,129</context>
+          <context context-type="linenumber">118,119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetShareInviteBtn" datatype="html">
         <source>Inviter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">138,140</context>
+          <context context-type="linenumber">128,130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummarySpendingEyebrow" datatype="html">
         <source>Sortants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">153,154</context>
+          <context context-type="linenumber">151,152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummarySpendingTitle" datatype="html">
         <source>Total des dépenses</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">155,157</context>
+          <context context-type="linenumber">153,155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummarySpendingCaption" datatype="html">
         <source>Toutes les transactions sortantes de la période chargée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">158,161</context>
+          <context context-type="linenumber">156,159</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummaryIncomingEyebrow" datatype="html">
         <source>Entrants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">162,163</context>
+          <context context-type="linenumber">160,161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummaryIncomingTitle" datatype="html">
         <source>Total des entrants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">164,166</context>
+          <context context-type="linenumber">162,164</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummaryIncomingCaption" datatype="html">
         <source>Virements, dépôts et contributions partagées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">167,170</context>
+          <context context-type="linenumber">165,168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummaryTransfersEyebrow" datatype="html">
         <source>Virements</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">171,172</context>
+          <context context-type="linenumber">169,170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummaryPocketsTitle" datatype="html">
         <source>Pockets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">174,175</context>
+          <context context-type="linenumber">172,173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetSummaryPocketsCaption" datatype="html">
         <source>Argent transféré du compte commun vers les pockets.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">176,180</context>
+          <context context-type="linenumber">174,178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersEyebrow" datatype="html">
         <source> Filtres </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">202,205</context>
+          <context context-type="linenumber">200,203</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersTitle" datatype="html">
         <source> Affiner le tableau </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">208,210</context>
+          <context context-type="linenumber">206,208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersDescription" datatype="html">
         <source> Cherchez par marchand, isolez une catégorie, ou affichez uniquement les lignes en attente avant de corriger les classifications. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">214,218</context>
+          <context context-type="linenumber">212,216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersSearchLabel" datatype="html">
         <source>Rechercher dans la description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">221,223</context>
+          <context context-type="linenumber">219,221</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersSearchPlaceholder" datatype="html">
         <source>Amazon, EDF, Carrefour…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">227,229</context>
+          <context context-type="linenumber">225,227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersCategoryLabel" datatype="html">
         <source>Catégorie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">234,236</context>
+          <context context-type="linenumber">232,234</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersStateLabel" datatype="html">
         <source>État</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">250,252</context>
+          <context context-type="linenumber">248,250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersStateAll" datatype="html">
         <source> Tous les états </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">257,258</context>
+          <context context-type="linenumber">255,256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersStateCompleted" datatype="html">
         <source> Terminé </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">260,262</context>
+          <context context-type="linenumber">258,260</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersStatePending" datatype="html">
         <source> En attente </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">263,265</context>
+          <context context-type="linenumber">261,263</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersTypeLabel" datatype="html">
         <source>Fixe ou variable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">269,271</context>
+          <context context-type="linenumber">267,269</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersTypeAll" datatype="html">
         <source>Tous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">275,276</context>
+          <context context-type="linenumber">273,274</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersTypeFixed" datatype="html">
         <source> Fixe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">277,278</context>
+          <context context-type="linenumber">275,276</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersTypeVariable" datatype="html">
         <source> Variable </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">280,282</context>
+          <context context-type="linenumber">278,280</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetTransactionsDeleteConfirm" datatype="html">
         <source>Supprimer cette transaction ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">269</context>
+          <context context-type="linenumber">278</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetFiltersCategoryAll" datatype="html">
         <source>Toutes les catégories</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">639</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMonthMarch" datatype="html">
-        <source>Mars</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">655</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMonthApril" datatype="html">
-        <source>Avril</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">656</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMonthMay" datatype="html">
-        <source>Mai</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">657</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMonthJune" datatype="html">
-        <source>Juin</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">658</context>
+          <context context-type="linenumber">668</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetChartDoughnutTitle" datatype="html">
@@ -1000,6 +972,48 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/components/budget-contributions-panel/budget-contributions-panel.component.ts</context>
           <context context-type="linenumber">112,114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetEmptyStateTitle" datatype="html">
+        <source> Aucune donnée pour ce mois </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetEmptyStateDescription" datatype="html">
+        <source> Importez un fichier CSV ou créez votre première entrée manuellement pour commencer à suivre votre budget. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
+          <context context-type="linenumber">36,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetEmptyStateImportAriaLabel" datatype="html">
+        <source>Importer un fichier CSV</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetEmptyStateImportBtn" datatype="html">
+        <source> Importer un CSV </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
+          <context context-type="linenumber">50,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetEmptyStateCreateAriaLabel" datatype="html">
+        <source>Créer une entrée manuellement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetEmptyStateCreateBtn" datatype="html">
+        <source> Créer une entrée manuellement </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
+          <context context-type="linenumber">62,66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetExportInProgress" datatype="html">
@@ -1077,6 +1091,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/budget-app/components/budget-members-panel/budget-members-panel.component.ts</context>
           <context context-type="linenumber">79,82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetMonthPickerLabel" datatype="html">
+        <source> Mois </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-month-picker/budget-month-picker.component.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="budgetMonthPickerAriaLabel" datatype="html">
+        <source>Sélectionner un mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/budget-app/components/budget-month-picker/budget-month-picker.component.html</context>
+          <context context-type="linenumber">14,15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="budgetRecurringEyebrow" datatype="html">
