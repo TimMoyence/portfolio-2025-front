@@ -101,9 +101,6 @@ export class BudgetAppComponent {
   readonly stateFilter = signal<"ALL" | "COMPLETED" | "PENDING">("ALL");
   readonly budgetTypeFilter = signal<"ALL" | "FIXED" | "VARIABLE">("ALL");
   readonly sourceLabel = signal("Embedded March 1-15 sample");
-  readonly timSalary = signal("");
-  readonly mariaSalary = signal("");
-  readonly budgetValidationMessage = signal("");
   readonly currentYear = signal(new Date().getFullYear());
   readonly members = signal<BudgetMember[]>([]);
   readonly contributions = signal<BudgetMemberContribution[]>([]);
@@ -115,14 +112,6 @@ export class BudgetAppComponent {
 
   private readonly baseTransactions = signal<BudgetTransaction[]>([]);
   private readonly overrides = signal<Record<string, string>>({});
-  private readonly salaryByMonth = signal<
-    Record<BudgetMonth, { tim: string; maria: string }>
-  >({
-    March: { tim: "", maria: "" },
-    April: { tim: "", maria: "" },
-    May: { tim: "", maria: "" },
-    June: { tim: "", maria: "" },
-  });
 
   constructor() {
     this.initBudget();
@@ -193,36 +182,6 @@ export class BudgetAppComponent {
     ),
   );
 
-  readonly timContribution = computed(() =>
-    this.fmt.formatCurrency(this.getContributionTotalFor("tim moyence")),
-  );
-
-  readonly mariaContribution = computed(() =>
-    this.fmt.formatCurrency(this.getContributionTotalFor("maria naumenko")),
-  );
-
-  readonly timContributionLines = computed(() => [
-    {
-      label: $localize`:@@budgetSummaryTimAdded:Tim a ajouté`,
-      value: this.timContribution(),
-    },
-    {
-      label: $localize`:@@budgetSummaryTimLeftToAdd:Tim reste à ajouter`,
-      value: "",
-    },
-  ]);
-
-  readonly mariaContributionLines = computed(() => [
-    {
-      label: $localize`:@@budgetSummaryMariaAdded:Maria a ajouté`,
-      value: this.mariaContribution(),
-    },
-    {
-      label: $localize`:@@budgetSummaryMariaLeftToAdd:Maria reste à ajouter`,
-      value: "",
-    },
-  ]);
-
   readonly pocketsTotal = computed(() =>
     this.fmt.formatCurrency(
       Math.abs(
@@ -275,26 +234,6 @@ export class BudgetAppComponent {
   );
 
   readonly monthNumber = computed(() => MONTH_NUMBER_MAP[this.selectedMonth()]);
-
-  readonly totalSalary = computed(
-    () =>
-      this.fmt.parseAmount(this.timSalary()) +
-      this.fmt.parseAmount(this.mariaSalary()),
-  );
-
-  readonly timSalaryShare = computed(() =>
-    this.fmt.formatPercentage(
-      this.fmt.parseAmount(this.timSalary()),
-      this.totalSalary(),
-    ),
-  );
-
-  readonly mariaSalaryShare = computed(() =>
-    this.fmt.formatPercentage(
-      this.fmt.parseAmount(this.mariaSalary()),
-      this.totalSalary(),
-    ),
-  );
 
   onCategoryChange(event: { id: string; category: string }): void {
     const nextCategory = event.category;
@@ -399,28 +338,12 @@ export class BudgetAppComponent {
     this.budgetTypeFilter.set(value as "ALL" | "FIXED" | "VARIABLE");
   }
 
-  onTimSalaryChange(value: string): void {
-    this.timSalary.set(value);
-  }
-
-  onMariaSalaryChange(value: string): void {
-    this.mariaSalary.set(value);
-  }
-
   selectMonth(month: BudgetMonth): void {
     if (this.selectedMonth() === month) {
       return;
     }
 
     this.selectedMonth.set(month);
-
-    const savedSalaries = this.salaryByMonth()[month] ?? {
-      tim: "",
-      maria: "",
-    };
-    this.timSalary.set(savedSalaries.tim);
-    this.mariaSalary.set(savedSalaries.maria);
-    this.budgetValidationMessage.set("");
     this.uploadStatus.set("");
 
     this.loadEntries();
@@ -432,20 +355,6 @@ export class BudgetAppComponent {
         this.currentYear(),
       );
     }
-  }
-
-  validateBudgetCalculation(): void {
-    const nextState = {
-      ...this.salaryByMonth(),
-      [this.selectedMonth()]: {
-        tim: this.timSalary(),
-        maria: this.mariaSalary(),
-      },
-    };
-    this.salaryByMonth.set(nextState);
-    this.budgetValidationMessage.set(
-      `Saved for ${this.selectedMonth()}: Tim ${this.timSalaryShare()} and Maria ${this.mariaSalaryShare()}.`,
-    );
   }
 
   readTextInput(event: Event): string {
@@ -734,10 +643,6 @@ export class BudgetAppComponent {
       return "Voiture 🚗";
     }
 
-    if (category === "Forfait telephone Tim & Maria") {
-      return "FREE Tim & Maria";
-    }
-
     if (category === "Netflix & Amazon & Ororo") {
       return "Subscriptions";
     }
@@ -771,64 +676,5 @@ export class BudgetAppComponent {
         category: cat?.name ?? "Autres",
       };
     });
-  }
-
-  private getContributionTotalFor(personNeedle: string): number {
-    const orderedTransactions = [...this.transactions()].sort(
-      (left, right) =>
-        this.getTransactionTimestamp(left) -
-        this.getTransactionTimestamp(right),
-    );
-
-    return orderedTransactions.reduce((sum, transaction, index) => {
-      if (transaction.amount <= 0) {
-        return sum;
-      }
-
-      if (!normalizeText(transaction.description).includes(personNeedle)) {
-        return sum;
-      }
-
-      const nextTransaction = orderedTransactions[index + 1];
-      if (this.isPocketPassThrough(transaction, nextTransaction)) {
-        return sum;
-      }
-
-      return sum + transaction.amount;
-    }, 0);
-  }
-
-  private getTransactionTimestamp(transaction: BudgetTransaction): number {
-    const value = transaction.completedDate || transaction.startedDate;
-    const date = new Date(value.replace(" ", "T"));
-    return Number.isNaN(date.getTime()) ? 0 : date.getTime();
-  }
-
-  private isPocketPassThrough(
-    contribution: BudgetTransaction,
-    nextTransaction?: BudgetTransaction,
-  ): boolean {
-    if (!nextTransaction) {
-      return false;
-    }
-
-    if (nextTransaction.category !== "Pockets" || nextTransaction.amount >= 0) {
-      return false;
-    }
-
-    const sameAmount =
-      Math.abs(Math.abs(nextTransaction.amount) - contribution.amount) < 0.01;
-
-    if (!sameAmount) {
-      return false;
-    }
-
-    const contributionTime = this.getTransactionTimestamp(contribution);
-    const pocketTime = this.getTransactionTimestamp(nextTransaction);
-
-    return (
-      pocketTime >= contributionTime &&
-      pocketTime - contributionTime <= 5 * 60 * 1000
-    );
   }
 }

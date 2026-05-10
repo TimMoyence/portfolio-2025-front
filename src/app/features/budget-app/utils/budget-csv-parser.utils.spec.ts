@@ -101,7 +101,7 @@ describe("toTransactions", () => {
 
   it("devrait inferer les contributions positives", () => {
     const rows = parseCsv(
-      "Started Date,Description,Amount,Type\n2026-03-01,Tim Moyence,1500,TRANSFER",
+      "Started Date,Description,Amount,Type\n2026-03-01,Transfer from Alice Martin,1500,TRANSFER",
     );
 
     const transactions = toTransactions(rows);

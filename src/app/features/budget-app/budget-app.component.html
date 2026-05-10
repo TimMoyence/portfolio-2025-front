@@ -35,16 +35,17 @@
           </p>
           <h1
             class="mt-4 max-w-[12ch] font-heading text-5xl font-black leading-[0.92] text-slate-950 md:text-7xl"
+            i18n="@@budgetDashboardTitle"
           >
-            Common Budget T&amp;M
+            Budget partagé
           </h1>
           <p
             class="mt-5 max-w-2xl text-base leading-7 text-slate-600 md:text-lg"
             i18n="@@budgetDashboardDescription"
           >
-            Un cockpit budget léger pour Tim et Maria : importez un CSV, classez
-            automatiquement les dépenses, ajustez manuellement les catégories,
-            et gardez les contributions visibles d'un coup d'œil.
+            Un cockpit budget léger pour gérer un budget commun : importez un
+            CSV, classez automatiquement les dépenses, ajustez manuellement les
+            catégories, et gardez les contributions visibles d'un coup d'œil.
           </p>
         </div>
 
@@ -166,18 +167,6 @@
         caption="Virements, dépôts et contributions partagées."
       />
       <app-budget-summary-card
-        i18n-eyebrow="@@budgetSummaryContributionEyebrow"
-        eyebrow="Contribution"
-        title="Maria"
-        [lines]="mariaContributionLines()"
-      />
-      <app-budget-summary-card
-        i18n-eyebrow="@@budgetSummaryContributionEyebrow"
-        eyebrow="Contribution"
-        title="Tim"
-        [lines]="timContributionLines()"
-      />
-      <app-budget-summary-card
         i18n-eyebrow="@@budgetSummaryTransfersEyebrow"
         eyebrow="Virements"
         i18n-title="@@budgetSummaryPocketsTitle"
@@ -195,108 +184,6 @@
         [apiCategories]="apiCategories()"
       />
     </div>
-
-    <section
-      class="mt-8 rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
-    >
-      <div
-        class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
-      >
-        <div>
-          <p
-            class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
-            i18n="@@budgetSalaryEyebrow"
-          >
-            Calcul du budget
-          </p>
-          <h2
-            class="mt-3 text-2xl font-black text-slate-950"
-            i18n="@@budgetSalaryTitle"
-          >
-            Ratio de contribution salariale
-          </h2>
-        </div>
-        <p
-          class="max-w-xl text-sm leading-6 text-slate-500"
-          i18n="@@budgetSalaryDescription"
-        >
-          Saisissez les salaires de Tim et Maria pour calculer le pourcentage
-          que chaque salaire représente dans le total combiné.
-        </p>
-      </div>
-
-      <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr_0.9fr]">
-        <label class="grid gap-2 text-sm text-slate-600">
-          <span i18n="@@budgetSalaryTimLabel">Salaire de Tim</span>
-          <input
-            class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="0"
-            [value]="timSalary()"
-            (input)="onTimSalaryChange(readTextInput($event))"
-          />
-          <span class="text-xs text-slate-500">
-            <span i18n="@@budgetSalaryShareLabel">Part :</span>
-            {{ timSalaryShare() }}
-          </span>
-        </label>
-
-        <label class="grid gap-2 text-sm text-slate-600">
-          <span i18n="@@budgetSalaryMariaLabel">Salaire de Maria</span>
-          <input
-            class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="0"
-            [value]="mariaSalary()"
-            (input)="onMariaSalaryChange(readTextInput($event))"
-          />
-          <span class="text-xs text-slate-500">
-            <span i18n="@@budgetSalaryShareLabel">Part :</span>
-            {{ mariaSalaryShare() }}
-          </span>
-        </label>
-
-        <div
-          class="rounded-[1.5rem] border border-budget-border bg-budget-surface p-5"
-        >
-          <p
-            class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500"
-            i18n="@@budgetSalaryCombinedLabel"
-          >
-            Salaires combinés
-          </p>
-          <p class="mt-3 text-3xl font-black text-slate-950">
-            {{ totalSalary() | number: "1.0-2" }} €
-          </p>
-          <p
-            class="mt-3 text-sm leading-6 text-slate-500"
-            i18n="@@budgetSalaryCombinedHelp"
-          >
-            Une règle rapide pour répartir équitablement les contributions au
-            compte commun.
-          </p>
-        </div>
-      </div>
-
-      <div class="mt-6 flex flex-wrap items-center gap-4">
-        <button
-          type="button"
-          class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
-          (click)="validateBudgetCalculation()"
-          i18n="@@budgetSalaryValidateBtn"
-        >
-          Valider
-        </button>
-
-        @if (budgetValidationMessage()) {
-          <p class="text-sm text-slate-600">{{ budgetValidationMessage() }}</p>
-        }
-      </div>
-    </section>
 
     <div class="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
       <app-budget-category-totals

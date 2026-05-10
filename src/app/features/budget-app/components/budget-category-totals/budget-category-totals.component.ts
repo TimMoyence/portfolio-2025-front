@@ -221,8 +221,8 @@ export class BudgetCategoryTotalsComponent {
       return "Voiture 🚗";
     }
 
-    if (name === "Forfait telephone Tim & Maria") {
-      return "FREE Tim & Maria";
+    if (name === "Forfait telephone partage") {
+      return "FREE partage";
     }
 
     if (name === "Netflix & Amazon & Ororo") {

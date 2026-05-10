@@ -132,19 +132,5 @@ describe("BudgetAppComponent", () => {
       expect(component.getMonthLabel("May")).toBe("Mai");
       expect(component.getMonthLabel("June")).toBe("Juin");
     });
-
-    it("mariaContributionLines exposes two FR-labelled entries", () => {
-      const lines = component.mariaContributionLines();
-      expect(lines.length).toBe(2);
-      expect(lines[0].label).toBe("Maria a ajouté");
-      expect(lines[1].label).toBe("Maria reste à ajouter");
-    });
-
-    it("timContributionLines exposes two FR-labelled entries", () => {
-      const lines = component.timContributionLines();
-      expect(lines.length).toBe(2);
-      expect(lines[0].label).toBe("Tim a ajouté");
-      expect(lines[1].label).toBe("Tim reste à ajouter");
-    });
   });
 });
