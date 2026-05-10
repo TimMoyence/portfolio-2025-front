@@ -1270,7 +1270,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-21",
+      "lastmod": "2026-05-09",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1338,7 +1338,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-21",
+      "lastmod": "2026-05-09",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1731,9 +1731,18 @@
       "priority": 0.8,
       "lastmod": "2026-04-21",
       "breadcrumb": [
-        { "name": "Accueil", "path": "/" },
-        { "name": "Formations", "path": "/formations" },
-        { "name": "Audit SEO DIY", "path": "/formations/audit-seo-diy" }
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Audit SEO DIY",
+          "path": "/formations/audit-seo-diy"
+        }
       ],
       "locales": {
         "fr": {
@@ -1920,10 +1929,22 @@
       "priority": 0.6,
       "lastmod": "2026-04-21",
       "breadcrumb": [
-        { "name": "Accueil", "path": "/" },
-        { "name": "Formations", "path": "/formations" },
-        { "name": "Audit SEO DIY", "path": "/formations/audit-seo-diy" },
-        { "name": "Toolkit", "path": "/formations/audit-seo-diy/toolkit" }
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Audit SEO DIY",
+          "path": "/formations/audit-seo-diy"
+        },
+        {
+          "name": "Toolkit",
+          "path": "/formations/audit-seo-diy/toolkit"
+        }
       ],
       "locales": {
         "fr": {
@@ -1937,7 +1958,9 @@
             "name": "Checklist audit SEO DIY",
             "description": "Page de capture pour recevoir le kit complet audit SEO DIY : checklist imprimable, rapport Google Sheets, liens outils, script developpeur.",
             "url": "https://asilidesign.fr/fr/formations/audit-seo-diy/toolkit",
-            "isPartOf": { "@id": "https://asilidesign.fr/#website" }
+            "isPartOf": {
+              "@id": "https://asilidesign.fr/#website"
+            }
           }
         },
         "en": {
@@ -1951,7 +1974,9 @@
             "name": "DIY SEO Audit Checklist",
             "description": "Capture page to receive the full DIY SEO audit kit: printable checklist, Google Sheets report, tool links, developer briefing script.",
             "url": "https://asilidesign.fr/en/formations/audit-seo-diy/toolkit",
-            "isPartOf": { "@id": "https://asilidesign.fr/#website" }
+            "isPartOf": {
+              "@id": "https://asilidesign.fr/#website"
+            }
           }
         }
       }
