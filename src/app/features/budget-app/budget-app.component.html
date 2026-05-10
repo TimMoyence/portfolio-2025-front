@@ -52,23 +52,13 @@
         <div
           class="grid gap-4 rounded-[1.75rem] border border-white/60 bg-white/70 p-4 backdrop-blur md:min-w-[24rem]"
         >
-          <div class="flex flex-wrap gap-2">
-            @for (month of months; track month) {
-              <button
-                type="button"
-                class="rounded-full px-4 py-2 text-sm font-semibold transition"
-                [class.bg-budget-accent]="selectedMonth() === month"
-                [class.text-white]="selectedMonth() === month"
-                [class.bg-white]="selectedMonth() !== month"
-                [class.text-slate-800]="selectedMonth() !== month"
-                [class.border]="selectedMonth() !== month"
-                [class.border-slate-200]="selectedMonth() !== month"
-                (click)="selectMonth(month)"
-              >
-                {{ getMonthLabel(month) }}
-              </button>
-            }
-          </div>
+          <!-- Selecteur de mois dynamique -->
+          <app-budget-month-picker
+            [currentMonth]="currentMonth()"
+            [currentYear]="currentYear()"
+            [availableMonths]="entriesMonths()"
+            (monthChange)="onMonthChange($event)"
+          />
 
           <div>
             <p
@@ -146,6 +136,14 @@
         </div>
       </div>
     </div>
+
+    <!-- Etat vide : aucune entree pour ce mois -->
+    @if (isEmpty()) {
+      <app-budget-empty-state
+        (importClick)="onImportClick()"
+        (createClick)="onImportClick()"
+      />
+    }
 
     <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
       <app-budget-summary-card
@@ -318,7 +316,7 @@
       <div class="mt-8 flex justify-end">
         <app-budget-export
           [groupId]="groupId()!"
-          [month]="monthNumber()"
+          [month]="currentMonth()"
           [year]="currentYear()"
         />
       </div>

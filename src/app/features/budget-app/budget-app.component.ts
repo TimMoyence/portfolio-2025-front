@@ -24,9 +24,12 @@ import { BudgetFormatService } from "../../core/services/budget-format.service";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
 import { BudgetChartComponent } from "./components/budget-chart/budget-chart.component";
 import { BudgetContributionsPanelComponent } from "./components/budget-contributions-panel/budget-contributions-panel.component";
+import { BudgetEmptyStateComponent } from "./components/budget-empty-state/budget-empty-state.component";
 import { BudgetExportComponent } from "./components/budget-export/budget-export.component";
 import { BudgetGoalsComponent } from "./components/budget-goals/budget-goals.component";
 import { BudgetMembersPanelComponent } from "./components/budget-members-panel/budget-members-panel.component";
+import { BudgetMonthPickerComponent } from "./components/budget-month-picker/budget-month-picker.component";
+import type { MonthYear } from "./components/budget-month-picker/budget-month-picker.component";
 import { BudgetRecurringComponent } from "./components/budget-recurring/budget-recurring.component";
 import { BudgetSavingsGoalsComponent } from "./components/budget-savings-goals/budget-savings-goals.component";
 import { BudgetSummaryCardComponent } from "./components/budget-summary-card/budget-summary-card.component";
@@ -48,17 +51,6 @@ import {
 } from "./utils/budget-csv-parser.utils";
 import { normalizeText } from "./utils/text.utils";
 
-type BudgetMonth = "March" | "April" | "May" | "June";
-
-const MONTHS: BudgetMonth[] = ["March", "April", "May", "June"];
-
-const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
-  March: 3,
-  April: 4,
-  May: 5,
-  June: 6,
-};
-
 @Component({
   selector: "app-budget-app",
   standalone: true,
@@ -74,6 +66,8 @@ const MONTH_NUMBER_MAP: Record<BudgetMonth, number> = {
     BudgetSavingsGoalsComponent,
     BudgetRecurringComponent,
     BudgetTransactionsTableComponent,
+    BudgetEmptyStateComponent,
+    BudgetMonthPickerComponent,
   ],
   templateUrl: "./budget-app.component.html",
   styleUrl: "./budget-app.component.scss",
@@ -94,14 +88,21 @@ export class BudgetAppComponent {
   readonly uploadStatus = signal("");
 
   readonly categories = computed(() => this.apiCategories().map((c) => c.name));
-  readonly months = MONTHS;
-  readonly selectedMonth = signal<BudgetMonth>("March");
+
+  /** Mois courant selectionne (1-12). */
+  readonly currentMonth = signal<number>(new Date().getMonth() + 1);
+
+  /** Annee courante selectionnee. */
+  readonly currentYear = signal<number>(new Date().getFullYear());
+
+  /** Mois disponibles recuperes depuis le backend pour le picker. */
+  readonly entriesMonths = signal<MonthYear[]>([]);
+
   readonly searchTerm = signal("");
   readonly categoryFilter = signal<string>("ALL");
   readonly stateFilter = signal<"ALL" | "COMPLETED" | "PENDING">("ALL");
   readonly budgetTypeFilter = signal<"ALL" | "FIXED" | "VARIABLE">("ALL");
-  readonly sourceLabel = signal("Embedded March 1-15 sample");
-  readonly currentYear = signal(new Date().getFullYear());
+  readonly sourceLabel = signal("Embedded sample");
   readonly members = signal<BudgetMember[]>([]);
   readonly contributions = signal<BudgetMemberContribution[]>([]);
   readonly previousMonthContributions = signal<BudgetMemberContribution[]>([]);
@@ -113,6 +114,9 @@ export class BudgetAppComponent {
   private readonly baseTransactions = signal<BudgetTransaction[]>([]);
   private readonly overrides = signal<Record<string, string>>({});
 
+  /** Identifiant DOM du file picker CSV — utilise par onImportClick. */
+  readonly csvInputId = "budgetCsv";
+
   constructor() {
     this.initBudget();
   }
@@ -123,6 +127,8 @@ export class BudgetAppComponent {
       category: this.overrides()[transaction.id] ?? transaction.category,
     })),
   );
+
+  readonly entries = computed(() => this.baseTransactions());
 
   readonly filteredTransactions = computed(() => {
     const search = normalizeText(this.searchTerm());
@@ -233,7 +239,10 @@ export class BudgetAppComponent {
     this.categoryTotals().filter((item) => item.budgetType === "VARIABLE"),
   );
 
-  readonly monthNumber = computed(() => MONTH_NUMBER_MAP[this.selectedMonth()]);
+  /** Vrai quand il n'y a ni mois disponibles ni entrees chargees. */
+  readonly isEmpty = computed(
+    () => this.entriesMonths().length === 0 && this.entries().length === 0,
+  );
 
   onCategoryChange(event: { id: string; category: string }): void {
     const nextCategory = event.category;
@@ -338,22 +347,23 @@ export class BudgetAppComponent {
     this.budgetTypeFilter.set(value as "ALL" | "FIXED" | "VARIABLE");
   }
 
-  selectMonth(month: BudgetMonth): void {
-    if (this.selectedMonth() === month) {
+  /** Appele par le BudgetMonthPickerComponent lors d'un changement de mois. */
+  onMonthChange(monthYear: MonthYear): void {
+    const sameMonth =
+      this.currentMonth() === monthYear.month &&
+      this.currentYear() === monthYear.year;
+    if (sameMonth) {
       return;
     }
 
-    this.selectedMonth.set(month);
+    this.currentMonth.set(monthYear.month);
+    this.currentYear.set(monthYear.year);
     this.uploadStatus.set("");
 
     this.loadEntries();
     const gid = this.groupId();
     if (gid) {
-      this.loadMembersAndContributions(
-        gid,
-        MONTH_NUMBER_MAP[month],
-        this.currentYear(),
-      );
+      this.loadMembersAndContributions(gid, monthYear.month, monthYear.year);
     }
   }
 
@@ -363,6 +373,21 @@ export class BudgetAppComponent {
 
   readSelectValue(event: Event): string {
     return (event.target as HTMLSelectElement | null)?.value ?? "";
+  }
+
+  /**
+   * Declenche le file picker CSV natif.
+   * Appele par le CTA "Importer un CSV" du BudgetEmptyStateComponent.
+   * SSR-safe : verifie isPlatformBrowser avant d'acceder au DOM.
+   */
+  onImportClick(): void {
+    if (!this.browser) {
+      return;
+    }
+    const input = document.getElementById(
+      this.csvInputId,
+    ) as HTMLInputElement | null;
+    input?.click();
   }
 
   onFileSelected(event: Event): void {
@@ -390,6 +415,8 @@ export class BudgetAppComponent {
       }
 
       const gid = this.groupId();
+      const month = this.currentMonth();
+      const year = this.currentYear();
 
       if (gid) {
         try {
@@ -398,7 +425,7 @@ export class BudgetAppComponent {
           );
           this.baseTransactions.set(this.apiEntriesToTransactions(entries));
           this.sourceLabel.set(
-            `${this.selectedMonth()} - ${file.name} (${entries.length} imported)`,
+            `${month}/${year} - ${file.name} (${entries.length} imported)`,
           );
           this.uploadStatus.set(
             `${entries.length} transactions loaded from ${file.name}.`,
@@ -406,16 +433,14 @@ export class BudgetAppComponent {
         } catch {
           // Fallback to local parsing
           this.baseTransactions.set(fallbackTransactions);
-          this.sourceLabel.set(
-            `${this.selectedMonth()} - ${file.name} (local parse)`,
-          );
+          this.sourceLabel.set(`${month}/${year} - ${file.name} (local parse)`);
           this.uploadStatus.set(
             `${fallbackTransactions.length} transactions loaded locally from ${file.name}.`,
           );
         }
       } else {
         this.baseTransactions.set(fallbackTransactions);
-        this.sourceLabel.set(`${this.selectedMonth()} - ${file.name}`);
+        this.sourceLabel.set(`${month}/${year} - ${file.name}`);
         this.uploadStatus.set(
           `${fallbackTransactions.length} transactions loaded from ${file.name}.`,
         );
@@ -464,10 +489,13 @@ export class BudgetAppComponent {
       );
       this.apiCategories.set(cats);
 
+      // Charger les mois disponibles depuis le backend
+      this.loadEntriesMonths(group.id);
+
       await this.loadEntries();
       this.loadMembersAndContributions(
         group.id,
-        MONTH_NUMBER_MAP[this.selectedMonth()],
+        this.currentMonth(),
         this.currentYear(),
       );
     } catch {
@@ -482,41 +510,42 @@ export class BudgetAppComponent {
     }
   }
 
+  /** Charge la liste des mois avec entrees depuis le backend. */
+  private loadEntriesMonths(groupId: string): void {
+    this.budgetPort.getEntriesMonths(groupId).subscribe({
+      next: (months) => this.entriesMonths.set(months),
+      error: () => this.entriesMonths.set([]),
+    });
+  }
+
   private async loadEntries(): Promise<void> {
     const gid = this.groupId();
     if (!gid) {
       return;
     }
 
-    const month = this.selectedMonth();
-    const monthIndex = MONTH_NUMBER_MAP[month];
+    const month = this.currentMonth();
     const year = this.currentYear();
 
     try {
       const entries = await firstValueFrom(
-        this.budgetPort.getEntries(gid, { month: monthIndex, year }),
+        this.budgetPort.getEntries(gid, { month, year }),
       );
 
       if (entries.length > 0) {
         this.baseTransactions.set(this.apiEntriesToTransactions(entries));
-        this.sourceLabel.set(`${month} - ${entries.length} entries from API`);
+        this.sourceLabel.set(
+          `${month}/${year} - ${entries.length} entries from API`,
+        );
         this.uploadStatus.set("");
       } else {
-        // No entries yet for this month — show empty or sample
-        if (month === "March") {
-          this.baseTransactions.set(
-            toTransactions(parseCsv(COMMON_BUDGET_SAMPLE_CSV)),
-          );
-          this.sourceLabel.set("March - Embedded sample (no API data yet)");
-        } else {
-          this.baseTransactions.set([]);
-          this.sourceLabel.set(`${month} - No data yet`);
-        }
+        this.baseTransactions.set([]);
+        this.sourceLabel.set(`${month}/${year} - No data yet`);
         this.uploadStatus.set("");
       }
     } catch {
       this.baseTransactions.set([]);
-      this.sourceLabel.set(`${month} - Error loading entries`);
+      this.sourceLabel.set(`${month}/${year} - Error loading entries`);
       this.uploadStatus.set("");
     }
   }
@@ -585,7 +614,7 @@ export class BudgetAppComponent {
     this.budgetPort
       .upsertMyContribution({
         groupId: gid,
-        month: this.monthNumber(),
+        month: this.currentMonth(),
         year: this.currentYear(),
         monthlySalary,
       })
@@ -648,16 +677,6 @@ export class BudgetAppComponent {
     }
 
     return category;
-  }
-
-  getMonthLabel(month: BudgetMonth): string {
-    const labels: Record<BudgetMonth, string> = {
-      March: $localize`:@@budgetMonthMarch:Mars`,
-      April: $localize`:@@budgetMonthApril:Avril`,
-      May: $localize`:@@budgetMonthMay:Mai`,
-      June: $localize`:@@budgetMonthJune:Juin`,
-    };
-    return labels[month];
   }
 
   private apiEntriesToTransactions(
