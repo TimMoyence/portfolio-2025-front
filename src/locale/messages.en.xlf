@@ -6066,10 +6066,16 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Couple dashboard</target>
       </segment>
     </unit>
+    <unit id="budgetDashboardTitle">
+      <segment>
+        <source>Budget partagé</source>
+        <target>Shared budget</target>
+      </segment>
+    </unit>
     <unit id="budgetDashboardDescription">
       <segment>
-        <source>Un cockpit budget léger pour Tim et Maria : importez un CSV, classez automatiquement les dépenses, ajustez manuellement les catégories, et gardez les contributions visibles d'un coup d'œil.</source>
-        <target>A lightweight budget cockpit for Tim and Maria: upload a CSV, auto-classify expenses, adjust categories manually, and keep contributions visible at a glance.</target>
+        <source>Un cockpit budget léger pour gérer un budget commun : importez un CSV, classez automatiquement les dépenses, ajustez manuellement les catégories, et gardez les contributions visibles d'un coup d'œil.</source>
+        <target>A lightweight budget cockpit to manage a shared budget: upload a CSV, auto-classify expenses, adjust categories manually, and keep contributions visible at a glance.</target>
       </segment>
     </unit>
     <unit id="budgetDashboardDataSource">
@@ -6133,12 +6139,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Transfers, top-ups, and shared contributions.</target>
       </segment>
     </unit>
-    <unit id="budgetSummaryContributionEyebrow">
-      <segment>
-        <source>Contribution</source>
-        <target>Contribution</target>
-      </segment>
-    </unit>
     <unit id="budgetSummaryTransfersEyebrow">
       <segment>
         <source>Virements</source>
@@ -6155,85 +6155,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Argent transféré du compte commun vers les pockets.</source>
         <target>Money moved from the common account into pockets.</target>
-      </segment>
-    </unit>
-    <unit id="budgetSummaryMariaAdded">
-      <segment>
-        <source>Maria a ajouté</source>
-        <target>Maria added</target>
-      </segment>
-    </unit>
-    <unit id="budgetSummaryMariaLeftToAdd">
-      <segment>
-        <source>Maria reste à ajouter</source>
-        <target>Maria left to add</target>
-      </segment>
-    </unit>
-    <unit id="budgetSummaryTimAdded">
-      <segment>
-        <source>Tim a ajouté</source>
-        <target>Tim added</target>
-      </segment>
-    </unit>
-    <unit id="budgetSummaryTimLeftToAdd">
-      <segment>
-        <source>Tim reste à ajouter</source>
-        <target>Tim left to add</target>
-      </segment>
-    </unit>
-    <!-- Salary section -->
-    <unit id="budgetSalaryEyebrow">
-      <segment>
-        <source>Calcul du budget</source>
-        <target>Budget calculation</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryTitle">
-      <segment>
-        <source>Ratio de contribution salariale</source>
-        <target>Salary contribution ratio</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryDescription">
-      <segment>
-        <source>Saisissez les salaires de Tim et Maria pour calculer le pourcentage que chaque salaire représente dans le total combiné.</source>
-        <target>Enter Tim and Maria salaries to calculate what percentage each salary represents from the combined total.</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryTimLabel">
-      <segment>
-        <source>Salaire de Tim</source>
-        <target>Tim salary</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryMariaLabel">
-      <segment>
-        <source>Salaire de Maria</source>
-        <target>Maria salary</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryShareLabel">
-      <segment>
-        <source>Part :</source>
-        <target>Share:</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryCombinedLabel">
-      <segment>
-        <source>Salaires combinés</source>
-        <target>Combined salaries</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryCombinedHelp">
-      <segment>
-        <source>Une règle rapide pour répartir équitablement les contributions au compte commun.</source>
-        <target>A quick rule for splitting contributions to the common account fairly.</target>
-      </segment>
-    </unit>
-    <unit id="budgetSalaryValidateBtn">
-      <segment>
-        <source>Valider</source>
-        <target>Validate</target>
       </segment>
     </unit>
     <!-- Filters -->
@@ -9128,6 +9049,147 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source> Gratuit — Aucune carte bancaire requise </source>
         <target> Free — No credit card required </target>
+      </segment>
+    </unit>
+    <!-- Members panel -->
+    <unit id="budgetMembersPanelEyebrow">
+      <segment>
+        <source>Membres</source>
+        <target>Members</target>
+      </segment>
+    </unit>
+    <unit id="budgetMembersPanelTitle">
+      <segment>
+        <source>Groupe partagé</source>
+        <target>Shared group</target>
+      </segment>
+    </unit>
+    <unit id="budgetMembersPanelInviteBtn">
+      <segment>
+        <source>Inviter</source>
+        <target>Invite</target>
+      </segment>
+    </unit>
+    <unit id="budgetMembersPanelOwnerBadge">
+      <segment>
+        <source>Owner</source>
+        <target>Owner</target>
+      </segment>
+    </unit>
+    <unit id="budgetMembersPanelRemoveBtn">
+      <segment>
+        <source>Retirer</source>
+        <target>Remove</target>
+      </segment>
+    </unit>
+    <unit id="budgetMembersPanelEmpty">
+      <segment>
+        <source>Aucun membre dans ce groupe.</source>
+        <target>No members in this group.</target>
+      </segment>
+    </unit>
+    <!-- Contributions panel -->
+    <unit id="budgetContributionsPanelEyebrow">
+      <segment>
+        <source>Contributions</source>
+        <target>Contributions</target>
+      </segment>
+    </unit>
+    <unit id="budgetContributionsPanelTitle">
+      <segment>
+        <source>Salaires du mois</source>
+        <target>Monthly salaries</target>
+      </segment>
+    </unit>
+    <unit id="budgetContributionsPanelTotal">
+      <segment>
+        <source>Total</source>
+        <target>Total</target>
+      </segment>
+    </unit>
+    <unit id="budgetContributionsPanelZeroTotal">
+      <segment>
+        <source>Renseigne ton salaire pour voir ta contribution.</source>
+        <target>Enter your salary to see your contribution.</target>
+      </segment>
+    </unit>
+    <!-- Savings goals -->
+    <unit id="budgetSavingsGoalsEyebrow">
+      <segment>
+        <source>Objectifs</source>
+        <target>Goals</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsTitle">
+      <segment>
+        <source>Epargne &amp; Plafonds</source>
+        <target>Savings &amp; Limits</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsDeleteBtn">
+      <segment>
+        <source>Supprimer</source>
+        <target>Delete</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsEmpty">
+      <segment>
+        <source>Aucun objectif defini pour ce groupe.</source>
+        <target>No goal defined for this group.</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsFormTitle">
+      <segment>
+        <source>Nouvel objectif</source>
+        <target>New goal</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsFormNamePlaceholder">
+      <segment>
+        <source>Nom de l'objectif</source>
+        <target>Goal name</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsKindSavings">
+      <segment>
+        <source>Epargne</source>
+        <target>Savings</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsKindSpendingLimit">
+      <segment>
+        <source>Plafond de depenses</source>
+        <target>Spending limit</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsKindCategoryLimit">
+      <segment>
+        <source>Plafond par categorie</source>
+        <target>Category limit</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsFormAmountPlaceholder">
+      <segment>
+        <source>Montant cible (€)</source>
+        <target>Target amount (€)</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsFormCategoryPlaceholder">
+      <segment>
+        <source>-- Choisir une categorie --</source>
+        <target>-- Choose a category --</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsFormDeadlinePlaceholder">
+      <segment>
+        <source>Echeance (optionnel)</source>
+        <target>Deadline (optional)</target>
+      </segment>
+    </unit>
+    <unit id="budgetSavingsGoalsFormSubmitBtn">
+      <segment>
+        <source>Ajouter l'objectif</source>
+        <target>Add goal</target>
       </segment>
     </unit>
     <unit id="formationsListLabel">
