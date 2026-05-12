@@ -166,10 +166,14 @@ export class BudgetHttpAdapter implements BudgetPort {
     );
   }
 
-  /** Met a jour une categorie (ex: budgetLimit). */
+  /**
+   * Met a jour une categorie. `groupId` (optionnel) est propage au
+   * backend pour declencher l'auto-clone d'une categorie par defaut
+   * (group_id IS NULL) au lieu de prendre un 403.
+   */
   updateCategory(
     categoryId: string,
-    payload: Partial<{ budgetLimit: number }>,
+    payload: Partial<{ budgetLimit: number; groupId: string }>,
   ): Observable<BudgetCategoryModel> {
     return this.http.patch<BudgetCategoryModel>(
       `${this.baseUrl}/budget/categories/${categoryId}`,

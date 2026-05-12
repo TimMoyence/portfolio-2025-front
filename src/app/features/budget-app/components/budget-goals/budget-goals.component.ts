@@ -186,12 +186,22 @@ export class BudgetGoalsComponent {
     this.cancelEdit();
   }
 
-  /** Met a jour la limite budgetaire d'une categorie via l'API. */
+  /**
+   * Met a jour la limite budgetaire d'une categorie via l'API.
+   *
+   * `groupId` est systematiquement transmis : pour une categorie
+   * per-group il est ignore cote backend, pour une default il
+   * declenche la creation (ou la mise a jour) d'un clone per-group
+   * au lieu d'un 403.
+   */
   async updateBudgetLimit(categoryId: string, newLimit: number): Promise<void> {
     this.errorMessage.set("");
     try {
       await firstValueFrom(
-        this.budgetPort.updateCategory(categoryId, { budgetLimit: newLimit }),
+        this.budgetPort.updateCategory(categoryId, {
+          budgetLimit: newLimit,
+          groupId: this.groupId(),
+        }),
       );
     } catch {
       this.errorMessage.set("Erreur lors de la mise à jour de l'objectif.");

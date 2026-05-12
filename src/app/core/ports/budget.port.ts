@@ -89,10 +89,18 @@ export interface BudgetPort {
   previewInvitation(token: string): Observable<InvitationPreview>;
   /** Supprime une entree de budget. */
   deleteEntry(entryId: string): Observable<void>;
-  /** Met a jour une categorie (ex: budgetLimit). */
+  /**
+   * Met a jour une categorie (ex: budgetLimit).
+   *
+   * `groupId` doit etre passe quand la categorie ciblee est une default
+   * (group_id IS NULL cote API) : le backend cree alors un clone
+   * per-group au lieu de retourner 403. Transparent pour le caller :
+   * la reponse contient toujours la categorie effectivement editee
+   * (clone ou per-group originale).
+   */
   updateCategory(
     categoryId: string,
-    payload: Partial<{ budgetLimit: number }>,
+    payload: Partial<{ budgetLimit: number; groupId: string }>,
   ): Observable<BudgetCategoryModel>;
   /** Exporte le budget en PDF. */
   exportPdf(groupId: string, month: number, year: number): Observable<Blob>;
