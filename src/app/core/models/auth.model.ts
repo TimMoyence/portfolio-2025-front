@@ -34,6 +34,23 @@ export interface RegisterUserPayload {
   firstName: string;
   lastName: string;
   phone?: string | null;
+  /**
+   * Token clair d'invitation magic-link (issu du query param `?invite=`).
+   * Si fourni, le backend tentera de l'accepter apres creation du user et
+   * pourra retourner un `inviteWarning` en cas d'echec metier.
+   */
+  inviteToken?: string;
+}
+
+/**
+ * Detail d'echec d'acceptation d'invitation (rapporte en plus du succes
+ * d'inscription) — voir CreateUsersUseCase.tryAcceptInvitation cote backend.
+ */
+export interface InviteWarning {
+  /** Code identifiant la cause (INVITATION_NOT_FOUND, INVITATION_EXPIRED, ...). */
+  code: string;
+  /** Message lisible pour l'utilisateur. */
+  message: string;
 }
 
 export interface ForgotPasswordPayload {
@@ -62,6 +79,12 @@ export interface UpdateProfilePayload {
 
 export interface AuthActionMessage {
   message: string;
+  /**
+   * Renseigne uniquement quand l'utilisateur a fourni un `inviteToken` lors de
+   * l'inscription et que son acceptation a echoue cote backend (ex: token
+   * expire, email mismatch). Le compte est cree malgre tout.
+   */
+  inviteWarning?: InviteWarning;
 }
 
 export interface ResendVerificationPayload {

@@ -84,6 +84,44 @@
                 </p>
               </div>
 
+              <!-- Banner contextuel d'invitation magic-link (?invite= dans URL) -->
+              @if (invitePreview(); as preview) {
+                <div
+                  class="mb-6 rounded-xl border border-budget-accent/30 bg-budget-accent/5 p-4 text-sm"
+                  role="status"
+                  data-testid="auth-invite-banner"
+                >
+                  <p i18n="@@register.invite-banner.body">
+                    <strong>{{ preview.inviterFirstName }}</strong> t'invite à
+                    rejoindre le budget «&nbsp;<strong>{{
+                      preview.groupName
+                    }}</strong
+                    >&nbsp;». Crée ton compte pour rejoindre le groupe.
+                  </p>
+                </div>
+              }
+              @if (inviteError()) {
+                <div
+                  class="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800"
+                  role="status"
+                  data-testid="auth-invite-banner-error"
+                >
+                  <p i18n="@@register.invite-banner.invalid">
+                    Cette invitation n'est plus valide. Tu peux quand même créer
+                    un compte.
+                  </p>
+                </div>
+              }
+              @if (inviteWarning(); as warning) {
+                <div
+                  class="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800"
+                  role="status"
+                  data-testid="auth-invite-warning"
+                >
+                  <p>{{ warning.message }}</p>
+                </div>
+              }
+
               <!-- Google auth en premier (inscription en 1 clic) -->
               <button
                 type="button"

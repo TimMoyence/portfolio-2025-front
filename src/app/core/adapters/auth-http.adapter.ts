@@ -43,13 +43,19 @@ export class AuthHttpAdapter implements AuthPort {
     return this.http.get<AuthUser>(`${this.baseUrl}/auth/me`);
   }
 
-  /** Envoie le jeton Google au backend pour authentification OAuth. */
-  googleAuth(idToken: string): Observable<AuthSession> {
-    return this.http.post<AuthSession>(
-      `${this.baseUrl}/auth/google`,
-      { idToken },
-      { withCredentials: true },
-    );
+  /**
+   * Envoie le jeton Google au backend pour authentification OAuth. Inclut
+   * eventuellement `inviteToken` pour declencher l'acceptation d'invitation
+   * magic-link cote serveur (hook AuthenticateGoogleUser.tryAcceptInvitation).
+   */
+  googleAuth(idToken: string, inviteToken?: string): Observable<AuthSession> {
+    const body: { idToken: string; inviteToken?: string } = { idToken };
+    if (inviteToken) {
+      body.inviteToken = inviteToken;
+    }
+    return this.http.post<AuthSession>(`${this.baseUrl}/auth/google`, body, {
+      withCredentials: true,
+    });
   }
 
   requestPasswordReset(

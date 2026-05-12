@@ -6,11 +6,15 @@ import {
   ElementRef,
   inject,
   PLATFORM_ID,
+  signal,
   ViewChild,
 } from "@angular/core";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
-import type { RegisterUserPayload } from "../../core/models/auth.model";
+import type {
+  InviteWarning,
+  RegisterUserPayload,
+} from "../../core/models/auth.model";
 import type { LoginFormState } from "../../core/models/loginForm.model";
 import type { SignupFormState } from "../../core/models/signupForm.model";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
@@ -18,6 +22,8 @@ import { APP_CONFIG } from "../../core/config/app-config.token";
 import { AuthStateService } from "../../core/services/auth-state.service";
 import type { AuthPort } from "../../core/ports/auth.port";
 import { AUTH_PORT } from "../../core/ports/auth.port";
+import type { InvitationPreview } from "../../core/ports/budget.port";
+import { BUDGET_PORT } from "../../core/ports/budget.port";
 import { loadGoogleGis } from "../../core/utils/google-gis";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
@@ -49,6 +55,7 @@ export class AuthComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly budgetPort = inject(BUDGET_PORT);
 
   @ViewChild("googleButtonContainer", { static: false })
   googleButtonContainer?: ElementRef<HTMLDivElement>;
@@ -79,6 +86,18 @@ export class AuthComponent {
   loginErrorMessage?: string;
   loginSuccessMessage?: string;
   signupForm: SignupFormState = { ...this.defaultSignupState };
+
+  /**
+   * Token clair lu depuis le query param `?invite=`. Mis a null si la preview
+   * echoue (token expire/inconnu) afin de ne pas l'envoyer au backend.
+   */
+  readonly inviteToken = signal<string | null>(null);
+  /** Preview retournee par GET /auth/invitations/by-token (null si absent). */
+  readonly invitePreview = signal<InvitationPreview | null>(null);
+  /** Vrai quand le token fourni dans l'URL est invalide/expire. */
+  readonly inviteError = signal(false);
+  /** Echec metier d'acceptation rapporte par le backend apres register/google. */
+  readonly inviteWarning = signal<InviteWarning | null>(null);
 
   readonly hero = {
     label: $localize`:auth.hero.label@@authHeroLabel:Accès`,
@@ -140,6 +159,35 @@ export class AuthComponent {
 
   loginForm: LoginFormState = { ...this.defaultLoginState };
 
+  constructor() {
+    // Lecture eager du query param d'invitation et appel preview public.
+    // Le snapshot suffit : si l'utilisateur navigue ailleurs puis revient avec
+    // un autre token, Angular recreera le composant (les routes auth ne sont
+    // pas re-utilisees).
+    const token = this.route.snapshot.queryParamMap.get("invite");
+    if (token) {
+      this.inviteToken.set(token);
+      this.budgetPort.previewInvitation(token).subscribe({
+        next: (preview) => {
+          this.invitePreview.set(preview);
+          // Pre-remplit l'email pour eviter une saisie incoherente.
+          this.signupForm = {
+            ...this.signupForm,
+            email: preview.targetEmail,
+          };
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          // Token invalide / expire / inconnu — on retire le token pour ne pas
+          // l'envoyer au backend, mais on laisse l'utilisateur s'inscrire.
+          this.inviteError.set(true);
+          this.inviteToken.set(null);
+          this.cdr.markForCheck();
+        },
+      });
+    }
+  }
+
   loginFields: {
     key: LoginFormKey;
     label: string;
@@ -181,12 +229,14 @@ export class AuthComponent {
       return;
     }
 
+    const inviteToken = this.inviteToken();
     const payload: RegisterUserPayload = {
       email: this.signupForm.email,
       password: this.signupForm.password,
       firstName: this.signupForm.firstName,
       lastName: this.signupForm.lastName,
       phone: this.signupForm.phone?.trim() || null,
+      ...(inviteToken ? { inviteToken } : {}),
     };
 
     this.isSignupLoading = true;
@@ -198,7 +248,18 @@ export class AuthComponent {
           result.message ??
           $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Inscription reussie. Verifiez votre email pour activer votre compte.`;
         this.resetSignupForm(form);
-        this.activeTab = "log-in";
+
+        // Cas inviteToken : si le backend a accepte sans warning, on redirige
+        // immediatement vers l'app budget. Sinon (echec metier ou pas
+        // d'inviteToken), on bascule sur l'onglet login comme avant.
+        if (result.inviteWarning) {
+          this.inviteWarning.set(result.inviteWarning);
+          this.activeTab = "log-in";
+        } else if (inviteToken) {
+          void this.router.navigateByUrl("/atelier/budget/app");
+        } else {
+          this.activeTab = "log-in";
+        }
       },
       onError: (message) => {
         this.signupErrorMessage = message;
@@ -295,22 +356,33 @@ export class AuthComponent {
     response: google.accounts.id.CredentialResponse,
     context: AuthTab,
   ): void {
-    this.authService.googleAuth(response.credential).subscribe({
-      next: (session) => {
-        this.authState.login(session);
-        const returnUrl = this.sanitizeReturnUrl(
-          this.route.snapshot.queryParamMap.get("returnUrl"),
-        );
-        void this.router.navigateByUrl(returnUrl);
-      },
-      error: (err) => {
-        const message =
-          err?.error?.message ??
-          $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`;
-        this.setGoogleError(context, message);
-        this.cdr.markForCheck();
-      },
-    });
+    const inviteToken = this.inviteToken();
+    this.authService
+      .googleAuth(response.credential, inviteToken ?? undefined)
+      .subscribe({
+        next: (session) => {
+          this.authState.login(session);
+          // Si la connexion Google s'est faite avec un inviteToken, on assume
+          // que l'acceptation a reussi cote backend (le use case swallow les
+          // erreurs metier) et on redirige vers l'app budget plutot que vers
+          // returnUrl. Sinon comportement nominal (returnUrl ou racine).
+          if (inviteToken) {
+            void this.router.navigateByUrl("/atelier/budget/app");
+            return;
+          }
+          const returnUrl = this.sanitizeReturnUrl(
+            this.route.snapshot.queryParamMap.get("returnUrl"),
+          );
+          void this.router.navigateByUrl(returnUrl);
+        },
+        error: (err) => {
+          const message =
+            err?.error?.message ??
+            $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`;
+          this.setGoogleError(context, message);
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   /** Affiche un message d'erreur Google dans le contexte (inscription ou connexion). */

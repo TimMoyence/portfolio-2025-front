@@ -19,8 +19,12 @@ export interface AuthPort {
   /** Inscrit un nouvel utilisateur. Retourne un message (email de verification envoye). */
   register(payload: RegisterUserPayload): Observable<AuthActionMessage>;
   me(): Observable<AuthUser>;
-  /** Authentifie l'utilisateur via un jeton Google Identity Services. */
-  googleAuth(idToken: string): Observable<AuthSession>;
+  /**
+   * Authentifie l'utilisateur via un jeton Google Identity Services.
+   * `inviteToken` est optionnel : si present, le backend tentera d'accepter
+   * l'invitation magic-link associee apres signature du JWT.
+   */
+  googleAuth(idToken: string, inviteToken?: string): Observable<AuthSession>;
   requestPasswordReset(
     payload: ForgotPasswordPayload,
   ): Observable<AuthActionMessage>;
