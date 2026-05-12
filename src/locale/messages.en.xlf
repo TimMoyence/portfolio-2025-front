@@ -12514,5 +12514,104 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <target>Free ($5 credits) / $20/month</target>
       </segment>
     </unit>
+
+    <!-- Budget magic-link invitations (Phase 3 — 2026-05-12) -->
+    <unit id="register.invite-banner.body">
+      <segment>
+        <source><ph id="0" equiv="START_TAG_STRONG" disp="&lt;strong&gt;"/><ph id="1" equiv="INTERPOLATION" disp="{{ preview.inviterFirstName }}"/><ph id="2" equiv="CLOSE_TAG_STRONG" disp="&lt;/strong&gt;"/> t'invite à rejoindre le budget « <ph id="3" equiv="START_TAG_STRONG" disp="&lt;strong&gt;"/><ph id="4" equiv="INTERPOLATION_1" disp="{{ preview.groupName }}"/><ph id="5" equiv="CLOSE_TAG_STRONG" disp="&lt;/strong&gt;"/> ». Crée ton compte pour rejoindre le groupe.</source>
+        <target><ph id="0" equiv="START_TAG_STRONG" disp="&lt;strong&gt;"/><ph id="1" equiv="INTERPOLATION" disp="{{ preview.inviterFirstName }}"/><ph id="2" equiv="CLOSE_TAG_STRONG" disp="&lt;/strong&gt;"/> is inviting you to join the budget «&#160;<ph id="3" equiv="START_TAG_STRONG" disp="&lt;strong&gt;"/><ph id="4" equiv="INTERPOLATION_1" disp="{{ preview.groupName }}"/><ph id="5" equiv="CLOSE_TAG_STRONG" disp="&lt;/strong&gt;"/>&#160;». Create your account to join the group.</target>
+      </segment>
+    </unit>
+
+    <unit id="register.invite-banner.invalid">
+      <segment>
+        <source>Cette invitation n'est plus valide. Tu peux quand même créer un compte.</source>
+        <target>This invitation is no longer valid. You can still create an account.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.no-group.title">
+      <segment>
+        <source>Aucun budget pour le moment</source>
+        <target>No budget yet</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.no-group.description">
+      <segment>
+        <source>Crée ton premier budget ou attends qu'un proche t'envoie une invitation par e-mail.</source>
+        <target>Create your first budget or wait for someone to send you an invitation by email.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.no-group.cta">
+      <segment>
+        <source>Créer mon premier budget</source>
+        <target>Create my first budget</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.share.invalid-email">
+      <segment>
+        <source>Veuillez entrer un email valide.</source>
+        <target>Please enter a valid email.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.share.shared">
+      <segment>
+        <source>Budget partagé avec <ph id="0" equiv="PH" disp="email"/>.</source>
+        <target>Budget shared with <ph id="0" equiv="PH" disp="email"/>.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.share.already-member">
+      <segment>
+        <source><ph id="0" equiv="PH" disp="email"/> est déjà membre de ce groupe.</source>
+        <target><ph id="0" equiv="PH" disp="email"/> is already a member of this group.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.share.invited">
+      <segment>
+        <source>Invitation envoyée à <ph id="0" equiv="PH" disp="email"/> (valable 7 jours).</source>
+        <target>Invitation sent to <ph id="0" equiv="PH" disp="email"/> (valid for 7 days).</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.share.quota">
+      <segment>
+        <source>Tu as atteint la limite de 5 invitations par jour. Réessaie demain.</source>
+        <target>You have reached the limit of 5 invitations per day. Try again tomorrow.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.share.forbidden">
+      <segment>
+        <source>Seul le propriétaire peut partager ce budget.</source>
+        <target>Only the owner can share this budget.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.share.error">
+      <segment>
+        <source>Erreur lors du partage. Réessaie dans quelques instants.</source>
+        <target>Error while sharing. Please try again in a moment.</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.pending.title">
+      <segment>
+        <source>Invitations en attente</source>
+        <target>Pending invitations</target>
+      </segment>
+    </unit>
+
+    <unit id="budget-app.pending.expires">
+      <segment>
+        <source>expire dans <ph id="0" equiv="INTERPOLATION" disp="{{ inv.daysLeft }}"/> j</source>
+        <target>expires in <ph id="0" equiv="INTERPOLATION" disp="{{ inv.daysLeft }}"/> d</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
