@@ -9,6 +9,7 @@ module.exports = tseslint.config(
       "dist/**",
       "coverage/**",
       ".angular/**",
+      ".claude/**",
       "e2e/**",
       "playwright-report/**",
       "test-results/**",
