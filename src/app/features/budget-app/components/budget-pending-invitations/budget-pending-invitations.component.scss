@@ -1,0 +1,5 @@
+// Styles purement structurels — l'apparence vient des classes utilitaires Tailwind
+// dans le template. Garder ce fichier minimal pour eviter la divergence design.
+:host {
+  display: block;
+}

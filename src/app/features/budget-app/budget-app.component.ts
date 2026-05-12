@@ -18,7 +18,10 @@ import type {
   CreateBudgetGoalPayload,
   UpdateBudgetGoalPayload,
 } from "../../core/models/budget.model";
-import { BUDGET_PORT } from "../../core/ports/budget.port";
+import {
+  BUDGET_PORT,
+  type PendingInvitation,
+} from "../../core/ports/budget.port";
 import { AuthStateService } from "../../core/services/auth-state.service";
 import { BudgetFormatService } from "../../core/services/budget-format.service";
 import { BudgetCategoryTotalsComponent } from "./components/budget-category-totals/budget-category-totals.component";
@@ -28,6 +31,7 @@ import { BudgetEmptyStateComponent } from "./components/budget-empty-state/budge
 import { BudgetExportComponent } from "./components/budget-export/budget-export.component";
 import { BudgetGoalsComponent } from "./components/budget-goals/budget-goals.component";
 import { BudgetMembersPanelComponent } from "./components/budget-members-panel/budget-members-panel.component";
+import { BudgetPendingInvitationsComponent } from "./components/budget-pending-invitations/budget-pending-invitations.component";
 import { BudgetMonthPickerComponent } from "./components/budget-month-picker/budget-month-picker.component";
 import type { MonthYear } from "./components/budget-month-picker/budget-month-picker.component";
 import { BudgetRecurringComponent } from "./components/budget-recurring/budget-recurring.component";
@@ -68,6 +72,7 @@ import { normalizeText } from "./utils/text.utils";
     BudgetTransactionsTableComponent,
     BudgetEmptyStateComponent,
     BudgetMonthPickerComponent,
+    BudgetPendingInvitationsComponent,
   ],
   templateUrl: "./budget-app.component.html",
   styleUrl: "./budget-app.component.scss",
@@ -86,6 +91,16 @@ export class BudgetAppComponent {
   readonly shareEmail = signal("");
   readonly shareMessage = signal("");
   readonly uploadStatus = signal("");
+  /**
+   * Vrai uniquement apres une reponse API explicite indiquant que l'utilisateur
+   * n'a aucun groupe. Permet d'afficher un empty state au lieu de creer
+   * silencieusement un groupe parasite (regression observee 2026-05-11 :
+   * un invite reçu via lien magique se voyait creer un budget vide).
+   */
+  readonly hasNoGroup = signal(false);
+
+  /** Invitations magic-link emises par l'owner et encore en attente d'acceptation. */
+  readonly pendingInvitations = signal<PendingInvitation[]>([]);
 
   readonly categories = computed(() => this.apiCategories().map((c) => c.name));
 
@@ -303,28 +318,61 @@ export class BudgetAppComponent {
     const gid = this.groupId();
     const email = this.shareEmail().trim();
     if (!gid || !email) {
-      this.shareMessage.set("Veuillez entrer un email valide.");
+      this.shareMessage.set(
+        $localize`:@@budget-app.share.invalid-email:Veuillez entrer un email valide.`,
+      );
       return;
     }
 
     try {
-      await firstValueFrom(
+      const result = await firstValueFrom(
         this.budgetPort.shareBudget({ groupId: gid, targetEmail: email }),
       );
-      this.shareMessage.set(`Budget partage avec ${email} !`);
-      this.shareEmail.set("");
-    } catch (error: unknown) {
-      const msg = (error as { error?: { message?: string } })?.error?.message;
-      if (msg && msg.includes("Aucun compte")) {
+
+      if (result.status === "shared") {
         this.shareMessage.set(
-          `Aucun compte pour ${email}. Demandez-lui de s'inscrire d'abord sur le site.`,
+          $localize`:@@budget-app.share.shared:Budget partagé avec ${email}.`,
+        );
+      } else if (result.status === "already-member") {
+        this.shareMessage.set(
+          $localize`:@@budget-app.share.already-member:${email} est déjà membre de ce groupe.`,
         );
       } else {
         this.shareMessage.set(
-          "Erreur lors du partage. Verifiez l'email et reessayez.",
+          $localize`:@@budget-app.share.invited:Invitation envoyée à ${email} (valable 7 jours).`,
+        );
+        this.refreshPendingInvitations();
+      }
+      this.shareEmail.set("");
+    } catch (error: unknown) {
+      const status = (error as { status?: number })?.status;
+      if (status === 429) {
+        this.shareMessage.set(
+          $localize`:@@budget-app.share.quota:Tu as atteint la limite de 5 invitations par jour. Réessaie demain.`,
+        );
+      } else if (status === 403) {
+        this.shareMessage.set(
+          $localize`:@@budget-app.share.forbidden:Seul le propriétaire peut partager ce budget.`,
+        );
+      } else {
+        this.shareMessage.set(
+          $localize`:@@budget-app.share.error:Erreur lors du partage. Réessaie dans quelques instants.`,
         );
       }
     }
+  }
+
+  /** Recharge la liste des invitations en attente pour le groupe courant. */
+  private refreshPendingInvitations(): void {
+    const gid = this.groupId();
+    if (!gid) {
+      this.pendingInvitations.set([]);
+      return;
+    }
+    this.budgetPort.listPendingInvitations(gid).subscribe({
+      next: (res) => this.pendingInvitations.set(res.invitations),
+      error: () => this.pendingInvitations.set([]),
+    });
   }
 
   onSearchChange(value: string): void {
@@ -470,34 +518,27 @@ export class BudgetAppComponent {
     this.loading.set(true);
     try {
       let groups: BudgetGroup[] = [];
+      let apiReachable = true;
       try {
         groups = await firstValueFrom(this.budgetPort.getGroups());
       } catch {
-        // getGroups failed, will create below
+        apiReachable = false;
       }
 
-      const group =
-        groups.length > 0
-          ? groups[0]
-          : await firstValueFrom(
-              this.budgetPort.createGroup("Budget couple T&M"),
-            );
-      this.groupId.set(group.id);
+      if (!apiReachable) {
+        // API unreachable -> fall through to catch block (sample data).
+        throw new Error("budget-api-unreachable");
+      }
 
-      const cats = await firstValueFrom(
-        this.budgetPort.getCategories(group.id),
-      );
-      this.apiCategories.set(cats);
+      if (groups.length === 0) {
+        // Aucun groupe -> empty state explicite. Pas de creation silencieuse :
+        // un invite (lien magique) peut etre en cours d'acceptation et un
+        // groupe parasite ferait perdre l'association.
+        this.hasNoGroup.set(true);
+        return;
+      }
 
-      // Charger les mois disponibles depuis le backend
-      this.loadEntriesMonths(group.id);
-
-      await this.loadEntries();
-      this.loadMembersAndContributions(
-        group.id,
-        this.currentMonth(),
-        this.currentYear(),
-      );
+      await this.bootstrapGroup(groups[0]);
     } catch {
       // Fallback to sample data if API is unreachable
       this.baseTransactions.set(
@@ -505,6 +546,44 @@ export class BudgetAppComponent {
       );
       this.sourceLabel.set("Fallback - Embedded sample");
       this.uploadStatus.set("");
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
+   * Charge un groupe (categories, entries, members, contributions, goals).
+   * Extrait de `initBudget` pour etre reutilisable apres creation explicite
+   * d'un premier groupe via `createFirstGroup`.
+   */
+  private async bootstrapGroup(group: BudgetGroup): Promise<void> {
+    this.groupId.set(group.id);
+    this.hasNoGroup.set(false);
+
+    const cats = await firstValueFrom(this.budgetPort.getCategories(group.id));
+    this.apiCategories.set(cats);
+
+    this.loadEntriesMonths(group.id);
+    await this.loadEntries();
+    this.loadMembersAndContributions(
+      group.id,
+      this.currentMonth(),
+      this.currentYear(),
+    );
+    this.refreshPendingInvitations();
+  }
+
+  /**
+   * Cree le premier groupe pour un utilisateur qui n'en a aucun. Appele
+   * explicitement par l'empty state — JAMAIS automatiquement au mount.
+   */
+  async createFirstGroup(name: string = "Mon budget"): Promise<void> {
+    this.loading.set(true);
+    try {
+      const group = await firstValueFrom(this.budgetPort.createGroup(name));
+      await this.bootstrapGroup(group);
+    } catch {
+      // Conserve hasNoGroup = true pour que l'utilisateur puisse retenter.
     } finally {
       this.loading.set(false);
     }

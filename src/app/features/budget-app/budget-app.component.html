@@ -20,338 +20,384 @@
       </div>
     }
 
-    <div
-      class="overflow-hidden rounded-[2rem] border border-black/10 bg-[linear-gradient(135deg,rgba(255,250,240,0.95),rgba(220,242,235,0.92))] px-6 py-8 shadow-[0_24px_60px_rgba(25,33,52,0.08)] md:px-10 md:py-12"
-    >
+    @if (hasNoGroup() && !loading()) {
       <div
-        class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
+        class="mx-auto mb-6 max-w-2xl rounded-[2rem] border border-black/10 bg-white/95 px-6 py-10 text-center shadow-[0_24px_60px_rgba(25,33,52,0.08)] md:px-10 md:py-12"
+        data-testid="budget-no-group"
+        role="region"
+        aria-labelledby="budget-no-group-title"
       >
-        <div class="max-w-3xl">
-          <p
-            class="text-sm font-semibold uppercase tracking-[0.28em] text-budget-accent"
-            i18n="@@budgetDashboardEyebrow"
-          >
-            Tableau de bord couple
-          </p>
-          <h1
-            class="mt-4 max-w-[12ch] font-heading text-5xl font-black leading-[0.92] text-slate-950 md:text-7xl"
-            i18n="@@budgetDashboardTitle"
-          >
-            Budget partagé
-          </h1>
-          <p
-            class="mt-5 max-w-2xl text-base leading-7 text-slate-600 md:text-lg"
-            i18n="@@budgetDashboardDescription"
-          >
-            Un cockpit budget léger pour gérer un budget commun : importez un
-            CSV, classez automatiquement les dépenses, ajustez manuellement les
-            catégories, et gardez les contributions visibles d'un coup d'œil.
-          </p>
-        </div>
-
-        <div
-          class="grid gap-4 rounded-[1.75rem] border border-white/60 bg-white/70 p-4 backdrop-blur md:min-w-[24rem]"
-        >
-          <!-- Selecteur de mois dynamique -->
-          <app-budget-month-picker
-            [currentMonth]="currentMonth()"
-            [currentYear]="currentYear()"
-            [availableMonths]="entriesMonths()"
-            (monthChange)="onMonthChange($event)"
-          />
-
-          <div>
-            <p
-              class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-              i18n="@@budgetDashboardDataSource"
-            >
-              Source de données
-            </p>
-            <p class="mt-2 text-sm font-medium text-slate-800">
-              {{ sourceLabel() }}
-            </p>
-          </div>
-
-          <div class="flex flex-wrap gap-3">
-            <label
-              class="inline-flex cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5"
-              for="budgetCsv"
-              i18n="@@budgetDashboardUploadCsv"
-            >
-              Importer un CSV
-            </label>
-            <input
-              id="budgetCsv"
-              class="hidden"
-              type="file"
-              accept=".csv"
-              (change)="onFileSelected($event)"
-            />
-
-            <button
-              type="button"
-              class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
-              (click)="resetToSample()"
-              i18n="@@budgetDashboardResetSample"
-            >
-              Réinitialiser l'exemple
-            </button>
-          </div>
-
-          @if (uploadStatus()) {
-            <p class="text-sm text-slate-600">{{ uploadStatus() }}</p>
-          }
-
-          @if (groupId()) {
-            <div class="mt-4 border-t border-white/40 pt-4">
-              <p
-                class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-                i18n="@@budgetShareTitle"
-              >
-                Partager le budget
-              </p>
-              <div class="mt-2 flex gap-2">
-                <input
-                  class="flex-1 rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-sm text-slate-900"
-                  type="email"
-                  i18n-placeholder="@@budgetSharePlaceholder"
-                  placeholder="email@exemple.com"
-                  [value]="shareEmail()"
-                  (input)="onShareEmailChange(readTextInput($event))"
-                  (keydown.enter)="shareBudgetWith()"
-                />
-                <button
-                  type="button"
-                  class="rounded-xl bg-budget-accent px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
-                  (click)="shareBudgetWith()"
-                >
-                  <span i18n="@@budgetShareInviteBtn">Inviter</span>
-                </button>
-              </div>
-              @if (shareMessage()) {
-                <p class="mt-2 text-xs text-slate-600">{{ shareMessage() }}</p>
-              }
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- Etat vide : aucune entree pour ce mois -->
-    @if (isEmpty()) {
-      <app-budget-empty-state
-        (importClick)="onImportClick()"
-        (createClick)="onImportClick()"
-      />
-    }
-
-    <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-      <app-budget-summary-card
-        i18n-eyebrow="@@budgetSummarySpendingEyebrow"
-        eyebrow="Sortants"
-        i18n-title="@@budgetSummarySpendingTitle"
-        title="Total des dépenses"
-        [value]="totalExpenses()"
-        i18n-caption="@@budgetSummarySpendingCaption"
-        caption="Toutes les transactions sortantes de la période chargée."
-      />
-      <app-budget-summary-card
-        i18n-eyebrow="@@budgetSummaryIncomingEyebrow"
-        eyebrow="Entrants"
-        i18n-title="@@budgetSummaryIncomingTitle"
-        title="Total des entrants"
-        [value]="totalIncoming()"
-        i18n-caption="@@budgetSummaryIncomingCaption"
-        caption="Virements, dépôts et contributions partagées."
-      />
-      <app-budget-summary-card
-        i18n-eyebrow="@@budgetSummaryTransfersEyebrow"
-        eyebrow="Virements"
-        i18n-title="@@budgetSummaryPocketsTitle"
-        title="Pockets"
-        [value]="pocketsTotal()"
-        i18n-caption="@@budgetSummaryPocketsCaption"
-        caption="Argent transféré du compte commun vers les pockets."
-      />
-    </div>
-
-    <!-- Charts -->
-    <div class="mt-8">
-      <app-budget-chart
-        [categoryTotals]="categoryTotals()"
-        [apiCategories]="apiCategories()"
-      />
-    </div>
-
-    <div class="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-      <app-budget-category-totals
-        [fixedTotals]="fixedCategoryTotals()"
-        [variableTotals]="variableCategoryTotals()"
-        (categorySelected)="onCategorySpotlight($event)"
-      />
-
-      <section
-        class="rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
-      >
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
-          i18n="@@budgetFiltersEyebrow"
-        >
-          Filtres
-        </p>
         <h2
-          class="mt-3 text-2xl font-black text-slate-950"
-          i18n="@@budgetFiltersTitle"
+          id="budget-no-group-title"
+          class="font-heading text-3xl font-black leading-tight text-slate-950 md:text-4xl"
+          i18n="@@budget-app.no-group.title"
         >
-          Affiner le tableau
+          Aucun budget pour le moment
         </h2>
         <p
-          class="mt-3 max-w-md text-sm leading-6 text-slate-500"
-          i18n="@@budgetFiltersDescription"
+          class="mt-4 text-base leading-7 text-slate-600"
+          i18n="@@budget-app.no-group.description"
         >
-          Cherchez par marchand, isolez une catégorie, ou affichez uniquement
-          les lignes en attente avant de corriger les classifications.
+          Crée ton premier budget ou attends qu'un proche t'envoie une
+          invitation par e-mail.
         </p>
-
-        <div class="mt-6 grid gap-4">
-          <label class="grid gap-2 text-sm text-slate-600">
-            <span i18n="@@budgetFiltersSearchLabel"
-              >Rechercher dans la description</span
-            >
-            <input
-              class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
-              type="search"
-              i18n-placeholder="@@budgetFiltersSearchPlaceholder"
-              placeholder="Amazon, EDF, Carrefour…"
-              [value]="searchTerm()"
-              (input)="onSearchChange(readTextInput($event))"
-            />
-          </label>
-
-          <label class="grid gap-2 text-sm text-slate-600">
-            <span i18n="@@budgetFiltersCategoryLabel">Catégorie</span>
-            <select
-              class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
-              [value]="categoryFilter()"
-              (change)="onCategoryFilterChange(readSelectValue($event))"
-            >
-              <option value="ALL">{{ getCategoryLabel("ALL") }}</option>
-              @for (category of categories(); track category) {
-                <option [value]="category">
-                  {{ getCategoryLabel(category) }}
-                </option>
-              }
-            </select>
-          </label>
-
-          <label class="grid gap-2 text-sm text-slate-600">
-            <span i18n="@@budgetFiltersStateLabel">État</span>
-            <select
-              class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
-              [value]="stateFilter()"
-              (change)="onStateFilterChange(readSelectValue($event))"
-            >
-              <option value="ALL" i18n="@@budgetFiltersStateAll">
-                Tous les états
-              </option>
-              <option value="COMPLETED" i18n="@@budgetFiltersStateCompleted">
-                Terminé
-              </option>
-              <option value="PENDING" i18n="@@budgetFiltersStatePending">
-                En attente
-              </option>
-            </select>
-          </label>
-
-          <label class="grid gap-2 text-sm text-slate-600">
-            <span i18n="@@budgetFiltersTypeLabel">Fixe ou variable</span>
-            <select
-              class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
-              [value]="budgetTypeFilter()"
-              (change)="onBudgetTypeFilterChange(readSelectValue($event))"
-            >
-              <option value="ALL" i18n="@@budgetFiltersTypeAll">Tous</option>
-              <option value="FIXED" i18n="@@budgetFiltersTypeFixed">
-                Fixe
-              </option>
-              <option value="VARIABLE" i18n="@@budgetFiltersTypeVariable">
-                Variable
-              </option>
-            </select>
-          </label>
+        <div
+          class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+        >
+          <button
+            type="button"
+            class="rounded-full bg-budget-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-budget-accent/90 disabled:opacity-50"
+            [disabled]="loading()"
+            (click)="createFirstGroup()"
+            data-testid="budget-create-first-group"
+            i18n="@@budget-app.no-group.cta"
+          >
+            Créer mon premier budget
+          </button>
         </div>
-      </section>
-    </div>
+      </div>
+    }
 
-    <!-- Goals -->
-    <div class="mt-8">
-      <app-budget-goals
-        [categories]="apiCategories()"
-        [categoryTotals]="categoryTotals()"
-        [groupId]="groupId() ?? ''"
-      />
-    </div>
+    @if (!hasNoGroup()) {
+      <div
+        class="overflow-hidden rounded-[2rem] border border-black/10 bg-[linear-gradient(135deg,rgba(255,250,240,0.95),rgba(220,242,235,0.92))] px-6 py-8 shadow-[0_24px_60px_rgba(25,33,52,0.08)] md:px-10 md:py-12"
+      >
+        <div
+          class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
+        >
+          <div class="max-w-3xl">
+            <p
+              class="text-sm font-semibold uppercase tracking-[0.28em] text-budget-accent"
+              i18n="@@budgetDashboardEyebrow"
+            >
+              Tableau de bord couple
+            </p>
+            <h1
+              class="mt-4 max-w-[12ch] font-heading text-5xl font-black leading-[0.92] text-slate-950 md:text-7xl"
+              i18n="@@budgetDashboardTitle"
+            >
+              Budget partagé
+            </h1>
+            <p
+              class="mt-5 max-w-2xl text-base leading-7 text-slate-600 md:text-lg"
+              i18n="@@budgetDashboardDescription"
+            >
+              Un cockpit budget léger pour gérer un budget commun : importez un
+              CSV, classez automatiquement les dépenses, ajustez manuellement
+              les catégories, et gardez les contributions visibles d'un coup
+              d'œil.
+            </p>
+          </div>
 
-    <div class="mt-8">
-      <app-budget-transactions-table
-        [transactions]="transactionViews()"
-        [categories]="categories()"
-        (categoryChanged)="onCategoryChange($event)"
-        (deleteRequested)="onDeleteEntry($event)"
-      />
-    </div>
+          <div
+            class="grid gap-4 rounded-[1.75rem] border border-white/60 bg-white/70 p-4 backdrop-blur md:min-w-[24rem]"
+          >
+            <!-- Selecteur de mois dynamique -->
+            <app-budget-month-picker
+              [currentMonth]="currentMonth()"
+              [currentYear]="currentYear()"
+              [availableMonths]="entriesMonths()"
+              (monthChange)="onMonthChange($event)"
+            />
 
-    <!-- Recurring entries -->
-    @if (groupId()) {
+            <div>
+              <p
+                class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
+                i18n="@@budgetDashboardDataSource"
+              >
+                Source de données
+              </p>
+              <p class="mt-2 text-sm font-medium text-slate-800">
+                {{ sourceLabel() }}
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+              <label
+                class="inline-flex cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5"
+                for="budgetCsv"
+                i18n="@@budgetDashboardUploadCsv"
+              >
+                Importer un CSV
+              </label>
+              <input
+                id="budgetCsv"
+                class="hidden"
+                type="file"
+                accept=".csv"
+                (change)="onFileSelected($event)"
+              />
+
+              <button
+                type="button"
+                class="rounded-full bg-budget-accent px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                (click)="resetToSample()"
+                i18n="@@budgetDashboardResetSample"
+              >
+                Réinitialiser l'exemple
+              </button>
+            </div>
+
+            @if (uploadStatus()) {
+              <p class="text-sm text-slate-600">{{ uploadStatus() }}</p>
+            }
+
+            @if (groupId()) {
+              <div class="mt-4 border-t border-white/40 pt-4">
+                <p
+                  class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
+                  i18n="@@budgetShareTitle"
+                >
+                  Partager le budget
+                </p>
+                <div class="mt-2 flex gap-2">
+                  <input
+                    class="flex-1 rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-sm text-slate-900"
+                    type="email"
+                    i18n-placeholder="@@budgetSharePlaceholder"
+                    placeholder="email@exemple.com"
+                    [value]="shareEmail()"
+                    (input)="onShareEmailChange(readTextInput($event))"
+                    (keydown.enter)="shareBudgetWith()"
+                  />
+                  <button
+                    type="button"
+                    class="rounded-xl bg-budget-accent px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                    (click)="shareBudgetWith()"
+                  >
+                    <span i18n="@@budgetShareInviteBtn">Inviter</span>
+                  </button>
+                </div>
+                @if (shareMessage()) {
+                  <p class="mt-2 text-xs text-slate-600">
+                    {{ shareMessage() }}
+                  </p>
+                }
+                <app-budget-pending-invitations
+                  [invitations]="pendingInvitations()"
+                />
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Etat vide : aucune entree pour ce mois -->
+      @if (isEmpty()) {
+        <app-budget-empty-state
+          (importClick)="onImportClick()"
+          (createClick)="onImportClick()"
+        />
+      }
+
+      <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+        <app-budget-summary-card
+          i18n-eyebrow="@@budgetSummarySpendingEyebrow"
+          eyebrow="Sortants"
+          i18n-title="@@budgetSummarySpendingTitle"
+          title="Total des dépenses"
+          [value]="totalExpenses()"
+          i18n-caption="@@budgetSummarySpendingCaption"
+          caption="Toutes les transactions sortantes de la période chargée."
+        />
+        <app-budget-summary-card
+          i18n-eyebrow="@@budgetSummaryIncomingEyebrow"
+          eyebrow="Entrants"
+          i18n-title="@@budgetSummaryIncomingTitle"
+          title="Total des entrants"
+          [value]="totalIncoming()"
+          i18n-caption="@@budgetSummaryIncomingCaption"
+          caption="Virements, dépôts et contributions partagées."
+        />
+        <app-budget-summary-card
+          i18n-eyebrow="@@budgetSummaryTransfersEyebrow"
+          eyebrow="Virements"
+          i18n-title="@@budgetSummaryPocketsTitle"
+          title="Pockets"
+          [value]="pocketsTotal()"
+          i18n-caption="@@budgetSummaryPocketsCaption"
+          caption="Argent transféré du compte commun vers les pockets."
+        />
+      </div>
+
+      <!-- Charts -->
       <div class="mt-8">
-        <app-budget-recurring
-          [groupId]="groupId()!"
+        <app-budget-chart
+          [categoryTotals]="categoryTotals()"
+          [apiCategories]="apiCategories()"
+        />
+      </div>
+
+      <div class="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <app-budget-category-totals
+          [fixedTotals]="fixedCategoryTotals()"
+          [variableTotals]="variableCategoryTotals()"
+          (categorySelected)="onCategorySpotlight($event)"
+        />
+
+        <section
+          class="rounded-[1.75rem] border border-black/10 bg-white/95 p-6 shadow-[0_18px_40px_rgba(25,33,52,0.08)]"
+        >
+          <p
+            class="text-sm font-semibold uppercase tracking-[0.22em] text-budget-accent"
+            i18n="@@budgetFiltersEyebrow"
+          >
+            Filtres
+          </p>
+          <h2
+            class="mt-3 text-2xl font-black text-slate-950"
+            i18n="@@budgetFiltersTitle"
+          >
+            Affiner le tableau
+          </h2>
+          <p
+            class="mt-3 max-w-md text-sm leading-6 text-slate-500"
+            i18n="@@budgetFiltersDescription"
+          >
+            Cherchez par marchand, isolez une catégorie, ou affichez uniquement
+            les lignes en attente avant de corriger les classifications.
+          </p>
+
+          <div class="mt-6 grid gap-4">
+            <label class="grid gap-2 text-sm text-slate-600">
+              <span i18n="@@budgetFiltersSearchLabel"
+                >Rechercher dans la description</span
+              >
+              <input
+                class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
+                type="search"
+                i18n-placeholder="@@budgetFiltersSearchPlaceholder"
+                placeholder="Amazon, EDF, Carrefour…"
+                [value]="searchTerm()"
+                (input)="onSearchChange(readTextInput($event))"
+              />
+            </label>
+
+            <label class="grid gap-2 text-sm text-slate-600">
+              <span i18n="@@budgetFiltersCategoryLabel">Catégorie</span>
+              <select
+                class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
+                [value]="categoryFilter()"
+                (change)="onCategoryFilterChange(readSelectValue($event))"
+              >
+                <option value="ALL">{{ getCategoryLabel("ALL") }}</option>
+                @for (category of categories(); track category) {
+                  <option [value]="category">
+                    {{ getCategoryLabel(category) }}
+                  </option>
+                }
+              </select>
+            </label>
+
+            <label class="grid gap-2 text-sm text-slate-600">
+              <span i18n="@@budgetFiltersStateLabel">État</span>
+              <select
+                class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
+                [value]="stateFilter()"
+                (change)="onStateFilterChange(readSelectValue($event))"
+              >
+                <option value="ALL" i18n="@@budgetFiltersStateAll">
+                  Tous les états
+                </option>
+                <option value="COMPLETED" i18n="@@budgetFiltersStateCompleted">
+                  Terminé
+                </option>
+                <option value="PENDING" i18n="@@budgetFiltersStatePending">
+                  En attente
+                </option>
+              </select>
+            </label>
+
+            <label class="grid gap-2 text-sm text-slate-600">
+              <span i18n="@@budgetFiltersTypeLabel">Fixe ou variable</span>
+              <select
+                class="rounded-2xl border border-[#d7cfbf] bg-[#fffdf8] px-4 py-3 text-slate-900"
+                [value]="budgetTypeFilter()"
+                (change)="onBudgetTypeFilterChange(readSelectValue($event))"
+              >
+                <option value="ALL" i18n="@@budgetFiltersTypeAll">Tous</option>
+                <option value="FIXED" i18n="@@budgetFiltersTypeFixed">
+                  Fixe
+                </option>
+                <option value="VARIABLE" i18n="@@budgetFiltersTypeVariable">
+                  Variable
+                </option>
+              </select>
+            </label>
+          </div>
+        </section>
+      </div>
+
+      <!-- Goals -->
+      <div class="mt-8">
+        <app-budget-goals
           [categories]="apiCategories()"
+          [categoryTotals]="categoryTotals()"
+          [groupId]="groupId() ?? ''"
         />
       </div>
-    }
 
-    <!-- Export PDF -->
-    @if (groupId()) {
-      <div class="mt-8 flex justify-end">
-        <app-budget-export
-          [groupId]="groupId()!"
-          [month]="currentMonth()"
-          [year]="currentYear()"
+      <div class="mt-8">
+        <app-budget-transactions-table
+          [transactions]="transactionViews()"
+          [categories]="categories()"
+          (categoryChanged)="onCategoryChange($event)"
+          (deleteRequested)="onDeleteEntry($event)"
         />
       </div>
+
+      <!-- Recurring entries -->
+      @if (groupId()) {
+        <div class="mt-8">
+          <app-budget-recurring
+            [groupId]="groupId()!"
+            [categories]="apiCategories()"
+          />
+        </div>
+      }
+
+      <!-- Export PDF -->
+      @if (groupId()) {
+        <div class="mt-8 flex justify-end">
+          <app-budget-export
+            [groupId]="groupId()!"
+            [month]="currentMonth()"
+            [year]="currentYear()"
+          />
+        </div>
+      }
+
+      <!-- Membres du groupe -->
+      <section class="mt-8">
+        <app-budget-members-panel
+          [members]="members()"
+          [currentUserId]="currentUserId()"
+          (removeMember)="onRemoveMember($event)"
+          (inviteMember)="onInviteMember($event)"
+        />
+      </section>
+
+      <!-- Contributions salariales -->
+      <section class="mt-8">
+        <app-budget-contributions-panel
+          [members]="members()"
+          [contributions]="contributions()"
+          [previousMonthContributions]="previousMonthContributions()"
+          [currentUserId]="currentUserId()"
+          (mySalaryChange)="onMySalaryChange($event)"
+        />
+      </section>
+
+      <!-- Objectifs d'epargne et plafonds -->
+      <section class="mt-8">
+        <app-budget-savings-goals
+          [goals]="savingsGoals()"
+          [categories]="apiCategories()"
+          (createGoal)="onCreateSavingsGoal($event)"
+          (updateGoal)="onUpdateSavingsGoal($event)"
+          (deleteGoal)="onDeleteSavingsGoal($event)"
+        />
+      </section>
     }
-
-    <!-- Membres du groupe -->
-    <section class="mt-8">
-      <app-budget-members-panel
-        [members]="members()"
-        [currentUserId]="currentUserId()"
-        (removeMember)="onRemoveMember($event)"
-        (inviteMember)="onInviteMember($event)"
-      />
-    </section>
-
-    <!-- Contributions salariales -->
-    <section class="mt-8">
-      <app-budget-contributions-panel
-        [members]="members()"
-        [contributions]="contributions()"
-        [previousMonthContributions]="previousMonthContributions()"
-        [currentUserId]="currentUserId()"
-        (mySalaryChange)="onMySalaryChange($event)"
-      />
-    </section>
-
-    <!-- Objectifs d'epargne et plafonds -->
-    <section class="mt-8">
-      <app-budget-savings-goals
-        [goals]="savingsGoals()"
-        [categories]="apiCategories()"
-        (createGoal)="onCreateSavingsGoal($event)"
-        (updateGoal)="onUpdateSavingsGoal($event)"
-        (deleteGoal)="onDeleteSavingsGoal($event)"
-      />
-    </section>
   </div>
 </section>

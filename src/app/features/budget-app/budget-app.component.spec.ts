@@ -61,6 +61,163 @@ describe("BudgetAppComponent", () => {
     expect(component.groupId()).toBe("group-1");
   });
 
+  describe("no group state (auto-create regression guard)", () => {
+    it("does NOT auto-create a group when getGroups returns an empty list", async () => {
+      budgetPortStub.getGroups.and.returnValue(of([]));
+      budgetPortStub.createGroup.and.returnValue(of(buildBudgetGroup()));
+
+      fixture = TestBed.createComponent(BudgetAppComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(budgetPortStub.createGroup).not.toHaveBeenCalled();
+      expect(component.groupId()).toBeNull();
+      expect(component.hasNoGroup()).toBeTrue();
+    });
+
+    it("still auto-loads the first group when getGroups returns one", async () => {
+      const group = buildBudgetGroup();
+      budgetPortStub.getGroups.and.returnValue(of([group]));
+      budgetPortStub.getCategories.and.returnValue(of([]));
+      budgetPortStub.getEntries.and.returnValue(of([]));
+      budgetPortStub.getEntriesMonths.and.returnValue(of([]));
+      budgetPortStub.getMembers.and.returnValue(of([]));
+      budgetPortStub.getContributions.and.returnValue(of([]));
+      budgetPortStub.getGoals.and.returnValue(of([]));
+
+      fixture = TestBed.createComponent(BudgetAppComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(budgetPortStub.createGroup).not.toHaveBeenCalled();
+      expect(component.hasNoGroup()).toBeFalse();
+    });
+
+    it("creates a group explicitly when user clicks the CTA", async () => {
+      const group = buildBudgetGroup();
+      budgetPortStub.getGroups.and.returnValue(of([]));
+      budgetPortStub.createGroup.and.returnValue(of(group));
+      budgetPortStub.getCategories.and.returnValue(of([]));
+      budgetPortStub.getEntries.and.returnValue(of([]));
+      budgetPortStub.getEntriesMonths.and.returnValue(of([]));
+      budgetPortStub.getMembers.and.returnValue(of([]));
+      budgetPortStub.getContributions.and.returnValue(of([]));
+      budgetPortStub.getGoals.and.returnValue(of([]));
+
+      fixture = TestBed.createComponent(BudgetAppComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      await component.createFirstGroup();
+      await fixture.whenStable();
+
+      expect(budgetPortStub.createGroup).toHaveBeenCalledTimes(1);
+      expect(component.groupId()).toBe(group.id);
+      expect(component.hasNoGroup()).toBeFalse();
+    });
+  });
+
+  describe("shareBudgetWith — 3 statuts + pending invitations", () => {
+    async function initWithGroup() {
+      const group = buildBudgetGroup();
+      budgetPortStub.getGroups.and.returnValue(of([group]));
+      budgetPortStub.getCategories.and.returnValue(of([]));
+      budgetPortStub.getEntries.and.returnValue(of([]));
+      budgetPortStub.getEntriesMonths.and.returnValue(of([]));
+      budgetPortStub.getMembers.and.returnValue(of([]));
+      budgetPortStub.getContributions.and.returnValue(of([]));
+      budgetPortStub.getGoals.and.returnValue(of([]));
+      budgetPortStub.listPendingInvitations.and.returnValue(
+        of({ invitations: [] }),
+      );
+
+      fixture = TestBed.createComponent(BudgetAppComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await fixture.whenStable();
+      return group;
+    }
+
+    it("affiche un message 'shared' quand le backend renvoie status: shared", async () => {
+      await initWithGroup();
+      budgetPortStub.shareBudget.and.returnValue(of({ status: "shared" }));
+      component.onShareEmailChange("maria@test.com");
+
+      await component.shareBudgetWith();
+
+      expect(component.shareMessage()).toContain("partag");
+      expect(component.shareEmail()).toBe("");
+    });
+
+    it("affiche un message 'already-member' quand le backend renvoie status: already-member", async () => {
+      await initWithGroup();
+      budgetPortStub.shareBudget.and.returnValue(
+        of({ status: "already-member" }),
+      );
+      component.onShareEmailChange("alice@test.com");
+
+      await component.shareBudgetWith();
+
+      expect(component.shareMessage().toLowerCase()).toContain("membre");
+    });
+
+    it("affiche un message 'invited' + rafraichit pending list", async () => {
+      await initWithGroup();
+      budgetPortStub.shareBudget.and.returnValue(of({ status: "invited" }));
+      const pending = {
+        invitations: [
+          {
+            id: "inv-1",
+            targetEmail: "new@test.com",
+            expiresAt: "2026-05-18T15:00:00.000Z",
+            createdAt: "2026-05-11T15:00:00.000Z",
+          },
+        ],
+      };
+      budgetPortStub.listPendingInvitations.and.returnValue(of(pending));
+      component.onShareEmailChange("new@test.com");
+
+      await component.shareBudgetWith();
+
+      expect(component.shareMessage().toLowerCase()).toContain("invitation");
+      expect(component.pendingInvitations()).toEqual(pending.invitations);
+    });
+
+    it("expose un message 'quota' sur erreur 429", async () => {
+      await initWithGroup();
+      budgetPortStub.shareBudget.and.returnValue(
+        throwError(() => ({ status: 429, error: { detail: "rate-limited" } })),
+      );
+      component.onShareEmailChange("spam@test.com");
+
+      await component.shareBudgetWith();
+
+      expect(component.shareMessage().toLowerCase()).toContain("limite");
+    });
+
+    it("expose un message 'forbidden' sur erreur 403", async () => {
+      await initWithGroup();
+      budgetPortStub.shareBudget.and.returnValue(
+        throwError(() => ({ status: 403, error: { detail: "not-owner" } })),
+      );
+      component.onShareEmailChange("forbidden@test.com");
+
+      await component.shareBudgetWith();
+
+      expect(component.shareMessage().toLowerCase()).toContain("propri");
+    });
+
+    it("charge les invitations en attente au mount du groupe", async () => {
+      await initWithGroup();
+      expect(budgetPortStub.listPendingInvitations).toHaveBeenCalledWith(
+        "group-1",
+      );
+    });
+  });
+
   describe("delete entry (B5)", () => {
     it("calls port.deleteEntry with the entry id when user confirms", () => {
       spyOn(window, "confirm").and.returnValue(true);
