@@ -192,5 +192,7 @@ export function createBudgetPortStub(): Record<keyof BudgetPort, jasmine.Spy> {
     updateGoal: jasmine.createSpy("updateGoal"),
     deleteGoal: jasmine.createSpy("deleteGoal"),
     getEntriesMonths: jasmine.createSpy("getEntriesMonths"),
+    listPendingInvitations: jasmine.createSpy("listPendingInvitations"),
+    previewInvitation: jasmine.createSpy("previewInvitation"),
   };
 }

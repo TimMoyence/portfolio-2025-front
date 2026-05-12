@@ -20,6 +20,33 @@ import type {
   UpsertMyBudgetContributionPayload,
 } from "../models/budget.model";
 
+/** Statut d'une operation de partage de budget retourne par le backend. */
+export type ShareBudgetStatus = "shared" | "already-member" | "invited";
+
+/** Reponse de POST /budget/share. */
+export interface ShareBudgetResponse {
+  status: ShareBudgetStatus;
+}
+
+/** Preview public d'une invitation (retourne par GET /auth/invitations/by-token/:token). */
+export interface InvitationPreview {
+  inviterFirstName: string;
+  groupName: string;
+  targetEmail: string;
+  /** ISO 8601. */
+  expiresAt: string;
+}
+
+/** Invitation pending pour l'owner (retournee par GET /budget/groups/:groupId/invitations). */
+export interface PendingInvitation {
+  id: string;
+  targetEmail: string;
+  /** ISO 8601. */
+  expiresAt: string;
+  /** ISO 8601. */
+  createdAt: string;
+}
+
 /** Port d'acces aux donnees du budget partage. */
 export interface BudgetPort {
   /** Recupere les groupes de budget du user connecte. */
@@ -47,9 +74,19 @@ export interface BudgetPort {
     entryId: string,
     categoryId: string | null,
   ): Observable<BudgetEntryModel>;
-  shareBudget(
-    payload: ShareBudgetPayload,
-  ): Observable<{ shared: true; userId: string }>;
+  shareBudget(payload: ShareBudgetPayload): Observable<ShareBudgetResponse>;
+  /**
+   * Liste les invitations en attente pour un groupe (owner uniquement).
+   * Backend : GET /budget/groups/:groupId/invitations
+   */
+  listPendingInvitations(
+    groupId: string,
+  ): Observable<{ invitations: PendingInvitation[] }>;
+  /**
+   * Lit le preview public d'une invitation a partir de son token clair.
+   * Backend : GET /auth/invitations/by-token/:token (public, anti-enumeration).
+   */
+  previewInvitation(token: string): Observable<InvitationPreview>;
   /** Supprime une entree de budget. */
   deleteEntry(entryId: string): Observable<void>;
   /** Met a jour une categorie (ex: budgetLimit). */

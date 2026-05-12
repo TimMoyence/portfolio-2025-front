@@ -76,16 +76,83 @@ describe("BudgetHttpAdapter", () => {
     req.flush(null);
   });
 
-  it("devrait partager le budget", () => {
+  it("shareBudget — POST /budget/share retourne {status: 'shared'} pour un email existant", () => {
     adapter
       .shareBudget({ groupId: "g1", targetEmail: "maria@test.com" })
       .subscribe((r) => {
-        expect(r.shared).toBeTrue();
+        expect(r.status).toBe("shared");
       });
 
     const req = httpMock.expectOne(`${baseUrl}/budget/share`);
     expect(req.request.method).toBe("POST");
-    req.flush({ shared: true, userId: "u2" });
+    expect(req.request.body).toEqual({
+      groupId: "g1",
+      targetEmail: "maria@test.com",
+    });
+    req.flush({ status: "shared" });
+  });
+
+  it("shareBudget — propage le statut 'invited' (compte inexistant)", () => {
+    adapter
+      .shareBudget({ groupId: "g1", targetEmail: "newuser@test.com" })
+      .subscribe((r) => {
+        expect(r.status).toBe("invited");
+      });
+
+    const req = httpMock.expectOne(`${baseUrl}/budget/share`);
+    req.flush({ status: "invited" });
+  });
+
+  it("shareBudget — propage le statut 'already-member'", () => {
+    adapter
+      .shareBudget({ groupId: "g1", targetEmail: "already@test.com" })
+      .subscribe((r) => {
+        expect(r.status).toBe("already-member");
+      });
+
+    const req = httpMock.expectOne(`${baseUrl}/budget/share`);
+    req.flush({ status: "already-member" });
+  });
+
+  it("listPendingInvitations — GET /budget/groups/:groupId/invitations", () => {
+    const expected = {
+      invitations: [
+        {
+          id: "inv-1",
+          targetEmail: "pending@test.com",
+          expiresAt: "2026-05-18T15:00:00.000Z",
+          createdAt: "2026-05-11T15:00:00.000Z",
+        },
+      ],
+    };
+
+    adapter.listPendingInvitations("g1").subscribe((res) => {
+      expect(res).toEqual(expected);
+    });
+
+    const req = httpMock.expectOne(`${baseUrl}/budget/groups/g1/invitations`);
+    expect(req.request.method).toBe("GET");
+    req.flush(expected);
+  });
+
+  it("previewInvitation — GET /auth/invitations/by-token/:token et encode le token", () => {
+    const expected = {
+      inviterFirstName: "Tim",
+      groupName: "Budget couple T&M",
+      targetEmail: "maria@test.com",
+      expiresAt: "2026-05-18T15:00:00.000Z",
+    };
+    const rawToken = "a/b+c=";
+
+    adapter.previewInvitation(rawToken).subscribe((res) => {
+      expect(res).toEqual(expected);
+    });
+
+    const req = httpMock.expectOne(
+      `${baseUrl}/auth/invitations/by-token/${encodeURIComponent(rawToken)}`,
+    );
+    expect(req.request.method).toBe("GET");
+    req.flush(expected);
   });
 
   it("getMembers — GET /budget/groups/:groupId/members", () => {

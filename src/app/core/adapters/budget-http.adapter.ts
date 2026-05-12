@@ -21,7 +21,12 @@ import type {
   UpdateRecurringEntryPayload,
   UpsertMyBudgetContributionPayload,
 } from "../models/budget.model";
-import type { BudgetPort } from "../ports/budget.port";
+import type {
+  BudgetPort,
+  InvitationPreview,
+  PendingInvitation,
+  ShareBudgetResponse,
+} from "../ports/budget.port";
 
 /**
  * Adaptateur HTTP pour le port budget.
@@ -128,13 +133,36 @@ export class BudgetHttpAdapter implements BudgetPort {
     return this.http.delete<void>(`${this.baseUrl}/budget/entries/${entryId}`);
   }
 
-  /** Partage le budget avec un autre utilisateur. */
-  shareBudget(
-    payload: ShareBudgetPayload,
-  ): Observable<{ shared: true; userId: string }> {
-    return this.http.post<{ shared: true; userId: string }>(
+  /**
+   * Partage un budget. Retourne le statut :
+   * - `shared` : email cible avait un compte, ajout immediat au groupe.
+   * - `already-member` : email cible deja membre (retour silencieux pour eviter
+   *   l'enumeration).
+   * - `invited` : compte inexistant, invitation magic-link creee + email envoye.
+   */
+  shareBudget(payload: ShareBudgetPayload): Observable<ShareBudgetResponse> {
+    return this.http.post<ShareBudgetResponse>(
       `${this.baseUrl}/budget/share`,
       payload,
+    );
+  }
+
+  /** Liste les invitations en attente (owner uniquement). */
+  listPendingInvitations(
+    groupId: string,
+  ): Observable<{ invitations: PendingInvitation[] }> {
+    return this.http.get<{ invitations: PendingInvitation[] }>(
+      `${this.baseUrl}/budget/groups/${groupId}/invitations`,
+    );
+  }
+
+  /**
+   * Preview public d'une invitation a partir du token clair. 404 indistinct
+   * pour token inconnu/expire/consomme (anti-enumeration cote backend).
+   */
+  previewInvitation(token: string): Observable<InvitationPreview> {
+    return this.http.get<InvitationPreview>(
+      `${this.baseUrl}/auth/invitations/by-token/${encodeURIComponent(token)}`,
     );
   }
 
