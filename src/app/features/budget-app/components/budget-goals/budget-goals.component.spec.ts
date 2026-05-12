@@ -58,4 +58,13 @@ describe("BudgetGoalsComponent", () => {
     // 450 / 600 = 75%
     expect(goals[0].progress).toBe(75);
   });
+
+  it("devrait passer groupId a updateCategory (auto-clone defaut)", async () => {
+    await component.updateBudgetLimit("cat-default", 750);
+
+    expect(budgetPortStub.updateCategory).toHaveBeenCalledWith("cat-default", {
+      budgetLimit: 750,
+      groupId: "group-1",
+    });
+  });
 });
