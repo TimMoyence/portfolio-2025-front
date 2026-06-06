@@ -1,9 +1,5 @@
 import type { ComponentFixture } from "@angular/core/testing";
-import {
-  DeferBlockBehavior,
-  DeferBlockState,
-  TestBed,
-} from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
@@ -21,7 +17,6 @@ describe("HomeComponent", () => {
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
-      deferBlockBehavior: DeferBlockBehavior.Manual,
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
@@ -33,59 +28,59 @@ describe("HomeComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should render the composed sections including contact and footer", async () => {
-    const deferBlocks = await fixture.getDeferBlocks();
-    for (const block of deferBlocks) {
-      await block.render(DeferBlockState.Complete);
-    }
-    fixture.detectChanges();
+  // --- Sections composees (Lot 3a) ---
 
+  it("devrait composer les sections Asili dans l'ordre attendu", () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    expect(compiled.querySelector("app-hero-section-home")).not.toBeNull();
-    expect(compiled.querySelector("app-services-section")).not.toBeNull();
-    expect(compiled.querySelector("app-cta-contact")).not.toBeNull();
+    expect(compiled.querySelector("app-asili-hero")).not.toBeNull();
+    expect(compiled.querySelector("app-asili-method")).not.toBeNull();
+    expect(compiled.querySelector("app-asili-pillars")).not.toBeNull();
+    expect(compiled.querySelector("app-asili-manifesto")).not.toBeNull();
+    expect(compiled.querySelector("app-asili-projects-grid")).not.toBeNull();
+    expect(compiled.querySelector("app-asili-cta-band")).not.toBeNull();
   });
 
-  // --- Sections composees ---
-
-  it("devrait afficher la section hero au chargement initial (sans defer)", () => {
+  it("devrait rendre un unique h1 (titre du hero)", () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    // Le hero n'est pas dans un @defer, il est rendu immediatement
-    expect(compiled.querySelector("app-hero-section-home")).not.toBeNull();
+    const headings = compiled.querySelectorAll("h1");
+    expect(headings.length).toBe(1);
+    expect(headings[0].textContent).toContain("Clarifier");
   });
 
-  it("devrait afficher la section projets", () => {
+  it("devrait afficher la section Atelier immersive avec ses deux lab-cards", () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    expect(compiled.querySelector("app-projects-accordion")).not.toBeNull();
+    const atelier = compiled.querySelector("section.atelier");
+    expect(atelier).not.toBeNull();
+    expect(atelier?.querySelectorAll(".lab-card").length).toBe(2);
+    expect(compiled.querySelector(".lab-card.meteo-c")).not.toBeNull();
+    expect(compiled.querySelector(".lab-card.seb-c")).not.toBeNull();
   });
 
-  it("devrait afficher la section mission", () => {
+  it("devrait lier les lab-cards vers les ateliers Météo et Sebastian", () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    expect(compiled.querySelector("app-mission-section")).not.toBeNull();
+    const hrefs = Array.from(
+      compiled.querySelectorAll<HTMLAnchorElement>(".lab-card a[href]"),
+    ).map((a) => a.getAttribute("href"));
+    expect(hrefs).toContain("/atelier/meteo");
+    expect(hrefs).toContain("/atelier/sebastian");
   });
 
-  it("devrait afficher la section CTA", () => {
+  it("devrait afficher la bande CTA finale", () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    expect(compiled.querySelector("app-cta-section")).not.toBeNull();
-  });
-
-  it("devrait afficher un placeholder avant le chargement du defer services", () => {
-    const compiled: HTMLElement = fixture.nativeElement;
-    // Avant le @defer, le placeholder (div.h-96) doit etre rendu
-    const placeholder = compiled.querySelector(".h-96");
-    expect(placeholder).not.toBeNull();
+    const cta = compiled.querySelector("app-asili-cta-band");
+    expect(cta?.textContent).toContain("clarifiait");
   });
 
   // --- Donnees du composant ---
 
-  it("devrait exposer les donnees de la section services avec 4 services", () => {
-    expect(component.servicesSection.services).toHaveSize(4);
-    expect(component.servicesSection.kicker).toBeTruthy();
-    expect(component.servicesSection.title).toBeTruthy();
+  it("devrait exposer 4 etapes de methode et 2 piliers", () => {
+    expect(component["methodSteps"]).toHaveSize(4);
+    expect(component["pillars"]).toHaveSize(2);
+    expect(component["pillars"][0].variant).toBe("services");
+    expect(component["pillars"][1].variant).toBe("formations");
   });
 
-  it("devrait exposer les paragraphes de la section contact", () => {
-    expect(component.contactSection.leadParagraphs).toHaveSize(2);
-    expect(component.contactSection.leadParagraphs[0]).toBeTruthy();
+  it("devrait exposer un teaser de projets non vide", () => {
+    expect(component["projects"].length).toBeGreaterThan(0);
   });
 });

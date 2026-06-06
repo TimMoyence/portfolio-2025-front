@@ -1,0 +1,141 @@
+/*
+  Home Asili — styles propres a la section Atelier uniquement.
+
+  Les autres sections (hero, methode, piliers, manifeste, projets, CTA) sont des
+  composants Lot 3a avec leurs styles scopes : on ne re-stylise rien ici. Les
+  primitives globales (.glass, .link-arrow, .kicker, .lead, .h-xl, .section-pad,
+  .wrap) et le theme .theme-night fournissent le reste. Bloc porte de
+  `.atelier` / `.atelier-head` / `.atelier-grid` / `.lab-card` de la maquette
+  AsiliNewDesign/asili-sections.css. La demo Meteo jouable inline est reportee
+  au Lot 4 — ici : entete immersive + deux lab-cards.
+*/
+
+.atelier {
+  position: relative;
+  overflow: hidden;
+  background: var(--night);
+  color: var(--ivory);
+
+  /* Halo immersif teal/bleu (sans canvas : le fond constellation reste global). */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        80% 60% at 15% 0%,
+        rgba(79, 179, 162, 0.22),
+        transparent 60%
+      ),
+      radial-gradient(
+        70% 70% at 90% 100%,
+        rgba(91, 140, 255, 0.24),
+        transparent 60%
+      );
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Sur-titre : pastille glow bleue (et non teal) dans le contexte sombre. */
+  .kicker {
+    color: var(--glow-soft);
+
+    &::before {
+      background: var(--glow);
+    }
+  }
+}
+
+.atelier-title {
+  margin-top: 20px;
+  color: #fff;
+
+  em {
+    color: var(--teal);
+    font-style: italic;
+  }
+}
+
+.atelier-head {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--s-5);
+  align-items: end;
+  margin-bottom: var(--s-5);
+
+  p {
+    color: rgba(251, 243, 230, 0.66);
+  }
+}
+
+.atelier-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  align-items: stretch;
+}
+
+.lab-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 26px;
+  transition:
+    transform 0.5s var(--ease),
+    border-color 0.4s var(--ease);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .lab-ic {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+  }
+
+  h3 {
+    margin: 18px 0 8px;
+    font-size: 26px;
+    color: #fff;
+  }
+
+  p {
+    font-size: 14px;
+    color: rgba(251, 243, 230, 0.6);
+  }
+
+  .link-arrow {
+    margin-top: 18px;
+    align-self: flex-start;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      border-color: var(--teal);
+    }
+  }
+
+  &.meteo-c .lab-ic {
+    background: rgba(79, 179, 162, 0.16);
+    color: var(--teal);
+  }
+
+  &.seb-c .lab-ic {
+    background: rgba(230, 170, 70, 0.16);
+    color: #e6aa46;
+  }
+}
+
+@media (max-width: 860px) {
+  .atelier-head,
+  .atelier-grid {
+    grid-template-columns: 1fr;
+  }
+}
