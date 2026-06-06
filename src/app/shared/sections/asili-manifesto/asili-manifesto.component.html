@@ -1,0 +1,12 @@
+<section class="manifesto section-pad">
+  <div class="wrap manifesto-track">
+    @for (line of lines(); track $index) {
+      <p class="mani-line lit">
+        @if (line.step; as step) {
+          <span class="mani-step">{{ step }}</span>
+        }
+        <span class="mani-text" [innerHTML]="line.html"></span>
+      </p>
+    }
+  </div>
+</section>
