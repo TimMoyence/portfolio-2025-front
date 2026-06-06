@@ -10819,64 +10819,55 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="meaning">contact.map.alt</note>
       </trans-unit>
       <trans-unit id="footerLogoAlt" datatype="html">
-        <source>Logo image</source>
+        <source>Asili Design — accueil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
-          <context context-type="linenumber">13,14</context>
+          <context context-type="linenumber">9,10</context>
         </context-group>
         <note priority="1" from="description">Footer logo alt</note>
         <note priority="1" from="meaning">footer.logo.alt</note>
       </trans-unit>
-      <trans-unit id="footerCopyright" datatype="html">
-        <source> © 2025 Moyence. All rights reserved. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
-          <context context-type="linenumber">131,134</context>
-        </context-group>
-        <note priority="1" from="description">Footer copyright</note>
-        <note priority="1" from="meaning">footer.copyright</note>
-      </trans-unit>
-      <trans-unit id="footerLastUpdated" datatype="html">
-        <source> Dernière mise à jour : </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.html</context>
-          <context context-type="linenumber">135,137</context>
-        </context-group>
-        <note priority="1" from="description">Footer last updated</note>
-        <note priority="1" from="meaning">footer.lastUpdated</note>
-      </trans-unit>
-      <trans-unit id="footerNavHome" datatype="html">
-        <source>Accueil</source>
+      <trans-unit id="footerBrandBaseline" datatype="html">
+        <source>« Asili » — la racine, l&apos;essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">34</context>
         </context-group>
-        <note priority="1" from="description">Footer nav link</note>
-        <note priority="1" from="meaning">footer.nav.home</note>
+        <note priority="1" from="description">Footer brand baseline</note>
+        <note priority="1" from="meaning">footer.brand.baseline</note>
       </trans-unit>
-      <trans-unit id="footerNavPresentation" datatype="html">
-        <source>Présentation</source>
+      <trans-unit id="footerFreshLabel" datatype="html">
+        <source>Mis à jour le</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">40</context>
         </context-group>
-        <note priority="1" from="description">Footer nav link</note>
-        <note priority="1" from="meaning">footer.nav.presentation</note>
+        <note priority="1" from="description">Footer freshness chip label</note>
+        <note priority="1" from="meaning">footer.fresh.label</note>
       </trans-unit>
-      <trans-unit id="footerNavProjects" datatype="html">
-        <source>Projets</source>
+      <trans-unit id="footerCopyrightAsili" datatype="html">
+        <source>© 2026 Asili Design · Bordeaux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">45</context>
         </context-group>
-        <note priority="1" from="description">Footer nav link</note>
-        <note priority="1" from="meaning">footer.nav.projects</note>
+        <note priority="1" from="description">Footer copyright line</note>
+        <note priority="1" from="meaning">footer.copyright.asili</note>
+      </trans-unit>
+      <trans-unit id="footerColumnWork" datatype="html">
+        <source>Travailler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Footer column heading</note>
+        <note priority="1" from="meaning">footer.column.work</note>
       </trans-unit>
       <trans-unit id="footerNavServices" datatype="html">
         <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.services</note>
@@ -10885,34 +10876,124 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.formations</note>
       </trans-unit>
-      <trans-unit id="footerNavGrowthAudit" datatype="html">
-        <source>Audit gratuit</source>
+      <trans-unit id="footerNavProjects" datatype="html">
+        <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
-        <note priority="1" from="meaning">footer.nav.growthAudit</note>
+        <note priority="1" from="meaning">footer.nav.projects</note>
       </trans-unit>
       <trans-unit id="footerNavContact" datatype="html">
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.contact</note>
+      </trans-unit>
+      <trans-unit id="footerColumnAtelier" datatype="html">
+        <source>L&apos;Atelier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Footer column heading</note>
+        <note priority="1" from="meaning">footer.column.atelier</note>
+      </trans-unit>
+      <trans-unit id="footerNavMeteo" datatype="html">
+        <source>Météo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.meteo</note>
+      </trans-unit>
+      <trans-unit id="footerNavSebastian" datatype="html">
+        <source>Sebastian</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.sebastian</note>
+      </trans-unit>
+      <trans-unit id="footerNavGrowthAudit" datatype="html">
+        <source>Growth Audit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.growthAudit</note>
+      </trans-unit>
+      <trans-unit id="footerColumnMore" datatype="html">
+        <source>En savoir plus</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Footer column heading</note>
+        <note priority="1" from="meaning">footer.column.more</note>
+      </trans-unit>
+      <trans-unit id="footerNavPresentation" datatype="html">
+        <source>Présentation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.presentation</note>
+      </trans-unit>
+      <trans-unit id="footerNavLegal" datatype="html">
+        <source>Mentions légales</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.legal</note>
+      </trans-unit>
+      <trans-unit id="footerNavPrivacy" datatype="html">
+        <source>Confidentialité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.privacy</note>
+      </trans-unit>
+      <trans-unit id="footerNavCookies" datatype="html">
+        <source>Paramètres cookies</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.cookies</note>
+      </trans-unit>
+      <trans-unit id="footerNavLinkedin" datatype="html">
+        <source>LinkedIn</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Footer nav link</note>
+        <note priority="1" from="meaning">footer.nav.linkedin</note>
       </trans-unit>
       <trans-unit id="footerSocialFacebook" datatype="html">
         <source>Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.facebook</note>
@@ -10921,7 +11002,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
@@ -10930,7 +11011,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.terms</note>
@@ -10939,7 +11020,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.privacy</note>
@@ -10948,7 +11029,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Paramètres de cookies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.cookiesSettings</note>
@@ -10957,34 +11038,36 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Navigation principale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">7,8</context>
+          <context context-type="linenumber">5,6</context>
         </context-group>
         <note priority="1" from="description">Main navigation landmark</note>
         <note priority="1" from="meaning">navbar.landmark</note>
       </trans-unit>
-      <trans-unit id="NavbarLogoAlt" datatype="html">
-        <source>Logo image</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">18,19</context>
-        </context-group>
-        <note priority="1" from="description">Navbar logo alt</note>
-        <note priority="1" from="meaning">Navbar.logo.alt</note>
-      </trans-unit>
       <trans-unit id="NavbarCompanyTitle" datatype="html">
-        <source> Asili Design </source>
+        <source>Asili</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">28,33</context>
+          <context context-type="linenumber">11,12</context>
         </context-group>
-        <note priority="1" from="description">Navbar company title</note>
-        <note priority="1" from="meaning">navbar.title.company</note>
+      </trans-unit>
+      <trans-unit id="navCtaContactLabel" datatype="html">
+        <source>Contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">341,347</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">373,378</context>
+        </context-group>
+        <note priority="1" from="description">Contact CTA label</note>
+        <note priority="1" from="meaning">navbar.cta.contact.label</note>
       </trans-unit>
       <trans-unit id="navLinkAudit:Audit" datatype="html">
         <source>Demander un devis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">301,302</context>
+          <context context-type="linenumber">352,353</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.audit</note>
@@ -10993,7 +11076,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">307,313</context>
+          <context context-type="linenumber">358,364</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.audit</note>
@@ -11002,40 +11085,31 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Me contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">314,316</context>
+          <context context-type="linenumber">366,368</context>
         </context-group>
         <note priority="1" from="description">Contact CTA tooltip</note>
         <note priority="1" from="meaning">navbar.cta.contact.title</note>
-      </trans-unit>
-      <trans-unit id="navCtaContactLabel" datatype="html">
-        <source>Contact</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">322,327</context>
-        </context-group>
-        <note priority="1" from="description">Contact CTA label</note>
-        <note priority="1" from="meaning">navbar.cta.contact.label</note>
       </trans-unit>
       <trans-unit id="navProfileLabel" datatype="html">
         <source>Profil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">395,397</context>
+          <context context-type="linenumber">437,439</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">436,438</context>
+          <context context-type="linenumber">474,476</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navLogoutLabel" datatype="html">
         <source>Déconnexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">404,406</context>
+          <context context-type="linenumber">445,446</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">444,445</context>
+          <context context-type="linenumber">482,484</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navLinkPresentation" datatype="html">
@@ -11057,7 +11131,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="meaning">navbar.link.projects</note>
       </trans-unit>
       <trans-unit id="navLinkOfferSpan" datatype="html">
-        <source>Offres</source>
+        <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
           <context context-type="linenumber">42</context>
@@ -11074,11 +11148,20 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <note priority="1" from="description">Atelier dropdown label</note>
         <note priority="1" from="meaning">navbar.atelier.label</note>
       </trans-unit>
+      <trans-unit id="navAtelierSubtitle" datatype="html">
+        <source>Météo · Sebastian</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Atelier drawer subtitle</note>
+        <note priority="1" from="meaning">navbar.atelier.subtitle</note>
+      </trans-unit>
       <trans-unit id="navAtelierMeteoTitle" datatype="html">
         <source>Météo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.meteo.title</note>
       </trans-unit>
@@ -11086,7 +11169,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Explorez la météo en temps réel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.meteo.desc</note>
       </trans-unit>
@@ -11094,7 +11177,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Sebastian</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.title</note>
       </trans-unit>
@@ -11102,7 +11185,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Votre majordome personnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.desc</note>
       </trans-unit>
@@ -11110,7 +11193,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Formations dropdown label</note>
         <note priority="1" from="meaning">navbar.formations.label</note>
@@ -11119,7 +11202,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>IA pour Solopreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.ia.title</note>
       </trans-unit>
@@ -11127,7 +11210,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Panorama des outils IA pour entrepreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.ia.desc</note>
       </trans-unit>
@@ -11135,7 +11218,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Automatiser avec l&apos;IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.auto.title</note>
       </trans-unit>
@@ -11143,7 +11226,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>5 workflows non-tech pour gagner 2h/semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.auto.desc</note>
       </trans-unit>
@@ -11151,7 +11234,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Audit SEO DIY</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.seo.title</note>
       </trans-unit>
@@ -11159,7 +11242,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>7 checks en 20 min avec 5 outils gratuits</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.seo.desc</note>
       </trans-unit>
@@ -11167,7 +11250,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Toutes les formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.all.title</note>
       </trans-unit>
@@ -11175,7 +11258,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Voir le catalogue complet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.all.desc</note>
       </trans-unit>
@@ -11183,7 +11266,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.open</note>
@@ -11192,7 +11275,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.close</note>
@@ -11201,7 +11284,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">Mobile nav heading</note>
         <note priority="1" from="meaning">navbar.menu.heading</note>
@@ -11210,7 +11293,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.close</note>
@@ -11219,7 +11302,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>

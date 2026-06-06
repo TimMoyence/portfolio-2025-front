@@ -4705,44 +4705,152 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <note category="meaning">footer.logo.alt</note>
       </notes>
       <segment>
-        <source>Logo image</source>
-        <target>Logo image</target>
+        <source>Asili Design — accueil</source>
+        <target>Asili Design — home</target>
       </segment>
     </unit>
 
-    <unit id="footerCopyright">
+    <unit id="footerBrandBaseline">
       <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.html:63,66</note>
-        <note category="description">Footer copyright</note>
-        <note category="meaning">footer.copyright</note>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:34</note>
+        <note category="description">Footer brand baseline</note>
+        <note category="meaning">footer.brand.baseline</note>
       </notes>
       <segment>
-        <source> © 2025 Moyence. All rights reserved. </source>
-        <target> © 2025 Moyence. All rights reserved. </target>
+        <source>« Asili » — la racine, l&apos;essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.</source>
+        <target>“Asili” — the root, the essential. Design that is functional and thoughtful, never decorative just to decorate.</target>
       </segment>
     </unit>
 
-    <unit id="footerLastUpdated">
+    <unit id="footerColumnWork">
       <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.html:135,137</note>
-        <note category="description">Footer last updated</note>
-        <note category="meaning">footer.lastUpdated</note>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:56</note>
+        <note category="description">Footer column heading</note>
+        <note category="meaning">footer.column.work</note>
       </notes>
       <segment>
-        <source> Dernière mise à jour : </source>
-        <target> Last updated: </target>
+        <source>Travailler</source>
+        <target>Work with me</target>
       </segment>
     </unit>
 
-    <unit id="footerNavHome">
+    <unit id="footerColumnAtelier">
       <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:43</note>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:77</note>
+        <note category="description">Footer column heading</note>
+        <note category="meaning">footer.column.atelier</note>
+      </notes>
+      <segment>
+        <source>L&apos;Atelier</source>
+        <target>The Workshop</target>
+      </segment>
+    </unit>
+
+    <unit id="footerColumnMore">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:94</note>
+        <note category="description">Footer column heading</note>
+        <note category="meaning">footer.column.more</note>
+      </notes>
+      <segment>
+        <source>En savoir plus</source>
+        <target>Learn more</target>
+      </segment>
+    </unit>
+
+    <unit id="footerFreshLabel">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:40</note>
+        <note category="description">Footer freshness chip label</note>
+        <note category="meaning">footer.fresh.label</note>
+      </notes>
+      <segment>
+        <source>Mis à jour le</source>
+        <target>Updated on</target>
+      </segment>
+    </unit>
+
+    <unit id="footerCopyrightAsili">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:45</note>
+        <note category="description">Footer copyright line</note>
+        <note category="meaning">footer.copyright.asili</note>
+      </notes>
+      <segment>
+        <source>© 2026 Asili Design · Bordeaux</source>
+        <target>© 2026 Asili Design · Bordeaux</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavMeteo">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:80</note>
         <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.home</note>
+        <note category="meaning">footer.nav.meteo</note>
       </notes>
       <segment>
-        <source>Accueil</source>
-        <target>Home</target>
+        <source>Météo</source>
+        <target>Weather</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavSebastian">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:84</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.sebastian</note>
+      </notes>
+      <segment>
+        <source>Sebastian</source>
+        <target>Sebastian</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavLegal">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:101</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.legal</note>
+      </notes>
+      <segment>
+        <source>Mentions légales</source>
+        <target>Legal notice</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavPrivacy">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:105</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.privacy</note>
+      </notes>
+      <segment>
+        <source>Confidentialité</source>
+        <target>Privacy</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavCookies">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:109</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.cookies</note>
+      </notes>
+      <segment>
+        <source>Paramètres cookies</source>
+        <target>Cookie settings</target>
+      </segment>
+    </unit>
+
+    <unit id="footerNavLinkedin">
+      <notes>
+        <note category="location">src/app/shared/components/footer/footer.component.ts:113</note>
+        <note category="description">Footer nav link</note>
+        <note category="meaning">footer.nav.linkedin</note>
+      </notes>
+      <segment>
+        <source>LinkedIn</source>
+        <target>LinkedIn</target>
       </segment>
     </unit>
 
@@ -4801,8 +4909,8 @@ The goal is not to add features, but to choose the most relevant levers to gener
         <note category="meaning">footer.nav.growthAudit</note>
       </notes>
       <segment>
-        <source>Audit gratuit</source>
-        <target>Free audit</target>
+        <source>Growth Audit</source>
+        <target>Growth Audit</target>
       </segment>
     </unit>
 
@@ -4869,19 +4977,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
 
-    <unit id="NavbarLogoAlt">
-      <notes>
-        <note category="location">src/app/shared/components/navbar/navbar.component.html:12</note>
-        <note category="description">Navbar logo alt</note>
-        <note category="meaning">Navbar.logo.alt</note>
-      </notes>
-      <segment>
-        <source>Logo image</source>
-        <target>Logo image</target>
-      </segment>
-    </unit>
-
-
 <unit id="navLinkOfferSpan">
   <notes>
     <note category="location">src/app/shared/components/navbar/navbar.component.ts:33</note>
@@ -4889,7 +4984,7 @@ The goal is not to add features, but to choose the most relevant levers to gener
     <note category="meaning">navbar.link.offer</note>
   </notes>
   <segment>
-    <source>Offres</source>
+    <source>Services</source>
     <target>Services</target>
   </segment>
 </unit>
@@ -5894,8 +5989,8 @@ The goal is not to add features, but to choose the most relevant levers to gener
     </unit>
     <unit id="NavbarCompanyTitle">
       <segment>
-        <source>Asili Design</source>
-        <target>Asili Design</target>
+        <source>Asili</source>
+        <target>Asili</target>
       </segment>
     </unit>
     <unit id="contactFormRoleLegend">
@@ -5909,6 +6004,17 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>L'Atelier</source>
         <target>The Workshop</target>
+      </segment>
+    </unit>
+    <unit id="navAtelierSubtitle">
+      <notes>
+        <note category="location">src/app/shared/components/navbar/navbar.component.ts:50</note>
+        <note category="description">Atelier drawer subtitle</note>
+        <note category="meaning">navbar.atelier.subtitle</note>
+      </notes>
+      <segment>
+        <source>Météo · Sebastian</source>
+        <target>Weather · Sebastian</target>
       </segment>
     </unit>
     <unit id="navAtelierMeteoTitle">
