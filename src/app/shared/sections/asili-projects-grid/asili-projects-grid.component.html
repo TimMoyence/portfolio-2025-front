@@ -1,0 +1,71 @@
+<section class="projects-section section-pad">
+  <div class="wrap">
+    <div class="projects-head" appReveal>
+      <div>
+        <ng-content select="[kicker]">
+          @if (kicker(); as k) {
+            <span class="kicker">{{ k }}</span>
+          }
+        </ng-content>
+        <ng-content select="[heading]">
+          @if (heading(); as h) {
+            <h2 class="h-xl projects-head__title">{{ h }}</h2>
+          }
+        </ng-content>
+      </div>
+      <ng-content select="[headLink]"></ng-content>
+    </div>
+
+    <div class="proj-grid">
+      @for (project of projects(); track project.title; let i = $index) {
+        <article
+          class="proj"
+          [class.big]="project.size === 'big'"
+          [class.small]="project.size === 'small'"
+          appReveal
+          [appRevealDelay]="i % 2 === 1 ? 1 : null"
+        >
+          @if (project.href; as href) {
+            <a class="proj-link" [href]="href">
+              <ng-container
+                [ngTemplateOutlet]="shot"
+                [ngTemplateOutletContext]="{ $implicit: project }"
+              />
+            </a>
+          } @else {
+            <ng-container
+              [ngTemplateOutlet]="shot"
+              [ngTemplateOutletContext]="{ $implicit: project }"
+            />
+          }
+
+          <div class="proj-body">
+            @if (project.tags.length) {
+              <div class="proj-meta">
+                @for (tag of project.tags; track tag.label) {
+                  <span class="tag" [class.tag-prod]="tag.prod">{{
+                    tag.label
+                  }}</span>
+                }
+              </div>
+            }
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.desc }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<ng-template #shot let-project>
+  <div class="proj-shot">
+    @if (project.image) {
+      <img [src]="project.image" [alt]="project.imageAlt ?? project.title" />
+    } @else {
+      <div class="placeholder" aria-hidden="true">
+        <span>{{ project.imageAlt ?? project.title }}</span>
+      </div>
+    }
+  </div>
+</ng-template>
