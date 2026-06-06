@@ -1,0 +1,39 @@
+<section class="method section-pad">
+  <div class="wrap">
+    <div class="method-head">
+      <div appReveal>
+        <ng-content select="[kicker]">
+          @if (kicker(); as k) {
+            <span class="kicker">{{ k }}</span>
+          }
+        </ng-content>
+        <ng-content select="[heading]">
+          @if (heading(); as h) {
+            <h2 class="h-lg method-head__title">{{ h }}</h2>
+          }
+        </ng-content>
+      </div>
+      <ng-content select="[intro]">
+        @if (intro(); as i) {
+          <p class="lead method-head__intro" appReveal [appRevealDelay]="1">
+            {{ i }}
+          </p>
+        }
+      </ng-content>
+    </div>
+
+    <div class="method-steps">
+      <div class="method-line" aria-hidden="true"></div>
+      @for (step of steps(); track step.num; let i = $index) {
+        <div class="step" appReveal [appRevealDelay]="revealDelay(i)">
+          <div class="num">{{ step.num }}</div>
+          @if (step.index) {
+            <span class="ix">{{ step.index }}</span>
+          }
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
