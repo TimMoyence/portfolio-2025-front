@@ -1,140 +1,139 @@
-<footer
-  role="contentinfo"
-  class="bg-scheme-background px-[5%] py-12 md:py-18 lg:py-20"
->
-  <div class="container">
-    <div class="flex flex-col md:flex-row justify-evenly items-start">
-      <div
-        class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center"
-      >
-        <a routerLink="/" aria-label="Accueil Asili Design">
-          <img
-            src="/assets/images/logo.webp"
-            alt="Logo image"
-            i18n-alt="footer.logo.alt|Footer logo alt@@footerLogoAlt"
-            class="h-[5rem] md:h-[7.5rem] lg:h-[10rem] inline-block"
-            loading="lazy"
-            aria-hidden="true"
-          />
+<footer class="asili-footer" role="contentinfo">
+  <div class="asili-footer__inner">
+    <div class="asili-footer__grid">
+      <!-- Colonne marque : logo Asili + baseline -->
+      <div class="asili-footer__brand">
+        <a
+          class="asili-logo"
+          routerLink="/"
+          aria-label="Asili Design — accueil"
+          i18n-aria-label="footer.logo.alt|Footer logo alt@@footerLogoAlt"
+        >
+          <span class="asili-logo__dot" aria-hidden="true"></span>
+          <span class="asili-logo__name">Asili</span>
+          <small class="asili-logo__suffix" aria-hidden="true">design</small>
         </a>
-        <div
-          class="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-y-6 py-2 gap-x-4"
-        >
+        <p class="asili-footer__baseline">{{ brandBaseline }}</p>
+
+        <ul class="asili-footer__social">
           @for (social of socialLinks; track $index) {
-            <a
-              class="flex size-6 items-center justify-center"
-              [href]="social.href"
-              [attr.aria-label]="social.label"
-              data-testid="social-link"
-            >
-              @if (social.icon) {
-                <app-svg-icon
-                  aria-hidden="true"
-                  [name]="social.icon!"
-                  [fill]="'keep'"
-                  [size]="2"
-                ></app-svg-icon>
-              }
-            </a>
-          }
-        </div>
-      </div>
-      <address
-        class="mb-4 not-italic flex flex-col justify-start items-start md:justify-center md:items-center"
-        itemscope
-        itemtype="https://schema.org/LocalBusiness"
-      >
-        <meta itemprop="name" content="Asili Design" />
-        <!-- P2.11 : adresse postale visible + structuree pour SEO local Bordeaux -->
-        <div
-          itemprop="address"
-          itemscope
-          itemtype="https://schema.org/PostalAddress"
-          class="text-sm md:text-base mb-2 md:text-center"
-        >
-          <span itemprop="streetAddress">Allée Serr</span>,
-          <span itemprop="postalCode">33100</span>
-          <span itemprop="addressLocality">Bordeaux</span>,
-          <span itemprop="addressCountry">France</span>
-        </div>
-        <div class="flex flex-col">
-          <div class="grid auto-cols-fr grid-cols-1 gap-x-2 gap-y-3 py-2">
-            @for (method of contactMethods; track $index) {
-              <div
-                class="flex flex-row"
-                [attr.data-testid]="'contact-method-' + $index"
+            <li>
+              <a
+                class="asili-footer__social-link"
+                [href]="social.href"
+                target="_blank"
+                rel="noopener noreferrer"
+                [attr.aria-label]="social.label"
+                data-testid="social-link"
               >
-                <div class="mr-4 flex items-center justify-center md:mb-4">
-                  @if (method.icon) {
-                    <app-svg-icon
-                      aria-hidden="true"
-                      [name]="method.icon!"
-                      [fill]="'keep'"
-                      [size]="1.5"
-                      aria-hidden="true"
-                    ></app-svg-icon>
-                  }
-                </div>
-                <div>
-                  @if (method.href) {
-                    <a
-                      [href]="method.href"
-                      [attr.aria-label]="method.label + ': ' + method.value"
-                      i18n-aria-label="
-                        contact.method.linkAria|Aria label for contact method
-                        link@@contactMethodLinkAria"
-                      [attr.itemprop]="method.schemaProp || null"
-                    >
-                      {{ method.value }}
-                    </a>
-                  } @else {
-                    <p [attr.itemprop]="method.schemaProp || null">
-                      {{ method.value }}
-                    </p>
-                  }
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      </address>
-      <div
-        class="mb-4 flex flex-col justify-start items-start md:justify-center md:items-center"
-      >
-        @for (column of navColumns; track $index) {
-          <ul data-testid="footer-column">
+                @if (social.icon) {
+                  <app-svg-icon
+                    aria-hidden="true"
+                    [name]="social.icon!"
+                    [fill]="'keep'"
+                    [size]="1.25"
+                  ></app-svg-icon>
+                }
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <!-- Colonnes de navigation (Travailler / L'Atelier / En savoir plus) -->
+      @for (column of navColumns; track $index) {
+        <nav class="asili-footer__col" [attr.aria-label]="column.heading">
+          @if (column.heading) {
+            <h4 class="asili-footer__heading">{{ column.heading }}</h4>
+          }
+          <ul class="asili-footer__list" data-testid="footer-column">
             @for (link of column.links; track $index) {
-              <li class="text-small py-2 font-semibold">
-                <a [routerLink]="link.href">{{ link.label }}</a>
+              <li>
+                @if (link.external) {
+                  <a
+                    class="asili-footer__link"
+                    [href]="link.href"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ link.label }}</a
+                  >
+                } @else {
+                  <a class="asili-footer__link" [routerLink]="link.href">{{
+                    link.label
+                  }}</a>
+                }
               </li>
             }
           </ul>
-        }
-      </div>
+        </nav>
+      }
     </div>
-    <div class="h-px w-full bg-scheme-border"></div>
 
-    <ul
-      class="flex flex-col sm:items-center sm:pt-8 sm:pb-0 pt-6 pb-4 justify-evenly md:flex-row"
-      data-testid="legal-links"
+    <!-- P2.11 : adresse postale visible + structuree pour SEO local Bordeaux -->
+    <address
+      class="asili-footer__address"
+      itemscope
+      itemtype="https://schema.org/LocalBusiness"
     >
+      <meta itemprop="name" content="Asili Design" />
+      <span
+        class="asili-footer__address-line"
+        itemprop="address"
+        itemscope
+        itemtype="https://schema.org/PostalAddress"
+      >
+        <span itemprop="streetAddress">Allée Serr</span>,
+        <span itemprop="postalCode">33100</span>
+        <span itemprop="addressLocality">Bordeaux</span>,
+        <span itemprop="addressCountry">France</span>
+      </span>
+      @for (method of contactMethods; track $index) {
+        <span
+          class="asili-footer__address-line"
+          [attr.data-testid]="'contact-method-' + $index"
+        >
+          @if (method.href) {
+            <a
+              [href]="method.href"
+              [attr.aria-label]="method.label + ': ' + method.value"
+              i18n-aria-label="
+                contact.method.linkAria|Aria label for contact method
+                link@@contactMethodLinkAria"
+              [attr.itemprop]="method.schemaProp || null"
+              >{{ method.value }}</a
+            >
+          } @else {
+            <span [attr.itemprop]="method.schemaProp || null">{{
+              method.value
+            }}</span>
+          }
+        </span>
+      }
+    </address>
+
+    <!-- Bas de footer : copyright (gauche) + chip fraicheur (droite) -->
+    <div class="asili-footer__bot">
+      <span class="asili-footer__copyright">{{ copyright }}</span>
+
+      <!-- P2.10 : time datetime visible pour signal fraicheur DOM (freshness ranking IA). -->
+      <span class="asili-footer__fresh">
+        <span class="asili-footer__live-dot" aria-hidden="true"></span>
+        <span class="asili-footer__fresh-label">{{ freshLabel }}</span>
+        <time class="asili-footer__time" [attr.datetime]="siteLastUpdated">{{
+          siteLastUpdated
+        }}</time>
+      </span>
+    </div>
+
+    <!-- Liens legaux (maillage + conformite) -->
+    <ul class="asili-footer__legal" data-testid="legal-links">
       @for (legalLink of legalLinks; track $index) {
-        <li class="text-sm py-1 md:py-0">
-          <a [href]="legalLink.href">{{ legalLink.label }}</a>
+        <li>
+          <a class="asili-footer__legal-link" [routerLink]="legalLink.href">{{
+            legalLink.label
+          }}</a>
         </li>
       }
     </ul>
-
-    <!-- P2.10 : time datetime visible pour signal fraicheur DOM (freshness ranking IA). -->
-    <p class="md:text-center text-sm md:mt-2 sm:mt-1">
-      <span i18n="footer.copyright|Footer copyright@@footerCopyright">
-        © 2025 Moyence. All rights reserved.
-      </span>
-      &middot;
-      <span i18n="footer.lastUpdated|Footer last updated@@footerLastUpdated">
-        Dernière mise à jour&nbsp;:
-      </span>
-      <time [attr.datetime]="siteLastUpdated">{{ siteLastUpdated }}</time>
-    </p>
   </div>
 </footer>

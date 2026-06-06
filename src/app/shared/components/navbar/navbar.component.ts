@@ -39,7 +39,7 @@ export class NavbarComponent {
       href: "/client-project",
     },
     {
-      label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Offres`,
+      label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Services`,
       href: "/offer",
     },
   ];
@@ -47,6 +47,7 @@ export class NavbarComponent {
   /** Dropdown "L'Atelier" regroupant les side-projects. */
   readonly atelierDropdown: DropdownSection = {
     label: $localize`:navbar.atelier.label|Atelier dropdown label@@navAtelierLabel:L'Atelier`,
+    subtitle: $localize`:navbar.atelier.subtitle|Atelier drawer subtitle@@navAtelierSubtitle:Météo · Sebastian`,
     isOpen: false,
     items: [
       {
