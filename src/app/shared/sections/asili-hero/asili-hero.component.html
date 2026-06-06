@@ -1,0 +1,49 @@
+<section class="hero">
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="wrap hero-grid">
+      <ng-content select="[chip]">
+        @if (liveChip(); as chip) {
+          <span class="live-chip" appReveal>
+            <span class="live-dot" aria-hidden="true"></span>{{ chip }}
+          </span>
+        } @else if (kicker()) {
+          <span class="kicker" appReveal>{{ kicker() }}</span>
+        }
+      </ng-content>
+
+      <h1 class="display hero-title" appReveal [appRevealDelay]="1">
+        <ng-content select="[title]">
+          @if (titlePre(); as pre) {
+            {{ pre }}
+          }
+          @if (accent(); as acc) {
+            <span class="accent">{{ acc }}</span>
+          }
+          @if (titlePost(); as post) {
+            {{ post }}
+          }
+        </ng-content>
+      </h1>
+
+      <div class="hero-sub">
+        @if (lead(); as l) {
+          <p class="lead" appReveal [appRevealDelay]="2">{{ l }}</p>
+        }
+        <div class="hero-meta" appReveal [appRevealDelay]="3">
+          <ng-content select="[meta]"></ng-content>
+        </div>
+      </div>
+
+      <div class="hero-cta" appReveal [appRevealDelay]="3">
+        <ng-content select="[cta]"></ng-content>
+      </div>
+    </div>
+  </div>
+
+  @if (scrollHint(); as hint) {
+    <div class="scroll-hint" aria-hidden="true">
+      <span class="bar"></span>{{ hint }}
+    </div>
+  }
+</section>
