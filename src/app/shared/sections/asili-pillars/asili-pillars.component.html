@@ -1,0 +1,67 @@
+<section class="pillars-section section-pad">
+  <div class="wrap">
+    <div class="pillars-head">
+      <div appReveal>
+        <ng-content select="[kicker]">
+          @if (kicker(); as k) {
+            <span class="kicker">{{ k }}</span>
+          }
+        </ng-content>
+        <ng-content select="[heading]">
+          @if (heading(); as h) {
+            <h2 class="h-xl pillars-head__title">{{ h }}</h2>
+          }
+        </ng-content>
+        <ng-content select="[intro]">
+          @if (intro(); as i) {
+            <p class="lead pillars-head__intro">{{ i }}</p>
+          }
+        </ng-content>
+      </div>
+    </div>
+
+    <div class="pillars">
+      @for (pillar of pillars(); track pillar.variant; let i = $index) {
+        <article
+          class="pillar"
+          [class.services]="pillar.variant === 'services'"
+          [class.formations]="pillar.variant === 'formations'"
+          appReveal
+          [appRevealDelay]="i === 0 ? null : 1"
+        >
+          <div class="pillar-orb" aria-hidden="true"></div>
+          <span class="pillar-tag">{{ pillar.tag }}</span>
+          <h3>{{ pillar.title }}</h3>
+          <p>{{ pillar.desc }}</p>
+          @if (pillar.items.length) {
+            <ul>
+              @for (item of pillar.items; track item) {
+                <li>
+                  <span class="tick" aria-hidden="true">
+                    <svg viewBox="0 0 18 18" fill="none">
+                      <path
+                        d="M3 9.5 7 13 15 5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  {{ item }}
+                </li>
+              }
+            </ul>
+          }
+          @if (pillar.link; as link) {
+            <div class="pillar-foot">
+              <a class="link-arrow" [href]="link.href">
+                {{ link.label }} <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>
