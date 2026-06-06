@@ -44,12 +44,17 @@
   gap: var(--s-4);
 }
 
-/* Titre serif geant ; l'accent (italique teal) est applique par .accent. */
+/* Titre serif geant ; l'accent (italique teal) est applique par .accent.
+   `::ng-deep` : indispensable car le titre peut arriver par projection
+   `[title]` (markup de l'hote, porteur du `_ngcontent` de la PAGE, pas du
+   hero) — un selecteur scope ne ciblerait jamais le `.accent` projete.
+   Couvre aussi le chemin par inputs (`.accent` rendu en interne). Meme
+   pattern que `asili-manifesto.component.scss` (`.mani-line ::ng-deep .t`). */
 .hero-title {
   max-width: 16ch;
   margin-top: 8px;
 }
-.hero-title .accent {
+.hero-title ::ng-deep .accent {
   font-style: italic;
   color: var(--teal-deep);
 }
@@ -83,17 +88,21 @@
 .hero-meta:not(:has(*)) {
   display: none;
 }
-.hero-meta div {
+/* `::ng-deep` : la meta arrive UNIQUEMENT par projection `[meta]` (markup de
+   l'hote). Les selecteurs descendants doivent percer l'encapsulation, sinon
+   les stats projetees restent NON stylees (pas de filet, pas de serif 30px).
+   Meme pattern que `asili-manifesto.component.scss` (`.mani-line ::ng-deep .t`). */
+.hero-meta ::ng-deep div {
   border-left: 1px solid var(--line);
   padding-left: 14px;
 }
-.hero-meta .n {
+.hero-meta ::ng-deep .n {
   font-family: var(--font-display);
   font-size: 30px;
   color: var(--ink);
   line-height: 1;
 }
-.hero-meta .l {
+.hero-meta ::ng-deep .l {
   font-size: 12.5px;
   color: var(--ink-mute);
   margin-top: 4px;

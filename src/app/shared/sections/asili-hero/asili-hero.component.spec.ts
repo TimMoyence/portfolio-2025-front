@@ -145,5 +145,36 @@ describe("AsiliHeroComponent", () => {
 
       expect(host.querySelector(".hero-meta [meta] .n")?.textContent).toBe("2");
     });
+
+    it("applique le style scope au contenu projete (accent italique teal, meta serif via ::ng-deep)", () => {
+      const hostFixture = TestBed.configureTestingModule({
+        imports: [HostComponent],
+        providers: [{ provide: PLATFORM_ID, useValue: "browser" }],
+      }).createComponent(HostComponent);
+      // getComputedStyle ne reflete la cascade que si l'element est dans le
+      // document : on attache le fixture pour verifier le style REEL du
+      // contenu projete (sinon une regression d'encapsulation passe inapercue).
+      document.body.appendChild(hostFixture.nativeElement);
+      hostFixture.detectChanges();
+
+      const host = hostFixture.nativeElement as HTMLElement;
+
+      const accent = host.querySelector(".hero-title .accent") as HTMLElement;
+      expect(accent).not.toBeNull();
+      expect(getComputedStyle(accent).fontStyle).toBe("italic");
+
+      const value = host.querySelector(".hero-meta .n") as HTMLElement;
+      expect(value).not.toBeNull();
+      // serif 30px : la regle `.hero-meta ::ng-deep .n` doit s'appliquer.
+      expect(getComputedStyle(value).fontSize).toBe("30px");
+
+      const divider = host.querySelector(".hero-meta div") as HTMLElement;
+      expect(divider).not.toBeNull();
+      // filet a gauche : border-left 1px.
+      expect(getComputedStyle(divider).borderLeftWidth).toBe("1px");
+
+      hostFixture.destroy();
+      host.remove();
+    });
   });
 });
