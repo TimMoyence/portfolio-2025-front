@@ -375,6 +375,886 @@
       </segment>
     </unit>
 
+    <unit id="homeMethodHeading">
+      <notes>
+        <note category="location">src/app/features/home/home.component.html:47,50</note>
+      </notes>
+      <segment>
+        <source>Un fil conducteur, du flou jusqu&apos;à ce qui <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">tient dans le temps</pc>.</source>
+        <target>A common thread, from the fuzziness to what <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">lasts over time</pc>.</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarsHeading">
+      <notes>
+        <note category="location">src/app/features/home/home.component.html:57,59</note>
+      </notes>
+      <segment>
+        <source>Services &amp; Formations, <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">à parts égales</pc>.</source>
+        <target>Services &amp; Training, <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">on equal footing</pc>.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProjectsHeading">
+      <notes>
+        <note category="location">src/app/features/home/home.component.html:135</note>
+      </notes>
+      <segment>
+        <source>Des réalisations,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>pas des promesses.</source>
+        <target>Real work,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>not promises.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroChip">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:56</note>
+      </notes>
+      <segment>
+        <source>Studio digital &amp; IA · Bordeaux</source>
+        <target>Digital &amp; AI studio · Bordeaux</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroTitlePre">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:59</note>
+      </notes>
+      <segment>
+        <source>Clarifier</source>
+        <target>Clarify</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroTitleAccent">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:62</note>
+      </notes>
+      <segment>
+        <source>avant</source>
+        <target>before</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroTitlePost">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:65</note>
+      </notes>
+      <segment>
+        <source>de construire.</source>
+        <target>you build.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroLead">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:68</note>
+      </notes>
+      <segment>
+        <source>Développeur &amp; consultant spécialisé Angular, NestJS et IA. Je structure les usages avant de déployer la techno — pour des TPE, PME et solopreneurs qui veulent des leviers concrets, pas du jargon.</source>
+        <target>Developer &amp; consultant specialised in Angular, NestJS and AI. I structure the uses before deploying the tech — for very small businesses, SMEs and solopreneurs who want concrete levers, not jargon.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroScrollHint">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:71</note>
+      </notes>
+      <segment>
+        <source>Défiler</source>
+        <target>Scroll</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroStat1Num">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:74</note>
+      </notes>
+      <segment>
+        <source>2</source>
+        <target>2</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroStat1Label">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:76</note>
+      </notes>
+      <segment>
+        <source>piliers : services &amp; formations</source>
+        <target>pillars: services &amp; training</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroStat2Num">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:79</note>
+      </notes>
+      <segment>
+        <source>∞</source>
+        <target>∞</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroStat2Label">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:81</note>
+      </notes>
+      <segment>
+        <source>l&apos;Atelier, un labo vivant à essayer</source>
+        <target>the Workshop, a living lab to try</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroCtaPrimary">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:84</note>
+      </notes>
+      <segment>
+        <source>Voir comment je travaille</source>
+        <target>See how I work</target>
+      </segment>
+    </unit>
+
+    <unit id="homeHeroCtaSecondary">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:86</note>
+      </notes>
+      <segment>
+        <source>Essayer l&apos;Atelier</source>
+        <target>Try the Workshop</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodKicker">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:91</note>
+      </notes>
+      <segment>
+        <source>La méthode</source>
+        <target>The method</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodIntro">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:93</note>
+      </notes>
+      <segment>
+        <source>Le digital et l&apos;IA sont des leviers, jamais des finalités. On commence par comprendre, on déploie ensuite — et on garde ce qui marche.</source>
+        <target>Digital and AI are levers, never ends in themselves. We start by understanding, then we deploy — and we keep what works.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep1Index">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:99</note>
+      </notes>
+      <segment>
+        <source>— Clarifier</source>
+        <target>— Clarify</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep1Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:100</note>
+      </notes>
+      <segment>
+        <source>Comprendre</source>
+        <target>Understand</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep1Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:101</note>
+      </notes>
+      <segment>
+        <source>On cartographie le besoin réel et les usages avant la moindre ligne de code.</source>
+        <target>We map the real need and the uses before a single line of code.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep2Index">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:105</note>
+      </notes>
+      <segment>
+        <source>— Construire</source>
+        <target>— Build</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep2Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:106</note>
+      </notes>
+      <segment>
+        <source>Déployer</source>
+        <target>Deploy</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep2Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:107</note>
+      </notes>
+      <segment>
+        <source>Des outils robustes et lisibles, dimensionnés sur le périmètre réel.</source>
+        <target>Robust, readable tools, sized to the actual scope.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep3Index">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:111</note>
+      </notes>
+      <segment>
+        <source>— Tester</source>
+        <target>— Test</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep3Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:112</note>
+      </notes>
+      <segment>
+        <source>Éprouver</source>
+        <target>Validate</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep3Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:113</note>
+      </notes>
+      <segment>
+        <source>On confronte à l&apos;usage, on mesure, on ajuste sans dogme.</source>
+        <target>We confront it with real use, we measure, we adjust without dogma.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep4Index">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:117</note>
+      </notes>
+      <segment>
+        <source>— Évoluer</source>
+        <target>— Evolve</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep4Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:118</note>
+      </notes>
+      <segment>
+        <source>Faire durer</source>
+        <target>Make it last</target>
+      </segment>
+    </unit>
+
+    <unit id="homeMethodStep4Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:119</note>
+      </notes>
+      <segment>
+        <source>Continuité humaine : l&apos;outil grandit avec vous, pas contre vous.</source>
+        <target>Human continuity: the tool grows with you, not against you.</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarsKicker">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:126</note>
+      </notes>
+      <segment>
+        <source>Deux façons de travailler ensemble</source>
+        <target>Two ways to work together</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarServicesTag">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:132</note>
+      </notes>
+      <segment>
+        <source>01 — Services premium</source>
+        <target>01 — Premium services</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarServicesTitle">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:133</note>
+      </notes>
+      <segment>
+        <source>On bâtit exactement ce qu&apos;il vous faut.</source>
+        <target>We build exactly what you need.</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarServicesDesc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:134</note>
+      </notes>
+      <segment>
+        <source>Interventions ciblées, projets structurants, accompagnement dans la durée. Un périmètre défini sur votre situation réelle — pas un catalogue de prix figés.</source>
+        <target>Targeted interventions, structuring projects, long-term support. A scope defined on your real situation — not a catalogue of fixed prices.</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarServicesItem1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:136</note>
+      </notes>
+      <segment>
+        <source>Audit &amp; cadrage avant tout chantier</source>
+        <target>Audit &amp; scoping before any project</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarServicesItem2">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:137</note>
+      </notes>
+      <segment>
+        <source>Développement Angular / NestJS sur-mesure</source>
+        <target>Bespoke Angular / NestJS development</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarServicesItem3">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:138</note>
+      </notes>
+      <segment>
+        <source>Intégration d&apos;IA utile, mesurée, maîtrisée</source>
+        <target>Useful AI integration, measured and under control</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarServicesLink">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:141</note>
+      </notes>
+      <segment>
+        <source>Découvrir l&apos;offre</source>
+        <target>Discover the offer</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarFormationsTag">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:147</note>
+      </notes>
+      <segment>
+        <source>02 — Formations premium</source>
+        <target>02 — Premium training</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarFormationsTitle">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:148</note>
+      </notes>
+      <segment>
+        <source>On vous rend autonome, pour de bon.</source>
+        <target>We make you truly autonomous.</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarFormationsDesc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:149</note>
+      </notes>
+      <segment>
+        <source>Des formations qui font monter en gamme : de l&apos;usage flou à un système qui travaille pour vous. Le gratuit reste un point d&apos;entrée — le premium va au fond des choses.</source>
+        <target>Training that levels you up: from fuzzy use to a system that works for you. The free content stays an entry point — the premium goes to the heart of things.</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarFormationsItem1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:151</note>
+      </notes>
+      <segment>
+        <source>IA pour solopreneurs</source>
+        <target>AI for solopreneurs</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarFormationsItem2">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:152</note>
+      </notes>
+      <segment>
+        <source>Automatiser avec l&apos;IA</source>
+        <target>Automating with AI</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarFormationsItem3">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:153</note>
+      </notes>
+      <segment>
+        <source>Audit SEO DIY — diagnostiquer soi-même</source>
+        <target>DIY SEO audit — diagnose it yourself</target>
+      </segment>
+    </unit>
+
+    <unit id="homePillarFormationsLink">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:156</note>
+      </notes>
+      <segment>
+        <source>Voir les formations</source>
+        <target>See the training</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierKicker">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:165</note>
+      </notes>
+      <segment>
+        <source>L&apos;Atelier — le bac à sable</source>
+        <target>The Workshop — the sandbox</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierTitlePre">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:167</note>
+      </notes>
+      <segment>
+        <source>Un laboratoire vivant où vous pouvez</source>
+        <target>A living laboratory where you can</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierTitleAccent">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:169</note>
+      </notes>
+      <segment>
+        <source>jouer</source>
+        <target>play</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierLead">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:171</note>
+      </notes>
+      <segment>
+        <source>Pas des produits à vendre : des preuves jouables. Je teste des idées en vrai, et vous les manipulez directement — sans inscription.</source>
+        <target>Not products to sell: playable proof. I test ideas for real, and you handle them directly — no sign-up.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierMeteoTitle">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:174</note>
+      </notes>
+      <segment>
+        <source>Météo</source>
+        <target>Weather</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierMeteoDesc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:176</note>
+      </notes>
+      <segment>
+        <source>Données réalistes, parallaxe, mode immersif ciel. La preuve d&apos;une interface vivante et précise.</source>
+        <target>Realistic data, parallax, immersive sky mode. The proof of a living, precise interface.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierMeteoLink">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:178</note>
+      </notes>
+      <segment>
+        <source>Essayer l&apos;app</source>
+        <target>Try the app</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierSebTitle">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:181</note>
+      </notes>
+      <segment>
+        <source>Sebastian</source>
+        <target>Sebastian</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierSebDesc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:183</note>
+      </notes>
+      <segment>
+        <source>Suivi de consommation : jauge de santé, calcul d&apos;alcoolémie, heatmap, et un bot Telegram. Le dark lounge ambré.</source>
+        <target>Consumption tracking: health gauge, blood-alcohol calculation, heatmap, and a Telegram bot. The amber dark lounge.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeAtelierSebLink">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:185</note>
+      </notes>
+      <segment>
+        <source>Accéder à Sebastian</source>
+        <target>Open Sebastian</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoStep1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:192</note>
+      </notes>
+      <segment>
+        <source>Le problème</source>
+        <target>The problem</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoLine1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:193</note>
+      </notes>
+      <segment>
+        <source>La technologie promet beaucoup,</source>
+        <target>Technology promises a lot,</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoLine2">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:196</note>
+      </notes>
+      <segment>
+        <source>et laisse souvent un &lt;span class=&quot;t&quot;&gt;flou&lt;/span&gt;.</source>
+        <target>and often leaves a &lt;span class=&quot;t&quot;&gt;blur&lt;/span&gt;.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoStep2">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:199</note>
+      </notes>
+      <segment>
+        <source>La clarté</source>
+        <target>Clarity</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoLine3">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:200</note>
+      </notes>
+      <segment>
+        <source>Mon métier commence là :</source>
+        <target>My job begins right there:</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoLine4">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:203</note>
+      </notes>
+      <segment>
+        <source>comprendre &lt;span class=&quot;t&quot;&gt;avant&lt;/span&gt; de construire.</source>
+        <target>understanding &lt;span class=&quot;t&quot;&gt;before&lt;/span&gt; building.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoStep3">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:206</note>
+      </notes>
+      <segment>
+        <source>La preuve</source>
+        <target>The proof</target>
+      </segment>
+    </unit>
+
+    <unit id="homeManifestoLine5">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:207</note>
+      </notes>
+      <segment>
+        <source>Et le prouver en le rendant &lt;span class=&quot;t&quot;&gt;jouable&lt;/span&gt;.</source>
+        <target>And proving it by making it &lt;span class=&quot;t&quot;&gt;playable&lt;/span&gt;.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProjectsKicker">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:214</note>
+      </notes>
+      <segment>
+        <source>Preuve de savoir-faire</source>
+        <target>Proof of know-how</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProjectsHeadLink">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:216</note>
+      </notes>
+      <segment>
+        <source>Voir tous les projets</source>
+        <target>See all projects</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject1Tag1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:223</note>
+      </notes>
+      <segment>
+        <source>Angular</source>
+        <target>Angular</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject1Tag2">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:224</note>
+      </notes>
+      <segment>
+        <source>NestJS</source>
+        <target>NestJS</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject1Tag3">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:225</note>
+      </notes>
+      <segment>
+        <source>IA</source>
+        <target>AI</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject1Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:227</note>
+      </notes>
+      <segment>
+        <source>Plateforme métier refondue de zéro</source>
+        <target>Business platform rebuilt from scratch</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject1Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:228</note>
+      </notes>
+      <segment>
+        <source>Du cadrage des usages à un produit qui tient la charge — et que l&apos;équipe sait faire évoluer seule.</source>
+        <target>From scoping the uses to a product that holds up under load — and that the team can evolve on its own.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject1ImageAlt">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:230</note>
+      </notes>
+      <segment>
+        <source>capture — étude de cas client</source>
+        <target>screenshot — client case study</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject2Tag1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:234</note>
+      </notes>
+      <segment>
+        <source>Atelier</source>
+        <target>Workshop</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject2Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:235</note>
+      </notes>
+      <segment>
+        <source>Météo</source>
+        <target>Weather</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject2Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:236</note>
+      </notes>
+      <segment>
+        <source>Data-viz vivante : vent, UV, arc solaire.</source>
+        <target>Living data-viz: wind, UV, solar arc.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject2ImageAlt">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:238</note>
+      </notes>
+      <segment>
+        <source>capture — app Météo</source>
+        <target>screenshot — Weather app</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject3Tag1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:242</note>
+      </notes>
+      <segment>
+        <source>Atelier</source>
+        <target>Workshop</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject3Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:243</note>
+      </notes>
+      <segment>
+        <source>Sebastian</source>
+        <target>Sebastian</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject3Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:244</note>
+      </notes>
+      <segment>
+        <source>Suivi de consommation, app + bot Telegram.</source>
+        <target>Consumption tracking, app + Telegram bot.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject3ImageAlt">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:246</note>
+      </notes>
+      <segment>
+        <source>capture — Sebastian</source>
+        <target>screenshot — Sebastian</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject4Tag1">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:251</note>
+      </notes>
+      <segment>
+        <source>Automatisation</source>
+        <target>Automation</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject4Tag2">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:252</note>
+      </notes>
+      <segment>
+        <source>IA</source>
+        <target>AI</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject4Title">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:254</note>
+      </notes>
+      <segment>
+        <source>Un système qui travaille en silence</source>
+        <target>A system that works in silence</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject4Desc">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:255</note>
+      </notes>
+      <segment>
+        <source>Des tâches répétitives remplacées par une automatisation lisible, mesurée, sous contrôle humain.</source>
+        <target>Repetitive tasks replaced by readable, measured automation, under human control.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeProject4ImageAlt">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:257</note>
+      </notes>
+      <segment>
+        <source>capture — automatisation IA</source>
+        <target>screenshot — AI automation</target>
+      </segment>
+    </unit>
+
+    <unit id="homeCtaKicker">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:264</note>
+      </notes>
+      <segment>
+        <source>Parlons de votre situation</source>
+        <target>Let’s talk about your situation</target>
+      </segment>
+    </unit>
+
+    <unit id="homeCtaTitle">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:266</note>
+      </notes>
+      <segment>
+        <source>Et si on clarifiait, ensemble, avant de construire ?</source>
+        <target>What if we clarified, together, before building?</target>
+      </segment>
+    </unit>
+
+    <unit id="homeCtaLead">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:268</note>
+      </notes>
+      <segment>
+        <source>Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.</source>
+        <target>Describe your context in a few lines. I’ll come back to you with an honest view — not a generic quote.</target>
+      </segment>
+    </unit>
+
+    <unit id="homeCtaPrimary">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:270</note>
+      </notes>
+      <segment>
+        <source>Démarrer la conversation</source>
+        <target>Start the conversation</target>
+      </segment>
+    </unit>
+
+    <unit id="homeCtaSecondary">
+      <notes>
+        <note category="location">src/app/features/home/home.component.ts:272</note>
+      </notes>
+      <segment>
+        <source>Explorer l&apos;Atelier</source>
+        <target>Explore the Workshop</target>
+      </segment>
+    </unit>
+
     <unit id="authSignupFieldFirstName">
       <notes>
         <note category="location">src/app/features/auth/auth.component.ts:79</note>
