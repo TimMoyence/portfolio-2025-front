@@ -1,36 +1,18 @@
 <nav
-  class="fixed top-0 left-0 right-0 z-50 pt-4 px-6 transition-all duration-300"
-  [ngClass]="
-    scrolled ? 'bg-transparent backdrop-blur-sm' : 'bg-scheme-background'
-  "
+  class="asili-nav"
+  [class.scrolled]="scrolled"
   role="navigation"
   aria-label="Navigation principale"
   i18n-aria-label="navbar.landmark|Main navigation landmark@@navLandmark"
 >
-  <div
-    class="glass-card-dark bg-scheme-background flex items-center justify-between p-3 px-6 rounded-full max-w-7xl mx-auto transition-all duration-300"
-    [ngClass]="{ 'shadow-lg': scrolled }"
-  >
-    <div>
-      <a class="flex flex-row items-center gap-3" routerLink="/">
-        <img
-          src="/assets/images/logo.webp"
-          alt="Logo image"
-          i18n-alt="Navbar.logo.alt|Navbar logo alt@@NavbarLogoAlt"
-          class="inline-block h-8 w-auto"
-          loading="lazy"
-          aria-hidden="true"
-        />
-        <p
-          i18n="navbar.title.company|Navbar company title@@NavbarCompanyTitle"
-          class="font-heading md:heading-h6 md:text-h6"
-        >
-          Asili Design
-        </p>
-      </a>
-    </div>
+  <div class="asili-nav__inner">
+    <a class="asili-logo" routerLink="/" aria-label="Asili Design — accueil">
+      <span class="asili-logo__dot" aria-hidden="true"></span>
+      <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili</span>
+      <small class="asili-logo__suffix" aria-hidden="true">design</small>
+    </a>
 
-    <div class="hidden lg:flex items-center gap-5">
+    <div class="asili-nav__links">
       <ng-container
         *ngTemplateOutlet="navContent; context: { isMobile: false }"
       >
@@ -42,7 +24,7 @@
       (click)="openMobileMenu()"
       #burgerButton
       type="button"
-      class="lg:hidden rounded-full p-2"
+      class="asili-burger"
       aria-haspopup="dialog"
       aria-controls="mobile-nav"
       [attr.aria-label]="mobileMenuOpen ? closeMenuLabel : openMenuLabel"
@@ -51,46 +33,59 @@
         <app-svg-icon
           [ariaLabel]="closeMenuIconLabel"
           name="close"
-          [size]="1.7"
+          [size]="1.4"
         ></app-svg-icon>
       } @else {
         <app-svg-icon
           [ariaLabel]="openMenuIconLabel"
           name="burger-menu"
-          [size]="1.7"
+          [size]="1.4"
         ></app-svg-icon>
       }
     </button>
   </div>
 </nav>
+
 @if (mobileMenuOpen) {
   <div
     id="mobile-nav"
-    class="lg:hidden fixed inset-0 z-40"
+    class="asili-drawer-overlay lg:hidden"
     role="dialog"
     aria-modal="true"
     aria-labelledby="mobile-nav-label"
   >
     <button
       type="button"
-      class="absolute inset-0 bg-black/40 backdrop-blur-sm mobile-menu-backdrop"
+      class="asili-drawer__backdrop"
       [attr.aria-label]="closeMenuLabel"
       (click)="closeMobileMenu()"
     ></button>
 
-    <div
-      class="absolute top-[15%] w-full flex justify-center px-4 mobile-menu-panel"
-    >
-      <div
-        #mobileMenuPanel
-        class="glass-card-dark rounded-2xl mt-2 py-4 px-5 w-full max-w-md border border-scheme-border bg-scheme-background"
-      >
-        <h2 id="mobile-nav-label" class="sr-only">{{ mobileNavHeading }}</h2>
-        <div class="mt-3 flex flex-col gap-4 items-stretch">
-          <ng-container
-            *ngTemplateOutlet="navContent; context: { isMobile: true }"
-          ></ng-container>
-        </div>
+    <div #mobileMenuPanel class="asili-drawer">
+      <div class="asili-drawer__top">
+        <a class="asili-logo" routerLink="/" (click)="closeMobileMenu()">
+          <span class="asili-logo__dot" aria-hidden="true"></span>
+          <span class="asili-logo__name">Asili</span>
+          <small class="asili-logo__suffix" aria-hidden="true">design</small>
+        </a>
+        <button
+          type="button"
+          class="asili-burger"
+          [attr.aria-label]="closeMenuLabel"
+          (click)="closeMobileMenu()"
+        >
+          <app-svg-icon
+            [ariaLabel]="closeMenuIconLabel"
+            name="close"
+            [size]="1.4"
+          ></app-svg-icon>
+        </button>
+      </div>
+      <h2 id="mobile-nav-label" class="sr-only">{{ mobileNavHeading }}</h2>
+      <div class="asili-drawer__body">
+        <ng-container
+          *ngTemplateOutlet="navContent; context: { isMobile: true }"
+        ></ng-container>
       </div>
     </div>
   </div>
@@ -98,106 +93,126 @@
 
 <!-- SHARED NAV CONTENT -->
 <ng-template #navContent let-isMobile="isMobile">
-  <ul
-    class="flex flex-col lg:flex-row gap-5"
-    [ngClass]="isMobile ? 'mt-2 items-start' : 'flex-row items-center'"
-  >
-    @for (item of navLinks; track $index) {
-      <li>
-        <a
-          [routerLink]="item.href"
-          routerLinkActive="font-medium"
-          #rla="routerLinkActive"
-          [attr.aria-current]="rla.isActive ? 'page' : null"
-          [id]="item.label + $index"
-          class="transition-colors duration-300 hover:text-scheme-accent"
-          [ngClass]="
-            isMobile ? 'block w-full py-3 border-b border-scheme-border/20' : ''
-          "
-          (click)="isMobile && closeMobileMenu()"
-        >
-          {{ item.label }}
-        </a>
-      </li>
-    }
-  </ul>
+  @for (item of navLinks; track $index) {
+    <div class="asili-nav__item" [class.is-mobile]="isMobile">
+      <a
+        [routerLink]="item.href"
+        routerLinkActive="active"
+        #rla="routerLinkActive"
+        [attr.aria-current]="rla.isActive ? 'page' : null"
+        [id]="item.label + $index"
+        class="asili-nav__link"
+        [class.is-mobile]="isMobile"
+        (click)="isMobile && closeMobileMenu()"
+      >
+        {{ item.label }}
+      </a>
+    </div>
+  }
 
   <!-- Dropdown L'Atelier — desktop -->
   @if (!isMobile) {
-    <div class="relative" (mouseleave)="closeAtelierDropdown()">
+    <div
+      class="asili-nav__item"
+      (mouseenter)="openAtelierDropdown()"
+      (mouseleave)="closeAtelierDropdown()"
+    >
       <button
         type="button"
         (click)="toggleAtelierDropdown()"
-        (mouseenter)="openAtelierDropdown()"
         [attr.aria-expanded]="atelierDropdown.isOpen"
         aria-haspopup="true"
-        class="flex items-center gap-1 transition-colors duration-300 hover:text-scheme-accent"
+        class="asili-nav__link asili-nav__trigger"
+        [class.active]="atelierDropdown.isOpen"
       >
         <span>{{ atelierDropdown.label }}</span>
-        <app-svg-icon
-          name="chevron-down"
-          [size]="0.8"
-          [ngClass]="{ 'rotate-180': atelierDropdown.isOpen }"
-          class="transition-transform duration-200"
-        ></app-svg-icon>
+        <svg
+          class="asili-nav__chevron"
+          [class.open]="atelierDropdown.isOpen"
+          width="11"
+          height="11"
+          viewBox="0 0 12 12"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M3 4.5 6 7.5 9 4.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </button>
-      @if (atelierDropdown.isOpen) {
-        <div class="absolute top-full left-0 pt-2 z-50">
-          <div
-            class="w-72 rounded-xl border border-scheme-border bg-scheme-background p-3 shadow-lg"
+      <div
+        class="asili-dropdown"
+        [class.open]="atelierDropdown.isOpen"
+        role="menu"
+      >
+        @for (item of atelierDropdown.items; track item.href) {
+          <a
+            [routerLink]="item.href"
+            (click)="closeAtelierDropdown()"
+            class="asili-drop-item"
+            role="menuitem"
           >
-            @for (item of atelierDropdown.items; track item.href) {
-              <a
-                [routerLink]="item.href"
-                (click)="closeAtelierDropdown()"
-                class="flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-scheme-surface"
-              >
-                <app-svg-icon [name]="item.icon" [size]="1.3"></app-svg-icon>
-                <div>
-                  <p class="font-medium text-scheme-text">{{ item.title }}</p>
-                  <p class="text-xs text-scheme-text-muted">
-                    {{ item.description }}
-                  </p>
-                </div>
-              </a>
-            }
-          </div>
-        </div>
-      }
+            <span class="asili-drop-item__ic">
+              <app-svg-icon [name]="item.icon" [size]="1.25"></app-svg-icon>
+            </span>
+            <span class="asili-drop-item__body">
+              <span class="asili-drop-item__title">{{ item.title }}</span>
+              <span class="asili-drop-item__desc">{{ item.description }}</span>
+            </span>
+          </a>
+        }
+      </div>
     </div>
   }
 
   <!-- Dropdown L'Atelier — mobile -->
   @if (isMobile) {
-    <div class="w-full">
+    <div class="asili-nav__item is-mobile asili-drawer__group">
       <button
         type="button"
         (click)="toggleAtelierDropdown()"
-        class="flex w-full items-center justify-between py-2"
+        [attr.aria-expanded]="atelierDropdown.isOpen"
+        class="asili-nav__link asili-nav__trigger is-mobile"
       >
-        <span>{{ atelierDropdown.label }}</span>
-        <app-svg-icon
-          name="chevron-down"
-          [size]="0.8"
-          [ngClass]="{ 'rotate-180': atelierDropdown.isOpen }"
-          class="transition-transform duration-200"
-        ></app-svg-icon>
+        <span class="asili-drawer__group-label"
+          >{{ atelierDropdown.label }}
+          @if (atelierDropdown.subtitle) {
+            <span class="asili-drawer__sub">{{
+              atelierDropdown.subtitle
+            }}</span>
+          }
+        </span>
+        <svg
+          class="asili-nav__chevron"
+          [class.open]="atelierDropdown.isOpen"
+          width="13"
+          height="13"
+          viewBox="0 0 12 12"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M3 4.5 6 7.5 9 4.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </button>
       @if (atelierDropdown.isOpen) {
-        <div class="flex flex-col gap-2 pl-4 mt-2">
+        <div class="asili-drawer__sublist">
           @for (item of atelierDropdown.items; track item.href) {
             <a
               [routerLink]="item.href"
               (click)="closeMobileMenu(); closeAtelierDropdown()"
-              class="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-scheme-surface"
+              class="asili-drawer__sublink"
             >
-              <app-svg-icon [name]="item.icon" [size]="1.2"></app-svg-icon>
-              <div>
-                <p class="text-sm font-medium">{{ item.title }}</p>
-                <p class="text-xs text-scheme-text-muted">
-                  {{ item.description }}
-                </p>
-              </div>
+              {{ item.title }}
             </a>
           }
         </div>
@@ -207,80 +222,102 @@
 
   <!-- Dropdown Formations — desktop -->
   @if (!isMobile) {
-    <div class="relative" (mouseleave)="closeFormationsDropdown()">
+    <div
+      class="asili-nav__item"
+      (mouseenter)="openFormationsDropdown()"
+      (mouseleave)="closeFormationsDropdown()"
+    >
       <button
         type="button"
         (click)="toggleFormationsDropdown()"
-        (mouseenter)="openFormationsDropdown()"
         [attr.aria-expanded]="formationsDropdown.isOpen"
         aria-haspopup="true"
-        class="flex items-center gap-1 transition-colors duration-300 hover:text-scheme-accent"
+        class="asili-nav__link asili-nav__trigger"
+        [class.active]="formationsDropdown.isOpen"
       >
         <span>{{ formationsDropdown.label }}</span>
-        <app-svg-icon
-          name="chevron-down"
-          [size]="0.8"
-          [ngClass]="{ 'rotate-180': formationsDropdown.isOpen }"
-          class="transition-transform duration-200"
-        ></app-svg-icon>
+        <svg
+          class="asili-nav__chevron"
+          [class.open]="formationsDropdown.isOpen"
+          width="11"
+          height="11"
+          viewBox="0 0 12 12"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M3 4.5 6 7.5 9 4.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </button>
-      @if (formationsDropdown.isOpen) {
-        <div class="absolute top-full left-0 pt-2 z-50">
-          <div
-            class="w-72 rounded-xl border border-scheme-border bg-scheme-background p-3 shadow-lg"
+      <div
+        class="asili-dropdown"
+        [class.open]="formationsDropdown.isOpen"
+        role="menu"
+      >
+        @for (item of formationsDropdown.items; track item.href) {
+          <a
+            [routerLink]="item.href"
+            (click)="closeFormationsDropdown()"
+            class="asili-drop-item"
+            role="menuitem"
           >
-            @for (item of formationsDropdown.items; track item.href) {
-              <a
-                [routerLink]="item.href"
-                (click)="closeFormationsDropdown()"
-                class="flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-scheme-surface"
-              >
-                <app-svg-icon [name]="item.icon" [size]="1.3"></app-svg-icon>
-                <div>
-                  <p class="font-medium text-scheme-text">{{ item.title }}</p>
-                  <p class="text-xs text-scheme-text-muted">
-                    {{ item.description }}
-                  </p>
-                </div>
-              </a>
-            }
-          </div>
-        </div>
-      }
+            <span class="asili-drop-item__ic">
+              <app-svg-icon [name]="item.icon" [size]="1.25"></app-svg-icon>
+            </span>
+            <span class="asili-drop-item__body">
+              <span class="asili-drop-item__title">{{ item.title }}</span>
+              <span class="asili-drop-item__desc">{{ item.description }}</span>
+            </span>
+          </a>
+        }
+      </div>
     </div>
   }
 
   <!-- Dropdown Formations — mobile -->
   @if (isMobile) {
-    <div class="w-full">
+    <div class="asili-nav__item is-mobile asili-drawer__group">
       <button
         type="button"
         (click)="toggleFormationsDropdown()"
-        class="flex w-full items-center justify-between py-2"
+        [attr.aria-expanded]="formationsDropdown.isOpen"
+        class="asili-nav__link asili-nav__trigger is-mobile"
       >
-        <span>{{ formationsDropdown.label }}</span>
-        <app-svg-icon
-          name="chevron-down"
-          [size]="0.8"
-          [ngClass]="{ 'rotate-180': formationsDropdown.isOpen }"
-          class="transition-transform duration-200"
-        ></app-svg-icon>
+        <span class="asili-drawer__group-label">{{
+          formationsDropdown.label
+        }}</span>
+        <svg
+          class="asili-nav__chevron"
+          [class.open]="formationsDropdown.isOpen"
+          width="13"
+          height="13"
+          viewBox="0 0 12 12"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M3 4.5 6 7.5 9 4.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </button>
       @if (formationsDropdown.isOpen) {
-        <div class="flex flex-col gap-2 pl-4 mt-2">
+        <div class="asili-drawer__sublist">
           @for (item of formationsDropdown.items; track item.href) {
             <a
               [routerLink]="item.href"
               (click)="closeMobileMenu(); closeFormationsDropdown()"
-              class="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-scheme-surface"
+              class="asili-drawer__sublink"
             >
-              <app-svg-icon [name]="item.icon" [size]="1.2"></app-svg-icon>
-              <div>
-                <p class="text-sm font-medium">{{ item.title }}</p>
-                <p class="text-xs text-scheme-text-muted">
-                  {{ item.description }}
-                </p>
-              </div>
+              {{ item.title }}
             </a>
           }
         </div>
@@ -288,16 +325,30 @@
     </div>
   }
 
-  <div
-    [ngClass]="
-      isMobile
-        ? 'flex flex-col items-stretch gap-3 mt-4 w-full'
-        : 'flex items-center justify-center gap-5'
-    "
-  >
+  <!-- Lien Contact (drawer mobile uniquement, parité maquette) -->
+  @if (isMobile) {
+    <div class="asili-nav__item is-mobile">
+      <a
+        routerLink="/contact"
+        routerLinkActive="active"
+        #rlaContact="routerLinkActive"
+        [attr.aria-current]="rlaContact.isActive ? 'page' : null"
+        class="asili-nav__link is-mobile"
+        (click)="closeMobileMenu()"
+      >
+        <span
+          i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel"
+          >Contact</span
+        >
+      </a>
+    </div>
+  }
+
+  <!-- Zone droite : actions + langue + compte -->
+  <div class="asili-nav__side" [class.is-mobile]="isMobile">
     <button
       type="button"
-      class="bg-scheme-accent rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 border border-scheme-border px-5 py-2 text-white"
+      class="btn btn-teal asili-nav__cta"
       title="Demander un devis"
       i18n-title="navbar.link.audit|Navbar primary link@@navLinkAudit:Audit"
       [routerLink]="'/growth-audit'"
@@ -308,154 +359,140 @@
       >
     </button>
 
-    <button
-      type="button"
-      class="bg-scheme-background rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 border border-scheme-border text-scheme-text px-5 py-2"
-      title="Me contacter"
-      i18n-title="
-        navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
-      [routerLink]="'/contact'"
-      (click)="isMobile && closeMobileMenu()"
-    >
-      <span
-        i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel"
-        >Contact</span
+    @if (!isMobile) {
+      <button
+        type="button"
+        class="btn btn-ghost asili-nav__cta asili-nav__cta--ghost"
+        title="Me contacter"
+        i18n-title="
+          navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
+        [routerLink]="'/contact'"
       >
-    </button>
+        <span
+          i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel"
+          >Contact</span
+        >
+      </button>
+    }
 
     <!-- Sélecteur de langue FR/EN -->
-    <a
-      [href]="getAlternateLocaleUrl()"
-      class="rounded-button border border-scheme-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-scheme-text transition-colors hover:bg-scheme-surface-hover"
-      [attr.aria-label]="'Switch to ' + getAlternateLocaleLabel()"
-    >
-      {{ getAlternateLocaleLabel() }}
-    </a>
+    <div class="asili-lang">
+      <span class="asili-lang__current" aria-hidden="true">{{
+        getAlternateLocaleLabel() === "EN" ? "FR" : "EN"
+      }}</span>
+      <a
+        [href]="getAlternateLocaleUrl()"
+        class="asili-lang__switch"
+        [attr.aria-label]="'Switch to ' + getAlternateLocaleLabel()"
+      >
+        {{ getAlternateLocaleLabel() }}
+      </a>
+    </div>
 
     @if (authState.isLoggedIn()) {
       <!-- Dropdown profil — desktop -->
       @if (!isMobile) {
-        <div class="relative" (mouseleave)="closeUserDropdown()">
+        <div class="asili-nav__item" (mouseleave)="closeUserDropdown()">
           <button
             type="button"
             (click)="toggleUserDropdown()"
             [attr.aria-expanded]="userDropdownOpen"
             aria-haspopup="true"
-            class="rounded-full transition-all duration-200 ease-in-out border border-scheme-border text-scheme-text bg-scheme-background flex items-center justify-center"
-            [ngStyle]="
-              userInitials() ? { width: '2.4rem', height: '2.4rem' } : {}
-            "
-            [class.p-2]="!userInitials()"
+            class="asili-avatar"
             [attr.aria-label]="'Menu utilisateur'"
             i18n-aria-label="
               navbar.user.label|User dropdown label@@navUserMenuLabel"
           >
             @if (userInitials()) {
-              <span
-                class="flex items-center justify-center w-full h-full rounded-full text-white text-xs font-bold select-none"
-                [ngStyle]="{ 'background-color': avatarColor() }"
-                >{{ userInitials() }}</span
-              >
+              <span class="asili-avatar__initials">{{ userInitials() }}</span>
             } @else {
-              <app-svg-icon name="person" [size]="1.3"></app-svg-icon>
+              <app-svg-icon name="person" [size]="1.2"></app-svg-icon>
             }
           </button>
           @if (userDropdownOpen) {
-            <div class="absolute top-full right-0 pt-2 z-50">
-              <div
-                class="w-64 rounded-xl border border-scheme-border bg-scheme-background p-3 shadow-lg"
-              >
-                @if (authState.user(); as u) {
-                  <div
-                    class="flex items-center gap-3 px-3 pb-3 border-b border-scheme-border"
-                  >
-                    @if (userInitials()) {
-                      <span
-                        class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-white text-sm font-bold select-none"
-                        [ngStyle]="{ 'background-color': avatarColor() }"
-                        >{{ userInitials() }}</span
-                      >
-                    }
-                    <div class="min-w-0">
-                      <p class="font-medium text-scheme-text text-sm">
-                        {{ u.firstName }} {{ u.lastName }}
-                      </p>
-                      <p class="text-xs text-scheme-text-muted truncate">
-                        {{ u.email }}
-                      </p>
-                    </div>
+            <div class="asili-dropdown asili-dropdown--user open">
+              @if (authState.user(); as u) {
+                <div class="asili-user-head">
+                  @if (userInitials()) {
+                    <span class="asili-avatar asili-avatar--sm">
+                      <span class="asili-avatar__initials">{{
+                        userInitials()
+                      }}</span>
+                    </span>
+                  }
+                  <div class="asili-user-head__meta">
+                    <p class="asili-user-head__name">
+                      {{ u.firstName }} {{ u.lastName }}
+                    </p>
+                    <p class="asili-user-head__email">{{ u.email }}</p>
                   </div>
-                }
-                <a
-                  routerLink="/profil"
-                  (click)="closeUserDropdown()"
-                  class="flex items-center gap-3 rounded-lg p-3 mt-1 transition-colors hover:bg-scheme-surface"
-                >
-                  <app-svg-icon name="person" [size]="1.1"></app-svg-icon>
-                  <span class="text-sm" i18n="@@navProfileLabel">Profil</span>
-                </a>
-                <button
-                  type="button"
-                  (click)="logout()"
-                  class="flex w-full items-center gap-3 rounded-lg p-3 transition-colors hover:bg-red-50 text-red-600"
-                >
-                  <app-svg-icon name="close" [size]="1.1"></app-svg-icon>
-                  <span class="text-sm" i18n="@@navLogoutLabel"
-                    >Déconnexion</span
-                  >
-                </button>
-              </div>
+                </div>
+              }
+              <a
+                routerLink="/profil"
+                (click)="closeUserDropdown()"
+                class="asili-drop-item asili-drop-item--simple"
+              >
+                <app-svg-icon name="person" [size]="1.05"></app-svg-icon>
+                <span i18n="@@navProfileLabel">Profil</span>
+              </a>
+              <button
+                type="button"
+                (click)="logout()"
+                class="asili-drop-item asili-drop-item--simple asili-drop-item--danger"
+              >
+                <app-svg-icon name="close" [size]="1.05"></app-svg-icon>
+                <span i18n="@@navLogoutLabel">Déconnexion</span>
+              </button>
             </div>
           }
         </div>
       }
       <!-- Menu profil — mobile -->
       @if (isMobile) {
-        <div class="w-full border-t border-scheme-border pt-3 mt-2">
+        <div class="asili-drawer__account">
           @if (authState.user(); as u) {
-            <div class="flex items-center gap-2 mb-2">
+            <div class="asili-drawer__account-head">
               @if (userInitials()) {
-                <span
-                  class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full text-white text-xs font-bold select-none"
-                  [ngStyle]="{ 'background-color': avatarColor() }"
-                  >{{ userInitials() }}</span
-                >
+                <span class="asili-avatar asili-avatar--sm">
+                  <span class="asili-avatar__initials">{{
+                    userInitials()
+                  }}</span>
+                </span>
               }
-              <p class="text-sm font-medium text-scheme-text">
+              <p class="asili-user-head__name">
                 {{ u.firstName }} {{ u.lastName }}
               </p>
             </div>
           }
-          <div class="flex flex-col gap-2">
-            <a
-              routerLink="/profil"
-              (click)="closeMobileMenu()"
-              class="flex items-center gap-2 rounded-lg p-2 transition-colors hover:bg-scheme-surface text-sm"
-            >
-              <app-svg-icon name="person" [size]="1.1"></app-svg-icon>
-              <span i18n="@@navProfileLabel">Profil</span>
-            </a>
-            <button
-              type="button"
-              (click)="logout()"
-              class="flex items-center gap-2 rounded-lg p-2 transition-colors hover:bg-red-50 text-red-600 text-sm"
-            >
-              <app-svg-icon name="close" [size]="1.1"></app-svg-icon>
-              <span i18n="@@navLogoutLabel">Déconnexion</span>
-            </button>
-          </div>
+          <a
+            routerLink="/profil"
+            (click)="closeMobileMenu()"
+            class="asili-drop-item asili-drop-item--simple"
+          >
+            <app-svg-icon name="person" [size]="1.05"></app-svg-icon>
+            <span i18n="@@navProfileLabel">Profil</span>
+          </a>
+          <button
+            type="button"
+            (click)="logout()"
+            class="asili-drop-item asili-drop-item--simple asili-drop-item--danger"
+          >
+            <app-svg-icon name="close" [size]="1.05"></app-svg-icon>
+            <span i18n="@@navLogoutLabel">Déconnexion</span>
+          </button>
         </div>
       }
     } @else {
       <button
         type="button"
-        class="rounded-full transition-all duration-200 ease-in-out border border-scheme-border text-scheme-text bg-scheme-background p-2"
+        class="asili-avatar asili-avatar--login"
         [routerLink]="'/login'"
         (click)="isMobile && closeMobileMenu()"
         [attr.aria-label]="'Espace utilisateur'"
         i18n-aria-label="navbar.auth.label|Auth button label@@navAuthLabel"
       >
-        <app-svg-icon name="person" [size]="1.3"></app-svg-icon>
+        <app-svg-icon name="person" [size]="1.2"></app-svg-icon>
       </button>
     }
   </div>

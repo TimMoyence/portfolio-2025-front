@@ -69,6 +69,38 @@ describe("NavbarComponent", () => {
       expect(url).toMatch(/^\/en/);
     });
 
+    it("devrait afficher le logo Asili (nom + suffixe design + dot)", () => {
+      fixture.detectChanges();
+      const nav = fixture.nativeElement as HTMLElement;
+      const logo = nav.querySelector(".asili-logo");
+      expect(logo).toBeTruthy();
+      expect(logo?.querySelector(".asili-logo__dot")).toBeTruthy();
+      expect(logo?.querySelector(".asili-logo__name")?.textContent).toContain(
+        "Asili",
+      );
+      expect(logo?.querySelector(".asili-logo__suffix")?.textContent).toContain(
+        "design",
+      );
+    });
+
+    it("devrait exposer le lien primaire « Services » vers /offer", () => {
+      fixture.detectChanges();
+      const offerLink = component.navLinks.find(
+        (link) => link.href === "/offer",
+      );
+      expect(offerLink?.label).toBe("Services");
+    });
+
+    it("devrait afficher la pill de langue FR/EN", () => {
+      fixture.detectChanges();
+      const nav = fixture.nativeElement as HTMLElement;
+      const lang = nav.querySelector(".asili-lang");
+      expect(lang).toBeTruthy();
+      expect(lang?.querySelector(".asili-lang__switch")?.textContent).toContain(
+        "EN",
+      );
+    });
+
     it("devrait afficher le bouton login quand non connecte", () => {
       fixture.detectChanges();
       const nav = fixture.nativeElement as HTMLElement;
