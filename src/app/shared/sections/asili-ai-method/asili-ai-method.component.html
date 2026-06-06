@@ -1,0 +1,46 @@
+<section class="ai-method-section theme-night section-pad">
+  <div class="wrap">
+    <div class="ai-method" appReveal>
+      <div class="ai-method-grid">
+        <div class="ai-method-intro">
+          <ng-content select="[kicker]">
+            @if (kicker(); as k) {
+              <span class="kicker">{{ k }}</span>
+            }
+          </ng-content>
+          <ng-content select="[heading]">
+            @if (heading(); as h) {
+              <h2 class="h-xl ai-method-title">{{ h }}</h2>
+            }
+          </ng-content>
+          <ng-content select="[lead]">
+            @if (lead(); as l) {
+              <p class="lead ai-method-lead">{{ l }}</p>
+            }
+          </ng-content>
+        </div>
+
+        <div class="ai-steps">
+          @for (step of steps(); track step.num) {
+            <div class="ai-step">
+              <span class="ai-n">{{ step.num }}</span>
+              <div>
+                <div class="ai-t">{{ step.title }}</div>
+                <div class="ai-d">{{ step.desc }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (rule(); as r) {
+        <blockquote class="ai-rule">
+          <p [innerHTML]="r"></p>
+          @if (ruleWho(); as who) {
+            <div class="ai-rule-who">{{ who }}</div>
+          }
+        </blockquote>
+      }
+    </div>
+  </div>
+</section>

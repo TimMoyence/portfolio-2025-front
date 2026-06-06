@@ -1,0 +1,121 @@
+:host {
+  display: block;
+}
+
+/* ============================================================
+   METHODE ASILI — grille d'etapes reliees par une ligne pointillee
+   Porte de .method / .method-steps / .step (asili-sections.css)
+   ============================================================ */
+.method {
+  background: transparent;
+  border-top: 1px solid var(--line);
+}
+
+.method-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-6);
+}
+
+.method-head__title {
+  margin-top: 18px;
+  max-width: 18ch;
+}
+
+.method-head__intro {
+  max-width: 34ch;
+}
+
+.method-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.method-line {
+  position: absolute;
+  top: 30px;
+  left: 6%;
+  right: 6%;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--line) 0 8px,
+    transparent 8px 16px
+  );
+}
+
+.step {
+  padding: 0 22px;
+  position: relative;
+}
+
+.step .num {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--teal-deep);
+  position: relative;
+  z-index: 1;
+  transition:
+    transform 0.5s var(--ease),
+    border-color 0.4s,
+    box-shadow 0.4s;
+}
+
+.step:hover .num {
+  transform: translateY(-4px);
+  border-color: var(--teal);
+  box-shadow: var(--shadow-soft);
+}
+
+.step .ix {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--teal);
+  display: inline-block;
+  margin-top: 22px;
+}
+
+.step h3 {
+  font-size: 24px;
+  margin: 22px 0 8px;
+}
+
+/* Quand l'intitule d'etape (.ix) precede le titre, c'est lui qui porte la
+   marge haute : on neutralise celle du titre pour eviter un double espace. */
+.step .ix + h3 {
+  margin-top: 8px;
+}
+
+.step p {
+  font-size: 15px;
+  color: var(--ink-mute);
+}
+
+@media (max-width: 860px) {
+  .method-steps {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4) var(--s-2);
+  }
+
+  .method-line {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .method-steps {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,135 @@
+:host {
+  display: block;
+}
+
+/* ============================================================
+   GRILLE PROJETS ASILI — grille editoriale 6 colonnes (big/small)
+   Porte de .proj-grid / .proj (asili-sections.css)
+   ============================================================ */
+.projects-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: var(--s-5);
+}
+
+.projects-head__title {
+  margin-top: 18px;
+}
+
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 22px;
+}
+
+.proj {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+
+.proj:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card);
+}
+
+.proj.big {
+  grid-column: span 4;
+}
+
+.proj.small {
+  grid-column: span 2;
+}
+
+/* Le lien englobe uniquement le visuel, comme la maquette. */
+.proj-link {
+  display: block;
+}
+
+.proj-shot {
+  aspect-ratio: 16 / 10;
+  position: relative;
+  overflow: hidden;
+}
+
+.proj.small .proj-shot {
+  aspect-ratio: 4 / 3;
+}
+
+.proj-shot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder raye affiche tant qu'aucune capture n'est fournie. */
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--sand) 0 14px,
+    var(--ivory) 14px 28px
+  );
+  display: grid;
+  place-items: center;
+}
+
+.placeholder span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  background: rgba(255, 250, 242, 0.85);
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+}
+
+.proj-body {
+  padding: 22px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.proj-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.proj h3 {
+  font-size: 26px;
+}
+
+.proj.small h3 {
+  font-size: 21px;
+}
+
+.proj p {
+  font-size: 14.5px;
+  color: var(--ink-mute);
+}
+
+@media (max-width: 860px) {
+  .proj-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .proj.big,
+  .proj.small {
+    grid-column: 1 / -1;
+  }
+}

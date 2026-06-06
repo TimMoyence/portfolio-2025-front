@@ -1,0 +1,164 @@
+:host {
+  display: block;
+}
+
+/* ============================================================
+   HERO ASILI — ouverture pleine hauteur, voile gradient,
+   titre serif geant a accent teal, meta serif, scroll-hint.
+   Porte de .hero / .hero-* (asili-sections.css). Le fond
+   constellation est global (Lot 0, #asili-field) : pas de canvas ici.
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Voile : adoucit le champ global vers le haut-droite et fond vers le bas. */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 90% at 78% 18%,
+      transparent 30%,
+      rgba(255, 250, 242, 0.5) 78%
+    ),
+    linear-gradient(180deg, rgba(255, 250, 242, 0) 60%, var(--cream) 100%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-top: 90px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+}
+
+/* Titre serif geant ; l'accent (italique teal) est applique par .accent.
+   `::ng-deep` : indispensable car le titre peut arriver par projection
+   `[title]` (markup de l'hote, porteur du `_ngcontent` de la PAGE, pas du
+   hero) — un selecteur scope ne ciblerait jamais le `.accent` projete.
+   Couvre aussi le chemin par inputs (`.accent` rendu en interne). Meme
+   pattern que `asili-manifesto.component.scss` (`.mani-line ::ng-deep .t`). */
+.hero-title {
+  max-width: 16ch;
+  margin-top: 8px;
+}
+.hero-title ::ng-deep .accent {
+  font-style: italic;
+  color: var(--teal-deep);
+}
+
+/* Bandeau bas du hero : accroche a gauche, meta a droite (aligne en bas). */
+.hero-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-top: var(--s-4);
+}
+
+/* Conteneur des CTA projetes (.btn...). */
+.hero-cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+/* Masque le conteneur quand aucun CTA n'est projete (evite gap/reveal vide). */
+.hero-cta:not(:has(*)) {
+  display: none;
+}
+
+/* Meta : statistiques serif separees par un filet. */
+.hero-meta {
+  display: flex;
+  gap: var(--s-4);
+}
+.hero-meta:not(:has(*)) {
+  display: none;
+}
+/* `::ng-deep` : la meta arrive UNIQUEMENT par projection `[meta]` (markup de
+   l'hote). Les selecteurs descendants doivent percer l'encapsulation, sinon
+   les stats projetees restent NON stylees (pas de filet, pas de serif 30px).
+   Meme pattern que `asili-manifesto.component.scss` (`.mani-line ::ng-deep .t`). */
+.hero-meta ::ng-deep div {
+  border-left: 1px solid var(--line);
+  padding-left: 14px;
+}
+.hero-meta ::ng-deep .n {
+  font-family: var(--font-display);
+  font-size: 30px;
+  color: var(--ink);
+  line-height: 1;
+}
+.hero-meta ::ng-deep .l {
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  margin-top: 4px;
+}
+
+/* Indication de scroll, centree en bas, barre qui « tombe ». */
+.scroll-hint {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.scroll-hint .bar {
+  width: 1px;
+  height: 38px;
+  background: linear-gradient(var(--ink-faint), transparent);
+  animation: asili-hero-drop 2s var(--ease) infinite;
+}
+
+@keyframes asili-hero-drop {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  40% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  60% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint .bar {
+    animation: none;
+  }
+}
+
+/* La meta serif disparait sur mobile (cf. maquette @860). */
+@media (max-width: 860px) {
+  .hero-meta {
+    display: none;
+  }
+}

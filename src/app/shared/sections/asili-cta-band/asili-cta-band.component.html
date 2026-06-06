@@ -1,0 +1,22 @@
+<section class="cta-band-section section-pad">
+  <div class="wrap">
+    <div class="cta" appReveal>
+      <div class="cta-inner">
+        <ng-content select="[kicker]">
+          @if (kicker(); as k) {
+            <span class="kicker cta-kicker">{{ k }}</span>
+          }
+        </ng-content>
+        <h2 class="cta-title">{{ title() }}</h2>
+        <ng-content select="[lead]">
+          @if (lead(); as l) {
+            <p class="cta-lead">{{ l }}</p>
+          }
+        </ng-content>
+        <div class="cta-actions">
+          <ng-content select="[cta]"></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
