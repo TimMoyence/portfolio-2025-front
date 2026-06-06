@@ -115,11 +115,9 @@ export class ContactComponent implements OnInit {
     const appLabel =
       normalizedApp === "weather"
         ? $localize`:contact.access.app.weather@@contactAccessAppWeather:l'application Météo`
-        : normalizedApp === "budget"
-          ? $localize`:contact.access.app.budget@@contactAccessAppBudget:l'application Budget`
-          : normalizedApp === "sebastian"
-            ? $localize`:contact.access.app.sebastian@@contactAccessAppSebastian:l'application Sebastian`
-            : $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'atelier ${normalizedApp}:app:`;
+        : normalizedApp === "sebastian"
+          ? $localize`:contact.access.app.sebastian@@contactAccessAppSebastian:l'application Sebastian`
+          : $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'atelier ${normalizedApp}:app:`;
     return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
   }
 

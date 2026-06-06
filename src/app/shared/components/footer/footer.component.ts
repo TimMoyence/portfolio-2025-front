@@ -28,10 +28,9 @@ export class FooterComponent {
   readonly siteLastUpdated = "2026-04-17";
 
   /**
-   * P2.12 : maillage interne enrichi pour topical authority. 8 liens au
-   * lieu de 4, couvrant les piliers metiers (Présentation, Projets,
-   * Services, Formations, Audit gratuit, Contact) + liens ateliers
-   * (Meteo, Budget) + lien Sebastian protege (filtre par le guard role).
+   * P2.12 : maillage interne enrichi pour topical authority. Liens couvrant
+   * les piliers metiers (Présentation, Projets, Services, Formations, Audit
+   * gratuit, Contact).
    */
   readonly navColumns: FooterColumn[] = [
     {

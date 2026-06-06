@@ -40,10 +40,10 @@ describe("roleGuard", () => {
 
   it("devrait autoriser l acces si l utilisateur possede le role requis", () => {
     authState.login(
-      buildAuthSession({ user: buildAuthUser({ roles: ["budget"] }) }),
+      buildAuthSession({ user: buildAuthUser({ roles: ["weather"] }) }),
     );
 
-    const guard = roleGuard("budget");
+    const guard = roleGuard("weather");
     const result = TestBed.runInInjectionContext(() =>
       guard({} as ActivatedRouteSnapshot, {} as never),
     );
@@ -53,29 +53,29 @@ describe("roleGuard", () => {
 
   it("devrait rediriger vers /contact avec queryParams si l utilisateur ne possede pas le role", () => {
     authState.login(
-      buildAuthSession({ user: buildAuthUser({ roles: ["weather"] }) }),
+      buildAuthSession({ user: buildAuthUser({ roles: ["sebastian"] }) }),
     );
 
-    const guard = roleGuard("budget");
+    const guard = roleGuard("weather");
     const result = TestBed.runInInjectionContext(() =>
       guard({} as ActivatedRouteSnapshot, {} as never),
     );
 
     expect(result).toBeInstanceOf(UrlTree);
     expect((result as UrlTree).toString()).toBe(
-      "/contact?reason=access&app=budget",
+      "/contact?reason=access&app=weather",
     );
   });
 
   it("devrait rediriger vers /contact avec queryParams si l utilisateur n est pas connecte", () => {
-    const guard = roleGuard("budget");
+    const guard = roleGuard("weather");
     const result = TestBed.runInInjectionContext(() =>
       guard({} as ActivatedRouteSnapshot, {} as never),
     );
 
     expect(result).toBeInstanceOf(UrlTree);
     expect((result as UrlTree).toString()).toBe(
-      "/contact?reason=access&app=budget",
+      "/contact?reason=access&app=weather",
     );
   });
 });
