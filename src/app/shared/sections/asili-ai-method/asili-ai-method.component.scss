@@ -1,0 +1,142 @@
+:host {
+  display: block;
+}
+
+/* ============================================================
+   MA MANIERE DE TRAVAILLER AVEC L'IA — bloc immersif sombre
+   Porte de .ai-method (asili-sections.css). Le theme-night
+   bascule les tokens semantiques ; le bloc applique son fond
+   night local + halo radial (sans re-creer le canvas global).
+   ============================================================ */
+.ai-method {
+  position: relative;
+  background: var(--night);
+  color: var(--ivory);
+  border-radius: var(--r-xl);
+  padding: clamp(36px, 5vw, 72px);
+  overflow: hidden;
+}
+
+/* Halo radial froid (teal + glow), reproduit l'ambiance .atelier. */
+.ai-method::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      80% 60% at 15% 0%,
+      rgba(79, 179, 162, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      70% 70% at 90% 100%,
+      rgba(91, 140, 255, 0.24),
+      transparent 60%
+    );
+}
+
+.ai-method-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(30px, 5vw, 64px);
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.ai-method-title {
+  margin-top: 18px;
+  max-width: 18ch;
+  color: #fff;
+}
+
+/* Accent serif italique teal dans le titre (« remplace pas »). */
+.ai-method-title :is(em, .it) {
+  font-style: italic;
+  color: var(--teal);
+}
+
+.ai-method-lead {
+  margin-top: 22px;
+  color: rgba(251, 243, 230, 0.66);
+}
+
+.ai-steps {
+  display: grid;
+  gap: 14px;
+}
+
+.ai-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  transition:
+    border-color 0.3s,
+    transform 0.4s var(--ease);
+}
+
+.ai-step:hover {
+  border-color: rgba(79, 179, 162, 0.4);
+  transform: translateX(4px);
+}
+
+.ai-n {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--teal);
+  flex: none;
+  padding-top: 3px;
+}
+
+.ai-t {
+  font-weight: 600;
+  color: #fff;
+  font-size: 15.5px;
+}
+
+.ai-d {
+  font-size: 13.5px;
+  color: rgba(251, 243, 230, 0.6);
+  margin-top: 3px;
+}
+
+.ai-rule {
+  margin: clamp(40px, 5vw, 64px) 0 0;
+  padding-top: clamp(32px, 4vw, 48px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.ai-rule p {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 50px);
+  line-height: 1.12;
+  color: #fff;
+  letter-spacing: -0.015em;
+}
+
+.ai-rule p :is(em, .it) {
+  font-style: italic;
+  color: var(--teal);
+}
+
+.ai-rule-who {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(251, 243, 230, 0.55);
+  margin-top: 20px;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 860px) {
+  .ai-method-grid {
+    grid-template-columns: 1fr;
+  }
+}
