@@ -57,13 +57,6 @@ export class NavbarComponent {
         href: "/atelier/meteo",
       },
       {
-        title: $localize`:navbar.atelier.budget.title|@@navAtelierBudgetTitle:Budget`,
-        description: $localize`:navbar.atelier.budget.desc|@@navAtelierBudgetDesc:Gérez votre budget à deux`,
-        icon: "business",
-        iconAlt: "Budget",
-        href: "/atelier/budget",
-      },
-      {
         title: $localize`:navbar.atelier.sebastian.title|@@navAtelierSebastianTitle:Sebastian`,
         description: $localize`:navbar.atelier.sebastian.desc|@@navAtelierSebastianDesc:Votre majordome personnel`,
         icon: "sebastian",

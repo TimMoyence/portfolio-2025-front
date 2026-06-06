@@ -19,7 +19,6 @@ import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
 import { AuthHttpAdapter } from "./core/adapters/auth-http.adapter";
 import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adapter";
-import { BudgetHttpAdapter } from "./core/adapters/budget-http.adapter";
 import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
 import { LeadMagnetHttpAdapter } from "./core/adapters/lead-magnet-http.adapter";
 import { PresentationHttpAdapter } from "./core/adapters/presentation-http.adapter";
@@ -31,7 +30,6 @@ import { authInterceptor } from "./core/http/interceptors/auth.interceptor";
 import { requestIdInterceptor } from "./core/http/interceptors/request-id.interceptor";
 import { AUTH_PORT } from "./core/ports/auth.port";
 import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
-import { BUDGET_PORT } from "./core/ports/budget.port";
 import { CONTACT_PORT } from "./core/ports/contact.port";
 import { LEAD_MAGNET_PORT } from "./core/ports/lead-magnet.port";
 import { PRESENTATION_PORT } from "./core/ports/presentation.port";
@@ -85,10 +83,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: WEATHER_PORT,
       useClass: WeatherHttpAdapter,
-    },
-    {
-      provide: BUDGET_PORT,
-      useClass: BudgetHttpAdapter,
     },
     {
       provide: SEBASTIAN_PORT,

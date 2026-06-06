@@ -25,10 +25,7 @@ module.exports = {
         "scheme-accent-active": "var(--teal-ink)",
         "scheme-accent-focus": "#4fb3a233",
         "scheme-on-accent": "var(--on-accent)",
-        // App tokens (Budget retiré au Lot 1, on les garde pour l'instant)
-        "budget-accent": "#0f7b65",
-        "budget-surface": "#fffaf2",
-        "budget-border": "#ddd5c7",
+        // App tokens
         "weather-sky": "#38bdf8",
         "weather-surface": "#f8faf9",
         "sebastian-gold": "#d4a854",

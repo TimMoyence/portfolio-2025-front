@@ -164,17 +164,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: "atelier/budget",
-    canActivate: [redirectIfAuthorizedGuard("budget")],
-    loadComponent: () =>
-      import("./features/budget/budget-presentation.component").then(
-        (m) => m.BudgetPresentationComponent,
-      ),
-    data: {
-      seoKey: "budget",
-    },
-  },
-  {
     path: "atelier/sebastian",
     canActivate: [redirectIfAuthorizedGuard("sebastian")],
     loadComponent: () =>
@@ -196,17 +185,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: "weather-app",
-    },
-  },
-  {
-    path: "atelier/budget/app",
-    canActivate: [authGuard, roleGuard("budget")],
-    loadComponent: () =>
-      import("./features/budget-app/budget-app.component").then(
-        (m) => m.BudgetAppComponent,
-      ),
-    data: {
-      seoKey: "budget-app",
     },
   },
   {
@@ -260,7 +238,7 @@ export const routes: Routes = [
   },
   {
     path: "commonbudgetTM",
-    redirectTo: "atelier/budget/app",
+    redirectTo: "",
     pathMatch: "full" as const,
   },
   {

@@ -15,7 +15,6 @@ import { resolve } from "node:path";
 const CLIENT_ONLY_ROUTE_PATTERNS: RegExp[] = [
   /^profil\/?$/,
   /^atelier\/meteo\/app(\/|$)/,
-  /^atelier\/budget\/app(\/|$)/,
   /^atelier\/sebastian\/app(\/|$)/,
 ];
 

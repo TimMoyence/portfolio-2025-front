@@ -169,7 +169,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1,
-      "lastmod": "2026-04-17",
+      "lastmod": "2026-06-06",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -567,7 +567,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-04-18",
+      "lastmod": "2026-06-06",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -940,58 +940,6 @@
       }
     },
     {
-      "id": "budget",
-      "path": "/atelier/budget",
-      "index": true,
-      "changefreq": "monthly",
-      "priority": 0.4,
-      "lastmod": "2026-04-18",
-      "locales": {
-        "fr": {
-          "title": "Budget — L'Atelier",
-          "description": "Outil de gestion de budget partagé pour couple avec import CSV, catégorisation automatique et suivi des contributions.",
-          "ogTitle": "Budget — L'Atelier",
-          "ogDescription": "Gérez votre budget commun : import CSV, auto-catégorisation et suivi des contributions.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Budget — L'Atelier",
-            "description": "Outil de gestion de budget partagé pour couple avec import CSV, catégorisation automatique et suivi des contributions.",
-            "applicationCategory": "FinanceApplication",
-            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR"
-            },
-            "screenshot": "https://asilidesign.fr/assets/images/ateliers/budget-screenshot.png",
-            "url": "https://asilidesign.fr/fr/atelier/budget"
-          }
-        },
-        "en": {
-          "title": "Budget — L'Atelier",
-          "description": "Shared couple budget management tool with CSV import, auto-categorization, and contribution tracking.",
-          "ogTitle": "Budget — L'Atelier",
-          "ogDescription": "Manage your shared budget: CSV import, auto-categorization, and contribution tracking.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Budget — L'Atelier",
-            "description": "Shared couple budget management tool with CSV import, auto-categorization, and contribution tracking.",
-            "applicationCategory": "FinanceApplication",
-            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR"
-            },
-            "screenshot": "https://asilidesign.fr/assets/images/ateliers/budget-screenshot.png",
-            "url": "https://asilidesign.fr/en/atelier/budget"
-          }
-        }
-      }
-    },
-    {
       "id": "sebastian",
       "path": "/atelier/sebastian",
       "index": true,
@@ -1059,25 +1007,6 @@
           "description": "Real-time weather application.",
           "ogTitle": "Weather — Application",
           "ogDescription": "Real-time weather application."
-        }
-      }
-    },
-    {
-      "id": "budget-app",
-      "path": "/atelier/budget/app",
-      "index": false,
-      "locales": {
-        "fr": {
-          "title": "Budget — Application",
-          "description": "Outil de gestion de budget partagé.",
-          "ogTitle": "Budget — Application",
-          "ogDescription": "Outil de gestion de budget partagé."
-        },
-        "en": {
-          "title": "Budget — Application",
-          "description": "Shared budget management tool.",
-          "ogTitle": "Budget — Application",
-          "ogDescription": "Shared budget management tool."
         }
       }
     },

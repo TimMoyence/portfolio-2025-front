@@ -34,10 +34,8 @@ describe("app routes", () => {
       "privacy",
       "growth-audit",
       "atelier/meteo",
-      "atelier/budget",
       "atelier/sebastian",
       "atelier/meteo/app",
-      "atelier/budget/app",
       "atelier/sebastian/app",
       "commonbudgetTM",
       "**",
@@ -51,31 +49,6 @@ describe("app routes", () => {
     }
   });
 
-  it("devrait rediriger /atelier/budget vers /app si autorise, sinon afficher la presentation", () => {
-    // Arrange
-    const budgetRoute = routes.find((r) => r.path === "atelier/budget");
-
-    // Assert — le guard redirectIfAuthorizedGuard redirige les utilisateurs
-    // authentifies+autorises vers /app, sinon laisse passer vers la presentation.
-    expect(budgetRoute).toBeDefined();
-    expect(budgetRoute?.canActivate).toBeDefined();
-    expect(budgetRoute?.canActivate?.length).toBe(1);
-    expect(typeof budgetRoute?.canActivate?.[0]).toBe("function");
-  });
-
-  it("devrait protéger /atelier/budget/app avec authGuard et roleGuard budget", () => {
-    // Arrange
-    const budgetAppRoute = routes.find((r) => r.path === "atelier/budget/app");
-
-    // Assert
-    expect(budgetAppRoute).toBeDefined();
-    expect(budgetAppRoute?.canActivate).toBeDefined();
-    expect(budgetAppRoute?.canActivate?.length).toBe(2);
-    expect(budgetAppRoute?.canActivate?.[0]).toBe(authGuard);
-    // Le second guard est le résultat de roleGuard('budget') — une CanActivateFn
-    expect(typeof budgetAppRoute?.canActivate?.[1]).toBe("function");
-  });
-
   it("devrait rediriger /home vers /", () => {
     // Arrange
     const homeRedirect = routes.find((r) => r.path === "home");
@@ -86,7 +59,7 @@ describe("app routes", () => {
     expect(homeRedirect?.pathMatch).toBe("full");
   });
 
-  it("devrait rediriger /commonbudgetTM vers /atelier/budget/app", () => {
+  it("devrait rediriger /commonbudgetTM vers l'accueil", () => {
     // Arrange
     const commonBudgetRedirect = routes.find(
       (r) => r.path === "commonbudgetTM",
@@ -94,7 +67,7 @@ describe("app routes", () => {
 
     // Assert
     expect(commonBudgetRedirect).toBeDefined();
-    expect(commonBudgetRedirect?.redirectTo).toBe("atelier/budget/app");
+    expect(commonBudgetRedirect?.redirectTo).toBe("");
     expect(commonBudgetRedirect?.pathMatch).toBe("full");
   });
 

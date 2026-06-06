@@ -74,13 +74,13 @@ describe("AuthStateService", () => {
             lastName: "B",
             phone: null,
             isActive: true,
-            roles: ["weather", "budget"],
+            roles: ["weather", "sebastian"],
           },
         }),
       );
 
       expect(service.hasRole("weather")).toBeTrue();
-      expect(service.hasRole("budget")).toBeTrue();
+      expect(service.hasRole("sebastian")).toBeTrue();
       expect(service.hasRole("admin")).toBeFalse();
     });
 

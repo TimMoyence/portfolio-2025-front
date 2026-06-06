@@ -157,7 +157,7 @@ export const buildLlmsTxt = (
     ["presentation", "client-project"].includes(p.id),
   );
   const appPages = indexablePages.filter((p) =>
-    ["weather", "budget", "sebastian"].includes(p.id),
+    ["weather", "sebastian"].includes(p.id),
   );
   const contactPages = indexablePages.filter((p) => p.id === "contact");
   const legalPages = indexablePages.filter((p) =>
