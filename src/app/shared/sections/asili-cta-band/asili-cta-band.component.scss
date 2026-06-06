@@ -1,0 +1,70 @@
+:host {
+  display: block;
+}
+
+/* ============================================================
+   BANDE CTA ASILI — bloc encre, halo teal, titre serif centre
+   Porte de .cta / .cta-inner (asili-sections.css)
+   ============================================================ */
+.cta {
+  background: var(--ink);
+  color: var(--ivory);
+  border-radius: var(--r-xl);
+  padding: clamp(48px, 7vw, 100px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Halo radial teal qui monte depuis le bas. */
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    60% 80% at 50% 120%,
+    rgba(79, 179, 162, 0.25),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.cta-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+/* Le kicker reprend le teal vif pour ressortir sur l'encre. */
+.cta-kicker {
+  color: var(--teal);
+}
+
+.cta-title {
+  color: #fff;
+  font-size: clamp(38px, 5.5vw, 78px);
+  max-width: 16ch;
+}
+
+.cta-lead {
+  font-size: clamp(18px, 1.5vw, 22px);
+  line-height: 1.55;
+  color: rgba(251, 243, 230, 0.7);
+  max-width: 48ch;
+}
+
+/* Conteneur des CTA projetes (.btn...), centre comme la maquette (.hero-cta). */
+.cta-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Masque le conteneur quand aucun CTA n'est projete (evite le gap superflu). */
+.cta-actions:empty {
+  display: none;
+}
