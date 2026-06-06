@@ -16,14 +16,13 @@ import { RenderMode, type ServerRoute } from "@angular/ssr";
  * est disponible).
  *
  * Les pages publiques de présentation des ateliers (/atelier/meteo,
- * /atelier/budget, /atelier/sebastian) restent prérendues — elles servent
+ * /atelier/sebastian) restent prérendues — elles servent
  * de landing pages SEO pour chaque mini-app.
  */
 export const serverRoutes: ServerRoute[] = [
   // Routes protégées par authGuard — rendu client uniquement
   { path: "profil", renderMode: RenderMode.Client },
   { path: "atelier/meteo/app", renderMode: RenderMode.Client },
-  { path: "atelier/budget/app", renderMode: RenderMode.Client },
   { path: "atelier/sebastian/app", renderMode: RenderMode.Client },
   { path: "atelier/sebastian/app/dashboard", renderMode: RenderMode.Client },
   { path: "atelier/sebastian/app/rapports", renderMode: RenderMode.Client },
