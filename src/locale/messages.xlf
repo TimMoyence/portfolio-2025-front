@@ -38,32 +38,18 @@
         <note priority="1" from="description">Signup panel description</note>
         <note priority="1" from="meaning">auth.signup.lead</note>
       </trans-unit>
-      <trans-unit id="register.invite-banner.body" datatype="html">
-        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ preview.inviterFirstName }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> t&apos;invite à rejoindre le budget « <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION_1" equiv-text="{{ preview.groupName }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ». Crée ton compte pour rejoindre le groupe. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">95,98</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="register.invite-banner.invalid" datatype="html">
-        <source> Cette invitation n&apos;est plus valide. Tu peux quand même créer un compte. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">109,111</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="7215127729541696793" datatype="html">
         <source>Inscrivez-vous avec Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">129,130</context>
+          <context context-type="linenumber">92,93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authSignupGoogle" datatype="html">
         <source> Inscrivez-vous avec Google </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">142,146</context>
+          <context context-type="linenumber">105,109</context>
         </context-group>
         <note priority="1" from="description">Signup with Google</note>
         <note priority="1" from="meaning">auth.signup.google</note>
@@ -72,11 +58,11 @@
         <source>ou</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">153,154</context>
+          <context context-type="linenumber">116,117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">363,364</context>
+          <context context-type="linenumber">326,327</context>
         </context-group>
         <note priority="1" from="description">Or separator</note>
         <note priority="1" from="meaning">auth.separator.or</note>
@@ -85,11 +71,11 @@
         <source>(facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">224,228</context>
+          <context context-type="linenumber">187,191</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">409,413</context>
+          <context context-type="linenumber">372,376</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -103,11 +89,11 @@
         <source>Ce champ est obligatoire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">237,240</context>
+          <context context-type="linenumber">200,203</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">422,425</context>
+          <context context-type="linenumber">385,388</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -145,11 +131,11 @@
         <source>Merci d’entrer une adresse email valide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">244,247</context>
+          <context context-type="linenumber">207,210</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">429,432</context>
+          <context context-type="linenumber">392,395</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -167,7 +153,7 @@
         <source>Le mot de passe doit contenir au moins 8 caractères.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">254,258</context>
+          <context context-type="linenumber">217,221</context>
         </context-group>
         <note priority="1" from="description">Password length
                               error</note>
@@ -177,11 +163,11 @@
         <source>Valeur invalide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">262,266</context>
+          <context context-type="linenumber">225,229</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">436,440</context>
+          <context context-type="linenumber">399,403</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
@@ -199,14 +185,14 @@
         <source>Créer compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">274,275</context>
+          <context context-type="linenumber">237,238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authSignupSubmit" datatype="html">
         <source>Créer compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">284,288</context>
+          <context context-type="linenumber">247,251</context>
         </context-group>
         <note priority="1" from="description">Signup submit
                           label</note>
@@ -216,7 +202,7 @@
         <source>Création en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">291,295</context>
+          <context context-type="linenumber">254,258</context>
         </context-group>
         <note priority="1" from="description">Signup loading
                           state</note>
@@ -226,7 +212,7 @@
         <source> Se connecter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">324,327</context>
+          <context context-type="linenumber">287,290</context>
         </context-group>
         <note priority="1" from="description">Login panel heading</note>
         <note priority="1" from="meaning">auth.login.title</note>
@@ -235,7 +221,7 @@
         <source> Votre espace de croissance commence </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">330,334</context>
+          <context context-type="linenumber">293,297</context>
         </context-group>
         <note priority="1" from="description">Login panel description</note>
         <note priority="1" from="meaning">auth.login.lead</note>
@@ -244,14 +230,14 @@
         <source>Connectez-vous avec Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">339,340</context>
+          <context context-type="linenumber">302,303</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authLoginGoogle" datatype="html">
         <source> Connectez-vous avec Google </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">352,354</context>
+          <context context-type="linenumber">315,317</context>
         </context-group>
         <note priority="1" from="description">Login with Google</note>
         <note priority="1" from="meaning">auth.login.google</note>
@@ -260,14 +246,14 @@
         <source>Log in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">449</context>
+          <context context-type="linenumber">412</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authLoginSubmit" datatype="html">
         <source>Log in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">457,460</context>
+          <context context-type="linenumber">420,423</context>
         </context-group>
         <note priority="1" from="description">Login submit label</note>
         <note priority="1" from="meaning">auth.login.submit</note>
@@ -276,7 +262,7 @@
         <source>Connexion en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">464,468</context>
+          <context context-type="linenumber">427,431</context>
         </context-group>
         <note priority="1" from="description">Login loading
                           state</note>
@@ -286,14 +272,14 @@
         <source>Mot de passe oublié ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">483,485</context>
+          <context context-type="linenumber">446,448</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authHeroLabel" datatype="html">
         <source>Accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">auth.hero.label</note>
       </trans-unit>
@@ -301,7 +287,7 @@
         <source>Connexion ou inscription</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">auth.hero.title</note>
       </trans-unit>
@@ -309,7 +295,7 @@
         <source>Rejoignez votre espace sécurisé pour suivre vos projets et vos échanges.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="description">auth.hero.description</note>
       </trans-unit>
@@ -317,7 +303,7 @@
         <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
@@ -334,7 +320,7 @@
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
@@ -351,7 +337,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.firstName</note>
@@ -360,7 +346,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.lastName</note>
@@ -369,7 +355,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.email</note>
@@ -378,7 +364,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.password</note>
@@ -387,7 +373,7 @@
         <source>Verification de mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.passwordConfirm</note>
@@ -396,7 +382,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.phone</note>
@@ -405,7 +391,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.email</note>
@@ -414,7 +400,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.password</note>
@@ -423,7 +409,7 @@
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">Signup error message</note>
         <note priority="1" from="meaning">auth.signup.error.passwordMismatch</note>
@@ -432,11 +418,11 @@
         <source>Une erreur est survenue. Veuillez réessayer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">245</context>
+          <context context-type="linenumber">195</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">303</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
@@ -445,7 +431,7 @@
         <source>Inscription reussie. Verifiez votre email pour activer votre compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">249</context>
+          <context context-type="linenumber">199</context>
         </context-group>
         <note priority="1" from="description">Signup success message</note>
         <note priority="1" from="meaning">auth.signup.success</note>
@@ -454,7 +440,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">306</context>
+          <context context-type="linenumber">245</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -463,7 +449,7 @@
         <source>L&apos;authentification Google n&apos;est pas configurée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">330</context>
+          <context context-type="linenumber">269</context>
         </context-group>
         <note priority="1" from="description">auth.google.notConfigured</note>
       </trans-unit>
@@ -471,7 +457,7 @@
         <source>Impossible de charger Google Sign-In.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">340</context>
+          <context context-type="linenumber">279</context>
         </context-group>
         <note priority="1" from="description">auth.google.loadError</note>
       </trans-unit>
@@ -479,7 +465,7 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">381</context>
+          <context context-type="linenumber">309</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
       </trans-unit>
@@ -700,1444 +686,6 @@
           <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">verify-email.error.generic</note>
-      </trans-unit>
-      <trans-unit id="budgetDashboardLoading" datatype="html">
-        <source> Chargement de votre budget… </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">18,20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.no-group.title" datatype="html">
-        <source> Aucun budget pour le moment </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">35,38</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.no-group.description" datatype="html">
-        <source> Crée ton premier budget ou attends qu&apos;un proche t&apos;envoie une invitation par e-mail. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">41,44</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.no-group.cta" datatype="html">
-        <source> Créer mon premier budget </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">53,55</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetDashboardEyebrow" datatype="html">
-        <source> Tableau de bord couple </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">71,73</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetDashboardTitle" datatype="html">
-        <source> Budget partagé </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">77,79</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetDashboardDescription" datatype="html">
-        <source> Un cockpit budget léger pour gérer un budget commun : importez un CSV, classez automatiquement les dépenses, ajustez manuellement les catégories, et gardez les contributions visibles d&apos;un coup d&apos;œil. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">83,86</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetDashboardDataSource" datatype="html">
-        <source> Source de données </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">105,107</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetDashboardUploadCsv" datatype="html">
-        <source> Importer un CSV </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">118,120</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetDashboardResetSample" datatype="html">
-        <source> Réinitialiser l&apos;exemple </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">134,136</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetShareTitle" datatype="html">
-        <source> Partager le budget </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">148,149</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSharePlaceholder" datatype="html">
-        <source>email@exemple.com</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">155,156</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetShareInviteBtn" datatype="html">
-        <source>Inviter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">165,167</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummarySpendingEyebrow" datatype="html">
-        <source>Sortants</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">191,192</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummarySpendingTitle" datatype="html">
-        <source>Total des dépenses</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">193,195</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummarySpendingCaption" datatype="html">
-        <source>Toutes les transactions sortantes de la période chargée.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">196,199</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummaryIncomingEyebrow" datatype="html">
-        <source>Entrants</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">200,201</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummaryIncomingTitle" datatype="html">
-        <source>Total des entrants</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">202,204</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummaryIncomingCaption" datatype="html">
-        <source>Virements, dépôts et contributions partagées.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">205,208</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummaryTransfersEyebrow" datatype="html">
-        <source>Virements</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">209,210</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummaryPocketsTitle" datatype="html">
-        <source>Pockets</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">212,213</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSummaryPocketsCaption" datatype="html">
-        <source>Argent transféré du compte commun vers les pockets.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">214,218</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersEyebrow" datatype="html">
-        <source> Filtres </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">240,243</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersTitle" datatype="html">
-        <source> Affiner le tableau </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">246,248</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersDescription" datatype="html">
-        <source> Cherchez par marchand, isolez une catégorie, ou affichez uniquement les lignes en attente avant de corriger les classifications. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">252,256</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersSearchLabel" datatype="html">
-        <source>Rechercher dans la description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">259,261</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersSearchPlaceholder" datatype="html">
-        <source>Amazon, EDF, Carrefour…</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">265,267</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersCategoryLabel" datatype="html">
-        <source>Catégorie</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">272,274</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersStateLabel" datatype="html">
-        <source>État</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">288,290</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersStateAll" datatype="html">
-        <source> Tous les états </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">295,296</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersStateCompleted" datatype="html">
-        <source> Terminé </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">298,300</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersStatePending" datatype="html">
-        <source> En attente </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">301,303</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersTypeLabel" datatype="html">
-        <source>Fixe ou variable</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">307,309</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersTypeAll" datatype="html">
-        <source>Tous</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">313,314</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersTypeFixed" datatype="html">
-        <source> Fixe </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">315,316</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersTypeVariable" datatype="html">
-        <source> Variable </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.html</context>
-          <context context-type="linenumber">318,320</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsDeleteConfirm" datatype="html">
-        <source>Supprimer cette transaction ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">293</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.share.invalid-email" datatype="html">
-        <source>Veuillez entrer un email valide.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">322</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.share.shared" datatype="html">
-        <source>Budget partagé avec <x id="PH" equiv-text="email"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">334</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.share.already-member" datatype="html">
-        <source><x id="PH" equiv-text="email"/> est déjà membre de ce groupe.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">338</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.share.invited" datatype="html">
-        <source>Invitation envoyée à <x id="PH" equiv-text="email"/> (valable 7 jours).</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">342</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.share.quota" datatype="html">
-        <source>Tu as atteint la limite de 5 invitations par jour. Réessaie demain.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">351</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.share.forbidden" datatype="html">
-        <source>Seul le propriétaire peut partager ce budget.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">355</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.share.error" datatype="html">
-        <source>Erreur lors du partage. Réessaie dans quelques instants.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">359</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetFiltersCategoryAll" datatype="html">
-        <source>Toutes les catégories</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/budget-app.component.ts</context>
-          <context context-type="linenumber">747</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetChartDoughnutTitle" datatype="html">
-        <source> Répartition des dépenses </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-chart/budget-chart.component.ts</context>
-          <context context-type="linenumber">34,36</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetChartBarTitle" datatype="html">
-        <source> Budget vs Réel </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-chart/budget-chart.component.ts</context>
-          <context context-type="linenumber">43,45</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetContributionsPanelEyebrow" datatype="html">
-        <source> Contributions </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-contributions-panel/budget-contributions-panel.component.ts</context>
-          <context context-type="linenumber">41,44</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetContributionsPanelTitle" datatype="html">
-        <source> Salaires du mois </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-contributions-panel/budget-contributions-panel.component.ts</context>
-          <context context-type="linenumber">47,51</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetContributionsPanelZeroTotal" datatype="html">
-        <source> Renseigne ton salaire pour voir ta contribution. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-contributions-panel/budget-contributions-panel.component.ts</context>
-          <context context-type="linenumber">102,105</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetContributionsPanelTotal" datatype="html">
-        <source> Total </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-contributions-panel/budget-contributions-panel.component.ts</context>
-          <context context-type="linenumber">112,114</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetEmptyStateTitle" datatype="html">
-        <source> Aucune donnée pour ce mois </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
-          <context context-type="linenumber">29,32</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetEmptyStateDescription" datatype="html">
-        <source> Importez un fichier CSV ou créez votre première entrée manuellement pour commencer à suivre votre budget. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
-          <context context-type="linenumber">36,40</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetEmptyStateImportAriaLabel" datatype="html">
-        <source>Importer un fichier CSV</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
-          <context context-type="linenumber">45,46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetEmptyStateImportBtn" datatype="html">
-        <source> Importer un CSV </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
-          <context context-type="linenumber">50,54</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetEmptyStateCreateAriaLabel" datatype="html">
-        <source>Créer une entrée manuellement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
-          <context context-type="linenumber">57,58</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetEmptyStateCreateBtn" datatype="html">
-        <source> Créer une entrée manuellement </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-empty-state/budget-empty-state.component.html</context>
-          <context context-type="linenumber">62,66</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetExportInProgress" datatype="html">
-        <source>Export en cours...</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-export/budget-export.component.ts</context>
-          <context context-type="linenumber">30,32</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetExportBtn" datatype="html">
-        <source>Exporter en PDF</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-export/budget-export.component.ts</context>
-          <context context-type="linenumber">32,34</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetGoalsEyebrow" datatype="html">
-        <source> Objectifs </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-goals/budget-goals.component.ts</context>
-          <context context-type="linenumber">43,45</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetGoalsTitle" datatype="html">
-        <source> Suivi par catégorie </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-goals/budget-goals.component.ts</context>
-          <context context-type="linenumber">49,51</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetGoalsEmpty" datatype="html">
-        <source> Aucune catégorie avec un objectif défini. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-goals/budget-goals.component.ts</context>
-          <context context-type="linenumber">110,112</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMembersPanelEyebrow" datatype="html">
-        <source> Membres </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-members-panel/budget-members-panel.component.ts</context>
-          <context context-type="linenumber">27,29</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMembersPanelTitle" datatype="html">
-        <source> Groupe partagé </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-members-panel/budget-members-panel.component.ts</context>
-          <context context-type="linenumber">33,35</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMembersPanelInviteBtn" datatype="html">
-        <source> Inviter </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-members-panel/budget-members-panel.component.ts</context>
-          <context context-type="linenumber">42,45</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMembersPanelOwnerBadge" datatype="html">
-        <source> Owner </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-members-panel/budget-members-panel.component.ts</context>
-          <context context-type="linenumber">61,63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMembersPanelRemoveBtn" datatype="html">
-        <source> Retirer </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-members-panel/budget-members-panel.component.ts</context>
-          <context context-type="linenumber">70,72</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMembersPanelEmpty" datatype="html">
-        <source> Aucun membre dans ce groupe. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-members-panel/budget-members-panel.component.ts</context>
-          <context context-type="linenumber">79,82</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMonthPickerLabel" datatype="html">
-        <source> Mois </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-month-picker/budget-month-picker.component.html</context>
-          <context context-type="linenumber">7,10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetMonthPickerAriaLabel" datatype="html">
-        <source>Sélectionner un mois</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-month-picker/budget-month-picker.component.html</context>
-          <context context-type="linenumber">14,15</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.pending.title" datatype="html">
-        <source> Invitations en attente </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-pending-invitations/budget-pending-invitations.component.html</context>
-          <context context-type="linenumber">10,12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-app.pending.expires" datatype="html">
-        <source> expire dans <x id="INTERPOLATION" equiv-text="{{ inv.daysLeft }}"/> j </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-pending-invitations/budget-pending-invitations.component.html</context>
-          <context context-type="linenumber">20,21</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringEyebrow" datatype="html">
-        <source> Automatisation </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">37,39</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringTitle" datatype="html">
-        <source> Entrées récurrentes </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">43,45</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringCancelBtn" datatype="html">
-        <source>Annuler</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">52,54</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringAddBtn" datatype="html">
-        <source>Ajouter une entrée récurrente</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">55,58</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormDescription" datatype="html">
-        <source> Description <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
-              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
-              type=&quot;text&quot;
-              [value]=&quot;formDescription()&quot;
-              (input)=&quot;formDescription.set(readInput($event))&quot;
-            /&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">75,82</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormAmount" datatype="html">
-        <source> Montant <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
-              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
-              type=&quot;number&quot;
-              step=&quot;0.01&quot;
-              [value]=&quot;formAmount()&quot;
-              (input)=&quot;formAmount.set(toNumber(readInput($event)))&quot;
-            /&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">87,95</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormFrequency" datatype="html">
-        <source>Fréquence</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">97,99</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormType" datatype="html">
-        <source>Type</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">109,111</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormCategory" datatype="html">
-        <source>Catégorie</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">122,124</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormDayOfMonth" datatype="html">
-        <source> Jour du mois <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
-                class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
-                type=&quot;number&quot;
-                min=&quot;1&quot;
-                max=&quot;31&quot;
-                [value]=&quot;formDayOfMonth()&quot;
-                (input)=&quot;formDayOfMonth.set(toNumber(readInput($event)))&quot;
-              /&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">139,148</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormDayOfWeek" datatype="html">
-        <source>Jour de la semaine</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">153,155</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormStartDate" datatype="html">
-        <source> Date de début <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
-              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
-              type=&quot;date&quot;
-              [value]=&quot;formStartDate()&quot;
-              (input)=&quot;formStartDate.set(readInput($event))&quot;
-            /&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">170,177</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFormEndDate" datatype="html">
-        <source> Date de fin (optionnel) <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input
-              class=&quot;rounded-xl border border-[#d7cfbf] bg-[#fffdf8] px-3 py-2 text-slate-900&quot;
-              type=&quot;date&quot;
-              [value]=&quot;formEndDate()&quot;
-              (input)=&quot;formEndDate.set(readInput($event))&quot;
-            /&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">182,189</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringCreateBtn" datatype="html">
-        <source>Créer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">196,198</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringColDescription" datatype="html">
-        <source>Description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">208,209</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringColAmount" datatype="html">
-        <source>Montant</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">209,210</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringColFrequency" datatype="html">
-        <source>Fréquence</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">210,211</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringColCategory" datatype="html">
-        <source>Catégorie</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">211,212</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringColActive" datatype="html">
-        <source>Actif</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">212,214</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDeleteBtn" datatype="html">
-        <source>Supprimer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">245,247</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringEmpty" datatype="html">
-        <source> Aucune entrée récurrente configurée. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">253,255</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringCategoryNone" datatype="html">
-        <source>Aucune</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">372</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDaySunday" datatype="html">
-        <source>Dimanche</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">376</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDayMonday" datatype="html">
-        <source>Lundi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">377</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDayTuesday" datatype="html">
-        <source>Mardi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">378</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDayWednesday" datatype="html">
-        <source>Mercredi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">379</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDayThursday" datatype="html">
-        <source>Jeudi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">380</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDayFriday" datatype="html">
-        <source>Vendredi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">381</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringDaySaturday" datatype="html">
-        <source>Samedi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">382</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFreqMonthly" datatype="html">
-        <source>Mensuelle</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">388</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFreqWeekly" datatype="html">
-        <source>Hebdomadaire</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">389</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringFreqBiweekly" datatype="html">
-        <source>Bimensuelle</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">390</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringTypeFixed" datatype="html">
-        <source>Fixe</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">398</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetRecurringTypeVariable" datatype="html">
-        <source>Variable</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-recurring/budget-recurring.component.ts</context>
-          <context context-type="linenumber">399</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsEyebrow" datatype="html">
-        <source> Objectifs </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">36,39</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsTitle" datatype="html">
-        <source> Epargne &amp; Plafonds </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">42,46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsDeleteBtn" datatype="html">
-        <source> Supprimer </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">75,76</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsEmpty" datatype="html">
-        <source> Aucun objectif defini pour ce groupe. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">96,99</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsFormTitle" datatype="html">
-        <source> Nouvel objectif </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">110,114</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsFormNamePlaceholder" datatype="html">
-        <source>Nom de l&apos;objectif</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">120,124</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsKindSavings" datatype="html">
-        <source> Epargne </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">129,131</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsKindSpendingLimit" datatype="html">
-        <source> Plafond de depenses </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">135,138</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsKindCategoryLimit" datatype="html">
-        <source> Plafond par categorie </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">141,144</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsFormAmountPlaceholder" datatype="html">
-        <source>Montant cible (€)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">154,157</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsFormCategoryPlaceholder" datatype="html">
-        <source> -- Choisir une categorie -- </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">164,166</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsFormDeadlinePlaceholder" datatype="html">
-        <source>Echeance (optionnel)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">178,183</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetSavingsGoalsFormSubmitBtn" datatype="html">
-        <source> Ajouter l&apos;objectif </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-savings-goals/budget-savings-goals.component.ts</context>
-          <context context-type="linenumber">186,189</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsEyebrow" datatype="html">
-        <source> Transactions </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">34,36</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsTitle" datatype="html">
-        <source> Vérifiez et corrigez les catégories </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">40,42</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsDescription" datatype="html">
-        <source> Chaque transaction peut être réassignée manuellement. Les totaux se mettent à jour immédiatement. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">47,50</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsColDate" datatype="html">
-        <source> Date </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">63,65</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsColDescription" datatype="html">
-        <source> Description </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">69,71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsColType" datatype="html">
-        <source> Type </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">75,77</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsColState" datatype="html">
-        <source> État </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">81,83</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsColAmount" datatype="html">
-        <source> Montant </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">87,89</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsColCategory" datatype="html">
-        <source> Catégorie </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">93,95</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsColActions" datatype="html">
-        <source> Actions </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">99,101</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsChangeCategory" datatype="html">
-        <source> Changer de catégorie </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">133,134</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsEmpty" datatype="html">
-        <source> Aucune transaction ne correspond aux filtres en cours. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">194,195</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetTransactionsDeleteAria" datatype="html">
-        <source>Supprimer la transaction <x id="description" equiv-text="description"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget-app/components/budget-transactions-table/budget-transactions-table.component.ts</context>
-          <context context-type="linenumber">217</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.logement" datatype="html">
-        <source>Logement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">105</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.courses" datatype="html">
-        <source>Courses</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">112</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.loisirs" datatype="html">
-        <source>Loisirs</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">119</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.transport" datatype="html">
-        <source>Transport</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">126</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.sante" datatype="html">
-        <source>Sante</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">133</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.abonnements" datatype="html">
-        <source>Abonnements</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">140</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.epargne" datatype="html">
-        <source>Epargne</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">147</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.cat.autres" datatype="html">
-        <source>Autres</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">154</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.month.jan" datatype="html">
-        <source>Jan</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">214</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.month.fev" datatype="html">
-        <source>Fev</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">215</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.month.mar" datatype="html">
-        <source>Mar</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">216</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.month.avr" datatype="html">
-        <source>Avr</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">217</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">223</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.month.mai" datatype="html">
-        <source>Mai</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">218</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.month.jun" datatype="html">
-        <source>Jun</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">219</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.0.title" datatype="html">
-        <source>Suivi en temps reel</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">286</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.0.description" datatype="html">
-        <source>Visualisez vos depenses au fur et a mesure. Graphiques par categorie, evolution mensuelle et alertes quand un budget est depasse.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">287</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.1.title" datatype="html">
-        <source>Contributions equitables</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">291</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.1.description" datatype="html">
-        <source>Chacun contribue au prorata de ses revenus. Le calcul est automatique, transparent et mis a jour chaque mois.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">292</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.2.title" datatype="html">
-        <source>Import CSV intelligent</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">296</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.2.description" datatype="html">
-        <source>Importez vos releves bancaires en un clic. L&apos;auto-categorisation reconnait vos depenses recurrentes.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">297</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.3.title" datatype="html">
-        <source>Auto-categorisation IA</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">301</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.feature.3.description" datatype="html">
-        <source>Les transactions sont classees automatiquement grace a l&apos;intelligence artificielle. Fini le tri manuel.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">302</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.0.title" datatype="html">
-        <source>Creez votre budget</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">319</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.0.description" datatype="html">
-        <source>Definissez vos categories, limites mensuelles et partagez l&apos;acces avec votre partenaire.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">320</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.1.title" datatype="html">
-        <source>Importez vos releves</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">325</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.1.description" datatype="html">
-        <source>Glissez votre CSV bancaire. Les transactions sont triees et categorisees automatiquement.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">326</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.2.title" datatype="html">
-        <source>Suivez vos objectifs</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">331</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.2.description" datatype="html">
-        <source>Chaque categorie a sa jauge. Vous voyez en un clin d&apos;oeil ou vous en etes.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">332</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.3.title" datatype="html">
-        <source>Analysez l&apos;historique</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">337</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budget-pres.timeline.3.description" datatype="html">
-        <source>Comparez mois par mois, identifiez les tendances et ajustez votre budget en consequence.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation-data.ts</context>
-          <context context-type="linenumber">338</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="budgetPresKicker" datatype="html">
-        <source> Common Budget T&amp;M </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">14,17</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.kicker</note>
-      </trans-unit>
-      <trans-unit id="budgetPresHeadline" datatype="html">
-        <source> Fini les prises de <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-budget-accent&quot;&gt;"/>tete<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> sur l&apos;argent </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">20,23</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.headline</note>
-      </trans-unit>
-      <trans-unit id="budgetPresDesc" datatype="html">
-        <source> Gerez votre budget a deux en toute serenite. Contributions equitables, suivi par categorie et import CSV intelligent. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">27,30</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.desc</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCtaStart" datatype="html">
-        <source>Commencer gratuitement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">35,39</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cta.start</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCtaDiscover" datatype="html">
-        <source>Decouvrir ↓</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">41,46</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cta.discover</note>
-      </trans-unit>
-      <trans-unit id="budgetPresDonutAria" datatype="html">
-        <source>Repartition des depenses par categorie</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">70,73</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.donut.aria</note>
-      </trans-unit>
-      <trans-unit id="budgetPresDonutLabel" datatype="html">
-        <source>Depenses totales</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">79,82</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.donut.label</note>
-      </trans-unit>
-      <trans-unit id="budgetPresContribKicker" datatype="html">
-        <source> Contributions </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">145,148</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.contrib.kicker</note>
-      </trans-unit>
-      <trans-unit id="budgetPresContribTitle" datatype="html">
-        <source> Chacun sa juste part </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">151,154</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.contrib.title</note>
-      </trans-unit>
-      <trans-unit id="budgetPresContribDesc" datatype="html">
-        <source> Les contributions sont calculees au prorata des revenus. Transparent, equitable et automatique. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">157,162</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.contrib.desc</note>
-      </trans-unit>
-      <trans-unit id="budgetPresContribMonth" datatype="html">
-        <source>/ mois</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">189,195</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.contrib.month</note>
-      </trans-unit>
-      <trans-unit id="budgetPresContribCombined" datatype="html">
-        <source> Revenus combines </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">205,207</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.contrib.combined</note>
-      </trans-unit>
-      <trans-unit id="budgetPresFeatKicker" datatype="html">
-        <source> Fonctionnalites </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">237,240</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.feat.kicker</note>
-      </trans-unit>
-      <trans-unit id="budgetPresFeatTitle" datatype="html">
-        <source> Tout ce qu&apos;il faut pour gerer a deux </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">243,246</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.feat.title</note>
-      </trans-unit>
-      <trans-unit id="budgetPresFeatDesc" datatype="html">
-        <source> Import intelligent, repartition equitable, categories personnalisables et suivi en temps reel. Votre budget n&apos;aura jamais ete aussi clair. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">249,254</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.feat.desc</note>
-      </trans-unit>
-      <trans-unit id="budgetPresPreviewKicker" datatype="html">
-        <source> Apercu </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">284,287</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.preview.kicker</note>
-      </trans-unit>
-      <trans-unit id="budgetPresPreviewTitle" datatype="html">
-        <source> Un tableau de bord qui parle </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">290,293</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.preview.title</note>
-      </trans-unit>
-      <trans-unit id="budgetPresPreviewDesc" datatype="html">
-        <source> Ajoutez vos depenses en quelques secondes. Le formulaire reconnait les categories, calcule les totaux et met a jour le donut en temps reel. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">296,301</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.preview.desc</note>
-      </trans-unit>
-      <trans-unit id="budgetPresFormKicker" datatype="html">
-        <source> Nouvelle depense </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">310,312</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.form.kicker</note>
-      </trans-unit>
-      <trans-unit id="budgetPresFormDesc" datatype="html">
-        <source>Description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">318,321</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.form.desc</note>
-      </trans-unit>
-      <trans-unit id="budgetPresFormAmount" datatype="html">
-        <source>Montant</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">335,338</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.form.amount</note>
-      </trans-unit>
-      <trans-unit id="budgetPresFormCategory" datatype="html">
-        <source>Categorie</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">351,354</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.form.category</note>
-      </trans-unit>
-      <trans-unit id="budgetPresTimelineKicker" datatype="html">
-        <source> Comment ca marche </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">379,382</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.timeline.kicker</note>
-      </trans-unit>
-      <trans-unit id="budgetPresTimelineTitle" datatype="html">
-        <source> 4 etapes, zero prise de tete </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">385,390</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.timeline.title</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCatKicker" datatype="html">
-        <source> Categories </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">426,429</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cat.kicker</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCatTitle" datatype="html">
-        <source> Vos depenses en detail </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">432,436</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cat.title</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCtaTitle" datatype="html">
-        <source> Pret a reprendre le controle de vos finances ? </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">476,478</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cta.title</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCtaDesc" datatype="html">
-        <source> Creez votre budget partage en quelques minutes. Import CSV, categories intelligentes et suivi en temps reel. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">479,484</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cta.desc</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCtaFinal" datatype="html">
-        <source>Commencer gratuitement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">487,492</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cta.final</note>
-      </trans-unit>
-      <trans-unit id="budgetPresCtaTrust" datatype="html">
-        <source> Gratuit — Aucune carte bancaire requise </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/budget/budget-presentation.component.html</context>
-          <context context-type="linenumber">495,499</context>
-        </context-group>
-        <note priority="1" from="meaning">budget.pres.cta.trust</note>
       </trans-unit>
       <trans-unit id="clientProjects.hero.label" datatype="html">
         <source>Créatif</source>
@@ -2985,19 +1533,11 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         </context-group>
         <note priority="1" from="description">contact.access.app.weather</note>
       </trans-unit>
-      <trans-unit id="contactAccessAppBudget" datatype="html">
-        <source>l&apos;application Budget</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">119</context>
-        </context-group>
-        <note priority="1" from="description">contact.access.app.budget</note>
-      </trans-unit>
       <trans-unit id="contactAccessAppSebastian" datatype="html">
         <source>l&apos;application Sebastian</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">contact.access.app.sebastian</note>
       </trans-unit>
@@ -3005,7 +1545,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>l&apos;atelier <x id="app" equiv-text="normalizedApp"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">contact.access.app.generic</note>
       </trans-unit>
@@ -3013,7 +1553,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Bonjour Tim, je souhaite un accès à <x id="appLabel" equiv-text="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">contact.access.message</note>
       </trans-unit>
@@ -3021,7 +1561,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.firstName</note>
       </trans-unit>
@@ -3029,7 +1569,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.lastName</note>
       </trans-unit>
@@ -3037,7 +1577,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.email</note>
       </trans-unit>
@@ -3045,7 +1585,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.phone</note>
       </trans-unit>
@@ -3053,7 +1593,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Merci de vérifier les champs en rouge.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.invalid</note>
       </trans-unit>
@@ -3061,7 +1601,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Une erreur est survenue. Veuillez réessayer plus tard.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.generic</note>
       </trans-unit>
@@ -3069,7 +1609,7 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <source>Message envoyé. Je reviens vers vous rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">contact.form.success</note>
       </trans-unit>
@@ -12309,7 +10849,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Accueil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.home</note>
@@ -12318,7 +10858,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.presentation</note>
@@ -12327,7 +10867,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.projects</note>
@@ -12336,7 +10876,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.services</note>
@@ -12345,7 +10885,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.formations</note>
@@ -12354,7 +10894,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.growthAudit</note>
@@ -12363,7 +10903,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.contact</note>
@@ -12372,7 +10912,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.facebook</note>
@@ -12381,7 +10921,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
@@ -12390,7 +10930,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.terms</note>
@@ -12399,7 +10939,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.privacy</note>
@@ -12408,7 +10948,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Paramètres de cookies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.cookiesSettings</note>
@@ -12550,27 +11090,11 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.meteo.desc</note>
       </trans-unit>
-      <trans-unit id="navAtelierBudgetTitle" datatype="html">
-        <source>Budget</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-        <note priority="1" from="meaning">navbar.atelier.budget.title</note>
-      </trans-unit>
-      <trans-unit id="navAtelierBudgetDesc" datatype="html">
-        <source>Gérez votre budget à deux</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-        <note priority="1" from="meaning">navbar.atelier.budget.desc</note>
-      </trans-unit>
       <trans-unit id="navAtelierSebastianTitle" datatype="html">
         <source>Sebastian</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.title</note>
       </trans-unit>
@@ -12578,7 +11102,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Votre majordome personnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="meaning">navbar.atelier.sebastian.desc</note>
       </trans-unit>
@@ -12586,7 +11110,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">Formations dropdown label</note>
         <note priority="1" from="meaning">navbar.formations.label</note>
@@ -12595,7 +11119,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>IA pour Solopreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.ia.title</note>
       </trans-unit>
@@ -12603,7 +11127,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Panorama des outils IA pour entrepreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.ia.desc</note>
       </trans-unit>
@@ -12611,7 +11135,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Automatiser avec l&apos;IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.auto.title</note>
       </trans-unit>
@@ -12619,7 +11143,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>5 workflows non-tech pour gagner 2h/semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.auto.desc</note>
       </trans-unit>
@@ -12627,7 +11151,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Audit SEO DIY</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.seo.title</note>
       </trans-unit>
@@ -12635,7 +11159,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>7 checks en 20 min avec 5 outils gratuits</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.seo.desc</note>
       </trans-unit>
@@ -12643,7 +11167,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Toutes les formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.all.title</note>
       </trans-unit>
@@ -12651,7 +11175,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Voir le catalogue complet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.all.desc</note>
       </trans-unit>
@@ -12659,7 +11183,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.open</note>
@@ -12668,7 +11192,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.close</note>
@@ -12677,7 +11201,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <note priority="1" from="description">Mobile nav heading</note>
         <note priority="1" from="meaning">navbar.menu.heading</note>
@@ -12686,7 +11210,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Fermer le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.close</note>
@@ -12695,7 +11219,7 @@ L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les l
         <source>Ouvrir le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>
