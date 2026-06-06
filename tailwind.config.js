@@ -4,104 +4,96 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      screens: {
-        sm: "640px",
-        md: "768px",
-        lg: "1024px",
-        xl: "1280px",
-      },
-      padding: "1rem", // ~5%
+      screens: { sm: "640px", md: "768px", lg: "1024px", xl: "1280px" },
+      padding: "1rem",
     },
     extend: {
-      // --------------------
-      // COULEURS PRIMITIVES
-      // --------------------
       colors: {
-        // --------------------
-        // COLOR SCHEME (UI TOKENS)
-        // --------------------
-        "scheme-background": "#ffffff",
-        "scheme-surface": "#ffffff",
-        "scheme-surface-hover": "#f6fbfa",
-
-        "scheme-text": "#0c0902",
-        "scheme-text-muted": "#54524d",
-
-        "scheme-border": "#0c090226",
-
-        "scheme-warning": "#f59e0b",
-        "scheme-warning-subtle": "#fef3c7", // amber-100 (fond warning leger)
-        "scheme-error": "#ef4444", // red-500
-        "scheme-success": "#16a34a", // green-600
-
-        "scheme-accent": "#4fb3a2",
-
-        "scheme-accent-hover": "#3f9c8e",
-        "scheme-accent-active": "#2f7f74",
+        // Compat : tokens existants remappés sur les sémantiques Asili (variables CSS)
+        "scheme-background": "var(--bg)",
+        "scheme-surface": "var(--surface)",
+        "scheme-surface-hover": "var(--ivory)",
+        "scheme-text": "var(--text-strong)",
+        "scheme-text-muted": "var(--text-mute)",
+        "scheme-border": "var(--border)",
+        "scheme-warning": "var(--warning)",
+        "scheme-warning-subtle": "#fef3c7",
+        "scheme-error": "var(--danger)",
+        "scheme-success": "var(--success)",
+        "scheme-accent": "var(--accent)",
+        "scheme-accent-hover": "var(--teal-deep)",
+        "scheme-accent-active": "var(--teal-ink)",
         "scheme-accent-focus": "#4fb3a233",
-        "scheme-on-accent": "#ffffff",
-
-        // --------------------
-        // APP-SPECIFIC TOKENS
-        // (extraits des usages reels: budget / weather / sebastian)
-        // --------------------
+        "scheme-on-accent": "var(--on-accent)",
+        // App tokens (Budget retiré au Lot 1, on les garde pour l'instant)
         "budget-accent": "#0f7b65",
         "budget-surface": "#fffaf2",
         "budget-border": "#ddd5c7",
-
         "weather-sky": "#38bdf8",
         "weather-surface": "#f8faf9",
-
         "sebastian-gold": "#d4a854",
         "sebastian-muted": "#54524d",
         "sebastian-amber": "#b8965a",
+        // Tokens Asili nommés (nouveaux composants)
+        cream: "var(--cream)",
+        ivory: "var(--ivory)",
+        sand: "var(--sand)",
+        line: "var(--line)",
+        ink: "var(--ink)",
+        "ink-soft": "var(--ink-soft)",
+        "ink-mute": "var(--ink-mute)",
+        teal: "var(--teal)",
+        "teal-deep": "var(--teal-deep)",
+        "teal-ink": "var(--teal-ink)",
+        glow: "var(--glow)",
+        "glow-soft": "var(--glow-soft)",
+        gold: "var(--gold)",
+        "gold-soft": "var(--gold-soft)",
+        "gold-deep": "var(--gold-deep)",
+        night: "var(--night)",
+        "night-2": "var(--night-2)",
+        "night-3": "var(--night-3)",
       },
-
-      // --------------------
-      // TYPO / FONT SIZES
-      // (génère text-h1, text-h2, text-medium, etc.)
-      // --------------------
       fontFamily: {
-        heading: ['"Nunito"', "italic", "system-ui", "sans-serif"],
-        body: ['"Merriweather Sans"', "system-ui", "sans-serif"],
+        display: ['"Instrument Serif"', "Georgia", "serif"],
+        heading: ['"Instrument Serif"', "Georgia", "serif"],
+        sans: ['"Hanken Grotesk"', "system-ui", "sans-serif"],
+        body: ['"Hanken Grotesk"', "system-ui", "sans-serif"],
+        mono: ['"Geist Mono"', "ui-monospace", "monospace"],
       },
       fontSize: {
-        h1: ["3rem", { lineHeight: "1.15", letterSpacing: "-0.045em" }], // 48px
-        h2: ["2.5rem", { lineHeight: "1.18", letterSpacing: "-0.04em" }], // 40px
-        h3: ["2.125rem", { lineHeight: "1.22", letterSpacing: "-0.03em" }], // 34px
-        h4: ["1.75rem", { lineHeight: "1.28", letterSpacing: "-0.02em" }], // 28px
-        h5: ["1.5rem", { lineHeight: "1.35", letterSpacing: "-0.01em" }], // 24px
-        h6: ["1rem", { lineHeight: "1.40", letterSpacing: "-0.005em" }], // 24px
-
+        h1: ["3rem", { lineHeight: "1.15", letterSpacing: "-0.045em" }],
+        h2: ["2.5rem", { lineHeight: "1.18", letterSpacing: "-0.04em" }],
+        h3: ["2.125rem", { lineHeight: "1.22", letterSpacing: "-0.03em" }],
+        h4: ["1.75rem", { lineHeight: "1.28", letterSpacing: "-0.02em" }],
+        h5: ["1.5rem", { lineHeight: "1.35", letterSpacing: "-0.01em" }],
+        h6: ["1rem", { lineHeight: "1.4", letterSpacing: "-0.005em" }],
         large: ["1.5rem", { lineHeight: "1.6" }],
         medium: ["1.25rem", { lineHeight: "1.65" }],
         small: ["1rem", { lineHeight: "1.65" }],
       },
-
-      // --------------------
-      // RADIUS
-      // (rounded-card, rounded-form, rounded-image, etc.)
-      // --------------------
       borderRadius: {
-        card: "0.5rem", // 8px
+        card: "0.5rem",
         form: "0.5rem",
         image: "0.75rem",
-        button: "9999px", // pill
+        button: "9999px",
+        pill: "999px",
       },
-
-      // --------------------
-      // SPACING / HEIGHTS
-      // --------------------
-      spacing: {
-        18: "4.5rem", // 72px => pour h-18, min-h-18
+      spacing: { 18: "4.5rem" },
+      maxWidth: { wrap: "1280px" },
+      transitionTimingFunction: {
+        organic: "cubic-bezier(0.22,1,0.36,1)",
+        soft: "cubic-bezier(0.33,0.02,0.13,1)",
       },
-
-      // Optionnel : ombres issues de effect.medium, etc. :contentReference[oaicite:2]{index=2}
       boxShadow: {
         xxs: "0 1px 2px 0 #0000000d",
         xs: "0 1px 2px 0 #0000000f, 0 1px 3px 0 #0000001a",
         sm: "0 2px 4px -2px #0000000f, 0 4px 8px -2px #0000001a",
         md: "0 4px 6px -2px #00000008, 0 12px 16px -4px #00000014",
+        soft: "var(--shadow-soft)",
+        card: "var(--shadow-card)",
+        lift: "var(--shadow-lift)",
+        glow: "var(--shadow-glow)",
       },
     },
   },

@@ -1,35 +1,12 @@
+/* Design tokens Asili (variables CSS + thèmes night/gold) */
+@import "./styles/tokens";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Utilitaires custom pour coller au HTML Relume */
+/* Base typographique Asili */
+@import "./styles/base";
 
-@layer utilities {
-  /* Rayons */
-  .rounded-card {
-    @apply rounded-lg;
-  } // 0.5rem
-  .rounded-form {
-    @apply rounded-lg;
-  }
-  .rounded-image {
-    @apply rounded-xl;
-  } // par ex. un peu plus arrondi
-  .rounded-button {
-    @apply rounded-lg;
-  }
-
-  /* Fonts : tu peux ajouter font-heading aux titres si tu veux le serif */
-  .font-heading {
-    font-family: "Nunito", italic, system-ui, sans-serif;
-  }
-  .font-body {
-    font-family: "Merriweather Sans", system-ui, sans-serif;
-    font-size: 1.125rem;
-  }
-}
-
-:focus {
-  outline: 2px solid theme("colors.scheme-accent");
-  outline-offset: 4px;
-}
+/* Primitives Asili */
+@import "./styles/primitives";

@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
+import { AsiliBackgroundComponent } from "./shared/components/asili-background/asili-background.component";
 import { FooterComponent } from "./shared/components/footer/footer.component";
 import { CookieBannerComponent } from "./shared/components/cookie-banner/cookie-banner.component";
 import { NavbarComponent } from "./shared/components/navbar/navbar.component";
@@ -13,6 +14,7 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
   imports: [
     CommonModule,
     RouterOutlet,
+    AsiliBackgroundComponent,
     NavbarComponent,
     SeoManagerComponent,
     FooterComponent,
@@ -20,6 +22,7 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
     CookieBannerComponent,
   ],
   template: `
+    <app-asili-background />
     <app-seo-manager></app-seo-manager>
     <app-skip-link></app-skip-link>
     <div class="min-h-screen text-scheme-text">
