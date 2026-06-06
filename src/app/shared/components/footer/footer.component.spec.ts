@@ -64,4 +64,51 @@ describe("FooterComponent", () => {
       component.legalLinks.length,
     );
   });
+
+  it("should render the Asili brand logo with name and teal dot", () => {
+    const compiled: HTMLElement = fixture.nativeElement;
+    const logo = compiled.querySelector(".asili-logo");
+    expect(logo).toBeTruthy();
+    expect(logo?.querySelector(".asili-logo__name")?.textContent).toContain(
+      "Asili",
+    );
+    expect(logo?.querySelector(".asili-logo__dot")).toBeTruthy();
+  });
+
+  it("should render the brand baseline", () => {
+    const baseline = fixture.nativeElement.querySelector(
+      ".asili-footer__baseline",
+    );
+    expect(baseline?.textContent?.trim()).toBe(component.brandBaseline);
+  });
+
+  it("should render the freshness chip with a live dot, label and <time>", () => {
+    const fresh = fixture.nativeElement.querySelector(".asili-footer__fresh");
+    expect(fresh).toBeTruthy();
+    expect(fresh.querySelector(".asili-footer__live-dot")).toBeTruthy();
+    expect(fresh.querySelector(".asili-footer__fresh-label")?.textContent).toBe(
+      component.freshLabel,
+    );
+  });
+
+  // P2.10 : signal de fraicheur SEO/IA — le <time datetime> doit rester dans le DOM.
+  it("should expose a <time datetime> bound to siteLastUpdated for SEO", () => {
+    const time: HTMLTimeElement | null =
+      fixture.nativeElement.querySelector("time[datetime]");
+    expect(time).toBeTruthy();
+    expect(time?.getAttribute("datetime")).toBe(component.siteLastUpdated);
+    expect(time?.textContent?.trim()).toBe(component.siteLastUpdated);
+  });
+
+  // P2.11 : adresse postale structuree visible pour SEO local Bordeaux.
+  it("should keep the structured <address> with postal address microdata", () => {
+    const address = fixture.nativeElement.querySelector("address[itemscope]");
+    expect(address).toBeTruthy();
+    expect(
+      address.querySelector('[itemprop="address"][itemscope]'),
+    ).toBeTruthy();
+    expect(
+      address.querySelector('[itemprop="addressLocality"]')?.textContent,
+    ).toContain("Bordeaux");
+  });
 });
