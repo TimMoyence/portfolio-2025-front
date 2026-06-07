@@ -48,6 +48,16 @@ describe("FooterComponent", () => {
   //   expect(compiled.textContent).toContain(component.address.email);
   // });
 
+  it("should point the « Projets » work link to /projets", () => {
+    const workColumn = component.navColumns.find(
+      (column) => column.heading === "Travailler",
+    );
+    const projetsLink = workColumn?.links.find(
+      (link) => link.label === "Projets",
+    );
+    expect(projetsLink?.href).toBe("/projets");
+  });
+
   it("should render a social link entry for each configured link", () => {
     const socialLinks = fixture.nativeElement.querySelectorAll(
       '[data-testid="social-link"]',
