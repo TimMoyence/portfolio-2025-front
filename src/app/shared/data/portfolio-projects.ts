@@ -1,7 +1,7 @@
 /**
  * Chemins d'images des projets portfolio.
  * Source unique pour eviter les divergences entre les composants
- * presentation et projects-accordion.
+ * qui affichent les realisations (page presentation).
  */
 export const PROJECT_IMAGES = {
   assistantIaGeev: "./assets/images/projects/Assistant-IA-Geev.webp",

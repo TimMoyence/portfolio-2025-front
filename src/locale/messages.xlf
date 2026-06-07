@@ -309,10 +309,6 @@
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
         <note priority="1" from="description">Home contact lead paragraph</note>
         <note priority="1" from="meaning">home.contact.lead.1</note>
       </trans-unit>
@@ -325,10 +321,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
           <context context-type="linenumber">73</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Home contact lead paragraph</note>
         <note priority="1" from="meaning">home.contact.lead.2</note>
@@ -5674,431 +5666,621 @@ L’application est organisée autour de trois modules complémentaires, chacun 
         <note priority="1" from="description">CTA illustration alt text</note>
         <note priority="1" from="meaning">cta.image.alt</note>
       </trans-unit>
-      <trans-unit id="heroKicker" datatype="html">
-        <source> Innovation </source>
+      <trans-unit id="homeMethodHeading" datatype="html">
+        <source>Un fil conducteur, du flou jusqu&apos;à ce qui <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>tient dans le temps<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
-          <context context-type="linenumber">20,23</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.html</context>
+          <context context-type="linenumber">47,50</context>
         </context-group>
-        <note priority="1" from="description">Hero small label</note>
-        <note priority="1" from="meaning">hero.kicker</note>
       </trans-unit>
-      <trans-unit id="heroTitle" datatype="html">
-        <source> Des solutions digitales claires, pensées pour votre réalité métier </source>
+      <trans-unit id="homePillarsHeading" datatype="html">
+        <source>Services &amp; Formations, <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>à parts égales<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
-          <context context-type="linenumber">26,28</context>
-        </context-group>
-        <note priority="1" from="description">Hero heading</note>
-        <note priority="1" from="meaning">hero.title</note>
-      </trans-unit>
-      <trans-unit id="heroLead" datatype="html">
-        <source> J’accompagne entreprises et indépendants dans la clarification, la structuration et l’évolution de leurs outils digitaux, avec une approche sobre, progressive et adaptée aux usages réels. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
-          <context context-type="linenumber">33,36</context>
-        </context-group>
-        <note priority="1" from="description">Hero description</note>
-        <note priority="1" from="meaning">hero.lead</note>
-      </trans-unit>
-      <trans-unit id="heroCtaAudit" datatype="html">
-        <source> Lancer mon audit gratuit <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon
-                    name=&quot;chevron-right&quot;
-                    [size]=&quot;1.2&quot;
-                    aria-hidden=&quot;true&quot;
-                  &gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
-          <context context-type="linenumber">45,52</context>
-        </context-group>
-        <note priority="1" from="description">Hero growth audit CTA</note>
-        <note priority="1" from="meaning">hero.cta.audit</note>
-      </trans-unit>
-      <trans-unit id="heroCtaAbout" datatype="html">
-        <source> Découvrir l’approche </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.html</context>
           <context context-type="linenumber">57,59</context>
         </context-group>
-        <note priority="1" from="description">Hero about CTA</note>
-        <note priority="1" from="meaning">hero.cta.about</note>
       </trans-unit>
-      <trans-unit id="heroImageAlt" datatype="html">
-        <source>Portrait de Tim, développeur web chez Asili Design</source>
+      <trans-unit id="homeProjectsHeading" datatype="html">
+        <source>Des réalisations,<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/>pas des promesses.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/hero-section-home/hero-section-home.component.ts</context>
-          <context context-type="linenumber">66,67</context>
-        </context-group>
-        <note priority="1" from="description">Hero portrait alt text</note>
-        <note priority="1" from="meaning">hero.imageAlt</note>
-      </trans-unit>
-      <trans-unit id="missionImageAlt" datatype="html">
-        <source>Illustration expliquant pourquoi Asili</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">23,25</context>
-        </context-group>
-        <note priority="1" from="description">Mission illustration alt</note>
-        <note priority="1" from="meaning">mission.imageAlt</note>
-      </trans-unit>
-      <trans-unit id="missionKicker" datatype="html">
-        <source> Mission </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">35,38</context>
-        </context-group>
-        <note priority="1" from="description">Section label</note>
-        <note priority="1" from="meaning">mission.kicker</note>
-      </trans-unit>
-      <trans-unit id="missionTitle" datatype="html">
-        <source> Pourquoi Asili ? Pourquoi cette approche ? </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">42,45</context>
-        </context-group>
-        <note priority="1" from="description">Section heading</note>
-        <note priority="1" from="meaning">mission.title</note>
-      </trans-unit>
-      <trans-unit id="missionLead" datatype="html">
-        <source> Le digital et l’intelligence artificielle sont des leviers puissants, mais mal utilisés, ils créent souvent plus de complexité que de valeur. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">48,51</context>
-        </context-group>
-        <note priority="1" from="description">Section description</note>
-        <note priority="1" from="meaning">mission.lead</note>
-      </trans-unit>
-      <trans-unit id="missionLead2" datatype="html">
-        <source> Mon rôle est d’aider à clarifier les besoins, à structurer les usageset à mettre en place des solutions compréhensibles, adaptées à la réalité terrain et pensées pour durer. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">56,60</context>
-        </context-group>
-        <note priority="1" from="description">Section description</note>
-        <note priority="1" from="meaning">mission.lead</note>
-      </trans-unit>
-      <trans-unit id="missionInternalLinks" datatype="html">
-        <source> Si vous êtes <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-                routerLink=&quot;/offer&quot;
-                class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;
-                &gt;"/>une TPE/PME qui cherche un développeur Angular à Bordeaux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-              &gt;"/>, consultez mes <x id="START_LINK_1" equiv-text="&lt;a
-                routerLink=&quot;/formations&quot;
-                class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;
-                &gt;"/>formations IA pour solopreneurs<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-              &gt;"/> ou lancez un <x id="START_LINK_2" equiv-text="&lt;a
-                routerLink=&quot;/growth-audit&quot;
-                class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;
-                &gt;"/>audit SEO gratuit en 24h<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-              &gt;"/> pour diagnostiquer votre site. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">66,84</context>
-        </context-group>
-        <note priority="1" from="description">Internal linking paragraph (P6.4 topical
-                authority)</note>
-        <note priority="1" from="meaning">mission.internalLinks</note>
-      </trans-unit>
-      <trans-unit id="heroCtaContact" datatype="html">
-        <source> Échanger sur votre contexte <x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon
-                  [name]=&quot;&apos;chevron-right&apos;&quot;
-                  [size]=&quot;1.2&quot;
-                  aria-hidden=&quot;true&quot;
-                &gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/mission-section/mission-section.component.ts</context>
-          <context context-type="linenumber">91,98</context>
-        </context-group>
-        <note priority="1" from="description">Hero contact CTA</note>
-        <note priority="1" from="meaning">hero.cta.contact</note>
-      </trans-unit>
-      <trans-unit id="projectsKicker" datatype="html">
-        <source> Projets </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">39,42</context>
-        </context-group>
-        <note priority="1" from="description">Section label</note>
-        <note priority="1" from="meaning">projects.kicker</note>
-      </trans-unit>
-      <trans-unit id="projectsTitle" datatype="html">
-        <source> Mes réalisations numériques </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">46,49</context>
-        </context-group>
-        <note priority="1" from="description">Section heading</note>
-        <note priority="1" from="meaning">projects.title</note>
-      </trans-unit>
-      <trans-unit id="projectsLead" datatype="html">
-        <source> Quelques projets représentatifs de mon approche et de ma manière de travailler </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">52,56</context>
-        </context-group>
-        <note priority="1" from="description">Section description</note>
-        <note priority="1" from="meaning">projects.lead</note>
-      </trans-unit>
-      <trans-unit id="projectsItemAutomationLabel" datatype="html">
-        <source>Automatisation de validation de diplômes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">134</context>
-        </context-group>
-        <note priority="1" from="description">Project label</note>
-        <note priority="1" from="meaning">projects.item.automation.label</note>
-      </trans-unit>
-      <trans-unit id="projectsItemAutomationTitle" datatype="html">
-        <source>Automatisation de validation de parcours de formation</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
+          <context context-type="sourcefile">src/app/features/home/home.component.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
-        <note priority="1" from="description">Project title</note>
-        <note priority="1" from="meaning">projects.item.automation.title</note>
       </trans-unit>
-      <trans-unit id="projectsItemAutomationDesc" datatype="html">
-        <source>Mise en place d’un processus automatisé pour la génération et l’envoi de communications de validation de diplômes sur une plateforme e-learning.L’objectif était de fiabiliser les échanges, réduire les interventions manuelles et garantir une communication cohérente à grande échelle.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">136</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">projects.item.automation.desc</note>
-      </trans-unit>
-      <trans-unit id="projectsItemAutomationImageAlt" datatype="html">
-        <source>automation image presentation</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">137</context>
-        </context-group>
-        <note priority="1" from="description">Project image alt</note>
-        <note priority="1" from="meaning">projects.item.automation.imageAlt</note>
-      </trans-unit>
-      <trans-unit id="projectsItemMobileLabel" datatype="html">
-        <source>Assistant de guide de musée (POC)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">143</context>
-        </context-group>
-        <note priority="1" from="description">Project label</note>
-        <note priority="1" from="meaning">projects.item.mobile.label</note>
-      </trans-unit>
-      <trans-unit id="projectsItemMobileTitle" datatype="html">
-        <source>Prototype d’assistant numérique pour médiation culturelle</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">144</context>
-        </context-group>
-        <note priority="1" from="description">Project title</note>
-        <note priority="1" from="meaning">projects.item.mobile.title</note>
-      </trans-unit>
-      <trans-unit id="projectsItemMobileDesc" datatype="html">
-        <source>Conception d’un prototype d’assistant destiné à accompagner les guides de musée dans leur médiation, en apportant un soutien contextuel et interactif. Le projet visait à explorer l’usage de l’intelligence artificielle comme outil d’aide, sans remplacer l’expertise humaine.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">145</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">projects.item.mobile.desc</note>
-      </trans-unit>
-      <trans-unit id="projectsItemMobileImageAlt" datatype="html">
-        <source>Image du prototype d’assistant numérique pour médiation culturelle</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">146</context>
-        </context-group>
-        <note priority="1" from="description">Project image alt</note>
-        <note priority="1" from="meaning">projects.item.mobile.imageAlt</note>
-      </trans-unit>
-      <trans-unit id="projectsItemAppLabel" datatype="html">
-        <source>Plateforme de réservation de vélos (Atlantic Bike)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">152</context>
-        </context-group>
-        <note priority="1" from="description">Project label</note>
-        <note priority="1" from="meaning">projects.item.app.label</note>
-      </trans-unit>
-      <trans-unit id="projectsItemAppTitle" datatype="html">
-        <source>Plateforme de réservation et de gestion pour location de vélos</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">153</context>
-        </context-group>
-        <note priority="1" from="description">Project title</note>
-        <note priority="1" from="meaning">projects.item.app.title</note>
-      </trans-unit>
-      <trans-unit id="projectsItemAppDesc" datatype="html">
-        <source>Conception d’un site de réservation destiné à une activité de location de vélos, avec une attention particulière portée à la simplicité d’usage et à la gestion opérationnelle. L’objectif était de faciliter les réservations tout en structurant les flux internes de l’activité.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">154</context>
-        </context-group>
-        <note priority="1" from="description">Project description</note>
-        <note priority="1" from="meaning">projects.item.app.desc</note>
-      </trans-unit>
-      <trans-unit id="projectsItemAppImageAlt" datatype="html">
-        <source>Image du site Atlantic Bike présentant une bicyclette le long de la côte</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/components/projects-accordion/projects-accordion.component.ts</context>
-          <context context-type="linenumber">155</context>
-        </context-group>
-        <note priority="1" from="description">Project image alt</note>
-        <note priority="1" from="meaning">projects.item.app.imageAlt</note>
-      </trans-unit>
-      <trans-unit id="servicesKicker" datatype="html">
-        <source>Approche</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-        <note priority="1" from="description">Section label</note>
-        <note priority="1" from="meaning">services.kicker</note>
-      </trans-unit>
-      <trans-unit id="servicesTitle" datatype="html">
-        <source>Une approche simple, progressive et adaptée</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-        <note priority="1" from="description">Section heading</note>
-        <note priority="1" from="meaning">services.title</note>
-      </trans-unit>
-      <trans-unit id="servicesLead1" datatype="html">
-        <source>Chaque projet commence par une phase de compréhension.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-        <note priority="1" from="description">Section description</note>
-        <note priority="1" from="meaning">services.lead.1</note>
-      </trans-unit>
-      <trans-unit id="servicesLead2" datatype="html">
-        <source>L’objectif est de faire les bons choix, au bon moment, sans complexifier inutilement.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-        <note priority="1" from="description">Section description</note>
-        <note priority="1" from="meaning">services.lead.2</note>
-      </trans-unit>
-      <trans-unit id="servicesItemWebTitle" datatype="html">
-        <source>Clarifier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">37</context>
-        </context-group>
-        <note priority="1" from="description">Service title</note>
-        <note priority="1" from="meaning">services.item.web.title</note>
-      </trans-unit>
-      <trans-unit id="servicesItemWebDesc" datatype="html">
-        <source>Comprendre le contexte, identifier les priorités et poser un cadre avant toute décision technique.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <note priority="1" from="description">Service description</note>
-        <note priority="1" from="meaning">services.item.web.desc</note>
-      </trans-unit>
-      <trans-unit id="servicesItemWebIconAlt" datatype="html">
-        <source>Icon for clarification</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-        <note priority="1" from="description">Service icon alt</note>
-        <note priority="1" from="meaning">services.item.web.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="servicesItemConstructionTitle" datatype="html">
-        <source>Construire</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-        <note priority="1" from="description">Service title</note>
-        <note priority="1" from="meaning">services.item.construction.title</note>
-      </trans-unit>
-      <trans-unit id="servicesItemConstructionDesc" datatype="html">
-        <source>Mettre en place des solutions sobres et utiles, pensées pour s’intégrer naturellement dans l’existant.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-        <note priority="1" from="description">Service description</note>
-        <note priority="1" from="meaning">services.item.construction.desc</note>
-      </trans-unit>
-      <trans-unit id="servicesItemConstructionIconAlt" datatype="html">
-        <source>Icon for building</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-        <note priority="1" from="description">Service icon alt</note>
-        <note priority="1" from="meaning">services.item.construction.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="servicesItemTestingTitle" datatype="html">
-        <source>Tester</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-        <note priority="1" from="description">Service title</note>
-        <note priority="1" from="meaning">services.item.evolution.testing.title</note>
-      </trans-unit>
-      <trans-unit id="servicesItemTestingDesc" datatype="html">
-        <source>Mettre en place des campagnes de tests utilisateurs pour valider les choix effectués et ajuster la trajectoire si nécessaire.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-        <note priority="1" from="description">Service description</note>
-        <note priority="1" from="meaning">services.item.evolution.testing.desc</note>
-      </trans-unit>
-      <trans-unit id="servicesItemTestingIconAlt" datatype="html">
-        <source>Tester icon</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-        <note priority="1" from="description">Service icon alt</note>
-        <note priority="1" from="meaning">services.item.evolution.testing.iconAlt</note>
-      </trans-unit>
-      <trans-unit id="servicesItemEvolutionAndMaintenanceTitle" datatype="html">
-        <source>Faire évoluer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-        <note priority="1" from="description">Service title</note>
-        <note priority="1" from="meaning">services.item.evolution.maintenance.title</note>
-      </trans-unit>
-      <trans-unit id="servicesItemEvolutionAndMaintenanceDesc" datatype="html">
-        <source>Accompagner les outils dans le temps pour qu’ils restent pertinents, sans complexité inutile.</source>
+      <trans-unit id="homeHeroChip" datatype="html">
+        <source>Studio digital &amp; IA · Bordeaux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
           <context context-type="linenumber">56</context>
         </context-group>
-        <note priority="1" from="description">Service description</note>
-        <note priority="1" from="meaning">services.item.evolution.maintenance.desc</note>
       </trans-unit>
-      <trans-unit id="servicesItemEvolutionAndMaintenanceIconAlt" datatype="html">
-        <source>Evolution logo icon</source>
+      <trans-unit id="homeHeroTitlePre" datatype="html">
+        <source>Clarifier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
-        <note priority="1" from="description">Service icon alt</note>
-        <note priority="1" from="meaning">services.item.evolution.maintenance.iconAlt</note>
       </trans-unit>
-      <trans-unit id="servicesCtaContact" datatype="html">
-        <source>Contactez-moi</source>
+      <trans-unit id="homeHeroTitleAccent" datatype="html">
+        <source>avant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <note priority="1" from="description">Contact link</note>
-        <note priority="1" from="meaning">services.cta.contact</note>
+      </trans-unit>
+      <trans-unit id="homeHeroTitlePost" datatype="html">
+        <source>de construire.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroLead" datatype="html">
+        <source>Développeur &amp; consultant spécialisé Angular, NestJS et IA. Je structure les usages avant de déployer la techno — pour des TPE, PME et solopreneurs qui veulent des leviers concrets, pas du jargon.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroScrollHint" datatype="html">
+        <source>Défiler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroStat1Num" datatype="html">
+        <source>2</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroStat1Label" datatype="html">
+        <source>piliers : services &amp; formations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroStat2Num" datatype="html">
+        <source>∞</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroStat2Label" datatype="html">
+        <source>l&apos;Atelier, un labo vivant à essayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroCtaPrimary" datatype="html">
+        <source>Voir comment je travaille</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeHeroCtaSecondary" datatype="html">
+        <source>Essayer l&apos;Atelier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodKicker" datatype="html">
+        <source>La méthode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodIntro" datatype="html">
+        <source>Le digital et l&apos;IA sont des leviers, jamais des finalités. On commence par comprendre, on déploie ensuite — et on garde ce qui marche.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep1Index" datatype="html">
+        <source>— Clarifier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep1Title" datatype="html">
+        <source>Comprendre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep1Desc" datatype="html">
+        <source>On cartographie le besoin réel et les usages avant la moindre ligne de code.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep2Index" datatype="html">
+        <source>— Construire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep2Title" datatype="html">
+        <source>Déployer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep2Desc" datatype="html">
+        <source>Des outils robustes et lisibles, dimensionnés sur le périmètre réel.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep3Index" datatype="html">
+        <source>— Tester</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep3Title" datatype="html">
+        <source>Éprouver</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep3Desc" datatype="html">
+        <source>On confronte à l&apos;usage, on mesure, on ajuste sans dogme.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep4Index" datatype="html">
+        <source>— Évoluer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep4Title" datatype="html">
+        <source>Faire durer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeMethodStep4Desc" datatype="html">
+        <source>Continuité humaine : l&apos;outil grandit avec vous, pas contre vous.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarsKicker" datatype="html">
+        <source>Deux façons de travailler ensemble</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarServicesTag" datatype="html">
+        <source>01 — Services premium</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarServicesTitle" datatype="html">
+        <source>On bâtit exactement ce qu&apos;il vous faut.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarServicesDesc" datatype="html">
+        <source>Interventions ciblées, projets structurants, accompagnement dans la durée. Un périmètre défini sur votre situation réelle — pas un catalogue de prix figés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarServicesItem1" datatype="html">
+        <source>Audit &amp; cadrage avant tout chantier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarServicesItem2" datatype="html">
+        <source>Développement Angular / NestJS sur-mesure</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarServicesItem3" datatype="html">
+        <source>Intégration d&apos;IA utile, mesurée, maîtrisée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarServicesLink" datatype="html">
+        <source>Découvrir l&apos;offre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarFormationsTag" datatype="html">
+        <source>02 — Formations premium</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarFormationsTitle" datatype="html">
+        <source>On vous rend autonome, pour de bon.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarFormationsDesc" datatype="html">
+        <source>Des formations qui font monter en gamme : de l&apos;usage flou à un système qui travaille pour vous. Le gratuit reste un point d&apos;entrée — le premium va au fond des choses.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarFormationsItem1" datatype="html">
+        <source>IA pour solopreneurs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarFormationsItem2" datatype="html">
+        <source>Automatiser avec l&apos;IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarFormationsItem3" datatype="html">
+        <source>Audit SEO DIY — diagnostiquer soi-même</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homePillarFormationsLink" datatype="html">
+        <source>Voir les formations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierKicker" datatype="html">
+        <source>L&apos;Atelier — le bac à sable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierTitlePre" datatype="html">
+        <source>Un laboratoire vivant où vous pouvez</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierTitleAccent" datatype="html">
+        <source>jouer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierLead" datatype="html">
+        <source>Pas des produits à vendre : des preuves jouables. Je teste des idées en vrai, et vous les manipulez directement — sans inscription.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierMeteoTitle" datatype="html">
+        <source>Météo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierMeteoDesc" datatype="html">
+        <source>Données réalistes, parallaxe, mode immersif ciel. La preuve d&apos;une interface vivante et précise.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierMeteoLink" datatype="html">
+        <source>Essayer l&apos;app</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierSebTitle" datatype="html">
+        <source>Sebastian</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierSebDesc" datatype="html">
+        <source>Suivi de consommation : jauge de santé, calcul d&apos;alcoolémie, heatmap, et un bot Telegram. Le dark lounge ambré.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeAtelierSebLink" datatype="html">
+        <source>Accéder à Sebastian</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoStep1" datatype="html">
+        <source>Le problème</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoLine1" datatype="html">
+        <source>La technologie promet beaucoup,</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoLine2" datatype="html">
+        <source>et laisse souvent un &lt;span class=&quot;t&quot;&gt;flou&lt;/span&gt;.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoStep2" datatype="html">
+        <source>La clarté</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoLine3" datatype="html">
+        <source>Mon métier commence là :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoLine4" datatype="html">
+        <source>comprendre &lt;span class=&quot;t&quot;&gt;avant&lt;/span&gt; de construire.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoStep3" datatype="html">
+        <source>La preuve</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeManifestoLine5" datatype="html">
+        <source>Et le prouver en le rendant &lt;span class=&quot;t&quot;&gt;jouable&lt;/span&gt;.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">207</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProjectsKicker" datatype="html">
+        <source>Preuve de savoir-faire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProjectsHeadLink" datatype="html">
+        <source>Voir tous les projets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject1Tag1" datatype="html">
+        <source>Angular</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject1Tag2" datatype="html">
+        <source>NestJS</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">224</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject1Tag3" datatype="html">
+        <source>IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject1Title" datatype="html">
+        <source>Plateforme métier refondue de zéro</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">227</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject1Desc" datatype="html">
+        <source>Du cadrage des usages à un produit qui tient la charge — et que l&apos;équipe sait faire évoluer seule.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">228</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject1ImageAlt" datatype="html">
+        <source>capture — étude de cas client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject2Tag1" datatype="html">
+        <source>Atelier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject2Title" datatype="html">
+        <source>Météo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject2Desc" datatype="html">
+        <source>Data-viz vivante : vent, UV, arc solaire.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">236</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject2ImageAlt" datatype="html">
+        <source>capture — app Météo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">238</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject3Tag1" datatype="html">
+        <source>Atelier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">242</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject3Title" datatype="html">
+        <source>Sebastian</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">243</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject3Desc" datatype="html">
+        <source>Suivi de consommation, app + bot Telegram.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">244</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject3ImageAlt" datatype="html">
+        <source>capture — Sebastian</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">246</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject4Tag1" datatype="html">
+        <source>Automatisation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">251</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject4Tag2" datatype="html">
+        <source>IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">252</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject4Title" datatype="html">
+        <source>Un système qui travaille en silence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">254</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject4Desc" datatype="html">
+        <source>Des tâches répétitives remplacées par une automatisation lisible, mesurée, sous contrôle humain.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">255</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeProject4ImageAlt" datatype="html">
+        <source>capture — automatisation IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">257</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeCtaKicker" datatype="html">
+        <source>Parlons de votre situation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">264</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeCtaTitle" datatype="html">
+        <source>Et si on clarifiait, ensemble, avant de construire ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">266</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeCtaLead" datatype="html">
+        <source>Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">268</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeCtaPrimary" datatype="html">
+        <source>Démarrer la conversation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">270</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="homeCtaSecondary" datatype="html">
+        <source>Explorer l&apos;Atelier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
+          <context context-type="linenumber">272</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="notFoundLabel" datatype="html">
         <source>Erreur 404</source>
