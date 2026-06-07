@@ -1,0 +1,209 @@
+/*
+  Formations Asili (page liste) — styles propres aux blocs page-level non
+  couverts par les composants de section du Lot 3a (hero, bande CTA, qui portent
+  leurs styles scopés). Blocs portés de `.formation-grid` / `.formation` /
+  `.badge` / `.f-meta` / `.f-foot` de `AsiliNewDesign/asili-pages.css` et de
+  `.fo-benefits` / `.fo-benefit` / `.bi` de `AsiliNewDesign/asili-formation.css`.
+  Les primitives globales (.kicker, .h-lg, .lead, .wrap, .section-pad, .btn,
+  .accent, .link-arrow) et les design tokens fournissent le reste — on ne
+  re-stylise rien d'existant.
+*/
+
+:host {
+  display: block;
+}
+
+/* --- Grille des formations (porté de .formation-grid) --------------------- */
+.formations-grid-section {
+  padding-bottom: clamp(40px, 6vh, 80px);
+}
+
+.formation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+}
+
+/* --- Carte formation (porté de .formation) ------------------------------- */
+.formation {
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line);
+  background: rgba(255, 250, 242, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: clamp(28px, 3.5vw, 44px);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease),
+    border-color 0.4s;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card);
+    border-color: var(--sand-deep);
+  }
+
+  /* Carte bonus « toolkit » : bordure pointillée (maquette). */
+  &--bonus {
+    border-style: dashed;
+  }
+
+  h3 {
+    font-size: clamp(28px, 3vw, 38px);
+    margin: 18px 0 12px;
+    max-width: 18ch;
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--ink-soft);
+    max-width: 46ch;
+  }
+}
+
+/* --- Badge (porté de .formation .badge / .badge.free) -------------------- */
+.badge {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(79, 179, 162, 0.12);
+  color: var(--teal-deep);
+}
+
+/* --- Méta clé/valeur (porté de .f-meta) ---------------------------------- */
+.f-meta {
+  display: flex;
+  gap: 22px;
+  margin: 22px 0;
+  flex-wrap: wrap;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .fk {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .fv {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+  }
+}
+
+/* --- Pied de carte (porté de .f-foot / .price) --------------------------- */
+.f-foot {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.price {
+  font-family: var(--font-display);
+  font-size: 34px;
+  color: var(--teal-deep);
+}
+
+/* --- En-tête de section (porté de .sec-head) ----------------------------- */
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-5);
+
+  h2 {
+    margin-top: 16px;
+  }
+
+  /* En-tête « le format diapo » centré (maquette). */
+  &.format-head {
+    justify-content: center;
+    text-align: center;
+
+    .kicker {
+      justify-content: center;
+    }
+
+    .format-head__title {
+      max-width: 22ch;
+      margin-inline: auto;
+    }
+  }
+}
+
+/* --- Bénéfices « le format diapo » (porté de .fo-benefits / .fo-benefit) -- */
+.fo-benefits {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.fo-benefit {
+  padding: 30px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: rgba(255, 250, 242, 0.6);
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .bi {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: var(--sand);
+    color: var(--teal-deep);
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+  }
+
+  h3 {
+    font-size: 23px;
+    margin-bottom: 9px;
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--ink-mute);
+    line-height: 1.55;
+  }
+}
+
+/* --- Responsive (porté de la media-query 860px de la maquette) ----------- */
+@media (max-width: 860px) {
+  .formation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fo-benefits {
+    grid-template-columns: 1fr;
+  }
+}
