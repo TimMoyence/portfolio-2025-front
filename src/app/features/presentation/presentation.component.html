@@ -1,104 +1,231 @@
-<app-hero-section
-  [label]="hero.label"
-  [title]="hero.title"
-  [description]="hero.description"
-  [actions]="hero.actions"
-  titleLevel="h1"
-  align="center"
-></app-hero-section>
+<!--
+  Présentation Asili — composition des sections du Lot 3a dans l'ordre de la
+  maquette AsiliNewDesign/presentation.html : hero (Le fondateur) → intro /
+  portrait → trois terrains d'expertise → méthode IA → timeline parcours → FAQ
+  → bande CTA. Le fond constellation est global (app-asili-background) : aucune
+  section ne recrée de canvas. Identité dev-forward : Tim Moyence, développeur
+  full-stack & IA, ex-manager Decathlon.
+-->
 
-<section
-  class="px-[5%] py-18 md:py-24 lg:py-28"
-  data-testid="technology-section"
->
-  <div class="container">
-    <div
-      class="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-20"
-    >
-      <div>
-        <p class="mb-3 font-semibold md:mb-4">{{ technologySection.label }}</p>
-        <h2
-          class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
-          i18n="@@presentationTechHeading"
+<!-- ===================== HERO ===================== -->
+<app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
+  <ng-container title>
+    {{ heroTitlePre }}<br />
+    {{ heroTitleAccent }} <span class="accent">{{ heroTitlePost }}</span>
+  </ng-container>
+
+  <ng-container meta>
+    <div class="presentation-hero-meta">
+      @for (row of heroMeta; track row.key) {
+        <div class="row">
+          <span class="k">{{ row.key }}</span>
+          <span class="v">{{ row.value }}</span>
+        </div>
+      }
+    </div>
+  </ng-container>
+</app-asili-hero>
+
+<!-- ===================== INTRO / PORTRAIT ===================== -->
+<section class="section-pad">
+  <div class="wrap intro-split">
+    <div class="portrait" appReveal>
+      <div class="placeholder">
+        <span>{{ portraitPlaceholder }}</span>
+      </div>
+    </div>
+    <div class="intro-body" appReveal [appRevealDelay]="1">
+      <p i18n="@@presentationIntroP1">
+        J'ai d'abord managé des équipes pendant six ans chez Decathlon. Le
+        terrain, les gens, les priorités. Puis je me suis reconverti au code —
+        en gardant cette obsession :
+        <strong
+          >comprendre le besoin réel avant de produire quoi que ce soit.</strong
         >
-          {{ technologySection.title }}
-        </h2>
-        @for (item of technologySection.leadParagraphs; track $index) {
-          <p class="mb-5 md:mb-6 md:text-md">
-            {{ item }}
-          </p>
-        }
-      </div>
-      <div>
-        <img
-          class="w-full h-[25rem] md:h-[30rem] lg:h-[35rem] rounded-image object-cover"
-          [src]="technologySection.image"
-          [alt]="technologySection.imageAlt"
-          loading="lazy"
-        />
-      </div>
+      </p>
+      <p i18n="@@presentationIntroP2">
+        Aujourd'hui je conçois des applications en production, avec de vrais
+        utilisateurs, sous une exigence d'ingénierie forte : DDD, Clean
+        Architecture, TDD obligatoire, CI/CD complet. L'IA est mon copilote au
+        quotidien — Claude Code, LangChain, agents autonomes — jamais un gadget.
+      </p>
+      <p i18n="@@presentationIntroP3">
+        Je crois aux outils qui <strong>durent</strong>, aux interfaces qu'on
+        comprend sans manuel, et à une relation humaine qui ne s'arrête pas à la
+        livraison. Mon passé de manager n'a pas disparu : il guide chaque
+        cadrage.
+      </p>
+      <div class="signature">{{ introSignature }}</div>
     </div>
   </div>
 </section>
 
-<section
-  class="bg-scheme-background px-[5%] py-6 md:py-8 lg:py-12 mb-6 md:mb-8 lg:mb-12"
-  data-testid="portfolio-section"
->
-  <div class="container">
-    <header class="mx-auto mb-12 max-w-lg text-center md:mb-18 lg:mb-20">
-      <p class="mb-3 font-semibold md:mb-4">
-        {{ portfolioHeader.label }}
-      </p>
-      <h2
-        class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
-        i18n="@@presentationPortfolioHeading"
-      >
-        {{ portfolioHeader.title.toUpperCase() }}
-      </h2>
-      <p class="md:text-md">{{ portfolioHeader.description }}</p>
-    </header>
-    <div class="columns-1 after:block md:columns-2 md:gap-x-8 lg:columns-3">
-      @for (project of portfolioCards; track $index) {
-        <article class="mb-8 break-inside-avoid">
-          <div class="mb-5 md:mb-6">
-            <a routerLink="/client-project">
-              <img
-                class="shadow-xl overflow-hidden w-full h-[15rem] md:h-[20rem] lg:h-[25rem] rounded-image object-cover"
-                [src]="project.image"
-                [alt]="project.alt"
-                loading="lazy"
-              />
-            </a>
-          </div>
-          <h3
-            class="mb-2 font-heading heading-h6 text-h6 md:heading-h5 md:text-h5"
-          >
-            <a routerLink="/client-project">{{ project.title }}</a>
-          </h3>
-          @for (paragraph of project.descriptionPragraphs; track $index) {
-            <p class="mb-2 text-xs md:text-base">{{ paragraph }}</p>
-          }
-          @if (project.descriptionNote) {
-            <p class="italic text-xs md:text-base mt-2">
-              {{ project.descriptionNote }}
-            </p>
-          }
-
-          <ul class="mt-3 flex flex-wrap gap-2 md:mt-4">
-            @for (tag of project.tags; track $index) {
-              <li class="flex">
-                <span
-                  class="px-2 py-1 text-sm items-center justify-center rounded border border-scheme-border small"
-                  >{{ tag }}</span
-                >
-              </li>
+<!-- ===================== COMPÉTENCES / APPROCHE ===================== -->
+<section class="section-pad">
+  <div class="wrap">
+    <div class="sec-head" appReveal>
+      <div>
+        <span class="kicker">{{ skillsKicker }}</span>
+        <h2 class="h-lg" i18n="@@presentationSkillsHeading">
+          Trois terrains que je maîtrise<br />de bout en bout.
+        </h2>
+      </div>
+    </div>
+    <div class="skills-grid">
+      @for (skill of skills; track skill.title) {
+        <article class="skill" appReveal [appRevealDelay]="skill.revealDelay">
+          <div class="s-ic" aria-hidden="true">
+            @switch (skill.icon) {
+              @case ("code") {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="m8 6-6 6 6 6M16 6l6 6-6 6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              }
+              @case ("ai") {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3.2"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+                  <path
+                    d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              }
+              @case ("chart") {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M3 3v18h18"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="m7 14 3-3 3 3 5-6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              }
             }
-          </ul>
+          </div>
+          <h3>{{ skill.title }}</h3>
+          <p>{{ skill.desc }}</p>
+          <div class="stack">
+            @for (tech of skill.stack; track tech) {
+              <span>{{ tech }}</span>
+            }
+          </div>
         </article>
       }
     </div>
   </div>
 </section>
 
-<app-cta-section></app-cta-section>
+<!-- ===================== MÉTHODE IA ===================== -->
+<app-asili-ai-method
+  [steps]="aiMethodSteps"
+  [kicker]="aiMethodKicker"
+  [lead]="aiMethodLead"
+  [rule]="aiMethodRule"
+  [ruleWho]="aiMethodRuleWho"
+>
+  <h2 heading class="h-xl ai-method-title" style="max-width: 18ch">
+    <ng-container i18n="@@presentationAiMethodHeading"
+      >L'IA amplifie une expertise. Elle ne la
+      <em>remplace pas</em>.</ng-container
+    >
+  </h2>
+</app-asili-ai-method>
+
+<!-- ===================== PARCOURS (timeline) ===================== -->
+<section class="section-pad">
+  <div class="wrap">
+    <div class="sec-head" appReveal>
+      <div>
+        <span class="kicker">{{ timelineKicker }}</span>
+        <h2 class="h-lg" i18n="@@presentationTimelineHeading">
+          Quelques jalons,<br />racontés simplement.
+        </h2>
+      </div>
+      <a class="link-arrow" routerLink="/client-project">
+        {{ timelineHeadLink }} <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    <div class="timeline">
+      @for (item of milestones; track item.title) {
+        <div class="tl-item" appReveal>
+          <div class="tl-year">{{ item.year }}</div>
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p [innerHTML]="item.descHtml"></p>
+            <div class="tl-tags">
+              @for (tag of item.tags; track tag) {
+                <span>{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section class="section-pad">
+  <div class="wrap">
+    <div class="sec-head faq-head" appReveal>
+      <div>
+        <span class="kicker">{{ faqKicker }}</span>
+        <h2 class="h-lg">{{ faqTitle }}</h2>
+      </div>
+    </div>
+    <div class="faq" appReveal itemscope itemtype="https://schema.org/FAQPage">
+      @for (item of faqItems; track item.q) {
+        <details
+          class="faq-item"
+          itemscope
+          itemprop="mainEntity"
+          itemtype="https://schema.org/Question"
+        >
+          <summary class="faq-q" itemprop="name">{{ item.q }}</summary>
+          <div
+            class="faq-a"
+            itemscope
+            itemprop="acceptedAnswer"
+            itemtype="https://schema.org/Answer"
+          >
+            <div class="faq-a-inner" itemprop="text">{{ item.a }}</div>
+          </div>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<app-asili-cta-band [title]="ctaTitle">
+  <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
+  <ng-container cta>
+    <a class="btn btn-teal" routerLink="/contact">
+      {{ ctaPrimary }} <span class="arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="btn btn-ghost" routerLink="/offer">
+      {{ ctaSecondary }}
+    </a>
+  </ng-container>
+</app-asili-cta-band>

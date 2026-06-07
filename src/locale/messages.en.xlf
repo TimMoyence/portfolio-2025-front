@@ -3220,550 +3220,47 @@ The application is organized around three complementary modules, each tailored t
       </segment>
     </unit>
 
-    <unit id="heroKicker">
-      <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:20,23</note>
-        <note category="description">Hero small label</note>
-        <note category="meaning">hero.kicker</note>
-      </notes>
-      <segment>
-        <source> Innovation </source>
-        <target> Innovation </target>
-      </segment>
-    </unit>
 
-    <unit id="heroTitle">
-      <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:26,28</note>
-        <note category="description">Hero heading</note>
-        <note category="meaning">hero.title</note>
-      </notes>
-      <segment>
-        <source> Des solutions digitales claires, pensées pour votre réalité métier </source>
-        <target> Clear digital solutions, designed for your business reality </target>
-      </segment>
-    </unit>
 
-    <unit id="heroLead">
-      <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:33,36</note>
-        <note category="description">Hero description</note>
-        <note category="meaning">hero.lead</note>
-      </notes>
-      <segment>
-        <source> J’accompagne entreprises et indépendants dans la clarification, la structuration et l’évolution de leurs outils digitaux, avec une approche sobre, progressive et adaptée aux usages réels. </source>
-        <target> I help companies and independents clarify, structure, and evolve their digital tools, with a clean, progressive approach tailored to real-world usage. </target>
-      </segment>
-    </unit>
 
-    <unit id="heroCtaAudit">
-      <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:41,49</note>
-        <note category="description">Hero growth audit CTA</note>
-        <note category="meaning">hero.cta.audit</note>
-      </notes>
-      <segment>
-        <source> Lancer mon audit gratuit <pc id="0" equivStart="START_TAG_APP_SVG_ICON" equivEnd="CLOSE_TAG_APP_SVG_ICON" type="other" dispStart="&lt;app-svg-icon
-                    name=&quot;chevron-right&quot;
-                    [size]=&quot;1.2&quot;
-                    aria-hidden=&quot;true&quot;
-                  &gt;" dispEnd="&lt;/app-svg-icon&gt;"></pc></source>
-        <target> Start my free audit <pc id="0" equivStart="START_TAG_APP_SVG_ICON" equivEnd="CLOSE_TAG_APP_SVG_ICON" type="other" dispStart="&lt;app-svg-icon
-                    name=&quot;chevron-right&quot;
-                    [size]=&quot;1.2&quot;
-                    aria-hidden=&quot;true&quot;
-                  &gt;" dispEnd="&lt;/app-svg-icon&gt;"></pc></target>
-      </segment>
-    </unit>
 
-    <unit id="heroCtaAbout">
-      <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:51,54</note>
-        <note category="description">Hero about CTA</note>
-        <note category="meaning">hero.cta.about</note>
-      </notes>
-      <segment>
-        <source> Découvrir l’approche </source>
-        <target> Discover the approach </target>
-      </segment>
-    </unit>
 
-    <unit id="heroCtaContact">
-      <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:53,60</note>
-        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:65,72</note>
-        <note category="description">Hero contact CTA</note>
-        <note category="meaning">hero.cta.contact</note>
-      </notes>
-      <segment>
-        <source> Échanger sur votre contexte <pc id="0" equivStart="START_TAG_APP_SVG_ICON" equivEnd="CLOSE_TAG_APP_SVG_ICON" type="other" dispStart="&lt;app-svg-icon
-                    name=&quot;chevron-right&quot;
-                    [size]=&quot;1.2&quot;
-                    aria-hidden=&quot;true&quot;
-                  &gt;" dispEnd="&lt;/app-svg-icon&gt;"></pc></source>
-        <target> Discuss your context <pc id="0" equivStart="START_TAG_APP_SVG_ICON" equivEnd="CLOSE_TAG_APP_SVG_ICON" type="other" dispStart="&lt;app-svg-icon
-                    name=&quot;chevron-right&quot;
-                    [size]=&quot;1.2&quot;
-                    aria-hidden=&quot;true&quot;
-                  &gt;" dispEnd="&lt;/app-svg-icon&gt;"></pc></target>
-      </segment>
-    </unit>
 
-    <unit id="heroImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/components/hero-section-home/hero-section-home.component.ts:67,68</note>
-        <note category="description">Hero portrait alt text</note>
-        <note category="meaning">hero.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Portrait de Tim, développeur web chez Asili Design</source>
-        <target>Portrait of Tim, web developer at Asili Design</target>
-      </segment>
-    </unit>
 
-    <unit id="missionImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:22,24</note>
-        <note category="description">Mission illustration alt</note>
-        <note category="meaning">mission.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration expliquant pourquoi Asili</source>
-        <target>Illustration explaining why Asili</target>
-      </segment>
-    </unit>
 
-    <unit id="missionKicker">
-      <notes>
-        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:34,37</note>
-        <note category="description">Section label</note>
-        <note category="meaning">mission.kicker</note>
-      </notes>
-      <segment>
-        <source> Mission </source>
-        <target> Mission </target>
-      </segment>
-    </unit>
-        <unit id="missionTitle">
-      <notes>
-        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:41,44</note>
-        <note category="description">Section heading</note>
-        <note category="meaning">mission.title</note>
-      </notes>
-      <segment>
-        <source> Pourquoi Asili ? Pourquoi cette approche ? </source>
-        <target> Why Asili? Why this approach? </target>
-      </segment>
-    </unit>
 
-    <unit id="missionLead">
-      <notes>
-        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:47,50</note>
-        <note category="description">Section description</note>
-        <note category="meaning">mission.lead</note>
-      </notes>
-      <segment>
-        <source> Le digital et l’intelligence artificielle sont des leviers puissants, mais mal utilisés, ils créent souvent plus de complexité que de valeur. </source>
-        <target> Digital tools and artificial intelligence are powerful levers, but when misused, they often create more complexity than value. </target>
-      </segment>
-    </unit>
 
-    <unit id="missionLead2">
-      <notes>
-        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:55,59</note>
-        <note category="description">Section description</note>
-        <note category="meaning">mission.lead</note>
-      </notes>
-      <segment>
-        <source> Mon rôle est d’aider à clarifier les besoins, à structurer les usageset à mettre en place des solutions compréhensibles, adaptées à la réalité terrain et pensées pour durer. </source>
-        <target> My role is to help clarify needs, structure usage, and implement solutions that are easy to understand, grounded in real-world operations, and built to last. </target>
-      </segment>
-    </unit>
 
-    <unit id="missionInternalLinks">
-      <notes>
-        <note category="location">src/app/features/home/components/mission-section/mission-section.component.ts:66,84</note>
-        <note category="description">Internal linking paragraph (P6.4 topical authority)</note>
-        <note category="meaning">mission.internalLinks</note>
-      </notes>
-      <segment>
-        <source> Si vous êtes <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/offer&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>une TPE/PME qui cherche un développeur Angular à Bordeaux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, consultez mes <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/formations&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>formations IA pour solopreneurs<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ou lancez un <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/growth-audit&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>audit SEO gratuit en 24h<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> pour diagnostiquer votre site. </source>
-        <target> If you are <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/offer&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>a small business or SME looking for an Angular developer in Bordeaux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, check out my <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/formations&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>AI training for solopreneurs<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or launch a <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/growth-audit&quot; class=&quot;underline text-scheme-accent hover:text-scheme-accent-hover&quot;&gt;"/>free 24-hour SEO audit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to diagnose your site. </target>
-      </segment>
-    </unit>
 
-    <unit id="projectsKicker">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:35,38</note>
-        <note category="description">Section label</note>
-        <note category="meaning">projects.kicker</note>
-      </notes>
-      <segment>
-        <source> Projets </source>
-        <target> Projects </target>
-      </segment>
-    </unit>
 
-    <unit id="projectsTitle">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:42,45</note>
-        <note category="description">Section heading</note>
-        <note category="meaning">projects.title</note>
-      </notes>
-      <segment>
-        <source> Mes réalisations numériques </source>
-        <target> My digital work </target>
-      </segment>
-    </unit>
 
-    <unit id="projectsLead">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:48,52</note>
-        <note category="description">Section description</note>
-        <note category="meaning">projects.lead</note>
-      </notes>
-      <segment>
-        <source> Quelques projets représentatifs de mon approche et de ma manière de travailler </source>
-        <target> A few projects that reflect my approach and the way I work </target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAutomationLabel">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:127</note>
-        <note category="description">Project label</note>
-        <note category="meaning">projects.item.automation.label</note>
-      </notes>
-      <segment>
-        <source>Automatisation de validation de diplômes</source>
-        <target>Degree validation automation</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAutomationTitle">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:128</note>
-        <note category="description">Project title</note>
-        <note category="meaning">projects.item.automation.title</note>
-      </notes>
-      <segment>
-        <source>Automatisation de validation de parcours de formation</source>
-        <target>Training pathway validation automation</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAutomationDesc">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:129</note>
-        <note category="description">Project description</note>
-        <note category="meaning">projects.item.automation.desc</note>
-      </notes>
-      <segment>
-        <source>Mise en place d’un processus automatisé pour la génération et l’envoi de communications de validation de diplômes sur une plateforme e-learning.L’objectif était de fiabiliser les échanges, réduire les interventions manuelles et garantir une communication cohérente à grande échelle.</source>
-        <target>Implementation of an automated process to generate and send degree validation communications on an e-learning platform. The goal was to make exchanges more reliable, reduce manual work, and ensure consistent communication at scale.</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAutomationImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:130</note>
-        <note category="description">Project image alt</note>
-        <note category="meaning">projects.item.automation.imageAlt</note>
-      </notes>
-      <segment>
-        <source>automation image presentation</source>
-        <target>Automation project illustration</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemMobileLabel">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:136</note>
-        <note category="description">Project label</note>
-        <note category="meaning">projects.item.mobile.label</note>
-      </notes>
-      <segment>
-        <source>Assistant de guide de musée (POC)</source>
-        <target>Museum guide assistant (POC)</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemMobileTitle">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:137</note>
-        <note category="description">Project title</note>
-        <note category="meaning">projects.item.mobile.title</note>
-      </notes>
-      <segment>
-        <source>Prototype d’assistant numérique pour médiation culturelle</source>
-        <target>Prototype of a digital assistant for cultural mediation</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemMobileDesc">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:138</note>
-        <note category="description">Project description</note>
-        <note category="meaning">projects.item.mobile.desc</note>
-      </notes>
-      <segment>
-        <source>Conception d’un prototype d’assistant destiné à accompagner les guides de musée dans leur médiation, en apportant un soutien contextuel et interactif. Le projet visait à explorer l’usage de l’intelligence artificielle comme outil d’aide, sans remplacer l’expertise humaine.</source>
-        <target>Design of a prototype assistant to support museum guides in their mediation work by providing contextual and interactive support. The project explored the use of AI as an assisting tool, without replacing human expertise.</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemMobileImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:139</note>
-        <note category="description">Project image alt</note>
-        <note category="meaning">projects.item.mobile.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Image du prototype d’assistant numérique pour médiation culturelle</source>
-        <target>Image of the digital assistant prototype for cultural mediation</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAppLabel">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:146</note>
-        <note category="description">Project label</note>
-        <note category="meaning">projects.item.app.label</note>
-      </notes>
-      <segment>
-        <source>Plateforme de réservation de vélos (Atlantic Bike)</source>
-        <target>Bike booking platform (Atlantic Bike)</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAppTitle">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:147</note>
-        <note category="description">Project title</note>
-        <note category="meaning">projects.item.app.title</note>
-      </notes>
-      <segment>
-        <source>Plateforme de réservation et de gestion pour location de vélos</source>
-        <target>Booking and management platform for bike rentals</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAppDesc">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:148</note>
-        <note category="description">Project description</note>
-        <note category="meaning">projects.item.app.desc</note>
-      </notes>
-      <segment>
-        <source>Conception d’un site de réservation destiné à une activité de location de vélos, avec une attention particulière portée à la simplicité d’usage et à la gestion opérationnelle. L’objectif était de faciliter les réservations tout en structurant les flux internes de l’activité.</source>
-        <target>Design of a booking website for a bike rental business, with a strong focus on ease of use and day-to-day operations. The goal was to simplify reservations while structuring internal workflows.</target>
-      </segment>
-    </unit>
 
-    <unit id="projectsItemAppImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/components/projects-accordion/projects-accordion.component.ts:149</note>
-        <note category="description">Project image alt</note>
-        <note category="meaning">projects.item.app.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Image du site Atlantic Bike présentant une bicyclette le long de la côte</source>
-        <target>Image of the Atlantic Bike website featuring a bicycle along the coast</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesKicker">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:30</note>
-        <note category="description">Section label</note>
-        <note category="meaning">services.kicker</note>
-      </notes>
-      <segment>
-        <source>Approche</source>
-        <target>Approach</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:31</note>
-        <note category="description">Section heading</note>
-        <note category="meaning">services.title</note>
-      </notes>
-      <segment>
-        <source>Une approche simple, progressive et adaptée</source>
-        <target>A simple, progressive, and tailored approach</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesLead1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:33</note>
-        <note category="description">Section description</note>
-        <note category="meaning">services.lead.1</note>
-      </notes>
-      <segment>
-        <source>Chaque projet commence par une phase de compréhension.</source>
-        <target>Every project starts with a discovery phase.</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesLead2">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:34</note>
-        <note category="description">Section description</note>
-        <note category="meaning">services.lead.2</note>
-      </notes>
-      <segment>
-        <source>L’objectif est de faire les bons choix, au bon moment, sans complexifier inutilement.</source>
-        <target>The goal is to make the right choices at the right time, without unnecessary complexity.</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemWebTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:38</note>
-        <note category="description">Service title</note>
-        <note category="meaning">services.item.web.title</note>
-      </notes>
-      <segment>
-        <source>Clarifier</source>
-        <target>Clarify</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemWebDesc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:39</note>
-        <note category="description">Service description</note>
-        <note category="meaning">services.item.web.desc</note>
-      </notes>
-      <segment>
-        <source>Comprendre le contexte, identifier les priorités et poser un cadre avant toute décision technique.</source>
-        <target>Understand the context, identify priorities, and define a clear framework before any technical decision.</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemWebIconAlt">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:41</note>
-        <note category="description">Service icon alt</note>
-        <note category="meaning">services.item.web.iconAlt</note>
-      </notes>
-      <segment>
-        <source>Icon for clarification</source>
-        <target>Icon for clarification</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemConstructionTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:44</note>
-        <note category="description">Service title</note>
-        <note category="meaning">services.item.construction.title</note>
-      </notes>
-      <segment>
-        <source>Construire</source>
-        <target>Build</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemConstructionDesc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:45</note>
-        <note category="description">Service description</note>
-        <note category="meaning">services.item.construction.desc</note>
-      </notes>
-      <segment>
-        <source>Mettre en place des solutions sobres et utiles, pensées pour s’intégrer naturellement dans l’existant.</source>
-        <target>Implement lean and useful solutions designed to integrate naturally with what you already have.</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemConstructionIconAlt">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:47</note>
-        <note category="description">Service icon alt</note>
-        <note category="meaning">services.item.construction.iconAlt</note>
-      </notes>
-      <segment>
-        <source>Icon for building</source>
-        <target>Icon for building</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemEvolutionAndMaintenanceTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:50</note>
-        <note category="description">Service title</note>
-        <note category="meaning">services.item.evolution.maintenance.title</note>
-      </notes>
-      <segment>
-        <source>Faire évoluer</source>
-        <target>Evolve</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemEvolutionAndMaintenanceDesc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:51</note>
-        <note category="description">Service description</note>
-        <note category="meaning">services.item.evolution.maintenance.desc</note>
-      </notes>
-      <segment>
-        <source>Accompagner les outils dans le temps pour qu’ils restent pertinents, sans complexité inutile.</source>
-        <target>Support your tools over time so they stay relevant, without unnecessary complexity.</target>
-      </segment>
-    </unit>
 
-    <unit id="servicesItemEvolutionAndMaintenanceIconAlt">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:53</note>
-        <note category="description">Service icon alt</note>
-        <note category="meaning">services.item.evolution.maintenance.iconAlt</note>
-      </notes>
-      <segment>
-        <source>Evolution logo icon</source>
-        <target>Evolution icon</target>
-      </segment>
-    </unit>
-<unit id="servicesItemTestingTitle">
-  <notes>
-    <note category="location">src/app/features/home/home.component.ts:50</note>
-    <note category="location">src/app/features/home/home.component.ts:56</note>
-    <note category="description">Service title</note>
-    <note category="meaning">services.item.evolution.testing.title</note>
-  </notes>
-  <segment>
-    <source>Tester</source>
-    <target>Test</target>
-  </segment>
-</unit>
 
-<unit id="servicesItemTestingDesc">
-  <notes>
-    <note category="location">src/app/features/home/home.component.ts:51</note>
-    <note category="location">src/app/features/home/home.component.ts:57</note>
-    <note category="description">Service description</note>
-    <note category="meaning">services.item.evolution.testing.desc</note>
-  </notes>
-  <segment>
-    <source>Mettre en place des campagnes de tests utilisateurs pour valider les choix effectués et ajuster la trajectoire si nécessaire.</source>
-    <target>Run user testing campaigns to validate the choices made and adjust the direction if needed.</target>
-  </segment>
-</unit>
 
-    <unit id="servicesCtaContact">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:57</note>
-        <note category="description">Contact link</note>
-        <note category="meaning">services.cta.contact</note>
-      </notes>
-      <segment>
-        <source>Contactez-moi</source>
-        <target>Contact me</target>
-      </segment>
-    </unit>
 
     <unit id="notFoundLabel">
       <notes>
@@ -3805,1663 +3302,150 @@ The application is organized around three complementary modules, each tailored t
       </segment>
     </unit>
 
-    <unit id="offerServiceHeading">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.html:18,19</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ service.heading }}"/> </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ service.heading }}"/> </target>
-      </segment>
-    </unit>
-
-    <unit id="offerQualityHeading">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.html:69,70</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ quality.heading }}"/> </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ quality.heading }}"/> </target>
-      </segment>
-    </unit>
-
-    <unit id="offer.hero.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:44</note>
-        <note category="description">offer.hero.title</note>
-      </notes>
-      <segment>
-        <source>Des solutions digitales claires, pensées pour votre réalité métier</source>
-        <target>Clear digital solutions, designed for your business reality</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.hero.description">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:45</note>
-        <note category="description">offer.hero.description</note>
-      </notes>
-      <segment>
-        <source>J’accompagne des entreprises et des indépendants dans la clarification, la structuration et l’évolution de leurs outils digitaux.
-
-Web, automatisation et intelligence artificielle sont utilisés comme des leviers, jamais comme des finalités.</source>
-        <target>I help companies and independents clarify, structure, and evolve their digital tools.
-
-Web, automation, and artificial intelligence are used as levers—never as ends in themselves.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.hero.actions.contact">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:48</note>
-        <note category="description">offer.hero.actions.contact</note>
-      </notes>
-      <segment>
-        <source>Contact</source>
-        <target>Contact</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.hero.actions.presentation">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:53</note>
-        <note category="description">offer.hero.actions.presentation</note>
-      </notes>
-      <segment>
-        <source>Présentation</source>
-        <target>About</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:65</note>
-        <note category="description">offer.packages.kicker</note>
-      </notes>
-      <segment>
-        <source>Services</source>
-        <target>Services</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:66</note>
-        <note category="description">offer.packages.title</note>
-      </notes>
-      <segment>
-        <source>Les offres (où le cadre se construit ensemble)</source>
-        <target>Service packages (where we build the framework together)</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.lead.1">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:68</note>
-        <note category="description">offer.packages.lead.1</note>
-      </notes>
-      <segment>
-        <source>Chaque collaboration commence par une phase de compréhension.</source>
-        <target>Every collaboration starts with a discovery phase.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.lead.2">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:69</note>
-        <note category="description">offer.packages.lead.2</note>
-      </notes>
-      <segment>
-        <source>Le périmètre, le rythme et le budget sont définis à partir du besoin réel, pas d’un catalogue de prestations.</source>
-        <target>Scope, pace, and budget are defined based on real needs—not a predefined service catalog.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.lead.3">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:70</note>
-        <note category="description">offer.packages.lead.3</note>
-      </notes>
-      <segment>
-        <source>Voici des ordres de grandeur, à titre indicatif.</source>
-        <target>These are indicative ballpark figures.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.targeted.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:74</note>
-        <note category="description">offer.packages.items.targeted.title</note>
-      </notes>
-      <segment>
-        <source>Interventions ciblées</source>
-        <target>Targeted interventions</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.targeted.desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:75</note>
-        <note category="description">offer.packages.items.targeted.desc</note>
-      </notes>
-      <segment>
-        <source>→ à partir de 50 €, délais courts</source>
-        <target>→ from €50, short turnaround</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.targeted.iconAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:77</note>
-        <note category="description">offer.packages.items.targeted.iconAlt</note>
-      </notes>
-      <segment>
-        <source>Icône interventions ciblées</source>
-        <target>Targeted interventions icon</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.structured.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:80</note>
-        <note category="description">offer.packages.items.structured.title</note>
-      </notes>
-      <segment>
-        <source>Projets structurants</source>
-        <target>Foundational projects</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.structured.desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:81</note>
-        <note category="description">offer.packages.items.structured.desc</note>
-      </notes>
-      <segment>
-        <source>budgets généralement compris entre 2 000 € et 4 000 €</source>
-        <target>budgets typically between €2,000 and €4,000</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.structured.iconAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:83</note>
-        <note category="description">offer.packages.items.structured.iconAlt</note>
-      </notes>
-      <segment>
-        <source>Icône projets structurants</source>
-        <target>Foundational projects icon</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.retainer.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:86</note>
-        <note category="description">offer.packages.items.retainer.title</note>
-      </notes>
-      <segment>
-        <source>Accompagnement dans le temps</source>
-        <target>Ongoing support</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.retainer.desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:87</note>
-        <note category="description">offer.packages.items.retainer.desc</note>
-      </notes>
-      <segment>
-        <source>engagements mensuels adaptés au rythme</source>
-        <target>monthly engagements tailored to your pace</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.retainer.iconAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:89</note>
-        <note category="description">offer.packages.items.retainer.iconAlt</note>
-      </notes>
-      <segment>
-        <source>Icône accompagnement dans le temps</source>
-        <target>Ongoing support icon</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.training.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:92</note>
-        <note category="description">offer.packages.items.training.title</note>
-      </notes>
-      <segment>
-        <source>Formation et coaching</source>
-        <target>Training and coaching</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.training.desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:93</note>
-        <note category="description">offer.packages.items.training.desc</note>
-      </notes>
-      <segment>
-        <source>Développez votre connaissance d’internet, et des outils en ligne avec des services sur mesure conçus pour propulser vos collaborateurs</source>
-        <target>Strengthen your understanding of the web and online tools with tailored sessions designed to empower your team.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.items.training.iconAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:95</note>
-        <note category="description">offer.packages.items.training.iconAlt</note>
-      </notes>
-      <segment>
-        <source>Icône formation et coaching</source>
-        <target>Training and coaching icon</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.packages.cta.label">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:99</note>
-        <note category="description">offer.packages.cta.label</note>
-      </notes>
-      <segment>
-        <source>Contactez-moi</source>
-        <target>Contact me</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.automation.linkLabel">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:113</note>
-        <note category="description">offer.approach.items.automation.linkLabel</note>
-      </notes>
-      <segment>
-        <source>Automatisation</source>
-        <target>Automation</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.automation.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:114</note>
-        <note category="description">offer.approach.items.automation.kicker</note>
-      </notes>
-      <segment>
-        <source>fluidité, efficacité, allègement</source>
-        <target>flow, efficiency, relief</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.automation.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:115</note>
-        <note category="description">offer.approach.items.automation.title</note>
-      </notes>
-      <segment>
-        <source>Pour fluidifier l’existant</source>
-        <target>To streamline what already exists</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.automation.body">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:116</note>
-        <note category="description">offer.approach.items.automation.body</note>
-      </notes>
-      <segment>
-        <source>L’objectif n’est pas d’ajouter des outils, mais de simplifier ce qui existe déjà.
-
-Simplifier ce qui ralentit votre quotidien.
-
-J’automatise des tâches et des flux existants pour gagner en fluidité, fiabilité et clarté, sans transformer votre organisation.</source>
-        <target>The goal is not to add more tools, but to simplify what already exists.
-
-Simplify what slows down your day-to-day.
-
-I automate existing tasks and workflows to improve flow, reliability, and clarity—without reshaping your organization.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.automation.imageAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:118</note>
-        <note category="description">offer.approach.items.automation.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration automatisation</source>
-        <target>Automation illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.automation.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:122</note>
-        <note category="description">offer.approach.items.automation.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Découvrir</source>
-        <target>Discover</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.businessTool.linkLabel">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:130</note>
-        <note category="description">offer.approach.items.businessTool.linkLabel</note>
-      </notes>
-      <segment>
-        <source>Outil métier</source>
-        <target>Business tool</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.businessTool.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:131</note>
-        <note category="description">offer.approach.items.businessTool.kicker</note>
-      </notes>
-      <segment>
-        <source>structure, clarté, pilotage</source>
-        <target>structure, clarity, oversight</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.businessTool.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:132</note>
-        <note category="description">offer.approach.items.businessTool.title</note>
-      </notes>
-      <segment>
-        <source>Pour structurer un usage clé</source>
-        <target>To structure a key workflow</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.businessTool.body">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:133</note>
-        <note category="description">offer.approach.items.businessTool.body</note>
-      </notes>
-      <segment>
-        <source>Un bon outil est celui qui s’intègre naturellement dans vos pratiques, sans formation lourde ni dépendance excessive.
-
-Un outil pensé pour votre manière de travailler.
-
-Je conçois des applications web sobres et utiles, centrées sur un usage métier clé, avec juste ce qu’il faut d’intelligence intégrée.</source>
-        <target>A good tool is one that integrates naturally into your practices, without heavy training or excessive dependency.
-
-A tool designed around how you work.
-
-I design lean and useful web applications focused on a key business workflow, with just the right amount of built-in intelligence.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.businessTool.imageAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:135</note>
-        <note category="description">offer.approach.items.businessTool.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration outil métier</source>
-        <target>Business tool illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.businessTool.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:139</note>
-        <note category="description">offer.approach.items.businessTool.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Explorer</source>
-        <target>Explore</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.evolution.linkLabel">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:147</note>
-        <note category="description">offer.approach.items.evolution.linkLabel</note>
-      </notes>
-      <segment>
-        <source>Évolutions &amp; accompagnement</source>
-        <target>Evolution &amp; support</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.evolution.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:148</note>
-        <note category="description">offer.approach.items.evolution.kicker</note>
-      </notes>
-      <segment>
-        <source>continuité, stabilité, suivi</source>
-        <target>continuity, stability, follow-up</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.evolution.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:149</note>
-        <note category="description">offer.approach.items.evolution.title</note>
-      </notes>
-      <segment>
-        <source>Faire vivre la solution dans le temps</source>
-        <target>Keep the solution alive over time</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.evolution.body">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:150</note>
-        <note category="description">offer.approach.items.evolution.body</note>
-      </notes>
-      <segment>
-        <source>Une solution utile aujourd’hui doit rester pertinente demain, sans empiler des couches inutiles.
-
-Faire évoluer sans complexifier.
-
-J’accompagne les solutions dans le temps pour qu’elles restent alignées avec vos usages, vos priorités et votre rythme.</source>
-        <target>A solution that is useful today must remain relevant tomorrow, without stacking unnecessary layers.
-
-Evolve without complicating.
-
-I support solutions over time so they stay aligned with your usage, priorities, and pace.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.evolution.imageAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:152</note>
-        <note category="description">offer.approach.items.evolution.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration évolutions et accompagnement</source>
-        <target>Evolution and support illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.evolution.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:156</note>
-        <note category="description">offer.approach.items.evolution.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Analyser</source>
-        <target>Analyze</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.global.linkLabel">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:164</note>
-        <note category="description">offer.approach.items.global.linkLabel</note>
-      </notes>
-      <segment>
-        <source>Accompagnement global</source>
-        <target>End-to-end support</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.global.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:165</note>
-        <note category="description">offer.approach.items.global.kicker</note>
-      </notes>
-      <segment>
-        <source>vision, cadrage, direction</source>
-        <target>vision, framing, direction</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.global.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:166</note>
-        <note category="description">offer.approach.items.global.title</note>
-      </notes>
-      <segment>
-        <source>Quand le besoin est large ou encore flou</source>
-        <target>When the need is broad or still unclear</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.global.body">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:167</note>
-        <note category="description">offer.approach.items.global.body</note>
-      </notes>
-      <segment>
-        <source>Décider trop vite coûte souvent plus cher que prendre le temps de clarifier.
-
-Clarifier avant de construire.
-
-J’interviens lorsque le besoin est large ou flou, pour structurer les priorités, définir les bons leviers et poser un cadre clair avant toute décision.</source>
-        <target>Deciding too quickly often costs more than taking the time to clarify.
-
-Clarify before you build.
-
-I step in when the need is broad or unclear, to structure priorities, identify the right levers, and set a clear framework before any decision is made.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.global.imageAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:169</note>
-        <note category="description">offer.approach.items.global.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration accompagnement global</source>
-        <target>End-to-end support illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.approach.items.global.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:173</note>
-        <note category="description">offer.approach.items.global.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Apprendre</source>
-        <target>Learn</target>
-      </segment>
-    </unit>
-    <unit id="offer.principles.items.tech.linkLabel">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:188</note>
-        <note category="description">offer.principles.items.tech.linkLabel</note>
-      </notes>
-      <segment>
-        <source>Expertise technique</source>
-        <target>Technical expertise</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.tech.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:189</note>
-        <note category="description">offer.principles.items.tech.kicker</note>
-      </notes>
-      <segment>
-        <source>Qualité</source>
-        <target>Quality</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.tech.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:190</note>
-        <note category="description">offer.principles.items.tech.title</note>
-      </notes>
-      <segment>
-        <source>Des choix techniques clairs et maîtrisés</source>
-        <target>Clear and well-controlled technical choices</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.tech.body">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:191</note>
-        <note category="description">offer.principles.items.tech.body</note>
-      </notes>
-      <segment>
-        <source>Chaque solution est conçue avec une attention particulière portée à la clarté, la robustesse et la maintenabilité.
-
-Les choix techniques sont expliqués sans jargons, assumés et adaptés au contexte et à votre usage réel, afin de garantir des outils compréhensibles, fiables et durables.</source>
-        <target>Each solution is designed with a strong focus on clarity, robustness, and maintainability.
-
-Technical choices are explained without jargon, clearly justified, and adapted to the context and your real-world usage, to ensure tools that are understandable, reliable, and long-lasting.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.tech.imageAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:194</note>
-        <note category="description">offer.principles.items.tech.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration expertise technique</source>
-        <target>Technical expertise illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.tech.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:198</note>
-        <note category="description">offer.principles.items.tech.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Discuter</source>
-        <target>Discuss</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.continuity.linkLabel">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:206</note>
-        <note category="description">offer.principles.items.continuity.linkLabel</note>
-      </notes>
-      <segment>
-        <source>Relation de continuité</source>
-        <target>Ongoing relationship</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.continuity.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:207</note>
-        <note category="description">offer.principles.items.continuity.kicker</note>
-      </notes>
-      <segment>
-        <source>Accompagnement</source>
-        <target>Support</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.continuity.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:208</note>
-        <note category="description">offer.principles.items.continuity.title</note>
-      </notes>
-      <segment>
-        <source>Un accompagnement humain dans la durée</source>
-        <target>Human support over time</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.continuity.body">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:209</note>
-        <note category="description">offer.principles.items.continuity.body</note>
-      </notes>
-      <segment>
-        <source>Les solutions ne sont pas livrées puis abandonnées.
-
-Un accompagnement est proposé pour faire évoluer les outils dans le temps, en fonction des usages réels, des priorités et du rythme de l’activité.</source>
-        <target>Solutions are not delivered and then abandoned.
-
-Ongoing support is offered to help tools evolve over time, based on real usage, priorities, and the pace of your activity.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.continuity.imageAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:211</note>
-        <note category="description">offer.principles.items.continuity.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration accompagnement</source>
-        <target>Support illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.continuity.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:215</note>
-        <note category="description">offer.principles.items.continuity.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Discuter</source>
-        <target>Discuss</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.strategy.linkLabel">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:223</note>
-        <note category="description">offer.principles.items.strategy.linkLabel</note>
-      </notes>
-      <segment>
-        <source>Stratégie digitale</source>
-        <target>Digital strategy</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.strategy.kicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:224</note>
-        <note category="description">offer.principles.items.strategy.kicker</note>
-      </notes>
-      <segment>
-        <source>Performance</source>
-        <target>Performance</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.strategy.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:225</note>
-        <note category="description">offer.principles.items.strategy.title</note>
-      </notes>
-      <segment>
-        <source>Décider avec méthode avant d’agir</source>
-        <target>Decide methodically before acting</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.strategy.body">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:226</note>
-        <note category="description">offer.principles.items.strategy.body</note>
-      </notes>
-      <segment>
-        <source>Les décisions digitales sont prises à partir d’une analyse du contexte, des contraintes et des objectifs réels.
-
-L’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les leviers les plus pertinents pour produire un impact mesurable.</source>
-        <target>Digital decisions are made based on an analysis of the context, constraints, and real objectives.
-
-The goal is not to add features, but to choose the most relevant levers to generate measurable impact.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.strategy.imageAlt">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:228</note>
-        <note category="description">offer.principles.items.strategy.imageAlt</note>
-      </notes>
-      <segment>
-        <source>Illustration stratégie digitale</source>
-        <target>Digital strategy illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.principles.items.strategy.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:232</note>
-        <note category="description">offer.principles.items.strategy.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Discuter</source>
-        <target>Discuss</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.cta.title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:241</note>
-        <note category="description">offer.cta.title</note>
-      </notes>
-      <segment>
-        <source>Prêt à clarifier et faire évoluer vos outils digitaux ?</source>
-        <target>Ready to clarify and evolve your digital tools?</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.cta.description">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:242</note>
-        <note category="description">offer.cta.description</note>
-      </notes>
-      <segment>
-        <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
-        <target>An initial conversation helps us understand your context and define the most relevant next steps.</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.cta.actions.primary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:245</note>
-        <note category="description">offer.cta.actions.primary</note>
-      </notes>
-      <segment>
-        <source>Me contacter</source>
-        <target>Contact me</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.cta.actions.secondary">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:249</note>
-        <note category="description">offer.cta.actions.secondary</note>
-      </notes>
-      <segment>
-        <source>Voir la présentation</source>
-        <target>View the presentation</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.contact.lead.1">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:258</note>
-        <note category="description">offer.contact.lead.1</note>
-      </notes>
-      <segment>
-        <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
-        <target>Do you have a need, a constraint, or an idea to clarify?</target>
-      </segment>
-    </unit>
-
-    <unit id="offer.contact.lead.2">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:259</note>
-        <note category="description">offer.contact.lead.2</note>
-      </notes>
-      <segment>
-        <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
-        <target>An initial conversation helps us understand your context and define the most relevant next steps.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationTechHeading">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.html:10,12</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ technologySection.title }}"/> </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ technologySection.title }}"/> </target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioHeading">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.html:35,37</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ portfolioHeader.title.toUpperCase() }}"/> </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ portfolioHeader.title.toUpperCase() }}"/> </target>
-      </segment>
-    </unit>
-
-    <unit id="presentationHeroLabel">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:39</note>
-        <note category="description">presentation.hero.label</note>
-      </notes>
-      <segment>
-        <source>Développeur</source>
-        <target>Developer</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationHeroTitle">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:40</note>
-        <note category="description">presentation.hero.title</note>
-      </notes>
-      <segment>
-        <source>Parcours de développement web</source>
-        <target>Web development journey</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationHeroDescription">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:41</note>
-        <note category="description">presentation.hero.description</note>
-      </notes>
-      <segment>
-        <source>Passionné de technologies web avec trois ans d&apos;expérience, je transforme des idées complexes en solutions numériques élégantes et fonctionnelles.</source>
-        <target>Passionate about web technologies with three years of experience, I turn complex ideas into elegant and functional digital solutions.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationHeroActionProjects">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:44</note>
-        <note category="description">presentation.hero.action.projects</note>
-      </notes>
-      <segment>
-        <source>Projets</source>
-        <target>Projects</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationHeroActionContact">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:49</note>
-        <note category="description">presentation.hero.action.contact</note>
-      </notes>
-      <segment>
-        <source>Contact</source>
-        <target>Contact</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationTechLabel">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:57</note>
-        <note category="description">presentation.tech.label</note>
-      </notes>
-      <segment>
-        <source>Technologies</source>
-        <target>Technologies</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationTechTitle">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:58</note>
-        <note category="description">presentation.tech.title</note>
-      </notes>
-      <segment>
-        <source>Des compétences techniques au service de projets concrets</source>
-        <target>Technical skills in service of real-world projects</target>
-      </segment>
-    </unit>
-
-    <unit id="leadParagraphsDescription1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:60</note>
-        <note category="description">leadParagraphs.description1</note>
-      </notes>
-      <segment>
-        <source>Mon approche du développement web repose sur la compréhension du contexte avant le choix des outils.</source>
-        <target>My approach to web development is based on understanding the context before choosing tools.</target>
-      </segment>
-    </unit>
-
-    <unit id="leadParagraphsDescription2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:61</note>
-        <note category="description">leadParagraphs.description2</note>
-      </notes>
-      <segment>
-        <source>Les technologies sont sélectionnées pour leur pertinence, leur fiabilité et leur capacité à s’inscrire dans la durée, afin de construire des solutions compréhensibles, maintenables et adaptées aux usages réels.</source>
-        <target>Technologies are selected for their relevance, reliability, and long-term viability, in order to build solutions that are understandable, maintainable, and suited to real-world use.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationTechImageAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:64</note>
-        <note category="description">presentation.tech.image.alt</note>
-      </notes>
-      <segment>
-        <source>Illustration de compétences techniques</source>
-        <target>Technical skills illustration</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationTechActionSkills">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:67</note>
-        <note category="description">presentation.tech.action.skills</note>
-      </notes>
-      <segment>
-        <source>Voir mes compétences</source>
-        <target>View my skills</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationTechActionLearnMore">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:72</note>
-        <note category="description">presentation.tech.action.learnMore</note>
-      </notes>
-      <segment>
-        <source>En savoir plus</source>
-        <target>Learn more</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioLabel">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:80</note>
-        <note category="description">presentation.portfolio.label</note>
-      </notes>
-      <segment>
-        <source>Réalisations</source>
-        <target>Work</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTitle">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:81</note>
-        <note category="description">presentation.portfolio.title</note>
-      </notes>
-      <segment>
-        <source>séléction de projets</source>
-        <target>Selected projects</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioDescription">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:82</note>
-        <note category="description">presentation.portfolio.description</note>
-      </notes>
-      <segment>
-        <source>Une sélection de projets représentatifs de mon approche, mêlant réflexion, développement et adaptation aux usages réels.</source>
-        <target>A selection of projects representative of my approach, combining reflection, development, and adaptation to real-world use.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCta">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:83</note>
-        <note category="description">presentation.portfolio.cta</note>
-      </notes>
-      <segment>
-        <source>Tous les projets</source>
-        <target>All projects</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistant">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:88</note>
-        <note category="description">presentation.portfolio.card.assistant</note>
-      </notes>
-      <segment>
-        <source>Assistant IA Geev</source>
-        <target>Geev AI Assistant</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistantDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:90,91</note>
-        <note category="description">presentation.portfolio.card.assistant.desc</note>
-      </notes>
-      <segment>
-        <source>Conception d’un prototype d’assistant intelligent destiné à faciliter le tri et l’analyse d’annonces à partir de contenus visuels.</source>
-        <target>Design of an intelligent assistant prototype intended to facilitate sorting and analysis of listings based on visual content.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistantDesc2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:92</note>
-        <note category="description">presentation.portfolio.card.assistant.desc</note>
-      </notes>
-      <segment>
-        <source>Le projet explore l’usage de l’intelligence artificielle comme outil d’aide à la décision, dans un cadre maîtrisé.</source>
-        <target>The project explores the use of artificial intelligence as a decision-support tool within a controlled framework.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistantAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:95</note>
-        <note category="description">presentation.portfolio.card.assistant.alt</note>
-      </notes>
-      <segment>
-        <source>Capture du projet Assistant IA Geev</source>
-        <target>Screenshot of the Geev AI Assistant project</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagAi">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:97</note>
-        <note category="description">presentation.portfolio.tag.ai</note>
-      </notes>
-      <segment>
-        <source>Intelligence artificielle</source>
-        <target>Artificial intelligence</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagImage">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:98</note>
-        <note category="description">presentation.portfolio.tag.image</note>
-      </notes>
-      <segment>
-        <source>Analyse de contenu</source>
-        <target>Content analysis</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagAutomationGeev">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:99</note>
-        <note category="description">presentation.portfolio.tag.automation.Geev</note>
-      </notes>
-      <segment>
-        <source>Automatisation</source>
-        <target>Automation</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardTest">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:103</note>
-        <note category="description">presentation.portfolio.card.test</note>
-      </notes>
-      <segment>
-        <source>Prototype de planification assistée</source>
-        <target>Assisted planning prototype</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardTestDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:105</note>
-        <note category="description">presentation.portfolio.card.test.desc</note>
-      </notes>
-      <segment>
-        <source>Exploration d’un système d’aide à la planification reposant sur l’intelligence artificielle, visant à automatiser et fluidifier la prise de rendez-vous.</source>
-        <target>Exploration of an AI-based planning support system designed to automate and streamline appointment scheduling.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardTestDesc2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:106</note>
-        <note category="description">presentation.portfolio.card.test.desc</note>
-      </notes>
-      <segment>
-        <source>Le projet s’inscrit dans une démarche d’optimisation des processus, sans remplacer l’intervention humaine.</source>
-        <target>The project follows a process optimization approach, without replacing human intervention.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardTestAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:109</note>
-        <note category="description">presentation.portfolio.card.test.alt</note>
-      </notes>
-      <segment>
-        <source>Capture du projet Test IA Geev</source>
-        <target>Screenshot of the Geev AI Test project</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagOptimisation">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:111</note>
-        <note category="description">presentation.portfolio.tag.optimisation</note>
-      </notes>
-      <segment>
-        <source>Optimisation</source>
-        <target>Optimization</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagPlanning">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:112</note>
-        <note category="description">presentation.portfolio.tag.planning</note>
-      </notes>
-      <segment>
-        <source>Planification</source>
-        <target>Planning</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagEfficiency">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:113</note>
-        <note category="description">presentation.portfolio.tag.efficiency</note>
-      </notes>
-      <segment>
-        <source>IA appliquée</source>
-        <target>Applied AI</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardBeecoming">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:117</note>
-        <note category="description">presentation.portfolio.card.beecoming</note>
-      </notes>
-      <segment>
-        <source>Gestion de chais de cognac</source>
-        <target>Cognac cellar management</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardBeecomingDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:119</note>
-        <note category="description">presentation.portfolio.card.beecoming.desc</note>
-      </notes>
-      <segment>
-        <source>Application de suivi et de structuration de la production pour la filière cognac, de la vigne à la mise en bouteille.</source>
-        <target>Production tracking and structuring application for the cognac industry, from vineyard to bottling.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardBeecomingDesc2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:120</note>
-        <note category="description">presentation.portfolio.card.beecoming.desc</note>
-      </notes>
-      <segment>
-        <source>L’objectif est de centraliser les informations, améliorer la traçabilité et accompagner les usages métier au quotidien.</source>
-        <target>The goal is to centralize information, improve traceability, and support day-to-day business operations.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardBeecomingAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:123</note>
-        <note category="description">presentation.portfolio.card.beecoming.alt</note>
-      </notes>
-      <segment>
-        <source>Capture du projet App Beecoming</source>
-        <target>Screenshot of the Beecoming app project</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagTraceability">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:125</note>
-        <note category="description">presentation.portfolio.tag.traceability</note>
-      </notes>
-      <segment>
-        <source>Traçabilité</source>
-        <target>Traceability</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagMetier">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:126</note>
-        <note category="description">presentation.portfolio.tag.metier</note>
-      </notes>
-      <segment>
-        <source>Métier</source>
-        <target>Business</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagProduction">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:127</note>
-        <note category="description">presentation.portfolio.tag.production</note>
-      </notes>
-      <segment>
-        <source>Production</source>
-        <target>Production</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardLouisons">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:131</note>
-        <note category="description">presentation.portfolio.card.louisons</note>
-      </notes>
-      <segment>
-        <source>Louisson Masseuse</source>
-        <target>Louisson Massage Therapist</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardLouisonsDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:133</note>
-        <note category="description">presentation.portfolio.card.louisons.desc</note>
-      </notes>
-      <segment>
-        <source>Création d’un site web personnalisé intégrant des fonctionnalités sur mesure pour répondre à des besoins spécifiques.</source>
-        <target>Creation of a custom website with tailored features to meet specific needs.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardLouisonsDesc2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:134</note>
-        <note category="description">presentation.portfolio.card.louisons.desc</note>
-      </notes>
-      <segment>
-        <source>Le projet met l’accent sur la simplicité d’usage, la cohérence visuelle et l’adaptation au contexte client.</source>
-        <target>The project emphasizes ease of use, visual consistency, and adaptation to the client’s context.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardLouisonsAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:137</note>
-        <note category="description">presentation.portfolio.card.louisons.alt</note>
-      </notes>
-      <segment>
-        <source>Capture du projet Louisons</source>
-        <target>Screenshot of the Louisons project</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagWeb">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:139</note>
-        <note category="description">presentation.portfolio.tag.web</note>
-      </notes>
-      <segment>
-        <source>Web</source>
-        <target>Web</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagDevelopment">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:140</note>
-        <note category="description">presentation.portfolio.tag.development</note>
-      </notes>
-      <segment>
-        <source>Développement</source>
-        <target>Development</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagLouisonCustom">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:141</note>
-      </notes>
-      <segment>
-        <source>Sur mesure</source>
-        <target>Custom</target>
-      </segment>
-    </unit>
-    <unit id="presentationPortfolioCardVincent">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:145</note>
-        <note category="description">presentation.portfolio.card.vincent</note>
-      </notes>
-      <segment>
-        <source>AtlanticBike</source>
-        <target>AtlanticBike</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardVincentDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:147</note>
-        <note category="description">presentation.portfolio.card.vincent.desc</note>
-      </notes>
-      <segment>
-        <source>Développement d’une solution web adaptée à des besoins spécifiques, avec une attention particulière portée à la clarté, à l’usage et à la personnalisation.</source>
-        <target>Development of a web solution tailored to specific needs, with a strong focus on clarity, usability, and customization.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardVincentDesc2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:148</note>
-        <note category="description">presentation.portfolio.card.vincent.desc</note>
-      </notes>
-      <segment>
-        <source>Le projet illustre une approche sur mesure, pensée pour s’intégrer naturellement dans l’activité du client.</source>
-        <target>The project illustrates a custom approach designed to integrate naturally into the client’s day-to-day activity.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardVincentAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:151</note>
-        <note category="description">presentation.portfolio.card.vincent.alt</note>
-      </notes>
-      <segment>
-        <source>Capture du projet Vincent</source>
-        <target>Screenshot of the Vincent project</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagWebsolution">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:153</note>
-        <note category="description">presentation.portfolio.tag.websolution</note>
-      </notes>
-      <segment>
-        <source>Solution web</source>
-        <target>Web solution</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagCustom">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:154</note>
-        <note category="description">presentation.portfolio.tag.customAB</note>
-      </notes>
-      <segment>
-        <source>Personnalisation</source>
-        <target>Customization</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagCreativity">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:155</note>
-        <note category="description">presentation.portfolio.tag.creativity</note>
-      </notes>
-      <segment>
-        <source>Usage</source>
-        <target>Usability</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAutomation">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:159</note>
-        <note category="description">presentation.portfolio.card.Automation</note>
-      </notes>
-      <segment>
-        <source>Automatisation de validation de diplômes</source>
-        <target>Automated diploma validation</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAutomationDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:161</note>
-        <note category="description">presentation.portfolio.card.Automation.desc</note>
-      </notes>
-      <segment>
-        <source>Mise en place d’un processus automatisé pour la génération et l’envoi de communications de validation sur une plateforme e-learning.</source>
-        <target>Implementation of an automated process to generate and send validation communications on an e-learning platform.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAutomationDesc2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:162</note>
-        <note category="description">presentation.portfolio.card.Automation.desc</note>
-      </notes>
-      <segment>
-        <source>L’objectif est de fiabiliser les échanges, réduire les tâches manuelles et faciliter le passage à l’échelle.</source>
-        <target>The goal is to improve reliability, reduce manual work, and make scaling easier.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAutomationAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:165</note>
-        <note category="description">presentation.portfolio.card.Automation.alt</note>
-      </notes>
-      <segment>
-        <source>Capture du projet Automation</source>
-        <target>Screenshot of the Automation project</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagAutomation">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:167</note>
-        <note category="description">presentation.portfolio.tag.automation</note>
-      </notes>
-      <segment>
-        <source>Automation</source>
-        <target>Automation</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagProcess">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:168</note>
-        <note category="description">presentation.portfolio.tag.process</note>
-      </notes>
-      <segment>
-        <source>Process</source>
-        <target>Process</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagFiabilité">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:169</note>
-        <note category="description">presentation.portfolio.tag.fiabilité</note>
-      </notes>
-      <segment>
-        <source>Fiabilité</source>
-        <target>Reliability</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardOthers">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:173</note>
-        <note category="description">presentation.portfolio.card.others</note>
-      </notes>
-      <segment>
-        <source>Modélisation prédictive de risques sanitaires</source>
-        <target>Predictive modeling of health risks</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardOthersDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:175</note>
-        <note category="description">presentation.portfolio.card.others.desc</note>
-      </notes>
-      <segment>
-        <source>Projet de modélisation et d’analyse de données visant à anticiper l’apparition de risques sanitaires à partir de données épidémiologiques.</source>
-        <target>Data modeling and analysis project aimed at anticipating emerging health risks using epidemiological data.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardOthersDesc">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:176</note>
-        <note category="description">presentation.portfolio.card.others.desc</note>
-      </notes>
-      <segment>
-        <source>L’objectif était d’explorer l’usage de modèles d’intelligence artificielle comme outil d’aide à la prévision et à la décision, dans un cadre analytique structuré.</source>
-        <target>The goal was to explore the use of AI models as a forecasting and decision-support tool within a structured analytical framework.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardOthersAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:180</note>
-        <note category="description">presentation.portfolio.card.others.alt</note>
-      </notes>
-      <segment>
-        <source>Illustration d&apos;autres projets</source>
-        <target>Illustration of other projects</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagAnalyse">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:182</note>
-        <note category="description">presentation.portfolio.tag.analyse</note>
-      </notes>
-      <segment>
-        <source>Analyse de données</source>
-        <target>Data analysis</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagModélisation">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:183</note>
-        <note category="description">presentation.portfolio.tag.modélisation</note>
-      </notes>
-      <segment>
-        <source>Modélisation prédictive</source>
-        <target>Predictive modeling</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagTechnicalIA">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:184</note>
-        <note category="description">presentation.portfolio.tag.technicalIA</note>
-      </notes>
-      <segment>
-        <source>IA Applicative</source>
-        <target>Applied AI</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardOthersNote">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:186</note>
-        <note category="description">presentation.portfolio.card.others.note</note>
-      </notes>
-      <segment>
-        <source>Projet académique réalisé dans le cadre d’un cursus en développement et analyse de données.</source>
-        <target>Academic project carried out as part of a program in development and data analysis.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistante">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:189</note>
-        <note category="description">presentation.portfolio.card.Assistante</note>
-      </notes>
-      <segment>
-        <source>Assistant pour médiation culturelle</source>
-        <target>Cultural mediation assistant</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistanteDesc1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:191</note>
-        <note category="description">presentation.portfolio.card.Assistante.desc</note>
-      </notes>
-      <segment>
-        <source>Conception d’un prototype d’assistant numérique destiné à accompagner les guides de musée dans leur médiation.</source>
-        <target>Design of a digital assistant prototype intended to support museum guides in their mediation work.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistanteDesc2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:192</note>
-        <note category="description">presentation.portfolio.card.Assistante.desc</note>
-      </notes>
-      <segment>
-        <source>Le projet explore une utilisation mesurée de l’IA comme soutien à l’expertise humaine, sans s’y substituer.</source>
-        <target>The project explores a measured use of AI to support human expertise, without replacing it.</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioCardAssistanteAlt">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:195</note>
-        <note category="description">presentation.portfolio.card.Assistante.alt</note>
-      </notes>
-      <segment>
-        <source>Illustration d&apos;un assistant pour médiation culturelle</source>
-        <target>Illustration of a cultural mediation assistant</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagMediation">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:197</note>
-        <note category="description">presentation.portfolio.tag.Mediation</note>
-      </notes>
-      <segment>
-        <source>Médiation</source>
-        <target>Mediation</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagCulture">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:198</note>
-        <note category="description">presentation.portfolio.tag.culture</note>
-      </notes>
-      <segment>
-        <source>Culture</source>
-        <target>Culture</target>
-      </segment>
-    </unit>
-
-    <unit id="presentationPortfolioTagAppliquée">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:199</note>
-        <note category="description">presentation.portfolio.tag.Appliquée</note>
-      </notes>
-      <segment>
-        <source>IA Appliquée</source>
-        <target>Applied AI</target>
-      </segment>
-    </unit>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <unit id="contactKicker">
       <notes>
@@ -6763,12 +4747,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Illustration erreur 404</source>
         <target>404 error illustration</target>
-      </segment>
-    </unit>
-    <unit id="servicesItemTestingIconAlt">
-      <segment>
-        <source>Tester icon</source>
-        <target>Testing icon</target>
       </segment>
     </unit>
     <unit id="auditPhaseTechnicalPages">
@@ -12011,90 +9989,6 @@ The goal is not to add features, but to choose the most relevant levers to gener
       </segment>
     </unit>
       <!-- needs-translation -->
-    <unit id="offerFaqTitle">
-      <segment>
-        <source>Questions fréquentes sur mes services</source>
-        <target>Questions fréquentes sur mes services</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqDescription">
-      <segment>
-        <source>Les questions qui reviennent le plus souvent lors d&apos;un premier échange.</source>
-        <target>Les questions qui reviennent le plus souvent lors d&apos;un premier échange.</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqQ1">
-      <segment>
-        <source>Combien coûte un site web sur mesure à Bordeaux ?</source>
-        <target>Combien coûte un site web sur mesure à Bordeaux ?</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqA1">
-      <segment>
-        <source>Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l&apos;objet d&apos;un devis personnalisé selon le périmètre, le rythme et la complexité.</source>
-        <target>Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l&apos;objet d&apos;un devis personnalisé selon le périmètre, le rythme et la complexité.</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqQ2">
-      <segment>
-        <source>Quel est le délai pour créer un site web ?</source>
-        <target>Quel est le délai pour créer un site web ?</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqA2">
-      <segment>
-        <source>Les interventions ciblées se livrent en quelques jours. Les projets structurants prennent généralement 2 à 6 semaines selon la complexité, les itérations et les validations.</source>
-        <target>Les interventions ciblées se livrent en quelques jours. Les projets structurants prennent généralement 2 à 6 semaines selon la complexité, les itérations et les validations.</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqQ3">
-      <segment>
-        <source>Proposez-vous un accompagnement après la livraison ?</source>
-        <target>Proposez-vous un accompagnement après la livraison ?</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqA3">
-      <segment>
-        <source>Oui, l&apos;accompagnement dans le temps est un engagement mensuel adapté à votre rythme. Il inclut évolutions, maintenance, conseils et ajustements au fil des usages réels.</source>
-        <target>Oui, l&apos;accompagnement dans le temps est un engagement mensuel adapté à votre rythme. Il inclut évolutions, maintenance, conseils et ajustements au fil des usages réels.</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqQ4">
-      <segment>
-        <source>Travaillez-vous avec les TPE, PME et indépendants uniquement ?</source>
-        <target>Travaillez-vous avec les TPE, PME et indépendants uniquement ?</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqA4">
-      <segment>
-        <source>Je collabore principalement avec des indépendants, TPE et PME à Bordeaux et en France. L&apos;approche sobre et progressive est particulièrement adaptée aux structures qui veulent évoluer sans surcoût technique ni complexité inutile.</source>
-        <target>Je collabore principalement avec des indépendants, TPE et PME à Bordeaux et en France. L&apos;approche sobre et progressive est particulièrement adaptée aux structures qui veulent évoluer sans surcoût technique ni complexité inutile.</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqQ5">
-      <segment>
-        <source>Quelles technologies utilisez-vous pour le développement web ?</source>
-        <target>Quelles technologies utilisez-vous pour le développement web ?</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
-    <unit id="offerFaqA5">
-      <segment>
-        <source>Angular, NestJS, TypeScript, Node.js et PostgreSQL pour le cœur technique. Pour l&apos;IA, j&apos;utilise les LLMs (Claude, OpenAI) via des architectures RAG et des pipelines Langchain. Les choix sont toujours justifiés par l&apos;usage, pas par la mode.</source>
-        <target>Angular, NestJS, TypeScript, Node.js et PostgreSQL pour le cœur technique. Pour l&apos;IA, j&apos;utilise les LLMs (Claude, OpenAI) via des architectures RAG et des pipelines Langchain. Les choix sont toujours justifiés par l&apos;usage, pas par la mode.</target>
-      </segment>
-    </unit>
-      <!-- needs-translation -->
     <unit id="navFormationsAutoTitle">
       <segment>
         <source>Automatiser avec l&apos;IA</source>
@@ -12400,6 +10294,1352 @@ The goal is not to add features, but to choose the most relevant levers to gener
       <segment>
         <source>Gratuit (5$ crédits) / 20$/mois</source>
         <target>Free ($5 credits) / $20/month</target>
+      </segment>
+    </unit>
+
+    <unit id="offerMethodHeading">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.html:71</note>
+      </notes>
+      <segment>
+        <source>Comment on avance,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>concrètement.</source>
+        <target>How we move forward,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>concretely.</target>
+      </segment>
+    </unit>
+    <unit id="offerDiffHeading">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.html:83,85</note>
+      </notes>
+      <segment>
+        <source> Trois engagements<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>qui changent tout. </source>
+        <target> Three commitments<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>that change everything. </target>
+      </segment>
+    </unit>
+    <unit id="offerHeroKicker">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:93</note>
+      </notes>
+      <segment>
+        <source>Services premium</source>
+        <target>Premium services</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroTitlePre">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:96</note>
+      </notes>
+      <segment>
+        <source>Un périmètre défini sur</source>
+        <target>A scope defined around</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroTitleAccent">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:99</note>
+      </notes>
+      <segment>
+        <source>votre</source>
+        <target>your</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroTitlePost">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:102</note>
+      </notes>
+      <segment>
+        <source>besoin.</source>
+        <target>needs.</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroLead">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:105</note>
+      </notes>
+      <segment>
+        <source>Pas un catalogue de prix figés. Quatre façons de travailler ensemble, choisies selon votre situation réelle — de l&apos;intervention ciblée à l&apos;accompagnement dans la durée.</source>
+        <target>Not a catalogue of fixed prices. Four ways to work together, chosen to fit your real situation — from a targeted intervention to ongoing support.</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroMeta1Key">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:110</note>
+      </notes>
+      <segment>
+        <source>Format</source>
+        <target>Format</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroMeta1Value">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:111</note>
+      </notes>
+      <segment>
+        <source>Sur-mesure</source>
+        <target>Tailor-made</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroMeta2Key">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:114</note>
+      </notes>
+      <segment>
+        <source>Engagement</source>
+        <target>Commitment</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroMeta2Value">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:115</note>
+      </notes>
+      <segment>
+        <source>Du ponctuel au continu</source>
+        <target>From one-off to continuous</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroMeta3Key">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:118</note>
+      </notes>
+      <segment>
+        <source>Toujours inclus</source>
+        <target>Always included</target>
+      </segment>
+    </unit>
+    <unit id="offerHeroMeta3Value">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:119</note>
+      </notes>
+      <segment>
+        <source>Cadrage honnête</source>
+        <target>Honest scoping</target>
+      </segment>
+    </unit>
+    <unit id="offerMode1Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:131</note>
+      </notes>
+      <segment>
+        <source>Interventions ciblées</source>
+        <target>Targeted interventions</target>
+      </segment>
+    </unit>
+    <unit id="offerMode1Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:132</note>
+      </notes>
+      <segment>
+        <source>Un blocage précis, une fonctionnalité, un audit. Une action courte et nette, avec un livrable clair.</source>
+        <target>A specific blocker, a feature, an audit. A short, sharp action with a clear deliverable.</target>
+      </segment>
+    </unit>
+    <unit id="offerMode2Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:138</note>
+      </notes>
+      <segment>
+        <source>Projets structurants</source>
+        <target>Structuring projects</target>
+      </segment>
+    </unit>
+    <unit id="offerMode2Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:139</note>
+      </notes>
+      <segment>
+        <source>Une plateforme, une refonte, une intégration d&apos;IA. Du cadrage à la mise en production, avec une architecture qui dure.</source>
+        <target>A platform, a redesign, an AI integration. From scoping to production, with an architecture built to last.</target>
+      </segment>
+    </unit>
+    <unit id="offerMode3Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:145</note>
+      </notes>
+      <segment>
+        <source>Accompagnement continu</source>
+        <target>Ongoing support</target>
+      </segment>
+    </unit>
+    <unit id="offerMode3Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:146</note>
+      </notes>
+      <segment>
+        <source>Une présence dans la durée : évolutions, conseil, montée en compétence de votre équipe. Le partenaire, pas le prestataire.</source>
+        <target>A lasting presence: evolutions, advice, upskilling your team. The partner, not the vendor.</target>
+      </segment>
+    </unit>
+    <unit id="offerMode4Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:152</note>
+      </notes>
+      <segment>
+        <source>Formation sur-mesure</source>
+        <target>Tailored training</target>
+      </segment>
+    </unit>
+    <unit id="offerMode4Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:153</note>
+      </notes>
+      <segment>
+        <source>Rendre votre équipe autonome sur l&apos;IA, l&apos;automatisation ou le SEO. Adapté à votre contexte, pas un cours générique.</source>
+        <target>Make your team self-reliant on AI, automation or SEO. Adapted to your context, not a generic course.</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodKicker">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:160</note>
+      </notes>
+      <segment>
+        <source>La méthode</source>
+        <target>The method</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodIntro">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:163</note>
+      </notes>
+      <segment>
+        <source>Un fil conducteur stable, quel que soit le mode d&apos;intervention choisi.</source>
+        <target>A steady through-line, whichever way of working you choose.</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep1Index">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:169</note>
+      </notes>
+      <segment>
+        <source>— Clarifier</source>
+        <target>— Clarify</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep1Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:170</note>
+      </notes>
+      <segment>
+        <source>Comprendre</source>
+        <target>Understand</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep1Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:171</note>
+      </notes>
+      <segment>
+        <source>On cartographie le besoin réel et les usages avant toute proposition technique.</source>
+        <target>We map the real need and the actual usage before any technical proposal.</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep2Index">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:175</note>
+      </notes>
+      <segment>
+        <source>— Construire</source>
+        <target>— Build</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep2Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:176</note>
+      </notes>
+      <segment>
+        <source>Déployer</source>
+        <target>Deploy</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep2Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:177</note>
+      </notes>
+      <segment>
+        <source>Des outils robustes et lisibles, dimensionnés sur le périmètre réel.</source>
+        <target>Robust, readable tools, sized to the real scope.</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep3Index">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:181</note>
+      </notes>
+      <segment>
+        <source>— Tester</source>
+        <target>— Test</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep3Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:182</note>
+      </notes>
+      <segment>
+        <source>Éprouver</source>
+        <target>Battle-test</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep3Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:183</note>
+      </notes>
+      <segment>
+        <source>On confronte à l&apos;usage, on mesure, on ajuste sans dogme.</source>
+        <target>We confront it with real usage, we measure, we adjust without dogma.</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep4Index">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:187</note>
+      </notes>
+      <segment>
+        <source>— Évoluer</source>
+        <target>— Evolve</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep4Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:188</note>
+      </notes>
+      <segment>
+        <source>Faire durer</source>
+        <target>Make it last</target>
+      </segment>
+    </unit>
+    <unit id="offerMethodStep4Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:189</note>
+      </notes>
+      <segment>
+        <source>Continuité humaine : l&apos;outil grandit avec vous, pas contre vous.</source>
+        <target>Human continuity: the tool grows with you, not against you.</target>
+      </segment>
+    </unit>
+    <unit id="offerDiffKicker">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:196</note>
+      </notes>
+      <segment>
+        <source>Ce qui différencie</source>
+        <target>What sets it apart</target>
+      </segment>
+    </unit>
+    <unit id="offerDiff1Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:203</note>
+      </notes>
+      <segment>
+        <source>Expertise réelle</source>
+        <target>Real expertise</target>
+      </segment>
+    </unit>
+    <unit id="offerDiff1Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:204</note>
+      </notes>
+      <segment>
+        <source>Angular, NestJS, IA : une maîtrise technique qui se voit dans la robustesse et la lisibilité de ce qu&apos;on livre.</source>
+        <target>Angular, NestJS, AI: technical mastery you can see in the robustness and readability of what we ship.</target>
+      </segment>
+    </unit>
+    <unit id="offerDiff2Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:209</note>
+      </notes>
+      <segment>
+        <source>Continuité humaine</source>
+        <target>Human continuity</target>
+      </segment>
+    </unit>
+    <unit id="offerDiff2Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:210</note>
+      </notes>
+      <segment>
+        <source>Un interlocuteur unique, qui connaît votre contexte et reste là après la livraison. Pas de tunnel, pas de turnover.</source>
+        <target>A single point of contact, who knows your context and stays around after delivery. No tunnel, no turnover.</target>
+      </segment>
+    </unit>
+    <unit id="offerDiff3Title">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:215</note>
+      </notes>
+      <segment>
+        <source>Stratégie avant techno</source>
+        <target>Strategy before tech</target>
+      </segment>
+    </unit>
+    <unit id="offerDiff3Desc">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:216</note>
+      </notes>
+      <segment>
+        <source>On décide ensemble quoi construire — et quoi ne pas construire. La sobriété est une décision, pas un défaut.</source>
+        <target>We decide together what to build — and what not to build. Restraint is a decision, not a flaw.</target>
+      </segment>
+    </unit>
+    <unit id="offerFaqKicker">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:223</note>
+      </notes>
+      <segment>
+        <source>Questions fréquentes</source>
+        <target>Frequently asked questions</target>
+      </segment>
+    </unit>
+    <unit id="offerFaqTitle">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:226</note>
+      </notes>
+      <segment>
+        <source>Avant de se lancer.</source>
+        <target>Before we get started.</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq1Q">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:231</note>
+      </notes>
+      <segment>
+        <source>Pourquoi pas de grille de prix ?</source>
+        <target>Why no price list?</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq1A">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:232</note>
+      </notes>
+      <segment>
+        <source>Parce qu&apos;un prix figé répond rarement à un besoin réel. Je préfère cadrer votre situation, puis proposer un périmètre et un budget justes. Transparent, mais sur-mesure.</source>
+        <target>Because a fixed price rarely matches a real need. I prefer to scope your situation, then propose a fair scope and budget. Transparent, but tailor-made.</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq2Q">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:235</note>
+      </notes>
+      <segment>
+        <source>Combien de temps dure un projet ?</source>
+        <target>How long does a project take?</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq2A">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:236</note>
+      </notes>
+      <segment>
+        <source>D&apos;une intervention de quelques jours à un accompagnement de plusieurs mois. On définit ensemble le rythme adapté à vos contraintes et à votre maturité.</source>
+        <target>From a few-day intervention to a months-long engagement. We define the right pace together, around your constraints and your maturity.</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq3Q">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:239</note>
+      </notes>
+      <segment>
+        <source>Reprenez-vous un projet existant ?</source>
+        <target>Do you take over an existing project?</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq3A">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:240</note>
+      </notes>
+      <segment>
+        <source>Oui, fréquemment. J&apos;audite l&apos;existant, j&apos;identifie ce qui mérite d&apos;être gardé, et je propose un chemin réaliste vers plus de clarté et de robustesse.</source>
+        <target>Yes, often. I audit what's there, identify what's worth keeping, and propose a realistic path towards more clarity and robustness.</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq4Q">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:243</note>
+      </notes>
+      <segment>
+        <source>Travaillez-vous à distance ?</source>
+        <target>Do you work remotely?</target>
+      </segment>
+    </unit>
+    <unit id="offerFaq4A">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:244</note>
+      </notes>
+      <segment>
+        <source>Basé à Bordeaux, je travaille avec des clients partout en France, à distance comme en présentiel selon les besoins. La proximité humaine ne dépend pas de la géographie.</source>
+        <target>Based in Bordeaux, I work with clients all over France, remotely or on site as needed. Human closeness doesn't depend on geography.</target>
+      </segment>
+    </unit>
+    <unit id="offerCtaKicker">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:251</note>
+      </notes>
+      <segment>
+        <source>Prêt à clarifier ?</source>
+        <target>Ready to get clear?</target>
+      </segment>
+    </unit>
+    <unit id="offerCtaTitle">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:254</note>
+      </notes>
+      <segment>
+        <source>Décrivez votre besoin. Je propose un cadrage, pas un devis générique.</source>
+        <target>Describe your need. I'll propose a scoping, not a generic quote.</target>
+      </segment>
+    </unit>
+    <unit id="offerCtaPrimary">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:257</note>
+      </notes>
+      <segment>
+        <source>Démarrer la conversation</source>
+        <target>Start the conversation</target>
+      </segment>
+    </unit>
+    <unit id="offerCtaSecondary">
+      <notes>
+        <note category="location">src/app/features/offer/offer.component.ts:260</note>
+      </notes>
+      <segment>
+        <source>Voir les réalisations</source>
+        <target>See the work</target>
+      </segment>
+    </unit>
+    <unit id="presentationIntroP1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.html:39,46</note>
+      </notes>
+      <segment>
+        <source> J&apos;ai d&apos;abord managé des équipes pendant six ans chez Decathlon. Le terrain, les gens, les priorités. Puis je me suis reconverti au code — en gardant cette obsession : <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong
+          &gt;" dispEnd="&lt;/strong
+        &gt;">comprendre le besoin réel avant de produire quoi que ce soit.</pc></source>
+        <target> I first managed teams for six years at Decathlon. The field, the people, the priorities. Then I retrained into code — keeping this obsession: <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong
+          &gt;" dispEnd="&lt;/strong
+        &gt;">understand the real need before producing anything at all.</pc></target>
+      </segment>
+    </unit>
+    <unit id="presentationIntroP2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.html:47,51</note>
+      </notes>
+      <segment>
+        <source> Aujourd&apos;hui je conçois des applications en production, avec de vrais utilisateurs, sous une exigence d&apos;ingénierie forte : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. L&apos;IA est mon copilote au quotidien — Claude Code, LangChain, agents autonomes — jamais un gadget. </source>
+        <target> Today I design applications in production, with real users, under a strong engineering standard: DDD, Clean Architecture, mandatory TDD, full CI/CD. AI is my day-to-day copilot — Claude Code, LangChain, autonomous agents — never a gimmick. </target>
+      </segment>
+    </unit>
+    <unit id="presentationIntroP3">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.html:53,56</note>
+      </notes>
+      <segment>
+        <source> Je crois aux outils qui <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">durent</pc>, aux interfaces qu&apos;on comprend sans manuel, et à une relation humaine qui ne s&apos;arrête pas à la livraison. Mon passé de manager n&apos;a pas disparu : il guide chaque cadrage. </source>
+        <target> I believe in tools that <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">last</pc>, in interfaces you grasp without a manual, and in a human relationship that doesn't stop at delivery. My past as a manager hasn't vanished: it guides every scoping. </target>
+      </segment>
+    </unit>
+    <unit id="presentationSkillsHeading">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.html:70,72</note>
+      </notes>
+      <segment>
+        <source> Trois terrains que je maîtrise<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>de bout en bout. </source>
+        <target> Three areas I master<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>end to end. </target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodHeading">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.html:149,152</note>
+      </notes>
+      <segment>
+        <source>L&apos;IA amplifie une expertise. Elle ne la <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">remplace pas</pc>.</source>
+        <target>AI amplifies expertise. It does not <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">replace it</pc>.</target>
+      </segment>
+    </unit>
+    <unit id="presentationTimelineHeading">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.html:162,164</note>
+      </notes>
+      <segment>
+        <source> Quelques jalons,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>racontés simplement. </source>
+        <target> A few milestones,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>told simply. </target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroKicker">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:94</note>
+      </notes>
+      <segment>
+        <source>Le fondateur</source>
+        <target>The founder</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroTitlePre">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:97</note>
+      </notes>
+      <segment>
+        <source>Développeur full-stack &amp; IA.</source>
+        <target>Full-stack &amp; AI developer.</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroTitleAccent">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:100</note>
+      </notes>
+      <segment>
+        <source>Manager</source>
+        <target>Manager</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroTitlePost">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:103</note>
+      </notes>
+      <segment>
+        <source>avant tout.</source>
+        <target>first.</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroLead">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:106</note>
+      </notes>
+      <segment>
+        <source>Je m&apos;appelle Tim Moyence — développeur full-stack &amp; IA, freelance à Bordeaux (remote). Six ans manager chez Decathlon avant de me reconvertir au code. J&apos;aide TPE, PME et solopreneurs à transformer un besoin flou en outils nets, robustes et durables — avec une exigence d&apos;ingénierie forte.</source>
+        <target>I'm Tim Moyence — full-stack &amp; AI developer, freelance in Bordeaux (remote). Six years as a manager at Decathlon before retraining into code. I help small businesses, SMEs and solopreneurs turn a fuzzy need into clean, robust, lasting tools — with a strong engineering standard.</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta1Key">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:111</note>
+      </notes>
+      <segment>
+        <source>Basé à</source>
+        <target>Based in</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta1Value">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:112</note>
+      </notes>
+      <segment>
+        <source>Bordeaux · France</source>
+        <target>Bordeaux · France</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta2Key">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:115</note>
+      </notes>
+      <segment>
+        <source>Stack</source>
+        <target>Stack</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta2Value">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:116</note>
+      </notes>
+      <segment>
+        <source>Angular · NestJS · .NET · IA</source>
+        <target>Angular · NestJS · .NET · AI</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta3Key">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:119</note>
+      </notes>
+      <segment>
+        <source>Exigence</source>
+        <target>Standard</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta3Value">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:120</note>
+      </notes>
+      <segment>
+        <source>DDD · Clean Archi · TDD</source>
+        <target>DDD · Clean Archi · TDD</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta4Key">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:123</note>
+      </notes>
+      <segment>
+        <source>Aussi</source>
+        <target>Also</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta4Value">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:124</note>
+      </notes>
+      <segment>
+        <source>Formateur · Ipac &amp; EPSI</source>
+        <target>Trainer · Ipac &amp; EPSI</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta5Key">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:127</note>
+      </notes>
+      <segment>
+        <source>Disponibilité</source>
+        <target>Availability</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroMeta5Value">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:128</note>
+      </notes>
+      <segment>
+        <source>Nouveaux projets · 2026</source>
+        <target>New projects · 2026</target>
+      </segment>
+    </unit>
+    <unit id="presentationPortraitPlaceholder">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:135</note>
+      </notes>
+      <segment>
+        <source>portrait — photo du fondateur</source>
+        <target>portrait — photo of the founder</target>
+      </segment>
+    </unit>
+    <unit id="presentationIntroSignature">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:138</note>
+      </notes>
+      <segment>
+        <source>— Tim Moyence, Asili Design</source>
+        <target>— Tim Moyence, Asili Design</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkillsKicker">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:143</note>
+      </notes>
+      <segment>
+        <source>Compétences &amp; approche</source>
+        <target>Skills &amp; approach</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:150</note>
+      </notes>
+      <segment>
+        <source>Développement produit</source>
+        <target>Product development</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:151</note>
+      </notes>
+      <segment>
+        <source>Des applications web robustes, lisibles et maintenables. De l&apos;architecture front à l&apos;API, avec une obsession pour la clarté du code et de l&apos;usage.</source>
+        <target>Robust, readable, maintainable web applications. From front-end architecture to the API, with an obsession for clarity of code and of usage.</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Stack1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:153</note>
+      </notes>
+      <segment>
+        <source>Angular 19</source>
+        <target>Angular 19</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Stack2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:154</note>
+      </notes>
+      <segment>
+        <source>NestJS</source>
+        <target>NestJS</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Stack3">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:155</note>
+      </notes>
+      <segment>
+        <source>.NET / C#</source>
+        <target>.NET / C#</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Stack4">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:156</note>
+      </notes>
+      <segment>
+        <source>React Native</source>
+        <target>React Native</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Stack5">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:157</note>
+      </notes>
+      <segment>
+        <source>PostgreSQL</source>
+        <target>PostgreSQL</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill1Stack6">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:158</note>
+      </notes>
+      <segment>
+        <source>Docker</source>
+        <target>Docker</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill2Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:164</note>
+      </notes>
+      <segment>
+        <source>IA utile &amp; mesurée</source>
+        <target>Useful, measured AI</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill2Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:165</note>
+      </notes>
+      <segment>
+        <source>L&apos;IA comme levier, pas comme gadget. J&apos;intègre des automatisations et des assistants qui font gagner du temps réel — sous contrôle humain, toujours.</source>
+        <target>AI as a lever, not a gadget. I integrate automations and assistants that save real time — under human control, always.</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill2Stack1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:167</note>
+      </notes>
+      <segment>
+        <source>LangChain</source>
+        <target>LangChain</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill2Stack2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:168</note>
+      </notes>
+      <segment>
+        <source>Agents autonomes</source>
+        <target>Autonomous agents</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill2Stack3">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:169</note>
+      </notes>
+      <segment>
+        <source>Claude Code</source>
+        <target>Claude Code</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill2Stack4">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:170</note>
+      </notes>
+      <segment>
+        <source>Multi-LLM</source>
+        <target>Multi-LLM</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill3Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:176</note>
+      </notes>
+      <segment>
+        <source>Conseil &amp; stratégie</source>
+        <target>Advice &amp; strategy</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill3Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:177</note>
+      </notes>
+      <segment>
+        <source>Avant la technique, la direction. Audit, cadrage, priorisation : je vous aide à décider quoi construire — et surtout quoi ne pas construire.</source>
+        <target>Before the tech, the direction. Audit, scoping, prioritisation: I help you decide what to build — and above all what not to build.</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill3Stack1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:179</note>
+      </notes>
+      <segment>
+        <source>Audit</source>
+        <target>Audit</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill3Stack2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:180</note>
+      </notes>
+      <segment>
+        <source>Cadrage</source>
+        <target>Scoping</target>
+      </segment>
+    </unit>
+    <unit id="presentationSkill3Stack3">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:181</note>
+      </notes>
+      <segment>
+        <source>SEO</source>
+        <target>SEO</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodKicker">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:189</note>
+      </notes>
+      <segment>
+        <source>Ma manière de travailler avec l&apos;IA</source>
+        <target>How I work with AI</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodLead">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:192</note>
+      </notes>
+      <segment>
+        <source>Je travaille en orchestration multi-agents : un agent par tâche, revue croisée, vérification adversariale avant de valider. Chaque changement commence par un test qui échoue (TDD), et l&apos;architecture est pensée pour durer (DDD, clean architecture) — même sur mes projets perso.</source>
+        <target>I work in multi-agent orchestration: one agent per task, cross-review, adversarial verification before validating. Every change starts with a failing test (TDD), and the architecture is designed to last (DDD, clean architecture) — even on my personal projects.</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep1Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:198</note>
+      </notes>
+      <segment>
+        <source>Un agent par tâche</source>
+        <target>One agent per task</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep1Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:199</note>
+      </notes>
+      <segment>
+        <source>Découpage clair, chaque agent a un rôle précis.</source>
+        <target>Clear breakdown, each agent has a precise role.</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep2Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:203</note>
+      </notes>
+      <segment>
+        <source>Revue croisée</source>
+        <target>Cross-review</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep2Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:204</note>
+      </notes>
+      <segment>
+        <source>Les agents se relisent ; rien ne passe sans contrôle.</source>
+        <target>The agents review each other; nothing passes without a check.</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep3Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:208</note>
+      </notes>
+      <segment>
+        <source>Vérification adversariale</source>
+        <target>Adversarial verification</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep3Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:209</note>
+      </notes>
+      <segment>
+        <source>On cherche activement à casser avant de valider.</source>
+        <target>We actively try to break it before validating.</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep4Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:213</note>
+      </notes>
+      <segment>
+        <source>TDD + architecture durable</source>
+        <target>TDD + lasting architecture</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodStep4Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:214</note>
+      </notes>
+      <segment>
+        <source>Un test qui échoue d&apos;abord ; DDD &amp; clean archi ensuite.</source>
+        <target>A failing test first; DDD &amp; clean architecture next.</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodRule">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:223</note>
+      </notes>
+      <segment>
+        <source>« L&apos;IA génère du contenu.&lt;br/&gt;&lt;em&gt;Un expert génère des résultats.&lt;/em&gt; »</source>
+        <target>« AI generates content.&lt;br/&gt;&lt;em&gt;An expert generates results.&lt;/em&gt; »</target>
+      </segment>
+    </unit>
+    <unit id="presentationAiMethodRuleWho">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:226</note>
+      </notes>
+      <segment>
+        <source>La règle d&apos;or — la même que dans mes formations</source>
+        <target>The golden rule — the same one as in my training courses</target>
+      </segment>
+    </unit>
+    <unit id="presentationTimelineKicker">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:231</note>
+      </notes>
+      <segment>
+        <source>Le parcours</source>
+        <target>The journey</target>
+      </segment>
+    </unit>
+    <unit id="presentationTimelineHeadLink">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:234</note>
+      </notes>
+      <segment>
+        <source>Voir les projets</source>
+        <target>See the projects</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone1Year">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:239</note>
+      </notes>
+      <segment>
+        <source>2026 →</source>
+        <target>2026 →</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone1Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:240</note>
+      </notes>
+      <segment>
+        <source>Asili Design &amp; projets actifs</source>
+        <target>Asili Design &amp; active projects</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone1Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:241</note>
+      </notes>
+      <segment>
+        <source>Le studio sous sa forme actuelle, plus deux chantiers très actifs : &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (médiation culturelle IA pour musées) et &lt;strong&gt;ZenFirst Vision&lt;/strong&gt; (pilotage de rentabilité &amp; compta intelligente, France/Québec).</source>
+        <target>The studio in its current form, plus two very active builds: &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (AI cultural mediation for museums) and &lt;strong&gt;ZenFirst Vision&lt;/strong&gt; (profitability steering &amp; smart accounting, France/Quebec).</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone1Tag1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:243</note>
+      </notes>
+      <segment>
+        <source>Monorepo</source>
+        <target>Monorepo</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone1Tag2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:244</note>
+      </notes>
+      <segment>
+        <source>Multi-LLM</source>
+        <target>Multi-LLM</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone1Tag3">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:245</note>
+      </notes>
+      <segment>
+        <source>React 19</source>
+        <target>React 19</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone2Year">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:249</note>
+      </notes>
+      <segment>
+        <source>2025</source>
+        <target>2025</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone2Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:250</note>
+      </notes>
+      <segment>
+        <source>Plateforme SaaS multi-apps</source>
+        <target>Multi-app SaaS platform</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone2Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:251</note>
+      </notes>
+      <segment>
+        <source>Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Weather, Sebastian, Growth Audit, Formations — avec auth, RGPD et lead-magnets.</source>
+        <target>An Angular 19 SSR + NestJS 11 foundation bringing together several apps in production: Weather, Sebastian, Growth Audit, Training — with auth, GDPR and lead magnets.</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone2Tag1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:253</note>
+      </notes>
+      <segment>
+        <source>Angular 19 SSR</source>
+        <target>Angular 19 SSR</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone2Tag2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:254</note>
+      </notes>
+      <segment>
+        <source>NestJS 11</source>
+        <target>NestJS 11</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone3Year">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:258</note>
+      </notes>
+      <segment>
+        <source>2023</source>
+        <target>2023</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone3Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:259</note>
+      </notes>
+      <segment>
+        <source>Reconversion au code</source>
+        <target>Retraining into code</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone3Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:260</note>
+      </notes>
+      <segment>
+        <source>Du management au développement, avec d&apos;emblée une exigence d&apos;ingénierie : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. Aussi formateur à l&apos;Ipac et l&apos;EPSI.</source>
+        <target>From management to development, with an engineering standard from the outset: DDD, Clean Architecture, mandatory TDD, full CI/CD. Also a trainer at Ipac and EPSI.</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone3Tag1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:262</note>
+      </notes>
+      <segment>
+        <source>DDD</source>
+        <target>DDD</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone3Tag2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:263</note>
+      </notes>
+      <segment>
+        <source>TDD</source>
+        <target>TDD</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone3Tag3">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:264</note>
+      </notes>
+      <segment>
+        <source>Formateur</source>
+        <target>Trainer</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone4Year">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:268</note>
+      </notes>
+      <segment>
+        <source>2017–23</source>
+        <target>2017–23</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone4Title">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:269</note>
+      </notes>
+      <segment>
+        <source>Manager chez Decathlon</source>
+        <target>Manager at Decathlon</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone4Desc">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:270</note>
+      </notes>
+      <segment>
+        <source>Six ans sur le terrain : leadership, équipes, priorités, décisions concrètes. La matière première de ma façon de cadrer un projet aujourd&apos;hui.</source>
+        <target>Six years on the ground: leadership, teams, priorities, concrete decisions. The raw material of how I frame a project today.</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone4Tag1">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:272</note>
+      </notes>
+      <segment>
+        <source>Leadership</source>
+        <target>Leadership</target>
+      </segment>
+    </unit>
+    <unit id="presentationMilestone4Tag2">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:273</note>
+      </notes>
+      <segment>
+        <source>Terrain</source>
+        <target>On the ground</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaqKicker">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:281</note>
+      </notes>
+      <segment>
+        <source>Questions fréquentes</source>
+        <target>Frequently asked questions</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaqTitle">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:284</note>
+      </notes>
+      <segment>
+        <source>Ce qu&apos;on me demande souvent.</source>
+        <target>What I'm often asked.</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq1Q">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:289</note>
+      </notes>
+      <segment>
+        <source>Travaillez-vous avec des non-techniciens ?</source>
+        <target>Do you work with non-technical people?</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq1A">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:290</note>
+      </notes>
+      <segment>
+        <source>Absolument — c&apos;est même mon terrain de prédilection. Je traduis le technique en décisions claires, sans jargon. Vous n&apos;avez pas besoin de comprendre le code pour piloter un bon projet.</source>
+        <target>Absolutely — it's even my favourite ground. I translate the technical into clear decisions, without jargon. You don't need to understand the code to steer a good project.</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq2Q">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:293</note>
+      </notes>
+      <segment>
+        <source>Quels types de projets prenez-vous ?</source>
+        <target>What kinds of projects do you take on?</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq2A">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:294</note>
+      </notes>
+      <segment>
+        <source>Des interventions ciblées aux projets structurants, en passant par l&apos;accompagnement dans la durée. Le périmètre est défini sur votre besoin réel, pas sur un catalogue figé.</source>
+        <target>From targeted interventions to structuring projects, by way of long-term support. The scope is defined around your real need, not a fixed catalogue.</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq3Q">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:297</note>
+      </notes>
+      <segment>
+        <source>L&apos;IA est-elle obligatoire dans vos projets ?</source>
+        <target>Is AI mandatory in your projects?</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq3A">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:298</note>
+      </notes>
+      <segment>
+        <source>Jamais. L&apos;IA est un levier parmi d&apos;autres. Si elle apporte une valeur mesurable, on l&apos;intègre proprement. Sinon, on s&apos;en passe — la sobriété est une qualité.</source>
+        <target>Never. AI is one lever among others. If it brings measurable value, we integrate it cleanly. Otherwise, we do without — restraint is a quality.</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq4Q">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:301</note>
+      </notes>
+      <segment>
+        <source>Comment démarre-t-on ?</source>
+        <target>How do we get started?</target>
+      </segment>
+    </unit>
+    <unit id="presentationFaq4A">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:302</note>
+      </notes>
+      <segment>
+        <source>Par une conversation. Décrivez votre situation via la page contact ; je reviens vers vous avec un regard honnête et une proposition de cadrage — pas un devis générique.</source>
+        <target>With a conversation. Describe your situation via the contact page; I get back to you with an honest take and a scoping proposal — not a generic quote.</target>
+      </segment>
+    </unit>
+    <unit id="presentationCtaKicker">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:309</note>
+      </notes>
+      <segment>
+        <source>On en parle ?</source>
+        <target>Shall we talk?</target>
+      </segment>
+    </unit>
+    <unit id="presentationCtaTitle">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:312</note>
+      </notes>
+      <segment>
+        <source>Votre projet mérite d&apos;être clarifié avant d&apos;être construit.</source>
+        <target>Your project deserves to be clarified before it's built.</target>
+      </segment>
+    </unit>
+    <unit id="presentationCtaPrimary">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:315</note>
+      </notes>
+      <segment>
+        <source>Démarrer la conversation</source>
+        <target>Start the conversation</target>
+      </segment>
+    </unit>
+    <unit id="presentationCtaSecondary">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:318</note>
+      </notes>
+      <segment>
+        <source>Voir les services</source>
+        <target>See the services</target>
       </segment>
     </unit>
 

@@ -1,196 +1,319 @@
-import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import type { HeroAction } from "../../shared/components/hero-section/hero-section.component";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
-import { PROJECT_IMAGES } from "../../shared/data/portfolio-projects";
-import { CtaSectionComponent } from "../home/components/cta-section/cta-section.component";
+import { RouterLink } from "@angular/router";
+import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import {
+  AsiliAiMethodComponent,
+  type AsiliAiMethodStep,
+  AsiliCtaBandComponent,
+  AsiliHeroComponent,
+} from "../../shared/sections";
 
-interface PortfolioCard {
+/**
+ * Une compétence / terrain d'expertise présenté sur la page Présentation.
+ *
+ * - `title` : intitulé du terrain (ex. « Développement produit »).
+ * - `desc` : phrase de description.
+ * - `stack` : étiquettes mono (technos / mots-clés) sous la description.
+ * - `icon` : identifiant de l'icône SVG inline (`code` / `ai` / `chart`).
+ */
+interface PresentationSkill {
   title: string;
-  descriptionPragraphs: string[];
-  descriptionNote?: string;
-  image: string;
-  alt: string;
-  tags: string[];
+  desc: string;
+  stack: readonly string[];
+  icon: "code" | "ai" | "chart";
+  /** Délai de révélation au scroll (cascade visuelle des cartes). */
+  revealDelay: 1 | 2 | 3 | 4 | null;
 }
 
+/**
+ * Un jalon de la timeline « parcours » de la page Présentation.
+ *
+ * - `year` : libellé d'année mono teal (ex. « 2026 → »), affiché tel quel.
+ * - `title` : intitulé du jalon.
+ * - `descHtml` : description, contenu de confiance (statique) pouvant contenir
+ *   des `<strong>` ; injecté via `[innerHTML]`.
+ * - `tags` : étiquettes mono sous la description.
+ */
+interface PresentationMilestone {
+  year: string;
+  title: string;
+  descHtml: string;
+  tags: readonly string[];
+}
+
+/**
+ * Une question / réponse de la FAQ de la page Présentation.
+ *
+ * - `q` : question (libellé de l'accordéon `<summary>`).
+ * - `a` : réponse en texte brut.
+ */
+interface PresentationFaq {
+  q: string;
+  a: string;
+}
+
+/**
+ * Page Présentation Asili (`/presentation`) — refonte dev-forward du Lot 3c.
+ *
+ * Compose les sections de la bibliothèque marketing du Lot 3a
+ * (`shared/sections/*`) dans l'ordre de la maquette
+ * `AsiliNewDesign/presentation.html` : hero (kicker « Le fondateur »,
+ * titre dev-first), intro/portrait (récit Decathlon → reconversion, signature
+ * Tim Moyence), trois terrains d'expertise (Développement produit / IA utile &
+ * mesurée / Conseil & stratégie), section « Ma manière de travailler avec
+ * l'IA » (`asili-ai-method`, orchestration multi-agents + règle d'or), timeline
+ * parcours (2026 / 2025 / 2023 / 2017-23), FAQ et bande CTA (`asili-cta-band`).
+ *
+ * Tout le texte est fourni en `$localize` (source FR verbatim de la maquette,
+ * IDs `@@presentation*`) ; la traduction EN vit dans les XLF. Le fond
+ * constellation est global (Lot 0, `<app-asili-background>`) : la page ne
+ * recrée aucun canvas.
+ *
+ * Identité : Tim Moyence — développeur full-stack & IA, ex-manager Decathlon.
+ * Le récit management est raconté en profondeur (intro + timeline) mais
+ * l'identité de tête reste « développeur ». Pas de social proof fictif.
+ */
 @Component({
   selector: "app-presentation",
   standalone: true,
   imports: [
-    CommonModule,
-    RouterModule,
-    HeroSectionComponent,
-    CtaSectionComponent,
+    RouterLink,
+    RevealOnScrollDirective,
+    AsiliHeroComponent,
+    AsiliAiMethodComponent,
+    AsiliCtaBandComponent,
   ],
   templateUrl: "./presentation.component.html",
   styleUrl: "./presentation.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PresentationComponent {
-  readonly hero = {
-    label: $localize`:presentation.hero.label@@presentationHeroLabel:Développeur`,
-    title: $localize`:presentation.hero.title@@presentationHeroTitle:Parcours de développement web`,
-    description: $localize`:presentation.hero.description@@presentationHeroDescription:Passionné de technologies web avec trois ans d'expérience, je transforme des idées complexes en solutions numériques élégantes et fonctionnelles.`,
-    actions: [
-      {
-        label: $localize`:presentation.hero.action.projects@@presentationHeroActionProjects:Projets`,
-        variant: "secondary" as HeroAction["variant"],
-        href: "/client-project",
-      },
-      {
-        label: $localize`:presentation.hero.action.contact@@presentationHeroActionContact:Contact`,
-        variant: "primary" as HeroAction["variant"],
-        href: "/contact",
-      },
-    ],
-  };
+  // --- Hero -----------------------------------------------------------------
 
-  readonly technologySection = {
-    label: $localize`:presentation.tech.label@@presentationTechLabel:Technologies`,
-    title: $localize`:presentation.tech.title@@presentationTechTitle:Des compétences techniques au service de projets concrets`,
-    leadParagraphs: [
-      $localize`:leadParagraphs.description1@@leadParagraphsDescription1:Mon approche du développement web repose sur la compréhension du contexte avant le choix des outils.`,
-      $localize`:leadParagraphs.description2@@leadParagraphsDescription2:Les technologies sont sélectionnées pour leur pertinence, leur fiabilité et leur capacité à s’inscrire dans la durée, afin de construire des solutions compréhensibles, maintenables et adaptées aux usages réels.`,
-    ],
-    image: "/assets/images/technology-skills-illustration.webp",
-    imageAlt: $localize`:presentation.tech.image.alt@@presentationTechImageAlt:Illustration de compétences techniques`,
-    actions: [
-      {
-        label: $localize`:presentation.tech.action.skills@@presentationTechActionSkills:Voir mes compétences`,
-        variant: "primary" as HeroAction["variant"],
-        href: "/offer",
-      },
-      {
-        label: $localize`:presentation.tech.action.learnMore@@presentationTechActionLearnMore:En savoir plus`,
-        variant: "ghost" as HeroAction["variant"],
-        href: "/presentation",
-      },
-    ],
-  };
+  /** Sur-titre mono du hero. */
+  protected readonly heroKicker = $localize`:@@presentationHeroKicker:Le fondateur`;
 
-  readonly portfolioHeader = {
-    label: $localize`:presentation.portfolio.label@@presentationPortfolioLabel:Réalisations`,
-    title: $localize`:presentation.portfolio.title@@presentationPortfolioTitle:séléction de projets`,
-    description: $localize`:presentation.portfolio.description@@presentationPortfolioDescription:Une sélection de projets représentatifs de mon approche, mêlant réflexion, développement et adaptation aux usages réels.`,
-    ctaLabel: $localize`:presentation.portfolio.cta@@presentationPortfolioCta:Tous les projets`,
-  };
+  /** Début du titre du hero, avant l'accent italique teal. */
+  protected readonly heroTitlePre = $localize`:@@presentationHeroTitlePre:Développeur full-stack & IA.`;
 
-  readonly portfolioCards: PortfolioCard[] = [
+  /** Mot accentué (italique teal) du titre du hero. */
+  protected readonly heroTitleAccent = $localize`:@@presentationHeroTitleAccent:Manager`;
+
+  /** Fin du titre du hero, après l'accent. */
+  protected readonly heroTitlePost = $localize`:@@presentationHeroTitlePost:avant tout.`;
+
+  /** Accroche du hero. */
+  protected readonly heroLead = $localize`:@@presentationHeroLead:Je m'appelle Tim Moyence — développeur full-stack & IA, freelance à Bordeaux (remote). Six ans manager chez Decathlon avant de me reconvertir au code. J'aide TPE, PME et solopreneurs à transformer un besoin flou en outils nets, robustes et durables — avec une exigence d'ingénierie forte.`;
+
+  /** Lignes de méta du hero : clé mono + valeur. */
+  protected readonly heroMeta: readonly { key: string; value: string }[] = [
     {
-      title: $localize`:presentation.portfolio.card.assistant@@presentationPortfolioCardAssistant:Assistant IA Geev`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.assistant.desc@@presentationPortfolioCardAssistantDesc1:Conception d’un prototype d’assistant intelligent destiné à faciliter le tri et l’analyse d’annonces à partir de contenus visuels.
-`,
-        $localize`:presentation.portfolio.card.assistant.desc@@presentationPortfolioCardAssistantDesc2:Le projet explore l’usage de l’intelligence artificielle comme outil d’aide à la décision, dans un cadre maîtrisé.`,
-      ],
-      image: PROJECT_IMAGES.assistantIaGeev,
-      alt: $localize`:presentation.portfolio.card.assistant.alt@@presentationPortfolioCardAssistantAlt:Capture du projet Assistant IA Geev`,
-      tags: [
-        $localize`:presentation.portfolio.tag.ai@@presentationPortfolioTagAi:Intelligence artificielle`,
-        $localize`:presentation.portfolio.tag.image@@presentationPortfolioTagImage:Analyse de contenu`,
-        $localize`:presentation.portfolio.tag.automation.Geev@@presentationPortfolioTagAutomationGeev:Automatisation`,
+      key: $localize`:@@presentationHeroMeta1Key:Basé à`,
+      value: $localize`:@@presentationHeroMeta1Value:Bordeaux · France`,
+    },
+    {
+      key: $localize`:@@presentationHeroMeta2Key:Stack`,
+      value: $localize`:@@presentationHeroMeta2Value:Angular · NestJS · .NET · IA`,
+    },
+    {
+      key: $localize`:@@presentationHeroMeta3Key:Exigence`,
+      value: $localize`:@@presentationHeroMeta3Value:DDD · Clean Archi · TDD`,
+    },
+    {
+      key: $localize`:@@presentationHeroMeta4Key:Aussi`,
+      value: $localize`:@@presentationHeroMeta4Value:Formateur · Ipac & EPSI`,
+    },
+    {
+      key: $localize`:@@presentationHeroMeta5Key:Disponibilité`,
+      value: $localize`:@@presentationHeroMeta5Value:Nouveaux projets · 2026`,
+    },
+  ];
+
+  // --- Intro / portrait -----------------------------------------------------
+
+  /** Libellé du placeholder de portrait. */
+  protected readonly portraitPlaceholder = $localize`:@@presentationPortraitPlaceholder:portrait — photo du fondateur`;
+
+  /** Signature serif italique sous l'intro. */
+  protected readonly introSignature = $localize`:@@presentationIntroSignature:— Tim Moyence, Asili Design`;
+
+  // --- Compétences / approche ----------------------------------------------
+
+  /** Sur-titre de la section compétences. */
+  protected readonly skillsKicker = $localize`:@@presentationSkillsKicker:Compétences & approche`;
+
+  /** Trois terrains d'expertise (développement / IA / conseil). */
+  protected readonly skills: readonly PresentationSkill[] = [
+    {
+      icon: "code",
+      revealDelay: null,
+      title: $localize`:@@presentationSkill1Title:Développement produit`,
+      desc: $localize`:@@presentationSkill1Desc:Des applications web robustes, lisibles et maintenables. De l'architecture front à l'API, avec une obsession pour la clarté du code et de l'usage.`,
+      stack: [
+        $localize`:@@presentationSkill1Stack1:Angular 19`,
+        $localize`:@@presentationSkill1Stack2:NestJS`,
+        $localize`:@@presentationSkill1Stack3:.NET / C#`,
+        $localize`:@@presentationSkill1Stack4:React Native`,
+        $localize`:@@presentationSkill1Stack5:PostgreSQL`,
+        $localize`:@@presentationSkill1Stack6:Docker`,
       ],
     },
     {
-      title: $localize`:presentation.portfolio.card.test@@presentationPortfolioCardTest:Prototype de planification assistée`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.test.desc@@presentationPortfolioCardTestDesc1:Exploration d’un système d’aide à la planification reposant sur l’intelligence artificielle, visant à automatiser et fluidifier la prise de rendez-vous.`,
-        $localize`:presentation.portfolio.card.test.desc@@presentationPortfolioCardTestDesc2:Le projet s’inscrit dans une démarche d’optimisation des processus, sans remplacer l’intervention humaine.`,
-      ],
-      image: PROJECT_IMAGES.planificationAssistee,
-      alt: $localize`:presentation.portfolio.card.test.alt@@presentationPortfolioCardTestAlt:Capture du projet Test IA Geev`,
-      tags: [
-        $localize`:presentation.portfolio.tag.optimisation@@presentationPortfolioTagOptimisation:Optimisation`,
-        $localize`:presentation.portfolio.tag.planning@@presentationPortfolioTagPlanning:Planification`,
-        $localize`:presentation.portfolio.tag.efficiency@@presentationPortfolioTagEfficiency:IA appliquée`,
+      icon: "ai",
+      revealDelay: 1,
+      title: $localize`:@@presentationSkill2Title:IA utile & mesurée`,
+      desc: $localize`:@@presentationSkill2Desc:L'IA comme levier, pas comme gadget. J'intègre des automatisations et des assistants qui font gagner du temps réel — sous contrôle humain, toujours.`,
+      stack: [
+        $localize`:@@presentationSkill2Stack1:LangChain`,
+        $localize`:@@presentationSkill2Stack2:Agents autonomes`,
+        $localize`:@@presentationSkill2Stack3:Claude Code`,
+        $localize`:@@presentationSkill2Stack4:Multi-LLM`,
       ],
     },
     {
-      title: $localize`:presentation.portfolio.card.beecoming@@presentationPortfolioCardBeecoming:Gestion de chais de cognac`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.beecoming.desc@@presentationPortfolioCardBeecomingDesc1:Application de suivi et de structuration de la production pour la filière cognac, de la vigne à la mise en bouteille.`,
-        $localize`:presentation.portfolio.card.beecoming.desc@@presentationPortfolioCardBeecomingDesc2:L’objectif est de centraliser les informations, améliorer la traçabilité et accompagner les usages métier au quotidien.`,
-      ],
-      image: PROJECT_IMAGES.gestionChais,
-      alt: $localize`:presentation.portfolio.card.beecoming.alt@@presentationPortfolioCardBeecomingAlt:Capture du projet App Beecoming`,
-      tags: [
-        $localize`:presentation.portfolio.tag.traceability@@presentationPortfolioTagTraceability:Traçabilité`,
-        $localize`:presentation.portfolio.tag.metier@@presentationPortfolioTagMetier:Métier`,
-        $localize`:presentation.portfolio.tag.production@@presentationPortfolioTagProduction:Production`,
-      ],
-    },
-    {
-      title: $localize`:presentation.portfolio.card.louisons@@presentationPortfolioCardLouisons:Louisson Masseuse`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.louisons.desc@@presentationPortfolioCardLouisonsDesc1:Création d’un site web personnalisé intégrant des fonctionnalités sur mesure pour répondre à des besoins spécifiques.`,
-        $localize`:presentation.portfolio.card.louisons.desc@@presentationPortfolioCardLouisonsDesc2:Le projet met l’accent sur la simplicité d’usage, la cohérence visuelle et l’adaptation au contexte client.`,
-      ],
-      image: PROJECT_IMAGES.louissonMasseuse,
-      alt: $localize`:presentation.portfolio.card.louisons.alt@@presentationPortfolioCardLouisonsAlt:Capture du projet Louisons`,
-      tags: [
-        $localize`:presentation.portfolio.tag.web@@presentationPortfolioTagWeb:Web`,
-        $localize`:presentation.portfolio.tag.development@@presentationPortfolioTagDevelopment:Développement`,
-        $localize`:@@presentationPortfolioTagLouisonCustom:Sur mesure`,
-      ],
-    },
-    {
-      title: $localize`:presentation.portfolio.card.vincent@@presentationPortfolioCardVincent:AtlanticBike`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.vincent.desc@@presentationPortfolioCardVincentDesc1:Développement d’une solution web adaptée à des besoins spécifiques, avec une attention particulière portée à la clarté, à l’usage et à la personnalisation.`,
-        $localize`:presentation.portfolio.card.vincent.desc@@presentationPortfolioCardVincentDesc2:Le projet illustre une approche sur mesure, pensée pour s’intégrer naturellement dans l’activité du client.`,
-      ],
-      image: PROJECT_IMAGES.atlanticBike,
-      alt: $localize`:presentation.portfolio.card.vincent.alt@@presentationPortfolioCardVincentAlt:Capture du projet Vincent`,
-      tags: [
-        $localize`:presentation.portfolio.tag.websolution@@presentationPortfolioTagWebsolution:Solution web`,
-        $localize`:presentation.portfolio.tag.customAB@@presentationPortfolioTagCustom:Personnalisation`,
-        $localize`:presentation.portfolio.tag.creativity@@presentationPortfolioTagCreativity:Usage`,
-      ],
-    },
-    {
-      title: $localize`:presentation.portfolio.card.Automation@@presentationPortfolioCardAutomation:Automatisation de validation de diplômes`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.Automation.desc@@presentationPortfolioCardAutomationDesc1:Mise en place d’un processus automatisé pour la génération et l’envoi de communications de validation sur une plateforme e-learning.`,
-        $localize`:presentation.portfolio.card.Automation.desc@@presentationPortfolioCardAutomationDesc2:L’objectif est de fiabiliser les échanges, réduire les tâches manuelles et faciliter le passage à l’échelle.`,
-      ],
-      image: PROJECT_IMAGES.automationValidation,
-      alt: $localize`:presentation.portfolio.card.Automation.alt@@presentationPortfolioCardAutomationAlt:Capture du projet Automation`,
-      tags: [
-        $localize`:presentation.portfolio.tag.automation@@presentationPortfolioTagAutomation:Automation`,
-        $localize`:presentation.portfolio.tag.process@@presentationPortfolioTagProcess:Process`,
-        $localize`:presentation.portfolio.tag.fiabilité@@presentationPortfolioTagFiabilité:Fiabilité`,
-      ],
-    },
-    {
-      title: $localize`:presentation.portfolio.card.others@@presentationPortfolioCardOthers:Modélisation prédictive de risques sanitaires`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.others.desc@@presentationPortfolioCardOthersDesc1:Projet de modélisation et d’analyse de données visant à anticiper l’apparition de risques sanitaires à partir de données épidémiologiques.`,
-        $localize`:presentation.portfolio.card.others.desc@@presentationPortfolioCardOthersDesc:L’objectif était d’explorer l’usage de modèles d’intelligence artificielle comme outil d’aide à la prévision et à la décision, dans un cadre analytique structuré.`,
-      ],
-      image: PROJECT_IMAGES.modelisationPredictive,
-      alt: $localize`:presentation.portfolio.card.others.alt@@presentationPortfolioCardOthersAlt:Illustration d'autres projets`,
-      tags: [
-        $localize`:presentation.portfolio.tag.analyse@@presentationPortfolioTagAnalyse:Analyse de données`,
-        $localize`:presentation.portfolio.tag.modélisation@@presentationPortfolioTagModélisation:Modélisation prédictive`,
-        $localize`:presentation.portfolio.tag.technicalIA@@presentationPortfolioTagTechnicalIA:IA Applicative`,
-      ],
-      descriptionNote: $localize`:presentation.portfolio.card.others.note@@presentationPortfolioCardOthersNote:Projet académique réalisé dans le cadre d’un cursus en développement et analyse de données.`,
-    },
-    {
-      title: $localize`:presentation.portfolio.card.Assistante@@presentationPortfolioCardAssistante:Assistant pour médiation culturelle`,
-      descriptionPragraphs: [
-        $localize`:presentation.portfolio.card.Assistante.desc@@presentationPortfolioCardAssistanteDesc1:Conception d’un prototype d’assistant numérique destiné à accompagner les guides de musée dans leur médiation.`,
-        $localize`:presentation.portfolio.card.Assistante.desc@@presentationPortfolioCardAssistanteDesc2:Le projet explore une utilisation mesurée de l’IA comme soutien à l’expertise humaine, sans s’y substituer.`,
-      ],
-      image: PROJECT_IMAGES.assistantMediation,
-      alt: $localize`:presentation.portfolio.card.Assistante.alt@@presentationPortfolioCardAssistanteAlt:Illustration d'un assistant pour médiation culturelle`,
-      tags: [
-        $localize`:presentation.portfolio.tag.Mediation@@presentationPortfolioTagMediation:Médiation`,
-        $localize`:presentation.portfolio.tag.culture@@presentationPortfolioTagCulture:Culture`,
-        $localize`:presentation.portfolio.tag.Appliquée@@presentationPortfolioTagAppliquée:IA Appliquée`,
+      icon: "chart",
+      revealDelay: 2,
+      title: $localize`:@@presentationSkill3Title:Conseil & stratégie`,
+      desc: $localize`:@@presentationSkill3Desc:Avant la technique, la direction. Audit, cadrage, priorisation : je vous aide à décider quoi construire — et surtout quoi ne pas construire.`,
+      stack: [
+        $localize`:@@presentationSkill3Stack1:Audit`,
+        $localize`:@@presentationSkill3Stack2:Cadrage`,
+        $localize`:@@presentationSkill3Stack3:SEO`,
       ],
     },
   ];
+
+  // --- Méthode IA -----------------------------------------------------------
+
+  /** Sur-titre de la section « Ma manière de travailler avec l'IA ». */
+  protected readonly aiMethodKicker = $localize`:@@presentationAiMethodKicker:Ma manière de travailler avec l'IA`;
+
+  /** Accroche de la section méthode IA. */
+  protected readonly aiMethodLead = $localize`:@@presentationAiMethodLead:Je travaille en orchestration multi-agents : un agent par tâche, revue croisée, vérification adversariale avant de valider. Chaque changement commence par un test qui échoue (TDD), et l'architecture est pensée pour durer (DDD, clean architecture) — même sur mes projets perso.`;
+
+  /** Étapes de la méthode de travail avec l'IA. */
+  protected readonly aiMethodSteps: readonly AsiliAiMethodStep[] = [
+    {
+      num: "01",
+      title: $localize`:@@presentationAiMethodStep1Title:Un agent par tâche`,
+      desc: $localize`:@@presentationAiMethodStep1Desc:Découpage clair, chaque agent a un rôle précis.`,
+    },
+    {
+      num: "02",
+      title: $localize`:@@presentationAiMethodStep2Title:Revue croisée`,
+      desc: $localize`:@@presentationAiMethodStep2Desc:Les agents se relisent ; rien ne passe sans contrôle.`,
+    },
+    {
+      num: "03",
+      title: $localize`:@@presentationAiMethodStep3Title:Vérification adversariale`,
+      desc: $localize`:@@presentationAiMethodStep3Desc:On cherche activement à casser avant de valider.`,
+    },
+    {
+      num: "04",
+      title: $localize`:@@presentationAiMethodStep4Title:TDD + architecture durable`,
+      desc: $localize`:@@presentationAiMethodStep4Desc:Un test qui échoue d'abord ; DDD & clean archi ensuite.`,
+    },
+  ];
+
+  /**
+   * Règle d'or de la section méthode IA. Contenu de confiance (statique)
+   * contenant un accent teal italique (`<em>`) et un saut de ligne (`<br>`) ;
+   * injecté via `[innerHTML]` par la section `asili-ai-method`.
+   */
+  protected readonly aiMethodRule = $localize`:@@presentationAiMethodRule:« L'IA génère du contenu.<br/><em>Un expert génère des résultats.</em> »`;
+
+  /** Signature sous la règle d'or. */
+  protected readonly aiMethodRuleWho = $localize`:@@presentationAiMethodRuleWho:La règle d'or — la même que dans mes formations`;
+
+  // --- Parcours (timeline) --------------------------------------------------
+
+  /** Sur-titre de la section parcours. */
+  protected readonly timelineKicker = $localize`:@@presentationTimelineKicker:Le parcours`;
+
+  /** Lien d'en-tête de la section parcours vers les projets. */
+  protected readonly timelineHeadLink = $localize`:@@presentationTimelineHeadLink:Voir les projets`;
+
+  /** Jalons du parcours (du plus récent au plus ancien). */
+  protected readonly milestones: readonly PresentationMilestone[] = [
+    {
+      year: $localize`:@@presentationMilestone1Year:2026 →`,
+      title: $localize`:@@presentationMilestone1Title:Asili Design & projets actifs`,
+      descHtml: $localize`:@@presentationMilestone1Desc:Le studio sous sa forme actuelle, plus deux chantiers très actifs : <strong>Musaium / InnovMind</strong> (médiation culturelle IA pour musées) et <strong>ZenFirst Vision</strong> (pilotage de rentabilité & compta intelligente, France/Québec).`,
+      tags: [
+        $localize`:@@presentationMilestone1Tag1:Monorepo`,
+        $localize`:@@presentationMilestone1Tag2:Multi-LLM`,
+        $localize`:@@presentationMilestone1Tag3:React 19`,
+      ],
+    },
+    {
+      year: $localize`:@@presentationMilestone2Year:2025`,
+      title: $localize`:@@presentationMilestone2Title:Plateforme SaaS multi-apps`,
+      descHtml: $localize`:@@presentationMilestone2Desc:Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Weather, Sebastian, Growth Audit, Formations — avec auth, RGPD et lead-magnets.`,
+      tags: [
+        $localize`:@@presentationMilestone2Tag1:Angular 19 SSR`,
+        $localize`:@@presentationMilestone2Tag2:NestJS 11`,
+      ],
+    },
+    {
+      year: $localize`:@@presentationMilestone3Year:2023`,
+      title: $localize`:@@presentationMilestone3Title:Reconversion au code`,
+      descHtml: $localize`:@@presentationMilestone3Desc:Du management au développement, avec d'emblée une exigence d'ingénierie : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. Aussi formateur à l'Ipac et l'EPSI.`,
+      tags: [
+        $localize`:@@presentationMilestone3Tag1:DDD`,
+        $localize`:@@presentationMilestone3Tag2:TDD`,
+        $localize`:@@presentationMilestone3Tag3:Formateur`,
+      ],
+    },
+    {
+      year: $localize`:@@presentationMilestone4Year:2017–23`,
+      title: $localize`:@@presentationMilestone4Title:Manager chez Decathlon`,
+      descHtml: $localize`:@@presentationMilestone4Desc:Six ans sur le terrain : leadership, équipes, priorités, décisions concrètes. La matière première de ma façon de cadrer un projet aujourd'hui.`,
+      tags: [
+        $localize`:@@presentationMilestone4Tag1:Leadership`,
+        $localize`:@@presentationMilestone4Tag2:Terrain`,
+      ],
+    },
+  ];
+
+  // --- FAQ ------------------------------------------------------------------
+
+  /** Sur-titre de la FAQ. */
+  protected readonly faqKicker = $localize`:@@presentationFaqKicker:Questions fréquentes`;
+
+  /** Titre de la FAQ. */
+  protected readonly faqTitle = $localize`:@@presentationFaqTitle:Ce qu'on me demande souvent.`;
+
+  /** Questions / réponses de la FAQ. */
+  protected readonly faqItems: readonly PresentationFaq[] = [
+    {
+      q: $localize`:@@presentationFaq1Q:Travaillez-vous avec des non-techniciens ?`,
+      a: $localize`:@@presentationFaq1A:Absolument — c'est même mon terrain de prédilection. Je traduis le technique en décisions claires, sans jargon. Vous n'avez pas besoin de comprendre le code pour piloter un bon projet.`,
+    },
+    {
+      q: $localize`:@@presentationFaq2Q:Quels types de projets prenez-vous ?`,
+      a: $localize`:@@presentationFaq2A:Des interventions ciblées aux projets structurants, en passant par l'accompagnement dans la durée. Le périmètre est défini sur votre besoin réel, pas sur un catalogue figé.`,
+    },
+    {
+      q: $localize`:@@presentationFaq3Q:L'IA est-elle obligatoire dans vos projets ?`,
+      a: $localize`:@@presentationFaq3A:Jamais. L'IA est un levier parmi d'autres. Si elle apporte une valeur mesurable, on l'intègre proprement. Sinon, on s'en passe — la sobriété est une qualité.`,
+    },
+    {
+      q: $localize`:@@presentationFaq4Q:Comment démarre-t-on ?`,
+      a: $localize`:@@presentationFaq4A:Par une conversation. Décrivez votre situation via la page contact ; je reviens vers vous avec un regard honnête et une proposition de cadrage — pas un devis générique.`,
+    },
+  ];
+
+  // --- Bande CTA ------------------------------------------------------------
+
+  /** Sur-titre de la bande CTA. */
+  protected readonly ctaKicker = $localize`:@@presentationCtaKicker:On en parle ?`;
+
+  /** Titre de la bande CTA. */
+  protected readonly ctaTitle = $localize`:@@presentationCtaTitle:Votre projet mérite d'être clarifié avant d'être construit.`;
+
+  /** CTA primaire de la bande. */
+  protected readonly ctaPrimary = $localize`:@@presentationCtaPrimary:Démarrer la conversation`;
+
+  /** CTA secondaire de la bande. */
+  protected readonly ctaSecondary = $localize`:@@presentationCtaSecondary:Voir les services`;
 }

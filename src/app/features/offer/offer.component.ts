@@ -1,286 +1,261 @@
-import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
-import type { FaqItem } from "../../shared/components/faq-section/faq-section.component";
-import { FaqSectionComponent } from "../../shared/components/faq-section/faq-section.component";
-import type { HeroAction } from "../../shared/components/hero-section/hero-section.component";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
-import type { ServiceItem } from "../../shared/components/services-section/services-section.component";
-import { ServicesSectionComponent } from "../../shared/components/services-section/services-section.component";
-import { CtaSectionComponent } from "../home/components/cta-section/cta-section.component";
+import { RouterLink } from "@angular/router";
+import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import {
+  AsiliCtaBandComponent,
+  AsiliHeroComponent,
+  AsiliMethodComponent,
+  type AsiliMethodStep,
+} from "../../shared/sections";
 
-interface ServiceSection {
-  id: string;
-  linkLabel: string;
-  category: string;
-  heading: string;
-  description: string;
-  image: string;
-  imageAlt: string;
-  offsetTop: string;
-  actions: HeroAction[];
+/**
+ * Un mode d'intervention de la page Services.
+ *
+ * - `num` : numéro mono teal (ex. « 01 »).
+ * - `title` : intitulé du mode (ex. « Interventions ciblées »).
+ * - `desc` : phrase de description.
+ * - `link` : route interne cible du lien (la ligne entière est cliquable).
+ * - `revealDelay` : délai de révélation au scroll (cascade visuelle).
+ */
+interface OfferMode {
+  num: string;
+  title: string;
+  desc: string;
+  link: string;
+  revealDelay: 1 | 2 | 3 | 4 | null;
 }
 
+/**
+ * Un différenciateur de la page Services (carte fond encre).
+ *
+ * - `num` : numéro mono (ex. « 01 »).
+ * - `title` : intitulé de l'engagement.
+ * - `desc` : phrase de description.
+ * - `revealDelay` : délai de révélation au scroll (cascade visuelle).
+ */
+interface OfferDiff {
+  num: string;
+  title: string;
+  desc: string;
+  revealDelay: 1 | 2 | 3 | 4 | null;
+}
+
+/**
+ * Une question / réponse de la FAQ de la page Services.
+ *
+ * - `q` : question (libellé de l'accordéon `<summary>`).
+ * - `a` : réponse en texte brut.
+ */
+interface OfferFaq {
+  q: string;
+  a: string;
+}
+
+/**
+ * Page Services Asili (`/offer`) — refonte du Lot 3c.
+ *
+ * Compose les sections de la bibliothèque marketing du Lot 3a
+ * (`shared/sections/*`) dans l'ordre de la maquette
+ * `AsiliNewDesign/services.html` : hero (kicker « Services premium »,
+ * titre « Un périmètre défini sur *votre* besoin. »), quatre modes
+ * d'intervention (Interventions ciblées / Projets structurants /
+ * Accompagnement continu / Formation sur-mesure), section « Méthode »
+ * (`asili-method`, quatre étapes Comprendre → Déployer → Éprouver → Faire
+ * durer), trois différenciateurs (Expertise réelle / Continuité humaine /
+ * Stratégie avant techno), FAQ (dont « Pourquoi pas de grille de prix ? ») et
+ * bande CTA (`asili-cta-band`).
+ *
+ * Tout le texte est fourni en `$localize` (source FR verbatim de la maquette) ;
+ * la traduction EN vit dans les XLF. Le fond constellation est global (Lot 0,
+ * `<app-asili-background>`) : la page ne recrée aucun canvas.
+ *
+ * Pas de grille de prix figée : l'offre se cadre sur le besoin réel. Pas de
+ * social proof fictif.
+ */
 @Component({
   selector: "app-offer",
   standalone: true,
   imports: [
-    CommonModule,
-    RouterModule,
-    HeroSectionComponent,
-    CtaSectionComponent,
-    ContactCtaComponent,
-    ServicesSectionComponent,
-    FaqSectionComponent,
+    RouterLink,
+    RevealOnScrollDirective,
+    AsiliHeroComponent,
+    AsiliMethodComponent,
+    AsiliCtaBandComponent,
   ],
   templateUrl: "./offer.component.html",
   styleUrl: "./offer.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfferComponent {
-  readonly hero = {
-    title: $localize`:offer.hero.title@@offer.hero.title:Nos offres de developpement web et d'accompagnement digital`,
-    description: $localize`:offer.hero.description@@offer.hero.description:J’accompagne des entreprises et des indépendants dans la clarification, la structuration et l’évolution de leurs outils digitaux.\n\nWeb, automatisation et intelligence artificielle sont utilisés comme des leviers, jamais comme des finalités.`,
-    actions: [
-      {
-        label: $localize`:offer.hero.actions.contact@@offer.hero.actions.contact:Contact`,
-        variant: "secondary" as HeroAction["variant"],
-        href: "/contact",
-      },
-      {
-        label: $localize`:offer.hero.actions.presentation@@offer.hero.actions.presentation:Présentation`,
-        variant: "primary" as HeroAction["variant"],
-        href: "/presentation",
-      },
-    ],
-  };
+  // --- Hero -----------------------------------------------------------------
 
-  /**
-   * Section "Les offres (où le cadre se construit ensemble)"
-   * (le visuel servicesSection.png)
-   */
-  readonly servicesSection = {
-    kicker: $localize`:offer.packages.kicker@@offer.packages.kicker:Services`,
-    title: $localize`:offer.packages.title@@offer.packages.title:Les offres (où le cadre se construit ensemble)`,
-    leadParagraphs: [
-      $localize`:offer.packages.lead.1@@offer.packages.lead.1:Chaque collaboration commence par une phase de compréhension.`,
-      $localize`:offer.packages.lead.2@@offer.packages.lead.2:Le périmètre, le rythme et le budget sont définis à partir du besoin réel, pas d’un catalogue de prestations.`,
-      $localize`:offer.packages.lead.3@@offer.packages.lead.3:Voici des ordres de grandeur, à titre indicatif.`,
-    ],
-    services: [
-      {
-        title: $localize`:offer.packages.items.targeted.title@@offer.packages.items.targeted.title:Interventions ciblées`,
-        description: $localize`:offer.packages.items.targeted.desc@@offer.packages.items.targeted.desc:→ à partir de 50 €, délais courts`,
-        iconSrc: "/assets/icons/strategy.svg",
-        iconAlt: $localize`:offer.packages.items.targeted.iconAlt@@offer.packages.items.targeted.iconAlt:Icône interventions ciblées`,
-      },
-      {
-        title: $localize`:offer.packages.items.structured.title@@offer.packages.items.structured.title:Projets structurants`,
-        description: $localize`:offer.packages.items.structured.desc@@offer.packages.items.structured.desc:budgets généralement compris entre 2 000 € et 4 000 €`,
-        iconSrc: "/assets/icons/web.svg",
-        iconAlt: $localize`:offer.packages.items.structured.iconAlt@@offer.packages.items.structured.iconAlt:Icône projets structurants`,
-      },
-      {
-        title: $localize`:offer.packages.items.retainer.title@@offer.packages.items.retainer.title:Accompagnement dans le temps`,
-        description: $localize`:offer.packages.items.retainer.desc@@offer.packages.items.retainer.desc:engagements mensuels adaptés au rythme`,
-        iconSrc: "/assets/icons/farsight_digital.svg",
-        iconAlt: $localize`:offer.packages.items.retainer.iconAlt@@offer.packages.items.retainer.iconAlt:Icône accompagnement dans le temps`,
-      },
-      {
-        title: $localize`:offer.packages.items.training.title@@offer.packages.items.training.title:Formation et coaching`,
-        description: $localize`:offer.packages.items.training.desc@@offer.packages.items.training.desc:Développez votre connaissance d’internet, et des outils en ligne avec des services sur mesure conçus pour propulser vos collaborateurs`,
-        iconSrc: "/assets/icons/linked_services.svg",
-        iconAlt: $localize`:offer.packages.items.training.iconAlt@@offer.packages.items.training.iconAlt:Icône formation et coaching`,
-      },
-    ] satisfies ServiceItem[],
-    cta: {
-      label: $localize`:offer.packages.cta.label@@offer.packages.cta.label:Contactez-moi`,
-      href: "/contact",
-      iconName: "chevron-right",
-      iconSize: 1.2,
-    },
-  };
+  /** Sur-titre mono du hero. */
+  protected readonly heroKicker = $localize`:@@offerHeroKicker:Services premium`;
 
-  /**
-   * Section "Approche" (4 blocs)
-   * (le visuel services.jpeg)
-   */
-  readonly services: ServiceSection[] = [
+  /** Début du titre du hero, avant l'accent italique teal. */
+  protected readonly heroTitlePre = $localize`:@@offerHeroTitlePre:Un périmètre défini sur`;
+
+  /** Mot accentué (italique teal) du titre du hero. */
+  protected readonly heroTitleAccent = $localize`:@@offerHeroTitleAccent:votre`;
+
+  /** Fin du titre du hero, après l'accent. */
+  protected readonly heroTitlePost = $localize`:@@offerHeroTitlePost:besoin.`;
+
+  /** Accroche du hero. */
+  protected readonly heroLead = $localize`:@@offerHeroLead:Pas un catalogue de prix figés. Quatre façons de travailler ensemble, choisies selon votre situation réelle — de l'intervention ciblée à l'accompagnement dans la durée.`;
+
+  /** Lignes de méta du hero : clé mono + valeur. */
+  protected readonly heroMeta: readonly { key: string; value: string }[] = [
     {
-      id: "01",
-      linkLabel: $localize`:offer.approach.items.automation.linkLabel@@offer.approach.items.automation.linkLabel:Automatisation`,
-      category: $localize`:offer.approach.items.automation.kicker@@offer.approach.items.automation.kicker:fluidité, efficacité, allègement`,
-      heading: $localize`:offer.approach.items.automation.title@@offer.approach.items.automation.title:Pour fluidifier l’existant`,
-      description: $localize`:offer.approach.items.automation.body@@offer.approach.items.automation.body:L’objectif n’est pas d’ajouter des outils, mais de simplifier ce qui existe déjà.\n\nSimplifier ce qui ralentit votre quotidien.\n\nJ’automatise des tâches et des flux existants pour gagner en fluidité, fiabilité et clarté, sans transformer votre organisation.`,
-      image: "./assets/images/offer/automation-illustration.webp",
-      imageAlt: $localize`:offer.approach.items.automation.imageAlt@@offer.approach.items.automation.imageAlt:Illustration automatisation`,
-      offsetTop: "6rem",
-      actions: [
-        {
-          label: $localize`:offer.approach.items.automation.actions.primary@@offer.approach.items.automation.actions.primary:Découvrir`,
-          variant: "secondary" as HeroAction["variant"],
-          href: "/offer",
-        },
-      ],
+      key: $localize`:@@offerHeroMeta1Key:Format`,
+      value: $localize`:@@offerHeroMeta1Value:Sur-mesure`,
     },
     {
-      id: "02",
-      linkLabel: $localize`:offer.approach.items.businessTool.linkLabel@@offer.approach.items.businessTool.linkLabel:Outil métier`,
-      category: $localize`:offer.approach.items.businessTool.kicker@@offer.approach.items.businessTool.kicker:structure, clarté, pilotage`,
-      heading: $localize`:offer.approach.items.businessTool.title@@offer.approach.items.businessTool.title:Pour structurer un usage clé`,
-      description: $localize`:offer.approach.items.businessTool.body@@offer.approach.items.businessTool.body:Un bon outil est celui qui s’intègre naturellement dans vos pratiques, sans formation lourde ni dépendance excessive.\n\nUn outil pensé pour votre manière de travailler.\n\nJe conçois des applications web sobres et utiles, centrées sur un usage métier clé, avec juste ce qu’il faut d’intelligence intégrée.`,
-      image: "./assets/images/offer/business-tool-illustration.webp",
-      imageAlt: $localize`:offer.approach.items.businessTool.imageAlt@@offer.approach.items.businessTool.imageAlt:Illustration outil métier`,
-      offsetTop: "10rem",
-      actions: [
-        {
-          label: $localize`:offer.approach.items.businessTool.actions.primary@@offer.approach.items.businessTool.actions.primary:Explorer`,
-          variant: "secondary" as HeroAction["variant"],
-          href: "/offer",
-        },
-      ],
+      key: $localize`:@@offerHeroMeta2Key:Engagement`,
+      value: $localize`:@@offerHeroMeta2Value:Du ponctuel au continu`,
     },
     {
-      id: "03",
-      linkLabel: $localize`:offer.approach.items.evolution.linkLabel@@offer.approach.items.evolution.linkLabel:Évolutions & accompagnement`,
-      category: $localize`:offer.approach.items.evolution.kicker@@offer.approach.items.evolution.kicker:continuité, stabilité, suivi`,
-      heading: $localize`:offer.approach.items.evolution.title@@offer.approach.items.evolution.title:Faire vivre la solution dans le temps`,
-      description: $localize`:offer.approach.items.evolution.body@@offer.approach.items.evolution.body:Une solution utile aujourd’hui doit rester pertinente demain, sans empiler des couches inutiles.\n\nFaire évoluer sans complexifier.\n\nJ’accompagne les solutions dans le temps pour qu’elles restent alignées avec vos usages, vos priorités et votre rythme.`,
-      image: "./assets/images/offer/grow-up-plante.webp",
-      imageAlt: $localize`:offer.approach.items.evolution.imageAlt@@offer.approach.items.evolution.imageAlt:Illustration évolutions et accompagnement`,
-      offsetTop: "14rem",
-      actions: [
-        {
-          label: $localize`:offer.approach.items.evolution.actions.primary@@offer.approach.items.evolution.actions.primary:Analyser`,
-          variant: "secondary" as HeroAction["variant"],
-          href: "/offer",
-        },
-      ],
-    },
-    {
-      id: "04",
-      linkLabel: $localize`:offer.approach.items.global.linkLabel@@offer.approach.items.global.linkLabel:Accompagnement global`,
-      category: $localize`:offer.approach.items.global.kicker@@offer.approach.items.global.kicker:vision, cadrage, direction`,
-      heading: $localize`:offer.approach.items.global.title@@offer.approach.items.global.title:Quand le besoin est large ou encore flou`,
-      description: $localize`:offer.approach.items.global.body@@offer.approach.items.global.body:Décider trop vite coûte souvent plus cher que prendre le temps de clarifier.\n\nClarifier avant de construire.\n\nJ’interviens lorsque le besoin est large ou flou, pour structurer les priorités, définir les bons leviers et poser un cadre clair avant toute décision.`,
-      image: "./assets/images/offer/global-approach-illustration.webp",
-      imageAlt: $localize`:offer.approach.items.global.imageAlt@@offer.approach.items.global.imageAlt:Illustration accompagnement global`,
-      offsetTop: "6rem",
-      actions: [
-        {
-          label: $localize`:offer.approach.items.global.actions.primary@@offer.approach.items.global.actions.primary:Apprendre`,
-          variant: "secondary" as HeroAction["variant"],
-          href: "/offer",
-        },
-      ],
+      key: $localize`:@@offerHeroMeta3Key:Toujours inclus`,
+      value: $localize`:@@offerHeroMeta3Value:Cadrage honnête`,
     },
   ];
 
-  /**
-   * Section "Qualités" (3 blocs)
-   * (le visuel qualities.jpeg)
-   */
-  readonly qualities: ServiceSection[] = [
+  // --- Modes d'intervention -------------------------------------------------
+
+  /** Quatre modes d'intervention (du ponctuel au continu, plus la formation). */
+  protected readonly modes: readonly OfferMode[] = [
     {
-      id: "01",
-      linkLabel: $localize`:offer.principles.items.tech.linkLabel@@offer.principles.items.tech.linkLabel:Expertise technique`,
-      category: $localize`:offer.principles.items.tech.kicker@@offer.principles.items.tech.kicker:Qualité`,
-      heading: $localize`:offer.principles.items.tech.title@@offer.principles.items.tech.title:Des choix techniques clairs et maîtrisés`,
-      description: $localize`:offer.principles.items.tech.body@@offer.principles.items.tech.body:Chaque solution est conçue avec une attention particulière portée à la clarté, la robustesse et la maintenabilité.\n\nLes choix techniques sont expliqués sans jargons, assumés et adaptés au contexte et à votre usage réel, afin de garantir des outils compréhensibles, fiables et durables.`,
-      image:
-        "./assets/images/offer/qualities-technical-expertise-illustration.webp",
-      imageAlt: $localize`:offer.principles.items.tech.imageAlt@@offer.principles.items.tech.imageAlt:Illustration expertise technique`,
-      offsetTop: "6rem",
-      actions: [
-        {
-          label: $localize`:offer.principles.items.tech.actions.primary@@offer.principles.items.tech.actions.primary:Discuter`,
-          variant: "secondary" as HeroAction["variant"],
-          href: "/contact",
-        },
-      ],
+      num: "01",
+      revealDelay: null,
+      link: "/contact",
+      title: $localize`:@@offerMode1Title:Interventions ciblées`,
+      desc: $localize`:@@offerMode1Desc:Un blocage précis, une fonctionnalité, un audit. Une action courte et nette, avec un livrable clair.`,
     },
     {
-      id: "02",
-      linkLabel: $localize`:offer.principles.items.continuity.linkLabel@@offer.principles.items.continuity.linkLabel:Relation de continuité`,
-      category: $localize`:offer.principles.items.continuity.kicker@@offer.principles.items.continuity.kicker:Accompagnement`,
-      heading: $localize`:offer.principles.items.continuity.title@@offer.principles.items.continuity.title:Un accompagnement humain dans la durée`,
-      description: $localize`:offer.principles.items.continuity.body@@offer.principles.items.continuity.body:Les solutions ne sont pas livrées puis abandonnées.\n\nUn accompagnement est proposé pour faire évoluer les outils dans le temps, en fonction des usages réels, des priorités et du rythme de l’activité.`,
-      image: "./assets/images/offer/qualities-human-support-illustration.webp",
-      imageAlt: $localize`:offer.principles.items.continuity.imageAlt@@offer.principles.items.continuity.imageAlt:Illustration accompagnement`,
-      offsetTop: "10rem",
-      actions: [
-        {
-          label: $localize`:offer.principles.items.continuity.actions.primary@@offer.principles.items.continuity.actions.primary:Discuter`,
-          variant: "secondary" as HeroAction["variant"],
-          href: "/contact",
-        },
-      ],
+      num: "02",
+      revealDelay: 1,
+      link: "/contact",
+      title: $localize`:@@offerMode2Title:Projets structurants`,
+      desc: $localize`:@@offerMode2Desc:Une plateforme, une refonte, une intégration d'IA. Du cadrage à la mise en production, avec une architecture qui dure.`,
     },
     {
-      id: "03",
-      linkLabel: $localize`:offer.principles.items.strategy.linkLabel@@offer.principles.items.strategy.linkLabel:Stratégie digitale`,
-      category: $localize`:offer.principles.items.strategy.kicker@@offer.principles.items.strategy.kicker:Performance`,
-      heading: $localize`:offer.principles.items.strategy.title@@offer.principles.items.strategy.title:Décider avec méthode avant d’agir`,
-      description: $localize`:offer.principles.items.strategy.body@@offer.principles.items.strategy.body:Les décisions digitales sont prises à partir d’une analyse du contexte, des contraintes et des objectifs réels.\n\nL’objectif n’est pas d’ajouter des fonctionnalités, mais de choisir les leviers les plus pertinents pour produire un impact mesurable.`,
-      image: "./assets/images/offer/strategy-illustration.webp",
-      imageAlt: $localize`:offer.principles.items.strategy.imageAlt@@offer.principles.items.strategy.imageAlt:Illustration stratégie digitale`,
-      offsetTop: "6rem",
-      actions: [
-        {
-          label: $localize`:offer.principles.items.strategy.actions.primary@@offer.principles.items.strategy.actions.primary:Discuter`,
-          variant: "secondary" as HeroAction["variant"],
-          href: "/contact",
-        },
-      ],
+      num: "03",
+      revealDelay: 2,
+      link: "/contact",
+      title: $localize`:@@offerMode3Title:Accompagnement continu`,
+      desc: $localize`:@@offerMode3Desc:Une présence dans la durée : évolutions, conseil, montée en compétence de votre équipe. Le partenaire, pas le prestataire.`,
+    },
+    {
+      num: "04",
+      revealDelay: 3,
+      link: "/formations",
+      title: $localize`:@@offerMode4Title:Formation sur-mesure`,
+      desc: $localize`:@@offerMode4Desc:Rendre votre équipe autonome sur l'IA, l'automatisation ou le SEO. Adapté à votre contexte, pas un cours générique.`,
     },
   ];
 
-  readonly callToAction = {
-    title: $localize`:offer.cta.title@@offer.cta.title:Prêt à clarifier et faire évoluer vos outils digitaux ?`,
-    description: $localize`:offer.cta.description@@offer.cta.description:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
-    actions: [
-      {
-        label: $localize`:offer.cta.actions.primary@@offer.cta.actions.primary:Me contacter`,
-        href: "/contact",
-      },
-      {
-        label: $localize`:offer.cta.actions.secondary@@offer.cta.actions.secondary:Voir la présentation`,
-        variant: "secondary" as HeroAction["variant"],
-        href: "/presentation",
-      },
-    ],
-  };
+  // --- Méthode --------------------------------------------------------------
 
-  readonly contactSection = {
-    leadParagraphs: [
-      $localize`:offer.contact.lead.1@@offer.contact.lead.1:Vous avez un besoin, une contrainte ou une idée à clarifier ?`,
-      $localize`:offer.contact.lead.2@@offer.contact.lead.2:Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.`,
-    ],
-  };
+  /** Sur-titre mono de la section méthode. */
+  protected readonly methodKicker = $localize`:@@offerMethodKicker:La méthode`;
 
-  readonly faqTitle = $localize`:offer.faq.title@@offerFaqTitle:Questions fréquentes sur mes services`;
-  readonly faqDescription = $localize`:offer.faq.description@@offerFaqDescription:Les questions qui reviennent le plus souvent lors d'un premier échange.`;
-  readonly faqItems: readonly FaqItem[] = [
+  /** Accroche de la section méthode. */
+  protected readonly methodIntro = $localize`:@@offerMethodIntro:Un fil conducteur stable, quel que soit le mode d'intervention choisi.`;
+
+  /** Quatre étapes de la méthode (Comprendre → Déployer → Éprouver → Faire durer). */
+  protected readonly methodSteps: readonly AsiliMethodStep[] = [
     {
-      question: $localize`:offer.faq.q1@@offerFaqQ1:Combien coûte un site web sur mesure à Bordeaux ?`,
-      answer: $localize`:offer.faq.a1@@offerFaqA1:Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l'objet d'un devis personnalisé selon le périmètre, le rythme et la complexité.`,
+      num: "01",
+      index: $localize`:@@offerMethodStep1Index:— Clarifier`,
+      title: $localize`:@@offerMethodStep1Title:Comprendre`,
+      desc: $localize`:@@offerMethodStep1Desc:On cartographie le besoin réel et les usages avant toute proposition technique.`,
     },
     {
-      question: $localize`:offer.faq.q2@@offerFaqQ2:Quel est le délai pour créer un site web ?`,
-      answer: $localize`:offer.faq.a2@@offerFaqA2:Les interventions ciblées se livrent en quelques jours. Les projets structurants prennent généralement 2 à 6 semaines selon la complexité, les itérations et les validations.`,
+      num: "02",
+      index: $localize`:@@offerMethodStep2Index:— Construire`,
+      title: $localize`:@@offerMethodStep2Title:Déployer`,
+      desc: $localize`:@@offerMethodStep2Desc:Des outils robustes et lisibles, dimensionnés sur le périmètre réel.`,
     },
     {
-      question: $localize`:offer.faq.q3@@offerFaqQ3:Proposez-vous un accompagnement après la livraison ?`,
-      answer: $localize`:offer.faq.a3@@offerFaqA3:Oui, l'accompagnement dans le temps est un engagement mensuel adapté à votre rythme. Il inclut évolutions, maintenance, conseils et ajustements au fil des usages réels.`,
+      num: "03",
+      index: $localize`:@@offerMethodStep3Index:— Tester`,
+      title: $localize`:@@offerMethodStep3Title:Éprouver`,
+      desc: $localize`:@@offerMethodStep3Desc:On confronte à l'usage, on mesure, on ajuste sans dogme.`,
     },
     {
-      question: $localize`:offer.faq.q4@@offerFaqQ4:Travaillez-vous avec les TPE, PME et indépendants uniquement ?`,
-      answer: $localize`:offer.faq.a4@@offerFaqA4:Je collabore principalement avec des indépendants, TPE et PME à Bordeaux et en France. L'approche sobre et progressive est particulièrement adaptée aux structures qui veulent évoluer sans surcoût technique ni complexité inutile.`,
-    },
-    {
-      question: $localize`:offer.faq.q5@@offerFaqQ5:Quelles technologies utilisez-vous pour le développement web ?`,
-      answer: $localize`:offer.faq.a5@@offerFaqA5:Angular, NestJS, TypeScript, Node.js et PostgreSQL pour le cœur technique. Pour l'IA, j'utilise les LLMs (Claude, OpenAI) via des architectures RAG et des pipelines Langchain. Les choix sont toujours justifiés par l'usage, pas par la mode.`,
+      num: "04",
+      index: $localize`:@@offerMethodStep4Index:— Évoluer`,
+      title: $localize`:@@offerMethodStep4Title:Faire durer`,
+      desc: $localize`:@@offerMethodStep4Desc:Continuité humaine : l'outil grandit avec vous, pas contre vous.`,
     },
   ];
+
+  // --- Ce qui différencie ---------------------------------------------------
+
+  /** Sur-titre mono de la section différenciateurs. */
+  protected readonly diffKicker = $localize`:@@offerDiffKicker:Ce qui différencie`;
+
+  /** Trois engagements qui différencient. */
+  protected readonly diffs: readonly OfferDiff[] = [
+    {
+      num: "01",
+      revealDelay: null,
+      title: $localize`:@@offerDiff1Title:Expertise réelle`,
+      desc: $localize`:@@offerDiff1Desc:Angular, NestJS, IA : une maîtrise technique qui se voit dans la robustesse et la lisibilité de ce qu'on livre.`,
+    },
+    {
+      num: "02",
+      revealDelay: 1,
+      title: $localize`:@@offerDiff2Title:Continuité humaine`,
+      desc: $localize`:@@offerDiff2Desc:Un interlocuteur unique, qui connaît votre contexte et reste là après la livraison. Pas de tunnel, pas de turnover.`,
+    },
+    {
+      num: "03",
+      revealDelay: 2,
+      title: $localize`:@@offerDiff3Title:Stratégie avant techno`,
+      desc: $localize`:@@offerDiff3Desc:On décide ensemble quoi construire — et quoi ne pas construire. La sobriété est une décision, pas un défaut.`,
+    },
+  ];
+
+  // --- FAQ ------------------------------------------------------------------
+
+  /** Sur-titre de la FAQ. */
+  protected readonly faqKicker = $localize`:@@offerFaqKicker:Questions fréquentes`;
+
+  /** Titre de la FAQ. */
+  protected readonly faqTitle = $localize`:@@offerFaqTitle:Avant de se lancer.`;
+
+  /** Questions / réponses de la FAQ. */
+  protected readonly faqItems: readonly OfferFaq[] = [
+    {
+      q: $localize`:@@offerFaq1Q:Pourquoi pas de grille de prix ?`,
+      a: $localize`:@@offerFaq1A:Parce qu'un prix figé répond rarement à un besoin réel. Je préfère cadrer votre situation, puis proposer un périmètre et un budget justes. Transparent, mais sur-mesure.`,
+    },
+    {
+      q: $localize`:@@offerFaq2Q:Combien de temps dure un projet ?`,
+      a: $localize`:@@offerFaq2A:D'une intervention de quelques jours à un accompagnement de plusieurs mois. On définit ensemble le rythme adapté à vos contraintes et à votre maturité.`,
+    },
+    {
+      q: $localize`:@@offerFaq3Q:Reprenez-vous un projet existant ?`,
+      a: $localize`:@@offerFaq3A:Oui, fréquemment. J'audite l'existant, j'identifie ce qui mérite d'être gardé, et je propose un chemin réaliste vers plus de clarté et de robustesse.`,
+    },
+    {
+      q: $localize`:@@offerFaq4Q:Travaillez-vous à distance ?`,
+      a: $localize`:@@offerFaq4A:Basé à Bordeaux, je travaille avec des clients partout en France, à distance comme en présentiel selon les besoins. La proximité humaine ne dépend pas de la géographie.`,
+    },
+  ];
+
+  // --- Bande CTA ------------------------------------------------------------
+
+  /** Sur-titre de la bande CTA. */
+  protected readonly ctaKicker = $localize`:@@offerCtaKicker:Prêt à clarifier ?`;
+
+  /** Titre de la bande CTA. */
+  protected readonly ctaTitle = $localize`:@@offerCtaTitle:Décrivez votre besoin. Je propose un cadrage, pas un devis générique.`;
+
+  /** CTA primaire de la bande. */
+  protected readonly ctaPrimary = $localize`:@@offerCtaPrimary:Démarrer la conversation`;
+
+  /** CTA secondaire de la bande. */
+  protected readonly ctaSecondary = $localize`:@@offerCtaSecondary:Voir les réalisations`;
 }

@@ -18,6 +18,16 @@ describe("AsiliHeroComponent", () => {
     fixture = TestBed.createComponent(AsiliHeroComponent);
   }
 
+  // Isolation : la classe `anim-ready` vit sur <html> (singleton partagé entre
+  // tous les specs Karma). On la retire avant ET après chaque test pour
+  // immuniser l'assertion SSR « pas d'anim-ready » contre une fuite d'état
+  // laissée par un spec précédent (ex. home/presentation/offer) qui aurait
+  // rendu un `appReveal` en plateforme browser sans nettoyer, quel que soit
+  // l'ordre d'exécution randomisé.
+  beforeEach(() => {
+    document.documentElement.classList.remove("anim-ready");
+  });
+
   afterEach(() => {
     document.documentElement.classList.remove("anim-ready");
   });
