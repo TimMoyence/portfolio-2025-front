@@ -374,6 +374,250 @@
       }
     },
     {
+      "id": "projets",
+      "path": "/projets",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-06-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Projets",
+          "path": "/projets"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Projets — Réalisations web & IA",
+          "description": "Réalisations de Tim Moyence (Asili Design) : plateformes métier, applications de l'Atelier, automatisations IA. Des preuves, pas des promesses.",
+          "ogTitle": "Projets — Réalisations d'Asili Design",
+          "ogDescription": "Plateformes métier, applications de l'Atelier et automatisations IA — chaque projet part d'un besoin réel et finit par un outil qui tient dans le temps.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Réalisations — Asili Design",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "ZenFirst Vision — pilotage de rentabilité",
+                  "description": "Plateforme de comptabilité intelligente (France & Québec) : 455 tables, conformité DGFiP/FEC/ANC, RGPD, durcissement OWASP."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Weather",
+                  "description": "App météo : prévisions, qualité de l'air, alertes, circuit breaker multi-provider."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Sebastian — suivi de consommation",
+                  "description": "App complète (objectifs, calcul d'alcoolémie, rapports) doublée d'un bot Telegram qui logge un verre en langage naturel."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Morning-Brief",
+                  "description": "Newsletter IA : 50+ sources agrégées, dédupliquées, synthétisées, livrées chaque matin par Telegram, 24/7 sur un Raspberry Pi."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 5,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Onboarding Telegram IFS — académie de formation",
+                  "description": "Audit d'appartenance aux groupes, relances automatiques, liens d'invitation signés, onboarding multi-étapes et récap quotidien par email."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 6,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Musaium",
+                  "description": "Médiation culturelle par l'IA : reconnaissance d'œuvres par photo, chat contextuel, multilingue."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 7,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Gestion de chais de Cognac — traçabilité",
+                  "description": "Suivi de la production de la vigne à la mise en bouteille : centralisation, traçabilité complète, accompagnement des usages métier."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 8,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Louison",
+                  "description": "Le site complet d'une praticienne : design, contenu, paiement en ligne et génération de documents PDF."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 9,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Le Jeu des Fourmis",
+                  "description": "MMO myrmécologique : 15 espèces = 15 façons de jouer, monde persistant avec météo et biomes, territoires en temps réel."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 10,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Growth Audit",
+                  "description": "Audit SEO en temps réel : l'analyse s'écrit live (streaming SSE), pilotée par BullMQ."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 11,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Voice IA",
+                  "description": "Assistant vocal Telegram : capture, transcrit et organise les idées vers Notion & Google Calendar."
+                }
+              }
+            ]
+          }
+        },
+        "en": {
+          "title": "Projects — Web & AI work",
+          "description": "Work by Tim Moyence (Asili Design): business platforms, Atelier apps, AI automations. Proof, not promises.",
+          "ogTitle": "Projects — Asili Design's work",
+          "ogDescription": "Business platforms, Atelier apps and AI automations — every project starts from a real need and ends as a tool that lasts.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Work — Asili Design",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "ZenFirst Vision — profitability steering",
+                  "description": "Intelligent accounting platform (France & Quebec): 455 tables, DGFiP/FEC/ANC compliance, GDPR, OWASP hardening."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Weather",
+                  "description": "Weather app: forecasts, air quality, alerts, multi-provider circuit breaker."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Sebastian — consumption tracking",
+                  "description": "Full app (goals, blood-alcohol calculation, reports) paired with a Telegram bot that logs a drink in natural language."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Morning-Brief",
+                  "description": "AI newsletter: 50+ sources aggregated, deduplicated, synthesised, delivered every morning via Telegram, 24/7 on a Raspberry Pi."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 5,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "IFS Telegram Onboarding — training academy",
+                  "description": "Group-membership audit, automatic reminders, signed invitation links, multi-step onboarding and daily email recap."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 6,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Musaium",
+                  "description": "AI cultural mediation: artwork recognition by photo, contextual chat, multilingual."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 7,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Cognac cellar management — traceability",
+                  "description": "Production tracking from vine to bottling: centralised information, full traceability, day-to-day business support."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 8,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Louison",
+                  "description": "A practitioner's full website: design, content, online payment and PDF document generation."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 9,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "The Ant Game",
+                  "description": "Myrmecological MMO: 15 species = 15 ways to play, a persistent world with weather and biomes, real-time territories."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 10,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Growth Audit",
+                  "description": "Real-time SEO audit: the analysis writes itself live (SSE streaming), driven by BullMQ."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 11,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Voice AI",
+                  "description": "Telegram voice assistant: captures, transcribes and organises ideas into Notion & Google Calendar."
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
       "id": "offer",
       "path": "/offer",
       "index": true,

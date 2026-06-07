@@ -85,6 +85,16 @@ export const routes: Routes = [
     },
   },
   {
+    path: "projets",
+    loadComponent: () =>
+      import("./features/projets/projets.component").then(
+        (m) => m.ProjetsComponent,
+      ),
+    data: {
+      seoKey: "projets",
+    },
+  },
+  {
     path: "offer",
     loadComponent: () =>
       import("./features/offer/offer.component").then((m) => m.OfferComponent),
