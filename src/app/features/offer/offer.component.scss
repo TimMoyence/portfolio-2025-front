@@ -1,17 +1,257 @@
-/* état par défaut (quand ça se chevauche en scroll) */
-.sticky-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition:
-    background 200ms ease,
-    backdrop-filter 200ms ease,
-    opacity 200ms ease;
+/*
+  Services Asili — styles propres aux blocs page-level non couverts par les
+  composants de section du Lot 3a (hero, méthode, bande CTA, qui portent leurs
+  styles scopés). Blocs portés de `.page-hero-meta` / `.modes` / `.diff-grid` /
+  `.faq` de la maquette AsiliNewDesign/asili-pages.css. Les primitives globales
+  (.kicker, .h-lg, .lead, .wrap, .section-pad, .btn, .accent) et les design
+  tokens fournissent le reste — on ne re-stylise rien d'existant.
+
+  La FAQ utilise des <details>/<summary> natifs (SSR-safe, accessibles au
+  clavier, sans JavaScript) plutôt que l'accordéon JS de la maquette ; le
+  microdata schema.org/FAQPage reste rendu pour le SEO.
+*/
+
+/* --- Hero : méta clé/valeur (porté de .page-hero-meta) --------------------
+   Le slot [meta] de <app-asili-hero> est pensé pour des statistiques serif :
+   la section applique via ::ng-deep un filet/padding gauche à chaque <div>
+   projeté. On neutralise ce filet ici (panneau de lignes clé/valeur). */
+/* Double classe : spécificité (0,2,0) > `.hero-meta div` (0,1,1) hérité du
+   slot, pour bien neutraliser le filet gauche sur le conteneur lui-même. */
+.offer-hero-meta.offer-hero-meta {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  border-left: 0;
+  padding-left: 0;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-left: 0;
+    padding-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .k {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .v {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+    text-align: right;
+  }
 }
 
-/* quand la card est vraiment “collée” au top */
-.sticky-card.is-stuck {
-  background: rgba(255, 255, 255, 1);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+/* --- En-têtes de section (porté de .sec-head) ----------------------------- */
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-5);
+
+  h2 {
+    margin-top: 16px;
+  }
+
+  &.faq-head {
+    justify-content: center;
+    text-align: center;
+
+    .kicker {
+      justify-content: center;
+    }
+  }
+}
+
+/* --- Modes d'intervention (porté de .modes / .mode) ----------------------- */
+.modes {
+  display: grid;
+  gap: 0;
+}
+
+.mode {
+  display: grid;
+  grid-template-columns: 80px 1.2fr 1fr auto;
+  gap: var(--s-4);
+  align-items: center;
+  padding: 34px 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  transition: padding-left 0.4s var(--ease);
+
+  &:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  &:hover {
+    padding-left: 14px;
+  }
+
+  .mode-n {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--teal-deep);
+  }
+
+  h3 {
+    font-size: clamp(26px, 2.6vw, 36px);
+  }
+
+  p {
+    font-size: 15.5px;
+    color: var(--ink-mute);
+    max-width: 42ch;
+  }
+
+  .mode-go {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    transition:
+      background 0.3s,
+      color 0.3s,
+      transform 0.4s var(--ease);
+    flex: none;
+  }
+
+  &:hover .mode-go {
+    background: var(--teal);
+    color: #06231f;
+    transform: translateX(4px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 4px;
+    border-radius: var(--r-lg);
+  }
+}
+
+/* --- Différenciateurs (porté de .diff-grid / .diff) ----------------------- */
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.diff {
+  padding: 32px;
+  border-radius: var(--r-lg);
+  background: var(--ink);
+  color: var(--ivory);
+  position: relative;
+  overflow: hidden;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+
+  &:nth-child(2) {
+    background: var(--teal-ink);
+  }
+
+  .diff-n {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  h3 {
+    color: #fff;
+    font-size: 27px;
+    margin: 14px 0 10px;
+  }
+
+  p {
+    color: rgba(251, 243, 230, 0.72);
+    font-size: 15px;
+    margin-top: auto;
+  }
+}
+
+/* --- FAQ (porté de .faq, adapté aux <details> natifs) --------------------- */
+.faq {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-q {
+  width: 100%;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--ink);
+  padding: 26px 50px 26px 0;
+  position: relative;
+  display: flex;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::after {
+    content: "+";
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    translate: 0 -50%;
+    font-family: var(--font-sans);
+    font-size: 28px;
+    color: var(--teal-deep);
+    transition: transform 0.4s var(--ease);
+    font-weight: 300;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 3px;
+    border-radius: var(--r-lg);
+  }
+}
+
+.faq-item[open] .faq-q::after {
+  transform: rotate(45deg);
+}
+
+.faq-a-inner {
+  padding: 0 60px 28px 0;
+  font-size: 16.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+/* --- Responsive (porté de la media-query 860px de la maquette) ------------ */
+@media (max-width: 860px) {
+  .mode {
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    .mode-go {
+      display: none;
+    }
+  }
+
+  .diff-grid {
+    grid-template-columns: 1fr;
+  }
 }
