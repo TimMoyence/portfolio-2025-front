@@ -24,6 +24,14 @@ describe("HomeComponent", () => {
     fixture.detectChanges();
   });
 
+  // Le rendu browser des sections `appReveal` (hero/method/pillars/projects-grid)
+  // pose `anim-ready` sur le <html> partagé. On nettoie pour ne pas faire fuiter
+  // cet état vers les assertions SSR « pas d'anim-ready » des autres specs sous
+  // l'ordre d'exécution randomisé de Karma.
+  afterEach(() => {
+    document.documentElement.classList.remove("anim-ready");
+  });
+
   it("should create", () => {
     expect(component).toBeTruthy();
   });
