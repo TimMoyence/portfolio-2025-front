@@ -65,7 +65,7 @@ export class FooterComponent {
         },
         {
           label: $localize`:footer.nav.projects|Footer nav link@@footerNavProjects:Projets`,
-          href: "/client-project",
+          href: "/projets",
         },
         {
           label: $localize`:footer.nav.contact|Footer nav link@@footerNavContact:Contact`,

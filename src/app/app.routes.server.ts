@@ -36,6 +36,11 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
 
+  // Page publique des réalisations — prérendue (landing SEO statique).
+  // Déjà couverte par le catch-all `**` ci-dessous ; entrée explicite pour
+  // rendre l'intention claire au build.
+  { path: "projets", renderMode: RenderMode.Prerender },
+
   // Routes publiques (incluant les présentations atelier) — prérendues.
   // Les formations sont enregistrees en routes STATIQUES par slug dans
   // `app.routes.ts` (composants slide-driven dedies), donc capturees ici.

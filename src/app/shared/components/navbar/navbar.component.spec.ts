@@ -91,6 +91,14 @@ describe("NavbarComponent", () => {
       expect(offerLink?.label).toBe("Services");
     });
 
+    it("devrait exposer le lien primaire « Projets » vers /projets", () => {
+      fixture.detectChanges();
+      const projetsLink = component.navLinks.find(
+        (link) => link.label === "Projets",
+      );
+      expect(projetsLink?.href).toBe("/projets");
+    });
+
     it("devrait afficher la pill de langue FR/EN", () => {
       fixture.detectChanges();
       const nav = fixture.nativeElement as HTMLElement;

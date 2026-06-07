@@ -1,0 +1,15 @@
+/*
+  Projets Asili — la page est entièrement composée des sections de la
+  bibliothèque du Lot 3a (asili-hero, asili-projects-grid, asili-method,
+  asili-cta-band), qui portent leurs propres styles scopés. Les primitives
+  globales (.kicker, .h-lg, .lead, .wrap, .section-pad, .btn, .accent, .arrow)
+  et les design tokens fournissent le reste — on ne re-stylise rien d'existant.
+
+  Aucun bloc page-level custom n'est ajouté ici : ce fichier reste vide par
+  conception (placeholder documenté pour rester cohérent avec les autres
+  pages du lot).
+*/
+
+:host {
+  display: block;
+}

@@ -36,7 +36,7 @@ export class NavbarComponent {
     },
     {
       label: $localize`:navbar.link.projects|Navbar primary link@@navLinkProjects:Projets`,
-      href: "/client-project",
+      href: "/projets",
     },
     {
       label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Services`,
