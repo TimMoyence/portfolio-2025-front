@@ -1,0 +1,329 @@
+/*
+  Présentation Asili — styles propres aux blocs page-level non couverts par les
+  composants de section du Lot 3a (hero, méthode IA, bande CTA, qui portent
+  leurs styles scopés). Blocs portés de `.page-hero-meta` / `.intro-split` /
+  `.skills-grid` / `.timeline` / `.faq` de la maquette
+  AsiliNewDesign/asili-pages.css. Les primitives globales (.kicker, .h-lg,
+  .h-xl, .lead, .wrap, .section-pad, .link-arrow, .btn, .accent) et les design
+  tokens fournissent le reste — on ne re-stylise rien d'existant.
+
+  La FAQ utilise des <details>/<summary> natifs (SSR-safe, accessibles au
+  clavier, sans JavaScript) plutôt que l'accordéon JS de la maquette ; le
+  microdata schema.org/FAQPage reste rendu pour le SEO.
+*/
+
+/* --- Hero : méta clé/valeur (porté de .page-hero-meta) --------------------
+   Le slot [meta] de <app-asili-hero> est pensé pour des statistiques serif :
+   la section applique via ::ng-deep un filet/padding gauche à chaque <div>
+   projeté. On neutralise explicitement ce filet ici, car la présentation
+   utilise un panneau de lignes clé/valeur (et non des stats côte à côte). */
+/* Double classe : spécificité (0,2,0) > `.hero-meta div` (0,1,1) hérité du
+   slot, pour bien neutraliser le filet gauche sur le conteneur lui-même. */
+.presentation-hero-meta.presentation-hero-meta {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  /* Neutralise le filet/padding hérités du slot [meta] (stats serif). */
+  border-left: 0;
+  padding-left: 0;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    /* Neutralise le filet/padding gauches hérités du slot [meta]. */
+    border-left: 0;
+    padding-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .k {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .v {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+    text-align: right;
+  }
+}
+
+/* --- En-têtes de section (porté de .sec-head) ----------------------------- */
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-5);
+
+  h2 {
+    margin-top: 16px;
+  }
+
+  &.faq-head {
+    justify-content: center;
+    text-align: center;
+
+    .kicker {
+      justify-content: center;
+    }
+  }
+}
+
+/* --- Intro / portrait (porté de .intro-split) ----------------------------- */
+.intro-split {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.portrait {
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  position: relative;
+  border: 1px solid var(--line);
+
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      135deg,
+      var(--sand) 0 16px,
+      var(--ivory) 16px 32px
+    );
+    display: grid;
+    place-items: center;
+  }
+
+  .placeholder span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    background: rgba(255, 250, 242, 0.85);
+    padding: 6px 12px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+  }
+}
+
+.intro-body {
+  p {
+    font-size: clamp(18px, 1.5vw, 21px);
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+    max-width: 54ch;
+  }
+
+  p strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}
+
+.signature {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 30px;
+  color: var(--teal-deep);
+  margin-top: 10px;
+}
+
+/* --- Compétences (porté de .skills-grid / .skill) ------------------------- */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.skill {
+  padding: 30px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: rgba(255, 250, 242, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease),
+    border-color 0.4s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card);
+    border-color: var(--sand-deep);
+  }
+
+  .s-ic {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: var(--sand);
+    color: var(--teal-deep);
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+  }
+
+  h3 {
+    font-size: 25px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--ink-mute);
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 16px;
+  }
+
+  .stack span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal-deep);
+    background: rgba(79, 179, 162, 0.1);
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+  }
+}
+
+/* --- Timeline (porté de .timeline / .tl-item) ----------------------------- */
+.timeline {
+  display: grid;
+  gap: 0;
+  max-width: 880px;
+}
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: var(--s-4);
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+  align-items: start;
+
+  &:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tl-year {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--teal-deep);
+    padding-top: 6px;
+  }
+
+  h3 {
+    font-size: 27px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 15.5px;
+    color: var(--ink-mute);
+    max-width: 60ch;
+  }
+
+  .tl-tags {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .tl-tags span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    border: 1px solid var(--line);
+    padding: 3px 9px;
+    border-radius: var(--r-pill);
+  }
+}
+
+/* --- FAQ (porté de .faq, adapté aux <details> natifs) --------------------- */
+.faq {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-q {
+  width: 100%;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--ink);
+  padding: 26px 50px 26px 0;
+  position: relative;
+  display: flex;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::after {
+    content: "+";
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    translate: 0 -50%;
+    font-family: var(--font-sans);
+    font-size: 28px;
+    color: var(--teal-deep);
+    transition: transform 0.4s var(--ease);
+    font-weight: 300;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 3px;
+    border-radius: var(--r-lg);
+  }
+}
+
+.faq-item[open] .faq-q::after {
+  transform: rotate(45deg);
+}
+
+.faq-a-inner {
+  padding: 0 60px 28px 0;
+  font-size: 16.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+/* --- Responsive (porté de la media-query 860px de la maquette) ------------ */
+@media (max-width: 860px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intro-split {
+    grid-template-columns: 1fr;
+  }
+
+  .tl-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
