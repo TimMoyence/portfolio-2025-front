@@ -1,146 +1,203 @@
-<app-hero-section
-  [label]="hero.label"
-  [title]="hero.title"
-  [description]="hero.description"
-  [actions]="hero.actions"
-  titleLevel="h1"
-  align="center"
-></app-hero-section>
+<!--
+  Étude de cas Asili — template piloté par le modèle `CaseStudy` (study).
+  Restitue AsiliNewDesign/client-project.html (ZenFirst Vision) : hero (retour
+  Projets, étiquettes, méta) → capture pleine largeur → corps narratif labellisé
+  → duo de captures → bandeau scope → citation → bloc tech → projet suivant →
+  bande CTA (asili-cta-band). Le fond constellation est global
+  (app-asili-background) : aucune section ne recrée de canvas. Contenu authored
+  par l'utilisateur (maquette) — repris verbatim, rien d'inventé ni retiré.
+-->
 
-<div class="py-6 md:py-8 lg:py-12">
-  @for (project of projectsOrdered; track project.key) {
-    <section
-      class="px-[5%] py-6 md:py-8 lg:py-12"
-      [ngClass]="project.theme === 'scheme' ? 'bg-scheme-background' : ''"
-      data-testid="projects-section"
-    >
-      <div class="container">
-        <!-- header -->
-        <div class="mx-auto mb-2 w-full max-w-2xl text-center md:mb-4 lg:mb-8">
-          <div class="flex flex-col items-center justify-center">
-            <p class="mb-1 font-semibold md:mb-2">{{ project.label }}</p>
-            <h2
-              class="font-heading heading-h3 text-h3 mb-2 md:mb-3 lg:whitespace-nowrap"
-            >
-              {{ project.title }}
-            </h2>
-            <p class="md:text-md whitespace-pre-line">
-              {{ project.description }}
-            </p>
-          </div>
+<!-- ===================== HERO ===================== -->
+<section class="cs-hero">
+  <div class="wrap">
+    <div class="cs-eyebrow" appReveal>
+      <a class="cs-back" [routerLink]="study.back.href">
+        <span class="cs-back-arrow" aria-hidden="true">→</span>
+        {{ study.back.label }}
+      </a>
+      @for (tag of study.tags; track tag.label) {
+        <span class="tag">{{ tag.label }}</span>
+      }
+    </div>
 
-          @if (project.actions?.length) {
-            <div class="flex flex-wrap items-center justify-center">
-              @for (action of project.actions; track $index) {
-                <a
-                  href="{{ action.href }}"
-                  class="rounded-2xl button px-5 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                  [ngClass]="{
-                    'bg-scheme-surface text-black border border-scheme-border':
-                      action.variant === 'secondary',
-                    'bg-transparent border border-transparent text-black underline underline-offset-2':
-                      action.variant === 'ghost',
-                    'bg-black text-white border border-black': !action.variant,
-                  }"
-                >
-                  {{ action.label }}
-                </a>
-              }
-            </div>
-          }
+    <div class="kicker cs-kicker" appReveal [appRevealDelay]="1">
+      {{ study.kicker }}
+    </div>
+
+    <h1 class="cs-title" appReveal [appRevealDelay]="1">
+      {{ study.titlePre }}<br /><em>{{ study.titleAccent }}</em
+      >{{ study.titlePost }}
+    </h1>
+
+    <p class="lead cs-lead" appReveal [appRevealDelay]="2">{{ study.lead }}</p>
+
+    <div class="cs-meta" appReveal [appRevealDelay]="2">
+      @for (m of study.meta; track m.key) {
+        <div>
+          <div class="k">{{ m.key }}</div>
+          <div class="v">{{ m.value }}</div>
         </div>
+      }
+    </div>
+  </div>
+</section>
 
-        <!-- content -->
-        @if (project.kind === "singleCard") {
-          <div
-            class="rounded-2xl md:shadow-xl md:overflow-hidden grid grid-cols-1 overflow-hidden border border-scheme-border bg-scheme-background md:grid-cols-2"
-          >
-            <div class="flex flex-col justify-center p-3 md:p-5 lg:p-8">
-              <p class="mb-2 text-sm font-semibold">
-                {{ project.card.kicker }}
-              </p>
-              <h3 class="font-heading heading-h3 text-h3 mb-1 md:mb-2">
-                {{ project.card.heading }}
-              </h3>
-              <ul class="mt-4 list-disc space-y-2 pl-5">
-                @for (item of project.card.bullets; track $index) {
-                  <li>{{ item }}</li>
-                }
-              </ul>
-            </div>
+<!-- ===================== CAPTURE PLEINE LARGEUR ===================== -->
+<div class="wrap">
+  <div class="cs-shot" appReveal>
+    <div class="placeholder">
+      <span>{{ study.cover.caption }}</span>
+    </div>
+  </div>
+</div>
 
-            <div
-              class="flex flex-col items-center justify-center bg-scheme-surface"
-            >
-              <img
-                [src]="project.imageSrc"
-                [alt]="project.imageAlt"
-                class="w-full object-cover"
-                loading="lazy"
-              />
-            </div>
+<!-- ===================== CORPS NARRATIF ===================== -->
+<section class="cs-section">
+  <div class="wrap cs-body">
+    @for (block of study.blocksBeforeDuo; track block.stepLabel) {
+      <ng-container
+        *ngTemplateOutlet="csBlock; context: { $implicit: block }"
+      ></ng-container>
+    }
+
+    <!-- duo de captures -->
+    <div class="cs-duo" appReveal>
+      @for (shot of study.duo; track shot.caption) {
+        <div class="cs-shot">
+          <div class="placeholder">
+            <span>{{ shot.caption }}</span>
           </div>
-        }
+        </div>
+      }
+    </div>
 
-        @if (project.kind === "modules") {
-          <div class="grid grid-cols-1 gap-8">
-            @for (mod of project.modules; track mod.key) {
-              <div
-                class="rounded-2xl md:shadow-xl md:overflow-hidden grid grid-cols-1 overflow-hidden border border-scheme-border bg-scheme-background md:grid-cols-2"
-              >
-                <div
-                  class="order-1 flex flex-col justify-center p-6 md:p-8 lg:p-12"
-                  [ngClass]="mod.reverse ? 'md:order-2' : ''"
-                >
-                  <p class="mb-2 text-sm font-semibold">
-                    {{ mod.moduleLabel }}
-                  </p>
-                  <h3
-                    class="font-heading heading-h3 text-h3 italic mb-5 md:mb-6"
-                  >
-                    {{ mod.title }}
-                  </h3>
+    @for (block of study.blocksAfterDuo; track block.stepLabel) {
+      <ng-container
+        *ngTemplateOutlet="csBlock; context: { $implicit: block }"
+      ></ng-container>
+    }
+  </div>
+</section>
 
-                  <div class="space-y-4 text-sm md:text-base">
-                    <div>
-                      <p class="font-semibold">{{ labels.objective }}</p>
-                      <p class="mt-1">{{ mod.objective }}</p>
-                    </div>
-
-                    <div>
-                      <p class="font-semibold">{{ labels.features }}</p>
-                      <ul class="mt-2 list-disc space-y-2 pl-5">
-                        @for (f of mod.features; track $index) {
-                          <li>{{ f }}</li>
-                        }
-                      </ul>
-                    </div>
-
-                    <div>
-                      <p class="font-semibold">{{ labels.approach }}</p>
-                      <p class="mt-1">{{ mod.approach }}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  class="order-2 flex flex-col items-center justify-center bg-scheme-surface"
-                  [ngClass]="mod.reverse ? 'md:order-1' : ''"
-                >
-                  <img
-                    [src]="mod.imageSrc"
-                    [alt]="mod.imageAlt"
-                    class="w-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            }
+<!-- ===================== SCOPE (chiffres clés) ===================== -->
+<section class="cs-section">
+  <div class="wrap">
+    <div class="cs-scope" appReveal>
+      <div class="cs-scope-grid">
+        @for (s of study.scope; track s.label) {
+          <div>
+            <div class="n">{{ s.n }}</div>
+            <div class="l">{{ s.label }}</div>
           </div>
         }
       </div>
-    </section>
-  }
-</div>
+    </div>
+  </div>
+</section>
 
-<app-cta-section></app-cta-section>
+<!-- ===================== CITATION ===================== -->
+<section class="cs-section cs-section--quote">
+  <div class="wrap">
+    <blockquote class="cs-quote" appReveal>
+      <p>
+        {{ study.quote.pre }}<em>{{ study.quote.accent }}</em
+        >{{ study.quote.post }}
+      </p>
+      <div class="who">{{ study.quote.who }}</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ===================== TECH (sous le capot) ===================== -->
+<section class="cs-section">
+  <div class="wrap cs-body">
+    <div class="cs-block cs-block--tech" appReveal>
+      <span class="step-label">{{ study.tech.stepLabel }}</span>
+      <h2>
+        {{ study.tech.titlePre }}<em>{{ study.tech.titleAccent }}</em
+        >{{ study.tech.titlePost }}
+      </h2>
+      <p>{{ study.tech.intro }}</p>
+      <div class="cs-tech">
+        @for (t of study.tech.items; track t) {
+          <span>{{ t }}</span>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROJET SUIVANT ===================== -->
+<section class="cs-section">
+  <div class="wrap cs-body">
+    <div class="cs-next" appReveal>
+      <div>
+        <div class="nx-k">{{ study.next.kicker }}</div>
+        <a [routerLink]="study.next.href">
+          {{ study.next.label }} <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<app-asili-cta-band [title]="study.cta.title" [lead]="study.cta.lead">
+  <span kicker class="kicker cta-kicker">{{ study.cta.kicker }}</span>
+  <ng-container cta>
+    <a class="btn btn-teal" [routerLink]="study.cta.primaryHref">
+      {{ study.cta.primaryLabel }}
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+    <a
+      class="btn btn-ghost cs-cta-ghost"
+      [routerLink]="study.cta.secondaryHref"
+    >
+      {{ study.cta.secondaryLabel }}
+    </a>
+  </ng-container>
+</app-asili-cta-band>
+
+<!-- Template réutilisable d'un bloc narratif labellisé. -->
+<ng-template #csBlock let-block>
+  <div class="cs-block" appReveal>
+    <span class="step-label">{{ block.stepLabel }}</span>
+    <h2>
+      {{ block.titlePre }}
+      @if (block.titleAccent) {
+        <em>{{ block.titleAccent }}</em>
+      }
+      {{ block.titlePost }}
+    </h2>
+    @for (p of block.paragraphs; track $index) {
+      <p>
+        {{ p.pre }}
+        @if (p.strong) {
+          <strong>{{ p.strong }}</strong>
+        }
+        {{ p.post }}
+      </p>
+    }
+    @if (block.bullets?.length) {
+      <ul>
+        @for (b of block.bullets; track $index) {
+          <li>
+            <span class="tk" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 12.5 10 17l9-10"
+                  stroke="var(--teal-deep)"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            {{ b }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</ng-template>
