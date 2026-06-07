@@ -1,0 +1,188 @@
+/*
+  Styles partages des pages toolkit « gate » (capture email) — refonte Asili
+  (Lot 3e). Portes de `.tk-wrap` / `.tk-card` / `.tk-icon` / `.tk-items` /
+  `.tk-foot` de `AsiliNewDesign/asili-formation.css`, plus quelques blocs
+  editoriaux (`.tk-editorial`, `.tk-section`, `.tk-faq`) pour le contenu SEO/AEO
+  conserve. Les primitives globales (.btn, .lead, design tokens) fournissent le
+  reste — on ne re-stylise rien d'existant. Les classes `.tk-*` ne sont PAS
+  globales : chaque page toolkit `@use` ce partiel pour les scoper.
+
+  Ce partiel est volontairement sans selecteur racine `:host` (laisse a chaque
+  composant) afin d'etre composable via `@use`.
+*/
+
+/* --- Conteneur centre (porte de .tk-wrap) -------------------------------- */
+.tk-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(96px, 14vh, 150px) var(--gutter) 60px;
+  gap: clamp(40px, 6vh, 72px);
+}
+
+/* --- Carte de capture (porte de .tk-card) -------------------------------- */
+.tk-card {
+  max-width: 540px;
+  width: 100%;
+  background: rgba(255, 250, 242, 0.8);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: clamp(32px, 5vw, 56px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+/* --- Icone d'en-tete (porte de .tk-icon) --------------------------------- */
+.tk-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: var(--sand);
+  color: var(--teal-deep);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 24px;
+}
+
+.tk-card h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 48px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+
+  em {
+    font-style: italic;
+    color: var(--teal-deep);
+  }
+}
+
+.tk-card .lead {
+  margin: 18px auto 0;
+  max-width: 42ch;
+  font-size: 17px;
+  color: var(--ink-soft);
+}
+
+/* --- Liste d'items inclus (porte de .tk-items) --------------------------- */
+.tk-items {
+  display: grid;
+  gap: 10px;
+  text-align: left;
+  margin: 28px 0;
+}
+
+.tk-items .it {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.tk-items .it .ck {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 50%;
+  background: rgba(79, 179, 162, 0.14);
+  color: var(--teal-deep);
+  display: grid;
+  place-items: center;
+}
+
+/* --- Accueil du formulaire de capture partage ---------------------------- */
+.tk-form-host {
+  margin-top: 4px;
+  text-align: left;
+}
+
+/* --- Mention de pied (porte de .tk-foot) --------------------------------- */
+.tk-foot {
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  margin-top: 16px;
+}
+
+/* --- Contenu editorial (SEO/AEO) ----------------------------------------- */
+.tk-editorial {
+  max-width: 640px;
+  width: 100%;
+  display: grid;
+  gap: 26px;
+}
+
+.tk-section {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: rgba(255, 250, 242, 0.6);
+  padding: clamp(24px, 3vw, 34px);
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.6vw, 28px);
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+}
+
+.tk-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+
+  li {
+    position: relative;
+    padding-left: 26px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+  }
+}
+
+.tk-faq {
+  display: grid;
+  gap: 20px;
+}
+
+.tk-qa {
+  h3 {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+  }
+}
+
+.tk-brand {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+
+  a {
+    color: var(--teal-deep);
+    text-decoration: underline;
+  }
+}

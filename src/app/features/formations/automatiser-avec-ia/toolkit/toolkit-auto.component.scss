@@ -1,0 +1,11 @@
+/*
+  Toolkit « Automatiser avec l'IA » (capture) — refonte Asili (Lot 3e).
+  Les styles `.tk-*` sont mutualises dans le partiel `_toolkit-page.scss`
+  (porte de AsiliNewDesign/asili-formation.css). On ne fait que les importer
+  et les scoper a ce composant.
+*/
+@use "../../toolkit-page";
+
+:host {
+  display: block;
+}

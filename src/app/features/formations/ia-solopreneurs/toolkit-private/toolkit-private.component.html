@@ -1,0 +1,271 @@
+<!--
+  Toolkit prive (acces debloque par token) — refonte Asili (Lot 3e).
+  Etat « debloque » inspire de AsiliNewDesign/toolkit.html : icone de
+  validation + titre « Accès débloqué. » + accroche, suivi des sections
+  personnalisees reellement resolues par token (cheatsheet, prompts,
+  workflows, templates, prompt Gamma). La logique d'etat et la resolution
+  de token (constructeur, getToolkitByToken, copyToClipboard) sont
+  INCHANGEES : seul le markup/style passe au design Asili. Fond
+  constellation global (Lot 0).
+-->
+@switch (state()) {
+  @case ("loading") {
+    <section class="tkp-state">
+      <div class="tkp-state__inner">
+        <div class="tkp-spinner" aria-hidden="true"></div>
+        <p class="tkp-state__text" i18n="@@formations.toolkitPrivate.loading">
+          Chargement de votre toolkit...
+        </p>
+      </div>
+    </section>
+  }
+
+  @case ("error") {
+    <section class="tkp-state">
+      <div class="tkp-state__inner tkp-state__inner--error">
+        <p
+          class="tkp-state__title"
+          i18n="@@formations.toolkitPrivate.errorTitle"
+        >
+          Impossible de charger le toolkit
+        </p>
+        <p
+          class="tkp-state__text"
+          i18n="@@formations.toolkitPrivate.errorDetail"
+        >
+          Le lien est peut-etre expire ou invalide. Verifiez votre email ou
+          refaites une demande.
+        </p>
+      </div>
+    </section>
+  }
+
+  @case ("loaded") {
+    @if (data(); as toolkit) {
+      <section class="tkp">
+        <div class="tkp-wrap">
+          <!-- ===================== EN-TÊTE « DÉBLOQUÉ » ===================== -->
+          <header class="tkp-head">
+            <div class="tkp-check" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 12.5 10 17l9-10"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <h1 i18n="@@formations.toolkitPrivate.heroTitle">
+              Accès <em>débloqué</em>.
+            </h1>
+            <p class="lead" i18n="@@formations.toolkitPrivate.heroGreeting">
+              Bonjour {{ toolkit.recap.firstName }}, voici votre toolkit
+              personnalisé.
+            </p>
+          </header>
+
+          <!-- ===================== 1 · CHEATSHEET ===================== -->
+          @if (toolkit.cheatsheet.length > 0) {
+            <section class="tkp-section">
+              <h2
+                class="tkp-h2"
+                i18n="@@formations.toolkitPrivate.sectionCheatsheet"
+              >
+                <span class="tkp-num">1.</span> Les 16 outils en un coup d'œil
+              </h2>
+              <div class="tkp-table-wrap">
+                <table class="tkp-table">
+                  <thead>
+                    <tr>
+                      <th i18n="@@formations.toolkitPrivate.tableTool">
+                        Outil
+                      </th>
+                      <th i18n="@@formations.toolkitPrivate.tableCategory">
+                        Catégorie
+                      </th>
+                      <th i18n="@@formations.toolkitPrivate.tablePrice">
+                        Prix
+                      </th>
+                      <th i18n="@@formations.toolkitPrivate.tableDescription">
+                        En une phrase
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (entry of toolkit.cheatsheet; track entry.tool) {
+                      <tr>
+                        <td class="tkp-td-tool">
+                          <a
+                            [href]="entry.url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {{ entry.tool }}
+                          </a>
+                        </td>
+                        <td>{{ entry.category }}</td>
+                        <td>{{ entry.price }}</td>
+                        <td>{{ entry.tip }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          }
+
+          <!-- ===================== 2 · PROMPTS ===================== -->
+          @if (toolkit.prompts.length > 0) {
+            <section class="tkp-section">
+              <h2
+                class="tkp-h2"
+                i18n="@@formations.toolkitPrivate.sectionPrompts"
+              >
+                <span class="tkp-num">2.</span> Prompts prêts à copier
+              </h2>
+              <div class="tkp-stack">
+                @for (prompt of toolkit.prompts; track prompt.title) {
+                  <article class="tkp-card">
+                    <h3 class="tkp-card__title">{{ prompt.title }}</h3>
+                    <p class="tkp-card__meta">
+                      {{ prompt.category }} · {{ prompt.tool }} ·
+                      {{ prompt.level }}
+                    </p>
+                    <div class="tkp-code">
+                      <pre>{{ prompt.prompt }}</pre>
+                      <button
+                        type="button"
+                        class="tkp-copy"
+                        (click)="copyToClipboard(prompt.prompt)"
+                      >
+                        {{
+                          copiedText() === prompt.prompt
+                            ? copiedLabel
+                            : copyLabel
+                        }}
+                      </button>
+                    </div>
+                  </article>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- ===================== 3 · WORKFLOWS ===================== -->
+          @if (toolkit.workflows.length > 0) {
+            <section class="tkp-section">
+              <h2
+                class="tkp-h2"
+                i18n="@@formations.toolkitPrivate.sectionWorkflows"
+              >
+                <span class="tkp-num">3.</span> Workflows à mettre en place
+              </h2>
+              <div class="tkp-grid">
+                @for (workflow of toolkit.workflows; track workflow.title) {
+                  <article class="tkp-card">
+                    <h3 class="tkp-card__title">{{ workflow.title }}</h3>
+                    <p class="tkp-card__meta">{{ workflow.description }}</p>
+                    <div class="tkp-tags">
+                      @for (tool of workflow.tools; track tool) {
+                        <span class="tkp-tag">{{ tool }}</span>
+                      }
+                    </div>
+                    <ol class="tkp-steps">
+                      @for (step of workflow.steps; track step.step) {
+                        <li>
+                          <span class="tkp-step-n">{{ step.step }}.</span>
+                          <span>
+                            <strong>{{ step.action }}</strong>
+                            ({{ step.tool }}) — {{ step.detail }}
+                          </span>
+                        </li>
+                      }
+                    </ol>
+                  </article>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- ===================== 4 · TEMPLATES ===================== -->
+          @if (toolkit.templates.length > 0) {
+            <section class="tkp-section">
+              <h2
+                class="tkp-h2"
+                i18n="@@formations.toolkitPrivate.sectionTemplates"
+              >
+                <span class="tkp-num">4.</span> Templates réutilisables
+              </h2>
+              <div class="tkp-grid tkp-grid--2">
+                @for (tmpl of toolkit.templates; track tmpl.name) {
+                  <a
+                    [href]="tmpl.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="tkp-card tkp-card--link"
+                  >
+                    <div class="tkp-card__head">
+                      <h3 class="tkp-card__title">{{ tmpl.name }}</h3>
+                      <span class="tkp-pill">{{ tmpl.platform }}</span>
+                    </div>
+                    <p class="tkp-card__meta">{{ tmpl.description }}</p>
+                  </a>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- ===================== 5 · PROMPT GAMMA ===================== -->
+          @if (toolkit.generatedPrompt) {
+            <section class="tkp-section">
+              <h2
+                class="tkp-h2"
+                i18n="@@formations.toolkitPrivate.sectionGamma"
+              >
+                <span class="tkp-num">5.</span> Votre prompt Gamma personnalisé
+              </h2>
+              <div class="tkp-card tkp-card--accent">
+                <div class="tkp-code">
+                  <pre>{{ toolkit.generatedPrompt }}</pre>
+                  <button
+                    type="button"
+                    class="tkp-copy"
+                    (click)="copyToClipboard(toolkit.generatedPrompt!)"
+                  >
+                    {{
+                      copiedText() === toolkit.generatedPrompt
+                        ? copiedLabel
+                        : copyLabel
+                    }}
+                  </button>
+                </div>
+                <p
+                  class="tkp-gamma-cta"
+                  i18n="@@formations.toolkitPrivate.gammaCta"
+                >
+                  Collez ce prompt dans
+                  <a
+                    href="https://gamma.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >gamma.app</a
+                  >
+                  pour generer votre presentation en 60 secondes.
+                </p>
+              </div>
+            </section>
+          }
+
+          <!-- ===================== FOOTER ===================== -->
+          <footer class="tkp-foot">
+            <p i18n="@@formations.toolkitPrivate.brand">
+              Asili Design — asilidesign.fr
+            </p>
+          </footer>
+        </div>
+      </section>
+    }
+  }
+}

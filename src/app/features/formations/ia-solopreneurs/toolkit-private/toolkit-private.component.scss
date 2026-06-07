@@ -1,0 +1,347 @@
+/*
+  Toolkit prive (acces debloque) — refonte Asili (Lot 3e).
+  En-tete « debloque » porte de `.tk-unlocked` / `.check` de
+  AsiliNewDesign/asili-formation.css ; les sections personnalisees
+  (cheatsheet, prompts, workflows, templates, Gamma) sont restylees aux
+  tokens Asili. Les primitives globales et les design tokens fournissent le
+  reste — on ne re-stylise rien d'existant.
+*/
+
+:host {
+  display: block;
+}
+
+/* --- Etats loading / error ----------------------------------------------- */
+.tkp-state {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: clamp(96px, 14vh, 150px) var(--gutter) 60px;
+}
+
+.tkp-state__inner {
+  text-align: center;
+  max-width: 30rem;
+}
+
+.tkp-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 4px solid var(--line);
+  border-top-color: var(--teal);
+  animation: tkp-spin 0.8s linear infinite;
+}
+
+@keyframes tkp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tkp-spinner {
+    animation: none;
+  }
+}
+
+.tkp-state__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.tkp-state__text {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+
+/* --- Conteneur charge ---------------------------------------------------- */
+.tkp-wrap {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(96px, 14vh, 150px) var(--gutter) 60px;
+}
+
+/* --- En-tete « debloque » (porte de .tk-unlocked / .check) --------------- */
+.tkp-head {
+  text-align: center;
+  margin-bottom: clamp(40px, 6vh, 64px);
+}
+
+.tkp-check {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(79, 179, 162, 0.16);
+  color: var(--teal-deep);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 22px;
+}
+
+.tkp-head h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+
+  em {
+    font-style: italic;
+    color: var(--teal-deep);
+  }
+}
+
+.tkp-head .lead {
+  margin: 16px auto 0;
+  max-width: 46ch;
+  font-size: 17px;
+  color: var(--ink-soft);
+}
+
+/* --- Sections ------------------------------------------------------------ */
+.tkp-section {
+  margin-bottom: clamp(40px, 6vh, 64px);
+}
+
+.tkp-h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.tkp-num {
+  color: var(--teal-deep);
+}
+
+/* --- Tableau cheatsheet -------------------------------------------------- */
+.tkp-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.tkp-table {
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: rgba(255, 250, 242, 0.6);
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--sand);
+    padding: 12px 16px;
+  }
+
+  td {
+    padding: 12px 16px;
+    color: var(--ink-mute);
+    border-top: 1px solid var(--line);
+  }
+
+  tbody tr:hover {
+    background: rgba(241, 231, 214, 0.45);
+  }
+}
+
+.tkp-td-tool a {
+  font-weight: 600;
+  color: var(--teal-deep);
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+/* --- Cartes (prompts / workflows / templates / Gamma) -------------------- */
+.tkp-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.tkp-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.tkp-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tkp-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: rgba(255, 250, 242, 0.6);
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+.tkp-card--link {
+  display: block;
+  transition:
+    border-color 0.25s,
+    transform 0.3s var(--ease);
+
+  &:hover {
+    border-color: var(--teal);
+    transform: translateY(-3px);
+  }
+}
+
+.tkp-card--accent {
+  border: 2px solid rgba(79, 179, 162, 0.25);
+  background: rgba(79, 179, 162, 0.04);
+}
+
+.tkp-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.tkp-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.tkp-card__meta {
+  font-size: 14px;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+}
+
+.tkp-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+  background: var(--sand);
+  color: var(--ink-mute);
+}
+
+/* --- Bloc code + bouton copier ------------------------------------------- */
+.tkp-code {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--cream);
+  padding: 16px;
+
+  pre {
+    white-space: pre-wrap;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+}
+
+.tkp-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(79, 179, 162, 0.3);
+  background: rgba(79, 179, 162, 0.1);
+  color: var(--teal-deep);
+  cursor: pointer;
+  transition: background 0.25s;
+
+  &:hover {
+    background: rgba(79, 179, 162, 0.2);
+  }
+}
+
+/* --- Tags & etapes (workflows) ------------------------------------------- */
+.tkp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.tkp-tag {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(79, 179, 162, 0.1);
+  color: var(--teal-deep);
+}
+
+.tkp-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--ink-mute);
+
+  li {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.tkp-step-n {
+  flex: none;
+  font-weight: 600;
+  color: var(--teal-deep);
+}
+
+/* --- Prompt Gamma -------------------------------------------------------- */
+.tkp-gamma-cta {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--ink-mute);
+
+  a {
+    color: var(--teal-deep);
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+/* --- Pied --------------------------------------------------------------- */
+.tkp-foot {
+  text-align: center;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+
+  p {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+  }
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+@media (max-width: 860px) {
+  .tkp-grid,
+  .tkp-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
