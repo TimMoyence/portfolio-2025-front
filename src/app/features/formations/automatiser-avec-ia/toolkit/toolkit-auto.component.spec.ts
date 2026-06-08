@@ -1,8 +1,10 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
 import { LEAD_MAGNET_PORT } from "../../../../core/ports/lead-magnet.port";
 import { createLeadMagnetPortStub } from "../../../../../testing/factories/lead-magnet.factory";
+import { ToolkitFormComponent } from "../../../../shared/components/toolkit-form/toolkit-form.component";
 import { ToolkitAutoComponent } from "./toolkit-auto.component";
 
 /**
@@ -42,12 +44,13 @@ describe("ToolkitAutoComponent", () => {
   });
 
   it("devrait rendre le composant toolkit-form avec le slug correct", () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const form = compiled.querySelector("app-toolkit-form");
-    expect(form).not.toBeNull();
     // Le slug est critique : il sert de cle metier pour le mailer
-    // (template PDF, sequence drip, attribution de la conversion).
-    expect(form?.getAttribute("formationSlug")).toBe("automatiser-avec-ia");
+    // (template PDF, sequence drip, attribution de la conversion). Il transite
+    // par une liaison de propriete (`@Input`), non reflechie en attribut DOM :
+    // on lit donc l'instance du composant enfant, pas `getAttribute`.
+    const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
+    expect(form).not.toBeNull();
+    expect(form.componentInstance.formationSlug).toBe("automatiser-avec-ia");
   });
 
   it("devrait afficher la section 'Ce que contient le toolkit'", () => {

@@ -1,0 +1,90 @@
+<!--
+  Scaffold partage des pages gate toolkit (capture email) — refonte Asili.
+  Porte de la maquette AsiliNewDesign/toolkit.html : carte centree (.tk-card)
+  avec icone enveloppe, titre projete a accent italique, accroche, items
+  inclus (coche), le formulaire de capture lead-magnet (app-toolkit-form,
+  logique INCHANGEE) et le contenu editorial (« ce que contient », FAQ). Les
+  donnees arrivent deja localisees via inputs ; chaque page shell ne fait que
+  les fournir. Le fond constellation est global (Lot 0).
+-->
+<section class="tk-wrap">
+  <div class="tk-card" appReveal>
+    <!-- ===================== GATE ===================== -->
+    <div class="tk-icon" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M4 7h16v13H4zM4 7l8 6 8-6M4 7V4h16v3"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    <h1>
+      <ng-content select="[title]" />
+    </h1>
+
+    <p class="lead">{{ data().lead }}</p>
+
+    <div class="tk-items">
+      @for (item of data().items; track item.label) {
+        <div class="it">
+          <span class="ck" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M5 12.5 10 17l9-10"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span>{{ item.label }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Formulaire de capture lead-magnet — logique INCHANGEE. -->
+    <div class="tk-form-host">
+      @if (formationSlug(); as slug) {
+        <app-toolkit-form [formationSlug]="slug" />
+      } @else {
+        <app-toolkit-form />
+      }
+    </div>
+
+    <p class="tk-foot">{{ data().foot }}</p>
+  </div>
+
+  <!-- ===================== CONTENU ÉDITORIAL (SEO/AEO) ===================== -->
+  <div class="tk-editorial">
+    <section class="tk-section" [attr.aria-labelledby]="contentsHeadingId">
+      <h2 [id]="contentsHeadingId">{{ data().contentsTitle }}</h2>
+      <ul class="tk-list">
+        @for (point of data().contents; track point) {
+          <li>{{ point }}</li>
+        }
+      </ul>
+    </section>
+
+    <section class="tk-section" [attr.aria-labelledby]="faqHeadingId">
+      <h2 [id]="faqHeadingId">{{ data().faqTitle }}</h2>
+      <div class="tk-faq">
+        @for (qa of data().faq; track qa.question) {
+          <div class="tk-qa">
+            <h3>{{ qa.question }}</h3>
+            <p>{{ qa.answer }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <p class="tk-brand">
+      <span>{{ data().brand }}</span>
+      —
+      <a routerLink="/privacy">{{ data().privacyLabel }}</a>
+    </p>
+  </div>
+</section>

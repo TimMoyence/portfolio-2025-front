@@ -1,8 +1,10 @@
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
 import { LEAD_MAGNET_PORT } from "../../../../core/ports/lead-magnet.port";
 import { createLeadMagnetPortStub } from "../../../../../testing/factories/lead-magnet.factory";
+import { ToolkitFormComponent } from "../../../../shared/components/toolkit-form/toolkit-form.component";
 import { ToolkitAuditSeoComponent } from "./toolkit-audit-seo.component";
 
 /**
@@ -42,10 +44,12 @@ describe("ToolkitAuditSeoComponent", () => {
   });
 
   it("devrait rendre le toolkit-form avec le slug audit-seo-diy", () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const form = compiled.querySelector("app-toolkit-form");
+    // Le slug est une cle metier (attribution back-end). Il transite par une
+    // liaison de propriete (`@Input`), non reflechie en attribut DOM : on lit
+    // donc l'instance du composant enfant, pas `getAttribute`.
+    const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
     expect(form).not.toBeNull();
-    expect(form?.getAttribute("formationSlug")).toBe("audit-seo-diy");
+    expect(form.componentInstance.formationSlug).toBe("audit-seo-diy");
   });
 
   it("devrait afficher la FAQ (AEO / FAQPage signal)", () => {
