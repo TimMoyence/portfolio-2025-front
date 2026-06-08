@@ -16,6 +16,7 @@ import {
 import { buildSecurityHeaders } from "./server/security-headers";
 import { injectSeoHead, isKnownRoute } from "./server/seo-injector";
 import {
+  ALLOWED_HOSTS,
   LOCALE_BARE_PATH,
   LOCALE_PREFIX_RE,
   STRIP_LOCALE_RE,
@@ -91,14 +92,7 @@ app.use((req, res, next) => {
 });
 
 const commonEngine = new CommonEngine({
-  allowedHosts: [
-    "asilidesign.fr",
-    "www.asilidesign.fr",
-    "localhost",
-    "127.0.0.1",
-    "portfolio-web-fr",
-    "portfolio-web-en",
-  ],
+  allowedHosts: [...ALLOWED_HOSTS],
 });
 
 const SEO_METADATA_CANDIDATES = [
