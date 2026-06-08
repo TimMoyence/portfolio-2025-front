@@ -10,13 +10,13 @@ import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import type { AuthPort } from "../../core/ports/auth.port";
 import { AUTH_PORT } from "../../core/ports/auth.port";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 
 @Component({
   selector: "app-forgot-password",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeroSectionComponent],
+  imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
   templateUrl: "./forgot-password.component.html",
   styleUrl: "./forgot-password.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,12 +30,6 @@ export class ForgotPasswordComponent {
   isLoading = false;
   successMessage?: string;
   errorMessage?: string;
-
-  readonly hero = {
-    label: $localize`:auth.forgot.hero.label@@authForgotHeroLabel:Sécurité`,
-    title: $localize`:auth.forgot.hero.title@@authForgotHeroTitle:Mot de passe oublié`,
-    description: $localize`:auth.forgot.hero.description@@authForgotHeroDescription:Entrez votre email pour recevoir un lien de réinitialisation.`,
-  };
 
   submit(form: NgForm): void {
     this.submitted = true;

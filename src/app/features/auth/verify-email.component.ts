@@ -8,63 +8,24 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { AUTH_PORT, type AuthPort } from "../../core/ports/auth.port";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 
 /**
  * Page de verification d'email.
  * Recupere le token depuis le query param et appelle l'API de verification.
  * Affiche le resultat (succes ou erreur) et redirige vers /login apres succes.
+ *
+ * Restyle Asili split-screen (source maquette AsiliNewDesign/auth.html écran
+ * « verify » + asili-auth.css). Le flux par lien magique (token query param +
+ * verifyEmail + redirect 3 s) est PRÉSERVÉ : la saisie de code à 6 chiffres de
+ * la maquette est purement cosmétique et n'est PAS implémentée.
  */
 @Component({
   selector: "app-verify-email",
   standalone: true,
-  imports: [CommonModule, RouterModule, HeroSectionComponent],
-  template: `
-    <app-hero-section
-      [label]="hero.label"
-      [title]="hero.title"
-      [description]="hero.description"
-    />
-    <section class="mx-auto max-w-lg px-4 py-12 text-center">
-      @if (isLoading) {
-        <p
-          class="text-gray-600"
-          i18n="verify-email.loading@@verifyEmailLoading"
-        >
-          Verification en cours...
-        </p>
-      }
-      @if (successMessage) {
-        <div
-          class="rounded-lg border border-green-200 bg-green-50 p-6"
-          role="status"
-        >
-          <p class="text-green-800">{{ successMessage }}</p>
-          <p
-            class="mt-4 text-sm text-gray-600"
-            i18n="verify-email.redirect@@verifyEmailRedirect"
-          >
-            Vous allez etre redirige vers la page de connexion...
-          </p>
-        </div>
-      }
-      @if (errorMessage) {
-        <div
-          class="rounded-lg border border-red-200 bg-red-50 p-6"
-          role="alert"
-        >
-          <p class="text-red-800">{{ errorMessage }}</p>
-          <a
-            routerLink="/login"
-            class="mt-4 inline-block text-sm text-indigo-600 underline"
-            i18n="verify-email.backToLogin@@verifyEmailBackToLogin"
-          >
-            Retour a la connexion
-          </a>
-        </div>
-      }
-    </section>
-  `,
+  imports: [CommonModule, RouterModule, RevealOnScrollDirective],
+  templateUrl: "./verify-email.component.html",
+  styleUrl: "./verify-email.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerifyEmailComponent implements OnInit {
@@ -72,12 +33,6 @@ export class VerifyEmailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
-
-  readonly hero = {
-    label: $localize`:verify-email.hero.label@@verifyEmailHeroLabel:Verification`,
-    title: $localize`:verify-email.hero.title@@verifyEmailHeroTitle:Verification de votre email`,
-    description: $localize`:verify-email.hero.description@@verifyEmailHeroDescription:Nous verifions votre adresse email...`,
-  };
 
   isLoading = true;
   successMessage?: string;
