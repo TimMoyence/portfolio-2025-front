@@ -186,6 +186,27 @@ describe("SvgIconComponent", () => {
       expect(component.role).toBe("img");
     });
 
+    it("devrait charger une icone en sous-dossier (network/google)", () => {
+      spyOn(console, "warn");
+
+      component.name = "network/google";
+      component.ngOnChanges({
+        name: {
+          currentValue: "network/google",
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true,
+        },
+      });
+
+      const req = httpMock.expectOne("assets/icons/network/google.svg");
+      expect(req.request.method).toBe("GET");
+      req.flush(MOCK_SVG);
+
+      expect(component.svgContent).not.toBeNull();
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
     it("ne devrait pas charger un SVG si le name contient un path traversal (../)", () => {
       spyOn(console, "warn");
 
@@ -226,20 +247,43 @@ describe("SvgIconComponent", () => {
       );
     });
 
-    it("ne devrait pas charger un SVG si le name contient des slashes", () => {
+    // Securite : les sous-dossiers sont autorises (ex: "network/google"), mais un
+    // traversal via ".." a travers un slash doit rester rejete.
+    it("ne devrait pas charger un SVG si le name contient un path traversal a travers un slash", () => {
       spyOn(console, "warn");
 
-      component.name = "icons/malicious";
+      component.name = "network/../../etc/passwd";
       component.ngOnChanges({
         name: {
-          currentValue: "icons/malicious",
+          currentValue: "network/../../etc/passwd",
           previousValue: undefined,
           firstChange: true,
           isFirstChange: () => true,
         },
       });
 
-      httpMock.expectNone("assets/icons/icons/malicious.svg");
+      httpMock.expectNone("assets/icons/network/../../etc/passwd.svg");
+      expect(component.svgContent).toBeNull();
+      expect(console.warn).toHaveBeenCalledWith(
+        jasmine.stringContaining("Nom d'icone invalide"),
+      );
+    });
+
+    // Securite : un segment vide (double slash) ne doit pas etre accepte.
+    it("ne devrait pas charger un SVG si le name contient un segment vide (a//b)", () => {
+      spyOn(console, "warn");
+
+      component.name = "network//google";
+      component.ngOnChanges({
+        name: {
+          currentValue: "network//google",
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true,
+        },
+      });
+
+      httpMock.expectNone("assets/icons/network//google.svg");
       expect(component.svgContent).toBeNull();
       expect(console.warn).toHaveBeenCalledWith(
         jasmine.stringContaining("Nom d'icone invalide"),

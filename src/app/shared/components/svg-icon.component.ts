@@ -22,8 +22,14 @@ import { catchError, map, take, tap } from "rxjs/operators";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SvgIconComponent implements OnChanges {
-  /** Regex de validation du nom d'icone : uniquement lettres, chiffres et tirets. */
-  private static readonly VALID_NAME = /^[a-zA-Z0-9-]+$/;
+  /**
+   * Regex de validation du nom d'icone.
+   * Autorise des segments alphanumeriques (lettres, chiffres, tirets) separes par
+   * des slashes pour les icones rangees en sous-dossier (ex: "network/google").
+   * Aucun point n'est admis : "..", "../etc/passwd" et tout traversal restent rejetes,
+   * de meme que les slashes en debut/fin et les segments vides ("a//b", "a/").
+   */
+  private static readonly VALID_NAME = /^[a-zA-Z0-9-]+(?:\/[a-zA-Z0-9-]+)*$/;
 
   private static cache = new Map<string, string>();
 
