@@ -8,12 +8,16 @@ import type {
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Inject,
+  inject,
   input,
   PLATFORM_ID,
   ViewChild,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { RADAR_PORT } from "../../../../core/ports/radar.port";
 
 /**
  * Carte radar meteorologique utilisant Leaflet + tuiles RainViewer.
@@ -116,6 +120,9 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private leaflet: typeof import("leaflet") | null = null;
   private resizeObserver: ResizeObserver | null = null;
 
+  private readonly radarPort = inject(RADAR_PORT);
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(@Inject(PLATFORM_ID) private readonly platformId: object) {}
 
   async ngAfterViewInit(): Promise<void> {
@@ -163,8 +170,8 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
       },
     ).addTo(this.map);
 
-    // Tuiles radar RainViewer
-    await this.loadRadarLayer();
+    // Tuiles radar RainViewer (via RadarPort, ADR 0002)
+    this.loadRadarLayer();
 
     // Observe le redimensionnement du container (animation slide-in, layout shifts)
     this.resizeObserver = new ResizeObserver(() => {
@@ -178,29 +185,20 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }, 600);
   }
 
-  private async loadRadarLayer(): Promise<void> {
-    if (!this.map || !this.leaflet) return;
-
-    try {
-      const resp = await fetch(
-        "https://api.rainviewer.com/public/weather-maps.json",
-      );
-      const data = (await resp.json()) as {
-        radar?: { past?: Array<{ path: string }> };
-      };
-
-      const frames = data.radar?.past;
-      if (!frames?.length) return;
-
-      const latest = frames[frames.length - 1];
-      this.radarLayer = this.leaflet
-        .tileLayer(
-          `https://tilecache.rainviewer.com${latest.path}/256/{z}/{x}/{y}/2/1_1.png`,
-          { opacity: 0.6, maxZoom: 18 },
-        )
-        .addTo(this.map);
-    } catch (error) {
-      console.warn("[RadarMap] RainViewer indisponible :", error);
-    }
+  /**
+   * Ajoute la couche de tuiles radar via le RadarPort.
+   * Degradation silencieuse : si le template est `null` (source indisponible),
+   * aucune couche radar n'est ajoutee.
+   */
+  private loadRadarLayer(): void {
+    this.radarPort
+      .getLatestRadarTileUrlTemplate()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((urlTemplate) => {
+        if (!urlTemplate || !this.map || !this.leaflet) return;
+        this.radarLayer = this.leaflet
+          .tileLayer(urlTemplate, { opacity: 0.6, maxZoom: 18 })
+          .addTo(this.map);
+      });
   }
 }

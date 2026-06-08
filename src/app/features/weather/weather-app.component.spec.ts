@@ -8,8 +8,10 @@ import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { of, throwError } from "rxjs";
 import { AUTH_PORT } from "../../core/ports/auth.port";
+import { RADAR_PORT } from "../../core/ports/radar.port";
 import { WEATHER_PORT } from "../../core/ports/weather.port";
 import { createAuthPortStub } from "../../../testing/factories/auth.factory";
+import { createRadarPortStub } from "../../../testing/factories/radar.factory";
 import {
   buildCityResult,
   buildEnsembleData,
@@ -67,6 +69,7 @@ describe("WeatherAppComponent", () => {
         provideHttpClientTesting(),
         { provide: AUTH_PORT, useValue: authPortStub },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        { provide: RADAR_PORT, useValue: createRadarPortStub() },
         { provide: GeolocationService, useValue: geoServiceSpy },
       ],
     }).compileComponents();

@@ -22,6 +22,7 @@ import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adap
 import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
 import { LeadMagnetHttpAdapter } from "./core/adapters/lead-magnet-http.adapter";
 import { PresentationHttpAdapter } from "./core/adapters/presentation-http.adapter";
+import { RadarHttpAdapter } from "./core/adapters/radar-http.adapter";
 import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
 import { SebastianHttpAdapter } from "./core/adapters/sebastian-http.adapter";
 import { WeatherHttpAdapter } from "./core/adapters/weather-http.adapter";
@@ -33,6 +34,7 @@ import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
 import { CONTACT_PORT } from "./core/ports/contact.port";
 import { LEAD_MAGNET_PORT } from "./core/ports/lead-magnet.port";
 import { PRESENTATION_PORT } from "./core/ports/presentation.port";
+import { RADAR_PORT } from "./core/ports/radar.port";
 import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
 import { SEBASTIAN_PORT } from "./core/ports/sebastian.port";
 import { WEATHER_PORT } from "./core/ports/weather.port";
@@ -95,6 +97,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: PRESENTATION_PORT,
       useClass: PresentationHttpAdapter,
+    },
+    {
+      provide: RADAR_PORT,
+      useClass: RadarHttpAdapter,
     },
   ],
 };
