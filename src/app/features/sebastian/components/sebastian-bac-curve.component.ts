@@ -90,9 +90,12 @@ export class SebastianBacCurveComponent implements OnDestroy {
         maintainAspectRatio: false,
         interaction: { mode: "index", intersect: false },
         plugins: {
+          // Thème dark lounge ambré (maquette asili-app.css) : libellés/ticks/grid
+          // en rgba(255,255,255,…) au lieu du crème. Couleurs des datasets (BAC
+          // rouge danger sémantique + limite légale) inchangées — décision 6.
           legend: {
             labels: {
-              color: "rgba(84, 82, 77, 0.8)",
+              color: "rgba(255, 255, 255, 0.8)",
               font: { size: 11 },
             },
           },
@@ -109,19 +112,19 @@ export class SebastianBacCurveComponent implements OnDestroy {
         scales: {
           x: {
             ticks: {
-              color: "rgba(84, 82, 77, 0.6)",
+              color: "rgba(255, 255, 255, 0.6)",
               maxRotation: 45,
               font: { size: 10 },
             },
-            grid: { color: "rgba(12, 9, 2, 0.06)" },
+            grid: { color: "rgba(255, 255, 255, 0.08)" },
           },
           y: {
             beginAtZero: true,
             ticks: {
-              color: "rgba(84, 82, 77, 0.6)",
+              color: "rgba(255, 255, 255, 0.6)",
               font: { size: 10 },
             },
-            grid: { color: "rgba(12, 9, 2, 0.06)" },
+            grid: { color: "rgba(255, 255, 255, 0.08)" },
           },
         },
       },
