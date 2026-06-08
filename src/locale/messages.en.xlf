@@ -5200,19 +5200,19 @@
     <unit id="formations-list.ia-solo.description">
       <segment>
         <source>16 outils IA triés, 30 minutes, cas pratique en live — on trie le bullshit du vraiment utile.</source>
-        <target>16 curated AI tools, 30 minutes, a live hands-on case — we sort the bullshit from what actually works.</target>
+        <target>16 curated AI tools and one live hands-on case: we sort the bullshit from what's genuinely useful. Enough to leave with a clear toolbox, not a hype list.</target>
       </segment>
     </unit>
     <unit id="formations-list.ia-solo.duration">
       <segment>
         <source>30 min</source>
-        <target>30 min</target>
+        <target>30 min · 17 slides</target>
       </segment>
     </unit>
     <unit id="formations-list.ia-solo.badge">
       <segment>
         <source>Gratuit</source>
-        <target>Free</target>
+        <target>Free · 17 slides</target>
       </segment>
     </unit>
     <unit id="formations-list.auto-ia.title">
@@ -5236,7 +5236,7 @@
     <unit id="formations-list.auto-ia.badge">
       <segment>
         <source>Gratuit</source>
-        <target>Free</target>
+        <target>Free · 13 slides</target>
       </segment>
     </unit>
     <unit id="formations-list.audit-seo.title">
@@ -5260,7 +5260,7 @@
     <unit id="formations-list.audit-seo.badge">
       <segment>
         <source>Gratuit</source>
-        <target>Free</target>
+        <target>Free · 14 slides</target>
       </segment>
     </unit>
 
@@ -6240,108 +6240,6 @@
     <!-- Members panel -->
     <!-- Contributions panel -->
     <!-- Savings goals -->
-    <unit id="formationsListLabel">
-      <segment>
-        <source><x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon name=&quot;sparkles&quot; [size]=&quot;0.85&quot;&gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/> Ressources gratuites </source>
-        <target><x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon name=&quot;sparkles&quot; [size]=&quot;0.85&quot;&gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/> Free resources </target>
-      </segment>
-    </unit>
-    <unit id="formationsListTitle">
-      <segment>
-        <source> Formations &amp; Présentations </source>
-        <target> Courses &amp; Presentations </target>
-      </segment>
-    </unit>
-    <unit id="formationsListSubtitle">
-      <segment>
-        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation — pensées pour les solopreneurs, freelances et petites équipes qui veulent des réponses actionnables, pas un cours universitaire. </source>
-        <target> Hands-on, practical presentations to help you get the most out of AI in your business. Read them online or run them in presentation mode — designed for solopreneurs, freelancers, and small teams who want actionable answers, not a university course. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyTitle">
-      <segment>
-        <source> Pourquoi ces formations ? </source>
-        <target> Why these courses? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyPara1">
-      <segment>
-        <source> L&apos;IA générative a changé le quotidien des indépendants en 18 mois : ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... La vraie difficulté n&apos;est plus de trouver un outil, c&apos;est de savoir lesquels garder et comment les intégrer sans perdre sa journée en prompt engineering. </source>
-        <target> Generative AI has transformed the daily life of independents in the past 18 months: ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... The real challenge is no longer finding a tool — it&apos;s knowing which ones to keep and how to integrate them without losing your day to prompt engineering. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyPara2">
-      <segment>
-        <source> Chaque formation est basée sur ma pratique quotidienne : développeur full-stack à Bordeaux, freelance depuis 3 ans, je teste les outils IA en production sur mes propres projets et ceux de mes clients. Je partage ce qui fonctionne, ce qui ne fonctionne pas et surtout les cas où l&apos;IA fait gagner 4-6 heures par semaine concrètement. </source>
-        <target> Each course is based on my daily practice: full-stack developer in Bordeaux, freelance for 3 years, I test AI tools in production on my own projects and those of my clients. I share what works, what doesn&apos;t, and especially the cases where AI concretely saves 4-6 hours per week. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyPara3">
-      <segment>
-        <source> Format pensé pour être consultable en ligne (slides interactifs, quiz en live, polls) ou en mode présentation si vous voulez les projeter en atelier d&apos;équipe. Tout est gratuit, sans inscription, sans email obligatoire à part pour les compléments PDF. </source>
-        <target> The format is designed to be consulted online (interactive slides, live quizzes, polls) or in presentation mode if you want to project them in a team workshop. Everything is free, no sign-up required, no mandatory email — except for the PDF add-ons. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaqTitle">
-      <segment>
-        <source> Questions fréquentes </source>
-        <target> Frequently asked questions </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq1Q">
-      <segment>
-        <source> Les formations sont-elles vraiment gratuites ? </source>
-        <target> Are the courses really free? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq1A">
-      <segment>
-        <source> Oui — les slides, quiz et polls en ligne sont entièrement gratuits et consultables sans inscription. Seuls certains compléments PDF (toolkit, prompts library) demandent un email pour l&apos;envoi, que vous pouvez retirer à tout moment. </source>
-        <target> Yes — the slides, quizzes, and polls online are entirely free and accessible without sign-up. Only some PDF add-ons (toolkit, prompts library) require an email for delivery, which you can remove at any time. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq2Q">
-      <segment>
-        <source> Puis-je les utiliser en présentation d&apos;équipe ? </source>
-        <target> Can I use them for team presentations? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq2A">
-      <segment>
-        <source> Absolument. Chaque formation a un mode &quot;présentation&quot; avec slides plein écran, polls live pour interagir avec l&apos;audience et quiz pour valider la compréhension. Vous pouvez l&apos;utiliser en atelier interne, en conférence ou en accompagnement client — mentionnez juste la source si vous le diffusez. </source>
-        <target> Absolutely. Each course has a &quot;presentation&quot; mode with full-screen slides, live polls to engage the audience, and quizzes to check understanding. You can use it for internal workshops, conferences, or client coaching — just credit the source if you share it publicly. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq3Q">
-      <segment>
-        <source> À quelle fréquence sont-elles mises à jour ? </source>
-        <target> How often are they updated? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq3A">
-      <segment>
-        <source> Les outils IA évoluent vite. Chaque formation est relue tous les 3-4 mois pour enlever ce qui ne fonctionne plus, ajouter les nouveautés qui tiennent la route et ajuster les budgets quand les grilles tarifaires changent. Les mises à jour majeures sont annoncées dans les slides concernés. </source>
-        <target> AI tools evolve fast. Each course is reviewed every 3-4 months to remove what no longer works, add reliable new tools, and adjust budgets when pricing changes. Major updates are flagged in the relevant slides. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq4Q">
-      <segment>
-        <source> Proposez-vous de l&apos;accompagnement personnalisé ? </source>
-        <target> Do you offer personalized coaching? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq4A">
-      <segment>
-        <source> Oui — au-delà des formations publiques, je fais aussi du coaching individuel et de la formation intra-entreprise sur l&apos;intégration IA dans les workflows métier. Voir la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> page offre <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ou contactez-moi directement. </source>
-        <target> Yes — beyond the public courses, I also offer one-to-one coaching and in-house training on integrating AI into business workflows. See the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> services page <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or contact me directly. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListViewCta">
-      <segment>
-        <source> Consulter → </source>
-        <target> View → </target>
-      </segment>
-    </unit>
     <unit id="sebastianPresHeadline">
       <segment>
         <source> Gardez le <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;accent-word&quot;&gt;"/>controle<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> sur vos habitudes </source>
@@ -7346,14 +7244,14 @@
     </unit>
     <unit id="formations.toolkit.title">
       <segment>
-        <source> Recevez votre boite a outils IA </source>
-        <target> Get your AI toolkit </target>
+        <source> Le toolkit IA<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>pour <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">solopreneurs</pc>. </source>
+        <target> The AI toolkit<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>for <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">solopreneurs</pc>. </target>
       </segment>
     </unit>
     <unit id="formations.toolkit.subtitle">
       <segment>
         <source> Les meilleurs outils IA pour solopreneurs — triés, testés, avec prix, budgets mensuels estimés et cas d&apos;usage concrets. Livré dans votre boite mail en 30 secondes, gratuit et sans engagement. </source>
-        <target> The best AI tools for solopreneurs — curated, tested, with pricing, estimated monthly budgets, and concrete use cases. Delivered to your inbox in 30 seconds, free and with no commitment. </target>
+        <target> A concrete starter kit, free. Enough to form a fair opinion — and take action today. </target>
       </segment>
     </unit>
     <unit id="formations.toolkit.contentsTitle">
@@ -7430,8 +7328,8 @@
     </unit>
     <unit id="formations.auto.toolkit.title">
       <segment>
-        <source> Recevez vos 5 workflows prêts à l'emploi </source>
-        <target> Get your 5 ready-to-use workflows </target>
+        <source> Vos 5 workflows<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>prêts à <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">l'emploi</pc>. </source>
+        <target> Your 5 workflows<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>ready to <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">use</pc>. </target>
       </segment>
     </unit>
     <unit id="formations.auto.toolkit.subtitle">
@@ -7514,8 +7412,8 @@
     </unit>
     <unit id="formations.audit-seo.toolkit.title">
       <segment>
-        <source> Recevez votre checklist audit SEO </source>
-        <target> Get your SEO audit checklist </target>
+        <source> Votre checklist<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">audit SEO</pc>. </source>
+        <target> Your <ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">SEO audit</pc> checklist. </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo.toolkit.subtitle">
@@ -7664,20 +7562,20 @@
     </unit>
     <unit id="formations.toolkitPrivate.heroTitle">
       <segment>
-        <source>Votre boite a outils IA</source>
-        <target>Your AI toolkit</target>
+        <source> Accès <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">débloqué</pc>. </source>
+        <target> Access <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">unlocked</pc>. </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.heroGreeting">
       <segment>
-        <source>Bonjour <x id="INTERPOLATION" equiv-text="{{ toolkit.recap.firstName }}"/>, voici votre toolkit personnalise.</source>
-        <target>Hi <x id="INTERPOLATION" equiv-text="{{ toolkit.recap.firstName }}"/>, here is your personalized toolkit.</target>
+        <source> Bonjour <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ toolkit.recap.firstName }}"/>, voici votre toolkit personnalisé. </source>
+        <target> Hi <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ toolkit.recap.firstName }}"/>, here is your personalized toolkit. </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.sectionCheatsheet">
       <segment>
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>1.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Les 16 outils en un coup d'oeil</source>
-        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>1.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> The 16 tools at a glance</target>
+        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">1.</pc> Les 16 outils en un coup d'œil </source>
+        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">1.</pc> The 16 tools at a glance </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.tableTool">
@@ -7706,32 +7604,32 @@
     </unit>
     <unit id="formations.toolkitPrivate.sectionPrompts">
       <segment>
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>2.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Prompts prets a copier</source>
-        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>2.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Ready-to-copy prompts</target>
+        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">2.</pc> Prompts prêts à copier </source>
+        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">2.</pc> Ready-to-copy prompts </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.sectionWorkflows">
       <segment>
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>3.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Workflows a mettre en place</source>
-        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>3.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Workflows to set up</target>
+        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">3.</pc> Workflows à mettre en place </source>
+        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">3.</pc> Workflows to set up </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.sectionTemplates">
       <segment>
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>4.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Templates reutilisables</source>
-        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>4.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Reusable templates</target>
+        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">4.</pc> Templates réutilisables </source>
+        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">4.</pc> Reusable templates </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.sectionGamma">
       <segment>
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Votre prompt Gamma personnalise</source>
-        <target><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Your personalized Gamma prompt</target>
+        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Votre prompt Gamma personnalisé </source>
+        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Your personalized Gamma prompt </target>
       </segment>
     </unit>
     <unit id="formations.toolkitPrivate.gammaCta">
       <segment>
-        <source>Collez ce prompt dans <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://gamma.app&quot;&gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> pour generer votre presentation en 60 secondes.</source>
-        <target>Paste this prompt into <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://gamma.app&quot;&gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to generate your presentation in 60 seconds.</target>
+        <source> Collez ce prompt dans <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> pour generer votre presentation en 60 secondes. </source>
+        <target> Paste this prompt into <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> to generate your presentation in 60 seconds. </target>
       </segment>
     </unit>
         <!-- needs-translation -->
@@ -12301,6 +12199,342 @@
       <segment>
         <source>Explorer l&apos;Atelier</source>
         <target>Explore the Workshop</target>
+      </segment>
+    </unit>
+    <unit id="formationsHeroKicker">
+      <segment>
+        <source>Formations · gratuites</source>
+        <target>Training · free</target>
+      </segment>
+    </unit>
+    <unit id="formationsHeroLead">
+      <segment>
+        <source>Trois formations, toutes gratuites, au format slides interactives — avec quiz et sondages. Consultables en ligne ou projetables en présentation. Des réponses actionnables, pas un cours universitaire. Sans inscription : votre email sert seulement à recevoir le toolkit PDF.</source>
+        <target>Three trainings, all free, as interactive slides — with quizzes and polls. View them online or project them in a presentation. Actionable answers, not a university lecture. No sign-up: your email is only used to send you the PDF toolkit.</target>
+      </segment>
+    </unit>
+    <unit id="formationsHeroTitle">
+      <segment>
+        <source>Du concret,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>en <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">format diapo</pc>.</source>
+        <target>Real substance,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>in <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">slide format</pc>.</target>
+      </segment>
+    </unit>
+    <unit id="formationsFormatKicker">
+      <segment>
+        <source>Le format</source>
+        <target>The format</target>
+      </segment>
+    </unit>
+    <unit id="formationsFormatHeading">
+      <segment>
+        <source> Des slides vivantes, pas un PDF qu'on ne lit jamais. </source>
+        <target> Living slides, not a PDF nobody ever reads. </target>
+      </segment>
+    </unit>
+    <unit id="formationsCtaKicker">
+      <segment>
+        <source>Tout est gratuit</source>
+        <target>It's all free</target>
+      </segment>
+    </unit>
+    <unit id="formationsCtaTitle">
+      <segment>
+        <source>Choisissez une formation et lancez les slides.</source>
+        <target>Pick a training and start the slides.</target>
+      </segment>
+    </unit>
+    <unit id="formationsCtaLead">
+      <segment>
+        <source>Aucune inscription. Votre email n'est demandé que si vous voulez le toolkit PDF.</source>
+        <target>No sign-up. Your email is only requested if you want the PDF toolkit.</target>
+      </segment>
+    </unit>
+    <unit id="formationsCtaPrimary">
+      <segment>
+        <source>Commencer par l'IA</source>
+        <target>Start with AI</target>
+      </segment>
+    </unit>
+    <unit id="formationsCtaSecondary">
+      <segment>
+        <source>Poser une question</source>
+        <target>Ask a question</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.meta.duration">
+      <segment>
+        <source>Durée</source>
+        <target>Duration</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.meta.format">
+      <segment>
+        <source>Format</source>
+        <target>Format</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.meta.toolkit">
+      <segment>
+        <source>Toolkit</source>
+        <target>Toolkit</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.meta.toolkit.value">
+      <segment>
+        <source>PDF à télécharger</source>
+        <target>Downloadable PDF</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.price.free">
+      <segment>
+        <source>Gratuit</source>
+        <target>Free</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.price.offered">
+      <segment>
+        <source>Offert</source>
+        <target>Free</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.cta.view">
+      <segment>
+        <source>Consulter</source>
+        <target>View</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.cta.toolkit">
+      <segment>
+        <source>Recevoir le toolkit</source>
+        <target>Get the toolkit</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.ia-solo.format">
+      <segment>
+        <source>Slides + quiz</source>
+        <target>Slides + quiz</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.auto-ia.format">
+      <segment>
+        <source>Slides + sondages</source>
+        <target>Slides + polls</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.audit-seo.format">
+      <segment>
+        <source>Slides + checklist</source>
+        <target>Slides + checklist</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.toolkit.badge">
+      <segment>
+        <source>Bonus</source>
+        <target>Bonus</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.toolkit.title">
+      <segment>
+        <source>Le toolkit à emporter</source>
+        <target>The toolkit to take away</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.toolkit.description">
+      <segment>
+        <source>Chaque formation s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.</source>
+        <target>Each training comes with a PDF toolkit: prompt templates, checklists, ready-to-use workflows. Your email is only used to send it to you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.toolkit.meta.content">
+      <segment>
+        <source>Contenu</source>
+        <target>Contents</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.toolkit.meta.content.value">
+      <segment>
+        <source>PDF + modèles</source>
+        <target>PDF + templates</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.toolkit.meta.access">
+      <segment>
+        <source>Accès</source>
+        <target>Access</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.toolkit.meta.access.value">
+      <segment>
+        <source>Email uniquement</source>
+        <target>Email only</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.benefit.interactive.title">
+      <segment>
+        <source>Interactif</source>
+        <target>Interactive</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.benefit.interactive.desc">
+      <segment>
+        <source>Des quiz et des sondages ponctuent chaque formation : on participe au lieu de subir.</source>
+        <target>Quizzes and polls punctuate every training: you take part instead of zoning out.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.benefit.screen.title">
+      <segment>
+        <source>En ligne ou projeté</source>
+        <target>Online or projected</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.benefit.screen.desc">
+      <segment>
+        <source>À consulter tranquillement chez soi, ou à projeter en présentation devant une équipe.</source>
+        <target>View it quietly at home, or project it in a presentation in front of a team.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.benefit.toolkit.title">
+      <segment>
+        <source>Un toolkit à emporter</source>
+        <target>A toolkit to take away</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.benefit.toolkit.desc">
+      <segment>
+        <source>Chaque session se termine par un PDF actionnable, pour passer de l'écoute à la pratique.</source>
+        <target>Each session ends with an actionable PDF, to move from listening to doing.</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.item1">
+      <segment>
+        <source>30 prompts prêts à l'emploi, classés par usage</source>
+        <target>30 ready-to-use prompts, sorted by use case</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.item2">
+      <segment>
+        <source>Une checklist d'automatisation pas-à-pas</source>
+        <target>A step-by-step automation checklist</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.item3">
+      <segment>
+        <source>Un mini-guide « par où commencer »</source>
+        <target>A "where to start" mini-guide</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.foot">
+      <segment>
+        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
+        <target>Free, no commitment. One-click unsubscribe. Your data stays confidential.</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.brand">
+      <segment>
+        <source>Asili Design — asilidesign.fr</source>
+        <target>Asili Design — asilidesign.fr</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkit.privacyLink">
+      <segment>
+        <source>Politique de confidentialité</source>
+        <target>Privacy policy</target>
+      </segment>
+    </unit>
+    <unit id="formations.auto.toolkit.item1">
+      <segment>
+        <source>5 workflows complets : devis, emails, réseaux, factures, veille</source>
+        <target>5 complete workflows: quotes, emails, social, invoices, monitoring</target>
+      </segment>
+    </unit>
+    <unit id="formations.auto.toolkit.item2">
+      <segment>
+        <source>La checklist de relecture en une minute</source>
+        <target>The one-minute review checklist</target>
+      </segment>
+    </unit>
+    <unit id="formations.auto.toolkit.item3">
+      <segment>
+        <source>Le tableau de bord « temps gagné » pré-rempli</source>
+        <target>The pre-filled "time saved" dashboard</target>
+      </segment>
+    </unit>
+    <unit id="formations.auto.toolkit.foot">
+      <segment>
+        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
+        <target>Free, no commitment. One-click unsubscribe. Your data stays confidential.</target>
+      </segment>
+    </unit>
+    <unit id="formations.auto.toolkit.brand">
+      <segment>
+        <source>Asili Design — asilidesign.fr</source>
+        <target>Asili Design — asilidesign.fr</target>
+      </segment>
+    </unit>
+    <unit id="formations.auto.toolkit.privacyLink">
+      <segment>
+        <source>Politique de confidentialité</source>
+        <target>Privacy policy</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo.toolkit.item1">
+      <segment>
+        <source>La checklist imprimable des 7 points à vérifier</source>
+        <target>The printable checklist of the 7 points to check</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo.toolkit.item2">
+      <segment>
+        <source>Le template de rapport d'audit sur une page A4</source>
+        <target>The one-page A4 audit report template</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo.toolkit.item3">
+      <segment>
+        <source>Les 5 outils SEO gratuits avec liens directs</source>
+        <target>The 5 free SEO tools with direct links</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo.toolkit.foot">
+      <segment>
+        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
+        <target>Free, no commitment. One-click unsubscribe. Your data stays confidential.</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo.toolkit.brand">
+      <segment>
+        <source>Asili Design — asilidesign.fr</source>
+        <target>Asili Design — asilidesign.fr</target>
+      </segment>
+    </unit>
+    <unit id="formations.audit-seo.toolkit.privacyLink">
+      <segment>
+        <source>Politique de confidentialité</source>
+        <target>Privacy policy</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.brand">
+      <segment>
+        <source>Asili Design — asilidesign.fr</source>
+        <target>Asili Design — asilidesign.fr</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.copy">
+      <segment>
+        <source>Copier</source>
+        <target>Copy</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.copied">
+      <segment>
+        <source>Copié !</source>
+        <target>Copied!</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.copyError">
+      <segment>
+        <source>Échec — copiez à la main</source>
+        <target>Failed — copy manually</target>
       </segment>
     </unit>
 

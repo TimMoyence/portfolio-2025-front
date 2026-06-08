@@ -2531,101 +2531,143 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.title" datatype="html">
-        <source> Recevez votre checklist audit SEO </source>
+        <source>Votre checklist<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>audit SEO<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">26,29</context>
+          <context context-type="linenumber">26,28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.subtitle" datatype="html">
-        <source> Les 7 checks SEO de la formation — avec les liens directs vers les 5 outils gratuits, le template de rapport à imprimer et le script pour briefer un développeur — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement. </source>
+        <source>Les 7 checks SEO de la formation — avec les liens directs vers les 5 outils gratuits, le template de rapport à imprimer et le script pour briefer un développeur — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">32,36</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.audit-seo.toolkit.item1" datatype="html">
+        <source>La checklist imprimable des 7 points à vérifier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.audit-seo.toolkit.item2" datatype="html">
+        <source>Le template de rapport d&apos;audit sur une page A4</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.audit-seo.toolkit.item3" datatype="html">
+        <source>Les 5 outils SEO gratuits avec liens directs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.audit-seo.toolkit.foot" datatype="html">
+        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.contentsTitle" datatype="html">
-        <source> Ce que contient le toolkit </source>
+        <source>Ce que contient le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">54,57</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.content1" datatype="html">
-        <source> La checklist imprimable des 7 points à vérifier — indexation, titres, vitesse, mobile, contenu, questions-réponses, signaux AEO — avec colonne OK / à corriger / urgent à cocher. </source>
+        <source>La checklist imprimable des 7 points à vérifier — indexation, titres, vitesse, mobile, contenu, questions-réponses, signaux AEO — avec colonne OK / à corriger / urgent à cocher.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">60,63</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.content2" datatype="html">
-        <source> Le template de rapport d&apos;audit sur une page A4 au format Google Sheets dupliquable — 3 colonnes (check, verdict, action) prêtes à remplir pour vos clients ou votre propre site. </source>
+        <source>Le template de rapport d&apos;audit sur une page A4 au format Google Sheets dupliquable — 3 colonnes (check, verdict, action) prêtes à remplir pour vos clients ou votre propre site.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">65,68</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.content3" datatype="html">
-        <source> Les 5 outils SEO gratuits avec liens directs et mode d&apos;emploi commenté — Google Search Console, PageSpeed Insights, Bing Webmaster, Ahrefs Webmaster Tools, SEO Meta in 1 Click. </source>
+        <source>Les 5 outils SEO gratuits avec liens directs et mode d&apos;emploi commenté — Google Search Console, PageSpeed Insights, Bing Webmaster, Ahrefs Webmaster Tools, SEO Meta in 1 Click.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">70,73</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.content4" datatype="html">
-        <source> Le script &quot;briefer un développeur&quot; — les 5 questions non-techniques à poser pour faire corriger les problèmes SEO sans être baladé(e) par un jargon incompréhensible. </source>
+        <source>Le script &quot;briefer un développeur&quot; — les 5 questions non-techniques à poser pour faire corriger les problèmes SEO sans être baladé(e) par un jargon incompréhensible.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">75,78</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.faqTitle" datatype="html">
-        <source> Questions fréquentes </source>
+        <source>Questions fréquentes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.faq1Q" datatype="html">
-        <source> Puis-je faire cet audit sans compétence technique ? </source>
+        <source>Puis-je faire cet audit sans compétence technique ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">99,101</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.faq1A" datatype="html">
-        <source> Oui entièrement. Chaque check utilise Google directement ou des outils avec un formulaire. Aucun terminal, aucun code. Si vous savez faire une recherche Google, vous savez lire le verdict de chaque outil présenté dans le toolkit. </source>
+        <source>Oui entièrement. Chaque check utilise Google directement ou des outils avec un formulaire. Aucun terminal, aucun code. Si vous savez faire une recherche Google, vous savez lire le verdict de chaque outil présenté dans le toolkit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">105,108</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.faq2Q" datatype="html">
-        <source> Combien de temps pour voir des résultats SEO ? </source>
+        <source>Combien de temps pour voir des résultats SEO ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">116,118</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.faq2A" datatype="html">
-        <source> Les corrections techniques (indexation, vitesse) produisent des effets visibles en 2 à 4 semaines. Les améliorations de contenu prennent 3 à 6 mois pour grimper dans les résultats. SEO = marathon, pas sprint. </source>
+        <source>Les corrections techniques (indexation, vitesse) produisent des effets visibles en 2 à 4 semaines. Les améliorations de contenu prennent 3 à 6 mois pour grimper dans les résultats. SEO = marathon, pas sprint.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">122,125</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.faq3Q" datatype="html">
-        <source> Comment recevoir le toolkit ? </source>
+        <source>Comment recevoir le toolkit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">133,135</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo.toolkit.faq3A" datatype="html">
-        <source> Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD. </source>
+        <source>Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">139,142</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.audit-seo.toolkit.brand" datatype="html">
+        <source>Asili Design — asilidesign.fr</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.audit-seo.toolkit.privacyLink" datatype="html">
+        <source>Politique de confidentialité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.accroche.title" datatype="html">
@@ -3224,304 +3266,513 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.title" datatype="html">
-        <source> Recevez vos 5 workflows prêts à l&apos;emploi </source>
+        <source>Vos 5 workflows<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/>prêts à <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>l&apos;emploi<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">25,28</context>
+          <context context-type="linenumber">30,32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.subtitle" datatype="html">
-        <source> Les cinq workflows testés de la formation — avec les prompts exacts, les pièges à éviter et la checklist de relecture — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement. </source>
+        <source>Les cinq workflows testés de la formation — avec les prompts exacts, les pièges à éviter et la checklist de relecture — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">31,34</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.auto.toolkit.item1" datatype="html">
+        <source>5 workflows complets : devis, emails, réseaux, factures, veille</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.auto.toolkit.item2" datatype="html">
+        <source>La checklist de relecture en une minute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.auto.toolkit.item3" datatype="html">
+        <source>Le tableau de bord « temps gagné » pré-rempli</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.auto.toolkit.foot" datatype="html">
+        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.contentsTitle" datatype="html">
-        <source> Ce que contient le toolkit </source>
+        <source>Ce que contient le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">52,55</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.content1" datatype="html">
-        <source> Les 5 workflows complets avec le prompt exact, le résultat attendu et la durée pour le mettre en place — devis, emails, réseaux sociaux, factures, veille. </source>
+        <source>Les 5 workflows complets avec le prompt exact, le résultat attendu et la durée pour le mettre en place — devis, emails, réseaux sociaux, factures, veille.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">58,61</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.content2" datatype="html">
-        <source> La checklist de relecture en une minute — les 6 points à vérifier avant d&apos;envoyer un contenu généré par l&apos;IA à un client ou un prospect. </source>
+        <source>La checklist de relecture en une minute — les 6 points à vérifier avant d&apos;envoyer un contenu généré par l&apos;IA à un client ou un prospect.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">63,66</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.content3" datatype="html">
-        <source> Le tableau de bord &quot;temps gagné&quot; — une feuille Google Docs pré-remplie pour mesurer le retour sur investissement de chaque workflow sur 4 semaines. </source>
+        <source>Le tableau de bord &quot;temps gagné&quot; — une feuille Google Docs pré-remplie pour mesurer le retour sur investissement de chaque workflow sur 4 semaines.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">68,71</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.content4" datatype="html">
-        <source> Les alternatives gratuites aux outils payants — pour chaque workflow, les options zéro euro qui tiennent la route en 2026 et celles à éviter. </source>
+        <source>Les alternatives gratuites aux outils payants — pour chaque workflow, les options zéro euro qui tiennent la route en 2026 et celles à éviter.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">73,76</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.faqTitle" datatype="html">
-        <source> Questions fréquentes </source>
+        <source>Questions fréquentes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">89,91</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.faq1Q" datatype="html">
-        <source> Les workflows fonctionnent-ils sans outil payant ? </source>
+        <source>Les workflows fonctionnent-ils sans outil payant ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">97,99</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.faq1A" datatype="html">
-        <source> Oui. Les 5 workflows tournent entièrement sur les versions gratuites de ChatGPT, Perplexity, Buffer et Google Docs. Le toolkit indique quand un outil payant apporte un gain réel et quand c&apos;est un achat inutile. </source>
+        <source>Oui. Les 5 workflows tournent entièrement sur les versions gratuites de ChatGPT, Perplexity, Buffer et Google Docs. Le toolkit indique quand un outil payant apporte un gain réel et quand c&apos;est un achat inutile.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">103,106</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.faq2Q" datatype="html">
-        <source> Faut-il avoir suivi la formation pour utiliser le toolkit ? </source>
+        <source>Faut-il avoir suivi la formation pour utiliser le toolkit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">114,116</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.faq2A" datatype="html">
-        <source> Non. Le PDF est autonome — chaque workflow est documenté étape par étape avec captures d&apos;écran. La formation ajoute le contexte et les explications, le toolkit donne les instructions pratiques directement copiables. </source>
+        <source>Non. Le PDF est autonome — chaque workflow est documenté étape par étape avec captures d&apos;écran. La formation ajoute le contexte et les explications, le toolkit donne les instructions pratiques directement copiables.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">120,123</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.faq3Q" datatype="html">
-        <source> Comment recevoir le toolkit ? </source>
+        <source>Comment recevoir le toolkit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">131,133</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.auto.toolkit.faq3A" datatype="html">
-        <source> Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD. </source>
+        <source>Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">137,139</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListLabel" datatype="html">
-        <source><x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon name=&quot;sparkles&quot; [size]=&quot;0.85&quot;&gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/> Ressources gratuites </source>
+      <trans-unit id="formations.auto.toolkit.brand" datatype="html">
+        <source>Asili Design — asilidesign.fr</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">28,31</context>
+          <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListTitle" datatype="html">
-        <source> Formations &amp; Présentations </source>
+      <trans-unit id="formations.auto.toolkit.privacyLink" datatype="html">
+        <source>Politique de confidentialité</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListSubtitle" datatype="html">
-        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation — pensées pour les solopreneurs, freelances et petites équipes qui veulent des réponses actionnables, pas un cours universitaire. </source>
+      <trans-unit id="formationsHeroTitle" datatype="html">
+        <source>Du concret,<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/>en <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;accent&quot;&gt;"/>format diapo<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">41,45</context>
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.html</context>
+          <context context-type="linenumber">15,17</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListWhyTitle" datatype="html">
-        <source> Pourquoi ces formations ? </source>
+      <trans-unit id="formationsFormatHeading" datatype="html">
+        <source> Des slides vivantes, pas un PDF qu&apos;on ne lit jamais. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">60,63</context>
+          <context context-type="sourcefile">src/app/features/formations/formations-list.component.html</context>
+          <context context-type="linenumber">61,64</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListWhyPara1" datatype="html">
-        <source> L&apos;IA générative a changé le quotidien des indépendants en 18 mois : ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... La vraie difficulté n&apos;est plus de trouver un outil, c&apos;est de savoir lesquels garder et comment les intégrer sans perdre sa journée en prompt engineering. </source>
+      <trans-unit id="formationsHeroKicker" datatype="html">
+        <source>Formations · gratuites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">66,70</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListWhyPara2" datatype="html">
-        <source> Chaque formation est basée sur ma pratique quotidienne : développeur full-stack à Bordeaux, freelance depuis 3 ans, je teste les outils IA en production sur mes propres projets et ceux de mes clients. Je partage ce qui fonctionne, ce qui ne fonctionne pas et surtout les cas où l&apos;IA fait gagner 4-6 heures par semaine concrètement. </source>
+      <trans-unit id="formationsHeroLead" datatype="html">
+        <source>Trois formations, toutes gratuites, au format slides interactives — avec quiz et sondages. Consultables en ligne ou projetables en présentation. Des réponses actionnables, pas un cours universitaire. Sans inscription : votre email sert seulement à recevoir le toolkit PDF.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">76,80</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListWhyPara3" datatype="html">
-        <source> Format pensé pour être consultable en ligne (slides interactifs, quiz en live, polls) ou en mode présentation si vous voulez les projeter en atelier d&apos;équipe. Tout est gratuit, sans inscription, sans email obligatoire à part pour les compléments PDF. </source>
+      <trans-unit id="formationsFormatKicker" datatype="html">
+        <source>Le format</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">86,90</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListViewCta" datatype="html">
-        <source> Consulter → </source>
+      <trans-unit id="formationsCtaKicker" datatype="html">
+        <source>Tout est gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">155,156</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListFaqTitle" datatype="html">
-        <source> Questions fréquentes </source>
+      <trans-unit id="formationsCtaTitle" datatype="html">
+        <source>Choisissez une formation et lancez les slides.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">174,176</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListFaq1Q" datatype="html">
-        <source> Les formations sont-elles vraiment gratuites ? </source>
+      <trans-unit id="formationsCtaLead" datatype="html">
+        <source>Aucune inscription. Votre email n&apos;est demandé que si vous voulez le toolkit PDF.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">182,184</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListFaq1A" datatype="html">
-        <source> Oui — les slides, quiz et polls en ligne sont entièrement gratuits et consultables sans inscription. Seuls certains compléments PDF (toolkit, prompts library) demandent un email pour l&apos;envoi, que vous pouvez retirer à tout moment. </source>
+      <trans-unit id="formationsCtaPrimary" datatype="html">
+        <source>Commencer par l&apos;IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">188,191</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListFaq2Q" datatype="html">
-        <source> Puis-je les utiliser en présentation d&apos;équipe ? </source>
+      <trans-unit id="formationsCtaSecondary" datatype="html">
+        <source>Poser une question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">199,201</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formationsListFaq2A" datatype="html">
-        <source> Absolument. Chaque formation a un mode &quot;présentation&quot; avec slides plein écran, polls live pour interagir avec l&apos;audience et quiz pour valider la compréhension. Vous pouvez l&apos;utiliser en atelier interne, en conférence ou en accompagnement client — mentionnez juste la source si vous le diffusez. </source>
+      <trans-unit id="formations-list.ia-solo.badge" datatype="html">
+        <source>Gratuit · 17 slides</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">205,209</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formationsListFaq3Q" datatype="html">
-        <source> À quelle fréquence sont-elles mises à jour ? </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">217,219</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formationsListFaq3A" datatype="html">
-        <source> Les outils IA évoluent vite. Chaque formation est relue tous les 3-4 mois pour enlever ce qui ne fonctionne plus, ajouter les nouveautés qui tiennent la route et ajuster les budgets quand les grilles tarifaires changent. Les mises à jour majeures sont annoncées dans les slides concernés. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">223,227</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formationsListFaq4Q" datatype="html">
-        <source> Proposez-vous de l&apos;accompagnement personnalisé ? </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">235,237</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formationsListFaq4A" datatype="html">
-        <source> Oui — au-delà des formations publiques, je fais aussi du coaching individuel et de la formation intra-entreprise sur l&apos;intégration IA dans les workflows métier. Voir la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> page offre <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ou contactez-moi directement. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/formations-list.component.ts</context>
-          <context context-type="linenumber">241,248</context>
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.title" datatype="html">
         <source>L&apos;IA au service des solopreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.description" datatype="html">
-        <source>16 outils IA triés, 30 minutes, cas pratique en live — on trie le bullshit du vraiment utile.</source>
+        <source>16 outils IA triés, un cas pratique en live : on trie le bullshit du vraiment utile. De quoi repartir avec une boîte à outils claire, pas une liste de hype.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.meta.duration" datatype="html">
+        <source>Durée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.duration" datatype="html">
-        <source>30 min</source>
+        <source>30 min · 17 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">72</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formations-list.ia-solo.badge" datatype="html">
+      <trans-unit id="formations-list.meta.format" datatype="html">
+        <source>Format</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.ia-solo.format" datatype="html">
+        <source>Slides + quiz</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.meta.toolkit" datatype="html">
+        <source>Toolkit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.meta.toolkit.value" datatype="html">
+        <source>PDF à télécharger</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.price.free" datatype="html">
         <source>Gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.cta.view" datatype="html">
+        <source>Consulter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.auto-ia.badge" datatype="html">
+        <source>Gratuit · 13 slides</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.title" datatype="html">
         <source>Automatiser avec l&apos;IA — 5 workflows pour non-tech</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.description" datatype="html">
-        <source>5 workflows testés, 25 minutes, zéro ligne de code — devis, emails, réseaux sociaux, factures, veille.</source>
+        <source>5 workflows testés sans coder — devis, emails, réseaux, factures, veille — pour récupérer environ 2h par jour. Concrets, reproductibles, applicables tout de suite.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.duration" datatype="html">
-        <source>25 min</source>
+        <source>25 min · 13 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formations-list.auto-ia.badge" datatype="html">
-        <source>Gratuit</source>
+      <trans-unit id="formations-list.auto-ia.format" datatype="html">
+        <source>Slides + sondages</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.audit-seo.badge" datatype="html">
+        <source>Gratuit · 14 slides</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.title" datatype="html">
         <source>Audit SEO DIY — 7 points en 20 minutes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.description" datatype="html">
-        <source>7 checks SEO concrets, 5 outils gratuits, 20 minutes — pour savoir si Google trouve vraiment votre site.</source>
+        <source>7 checks SEO concrets avec 5 outils gratuits, pour savoir si Google trouve votre site — et corriger vous-même ce qui coince.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.duration" datatype="html">
-        <source>20 min</source>
+        <source>20 min · 14 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formations-list.audit-seo.badge" datatype="html">
-        <source>Gratuit</source>
+      <trans-unit id="formations-list.audit-seo.format" datatype="html">
+        <source>Slides + checklist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.toolkit.badge" datatype="html">
+        <source>Bonus</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.toolkit.title" datatype="html">
+        <source>Le toolkit à emporter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.toolkit.description" datatype="html">
+        <source>Chaque formation s&apos;accompagne d&apos;un toolkit PDF : modèles de prompts, checklists, workflows prêts à l&apos;emploi. Votre email sert uniquement à vous l&apos;envoyer.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.toolkit.meta.content" datatype="html">
+        <source>Contenu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.toolkit.meta.content.value" datatype="html">
+        <source>PDF + modèles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.toolkit.meta.access" datatype="html">
+        <source>Accès</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.toolkit.meta.access.value" datatype="html">
+        <source>Email uniquement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.price.offered" datatype="html">
+        <source>Offert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.cta.toolkit" datatype="html">
+        <source>Recevoir le toolkit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.benefit.interactive.title" datatype="html">
+        <source>Interactif</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.benefit.interactive.desc" datatype="html">
+        <source>Des quiz et des sondages ponctuent chaque formation : on participe au lieu de subir.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.benefit.screen.title" datatype="html">
+        <source>En ligne ou projeté</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.benefit.screen.desc" datatype="html">
+        <source>À consulter tranquillement chez soi, ou à projeter en présentation devant une équipe.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.benefit.toolkit.title" datatype="html">
+        <source>Un toolkit à emporter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.benefit.toolkit.desc" datatype="html">
+        <source>Chaque session se termine par un PDF actionnable, pour passer de l&apos;écoute à la pratique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.accroche.title" datatype="html">
@@ -4741,210 +4992,279 @@
       <trans-unit id="formations.toolkitPrivate.loading" datatype="html">
         <source> Chargement de votre toolkit... </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">42,45</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">17,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.errorTitle" datatype="html">
         <source> Impossible de charger le toolkit </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">57,60</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">30,33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.errorDetail" datatype="html">
         <source> Le lien est peut-etre expire ou invalide. Verifiez votre email ou refaites une demande. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">63,66</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">36,40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.heroTitle" datatype="html">
-        <source> Votre boite a outils IA </source>
+        <source> Accès <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>débloqué<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">80,82</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">61,63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.heroGreeting" datatype="html">
-        <source> Bonjour <x id="INTERPOLATION" equiv-text="{{ toolkit.recap.firstName }}"/>, voici votre toolkit personnalise. </source>
+        <source> Bonjour <x id="INTERPOLATION" equiv-text="{{ toolkit.recap.firstName }}"/>, voici votre toolkit personnalisé. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">86,87</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">64,66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.sectionCheatsheet" datatype="html">
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>1.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Les 16 outils en un coup d&apos;oeil </source>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;tkp-num&quot;&gt;"/>1.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Les 16 outils en un coup d&apos;œil </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">98,99</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">76,77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.tableTool" datatype="html">
         <source> Outil </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">111,112</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">83,84</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.tableCategory" datatype="html">
-        <source> Categorie </source>
+        <source> Catégorie </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">117,118</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">86,88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.tablePrice" datatype="html">
         <source> Prix </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">123,124</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">89,90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.tableDescription" datatype="html">
         <source> En une phrase </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">129,130</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">92,94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.sectionPrompts" datatype="html">
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>2.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Prompts prets a copier </source>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;tkp-num&quot;&gt;"/>2.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Prompts prêts à copier </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">172,173</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">126,127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.sectionWorkflows" datatype="html">
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>3.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Workflows a mettre en place </source>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;tkp-num&quot;&gt;"/>3.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Workflows à mettre en place </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">221,222</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">159,160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.sectionTemplates" datatype="html">
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>4.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Templates reutilisables </source>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;tkp-num&quot;&gt;"/>4.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Templates réutilisables </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">273,274</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">195,196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.sectionGamma" datatype="html">
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-scheme-accent&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Votre prompt Gamma personnalise </source>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;tkp-num&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Votre prompt Gamma personnalisé </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">310,311</context>
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">223,224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.gammaCta" datatype="html">
         <source> Collez ce prompt dans <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-                        href=&quot;https://gamma.app&quot;
-                        target=&quot;_blank&quot;
-                        rel=&quot;noopener noreferrer&quot;
-                        class=&quot;text-scheme-accent underline hover:no-underline&quot;
-                        &gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-                      &gt;"/> pour generer votre presentation en 60 secondes. </source>
+                    href=&quot;https://gamma.app&quot;
+                    target=&quot;_blank&quot;
+                    rel=&quot;noopener noreferrer&quot;
+                    &gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+                  &gt;"/> pour generer votre presentation en 60 secondes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">240,247</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.brand" datatype="html">
+        <source> Asili Design — asilidesign.fr </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
+          <context context-type="linenumber">256,258</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.copy" datatype="html">
+        <source>Copier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">339,347</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.copied" datatype="html">
+        <source>Copié !</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.copyError" datatype="html">
+        <source>Échec — copiez à la main</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.title" datatype="html">
-        <source> Recevez votre boite a outils IA </source>
+        <source>Le toolkit IA<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/>pour <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>solopreneurs<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">23,25</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.subtitle" datatype="html">
-        <source> Les meilleurs outils IA pour solopreneurs — triés, testés, avec prix, budgets mensuels estimés et cas d&apos;usage concrets. Livré dans votre boite mail en 30 secondes, gratuit et sans engagement. </source>
+        <source>Un kit de démarrage concret, offert. De quoi vous faire une idée juste — et passer à l&apos;action dès aujourd&apos;hui.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">29,32</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.item1" datatype="html">
+        <source>30 prompts prêts à l&apos;emploi, classés par usage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.item2" datatype="html">
+        <source>Une checklist d&apos;automatisation pas-à-pas</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.item3" datatype="html">
+        <source>Un mini-guide « par où commencer »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.foot" datatype="html">
+        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.contentsTitle" datatype="html">
-        <source> Ce que contient le toolkit </source>
+        <source>Ce que contient le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">50,53</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content1" datatype="html">
-        <source> 16 outils IA sélectionnés pour la génération de contenu, l&apos;automatisation marketing, la création visuelle, la prospection commerciale et le support client — avec une fiche comparative pour chacun. </source>
+        <source>16 outils IA sélectionnés pour la génération de contenu, l&apos;automatisation marketing, la création visuelle, la prospection commerciale et le support client — avec une fiche comparative pour chacun.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">56,59</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content2" datatype="html">
-        <source> Les budgets mensuels estimés par tier d&apos;usage (solo, équipe, agence) pour dimensionner votre stack IA sans surpayer — typiquement 30 à 150 € / mois pour un solopreneur. </source>
+        <source>Les budgets mensuels estimés par tier d&apos;usage (solo, équipe, agence) pour dimensionner votre stack IA sans surpayer — typiquement 30 à 150 € / mois pour un solopreneur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">62,65</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content3" datatype="html">
-        <source> 3 workflows concrets clé en main : rédaction de newsletters hebdo, réponse client multilingue, création de visuels LinkedIn — chacun avec prompt, outil recommandé et temps gagné. </source>
+        <source>3 workflows concrets clé en main : rédaction de newsletters hebdo, réponse client multilingue, création de visuels LinkedIn — chacun avec prompt, outil recommandé et temps gagné.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">67,70</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content4" datatype="html">
-        <source> Les pièges à éviter : outils payants qui ne tiennent pas leurs promesses, RGPD sur les données, hallucinations IA sur la partie juridique et comptable. </source>
+        <source>Les pièges à éviter : outils payants qui ne tiennent pas leurs promesses, RGPD sur les données, hallucinations IA sur la partie juridique et comptable.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">72,75</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faqTitle" datatype="html">
-        <source> Questions fréquentes </source>
+        <source>Questions fréquentes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">88,90</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq1Q" datatype="html">
-        <source> À qui s&apos;adresse ce toolkit ? </source>
+        <source>À qui s&apos;adresse ce toolkit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">96,98</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq1A" datatype="html">
-        <source> Aux solopreneurs, freelances et indépendants qui veulent gagner du temps sans se noyer dans les dizaines d&apos;outils IA qui sortent chaque semaine. Niveau requis : zéro — les fiches expliquent pas à pas. </source>
+        <source>Aux solopreneurs, freelances et indépendants qui veulent gagner du temps sans se noyer dans les dizaines d&apos;outils IA qui sortent chaque semaine. Niveau requis : zéro — les fiches expliquent pas à pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">102,104</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq2Q" datatype="html">
-        <source> Pourquoi le toolkit est gratuit ? </source>
+        <source>Pourquoi le toolkit est gratuit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">113,115</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq2A" datatype="html">
-        <source> Parce que c&apos;est une version condensée des formations que je vends en intra-entreprise. L&apos;objectif est de démontrer la qualité du travail avant de proposer un accompagnement sur-mesure, si vous en avez besoin. </source>
+        <source>Parce que c&apos;est une version condensée des formations que je vends en intra-entreprise. L&apos;objectif est de démontrer la qualité du travail avant de proposer un accompagnement sur-mesure, si vous en avez besoin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">119,122</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq3Q" datatype="html">
-        <source> Comment le recevoir ? </source>
+        <source>Comment le recevoir ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">130,132</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq3A" datatype="html">
-        <source> Laissez votre email dans le formulaire ci-dessus. Vous recevrez le PDF du toolkit dans la minute. Aucune newsletter automatique, aucun follow-up marketing : c&apos;est promis, et conforme RGPD. </source>
+        <source>Laissez votre email dans le formulaire ci-dessus. Vous recevrez le PDF du toolkit dans la minute. Aucune newsletter automatique, aucun follow-up marketing : c&apos;est promis, et conforme RGPD.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
-          <context context-type="linenumber">136,138</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.brand" datatype="html">
+        <source>Asili Design — asilidesign.fr</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations.toolkit.privacyLink" datatype="html">
+        <source>Politique de confidentialité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit/toolkit.component.ts</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPhaseTechnicalPages" datatype="html">

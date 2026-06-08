@@ -1,0 +1,130 @@
+<!--
+  Formations Asili — page liste, composition de la maquette
+  AsiliNewDesign/formations.html : hero (asili-hero) → grille de quatre cartes
+  (trois formations gratuites vers les slide-decks existants + carte bonus
+  toolkit vers la capture email) → section « le format diapo » (trois bénéfices)
+  → bande CTA (asili-cta-band). Le fond constellation est global
+  (app-asili-background) : aucune section ne recrée de canvas. Les slide-decks
+  sont hors périmètre — la page ne fait que les référencer.
+-->
+
+<!-- ===================== HERO ===================== -->
+<app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
+  <ng-container title>
+    <ng-container i18n="@@formationsHeroTitle"
+      >Du concret,<br />en
+      <span class="accent">format diapo</span>.</ng-container
+    >
+  </ng-container>
+</app-asili-hero>
+
+<!-- ===================== GRILLE DES FORMATIONS ===================== -->
+<section class="formations-grid-section">
+  <div class="wrap">
+    <div class="formation-grid">
+      @for (formation of formations; track formation.link) {
+        <article
+          class="formation"
+          [class.formation--bonus]="formation.variant === 'bonus'"
+          appReveal
+        >
+          <span class="badge">{{ formation.badge }}</span>
+          <h3>{{ formation.title }}</h3>
+          <p>{{ formation.description }}</p>
+          <div class="f-meta">
+            @for (row of formation.meta; track row.key) {
+              <div>
+                <span class="fk">{{ row.key }}</span>
+                <span class="fv">{{ row.value }}</span>
+              </div>
+            }
+          </div>
+          <div class="f-foot">
+            <span class="price">{{ formation.price }}</span>
+            <a class="link-arrow" [routerLink]="formation.link">
+              {{ formation.cta }} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LE FORMAT DIAPO ===================== -->
+<section class="format-section section-pad">
+  <div class="wrap">
+    <div class="sec-head format-head" appReveal>
+      <div>
+        <span class="kicker">{{ formatKicker }}</span>
+        <h2 class="h-lg format-head__title" i18n="@@formationsFormatHeading">
+          Des slides vivantes, pas un PDF qu'on ne lit jamais.
+        </h2>
+      </div>
+    </div>
+    <div class="fo-benefits">
+      @for (benefit of benefits; track benefit.title) {
+        <div class="fo-benefit" appReveal>
+          <div class="bi" aria-hidden="true">
+            @switch (benefit.icon) {
+              @case ("interactive") {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="3"
+                    y="4"
+                    width="18"
+                    height="13"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M9 21h6M12 17v4"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              }
+              @case ("screen") {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M5 3h14v18l-7-4-7 4z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              }
+              @case ("toolkit") {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              }
+            }
+          </div>
+          <h3>{{ benefit.title }}</h3>
+          <p>{{ benefit.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<app-asili-cta-band [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead">
+  <ng-container cta>
+    <a class="btn btn-teal" routerLink="/formations/ia-solopreneurs">
+      {{ ctaPrimary }} <span class="arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="btn btn-ghost" routerLink="/contact">
+      {{ ctaSecondary }}
+    </a>
+  </ng-container>
+</app-asili-cta-band>
