@@ -21,6 +21,12 @@ export interface WeatherPort {
     count?: number,
   ): Observable<GeocodingResponse>;
 
+  /**
+   * Reverse-geocoding : resout le nom de la ville a partir de coordonnees.
+   * Retourne le nom de la ville ou `null` si indisponible.
+   */
+  reverseGeocode(lat: number, lon: number): Observable<string | null>;
+
   /** Recuperation des previsions meteo pour des coordonnees donnees. */
   getForecast(
     latitude: number,

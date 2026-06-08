@@ -1,29 +1,20 @@
 import { isPlatformBrowser } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { map, catchError } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import type { CityResult } from "../../../core/models/weather.model";
-
-interface NominatimResponse {
-  address?: {
-    city?: string;
-    town?: string;
-    village?: string;
-    municipality?: string;
-    country?: string;
-    country_code?: string;
-  };
-}
+import { WEATHER_PORT } from "../../../core/ports/weather.port";
 
 /**
  * Service de geolocation du navigateur avec reverse geocoding.
+ * La capacite `navigator.geolocation` est legitime cote feature ;
+ * le reverse-geocoding est delegue au WeatherPort (adapter core).
  * SSR-safe : retourne une erreur propre cote serveur.
  */
 @Injectable({ providedIn: "root" })
 export class GeolocationService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  private readonly http = inject(HttpClient);
+  private readonly weatherPort = inject(WEATHER_PORT);
 
   /** Demande la position du navigateur et retourne un CityResult. */
   locate(): Observable<CityResult> {
@@ -62,26 +53,10 @@ export class GeolocationService {
   }
 
   /**
-   * Enrichit le nom de la ville via Nominatim reverse geocoding.
-   * Retourne le nom de la ville ou null.
+   * Enrichit le nom de la ville via reverse geocoding.
+   * Delegue au WeatherPort (adapter core). Retourne le nom ou `null`.
    */
   reverseGeocode(lat: number, lon: number): Observable<string | null> {
-    return this.http
-      .get<NominatimResponse>(
-        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10`,
-      )
-      .pipe(
-        map((resp) => {
-          const addr = resp.address;
-          return (
-            addr?.city ??
-            addr?.town ??
-            addr?.village ??
-            addr?.municipality ??
-            null
-          );
-        }),
-        catchError(() => of(null)),
-      );
+    return this.weatherPort.reverseGeocode(lat, lon);
   }
 }

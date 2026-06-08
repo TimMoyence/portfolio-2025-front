@@ -260,6 +260,9 @@ export function createWeatherPortStub(): Record<
 > {
   return {
     searchCity: jasmine.createSpy("searchCity"),
+    reverseGeocode: jasmine
+      .createSpy("reverseGeocode")
+      .and.returnValue(of(null)),
     getForecast: jasmine.createSpy("getForecast"),
     getPreferences: jasmine.createSpy("getPreferences"),
     updatePreferences: jasmine.createSpy("updatePreferences"),
