@@ -29,16 +29,18 @@ import {
     <!--
       Objectifs App Sebastian — thème "dark lounge ambré" porté de la maquette
       AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (glass) pour le
-      formulaire, .goal/.goal-top/.goal-track/.gmeta pour chaque objectif (barre
-      de progression gold). Restyle 100 % visuel : goalCategory/goalQuantity/
-      goalPeriod, addGoal/removeGoal/loadGoals, emoji 🍺/☕ par catégorie, état
-      vide et tous les data-testid (goal-category/goal-quantity/goal-period/
-      goal-submit, goal-item, delete-goal, empty-state) conservés.
+      formulaire, .goal/.goal-top/.gmeta pour chaque objectif. PAS de barre de
+      progression : le modèle SebastianGoal n'expose aucun avancement réel, on
+      n'affiche donc pas la jauge gold de la maquette (donnée fictive proscrite).
+      Restyle 100 % visuel : goalCategory/goalQuantity/goalPeriod, addGoal/
+      removeGoal/loadGoals, emoji 🍺/☕ par catégorie, état vide et tous les
+      data-testid (goal-category/goal-quantity/goal-period/goal-submit,
+      goal-item, delete-goal, empty-state) conservés.
     -->
     <div class="space-y-6">
       <!-- Formulaire d'ajout d'objectif (glass .panel, champs dark ambrés) -->
       <div
-        class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] bg-scheme-surface p-6 backdrop-blur-[18px]"
+        class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6 backdrop-blur-[18px]"
       >
         <h2 class="mb-4 font-display text-h5 text-white">Nouvel objectif</h2>
         <div class="space-y-3">
@@ -110,18 +112,8 @@ import {
                 Supprimer
               </button>
             </div>
-            <!-- .goal-track : barre gold (objectif = 100 %) -->
-            <div
-              class="h-2.5 overflow-hidden rounded-[5px] bg-white/[0.08]"
-              aria-hidden="true"
-            >
-              <i
-                class="block h-full rounded-[5px] bg-[linear-gradient(90deg,var(--gold),var(--gold-soft))]"
-                style="width: 100%"
-              ></i>
-            </div>
-            <!-- .gmeta : période -->
-            <div class="mt-3 flex gap-5 font-mono text-xs text-white/55">
+            <!-- .gmeta : période (factuelle ; pas de jauge d'avancement fictive) -->
+            <div class="flex gap-5 font-mono text-xs text-white/55">
               <span>{{
                 goal.period === "daily"
                   ? "Quotidien"
