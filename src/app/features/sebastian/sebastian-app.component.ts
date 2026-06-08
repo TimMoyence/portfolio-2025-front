@@ -34,86 +34,99 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
     SebastianAddDrinkSheetComponent,
   ],
   template: `
-    <div
-      class="min-h-screen bg-scheme-background px-4 py-8 font-body sm:px-6 lg:px-8"
-    >
+    <!--
+      Shell App Sebastian — thème "dark lounge ambré" porté de la maquette
+      AsiliNewDesign/sebastian-app.html + asili-app.css :
+      .seb-app { --app-bg:#14100a }, .seb-pagehead, .seb-cards, .sc (sk/sv),
+      .app-pill, .seb-nav button(.on). Décision nav (3) = OPTION A : on conserve
+      l'ossature réelle (header + barre d'onglets HORIZONTALE + router-outlet)
+      et on lui applique le STYLE Asili (pas la sidebar .seb-side, qui ferait
+      double chrome avec la navbar globale conservée — décisions Lot 3f/4).
+      Tokens : --gold/--gold-soft/--gold-deep, --font-display (Instrument Serif),
+      --font-mono (Geist Mono), opacités ambrées rgba(230,170,70,x) de la maquette.
+    -->
+    <div class="min-h-screen bg-[#14100a] px-4 py-8 font-sans sm:px-6 lg:px-8">
       <div class="mx-auto max-w-7xl">
-        <!-- Header -->
+        <!-- Header — titre display, sous-titre mono ambré (.seb-pagehead h1/.sub) -->
         <header class="mb-8 text-center">
           <h1
-            class="mb-2 font-heading text-4xl font-bold text-scheme-text"
+            class="mb-2 font-display text-4xl text-white sm:text-5xl"
             i18n="sebastian.title|@@sebastianTitle"
           >
             Sebastian
           </h1>
           <p
-            class="text-lg text-scheme-text-muted"
+            class="text-lg text-white/55"
             i18n="sebastian.description|@@sebastianDescription"
           >
             Votre majordome de suivi de consommation
           </p>
         </header>
 
-        <!-- Compteurs journaliers -->
+        <!-- Compteurs journaliers (format .sc Asili : sk mono / sv display / barre gold) -->
         <section class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <!-- Compteur Alcool -->
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4 shadow-xs"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-5 transition-colors duration-300 hover:border-[rgba(230,170,70,0.35)]"
           >
             <div class="mb-2 flex items-center justify-between">
               <span
-                class="font-heading text-sm font-semibold text-scheme-warning"
+                class="font-mono text-[10.5px] uppercase tracking-[0.12em] text-gold-soft"
                 i18n="sebastian.counter.alcohol|@@sebastianCounterAlcohol"
                 >Alcool aujourd'hui</span
               >
-              <span class="text-2xl font-bold text-scheme-warning">{{
+              <span class="font-display text-4xl leading-none text-white">{{
                 todayAlcohol()
               }}</span>
             </div>
             @if (dailyAlcoholGoal(); as goal) {
-              <div
-                class="mb-1 flex justify-between text-xs text-scheme-text-muted"
-              >
-                <span i18n="sebastian.counter.goal|@@sebastianCounterGoal"
+              <div class="mb-1 flex justify-between text-xs text-white/45">
+                <span
+                  class="font-mono uppercase tracking-[0.08em]"
+                  i18n="sebastian.counter.goal|@@sebastianCounterGoal"
                   >Objectif</span
                 >
                 <span>{{ todayAlcohol() }}/{{ goal.targetQuantity }}</span>
               </div>
-              <div class="h-2 overflow-hidden rounded-full bg-scheme-border">
+              <div
+                class="h-2 overflow-hidden rounded-full bg-[rgba(230,170,70,0.12)]"
+              >
                 <div
-                  class="h-full rounded-full bg-scheme-warning transition-all duration-500"
+                  class="h-full rounded-full bg-gradient-to-r from-gold to-gold-soft transition-all duration-500"
                   [style.width.%]="alcoholProgress()"
                 ></div>
               </div>
             }
           </div>
 
-          <!-- Compteur Cafe -->
+          <!-- Compteur Cafe (décision 5 : café conservé, teinte gold-deep) -->
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4 shadow-xs"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-5 transition-colors duration-300 hover:border-[rgba(230,170,70,0.35)]"
           >
             <div class="mb-2 flex items-center justify-between">
               <span
-                class="font-heading text-sm font-semibold text-scheme-accent-active"
+                class="font-mono text-[10.5px] uppercase tracking-[0.12em] text-gold-deep"
                 i18n="sebastian.counter.coffee|@@sebastianCounterCoffee"
                 >Cafe aujourd'hui</span
               >
-              <span class="text-2xl font-bold text-scheme-accent-active">{{
+              <span class="font-display text-4xl leading-none text-white">{{
                 todayCoffee()
               }}</span>
             </div>
             @if (dailyCoffeeGoal(); as goal) {
-              <div
-                class="mb-1 flex justify-between text-xs text-scheme-text-muted"
-              >
-                <span i18n="sebastian.counter.goal|@@sebastianCounterGoal"
+              <div class="mb-1 flex justify-between text-xs text-white/45">
+                <span
+                  class="font-mono uppercase tracking-[0.08em]"
+                  i18n="sebastian.counter.goal|@@sebastianCounterGoal"
                   >Objectif</span
                 >
                 <span>{{ todayCoffee() }}/{{ goal.targetQuantity }}</span>
               </div>
-              <div class="h-2 overflow-hidden rounded-full bg-scheme-border">
+              <div
+                class="h-2 overflow-hidden rounded-full bg-[rgba(230,170,70,0.12)]"
+              >
                 <div
-                  class="h-full rounded-full bg-scheme-accent-active transition-all duration-500"
+                  class="h-full rounded-full bg-gradient-to-r from-gold-deep to-gold transition-all duration-500"
                   [style.width.%]="coffeeProgress()"
                 ></div>
               </div>
@@ -121,15 +134,15 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
           </div>
         </section>
 
-        <!-- Barre d'onglets -->
+        <!-- Barre d'onglets restylée (pills ambrés, état actif gold .seb-nav button.on) -->
         <nav
-          class="mb-6 flex gap-1 overflow-x-auto border-b border-scheme-border px-4"
+          class="mb-6 flex gap-1.5 overflow-x-auto border-b border-[rgba(230,170,70,0.14)] pb-2"
         >
           @for (tab of tabs; track tab.route) {
             <a
               [routerLink]="tab.route"
-              routerLinkActive="text-scheme-accent border-b-2 border-scheme-accent"
-              class="whitespace-nowrap px-4 py-2 font-heading text-scheme-text-muted transition-colors hover:text-scheme-text"
+              routerLinkActive="!bg-[rgba(230,170,70,0.16)] !text-gold-soft"
+              class="whitespace-nowrap rounded-full px-4 py-2 font-mono text-sm text-white/62 transition-colors duration-200 hover:bg-[rgba(230,170,70,0.08)] hover:text-white"
             >
               {{ tab.label }}
             </a>
@@ -143,11 +156,11 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
       </div>
     </div>
 
-    <!-- FAB Ajout -->
+    <!-- FAB Ajout — gold glow (cercle ambré lumineux) -->
     <div class="fixed bottom-6 right-6 z-40">
       <button
         type="button"
-        class="flex h-14 w-14 items-center justify-center rounded-full bg-scheme-accent text-2xl font-bold text-scheme-on-accent shadow-lg transition-transform hover:scale-110 hover:bg-scheme-accent-hover"
+        class="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-2xl font-bold text-[#1a1206] shadow-[0_0_24px_rgba(230,170,70,0.5)] transition-transform duration-300 hover:scale-110 hover:bg-gold-soft motion-reduce:transition-none"
         (click)="addSheetOpen.set(true)"
         aria-label="Ajouter une consommation"
       >
