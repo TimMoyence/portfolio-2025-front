@@ -86,6 +86,14 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
   standalone: true,
   imports: [BottomSheetComponent, FormsModule],
   template: `
+    <!--
+      Bottom-sheet d'ajout App Sebastian — harmonisé au thème "dark lounge ambré"
+      Asili (le BottomSheetComponent partagé est déjà dark white/x ; cf. maquette
+      AsiliNewDesign : .ag-drinks/.ag-drink.on (gold), .ag-add (bouton gold)).
+      Restyle 100 % visuel : 7 types DRINK_DEFAULTS/DRINK_UI, selectDrinkType,
+      quantité/degré/volume, timeMode/resolveConsumedAt, quickAddRecent, submit,
+      les output (openChange/addDrink) et tous les data-testid conservés.
+    -->
     <app-bottom-sheet
       [open]="open()"
       [title]="'Ajouter une boisson'"
@@ -101,7 +109,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
                 <button
                   type="button"
                   data-testid="recent-chip"
-                  class="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/10"
+                  class="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white transition-colors hover:border-[rgba(230,170,70,0.45)] hover:bg-[rgba(230,170,70,0.12)]"
                   (click)="quickAddRecent(entry)"
                 >
                   <span>{{ drinkIcon(entry.drinkType) }}</span>
@@ -131,8 +139,8 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
                 class="flex flex-col items-center gap-1 rounded-xl border p-2 text-center transition-all"
                 [class]="
                   selectedDrinkType() === type
-                    ? 'border-white/30 bg-white/10 ' + drinkUi[type].colorClass
-                    : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10'
+                    ? 'border-gold bg-[rgba(230,170,70,0.14)] text-white'
+                    : 'border-white/10 bg-white/5 text-white/60 hover:border-[rgba(230,170,70,0.4)] hover:bg-white/10'
                 "
                 (click)="selectDrinkType(type)"
               >
@@ -258,8 +266,8 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
                 class="rounded-full border px-3 py-1.5 text-sm transition-all"
                 [class]="
                   timeMode() === opt.mode
-                    ? 'border-white/30 bg-white/10 text-white'
-                    : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10'
+                    ? 'border-gold bg-[rgba(230,170,70,0.14)] text-white'
+                    : 'border-white/10 bg-white/5 text-white/60 hover:border-[rgba(230,170,70,0.4)] hover:bg-white/10'
                 "
                 (click)="timeMode.set(opt.mode)"
               >
@@ -305,7 +313,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
         <button
           type="button"
           data-testid="submit-button"
-          class="w-full rounded-xl bg-scheme-accent px-4 py-3 font-semibold text-white transition-colors hover:bg-scheme-accent-active"
+          class="w-full rounded-xl bg-gold px-4 py-3 font-semibold text-[#1a1206] transition-transform hover:-translate-y-0.5"
           (click)="submit()"
         >
           Ajouter {{ quantity() }}
