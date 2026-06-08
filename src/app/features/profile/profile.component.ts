@@ -4,9 +4,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   inject,
   signal,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 import { Router, RouterModule } from "@angular/router";
@@ -37,6 +39,7 @@ export class ProfileComponent implements OnInit {
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   /* — Edition du profil — */
   isEditing = signal(false);
@@ -212,12 +215,20 @@ export class ProfileComponent implements OnInit {
   /* ========================= WEATHER ========================= */
 
   removeFavoriteCity(city: FavoriteCity): void {
+    const previous = this.favoriteCities;
     this.favoriteCities = this.favoriteCities.filter(
       (c) => c.latitude !== city.latitude || c.longitude !== city.longitude,
     );
     this.weatherService
       .updatePreferences({ favoriteCities: this.favoriteCities })
-      .subscribe();
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        // Rollback : restaure la liste precedente en cas d'echec backend
+        error: () => {
+          this.favoriteCities = previous;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   /** Libelle lisible du niveau meteo. */

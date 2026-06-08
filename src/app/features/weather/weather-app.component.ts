@@ -361,28 +361,39 @@ export class WeatherAppComponent implements OnInit {
     this.weatherService
       .updatePreferences({ favoriteCities: updated })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe({
+        // Rollback : restaure la liste precedente en cas d'echec backend
+        error: () => this.favoriteCities.set(current),
+      });
   }
 
   /** Retire une ville des favoris et synchronise avec le backend. */
   removeFavorite(city: FavoriteCity): void {
-    const updated = this.favoriteCities().filter(
+    const previous = this.favoriteCities();
+    const updated = previous.filter(
       (c) => c.latitude !== city.latitude || c.longitude !== city.longitude,
     );
     this.favoriteCities.set(updated);
     this.weatherService
       .updatePreferences({ favoriteCities: updated })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe({
+        // Rollback : restaure la liste precedente en cas d'echec backend
+        error: () => this.favoriteCities.set(previous),
+      });
   }
 
   /** Definit ou retire la ville favorite par defaut. */
   setDefaultCity(index: number | null): void {
+    const previous = this.defaultCityIndex();
     this.defaultCityIndex.set(index);
     this.weatherService
       .updatePreferences({ defaultCityIndex: index })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe({
+        // Rollback : restaure l'index precedent en cas d'echec backend
+        error: () => this.defaultCityIndex.set(previous),
+      });
   }
 
   /** Gere la selection d'un jour pour afficher le detail. */
@@ -393,11 +404,15 @@ export class WeatherAppComponent implements OnInit {
 
   /** Met a jour la granularite de la vue d'ensemble et synchronise avec le backend. */
   onGranularityChange(granularity: OverviewGranularity): void {
+    const previous = this.overviewGranularity();
     this.overviewGranularity.set(granularity);
     this.weatherService
       .updatePreferences({ overviewGranularity: granularity })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe({
+        // Rollback : restaure la granularite precedente en cas d'echec backend
+        error: () => this.overviewGranularity.set(previous),
+      });
   }
 
   /** Met a jour le nombre de jours de prevision et recharge les donnees. */

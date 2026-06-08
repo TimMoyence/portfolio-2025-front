@@ -255,6 +255,44 @@ describe("WeatherAppComponent", () => {
     expect(component.selectedCity()?.name).toBe("Toulouse");
   });
 
+  // --- Tests rollback updates optimistes ---
+
+  it("devrait restaurer favoriteCities si removeFavorite echoue cote backend", () => {
+    const paris = {
+      name: "Paris",
+      latitude: 48.85,
+      longitude: 2.35,
+      country: "France",
+    };
+    const lyon = {
+      name: "Lyon",
+      latitude: 45.75,
+      longitude: 4.85,
+      country: "France",
+    };
+    component.favoriteCities.set([paris, lyon]);
+
+    weatherPortStub.updatePreferences.and.returnValue(
+      throwError(() => new Error("backend KO")),
+    );
+
+    component.removeFavorite(lyon);
+
+    // Rollback : la liste d'origine est restauree
+    expect(component.favoriteCities()).toEqual([paris, lyon]);
+  });
+
+  it("devrait restaurer defaultCityIndex si setDefaultCity echoue cote backend", () => {
+    component.defaultCityIndex.set(2);
+    weatherPortStub.updatePreferences.and.returnValue(
+      throwError(() => new Error("backend KO")),
+    );
+
+    component.setDefaultCity(5);
+
+    expect(component.defaultCityIndex()).toBe(2);
+  });
+
   it("devrait ne pas appeler geoloc si ville par defaut existe", () => {
     geoServiceSpy.locate.calls.reset();
     weatherPortStub.getPreferences.and.returnValue(
