@@ -1,7 +1,10 @@
 import { Component } from "@angular/core";
 import { TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
+import {
+  buildInteractionsResponse,
+  createPresentationPortStub,
+} from "../../../../../testing/factories/presentation.factory";
 import { SlideReflectionComponent } from "./slide-reflection.component";
 
 @Component({
@@ -15,23 +18,21 @@ class HostComponent {}
 
 describe("SlideReflectionComponent", () => {
   beforeEach(() => {
-    const portStub = {
-      getInteractions: () =>
-        of({
-          slug: "ia-solopreneurs",
-          interactions: {
-            "reflect-1": {
-              scroll: [
-                {
-                  type: "reflection",
-                  question: "Quelle tâche aimerais-tu déléguer à une IA ?",
-                  placeholder: "Ex: relances email",
-                },
-              ],
-            },
+    const portStub = createPresentationPortStub(
+      buildInteractionsResponse({
+        interactions: {
+          "reflect-1": {
+            scroll: [
+              {
+                type: "reflection",
+                question: "Quelle tâche aimerais-tu déléguer à une IA ?",
+                placeholder: "Ex: relances email",
+              },
+            ],
           },
-        }),
-    };
+        },
+      }),
+    );
     TestBed.configureTestingModule({
       imports: [HostComponent],
       providers: [{ provide: PRESENTATION_PORT, useValue: portStub }],

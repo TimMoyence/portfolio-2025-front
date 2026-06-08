@@ -1,8 +1,8 @@
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
-import { of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../core/ports/presentation.port";
 import { SlideDeckService } from "../../../shared/slides";
+import { createPresentationPortStub } from "../../../../testing/factories/presentation.factory";
 import { IaSolopreneursComponent } from "./ia-solopreneurs.component";
 
 describe("IaSolopreneursComponent", () => {
@@ -14,7 +14,7 @@ describe("IaSolopreneursComponent", () => {
         provideRouter([]),
         {
           provide: PRESENTATION_PORT,
-          useValue: { getInteractions: () => of([]) },
+          useValue: createPresentationPortStub(),
         },
       ],
     });
