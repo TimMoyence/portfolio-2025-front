@@ -160,6 +160,19 @@ export const routes: Routes = [
       seoKey: "growth-audit",
     },
   },
+  // Hub L'Atelier — page vitrine indexable regroupant les deux experiences
+  // jouables (Meteo + Sebastian) avec demos simulees autonomes.
+  {
+    path: "atelier",
+    pathMatch: "full",
+    loadComponent: () =>
+      import("./features/atelier/atelier.component").then(
+        (m) => m.AtelierComponent,
+      ),
+    data: {
+      seoKey: "atelier",
+    },
+  },
   // Pages publiques de presentation des ateliers (indexables, marketing).
   // Affichent une marketing page invitant a s'inscrire / acceder a l'app.
   {

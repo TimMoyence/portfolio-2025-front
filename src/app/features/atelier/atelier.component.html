@@ -1,0 +1,474 @@
+<!--
+  Hub L'Atelier (/atelier) — composition de la maquette AsiliNewDesign/atelier.html :
+  hero .page-hero → deux blocs .lab-big (teasers Météo / Sebastian) → bande
+  immersive .atelier de deux démos jouables SIMULÉES (météo 4 villes + panneau
+  Sebastian) → bande CTA (app-asili-cta-band). Le fond constellation est global
+  (app-asili-background) : aucune section ne recrée de canvas. Les démos sont
+  autonomes — aucune dépendance aux vraies apps Météo/Sebastian (Lots 4/5).
+  Wording verbatim maquette, en $localize (@@atelier*).
+-->
+
+<!-- ===================== HERO ===================== -->
+<section class="page-hero">
+  <div class="wrap">
+    <span class="kicker" appReveal>{{ heroKicker }}</span>
+    <h1 appReveal [appRevealDelay]="1" i18n="@@atelierHeroTitle">
+      Un laboratoire vivant<br />où vous pouvez
+      <span class="accent">jouer</span>.
+    </h1>
+    <p class="lead" appReveal [appRevealDelay]="2">{{ heroLead }}</p>
+  </div>
+</section>
+
+<!-- ===================== DEUX APPS EN VEDETTE ===================== -->
+<section class="atelier-feature-section">
+  <div class="wrap">
+    <div class="lab-feature">
+      <!-- Météo -->
+      <article class="lab-big meteo-feat" appReveal>
+        <div>
+          <span class="lab-ic" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path
+                d="M12 2v3M12 19v3M2 12h3M19 12h3M5.5 5.5l2 2M16.5 16.5l2 2M18.5 5.5l-2 2M7.5 16.5l-2 2"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+          <h2 i18n="@@atelierMeteoFeatTitle">Météo</h2>
+          <p i18n="@@atelierMeteoFeatDesc">
+            Données météo réalistes rendues vivantes : boussole de vent, arc
+            solaire, indice UV, qualité de l'air. Parallaxe et mode immersif
+            ciel.
+          </p>
+        </div>
+        <div>
+          <div class="lab-stats">
+            <div>
+              <div class="n">6</div>
+              <div class="l" i18n="@@atelierMeteoStat1">
+                indicateurs<br />temps réel
+              </div>
+            </div>
+            <div>
+              <div class="n">4</div>
+              <div class="l" i18n="@@atelierMeteoStat2">
+                villes<br />jouables
+              </div>
+            </div>
+          </div>
+          <a class="link-arrow" routerLink="/atelier/meteo">
+            <span i18n="@@atelierMeteoFeatLink">Découvrir Météo</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Sebastian -->
+      <article class="lab-big seb-feat" appReveal [appRevealDelay]="1">
+        <div>
+          <span class="lab-ic" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <h2 i18n="@@atelierSebFeatTitle">Sebastian</h2>
+          <p i18n="@@atelierSebFeatDesc">
+            Suivi de consommation, dans une ambiance dark lounge ambrée : jauge
+            de santé animée, calcul d'alcoolémie, heatmap d'activité, et un bot
+            Telegram pour logger en 2 secondes.
+          </p>
+        </div>
+        <div>
+          <div class="lab-stats">
+            <div>
+              <div class="n">∞</div>
+              <div class="l" i18n="@@atelierSebStat1">verres<br />suivis</div>
+            </div>
+            <div>
+              <div class="n">2s</div>
+              <div class="l" i18n="@@atelierSebStat2">
+                pour logger<br />via Telegram
+              </div>
+            </div>
+          </div>
+          <a class="link-arrow" routerLink="/atelier/sebastian">
+            <span i18n="@@atelierSebFeatLink">Découvrir Sebastian</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BANDE JOUABLE IMMERSIVE ===================== -->
+<section class="atelier section-pad">
+  <div class="wrap">
+    <div class="atelier-head">
+      <div appReveal>
+        <span class="kicker" i18n="@@atelierDemoKicker">Jouez maintenant</span>
+        <h2 class="h-xl atelier-head__title" i18n="@@atelierDemoTitle">
+          Touchez. Ça <em>réagit</em>.
+        </h2>
+      </div>
+      <p class="lead" appReveal [appRevealDelay]="1" i18n="@@atelierDemoLead">
+        Les deux démos sont réelles et manipulables directement. Aucune
+        inscription : c'est la preuve par l'usage.
+      </p>
+    </div>
+
+    <div class="atelier-grid">
+      <!-- MÉTÉO DEMO (simulée, autonome) -->
+      <div class="glass meteo" appReveal>
+        <div class="meteo-top">
+          <div>
+            <div class="meteo-loc">
+              <span class="pin" aria-hidden="true"></span>
+              <span>{{ city().name }}</span>
+            </div>
+            <div class="meteo-cond meteo-cond--sub">{{ city().cond }}</div>
+          </div>
+          <span class="meteo-cond" i18n="@@atelierMeteoLive"
+            >EN DIRECT · 14:20</span
+          >
+        </div>
+        <div class="meteo-temp">{{ city().temp }}°</div>
+        <div class="meteo-cond meteo-cond--feels">
+          <ng-container i18n="@@atelierMeteoFeels">Ressenti</ng-container>
+          {{ city().feels }}°
+        </div>
+        <div class="meteo-dials">
+          <div class="dial">
+            <div class="dl" i18n="@@atelierMeteoHumidity">Humidité</div>
+            <div class="dv">{{ city().hum }}%</div>
+          </div>
+          <div class="dial">
+            <div class="dl" i18n="@@atelierMeteoUv">Indice UV</div>
+            <div class="dv">{{ city().uv }}<small> / 11</small></div>
+          </div>
+          <div class="dial">
+            <div class="dl" i18n="@@atelierMeteoAir">Qualité air</div>
+            <div class="dv">{{ city().aqi }}</div>
+            <div class="dl dial__aqi-label">{{ city().aqiLabel }}</div>
+          </div>
+        </div>
+
+        <div class="meteo-instruments">
+          <div>
+            <div class="compass">
+              <svg
+                viewBox="0 0 180 180"
+                aria-label="Boussole de vent"
+                i18n-aria-label="@@atelierMeteoCompassLabel"
+              >
+                <circle
+                  cx="90"
+                  cy="90"
+                  r="74"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.14)"
+                  stroke-width="1"
+                />
+                <circle
+                  cx="90"
+                  cy="90"
+                  r="60"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.07)"
+                  stroke-width="1"
+                />
+                <text
+                  x="90"
+                  y="22"
+                  fill="rgba(255,255,255,0.6)"
+                  font-family="Geist Mono, monospace"
+                  font-size="11"
+                  text-anchor="middle"
+                >
+                  N
+                </text>
+                <text
+                  x="164"
+                  y="94"
+                  fill="rgba(255,255,255,0.45)"
+                  font-family="Geist Mono, monospace"
+                  font-size="11"
+                  text-anchor="middle"
+                >
+                  E
+                </text>
+                <text
+                  x="90"
+                  y="166"
+                  fill="rgba(255,255,255,0.45)"
+                  font-family="Geist Mono, monospace"
+                  font-size="11"
+                  text-anchor="middle"
+                >
+                  S
+                </text>
+                <text
+                  x="18"
+                  y="94"
+                  fill="rgba(255,255,255,0.45)"
+                  font-family="Geist Mono, monospace"
+                  font-size="11"
+                  text-anchor="middle"
+                >
+                  O
+                </text>
+                <g class="needle" [attr.transform]="needleTransform()">
+                  <path d="M90 42 L99 92 L90 84 L81 92 Z" fill="#4fb3a2" />
+                  <path
+                    d="M90 138 L99 90 L90 98 L81 90 Z"
+                    fill="rgba(255,255,255,0.28)"
+                  />
+                </g>
+                <circle cx="90" cy="90" r="5" fill="#fff" />
+              </svg>
+            </div>
+            <div class="instr-cap">
+              <ng-container i18n="@@atelierMeteoWindCap">Vent</ng-container>
+              {{ city().wind }} km/h · {{ city().windTxt }}
+            </div>
+          </div>
+          <div>
+            <div class="solar">
+              <svg
+                viewBox="0 0 190 116"
+                aria-label="Arc solaire"
+                i18n-aria-label="@@atelierMeteoSolarLabel"
+              >
+                <path
+                  d="M17 92 A78 78 0 0 1 173 92"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.16)"
+                  stroke-width="1.5"
+                  stroke-dasharray="3 5"
+                />
+                <line
+                  x1="17"
+                  y1="92"
+                  x2="173"
+                  y2="92"
+                  stroke="rgba(255,255,255,0.12)"
+                  stroke-width="1"
+                />
+                <line
+                  class="sun-ray"
+                  x1="95"
+                  y1="92"
+                  [attr.x2]="sunDot().x"
+                  [attr.y2]="sunDot().y"
+                  stroke="rgba(91,140,255,0.4)"
+                  stroke-width="1.5"
+                />
+                <circle
+                  class="sun-dot-glow"
+                  [attr.cx]="sunDot().x"
+                  [attr.cy]="sunDot().y"
+                  r="9"
+                  fill="none"
+                  stroke="rgba(91,140,255,0.4)"
+                  stroke-width="6"
+                />
+                <circle
+                  class="sun-dot"
+                  [attr.cx]="sunDot().x"
+                  [attr.cy]="sunDot().y"
+                  r="9"
+                  fill="#5b8cff"
+                />
+                <text
+                  x="14"
+                  y="108"
+                  fill="rgba(255,255,255,0.4)"
+                  font-family="Geist Mono, monospace"
+                  font-size="9"
+                >
+                  {{ city().sunrise }}
+                </text>
+                <text
+                  x="150"
+                  y="108"
+                  fill="rgba(255,255,255,0.4)"
+                  font-family="Geist Mono, monospace"
+                  font-size="9"
+                >
+                  {{ city().sunset }}
+                </text>
+              </svg>
+            </div>
+            <div class="instr-cap" i18n="@@atelierMeteoSolarCap">
+              Arc solaire
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="meteo-cities"
+          role="group"
+          aria-label="Choisir une ville"
+          i18n-aria-label="@@atelierMeteoCitiesLabel"
+        >
+          @for (c of cities; track c.id) {
+            <button
+              type="button"
+              class="city-btn"
+              [class.on]="c.id === activeCityId()"
+              [attr.aria-pressed]="c.id === activeCityId()"
+              (click)="selectCity(c.id)"
+            >
+              {{ c.name }}
+            </button>
+          }
+        </div>
+        <p class="meteo-hint">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 11V6a3 3 0 0 1 6 0v5M5 11h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+          </svg>
+          <ng-container i18n="@@atelierMeteoHint"
+            >Changez de ville — tout réagit, sans login.</ng-container
+          >
+        </p>
+      </div>
+
+      <!-- SEBASTIAN DEMO (simulée, autonome) -->
+      <div class="glass seb-panel seb-c" appReveal [appRevealDelay]="1">
+        <div class="seb-head">
+          <div>
+            <div class="seb-loc">Sebastian</div>
+            <div class="meteo-cond seb-head__sub" i18n="@@atelierSebWeek">
+              Semaine 23 · en forme
+            </div>
+          </div>
+          <span class="meteo-cond" i18n="@@atelierSebStreak"
+            >SÉRIE · 12 jours</span
+          >
+        </div>
+        <div class="seb-row">
+          <div class="seb-gauge">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <circle
+                cx="50"
+                cy="50"
+                r="40"
+                fill="none"
+                stroke="rgba(255,255,255,0.1)"
+                stroke-width="9"
+              />
+              <circle
+                class="ring-fg"
+                cx="50"
+                cy="50"
+                r="40"
+                fill="none"
+                stroke="#e6aa46"
+                stroke-width="9"
+                stroke-linecap="round"
+                transform="rotate(-90 50 50)"
+                stroke-dasharray="251"
+                [attr.stroke-dashoffset]="gaugeOffset()"
+              />
+            </svg>
+            <div class="g-label">
+              <div class="gv">{{ gaugeValue() }}</div>
+              <div class="gl" i18n="@@atelierSebGaugeLabel">score santé</div>
+            </div>
+          </div>
+          <div class="seb-stats">
+            <div class="seb-stat">
+              <div class="sv">5/6</div>
+              <div class="sl" i18n="@@atelierSebStatHabits">
+                habitudes du jour
+              </div>
+            </div>
+            <div class="seb-stat">
+              <div class="sv">12j</div>
+              <div class="sl" i18n="@@atelierSebStatStreak">série en cours</div>
+            </div>
+            <div class="seb-stat">
+              <div class="sv">+8%</div>
+              <div class="sl" i18n="@@atelierSebStatVs">vs sem. dernière</div>
+            </div>
+            <div class="seb-stat">
+              <div class="sv">0.8</div>
+              <div class="sl" i18n="@@atelierSebStatDrinks">verres / jour</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="heatmap" aria-hidden="true">
+            @for (lv of heatmap(); track $index) {
+              <i
+                [class.l1]="lv === 1"
+                [class.l2]="lv === 2"
+                [class.l3]="lv === 3"
+              ></i>
+            }
+          </div>
+          <div class="heatmap-cap" i18n="@@atelierSebHeatmapCap">
+            Activité · 4 dernières semaines
+          </div>
+        </div>
+        <p class="meteo-hint seb-hint">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 11V6a3 3 0 0 1 6 0v5M5 11h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+          </svg>
+          <ng-container i18n="@@atelierSebHint"
+            >Survolez la heatmap — chaque case est un jour.</ng-container
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<app-asili-cta-band [title]="ctaTitle" [kicker]="ctaKicker">
+  <ng-container cta>
+    <a class="btn btn-teal" routerLink="/offer">
+      <span i18n="@@atelierCtaPrimary">Voir les services</span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="btn btn-ghost atelier-cta-ghost" routerLink="/formations">
+      <span i18n="@@atelierCtaSecondary">Les formations</span>
+    </a>
+  </ng-container>
+</app-asili-cta-band>

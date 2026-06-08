@@ -117,33 +117,52 @@
       (mouseenter)="openAtelierDropdown()"
       (mouseleave)="closeAtelierDropdown()"
     >
-      <button
-        type="button"
-        (click)="toggleAtelierDropdown()"
-        [attr.aria-expanded]="atelierDropdown.isOpen"
-        aria-haspopup="true"
-        class="asili-nav__link asili-nav__trigger"
+      <!--
+        Le label « L'Atelier » navigue vers le hub /atelier (lien réel) ; le
+        chevron reste une bascule du dropdown. Cela rend la section accessible
+        au clic sans casser l'ouverture du menu (survol + chevron).
+      -->
+      <span
+        class="asili-nav__trigger asili-nav__trigger--linked"
         [class.active]="atelierDropdown.isOpen"
       >
-        <span>{{ atelierDropdown.label }}</span>
-        <svg
-          class="asili-nav__chevron"
-          [class.open]="atelierDropdown.isOpen"
-          width="11"
-          height="11"
-          viewBox="0 0 12 12"
-          fill="none"
-          aria-hidden="true"
+        <a
+          [routerLink]="atelierDropdown.href"
+          routerLinkActive="active"
+          #rlaAtelier="routerLinkActive"
+          [attr.aria-current]="rlaAtelier.isActive ? 'page' : null"
+          class="asili-nav__link asili-nav__trigger-label"
+          >{{ atelierDropdown.label }}</a
         >
-          <path
-            d="M3 4.5 6 7.5 9 4.5"
-            stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
+        <button
+          type="button"
+          (click)="toggleAtelierDropdown()"
+          [attr.aria-expanded]="atelierDropdown.isOpen"
+          aria-haspopup="true"
+          class="asili-nav__chevron-btn"
+          aria-label="Ouvrir le menu L'Atelier"
+          i18n-aria-label="
+            navbar.atelier.toggle|Atelier dropdown toggle@@navAtelierToggle"
+        >
+          <svg
+            class="asili-nav__chevron"
+            [class.open]="atelierDropdown.isOpen"
+            width="11"
+            height="11"
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 4.5 6 7.5 9 4.5"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </span>
       <div
         class="asili-dropdown"
         [class.open]="atelierDropdown.isOpen"
@@ -206,6 +225,15 @@
       </button>
       @if (atelierDropdown.isOpen) {
         <div class="asili-drawer__sublist">
+          @if (atelierDropdown.href) {
+            <a
+              [routerLink]="atelierDropdown.href"
+              (click)="closeMobileMenu(); closeAtelierDropdown()"
+              class="asili-drawer__sublink asili-drawer__sublink--hub"
+            >
+              {{ atelierDropdown.label }}
+            </a>
+          }
           @for (item of atelierDropdown.items; track item.href) {
             <a
               [routerLink]="item.href"

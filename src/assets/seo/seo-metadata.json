@@ -1132,6 +1132,80 @@
       }
     },
     {
+      "id": "atelier",
+      "path": "/atelier",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.7,
+      "lastmod": "2026-06-08",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "L'Atelier",
+          "path": "/atelier"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "L'Atelier — Météo & Sebastian, démos jouables",
+          "description": "Le bac à sable d'Asili Design : un laboratoire vivant où vous manipulez Météo et Sebastian directement, sans inscription. Des preuves jouables, pas des produits à vendre.",
+          "ogTitle": "L'Atelier — le bac à sable d'Asili Design",
+          "ogDescription": "Deux expériences jouables — Météo et Sebastian — à manipuler en direct, sans login. La preuve par l'usage.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "L'Atelier — Asili Design",
+            "description": "Laboratoire d'expériences jouables : Météo et Sebastian, manipulables sans inscription.",
+            "url": "https://asilidesign.fr/fr/atelier",
+            "hasPart": [
+              {
+                "@type": "SoftwareApplication",
+                "name": "Météo — L'Atelier",
+                "applicationCategory": "WeatherApplication",
+                "url": "https://asilidesign.fr/fr/atelier/meteo"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Sebastian — L'Atelier",
+                "applicationCategory": "LifestyleApplication",
+                "url": "https://asilidesign.fr/fr/atelier/sebastian"
+              }
+            ]
+          }
+        },
+        "en": {
+          "title": "The Atelier — Weather & Sebastian, playable demos",
+          "description": "Asili Design's sandbox: a living lab where you handle Weather and Sebastian directly, no sign-up. Playable proof, not products to sell.",
+          "ogTitle": "The Atelier — Asili Design's sandbox",
+          "ogDescription": "Two playable experiences — Weather and Sebastian — to handle live, no login. Proof through use.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "The Atelier — Asili Design",
+            "description": "A lab of playable experiences: Weather and Sebastian, usable without sign-up.",
+            "url": "https://asilidesign.fr/en/atelier",
+            "hasPart": [
+              {
+                "@type": "SoftwareApplication",
+                "name": "Weather — The Atelier",
+                "applicationCategory": "WeatherApplication",
+                "url": "https://asilidesign.fr/en/atelier/meteo"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Sebastian — The Atelier",
+                "applicationCategory": "LifestyleApplication",
+                "url": "https://asilidesign.fr/en/atelier/sebastian"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
       "id": "weather",
       "path": "/atelier/meteo",
       "index": true,

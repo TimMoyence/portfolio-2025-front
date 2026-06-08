@@ -41,6 +41,10 @@ export const serverRoutes: ServerRoute[] = [
   // rendre l'intention claire au build.
   { path: "projets", renderMode: RenderMode.Prerender },
 
+  // Hub L'Atelier — landing SEO statique (démos simulées, aucun guard).
+  // Déjà couverte par `**` ; entrée explicite pour rendre l'intention claire.
+  { path: "atelier", renderMode: RenderMode.Prerender },
+
   // Routes publiques (incluant les présentations atelier) — prérendues.
   // Les formations sont enregistrees en routes STATIQUES par slug dans
   // `app.routes.ts` (composants slide-driven dedies), donc capturees ici.

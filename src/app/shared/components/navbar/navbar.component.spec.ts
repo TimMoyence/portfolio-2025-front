@@ -99,6 +99,28 @@ describe("NavbarComponent", () => {
       expect(projetsLink?.href).toBe("/projets");
     });
 
+    it("devrait exposer un lien hub /atelier sur le dropdown L'Atelier", () => {
+      fixture.detectChanges();
+      expect(component.atelierDropdown.href).toBe("/atelier");
+
+      const nav = fixture.nativeElement as HTMLElement;
+      // Le label « L'Atelier » est un lien réel vers le hub (desktop).
+      const hubLink = nav.querySelector(
+        'a.asili-nav__trigger-label[href="/atelier"]',
+      );
+      expect(hubLink).toBeTruthy();
+      expect(hubLink?.textContent).toContain("L'Atelier");
+    });
+
+    it("devrait conserver la bascule du dropdown L'Atelier (chevron)", () => {
+      fixture.detectChanges();
+      expect(component.atelierDropdown.isOpen).toBeFalse();
+      component.toggleAtelierDropdown();
+      expect(component.atelierDropdown.isOpen).toBeTrue();
+      component.closeAtelierDropdown();
+      expect(component.atelierDropdown.isOpen).toBeFalse();
+    });
+
     it("devrait afficher la pill de langue FR/EN", () => {
       fixture.detectChanges();
       const nav = fixture.nativeElement as HTMLElement;

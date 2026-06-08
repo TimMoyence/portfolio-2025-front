@@ -48,6 +48,7 @@ export class NavbarComponent {
   readonly atelierDropdown: DropdownSection = {
     label: $localize`:navbar.atelier.label|Atelier dropdown label@@navAtelierLabel:L'Atelier`,
     subtitle: $localize`:navbar.atelier.subtitle|Atelier drawer subtitle@@navAtelierSubtitle:Météo · Sebastian`,
+    href: "/atelier",
     isOpen: false,
     items: [
       {
