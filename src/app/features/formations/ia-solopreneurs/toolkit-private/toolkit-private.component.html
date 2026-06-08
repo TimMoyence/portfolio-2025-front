@@ -140,11 +140,7 @@
                         class="tkp-copy"
                         (click)="copyToClipboard(prompt.prompt)"
                       >
-                        {{
-                          copiedText() === prompt.prompt
-                            ? copiedLabel
-                            : copyLabel
-                        }}
+                        {{ copyButtonLabel(prompt.prompt) }}
                       </button>
                     </div>
                   </article>
@@ -234,11 +230,7 @@
                     class="tkp-copy"
                     (click)="copyToClipboard(toolkit.generatedPrompt!)"
                   >
-                    {{
-                      copiedText() === toolkit.generatedPrompt
-                        ? copiedLabel
-                        : copyLabel
-                    }}
+                    {{ copyButtonLabel(toolkit.generatedPrompt) }}
                   </button>
                 </div>
                 <p

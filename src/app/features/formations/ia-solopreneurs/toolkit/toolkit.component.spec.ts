@@ -20,8 +20,8 @@ describe("ToolkitComponent", () => {
       imports: [ToolkitComponent],
       providers: [
         { provide: LEAD_MAGNET_PORT, useValue: createLeadMagnetPortStub() },
-        // La page utilise RouterLink vers /fr/privacy — fournir un routeur
-        // vide pour satisfaire l'injection ActivatedRoute.
+        // La page utilise RouterLink vers /privacy (sans prefixe de locale) —
+        // fournir un routeur vide pour satisfaire l'injection ActivatedRoute.
         provideRouter([]),
       ],
     }).compileComponents();
@@ -63,5 +63,11 @@ describe("ToolkitComponent", () => {
   it("devrait afficher le nom de la marque", () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain("Asili Design");
+  });
+
+  it("devrait pointer le lien privacy vers /privacy (sans prefixe de locale)", () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const link = compiled.querySelector(".tk-brand a");
+    expect(link?.getAttribute("href")).toBe("/privacy");
   });
 });
