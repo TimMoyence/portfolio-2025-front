@@ -37,7 +37,8 @@
         </label>
       </div>
 
-      <!-- Mesure d'audience → preferences.analytics -->
+      <!-- Mesure d'audience : non collectée (l'app est en lancement) → état réel
+           reflété, toggle désactivé pour ne rien laisser croire de fictif. -->
       <div class="ck-item">
         <div class="ck-txt">
           <h3>{{ categories.analytics.title }}</h3>
@@ -47,7 +48,8 @@
         <label class="switch">
           <input
             type="checkbox"
-            [(ngModel)]="preferences.analytics"
+            [checked]="preferences.analytics"
+            disabled
             [attr.aria-label]="toggleAria.analytics"
           />
           <span class="track"></span>
@@ -71,7 +73,8 @@
         </label>
       </div>
 
-      <!-- Marketing → preferences.marketing -->
+      <!-- Marketing : désactivé par défaut, non utilisé → état réel reflété,
+           toggle désactivé (cohérent avec le service qui le force à false). -->
       <div class="ck-item">
         <div class="ck-txt">
           <h3>{{ categories.marketing.title }}</h3>
@@ -81,7 +84,8 @@
         <label class="switch">
           <input
             type="checkbox"
-            [(ngModel)]="preferences.marketing"
+            [checked]="preferences.marketing"
+            disabled
             [attr.aria-label]="toggleAria.marketing"
           />
           <span class="track"></span>

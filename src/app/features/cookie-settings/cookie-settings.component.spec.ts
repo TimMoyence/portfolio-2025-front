@@ -164,7 +164,28 @@ describe("CookieSettingsComponent", () => {
     );
   });
 
-  it("devrait tout accepter et enregistrer via saveConsent (action accept_all)", () => {
+  it("devrait rendre Mesure d'audience et Marketing desactives (non collectes)", () => {
+    const fixture = TestBed.createComponent(CookieSettingsComponent);
+    fixture.detectChanges();
+
+    const toggles = fixture.nativeElement.querySelectorAll(
+      ".ck-item input[type='checkbox']",
+    ) as NodeListOf<HTMLInputElement>;
+    // Ordre des catégories : essentiels, analytics, préférences, marketing.
+    const [, analytics, preferences, marketing] = Array.from(toggles);
+    expect(analytics.disabled)
+      .withContext("Mesure d'audience non collectée → toggle désactivé")
+      .toBeTrue();
+    expect(analytics.checked).toBeFalse();
+    expect(marketing.disabled)
+      .withContext("Marketing non utilisé → toggle désactivé")
+      .toBeTrue();
+    expect(marketing.checked).toBeFalse();
+    // La seule catégorie optionnelle réellement pilotable reste activable.
+    expect(preferences.disabled).toBeFalse();
+  });
+
+  it("devrait tout accepter (catégories réellement activables) via saveConsent (action accept_all)", () => {
     const fixture = TestBed.createComponent(CookieSettingsComponent);
     fixture.detectChanges();
 
@@ -177,18 +198,19 @@ describe("CookieSettingsComponent", () => {
     expect(acceptBtn).toBeTruthy();
     acceptBtn!.click();
 
+    // analytics/marketing restent false : non collectés (et forcés par le service).
     expect(fixture.componentInstance.preferences).toEqual({
       essential: true,
       preferences: true,
-      analytics: true,
-      marketing: true,
+      analytics: false,
+      marketing: false,
     });
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
       {
         essential: true,
         preferences: true,
-        analytics: true,
-        marketing: true,
+        analytics: false,
+        marketing: false,
       },
       "settings",
       "accept_all",

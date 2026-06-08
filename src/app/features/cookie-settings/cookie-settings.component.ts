@@ -47,8 +47,8 @@ export class CookieSettingsComponent {
     },
     analytics: {
       title: $localize`:cookie.settings.analytics.title@@cookieSettingsPreferencesAnalyticsTitle:Mesure d'audience`,
-      description: $localize`:cookie.settings.analytics.desc@@cookieSettingsPreferencesAnalyticsDesc:Des statistiques anonymisées pour comprendre ce qui est utile et améliorer le site. Aucune donnée personnelle identifiable.`,
-      tag: $localize`:cookie.settings.analytics.tag@@cookieSettingsAnalyticsTag:Anonymisé`,
+      description: $localize`:cookie.settings.analytics.desc@@cookieSettingsPreferencesAnalyticsDesc:Permettraient des statistiques anonymisées pour améliorer le site. L'app est en lancement : on n'en collecte aucune pour l'instant.`,
+      tag: $localize`:cookie.settings.analytics.tag@@cookieSettingsAnalyticsTag:Non collecté`,
     },
     preferences: {
       title: $localize`:cookie.settings.preferences.title@@cookieSettingsPreferencesOptionalTitle:Préférences`,
@@ -99,16 +99,19 @@ export class CookieSettingsComponent {
   }
 
   /**
-   * Accepte toutes les catégories optionnelles puis enregistre via le service.
-   * Réutilise le contrat `saveConsent(..., "accept_all")` — pas de logique
-   * de persistance nouvelle, seulement un état coché avant l'appel.
+   * Accepte les catégories réellement activables puis enregistre via le service.
+   * Réutilise le contrat `saveConsent(..., "accept_all")` — pas de logique de
+   * persistance nouvelle, seulement un état coché avant l'appel. `analytics` et
+   * `marketing` restent à `false` : ils ne sont pas collectés (l'app est en
+   * lancement) et le service les force de toute façon à `false` — on évite de
+   * laisser croire à l'utilisateur qu'ils ont été activés.
    */
   acceptAll(): void {
     this.preferences = {
       essential: true,
       preferences: true,
-      analytics: true,
-      marketing: true,
+      analytics: false,
+      marketing: false,
     };
     this.persist(
       this.consentService.saveConsent(
