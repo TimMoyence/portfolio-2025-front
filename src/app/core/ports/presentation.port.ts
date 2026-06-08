@@ -1,6 +1,6 @@
 import { InjectionToken } from "@angular/core";
 import type { Observable } from "rxjs";
-import type { SlideInteractions } from "../../shared/models/slide.model";
+import type { SlideInteractions } from "../models/presentation-interactions.model";
 
 /** Réponse de l'API interactions de présentation. */
 export interface PresentationInteractionsResponse {
