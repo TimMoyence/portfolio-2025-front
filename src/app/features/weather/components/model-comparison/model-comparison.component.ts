@@ -17,11 +17,19 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
   standalone: true,
   imports: [DecimalPipe],
   template: `
+    <!--
+      Carte Expert comparaison de modèles — conteneur glass Asili.
+      Re-skin AsiliNewDesign/asili-app.css : .gp/.wx-card (bg-white/5,
+      border-teal/15, rayon --r-lg 20px, backdrop-blur-xl) + en-tête kicker
+      .gp-h (font-mono uppercase tracking .14em). Restyle visuel uniquement —
+      le tableau, columns()/tempDivergent() et la couleur sémantique orange de
+      divergence sont inchangés.
+    -->
     <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+      class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
     >
       <h3
-        class="mb-3 text-sm font-medium text-white/70"
+        class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
         i18n="weather.modelComparison.title|@@weatherModelComparisonTitle"
       >
         Comparaison des modèles
@@ -31,9 +39,9 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-white">
             <thead>
-              <tr class="border-b border-white/10">
+              <tr class="border-b border-teal/15">
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-white/50"
+                  class="px-3 py-2 text-left font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-white/45"
                   i18n="
                     weather.modelComparison.metric|@@weatherModelComparisonMetric"
                 >
@@ -41,7 +49,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
                 </th>
                 @for (col of columns(); track col.model) {
                   <th
-                    class="px-3 py-2 text-center text-xs font-medium text-white/50"
+                    class="px-3 py-2 text-center font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-teal/80"
                   >
                     {{ col.model }}
                   </th>
@@ -52,7 +60,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
               <!-- Temperature moyenne 24h -->
               <tr class="border-b border-white/5">
                 <td
-                  class="px-3 py-2 text-white/70"
+                  class="px-3 py-2 text-white/65"
                   i18n="
                     weather.modelComparison.avgTemp|@@weatherModelComparisonAvgTemp"
                 >
@@ -71,7 +79,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
               <!-- Precipitations totales 24h -->
               <tr>
                 <td
-                  class="px-3 py-2 text-white/70"
+                  class="px-3 py-2 text-white/65"
                   i18n="
                     weather.modelComparison.totalPrecip|@@weatherModelComparisonTotalPrecip"
                 >
