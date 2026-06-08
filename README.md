@@ -105,7 +105,7 @@ Apres `npm ci`, Husky installe automatiquement trois hooks :
 
 - `pre-commit` : lance `lint-staged` pour formatter et lint uniquement les fichiers indexes ;
 - `commit-msg` : impose un message au format Conventional Commit ;
-- `pre-push` : lance `npm run ci:check` pour bloquer un push sale.
+- `pre-push` : lance `npm run pre-push:check` (lint + format:check + typecheck + test:ci, sans build) pour bloquer un push sale.
 
 Ces hooks ne remplacent pas la CI, ils evitent surtout d'introduire une regression evidente dans l'historique local.
 
