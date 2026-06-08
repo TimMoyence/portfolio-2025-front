@@ -28,6 +28,32 @@ class HostNativeComponent {}
 })
 class HostIframeComponent {}
 
+@Component({
+  standalone: true,
+  imports: [SlideVideoComponent],
+  template: `
+    <app-slide-video
+      src="https://www.youtube-nocookie.com/embed/xyz789"
+      type="iframe"
+      caption="YouTube no-cookie"
+    />
+  `,
+})
+class HostNocookieComponent {}
+
+@Component({
+  standalone: true,
+  imports: [SlideVideoComponent],
+  template: `
+    <app-slide-video
+      src="https://evil.example/x"
+      type="iframe"
+      caption="Hôte non autorisé"
+    />
+  `,
+})
+class HostEvilComponent {}
+
 describe("SlideVideoComponent", () => {
   it("rend une balise <video> en mode natif", () => {
     const fixture = TestBed.createComponent(HostNativeComponent);
@@ -43,6 +69,25 @@ describe("SlideVideoComponent", () => {
     const iframe = fixture.nativeElement.querySelector("iframe");
     expect(iframe).toBeTruthy();
     expect(iframe.getAttribute("src")).toContain("youtube.com");
+  });
+
+  it("rend la source pour un hôte autorisé (youtube-nocookie)", () => {
+    const fixture = TestBed.createComponent(HostNocookieComponent);
+    fixture.detectChanges();
+    const iframe = fixture.nativeElement.querySelector("iframe");
+    expect(iframe).toBeTruthy();
+    expect(iframe.getAttribute("src")).toContain("youtube-nocookie.com");
+  });
+
+  it("neutralise la source pour un hôte non autorisé (defense en profondeur)", () => {
+    const fixture = TestBed.createComponent(HostEvilComponent);
+    fixture.detectChanges();
+    const iframe = fixture.nativeElement.querySelector("iframe");
+    expect(iframe).toBeTruthy();
+    // L'hôte hors allowlist produit une source vide/neutre — jamais l'URL brute.
+    const src = iframe.getAttribute("src") ?? "";
+    expect(src).not.toContain("evil.example");
+    expect(src).toBe("");
   });
 
   it("affiche la caption sous la vidéo", () => {

@@ -73,7 +73,43 @@ describe("PresentationEngineComponent", () => {
     expect(map.get("deck-10")).toBe(8);
   });
 
-  it("devrait logger un warning si les slides d un acte ne sont pas contigues", () => {
+  it("devrait logger un warning (via effect) si les slides d un acte ne sont pas contigues", () => {
+    const warnSpy = spyOn(console, "warn");
+    const actA = { id: "act-a", label: "A" };
+    const actB = { id: "act-b", label: "B" };
+    fixture.componentRef.setInput("slides", [
+      buildPresentationSlide({ id: "s1", act: actA, fragmentCount: 0 }),
+      buildPresentationSlide({ id: "s2", act: actB, fragmentCount: 0 }),
+      buildPresentationSlide({ id: "s3", act: actA, fragmentCount: 0 }),
+    ]);
+    // L'effect de validation s'execute pendant la detection de changement.
+    fixture.detectChanges();
+
+    expect(warnSpy).toHaveBeenCalled();
+    const message = warnSpy.calls.mostRecent().args[0] as string;
+    expect(message).toContain("act-a");
+  });
+
+  it("acts() ne doit PAS logger de warning (computed pur, meme sur acces multiples)", () => {
+    const warnSpy = spyOn(console, "warn");
+    const actA = { id: "act-a", label: "A" };
+    const actB = { id: "act-b", label: "B" };
+    fixture.componentRef.setInput("slides", [
+      buildPresentationSlide({ id: "s1", act: actA, fragmentCount: 0 }),
+      buildPresentationSlide({ id: "s2", act: actB, fragmentCount: 0 }),
+      buildPresentationSlide({ id: "s3", act: actA, fragmentCount: 0 }),
+    ]);
+
+    // Acces multiples au computed sans declencher la detection de changement :
+    // aucune dérivation impure (pas de console.warn).
+    component.acts();
+    component.acts();
+    component.acts();
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it("l effect ne logge qu une seule fois pour un meme etat non contigu", () => {
     const warnSpy = spyOn(console, "warn");
     const actA = { id: "act-a", label: "A" };
     const actB = { id: "act-b", label: "B" };
@@ -83,13 +119,11 @@ describe("PresentationEngineComponent", () => {
       buildPresentationSlide({ id: "s3", act: actA, fragmentCount: 0 }),
     ]);
     fixture.detectChanges();
+    // Plusieurs cycles de detection sans changement d etat : un seul warning.
+    fixture.detectChanges();
+    fixture.detectChanges();
 
-    // Force la lecture du computed
-    component.acts();
-
-    expect(warnSpy).toHaveBeenCalled();
-    const message = warnSpy.calls.mostRecent().args[0] as string;
-    expect(message).toContain("act-a");
+    expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 
   describe("navigateNext", () => {

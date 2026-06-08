@@ -1,5 +1,5 @@
-import type { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { of, type Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
 /**
  * Interaction normalisee aplatie consommee par les composants
@@ -37,6 +37,50 @@ export function flattenInteractions(
   source: Observable<unknown>,
 ): Observable<FlatInteraction[]> {
   return source.pipe(map((value) => normaliseInteractions(value)));
+}
+
+/**
+ * Charge une interaction unique depuis la reponse du port et la downcaste
+ * vers la shape `T` attendue par le composant appelant.
+ *
+ * Mutualise le pipeline partage par `slide-quiz`, `slide-poll` et
+ * `slide-reflection` :
+ * 1. aplatit la reponse via {@link flattenInteractions} ;
+ * 2. en cas d'erreur de la source, appelle `onError` (degradation gracieuse)
+ *    et substitue une liste vide ;
+ * 3. selectionne la premiere interaction dont le `type` correspond et dont
+ *    l'`id` legacy *ou* le `slideId` derive correspond a `interactionId` ;
+ * 4. downcaste le resultat vers `T` (ou `null` si rien ne correspond).
+ *
+ * Le comportement est strictement identique a l'ancien `load()` duplique
+ * dans chaque composant.
+ *
+ * @param source$ Observable du port (`PresentationPort.getInteractions`).
+ * @param type Type discriminant recherche (`quiz`, `poll`, `reflection`...).
+ * @param interactionId Id cible (matche `id` legacy ou `slideId`).
+ * @param onError Callback declenchee si la source emet une erreur.
+ * @returns Observable de l'interaction trouvee (castee `T`) ou `null`.
+ */
+export function loadInteraction<T>(
+  source$: Observable<unknown>,
+  type: string,
+  interactionId: string,
+  onError: () => void,
+): Observable<T | null> {
+  return flattenInteractions(source$).pipe(
+    catchError(() => {
+      onError();
+      return of([] as FlatInteraction[]);
+    }),
+    map((list) => {
+      const found = list.find(
+        (i) =>
+          i.type === type &&
+          (i.id === interactionId || i.slideId === interactionId),
+      );
+      return found ? (found as unknown as T) : null;
+    }),
+  );
 }
 
 function normaliseInteractions(value: unknown): FlatInteraction[] {

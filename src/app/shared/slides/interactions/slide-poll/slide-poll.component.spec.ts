@@ -1,7 +1,10 @@
 import { Component } from "@angular/core";
 import { TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
+import {
+  buildInteractionsResponse,
+  createPresentationPortStub,
+} from "../../../../../testing/factories/presentation.factory";
 import { SlidePollComponent } from "./slide-poll.component";
 
 @Component({
@@ -13,23 +16,21 @@ class HostComponent {}
 
 describe("SlidePollComponent", () => {
   beforeEach(() => {
-    const portStub = {
-      getInteractions: () =>
-        of({
-          slug: "ia-solopreneurs",
-          interactions: {
-            "poll-1": {
-              present: [
-                {
-                  type: "poll",
-                  question: "Quel outil utilises-tu le plus ?",
-                  options: ["ChatGPT", "Claude", "Gemini"],
-                },
-              ],
-            },
+    const portStub = createPresentationPortStub(
+      buildInteractionsResponse({
+        interactions: {
+          "poll-1": {
+            present: [
+              {
+                type: "poll",
+                question: "Quel outil utilises-tu le plus ?",
+                options: ["ChatGPT", "Claude", "Gemini"],
+              },
+            ],
           },
-        }),
-    };
+        },
+      }),
+    );
     TestBed.configureTestingModule({
       imports: [HostComponent],
       providers: [{ provide: PRESENTATION_PORT, useValue: portStub }],

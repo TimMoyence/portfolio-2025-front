@@ -1,8 +1,13 @@
 import { Component } from "@angular/core";
 import { TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { of, throwError } from "rxjs";
+import { throwError } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
 import type { PresentationPort } from "../../../../core/ports/presentation.port";
+import type { ScrollInteraction } from "../../../../core/models/presentation-interactions.model";
+import {
+  buildInteractionsResponse,
+  createPresentationPortStub,
+} from "../../../../../testing/factories/presentation.factory";
 import { SlideQuizComponent } from "./slide-quiz.component";
 
 @Component({
@@ -15,28 +20,30 @@ import { SlideQuizComponent } from "./slide-quiz.component";
 class HostComponent {}
 
 describe("SlideQuizComponent", () => {
-  let portStub: PresentationPort;
+  let portStub: jasmine.SpyObj<PresentationPort>;
 
   beforeEach(() => {
-    portStub = {
-      getInteractions: jasmine.createSpy("getInteractions").and.returnValue(
-        of({
-          slug: "ia-solopreneurs",
-          interactions: {
-            "quiz-intro": {
-              scroll: [
-                {
-                  type: "quiz",
-                  question: "Quel est le premier réflexe IA ?",
-                  options: ["Délégation", "Automatisation", "Génération"],
-                  correctIndex: 1,
-                },
-              ],
-            },
-          },
-        }),
-      ),
-    } as unknown as PresentationPort;
+    // `SlideQuizComponent` consomme une shape de quiz « connaissance »
+    // (options: string[], correctIndex) distincte du contrat de profilage
+    // `QuizInteraction`. Le port aplatit la reponse en `unknown`, donc ce
+    // payload legacy reste valide a l'execution ; on le caste localement
+    // pour satisfaire le typage strict de `SlideInteractions`.
+    const scroll = [
+      {
+        type: "quiz",
+        question: "Quel est le premier réflexe IA ?",
+        options: ["Délégation", "Automatisation", "Génération"],
+        correctIndex: 1,
+      },
+    ] as unknown as ScrollInteraction[];
+
+    portStub = createPresentationPortStub(
+      buildInteractionsResponse({
+        interactions: {
+          "quiz-intro": { scroll },
+        },
+      }),
+    );
 
     TestBed.configureTestingModule({
       imports: [HostComponent],
@@ -100,7 +107,7 @@ describe("SlideQuizComponent", () => {
   }));
 
   it("ne rend rien si le port échoue (degradation gracieuse)", fakeAsync(() => {
-    (portStub.getInteractions as jasmine.Spy).and.returnValue(
+    portStub.getInteractions.and.returnValue(
       throwError(() => new Error("network")),
     );
     const fixture = TestBed.createComponent(HostComponent);

@@ -292,33 +292,47 @@ export class PresentationEngineComponent {
   /**
    * Slides regroupees par acte tout en preservant l'ordre.
    *
-   * Valide egalement que les slides d'un meme acte sont contigues : si deux
-   * slides du meme acte sont separees par une slide d'un autre acte, un warning
-   * est loggue en console — ce scenario casserait le regroupement visuel.
+   * Derivation pure : aucun effet de bord. La validation de contiguite des
+   * actes (anciennement un `console.warn` inline) est deportee dans un
+   * `effect()` du constructeur (voir `nonContiguousActId`) afin que ce
+   * `computed` reste reentrant et exempt d'effet observable.
    */
   readonly acts = computed((): ActGroup[] => {
     const grouped = new Map<string, PresentationSlide[]>();
-    const seenActs = new Set<string>();
-    let previousActId: string | null = null;
 
     for (const slide of this.activeSlides()) {
       const actId = slide.act.id;
-      if (actId !== previousActId && seenActs.has(actId)) {
-        console.warn(
-          `[PresentationEngine] Slides de l'acte "${actId}" ne sont pas contigues — le regroupement peut masquer un bug.`,
-        );
-      }
       if (!grouped.has(actId)) {
         grouped.set(actId, []);
       }
       grouped.get(actId)!.push(slide);
-      seenActs.add(actId);
-      previousActId = actId;
     }
     return Array.from(grouped.entries()).map(([, groupSlides]) => ({
       act: groupSlides[0].act,
       slides: groupSlides,
     }));
+  });
+
+  /**
+   * Identifiant du premier acte detecte comme non contigu dans le deck actif,
+   * ou `null` si tous les actes sont contigus.
+   *
+   * Derivation pure consommee par l'effect de validation : si deux slides du
+   * meme acte sont separees par une slide d'un autre acte, le regroupement
+   * visuel peut masquer un bug d'ordonnancement.
+   */
+  private readonly nonContiguousActId = computed((): string | null => {
+    const seenActs = new Set<string>();
+    let previousActId: string | null = null;
+    for (const slide of this.activeSlides()) {
+      const actId = slide.act.id;
+      if (actId !== previousActId && seenActs.has(actId)) {
+        return actId;
+      }
+      seenActs.add(actId);
+      previousActId = actId;
+    }
+    return null;
   });
 
   private readonly fragmentService = inject(FragmentService);
@@ -330,6 +344,12 @@ export class PresentationEngineComponent {
 
   /** Identifiant de la derniere slide pour laquelle on a reinitialise les fragments. */
   private lastResetId: string | null = null;
+
+  /**
+   * Dernier identifiant d'acte non contigu deja signale — evite de logger
+   * le meme avertissement a chaque cycle de detection pour un etat inchange.
+   */
+  private lastWarnedActId: string | null = null;
 
   /** True si l'utilisateur prefere les mouvements reduits — desactive les transitions GSAP. */
   private prefersReducedMotion = false;
@@ -367,6 +387,26 @@ export class PresentationEngineComponent {
         this.fragmentService.reset(slide.fragmentCount);
         this.lastResetId = slide.id;
       }
+    });
+
+    /**
+     * Validation de contiguite des actes (effet de bord deporte hors du
+     * computed `acts()`). Logge un avertissement une seule fois par etat
+     * lorsqu'un acte n'est pas contigu. Le guard `platformId` evite tout log
+     * cote SSR.
+     */
+    effect(() => {
+      const actId = this.nonContiguousActId();
+      if (
+        actId !== null &&
+        actId !== this.lastWarnedActId &&
+        isPlatformBrowser(this.platformId)
+      ) {
+        console.warn(
+          `[PresentationEngine] Slides de l'acte "${actId}" ne sont pas contigues — le regroupement peut masquer un bug.`,
+        );
+      }
+      this.lastWarnedActId = actId;
     });
 
     /**
