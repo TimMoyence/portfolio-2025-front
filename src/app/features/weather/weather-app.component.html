@@ -1,4 +1,13 @@
-<section class="relative min-h-screen px-4 pt-4 pb-8 overflow-hidden">
+<!--
+  Shell App Météo (/atelier/meteo/app) — re-skin Asili immersif « ciel / glass ».
+  Source maquette : AsiliNewDesign/meteo-app.html + asili-app.css
+  (.app-body, .sky-bg, .app-shell, .app-main, .gp/.gp-pad/.gp-h, .wx-grid,
+  .app-pill/.live-dot) + meteo-app.js (palettes SKIES). Le système de fond
+  data-driven existant (gradient par code météo + crossfade + parallax) est
+  CONSERVÉ tel quel et harmonisé visuellement à la palette ciel Asili via le
+  voile radial scopé (.wx-sky-veil). Aucun binding/signal/effect modifié.
+-->
+<section class="wx-shell relative min-h-screen overflow-hidden">
   <!-- Fond avec crossfade + parallax : ancien gradient en dessous, nouveau au-dessus avec fade-in -->
   @if (hasForecast()) {
     <div
@@ -12,236 +21,259 @@
       [class.opacity-0]="backgroundTransitioning()"
       [style.transform]="'translateY(' + parallaxOffset() + 'px)'"
     ></div>
+    <!-- Voile ciel Asili (asili-app.css : .sky-bg) : harmonise le gradient
+         data-driven avec la profondeur radiale immersive de la maquette. -->
+    <div class="wx-sky-veil" aria-hidden="true"></div>
   } @else {
     <div class="absolute inset-0 bg-scheme-background"></div>
   }
-  <div class="relative z-10 mx-auto max-w-6xl space-y-6">
-    <!-- Titre -->
-    <div class="text-center">
-      <h1
-        class="text-3xl font-bold md:text-4xl"
-        [ngClass]="hasForecast() ? 'text-white' : 'text-scheme-text'"
-        i18n="weather.app.title|@@weatherAppTitle"
-      >
-        Météo
-      </h1>
-      @if (selectedCity(); as city) {
-        <p
-          class="mt-1 text-lg"
-          [ngClass]="hasForecast() ? 'text-white/70' : 'text-scheme-text-muted'"
+
+  <!-- Conteneur principal (asili-app.css : .app-main) -->
+  <div class="wx-main relative z-10">
+    <!-- Header d'app interne (décision 3) : bandeau glass Asili regroupant titre
+         + sélecteurs existants. PAS de back/brand redondants avec la navbar. -->
+    <header class="wx-app-head gp gp-pad">
+      <div class="wx-app-head-top">
+        <div class="wx-app-title">
+          <h1
+            class="wx-title font-display"
+            i18n="weather.app.title|@@weatherAppTitle"
+          >
+            Météo
+          </h1>
+          @if (selectedCity(); as city) {
+            <p class="wx-place font-mono">
+              <span class="wx-pin" aria-hidden="true"></span>
+              {{ city.name }}, {{ city.country }}
+            </p>
+          }
+        </div>
+
+        <!-- Pill « En direct » (asili-app.css : .app-pill/.live-dot) -->
+        @if (hasForecast()) {
+          <span class="wx-pill app-pill font-mono">
+            <span class="wx-live-dot" aria-hidden="true"></span>
+            <span i18n="weather.app.live|@@weatherAppLive">En direct</span>
+          </span>
+        }
+      </div>
+
+      <!-- Sélecteur de niveau + unités (bindings conservés à l'identique) -->
+      <div class="wx-app-controls">
+        <app-level-selector
+          [darkMode]="hasForecast()"
+          (levelChanged)="onLevelChanged($event)"
+        />
+        <app-unit-selector />
+      </div>
+
+      <!-- Recherche de ville (binding conservé) -->
+      <app-city-search
+        [darkMode]="hasForecast()"
+        (citySelected)="onCitySelected($event)"
+      />
+
+      <!-- Suggestion de transition de niveau -->
+      <app-transition-prompt />
+
+      <!-- Barre de villes favorites -->
+      @if (favoriteCities().length > 0 || selectedCity()) {
+        <app-favorite-cities-bar
+          [darkMode]="hasForecast()"
+          [favorites]="favoriteCities()"
+          [selectedCity]="selectedCity()"
+          [defaultCityIndex]="defaultCityIndex()"
+          (favoriteSelected)="onCitySelected($event)"
+          (addFavorite)="addFavorite($event)"
+          (removeFavorite)="removeFavorite($event)"
+          (defaultCityChange)="setDefaultCity($event)"
+        />
+      }
+    </header>
+
+    <div class="wx-content">
+      <!-- Chargement : skeleton loaders -->
+      @if (loading()) {
+        <app-chart-skeleton />
+        <app-chart-skeleton />
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <app-weather-card-skeleton />
+          }
+        </div>
+      }
+
+      <!-- Erreur (restyle glass Asili, alt conservé) -->
+      @if (error(); as errorMsg) {
+        <div class="wx-error gp gp-pad">
+          <div class="wx-error-inner">
+            <img
+              src="/assets/images/meteo/nuage-erreur.png"
+              alt=""
+              class="wx-error-img"
+            />
+            <p class="wx-error-text">{{ errorMsg }}</p>
+          </div>
+        </div>
+      }
+
+      <!-- Previsions (Decouverte+) : toujours visibles -->
+      @if (forecast(); as data) {
+        <div
+          appSlideIn
+          class="content-transition"
+          [class.content-transitioning]="contentTransitioning()"
         >
-          {{ city.name }}, {{ city.country }}
-        </p>
-      }
-    </div>
-
-    <!-- Selecteur de niveau + unites -->
-    <div class="flex justify-center items-center gap-2 mt-2">
-      <app-level-selector
-        [darkMode]="hasForecast()"
-        (levelChanged)="onLevelChanged($event)"
-      />
-      <app-unit-selector />
-    </div>
-
-    <!-- Suggestion de transition de niveau -->
-    <app-transition-prompt />
-
-    <!-- Barre de villes favorites -->
-    @if (favoriteCities().length > 0 || selectedCity()) {
-      <app-favorite-cities-bar
-        [darkMode]="hasForecast()"
-        [favorites]="favoriteCities()"
-        [selectedCity]="selectedCity()"
-        [defaultCityIndex]="defaultCityIndex()"
-        (favoriteSelected)="onCitySelected($event)"
-        (addFavorite)="addFavorite($event)"
-        (removeFavorite)="removeFavorite($event)"
-        (defaultCityChange)="setDefaultCity($event)"
-      />
-    }
-
-    <!-- Recherche de ville -->
-    <app-city-search
-      [darkMode]="hasForecast()"
-      (citySelected)="onCitySelected($event)"
-    />
-
-    <!-- Chargement : skeleton loaders -->
-    @if (loading()) {
-      <app-chart-skeleton />
-      <app-chart-skeleton />
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <app-weather-card-skeleton />
-        }
-      </div>
-    }
-
-    <!-- Erreur -->
-    @if (error(); as errorMsg) {
-      <div
-        class="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-center"
-      >
-        <div class="flex items-center justify-center gap-2">
-          <img
-            src="/assets/images/meteo/nuage-erreur.png"
-            alt=""
-            class="h-8 w-8"
+          <app-current-conditions
+            [current]="data.current"
+            [detailed]="detailedCurrent()"
           />
-          <p class="text-red-600">{{ errorMsg }}</p>
         </div>
-      </div>
-    }
 
-    <!-- Previsions (Decouverte+) : toujours visibles -->
-    @if (forecast(); as data) {
-      <div
-        appSlideIn
-        class="content-transition"
-        [class.content-transitioning]="contentTransitioning()"
-      >
-        <app-current-conditions
-          [current]="data.current"
-          [detailed]="detailedCurrent()"
-        />
-      </div>
+        <!-- Alertes meteo -->
+        @if (alerts().length > 0) {
+          <div appSlideIn>
+            <app-weather-alerts-card [alerts]="alerts()" />
+          </div>
+        }
 
-      <!-- Alertes meteo -->
-      @if (alerts().length > 0) {
+        <!-- Tableau unifié prévisions (remplace daily-forecast + weekly-overview) -->
         <div appSlideIn>
-          <app-weather-alerts-card [alerts]="alerts()" />
-        </div>
-      }
-
-      <!-- Tableau unifié prévisions (remplace daily-forecast + weekly-overview) -->
-      <div appSlideIn>
-        <app-weekly-overview
-          [hourly]="data.hourly"
-          [daily]="data.daily"
-          [level]="levelService.level()"
-          [initialGranularity]="overviewGranularity()"
-          (granularityChange)="onGranularityChange($event)"
-        />
-      </div>
-
-      <div appSlideIn>
-        @defer (on viewport) {
-          <app-hourly-chart [hourly]="data.hourly" />
-        } @placeholder {
-          <app-chart-skeleton />
-        }
-      </div>
-
-      <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
-      @if (levelService.level() !== "discovery") {
-        <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3">
-          <div appSlideIn>
-            <app-uv-index-card
-              [uvIndex]="data.current.uv_index ?? 0"
-              [hourlyUv]="data.hourly.uv_index ?? []"
-            />
-          </div>
-          <div appSlideIn>
-            <app-air-quality-card [airQuality]="airQuality()" />
-          </div>
-          <div appSlideIn>
-            <app-pressure-card
-              [pressure]="data.current.pressure_msl ?? null"
-              [hourlyPressure]="data.hourly.pressure_msl ?? null"
-            />
-          </div>
-          <div appSlideIn>
-            <app-wind-compass
-              [speed]="data.current.wind_speed_10m"
-              [direction]="data.current.wind_direction_10m ?? 0"
-              [gusts]="data.current.wind_gusts_10m ?? null"
-              [hourlyWind]="data.hourly.wind_speed_10m"
-            />
-          </div>
-          <div appSlideIn>
-            <app-sun-arc
-              [sunrise]="data.daily.sunrise[0]"
-              [sunset]="data.daily.sunset[0]"
-            />
-          </div>
-          <div appSlideIn>
-            <app-humidity-card
-              [humidity]="data.current.relative_humidity_2m ?? 0"
-              [dewPoint]="data.current.dew_point_2m ?? null"
-              [hourlyHumidity]="data.hourly.relative_humidity_2m ?? []"
-            />
-          </div>
-          <div appSlideIn>
-            <app-cloud-visibility-card
-              [cloudCover]="data.current.cloud_cover ?? 0"
-              [visibility]="data.current.visibility ?? null"
-            />
-          </div>
+          <app-weekly-overview
+            [hourly]="data.hourly"
+            [daily]="data.daily"
+            [level]="levelService.level()"
+            [initialGranularity]="overviewGranularity()"
+            (granularityChange)="onGranularityChange($event)"
+          />
         </div>
 
-        <!-- Carte radar -->
-        @if (selectedCity(); as city) {
-          <div appSlideIn>
-            <app-radar-map
-              [latitude]="city.latitude"
-              [longitude]="city.longitude"
-            />
-          </div>
-        }
-      }
+        <div appSlideIn>
+          @defer (on viewport) {
+            <app-hourly-chart [hourly]="data.hourly" />
+          } @placeholder {
+            <app-chart-skeleton />
+          }
+        </div>
 
-      <!-- Expert : cartes expertes -->
-      @if (levelService.level() === "expert") {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-          <div appSlideIn class="md:col-span-2 lg:col-span-3">
-            @defer (on viewport) {
-              <app-model-comparison [ensemble]="ensemble()" />
-            } @placeholder {
-              <app-chart-skeleton />
-            }
-          </div>
-          <div appSlideIn class="md:col-span-2 lg:col-span-3">
-            @defer (on viewport) {
-              <app-spaghetti-plot [ensemble]="ensemble()" />
-            } @placeholder {
-              <app-chart-skeleton />
-            }
-          </div>
-          <div appSlideIn>
-            <app-cape-card [cape]="extractCape()" />
-          </div>
-          <div appSlideIn>
-            @defer (on viewport) {
-              <app-historical-comparison
-                [historical]="historical()"
-                [currentTemp]="forecast()?.current?.temperature_2m ?? 0"
+        <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
+        @if (levelService.level() !== "discovery") {
+          <div
+            class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3"
+          >
+            <div appSlideIn>
+              <app-uv-index-card
+                [uvIndex]="data.current.uv_index ?? 0"
+                [hourlyUv]="data.hourly.uv_index ?? []"
               />
-            } @placeholder {
-              <app-chart-skeleton />
-            }
+            </div>
+            <div appSlideIn>
+              <app-air-quality-card [airQuality]="airQuality()" />
+            </div>
+            <div appSlideIn>
+              <app-pressure-card
+                [pressure]="data.current.pressure_msl ?? null"
+                [hourlyPressure]="data.hourly.pressure_msl ?? null"
+              />
+            </div>
+            <div appSlideIn>
+              <app-wind-compass
+                [speed]="data.current.wind_speed_10m"
+                [direction]="data.current.wind_direction_10m ?? 0"
+                [gusts]="data.current.wind_gusts_10m ?? null"
+                [hourlyWind]="data.hourly.wind_speed_10m"
+              />
+            </div>
+            <div appSlideIn>
+              <app-sun-arc
+                [sunrise]="data.daily.sunrise[0]"
+                [sunset]="data.daily.sunset[0]"
+              />
+            </div>
+            <div appSlideIn>
+              <app-humidity-card
+                [humidity]="data.current.relative_humidity_2m ?? 0"
+                [dewPoint]="data.current.dew_point_2m ?? null"
+                [hourlyHumidity]="data.hourly.relative_humidity_2m ?? []"
+              />
+            </div>
+            <div appSlideIn>
+              <app-cloud-visibility-card
+                [cloudCover]="data.current.cloud_cover ?? 0"
+                [visibility]="data.current.visibility ?? null"
+              />
+            </div>
           </div>
-          <div appSlideIn class="md:col-span-2 lg:col-span-3">
-            <app-data-export [forecast]="forecast()" [ensemble]="ensemble()" />
+
+          <!-- Carte radar -->
+          @if (selectedCity(); as city) {
+            <div appSlideIn>
+              <app-radar-map
+                [latitude]="city.latitude"
+                [longitude]="city.longitude"
+              />
+            </div>
+          }
+        }
+
+        <!-- Expert : cartes expertes -->
+        @if (levelService.level() === "expert") {
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6"
+          >
+            <div appSlideIn class="md:col-span-2 lg:col-span-3">
+              @defer (on viewport) {
+                <app-model-comparison [ensemble]="ensemble()" />
+              } @placeholder {
+                <app-chart-skeleton />
+              }
+            </div>
+            <div appSlideIn class="md:col-span-2 lg:col-span-3">
+              @defer (on viewport) {
+                <app-spaghetti-plot [ensemble]="ensemble()" />
+              } @placeholder {
+                <app-chart-skeleton />
+              }
+            </div>
+            <div appSlideIn>
+              <app-cape-card [cape]="extractCape()" />
+            </div>
+            <div appSlideIn>
+              @defer (on viewport) {
+                <app-historical-comparison
+                  [historical]="historical()"
+                  [currentTemp]="forecast()?.current?.temperature_2m ?? 0"
+                />
+              } @placeholder {
+                <app-chart-skeleton />
+              }
+            </div>
+            <div appSlideIn class="md:col-span-2 lg:col-span-3">
+              <app-data-export
+                [forecast]="forecast()"
+                [ensemble]="ensemble()"
+              />
+            </div>
           </div>
+        }
+      }
+
+      <!-- Etat initial (restyle glass Asili, alt conservé) -->
+      @if (!forecast() && !loading() && !error()) {
+        <div class="wx-empty gp gp-pad">
+          <img
+            src="/assets/images/meteo/soleil-et-nuage.png"
+            alt=""
+            class="wx-empty-img"
+          />
+          <p
+            class="wx-empty-text"
+            i18n="weather.initial.hint|@@weatherInitialHint"
+          >
+            Recherchez une ville pour afficher la météo
+          </p>
         </div>
       }
-    }
-
-    <!-- Etat initial -->
-    @if (!forecast() && !loading() && !error()) {
-      <div
-        class="flex flex-col items-center justify-center py-16 text-scheme-text-muted"
-      >
-        <img
-          src="/assets/images/meteo/soleil-et-nuage.png"
-          alt=""
-          class="mb-4 h-20 w-20 opacity-50"
-        />
-        <p i18n="weather.initial.hint|@@weatherInitialHint">
-          Recherchez une ville pour afficher la météo
-        </p>
-      </div>
-    }
+    </div>
   </div>
 </section>

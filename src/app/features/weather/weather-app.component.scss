@@ -1,8 +1,226 @@
+/*
+  Shell App Météo (/atelier/meteo/app) — styles scopés portés des maquettes
+  AsiliNewDesign/asili-app.css (.app-main, .gp/.gp-pad/.gp-h, .app-pill/.live-dot,
+  .wx-grid + responsive @media 900/560px) et meteo-app.js (palette ciel SKIES,
+  voile radial). Le langage visuel est l'immersif glass « ciel / teal / glow ».
+
+  Décision chrome (3) : pas de topbar .app-top concurrent de la navbar globale —
+  on intègre titre + sélecteurs existants dans un header d'app interne (.wx-app-head).
+  Décision fond (4) : le système data-driven (gradient par code météo + crossfade
+  + parallax, piloté en TS) est CONSERVÉ ; .wx-sky-veil ne fait qu'HARMONISER la
+  profondeur radiale Asili par-dessus, sans toucher aux signals de fond.
+
+  Tokens globaux (src/styles/_tokens.scss) : --teal, --glow, --glow-soft, --r-lg,
+  --r-pill, --ease, --font-display, --font-mono.
+*/
+
 :host {
   display: block;
 }
 
-/* ---- Slide-in animation ---- */
+/* ---------- SHELL + FOND CIEL (asili-app.css : .app-body / .sky-bg) ---------- */
+.wx-shell {
+  padding: clamp(16px, 4vw, 40px) clamp(12px, 4vw, 36px) 80px;
+}
+
+/* Voile ciel Asili : profondeur radiale par-dessus le gradient data-driven.
+   Source maquette : meteo-app.js → SKIES (radial-gradient 120% at 70% -10%). */
+.wx-sky-veil {
+  position: absolute;
+  inset: -4rem 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 100% at 70% -10%,
+    rgba(31, 78, 110, 0.35) 0%,
+    rgba(17, 39, 54, 0.2) 55%,
+    rgba(10, 18, 27, 0.55) 100%
+  );
+  mix-blend-mode: soft-light;
+}
+
+/* ---------- CONTENEUR (asili-app.css : .app-main) ---------- */
+.wx-main {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wx-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------- GLASS PANEL (asili-app.css : .gp / .gp-pad / .gp-h) ---------- */
+.gp {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.gp-pad {
+  padding: clamp(18px, 2.4vw, 26px);
+}
+
+/* ---------- HEADER D'APP INTERNE (décision 3) ---------- */
+.wx-app-head {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.wx-app-head-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.wx-app-title {
+  min-width: 0;
+}
+
+/* Titre — typo display Asili (asili-app.css : .app-brand / .wx-temp scale). */
+.wx-title {
+  font-size: clamp(34px, 5vw, 46px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+/* Localisation courante — mono + pin glow (asili-app.css : .wx-loc .pin). */
+.wx-place {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 8px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wx-pin {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 14px var(--glow);
+}
+
+/* Pill « En direct » (asili-app.css : .app-pill / .live-dot teal). */
+.wx-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+
+.wx-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 10px var(--teal);
+  animation: wxLivePulse 2s ease-in-out infinite;
+}
+
+@keyframes wxLivePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.8);
+  }
+}
+
+/* Rangée sélecteurs niveau + unités (bindings inchangés côté composants). */
+.wx-app-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ---------- ÉTATS ERREUR / VIDE (restyle glass Asili) ---------- */
+.wx-error {
+  border-color: rgba(230, 100, 100, 0.3);
+  background: rgba(220, 70, 70, 0.1);
+}
+
+.wx-error-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.wx-error-img {
+  width: 32px;
+  height: 32px;
+}
+
+.wx-error-text {
+  color: #f3a9a9;
+  font-size: 15px;
+}
+
+.wx-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-block: clamp(40px, 8vw, 72px);
+}
+
+.wx-empty-img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.wx-empty-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ---------- RESPONSIVE (asili-app.css : @media 900 / 560px) ---------- */
+@media (max-width: 900px) {
+  .wx-app-head-top {
+    align-items: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .wx-title {
+    font-size: clamp(30px, 9vw, 38px);
+  }
+  .wx-app-controls {
+    gap: 8px;
+  }
+}
+
+/* ---- Slide-in animation (préservé) ---- */
 :host ::ng-deep .slide-in-hidden {
   opacity: 0;
   transform: translateY(24px);
@@ -77,6 +295,10 @@
   }
 
   :host ::ng-deep .chevron-pulse {
+    animation: none !important;
+  }
+
+  .wx-live-dot {
     animation: none !important;
   }
 
