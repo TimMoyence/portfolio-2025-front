@@ -27,11 +27,20 @@ interface ModeOption {
   standalone: true,
   imports: [CommonModule],
   template: `
+    <!--
+      Heatmap App Sebastian — thème "dark lounge ambré" porté de la maquette
+      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (glass
+      bg-white/4 + bordure ambrée), .heat-big/.heat-legend (intensité gold
+      rgba(230,170,70,…) niveaux l1/l2/l3), .app-pill (sélecteur de mode).
+      Restyle 100 % visuel : cellClass/cells/maxValue/getValue/dayLabels et tous
+      les data-testid (heatmap-container, heatmap-cell, mode-button) conservés ;
+      seules les classes CSS rendues (palette gold) changent.
+    -->
     <div
       data-testid="heatmap-container"
-      class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+      class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
     >
-      <!-- Selecteur de mode -->
+      <!-- Selecteur de mode (.app-pill ambrés) -->
       <div class="mb-4 flex gap-2">
         @for (m of modes; track m.value) {
           <button
@@ -39,10 +48,10 @@ interface ModeOption {
             (click)="mode.set(m.value)"
             [class]="
               mode() === m.value
-                ? 'bg-scheme-accent text-scheme-on-accent'
-                : 'bg-scheme-surface text-scheme-text-muted hover:bg-scheme-surface-hover'
+                ? 'bg-gold text-[#1a1206] border-gold'
+                : 'bg-white/[0.04] text-white/55 hover:text-white hover:border-[rgba(230,170,70,0.35)]'
             "
-            class="rounded-button border border-scheme-border px-3 py-1 font-heading text-small"
+            class="rounded-full border border-[rgba(230,170,70,0.14)] px-3 py-1 font-mono text-xs uppercase tracking-[0.06em] transition-colors"
           >
             {{ m.label }}
           </button>
@@ -52,11 +61,11 @@ interface ModeOption {
       <!-- Labels jours de la semaine -->
       <div class="mb-1 grid grid-cols-7 gap-1 text-center">
         @for (label of dayLabels; track label) {
-          <span class="text-xs text-scheme-text-muted">{{ label }}</span>
+          <span class="font-mono text-xs text-white/45">{{ label }}</span>
         }
       </div>
 
-      <!-- Grille heatmap -->
+      <!-- Grille heatmap (intensité gold .heat-big) -->
       <div class="grid grid-cols-7 gap-1">
         @for (cell of cells(); track cell.date) {
           <div
@@ -107,24 +116,26 @@ export class SebastianHeatmapComponent {
   /**
    * Retourne la classe CSS d'intensite pour une cellule.
    * L'intensite est determinee par le ratio valeur/max.
+   * Restyle Lot 5 : palette gold dark lounge (.heat-big niveaux l1/l2/l3
+   * rgba(230,170,70,…)) — seuils/branchement inchangés, classes visuelles only.
    */
   cellClass(cell: { value: number }): string {
     if (cell.value === 0) {
-      return "bg-scheme-surface border border-scheme-border text-scheme-text-muted";
+      return "bg-[rgba(230,170,70,0.1)] text-white/40";
     }
 
     const ratio = cell.value / this.maxValue();
 
     if (ratio <= 0.25) {
-      return "bg-scheme-accent/20 text-scheme-text";
+      return "bg-[rgba(230,170,70,0.3)] text-white/80";
     }
     if (ratio <= 0.5) {
-      return "bg-scheme-accent/40 text-scheme-text";
+      return "bg-[rgba(230,170,70,0.55)] text-[#1a1206]";
     }
     if (ratio <= 0.75) {
-      return "bg-scheme-accent/60 text-scheme-on-accent";
+      return "bg-[rgba(230,170,70,0.7)] text-[#1a1206]";
     }
-    return "bg-scheme-accent text-scheme-on-accent";
+    return "bg-[rgba(230,170,70,0.85)] text-[#1a1206]";
   }
 
   /**

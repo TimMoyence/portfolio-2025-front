@@ -45,9 +45,10 @@ describe("SebastianReportsComponent", () => {
   });
 
   it("devrait afficher le selecteur Semaine comme actif par defaut", () => {
+    // Restyle Lot 5 : pill active = bg-gold (dark lounge ambré).
     const activeButton: HTMLButtonElement | null =
       fixture.nativeElement.querySelector(
-        "[data-testid='period-button'].bg-scheme-accent",
+        "[data-testid='period-button'].bg-gold",
       );
     expect(activeButton).toBeTruthy();
     expect(activeButton!.textContent!.trim()).toBe("Semaine");
@@ -142,9 +143,11 @@ describe("SebastianReportsComponent", () => {
     expect(content).toContain("Dim");
   });
 
-  it("devrait utiliser les tokens de design SSOT", () => {
+  it("devrait utiliser le glass Asili dark lounge ambré", () => {
+    // Restyle Lot 5 : cartes au glass .panel — bg-white/[0.04] + bordure
+    // ambrée rgba(230,170,70,0.14) + rayon 20px.
     const cards: NodeListOf<HTMLElement> =
-      fixture.nativeElement.querySelectorAll(".bg-scheme-surface");
+      fixture.nativeElement.querySelectorAll(".bg-white\\/\\[0\\.04\\]");
     expect(cards.length).toBeGreaterThan(0);
   });
 });

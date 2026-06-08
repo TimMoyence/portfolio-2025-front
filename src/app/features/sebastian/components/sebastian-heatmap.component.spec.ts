@@ -59,9 +59,10 @@ describe("SebastianHeatmapComponent", () => {
   });
 
   it("devrait avoir le mode combined actif par defaut", () => {
+    // Restyle Lot 5 : pill active = bg-gold (dark lounge ambré).
     const activeButton: HTMLButtonElement | null =
       fixture.nativeElement.querySelector(
-        "[data-testid='mode-button'].bg-scheme-accent",
+        "[data-testid='mode-button'].bg-gold",
       );
     expect(activeButton).toBeTruthy();
     expect(activeButton!.textContent!.trim()).toContain("Combine");
@@ -77,7 +78,7 @@ describe("SebastianHeatmapComponent", () => {
     alcoholButton.click();
     fixture.detectChanges();
 
-    expect(alcoholButton.classList).toContain("bg-scheme-accent");
+    expect(alcoholButton.classList).toContain("bg-gold");
   });
 
   it("devrait changer de mode quand on clique sur Cafe", () => {
@@ -90,7 +91,7 @@ describe("SebastianHeatmapComponent", () => {
     coffeeButton.click();
     fixture.detectChanges();
 
-    expect(coffeeButton.classList).toContain("bg-scheme-accent");
+    expect(coffeeButton.classList).toContain("bg-gold");
   });
 
   it("devrait appliquer une intensite nulle pour une cellule a 0", () => {
@@ -101,29 +102,30 @@ describe("SebastianHeatmapComponent", () => {
       c.textContent!.includes("2"),
     );
     expect(zeroCell).toBeTruthy();
-    // Une cellule a zero ne devrait pas avoir d'opacite accent
+    // Restyle Lot 5 : niveau gold le plus faible (.heat-big base
+    // rgba(230,170,70,0.1)) pour une cellule a zero.
     const zeroCellApril2 = cells[3]; // 4eme jour dans l'ordre
-    expect(zeroCellApril2.classList).toContain("bg-scheme-surface");
+    expect(zeroCellApril2.className).toContain("bg-[rgba(230,170,70,0.1)]");
   });
 
   it("devrait appliquer une intensite elevee pour une cellule a valeur haute", () => {
     const cells: NodeListOf<HTMLElement> =
       fixture.nativeElement.querySelectorAll("[data-testid='heatmap-cell']");
     // La cellule du 2026-04-03 a combined=7 (la plus haute)
+    // Restyle Lot 5 : niveau gold le plus fort (.heat-big l3
+    // rgba(230,170,70,0.85)).
     const highCell = cells[4]; // 5eme jour
-    expect(
-      highCell.classList.contains("bg-scheme-accent") ||
-        highCell.className.includes("bg-scheme-accent"),
-    ).toBeTrue();
+    expect(highCell.className).toContain("bg-[rgba(230,170,70,0.85)]");
   });
 
-  it("devrait utiliser les tokens de design SSOT", () => {
+  it("devrait utiliser le glass Asili dark lounge ambré", () => {
+    // Restyle Lot 5 : conteneur au glass .panel — bg-white/[0.04] + rayon 20px.
     const container: HTMLElement | null = fixture.nativeElement.querySelector(
       "[data-testid='heatmap-container']",
     );
     expect(container).toBeTruthy();
-    expect(container!.classList).toContain("bg-scheme-surface");
-    expect(container!.classList).toContain("rounded-card");
+    expect(container!.className).toContain("bg-white/[0.04]");
+    expect(container!.className).toContain("rounded-[20px]");
   });
 
   it("devrait afficher le numero du jour dans chaque cellule", () => {

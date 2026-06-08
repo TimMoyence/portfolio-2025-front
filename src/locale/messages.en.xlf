@@ -3607,12 +3607,6 @@
         <target>Hourly forecast</target>
       </segment>
     </unit>
-    <unit id="weatherDailyTitle">
-      <segment>
-        <source>Prévisions journalières</source>
-        <target>Daily forecast</target>
-      </segment>
-    </unit>
     <unit id="weatherDailyToday">
       <segment>
         <source>Aujourd'hui</source>
@@ -4465,24 +4459,6 @@
       <segment>
         <source> Visibilité </source>
         <target> Visibility </target>
-      </segment>
-    </unit>
-    <unit id="weatherDaily14Days">
-      <segment>
-        <source> 14 jours </source>
-        <target> 14 days </target>
-      </segment>
-    </unit>
-    <unit id="weatherDaily7Days">
-      <segment>
-        <source> 7 jours </source>
-        <target> 7 days </target>
-      </segment>
-    </unit>
-    <unit id="weatherDailyToggleAria">
-      <segment>
-        <source>Nombre de jours de prévisions</source>
-        <target>Number of forecast days</target>
       </segment>
     </unit>
     <unit id="weatherDayDetailGusts">

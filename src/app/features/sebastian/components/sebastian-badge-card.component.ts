@@ -14,11 +14,19 @@ import type { SebastianBadgeStatus } from "../../../core/models/sebastian.model"
   selector: "app-sebastian-badge-card",
   standalone: true,
   template: `
+    <!--
+      Carte badge App Sebastian — thème "dark lounge ambré" Asili (cohérence avec
+      les autres panneaux, le badge n'existe pas dans la maquette ; cf. .bcard de
+      asili-app.css). Glass gold : bordure ambrée + accent gold-soft si débloqué,
+      opacité réduite + grayscale si verrouillé. Restyle 100 % visuel : iconPath
+      (assets/icons/badges/{key}.png), formattedDate, unlocked/unlockedAt et tous
+      les data-testid (badge-card/badge-icon/badge-date) conservés.
+    -->
     <div
       data-testid="badge-card"
-      class="rounded-card border bg-scheme-surface p-4 shadow-xs transition-all"
-      [class.border-scheme-accent]="badge().unlocked"
-      [class.border-scheme-border]="!badge().unlocked"
+      class="rounded-[18px] border bg-white/[0.04] p-4 transition-transform duration-300 hover:-translate-y-1"
+      [class.border-gold]="badge().unlocked"
+      [class.border-[rgba(230,170,70,0.14)]]="!badge().unlocked"
       [class.opacity-50]="!badge().unlocked"
     >
       <!-- Icone badge PNG -->
@@ -32,10 +40,10 @@ import type { SebastianBadgeStatus } from "../../../core/models/sebastian.model"
           [class.opacity-40]="!badge().unlocked"
         />
         <div class="min-w-0 flex-1">
-          <h4 class="font-heading text-small font-semibold text-scheme-text">
+          <h4 class="font-display text-small font-semibold text-white">
             {{ badge().name }}
           </h4>
-          <p class="text-xs text-scheme-text-muted">
+          <p class="text-xs text-white/50">
             {{ badge().description }}
           </p>
         </div>
@@ -43,11 +51,16 @@ import type { SebastianBadgeStatus } from "../../../core/models/sebastian.model"
 
       <!-- Date de deblocage ou categorie -->
       @if (badge().unlocked && badge().unlockedAt) {
-        <p data-testid="badge-date" class="text-xs text-scheme-accent">
+        <p
+          data-testid="badge-date"
+          class="inline-block rounded-full bg-[rgba(230,170,70,0.18)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[#f4d18a]"
+        >
           {{ formattedDate() }}
         </p>
       } @else if (!badge().unlocked) {
-        <p class="text-xs text-scheme-text-muted">
+        <p
+          class="inline-block rounded-full bg-white/[0.08] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-white/50"
+        >
           {{ badge().category }}
         </p>
       }

@@ -105,12 +105,15 @@ describe("SebastianScoreCardComponent", () => {
     expect(content).toContain("Phase 3");
   });
 
-  it("devrait utiliser les tokens de design SSOT", () => {
+  it("devrait utiliser le glass Asili dark lounge ambré", () => {
     const card: HTMLElement = fixture.nativeElement.querySelector(
       "[data-testid='score-card']",
     );
     expect(card).toBeTruthy();
-    expect(card.classList).toContain("bg-scheme-surface");
-    expect(card.classList).toContain("rounded-card");
+    // Restyle Lot 5 : glass dark lounge ambré (.panel) — bg-white/[0.04] +
+    // bordure ambrée rgba(230,170,70,0.14) + rayon 20px.
+    expect(card.classList).toContain("bg-white/[0.04]");
+    expect(card.classList).toContain("border-[rgba(230,170,70,0.14)]");
+    expect(card.classList).toContain("rounded-[20px]");
   });
 });

@@ -33,17 +33,27 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
     RouterLink,
   ],
   template: `
+    <!--
+      Dashboard App Sebastian — thème "dark lounge ambré" porté de la maquette
+      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (glass
+      bg-white/4 + bordure ambrée rgba(230,170,70,0.14), titre font-display),
+      .bac/.bac-info (en-tête alcoolémie), .barchart (graphes de tendance).
+      Restyle 100 % visuel : seuils BAC 0.25/0.5, formatTime, bloc conditionnel
+      score/invitation, datasets Chart.js et strings assertées (« Taux
+      d'alcoolemie », « 7 derniers jours », « 30 derniers jours », « Moy.
+      alcool », « Moy. cafe ») conservés à l'identique (décision 6).
+    -->
     <div class="space-y-6">
       <!-- Score card ou invitation a definir un objectif -->
       @if (healthScore(); as score) {
         @if (score.score === 0 && score.phase === 1) {
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-6 text-center shadow-xs"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6 text-center"
           >
-            <p class="mb-3 text-scheme-text-muted">{{ score.message }}</p>
+            <p class="mb-3 text-white/55">{{ score.message }}</p>
             <a
               routerLink="../objectifs"
-              class="inline-block rounded-button bg-scheme-accent px-6 py-2 font-semibold text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover"
+              class="inline-block rounded-full bg-gold px-6 py-2 font-semibold text-[#1a1206] transition-colors hover:bg-gold-soft"
             >
               Definir un objectif
             </a>
@@ -53,7 +63,7 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
             <app-sebastian-score-card class="flex-1" [score]="score" />
             <a
               routerLink="../objectifs"
-              class="mt-2 whitespace-nowrap rounded-button border border-scheme-border px-4 py-2 text-sm text-scheme-text-muted transition-colors hover:bg-scheme-surface-hover"
+              class="mt-2 whitespace-nowrap rounded-full border border-[rgba(230,170,70,0.14)] px-4 py-2 text-sm text-white/55 transition-colors hover:border-[rgba(230,170,70,0.35)] hover:text-white"
             >
               Modifier les objectifs
             </a>
@@ -61,17 +71,17 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
         }
       }
 
-      <!-- Taux d'alcoolemie -->
+      <!-- Taux d'alcoolemie (en-tête .bac/.bac-info, seuils couleur 0.25/0.5) -->
       @if (bacResult(); as bac) {
         <section
-          class="rounded-card border border-scheme-border bg-scheme-surface p-4 shadow-xs"
+          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6"
         >
-          <h3 class="mb-3 font-heading text-h5 text-scheme-text">
+          <h3 class="mb-3 font-display text-2xl text-white">
             Taux d'alcoolemie
           </h3>
           <div class="mb-3 flex items-center gap-4">
             <span
-              class="text-3xl font-bold"
+              class="font-display text-4xl leading-none"
               [class]="
                 bac.currentBac >= 0.5
                   ? 'text-red-500'
@@ -83,7 +93,7 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
               {{ bac.currentBac.toFixed(2) }} g/L
             </span>
             @if (bac.estimatedSoberAt) {
-              <span class="text-sm text-scheme-text-muted">
+              <span class="text-sm text-white/55">
                 Sobriete estimee : {{ formatTime(bac.estimatedSoberAt) }}
               </span>
             }
@@ -94,12 +104,12 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
         </section>
       }
 
-      <!-- Grille des graphiques de tendance -->
+      <!-- Grille des graphiques de tendance (.panel glass + barchart gold) -->
       <div class="grid gap-6 md:grid-cols-2">
         <section
-          class="rounded-card border border-scheme-border bg-scheme-surface p-4 shadow-xs"
+          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6"
         >
-          <h3 class="mb-3 font-heading text-h5 text-scheme-text">
+          <h3 class="mb-3 font-display text-2xl text-white">
             7 derniers jours
           </h3>
           @if (trends7d()) {
@@ -107,9 +117,9 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
           }
         </section>
         <section
-          class="rounded-card border border-scheme-border bg-scheme-surface p-4 shadow-xs"
+          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6"
         >
-          <h3 class="mb-3 font-heading text-h5 text-scheme-text">
+          <h3 class="mb-3 font-display text-2xl text-white">
             30 derniers jours
           </h3>
           @if (trends30d()) {
@@ -117,11 +127,13 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
           }
           <!-- Resume mensuel sous le graphe 30d -->
           @if (trends30d()) {
-            <div
-              class="mt-3 flex justify-between text-small text-scheme-text-muted"
-            >
-              <span>Moy. alcool : {{ trends30d()!.summary.avgAlcohol }}/j</span>
-              <span>Moy. cafe : {{ trends30d()!.summary.avgCoffee }}/j</span>
+            <div class="mt-3 flex justify-between text-sm text-white/55">
+              <span class="font-mono"
+                >Moy. alcool : {{ trends30d()!.summary.avgAlcohol }}/j</span
+              >
+              <span class="font-mono"
+                >Moy. cafe : {{ trends30d()!.summary.avgCoffee }}/j</span
+              >
             </div>
           }
         </section>

@@ -9226,7 +9226,7 @@
         <source> Sebastian </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">47,50</context>
+          <context context-type="linenumber">56,59</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.title</note>
       </trans-unit>
@@ -9234,7 +9234,7 @@
         <source> Votre majordome de suivi de consommation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">53,57</context>
+          <context context-type="linenumber">62,66</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.description</note>
       </trans-unit>
@@ -9242,7 +9242,7 @@
         <source>Alcool aujourd&apos;hui</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">67,69</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.counter.alcohol</note>
       </trans-unit>
@@ -9250,11 +9250,11 @@
         <source>Objectif</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">78,80</context>
+          <context context-type="linenumber">87,89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">110,112</context>
+          <context context-type="linenumber">121,123</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.counter.goal</note>
       </trans-unit>
@@ -9262,7 +9262,7 @@
         <source>Cafe aujourd&apos;hui</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
-          <context context-type="linenumber">99,101</context>
+          <context context-type="linenumber">110,112</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.counter.coffee</note>
       </trans-unit>
@@ -10457,58 +10457,6 @@
         </context-group>
         <note priority="1" from="meaning">weather.current.visibility</note>
       </trans-unit>
-      <trans-unit id="weatherDailyTitle" datatype="html">
-        <source> Prévisions journalières </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">52,55</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.daily.title</note>
-      </trans-unit>
-      <trans-unit id="weatherDailyToggleAria" datatype="html">
-        <source>Nombre de jours de prévisions</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">59,60</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.daily.toggle.aria</note>
-      </trans-unit>
-      <trans-unit id="weatherDaily7Days" datatype="html">
-        <source> 7 jours </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">75,78</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.daily.7days</note>
-      </trans-unit>
-      <trans-unit id="weatherDaily14Days" datatype="html">
-        <source> 14 jours </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">90,93</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.daily.14days</note>
-      </trans-unit>
-      <trans-unit id="weatherDailyToday" datatype="html">
-        <source>Aujourd&apos;hui</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/daily-forecast/daily-forecast.component.ts</context>
-          <context context-type="linenumber">238</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
-          <context context-type="linenumber">173</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts</context>
-          <context context-type="linenumber">118</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts</context>
-          <context context-type="linenumber">239</context>
-        </context-group>
-        <note priority="1" from="meaning">weather.daily.today</note>
-      </trans-unit>
       <trans-unit id="weatherDataExportTitle" datatype="html">
         <source> Export des données </source>
         <context-group purpose="location">
@@ -10580,6 +10528,22 @@
           <context context-type="linenumber">134,136</context>
         </context-group>
         <note priority="1" from="meaning">weather.dayDetail.sun</note>
+      </trans-unit>
+      <trans-unit id="weatherDailyToday" datatype="html">
+        <source>Aujourd&apos;hui</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/day-detail-panel/day-detail-panel.component.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.daily.today</note>
       </trans-unit>
       <trans-unit id="weatherUvLow" datatype="html">
         <source>Faible</source>
@@ -11530,7 +11494,7 @@
         <source>Erreur lors du chargement des prévisions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/weather-app.component.ts</context>
-          <context context-type="linenumber">266</context>
+          <context context-type="linenumber">264</context>
         </context-group>
         <note priority="1" from="meaning">weather.error.loading</note>
       </trans-unit>

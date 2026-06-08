@@ -25,14 +25,24 @@ import {
   standalone: true,
   imports: [FormsModule, DatePipe],
   template: `
+    <!--
+      Historique App Sebastian — thème "dark lounge ambré" porté de la maquette
+      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (barre de
+      filtres glass), .histlog/.logrow (journal : emoji, libellé, date mono,
+      suppression). Restyle 100 % visuel : filtres (onCategoryChange/
+      onFromChange/onToChange), loadEntries, removeEntry, mapping emoji par
+      drinkType/category, DatePipe, état vide et tous les data-testid
+      (category-filter, date-from, date-to, entry-item, delete-entry,
+      empty-state) conservés.
+    -->
     <div class="space-y-6">
-      <!-- Barre de filtres -->
+      <!-- Barre de filtres (glass .panel, champs dark) -->
       <div
-        class="flex flex-wrap gap-3 rounded-card border border-scheme-border bg-scheme-surface p-4"
+        class="flex flex-wrap gap-3 rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
       >
         <select
           data-testid="category-filter"
-          class="rounded-form border border-scheme-border bg-scheme-surface px-3 py-2 text-sm text-scheme-text"
+          class="rounded-lg border border-[rgba(230,170,70,0.14)] bg-white/[0.04] px-3 py-2 text-sm text-white transition-colors focus:border-[rgba(230,170,70,0.45)] focus:outline-none [&>option]:bg-[#14100a] [&>option]:text-white"
           [ngModel]="filterCategory()"
           (ngModelChange)="onCategoryChange($event)"
         >
@@ -44,7 +54,7 @@ import {
         <input
           data-testid="date-from"
           type="date"
-          class="rounded-form border border-scheme-border bg-scheme-surface px-3 py-2 text-sm text-scheme-text"
+          class="rounded-lg border border-[rgba(230,170,70,0.14)] bg-white/[0.04] px-3 py-2 text-sm text-white transition-colors focus:border-[rgba(230,170,70,0.45)] focus:outline-none [color-scheme:dark]"
           [ngModel]="filterFrom()"
           (ngModelChange)="onFromChange($event)"
           placeholder="Date debut"
@@ -52,19 +62,19 @@ import {
         <input
           data-testid="date-to"
           type="date"
-          class="rounded-form border border-scheme-border bg-scheme-surface px-3 py-2 text-sm text-scheme-text"
+          class="rounded-lg border border-[rgba(230,170,70,0.14)] bg-white/[0.04] px-3 py-2 text-sm text-white transition-colors focus:border-[rgba(230,170,70,0.45)] focus:outline-none [color-scheme:dark]"
           [ngModel]="filterTo()"
           (ngModelChange)="onToChange($event)"
           placeholder="Date fin"
         />
       </div>
 
-      <!-- Liste des entrees -->
-      <div class="space-y-2">
+      <!-- Liste des entrees (.histlog/.logrow) -->
+      <div class="space-y-1">
         @for (entry of entries(); track entry.id) {
           <div
             data-testid="entry-item"
-            class="flex items-center justify-between rounded-card border border-scheme-border bg-scheme-surface px-4 py-3"
+            class="flex items-center justify-between rounded-[10px] px-3 py-3 transition-colors hover:bg-white/[0.04]"
           >
             <div class="flex items-center gap-3">
               <span class="text-xl">{{
@@ -77,7 +87,7 @@ import {
                       : "☕"
               }}</span>
               <div>
-                <span class="font-medium text-scheme-text">
+                <span class="font-medium text-white">
                   {{ entry.quantity }}
                   {{
                     entry.drinkType === "wine"
@@ -95,7 +105,7 @@ import {
                     ({{ entry.volumeCl }}cl)
                   }
                 </span>
-                <p class="text-xs text-scheme-text-muted">
+                <p class="font-mono text-xs text-white/45">
                   {{ entry.date | date: "dd/MM/yyyy" }}
                   @if (entry.notes) {
                     — {{ entry.notes }}
@@ -115,7 +125,7 @@ import {
         } @empty {
           <p
             data-testid="empty-state"
-            class="text-center text-sm text-scheme-text-muted"
+            class="text-center text-sm text-white/45"
           >
             Aucune entree enregistree
           </p>

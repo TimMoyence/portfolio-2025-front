@@ -53,7 +53,8 @@ describe("SebastianBadgeCardComponent", () => {
       "[data-testid='badge-card']",
     );
     expect(card).toBeTruthy();
-    expect(card.classList).toContain("border-scheme-accent");
+    // Bordure gold Asili pour un badge débloqué (thème dark lounge ambré).
+    expect(card.classList).toContain("border-gold");
   });
 
   it("devrait afficher la date de deblocage pour un badge debloque", () => {
