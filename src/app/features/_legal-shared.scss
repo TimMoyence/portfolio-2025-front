@@ -1,0 +1,187 @@
+/*
+  Styles partagés des pages légales « layout TOC » (terms / privacy) — refonte
+  Asili (Lot 3f). Portés verbatim de `AsiliNewDesign/asili-legal.css` :
+  `.lg-hero`, `.lg-layout`, `.lg-toc`, `.lg-body`, `.lg-note`. Les primitives
+  globales (.kicker, design tokens _tokens.scss) fournissent le reste.
+
+  Les classes `.lg-*` ne sont PAS globales : chaque page légale `@use` ce
+  partiel pour les scoper. Volontairement sans sélecteur racine `:host`
+  (laissé à chaque composant) afin d'être composable via `@use`.
+*/
+
+/* --- Hero (asili-legal.css : .lg-hero) ----------------------------------- */
+.lg-hero {
+  padding-top: clamp(130px, 16vh, 190px);
+  padding-bottom: clamp(30px, 5vh, 50px);
+  border-bottom: 1px solid var(--line);
+}
+.lg-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  max-width: 18ch;
+  margin-top: 16px;
+}
+.lg-hero h1 em {
+  font-style: italic;
+  color: var(--teal-deep);
+}
+.lg-hero .updated {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.lg-hero .updated .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+/* --- Section englobante (padding bas porté du style inline maquette) ------ */
+.lg-section {
+  padding-bottom: clamp(60px, 9vh, 120px);
+}
+
+/* --- Layout TOC + corps (asili-legal.css : .lg-layout) ------------------- */
+.lg-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: clamp(30px, 5vw, 72px);
+  padding-top: clamp(40px, 6vh, 70px);
+  align-items: start;
+}
+
+/* TOC sticky */
+.lg-toc {
+  position: sticky;
+  top: 100px;
+}
+.lg-toc .toc-k {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 16px;
+}
+.lg-toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: toc;
+  display: grid;
+  gap: 3px;
+}
+.lg-toc a {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  border-left: 2px solid transparent;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  counter-increment: toc;
+}
+.lg-toc a::before {
+  content: counter(toc, decimal-leading-zero) "  ";
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.lg-toc a:hover {
+  background: var(--ivory);
+  color: var(--ink);
+}
+.lg-toc a.active {
+  border-left-color: var(--teal);
+  color: var(--teal-deep);
+  background: rgba(79, 179, 162, 0.06);
+}
+
+/* Corps lisible */
+.lg-body {
+  max-width: 680px;
+}
+.lg-body section {
+  margin-bottom: clamp(40px, 6vh, 70px);
+  scroll-margin-top: 100px;
+}
+.lg-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin-bottom: 20px;
+}
+.lg-body h3 {
+  font-size: 19px;
+  margin: 26px 0 10px;
+  color: var(--ink);
+}
+.lg-body p {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+.lg-body ul {
+  margin: 0 0 18px;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 11px;
+}
+.lg-body ul li {
+  display: flex;
+  gap: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.lg-body ul li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  flex: none;
+  margin-top: 10px;
+}
+.lg-body a.inl {
+  color: var(--teal-deep);
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+}
+.lg-body a.inl:hover {
+  border-color: var(--teal);
+}
+.lg-body strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.lg-note {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px 22px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 880px) {
+  .lg-layout {
+    grid-template-columns: 1fr;
+  }
+  .lg-toc {
+    display: none;
+  }
+}

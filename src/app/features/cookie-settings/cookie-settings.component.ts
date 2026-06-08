@@ -1,20 +1,30 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import type { CookieConsentPreferences } from "../../core/models/cookie-consent.model";
 import { CookieConsentService } from "../../core/services/cookie-consent.service";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 
-interface ComplianceSection {
-  title: string;
-  intro: string;
-  items: string[];
-}
-
+/**
+ * Page « Préférences cookies ».
+ *
+ * Restyle Asili porté de `AsiliNewDesign/cookie-settings.html` + `asili-legal.css`
+ * (`.lg-hero`, `.ck-list`, `.ck-item`, `.switch`, `.ck-actions`, `.ck-saved`).
+ * Quatre catégories (Essentiels / Mesure d'audience / Préférences / Marketing)
+ * branchées sur le modèle `CookieConsentPreferences` existant.
+ *
+ * IMPORTANT : la logique de consentement (`CookieConsentService`) est conservée
+ * intégralement — le restyle est purement visuel. Les toggles sont liés aux
+ * états `preferences.*` existants et les handlers `savePreferences()` /
+ * `withdrawConsent()` appellent le service à l'identique. `acceptAll()` réutilise
+ * le contrat `saveConsent(..., "accept_all")` du service (action déjà supportée
+ * par le modèle), sans modifier la logique de persistance.
+ */
 @Component({
   selector: "app-cookie-settings",
   standalone: true,
-  imports: [CommonModule, FormsModule, HeroSectionComponent],
+  imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
   templateUrl: "./cookie-settings.component.html",
   styleUrl: "./cookie-settings.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,131 +33,121 @@ export class CookieSettingsComponent {
   private readonly consentService = inject(CookieConsentService);
 
   readonly hero = {
-    label: $localize`:cookie.settings.hero.label@@cookieSettingsHeroLabel:Conformité & Cookies`,
-    title: $localize`:cookie.settings.hero.title@@cookieSettingsHeroTitle:Vos choix de confidentialité`,
-    description: $localize`:cookie.settings.hero.description@@cookieSettingsHeroDescription:Retrouvez ici les informations GDPR et gérez vos préférences de cookies pour l'Union européenne et le Royaume-Uni.`,
+    kicker: $localize`:cookie.settings.hero.kicker@@cookieSettingsHeroLabel:Vos choix`,
+    updated: $localize`:cookie.settings.hero.updated@@cookieSettingsMetaLastUpdated:Vous gardez la main — modifiable à tout moment`,
   };
 
-  readonly meta = {
-    lastUpdated: $localize`:cookie.settings.meta.lastUpdated@@cookieSettingsMetaLastUpdated:Dernière mise à jour : 11 février 2026`,
-    version: $localize`:cookie.settings.meta.version@@cookieSettingsMetaVersion:Version de la politique : 2026-02-11`,
-    regionNote: $localize`:cookie.settings.meta.region@@cookieSettingsMetaRegion:Ce dispositif s'applique aux visiteurs de l'Union européenne et du Royaume-Uni.`,
-  };
+  readonly intro = $localize`:cookie.settings.intro@@cookieSettingsIntro:On utilise le strict nécessaire pour que le site fonctionne, et rien de plus sans votre accord. Réglez chaque catégorie ci-dessous.`;
 
-  readonly sections: ComplianceSection[] = [
-    {
-      title: $localize`:cookie.settings.section.gdpr.title@@cookieSettingsGdprTitle:Conformité GDPR (UE & Royaume-Uni)`,
-      intro: $localize`:cookie.settings.section.gdpr.intro@@cookieSettingsGdprIntro:Nous traitons les données personnelles de manière transparente, limitée et sécurisée.`,
-      items: [
-        $localize`:cookie.settings.section.gdpr.item1@@cookieSettingsGdprItem1:Les données collectées sont strictement nécessaires aux finalités annoncées.`,
-        $localize`:cookie.settings.section.gdpr.item2@@cookieSettingsGdprItem2:Le consentement est libre, spécifique, informé et peut être retiré à tout moment.`,
-        $localize`:cookie.settings.section.gdpr.item3@@cookieSettingsGdprItem3:Les durées de conservation sont limitées et documentées.`,
-        $localize`:cookie.settings.section.gdpr.item4@@cookieSettingsGdprItem4:Vous pouvez demander l'accès, la rectification ou la suppression de vos données.`,
-      ],
-    },
-    {
-      title: $localize`:cookie.settings.section.cookies.title@@cookieSettingsCookiesTitle:Gestion des cookies`,
-      intro: $localize`:cookie.settings.section.cookies.intro@@cookieSettingsCookiesIntro:Nous utilisons uniquement les cookies nécessaires au fonctionnement du site et à la gestion de vos choix.`,
-      items: [
-        $localize`:cookie.settings.section.cookies.item1@@cookieSettingsCookiesItem1:Cookies essentiels : indispensables pour le fonctionnement et la sécurité.`,
-        $localize`:cookie.settings.section.cookies.item2@@cookieSettingsCookiesItem2:Cookies de préférences : optionnels, pour améliorer l'expérience.`,
-        $localize`:cookie.settings.section.cookies.item3@@cookieSettingsCookiesItem3:Cookies analytiques et marketing : non utilisés sur ce site pour le moment.`,
-        $localize`:cookie.settings.section.cookies.item4@@cookieSettingsCookiesItem4:Aucun cookie non essentiel n'est déposé sans votre accord.`,
-      ],
-    },
-    {
-      title: $localize`:cookie.settings.section.logic.title@@cookieSettingsLogicTitle:Logique conditionnelle & activation`,
-      intro: $localize`:cookie.settings.section.logic.intro@@cookieSettingsLogicIntro:Les cookies non essentiels restent désactivés tant que vous n'avez pas donné votre accord.`,
-      items: [
-        $localize`:cookie.settings.section.logic.item1@@cookieSettingsLogicItem1:Le bandeau de consentement s'affiche pour les visiteurs UE/Royaume-Uni.`,
-        $localize`:cookie.settings.section.logic.item2@@cookieSettingsLogicItem2:Les scripts non essentiels sont bloqués jusqu'à consentement.`,
-        $localize`:cookie.settings.section.logic.item3@@cookieSettingsLogicItem3:Vous pouvez modifier ou retirer votre choix depuis cette page.`,
-      ],
-    },
-    {
-      title: $localize`:cookie.settings.section.i18n.title@@cookieSettingsI18nTitle:Internationalisation`,
-      intro: $localize`:cookie.settings.section.i18n.intro@@cookieSettingsI18nIntro:Les informations de confidentialité sont présentées en français et en anglais avec un sens juridique équivalent.`,
-      items: [
-        $localize`:cookie.settings.section.i18n.item1@@cookieSettingsI18nItem1:Les notices et politiques sont affichées dans la langue de l'interface.`,
-        $localize`:cookie.settings.section.i18n.item2@@cookieSettingsI18nItem2:Les versions traduites sont alignées sur la version de référence.`,
-        $localize`:cookie.settings.section.i18n.item3@@cookieSettingsI18nItem3:La version affichée est enregistrée lors du consentement.`,
-      ],
-    },
-    {
-      title: $localize`:cookie.settings.section.audit.title@@cookieSettingsAuditTitle:Documentation & traçabilité`,
-      intro: $localize`:cookie.settings.section.audit.intro@@cookieSettingsAuditIntro:Nous conservons des preuves de consentement pour répondre aux exigences d'audit.`,
-      items: [
-        $localize`:cookie.settings.section.audit.item1@@cookieSettingsAuditItem1:Journalisation de la date, de la version, de la langue et des catégories.`,
-        $localize`:cookie.settings.section.audit.item2@@cookieSettingsAuditItem2:Les traces de consentement sont conservées pour démontrer la conformité.`,
-        $localize`:cookie.settings.section.audit.item3@@cookieSettingsAuditItem3:Tout retrait de consentement est enregistré.`,
-      ],
-    },
-  ];
-
-  readonly preferenceLabels = {
-    title: $localize`:cookie.settings.preferences.title@@cookieSettingsPreferencesTitle:Vos préférences cookies`,
-    description: $localize`:cookie.settings.preferences.description@@cookieSettingsPreferencesDescription:Vous pouvez ajuster vos choix à tout moment.`,
+  readonly categories = {
     essential: {
-      title: $localize`:cookie.settings.preferences.essential.title@@cookieSettingsPreferencesEssentialTitle:Essentiels (obligatoires)`,
-      description: $localize`:cookie.settings.preferences.essential.desc@@cookieSettingsPreferencesEssentialDesc:Nécessaires au fonctionnement du site et à la mémorisation de votre choix.`,
-    },
-    preferences: {
-      title: $localize`:cookie.settings.preferences.preferences.title@@cookieSettingsPreferencesOptionalTitle:Préférences`,
-      description: $localize`:cookie.settings.preferences.preferences.desc@@cookieSettingsPreferencesOptionalDesc:Permettent d'améliorer votre expérience (langue, affichage).`,
+      title: $localize`:cookie.settings.essential.title@@cookieSettingsPreferencesEssentialTitle:Essentiels`,
+      description: $localize`:cookie.settings.essential.desc@@cookieSettingsPreferencesEssentialDesc:Indispensables au fonctionnement du site : connexion, sécurité, mémorisation de vos préférences. Ils ne peuvent pas être désactivés.`,
+      tag: $localize`:cookie.settings.essential.tag@@cookieSettingsEssentialTag:Toujours actifs`,
     },
     analytics: {
-      title: $localize`:cookie.settings.preferences.analytics.title@@cookieSettingsPreferencesAnalyticsTitle:Analytique (désactivé)`,
-      description: $localize`:cookie.settings.preferences.analytics.desc@@cookieSettingsPreferencesAnalyticsDesc:Aucun outil de mesure d'audience n'est actif actuellement.`,
+      title: $localize`:cookie.settings.analytics.title@@cookieSettingsPreferencesAnalyticsTitle:Mesure d'audience`,
+      description: $localize`:cookie.settings.analytics.desc@@cookieSettingsPreferencesAnalyticsDesc:Permettraient des statistiques anonymisées pour améliorer le site. L'app est en lancement : on n'en collecte aucune pour l'instant.`,
+      tag: $localize`:cookie.settings.analytics.tag@@cookieSettingsAnalyticsTag:Non collecté`,
+    },
+    preferences: {
+      title: $localize`:cookie.settings.preferences.title@@cookieSettingsPreferencesOptionalTitle:Préférences`,
+      description: $localize`:cookie.settings.preferences.desc@@cookieSettingsPreferencesOptionalDesc:Mémorisent vos choix d'affichage (langue, réglages) pour une expérience plus fluide d'une visite à l'autre.`,
+      tag: $localize`:cookie.settings.preferences.tag@@cookieSettingsPreferencesTag:Confort`,
     },
     marketing: {
-      title: $localize`:cookie.settings.preferences.marketing.title@@cookieSettingsPreferencesMarketingTitle:Marketing (désactivé)`,
-      description: $localize`:cookie.settings.preferences.marketing.desc@@cookieSettingsPreferencesMarketingDesc:Aucun suivi publicitaire n'est actif actuellement.`,
+      title: $localize`:cookie.settings.marketing.title@@cookieSettingsPreferencesMarketingTitle:Marketing`,
+      description: $localize`:cookie.settings.marketing.desc@@cookieSettingsPreferencesMarketingDesc:Permettraient de mesurer l'efficacité de campagnes. Désactivés par défaut — l'app est en lancement, on n'en utilise pas.`,
+      tag: $localize`:cookie.settings.marketing.tag@@cookieSettingsMarketingTag:Désactivé par défaut`,
     },
-    save: $localize`:cookie.settings.preferences.save@@cookieSettingsPreferencesSave:Enregistrer mes préférences`,
-    withdraw: $localize`:cookie.settings.preferences.withdraw@@cookieSettingsPreferencesWithdraw:Retirer mon consentement`,
-    saved: $localize`:cookie.settings.preferences.saved@@cookieSettingsPreferencesSaved:Vos préférences ont été enregistrées.`,
-    error: $localize`:cookie.settings.preferences.error@@cookieSettingsPreferencesError:Impossible d'enregistrer vos préférences pour le moment.`,
+  };
+
+  readonly actions = {
+    save: $localize`:cookie.settings.actions.save@@cookieSettingsPreferencesSave:Enregistrer mes choix`,
+    acceptAll: $localize`:cookie.settings.actions.acceptAll@@cookieSettingsAcceptAll:Tout accepter`,
+    saved: $localize`:cookie.settings.actions.saved@@cookieSettingsPreferencesSaved:Préférences enregistrées`,
+    error: $localize`:cookie.settings.actions.error@@cookieSettingsPreferencesError:Impossible d'enregistrer vos préférences pour le moment.`,
+  };
+
+  readonly privacyNote = {
+    before: $localize`:cookie.settings.privacyNote.before@@cookieSettingsPrivacyNoteBefore:Pour en savoir plus, consultez notre`,
+    link: $localize`:cookie.settings.privacyNote.link@@cookieSettingsPrivacyNoteLink:politique de confidentialité`,
+  };
+
+  /** Aria-labels des toggles (a11y). */
+  readonly toggleAria = {
+    essential: $localize`:cookie.settings.aria.essential@@cookieSettingsAriaEssential:Cookies essentiels`,
+    analytics: $localize`:cookie.settings.aria.analytics@@cookieSettingsAriaAnalytics:Mesure d'audience`,
+    preferences: $localize`:cookie.settings.aria.preferences@@cookieSettingsAriaPreferences:Préférences`,
+    marketing: $localize`:cookie.settings.aria.marketing@@cookieSettingsAriaMarketing:Marketing`,
   };
 
   preferences: CookieConsentPreferences = this.consentService.getPreferences();
   statusMessage?: string;
+  showSaved = false;
   isSaving = false;
 
+  /** Enregistre les préférences courantes via le service (logique conservée). */
   savePreferences(): void {
-    this.isSaving = true;
-    this.statusMessage = undefined;
-    this.consentService
-      .saveConsent(this.preferences, "settings", "save_preferences")
-      .subscribe({
-        next: (response) => {
-          this.statusMessage =
-            response?.httpCode === 201
-              ? this.preferenceLabels.saved
-              : this.preferenceLabels.error;
-        },
-        error: () => {
-          this.statusMessage = this.preferenceLabels.error;
-        },
-        complete: () => {
-          this.isSaving = false;
-        },
-      });
+    this.persist(
+      this.consentService.saveConsent(
+        this.preferences,
+        "settings",
+        "save_preferences",
+      ),
+    );
   }
 
+  /**
+   * Accepte les catégories réellement activables puis enregistre via le service.
+   * Réutilise le contrat `saveConsent(..., "accept_all")` — pas de logique de
+   * persistance nouvelle, seulement un état coché avant l'appel. `analytics` et
+   * `marketing` restent à `false` : ils ne sont pas collectés (l'app est en
+   * lancement) et le service les force de toute façon à `false` — on évite de
+   * laisser croire à l'utilisateur qu'ils ont été activés.
+   */
+  acceptAll(): void {
+    this.preferences = {
+      essential: true,
+      preferences: true,
+      analytics: false,
+      marketing: false,
+    };
+    this.persist(
+      this.consentService.saveConsent(
+        this.preferences,
+        "settings",
+        "accept_all",
+      ),
+    );
+  }
+
+  /**
+   * Retire le consentement : réinitialise sur les valeurs par défaut puis
+   * appelle le service (logique conservée à l'identique).
+   */
   withdrawConsent(): void {
-    this.isSaving = true;
-    this.statusMessage = undefined;
     const reset = this.consentService.getDefaultPreferences();
     this.preferences = { ...reset };
-    this.consentService.withdrawConsent().subscribe({
+    this.persist(this.consentService.withdrawConsent());
+  }
+
+  /** Abonne un appel de consentement et reflète le résultat dans l'UI. */
+  private persist(call: ReturnType<CookieConsentService["saveConsent"]>): void {
+    this.isSaving = true;
+    this.statusMessage = undefined;
+    this.showSaved = false;
+    call.subscribe({
       next: (response) => {
-        this.statusMessage =
-          response?.httpCode === 201
-            ? this.preferenceLabels.saved
-            : this.preferenceLabels.error;
+        if (response?.httpCode === 201) {
+          this.statusMessage = this.actions.saved;
+          this.showSaved = true;
+        } else {
+          this.statusMessage = this.actions.error;
+        }
       },
       error: () => {
-        this.statusMessage = this.preferenceLabels.error;
+        this.statusMessage = this.actions.error;
       },
       complete: () => {
         this.isSaving = false;

@@ -1,131 +1,172 @@
-<app-hero-section
-  [label]="hero.label"
-  [title]="hero.title"
-  [description]="hero.description"
-  titleLevel="h1"
-  align="center"
-></app-hero-section>
-
-<section class="px-[5%] py-6 md:py-8 lg:py-10 bg-scheme-background">
-  <div class="container">
-    <p class="text-sm md:text-base text-scheme-text-muted">
-      {{ meta.lastUpdated }}
-    </p>
+<!--
+  Conditions générales & mentions légales — restyle Asili (layout TOC).
+  Source maquette : AsiliNewDesign/terms.html + asili-legal.css.
+  Chrome globale conservée (navbar/footer) ; 8 sections verbatim de la maquette.
+-->
+<section class="lg-hero">
+  <div class="wrap" appReveal>
+    <span class="kicker">{{ hero.kicker }}</span>
+    <h1 i18n="@@termsHeroTitle">
+      Conditions générales &amp; <em>mentions légales</em>.
+    </h1>
+    <div class="updated"><span class="dot"></span>{{ hero.updated }}</div>
   </div>
 </section>
 
-<section class="px-[5%] pb-12 md:pb-16 lg:pb-20 bg-scheme-background">
-  <div class="container grid gap-6">
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsScopeTitle">
-        Objet et acceptation
-      </h2>
-      <p class="text-sm md:text-base text-scheme-text" i18n="@@termsScopeBody">
-        L'utilisation du site implique l'acceptation des présentes conditions.
-        Elles s'appliquent à toute navigation et à toute prise de contact via
-        les formulaires.
-      </p>
-    </article>
+<section class="lg-section">
+  <div class="wrap lg-layout">
+    <!-- TOC : ancres natives SSR-safe -->
+    <nav class="lg-toc" aria-label="Sommaire" i18n-aria-label="@@termsTocAria">
+      <div class="toc-k" i18n="@@termsTocHeading">Sommaire</div>
+      <ol>
+        @for (item of toc; track item.anchor) {
+          <li>
+            <a [href]="'#' + item.anchor">{{ item.label }}</a>
+          </li>
+        }
+      </ol>
+    </nav>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsServicesTitle">
-        Services proposés
-      </h2>
-      <p
-        class="text-sm md:text-base text-scheme-text"
-        i18n="@@termsServicesBody"
-      >
-        Le site présente des prestations de conseil et de développement. Toute
-        mission fait l'objet d'un devis et d'un accord contractuel distinct.
-      </p>
-    </article>
+    <!-- BODY : 8 sections verbatim -->
+    <div class="lg-body">
+      <section id="editeur" appReveal>
+        <h2 i18n="@@termsEditeurTitle">1. Éditeur du site</h2>
+        <p i18n="@@termsEditeurBody1">
+          Le présent site est édité par <strong>Asili Design</strong>, activité
+          de développement et de conseil digital exercée par Tim Moyence, basée
+          à Bordeaux (France).
+        </p>
+        <p>
+          <span i18n="@@termsEditeurBody2"
+            >Pour toute question, vous pouvez nous écrire via la</span
+          >
+          <a class="inl" routerLink="/contact" i18n="@@termsEditeurContactLink"
+            >page de contact</a
+          ><span i18n="@@termsEditeurBody3"
+            >. L'hébergement est assuré par un prestataire situé dans l'Union
+            européenne.</span
+          >
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsAccessTitle">
-        Accès au site
-      </h2>
-      <p class="text-sm md:text-base text-scheme-text" i18n="@@termsAccessBody">
-        L'accès au site est fourni en l'état. Nous nous réservons le droit de
-        suspendre ou de limiter l'accès pour maintenance ou mise à jour.
-      </p>
-    </article>
+      <section id="objet" appReveal>
+        <h2 i18n="@@termsObjetTitle">2. Objet</h2>
+        <p i18n="@@termsObjetBody1">
+          Les présentes conditions régissent l'utilisation du site et l'accès
+          aux prestations proposées : services de développement et de conseil,
+          formations en ligne, ressources gratuites et expériences de l'Atelier.
+        </p>
+        <p i18n="@@termsObjetBody2">
+          En naviguant sur le site ou en créant un compte, vous acceptez ces
+          conditions dans leur version en vigueur à la date de votre visite.
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsIpTitle">
-        Propriété intellectuelle
-      </h2>
-      <p class="text-sm md:text-base text-scheme-text" i18n="@@termsIpBody">
-        Tous les contenus (textes, visuels, identité graphique) sont protégés.
-        Toute reproduction sans autorisation écrite est interdite.
-      </p>
-    </article>
+      <section id="services" appReveal>
+        <h2 i18n="@@termsServicesTitle">3. Services &amp; formations</h2>
+        <p i18n="@@termsServicesBody1">
+          Les <strong>services</strong> (interventions, projets, accompagnement)
+          font l'objet d'un cadrage et d'un devis spécifiques, établis après
+          échange. Aucun engagement n'est pris sans accord écrit mutuel.
+        </p>
+        <p i18n="@@termsServicesBody2">
+          Les <strong>formations</strong> premium donnent accès à un contenu
+          pédagogique en ligne. Le détail (durée, format, modules) est précisé
+          sur chaque page de formation.
+        </p>
+        <ul>
+          <li i18n="@@termsServicesItem1">
+            L'accès aux contenus est strictement personnel et non transférable.
+          </li>
+          <li i18n="@@termsServicesItem2">
+            Les ressources gratuites (toolkit, audit) sont fournies en l'état, à
+            titre informatif.
+          </li>
+          <li i18n="@@termsServicesItem3">
+            Les expériences de l'Atelier sont des démonstrations ; les données
+            affichées peuvent être simulées.
+          </li>
+        </ul>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsLiabilityTitle">
-        Responsabilité
-      </h2>
-      <p
-        class="text-sm md:text-base text-scheme-text"
-        i18n="@@termsLiabilityBody"
-      >
-        Nous mettons tout en œuvre pour fournir des informations fiables, sans
-        garantir l'absence d'erreur. La responsabilité ne saurait être engagée
-        pour des dommages indirects.
-      </p>
-    </article>
+      <section id="paiement" appReveal>
+        <h2 i18n="@@termsPaiementTitle">4. Paiement &amp; accès</h2>
+        <p i18n="@@termsPaiementBody1">
+          Les formations premium sont réglées en paiement unique, sécurisé.
+          L'accès est ouvert dès confirmation du règlement et reste disponible
+          sans limite de durée, sauf cas de force majeure.
+        </p>
+        <p i18n="@@termsPaiementBody2">
+          Les prix sont indiqués en euros, toutes taxes comprises le cas
+          échéant. Une facture est émise pour chaque achat.
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsLinksTitle">
-        Liens externes
-      </h2>
-      <p class="text-sm md:text-base text-scheme-text" i18n="@@termsLinksBody">
-        Le site peut contenir des liens vers des sites tiers. Nous ne contrôlons
-        pas leur contenu et déclinons toute responsabilité associée.
-      </p>
-    </article>
+      <section id="retractation" appReveal>
+        <h2 i18n="@@termsRetractationTitle">5. Droit de rétractation</h2>
+        <p i18n="@@termsRetractationBody">
+          Conformément à la réglementation applicable, vous disposez d'un délai
+          de <strong>14 jours</strong> pour vous rétracter d'un achat de
+          formation, sans avoir à vous justifier.
+        </p>
+        <div class="lg-note" i18n="@@termsRetractationNote">
+          Pour exercer ce droit, il vous suffit de nous écrire depuis la page de
+          contact. Le remboursement intervient dans les meilleurs délais, sur le
+          même moyen de paiement.
+        </div>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsPrivacyTitle">
-        Données personnelles &amp; cookies
-      </h2>
-      <p class="text-sm md:text-base text-scheme-text">
-        <span i18n="@@termsPrivacyBody">
-          Les traitements de données sont décrits dans la politique de
-          confidentialité et les paramètres de cookies.
-        </span>
-        <a
-          routerLink="/privacy"
-          class="underline font-semibold"
-          i18n="@@termsPrivacyLinkLabel"
-          >Consulter la politique</a
-        >
-      </p>
-    </article>
+      <section id="propriete" appReveal>
+        <h2 i18n="@@termsProprieteTitle">6. Propriété intellectuelle</h2>
+        <p i18n="@@termsProprieteBody1">
+          L'ensemble des contenus du site — textes, visuels, code, supports de
+          formation — est protégé par le droit de la propriété intellectuelle.
+          Toute reproduction ou diffusion non autorisée est interdite.
+        </p>
+        <p i18n="@@termsProprieteBody2">
+          L'accès à une formation vous confère un droit d'usage personnel, et
+          non un droit de revente ou de rediffusion.
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@termsLawTitle">
-        Droit applicable
-      </h2>
-      <p class="text-sm md:text-base text-scheme-text" i18n="@@termsLawBody">
-        Les présentes conditions sont régies par le droit français. En cas de
-        litige, une solution amiable sera recherchée en priorité.
-      </p>
-    </article>
+      <section id="responsabilite" appReveal>
+        <h2 i18n="@@termsResponsabiliteTitle">7. Responsabilité</h2>
+        <p i18n="@@termsResponsabiliteBody1">
+          Asili Design met tout en œuvre pour fournir des contenus fiables et à
+          jour. Les résultats d'une formation ou d'un audit dépendent toutefois
+          de leur mise en application par chacun ; aucune garantie de résultat
+          chiffré n'est donnée.
+        </p>
+        <p i18n="@@termsResponsabiliteBody2">
+          Le site peut contenir des liens vers des ressources externes, sur
+          lesquelles nous n'exerçons aucun contrôle.
+        </p>
+      </section>
+
+      <section id="droit" appReveal>
+        <h2 i18n="@@termsDroitTitle">8. Droit applicable</h2>
+        <p i18n="@@termsDroitBody1">
+          Les présentes conditions sont soumises au droit français. En cas de
+          litige, une solution amiable sera recherchée en priorité avant toute
+          action contentieuse.
+        </p>
+        <p>
+          <span i18n="@@termsDroitBody2"
+            >Pour en savoir plus sur le traitement de vos données, consultez
+            notre</span
+          >
+          <a class="inl" routerLink="/privacy" i18n="@@termsDroitPrivacyLink"
+            >politique de confidentialité</a
+          >
+          <span i18n="@@termsDroitBody3">et nos</span>
+          <a
+            class="inl"
+            routerLink="/cookie-settings"
+            i18n="@@termsDroitCookiesLink"
+            >préférences cookies</a
+          ><span i18n="@@termsDroitBody4">.</span>
+        </p>
+      </section>
+    </div>
   </div>
 </section>

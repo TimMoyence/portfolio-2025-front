@@ -1,3 +1,367 @@
+/*
+  Profil — styles page-spécifiques portés de la maquette
+  AsiliNewDesign/asili-auth.css (section PROFIL : .pf-hero, .pf-top, .pf-avatar,
+  .pf-badge, .pf-grid, .pf-card, .pf-line, .pf-access, .pf-acc). Les champs de
+  formulaire (.pf-field input) reprennent le style .auth-field input de la même
+  feuille. Primitives globales (.btn*, .wrap) + tokens (_tokens.scss) fournissent
+  le reste. Restyle = visuel uniquement ; logique inchangée.
+*/
+
 :host {
   display: block;
+}
+
+/* ---------- HERO (asili-auth.css : .pf-hero, .pf-top, .pf-avatar) ---------- */
+.pf-hero {
+  padding-top: clamp(130px, 16vh, 190px);
+  padding-bottom: clamp(36px, 6vh, 64px);
+}
+
+.pf-top {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.pf-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--teal-ink));
+  color: var(--cream);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 36px;
+  flex: none;
+  box-shadow: var(--shadow-soft);
+}
+
+.pf-id {
+  flex: 1;
+}
+
+.pf-top h1 {
+  font-size: clamp(32px, 4vw, 50px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.pf-top .pf-mail {
+  font-size: 15px;
+  color: var(--ink-mute);
+  margin-top: 4px;
+}
+
+.pf-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(79, 179, 162, 0.12);
+  color: var(--teal-deep);
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(79, 179, 162, 0.22);
+}
+
+/* ---------- GRILLE DE CARTES (asili-auth.css : .pf-grid, .pf-card) ---------- */
+.pf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: clamp(36px, 5vh, 56px);
+}
+
+.pf-card {
+  background: rgba(255, 250, 242, 0.6);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 28px;
+}
+
+.pf-card.full {
+  grid-column: 1 / -1;
+}
+
+.pf-card-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.pf-card .ch-sub {
+  font-size: 13.5px;
+  color: var(--ink-mute);
+  margin-bottom: 22px;
+}
+
+/* ---------- LIGNES INFO (asili-auth.css : .pf-line) ---------- */
+.pf-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.pf-line:first-of-type {
+  border-top: 0;
+}
+
+.pf-line .k {
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+
+.pf-line .v {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.muted {
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+
+.edit {
+  font-size: 13px;
+  color: var(--teal-deep);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+.edit:hover {
+  text-decoration: underline;
+}
+
+.edit.danger {
+  color: var(--danger);
+}
+
+/* ---------- ACCÈS ATELIER (asili-auth.css : .pf-access, .pf-acc) ---------- */
+.pf-access {
+  display: grid;
+  gap: 12px;
+}
+
+.pf-acc {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--cream);
+}
+
+.pf-acc .ai {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.pf-acc.meteo .ai {
+  background: rgba(79, 179, 162, 0.16);
+  color: var(--teal-deep);
+}
+
+.pf-acc.seb .ai {
+  background: rgba(230, 170, 70, 0.16);
+  color: var(--gold-deep);
+}
+
+.pf-acc .at {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.pf-acc .ad {
+  font-size: 12.5px;
+  color: var(--ink-mute);
+}
+
+.pf-acc .pill {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  background: rgba(108, 174, 62, 0.14);
+  color: #4e7d2c;
+}
+
+.pf-acc .pill.locked {
+  background: var(--sand);
+  color: var(--ink-mute);
+}
+
+.pf-acc-links {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pf-acc-links .btn {
+  font-size: 14px;
+  padding: 11px 18px;
+}
+
+/* ---------- FORMULAIRES (parité asili-auth.css : .auth-field) ---------- */
+.pf-edit,
+.pf-form {
+  display: grid;
+  gap: 18px;
+}
+
+.pf-field label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+
+.pf-field input {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 13px 15px;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.pf-field input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(79, 179, 162, 0.14);
+}
+
+.pf-field input.invalid {
+  border-color: var(--danger);
+}
+
+.pf-note {
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+
+.pf-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pf-msg {
+  font-size: 13.5px;
+  margin-top: 4px;
+}
+
+.pf-msg.ok {
+  color: var(--success);
+}
+
+.pf-msg.err {
+  color: var(--danger);
+}
+
+/* ---------- PRÉFÉRENCES MÉTÉO ---------- */
+.pf-weather-level {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.pf-level-line {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.pf-progress {
+  width: 100%;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--sand);
+  overflow: hidden;
+}
+
+.pf-progress-bar {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--teal);
+  transition: width 0.5s var(--ease, ease);
+}
+
+.pf-progress-meta {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+.pf-progress-ready {
+  color: var(--teal-deep);
+  font-weight: 600;
+}
+
+.pf-fav-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.pf-fav-list {
+  display: grid;
+  gap: 8px;
+}
+
+.pf-fav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  font-size: 14px;
+}
+
+.pf-fav-remove {
+  font-size: 12.5px;
+  color: var(--danger);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+.pf-fav-remove:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+  .pf-grid {
+    grid-template-columns: 1fr;
+  }
 }

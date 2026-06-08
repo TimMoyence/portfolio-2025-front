@@ -77,6 +77,10 @@ export class FooterComponent {
       heading: $localize`:footer.column.atelier|Footer column heading@@footerColumnAtelier:L'Atelier`,
       links: [
         {
+          label: $localize`:footer.nav.atelier|Footer nav link@@footerNavAtelier:L'Atelier`,
+          href: "/atelier",
+        },
+        {
           label: $localize`:footer.nav.meteo|Footer nav link@@footerNavMeteo:Météo`,
           href: "/atelier/meteo",
         },

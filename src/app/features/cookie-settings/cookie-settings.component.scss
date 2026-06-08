@@ -1,3 +1,144 @@
+/*
+  Préférences cookies (/cookie-settings) — restyle Asili.
+  Le hero `.lg-hero` est mutualisé dans le partiel `_legal-shared.scss` ; les
+  classes `.ck-*` / `.switch` sont portées ici, verbatim de
+  AsiliNewDesign/asili-legal.css (.ck-list, .ck-item, .switch, .ck-actions,
+  .ck-saved). Primitives globales (.btn, .btn-teal, .btn-ghost, .arrow, .kicker,
+  .lead, .wrap) + tokens (_tokens.scss) pour le reste.
+*/
+@use "../legal-shared";
+
 :host {
   display: block;
+}
+
+/* Section englobante (porté du style inline maquette : padding-block) */
+.ck-section {
+  padding-block: clamp(40px, 6vh, 70px) clamp(60px, 9vh, 120px);
+}
+.ck-intro {
+  max-width: 60ch;
+  margin-bottom: 36px;
+}
+
+/* --- Liste de catégories (asili-legal.css : .ck-list / .ck-item) --------- */
+.ck-list {
+  display: grid;
+  gap: 14px;
+  max-width: 680px;
+}
+.ck-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: rgba(255, 250, 242, 0.6);
+}
+.ck-item .ck-txt {
+  flex: 1;
+}
+.ck-item h3 {
+  font-size: 19px;
+  margin-bottom: 6px;
+}
+.ck-item p {
+  font-size: 14.5px;
+  color: var(--ink-mute);
+  line-height: 1.55;
+}
+.ck-item .ck-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--teal-deep);
+  margin-top: 8px;
+  display: inline-block;
+}
+
+/* --- Switch (asili-legal.css : .switch) ---------------------------------- */
+.switch {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  flex: none;
+}
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.switch .track {
+  position: absolute;
+  inset: 0;
+  background: var(--sand-deep);
+  border-radius: var(--r-pill);
+  transition: background 0.3s var(--ease);
+}
+.switch .track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s var(--ease);
+}
+.switch input:checked + .track {
+  background: var(--teal);
+}
+.switch input:checked + .track::after {
+  transform: translateX(22px);
+}
+.switch input:disabled + .track {
+  background: var(--teal-deep);
+  opacity: 0.5;
+}
+.switch input:disabled {
+  cursor: not-allowed;
+}
+.switch input:focus-visible + .track {
+  box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.4);
+}
+
+/* --- Actions (asili-legal.css : .ck-actions / .ck-saved) ----------------- */
+.ck-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.ck-saved {
+  font-size: 13.5px;
+  color: var(--teal-deep);
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+.ck-saved.show {
+  display: inline-flex;
+}
+.ck-status {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--danger);
+}
+
+/* --- Note confidentialité (porté du style inline maquette) --------------- */
+.ck-privacy-note {
+  font-size: 14px;
+  color: var(--ink-mute);
+  margin-top: 30px;
+  max-width: 54ch;
+}
+.ck-privacy-note .inl {
+  color: var(--teal-deep);
+  font-weight: 600;
 }

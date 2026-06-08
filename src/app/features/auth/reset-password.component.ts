@@ -11,13 +11,13 @@ import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import type { AuthPort } from "../../core/ports/auth.port";
 import { AUTH_PORT } from "../../core/ports/auth.port";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 
 @Component({
   selector: "app-reset-password",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeroSectionComponent],
+  imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
   templateUrl: "./reset-password.component.html",
   styleUrl: "./reset-password.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,12 +34,6 @@ export class ResetPasswordComponent implements OnInit {
   isLoading = false;
   successMessage?: string;
   errorMessage?: string;
-
-  readonly hero = {
-    label: $localize`:auth.reset.hero.label@@authResetHeroLabel:Sécurité`,
-    title: $localize`:auth.reset.hero.title@@authResetHeroTitle:Réinitialiser le mot de passe`,
-    description: $localize`:auth.reset.hero.description@@authResetHeroDescription:Choisissez un nouveau mot de passe robuste pour sécuriser votre compte.`,
-  };
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParamMap.get("token");

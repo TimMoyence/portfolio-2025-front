@@ -128,6 +128,38 @@
   transform: rotate(180deg);
 }
 
+/*
+  Variante « trigger lié » (desktop) : le label est un lien réel vers le hub
+  (/atelier) et le chevron une bascule du dropdown. Le wrapper regroupe les
+  deux comme un seul item de nav, sans padding propre (porté par le label).
+*/
+.asili-nav__trigger--linked {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.asili-nav__trigger-label {
+  padding-right: 6px;
+}
+
+.asili-nav__chevron-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 12px 9px 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-soft);
+  border-radius: var(--r-pill);
+  transition: color 0.25s var(--ease);
+}
+
+.asili-nav__chevron-btn:hover,
+.asili-nav__chevron-btn:focus-visible {
+  color: var(--ink);
+}
+
 /* ---------- Dropdowns desktop ---------- */
 .asili-dropdown {
   position: absolute;
@@ -482,6 +514,12 @@
 .asili-drawer__sublink:hover,
 .asili-drawer__sublink:focus-visible {
   color: var(--teal-deep);
+}
+
+/* Lien hub « L'Atelier » en tête du sous-menu mobile — mis en avant. */
+.asili-drawer__sublink--hub {
+  color: var(--ink);
+  font-weight: 600;
 }
 
 /* Zone actions + compte dans le drawer */

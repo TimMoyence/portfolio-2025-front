@@ -1,406 +1,508 @@
-<app-hero-section
-  [label]="hero.label"
-  [title]="hero.title"
-  [description]="hero.description"
-  titleLevel="h1"
-  align="left"
-></app-hero-section>
-
-<section class="px-[5%] py-8 md:py-10 lg:py-12 bg-scheme-background">
-  <div class="container max-w-2xl space-y-6">
+<!--
+  Profil — restyle Asili (source maquette AsiliNewDesign/profil.html +
+  asili-auth.css : .pf-hero, .pf-top, .pf-avatar, .pf-badge, .pf-grid,
+  .pf-card, .pf-line, .pf-access, .pf-acc). Logique inchangée : édition profil,
+  set/change password, préférences météo (AUTH_PORT + WEATHER_PORT +
+  AuthStateService). Restyle = HTML/SCSS uniquement.
+-->
+<section class="pf-hero">
+  <div class="wrap">
     @if (authState.user(); as user) {
-      <!-- Informations personnelles -->
-      <article
-        class="rounded-form border border-scheme-border bg-scheme-surface p-6 space-y-4"
-      >
-        <div class="flex items-center justify-between">
-          <h2 class="heading-h5 text-h5" i18n="@@profileIdentityTitle">
+      <div class="pf-top" appReveal>
+        <span class="pf-avatar" aria-hidden="true">{{
+          initial(user.firstName, user.lastName, user.email)
+        }}</span>
+        <div class="pf-id">
+          <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+          <div class="pf-mail">{{ user.email }}</div>
+        </div>
+        <span class="pf-badge" i18n="@@profileBadge">Espace personnel</span>
+      </div>
+
+      <div class="pf-grid">
+        <!-- ============ INFORMATIONS ============ -->
+        <article class="pf-card" appReveal>
+          <h2 class="pf-card-title" i18n="@@profileIdentityTitle">
             Informations personnelles
           </h2>
-          @if (!isEditing()) {
-            <button
-              type="button"
-              (click)="startEditing()"
-              class="text-sm text-scheme-accent hover:underline"
-              i18n="@@profileEditButton"
-            >
-              Modifier
-            </button>
-          }
-        </div>
+          <p class="ch-sub" i18n="@@profileIdentitySub">
+            Vos coordonnées de compte.
+          </p>
 
-        @if (!isEditing()) {
-          <!-- Mode lecture -->
-          <div class="space-y-2">
-            <p class="text-sm text-scheme-text">
-              <strong i18n="@@profileFirstNameLabel">Prenom :</strong>
-              {{ user.firstName }}
-            </p>
-            <p class="text-sm text-scheme-text">
-              <strong i18n="@@profileLastNameLabel">Nom :</strong>
-              {{ user.lastName }}
-            </p>
-            <p class="text-sm text-scheme-text">
-              <strong i18n="@@profileEmailLabel">Email :</strong>
-              {{ user.email }}
-            </p>
-            @if (user.phone) {
-              <p class="text-sm text-scheme-text">
-                <strong i18n="@@profilePhoneLabel">Telephone :</strong>
-                {{ user.phone }}
-              </p>
-            }
-          </div>
-        } @else {
-          <!-- Mode edition -->
-          <div class="space-y-4">
-            <div class="space-y-2">
-              <label
-                for="editFirstName"
-                class="block text-sm text-scheme-text"
-                i18n="@@profileEditFirstNameLabel"
-                >Prenom</label
-              >
-              <input
-                id="editFirstName"
-                name="editFirstName"
-                type="text"
-                [(ngModel)]="editFirstName"
-                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
-              />
+          @if (!isEditing()) {
+            <!-- Mode lecture -->
+            <div class="pf-line">
+              <div>
+                <div class="k" i18n="@@profileFirstNameLabel">Prénom</div>
+                <div class="v">{{ user.firstName }}</div>
+              </div>
             </div>
-            <div class="space-y-2">
-              <label
-                for="editLastName"
-                class="block text-sm text-scheme-text"
-                i18n="@@profileEditLastNameLabel"
-                >Nom</label
-              >
-              <input
-                id="editLastName"
-                name="editLastName"
-                type="text"
-                [(ngModel)]="editLastName"
-                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
-              />
+            <div class="pf-line">
+              <div>
+                <div class="k" i18n="@@profileLastNameLabel">Nom</div>
+                <div class="v">{{ user.lastName }}</div>
+              </div>
             </div>
-            <div class="space-y-2">
-              <label
-                for="editPhone"
-                class="block text-sm text-scheme-text"
-                i18n="@@profileEditPhoneLabel"
-                >Telephone</label
-              >
-              <input
-                id="editPhone"
-                name="editPhone"
-                type="tel"
-                [(ngModel)]="editPhone"
-                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
-              />
+            <div class="pf-line">
+              <div>
+                <div class="k" i18n="@@profileEmailLabel">Email</div>
+                <div class="v">{{ user.email }}</div>
+              </div>
             </div>
-            <p class="text-xs text-scheme-text-muted">
-              <strong i18n="@@profileEmailLabel">Email :</strong>
-              {{ user.email }}
-              <span class="text-scheme-text-muted" i18n="@@profileEmailReadonly"
-                >(non modifiable)</span
-              >
-            </p>
-            <div class="flex gap-3">
+            <div class="pf-line">
+              <div>
+                <div class="k" i18n="@@profilePhoneLabel">Téléphone</div>
+                <div class="v">
+                  @if (user.phone) {
+                    {{ user.phone }}
+                  } @else {
+                    <span class="muted" i18n="@@profilePhoneEmpty"
+                      >Non renseigné</span
+                    >
+                  }
+                </div>
+              </div>
               <button
                 type="button"
-                (click)="saveProfile()"
-                class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
-                [disabled]="editProfileLoading"
-                [attr.aria-busy]="editProfileLoading"
+                class="edit"
+                (click)="startEditing()"
+                i18n="@@profileEditButton"
               >
-                @if (!editProfileLoading) {
-                  <span i18n="@@profileEditSaveButton">Enregistrer</span>
+                Modifier
+              </button>
+            </div>
+          } @else {
+            <!-- Mode édition -->
+            <div class="pf-edit">
+              <div class="pf-field">
+                <label for="editFirstName" i18n="@@profileEditFirstNameLabel"
+                  >Prénom</label
+                >
+                <input
+                  id="editFirstName"
+                  name="editFirstName"
+                  type="text"
+                  [(ngModel)]="editFirstName"
+                />
+              </div>
+              <div class="pf-field">
+                <label for="editLastName" i18n="@@profileEditLastNameLabel"
+                  >Nom</label
+                >
+                <input
+                  id="editLastName"
+                  name="editLastName"
+                  type="text"
+                  [(ngModel)]="editLastName"
+                />
+              </div>
+              <div class="pf-field">
+                <label for="editPhone" i18n="@@profileEditPhoneLabel"
+                  >Téléphone</label
+                >
+                <input
+                  id="editPhone"
+                  name="editPhone"
+                  type="tel"
+                  [(ngModel)]="editPhone"
+                />
+              </div>
+              <p class="pf-note">
+                <strong i18n="@@profileEmailLabel">Email</strong> :
+                {{ user.email }}
+                <span class="muted" i18n="@@profileEmailReadonly"
+                  >(non modifiable)</span
+                >
+              </p>
+              <div class="pf-actions">
+                <button
+                  type="button"
+                  class="btn btn-teal"
+                  (click)="saveProfile()"
+                  [disabled]="editProfileLoading"
+                  [attr.aria-busy]="editProfileLoading"
+                >
+                  @if (!editProfileLoading) {
+                    <span i18n="@@profileEditSaveButton">Enregistrer</span>
+                  } @else {
+                    <span i18n="@@profileEditSavingButton"
+                      >Enregistrement...</span
+                    >
+                  }
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-ghost"
+                  (click)="cancelEditing()"
+                  [disabled]="editProfileLoading"
+                  i18n="@@profileEditCancelButton"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (editProfileSuccess) {
+            <p class="pf-msg ok">{{ editProfileSuccess }}</p>
+          }
+          @if (editProfileError) {
+            <p class="pf-msg err">{{ editProfileError }}</p>
+          }
+        </article>
+
+        <!-- ============ ACCÈS ATELIER ============ -->
+        <article class="pf-card" appReveal [appRevealDelay]="1">
+          <h2 class="pf-card-title" i18n="@@profileAccessTitle">
+            Accès Atelier
+          </h2>
+          <p class="ch-sub" i18n="@@profileAccessSub">
+            Vos expériences déverrouillées.
+          </p>
+
+          <div class="pf-access">
+            <div class="pf-acc meteo">
+              <span class="ai" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="4"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+              <div>
+                <div class="at" i18n="@@profileAccessMeteoTitle">Météo</div>
+                <div class="ad" i18n="@@profileAccessMeteoDesc">
+                  Tableau de bord météo immersif
+                </div>
+              </div>
+              @if (authState.hasRole("weather")) {
+                <span class="pill" i18n="@@profileAccessActive">Actif</span>
+              } @else {
+                <span class="pill locked" i18n="@@profileAccessLocked"
+                  >Verrouillé</span
+                >
+              }
+            </div>
+
+            <div class="pf-acc seb">
+              <span class="ai" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <div>
+                <div class="at" i18n="@@profileAccessSebTitle">Sebastian</div>
+                <div class="ad" i18n="@@profileAccessSebDesc">
+                  Suivi d'habitudes gamifié
+                </div>
+              </div>
+              @if (authState.hasRole("sebastian")) {
+                <span class="pill" i18n="@@profileAccessActive">Actif</span>
+              } @else {
+                <span class="pill locked" i18n="@@profileAccessLocked"
+                  >Verrouillé</span
+                >
+              }
+            </div>
+          </div>
+
+          <div class="pf-acc-links">
+            @if (authState.hasRole("weather")) {
+              <a class="btn btn-ghost" routerLink="/atelier/meteo/app">
+                <span i18n="@@profileAccessOpenMeteo">Ouvrir Météo</span>
+              </a>
+            } @else {
+              <a class="btn btn-ghost" routerLink="/atelier/meteo">
+                <span i18n="@@profileAccessDiscoverMeteo">Découvrir Météo</span>
+              </a>
+            }
+            @if (authState.hasRole("sebastian")) {
+              <a class="btn btn-ghost" routerLink="/atelier/sebastian/app">
+                <span i18n="@@profileAccessOpenSeb">Ouvrir Sebastian</span>
+              </a>
+            } @else {
+              <a class="btn btn-ghost" routerLink="/atelier/sebastian">
+                <span i18n="@@profileAccessDiscoverSeb"
+                  >Découvrir Sebastian</span
+                >
+              </a>
+            }
+          </div>
+        </article>
+
+        <!-- ============ MOT DE PASSE ============ -->
+        <!-- Définir un mot de passe (compte Google-only) -->
+        @if (user.hasPassword !== true) {
+          <article class="pf-card" appReveal>
+            <h2 class="pf-card-title" i18n="@@profileSetPasswordTitle">
+              Définir un mot de passe
+            </h2>
+            <p class="ch-sub" i18n="@@profileSetPasswordSub">
+              Sécurisez votre compte avec un mot de passe.
+            </p>
+
+            <form
+              #setPasswordForm="ngForm"
+              (ngSubmit)="setPassword(setPasswordForm)"
+              class="pf-form"
+            >
+              <div class="pf-field">
+                <label for="newPassword" i18n="@@profileSetPasswordLabel"
+                  >Nouveau mot de passe</label
+                >
+                <input
+                  id="newPassword"
+                  name="newPassword"
+                  type="password"
+                  required
+                  minlength="12"
+                  [(ngModel)]="newPassword"
+                  #newPasswordCtrl="ngModel"
+                  [class.invalid]="
+                    newPasswordCtrl.invalid &&
+                    (newPasswordCtrl.touched || setPasswordSubmitted)
+                  "
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-teal"
+                [disabled]="setPasswordLoading"
+                [attr.aria-busy]="setPasswordLoading"
+              >
+                @if (!setPasswordLoading) {
+                  <span i18n="@@profileSetPasswordSubmit">Enregistrer</span>
                 } @else {
-                  <span i18n="@@profileEditSavingButton"
+                  <span i18n="@@profileSetPasswordLoading"
                     >Enregistrement...</span
                   >
                 }
               </button>
+
+              @if (setPasswordSuccess) {
+                <p class="pf-msg ok">{{ setPasswordSuccess }}</p>
+              }
+              @if (setPasswordError) {
+                <p class="pf-msg err">{{ setPasswordError }}</p>
+              }
+            </form>
+          </article>
+        }
+
+        <!-- Changer le mot de passe -->
+        @if (user.hasPassword === true) {
+          <article class="pf-card" appReveal>
+            <h2 class="pf-card-title" i18n="@@profileChangePasswordTitle">
+              Changer le mot de passe
+            </h2>
+            <p class="ch-sub" i18n="@@profileChangePasswordSub">
+              Mettez à jour votre mot de passe régulièrement.
+            </p>
+
+            <form
+              #changePasswordForm="ngForm"
+              (ngSubmit)="changePassword(changePasswordForm)"
+              class="pf-form"
+            >
+              <div class="pf-field">
+                <label
+                  for="currentPassword"
+                  i18n="@@profileCurrentPasswordLabel"
+                  >Mot de passe actuel</label
+                >
+                <input
+                  id="currentPassword"
+                  name="currentPassword"
+                  type="password"
+                  required
+                  [(ngModel)]="currentPassword"
+                  #currentPasswordCtrl="ngModel"
+                  [class.invalid]="
+                    currentPasswordCtrl.invalid &&
+                    (currentPasswordCtrl.touched || changePasswordSubmitted)
+                  "
+                />
+              </div>
+              <div class="pf-field">
+                <label for="changeNewPassword" i18n="@@profileNewPasswordLabel"
+                  >Nouveau mot de passe</label
+                >
+                <input
+                  id="changeNewPassword"
+                  name="changeNewPassword"
+                  type="password"
+                  required
+                  minlength="12"
+                  [(ngModel)]="changeNewPassword"
+                  #changeNewPasswordCtrl="ngModel"
+                  [class.invalid]="
+                    changeNewPasswordCtrl.invalid &&
+                    (changeNewPasswordCtrl.touched || changePasswordSubmitted)
+                  "
+                />
+              </div>
+
               <button
-                type="button"
-                (click)="cancelEditing()"
-                class="inline-flex items-center justify-center rounded-button border border-scheme-border bg-scheme-background px-5 py-2 text-scheme-text"
-                [disabled]="editProfileLoading"
-                i18n="@@profileEditCancelButton"
+                type="submit"
+                class="btn btn-teal"
+                [disabled]="changePasswordLoading"
+                [attr.aria-busy]="changePasswordLoading"
               >
-                Annuler
-              </button>
-            </div>
-          </div>
-        }
-
-        @if (editProfileSuccess) {
-          <p class="text-sm text-green-600">{{ editProfileSuccess }}</p>
-        }
-        @if (editProfileError) {
-          <p class="text-sm text-red-500">{{ editProfileError }}</p>
-        }
-      </article>
-
-      <!-- Definir un mot de passe (Google-only) -->
-      @if (user.hasPassword !== true) {
-        <article
-          class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-        >
-          <h2 class="heading-h5 text-h5 mb-4" i18n="@@profileSetPasswordTitle">
-            Definir un mot de passe
-          </h2>
-
-          <form
-            #setPasswordForm="ngForm"
-            (ngSubmit)="setPassword(setPasswordForm)"
-            class="space-y-4"
-          >
-            <div class="space-y-2">
-              <label
-                for="newPassword"
-                class="block text-sm text-scheme-text"
-                i18n="@@profileSetPasswordLabel"
-                >Nouveau mot de passe</label
-              >
-              <input
-                id="newPassword"
-                name="newPassword"
-                type="password"
-                required
-                minlength="12"
-                [(ngModel)]="newPassword"
-                #newPasswordCtrl="ngModel"
-                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
-                [class.border-red-500]="
-                  newPasswordCtrl.invalid &&
-                  (newPasswordCtrl.touched || setPasswordSubmitted)
-                "
-              />
-            </div>
-
-            <button
-              type="submit"
-              class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
-              [disabled]="setPasswordLoading"
-              [attr.aria-busy]="setPasswordLoading"
-            >
-              @if (!setPasswordLoading) {
-                <span i18n="@@profileSetPasswordSubmit">Enregistrer</span>
-              } @else {
-                <span i18n="@@profileSetPasswordLoading"
-                  >Enregistrement...</span
-                >
-              }
-            </button>
-
-            @if (setPasswordSuccess) {
-              <p class="text-sm text-green-600">{{ setPasswordSuccess }}</p>
-            }
-            @if (setPasswordError) {
-              <p class="text-sm text-red-500">{{ setPasswordError }}</p>
-            }
-          </form>
-        </article>
-      }
-
-      <!-- Changer le mot de passe -->
-      @if (user.hasPassword === true) {
-        <article
-          class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-        >
-          <h2
-            class="heading-h5 text-h5 mb-4"
-            i18n="@@profileChangePasswordTitle"
-          >
-            Changer le mot de passe
-          </h2>
-
-          <form
-            #changePasswordForm="ngForm"
-            (ngSubmit)="changePassword(changePasswordForm)"
-            class="space-y-4"
-          >
-            <div class="space-y-2">
-              <label
-                for="currentPassword"
-                class="block text-sm text-scheme-text"
-                i18n="@@profileCurrentPasswordLabel"
-                >Mot de passe actuel</label
-              >
-              <input
-                id="currentPassword"
-                name="currentPassword"
-                type="password"
-                required
-                [(ngModel)]="currentPassword"
-                #currentPasswordCtrl="ngModel"
-                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
-                [class.border-red-500]="
-                  currentPasswordCtrl.invalid &&
-                  (currentPasswordCtrl.touched || changePasswordSubmitted)
-                "
-              />
-            </div>
-            <div class="space-y-2">
-              <label
-                for="changeNewPassword"
-                class="block text-sm text-scheme-text"
-                i18n="@@profileNewPasswordLabel"
-                >Nouveau mot de passe</label
-              >
-              <input
-                id="changeNewPassword"
-                name="changeNewPassword"
-                type="password"
-                required
-                minlength="12"
-                [(ngModel)]="changeNewPassword"
-                #changeNewPasswordCtrl="ngModel"
-                class="w-full rounded-form border border-scheme-border bg-scheme-background px-3 py-2 focus:border-scheme-accent focus:outline-none"
-                [class.border-red-500]="
-                  changeNewPasswordCtrl.invalid &&
-                  (changeNewPasswordCtrl.touched || changePasswordSubmitted)
-                "
-              />
-            </div>
-
-            <button
-              type="submit"
-              class="inline-flex items-center justify-center rounded-button bg-scheme-accent px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
-              [disabled]="changePasswordLoading"
-              [attr.aria-busy]="changePasswordLoading"
-            >
-              @if (!changePasswordLoading) {
-                <span i18n="@@profileChangePasswordSubmit">Modifier</span>
-              } @else {
-                <span i18n="@@profileChangePasswordLoading"
-                  >Modification...</span
-                >
-              }
-            </button>
-
-            @if (changePasswordSuccess) {
-              <p class="text-sm text-green-600">{{ changePasswordSuccess }}</p>
-            }
-            @if (changePasswordError) {
-              <p class="text-sm text-red-500">{{ changePasswordError }}</p>
-            }
-          </form>
-        </article>
-      }
-
-      <!-- Section meteo (si role weather) -->
-      @if (authState.hasRole("weather")) {
-        <article
-          class="rounded-form border border-scheme-border bg-scheme-surface p-6 space-y-4"
-        >
-          <h2 class="heading-h5 text-h5" i18n="@@profileWeatherTitle">
-            Preferences meteo
-          </h2>
-
-          <!-- Niveau + progression -->
-          <div class="space-y-2">
-            <p class="text-sm text-scheme-text">
-              <strong i18n="@@profileWeatherLevelLabel">Niveau :</strong>
-              {{ levelLabel(levelService.level()) }}
-            </p>
-            <div class="w-full bg-scheme-border rounded-full h-2">
-              @if (levelService.level() === "discovery") {
-                <div
-                  class="bg-scheme-accent h-2 rounded-full transition-all duration-500"
-                  [style.width.%]="
-                    (levelService.daysUsed() / 7) * 100 > 100
-                      ? 100
-                      : (levelService.daysUsed() / 7) * 100
-                  "
-                ></div>
-              } @else if (levelService.level() === "curious") {
-                <div
-                  class="bg-scheme-accent h-2 rounded-full transition-all duration-500"
-                  [style.width.%]="
-                    (levelService.daysUsed() / 30) * 100 > 100
-                      ? 100
-                      : (levelService.daysUsed() / 30) * 100
-                  "
-                ></div>
-              } @else {
-                <div
-                  class="bg-scheme-accent h-2 rounded-full"
-                  style="width: 100%"
-                ></div>
-              }
-            </div>
-            <p class="text-xs text-scheme-text-muted">
-              {{ levelService.daysUsed() }}
-              <span i18n="@@profileWeatherDaysUsed">jours d'utilisation</span>
-              @if (levelService.showTransitionPrompt()) {
-                &mdash;
-                <span
-                  class="text-scheme-accent font-medium"
-                  i18n="@@profileWeatherTransitionReady"
-                  >Pret pour le niveau suivant !</span
-                >
-              }
-            </p>
-          </div>
-
-          <!-- Villes favorites -->
-          <div class="space-y-2">
-            <h3
-              class="text-sm font-medium text-scheme-text"
-              i18n="@@profileWeatherFavoritesTitle"
-            >
-              Villes favorites
-            </h3>
-            @if (weatherLoading) {
-              <p
-                class="text-xs text-scheme-text-muted"
-                i18n="@@profileWeatherLoading"
-              >
-                Chargement...
-              </p>
-            } @else if (favoriteCities.length === 0) {
-              <p
-                class="text-xs text-scheme-text-muted"
-                i18n="@@profileWeatherNoFavorites"
-              >
-                Aucune ville favorite. Ajoutez-en depuis l'app meteo.
-              </p>
-            } @else {
-              <ul class="space-y-1">
-                @for (city of favoriteCities; track city.latitude) {
-                  <li
-                    class="flex items-center justify-between rounded-lg border border-scheme-border px-3 py-2 text-sm"
+                @if (!changePasswordLoading) {
+                  <span i18n="@@profileChangePasswordSubmit">Modifier</span>
+                } @else {
+                  <span i18n="@@profileChangePasswordLoading"
+                    >Modification...</span
                   >
-                    <span>{{ city.name }}, {{ city.country }}</span>
-                    <button
-                      type="button"
-                      (click)="removeFavoriteCity(city)"
-                      class="text-red-500 hover:text-red-700 text-xs"
-                      [attr.aria-label]="
-                        'Supprimer ' + city.name + ' des favoris'
-                      "
-                      i18n-aria-label="@@profileWeatherRemoveFavoriteAriaLabel"
-                    >
-                      <span i18n="@@profileWeatherRemoveFavorite"
-                        >Supprimer</span
-                      >
-                    </button>
-                  </li>
                 }
-              </ul>
-            }
+              </button>
+
+              @if (changePasswordSuccess) {
+                <p class="pf-msg ok">{{ changePasswordSuccess }}</p>
+              }
+              @if (changePasswordError) {
+                <p class="pf-msg err">{{ changePasswordError }}</p>
+              }
+            </form>
+          </article>
+        }
+
+        <!-- ============ PRÉFÉRENCES MÉTÉO ============ -->
+        @if (authState.hasRole("weather")) {
+          <article class="pf-card full" appReveal>
+            <h2 class="pf-card-title" i18n="@@profileWeatherTitle">
+              Préférences météo
+            </h2>
+            <p class="ch-sub" i18n="@@profileWeatherSub">
+              Votre progression et vos villes favorites.
+            </p>
+
+            <!-- Niveau + progression -->
+            <div class="pf-weather-level">
+              <p class="pf-level-line">
+                <strong i18n="@@profileWeatherLevelLabel">Niveau :</strong>
+                {{ levelLabel(levelService.level()) }}
+              </p>
+              <div class="pf-progress">
+                @if (levelService.level() === "discovery") {
+                  <div
+                    class="pf-progress-bar"
+                    [style.width.%]="
+                      (levelService.daysUsed() / 7) * 100 > 100
+                        ? 100
+                        : (levelService.daysUsed() / 7) * 100
+                    "
+                  ></div>
+                } @else if (levelService.level() === "curious") {
+                  <div
+                    class="pf-progress-bar"
+                    [style.width.%]="
+                      (levelService.daysUsed() / 30) * 100 > 100
+                        ? 100
+                        : (levelService.daysUsed() / 30) * 100
+                    "
+                  ></div>
+                } @else {
+                  <div class="pf-progress-bar" style="width: 100%"></div>
+                }
+              </div>
+              <p class="pf-progress-meta">
+                {{ levelService.daysUsed() }}
+                <span i18n="@@profileWeatherDaysUsed">jours d'utilisation</span>
+                @if (levelService.showTransitionPrompt()) {
+                  &mdash;
+                  <span
+                    class="pf-progress-ready"
+                    i18n="@@profileWeatherTransitionReady"
+                    >Prêt pour le niveau suivant !</span
+                  >
+                }
+              </p>
+            </div>
+
+            <!-- Villes favorites -->
+            <div class="pf-favorites">
+              <h3 class="pf-fav-title" i18n="@@profileWeatherFavoritesTitle">
+                Villes favorites
+              </h3>
+              @if (weatherLoading) {
+                <p class="muted" i18n="@@profileWeatherLoading">
+                  Chargement...
+                </p>
+              } @else if (favoriteCities.length === 0) {
+                <p class="muted" i18n="@@profileWeatherNoFavorites">
+                  Aucune ville favorite. Ajoutez-en depuis l'app météo.
+                </p>
+              } @else {
+                <ul class="pf-fav-list">
+                  @for (city of favoriteCities; track city.latitude) {
+                    <li class="pf-fav-item">
+                      <span>{{ city.name }}, {{ city.country }}</span>
+                      <button
+                        type="button"
+                        class="pf-fav-remove"
+                        (click)="removeFavoriteCity(city)"
+                        [attr.aria-label]="
+                          'Supprimer ' + city.name + ' des favoris'
+                        "
+                        i18n-aria-label="
+                          @@profileWeatherRemoveFavoriteAriaLabel"
+                      >
+                        <span i18n="@@profileWeatherRemoveFavorite"
+                          >Supprimer</span
+                        >
+                      </button>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </article>
+        }
+
+        <!-- ============ PRÉFÉRENCES & SESSION ============ -->
+        <article class="pf-card full" appReveal [appRevealDelay]="1">
+          <h2 class="pf-card-title" i18n="@@profileSessionTitle">
+            Préférences &amp; session
+          </h2>
+          <p class="ch-sub" i18n="@@profileSessionSub">
+            Gérez votre accès à l'écosystème Asili.
+          </p>
+          <div class="pf-line">
+            <div>
+              <div class="k" i18n="@@profileSessionLabel">Session</div>
+              <div class="v" i18n="@@profileSessionValue">
+                Connecté sur cet appareil
+              </div>
+            </div>
+            <button
+              type="button"
+              class="edit danger"
+              (click)="logout()"
+              i18n="@@profileLogout"
+            >
+              Se déconnecter
+            </button>
           </div>
         </article>
-      }
+      </div>
     }
-
-    <p class="text-sm text-scheme-text-muted">
-      <a routerLink="/" class="underline" i18n="@@profileBackHome"
-        >Retour a l'accueil</a
-      >
-    </p>
   </div>
 </section>

@@ -1,0 +1,120 @@
+<!--
+  Vérification d'email — restyle Asili split-screen (source maquette
+  AsiliNewDesign/auth.html écran « verify » + asili-auth.css). Le flux par lien
+  magique (token query param → AUTH_PORT.verifyEmail → redirect /login après
+  3 s) est PRÉSERVÉ ; la saisie de code à 6 chiffres de la maquette est
+  cosmétique et non implémentée. Restyle = HTML/SCSS uniquement.
+-->
+<div class="auth-split">
+  <aside class="auth-aside">
+    <a class="auth-logo" routerLink="/">
+      <span class="dot" aria-hidden="true"></span>Asili<small>design</small>
+    </a>
+    <div class="auth-aside-mid" appReveal>
+      <span class="kicker" i18n="@@authVerifyAsideKicker">Vérification</span>
+      <h2 i18n="@@authVerifyAsideTitle">
+        Dernière étape avant <em>l'Atelier</em>.
+      </h2>
+      <p i18n="@@authVerifyAsideSub">
+        On confirme votre adresse email : votre espace personnel vous attend
+        juste après.
+      </p>
+    </div>
+    <div class="auth-aside-foot">
+      <span i18n="@@authAsideQuote">« Clarifier avant de construire »</span>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      @if (isLoading) {
+        <div class="auth-illus" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 8l9 6 9-6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+          </svg>
+        </div>
+        <h1 i18n="@@authVerifyLoadingTitle">
+          Vérification de votre <em>email</em>
+        </h1>
+        <p class="sub" i18n="verify-email.loading@@verifyEmailLoading">
+          Verification en cours...
+        </p>
+      }
+
+      @if (successMessage) {
+        <div class="auth-success" role="status" aria-live="polite">
+          <div class="check" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M5 12.5 10 17l9-10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <h1 i18n="@@authVerifySuccessTitle">Compte <em>activé</em></h1>
+          <p class="sub">{{ successMessage }}</p>
+          <p class="sub" i18n="verify-email.redirect@@verifyEmailRedirect">
+            Vous allez etre redirige vers la page de connexion...
+          </p>
+          <div style="margin-top: 26px">
+            <a class="btn btn-teal" routerLink="/login">
+              <span i18n="@@authVerifyGoToLogin">Accéder à la connexion</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div role="alert" aria-live="assertive">
+          <div class="auth-illus" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path
+                d="M12 7v6M12 16.5v.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <h1 i18n="@@authVerifyErrorTitle">
+            Vérification <em>impossible</em>
+          </h1>
+          <p class="auth-msg err">{{ errorMessage }}</p>
+          <p class="auth-alt">
+            <a
+              routerLink="/login"
+              i18n="verify-email.backToLogin@@verifyEmailBackToLogin"
+            >
+              Retour a la connexion
+            </a>
+          </p>
+        </div>
+      }
+    </div>
+  </main>
+</div>

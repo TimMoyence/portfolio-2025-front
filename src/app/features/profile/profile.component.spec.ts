@@ -1,7 +1,7 @@
 import { signal } from "@angular/core";
 import type { ComponentFixture } from "@angular/core/testing";
 import { TestBed } from "@angular/core/testing";
-import { provideRouter } from "@angular/router";
+import { provideRouter, Router } from "@angular/router";
 import { of, throwError } from "rxjs";
 import { AUTH_PORT } from "../../core/ports/auth.port";
 import { WEATHER_PORT } from "../../core/ports/weather.port";
@@ -27,6 +27,7 @@ function createAuthStateMock(
   return {
     restoreSession: jasmine.createSpy("restoreSession"),
     updateUser: jasmine.createSpy("updateUser"),
+    logout: jasmine.createSpy("logout"),
     user: signal(user),
     isLoggedIn: signal(true),
     hasRole: (role: string) => user.roles.includes(role),
@@ -86,6 +87,23 @@ describe("ProfileComponent", () => {
 
   it("devrait se creer", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("initial renvoie la premiere lettre majuscule (prenom > nom > email)", () => {
+    expect(component.initial("Jean", "Dupont", "j@d.fr")).toBe("J");
+    expect(component.initial("", "Dupont", "j@d.fr")).toBe("D");
+    expect(component.initial("", "", "j@d.fr")).toBe("J");
+    expect(component.initial()).toBe("?");
+  });
+
+  it("logout nettoie le state et redirige vers l'accueil", () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = spyOn(router, "navigate").and.resolveTo(true);
+
+    component.logout();
+
+    expect(authState.logout).toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith(["/"]);
   });
 
   it("appelle setPassword et rafraichit la session", () => {

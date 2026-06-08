@@ -1,0 +1,386 @@
+/*
+  Styles partagés des écrans d'authentification (login / register / forgot /
+  reset / verify) — refonte Asili (Lot 3f). Portés de
+  `AsiliNewDesign/asili-auth.css` : `.auth-split`, `.auth-aside`,
+  `.auth-aside-mid/-foot`, `.auth-main`, `.auth-card`, `.auth-screen`,
+  `.auth-google`, `.auth-or`, `.auth-field`, `.auth-row`, `.auth-check`,
+  `.auth-submit`, `.auth-alt`, `.auth-link`, `.auth-illus`, `.auth-success`,
+  `.pw-strength`. Les primitives globales (.btn*, .kicker) et les design tokens
+  (_tokens.scss) fournissent le reste.
+
+  Les classes `.auth-*` ne sont PAS globales : chaque écran `@use` ce partiel
+  pour les scoper. Volontairement sans `:host` (laissé à chaque composant) afin
+  d'être composable via `@use`.
+
+  Décision chrome (Lot 3f) : la navbar/footer globales sont conservées. Le
+  split-screen s'inscrit DANS le `<main>` existant — l'aside utilise donc une
+  hauteur min confortable (pas `100vh` fixe) et le `.auth-back` / topbar de la
+  maquette sont omis (redondants avec la navbar).
+*/
+
+.auth-split {
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  min-height: clamp(620px, 88vh, 920px);
+  background: var(--cream);
+}
+
+/* — Panneau immersif (gauche) — */
+.auth-aside {
+  position: relative;
+  background: var(--night);
+  color: var(--ivory);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(32px, 4vw, 56px);
+}
+.auth-aside::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      70% 50% at 15% 0%,
+      rgba(79, 179, 162, 0.2),
+      transparent 60%
+    ),
+    radial-gradient(
+      70% 60% at 95% 100%,
+      rgba(91, 140, 255, 0.22),
+      transparent 62%
+    );
+  pointer-events: none;
+}
+.auth-aside > * {
+  position: relative;
+  z-index: 2;
+}
+.auth-aside .auth-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: #fff;
+}
+.auth-aside .auth-logo .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 4px rgba(79, 179, 162, 0.2);
+}
+.auth-aside .auth-logo small {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+.auth-aside-mid {
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-block: 40px;
+}
+.auth-aside-mid .kicker {
+  color: var(--glow-soft);
+}
+.auth-aside-mid .kicker::before {
+  background: var(--glow);
+}
+.auth-aside-mid h2 {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.6vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-top: 20px;
+  max-width: 16ch;
+}
+.auth-aside-mid h2 em {
+  font-style: italic;
+  color: var(--teal);
+}
+.auth-aside-mid p {
+  color: rgba(251, 243, 230, 0.66);
+  font-size: 16px;
+  margin-top: 20px;
+  max-width: 42ch;
+}
+.auth-aside-foot {
+  display: flex;
+  gap: 26px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  flex-wrap: wrap;
+}
+
+/* — Zone formulaire (droite) — */
+.auth-main {
+  display: grid;
+  place-items: center;
+  padding: clamp(40px, 6vh, 80px) clamp(24px, 5vw, 80px);
+  background: var(--cream);
+  position: relative;
+}
+.auth-card {
+  width: 100%;
+  max-width: 408px;
+}
+.auth-card h1 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.4vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.auth-card h1 em {
+  font-style: italic;
+  color: var(--teal-deep);
+}
+.auth-card .sub {
+  font-size: 15px;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+
+/* — Bouton Google + séparateur — */
+.auth-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    border-color 0.25s,
+    box-shadow 0.3s;
+  margin-top: 26px;
+}
+.auth-google:hover {
+  background: var(--ivory);
+  box-shadow: var(--shadow-soft);
+}
+.auth-or {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 22px 0;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+.auth-or::before,
+.auth-or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* — Champs — */
+.auth-field {
+  margin-bottom: 18px;
+}
+.auth-field label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+.auth-field .ip {
+  position: relative;
+}
+.auth-field input {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 13px 44px 13px 15px;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+.auth-field input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(79, 179, 162, 0.14);
+}
+.auth-field input.invalid {
+  border-color: var(--danger);
+}
+.auth-field .ic {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--ink-faint);
+  display: grid;
+}
+.auth-field .toggle-pw {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-faint);
+  padding: 0;
+}
+.auth-field .hint {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin-top: 7px;
+}
+.auth-field .err {
+  font-size: 12.5px;
+  color: var(--danger);
+  margin-top: 7px;
+}
+
+/* — Indicateur de force (cosmétique) — */
+.pw-strength {
+  display: flex;
+  gap: 5px;
+  margin-top: 9px;
+}
+.pw-strength i {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  transition: background 0.3s;
+}
+.pw-strength.s1 i:nth-child(1) {
+  background: var(--danger);
+}
+.pw-strength.s2 i:nth-child(-n + 2) {
+  background: var(--gold);
+}
+.pw-strength.s3 i:nth-child(-n + 3) {
+  background: var(--success);
+}
+.pw-strength.s4 i {
+  background: var(--teal);
+}
+.pw-label {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 6px;
+}
+
+/* — Ligne options (remember / forgot) — */
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 6px 0 22px;
+  flex-wrap: wrap;
+}
+.auth-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.auth-check input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--teal);
+}
+.auth-link {
+  font-size: 14px;
+  color: var(--teal-deep);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+.auth-link:hover {
+  text-decoration: underline;
+}
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+}
+.auth-alt {
+  text-align: center;
+  font-size: 14.5px;
+  color: var(--ink-mute);
+  margin-top: 24px;
+}
+.auth-alt a,
+.auth-alt button {
+  color: var(--teal-deep);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+}
+.auth-alt a:hover,
+.auth-alt button:hover {
+  text-decoration: underline;
+}
+
+/* — Messages succès / erreur — */
+.auth-msg {
+  font-size: 13.5px;
+  margin-top: 14px;
+}
+.auth-msg.ok {
+  color: var(--success);
+}
+.auth-msg.err {
+  color: var(--danger);
+}
+
+/* — Verify / illustration / succès — */
+.auth-illus {
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  background: var(--sand);
+  color: var(--teal-deep);
+  display: grid;
+  place-items: center;
+  margin-bottom: 26px;
+}
+.auth-success {
+  text-align: center;
+}
+.auth-success .check {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(79, 179, 162, 0.16);
+  color: var(--teal-deep);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 24px;
+}
+
+@media (max-width: 880px) {
+  .auth-split {
+    grid-template-columns: 1fr;
+  }
+  .auth-aside {
+    min-height: 280px;
+  }
+}

@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import type { NgForm } from "@angular/forms";
 import { FormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import type { FavoriteCity } from "../../core/models/weather.model";
 import type { AuthPort } from "../../core/ports/auth.port";
 import { AUTH_PORT } from "../../core/ports/auth.port";
@@ -17,14 +17,14 @@ import { AuthStateService } from "../../core/services/auth-state.service";
 import type { WeatherPort } from "../../core/ports/weather.port";
 import { WEATHER_PORT } from "../../core/ports/weather.port";
 import { WeatherLevelService } from "../weather/services/weather-level.service";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 
 /** Page profil utilisateur : identite, mot de passe, preferences meteo. */
 @Component({
   selector: "app-profile",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeroSectionComponent],
+  imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
   templateUrl: "./profile.component.html",
   styleUrl: "./profile.component.scss",
   providers: [WeatherLevelService],
@@ -36,6 +36,7 @@ export class ProfileComponent implements OnInit {
   readonly levelService = inject(WeatherLevelService);
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
 
   /* — Edition du profil — */
   isEditing = signal(false);
@@ -65,16 +66,25 @@ export class ProfileComponent implements OnInit {
   favoriteCities: FavoriteCity[] = [];
   weatherLoading = false;
 
-  readonly hero = {
-    label: $localize`:profile.hero.label@@profileHeroLabel:Espace utilisateur`,
-    title: $localize`:profile.hero.title@@profileHeroTitle:Votre profil`,
-    description: $localize`:profile.hero.description@@profileHeroDescription:Gerez vos informations personnelles et vos parametres de securite.`,
-  };
-
   ngOnInit(): void {
     if (this.authState.hasRole("weather")) {
       this.loadWeatherPreferences();
     }
+  }
+
+  /**
+   * Initiale de l'avatar : premiere lettre du prenom, sinon du nom,
+   * sinon de l'email. Purement cosmetique (.pf-avatar).
+   */
+  initial(firstName?: string, lastName?: string, email?: string): string {
+    const source = firstName || lastName || email || "?";
+    return source.charAt(0).toUpperCase();
+  }
+
+  /** Deconnexion : nettoie le state (parite navbar) puis retour accueil. */
+  logout(): void {
+    this.authState.logout();
+    void this.router.navigate(["/"]);
   }
 
   /* ========================= EDIT PROFILE ========================= */
