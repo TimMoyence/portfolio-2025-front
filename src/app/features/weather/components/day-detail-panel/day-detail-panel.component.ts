@@ -61,7 +61,7 @@ import {
           <span class="text-sm text-white/50">
             {{ data.tempMin | unit: unitService.temperatureUnit() }}
           </span>
-          <div class="h-2 flex-1 overflow-hidden rounded-full bg-white/20">
+          <div class="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
             <div
               class="h-full rounded-full bg-gradient-to-r from-blue-400 to-orange-400"
               style="width: 100%"

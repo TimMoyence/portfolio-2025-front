@@ -26,8 +26,9 @@ describe("WeatherAlertsCardComponent", () => {
     fixture.componentRef.setInput("alerts", []);
     fixture.detectChanges();
 
-    const container = fixture.nativeElement.querySelector(".space-y-2");
-    expect(container).toBeNull();
+    // Sans alerte, le composant ne rend strictement rien (assertion robuste au
+    // markup : aucun element projete, independamment des classes de style).
+    expect(fixture.nativeElement.querySelectorAll("*").length).toBe(0);
   });
 
   it("devrait afficher les headlines et descriptions des alertes", () => {
