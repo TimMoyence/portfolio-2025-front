@@ -1,16 +1,22 @@
+<!--
+  Tableau prévisions unifié — re-skin Asili « wx-week / gp-h »
+  (AsiliNewDesign/asili-app.css : .gp-h, .wx-day, .wx-bar gradient glow→teal).
+  Glass .gp, en-tête kicker font-mono uppercase, onglets segmentés teal actif.
+  Tailwind/SVG uniquement (décision 2) : dayRows/hourRows/granularity intacts.
+-->
 <div
-  class="rounded-2xl border border-white/20 bg-white/10 p-4 md:p-6 backdrop-blur-md"
+  class="rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl md:p-6"
 >
-  <!-- Header -->
-  <div class="mb-3 flex items-center justify-between">
+  <!-- Header (.gp-h) -->
+  <div class="mb-4 flex items-center justify-between gap-3">
     <h3
-      class="text-lg font-semibold text-white"
+      class="font-mono text-[11px] uppercase tracking-[0.14em] text-white/55"
       i18n="weather.overview.title|@@weatherOverviewTitle"
     >
       Prévisions
     </h3>
     <nav
-      class="inline-flex rounded-xl border border-white/20 bg-white/10 p-0.5 backdrop-blur-md"
+      class="inline-flex rounded-full border border-white/15 bg-white/[0.06] p-0.5 font-mono text-xs backdrop-blur-md"
       role="tablist"
       aria-label="Granularité"
       i18n-aria-label="
@@ -21,11 +27,11 @@
           type="button"
           role="tab"
           [attr.aria-selected]="granularity() === option.value"
-          class="rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
+          class="rounded-full px-3 py-1.5 font-medium transition-all"
           [ngClass]="
             granularity() === option.value
-              ? 'bg-white/25 text-white shadow-sm'
-              : 'text-white/60 hover:text-white/80'
+              ? 'bg-teal/20 text-teal'
+              : 'text-white/55 hover:text-white/80'
           "
           (click)="setGranularity(option.value)"
         >
@@ -42,7 +48,9 @@
         class="w-full text-sm text-white border-separate border-spacing-y-0.5"
       >
         <thead>
-          <tr class="text-[11px] uppercase tracking-wider text-white/50">
+          <tr
+            class="font-mono text-[10px] uppercase tracking-[0.12em] text-white/45"
+          >
             <th
               class="py-2 pr-3 text-left font-medium"
               i18n="weather.table.day|@@weatherTableDay"
@@ -107,11 +115,11 @@
               [ngClass]="i % 2 === 0 ? 'bg-white/[0.03]' : ''"
             >
               <td
-                class="py-3 pr-3 font-medium whitespace-nowrap rounded-l-lg group-hover:bg-white/5"
+                class="py-3 pr-3 font-medium whitespace-nowrap rounded-l-lg group-hover:bg-teal/[0.06]"
               >
                 {{ row.dayLabel }}
               </td>
-              <td class="py-3 group-hover:bg-white/5">
+              <td class="py-3 group-hover:bg-teal/[0.06]">
                 <img
                   [src]="row.icon"
                   alt=""
@@ -119,19 +127,19 @@
                 />
               </td>
               <td
-                class="py-3 px-2 text-right font-semibold rounded-md group-hover:bg-white/5"
+                class="py-3 px-2 text-right font-semibold rounded-md group-hover:bg-teal/[0.06]"
                 [style.background]="tempColor(row.tempMin, 0.25)"
               >
                 {{ row.tempMin | unit: unitService.temperatureUnit() }}
               </td>
               <td
-                class="py-3 px-2 text-right font-semibold rounded-md group-hover:bg-white/5"
+                class="py-3 px-2 text-right font-semibold rounded-md group-hover:bg-teal/[0.06]"
                 [style.background]="tempColor(row.tempMax, 0.25)"
               >
                 {{ row.tempMax | unit: unitService.temperatureUnit() }}
               </td>
               <td
-                class="py-3 px-2 text-right group-hover:bg-white/5"
+                class="py-3 px-2 text-right group-hover:bg-teal/[0.06]"
                 [ngClass]="
                   row.precipitationSum > 0
                     ? 'text-blue-300 font-medium'
@@ -145,7 +153,7 @@
                 }}
               </td>
               <td
-                class="py-3 px-2 text-right whitespace-nowrap group-hover:bg-white/5"
+                class="py-3 px-2 text-right whitespace-nowrap group-hover:bg-teal/[0.06]"
               >
                 @if (row.windDir !== null) {
                   <span
@@ -160,7 +168,7 @@
               <!-- Curious+ -->
               @if (isCurious()) {
                 <td
-                  class="py-3 px-2 text-right text-white/60 group-hover:bg-white/5"
+                  class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]"
                 >
                   {{ row.humidity !== null ? row.humidity + " %" : "—" }}
                 </td>
@@ -168,7 +176,7 @@
               <!-- Expert -->
               @if (isExpert()) {
                 <td
-                  class="py-3 px-2 text-right text-white/60 group-hover:bg-white/5"
+                  class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]"
                 >
                   {{
                     row.gustsMax !== null
@@ -177,7 +185,7 @@
                   }}
                 </td>
                 <td
-                  class="py-3 px-2 text-right text-white/60 rounded-r-lg group-hover:bg-white/5"
+                  class="py-3 px-2 text-right text-white/60 rounded-r-lg group-hover:bg-teal/[0.06]"
                 >
                   {{ row.pressure !== null ? row.pressure + " hPa" : "—" }}
                 </td>
@@ -199,7 +207,7 @@
       >
         <thead class="sticky top-0 z-10">
           <tr
-            class="text-[11px] uppercase tracking-wider text-white/50 bg-white/10 backdrop-blur-xl"
+            class="font-mono text-[10px] uppercase tracking-[0.12em] text-white/45 bg-white/[0.07] backdrop-blur-xl"
           >
             <th
               class="py-2 pr-2 text-left font-medium rounded-l-lg"
@@ -264,14 +272,14 @@
             <tr>
               <td
                 [attr.colspan]="isCurious() ? (isExpert() ? 9 : 7) : 6"
-                class="pt-3 pb-1 text-xs font-semibold text-white/70 border-b border-white/15"
+                class="pt-3 pb-1 font-mono text-[11px] uppercase tracking-[0.1em] font-semibold text-teal/80 border-b border-white/10"
               >
                 {{ group.dayLabel }}
               </td>
             </tr>
             @for (slot of group.slots; track slot.label; let j = $index) {
               <tr
-                class="group transition-colors"
+                class="group transition-colors hover:bg-teal/[0.05]"
                 [ngClass]="j % 2 === 0 ? 'bg-white/[0.03]' : ''"
               >
                 <td class="py-2 pr-2"></td>
