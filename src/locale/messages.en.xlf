@@ -3565,6 +3565,12 @@
         <target>Weather</target>
       </segment>
     </unit>
+    <unit id="weatherAppLive">
+      <segment>
+        <source>En direct</source>
+        <target>Live</target>
+      </segment>
+    </unit>
     <unit id="weatherSearchPlaceholder">
       <segment>
         <source>Rechercher une ville...</source>
@@ -3585,14 +3591,14 @@
     </unit>
     <unit id="weatherCurrentFeelsLike">
       <segment>
-        <source>Ressenti</source>
-        <target>Feels like</target>
+        <source> Ressenti <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.apparent_temperature | unit: unitService.temperatureUnit() }}"/></pc></source>
+        <target> Feels like <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.apparent_temperature | unit: unitService.temperatureUnit() }}"/></pc></target>
       </segment>
     </unit>
     <unit id="weatherCurrentWind">
       <segment>
-        <source>Vent</source>
-        <target>Wind</target>
+        <source> Vent <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.wind_speed_10m | unit: unitService.speedUnit() }}"/></pc></source>
+        <target> Wind <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.wind_speed_10m | unit: unitService.speedUnit() }}"/></pc></target>
       </segment>
     </unit>
     <unit id="weatherHourlyTitle">
