@@ -37,8 +37,19 @@ interface DayLabel {
   standalone: true,
   imports: [SebastianHeatmapComponent],
   template: `
+    <!--
+      Rapports App Sebastian — thème "dark lounge ambré" porté de la maquette
+      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (glass
+      bg-white/4 + bordure ambrée rgba(230,170,70,0.14), titre font-display),
+      .app-pill (pills de période/navigateur), .health-list/.hrow (distribution
+      par jour), .barchart (totaux). Restyle 100 % visuel : tous les data-testid
+      (period-button, period-nav, prev/next-period, period-label,
+      day-distribution), selectedPeriod/currentStartDate/periodLabel,
+      prev/next/selectPeriod, getDayTotal, report()!.* et les couleurs
+      sémantiques delta (text-green-500/text-red-500) conservés (décision 6).
+    -->
     <div class="space-y-6">
-      <!-- Selecteur de periode -->
+      <!-- Selecteur de periode (.app-pill ambrés) -->
       <div class="flex gap-2">
         @for (p of periods; track p.value) {
           <button
@@ -46,10 +57,10 @@ interface DayLabel {
             (click)="selectPeriod(p.value)"
             [class]="
               selectedPeriod() === p.value
-                ? 'bg-scheme-accent text-scheme-on-accent'
-                : 'bg-scheme-surface text-scheme-text-muted hover:bg-scheme-surface-hover'
+                ? 'bg-gold text-[#1a1206] border-gold'
+                : 'bg-white/[0.04] text-white/55 hover:text-white hover:border-[rgba(230,170,70,0.35)]'
             "
-            class="rounded-button border border-scheme-border px-4 py-2 font-heading text-small"
+            class="rounded-full border border-[rgba(230,170,70,0.14)] px-4 py-2 font-mono text-xs uppercase tracking-[0.06em] transition-colors"
           >
             {{ p.label }}
           </button>
@@ -61,54 +72,73 @@ interface DayLabel {
         <button
           data-testid="prev-period"
           (click)="prevPeriod()"
-          class="rounded-button border border-scheme-border bg-scheme-surface px-3 py-2 text-scheme-text hover:bg-scheme-surface-hover"
+          class="rounded-full border border-[rgba(230,170,70,0.14)] bg-white/[0.04] px-3 py-2 text-white/70 transition-colors hover:border-[rgba(230,170,70,0.35)] hover:text-white"
         >
           &larr;
         </button>
-        <span data-testid="period-label" class="font-heading text-scheme-text">
+        <span
+          data-testid="period-label"
+          class="font-display text-xl text-white"
+        >
           {{ periodLabel() }}
         </span>
         <button
           data-testid="next-period"
           (click)="nextPeriod()"
-          class="rounded-button border border-scheme-border bg-scheme-surface px-3 py-2 text-scheme-text hover:bg-scheme-surface-hover"
+          class="rounded-full border border-[rgba(230,170,70,0.14)] bg-white/[0.04] px-3 py-2 text-white/70 transition-colors hover:border-[rgba(230,170,70,0.35)] hover:text-white"
         >
           &rarr;
         </button>
       </div>
 
       @if (report()) {
-        <!-- Totaux -->
+        <!-- Totaux (cartes glass .panel) -->
         <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
           >
-            <p class="text-small text-scheme-text-muted">Total alcool</p>
-            <p class="font-heading text-h4 text-scheme-text">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+            >
+              Total alcool
+            </p>
+            <p class="font-display text-3xl text-white">
               {{ report()!.totals.alcohol }}
             </p>
           </div>
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
           >
-            <p class="text-small text-scheme-text-muted">Total cafe</p>
-            <p class="font-heading text-h4 text-scheme-text">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+            >
+              Total cafe
+            </p>
+            <p class="font-display text-3xl text-white">
               {{ report()!.totals.coffee }}
             </p>
           </div>
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
           >
-            <p class="text-small text-scheme-text-muted">Moy. alcool/jour</p>
-            <p class="font-heading text-h4 text-scheme-text">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+            >
+              Moy. alcool/jour
+            </p>
+            <p class="font-display text-3xl text-white">
               {{ report()!.dailyAvg.alcohol.toFixed(1) }}
             </p>
           </div>
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
           >
-            <p class="text-small text-scheme-text-muted">Moy. cafe/jour</p>
-            <p class="font-heading text-h4 text-scheme-text">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+            >
+              Moy. cafe/jour
+            </p>
+            <p class="font-display text-3xl text-white">
               {{ report()!.dailyAvg.coffee.toFixed(1) }}
             </p>
           </div>
@@ -116,12 +146,14 @@ interface DayLabel {
 
         <!-- Comparaison vs periode precedente -->
         <div
-          class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
         >
-          <p class="mb-2 text-small text-scheme-text-muted">
+          <p
+            class="mb-2 font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+          >
             vs periode precedente :
           </p>
-          <div class="flex gap-4">
+          <div class="flex gap-4 text-sm">
             <span
               [class]="
                 report()!.comparison.alcoholDelta < 0
@@ -148,10 +180,14 @@ interface DayLabel {
         <!-- Meilleur / Pire jour -->
         <div class="grid grid-cols-2 gap-4">
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
           >
-            <p class="text-small text-scheme-text-muted">Meilleur jour</p>
-            <p class="font-heading text-scheme-text">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+            >
+              Meilleur jour
+            </p>
+            <p class="font-display text-lg text-white">
               {{ report()!.best.date }}
             </p>
             <p class="text-xs text-green-500">
@@ -159,10 +195,14 @@ interface DayLabel {
             </p>
           </div>
           <div
-            class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+            class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
           >
-            <p class="text-small text-scheme-text-muted">Pire jour</p>
-            <p class="font-heading text-scheme-text">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+            >
+              Pire jour
+            </p>
+            <p class="font-display text-lg text-white">
               {{ report()!.worst.date }}
             </p>
             <p class="text-xs text-red-500">
@@ -174,19 +214,23 @@ interface DayLabel {
         <!-- Heatmap -->
         <app-sebastian-heatmap [data]="report()!.heatmap" />
 
-        <!-- Distribution par jour de la semaine -->
+        <!-- Distribution par jour de la semaine (.panel + barres gold) -->
         <div
           data-testid="day-distribution"
-          class="rounded-card border border-scheme-border bg-scheme-surface p-4"
+          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
         >
-          <h3 class="mb-3 font-heading text-h5">Distribution par jour</h3>
+          <h3 class="mb-3 font-display text-xl text-white">
+            Distribution par jour
+          </h3>
           <div class="grid grid-cols-7 gap-2 text-center">
             @for (day of dayLabels; track day.index) {
               <div>
-                <p class="text-small text-scheme-text-muted">
+                <p
+                  class="font-mono text-xs uppercase tracking-[0.04em] text-white/45"
+                >
                   {{ day.label }}
                 </p>
-                <p class="font-heading text-scheme-text">
+                <p class="font-display text-lg text-gold-soft">
                   {{ getDayTotal(day.index) }}
                 </p>
               </div>

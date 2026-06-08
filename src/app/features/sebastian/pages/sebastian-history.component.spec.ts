@@ -144,9 +144,11 @@ describe("SebastianHistoryComponent", () => {
     expect(dateTo).toBeTruthy();
   });
 
-  it("devrait utiliser les tokens de design SSOT", () => {
-    const surface =
-      fixture.nativeElement.querySelectorAll(".bg-scheme-surface");
+  it("devrait utiliser le glass Asili dark lounge ambré", () => {
+    // Restyle Lot 5 : barre de filtres au glass .panel — bg-white/[0.04].
+    const surface = fixture.nativeElement.querySelectorAll(
+      ".bg-white\\/\\[0\\.04\\]",
+    );
     expect(surface.length).toBeGreaterThan(0);
   });
 });
