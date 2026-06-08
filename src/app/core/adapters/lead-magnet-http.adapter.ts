@@ -25,7 +25,7 @@ export class LeadMagnetHttpAdapter implements LeadMagnetPort {
 
   getToolkitByToken(token: string): Observable<ToolkitPageData> {
     return this.http.get<ToolkitPageData>(
-      `${this.baseUrl}/lead-magnets/toolkit/${token}`,
+      `${this.baseUrl}/lead-magnets/toolkit/${encodeURIComponent(token)}`,
     );
   }
 }
