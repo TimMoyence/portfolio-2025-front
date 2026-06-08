@@ -6300,40 +6300,34 @@
         <target> Paste this prompt into <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> to generate your presentation in 60 seconds. </target>
       </segment>
     </unit>
-        <!-- needs-translation -->
     <unit id="contactFormSubjectAccess">
       <segment>
         <source>Demande d&apos;accès application</source>
-        <target>Demande d&apos;accès application</target>
+        <target>App access request</target>
       </segment>
     </unit>
-      <!-- needs-translation -->
     <unit id="contactAccessAppWeather">
       <segment>
         <source>l&apos;application Météo</source>
-        <target>l&apos;application Météo</target>
+        <target>the Weather app</target>
       </segment>
     </unit>
-      <!-- needs-translation -->
-      <!-- needs-translation -->
     <unit id="contactAccessAppSebastian">
       <segment>
         <source>l&apos;application Sebastian</source>
-        <target>l&apos;application Sebastian</target>
+        <target>the Sebastian app</target>
       </segment>
     </unit>
-      <!-- needs-translation -->
     <unit id="contactAccessAppGeneric">
       <segment>
-        <source>l&apos;atelier <x id="app" equiv-text="normalizedApp"/></source>
-        <target>l&apos;atelier <x id="app" equiv-text="normalizedApp"/></target>
+        <source>l&apos;atelier <ph id="0" equiv="app" disp="normalizedApp"/></source>
+        <target>the <ph id="0" equiv="app" disp="normalizedApp"/> workshop</target>
       </segment>
     </unit>
-      <!-- needs-translation -->
     <unit id="contactAccessMessage">
       <segment>
-        <source>Bonjour Tim, je souhaite un accès à <x id="appLabel" equiv-text="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</source>
-        <target>Bonjour Tim, je souhaite un accès à <x id="appLabel" equiv-text="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</target>
+        <source>Bonjour Tim, je souhaite un accès à <ph id="0" equiv="appLabel" disp="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</source>
+        <target>Hi Tim, I&apos;d like to get access to <ph id="0" equiv="appLabel" disp="appLabel"/> . Could you explain how it works? Thanks.</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.accroche.title">
@@ -7760,8 +7754,8 @@
     </unit>
     <unit id="slideQuizIncorrect">
       <segment>
-        <source>Pas tout à fait. La bonne réponse est : <x id="INTERPOLATION" equiv-text="{{ q.options[q.correctIndex] }}"/></source>
-        <target>Not quite. The right answer is: …</target>
+        <source>Pas tout à fait. La bonne réponse est : <ph id="0" equiv="INTERPOLATION" disp="{{ q.options[q.correctIndex] }}"/></source>
+        <target>Not quite. The right answer is: <ph id="0" equiv="INTERPOLATION" disp="{{ q.options[q.correctIndex] }}"/></target>
       </segment>
     </unit>
     <unit id="slideReflectionSave">
