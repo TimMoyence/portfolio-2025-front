@@ -200,4 +200,68 @@ describe("WeatherHttpAdapter", () => {
     expect(req.request.method).toBe("GET");
     req.flush(response);
   });
+
+  describe("reverseGeocode", () => {
+    const NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse";
+
+    it("devrait retourner la ville (city) via Nominatim", () => {
+      let result: string | null = "UNSET";
+      adapter.reverseGeocode(48.85, 2.35).subscribe((name) => {
+        result = name;
+      });
+
+      const req = httpMock.expectOne((r) => r.url === NOMINATIM_URL);
+      expect(req.request.method).toBe("GET");
+      expect(req.request.params.get("lat")).toBe("48.85");
+      expect(req.request.params.get("lon")).toBe("2.35");
+      req.flush({ address: { city: "Paris", town: "Ignore" } });
+
+      expect(result).toBe("Paris");
+    });
+
+    it("devrait retomber sur town/village/municipality si city absente", () => {
+      const cases: Array<[Record<string, string>, string]> = [
+        [{ town: "Versailles" }, "Versailles"],
+        [{ village: "Giverny" }, "Giverny"],
+        [{ municipality: "Lyon Metropole" }, "Lyon Metropole"],
+      ];
+
+      for (const [address, expected] of cases) {
+        let result: string | null = "UNSET";
+        adapter.reverseGeocode(1, 2).subscribe((name) => {
+          result = name;
+        });
+        const req = httpMock.expectOne((r) => r.url === NOMINATIM_URL);
+        req.flush({ address });
+        expect(result).toBe(expected);
+      }
+    });
+
+    it("devrait retourner null si aucun champ d'adresse exploitable", () => {
+      let result: string | null = "UNSET";
+      adapter.reverseGeocode(1, 2).subscribe((name) => {
+        result = name;
+      });
+
+      const req = httpMock.expectOne((r) => r.url === NOMINATIM_URL);
+      req.flush({ address: { country: "France" } });
+
+      expect(result).toBeNull();
+    });
+
+    it("devrait retourner null en cas d'erreur HTTP", () => {
+      let result: string | null = "UNSET";
+      adapter.reverseGeocode(1, 2).subscribe((name) => {
+        result = name;
+      });
+
+      const req = httpMock.expectOne((r) => r.url === NOMINATIM_URL);
+      req.flush("Erreur", {
+        status: 500,
+        statusText: "Internal Server Error",
+      });
+
+      expect(result).toBeNull();
+    });
+  });
 });

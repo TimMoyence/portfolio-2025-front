@@ -8,8 +8,10 @@ import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 import { of, throwError } from "rxjs";
 import { AUTH_PORT } from "../../core/ports/auth.port";
+import { RADAR_PORT } from "../../core/ports/radar.port";
 import { WEATHER_PORT } from "../../core/ports/weather.port";
 import { createAuthPortStub } from "../../../testing/factories/auth.factory";
+import { createRadarPortStub } from "../../../testing/factories/radar.factory";
 import {
   buildCityResult,
   buildEnsembleData,
@@ -67,6 +69,7 @@ describe("WeatherAppComponent", () => {
         provideHttpClientTesting(),
         { provide: AUTH_PORT, useValue: authPortStub },
         { provide: WEATHER_PORT, useValue: weatherPortStub },
+        { provide: RADAR_PORT, useValue: createRadarPortStub() },
         { provide: GeolocationService, useValue: geoServiceSpy },
       ],
     }).compileComponents();
@@ -250,6 +253,44 @@ describe("WeatherAppComponent", () => {
     expect(geoServiceSpy.reverseGeocode).toHaveBeenCalledWith(43.6, 1.44);
     expect(component.selectedCity()).toBeTruthy();
     expect(component.selectedCity()?.name).toBe("Toulouse");
+  });
+
+  // --- Tests rollback updates optimistes ---
+
+  it("devrait restaurer favoriteCities si removeFavorite echoue cote backend", () => {
+    const paris = {
+      name: "Paris",
+      latitude: 48.85,
+      longitude: 2.35,
+      country: "France",
+    };
+    const lyon = {
+      name: "Lyon",
+      latitude: 45.75,
+      longitude: 4.85,
+      country: "France",
+    };
+    component.favoriteCities.set([paris, lyon]);
+
+    weatherPortStub.updatePreferences.and.returnValue(
+      throwError(() => new Error("backend KO")),
+    );
+
+    component.removeFavorite(lyon);
+
+    // Rollback : la liste d'origine est restauree
+    expect(component.favoriteCities()).toEqual([paris, lyon]);
+  });
+
+  it("devrait restaurer defaultCityIndex si setDefaultCity echoue cote backend", () => {
+    component.defaultCityIndex.set(2);
+    weatherPortStub.updatePreferences.and.returnValue(
+      throwError(() => new Error("backend KO")),
+    );
+
+    component.setDefaultCity(5);
+
+    expect(component.defaultCityIndex()).toBe(2);
   });
 
   it("devrait ne pas appeler geoloc si ville par defaut existe", () => {

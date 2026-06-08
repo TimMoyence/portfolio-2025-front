@@ -135,6 +135,22 @@ describe("ProfileComponent", () => {
     expect(component.favoriteCities.length).toBe(0);
   });
 
+  it("restaure la liste si removeFavoriteCity echoue cote backend", () => {
+    const weatherPort = TestBed.inject(WEATHER_PORT) as ReturnType<
+      typeof createWeatherPortStub
+    >;
+    weatherPort.updatePreferences.and.returnValue(
+      throwError(() => new Error("backend KO")),
+    );
+    const before = [...component.favoriteCities];
+    expect(before.length).toBe(1);
+
+    component.removeFavoriteCity(component.favoriteCities[0]);
+
+    // Rollback : la liste d'origine est restauree
+    expect(component.favoriteCities).toEqual(before);
+  });
+
   /* ========================= EDIT PROFILE ========================= */
 
   describe("mode edition du profil", () => {

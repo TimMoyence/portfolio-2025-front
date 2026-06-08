@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import type { Observable } from "rxjs";
+import { of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { getApiBaseUrl } from "../http/api-config";
 import type {
   AirQualityData,
@@ -15,10 +17,22 @@ import type {
 } from "../models/weather.model";
 import type { WeatherPort } from "../ports/weather.port";
 
+/** Reponse transport Nominatim (reverse geocoding, sous-ensemble utilise). */
+interface NominatimResponse {
+  address?: {
+    city?: string;
+    town?: string;
+    village?: string;
+    municipality?: string;
+    country?: string;
+    country_code?: string;
+  };
+}
+
 /**
  * Adaptateur HTTP pour le port meteo.
  * Communique avec les endpoints `/weather/geocoding`, `/weather/forecast`
- * et `/weather/preferences`.
+ * et `/weather/preferences`. Le reverse-geocoding passe par Nominatim (OSM).
  */
 @Injectable()
 export class WeatherHttpAdapter implements WeatherPort {
@@ -38,6 +52,36 @@ export class WeatherHttpAdapter implements WeatherPort {
         params: { name, language, count: count.toString() },
       },
     );
+  }
+
+  /**
+   * Reverse-geocoding via Nominatim (OpenStreetMap).
+   * Retourne le nom de la ville (city > town > village > municipality)
+   * ou `null` si indisponible.
+   */
+  reverseGeocode(lat: number, lon: number): Observable<string | null> {
+    return this.http
+      .get<NominatimResponse>("https://nominatim.openstreetmap.org/reverse", {
+        params: {
+          lat: lat.toString(),
+          lon: lon.toString(),
+          format: "json",
+          zoom: "10",
+        },
+      })
+      .pipe(
+        map((resp) => {
+          const addr = resp.address;
+          return (
+            addr?.city ??
+            addr?.town ??
+            addr?.village ??
+            addr?.municipality ??
+            null
+          );
+        }),
+        catchError(() => of(null)),
+      );
   }
 
   /** Recuperation des previsions meteo pour des coordonnees donnees. */
