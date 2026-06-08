@@ -28,9 +28,15 @@ import {
   standalone: true,
   imports: [CommonModule, UnitPipe],
   template: `
+    <!--
+      Panneau détail jour — re-skin Asili : conteneur glass .gp (border teal
+      subtile, backdrop-blur) + tuiles internes glass. Le dégradé température
+      reste sémantique (froid bleu → chaud orange). Restyle visuel uniquement —
+      dayData()/uvRisk*, unités, IDs i18n inchangés.
+    -->
     @if (dayData(); as data) {
       <div
-        class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+        class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
       >
         <!-- Header : nom du jour + date + icone -->
         <div class="mb-4 flex items-center gap-3">
@@ -69,7 +75,7 @@ import {
         <!-- Grille de details -->
         <div class="grid grid-cols-2 gap-3">
           <!-- UV max -->
-          <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+          <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p
               class="mb-1 text-xs text-white/50"
               i18n="weather.dayDetail.uv|@@weatherDayDetailUv"
@@ -85,7 +91,7 @@ import {
           </div>
 
           <!-- Vent max + rafales -->
-          <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+          <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p
               class="mb-1 text-xs text-white/50"
               i18n="weather.dayDetail.wind|@@weatherDayDetailWind"
@@ -106,7 +112,7 @@ import {
           </div>
 
           <!-- Precipitations -->
-          <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+          <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p
               class="mb-1 text-xs text-white/50"
               i18n="weather.dayDetail.precip|@@weatherDayDetailPrecip"
@@ -120,7 +126,7 @@ import {
           </div>
 
           <!-- Lever / coucher du soleil -->
-          <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+          <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p
               class="mb-1 text-xs text-white/50"
               i18n="weather.dayDetail.sun|@@weatherDayDetailSun"

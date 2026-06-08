@@ -25,11 +25,18 @@ interface LevelTab {
   standalone: true,
   imports: [CommonModule],
   template: `
+    <!--
+      Sélecteur de niveau — re-skin Asili AsiliNewDesign/asili-app.css :
+      .unit-toggle (segment pill, bordure subtile) + onglet actif .on
+      (fond teal sur foncé, libellé font-mono). Restyle visuel uniquement —
+      WeatherLevelService, (levelChanged), role=tablist/aria-selected/
+      aria-label inchangés.
+    -->
     <nav
-      class="inline-flex rounded-xl border p-1"
+      class="inline-flex overflow-hidden rounded-full border p-1 font-mono"
       [ngClass]="
         darkMode()
-          ? 'border-white/20 bg-white/10 backdrop-blur-md'
+          ? 'border-teal/15 bg-white/5 backdrop-blur-xl'
           : 'border-scheme-border bg-scheme-surface'
       "
       role="tablist"
@@ -40,14 +47,14 @@ interface LevelTab {
           type="button"
           role="tab"
           [attr.aria-selected]="levelService.level() === tab.value"
-          class="rounded-lg px-4 py-1.5 text-sm font-medium transition-all"
+          class="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
           [ngClass]="
             levelService.level() === tab.value
               ? darkMode()
-                ? 'bg-white/25 text-white shadow-sm'
+                ? 'bg-teal font-semibold text-[#06231f]'
                 : 'bg-scheme-accent text-white shadow-sm'
               : darkMode()
-                ? 'text-white/60 hover:text-white/80'
+                ? 'text-white/55 hover:text-white'
                 : 'text-scheme-text-muted hover:text-scheme-text'
           "
           (click)="onLevelChange(tab.value)"

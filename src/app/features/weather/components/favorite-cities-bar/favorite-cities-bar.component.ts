@@ -24,19 +24,25 @@ import type {
   imports: [CommonModule],
   host: { class: "block" },
   template: `
+    <!--
+      Barre de villes favorites — re-skin Asili AsiliNewDesign/asili-sections.css :
+      .meteo-cities (rangée flex) + .city-btn (pill border subtile, hover teal,
+      .on = fond teal sur foncé). Restyle visuel uniquement — add/remove/
+      setDefault, [darkMode] et les bindings inchangés.
+    -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
       <!-- Bouton etoile : ajouter/retirer la ville courante -->
       @if (selectedCity()) {
         <button
           type="button"
           (click)="toggleFavorite()"
-          class="flex-shrink-0 rounded-lg border p-2 transition-colors"
+          class="flex-shrink-0 rounded-full border p-2 transition-colors"
           [ngClass]="
             darkMode()
-              ? 'border-white/20 bg-white/10 text-white/70 hover:bg-white/20'
+              ? 'border-teal/15 bg-white/5 text-white/70 hover:border-teal/40 hover:text-white'
               : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
           "
-          [class.text-yellow-400]="isCurrentFavorite()"
+          [class.text-teal]="isCurrentFavorite()"
           [attr.aria-label]="
             isCurrentFavorite() ? removeFromFavoritesLabel : addToFavoritesLabel
           "
@@ -64,14 +70,14 @@ import type {
           <button
             type="button"
             (click)="onCityClick(city)"
-            class="rounded-l-full border border-r-0 px-3 py-1.5 text-sm transition-colors"
+            class="rounded-l-full border border-r-0 px-3 py-1.5 text-sm font-medium transition-colors"
             [ngClass]="
               isSelected(city)
                 ? darkMode()
-                  ? 'border-white/50 bg-white/20 text-white'
+                  ? 'border-teal bg-teal font-semibold text-[#06231f]'
                   : 'border-scheme-accent bg-scheme-accent/10 text-scheme-accent'
                 : darkMode()
-                  ? 'border-white/20 bg-white/10 text-white/80 hover:bg-white/20'
+                  ? 'border-teal/15 bg-white/5 text-white/80 hover:border-teal/40 hover:text-white'
                   : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
             "
           >
@@ -83,10 +89,10 @@ import type {
             class="rounded-r-full border px-1.5 py-1.5 text-xs transition-colors"
             [ngClass]="
               darkMode()
-                ? 'border-white/20 bg-white/10 text-white/60 hover:bg-white/20'
+                ? 'border-teal/15 bg-white/5 text-white/60 hover:border-teal/40 hover:text-white'
                 : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
             "
-            [class.text-yellow-400]="defaultCityIndex() === i"
+            [class.text-teal]="defaultCityIndex() === i"
             [attr.aria-label]="
               defaultCityIndex() === i
                 ? defaultCityRemoveLabel

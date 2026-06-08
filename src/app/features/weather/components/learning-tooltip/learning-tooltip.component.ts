@@ -25,10 +25,16 @@ import { WeatherLevelService } from "../../services/weather-level.service";
   selector: "app-learning-tooltip",
   standalone: true,
   template: `
+    <!--
+      Tooltip pédagogique — re-skin Asili : déclencheur "?" glass teal +
+      popover en portail glass .gp. Restyle visuel uniquement — portail,
+      positionnement, escapeHtml, a11y (aria-label/aria-expanded/role)
+      inchangés.
+    -->
     <span class="relative inline-block">
       <button
         type="button"
-        class="flex h-5 w-5 items-center justify-center rounded-full border border-white/30 bg-white/10 text-xs text-white/70 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-white"
+        class="flex h-5 w-5 items-center justify-center rounded-full border border-teal/30 bg-white/5 text-xs text-white/70 backdrop-blur-sm transition-colors hover:border-teal/50 hover:text-white"
         [attr.aria-label]="title()"
         [attr.aria-expanded]="visible()"
         (click)="toggle($event)"
@@ -110,10 +116,11 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
         "max-width",
         "min(16rem, calc(100vw - 2rem))",
       );
-      this.renderer.addClass(this.portalEl, "rounded-xl");
+      // Popover glass Asili .gp : rayon --r-lg, border teal subtile, blur.
+      this.renderer.addClass(this.portalEl, "rounded-[20px]");
       this.renderer.addClass(this.portalEl, "border");
-      this.renderer.addClass(this.portalEl, "border-white/20");
-      this.renderer.addClass(this.portalEl, "bg-white/15");
+      this.renderer.addClass(this.portalEl, "border-teal/20");
+      this.renderer.addClass(this.portalEl, "bg-white/[0.07]");
       this.renderer.addClass(this.portalEl, "p-4");
       this.renderer.addClass(this.portalEl, "shadow-xl");
       this.renderer.addClass(this.portalEl, "backdrop-blur-xl");
