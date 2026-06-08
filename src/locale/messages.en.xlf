@@ -6240,108 +6240,6 @@
     <!-- Members panel -->
     <!-- Contributions panel -->
     <!-- Savings goals -->
-    <unit id="formationsListLabel">
-      <segment>
-        <source><x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon name=&quot;sparkles&quot; [size]=&quot;0.85&quot;&gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/> Ressources gratuites </source>
-        <target><x id="START_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;app-svg-icon name=&quot;sparkles&quot; [size]=&quot;0.85&quot;&gt;"/><x id="CLOSE_TAG_APP_SVG_ICON" ctype="x-app_svg_icon" equiv-text="&lt;/app-svg-icon&gt;"/> Free resources </target>
-      </segment>
-    </unit>
-    <unit id="formationsListTitle">
-      <segment>
-        <source> Formations &amp; Présentations </source>
-        <target> Courses &amp; Presentations </target>
-      </segment>
-    </unit>
-    <unit id="formationsListSubtitle">
-      <segment>
-        <source> Des présentations concrètes et pratiques pour tirer le meilleur de l&apos;IA dans votre activité. Consultables en ligne ou en mode présentation — pensées pour les solopreneurs, freelances et petites équipes qui veulent des réponses actionnables, pas un cours universitaire. </source>
-        <target> Hands-on, practical presentations to help you get the most out of AI in your business. Read them online or run them in presentation mode — designed for solopreneurs, freelancers, and small teams who want actionable answers, not a university course. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyTitle">
-      <segment>
-        <source> Pourquoi ces formations ? </source>
-        <target> Why these courses? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyPara1">
-      <segment>
-        <source> L&apos;IA générative a changé le quotidien des indépendants en 18 mois : ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... La vraie difficulté n&apos;est plus de trouver un outil, c&apos;est de savoir lesquels garder et comment les intégrer sans perdre sa journée en prompt engineering. </source>
-        <target> Generative AI has transformed the daily life of independents in the past 18 months: ChatGPT, Claude, Perplexity, Gemini, Midjourney, Notion AI, Zapier AI... The real challenge is no longer finding a tool — it&apos;s knowing which ones to keep and how to integrate them without losing your day to prompt engineering. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyPara2">
-      <segment>
-        <source> Chaque formation est basée sur ma pratique quotidienne : développeur full-stack à Bordeaux, freelance depuis 3 ans, je teste les outils IA en production sur mes propres projets et ceux de mes clients. Je partage ce qui fonctionne, ce qui ne fonctionne pas et surtout les cas où l&apos;IA fait gagner 4-6 heures par semaine concrètement. </source>
-        <target> Each course is based on my daily practice: full-stack developer in Bordeaux, freelance for 3 years, I test AI tools in production on my own projects and those of my clients. I share what works, what doesn&apos;t, and especially the cases where AI concretely saves 4-6 hours per week. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListWhyPara3">
-      <segment>
-        <source> Format pensé pour être consultable en ligne (slides interactifs, quiz en live, polls) ou en mode présentation si vous voulez les projeter en atelier d&apos;équipe. Tout est gratuit, sans inscription, sans email obligatoire à part pour les compléments PDF. </source>
-        <target> The format is designed to be consulted online (interactive slides, live quizzes, polls) or in presentation mode if you want to project them in a team workshop. Everything is free, no sign-up required, no mandatory email — except for the PDF add-ons. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaqTitle">
-      <segment>
-        <source> Questions fréquentes </source>
-        <target> Frequently asked questions </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq1Q">
-      <segment>
-        <source> Les formations sont-elles vraiment gratuites ? </source>
-        <target> Are the courses really free? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq1A">
-      <segment>
-        <source> Oui — les slides, quiz et polls en ligne sont entièrement gratuits et consultables sans inscription. Seuls certains compléments PDF (toolkit, prompts library) demandent un email pour l&apos;envoi, que vous pouvez retirer à tout moment. </source>
-        <target> Yes — the slides, quizzes, and polls online are entirely free and accessible without sign-up. Only some PDF add-ons (toolkit, prompts library) require an email for delivery, which you can remove at any time. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq2Q">
-      <segment>
-        <source> Puis-je les utiliser en présentation d&apos;équipe ? </source>
-        <target> Can I use them for team presentations? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq2A">
-      <segment>
-        <source> Absolument. Chaque formation a un mode &quot;présentation&quot; avec slides plein écran, polls live pour interagir avec l&apos;audience et quiz pour valider la compréhension. Vous pouvez l&apos;utiliser en atelier interne, en conférence ou en accompagnement client — mentionnez juste la source si vous le diffusez. </source>
-        <target> Absolutely. Each course has a &quot;presentation&quot; mode with full-screen slides, live polls to engage the audience, and quizzes to check understanding. You can use it for internal workshops, conferences, or client coaching — just credit the source if you share it publicly. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq3Q">
-      <segment>
-        <source> À quelle fréquence sont-elles mises à jour ? </source>
-        <target> How often are they updated? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq3A">
-      <segment>
-        <source> Les outils IA évoluent vite. Chaque formation est relue tous les 3-4 mois pour enlever ce qui ne fonctionne plus, ajouter les nouveautés qui tiennent la route et ajuster les budgets quand les grilles tarifaires changent. Les mises à jour majeures sont annoncées dans les slides concernés. </source>
-        <target> AI tools evolve fast. Each course is reviewed every 3-4 months to remove what no longer works, add reliable new tools, and adjust budgets when pricing changes. Major updates are flagged in the relevant slides. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq4Q">
-      <segment>
-        <source> Proposez-vous de l&apos;accompagnement personnalisé ? </source>
-        <target> Do you offer personalized coaching? </target>
-      </segment>
-    </unit>
-    <unit id="formationsListFaq4A">
-      <segment>
-        <source> Oui — au-delà des formations publiques, je fais aussi du coaching individuel et de la formation intra-entreprise sur l&apos;intégration IA dans les workflows métier. Voir la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> page offre <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ou contactez-moi directement. </source>
-        <target> Yes — beyond the public courses, I also offer one-to-one coaching and in-house training on integrating AI into business workflows. See the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/fr/offer&quot; class=&quot;underline text-scheme-accent&quot;&gt;"/> services page <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or contact me directly. </target>
-      </segment>
-    </unit>
-    <unit id="formationsListViewCta">
-      <segment>
-        <source> Consulter → </source>
-        <target> View → </target>
-      </segment>
-    </unit>
     <unit id="sebastianPresHeadline">
       <segment>
         <source> Gardez le <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;accent-word&quot;&gt;"/>controle<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> sur vos habitudes </source>
@@ -12631,6 +12529,12 @@
       <segment>
         <source>Copié !</source>
         <target>Copied!</target>
+      </segment>
+    </unit>
+    <unit id="formations.toolkitPrivate.copyError">
+      <segment>
+        <source>Échec — copiez à la main</source>
+        <target>Failed — copy manually</target>
       </segment>
     </unit>
 
