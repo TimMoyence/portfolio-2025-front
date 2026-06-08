@@ -17,9 +17,15 @@ import { WeatherLevelService } from "../../services/weather-level.service";
   standalone: true,
   host: { class: "block" },
   template: `
+    <!--
+      Invite de transition de niveau — re-skin Asili : carte glass .gp
+      (border teal subtile, backdrop-blur) + bouton d'activation teal.
+      Restyle visuel uniquement — chevron-pulse, WeatherLevelService et
+      la logique d'activation/fermeture inchangés.
+    -->
     @if (levelService.showTransitionPrompt() && !dismissed()) {
       <div
-        class="relative rounded-2xl border border-white/20 bg-gradient-to-r from-white/10 to-white/5 p-4 backdrop-blur-md"
+        class="relative rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
         role="status"
       >
         <div class="flex items-center justify-between gap-4">
@@ -33,7 +39,7 @@ import { WeatherLevelService } from "../../services/weather-level.service";
           <div class="flex items-center gap-2">
             <button
               type="button"
-              class="chevron-pulse rounded-lg bg-white/20 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/30"
+              class="chevron-pulse rounded-full bg-teal px-3 py-1.5 text-sm font-semibold text-[#06231f] transition-colors hover:brightness-110"
               (click)="activate()"
             >
               {{ activateLabel }}

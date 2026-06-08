@@ -11,7 +11,19 @@ export interface ChartParameter {
   defaultVisible: boolean;
 }
 
-/** Parametres disponibles pour le graphique horaire. */
+/**
+ * Parametres disponibles pour le graphique horaire.
+ *
+ * Palette Asili (AsiliNewDesign/asili.css) :
+ *  - température : glow #5b8cff (rgb 91,140,255) — ligne principale ;
+ *  - précipitations : glow-soft #8fb0ff (rgb 143,176,255) — barres ;
+ *  - vent : teal #4fb3a2 (rgb 79,179,162) ;
+ *  - humidité : glow-soft assombri (rgb 110,150,235) ;
+ *  - UV : ambre conservé (couleur sémantique d'alerte).
+ *
+ * Les alphas `0.9`/`0.8` des `borderColor` sont volontairement preserves :
+ * `hourly-chart.component` les remplace par `0.7` pour deriver la couleur des ticks.
+ */
 export const CHART_PARAMETERS: ChartParameter[] = [
   {
     id: "temperature",
@@ -19,8 +31,8 @@ export const CHART_PARAMETERS: ChartParameter[] = [
     dataKey: "temperature_2m",
     type: "line",
     yAxisID: "y",
-    borderColor: "rgba(255, 255, 255, 0.9)",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderColor: "rgba(91, 140, 255, 0.9)",
+    backgroundColor: "rgba(91, 140, 255, 0.12)",
     unit: "°",
     defaultVisible: true,
   },
@@ -30,8 +42,8 @@ export const CHART_PARAMETERS: ChartParameter[] = [
     dataKey: "precipitation",
     type: "bar",
     yAxisID: "y1",
-    borderColor: "rgba(96, 165, 250, 0.8)",
-    backgroundColor: "rgba(96, 165, 250, 0.5)",
+    borderColor: "rgba(143, 176, 255, 0.8)",
+    backgroundColor: "rgba(143, 176, 255, 0.4)",
     unit: "mm",
     defaultVisible: true,
   },
@@ -41,8 +53,8 @@ export const CHART_PARAMETERS: ChartParameter[] = [
     dataKey: "wind_speed_10m",
     type: "line",
     yAxisID: "y2",
-    borderColor: "rgba(74, 222, 128, 0.9)",
-    backgroundColor: "rgba(74, 222, 128, 0.1)",
+    borderColor: "rgba(79, 179, 162, 0.9)",
+    backgroundColor: "rgba(79, 179, 162, 0.12)",
     unit: "km/h",
     defaultVisible: false,
   },
@@ -52,8 +64,8 @@ export const CHART_PARAMETERS: ChartParameter[] = [
     dataKey: "relative_humidity_2m",
     type: "line",
     yAxisID: "y3",
-    borderColor: "rgba(147, 197, 253, 0.9)",
-    backgroundColor: "rgba(147, 197, 253, 0.1)",
+    borderColor: "rgba(110, 150, 235, 0.9)",
+    backgroundColor: "rgba(110, 150, 235, 0.1)",
     unit: "%",
     defaultVisible: false,
   },
@@ -63,8 +75,8 @@ export const CHART_PARAMETERS: ChartParameter[] = [
     dataKey: "uv_index",
     type: "line",
     yAxisID: "y4",
-    borderColor: "rgba(250, 204, 21, 0.9)",
-    backgroundColor: "rgba(250, 204, 21, 0.1)",
+    borderColor: "rgba(230, 198, 79, 0.9)",
+    backgroundColor: "rgba(230, 198, 79, 0.1)",
     unit: "",
     defaultVisible: false,
   },

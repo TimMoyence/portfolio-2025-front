@@ -21,11 +21,19 @@ import type {
   selector: "app-data-export",
   standalone: true,
   template: `
+    <!--
+      Carte Expert export de données — conteneur glass Asili.
+      Re-skin AsiliNewDesign/asili-app.css : .gp/.wx-card (bg-white/5,
+      border-teal/15, rayon --r-lg 20px, backdrop-blur-xl) + en-tête kicker
+      .gp-h (font-mono uppercase) + boutons glass accent teal au survol.
+      Restyle visuel uniquement : exportCsv()/exportJson()/downloadFile() et
+      les IDs @@weatherDataExport* sont inchangés.
+    -->
     <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+      class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
     >
       <h3
-        class="mb-3 text-sm font-medium text-white/70"
+        class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
         i18n="weather.dataExport.title|@@weatherDataExportTitle"
       >
         Export des données
@@ -34,7 +42,7 @@ import type {
       <div class="flex flex-wrap gap-3">
         <button
           type="button"
-          class="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+          class="rounded-xl border border-teal/20 bg-white/5 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:border-teal/40 hover:bg-teal/10"
           (click)="exportCsv()"
           i18n="weather.dataExport.csv|@@weatherDataExportCsv"
         >
@@ -42,7 +50,7 @@ import type {
         </button>
         <button
           type="button"
-          class="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+          class="rounded-xl border border-teal/20 bg-white/5 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:border-teal/40 hover:bg-teal/10"
           (click)="exportJson()"
           i18n="weather.dataExport.json|@@weatherDataExportJson"
         >
@@ -52,10 +60,10 @@ import type {
 
       <!-- Placeholder radar -->
       <div
-        class="mt-4 rounded-xl border border-dashed border-white/20 p-3 text-center"
+        class="mt-4 rounded-xl border border-dashed border-teal/15 p-3 text-center"
       >
         <p
-          class="text-xs text-white/40"
+          class="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40"
           i18n="
             weather.dataExport.radarPlaceholder|@@weatherDataExportRadarPlaceholder"
         >

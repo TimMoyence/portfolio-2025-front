@@ -31,19 +31,25 @@ Chart.register(...registerables, zoomPlugin);
   selector: "app-hourly-chart",
   standalone: true,
   template: `
+    <!--
+      Graphe horaire — re-skin Asili « gp / gp-h » (AsiliNewDesign/asili-app.css).
+      Glass .gp, en-tête kicker font-mono uppercase, onglets segmentés teal actif.
+      Couleurs Chart.js portées sur la palette teal/glow (chart-datasets.config).
+      Tailwind/couleurs uniquement : logique de dataset/timeRange inchangée.
+    -->
     <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-md"
+      class="rounded-[20px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl"
     >
-      <div class="mb-4 flex items-center justify-between">
+      <div class="mb-4 flex items-center justify-between gap-3">
         <h3
-          class="text-lg font-semibold text-white"
+          class="font-mono text-[11px] uppercase tracking-[0.14em] text-white/55"
           i18n="weather.hourly.title|@@weatherHourlyTitle"
         >
           Prévisions horaires
         </h3>
         <!-- Selecteur de plage temporelle -->
         <nav
-          class="inline-flex rounded-xl border border-white/20 bg-white/10 p-0.5"
+          class="inline-flex rounded-full border border-white/15 bg-white/[0.06] p-0.5 font-mono text-xs"
           role="tablist"
         >
           @for (range of timeRangeOptions; track range) {
@@ -51,11 +57,11 @@ Chart.register(...registerables, zoomPlugin);
               type="button"
               role="tab"
               [attr.aria-selected]="timeRange() === range"
-              class="rounded-lg px-2 py-0.5 text-xs font-medium transition-all"
+              class="rounded-full px-2.5 py-0.5 font-medium transition-all"
               [class]="
                 timeRange() === range
-                  ? 'bg-white/25 text-white shadow-sm'
-                  : 'text-white/60 hover:text-white/80'
+                  ? 'bg-teal/20 text-teal'
+                  : 'text-white/55 hover:text-white/80'
               "
               (click)="setTimeRange(range)"
             >
@@ -69,10 +75,10 @@ Chart.register(...registerables, zoomPlugin);
         @for (param of availableParams; track param.id) {
           <button
             type="button"
-            class="rounded-lg px-2.5 py-1 text-xs font-medium transition-all"
+            class="rounded-full px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-wider transition-all"
             [class]="
               visibleParams().has(param.id)
-                ? 'bg-white/20 text-white'
+                ? 'bg-white/15 text-white'
                 : 'text-white/40 hover:text-white/60'
             "
             [style.border-left]="
@@ -285,9 +291,11 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
             },
           },
           tooltip: {
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            backgroundColor: "rgba(10, 14, 18, 0.85)",
             titleColor: "white",
             bodyColor: "white",
+            borderColor: "rgba(79, 179, 162, 0.4)",
+            borderWidth: 1,
           },
           zoom: {
             pan: {

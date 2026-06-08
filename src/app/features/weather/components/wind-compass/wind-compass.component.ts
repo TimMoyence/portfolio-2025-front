@@ -29,6 +29,12 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
     >
       <span cardTitle i18n="weather.wind.title|@@weatherWindTitle">Vent</span>
 
+      <!--
+        Boussole SVG — re-skin Asili (.compass / #wind-needle) :
+        aiguille teal vers l'origine du vent, contre-aiguille translucide,
+        moyeu blanc. SVG/couleurs uniquement — arrowTransform()/cardinalDirection()/
+        displaySpeedValue() inchangés.
+      -->
       <div class="flex flex-col items-center">
         <!-- Boussole SVG -->
         <svg viewBox="0 0 120 120" class="h-32 w-32" aria-hidden="true">
@@ -38,24 +44,24 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
             cy="60"
             r="54"
             fill="none"
-            stroke="rgba(255,255,255,0.15)"
-            stroke-width="2"
+            stroke="rgba(255,255,255,0.14)"
+            stroke-width="1.5"
           />
           <circle
             cx="60"
             cy="60"
             r="40"
             fill="none"
-            stroke="rgba(255,255,255,0.08)"
+            stroke="rgba(255,255,255,0.07)"
             stroke-width="1"
           />
 
-          <!-- Directions cardinales -->
+          <!-- Directions cardinales (font-mono Geist) -->
           <text
             x="60"
             y="14"
             text-anchor="middle"
-            class="fill-white/70 text-[10px] font-medium"
+            class="fill-white/55 font-mono text-[10px]"
           >
             N
           </text>
@@ -63,7 +69,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
             x="110"
             y="64"
             text-anchor="middle"
-            class="fill-white/70 text-[10px] font-medium"
+            class="fill-white/40 font-mono text-[10px]"
           >
             E
           </text>
@@ -71,7 +77,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
             x="60"
             y="116"
             text-anchor="middle"
-            class="fill-white/70 text-[10px] font-medium"
+            class="fill-white/40 font-mono text-[10px]"
           >
             S
           </text>
@@ -79,30 +85,24 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
             x="10"
             y="64"
             text-anchor="middle"
-            class="fill-white/70 text-[10px] font-medium"
+            class="fill-white/40 font-mono text-[10px]"
           >
             O
           </text>
 
-          <!-- Fleche directionnelle (pointe vers la direction d'ou vient le vent) -->
+          <!-- Aiguille directionnelle (pointe vers l'origine du vent) -->
           <g [attr.transform]="arrowTransform()">
-            <polygon points="60,22 55,42 65,42" class="fill-white/90" />
-            <line
-              x1="60"
-              y1="42"
-              x2="60"
-              y2="78"
-              stroke="rgba(255,255,255,0.4)"
-              stroke-width="2"
-            />
+            <polygon points="60,22 54,46 66,46" fill="#4fb3a2" />
+            <polygon points="60,98 54,74 66,74" fill="rgba(255,255,255,0.25)" />
           </g>
+          <circle cx="60" cy="60" r="4" fill="#fff" />
 
           <!-- Vitesse au centre -->
           <text
             x="60"
             y="57"
             text-anchor="middle"
-            class="fill-white text-[16px] font-light"
+            class="fill-white font-display text-[18px]"
           >
             {{ displaySpeedValue() }}
           </text>
@@ -110,7 +110,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
             x="60"
             y="70"
             text-anchor="middle"
-            class="fill-white/50 text-[8px]"
+            class="fill-white/50 font-mono text-[8px]"
           >
             {{ displaySpeedUnit() }}
           </text>
@@ -134,7 +134,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
         <div class="mt-2">
           <app-sparkline
             [data]="hourlyWind()"
-            [color]="'rgba(74, 222, 128, 0.8)'"
+            [color]="'rgba(79, 179, 162, 0.85)'"
           />
         </div>
       }

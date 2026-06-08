@@ -27,11 +27,19 @@ Chart.register(...registerables, Filler);
   selector: "app-historical-comparison",
   standalone: true,
   template: `
+    <!--
+      Carte Expert comparaison historique — conteneur glass Asili.
+      Re-skin AsiliNewDesign/asili-app.css : .gp/.wx-card (bg-white/5,
+      border-teal/15, rayon --r-lg 20px, backdrop-blur-xl) + titre font-display.
+      Restyle visuel uniquement : conteneur, titre et couleurs des datasets
+      Chart.js (teal/glow/ambre). historical(), currentTemp(), la structure des
+      datasets (fill +1, refLine, borderDash) et la logique sont inchangées.
+    -->
     <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-md"
+      class="rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl"
     >
       <h3
-        class="mb-4 text-lg font-semibold text-white"
+        class="mb-4 font-display text-xl font-normal text-white"
         i18n="weather.historical.title|@@weatherHistoricalTitle"
       >
         Historique (30 jours)
@@ -109,19 +117,21 @@ export class HistoricalComparisonComponent
         labels,
         datasets: [
           {
+            // Couleur Asili : ambre chaud (limite haute de la bande min/max).
             label: $localize`:weather.historical.max|@@weatherHistoricalMax:Max`,
             data: maxTemps,
-            borderColor: "rgba(239, 68, 68, 0.4)",
-            backgroundColor: "rgba(239, 68, 68, 0.08)",
+            borderColor: "rgba(217, 160, 91, 0.45)",
+            backgroundColor: "rgba(217, 160, 91, 0.08)",
             borderWidth: 1,
             pointRadius: 0,
             fill: "+1",
             tension: 0.3,
           },
           {
+            // Couleur Asili : teal (limite basse de la bande min/max).
             label: $localize`:weather.historical.min|@@weatherHistoricalMin:Min`,
             data: minTemps,
-            borderColor: "rgba(59, 130, 246, 0.4)",
+            borderColor: "rgba(79, 179, 162, 0.45)",
             backgroundColor: "transparent",
             borderWidth: 1,
             pointRadius: 0,
@@ -129,6 +139,7 @@ export class HistoricalComparisonComponent
             tension: 0.3,
           },
           {
+            // Ligne principale : blanc (lisibilité sur fond ciel).
             label: $localize`:weather.historical.mean|@@weatherHistoricalMean:Moyenne`,
             data: meanTemps,
             borderColor: "rgba(255, 255, 255, 0.9)",
@@ -139,9 +150,10 @@ export class HistoricalComparisonComponent
             tension: 0.3,
           },
           {
+            // Référence température actuelle : glow Asili (pointillé).
             label: $localize`:weather.historical.current|@@weatherHistoricalCurrent:Actuelle`,
             data: refLine,
-            borderColor: "rgba(250, 204, 21, 0.7)",
+            borderColor: "rgba(91, 140, 255, 0.8)",
             backgroundColor: "transparent",
             borderWidth: 2,
             borderDash: [6, 3],

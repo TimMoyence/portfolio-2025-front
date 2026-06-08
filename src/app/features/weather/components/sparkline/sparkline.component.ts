@@ -41,8 +41,8 @@ export class SparklineComponent {
   /** Donnees a tracer (tableau de nombres). */
   readonly data = input<number[]>([]);
 
-  /** Couleur de la courbe (CSS). */
-  readonly color = input("rgba(255, 255, 255, 0.6)");
+  /** Couleur de la courbe (CSS). Défaut : teal Asili. */
+  readonly color = input("rgba(79, 179, 162, 0.85)");
 
   /** Points normalises pour le SVG. */
   readonly points = computed(() => {

@@ -17,11 +17,16 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
 
 Chart.register(...registerables);
 
-/** Couleurs associees a chaque modele meteorologique. */
+/**
+ * Couleurs associees a chaque modele meteorologique.
+ * Palette Asili (src/styles/_tokens.scss) : teal #4fb3a2, glow #5b8cff,
+ * glow-soft #8fb0ff — trois teintes distinctes du langage « ciel/glass ».
+ * Restyle visuel uniquement : seules les couleurs des courbes changent.
+ */
 const MODEL_COLORS: Record<string, string> = {
-  ECMWF: "rgba(59, 130, 246, 0.9)",
-  GFS: "rgba(239, 68, 68, 0.9)",
-  ICON: "rgba(34, 197, 94, 0.9)",
+  ECMWF: "rgba(79, 179, 162, 0.9)",
+  GFS: "rgba(91, 140, 255, 0.9)",
+  ICON: "rgba(143, 176, 255, 0.9)",
 };
 
 /**
@@ -34,11 +39,18 @@ const MODEL_COLORS: Record<string, string> = {
   selector: "app-spaghetti-plot",
   standalone: true,
   template: `
+    <!--
+      Carte Expert spaghetti plot — conteneur glass Asili.
+      Re-skin AsiliNewDesign/asili-app.css : .gp/.wx-card (bg-white/5,
+      border-teal/15, rayon --r-lg 20px, backdrop-blur-xl) + titre font-display.
+      Restyle visuel uniquement : MODEL_COLORS (teal/glow), conteneur et titre.
+      Le pipeline Chart.js, ensemble() et la logique de dataset sont inchangés.
+    -->
     <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-md"
+      class="rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl"
     >
       <h3
-        class="mb-4 text-lg font-semibold text-white"
+        class="mb-4 font-display text-xl font-normal text-white"
         i18n="weather.spaghettiPlot.title|@@weatherSpaghettiPlotTitle"
       >
         Comparaison des modèles (courbes)

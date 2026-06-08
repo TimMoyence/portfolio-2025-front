@@ -31,11 +31,11 @@ import {
       border-radius: 0.75rem;
       font-family: inherit;
     }
-    /* Controles de zoom stylises */
+    /* Controles de zoom stylises (border teal Asili) */
     :host ::ng-deep .leaflet-control-zoom a {
       background: rgba(0, 0, 0, 0.6) !important;
       color: white !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border: 1px solid rgba(79, 179, 162, 0.25) !important;
       backdrop-filter: blur(4px);
     }
     :host ::ng-deep .leaflet-control-zoom a:hover {
@@ -52,11 +52,16 @@ import {
     }
   `,
   template: `
+    <!--
+      Carte radar — re-skin glass Asili (.gp r-lg 20px, border teal subtile).
+      lat/long + placeholder/iframe Leaflet (SSR-safe via isPlatformBrowser)
+      conservés ; conteneur/typo uniquement.
+    -->
     <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+      class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
     >
       <h3
-        class="mb-3 text-sm font-medium text-white/90"
+        class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
         i18n="weather.radar.title|@@weatherRadarTitle"
       >
         Carte radar

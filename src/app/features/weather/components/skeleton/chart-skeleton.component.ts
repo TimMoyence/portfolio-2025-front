@@ -9,15 +9,21 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   standalone: true,
   host: { class: "block" },
   template: `
+    <!--
+      Skeleton graphe — re-skin Asili : carte glass .gp (border teal subtile,
+      backdrop-blur), barres simulées au glow translucide. Pulse conservé.
+    -->
     <div
-      class="animate-pulse rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-md"
+      class="animate-pulse rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl"
     >
       <!-- Titre -->
-      <div class="mb-4 h-5 w-40 rounded bg-white/20"></div>
+      <div class="mb-4 h-5 w-40 rounded bg-white/15"></div>
       <!-- Zone du graphique avec barres simulees -->
-      <div class="flex h-40 items-end gap-1 rounded bg-white/5 p-4 md:h-64">
+      <div
+        class="flex h-40 items-end gap-1 rounded bg-white/[0.03] p-4 md:h-64"
+      >
         @for (h of bars; track $index) {
-          <div class="flex-1 rounded-t bg-white/15" [style.height.%]="h"></div>
+          <div class="flex-1 rounded-t bg-teal/15" [style.height.%]="h"></div>
         }
       </div>
     </div>

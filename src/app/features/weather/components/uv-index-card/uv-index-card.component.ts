@@ -26,8 +26,14 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
     >
       <span cardTitle i18n="weather.uv.title|@@weatherUvTitle">Indice UV</span>
 
+      <!--
+        Indice UV — re-skin Asili (.uv-track / .knob) : valeur font-display
+        géante, piste dégradée teal→ambre→rouge→violet, knob blanc liseré sombre.
+        SVG/couleurs uniquement — uvIndex()/riskLabel()/labelColor()/gaugePosition()
+        inchangés.
+      -->
       <div class="flex items-baseline gap-2">
-        <span class="text-3xl font-light text-white">
+        <span class="font-display text-4xl leading-none text-white">
           {{ uvIndex() | number: "1.0-0" }}
         </span>
         <span [class]="'text-sm font-medium ' + labelColor()">
@@ -35,9 +41,9 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
         </span>
       </div>
 
-      <!-- Jauge horizontale a gradient -->
+      <!-- Jauge horizontale a gradient (.uv-track) -->
       <div
-        class="relative mt-3 h-2 overflow-hidden rounded-full bg-white/10"
+        class="relative mt-3 h-2 overflow-visible rounded-full"
         role="meter"
         [attr.aria-valuenow]="uvIndex()"
         aria-valuemin="0"
@@ -46,16 +52,18 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
       >
         <div
           class="absolute inset-0 rounded-full"
-          style="background: linear-gradient(to right, #22c55e, #eab308, #f97316, #ef4444, #a855f7)"
+          style="background: linear-gradient(90deg, #4fb3a2, #e6c64f, #e6884f, #e64f6b, #b04fe6)"
         ></div>
-        <!-- Curseur de position -->
+        <!-- Curseur de position (.knob) -->
         <div
-          class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-white/90 shadow-md"
+          class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-[#0a0e12] bg-white shadow-md"
           [style.left.%]="gaugePosition()"
         ></div>
       </div>
 
-      <div class="mt-1 flex justify-between text-xs text-white/40">
+      <div
+        class="mt-2 flex justify-between font-mono text-[10px] text-white/40"
+      >
         <span>0</span>
         <span>3</span>
         <span>6</span>
@@ -67,7 +75,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
         <div class="mt-2">
           <app-sparkline
             [data]="hourlyUv()"
-            [color]="'rgba(250, 204, 21, 0.8)'"
+            [color]="'rgba(230, 198, 79, 0.85)'"
           />
         </div>
       }

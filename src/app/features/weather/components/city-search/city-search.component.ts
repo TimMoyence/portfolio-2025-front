@@ -38,12 +38,18 @@ import { GeolocationService } from "../../services/geolocation.service";
   imports: [CommonModule, FormsModule],
   host: { class: "block" },
   template: `
+    <!--
+      Recherche de ville — re-skin Asili AsiliNewDesign/asili-app.css :
+      .app-search (champ pill glass, loupe, placeholder atténué) + dropdown
+      résultats glass .gp. Restyle visuel uniquement — recherche live,
+      géolocalisation, (citySelected) et l'a11y combobox/listbox inchangés.
+    -->
     <div class="relative w-full max-w-md mx-auto" #searchContainer>
       <div class="relative flex gap-2">
         <div class="relative flex-1">
           <svg
-            class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5"
-            [ngClass]="darkMode() ? 'text-white/60' : 'text-scheme-text-muted'"
+            class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5"
+            [ngClass]="darkMode() ? 'text-white/50' : 'text-scheme-text-muted'"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -63,10 +69,10 @@ import { GeolocationService } from "../../services/geolocation.service";
             i18n-placeholder="
               weather.search.placeholder|@@weatherSearchPlaceholder"
             placeholder="Rechercher une ville..."
-            class="w-full rounded-xl border py-3 pl-10 pr-4 outline-none transition-colors"
+            class="w-full rounded-full border py-3 pl-11 pr-4 outline-none transition-colors"
             [ngClass]="
               darkMode()
-                ? 'border-white/20 bg-white/10 text-white placeholder-white/50 backdrop-blur-md focus-visible:border-white/40 focus-visible:bg-white/15'
+                ? 'border-teal/15 bg-white/5 text-white placeholder-white/40 backdrop-blur-xl focus-visible:border-teal/40 focus-visible:bg-white/10'
                 : 'border-scheme-border bg-scheme-surface text-scheme-text placeholder-scheme-text-muted focus-visible:border-scheme-accent'
             "
             autocomplete="off"
@@ -79,10 +85,10 @@ import { GeolocationService } from "../../services/geolocation.service";
         </div>
         <button
           type="button"
-          class="flex-shrink-0 rounded-xl border p-3 transition-colors disabled:opacity-40"
+          class="flex-shrink-0 rounded-full border p-3 transition-colors disabled:opacity-40"
           [ngClass]="
             darkMode()
-              ? 'border-white/20 bg-white/10 text-white/70 backdrop-blur-md hover:bg-white/20 hover:text-white'
+              ? 'border-teal/15 bg-white/5 text-white/70 backdrop-blur-xl hover:border-teal/40 hover:text-white'
               : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border hover:text-scheme-text'
           "
           (click)="locateMe()"
@@ -94,7 +100,7 @@ import { GeolocationService } from "../../services/geolocation.service";
         >
           @if (locating()) {
             <div
-              class="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"
+              class="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-teal"
             ></div>
           } @else {
             <svg
@@ -127,10 +133,10 @@ import { GeolocationService } from "../../services/geolocation.service";
 
       @if (showDropdown() && results().length > 0) {
         <ul
-          class="absolute z-10 mt-2 w-full overflow-hidden rounded-xl border"
+          class="absolute z-10 mt-2 w-full overflow-hidden rounded-[20px] border"
           [ngClass]="
             darkMode()
-              ? 'border-white/20 bg-white/10 backdrop-blur-xl'
+              ? 'border-teal/15 bg-white/5 backdrop-blur-xl'
               : 'border-scheme-border bg-scheme-background shadow-lg'
           "
           id="city-search-listbox"
@@ -143,7 +149,7 @@ import { GeolocationService } from "../../services/geolocation.service";
               class="cursor-pointer px-4 py-3 transition-colors"
               [ngClass]="
                 darkMode()
-                  ? 'text-white hover:bg-white/20'
+                  ? 'text-white hover:bg-teal/15'
                   : 'text-scheme-text hover:bg-scheme-surface'
               "
               (click)="selectCity(city)"

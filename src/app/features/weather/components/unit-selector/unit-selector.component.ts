@@ -24,10 +24,17 @@ interface UnitOption<T extends string> {
   standalone: true,
   imports: [CommonModule, BottomSheetComponent],
   template: `
+    <!--
+      Sélecteur d'unités — re-skin Asili AsiliNewDesign/asili-app.css :
+      bouton engrenage glass + segments .unit-toggle (pill, bordure subtile,
+      onglet actif .on fond teal sur foncé, libellés font-mono). Restyle
+      visuel uniquement — UnitPreferencesService, BottomSheetComponent,
+      role=tablist/aria-selected inchangés.
+    -->
     <!-- Bouton engrenage -->
     <button
       type="button"
-      class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 backdrop-blur-md transition-colors hover:bg-white/20"
+      class="flex h-11 w-11 items-center justify-center rounded-full border border-teal/15 bg-white/5 backdrop-blur-xl transition-colors hover:border-teal/40"
       (click)="toggleOpen()"
       aria-label="Paramètres d'unités"
       i18n-aria-label="weather.units.button.aria|@@weatherUnitsButtonAria"
@@ -71,7 +78,7 @@ interface UnitOption<T extends string> {
             Température
           </p>
           <nav
-            class="inline-flex rounded-xl border border-white/20 bg-white/10 p-0.5"
+            class="inline-flex rounded-full border border-teal/15 bg-white/5 p-0.5 font-mono"
             role="tablist"
           >
             @for (opt of temperatureOptions; track opt.value) {
@@ -81,11 +88,11 @@ interface UnitOption<T extends string> {
                 [attr.aria-selected]="
                   unitService.temperatureUnit() === opt.value
                 "
-                class="rounded-lg px-4 py-1.5 text-sm font-medium transition-all"
+                class="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
                 [ngClass]="
                   unitService.temperatureUnit() === opt.value
-                    ? 'bg-white/25 text-white shadow-sm'
-                    : 'text-white/60 hover:text-white/80'
+                    ? 'bg-teal font-semibold text-[#06231f]'
+                    : 'text-white/55 hover:text-white'
                 "
                 (click)="unitService.setTemperatureUnit(opt.value)"
               >
@@ -104,7 +111,7 @@ interface UnitOption<T extends string> {
             Vitesse
           </p>
           <nav
-            class="inline-flex rounded-xl border border-white/20 bg-white/10 p-0.5"
+            class="inline-flex rounded-full border border-teal/15 bg-white/5 p-0.5 font-mono"
             role="tablist"
           >
             @for (opt of speedOptions; track opt.value) {
@@ -112,11 +119,11 @@ interface UnitOption<T extends string> {
                 type="button"
                 role="tab"
                 [attr.aria-selected]="unitService.speedUnit() === opt.value"
-                class="rounded-lg px-4 py-1.5 text-sm font-medium transition-all"
+                class="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
                 [ngClass]="
                   unitService.speedUnit() === opt.value
-                    ? 'bg-white/25 text-white shadow-sm'
-                    : 'text-white/60 hover:text-white/80'
+                    ? 'bg-teal font-semibold text-[#06231f]'
+                    : 'text-white/55 hover:text-white'
                 "
                 (click)="unitService.setSpeedUnit(opt.value)"
               >
@@ -135,7 +142,7 @@ interface UnitOption<T extends string> {
             Pression
           </p>
           <nav
-            class="inline-flex rounded-xl border border-white/20 bg-white/10 p-0.5"
+            class="inline-flex rounded-full border border-teal/15 bg-white/5 p-0.5 font-mono"
             role="tablist"
           >
             @for (opt of pressureOptions; track opt.value) {
@@ -143,11 +150,11 @@ interface UnitOption<T extends string> {
                 type="button"
                 role="tab"
                 [attr.aria-selected]="unitService.pressureUnit() === opt.value"
-                class="rounded-lg px-4 py-1.5 text-sm font-medium transition-all"
+                class="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
                 [ngClass]="
                   unitService.pressureUnit() === opt.value
-                    ? 'bg-white/25 text-white shadow-sm'
-                    : 'text-white/60 hover:text-white/80'
+                    ? 'bg-teal font-semibold text-[#06231f]'
+                    : 'text-white/55 hover:text-white'
                 "
                 (click)="unitService.setPressureUnit(opt.value)"
               >

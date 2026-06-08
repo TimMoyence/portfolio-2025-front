@@ -32,16 +32,21 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 
       @if (cape() !== null) {
         <div class="flex items-baseline gap-2">
-          <span class="text-3xl font-light text-white">
+          <span class="font-display text-4xl font-normal text-white">
             {{ cape()! | number: "1.0-0" }}
           </span>
-          <span class="text-sm text-white/50">J/kg</span>
+          <span class="font-mono text-xs text-white/50">J/kg</span>
           <span [class]="'text-sm font-medium ' + labelColor()">
             {{ instabilityLabel() }}
           </span>
         </div>
 
-        <!-- Jauge horizontale a gradient -->
+        <!--
+          Jauge d'instabilité — piste façon .uv-track Asili (knob blanc liseré
+          sombre). Le dégradé reste l'échelle CAPE sémantique (vert stable →
+          violet extrême) alignée sur labelColor() — couleurs sémantiques
+          conservées, restyle du knob/piste uniquement.
+        -->
         <div
           class="relative mt-3 h-2 overflow-hidden rounded-full bg-white/10"
           role="meter"
@@ -55,12 +60,14 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
             style="background: linear-gradient(to right, #22c55e, #eab308, #f97316, #ef4444, #a855f7)"
           ></div>
           <div
-            class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-white/90 shadow-md"
+            class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#0b1220] bg-white shadow-md"
             [style.left.%]="gaugePosition()"
           ></div>
         </div>
 
-        <div class="mt-1 flex justify-between text-xs text-white/40">
+        <div
+          class="mt-1 flex justify-between font-mono text-[10px] tracking-[0.08em] text-white/40"
+        >
           <span>0</span>
           <span>500</span>
           <span>1000</span>

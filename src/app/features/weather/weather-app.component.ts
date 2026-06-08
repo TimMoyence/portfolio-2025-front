@@ -32,7 +32,6 @@ import { CapeCardComponent } from "./components/cape-card/cape-card.component";
 import { CitySearchComponent } from "./components/city-search/city-search.component";
 import { CloudVisibilityCardComponent } from "./components/cloud-visibility-card/cloud-visibility-card.component";
 import { CurrentConditionsComponent } from "./components/current-conditions/current-conditions.component";
-import { DailyForecastComponent } from "./components/daily-forecast/daily-forecast.component";
 import { DayDetailPanelComponent } from "./components/day-detail-panel/day-detail-panel.component";
 import { DataExportComponent } from "./components/data-export/data-export.component";
 import { WeeklyOverviewComponent } from "./components/weekly-overview/weekly-overview.component";
@@ -73,7 +72,6 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     CitySearchComponent,
     CurrentConditionsComponent,
     HourlyChartComponent,
-    DailyForecastComponent,
     DayDetailPanelComponent,
     LevelSelectorComponent,
     TransitionPromptComponent,

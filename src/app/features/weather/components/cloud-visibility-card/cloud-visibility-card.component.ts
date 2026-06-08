@@ -28,12 +28,17 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
         >Couverture nuageuse</span
       >
 
+      <!--
+        Nuages / visibilité — re-skin Asili : couverture font-display, libellé
+        de visibilité font-mono. Typo/couleurs uniquement — cloudIcon()/
+        cloudLabel()/visibilityKm() inchangés.
+      -->
       <div class="flex items-center gap-4">
         <img [src]="cloudIcon()" alt="" class="h-12 w-12 drop-shadow-md" />
 
         <div class="flex flex-col gap-1">
           <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-light text-white">
+            <span class="font-display text-3xl leading-none text-white">
               {{ cloudCover() }}%
             </span>
             <span class="text-sm text-white/50">
@@ -42,7 +47,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
           </div>
 
           @if (visibility() !== null) {
-            <span class="text-sm text-white/50">
+            <span class="font-mono text-[11px] text-white/50">
               <span i18n="weather.cloud.visibility|@@weatherCloudVisibility"
                 >Visibilité</span
               >

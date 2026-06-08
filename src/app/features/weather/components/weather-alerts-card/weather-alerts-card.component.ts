@@ -8,18 +8,38 @@ import type { WeatherAlert } from "../../../../core/models/weather.model";
   standalone: true,
   imports: [CommonModule],
   template: `
+    <!--
+      Alertes météo — re-skin Asili AsiliNewDesign/asili-app.css :
+      .alert-item (ligne flex, séparateur subtil) + .alert-ic (badge carré
+      30px rayon 8px, icône sévérité) + .alert-t/.alert-d. Carte conteneur
+      glass .gp (border teal subtile, backdrop-blur). Restyle visuel
+      uniquement — severityClasses()/severityIcon() et leurs couleurs
+      sémantiques (jaune/orange/rouge) inchangés.
+    -->
     @if (alerts().length > 0) {
-      <div class="space-y-2">
+      <div
+        class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
+      >
         @for (alert of alerts(); track alert.type + alert.severity) {
+          <!-- .alert-item : ligne avec séparateur entre alertes -->
           <div
-            class="rounded-xl p-4 backdrop-blur-md border"
-            [ngClass]="severityClasses(alert.severity)"
+            class="flex items-start gap-3 border-white/[0.08] py-3 first:pt-0 last:pb-0 [&:not(:first-child)]:border-t"
           >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-lg">{{ severityIcon(alert.severity) }}</span>
-              <h4 class="font-semibold text-sm">{{ alert.headline }}</h4>
+            <!-- .alert-ic : badge sévérité carré, couleur sémantique conservée -->
+            <span
+              class="grid h-[30px] w-[30px] flex-none place-items-center rounded-lg border text-base"
+              [ngClass]="severityClasses(alert.severity)"
+            >
+              {{ severityIcon(alert.severity) }}
+            </span>
+            <div class="min-w-0">
+              <h4 class="text-sm font-semibold text-white">
+                {{ alert.headline }}
+              </h4>
+              <p class="mt-0.5 text-[12.5px] text-white/55">
+                {{ alert.description }}
+              </p>
             </div>
-            <p class="text-xs opacity-80">{{ alert.description }}</p>
           </div>
         }
       </div>
