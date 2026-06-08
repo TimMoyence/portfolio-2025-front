@@ -24,28 +24,60 @@ Regle non negociable : un composant peut orchestrer de l'etat UI, mais pas embar
 
 ## Cartographie des routes
 
-Les routes principales exposees aujourd'hui sont :
+Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/app/app.routes.server.ts`](./src/app/app.routes.server.ts) pour les `renderMode`).
+
+### Pages publiques
 
 - `/` — Home (landing page)
 - `/presentation` — Page a propos
+- `/projets` — Realisations
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
 - `/client-project` — Projets clients
 - `/growth-audit` — Audit SEO automatise
+- `/atelier` — Hub L'Atelier (vitrine indexable regroupant les experiences jouables)
+
+### Auth
+
 - `/login` — Connexion
 - `/register` — Inscription
 - `/forgot-password` — Mot de passe oublie
 - `/reset-password` — Reinitialisation
-- `/profil` — Profil utilisateur (protege auth)
-- `/atelier/meteo` — App meteo (protege auth + role weather)
-- `/atelier/budget` — App budget (protege auth + role budget)
-- `/atelier/sebastian` — App Sebastian (protege auth + role sebastian) avec sous-routes : dashboard, rapports, badges, historique, objectifs
+- `/verify-email` — Verification d'email (lien magique)
+- `/profil` — Profil utilisateur (`authGuard`, rendu client)
+
+### Ateliers — landings marketing (publiques)
+
+Pages vitrines indexables, sans authentification. Le `redirectIfAuthorizedGuard(role)` renvoie un utilisateur deja autorise vers l'app correspondante.
+
+- `/atelier/meteo` — Landing meteo (`redirectIfAuthorizedGuard("weather")`)
+- `/atelier/sebastian` — Landing Sebastian (`redirectIfAuthorizedGuard("sebastian")`)
+
+### Ateliers — apps (protegees auth + role)
+
+Apps reelles non indexables, en rendu client (`RenderMode.Client`).
+
+- `/atelier/meteo/app` — App meteo (`authGuard` + `roleGuard("weather")`)
+- `/atelier/sebastian/app` — App Sebastian (`authGuard` + `roleGuard("sebastian")`) avec sous-routes : `dashboard`, `rapports`, `badges`, `historique`, `objectifs`
+
+### Formations
+
 - `/formations` — Liste des formations
 - `/formations/ia-solopreneurs` — Formation IA Solopreneurs (slides)
-- `/formations/ia-solopreneurs/toolkit` — Toolkit QR code
+- `/formations/ia-solopreneurs/toolkit` — Toolkit IA Solopreneurs (capture email)
+- `/formations/ia-solopreneurs/toolkit/:token` — Toolkit personnalise (acces direct via token, rendu serveur on-demand)
+- `/formations/automatiser-avec-ia` — Formation Automatiser avec l'IA (slides)
+- `/formations/automatiser-avec-ia/toolkit` — Toolkit Automatiser avec l'IA
+- `/formations/audit-seo-diy` — Formation Audit SEO DIY (slides)
+- `/formations/audit-seo-diy/toolkit` — Toolkit Audit SEO DIY
+
+### Utilitaires
+
 - `/cookie-settings` — Parametres cookies
 - `/terms` — CGU
 - `/privacy` — Politique de confidentialite
+- `/commonbudgetTM` — Redirection vers l'accueil `/`
+- `/slides/library` — Bibliotheque de slides interne (`noindex, nofollow`)
 - `/**` — 404
 
 ## Prise en main rapide
@@ -73,7 +105,7 @@ Apres `npm ci`, Husky installe automatiquement trois hooks :
 
 - `pre-commit` : lance `lint-staged` pour formatter et lint uniquement les fichiers indexes ;
 - `commit-msg` : impose un message au format Conventional Commit ;
-- `pre-push` : lance `npm run ci:check` pour bloquer un push sale.
+- `pre-push` : lance `npm run pre-push:check` (lint + format:check + typecheck + test:ci, sans build) pour bloquer un push sale.
 
 Ces hooks ne remplacent pas la CI, ils evitent surtout d'introduire une regression evidente dans l'historique local.
 

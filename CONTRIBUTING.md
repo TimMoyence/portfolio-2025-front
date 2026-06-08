@@ -39,7 +39,7 @@ Les hooks Git suivants tournent automatiquement apres installation des dependanc
 
 - `pre-commit` via `lint-staged` ;
 - `commit-msg` via `commitlint` ;
-- `pre-push` via `npm run ci:check`.
+- `pre-push` via `npm run pre-push:check` (lint + format:check + typecheck + test:ci, sans build).
 
 Si une verification ne peut pas etre executee, documenter la commande exacte et le blocage reel.
 
