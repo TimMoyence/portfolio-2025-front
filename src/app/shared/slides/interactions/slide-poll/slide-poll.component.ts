@@ -8,12 +8,8 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
-import {
-  flattenInteractions,
-  type FlatInteraction,
-} from "../interactions.util";
+import { loadInteraction } from "../interactions.util";
 
 interface PollInteraction {
   id?: string;
@@ -72,22 +68,13 @@ export class SlidePollComponent {
   }
 
   private load(): void {
-    flattenInteractions(this.port.getInteractions(this.slug()))
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(() => {
-          this.error.set(true);
-          return of([] as FlatInteraction[]);
-        }),
-      )
-      .subscribe((list) => {
-        const target = this.interactionId();
-        const found = list.find(
-          (i) => i.type === "poll" && (i.id === target || i.slideId === target),
-        );
-        if (found) {
-          this.poll.set(found as unknown as PollInteraction);
-        }
-      });
+    loadInteraction<PollInteraction>(
+      this.port.getInteractions(this.slug()),
+      "poll",
+      this.interactionId(),
+      () => this.error.set(true),
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((found) => found && this.poll.set(found));
   }
 }

@@ -7,12 +7,8 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
-import {
-  flattenInteractions,
-  type FlatInteraction,
-} from "../interactions.util";
+import { loadInteraction } from "../interactions.util";
 
 interface QuizInteraction {
   id?: string;
@@ -64,22 +60,13 @@ export class SlideQuizComponent {
   }
 
   private load(): void {
-    flattenInteractions(this.port.getInteractions(this.slug()))
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(() => {
-          this.error.set(true);
-          return of([] as FlatInteraction[]);
-        }),
-      )
-      .subscribe((list) => {
-        const target = this.interactionId();
-        const found = list.find(
-          (i) => i.type === "quiz" && (i.id === target || i.slideId === target),
-        );
-        if (found) {
-          this.quiz.set(found as unknown as QuizInteraction);
-        }
-      });
+    loadInteraction<QuizInteraction>(
+      this.port.getInteractions(this.slug()),
+      "quiz",
+      this.interactionId(),
+      () => this.error.set(true),
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((found) => found && this.quiz.set(found));
   }
 }

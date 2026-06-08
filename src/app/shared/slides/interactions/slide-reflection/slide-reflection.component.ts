@@ -8,12 +8,8 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, of } from "rxjs";
 import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
-import {
-  flattenInteractions,
-  type FlatInteraction,
-} from "../interactions.util";
+import { loadInteraction } from "../interactions.util";
 
 interface ReflectionInteraction {
   id?: string;
@@ -79,24 +75,13 @@ export class SlideReflectionComponent {
   }
 
   private load(): void {
-    flattenInteractions(this.port.getInteractions(this.slug()))
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(() => {
-          this.error.set(true);
-          return of([] as FlatInteraction[]);
-        }),
-      )
-      .subscribe((list) => {
-        const target = this.interactionId();
-        const found = list.find(
-          (i) =>
-            i.type === "reflection" &&
-            (i.id === target || i.slideId === target),
-        );
-        if (found) {
-          this.reflection.set(found as unknown as ReflectionInteraction);
-        }
-      });
+    loadInteraction<ReflectionInteraction>(
+      this.port.getInteractions(this.slug()),
+      "reflection",
+      this.interactionId(),
+      () => this.error.set(true),
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((found) => found && this.reflection.set(found));
   }
 }
