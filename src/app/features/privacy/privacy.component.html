@@ -1,161 +1,170 @@
-<app-hero-section
-  [label]="hero.label"
-  [title]="hero.title"
-  [description]="hero.description"
-  titleLevel="h1"
-  align="center"
-></app-hero-section>
-
-<section class="px-[5%] py-6 md:py-8 lg:py-10 bg-scheme-background">
-  <div class="container">
-    <p class="text-sm md:text-base text-scheme-text-muted">
-      {{ meta.lastUpdated }}
-    </p>
+<!--
+  Politique de confidentialité — restyle Asili (layout TOC).
+  Source maquette : AsiliNewDesign/privacy.html + asili-legal.css.
+  Chrome globale conservée (navbar/footer) ; 8 sections verbatim de la maquette.
+-->
+<section class="lg-hero">
+  <div class="wrap" appReveal>
+    <span class="kicker">{{ hero.kicker }}</span>
+    <h1 i18n="@@privacyHeroTitle">Politique de <em>confidentialité</em>.</h1>
+    <div class="updated"><span class="dot"></span>{{ hero.updated }}</div>
   </div>
 </section>
 
-<section class="px-[5%] pb-12 md:pb-16 lg:pb-20 bg-scheme-background">
-  <div class="container grid gap-6">
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
+<section class="lg-section">
+  <div class="wrap lg-layout">
+    <!-- TOC : ancres natives SSR-safe -->
+    <nav
+      class="lg-toc"
+      aria-label="Sommaire"
+      i18n-aria-label="@@privacyTocAria"
     >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyControllerTitle">
-        Responsable du traitement
-      </h2>
-      <p
-        class="text-sm md:text-base text-scheme-text"
-        i18n="@@privacyControllerBody"
-      >
-        Le responsable du traitement est Moyence, basé à Bordeaux, France. Pour
-        toute question, contactez-moi à moyencet&#64;gmail.com.
-      </p>
-    </article>
+      <div class="toc-k" i18n="@@privacyTocHeading">Sommaire</div>
+      <ol>
+        @for (item of toc; track item.anchor) {
+          <li>
+            <a [href]="'#' + item.anchor">{{ item.label }}</a>
+          </li>
+        }
+      </ol>
+    </nav>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyDataTitle">
-        Données collectées
-      </h2>
-      <ul class="space-y-2 text-sm md:text-base text-scheme-text">
-        <li i18n="@@privacyDataItem1">
-          Informations fournies via le formulaire de contact (nom, email,
-          téléphone, sujet, message, rôle).
-        </li>
-        <li i18n="@@privacyDataItem2">
-          Preuves de consentement (version, langue et date d'acceptation).
-        </li>
-        <li i18n="@@privacyDataItem3">
-          Préférences de cookies enregistrées lorsque vous interagissez avec le
-          bandeau.
-        </li>
-      </ul>
-    </article>
+    <!-- BODY : 8 sections verbatim -->
+    <div class="lg-body">
+      <section id="principe" appReveal>
+        <h2 i18n="@@privacyPrincipeTitle">1. Notre principe</h2>
+        <p i18n="@@privacyPrincipeBody">
+          La même exigence guide notre rapport à vos données que notre travail :
+          <strong>clarté et sobriété</strong>. On ne collecte que ce qui est
+          utile, on l'explique simplement, et on ne le partage pas pour de la
+          publicité.
+        </p>
+        <div class="lg-note" i18n="@@privacyPrincipeNote">
+          En résumé : votre email sert à vous envoyer ce que vous avez demandé
+          et à gérer votre compte. Rien de plus, sans votre accord.
+        </div>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyPurposeTitle">
-        Finalités
-      </h2>
-      <ul class="space-y-2 text-sm md:text-base text-scheme-text">
-        <li i18n="@@privacyPurposeItem1">
-          Répondre à vos demandes et préparer une proposition de service.
-        </li>
-        <li i18n="@@privacyPurposeItem2">
-          Gérer vos préférences de cookies et prouver votre consentement.
-        </li>
-        <li i18n="@@privacyPurposeItem3">
-          Assurer la sécurité et le bon fonctionnement du site.
-        </li>
-      </ul>
-    </article>
+      <section id="collecte" appReveal>
+        <h2 i18n="@@privacyCollecteTitle">2. Données collectées</h2>
+        <p i18n="@@privacyCollecteBody1">
+          Selon votre usage du site, nous pouvons traiter :
+        </p>
+        <ul>
+          <li i18n="@@privacyCollecteItem1">
+            <strong>Données de compte</strong> : nom, adresse email, mot de
+            passe (chiffré).
+          </li>
+          <li i18n="@@privacyCollecteItem2">
+            <strong>Données de contact</strong> : les informations que vous nous
+            transmettez via le formulaire.
+          </li>
+          <li i18n="@@privacyCollecteItem3">
+            <strong>Données d'usage</strong> : statistiques de navigation
+            anonymisées, pour améliorer le site.
+          </li>
+        </ul>
+        <p i18n="@@privacyCollecteBody2">
+          Les expériences de l'Atelier fonctionnent sans collecte personnelle
+          pour leur démonstration.
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyBasisTitle">
-        Base légale
-      </h2>
-      <ul class="space-y-2 text-sm md:text-base text-scheme-text">
-        <li i18n="@@privacyBasisItem1">
-          Exécution de mesures précontractuelles lorsque vous demandez un
-          contact.
-        </li>
-        <li i18n="@@privacyBasisItem2">
-          Consentement pour les cookies non essentiels (si activés).
-        </li>
-        <li i18n="@@privacyBasisItem3">
-          Intérêt légitime pour la sécurité et l'administration du site.
-        </li>
-      </ul>
-    </article>
+      <section id="usage" appReveal>
+        <h2 i18n="@@privacyUsageTitle">3. Usage des données</h2>
+        <p i18n="@@privacyUsageBody">Vos données servent uniquement à :</p>
+        <ul>
+          <li i18n="@@privacyUsageItem1">
+            Gérer votre compte et vos accès (formations, Atelier).
+          </li>
+          <li i18n="@@privacyUsageItem2">
+            Vous envoyer les ressources demandées (toolkit, rapport d'audit).
+          </li>
+          <li i18n="@@privacyUsageItem3">Répondre à vos messages.</li>
+          <li i18n="@@privacyUsageItem4">
+            Améliorer le site, de façon agrégée et anonyme.
+          </li>
+        </ul>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyRetentionTitle">
-        Durées de conservation
-      </h2>
-      <p
-        class="text-sm md:text-base text-scheme-text"
-        i18n="@@privacyRetentionBody"
-      >
-        Les messages de contact sont conservés le temps de traiter votre
-        demande. Les preuves de consentement sont conservées tant que nécessaire
-        pour démontrer la conformité.
-      </p>
-    </article>
+      <section id="base" appReveal>
+        <h2 i18n="@@privacyBaseTitle">4. Base légale</h2>
+        <p i18n="@@privacyBaseBody">
+          Le traitement repose, selon les cas, sur l'exécution d'un contrat
+          (votre achat), votre consentement (newsletter, toolkit), ou notre
+          intérêt légitime (sécurité et amélioration du site).
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyRecipientsTitle">
-        Destinataires
-      </h2>
-      <p
-        class="text-sm md:text-base text-scheme-text"
-        i18n="@@privacyRecipientsBody"
-      >
-        Les données sont consultées uniquement par la personne en charge du site
-        et ne sont pas vendues ni partagées à des fins commerciales.
-      </p>
-    </article>
+      <section id="partage" appReveal>
+        <h2 i18n="@@privacyPartageTitle">5. Partage des données</h2>
+        <p i18n="@@privacyPartageBody">
+          Nous ne vendons ni ne louons vos données. Elles peuvent être traitées
+          par des prestataires techniques de confiance (hébergement, paiement,
+          envoi d'emails), strictement pour fournir le service, et situés dans
+          l'Union européenne autant que possible.
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyRightsTitle">
-        Vos droits
-      </h2>
-      <p
-        class="text-sm md:text-base text-scheme-text"
-        i18n="@@privacyRightsBody"
-      >
-        Vous pouvez demander l'accès, la rectification, l'effacement ou la
-        limitation du traitement. Pour exercer vos droits, contactez-moi à
-        moyencet&#64;gmail.com.
-      </p>
-    </article>
+      <section id="conservation" appReveal>
+        <h2 i18n="@@privacyConservationTitle">6. Conservation</h2>
+        <p i18n="@@privacyConservationBody">
+          Vos données sont conservées le temps nécessaire à la finalité
+          concernée : la durée de vie de votre compte, puis les délais légaux
+          applicables (par exemple, comptables). Au-delà, elles sont supprimées
+          ou anonymisées.
+        </p>
+      </section>
 
-    <article
-      class="rounded-form border border-scheme-border bg-scheme-surface p-6"
-    >
-      <h2 class="heading-h4 text-h4 mb-3" i18n="@@privacyCookiesTitle">
-        Cookies
-      </h2>
-      <p class="text-sm md:text-base text-scheme-text">
-        <span i18n="@@privacyCookiesBody"
-          >Les préférences de cookies sont gérées depuis le bandeau ou la page
-          dédiée.</span
-        >
-        <a
-          routerLink="/cookie-settings"
-          class="underline font-semibold"
-          i18n="@@privacyCookiesLinkLabel"
-          >Accéder aux paramètres</a
-        >
-      </p>
-    </article>
+      <section id="droits" appReveal>
+        <h2 i18n="@@privacyDroitsTitle">7. Vos droits</h2>
+        <p i18n="@@privacyDroitsBody">
+          Conformément au RGPD, vous disposez d'un droit d'accès, de
+          rectification, d'effacement, de portabilité et d'opposition sur vos
+          données.
+        </p>
+        <ul>
+          <li>
+            <span i18n="@@privacyDroitsItem1"
+              >Consulter ou corriger vos informations depuis votre</span
+            >
+            <a class="inl" routerLink="/profil" i18n="@@privacyDroitsProfilLink"
+              >espace personnel</a
+            ><span i18n="@@privacyDroitsItem1End">.</span>
+          </li>
+          <li i18n="@@privacyDroitsItem2">
+            Demander la suppression de votre compte à tout moment.
+          </li>
+          <li i18n="@@privacyDroitsItem3">
+            Vous désinscrire des emails en un clic.
+          </li>
+        </ul>
+      </section>
+
+      <section id="contact" appReveal>
+        <h2 i18n="@@privacyContactTitle">8. Nous contacter</h2>
+        <p>
+          <span i18n="@@privacyContactBody1"
+            >Pour exercer vos droits ou poser une question sur vos données,
+            écrivez-nous via la</span
+          >
+          <a
+            class="inl"
+            routerLink="/contact"
+            i18n="@@privacyContactContactLink"
+            >page de contact</a
+          ><span i18n="@@privacyContactBody2"
+            >. Vous pouvez aussi régler vos</span
+          >
+          <a
+            class="inl"
+            routerLink="/cookie-settings"
+            i18n="@@privacyContactCookiesLink"
+            >préférences cookies</a
+          >
+          <span i18n="@@privacyContactBody3">à tout moment.</span>
+        </p>
+      </section>
+    </div>
   </div>
 </section>

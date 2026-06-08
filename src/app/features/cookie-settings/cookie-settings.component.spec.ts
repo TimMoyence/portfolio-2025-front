@@ -1,13 +1,16 @@
 import { TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 import { of, throwError } from "rxjs";
 import { CookieConsentService } from "../../core/services/cookie-consent.service";
 import { CookieSettingsComponent } from "./cookie-settings.component";
 import { createCookieConsentServiceStub } from "../../../testing/factories/cookie-consent.factory";
 
 /**
- * Tests unitaires du CookieSettingsComponent.
- * Verifie l'affichage des sections RGPD, la sauvegarde des preferences,
- * le retrait du consentement et la gestion des erreurs.
+ * Tests unitaires du CookieSettingsComponent (restyle Asili — layout cookies).
+ * Vérifie l'affichage des quatre catégories, la sauvegarde des préférences,
+ * « Tout accepter », le retrait du consentement et la gestion des erreurs.
+ * La logique de consentement (CookieConsentService) est préservée : on vérifie
+ * que les handlers délèguent au service avec le contrat existant.
  */
 describe("CookieSettingsComponent", () => {
   const consentServiceStub = createCookieConsentServiceStub();
@@ -40,6 +43,7 @@ describe("CookieSettingsComponent", () => {
     await TestBed.configureTestingModule({
       imports: [CookieSettingsComponent],
       providers: [
+        provideRouter([]),
         { provide: CookieConsentService, useValue: consentServiceStub },
       ],
     }).compileComponents();
@@ -51,33 +55,43 @@ describe("CookieSettingsComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("devrait afficher les cinq sections de conformite", () => {
+  it("devrait initialiser les preferences depuis le service", () => {
     const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    const articles = fixture.nativeElement.querySelectorAll(
-      "article",
-    ) as NodeListOf<HTMLElement>;
-    expect(articles.length).toBe(5);
-
-    const component = fixture.componentInstance;
-    component.sections.forEach((section, index) => {
-      const articleText = articles[index].textContent ?? "";
-      expect(articleText).toContain(section.title);
+    expect(consentServiceStub.getPreferences).toHaveBeenCalled();
+    expect(fixture.componentInstance.preferences).toEqual({
+      essential: true,
+      preferences: false,
+      analytics: false,
+      marketing: false,
     });
   });
 
-  it("devrait afficher la section preferences cookies avec les quatre categories", () => {
+  it("devrait afficher les quatre categories de cookies", () => {
     const fixture = TestBed.createComponent(CookieSettingsComponent);
     fixture.detectChanges();
 
+    const items = fixture.nativeElement.querySelectorAll(
+      ".ck-item",
+    ) as NodeListOf<HTMLElement>;
+    expect(items.length).toBe(4);
+
     const content = fixture.nativeElement.textContent as string;
     const component = fixture.componentInstance;
+    expect(content).toContain(component.categories.essential.title);
+    expect(content).toContain(component.categories.analytics.title);
+    expect(content).toContain(component.categories.preferences.title);
+    expect(content).toContain(component.categories.marketing.title);
+  });
 
-    expect(content).toContain(component.preferenceLabels.essential.title);
-    expect(content).toContain(component.preferenceLabels.preferences.title);
-    expect(content).toContain(component.preferenceLabels.analytics.title);
-    expect(content).toContain(component.preferenceLabels.marketing.title);
+  it("devrait rendre la categorie Essentiels cochee et desactivee", () => {
+    const fixture = TestBed.createComponent(CookieSettingsComponent);
+    fixture.detectChanges();
+
+    const firstToggle = fixture.nativeElement.querySelector(
+      ".ck-item input[type='checkbox']",
+    ) as HTMLInputElement;
+    expect(firstToggle.checked).toBeTrue();
+    expect(firstToggle.disabled).toBeTrue();
   });
 
   it("devrait appeler saveConsent au clic sur Enregistrer", () => {
@@ -88,9 +102,7 @@ describe("CookieSettingsComponent", () => {
       "button",
     ) as NodeListOf<HTMLButtonElement>;
     const saveBtn = Array.from(buttons).find((btn) =>
-      btn.textContent?.includes(
-        fixture.componentInstance.preferenceLabels.save,
-      ),
+      btn.textContent?.includes(fixture.componentInstance.actions.save),
     );
     expect(saveBtn).toBeTruthy();
     saveBtn!.click();
@@ -113,8 +125,9 @@ describe("CookieSettingsComponent", () => {
     fixture.componentInstance.savePreferences();
     fixture.detectChanges();
 
+    expect(fixture.componentInstance.showSaved).toBeTrue();
     expect(fixture.componentInstance.statusMessage).toBe(
-      fixture.componentInstance.preferenceLabels.saved,
+      fixture.componentInstance.actions.saved,
     );
   });
 
@@ -129,8 +142,9 @@ describe("CookieSettingsComponent", () => {
     fixture.componentInstance.savePreferences();
     fixture.detectChanges();
 
+    expect(fixture.componentInstance.showSaved).toBeFalse();
     expect(fixture.componentInstance.statusMessage).toBe(
-      fixture.componentInstance.preferenceLabels.error,
+      fixture.componentInstance.actions.error,
     );
   });
 
@@ -146,29 +160,42 @@ describe("CookieSettingsComponent", () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance.statusMessage).toBe(
-      fixture.componentInstance.preferenceLabels.error,
+      fixture.componentInstance.actions.error,
     );
   });
 
-  it("devrait appeler withdrawConsent au clic sur Retirer le consentement", () => {
+  it("devrait tout accepter et enregistrer via saveConsent (action accept_all)", () => {
     const fixture = TestBed.createComponent(CookieSettingsComponent);
     fixture.detectChanges();
 
     const buttons = fixture.nativeElement.querySelectorAll(
       "button",
     ) as NodeListOf<HTMLButtonElement>;
-    const withdrawBtn = Array.from(buttons).find((btn) =>
-      btn.textContent?.includes(
-        fixture.componentInstance.preferenceLabels.withdraw,
-      ),
+    const acceptBtn = Array.from(buttons).find((btn) =>
+      btn.textContent?.includes(fixture.componentInstance.actions.acceptAll),
     );
-    expect(withdrawBtn).toBeTruthy();
-    withdrawBtn!.click();
+    expect(acceptBtn).toBeTruthy();
+    acceptBtn!.click();
 
-    expect(consentServiceStub.withdrawConsent).toHaveBeenCalled();
+    expect(fixture.componentInstance.preferences).toEqual({
+      essential: true,
+      preferences: true,
+      analytics: true,
+      marketing: true,
+    });
+    expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
+      {
+        essential: true,
+        preferences: true,
+        analytics: true,
+        marketing: true,
+      },
+      "settings",
+      "accept_all",
+    );
   });
 
-  it("devrait reinitialiser les preferences au retrait du consentement", () => {
+  it("devrait appeler withdrawConsent et reinitialiser les preferences", () => {
     const fixture = TestBed.createComponent(CookieSettingsComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
@@ -176,12 +203,13 @@ describe("CookieSettingsComponent", () => {
     component.preferences = {
       essential: true,
       preferences: true,
-      analytics: false,
+      analytics: true,
       marketing: false,
     };
 
     component.withdrawConsent();
 
+    expect(consentServiceStub.withdrawConsent).toHaveBeenCalled();
     expect(component.preferences).toEqual({
       essential: true,
       preferences: false,
@@ -202,23 +230,6 @@ describe("CookieSettingsComponent", () => {
     expect(component.isSaving).toBeFalse();
 
     component.savePreferences();
-
-    // L'observable synchrone complete immediatement, donc isSaving revient a false
-    expect(component.isSaving).toBeFalse();
-  });
-
-  it("devrait passer isSaving a true au debut du retrait et a false apres", () => {
-    consentServiceStub.withdrawConsent.and.returnValue(
-      of({ message: "ok", httpCode: 201 }),
-    );
-
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    const component = fixture.componentInstance;
-    expect(component.isSaving).toBeFalse();
-
-    component.withdrawConsent();
 
     // L'observable synchrone complete immediatement, donc isSaving revient a false
     expect(component.isSaving).toBeFalse();

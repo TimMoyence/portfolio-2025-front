@@ -1,3 +1,12 @@
+/*
+  Conditions générales & mentions légales (/terms) — restyle Asili (layout TOC).
+  Les classes `.lg-*` sont mutualisées dans le partiel `_legal-shared.scss`
+  (porté de AsiliNewDesign/asili-legal.css). On ne fait que les importer et les
+  scoper à ce composant. Primitives globales (.kicker, .wrap) + tokens
+  (_tokens.scss) pour le reste.
+*/
+@use "../legal-shared";
+
 :host {
   display: block;
 }
