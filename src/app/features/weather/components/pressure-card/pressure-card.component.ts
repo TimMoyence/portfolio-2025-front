@@ -33,8 +33,13 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
         >Pression atmosphérique</span
       >
 
+      <!--
+        Pression — re-skin Asili : valeur font-display, tendance sémantique
+        conservée (flèche/couleur liées à trend()). Couleurs uniquement —
+        trend()/trendArrow()/trendColor()/trendDescription() inchangés.
+      -->
       <div class="flex items-baseline gap-2">
-        <span class="text-3xl font-light text-white">
+        <span class="font-display text-4xl leading-none text-white">
           {{ pressure() | unit: unitService.pressureUnit() }}
         </span>
         <span class="text-lg" [class]="trendColor()">
@@ -49,7 +54,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
       @if (hourlyPressure(); as hp) {
         @if (hp.length > 1) {
           <div class="mt-2">
-            <app-sparkline [data]="hp" [color]="'rgba(168, 162, 158, 0.8)'" />
+            <app-sparkline [data]="hp" [color]="'rgba(143, 176, 255, 0.7)'" />
           </div>
         }
       }

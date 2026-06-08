@@ -39,8 +39,16 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
   ],
   host: { class: "block" },
   template: `
+    <!--
+      Carte instrument — wrapper glass Asili (levier central partagé).
+      Re-skin AsiliNewDesign/asili-app.css : .gp (bg-white/5 border-white/10
+      r-lg 20px backdrop-blur) + .wx-card + en-tête .gp-h (.t : font-mono 11px
+      letterspacing .14em uppercase, teal subtil). Restyle visuel uniquement —
+      containerClasses()/titleClasses() retournent des classes Tailwind, la
+      logique (variant/expand/unavailable/a11y) est inchangée.
+    -->
     <div [class]="containerClasses()">
-      <!-- Header -->
+      <!-- Header (.gp-h) -->
       <div class="mb-3 flex items-center justify-between">
         <h3 [class]="titleClasses()">
           <ng-content select="[cardTitle]" />
@@ -54,7 +62,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
           @if (expandable()) {
             <button
               type="button"
-              class="flex h-6 w-6 items-center justify-center rounded-full text-white/50 transition-transform hover:text-white/80"
+              class="flex h-6 w-6 items-center justify-center rounded-full text-white/40 transition-transform hover:text-teal"
               [class.rotate-180]="expanded()"
               [attr.aria-expanded]="expanded()"
               [attr.aria-label]="
@@ -86,7 +94,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
         <ng-content />
 
         @if (expandable() && expanded()) {
-          <div @expandCollapse class="mt-3 border-t border-white/10 pt-3">
+          <div @expandCollapse class="mt-3 border-t border-teal/15 pt-3">
             <ng-content select="[cardDetail]" />
           </div>
         }
@@ -133,10 +141,14 @@ export class MetricCardComponent {
     return this.variant();
   });
 
-  /** Classes CSS du conteneur selon la variante. */
+  /**
+   * Classes CSS du conteneur selon la variante.
+   * Glass Asili .gp/.wx-card : rayon --r-lg (20px), border teal subtile,
+   * fond translucide, backdrop-blur. Restyle visuel uniquement.
+   */
   readonly containerClasses = computed(() => {
     const base =
-      "rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md";
+      "rounded-[20px] border border-teal/15 bg-white/5 backdrop-blur-xl transition-colors hover:border-teal/30";
     switch (this.effectiveVariant()) {
       case "compact":
         return `${base} p-3`;
@@ -147,12 +159,16 @@ export class MetricCardComponent {
     }
   });
 
-  /** Classes CSS du titre selon la variante. */
+  /**
+   * Classes CSS du titre selon la variante.
+   * En-tête .gp-h .t : font-mono, uppercase, letterspacing — kicker Asili.
+   */
   readonly titleClasses = computed(() => {
-    const base = "font-medium text-white/70";
+    const base =
+      "font-mono uppercase tracking-[0.14em] font-medium text-white/55";
     return this.effectiveVariant() === "compact"
-      ? `${base} text-xs`
-      : `${base} text-sm`;
+      ? `${base} text-[10px]`
+      : `${base} text-[11px]`;
   });
 
   /** Bascule l'etat expanded. */

@@ -32,6 +32,12 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
         >Humidité</span
       >
 
+      <!--
+        Humidité — re-skin Asili : valeur centrale font-display, jauge circulaire
+        conservée (couleur progressColor() sémantique liée au confort). Couleurs/
+        typo uniquement — dashArray()/progressColor()/comfortLabel()/comfortColor()
+        inchangés.
+      -->
       <div class="flex items-center gap-4">
         <!-- Indicateur circulaire -->
         <div
@@ -70,7 +76,9 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
             />
           </svg>
           <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-lg font-light text-white">{{ humidity() }}%</span>
+            <span class="font-display text-xl leading-none text-white"
+              >{{ humidity() }}%</span
+            >
           </div>
         </div>
 
@@ -96,7 +104,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
         <div class="mt-2">
           <app-sparkline
             [data]="hourlyHumidity()"
-            [color]="'rgba(147, 197, 253, 0.8)'"
+            [color]="'rgba(143, 176, 255, 0.8)'"
           />
         </div>
       }

@@ -20,12 +20,18 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
   standalone: true,
   imports: [LearningTooltipComponent],
   template: `
+    <!--
+      Arc solaire — re-skin Asili (.solar / #solar-svg) : glass .gp (r-lg 20px,
+      border teal subtile), arc pointillé, rayon + halo glow #5b8cff, point
+      soleil glow. Data-driven conservé (décision 5 : pas de drag) — sunProgress()/
+      sunX()/sunY()/litArcPath() et la SSR-safety inchangés.
+    -->
     <div
-      class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md"
+      class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl transition-colors hover:border-teal/30"
     >
       <div class="mb-3 flex items-center justify-between">
         <h3
-          class="text-sm font-medium text-white/70"
+          class="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
           i18n="weather.sun.title|@@weatherSunTitle"
         >
           Lever & coucher du soleil
@@ -47,13 +53,14 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
             class="h-24 w-full max-w-[200px]"
             aria-hidden="true"
           >
-            <!-- Arc de trajectoire -->
+            <!-- Arc de trajectoire (pointillé Asili) -->
             <path
               d="M 20 90 Q 100 -10 180 90"
               fill="none"
-              stroke="rgba(255,255,255,0.15)"
-              stroke-width="2"
+              stroke="rgba(255,255,255,0.16)"
+              stroke-width="1.5"
               stroke-linecap="round"
+              stroke-dasharray="3 5"
             />
 
             <!-- Portion eclairee de l'arc (du lever a la position courante) -->
@@ -61,28 +68,36 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
               <path
                 [attr.d]="litArcPath()"
                 fill="none"
-                stroke="rgba(250,204,21,0.6)"
+                stroke="rgba(91,140,255,0.5)"
                 stroke-width="2"
                 stroke-linecap="round"
               />
             }
 
-            <!-- Point de position du soleil -->
+            <!-- Point de position du soleil (glow Asili) -->
             @if (sunProgress() > 0 && sunProgress() <= 1) {
-              <circle
-                [attr.cx]="sunX()"
-                [attr.cy]="sunY()"
-                r="6"
-                fill="#FBBF24"
-                class="drop-shadow-lg"
+              <line
+                x1="100"
+                y1="90"
+                [attr.x2]="sunX()"
+                [attr.y2]="sunY()"
+                stroke="rgba(91,140,255,0.35)"
+                stroke-width="1.5"
               />
               <circle
                 [attr.cx]="sunX()"
                 [attr.cy]="sunY()"
                 r="9"
                 fill="none"
-                stroke="rgba(251,191,36,0.3)"
-                stroke-width="2"
+                stroke="rgba(91,140,255,0.35)"
+                stroke-width="6"
+              />
+              <circle
+                [attr.cx]="sunX()"
+                [attr.cy]="sunY()"
+                r="6"
+                fill="#5b8cff"
+                class="drop-shadow-lg"
               />
             }
 
@@ -92,14 +107,14 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
               y1="90"
               x2="185"
               y2="90"
-              stroke="rgba(255,255,255,0.1)"
+              stroke="rgba(255,255,255,0.12)"
               stroke-width="1"
             />
           </svg>
 
-          <!-- Heures de lever et coucher -->
+          <!-- Heures de lever et coucher (font-mono Geist) -->
           <div
-            class="mt-2 flex w-full max-w-[200px] justify-between text-xs text-white/60"
+            class="mt-2 flex w-full max-w-[200px] justify-between font-mono text-[11px] text-white/60"
           >
             <div class="flex items-center gap-1">
               <span>↑</span>

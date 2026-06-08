@@ -30,9 +30,15 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
         >Qualité de l'air</span
       >
 
+      <!--
+        Qualité de l'air — re-skin Asili (.aqi-ring) : indice AQI font-display,
+        badge sémantique conservé (couleurs liées au mapping), pastilles
+        polluants teal subtiles. Mapping AQI→label (qualityLabel/badgeClasses)
+        et état null→indisponible inchangés.
+      -->
       @if (airQuality(); as aq) {
         <div class="flex items-baseline gap-2">
-          <span class="text-3xl font-light text-white">
+          <span class="font-display text-4xl leading-none text-white">
             {{ aq.current.european_aqi }}
           </span>
           <span
@@ -44,19 +50,19 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
         </div>
 
         <!-- Polluants principaux -->
-        <div class="mt-3 flex flex-wrap gap-2">
+        <div class="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
           <span
-            class="rounded-full bg-white/10 px-2 py-1 text-xs text-white/70"
+            class="rounded-full border border-teal/15 bg-white/5 px-2 py-1 text-white/70"
           >
             PM2.5 : {{ aq.current.pm2_5 | number: "1.0-1" }} µg/m³
           </span>
           <span
-            class="rounded-full bg-white/10 px-2 py-1 text-xs text-white/70"
+            class="rounded-full border border-teal/15 bg-white/5 px-2 py-1 text-white/70"
           >
             PM10 : {{ aq.current.pm10 | number: "1.0-1" }} µg/m³
           </span>
           <span
-            class="rounded-full bg-white/10 px-2 py-1 text-xs text-white/70"
+            class="rounded-full border border-teal/15 bg-white/5 px-2 py-1 text-white/70"
           >
             O₃ : {{ aq.current.ozone | number: "1.0-1" }} µg/m³
           </span>
