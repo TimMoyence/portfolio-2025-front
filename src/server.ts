@@ -13,8 +13,10 @@ import {
   buildRobotsTxt,
   buildSitemapXml,
 } from "./server/seo-builders";
+import { buildSecurityHeaders } from "./server/security-headers";
 import { injectSeoHead, isKnownRoute } from "./server/seo-injector";
 import {
+  ALLOWED_HOSTS,
   LOCALE_BARE_PATH,
   LOCALE_PREFIX_RE,
   STRIP_LOCALE_RE,
@@ -73,15 +75,24 @@ app.use((req, res, next) => {
   next();
 });
 
+/**
+ * Headers de securite (defense en profondeur) poses sur TOUTES les reponses,
+ * tot dans la chaine middleware. HSTS n'est emis qu'en HTTPS (detecte via
+ * `req.secure` ou le header `X-Forwarded-Proto` du reverse-proxy en amont).
+ * Le `X-Content-Type-Options` existant sur certaines routes reste en place
+ * (non duplique ici).
+ */
+app.use((req, res, next) => {
+  const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https";
+  const headers = buildSecurityHeaders({ isHttps });
+  for (const [name, value] of Object.entries(headers)) {
+    res.setHeader(name, value);
+  }
+  next();
+});
+
 const commonEngine = new CommonEngine({
-  allowedHosts: [
-    "asilidesign.fr",
-    "www.asilidesign.fr",
-    "localhost",
-    "127.0.0.1",
-    "portfolio-web-fr",
-    "portfolio-web-en",
-  ],
+  allowedHosts: [...ALLOWED_HOSTS],
 });
 
 const SEO_METADATA_CANDIDATES = [
