@@ -13,6 +13,7 @@ import {
   buildRobotsTxt,
   buildSitemapXml,
 } from "./server/seo-builders";
+import { buildSecurityHeaders } from "./server/security-headers";
 import { injectSeoHead, isKnownRoute } from "./server/seo-injector";
 import {
   LOCALE_BARE_PATH,
@@ -69,6 +70,22 @@ app.use((req, res, next) => {
       ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
       : "";
     return void res.redirect(301, normalized + query);
+  }
+  next();
+});
+
+/**
+ * Headers de securite (defense en profondeur) poses sur TOUTES les reponses,
+ * tot dans la chaine middleware. HSTS n'est emis qu'en HTTPS (detecte via
+ * `req.secure` ou le header `X-Forwarded-Proto` du reverse-proxy en amont).
+ * Le `X-Content-Type-Options` existant sur certaines routes reste en place
+ * (non duplique ici).
+ */
+app.use((req, res, next) => {
+  const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https";
+  const headers = buildSecurityHeaders({ isHttps });
+  for (const [name, value] of Object.entries(headers)) {
+    res.setHeader(name, value);
   }
   next();
 });
