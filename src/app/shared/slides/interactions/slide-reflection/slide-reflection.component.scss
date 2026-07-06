@@ -37,7 +37,7 @@
   background: var(--accent, #4fb3a2);
   color: white;
   border: none;
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   font-weight: 600;
   cursor: pointer;
 

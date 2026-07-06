@@ -60,7 +60,7 @@
   .bar {
     height: 5px;
     border-radius: 3px;
-    background: linear-gradient(90deg, #5b8cff, #4fb3a2);
+    background: linear-gradient(90deg, #5b8cff, var(--teal));
   }
 
   .t {

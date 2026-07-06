@@ -95,7 +95,7 @@
   .lab-ic {
     width: 44px;
     height: 44px;
-    border-radius: 12px;
+    border-radius: var(--r);
     display: grid;
     place-items: center;
   }
