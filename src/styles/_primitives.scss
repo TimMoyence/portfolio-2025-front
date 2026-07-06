@@ -112,6 +112,14 @@
     border-radius: var(--r-lg);
   }
 
+  .glass-dark {
+    background: var(--glass-dark);
+    border: 1px solid var(--glass-dark-line);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: var(--r-lg);
+  }
+
   .live-chip {
     display: inline-flex;
     align-items: center;
