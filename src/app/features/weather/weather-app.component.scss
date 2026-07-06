@@ -56,8 +56,9 @@
 
 /* ---------- GLASS PANEL (asili-app.css : .gp / .gp-pad / .gp-h) ---------- */
 .gp {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* glass-dark (DUP-5) : consomme les tokens couleur, blur 18px */
+  background: var(--glass-dark);
+  border: 1px solid var(--glass-dark-line);
   border-radius: var(--r-lg);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);

@@ -31,6 +31,9 @@
   --night-3: #131c25;
   --glass: rgba(255, 255, 255, 0.05);
   --glass-line: rgba(255, 255, 255, 0.12);
+  /* — Glass sombre (panneaux atelier/app : bordure .1) — */
+  --glass-dark: rgba(255, 255, 255, 0.05);
+  --glass-dark-line: rgba(255, 255, 255, 0.1);
   /* — Sémantiques d'état — */
   --success: #6cae3e;
   --warning: #e6884f;

@@ -1,18 +1,24 @@
 /*
-  Landing Météo (/atelier/meteo) — styles page-spécifiques portés des maquettes
-  AsiliNewDesign/asili-landing.css (.lp-sky, .lp-hero, .lp-hero-grid, .lp-kicker,
-  .lp-lead, .lp-cta, .lp-hero-stats, .lp-section, .lp-sec-head, .lp-features,
-  .lp-feat, .lp-demo-grid, .lp-demo-copy, .lp-demo-list, .lp-final) et des démos
-  instrumentées d'asili-sections.css (.meteo*, .compass, .solar, .dial, .city-btn,
-  .instr-cap, .needle, .sun-*). Les primitives globales (.glass, .btn*, .arrow)
-  et les design tokens (_tokens.scss) fournissent le reste.
-
-  Chrome globale conservée (navbar/footer) : le topbar .lp-top et le footer
-  .lp-foot de la maquette sont omis (redondants). Le ciel .lp-sky est porté en
-  fond fixe scopé au composant ; l'effet parallaxe est piloté en TS (SSR-safe).
+  Landing Météo (/atelier/meteo) — résiduel page-spécifique. Le système `.lp-*`
+  commun (hero, sections, features, demo band, aperçu, CTA final) est mutualisé
+  dans le partiel `_landing-shared.scss` (@use ci-dessous) ; l'accent teal est
+  injecté via les variables `--lp-*` posées sur `:host`. Ne reste ici que le
+  résiduel : fond de repli, ciel bleu parallaxe (.lp-sky), l'aperçu 7 jours
+  (.lp-preview-row*) et la démo instrumentée (.meteo*, .dial, .compass, .solar,
+  .city-btn) portée d'asili-sections.css. Les primitives globales (.glass, .btn*)
+  et les tokens (_tokens.scss) fournissent le reste ; --teal reste intact pour
+  les strokes SVG inline du template.
 */
+@use "../landing-shared";
 
 :host {
+  /* Accent teal du système .lp-* partagé (cf. _landing-shared.scss) */
+  --lp-accent: var(--teal);
+  --lp-accent-rgb: 79, 179, 162;
+  --lp-kicker: var(--glow-soft);
+  --lp-kicker-line: var(--glow);
+  --lp-tk-alpha: 0.18;
+
   display: block;
   position: relative;
   color: #fff;
@@ -35,282 +41,7 @@
   will-change: transform;
 }
 
-.lp-shell {
-  position: relative;
-  z-index: 2;
-}
-
-.lp-wrap {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding-inline: clamp(18px, 4vw, 40px);
-}
-
-/* ---------- HERO (asili-landing.css : .lp-hero) ---------- */
-.lp-hero {
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  padding-top: 120px;
-  padding-bottom: 60px;
-}
-
-.lp-hero-grid {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(28px, 5vw, 64px);
-  align-items: center;
-  width: 100%;
-}
-
-.lp-kicker {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--glow-soft);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-
-  &::before {
-    content: "";
-    width: 22px;
-    height: 1px;
-    background: var(--glow);
-  }
-
-  &--center {
-    justify-content: center;
-  }
-}
-
-.lp-hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(48px, 7vw, 92px);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  color: #fff;
-  margin: 18px 0 0;
-
-  em {
-    font-style: italic;
-    color: var(--teal);
-  }
-}
-
-.lp-lead {
-  font-size: clamp(17px, 1.6vw, 21px);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.75);
-  max-width: 50ch;
-  margin-top: 30px;
-}
-
-.lp-cta {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 34px;
-
-  &--center {
-    justify-content: center;
-    margin-top: 32px;
-  }
-}
-
-/* Bouton fantôme sur fond sombre : bordure claire (parité maquette). */
-.lp-ghost {
-  --btn-fg: #fff;
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.25);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-}
-
-.lp-hero-stats {
-  display: flex;
-  gap: 30px;
-  margin-top: 40px;
-
-  .n {
-    font-family: var(--font-display);
-    font-size: 32px;
-    color: #fff;
-    line-height: 1;
-  }
-
-  .l {
-    font-size: 12.5px;
-    color: rgba(255, 255, 255, 0.55);
-    margin-top: 6px;
-  }
-}
-
-/* ---------- SECTIONS (asili-landing.css : .lp-section) ---------- */
-.lp-section {
-  padding-block: clamp(80px, 13vh, 170px);
-  position: relative;
-}
-
-.lp-demo-band {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.lp-sec-head {
-  max-width: 64ch;
-  margin-bottom: clamp(40px, 6vh, 80px);
-
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(34px, 5vw, 64px);
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    color: #fff;
-    margin: 16px 0 0;
-
-    em {
-      font-style: italic;
-      color: var(--teal);
-    }
-  }
-
-  p {
-    font-size: clamp(17px, 1.5vw, 20px);
-    color: rgba(255, 255, 255, 0.66);
-    margin-top: 20px;
-    max-width: 56ch;
-  }
-}
-
-/* ---------- FEATURES (asili-landing.css : .lp-features / .lp-feat) ---------- */
-.lp-features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-}
-
-.lp-feat {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--r-lg);
-  padding: 30px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition:
-    transform 0.5s var(--ease),
-    border-color 0.4s,
-    background 0.4s;
-
-  &:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.07);
-  }
-
-  .fi {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    background: rgba(79, 179, 162, 0.16);
-    color: var(--teal);
-    margin-bottom: 18px;
-  }
-
-  h3 {
-    color: #fff;
-    font-size: 23px;
-    margin-bottom: 9px;
-  }
-
-  p {
-    font-size: 14.5px;
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.55;
-  }
-}
-
-/* ---------- DEMO BAND (asili-landing.css : .lp-demo-grid) ---------- */
-.lp-demo-grid {
-  display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  gap: clamp(30px, 5vw, 70px);
-  align-items: center;
-}
-
-.lp-demo-copy {
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(32px, 4.5vw, 56px);
-    line-height: 1.04;
-    color: #fff;
-
-    em {
-      font-style: italic;
-      color: var(--teal);
-    }
-  }
-
-  p {
-    font-size: 17px;
-    color: rgba(255, 255, 255, 0.66);
-    margin-top: 18px;
-    max-width: 46ch;
-  }
-}
-
-.lp-demo-list {
-  list-style: none;
-  padding: 0;
-  margin: 28px 0 0;
-  display: grid;
-  gap: 14px;
-
-  li {
-    display: flex;
-    gap: 13px;
-    align-items: center;
-    font-size: 15.5px;
-    color: rgba(255, 255, 255, 0.82);
-  }
-
-  .tk {
-    width: 22px;
-    height: 22px;
-    flex: none;
-    border-radius: 50%;
-    background: rgba(79, 179, 162, 0.18);
-    display: grid;
-    place-items: center;
-  }
-}
-
-/* Aperçu 7 jours (calque du second .glass de la demo band maquette). */
-.lp-preview-wrap {
-  display: grid;
-  place-items: center;
-  gap: 14px;
-}
-
-.lp-preview {
-  padding: 30px;
-  width: 100%;
-  max-width: 380px;
-}
-
-.lp-preview-head {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  margin-bottom: 18px;
-}
-
+/* Aperçu 7 jours (weather-only : internes de .lp-preview). */
 .lp-preview-rows {
   display: grid;
   gap: 8px;
@@ -340,48 +71,6 @@
     .lo {
       color: rgba(255, 255, 255, 0.5);
     }
-  }
-}
-
-.lp-preview-foot {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 20px;
-  text-align: center;
-}
-
-.lp-disclaimer {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* ---------- CTA FINAL (asili-landing.css : .lp-final) ---------- */
-.lp-final {
-  text-align: center;
-
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(40px, 6.5vw, 92px);
-    line-height: 0.98;
-    letter-spacing: -0.025em;
-    color: #fff;
-    max-width: 16ch;
-    margin: 18px auto 0;
-
-    em {
-      font-style: italic;
-      color: var(--teal);
-    }
-  }
-
-  p {
-    font-size: 18px;
-    color: rgba(255, 255, 255, 0.66);
-    margin: 22px auto 0;
-    max-width: 44ch;
   }
 }
 
@@ -571,17 +260,8 @@
   gap: 7px;
 }
 
-/* ---------- RESPONSIVE (asili-landing.css) ---------- */
+/* ---------- RESPONSIVE (résiduel démo ; part .lp-* dans le partiel) ---------- */
 @media (max-width: 900px) {
-  .lp-hero-grid,
-  .lp-demo-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .lp-features {
-    grid-template-columns: 1fr;
-  }
-
   .meteo {
     max-width: 460px;
   }
