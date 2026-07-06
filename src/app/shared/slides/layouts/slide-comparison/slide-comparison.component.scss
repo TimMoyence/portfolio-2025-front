@@ -71,9 +71,9 @@
     }
   }
   &.tone-info {
-    border-top-color: #4fb3a2;
+    border-top-color: var(--teal);
     h3 {
-      color: #4fb3a2;
+      color: var(--teal);
     }
   }
   &.tone-warning {

@@ -164,7 +164,7 @@
   .bi {
     width: 46px;
     height: 46px;
-    border-radius: 12px;
+    border-radius: var(--r);
     background: var(--sand);
     color: var(--teal-deep);
     display: grid;

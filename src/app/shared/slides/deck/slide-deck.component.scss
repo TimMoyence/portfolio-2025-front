@@ -55,7 +55,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border, rgba(12, 9, 2, 0.12));
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   background: var(--card-bg, #ffffff);
   color: var(--accent, #4fb3a2);
   font-size: 1.25rem;
@@ -84,7 +84,7 @@
   color: var(--text-muted, #54524d);
   background: var(--card-bg, #ffffff);
   padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   border: 1px solid var(--border, rgba(12, 9, 2, 0.12));
   box-shadow: 0 2px 6px rgba(12, 9, 2, 0.06);
 }
