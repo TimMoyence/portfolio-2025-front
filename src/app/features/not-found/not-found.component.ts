@@ -9,6 +9,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { clamp } from "../../shared/utils/math.utils";
 
 /**
  * Page 404 ludique — restyle Asili.
@@ -196,8 +197,8 @@ export class NotFoundComponent {
       const dx = (event.clientX - cx) / 14;
       const dy = (event.clientY - cy) / 14;
       const max = 16;
-      const clampedX = Math.max(-max, Math.min(max, dx));
-      const clampedY = Math.max(-max, Math.min(max, dy));
+      const clampedX = clamp(dx, -max, max);
+      const clampedY = clamp(dy, -max, max);
       el.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
     };
     const onLeave = (): void => {

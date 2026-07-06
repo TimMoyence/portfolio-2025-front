@@ -16,6 +16,7 @@ import type {
   WeatherLevel,
 } from "../../../../core/models/weather.model";
 import { UnitPipe } from "../../pipes/unit.pipe";
+import { clamp } from "../../../../shared/utils/math.utils";
 import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import {
   groupHourlyByGranularity,
@@ -192,7 +193,7 @@ export class WeeklyOverviewComponent {
    * Bleu (#3b82f6) → Cyan → Vert → Jaune → Orange → Rouge (#ef4444).
    */
   tempColor(temp: number, alpha: number): string {
-    const t = Math.max(-10, Math.min(40, temp));
+    const t = clamp(temp, -10, 40);
     const ratio = (t + 10) / 50;
 
     let r: number, g: number, b: number;

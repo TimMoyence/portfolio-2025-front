@@ -9,6 +9,7 @@ import { UnitPipe } from "../../pipes/unit.pipe";
 import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import { MetricCardComponent } from "../metric-card/metric-card.component";
 import { SparklineComponent } from "../sparkline/sparkline.component";
+import { clamp } from "../../../../shared/utils/math.utils";
 
 /**
  * Carte d'humidite avec indicateur de progression circulaire CSS
@@ -127,7 +128,7 @@ export class HumidityCardComponent {
 
   /** stroke-dasharray pour l'indicateur circulaire (perimetre = 100). */
   readonly dashArray = computed(() => {
-    const pct = Math.max(0, Math.min(100, this.humidity()));
+    const pct = clamp(this.humidity(), 0, 100);
     return `${pct} ${100 - pct}`;
   });
 

@@ -9,6 +9,7 @@ import {
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { AUTH_PORT, type AuthPort } from "../../core/ports/auth.port";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 
 /**
  * Page de verification d'email.
@@ -60,8 +61,7 @@ export class VerifyEmailComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =
-          err?.error?.detail ??
-          err?.error?.message ??
+          extractErrorMessage(err, { includeTopLevelMessage: false }) ??
           $localize`:verify-email.error.generic@@verifyEmailErrorGeneric:La verification a echoue. Le lien est peut-etre expire.`;
         this.cdr.markForCheck();
       },

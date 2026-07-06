@@ -17,6 +17,10 @@ import type {
 import { UnitPipe } from "../../pipes/unit.pipe";
 import { UnitPreferencesService } from "../../services/unit-preferences.service";
 import {
+  animateValue,
+  type AnimationHandle,
+} from "../../../../shared/utils/animate-value";
+import {
   weatherCodeToDescription,
   weatherCodeToIcon,
 } from "../../utils/weather-icons";
@@ -152,7 +156,7 @@ import {
 export class CurrentConditionsComponent {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly destroyRef = inject(DestroyRef);
-  private animFrameId: number | null = null;
+  private animHandle: AnimationHandle | null = null;
 
   /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
@@ -181,9 +185,7 @@ export class CurrentConditionsComponent {
   });
 
   constructor() {
-    this.destroyRef.onDestroy(() => {
-      if (this.animFrameId !== null) cancelAnimationFrame(this.animFrameId);
-    });
+    this.destroyRef.onDestroy(() => this.animHandle?.cancel());
 
     effect(() => {
       const data = this.current();
@@ -202,25 +204,17 @@ export class CurrentConditionsComponent {
       return;
     }
 
-    if (this.animFrameId !== null) cancelAnimationFrame(this.animFrameId);
+    this.animHandle?.cancel();
 
     const start = this.animatedTemp();
-    const duration = 500;
-    const startTime = performance.now();
-
-    const animate = (now: number): void => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      this.animatedTemp.set(start + (target - start) * eased);
-
-      if (progress < 1) {
-        this.animFrameId = requestAnimationFrame(animate);
-      } else {
-        this.animFrameId = null;
-      }
-    };
-
-    this.animFrameId = requestAnimationFrame(animate);
+    this.animHandle = animateValue({
+      from: start,
+      to: target,
+      durationMs: 500,
+      onFrame: (v) => this.animatedTemp.set(v),
+      onComplete: () => {
+        this.animHandle = null;
+      },
+    });
   }
 }

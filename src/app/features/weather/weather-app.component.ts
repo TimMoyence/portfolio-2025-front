@@ -57,6 +57,7 @@ import { WeatherCardSkeletonComponent } from "./components/skeleton/weather-card
 import { GeolocationService } from "./services/geolocation.service";
 import { UnitPreferencesService } from "./services/unit-preferences.service";
 import { WeatherLevelService } from "./services/weather-level.service";
+import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 import { weatherCodeToBackground } from "./utils/weather-code-background";
 
 /**
@@ -260,7 +261,7 @@ export class WeatherAppComponent implements OnInit {
         },
         error: (err) => {
           this.error.set(
-            err?.error?.message ??
+            extractErrorMessage(err, { includeTopLevelMessage: false }) ??
               $localize`:weather.error.loading|@@weatherErrorLoading:Erreur lors du chargement des prévisions.`,
           );
           this.loading.set(false);

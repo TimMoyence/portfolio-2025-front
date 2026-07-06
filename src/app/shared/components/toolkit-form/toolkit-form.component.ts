@@ -12,6 +12,10 @@ import {
 import { LEAD_MAGNET_PORT } from "../../../core/ports/lead-magnet.port";
 import type { ToolkitRequest } from "../../../core/models/toolkit-request.model";
 import { InteractionCollectorService } from "../../services/interaction-collector.service";
+import {
+  readInputValue,
+  readCheckboxChecked,
+} from "../../utils/dom-event.utils";
 
 type FormState = "idle" | "loading" | "success" | "error";
 
@@ -159,17 +163,11 @@ export class ToolkitFormComponent {
     );
   });
 
-  /** Helper typ-safe pour lire la valeur d'un input depuis un Event. */
-  protected readInputValue(event: Event): string {
-    const target = event.target;
-    return target instanceof HTMLInputElement ? target.value : "";
-  }
+  /** Helper typ-safe pour lire la valeur d'un input depuis un Event (utilise dans le template). */
+  protected readInputValue = readInputValue;
 
-  /** Helper typ-safe pour lire la checked d'une checkbox depuis un Event. */
-  protected readCheckboxChecked(event: Event): boolean {
-    const target = event.target;
-    return target instanceof HTMLInputElement ? target.checked : false;
-  }
+  /** Helper typ-safe pour lire la checked d'une checkbox depuis un Event (utilise dans le template). */
+  protected readCheckboxChecked = readCheckboxChecked;
 
   onSubmit(): void {
     if (!this.isValid()) return;

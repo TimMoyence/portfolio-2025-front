@@ -10,6 +10,7 @@ import {
 import { RouterLink } from "@angular/router";
 import { AsiliCtaBandComponent } from "../../shared/sections";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { animateValue } from "../../shared/utils/animate-value";
 
 /**
  * Donnees meteo simulees pour une ville de la demo jouable du hub.
@@ -276,19 +277,11 @@ export class AtelierComponent {
    * Browser-only (gardee par le constructeur).
    */
   private animateGauge(): void {
-    const target = this.healthTarget;
-    const duration = 1400;
-    const start = performance.now();
-
-    const step = (now: number): void => {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-      this.gaugeValue.set(Math.round(eased * target));
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      }
-    };
-
-    requestAnimationFrame(step);
+    animateValue({
+      from: 0,
+      to: this.healthTarget,
+      durationMs: 1400,
+      onFrame: (v) => this.gaugeValue.set(Math.round(v)),
+    });
   }
 }

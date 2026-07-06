@@ -7,6 +7,10 @@ import {
   signal,
 } from "@angular/core";
 import type { QuizInteraction } from "../../models/slide.model";
+import {
+  readInputValue,
+  readCheckboxChecked,
+} from "../../utils/dom-event.utils";
 
 /**
  * Interaction quiz pour le mode scroll.
@@ -173,20 +177,8 @@ export class QuizInteractionComponent {
     this.valueChanged.emit(text);
   }
 
-  /** Helpers typ-safe pour les handlers d'evenements (evite $any). */
-  protected readInputValue(event: Event): string {
-    const target = event.target;
-    if (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement
-    ) {
-      return target.value;
-    }
-    return "";
-  }
+  /** Helpers typ-safe pour les handlers d'evenements (evite $any, utilises dans le template). */
+  protected readInputValue = readInputValue;
 
-  protected readCheckboxChecked(event: Event): boolean {
-    const target = event.target;
-    return target instanceof HTMLInputElement ? target.checked : false;
-  }
+  protected readCheckboxChecked = readCheckboxChecked;
 }

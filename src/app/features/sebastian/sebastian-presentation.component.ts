@@ -9,6 +9,7 @@ import {
 } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { animateValue } from "../../shared/utils/animate-value";
 import {
   MOCK_BAC,
   MOCK_BADGES,
@@ -219,21 +220,14 @@ export class SebastianPresentationComponent {
    */
   private animateGauge(): void {
     const target = this.targetScore();
-    const duration = 1500;
-    const start = performance.now();
-
-    const step = (now: number): void => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-      this.gaugeValue.set(Math.round(eased * target));
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else {
+    animateValue({
+      from: 0,
+      to: target,
+      durationMs: 1500,
+      onFrame: (v) => this.gaugeValue.set(Math.round(v)),
+      onComplete: () => {
         this.hasAnimated = true;
-      }
-    };
-
-    requestAnimationFrame(step);
+      },
+    });
   }
 }
