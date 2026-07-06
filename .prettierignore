@@ -6,4 +6,5 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 CLAUDE.md
+AGENTS.md
 .claude
