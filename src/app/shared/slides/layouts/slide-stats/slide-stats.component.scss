@@ -32,7 +32,7 @@
 .slide-stats__label {
   font-size: 1rem;
   margin-top: 0.75rem;
-  color: var(--text-muted, #54524d);
+  color: var(--text-muted, var(--slide-text-muted));
 }
 
 .slide-stats__source {

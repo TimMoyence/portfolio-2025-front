@@ -1,3 +1,4 @@
+@use "../../styles-shared/breakpoints" as bp;
 /*
   Shell App Météo (/atelier/meteo/app) — styles scopés portés des maquettes
   AsiliNewDesign/asili-app.css (.app-main, .gp/.gp-pad/.gp-h, .app-pill/.live-dot,
@@ -212,7 +213,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@include bp.mobile {
   .wx-title {
     font-size: clamp(30px, 9vw, 38px);
   }

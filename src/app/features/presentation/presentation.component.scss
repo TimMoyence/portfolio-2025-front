@@ -1,3 +1,4 @@
+@use "../../styles-shared/breakpoints" as bp;
 /*
   Présentation Asili — styles propres aux blocs page-level non couverts par les
   composants de section du Lot 3a (hero, méthode IA, bande CTA, qui portent
@@ -183,7 +184,7 @@
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--teal-deep);
-    background: rgba(79, 179, 162, 0.1);
+    background: rgba(var(--teal-rgb), 0.1);
     padding: 4px 10px;
     border-radius: var(--r-pill);
   }
@@ -246,7 +247,7 @@
 /* --- FAQ <details> — bloc global partagé dans styles/_faq.scss ------------ */
 
 /* --- Responsive (porté de la media-query 860px de la maquette) ------------ */
-@media (max-width: 860px) {
+@include bp.tablet {
   .skills-grid {
     grid-template-columns: 1fr;
   }

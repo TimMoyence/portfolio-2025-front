@@ -29,7 +29,7 @@
 .slide-comparison__column {
   padding: 2rem;
   border-radius: 1rem;
-  background: var(--card-bg, #f6fbfa);
+  background: var(--card-bg, var(--slide-card-soft));
   border-top: 4px solid transparent;
 
   h3 {
@@ -77,15 +77,15 @@
     }
   }
   &.tone-warning {
-    border-top-color: #2f7f74;
+    border-top-color: var(--teal-dark);
     h3 {
-      color: #2f7f74;
+      color: var(--teal-dark);
     }
   }
   &.tone-neutral {
     border-top-color: #9ca3af;
     h3 {
-      color: #54524d;
+      color: var(--slide-text-muted);
     }
   }
 }

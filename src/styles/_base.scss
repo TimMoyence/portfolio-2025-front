@@ -1,3 +1,4 @@
+@use "../app/styles-shared/breakpoints" as bp;
 /* ============================================================
    ASILI — Base typographique & helpers
    ============================================================ */
@@ -74,7 +75,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@include bp.mobile {
   body {
     font-size: 16px;
   }

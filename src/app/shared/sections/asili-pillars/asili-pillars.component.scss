@@ -1,3 +1,4 @@
+@use "../../../styles-shared/breakpoints" as bp;
 @use "../../../styles-shared/lists";
 
 :host {
@@ -132,7 +133,7 @@
 
 .pillar.services .link-arrow {
   color: var(--teal);
-  border-color: rgba(79, 179, 162, 0.4);
+  border-color: rgba(var(--teal-rgb), 0.4);
 }
 
 .pillar.services .link-arrow:hover {
@@ -168,7 +169,7 @@
   );
 }
 
-@media (max-width: 860px) {
+@include bp.tablet {
   .pillars {
     grid-template-columns: 1fr;
   }

@@ -26,6 +26,6 @@
 
 .slide-quote__role {
   font-size: 0.95rem;
-  color: var(--text-muted, #54524d);
+  color: var(--text-muted, var(--slide-text-muted));
   margin-top: 0.25rem;
 }

@@ -1,3 +1,4 @@
+@use "../../../../styles-shared/breakpoints" as bp;
 /*
   Toolkit prive (acces debloque) — refonte Asili (Lot 3e).
   En-tete « debloque » porte de `.tk-unlocked` / `.check` de
@@ -75,7 +76,7 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: rgba(79, 179, 162, 0.16);
+  background: rgba(var(--teal-rgb), 0.16);
   color: var(--teal-deep);
   display: grid;
   place-items: center;
@@ -201,8 +202,8 @@
 }
 
 .tkp-card--accent {
-  border: 2px solid rgba(79, 179, 162, 0.25);
-  background: rgba(79, 179, 162, 0.04);
+  border: 2px solid rgba(var(--teal-rgb), 0.25);
+  background: rgba(var(--teal-rgb), 0.04);
 }
 
 .tkp-card__head {
@@ -261,14 +262,14 @@
   font-weight: 600;
   padding: 6px 12px;
   border-radius: var(--r-pill);
-  border: 1px solid rgba(79, 179, 162, 0.3);
-  background: rgba(79, 179, 162, 0.1);
+  border: 1px solid rgba(var(--teal-rgb), 0.3);
+  background: rgba(var(--teal-rgb), 0.1);
   color: var(--teal-deep);
   cursor: pointer;
   transition: background 0.25s;
 
   &:hover {
-    background: rgba(79, 179, 162, 0.2);
+    background: rgba(var(--teal-rgb), 0.2);
   }
 }
 
@@ -285,7 +286,7 @@
   font-weight: 500;
   padding: 4px 10px;
   border-radius: var(--r-pill);
-  background: rgba(79, 179, 162, 0.1);
+  background: rgba(var(--teal-rgb), 0.1);
   color: var(--teal-deep);
 }
 
@@ -339,7 +340,7 @@
 }
 
 /* --- Responsive ---------------------------------------------------------- */
-@media (max-width: 860px) {
+@include bp.tablet {
   .tkp-grid,
   .tkp-grid--2 {
     grid-template-columns: 1fr;

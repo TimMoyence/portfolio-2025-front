@@ -89,7 +89,7 @@
   height: 22px;
   flex: none;
   border-radius: 50%;
-  background: rgba(79, 179, 162, 0.14);
+  background: rgba(var(--teal-rgb), 0.14);
   color: var(--teal-deep);
   display: grid;
   place-items: center;

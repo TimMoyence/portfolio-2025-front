@@ -1,3 +1,4 @@
+@use "../../styles-shared/breakpoints" as bp;
 /*
   Services Asili — styles propres aux blocs page-level non couverts par les
   composants de section du Lot 3a (hero, méthode, bande CTA, qui portent leurs
@@ -174,7 +175,7 @@
 /* --- FAQ <details> — bloc global partagé dans styles/_faq.scss ------------ */
 
 /* --- Responsive (porté de la media-query 860px de la maquette) ------------ */
-@media (max-width: 860px) {
+@include bp.tablet {
   .mode {
     grid-template-columns: 1fr;
     gap: 10px;
