@@ -30,9 +30,18 @@
 <section class="section-pad">
   <div class="wrap intro-split">
     <div class="portrait" appReveal>
-      <div class="placeholder">
-        <span>{{ portraitPlaceholder }}</span>
-      </div>
+      @if (portraitImage) {
+        <img
+          [src]="portraitImage"
+          [alt]="portraitAlt"
+          loading="lazy"
+          decoding="async"
+        />
+      } @else {
+        <div class="placeholder">
+          <span>{{ portraitPlaceholder }}</span>
+        </div>
+      }
     </div>
     <div class="intro-body" appReveal [appRevealDelay]="1">
       <p i18n="@@presentationIntroP1">
