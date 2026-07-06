@@ -169,7 +169,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1,
-      "lastmod": "2026-06-06",
+      "lastmod": "2026-07-06",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -231,7 +231,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-15",
+      "lastmod": "2026-07-06",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -623,7 +623,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-13",
+      "lastmod": "2026-07-06",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
@@ -871,7 +871,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-04-12",
+      "lastmod": "2026-07-06",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1353,7 +1353,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-03-30",
+      "lastmod": "2026-06-08",
       "locales": {
         "fr": {
           "title": "Conditions de services — Moyence",
@@ -1375,7 +1375,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-03-30",
+      "lastmod": "2026-06-08",
       "locales": {
         "fr": {
           "title": "Politique de confidentialité — Moyence",
@@ -1397,7 +1397,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-04-17",
+      "lastmod": "2026-07-06",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1517,7 +1517,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-05-09",
+      "lastmod": "2026-07-06",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1585,7 +1585,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-05-09",
+      "lastmod": "2026-07-06",
       "breadcrumb": [
         {
           "name": "Accueil",

@@ -7,9 +7,15 @@
 >
   <div class="asili-nav__inner">
     <a class="asili-logo" routerLink="/" aria-label="Asili Design — accueil">
-      <span class="asili-logo__dot" aria-hidden="true"></span>
-      <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili</span>
-      <small class="asili-logo__suffix" aria-hidden="true">design</small>
+      <img
+        class="asili-logo_img"
+        aria-hidden="true"
+        src="/assets/images/logo.webp"
+        alt="Asili Design logo"
+      />
+      <span class="asili-logo__name" i18n="@@NavbarCompanyTitle"
+        >Asili design</span
+      >
     </a>
 
     <div class="asili-nav__links">
@@ -64,9 +70,13 @@
     <div #mobileMenuPanel class="asili-drawer">
       <div class="asili-drawer__top">
         <a class="asili-logo" routerLink="/" (click)="closeMobileMenu()">
-          <span class="asili-logo__dot" aria-hidden="true"></span>
-          <span class="asili-logo__name">Asili</span>
-          <small class="asili-logo__suffix" aria-hidden="true">design</small>
+          <img
+            class="asili-logo_img"
+            aria-hidden="true"
+            src="/assets/images/logo.webp"
+            alt="Asili Design logo"
+          />
+          <span class="asili-logo__name">Asili design</span>
         </a>
         <button
           type="button"

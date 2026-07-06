@@ -82,7 +82,7 @@ describe("AsiliHeroComponent", () => {
     );
   });
 
-  it("affiche l'accroche et l'indication de scroll quand fournies", () => {
+  it("affiche l'accroche et l'indicateur de scroll quand fournis", () => {
     setup();
     fixture.componentRef.setInput("lead", LEAD);
     fixture.componentRef.setInput("scrollHint", "Defiler");
@@ -90,9 +90,9 @@ describe("AsiliHeroComponent", () => {
     expect(fixture.nativeElement.querySelector(".lead")?.textContent).toBe(
       LEAD,
     );
-    expect(
-      fixture.nativeElement.querySelector(".scroll-hint")?.textContent,
-    ).toContain("Defiler");
+    const scrollHint = fixture.nativeElement.querySelector(".scroll-hint");
+    expect(scrollHint).toBeTruthy();
+    expect(scrollHint?.querySelector(".bar")).toBeTruthy();
   });
 
   it("n'affiche pas l'indication de scroll quand non fournie", () => {
