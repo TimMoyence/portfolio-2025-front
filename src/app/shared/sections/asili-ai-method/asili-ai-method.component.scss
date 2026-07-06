@@ -1,3 +1,4 @@
+@use "../../../styles-shared/breakpoints" as bp;
 :host {
   display: block;
 }
@@ -26,7 +27,7 @@
   background:
     radial-gradient(
       80% 60% at 15% 0%,
-      rgba(79, 179, 162, 0.22),
+      rgba(var(--teal-rgb), 0.22),
       transparent 60%
     ),
     radial-gradient(
@@ -81,7 +82,7 @@
 }
 
 .ai-step:hover {
-  border-color: rgba(79, 179, 162, 0.4);
+  border-color: rgba(var(--teal-rgb), 0.4);
   transform: translateX(4px);
 }
 
@@ -135,7 +136,7 @@
   letter-spacing: 0.04em;
 }
 
-@media (max-width: 860px) {
+@include bp.tablet {
   .ai-method-grid {
     grid-template-columns: 1fr;
   }

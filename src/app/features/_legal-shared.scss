@@ -103,7 +103,7 @@
 .lg-toc a.active {
   border-left-color: var(--teal);
   color: var(--teal-deep);
-  background: rgba(79, 179, 162, 0.06);
+  background: rgba(var(--teal-rgb), 0.06);
 }
 
 /* Corps lisible */

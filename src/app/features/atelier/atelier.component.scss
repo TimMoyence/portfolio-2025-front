@@ -1,3 +1,4 @@
+@use "../../styles-shared/breakpoints" as bp;
 /*
   Hub L'Atelier (/atelier) — styles page-spécifiques portés des maquettes
   AsiliNewDesign/asili-pages.css (.page-hero, .lab-feature, .lab-big,
@@ -87,7 +88,7 @@
   }
 
   &.meteo-feat .lab-ic {
-    background: rgba(79, 179, 162, 0.18);
+    background: rgba(var(--teal-rgb), 0.18);
     color: var(--teal);
   }
 
@@ -162,7 +163,7 @@
     background:
       radial-gradient(
         80% 60% at 15% 0%,
-        rgba(79, 179, 162, 0.22),
+        rgba(var(--teal-rgb), 0.22),
         transparent 60%
       ),
       radial-gradient(
@@ -561,13 +562,13 @@
   }
 }
 
-@media (max-width: 860px) {
+@include bp.tablet {
   .lab-feature {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 560px) {
+@include bp.mobile {
   .meteo-instruments {
     grid-template-columns: 1fr;
   }

@@ -8,7 +8,7 @@
   background: linear-gradient(
     135deg,
     var(--accent, #4fb3a2),
-    var(--accent-dark, #2f7f74)
+    var(--accent-dark, var(--teal-dark))
   );
   color: white;
 }

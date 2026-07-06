@@ -1,3 +1,4 @@
+@use "../../styles-shared/breakpoints" as bp;
 /*
   Landing Météo (/atelier/meteo) — résiduel page-spécifique. Le système `.lp-*`
   commun (hero, sections, features, demo band, aperçu, CTA final) est mutualisé
@@ -267,7 +268,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@include bp.mobile {
   .meteo-instruments {
     grid-template-columns: 1fr;
   }

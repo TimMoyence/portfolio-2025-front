@@ -35,7 +35,7 @@
 .slide-image__subtitle {
   font-size: clamp(1.05rem, 1.4vw, 1.25rem);
   font-weight: 600;
-  color: var(--accent-dark, #2f7f74);
+  color: var(--accent-dark, var(--teal-dark));
   margin: 0 0 1.5rem;
 }
 
@@ -93,7 +93,7 @@
   align-items: start;
   padding: 1rem;
   background: var(--card-bg, #ffffff);
-  border: 1px solid var(--border, rgba(12, 9, 2, 0.08));
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.08));
   border-radius: 0.75rem;
   transition:
     border-color 0.2s ease,
@@ -102,7 +102,7 @@
 
   &:hover {
     border-color: var(--accent, #4fb3a2);
-    box-shadow: 0 8px 24px rgba(12, 9, 2, 0.06);
+    box-shadow: 0 8px 24px rgba(var(--ink-rgb), 0.06);
     transform: translateY(-1px);
   }
 }
@@ -111,8 +111,8 @@
   width: 3rem;
   height: 3rem;
   border-radius: 0.5rem;
-  background: var(--card-bg-soft, #f6fbfa);
-  border: 1px solid var(--border, rgba(12, 9, 2, 0.08));
+  background: var(--card-bg-soft, var(--slide-card-soft));
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.08));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,8 +160,8 @@
 .slide-image__rich-meta {
   font-size: 0.8rem;
   font-weight: 500;
-  color: var(--accent-dark, #2f7f74);
-  background: var(--card-bg-soft, #f6fbfa);
+  color: var(--accent-dark, var(--teal-dark));
+  background: var(--card-bg-soft, var(--slide-card-soft));
   border: 1px solid var(--accent, #4fb3a2);
   padding: 0.15rem 0.5rem;
   border-radius: var(--r-pill);

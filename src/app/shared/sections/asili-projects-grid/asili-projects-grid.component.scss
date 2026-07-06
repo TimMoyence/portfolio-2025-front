@@ -1,3 +1,4 @@
+@use "../../../styles-shared/breakpoints" as bp;
 :host {
   display: block;
 }
@@ -123,7 +124,7 @@
   color: var(--ink-mute);
 }
 
-@media (max-width: 860px) {
+@include bp.tablet {
   .proj-grid {
     grid-template-columns: 1fr;
   }

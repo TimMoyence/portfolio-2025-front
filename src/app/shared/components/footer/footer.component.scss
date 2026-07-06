@@ -1,3 +1,4 @@
+@use "../../../styles-shared/breakpoints" as bp;
 @use "../../../styles-shared/lists";
 
 :host {
@@ -96,7 +97,7 @@
   border-radius: 50%;
   background: var(--teal);
   align-self: center;
-  box-shadow: 0 0 0 4px rgba(79, 179, 162, 0.18);
+  box-shadow: 0 0 0 4px rgba(var(--teal-rgb), 0.18);
 }
 
 .asili-logo__suffix {
@@ -262,7 +263,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@include bp.mobile {
   .asili-footer__grid {
     grid-template-columns: 1fr;
   }

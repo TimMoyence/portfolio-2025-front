@@ -25,7 +25,7 @@
 
 .slide-quiz__option {
   padding: 1rem 1.5rem;
-  background: var(--card-bg, #f6fbfa);
+  background: var(--card-bg, var(--slide-card-soft));
   border: 2px solid transparent;
   border-radius: 0.75rem;
   text-align: left;
@@ -41,7 +41,7 @@
 
   &.is-selected {
     border-color: var(--accent, #4fb3a2);
-    background: rgba(79, 179, 162, 0.1);
+    background: rgba(var(--teal-rgb), 0.1);
   }
 
   &:disabled {

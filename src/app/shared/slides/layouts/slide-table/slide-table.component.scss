@@ -19,7 +19,7 @@
   width: 100%;
   overflow-x: auto;
   border-radius: 1rem;
-  background: var(--card-bg, #f6fbfa);
+  background: var(--card-bg, var(--slide-card-soft));
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 
   table {
@@ -53,13 +53,13 @@
       transition: background 0.15s;
 
       &:hover {
-        background: rgba(79, 179, 162, 0.08);
+        background: rgba(var(--teal-rgb), 0.08);
       }
     }
 
     td {
       padding: 0.75rem 1rem;
-      border-top: 1px solid rgba(12, 9, 2, 0.08);
+      border-top: 1px solid rgba(var(--ink-rgb), 0.08);
       vertical-align: top;
       line-height: 1.45;
 
