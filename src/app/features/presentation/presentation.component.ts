@@ -131,8 +131,15 @@ export class PresentationComponent {
 
   // --- Intro / portrait -----------------------------------------------------
 
-  /** Libellé du placeholder de portrait. */
+  /** Libellé du placeholder de portrait (fallback si l'image est absente). */
   protected readonly portraitPlaceholder = $localize`:@@presentationPortraitPlaceholder:portrait — photo du fondateur`;
+
+  /** Portrait du fondateur (chemin absolu, SSR/i18n-safe). */
+  protected readonly portraitImage =
+    "/assets/images/portrait-tim-asili-design.webp";
+
+  /** Texte alternatif du portrait (a11y). */
+  protected readonly portraitAlt = $localize`:@@presentationPortraitAlt:Tim Moyence, fondateur d'Asili Design`;
 
   /** Signature serif italique sous l'intro. */
   protected readonly introSignature = $localize`:@@presentationIntroSignature:— Tim Moyence, Asili Design`;
