@@ -5,450 +5,415 @@
   mot de passe (showPassword), validation, messages, returnUrl. Restyle =
   HTML/SCSS uniquement. Chrome globale conservée : .auth-back / topbar omis.
 -->
-<div class="auth-split">
-  <!-- PANNEAU IMMERSIF (gauche) — contextuel login / register -->
-  <aside class="auth-aside">
-    <a class="auth-logo" routerLink="/">
-      <span class="dot" aria-hidden="true"></span>Asili<small>design</small>
-    </a>
-    <div class="auth-aside-mid" appReveal>
-      @if (isTabActive("sign-up")) {
-        <span class="kicker" i18n="@@authAsideRegisterKicker">Bienvenue</span>
-        <h2 i18n="@@authAsideRegisterTitle">
-          Un compte, <em>tout l'écosystème</em> Asili.
-        </h2>
-        <p i18n="@@authAsideRegisterSub">
-          Créez votre espace pour accéder à l'Atelier, aux formations et à votre
-          profil.
-        </p>
-      } @else {
-        <span class="kicker" i18n="@@authAsideLoginKicker">Bon retour</span>
-        <h2 i18n="@@authAsideLoginTitle">
-          Reprenez là où vous <em>vous étiez arrêté</em>.
-        </h2>
-        <p i18n="@@authAsideLoginSub">
-          Accédez à vos formations, à l'Atelier et à votre espace personnel.
-        </p>
-      }
-    </div>
-    <div class="auth-aside-foot">
-      <span i18n="@@authAsideQuote">« Clarifier avant de construire »</span>
-    </div>
-  </aside>
+<app-auth-shell>
+  <div aside class="auth-aside-mid" appReveal>
+    @if (isTabActive("sign-up")) {
+      <span class="kicker" i18n="@@authAsideRegisterKicker">Bienvenue</span>
+      <h2 i18n="@@authAsideRegisterTitle">
+        Un compte, <em>tout l'écosystème</em> Asili.
+      </h2>
+      <p i18n="@@authAsideRegisterSub">
+        Créez votre espace pour accéder à l'Atelier, aux formations et à votre
+        profil.
+      </p>
+    } @else {
+      <span class="kicker" i18n="@@authAsideLoginKicker">Bon retour</span>
+      <h2 i18n="@@authAsideLoginTitle">
+        Reprenez là où vous <em>vous étiez arrêté</em>.
+      </h2>
+      <p i18n="@@authAsideLoginSub">
+        Accédez à vos formations, à l'Atelier et à votre espace personnel.
+      </p>
+    }
+  </div>
 
-  <!-- FORMULAIRES (droite) -->
-  <main class="auth-main">
-    <div class="auth-card">
-      <!-- Onglets login / register -->
-      <div
-        class="auth-tabs"
-        role="tablist"
-        aria-orientation="horizontal"
-        [attr.aria-label]="'Connexion ou inscription'"
-        i18n-aria-label="@@authTabsAriaLabel"
+  <!-- Onglets login / register -->
+  <div
+    class="auth-tabs"
+    role="tablist"
+    aria-orientation="horizontal"
+    [attr.aria-label]="'Connexion ou inscription'"
+    i18n-aria-label="@@authTabsAriaLabel"
+  >
+    <button
+      type="button"
+      role="tab"
+      id="auth-trigger-log-in"
+      class="auth-tab"
+      [attr.aria-controls]="'auth-tab-log-in'"
+      [attr.aria-selected]="isTabActive('log-in')"
+      [attr.tabindex]="isTabActive('log-in') ? 0 : -1"
+      (click)="selectTab('log-in')"
+    >
+      <span i18n="auth.tabs.login|Login tab label@@authTabLogin"
+        >Connexion</span
       >
-        <button
-          type="button"
-          role="tab"
-          id="auth-trigger-log-in"
-          class="auth-tab"
-          [attr.aria-controls]="'auth-tab-log-in'"
-          [attr.aria-selected]="isTabActive('log-in')"
-          [attr.tabindex]="isTabActive('log-in') ? 0 : -1"
-          (click)="selectTab('log-in')"
-        >
-          <span i18n="auth.tabs.login|Login tab label@@authTabLogin"
-            >Connexion</span
-          >
-        </button>
-        <button
-          type="button"
-          role="tab"
-          id="auth-trigger-sign-up"
-          class="auth-tab"
-          [attr.aria-controls]="'auth-tab-sign-up'"
-          [attr.aria-selected]="isTabActive('sign-up')"
-          [attr.tabindex]="isTabActive('sign-up') ? 0 : -1"
-          (click)="selectTab('sign-up')"
-        >
-          <span i18n="auth.tabs.signup|Signup tab label@@authTabSignup"
-            >S'inscrire</span
-          >
-        </button>
-      </div>
+    </button>
+    <button
+      type="button"
+      role="tab"
+      id="auth-trigger-sign-up"
+      class="auth-tab"
+      [attr.aria-controls]="'auth-tab-sign-up'"
+      [attr.aria-selected]="isTabActive('sign-up')"
+      [attr.tabindex]="isTabActive('sign-up') ? 0 : -1"
+      (click)="selectTab('sign-up')"
+    >
+      <span i18n="auth.tabs.signup|Signup tab label@@authTabSignup"
+        >S'inscrire</span
+      >
+    </button>
+  </div>
 
-      <!-- ============ LOGIN ============ -->
-      @if (isTabActive("log-in")) {
-        <section
-          class="auth-screen"
-          role="tabpanel"
-          id="auth-tab-log-in"
-          [attr.aria-labelledby]="'auth-trigger-log-in'"
-          tabindex="0"
-        >
-          <h1 i18n="auth.login.title|Login panel heading@@authLoginTitle">
-            Se connecter
-          </h1>
-          <p
-            class="sub"
-            i18n="auth.login.lead|Login panel description@@authLoginLead"
-          >
-            Votre espace de croissance commence
-          </p>
+  <!-- ============ LOGIN ============ -->
+  @if (isTabActive("log-in")) {
+    <section
+      class="auth-screen"
+      role="tabpanel"
+      id="auth-tab-log-in"
+      [attr.aria-labelledby]="'auth-trigger-log-in'"
+      tabindex="0"
+    >
+      <h1 i18n="auth.login.title|Login panel heading@@authLoginTitle">
+        Se connecter
+      </h1>
+      <p
+        class="sub"
+        i18n="auth.login.lead|Login panel description@@authLoginLead"
+      >
+        Votre espace de croissance commence
+      </p>
 
-          <!-- Google -->
-          <button
-            type="button"
-            class="auth-google"
-            title="Connectez-vous avec Google"
-            i18n-title
-            (click)="handleGoogleAuth('log-in')"
-          >
-            <app-svg-icon
-              name="network/google"
-              [fill]="'keep'"
-              [size]="1.4"
-            ></app-svg-icon>
-            <span i18n="auth.login.google|Login with Google@@authLoginGoogle">
-              Connectez-vous avec Google
-            </span>
-          </button>
+      <!-- Google -->
+      <button
+        type="button"
+        class="auth-google"
+        title="Connectez-vous avec Google"
+        i18n-title
+        (click)="handleGoogleAuth('log-in')"
+      >
+        <app-svg-icon
+          name="network/google"
+          [fill]="'keep'"
+          [size]="1.4"
+        ></app-svg-icon>
+        <span i18n="auth.login.google|Login with Google@@authLoginGoogle">
+          Connectez-vous avec Google
+        </span>
+      </button>
 
-          <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
+      <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
 
-          <!-- Formulaire login -->
-          <form
-            #loginFormRef="ngForm"
-            (ngSubmit)="handleLoginSubmit(loginFormRef)"
-            novalidate
-          >
-            @for (field of loginFields; track field.key) {
-              <div class="auth-field">
-                <label [for]="'login-' + field.key">{{ field.label }}</label>
-                <div class="ip">
-                  <input
-                    [type]="
-                      field.key === 'password' && showPassword
-                        ? 'text'
-                        : field.type
-                    "
-                    [id]="'login-' + field.key"
-                    [name]="field.key"
-                    [(ngModel)]="loginForm[field.key]"
-                    [required]="field.required"
-                    [minlength]="field.key === 'password' ? 8 : null"
-                    [email]="field.type === 'email' ? '' : false"
-                    #control="ngModel"
-                    [class.invalid]="
-                      control.invalid && (control.touched || isLoginSubmitted)
-                    "
-                  />
-                  @if (field.key === "password") {
-                    <span class="ic">
-                      <button
-                        type="button"
-                        class="toggle-pw"
-                        (click)="showPassword = !showPassword"
-                        [attr.aria-label]="
-                          showPassword
-                            ? 'Masquer le mot de passe'
-                            : 'Afficher le mot de passe'
-                        "
-                        i18n-aria-label="@@authTogglePassword"
-                      >
-                        <app-svg-icon
-                          [name]="
-                            showPassword ? 'visibility_off' : 'visibility'
-                          "
-                          [fill]="'keep'"
-                          [size]="1.1"
-                        ></app-svg-icon>
-                      </button>
-                    </span>
-                  }
-                </div>
-                @if (control.invalid && (control.touched || isLoginSubmitted)) {
-                  <p class="err">
-                    @if (control.errors?.["required"]) {
-                      <span
-                        i18n="
-                          auth.error.required|Required field
-                          error@@authErrorRequired"
-                        >Ce champ est obligatoire.</span
-                      >
-                    } @else if (control.errors?.["email"]) {
-                      <span
-                        i18n="
-                          auth.error.email|Invalid email error@@authErrorEmail"
-                        >Merci d’entrer une adresse email valide.</span
-                      >
-                    } @else {
-                      <span
-                        i18n="
-                          auth.error.generic|Generic validation
-                          error@@authErrorGeneric"
-                        >Valeur invalide.</span
-                      >
-                    }
-                  </p>
-                }
-              </div>
-            }
-
-            <div class="auth-row">
-              <span></span>
-              <a
-                class="auth-link"
-                routerLink="/forgot-password"
-                i18n="@@authLoginForgotPassword"
-                >Mot de passe oublié ?</a
-              >
-            </div>
-
-            <button
-              type="submit"
-              class="btn btn-teal auth-submit"
-              [disabled]="isLoginLoading"
-              [attr.aria-busy]="isLoginLoading"
-            >
-              @if (!isLoginLoading) {
-                <span
-                  i18n="auth.login.submit|Login submit label@@authLoginSubmit"
-                  >Se connecter</span
-                >
-                <span class="arrow" aria-hidden="true">→</span>
-              } @else {
-                <span
-                  i18n="
-                    auth.login.loading|Login loading state@@authLoginLoading"
-                  >Connexion en cours...</span
-                >
-              }
-            </button>
-
-            @if (loginErrorMessage) {
-              <p class="auth-msg err" role="alert">{{ loginErrorMessage }}</p>
-            }
-            @if (loginSuccessMessage) {
-              <p class="auth-msg ok" role="status">{{ loginSuccessMessage }}</p>
-            }
-          </form>
-
-          <p class="auth-alt">
-            <span i18n="@@authAltNoAccount">Pas encore de compte ?</span>
-            <button
-              type="button"
-              (click)="selectTab('sign-up')"
-              i18n="@@authAltCreate"
-            >
-              Créer un compte
-            </button>
-          </p>
-        </section>
-      }
-
-      <!-- ============ REGISTER ============ -->
-      @if (isTabActive("sign-up")) {
-        <section
-          class="auth-screen"
-          role="tabpanel"
-          id="auth-tab-sign-up"
-          [attr.aria-labelledby]="'auth-trigger-sign-up'"
-          tabindex="0"
-        >
-          <h1 i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
-            Créer un <em>compte</em>
-          </h1>
-          <p
-            class="sub"
-            i18n="auth.signup.lead|Signup panel description@@authSignupLead"
-          >
-            Un compte, tout l'écosystème Asili.
-          </p>
-
-          <!-- Google -->
-          <button
-            type="button"
-            class="auth-google"
-            title="Inscrivez-vous avec Google"
-            i18n-title
-            (click)="handleGoogleAuth('sign-up')"
-          >
-            <app-svg-icon
-              name="network/google"
-              [fill]="'keep'"
-              [size]="1.4"
-            ></app-svg-icon>
-            <span
-              i18n="auth.signup.google|Signup with Google@@authSignupGoogle"
-            >
-              Inscrivez-vous avec Google
-            </span>
-          </button>
-
-          <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
-
-          <!-- Formulaire register -->
-          <form
-            #signupFormRef="ngForm"
-            (ngSubmit)="handleSignupSubmit(signupFormRef)"
-            novalidate
-          >
-            @for (field of signupFields; track field.key) {
-              <div class="auth-field">
-                <label [for]="'reg-' + field.key">
-                  {{ field.label }}
-                  @if (!field.required) {
-                    <span
-                      i18n="
-                        auth.field.optional|Optional field
-                        helper@@authFieldOptional"
-                      >(facultatif)</span
-                    >
-                  }
-                </label>
-                <div class="ip">
-                  <input
-                    [type]="
-                      (field.key === 'password' ||
-                        field.key === 'verifPassword') &&
+      <!-- Formulaire login -->
+      <form
+        #loginFormRef="ngForm"
+        (ngSubmit)="handleLoginSubmit(loginFormRef)"
+        novalidate
+      >
+        @for (field of loginFields; track field.key) {
+          <div class="auth-field">
+            <label [for]="'login-' + field.key">{{ field.label }}</label>
+            <div class="ip">
+              <input
+                [type]="
+                  field.key === 'password' && showPassword ? 'text' : field.type
+                "
+                [id]="'login-' + field.key"
+                [name]="field.key"
+                [(ngModel)]="loginForm[field.key]"
+                [required]="field.required"
+                [minlength]="field.key === 'password' ? 8 : null"
+                [email]="field.type === 'email' ? '' : false"
+                #control="ngModel"
+                [class.invalid]="
+                  control.invalid && (control.touched || isLoginSubmitted)
+                "
+              />
+              @if (field.key === "password") {
+                <span class="ic">
+                  <button
+                    type="button"
+                    class="toggle-pw"
+                    (click)="showPassword = !showPassword"
+                    [attr.aria-label]="
                       showPassword
-                        ? 'text'
-                        : field.type
+                        ? 'Masquer le mot de passe'
+                        : 'Afficher le mot de passe'
                     "
-                    [id]="'reg-' + field.key"
-                    [name]="field.key"
-                    [(ngModel)]="signupForm[field.key]"
-                    [required]="field.required"
-                    [minlength]="field.key === 'password' ? 8 : null"
-                    [email]="field.type === 'email' ? '' : false"
-                    #control="ngModel"
-                    [class.invalid]="
-                      control.invalid && (control.touched || isSignupSubmitted)
-                    "
-                  />
-                  @if (
-                    field.key === "password" || field.key === "verifPassword"
-                  ) {
-                    <span class="ic">
-                      <button
-                        type="button"
-                        class="toggle-pw"
-                        (click)="showPassword = !showPassword"
-                        [attr.aria-label]="
-                          showPassword
-                            ? 'Masquer le mot de passe'
-                            : 'Afficher le mot de passe'
-                        "
-                        i18n-aria-label="@@authTogglePassword"
-                      >
-                        <app-svg-icon
-                          [name]="
-                            showPassword ? 'visibility_off' : 'visibility'
-                          "
-                          [fill]="'keep'"
-                          [size]="1.1"
-                        ></app-svg-icon>
-                      </button>
-                    </span>
-                  }
-                </div>
-                @if (
-                  control.invalid && (control.touched || isSignupSubmitted)
-                ) {
-                  <p class="err">
-                    @if (control.errors?.["required"]) {
-                      <span
-                        i18n="
-                          auth.error.required|Required field
-                          error@@authErrorRequired"
-                        >Ce champ est obligatoire.</span
-                      >
-                    } @else if (control.errors?.["email"]) {
-                      <span
-                        i18n="
-                          auth.error.email|Invalid email error@@authErrorEmail"
-                        >Merci d’entrer une adresse email valide.</span
-                      >
-                    } @else if (
-                      control.errors?.["minlength"] && field.key === "password"
-                    ) {
-                      <span
-                        i18n="
-                          auth.error.passwordLength|Password length
-                          error@@authErrorPasswordLength"
-                        >Le mot de passe doit contenir au moins 8
-                        caractères.</span
-                      >
-                    } @else {
-                      <span
-                        i18n="
-                          auth.error.generic|Generic validation
-                          error@@authErrorGeneric"
-                        >Valeur invalide.</span
-                      >
-                    }
-                  </p>
-                }
-              </div>
-            }
-
-            <label class="auth-check" style="margin-bottom: 22px">
-              <input type="checkbox" required name="acceptTerms" ngModel />
-              <span i18n="@@authAcceptTerms">
-                J'accepte les
-                <a routerLink="/terms" class="auth-link">conditions</a> &amp; la
-                <a routerLink="/privacy" class="auth-link">confidentialité</a>
-              </span>
-            </label>
-
-            <button
-              type="submit"
-              class="btn btn-teal auth-submit"
-              [disabled]="isSignupLoading"
-              [attr.aria-busy]="isSignupLoading"
-            >
-              @if (!isSignupLoading) {
-                <span
-                  i18n="
-                    auth.signup.submit|Signup submit label@@authSignupSubmit"
-                  >Créer mon compte</span
-                >
-                <span class="arrow" aria-hidden="true">→</span>
-              } @else {
-                <span
-                  i18n="
-                    auth.signup.loading|Signup loading state@@authSignupLoading"
-                  >Création en cours...</span
-                >
+                    i18n-aria-label="@@authTogglePassword"
+                  >
+                    <app-svg-icon
+                      [name]="showPassword ? 'visibility_off' : 'visibility'"
+                      [fill]="'keep'"
+                      [size]="1.1"
+                    ></app-svg-icon>
+                  </button>
+                </span>
               }
-            </button>
-
-            @if (signupErrorMessage) {
-              <p class="auth-msg err" role="alert">{{ signupErrorMessage }}</p>
-            }
-            @if (signupSuccessMessage) {
-              <p class="auth-msg ok" role="status">
-                {{ signupSuccessMessage }}
+            </div>
+            @if (control.invalid && (control.touched || isLoginSubmitted)) {
+              <p class="err">
+                @if (control.errors?.["required"]) {
+                  <span
+                    i18n="
+                      auth.error.required|Required field
+                      error@@authErrorRequired"
+                    >Ce champ est obligatoire.</span
+                  >
+                } @else if (control.errors?.["email"]) {
+                  <span
+                    i18n="auth.error.email|Invalid email error@@authErrorEmail"
+                    >Merci d’entrer une adresse email valide.</span
+                  >
+                } @else {
+                  <span
+                    i18n="
+                      auth.error.generic|Generic validation
+                      error@@authErrorGeneric"
+                    >Valeur invalide.</span
+                  >
+                }
               </p>
             }
-          </form>
+          </div>
+        }
 
-          <p class="auth-alt">
-            <span i18n="@@authAltHasAccount">Déjà inscrit ?</span>
-            <button
-              type="button"
-              (click)="selectTab('log-in')"
-              i18n="@@authAltLogin"
+        <div class="auth-row">
+          <span></span>
+          <a
+            class="auth-link"
+            routerLink="/forgot-password"
+            i18n="@@authLoginForgotPassword"
+            >Mot de passe oublié ?</a
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-teal auth-submit"
+          [disabled]="isLoginLoading"
+          [attr.aria-busy]="isLoginLoading"
+        >
+          @if (!isLoginLoading) {
+            <span i18n="auth.login.submit|Login submit label@@authLoginSubmit"
+              >Se connecter</span
             >
-              Se connecter
-            </button>
+            <span class="arrow" aria-hidden="true">→</span>
+          } @else {
+            <span
+              i18n="auth.login.loading|Login loading state@@authLoginLoading"
+              >Connexion en cours...</span
+            >
+          }
+        </button>
+
+        @if (loginErrorMessage) {
+          <p class="auth-msg err" role="alert">{{ loginErrorMessage }}</p>
+        }
+        @if (loginSuccessMessage) {
+          <p class="auth-msg ok" role="status">{{ loginSuccessMessage }}</p>
+        }
+      </form>
+
+      <p class="auth-alt">
+        <span i18n="@@authAltNoAccount">Pas encore de compte ?</span>
+        <button
+          type="button"
+          (click)="selectTab('sign-up')"
+          i18n="@@authAltCreate"
+        >
+          Créer un compte
+        </button>
+      </p>
+    </section>
+  }
+
+  <!-- ============ REGISTER ============ -->
+  @if (isTabActive("sign-up")) {
+    <section
+      class="auth-screen"
+      role="tabpanel"
+      id="auth-tab-sign-up"
+      [attr.aria-labelledby]="'auth-trigger-sign-up'"
+      tabindex="0"
+    >
+      <h1 i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
+        Créer un <em>compte</em>
+      </h1>
+      <p
+        class="sub"
+        i18n="auth.signup.lead|Signup panel description@@authSignupLead"
+      >
+        Un compte, tout l'écosystème Asili.
+      </p>
+
+      <!-- Google -->
+      <button
+        type="button"
+        class="auth-google"
+        title="Inscrivez-vous avec Google"
+        i18n-title
+        (click)="handleGoogleAuth('sign-up')"
+      >
+        <app-svg-icon
+          name="network/google"
+          [fill]="'keep'"
+          [size]="1.4"
+        ></app-svg-icon>
+        <span i18n="auth.signup.google|Signup with Google@@authSignupGoogle">
+          Inscrivez-vous avec Google
+        </span>
+      </button>
+
+      <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
+
+      <!-- Formulaire register -->
+      <form
+        #signupFormRef="ngForm"
+        (ngSubmit)="handleSignupSubmit(signupFormRef)"
+        novalidate
+      >
+        @for (field of signupFields; track field.key) {
+          <div class="auth-field">
+            <label [for]="'reg-' + field.key">
+              {{ field.label }}
+              @if (!field.required) {
+                <span
+                  i18n="
+                    auth.field.optional|Optional field helper@@authFieldOptional"
+                  >(facultatif)</span
+                >
+              }
+            </label>
+            <div class="ip">
+              <input
+                [type]="
+                  (field.key === 'password' || field.key === 'verifPassword') &&
+                  showPassword
+                    ? 'text'
+                    : field.type
+                "
+                [id]="'reg-' + field.key"
+                [name]="field.key"
+                [(ngModel)]="signupForm[field.key]"
+                [required]="field.required"
+                [minlength]="field.key === 'password' ? 8 : null"
+                [email]="field.type === 'email' ? '' : false"
+                #control="ngModel"
+                [class.invalid]="
+                  control.invalid && (control.touched || isSignupSubmitted)
+                "
+              />
+              @if (field.key === "password" || field.key === "verifPassword") {
+                <span class="ic">
+                  <button
+                    type="button"
+                    class="toggle-pw"
+                    (click)="showPassword = !showPassword"
+                    [attr.aria-label]="
+                      showPassword
+                        ? 'Masquer le mot de passe'
+                        : 'Afficher le mot de passe'
+                    "
+                    i18n-aria-label="@@authTogglePassword"
+                  >
+                    <app-svg-icon
+                      [name]="showPassword ? 'visibility_off' : 'visibility'"
+                      [fill]="'keep'"
+                      [size]="1.1"
+                    ></app-svg-icon>
+                  </button>
+                </span>
+              }
+            </div>
+            @if (control.invalid && (control.touched || isSignupSubmitted)) {
+              <p class="err">
+                @if (control.errors?.["required"]) {
+                  <span
+                    i18n="
+                      auth.error.required|Required field
+                      error@@authErrorRequired"
+                    >Ce champ est obligatoire.</span
+                  >
+                } @else if (control.errors?.["email"]) {
+                  <span
+                    i18n="auth.error.email|Invalid email error@@authErrorEmail"
+                    >Merci d’entrer une adresse email valide.</span
+                  >
+                } @else if (
+                  control.errors?.["minlength"] && field.key === "password"
+                ) {
+                  <span
+                    i18n="
+                      auth.error.passwordLength|Password length
+                      error@@authErrorPasswordLength"
+                    >Le mot de passe doit contenir au moins 8 caractères.</span
+                  >
+                } @else {
+                  <span
+                    i18n="
+                      auth.error.generic|Generic validation
+                      error@@authErrorGeneric"
+                    >Valeur invalide.</span
+                  >
+                }
+              </p>
+            }
+          </div>
+        }
+
+        <label class="auth-check" style="margin-bottom: 22px">
+          <input type="checkbox" required name="acceptTerms" ngModel />
+          <span i18n="@@authAcceptTerms">
+            J'accepte les
+            <a routerLink="/terms" class="auth-link">conditions</a> &amp; la
+            <a routerLink="/privacy" class="auth-link">confidentialité</a>
+          </span>
+        </label>
+
+        <button
+          type="submit"
+          class="btn btn-teal auth-submit"
+          [disabled]="isSignupLoading"
+          [attr.aria-busy]="isSignupLoading"
+        >
+          @if (!isSignupLoading) {
+            <span
+              i18n="auth.signup.submit|Signup submit label@@authSignupSubmit"
+              >Créer mon compte</span
+            >
+            <span class="arrow" aria-hidden="true">→</span>
+          } @else {
+            <span
+              i18n="auth.signup.loading|Signup loading state@@authSignupLoading"
+              >Création en cours...</span
+            >
+          }
+        </button>
+
+        @if (signupErrorMessage) {
+          <p class="auth-msg err" role="alert">{{ signupErrorMessage }}</p>
+        }
+        @if (signupSuccessMessage) {
+          <p class="auth-msg ok" role="status">
+            {{ signupSuccessMessage }}
           </p>
-        </section>
-      }
-    </div>
-  </main>
-</div>
+        }
+      </form>
+
+      <p class="auth-alt">
+        <span i18n="@@authAltHasAccount">Déjà inscrit ?</span>
+        <button
+          type="button"
+          (click)="selectTab('log-in')"
+          i18n="@@authAltLogin"
+        >
+          Se connecter
+        </button>
+      </p>
+    </section>
+  }
+</app-auth-shell>
 
 <!-- Conteneur caché pour le bouton Google rendu par GIS -->
 <div
