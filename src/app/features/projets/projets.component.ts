@@ -116,6 +116,7 @@ export class ProjetsComponent {
       ],
       title: $localize`:@@projetsProject5Title:Onboarding Telegram IFS — académie de formation`,
       desc: $localize`:@@projetsProject5Desc:Audit d'appartenance aux groupes, relances automatiques, liens d'invitation signés, parcours d'onboarding multi-étapes et récap quotidien par email. Accueille des centaines d'élèves sans intervention manuelle.`,
+      image: "/assets/images/projects/IFS-Academy.webp",
       imageAlt: $localize`:@@projetsProject5ImageAlt:capture — Onboarding Telegram IFS`,
     },
     {
@@ -127,6 +128,7 @@ export class ProjetsComponent {
       title: $localize`:@@projetsProject6Title:Musaium`,
       desc: $localize`:@@projetsProject6Desc:Médiation culturelle par l'IA : reconnaissance d'œuvres par photo, chat contextuel, multilingue.`,
       href: "/client-project",
+      image: "/assets/images/projects/Assistant-mediation-culturelle.webp",
       imageAlt: $localize`:@@projetsProject6ImageAlt:capture — Musaium`,
     },
     {
@@ -138,6 +140,7 @@ export class ProjetsComponent {
       ],
       title: $localize`:@@projetsProject7Title:Gestion de chais de Cognac — traçabilité`,
       desc: $localize`:@@projetsProject7Desc:Suivi de la production de la vigne à la mise en bouteille : centralisation des informations, traçabilité complète, accompagnement des usages métier au quotidien.`,
+      image: "/assets/images/projects/GDC-presentation.webp",
       imageAlt: $localize`:@@projetsProject7ImageAlt:capture — Gestion de chais de Cognac`,
     },
     {
@@ -148,6 +151,7 @@ export class ProjetsComponent {
       ],
       title: $localize`:@@projetsProject8Title:Louison`,
       desc: $localize`:@@projetsProject8Desc:Le site complet d'une praticienne : design, contenu, paiement en ligne et génération de documents PDF.`,
+      image: "/assets/images/projects/Louisson-masseuse.webp",
       imageAlt: $localize`:@@projetsProject8ImageAlt:capture — Louison`,
     },
     {
