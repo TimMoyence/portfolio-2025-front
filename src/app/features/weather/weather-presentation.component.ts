@@ -12,60 +12,18 @@ import {
 import { RouterModule } from "@angular/router";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 import {
+  createMeteoCities,
+  needleTransform,
+  sunDot,
+  type DemoCity,
+} from "../../shared/demos/meteo-demo";
+import {
   MOCK_AIR_QUALITY,
   MOCK_CURRENT,
   MOCK_DAILY,
   MOCK_FORECAST,
   MOCK_HOURLY,
 } from "./weather-presentation-data";
-
-/**
- * Donnees meteo simulees pour une ville de la demo jouable de la landing.
- * Toutes les valeurs sont fictives et autonomes : la demo ne depend d'aucune
- * des vraies apps (Lots 4/5) ni d'un appel reseau. La premiere ville
- * (Bordeaux) calque les valeurs courantes du jeu de donnees de presentation
- * (`MOCK_CURRENT`) ; les trois autres sont coherentes et autonomes.
- */
-interface DemoCity {
-  /** Identifiant technique (clef du bouton). */
-  readonly id: string;
-  /** Nom affiche de la ville. */
-  readonly name: string;
-  /** Condition meteo resumee (ex. « Ciel voile · brise d'ouest »). */
-  readonly cond: string;
-  /** Temperature en degres (entier). */
-  readonly temp: number;
-  /** Temperature ressentie en degres (entier). */
-  readonly feels: number;
-  /** Humidite relative en pourcent. */
-  readonly hum: number;
-  /** Indice UV (0–11). */
-  readonly uv: number;
-  /** Indice de qualite de l'air (european AQI). */
-  readonly aqi: number;
-  /** Libelle qualitatif de l'AQI (ex. « Bon »). */
-  readonly aqiLabel: string;
-  /** Vitesse du vent en km/h. */
-  readonly wind: number;
-  /** Direction cardinale du vent (ex. « O »). */
-  readonly windTxt: string;
-  /** Angle de la boussole en degres (0 = N, sens horaire). */
-  readonly windDeg: number;
-  /** Progression du soleil dans l'arc, 0 (lever) → 1 (coucher). */
-  readonly sun: number;
-  /** Heure de lever du soleil affichee. */
-  readonly sunrise: string;
-  /** Heure de coucher du soleil affichee. */
-  readonly sunset: string;
-}
-
-/** Geometrie de l'arc solaire (calque du SVG `solar` de la maquette). */
-const ARC = {
-  cx: 95,
-  cy: 92,
-  r: 78,
-  rayTop: 14,
-} as const;
 
 /**
  * Landing marketing de l'application Meteo (`/atelier/meteo`).
@@ -124,79 +82,33 @@ export class WeatherPresentationComponent implements OnInit {
   // --- Demo jouable : meteo simulee -----------------------------------------
 
   /**
-   * Quatre villes jouables aux donnees fictives. Bordeaux calque les valeurs
-   * courantes de `MOCK_CURRENT` ; les autres sont coherentes et autonomes.
+   * Quatre villes jouables aux donnees fictives (coeurs numeriques partages via
+   * {@link createMeteoCities}). Seuls les libelles i18n restent LOCAUX ici : les
+   * IDs `@@weatherLanding*` sont propres a la landing (distincts du hub Atelier).
+   * Bordeaux calque les valeurs courantes de `MOCK_CURRENT`.
    */
-  readonly cities: readonly DemoCity[] = [
-    {
-      id: "bordeaux",
-      name: "Bordeaux",
+  readonly cities: readonly DemoCity[] = createMeteoCities({
+    bordeaux: {
       cond: $localize`:@@weatherLandingCondBordeaux:Ciel voilé · brise d'ouest`,
-      temp: 19,
-      feels: 18,
-      hum: 64,
-      uv: 4,
-      aqi: 22,
       aqiLabel: $localize`:@@weatherLandingAqiGood:Bon`,
-      wind: 14,
       windTxt: $localize`:@@weatherLandingWindW:O`,
-      windDeg: 270,
-      sun: 0.5,
-      sunrise: "06:42",
-      sunset: "21:18",
     },
-    {
-      id: "paris",
-      name: "Paris",
+    paris: {
       cond: $localize`:@@weatherLandingCondParis:Couvert · vent du nord`,
-      temp: 16,
-      feels: 14,
-      hum: 71,
-      uv: 3,
-      aqi: 34,
       aqiLabel: $localize`:@@weatherLandingAqiOk:Correct`,
-      wind: 18,
       windTxt: $localize`:@@weatherLandingWindN:N`,
-      windDeg: 0,
-      sun: 0.32,
-      sunrise: "06:31",
-      sunset: "21:34",
     },
-    {
-      id: "nice",
-      name: "Nice",
+    nice: {
       cond: $localize`:@@weatherLandingCondNice:Grand soleil · mer calme`,
-      temp: 24,
-      feels: 25,
-      hum: 52,
-      uv: 7,
-      aqi: 18,
       aqiLabel: $localize`:@@weatherLandingAqiGood:Bon`,
-      wind: 9,
       windTxt: $localize`:@@weatherLandingWindSE:SE`,
-      windDeg: 135,
-      sun: 0.68,
-      sunrise: "06:18",
-      sunset: "21:06",
     },
-    {
-      id: "lyon",
-      name: "Lyon",
+    lyon: {
       cond: $localize`:@@weatherLandingCondLyon:Éclaircies · brise du sud`,
-      temp: 21,
-      feels: 20,
-      hum: 58,
-      uv: 5,
-      aqi: 27,
       aqiLabel: $localize`:@@weatherLandingAqiOk:Correct`,
-      wind: 12,
       windTxt: $localize`:@@weatherLandingWindS:S`,
-      windDeg: 180,
-      sun: 0.45,
-      sunrise: "06:25",
-      sunset: "21:22",
     },
-  ];
+  });
 
   /** Identifiant de la ville actuellement selectionnee. */
   readonly activeCityId = signal<string>("bordeaux");
@@ -208,18 +120,12 @@ export class WeatherPresentationComponent implements OnInit {
   );
 
   /** Transformation SVG de l'aiguille de la boussole selon la direction du vent. */
-  readonly needleTransform = computed(
-    () => `rotate(${this.city().windDeg}, 90, 90)`,
+  readonly needleTransform = computed(() =>
+    needleTransform(this.city().windDeg),
   );
 
   /** Coordonnees (cx, cy) du soleil sur l'arc selon la progression `sun`. */
-  readonly sunDot = computed(() => {
-    const angle = Math.PI * (1 - this.city().sun); // 0 (gauche) → PI (droite)
-    return {
-      x: ARC.cx - Math.cos(angle) * ARC.r,
-      y: ARC.cy - Math.sin(angle) * (ARC.cy - ARC.rayTop),
-    };
-  });
+  readonly sunDot = computed(() => sunDot(this.city().sun));
 
   /** Selectionne une ville (recalcule l'ensemble de la demo meteo). */
   selectCity(id: string): void {
