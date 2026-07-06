@@ -5,6 +5,8 @@
    .lead, .section-pad). Styles scopés au host : seuls les blocs cs-* propres
    à l'étude de cas sont définis ici.
    ============================================================ */
+@use "../../styles-shared/lists";
+
 :host {
   display: block;
 }
@@ -196,8 +198,7 @@
 }
 
 .cs-block ul {
-  list-style: none;
-  padding: 0;
+  @include lists.list-reset;
   margin: 0 0 22px;
   display: grid;
   gap: 14px;

@@ -1,3 +1,5 @@
+@use "../../../styles-shared/lists";
+
 :host {
   display: block;
 }
@@ -42,9 +44,8 @@
 }
 
 .asili-footer__social {
-  list-style: none;
+  @include lists.list-reset;
   margin: 18px 0 0;
-  padding: 0;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -123,9 +124,7 @@
 }
 
 .asili-footer__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  @include lists.list-reset;
   display: grid;
   gap: 10px;
 }
@@ -216,8 +215,7 @@
 
 /* ---------- Liens légaux ---------- */
 .asili-footer__legal {
-  list-style: none;
-  padding: 0;
+  @include lists.list-reset;
   margin: 16px 0 0;
   display: flex;
   flex-wrap: wrap;

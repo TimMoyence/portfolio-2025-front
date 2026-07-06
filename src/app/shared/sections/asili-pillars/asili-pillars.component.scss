@@ -1,3 +1,5 @@
+@use "../../../styles-shared/lists";
+
 :host {
   display: block;
 }
@@ -93,8 +95,7 @@
 }
 
 .pillar ul {
-  list-style: none;
-  padding: 0;
+  @include lists.list-reset;
   margin: 24px 0 0;
   display: grid;
   gap: 11px;

@@ -8,6 +8,7 @@
   partiel pour les scoper. Volontairement sans sélecteur racine `:host`
   (laissé à chaque composant) afin d'être composable via `@use`.
 */
+@use "../styles-shared/lists";
 
 /* --- Hero (asili-legal.css : .lg-hero) ----------------------------------- */
 .lg-hero {
@@ -71,9 +72,7 @@
   margin-bottom: 16px;
 }
 .lg-toc ol {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  @include lists.list-reset;
   counter-reset: toc;
   display: grid;
   gap: 3px;

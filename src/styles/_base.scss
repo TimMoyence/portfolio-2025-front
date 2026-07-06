@@ -134,3 +134,16 @@
   background: var(--accent);
   display: inline-block;
 }
+/* En-tête de section partagé (offer / presentation / formations).
+   Base commune ; variantes centrées (.faq-head / .format-head) restent locales. */
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-5);
+}
+.sec-head h2 {
+  margin-top: 16px;
+}

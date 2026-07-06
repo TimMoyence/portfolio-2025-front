@@ -50,26 +50,14 @@
   }
 }
 
-/* --- En-têtes de section (porté de .sec-head) ----------------------------- */
-.sec-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--s-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--s-5);
+/* --- En-têtes de section — base globale dans styles/_base.scss (.sec-head).
+   Seule la variante centrée FAQ reste locale. ------------------------------ */
+.sec-head.faq-head {
+  justify-content: center;
+  text-align: center;
 
-  h2 {
-    margin-top: 16px;
-  }
-
-  &.faq-head {
+  .kicker {
     justify-content: center;
-    text-align: center;
-
-    .kicker {
-      justify-content: center;
-    }
   }
 }
 
@@ -183,62 +171,7 @@
   }
 }
 
-/* --- FAQ (porté de .faq, adapté aux <details> natifs) --------------------- */
-.faq {
-  max-width: 860px;
-  margin: 0 auto;
-}
-
-.faq-item {
-  border-bottom: 1px solid var(--line);
-}
-
-.faq-q {
-  width: 100%;
-  list-style: none;
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-size: clamp(22px, 2.4vw, 30px);
-  color: var(--ink);
-  padding: 26px 50px 26px 0;
-  position: relative;
-  display: flex;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-
-  &::after {
-    content: "+";
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    translate: 0 -50%;
-    font-family: var(--font-sans);
-    font-size: 28px;
-    color: var(--teal-deep);
-    transition: transform 0.4s var(--ease);
-    font-weight: 300;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--glow);
-    outline-offset: 3px;
-    border-radius: var(--r-lg);
-  }
-}
-
-.faq-item[open] .faq-q::after {
-  transform: rotate(45deg);
-}
-
-.faq-a-inner {
-  padding: 0 60px 28px 0;
-  font-size: 16.5px;
-  color: var(--ink-soft);
-  line-height: 1.6;
-  max-width: 64ch;
-}
+/* --- FAQ <details> — bloc global partagé dans styles/_faq.scss ------------ */
 
 /* --- Responsive (porté de la media-query 860px de la maquette) ------------ */
 @media (max-width: 860px) {
