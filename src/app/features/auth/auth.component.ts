@@ -20,6 +20,7 @@ import type { AuthPort } from "../../core/ports/auth.port";
 import { AUTH_PORT } from "../../core/ports/auth.port";
 import { loadGoogleGis } from "../../core/utils/google-gis";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
+import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 import { SvgIconComponent } from "../../shared/components/svg-icon.component";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 
@@ -290,7 +291,7 @@ export class AuthComponent {
       },
       error: (err) => {
         const message =
-          err?.error?.message ??
+          extractErrorMessage(err, { includeTopLevelMessage: false }) ??
           $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`;
         this.setGoogleError(context, message);
         this.cdr.markForCheck();

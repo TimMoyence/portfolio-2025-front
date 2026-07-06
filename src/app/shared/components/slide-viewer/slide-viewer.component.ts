@@ -14,6 +14,7 @@ import {
 import { RouterModule } from "@angular/router";
 import { SvgIconComponent } from "../svg-icon.component";
 import type { PromptTemplate, Slide } from "../../models/slide.model";
+import { clamp } from "../../utils/math.utils";
 import { SlideRendererComponent } from "./templates/slide-renderer.component";
 
 /**
@@ -280,7 +281,7 @@ export class SlideViewerComponent {
 
   goToSlide(index: number): void {
     const max = this.slides().length - 1;
-    this.currentSlideIndex.set(Math.max(0, Math.min(index, max)));
+    this.currentSlideIndex.set(clamp(index, 0, max));
   }
 
   scrollToSlide(index: number): void {

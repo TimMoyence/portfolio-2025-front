@@ -9,6 +9,7 @@ import {
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { clamp } from "../../../../shared/utils/math.utils";
 
 /**
  * Arc solaire SVG montrant la trajectoire du soleil entre lever et coucher.
@@ -174,13 +175,13 @@ export class SunArcComponent {
 
   /** Coordonnee X du soleil sur l'arc SVG. */
   readonly sunX = computed(() => {
-    const t = Math.max(0, Math.min(1, this.sunProgress()));
+    const t = clamp(this.sunProgress(), 0, 1);
     return 20 + t * 160;
   });
 
   /** Coordonnee Y du soleil sur l'arc SVG (courbe quadratique). */
   readonly sunY = computed(() => {
-    const t = Math.max(0, Math.min(1, this.sunProgress()));
+    const t = clamp(this.sunProgress(), 0, 1);
     // Courbe de Bezier quadratique : P = (1-t)²*P0 + 2*(1-t)*t*P1 + t²*P2
     const p0y = 90;
     const p1y = -10;
@@ -190,7 +191,7 @@ export class SunArcComponent {
 
   /** Chemin SVG de la portion eclairee de l'arc (du lever au point courant). */
   readonly litArcPath = computed(() => {
-    const t = Math.max(0, Math.min(1, this.sunProgress()));
+    const t = clamp(this.sunProgress(), 0, 1);
     // Approximation : on coupe l'arc quadratique au parametre t
     // Subdivision de De Casteljau pour le segment [0, t]
     const p0 = { x: 20, y: 90 };

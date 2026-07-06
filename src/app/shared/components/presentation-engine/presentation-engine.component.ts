@@ -20,6 +20,7 @@ import type {
   PresentationSlide,
   PromptTemplate,
 } from "../../models/slide.model";
+import { clamp } from "../../utils/math.utils";
 import { FragmentService } from "../../services/fragment.service";
 import { InteractionCollectorService } from "../../services/interaction-collector.service";
 import { InteractionSlotComponent } from "../interactions/interaction-slot.component";
@@ -517,7 +518,7 @@ export class PresentationEngineComponent {
    */
   goToSlide(index: number): void {
     const max = this.activeSlides().length - 1;
-    const clamped = Math.max(0, Math.min(index, max));
+    const clamped = clamp(index, 0, max);
     this.currentIndex.set(clamped);
     const target = this.activeSlides()[clamped];
     if (target && this.lastResetId !== target.id) {
