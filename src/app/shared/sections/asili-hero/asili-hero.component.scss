@@ -1,3 +1,4 @@
+@use "../../../styles-shared/breakpoints" as bp;
 :host {
   display: block;
 }
@@ -10,7 +11,7 @@
    ============================================================ */
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: 89svh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -35,7 +36,6 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  padding-top: 90px;
 }
 
 .hero-grid {
@@ -157,7 +157,7 @@
 }
 
 /* La meta serif disparait sur mobile (cf. maquette @860). */
-@media (max-width: 860px) {
+@include bp.tablet {
   .hero-meta {
     display: none;
   }

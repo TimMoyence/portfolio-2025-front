@@ -69,17 +69,16 @@ describe("NavbarComponent", () => {
       expect(url).toMatch(/^\/en/);
     });
 
-    it("devrait afficher le logo Asili (nom + suffixe design + dot)", () => {
+    it("devrait afficher le logo Asili (image + nom « Asili design »)", () => {
       fixture.detectChanges();
       const nav = fixture.nativeElement as HTMLElement;
       const logo = nav.querySelector(".asili-logo");
       expect(logo).toBeTruthy();
-      expect(logo?.querySelector(".asili-logo__dot")).toBeTruthy();
+      const img = logo?.querySelector("img");
+      expect(img).toBeTruthy();
+      expect(img?.getAttribute("alt")).toContain("Asili");
       expect(logo?.querySelector(".asili-logo__name")?.textContent).toContain(
-        "Asili",
-      );
-      expect(logo?.querySelector(".asili-logo__suffix")?.textContent).toContain(
-        "design",
+        "Asili design",
       );
     });
 

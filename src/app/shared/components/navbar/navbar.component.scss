@@ -46,24 +46,13 @@
 }
 
 .asili-logo__name {
-  font-family: var(--font-display);
-}
-
-.asili-logo__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--teal);
   align-self: center;
-  box-shadow: 0 0 0 4px rgba(79, 179, 162, 0.18);
 }
 
-.asili-logo__suffix {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
+.asili-logo_img {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
   align-self: center;
 }
 
@@ -422,7 +411,7 @@
   inset: 0;
   border: 0;
   cursor: pointer;
-  background: rgba(12, 9, 2, 0.32);
+  background: rgba(var(--ink-rgb), 0.32);
   animation: asiliBackdropFade 0.3s var(--ease);
 }
 
