@@ -23,6 +23,7 @@ import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 import { SvgIconComponent } from "../../shared/components/svg-icon.component";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { AuthShellComponent } from "../../shared/components/auth-shell/auth-shell.component";
 
 type AuthTab = "sign-up" | "log-in";
 type SignupFormKey = keyof SignupFormState;
@@ -37,6 +38,7 @@ type LoginFormKey = keyof LoginFormState;
     RouterModule,
     SvgIconComponent,
     RevealOnScrollDirective,
+    AuthShellComponent,
   ],
   templateUrl: "./auth.component.html",
   styleUrl: "./auth.component.scss",

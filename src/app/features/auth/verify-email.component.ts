@@ -9,6 +9,8 @@ import {
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { AUTH_PORT, type AuthPort } from "../../core/ports/auth.port";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { AuthShellComponent } from "../../shared/components/auth-shell/auth-shell.component";
+import { AuthSuccessComponent } from "../../shared/components/auth-success/auth-success.component";
 import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 
 /**
@@ -24,7 +26,13 @@ import { extractErrorMessage } from "../../shared/utils/http-error.utils";
 @Component({
   selector: "app-verify-email",
   standalone: true,
-  imports: [CommonModule, RouterModule, RevealOnScrollDirective],
+  imports: [
+    CommonModule,
+    RouterModule,
+    RevealOnScrollDirective,
+    AuthShellComponent,
+    AuthSuccessComponent,
+  ],
   templateUrl: "./verify-email.component.html",
   styleUrl: "./verify-email.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

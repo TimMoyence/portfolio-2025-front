@@ -1,0 +1,19 @@
+<div class="auth-split">
+  <!-- PANNEAU IMMERSIF (gauche) — contenu contextuel projeté par la page -->
+  <aside class="auth-aside">
+    <a class="auth-logo" routerLink="/">
+      <span class="dot" aria-hidden="true"></span>Asili<small>design</small>
+    </a>
+    <ng-content select="[aside]" />
+    <div class="auth-aside-foot">
+      <span i18n="@@authAsideQuote">« Clarifier avant de construire »</span>
+    </div>
+  </aside>
+
+  <!-- ZONE FORMULAIRE (droite) — corps de carte projeté par la page -->
+  <main class="auth-main">
+    <div class="auth-card">
+      <ng-content />
+    </div>
+  </main>
+</div>

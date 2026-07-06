@@ -12,12 +12,21 @@ import { ActivatedRoute, RouterModule } from "@angular/router";
 import type { AuthPort } from "../../core/ports/auth.port";
 import { AUTH_PORT } from "../../core/ports/auth.port";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { AuthShellComponent } from "../../shared/components/auth-shell/auth-shell.component";
+import { AuthSuccessComponent } from "../../shared/components/auth-success/auth-success.component";
 import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
 
 @Component({
   selector: "app-reset-password",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    RevealOnScrollDirective,
+    AuthShellComponent,
+    AuthSuccessComponent,
+  ],
   templateUrl: "./reset-password.component.html",
   styleUrl: "./reset-password.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
