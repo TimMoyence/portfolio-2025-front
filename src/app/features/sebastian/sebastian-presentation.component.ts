@@ -11,6 +11,11 @@ import { RouterModule } from "@angular/router";
 import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
 import { animateValue } from "../../shared/utils/animate-value";
 import {
+  buildDeterministicHeatmap,
+  buildRandomHeatmap,
+  gaugeOffset,
+} from "../../shared/demos/sebastian-gauge";
+import {
   MOCK_BAC,
   MOCK_BADGES,
   MOCK_DAILY_COUNTS,
@@ -18,9 +23,6 @@ import {
   MOCK_HEATMAP,
   MOCK_TRENDS,
 } from "./sebastian-presentation-data";
-
-/** Perimetre du cercle SVG de la jauge (r=40 → 2·π·40 ≈ 251). */
-const GAUGE_PERIMETER = 251;
 
 /**
  * Habitude cochable de la demo jouable Sebastian.
@@ -148,9 +150,7 @@ export class SebastianPresentationComponent {
   readonly gaugeValue = signal<number>(0);
 
   /** `stroke-dashoffset` de la jauge derive de `gaugeValue`. */
-  readonly gaugeOffset = computed(
-    () => GAUGE_PERIMETER - (this.gaugeValue() / 100) * GAUGE_PERIMETER,
-  );
+  readonly gaugeOffset = computed(() => gaugeOffset(this.gaugeValue()));
 
   /** Indique si la jauge a deja joue son animation d'apparition. */
   private hasAnimated = false;
@@ -160,14 +160,14 @@ export class SebastianPresentationComponent {
    * En SSR la sequence est deterministe (pas de `Math.random`) pour un rendu
    * stable et hydratable ; en navigateur elle est regeneree, variee.
    */
-  readonly heatmap = signal<number[]>(this.buildDeterministicHeatmap());
+  readonly heatmap = signal<number[]>(buildDeterministicHeatmap(56, 0.32));
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       // La jauge part de 0 puis s'anime : effet « vivant » browser-only.
       this.animateGauge();
       // Regenere une heatmap variee (Math.random) uniquement cote client.
-      this.heatmap.set(this.buildRandomHeatmap());
+      this.heatmap.set(buildRandomHeatmap(56, 0.32));
     } else {
       // SSR : etat statique lisible a la valeur cible.
       this.gaugeValue.set(this.targetScore());
@@ -192,25 +192,6 @@ export class SebastianPresentationComponent {
   /** Indique si une habitude est cochee (pour le template). */
   isChecked(id: string): boolean {
     return this.checkedHabits().has(id);
-  }
-
-  /**
-   * Heatmap deterministe (SSR-safe) : motif pseudo-aleatoire stable derive de
-   * l'index, sans `Math.random`, pour un rendu serveur reproductible.
-   */
-  private buildDeterministicHeatmap(): number[] {
-    return Array.from({ length: 56 }, (_, i) => {
-      const v = (Math.sin(i * 1.7) + 1) / 2; // 0..1 deterministe
-      return v > 0.78 ? 3 : v > 0.55 ? 2 : v > 0.32 ? 1 : 0;
-    });
-  }
-
-  /** Heatmap variee generee en navigateur (calque du script de la maquette). */
-  private buildRandomHeatmap(): number[] {
-    return Array.from({ length: 56 }, () => {
-      const r = Math.random();
-      return r > 0.78 ? 3 : r > 0.55 ? 2 : r > 0.32 ? 1 : 0;
-    });
   }
 
   /**
