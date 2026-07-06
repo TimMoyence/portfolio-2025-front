@@ -122,32 +122,19 @@
   color: var(--teal-deep);
 }
 
-/* --- En-tête de section (porté de .sec-head) ----------------------------- */
-.sec-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--s-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--s-5);
+/* --- En-tête de section — base globale dans styles/_base.scss (.sec-head).
+   Seule la variante centrée « le format diapo » reste locale. -------------- */
+.sec-head.format-head {
+  justify-content: center;
+  text-align: center;
 
-  h2 {
-    margin-top: 16px;
+  .kicker {
+    justify-content: center;
   }
 
-  /* En-tête « le format diapo » centré (maquette). */
-  &.format-head {
-    justify-content: center;
-    text-align: center;
-
-    .kicker {
-      justify-content: center;
-    }
-
-    .format-head__title {
-      max-width: 22ch;
-      margin-inline: auto;
-    }
+  .format-head__title {
+    max-width: 22ch;
+    margin-inline: auto;
   }
 }
 

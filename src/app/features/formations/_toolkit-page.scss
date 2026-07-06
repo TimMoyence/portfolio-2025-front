@@ -10,6 +10,7 @@
   Ce partiel est volontairement sans selecteur racine `:host` (laisse a chaque
   composant) afin d'etre composable via `@use`.
 */
+@use "../../styles-shared/lists";
 
 /* --- Conteneur centre (porte de .tk-wrap) -------------------------------- */
 .tk-wrap {
@@ -130,9 +131,7 @@
 }
 
 .tk-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  @include lists.list-reset;
   display: grid;
   gap: 14px;
 

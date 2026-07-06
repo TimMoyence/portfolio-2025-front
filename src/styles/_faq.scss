@@ -1,0 +1,53 @@
+/* ============================================================
+   ASILI — Bloc FAQ <details> partagé (offer / presentation)
+   Extrait verbatim des deux composants (byte-identique). Non-layered
+   pour cloner le comportement des règles scoped d'origine.
+   ============================================================ */
+.faq {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+.faq-q {
+  width: 100%;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--ink);
+  padding: 26px 50px 26px 0;
+  position: relative;
+  display: flex;
+}
+.faq-q::-webkit-details-marker {
+  display: none;
+}
+.faq-q::after {
+  content: "+";
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  translate: 0 -50%;
+  font-family: var(--font-sans);
+  font-size: 28px;
+  color: var(--teal-deep);
+  transition: transform 0.4s var(--ease);
+  font-weight: 300;
+}
+.faq-q:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+  border-radius: var(--r-lg);
+}
+.faq-item[open] .faq-q::after {
+  transform: rotate(45deg);
+}
+.faq-a-inner {
+  padding: 0 60px 28px 0;
+  font-size: 16.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 64ch;
+}
