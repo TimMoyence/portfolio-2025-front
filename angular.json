@@ -30,8 +30,12 @@
             "tsConfig": "tsconfig.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/assets/favicon.ico",
-              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets",
+                "ignore": ["figma/**"]
+              },
               {
                 "glob": "**/*",
                 "input": "public"

@@ -8557,6 +8557,15 @@
         <target> Three areas I master<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>end to end. </target>
       </segment>
     </unit>
+    <unit id="presentationPortraitAlt">
+      <notes>
+        <note category="location">src/app/features/presentation/presentation.component.ts:142</note>
+      </notes>
+      <segment>
+        <source>Tim Moyence, fondateur d&apos;Asili Design</source>
+        <target>Tim Moyence, founder of Asili Design</target>
+      </segment>
+    </unit>
     <unit id="presentationAiMethodHeading">
       <notes>
         <note category="location">src/app/features/presentation/presentation.component.html:149,152</note>

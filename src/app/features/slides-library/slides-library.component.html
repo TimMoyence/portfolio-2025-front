@@ -3,15 +3,15 @@
     <app-slide-hero
       title="Slides Library"
       subtitle="Catalogue interne — non indexe"
-      bgImage="/images/slides-library-hero.webp"
-      bgImageAlt="Bibliotheque de composants slide"
+      bgImage="/assets/images/bordeaux-placeholder.webp"
+      bgImageAlt="Vue de Bordeaux en arriere-plan du catalogue de slides"
     />
   </app-slide>
 
   <app-slide id="image-left">
     <app-slide-image-left
-      image="/images/sample-left.webp"
-      imageAlt="Image demo gauche"
+      image="/assets/images/offer/strategy-illustration.webp"
+      imageAlt="Illustration strategie, demo du layout image a gauche"
       title="slide-image-left"
     >
       <p>Layout 50/50 image a gauche, contenu a droite.</p>
@@ -20,19 +20,25 @@
 
   <app-slide id="image-right">
     <app-slide-image-right
-      image="/images/sample-right.webp"
-      imageAlt="Image demo droite"
+      image="/assets/images/offer/automation-illustration.webp"
+      imageAlt="Illustration automatisation, demo du layout image a droite"
       title="slide-image-right"
     >
       <p>Layout 50/50 contenu a gauche, image a droite.</p>
     </app-slide-image-right>
   </app-slide>
 
+  <!--
+    Le repo ne contient aucun asset video : la slide demontre donc le layout via
+    son poster seul (src vide = pas de requete vers un fichier inexistant).
+    Pour une demo lisible : deposer une video dans public/videos/ et renseigner
+    src, ou passer type="iframe" avec une URL YouTube nocookie / Vimeo.
+  -->
   <app-slide id="video">
     <app-slide-video
-      src="/videos/sample.mp4"
-      poster="/images/sample-poster.webp"
-      caption="slide-video : demonstration native"
+      src=""
+      poster="/assets/images/audit.webp"
+      caption="slide-video : layout natif (source video a fournir)"
     />
   </app-slide>
 
