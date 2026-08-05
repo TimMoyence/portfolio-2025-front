@@ -164,6 +164,44 @@ describe("SlideDeckComponent — visibility filter", () => {
     expect(slides.length).toBe(2);
   });
 
+  it("compte la slide courante dans le referentiel filtre, pas global", () => {
+    @Component({
+      standalone: true,
+      imports: [SlideDeckComponent, SlideComponent],
+      template: `
+        <app-slide-deck mode="scroll" [allowFullscreen]="true">
+          <app-slide id="a" visibility="present-only">A</app-slide>
+          <app-slide id="b" visibility="present-only">B</app-slide>
+          <app-slide id="c" visibility="both">C</app-slide>
+        </app-slide-deck>
+      `,
+    })
+    class HostCounterComponent {}
+
+    TestBed.configureTestingModule({
+      imports: [HostCounterComponent],
+      providers: [
+        SlideDeckService,
+        FullscreenAdapter,
+        { provide: PLATFORM_ID, useValue: "browser" },
+        { provide: SLIDE_DECK_CONFIG, useValue: buildSlideDeckConfig() },
+      ],
+    });
+    const fix = TestBed.createComponent(HostCounterComponent);
+    fix.detectChanges();
+
+    // "c" est la 3e slide enregistree mais la 1re *visible* en mode scroll :
+    // les deux present-only sont filtrees. Le compteur doit parler du
+    // referentiel filtre, sinon il affiche un numerateur > denominateur.
+    TestBed.inject(SlideDeckService).goTo("c");
+    fix.detectChanges();
+
+    const progress = fix.nativeElement.querySelector(
+      ".slide-deck-progress span",
+    ) as HTMLElement;
+    expect(progress.textContent?.trim()).toBe("1 / 1");
+  });
+
   it("filtre les slides present-only en mode scroll", () => {
     @Component({
       standalone: true,

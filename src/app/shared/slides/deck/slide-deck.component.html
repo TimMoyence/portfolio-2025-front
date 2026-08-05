@@ -4,7 +4,7 @@
       navigation="true"
       keyboard="true"
       pagination="true"
-      [attr.initial-slide]="service.currentIndex()"
+      [attr.initial-slide]="currentVisibleIndex()"
     >
       @for (slide of visibleSlides(); track slide.id()) {
         <swiper-slide>
@@ -36,6 +36,6 @@
   }
 
   <div class="slide-deck-progress" aria-hidden="true">
-    <span>{{ service.currentIndex() + 1 }} / {{ visibleSlides().length }}</span>
+    <span>{{ currentVisibleIndex() + 1 }} / {{ visibleSlides().length }}</span>
   </div>
 </div>
