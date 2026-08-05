@@ -5464,6 +5464,26 @@
       </segment>
     </unit>
 
+    <!-- Slide: cas-pratique -->
+    <unit id="ia-solo.cas-pratique.title">
+      <segment>
+        <source>Votre premier prompt, maintenant</source>
+        <target>Your first prompt, right now</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cas-pratique.subtitle">
+      <segment>
+        <source>Renseignez votre secteur : le prompt se construit sous vos yeux, prêt à coller dans votre outil.</source>
+        <target>Enter your industry: the prompt builds itself before your eyes, ready to paste into your tool.</target>
+      </segment>
+    </unit>
+    <unit id="ia-solo.cas-pratique.imageAlt">
+      <segment>
+        <source>Illustration d'un workflow automatisé</source>
+        <target>Illustration of an automated workflow</target>
+      </segment>
+    </unit>
+
     <!-- Slide: demo-gamma -->
 
     <!-- Slide: recap-8020 -->

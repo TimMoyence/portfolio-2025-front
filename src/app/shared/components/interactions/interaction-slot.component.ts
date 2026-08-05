@@ -19,6 +19,7 @@ import {
 import { ChecklistInteractionComponent } from "./checklist-interaction.component";
 import { CountdownInteractionComponent } from "./countdown-interaction.component";
 import { PollInteractionComponent } from "./poll-interaction.component";
+import { PromptBuilderInteractionComponent } from "./prompt-builder-interaction.component";
 import { QuizInteractionComponent } from "./quiz-interaction.component";
 import { ReflectionInteractionComponent } from "./reflection-interaction.component";
 import { SelfRatingInteractionComponent } from "./self-rating-interaction.component";
@@ -28,7 +29,8 @@ import { SelfRatingInteractionComponent } from "./self-rating-interaction.compon
  *
  * Orchestre le rendu des interactions en fonction du mode courant :
  * - mode `present` / `overview` : affiche les PresentInteraction (poll, countdown)
- * - mode `scroll` : affiche les ScrollInteraction (reflection, checklist, self-rating)
+ * - mode `scroll` : affiche les ScrollInteraction (reflection, checklist,
+ *   self-rating, quiz, prompt-builder)
  *
  * Ne rend rien si la slide n'a pas d'interactions pour le mode courant.
  */
@@ -42,6 +44,7 @@ import { SelfRatingInteractionComponent } from "./self-rating-interaction.compon
     SelfRatingInteractionComponent,
     QuizInteractionComponent,
     CountdownInteractionComponent,
+    PromptBuilderInteractionComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -72,6 +75,9 @@ import { SelfRatingInteractionComponent } from "./self-rating-interaction.compon
                     [config]="interaction"
                     (valueChanged)="onQuiz(interaction, $event)"
                   />
+                }
+                @case ("prompt-builder") {
+                  <app-prompt-builder-interaction [config]="interaction" />
                 }
               }
             }

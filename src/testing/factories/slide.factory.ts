@@ -3,6 +3,7 @@ import type {
   ChecklistInteraction,
   PollInteraction,
   PresentationSlide,
+  PromptBuilderInteraction,
   ReflectionInteraction,
   SelfRatingInteraction,
   Slide,
@@ -109,6 +110,21 @@ export function buildSelfRatingInteraction(
     min: 1,
     max: 5,
     labels: { min: "Debutant", max: "Expert" },
+    ...overrides,
+  };
+}
+
+/**
+ * Construit un PromptBuilderInteraction avec des valeurs par defaut.
+ */
+export function buildPromptBuilderInteraction(
+  overrides?: Partial<PromptBuilderInteraction>,
+): PromptBuilderInteraction {
+  return {
+    type: "prompt-builder",
+    context: "Newsletter hebdo IA — 30 min de veille pour 1 article",
+    promptTemplate: "Tu es expert {{sector}}. Redige un resume.",
+    placeholder: "Ex: SaaS B2B",
     ...overrides,
   };
 }

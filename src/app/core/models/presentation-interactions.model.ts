@@ -92,11 +92,30 @@ export interface QuizInteraction {
   placeholder?: string;
 }
 
+/**
+ * Mini-exercice live : materialise un cas pratique en generant un prompt pret
+ * a copier apres que le lecteur saisit un parametre (`{{sector}}`). La
+ * substitution est executee cote front, la valeur saisie ne transite jamais
+ * sur le reseau.
+ */
+export interface PromptBuilderInteraction {
+  type: "prompt-builder";
+  /** Phrase de contexte / persona affichee en haut de l'exercice. */
+  context: string;
+  /** Template de prompt contenant le placeholder `{{sector}}`. */
+  promptTemplate: string;
+  /** Texte d'aide affiche dans le champ de saisie. */
+  placeholder: string;
+  /** Libelle du bouton de copie ; libelle par defaut du composant si absent. */
+  ctaLabel?: string;
+}
+
 export type ScrollInteraction =
   | ReflectionInteraction
   | ChecklistInteraction
   | SelfRatingInteraction
-  | QuizInteraction;
+  | QuizInteraction
+  | PromptBuilderInteraction;
 
 /** Interactions par mode, servies par le backend et attachées à chaque slide */
 export interface SlideInteractions {
