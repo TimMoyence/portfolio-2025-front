@@ -7766,6 +7766,12 @@
         <target>Voir le catalogue complet</target>
       </segment>
     </unit>
+    <unit id="slidePollVoteRecorded">
+      <segment>
+        <source>Vote enregistré : <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></source>
+        <target>Vote recorded: <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></target>
+      </segment>
+    </unit>
     <unit id="slideQuizCorrect">
       <segment>
         <source>Bonne réponse !</source>
