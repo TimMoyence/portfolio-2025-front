@@ -16,7 +16,7 @@ const TOKEN_KEY = "portfolio_jwt";
 
 // ---------- Donnees mockees ----------
 
-/** Utilisateur fictif avec les roles budget et weather. */
+/** Utilisateur fictif avec le role weather. */
 export const MOCK_USER = {
   id: "1",
   email: "test@test.com",
@@ -24,7 +24,7 @@ export const MOCK_USER = {
   lastName: "User",
   phone: null,
   isActive: true,
-  roles: ["budget", "weather"],
+  roles: ["weather"],
   hasPassword: true,
   createdAt: "2025-01-01T00:00:00.000Z",
   updatedAt: "2025-01-01T00:00:00.000Z",
