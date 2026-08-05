@@ -86,6 +86,7 @@ export type {
   SelfRatingInteraction,
   QuizInteractionOption,
   QuizInteraction,
+  PromptBuilderInteraction,
   ScrollInteraction,
   SlideInteractions,
 } from "../../core/models/presentation-interactions.model";

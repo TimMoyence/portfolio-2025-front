@@ -6,6 +6,7 @@ import {
   buildReflectionInteraction,
   buildChecklistInteraction,
   buildSelfRatingInteraction,
+  buildPromptBuilderInteraction,
 } from "../../../../testing/factories/slide.factory";
 import type {
   PresentationMode,
@@ -81,6 +82,15 @@ describe("InteractionSlotComponent", () => {
       fixture.detectChanges();
       const el = fixture.nativeElement as HTMLElement;
       expect(el.querySelector("app-self-rating-interaction")).toBeTruthy();
+    });
+
+    it("devrait afficher les prompt-builders", () => {
+      host.interactions = {
+        scroll: [buildPromptBuilderInteraction()],
+      };
+      fixture.detectChanges();
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector("app-prompt-builder-interaction")).toBeTruthy();
     });
 
     it("devrait ne PAS afficher les interactions present en scroll", () => {
