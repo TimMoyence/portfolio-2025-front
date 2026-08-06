@@ -460,13 +460,22 @@
                 "position": 7,
                 "item": {
                   "@type": "CreativeWork",
+                  "name": "Gestion de chais — la vinification au quotidien",
+                  "description": "Le même outil côté terrain : les opérations de vinification se saisissent au poste comme sur mobile, pour que la traçabilité se remplisse là où le travail se fait."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 8,
+                "item": {
+                  "@type": "CreativeWork",
                   "name": "Louison",
                   "description": "Le site complet d'une praticienne : design, contenu, paiement en ligne et génération de documents PDF."
                 }
               },
               {
                 "@type": "ListItem",
-                "position": 8,
+                "position": 9,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Le Jeu des Fourmis",
@@ -475,7 +484,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 9,
+                "position": 10,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Growth Audit",
@@ -484,7 +493,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 10,
+                "position": 11,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Voice IA",
@@ -493,7 +502,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 11,
+                "position": 12,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "AtlanticBike — location et réparation de vélos",
@@ -503,7 +512,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 12,
+                "position": 13,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Assistant IA Geev",
@@ -512,20 +521,11 @@
               },
               {
                 "@type": "ListItem",
-                "position": 13,
+                "position": 14,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Modélisation prédictive de risques sanitaires",
                   "description": "Modélisation et analyse de données visant à anticiper l'apparition de risques sanitaires à partir de données épidémiologiques."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 14,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Gestion de chais — la vinification au quotidien",
-                  "description": "Le même outil côté terrain : les opérations de vinification se saisissent au poste comme sur mobile, pour que la traçabilité se remplisse là où le travail se fait."
                 }
               }
             ]
@@ -600,13 +600,22 @@
                 "position": 7,
                 "item": {
                   "@type": "CreativeWork",
+                  "name": "Cellar management — winemaking day to day",
+                  "description": "The same tool out in the field: winemaking operations can be logged from a desktop or a phone, so traceability fills in where the work actually happens."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 8,
+                "item": {
+                  "@type": "CreativeWork",
                   "name": "Louison",
                   "description": "A practitioner's full website: design, content, online payment and PDF document generation."
                 }
               },
               {
                 "@type": "ListItem",
-                "position": 8,
+                "position": 9,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "The Ant Game",
@@ -615,7 +624,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 9,
+                "position": 10,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Growth Audit",
@@ -624,7 +633,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 10,
+                "position": 11,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Voice AI",
@@ -633,7 +642,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 11,
+                "position": 12,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "AtlanticBike — bike rental and repair",
@@ -643,7 +652,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 12,
+                "position": 13,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Geev AI Assistant",
@@ -652,20 +661,11 @@
               },
               {
                 "@type": "ListItem",
-                "position": 13,
+                "position": 14,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Predictive modeling of health risks",
                   "description": "Data modeling and analysis aimed at anticipating emerging health risks from epidemiological data."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 14,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Cellar management — winemaking day to day",
-                  "description": "The same tool out in the field: winemaking operations can be logged from a desktop or a phone, so traceability fills in where the work actually happens."
                 }
               }
             ]
