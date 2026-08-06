@@ -10,7 +10,7 @@ const PROJECTS: readonly AsiliProject[] = [
     title: "Plateforme metier refondue",
     desc: "Du cadrage des usages a un produit qui tient la charge.",
     tags: [{ label: "Angular" }, { label: "NestJS" }, { label: "IA" }],
-    href: "/client-project",
+    href: "/projets",
     size: "big",
   },
   {
@@ -142,7 +142,7 @@ describe("AsiliProjectsGridComponent", () => {
     const links = host.querySelectorAll<HTMLAnchorElement>(".proj .proj-link");
     // Deux projets ont un href (plateforme + meteo).
     expect(links.length).toBe(2);
-    expect(links[0].getAttribute("href")).toBe("/client-project");
+    expect(links[0].getAttribute("href")).toBe("/projets");
   });
 
   it("n'enveloppe pas le visuel d'un lien quand href est absent", () => {

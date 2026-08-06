@@ -154,7 +154,7 @@ export const buildLlmsTxt = (
       p.id.startsWith("formations-"),
   );
   const aboutPages = indexablePages.filter((p) =>
-    ["presentation", "client-project"].includes(p.id),
+    ["presentation"].includes(p.id),
   );
   const appPages = indexablePages.filter((p) =>
     ["weather", "sebastian"].includes(p.id),

@@ -71,6 +71,17 @@ describe("app routes", () => {
     expect(commonBudgetRedirect?.pathMatch).toBe("full");
   });
 
+  it("devrait rediriger /client-project vers /projets", () => {
+    // Arrange — l'étude de cas dédiée a été retirée, mais l'URL était indexée
+    const caseStudyRedirect = routes.find((r) => r.path === "client-project");
+
+    // Assert
+    expect(caseStudyRedirect).toBeDefined();
+    expect(caseStudyRedirect?.redirectTo).toBe("projets");
+    expect(caseStudyRedirect?.pathMatch).toBe("full");
+    expect(caseStudyRedirect?.loadComponent).toBeUndefined();
+  });
+
   it("devrait définir un seoKey pour chaque route indexable", () => {
     // Arrange — routes indexables : celles qui ont un loadComponent (pas de redirectTo)
     const routesIndexables = routes.filter(

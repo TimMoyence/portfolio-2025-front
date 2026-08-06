@@ -50,22 +50,37 @@ describe("ProjetsComponent", () => {
     expect(compiled.querySelector("app-asili-cta-band")).not.toBeNull();
   });
 
-  it("should render the eleven realisations from the mockup", () => {
+  it("should render the fourteen realisations from the mockup", () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const cards = compiled.querySelectorAll(
       "app-asili-projects-grid .proj-grid .proj",
     );
-    expect(cards.length).toBe(11);
-    expect(component["projects"].length).toBe(11);
+    expect(cards.length).toBe(14);
+    expect(component["projects"].length).toBe(14);
   });
 
-  it("should expose the ZenFirst Vision realisation linking to the case study", () => {
+  it("should illustrate every realisation, leaving no striped placeholder", () => {
+    const withoutImage = component["projects"].filter((p) => !p.image);
+    expect(withoutImage).toEqual([]);
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(
+      compiled.querySelectorAll("app-asili-projects-grid .placeholder").length,
+    ).toBe(0);
+  });
+
+  it("should no longer expose the ZenFirst Vision realisation", () => {
     const zenfirst = component["projects"].find((p) =>
       p.title.includes("ZenFirst Vision"),
     );
-    expect(zenfirst).toBeDefined();
-    expect(zenfirst?.href).toBe("/client-project");
-    expect(zenfirst?.tags.some((t) => t.prod)).toBe(true);
+    expect(zenfirst).toBeUndefined();
+  });
+
+  it("should not link any realisation to the removed case study page", () => {
+    const stale = component["projects"].filter(
+      (p) => p.href === "/client-project",
+    );
+    expect(stale).toEqual([]);
   });
 
   it("should render the four-step method banner (le fil rouge)", () => {

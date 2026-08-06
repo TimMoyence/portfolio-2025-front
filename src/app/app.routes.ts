@@ -113,14 +113,11 @@ export const routes: Routes = [
     },
   },
   {
+    // L'étude de cas dédiée a été retirée ; l'URL était indexée, on la
+    // redirige vers la grille des réalisations plutôt que de servir une 404.
     path: "client-project",
-    loadComponent: () =>
-      import("./features/client-project/client-project.component").then(
-        (m) => m.ClientProjectComponent,
-      ),
-    data: {
-      seoKey: "client-project",
-    },
+    redirectTo: "projets",
+    pathMatch: "full" as const,
   },
   {
     path: "cookie-settings",

@@ -16,15 +16,15 @@ import {
  * (`shared/sections/*`) dans l'ordre de la maquette
  * `AsiliNewDesign/projets.html` : hero (kicker « Réalisations », titre « Des
  * preuves, pas des promesses. ») → grille `asili-projects-grid` reprenant les
- * onze réalisations verbatim de la maquette → bandeau `asili-method` (« le fil
+ * réalisations verbatim de la maquette → bandeau `asili-method` (« le fil
  * rouge », quatre étapes Comprendre / Déployer / Éprouver / Faire durer) →
  * bande `asili-cta-band`.
  *
  * Les réalisations sont authored par l'utilisateur (maquette) : titres,
  * descriptions, étiquettes et statut « En production » sont repris tels quels —
- * rien n'est inventé ni retiré. Les liens internes pointent vers les pages
- * existantes (étude de cas, ateliers, growth audit) ; les réalisations sans
- * page dédiée (`href="#"` dans la maquette) restent non cliquables.
+ * rien n'est inventé. Les liens internes pointent vers les pages existantes
+ * (ateliers, growth audit) ; les réalisations sans page dédiée restent non
+ * cliquables.
  *
  * Tout le texte est fourni en `$localize` (source FR verbatim de la maquette,
  * IDs `@@projets*`) ; la traduction EN vit dans les XLF. Le fond constellation
@@ -56,24 +56,26 @@ export class ProjetsComponent {
   // --- Grille des réalisations ---------------------------------------------
 
   /**
-   * Onze réalisations reprises verbatim de `AsiliNewDesign/projets.html`
-   * (ordre, titres, descriptions, étiquettes et statut « En production »
-   * authored par l'utilisateur). Les liens internes ne sont posés que pour
-   * les réalisations disposant d'une page dédiée dans l'app.
+   * Réalisations reprises verbatim de `AsiliNewDesign/projets.html` (ordre,
+   * titres, descriptions, étiquettes et statut « En production » authored par
+   * l'utilisateur), complétées par AtlanticBike, Assistant IA Geev et
+   * Modélisation prédictive — dont les textes sont repris verbatim de
+   * l'ancienne section « Réalisations » de `/presentation`.
+   *
+   * Les liens internes ne sont posés que pour les réalisations disposant d'une
+   * page dédiée dans l'app. Une réalisation sans `image` s'affiche avec le
+   * placeholder rayé de `asili-projects-grid` tant qu'aucune capture n'existe.
+   *
+   * Trois réalisations sans capture possible (Morning-Brief, Le Jeu des Fourmis,
+   * Voice IA) sont illustrées par des photos Pexels — licence libre, usage
+   * commercial, sans attribution obligatoire — et leur `imageAlt` dit
+   * « illustration » et non « capture » pour ne pas les faire passer pour des
+   * copies d'écran du produit :
+   * - `morning-brief.webp`   → pexels.com/photo/27164054
+   * - `jeu-des-fourmis.webp` → pexels.com/photo/842401
+   * - `voice-ia.webp`        → pexels.com/photo/7120126
    */
   protected readonly projects: readonly AsiliProject[] = [
-    {
-      size: "big",
-      tags: [
-        { label: $localize`:@@projetsProject1Tag1:En production`, prod: true },
-        { label: $localize`:@@projetsProject1Tag2:React 19` },
-        { label: $localize`:@@projetsProject1Tag3:Conformité` },
-      ],
-      title: $localize`:@@projetsProject1Title:ZenFirst Vision — pilotage de rentabilité`,
-      desc: $localize`:@@projetsProject1Desc:Plateforme de comptabilité intelligente (France & Québec). Très ambitieuse : 455 tables, conformité DGFiP/FEC/ANC, RGPD, durcissement OWASP. L'ingénierie au service de la confiance.`,
-      href: "/client-project",
-      imageAlt: $localize`:@@projetsProject1ImageAlt:capture — ZenFirst Vision`,
-    },
     {
       size: "small",
       tags: [
@@ -83,6 +85,7 @@ export class ProjetsComponent {
       title: $localize`:@@projetsProject2Title:Weather`,
       desc: $localize`:@@projetsProject2Desc:Prévisions, qualité de l'air, alertes, circuit breaker multi-provider.`,
       href: "/atelier/meteo",
+      image: "/assets/images/projects/weather.webp",
       imageAlt: $localize`:@@projetsProject2ImageAlt:capture — Weather`,
     },
     {
@@ -95,6 +98,7 @@ export class ProjetsComponent {
       title: $localize`:@@projetsProject3Title:Sebastian — suivi de consommation`,
       desc: $localize`:@@projetsProject3Desc:App complète (objectifs, calcul d'alcoolémie, rapports) doublée d'un bot Telegram qui logge un verre en langage naturel — « j'ai bu 3 bières » — et calcule le taux en direct.`,
       href: "/atelier/sebastian",
+      image: "/assets/images/projects/sebastian.webp",
       imageAlt: $localize`:@@projetsProject3ImageAlt:capture — Sebastian`,
     },
     {
@@ -105,7 +109,8 @@ export class ProjetsComponent {
       ],
       title: $localize`:@@projetsProject4Title:Morning-Brief`,
       desc: $localize`:@@projetsProject4Desc:Newsletter IA : 50+ sources agrégées, dédupliquées, synthétisées, livrées chaque matin par Telegram. 24/7 sur un Raspberry Pi.`,
-      imageAlt: $localize`:@@projetsProject4ImageAlt:capture — Morning-Brief`,
+      image: "/assets/images/projects/morning-brief.webp",
+      imageAlt: $localize`:@@projetsProject4ImageAlt:illustration — Morning-Brief`,
     },
     {
       size: "big",
@@ -127,7 +132,6 @@ export class ProjetsComponent {
       ],
       title: $localize`:@@projetsProject6Title:Musaium`,
       desc: $localize`:@@projetsProject6Desc:Médiation culturelle par l'IA : reconnaissance d'œuvres par photo, chat contextuel, multilingue.`,
-      href: "/client-project",
       image: "/assets/images/projects/Assistant-mediation-culturelle.webp",
       imageAlt: $localize`:@@projetsProject6ImageAlt:capture — Musaium`,
     },
@@ -142,6 +146,17 @@ export class ProjetsComponent {
       desc: $localize`:@@projetsProject7Desc:Suivi de la production de la vigne à la mise en bouteille : centralisation des informations, traçabilité complète, accompagnement des usages métier au quotidien.`,
       image: "/assets/images/projects/GDC-presentation.webp",
       imageAlt: $localize`:@@projetsProject7ImageAlt:capture — Gestion de chais de Cognac`,
+    },
+    {
+      size: "small",
+      tags: [
+        { label: $localize`:@@projetsProject15Tag1:Vinification` },
+        { label: $localize`:@@projetsProject15Tag2:Poste & mobile` },
+      ],
+      title: $localize`:@@projetsProject15Title:Gestion de chais — la vinification au quotidien`,
+      desc: $localize`:@@projetsProject15Desc:Le même outil, côté terrain : les opérations de vinification se saisissent aussi bien au poste que sur mobile, pour que la traçabilité se remplisse là où le travail se fait.`,
+      image: "/assets/images/projects/GDC-vinification.webp",
+      imageAlt: $localize`:@@projetsProject15ImageAlt:capture — Gestion de chais, vinification sur poste et mobile`,
     },
     {
       size: "small",
@@ -162,7 +177,8 @@ export class ProjetsComponent {
       ],
       title: $localize`:@@projetsProject9Title:Le Jeu des Fourmis`,
       desc: $localize`:@@projetsProject9Desc:MMO myrmécologique : 15 espèces = 15 façons de jouer, monde persistant avec météo et biomes, territoires sur une carte du monde réel en temps réel.`,
-      imageAlt: $localize`:@@projetsProject9ImageAlt:capture — Le Jeu des Fourmis`,
+      image: "/assets/images/projects/jeu-des-fourmis.webp",
+      imageAlt: $localize`:@@projetsProject9ImageAlt:illustration — Le Jeu des Fourmis`,
     },
     {
       size: "small",
@@ -173,6 +189,7 @@ export class ProjetsComponent {
       title: $localize`:@@projetsProject10Title:Growth Audit`,
       desc: $localize`:@@projetsProject10Desc:Audit SEO en temps réel : l'analyse s'écrit live (streaming SSE), pilotée par BullMQ.`,
       href: "/growth-audit",
+      image: "/assets/images/projects/growth-audit.webp",
       imageAlt: $localize`:@@projetsProject10ImageAlt:capture — Growth Audit`,
     },
     {
@@ -180,7 +197,43 @@ export class ProjetsComponent {
       tags: [{ label: $localize`:@@projetsProject11Tag1:NestJS 11` }],
       title: $localize`:@@projetsProject11Title:Voice IA`,
       desc: $localize`:@@projetsProject11Desc:Assistant vocal Telegram : capture, transcrit et organise les idées vers Notion & Google Calendar.`,
-      imageAlt: $localize`:@@projetsProject11ImageAlt:capture — Voice IA`,
+      image: "/assets/images/projects/voice-ia.webp",
+      imageAlt: $localize`:@@projetsProject11ImageAlt:illustration — Voice IA`,
+    },
+    {
+      size: "big",
+      tags: [
+        { label: $localize`:@@projetsProject12Tag1:Refonte en cours` },
+        { label: $localize`:@@projetsProject12Tag2:Réservation en ligne` },
+        { label: $localize`:@@projetsProject12Tag3:Migration SEO` },
+      ],
+      title: $localize`:@@projetsProject12Title:AtlanticBike — location et réparation de vélos`,
+      desc: $localize`:@@projetsProject12Desc:Loueur-réparateur sur la côte atlantique : présenter l'activité, structurer l'offre et permettre la réservation en ligne. Demande en 6 étapes dont le devis est recalculé côté serveur uniquement, back-office du parc et de l'atelier, reprise des URL indexées.`,
+      image: "/assets/images/projects/Atlanticbike.webp",
+      imageAlt: $localize`:@@projetsProject12ImageAlt:capture — AtlanticBike`,
+    },
+    {
+      size: "small",
+      tags: [
+        { label: $localize`:@@projetsProject13Tag1:Prototype` },
+        { label: $localize`:@@projetsProject13Tag2:Analyse de contenu` },
+      ],
+      title: $localize`:@@projetsProject13Title:Assistant IA Geev`,
+      desc: $localize`:@@projetsProject13Desc:Prototype d'assistant intelligent pour faciliter le tri et l'analyse d'annonces à partir de contenus visuels.`,
+      image: "/assets/images/projects/Assistant-IA-Geev.webp",
+      imageAlt: $localize`:@@projetsProject13ImageAlt:capture — Assistant IA Geev`,
+    },
+    {
+      size: "small",
+      tags: [
+        { label: $localize`:@@projetsProject14Tag1:Projet académique` },
+        { label: $localize`:@@projetsProject14Tag2:Modélisation prédictive` },
+      ],
+      title: $localize`:@@projetsProject14Title:Modélisation prédictive de risques sanitaires`,
+      desc: $localize`:@@projetsProject14Desc:Modélisation et analyse de données visant à anticiper l'apparition de risques sanitaires à partir de données épidémiologiques.`,
+      image:
+        "/assets/images/projects/Modélisation-prédictive-risques-sanitaires.webp",
+      imageAlt: $localize`:@@projetsProject14ImageAlt:capture — Modélisation prédictive de risques sanitaires`,
     },
   ];
 
