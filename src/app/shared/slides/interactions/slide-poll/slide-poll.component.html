@@ -6,7 +6,9 @@
         <button
           type="button"
           class="slide-poll__option"
+          [class.is-voted]="votedIndex() === i"
           [disabled]="hasVoted()"
+          [attr.aria-current]="votedIndex() === i ? 'true' : null"
           (click)="vote(i)"
         >
           <span class="slide-poll__label">{{ opt }}</span>
@@ -21,5 +23,19 @@
         </button>
       }
     </div>
+
+    <!--
+      Region live presente des le rendu et vide tant qu'aucun vote n'a eu
+      lieu : une region inseree APRES le vote ne serait pas annoncee par la
+      plupart des lecteurs d'ecran, qui n'observent que les regions deja
+      presentes dans l'arbre.
+    -->
+    <p class="slide-poll__status" role="status" aria-live="polite">
+      @if (votedLabel(); as label) {
+        <span i18n="@@slidePollVoteRecorded"
+          >Vote enregistré : {{ label }}</span
+        >
+      }
+    </p>
   </div>
 }

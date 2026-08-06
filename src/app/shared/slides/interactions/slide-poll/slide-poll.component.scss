@@ -30,7 +30,10 @@
   align-items: center;
   padding: 1rem 1.5rem;
   background: var(--card-bg, var(--slide-card-soft));
-  border: 2px solid transparent;
+  // Bordure visible DES LE REPOS : avec une bordure transparente, seul le
+  // survol signalait la cliquabilite — donc rien au tactile, ou le survol
+  // n'existe pas.
+  border: 2px solid rgba(var(--teal-rgb), 0.25);
   border-radius: 0.75rem;
   cursor: pointer;
   font-size: 1rem;
@@ -41,8 +44,29 @@
   &:hover:not(:disabled) {
     border-color: var(--accent, #4fb3a2);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent, #4fb3a2);
+    outline-offset: 2px;
+  }
+
   &:disabled {
     cursor: default;
+    // Les options non retenues s'effacent pour laisser ressortir le choix.
+    border-color: transparent;
+  }
+
+  // L'option votee reste identifiable apres coup, sans dependre de la
+  // seule couleur : la bordure pleine la distingue des options grisees.
+  &.is-voted {
+    border-color: var(--accent, #4fb3a2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-poll__option,
+  .slide-poll__bar {
+    transition: none;
   }
 }
 
@@ -58,6 +82,14 @@
 .slide-poll__pct {
   position: relative;
   z-index: 1;
+}
+
+.slide-poll__status {
+  margin: 1rem 0 0;
+  min-height: 1.5rem;
+  text-align: center;
+  font-size: 0.9375rem;
+  opacity: 0.85;
 }
 
 .slide-poll__error {
