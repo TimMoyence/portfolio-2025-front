@@ -40,9 +40,26 @@ export class SlidePollComponent {
   protected readonly votes = signal<Record<number, number>>({});
   protected readonly hasVoted = signal<boolean>(false);
 
+  /** Index de l'option choisie, ou `null` tant que l'utilisateur n'a pas vote. */
+  protected readonly votedIndex = signal<number | null>(null);
+
   protected readonly totalVotes = computed(() =>
     Object.values(this.votes()).reduce((a, b) => a + b, 0),
   );
+
+  /**
+   * Libelle de l'option votee, destine a la region live du template.
+   * `null` avant le vote : la region reste alors vide, ce qui evite qu'un
+   * lecteur d'ecran annonce un etat inexistant au chargement.
+   */
+  protected readonly votedLabel = computed(() => {
+    const index = this.votedIndex();
+    const current = this.poll();
+    if (index === null || current === null) {
+      return null;
+    }
+    return current.options[index] ?? null;
+  });
 
   private readonly port = inject(PRESENTATION_PORT);
   private readonly destroyRef = inject(DestroyRef);
@@ -56,6 +73,7 @@ export class SlidePollComponent {
       return;
     }
     this.votes.update((v) => ({ ...v, [index]: (v[index] ?? 0) + 1 }));
+    this.votedIndex.set(index);
     this.hasVoted.set(true);
   }
 

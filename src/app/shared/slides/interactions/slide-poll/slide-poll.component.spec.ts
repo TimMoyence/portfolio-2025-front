@@ -65,4 +65,37 @@ describe("SlidePollComponent", () => {
     );
     expect(bar.style.width).toBe("100%");
   }));
+
+  it("marque l'option votée avec aria-current et laisse les autres sans", fakeAsync(() => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+    const opts = fixture.nativeElement.querySelectorAll(".slide-poll__option");
+    opts[1].click();
+    fixture.detectChanges();
+
+    expect(opts[1].getAttribute("aria-current")).toBe("true");
+    expect(opts[0].getAttribute("aria-current")).toBeNull();
+    expect(opts[2].getAttribute("aria-current")).toBeNull();
+  }));
+
+  it("annonce le vote enregistré dans une région live", fakeAsync(() => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    // Avant le vote : la region live existe (elle doit preexister pour que
+    // les lecteurs d'ecran annoncent la mise a jour) mais reste vide.
+    const live = fixture.nativeElement.querySelector(".slide-poll__status");
+    expect(live).toBeTruthy();
+    expect(live.getAttribute("aria-live")).toBe("polite");
+    expect(live.textContent.trim()).toBe("");
+
+    fixture.nativeElement.querySelectorAll(".slide-poll__option")[1].click();
+    fixture.detectChanges();
+
+    expect(live.textContent).toContain("Claude");
+  }));
 });
