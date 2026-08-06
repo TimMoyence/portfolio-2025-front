@@ -57,7 +57,6 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3806 symbols, 8
 | Work in the Seo area (14 symbols) | `.claude/skills/generated/seo/SKILL.md` |
 | Work in the Navbar area (11 symbols) | `.claude/skills/generated/navbar/SKILL.md` |
 | Work in the Deck area (11 symbols) | `.claude/skills/generated/deck/SKILL.md` |
-| Work in the Presentation-engine area (10 symbols) | `.claude/skills/generated/presentation-engine/SKILL.md` |
 | Work in the Learning-tooltip area (9 symbols) | `.claude/skills/generated/learning-tooltip/SKILL.md` |
 | Work in the Sebastian area (9 symbols) | `.claude/skills/generated/sebastian/SKILL.md` |
 | Work in the Sun-arc area (8 symbols) | `.claude/skills/generated/sun-arc/SKILL.md` |

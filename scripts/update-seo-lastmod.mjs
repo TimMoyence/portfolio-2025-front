@@ -6,10 +6,10 @@
 // Mapping page -> sources derive par convention :
 //   - "/" -> src/app/features/home/
 //   - "/presentation" -> src/app/features/presentation/
+//   - "/projets" -> src/app/features/projets/
 //   - "/contact" -> src/app/features/contact/
 //   - "/offer" -> src/app/features/offer/
 //   - "/growth-audit" -> src/app/features/growth-audit/
-//   - "/client-project" -> src/app/features/client-project/
 //   - "/formations" -> src/app/features/formations/
 //   - "/formations/ia-solopreneurs" -> src/app/features/formations/ia-solopreneurs/
 //   - "/cookie-settings" -> src/app/features/cookie-settings/
@@ -39,10 +39,10 @@ const metadataPath = resolve(__dirname, '../src/assets/seo/seo-metadata.json');
 const pathToSources = {
   '/': ['src/app/features/home', 'src/app/app.component.ts'],
   '/presentation': ['src/app/features/presentation'],
+  '/projets': ['src/app/features/projets'],
   '/contact': ['src/app/features/contact'],
   '/offer': ['src/app/features/offer'],
   '/growth-audit': ['src/app/features/growth-audit'],
-  '/client-project': ['src/app/features/client-project'],
   '/formations': ['src/app/features/formations'],
   '/formations/ia-solopreneurs': [
     'src/app/features/formations/ia-solopreneurs',

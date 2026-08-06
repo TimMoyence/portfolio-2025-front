@@ -58,7 +58,7 @@ export interface Slide {
   quote?: string;
   quoteAuthor?: string;
   lottie?: string;
-  /** Identifiant de l'acte narratif (string simple, ou Act typé via PresentationSlide) */
+  /** Acte narratif : identifiant simple, ou `Act` typé */
   act?: string | Act;
   /** Notes pour le présentateur (non affichées au public, distinctes de `notes`) */
   speakerNotes?: string;
@@ -90,14 +90,3 @@ export type {
   ScrollInteraction,
   SlideInteractions,
 } from "../../core/models/presentation-interactions.model";
-
-import type { SlideInteractions } from "../../core/models/presentation-interactions.model";
-
-/** Slide enrichie avec acte typé et support fragments pour le moteur de présentation */
-export interface PresentationSlide extends Slide {
-  act: Act;
-  /** Nombre d'éléments révélés progressivement (0 = tout visible d'un coup) */
-  fragmentCount: number;
-  /** Interactions par mode — present (présentateur) et scroll (lecteur) */
-  interactions?: SlideInteractions;
-}

@@ -33,7 +33,6 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/projets` — Realisations
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
-- `/client-project` — Projets clients
 - `/growth-audit` — Audit SEO automatise
 - `/atelier` — Hub L'Atelier (vitrine indexable regroupant les experiences jouables)
 
