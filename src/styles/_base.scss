@@ -44,10 +44,35 @@
   }
   /* Champs de saisie : fond transparent pour épouser la surface qui les porte
      (page cream, carte ivoire, panneau sombre) au lieu du blanc impose par
-     defaut par le navigateur. Cases a cocher et boutons radio gardent leur
-     rendu natif. Dans `@layer base` : tout style de composant reste
-     prioritaire et peut redonner un fond a un champ qui en a besoin. */
-  input:not([type="checkbox"], [type="radio"], [type="submit"]),
+     defaut par le navigateur.
+
+     Les cases a cocher et boutons radio sont exclus pour garder leur rendu
+     natif. Les autres types exclus ne sont pas utilises aujourd'hui : c'est
+     une precaution pour qu'un futur `type="file"` ou `type="range"` ne soit
+     pas aplati sans qu'on l'ait voulu. Aucun effet visuel aujourd'hui, et
+     aucun pour button/reset/submit, que le preflight Tailwind met de toute
+     facon deja en `background-color: transparent`.
+
+     `:where()` est indispensable : sa specificite est nulle, donc le selecteur
+     pese (0,0,1) comme `textarea` et `select`, et le moindre utilitaire de
+     composant (0,1,0) reprend la main. Sans lui, `:not()` heriterait de la
+     specificite de son argument le plus fort -- (0,1,1) -- et ecraserait les
+     `bg-*` des champs de Sebastian, de la recherche Meteo et des slides.
+     `@layer base` est une directive Tailwind 3, pas une couche CSS native
+     (aucun `@layer` dans la feuille compilee) : elle n'arbitre rien ici. */
+  input:where(
+    :not(
+      [type="checkbox"],
+      [type="radio"],
+      [type="submit"],
+      [type="button"],
+      [type="reset"],
+      [type="file"],
+      [type="color"],
+      [type="range"],
+      [type="image"]
+    )
+  ),
   textarea,
   select {
     background-color: transparent;
