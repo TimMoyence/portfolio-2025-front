@@ -193,7 +193,7 @@ export class ProjetsComponent {
       imageAlt: $localize`:@@projetsProject10ImageAlt:capture — Growth Audit`,
     },
     {
-      size: "small",
+      size: "big",
       tags: [{ label: $localize`:@@projetsProject11Tag1:NestJS 11` }],
       title: $localize`:@@projetsProject11Title:Voice IA`,
       desc: $localize`:@@projetsProject11Desc:Assistant vocal Telegram : capture, transcrit et organise les idées vers Notion & Google Calendar.`,
@@ -201,7 +201,7 @@ export class ProjetsComponent {
       imageAlt: $localize`:@@projetsProject11ImageAlt:illustration — Voice IA`,
     },
     {
-      size: "big",
+      size: "small",
       tags: [
         { label: $localize`:@@projetsProject12Tag1:Refonte en cours` },
         { label: $localize`:@@projetsProject12Tag2:Réservation en ligne` },

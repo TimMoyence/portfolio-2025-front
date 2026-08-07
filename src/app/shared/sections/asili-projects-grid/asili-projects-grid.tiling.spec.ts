@@ -46,11 +46,28 @@ function rowFills(projects: readonly AsiliProject[]): readonly number[] {
 }
 
 /**
- * Verifie que les pages qui composent `<app-asili-projects-grid>` fournissent un
- * jeu de cartes pavant la grille 6 colonnes sans rangee incomplete.
+ * Rangées dont le remplissage doit être complet, c'est-à-dire toutes sauf la
+ * dernière : une rangée intermédiaire incomplète est un trou visuel au milieu
+ * de la grille, alors qu'une dernière rangée partielle est la conséquence
+ * arithmétique normale d'un total de cartes non multiple de `GRID_COLUMNS`.
+ *
+ * @returns Les remplissages des rangées intermédiaires qui ne font pas la
+ *   largeur complète — tableau vide quand le pavage est sain.
+ */
+function incompleteInnerRows(
+  projects: readonly AsiliProject[],
+): readonly number[] {
+  return rowFills(projects)
+    .slice(0, -1)
+    .filter((filled) => filled !== GRID_COLUMNS);
+}
+
+/**
+ * Vérifie que les pages qui composent `<app-asili-projects-grid>` fournissent un
+ * jeu de cartes pavant la grille 6 colonnes sans rangée incomplète.
  *
  * Ce contrat vit avec la grille (c'est son SCSS qui fixe les spans), mais il ne
- * peut etre verifie qu'au niveau des donnees des pages : le composant subit les
+ * peut être vérifié qu'au niveau des données des pages : le composant subit les
  * tailles qu'on lui passe.
  */
 describe("Pavage de la grille projets", () => {
@@ -67,21 +84,19 @@ describe("Pavage de la grille projets", () => {
     expect(incomplete).toEqual([]);
   });
 
-  // `/projets` n'est volontairement PAS soumis au meme contrat que la home.
-  // Son jeu de 14 cartes laisse un trou de 2 colonnes en rangee 5 : le fermer
-  // suppose de changer la taille de cartes (p. ex. « Voice IA » small -> big et
-  // « AtlanticBike » big -> small), c'est-a-dire de rearbitrer quelle
-  // realisation est mise en avant. C'est une decision editoriale, pas un
-  // correctif technique — d'ou une caracterisation de l'existant plutot qu'une
-  // exigence. Ce test n'entérine pas le trou : il force a le regarder si le jeu
-  // de cartes bouge.
-  it("caracterise le pavage actuel de /projets, trou editorial compris", () => {
+  // `/projets` est soumis au même contrat que la home depuis que le trou de 2
+  // colonnes qui subsistait en rangée 5 a été fermé (« Voice IA » small → big,
+  // « AtlanticBike » big → small). Ce n'était pas un correctif technique mais un
+  // arbitrage éditorial sur la réalisation mise en avant : il est tranché, donc
+  // ce test cesse de caractériser l'existant et exige le pavage sain.
+  //
+  // Seule la dernière rangée peut rester partielle : le jeu de 14 cartes ne
+  // totalise pas nécessairement un multiple de 6 colonnes.
+  it("ne laisse aucune rangee intermediaire incomplete sur /projets", () => {
     const projets = new ProjetsComponent() as unknown as {
       readonly projects: readonly AsiliProject[];
     };
 
-    // 6|6|6|6|4|6|2 — le 4 est le trou en rangee 5 ; le 2 final est la derniere
-    // rangee partielle, normale des que le total n'est pas multiple de 6.
-    expect(rowFills(projets.projects)).toEqual([6, 6, 6, 6, 4, 6, 2]);
+    expect(incompleteInnerRows(projets.projects)).toEqual([]);
   });
 });
