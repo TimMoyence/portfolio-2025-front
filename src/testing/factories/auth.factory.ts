@@ -64,7 +64,11 @@ export function buildResetPasswordPayload(
   overrides?: Partial<ResetPasswordPayload>,
 ): ResetPasswordPayload {
   return {
-    token: '4f7ab9f3f7b3d0eaa77a4b5b0dcaea31695f15de22f22e53f35b98b0aaf3112c',
+    // Jeton factice, volontairement sans entropie : la valeur precedente etait
+    // un hexadecimal aleatoire de 64 caracteres que le scan de secrets prenait
+    // pour une vraie cle. Aucun test ne depend de son contenu — les specs
+    // comparent le corps de la requete au payload lui-meme.
+    token: '0'.repeat(64),
     newPassword: 'NewPassword123!',
     ...overrides,
   };

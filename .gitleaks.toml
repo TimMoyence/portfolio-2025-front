@@ -1,0 +1,33 @@
+# Configuration du scan de secrets (gitleaks), utilisee par le job `security`
+# de .github/workflows/ci.yml.
+#
+# On ETEND le jeu de regles par defaut, on ne le remplace pas : toutes les
+# detections natives restent actives. Seules les exceptions ci-dessous sont
+# levees, et chacune doit etre justifiee.
+
+[extend]
+useDefault = true
+
+# --- Exception 1 : identifiants de champs de l'API Open-Meteo ----------------
+#
+# `chart-datasets.config.ts` decrit l'affichage du graphique horaire de l'app
+# meteo : libelles, couleurs, unites, et le nom du champ a lire dans la reponse
+# de l'API. La regle `generic-api-key` se declenche sur `relative_humidity_2m`
+# a cause de son entropie, alors que c'est un nom de champ publiquement
+# documente par Open-Meteo, au meme titre que `temperature_2m` ou `uv_index`.
+#
+# Verifie avant d'ecrire cette exception : le fichier fait 83 lignes et ne
+# contient aucune occurrence de `http`, `apiKey`, `secret`, `password`, `token`
+# ni `Bearer`. C'est un fichier de configuration d'affichage, compile dans le
+# bundle navigateur — aucun secret n'a de raison d'y figurer, et un secret qu'on
+# y placerait serait de toute facon public.
+[[allowlists]]
+description = "Noms de champs de l'API Open-Meteo dans la config du graphique horaire"
+paths = ['''src/app/features/weather/components/hourly-chart/chart-datasets\.config\.ts''']
+
+# --- Note sur une exception qu'on n'a PAS ecrite -----------------------------
+#
+# `src/testing/factories/auth.factory.ts` declenchait la meme regle sur un jeton
+# de reinitialisation factice. Plutot que d'allowlister le fichier — qui reste
+# un endroit ou un vrai secret pourrait se glisser un jour — la valeur a ete
+# remplacee par une chaine sans entropie. Le probleme est corrige a la source.
