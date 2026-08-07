@@ -42,9 +42,9 @@ describe('AuthStateService', () => {
       expect(service.user()).toEqual(session.user);
     });
 
-    it('devrait reinitialiser le state apres logout', () => {
+    it('devrait reinitialiser le state apres clearSession', () => {
       service.login(buildAuthSession());
-      service.logout();
+      service.clearSession();
 
       expect(service.isLoggedIn()).toBeFalse();
       expect(service.token()).toBeNull();
@@ -100,21 +100,21 @@ describe('AuthStateService', () => {
       expect(service.token()).toBe('jwt-renewed');
     }));
 
-    it('devrait appeler authPort.logout() sans parametre sur logoutFull (cookie HttpOnly)', () => {
+    it('devrait appeler authPort.logout() sans parametre sur logout (cookie HttpOnly)', () => {
       const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
       service.login(buildAuthSession());
 
-      service.logoutFull();
+      service.logout();
 
       expect(authPortStub.logout).toHaveBeenCalledWith();
       expect(service.isLoggedIn()).toBeFalse();
     });
 
-    it('devrait annuler le timer au logout', fakeAsync(() => {
+    it('devrait annuler le timer au clearSession', fakeAsync(() => {
       const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
 
       service.login(buildAuthSession({ expiresIn: 120 }));
-      service.logout();
+      service.clearSession();
 
       tick(120_000);
 

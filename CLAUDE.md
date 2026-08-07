@@ -4,7 +4,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **portfolio-2025-front** (3541 symbols, 8157 relationships, 150 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **portfolio-2025-front** (3546 symbols, 8192 relationships, 150 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
 
@@ -53,12 +53,12 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3541 symbols, 8
 | Work in the Auth area (16 symbols) | `.claude/skills/generated/auth/SKILL.md` |
 | Work in the Pages area (15 symbols) | `.claude/skills/generated/pages/SKILL.md` |
 | Work in the Seo area (14 symbols) | `.claude/skills/generated/seo/SKILL.md` |
-| Work in the Factories area (12 symbols) | `.claude/skills/generated/factories/SKILL.md` |
+| Work in the Factories area (14 symbols) | `.claude/skills/generated/factories/SKILL.md` |
 | Work in the Navbar area (11 symbols) | `.claude/skills/generated/navbar/SKILL.md` |
 | Work in the Deck area (11 symbols) | `.claude/skills/generated/deck/SKILL.md` |
 | Work in the Interactions area (10 symbols) | `.claude/skills/generated/interactions/SKILL.md` |
+| Work in the Atelier area (9 symbols) | `.claude/skills/generated/atelier/SKILL.md` |
 | Work in the Learning-tooltip area (9 symbols) | `.claude/skills/generated/learning-tooltip/SKILL.md` |
-| Work in the Sebastian area (9 symbols) | `.claude/skills/generated/sebastian/SKILL.md` |
 | Work in the Asili-background area (8 symbols) | `.claude/skills/generated/asili-background/SKILL.md` |
 | Work in the Demos area (8 symbols) | `.claude/skills/generated/demos/SKILL.md` |
 | Work in the Profile area (6 symbols) | `.claude/skills/generated/profile/SKILL.md` |

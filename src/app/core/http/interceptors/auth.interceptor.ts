@@ -26,7 +26,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     tap({
       error: (error: { status?: number }) => {
         if (error.status === 401) {
-          authState.logout();
+          authState.clearSession();
           void router.navigate(['/login'], {
             queryParams: { returnUrl: router.url },
           });

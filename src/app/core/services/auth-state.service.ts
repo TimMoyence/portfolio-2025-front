@@ -51,11 +51,11 @@ export class AuthStateService {
     this.scheduleRefresh(session.expiresIn);
   }
 
-  logout(): void {
+  clearSession(): void {
     this.clearState();
   }
 
-  logoutFull(): void {
+  logout(): void {
     if (this.authPort) {
       this.authPort.logout().subscribe({ error: () => {} });
     }
@@ -76,7 +76,7 @@ export class AuthStateService {
 
     this.authPort.me().subscribe({
       next: (user) => this._user.set(user),
-      error: () => this.logout(),
+      error: () => this.clearSession(),
     });
   }
 
@@ -90,7 +90,7 @@ export class AuthStateService {
     if (!this.authPort) return;
     this.authPort.refresh().subscribe({
       next: (session) => this.login(session),
-      error: () => this.logout(),
+      error: () => this.clearSession(),
     });
   }
 

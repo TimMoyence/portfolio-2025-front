@@ -11,7 +11,7 @@ export class SlideDeckService {
   readonly current = this.currentId.asReadonly();
   readonly mode = this.modeSignal.asReadonly();
   readonly total = computed(() => this.slides().length);
-  readonly currentIndex = computed(() => {
+  readonly currentIndexInAllSlides = computed(() => {
     const id = this.currentId();
     if (id === null) {
       return -1;
@@ -42,7 +42,7 @@ export class SlideDeckService {
     if (list.length === 0) {
       return;
     }
-    const idx = this.currentIndex();
+    const idx = this.currentIndexInAllSlides();
     if (idx < 0) {
       this.currentId.set(list[0]);
       return;
@@ -58,7 +58,7 @@ export class SlideDeckService {
     if (list.length === 0) {
       return;
     }
-    const idx = this.currentIndex();
+    const idx = this.currentIndexInAllSlides();
     if (idx < 0) {
       this.currentId.set(list[0]);
       return;

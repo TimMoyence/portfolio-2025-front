@@ -197,7 +197,7 @@ export class NavbarComponent {
 
   logout(): void {
     this.closeUserDropdown();
-    this.authState.logout();
+    this.authState.clearSession();
     this.closeMobileMenu();
     void this.router.navigate(['/']);
   }

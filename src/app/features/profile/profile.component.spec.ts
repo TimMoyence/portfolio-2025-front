@@ -22,7 +22,7 @@ function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: 
   return {
     restoreSession: jasmine.createSpy('restoreSession'),
     updateUser: jasmine.createSpy('updateUser'),
-    logout: jasmine.createSpy('logout'),
+    clearSession: jasmine.createSpy('clearSession'),
     user: signal(user),
     isLoggedIn: signal(true),
     hasRole: (role: string) => user.roles.includes(role),
@@ -95,7 +95,7 @@ describe('ProfileComponent', () => {
 
     component.logout();
 
-    expect(authState.logout).toHaveBeenCalled();
+    expect(authState.clearSession).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
   });
 

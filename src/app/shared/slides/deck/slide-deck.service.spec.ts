@@ -85,15 +85,15 @@ describe('SlideDeckService', () => {
     expect(service.mode()).toBe('scroll');
   });
 
-  it("currentIndex() retourne l'index de la slide courante (0-based)", () => {
+  it("currentIndexInAllSlides() retourne l'index de la slide courante (0-based)", () => {
     service.register('a');
     service.register('b');
     service.register('c');
     service.goTo('b');
-    expect(service.currentIndex()).toBe(1);
+    expect(service.currentIndexInAllSlides()).toBe(1);
   });
 
-  it('currentIndex() retourne -1 quand aucune slide courante', () => {
-    expect(service.currentIndex()).toBe(-1);
+  it('currentIndexInAllSlides() retourne -1 quand aucune slide courante', () => {
+    expect(service.currentIndexInAllSlides()).toBe(-1);
   });
 });

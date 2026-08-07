@@ -103,8 +103,7 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
   };
 
   const site = metadata.global?.localBusiness as
-    | { name?: string; description?: string; founder?: { name?: string } }
-    | undefined;
+    { name?: string; description?: string; founder?: { name?: string } } | undefined;
   const siteName = site?.name ?? 'Asili Design';
   const siteDescription = site?.description ?? '';
   const founderName = site?.founder?.name ?? 'Tim Moyence';
@@ -199,8 +198,7 @@ export const buildLlmsFullTxt = (metadata: SeoMetadataFile, baseUrl: string): st
 
   const lines: string[] = [];
   const site = metadata.global?.localBusiness as
-    | { name?: string; description?: string }
-    | undefined;
+    { name?: string; description?: string } | undefined;
   lines.push(`# ${site?.name ?? 'Asili Design'} — llms-full`);
   lines.push('');
   lines.push('> Agregation complete du contenu indexable (title, description, URL,');

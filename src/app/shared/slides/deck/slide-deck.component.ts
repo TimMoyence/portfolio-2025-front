@@ -62,14 +62,6 @@ export class SlideDeckComponent implements AfterViewInit {
   });
 
   /**
-   * Position de la slide courante **dans la liste filtree** (`visibleSlides`).
-   *
-   * `SlideDeckService.currentIndex` indexe la liste complete des slides
-   * enregistrees, visibilite comprise : l'utiliser face a
-   * `visibleSlides().length` compare deux referentiels differents et peut
-   * produire un numerateur superieur au denominateur (ex. « 3 / 1 » en mode
-   * scroll quand les slides precedentes sont `present-only`).
-   *
    * Retourne -1 si aucune slide n'est visible, et 0 par defaut tant que la
    * slide courante n'est pas resynchronisee sur le referentiel filtre
    * (changement de mode) — coherent avec `scrollToSibling`.
@@ -94,7 +86,7 @@ export class SlideDeckComponent implements AfterViewInit {
 
     effect(() => {
       const id = this.service.current();
-      const idx = this.service.currentIndex();
+      const idx = this.service.currentIndexInAllSlides();
       if (id !== null && idx >= 0) {
         this.slideChanged.emit({ id, index: idx });
         if (isPlatformBrowser(this.platformId)) {

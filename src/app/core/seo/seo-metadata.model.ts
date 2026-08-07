@@ -1,11 +1,5 @@
 export type SeoChangeFreq =
-  | 'always'
-  | 'hourly'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'yearly'
-  | 'never';
+  'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
 export type JsonLdBlock = Record<string, unknown> | Record<string, unknown>[];
 

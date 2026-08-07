@@ -89,15 +89,15 @@ describe('authInterceptor', () => {
     req.flush({});
   });
 
-  it('devrait appeler logout et naviguer vers /login sur erreur 401', () => {
+  it('devrait appeler clearSession et naviguer vers /login sur erreur 401', () => {
     authState.login(buildAuthSession());
-    spyOn(authState, 'logout').and.callThrough();
+    spyOn(authState, 'clearSession').and.callThrough();
     spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
 
     http.get('/api/protected').subscribe({
       next: () => fail('devrait echouer'),
       error: () => {
-        expect(authState.logout).toHaveBeenCalled();
+        expect(authState.clearSession).toHaveBeenCalled();
         expect(router.navigate).toHaveBeenCalledWith(['/login'], {
           queryParams: { returnUrl: router.url },
         });
@@ -108,16 +108,16 @@ describe('authInterceptor', () => {
     req.flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
   });
 
-  it('devrait propager les erreurs non-401 sans logout', () => {
+  it('devrait propager les erreurs non-401 sans clearSession', () => {
     authState.login(buildAuthSession());
-    spyOn(authState, 'logout');
+    spyOn(authState, 'clearSession');
     spyOn(router, 'navigate');
 
     http.get('/api/other').subscribe({
       next: () => fail('devrait echouer'),
       error: (error) => {
         expect(error.status).toBe(500);
-        expect(authState.logout).not.toHaveBeenCalled();
+        expect(authState.clearSession).not.toHaveBeenCalled();
         expect(router.navigate).not.toHaveBeenCalled();
       },
     });
