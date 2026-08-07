@@ -1,33 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { APP_CONFIG } from '../config/app-config.token';
-import type { AppConfig } from '../config/app-config.model';
 import type { AuditCompletedEvent, AuditStreamEvent } from '../models/audit-request.model';
 import { buildClientReport } from '../../../testing/factories/audit-request.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuditRequestHttpAdapter } from './audit-request-http.adapter';
 
 describe('AuditRequestHttpAdapter', () => {
-  const mockAppConfig: AppConfig = {
-    production: false,
-    appName: 'test',
-    apiBaseUrl: 'http://localhost:3000/api/v1/portfolio25/',
-    baseUrl: 'http://localhost:4200',
-    external: { sebastianUrl: '' },
-  };
-
   describe('en contexte serveur (SSR)', () => {
     let adapter: AuditRequestHttpAdapter;
 
     beforeEach(() => {
       const httpSpy = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'post']);
 
-      TestBed.configureTestingModule({
+      setupTestBed({
+        http: false,
         providers: [
           AuditRequestHttpAdapter,
           { provide: HttpClient, useValue: httpSpy },
           { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: APP_CONFIG, useValue: mockAppConfig },
         ],
       });
 
@@ -61,12 +52,12 @@ describe('AuditRequestHttpAdapter', () => {
     beforeEach(() => {
       const httpSpy = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'post']);
 
-      TestBed.configureTestingModule({
+      setupTestBed({
+        http: false,
         providers: [
           AuditRequestHttpAdapter,
           { provide: HttpClient, useValue: httpSpy },
           { provide: PLATFORM_ID, useValue: 'browser' },
-          { provide: APP_CONFIG, useValue: mockAppConfig },
         ],
       });
 

@@ -1,12 +1,9 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
-import { APP_CONFIG } from '../config/app-config.token';
-import { environment } from '../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthStateService } from './auth-state.service';
 
 describe('AuthStateService', () => {
@@ -14,13 +11,10 @@ describe('AuthStateService', () => {
     let service: AuthStateService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
+      setupTestBed({
         providers: [
           { provide: PLATFORM_ID, useValue: 'browser' },
-          provideHttpClient(),
-          provideHttpClientTesting(),
           { provide: AUTH_PORT, useValue: createAuthPortStub() },
-          { provide: APP_CONFIG, useValue: environment },
         ],
       });
       service = TestBed.inject(AuthStateService);
@@ -132,13 +126,10 @@ describe('AuthStateService', () => {
     let service: AuthStateService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
+      setupTestBed({
         providers: [
           { provide: PLATFORM_ID, useValue: 'server' },
-          provideHttpClient(),
-          provideHttpClientTesting(),
           { provide: AUTH_PORT, useValue: createAuthPortStub() },
-          { provide: APP_CONFIG, useValue: environment },
         ],
       });
       service = TestBed.inject(AuthStateService);

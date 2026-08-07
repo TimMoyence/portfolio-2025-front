@@ -1,21 +1,18 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import type { AuthSession } from '../../core/models/auth.model';
-import { APP_CONFIG } from '../../core/config/app-config.token';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
-import { environment } from '../../../environments/environment';
 import {
   buildAuthSession,
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthComponent } from './auth.component';
 
 describe('AuthComponent', () => {
@@ -31,19 +28,13 @@ describe('AuthComponent', () => {
 
     authService = createAuthPortStub();
 
-    await TestBed.configureTestingModule({
+    await setupTestBed({
+      router: true,
       imports: [FormsModule, AuthComponent],
       providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
         {
           provide: AUTH_PORT,
           useValue: authService,
-        },
-        {
-          provide: APP_CONFIG,
-          useValue: environment,
         },
         {
           provide: ActivatedRoute,

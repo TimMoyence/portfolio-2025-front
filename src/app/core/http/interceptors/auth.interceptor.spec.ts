@@ -1,12 +1,12 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
-import { APP_CONFIG } from '../../../core/config/app-config.token';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { environment } from '../../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
+import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor', () => {
@@ -16,13 +16,13 @@ describe('authInterceptor', () => {
   let router: Router;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
+    setupTestBed({
+      http: false,
+      router: true,
       providers: [
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
-        provideRouter([]),
         { provide: AUTH_PORT, useValue: createAuthPortStub() },
-        { provide: APP_CONFIG, useValue: environment },
       ],
     });
 

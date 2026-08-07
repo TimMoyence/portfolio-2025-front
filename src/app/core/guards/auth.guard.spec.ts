@@ -1,15 +1,12 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot } from '@angular/router';
-import { provideRouter, UrlTree } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { AUTH_PORT } from '../ports/auth.port';
-import { APP_CONFIG } from '../config/app-config.token';
 import { AuthStateService } from '../services/auth-state.service';
-import { environment } from '../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { authGuard } from './auth.guard';
 
 describe('authGuard', () => {
@@ -17,14 +14,11 @@ describe('authGuard', () => {
     let authState: AuthStateService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
+      setupTestBed({
+        router: true,
         providers: [
           { provide: PLATFORM_ID, useValue: 'server' },
-          provideRouter([]),
-          provideHttpClient(),
-          provideHttpClientTesting(),
           { provide: AUTH_PORT, useValue: createAuthPortStub() },
-          { provide: APP_CONFIG, useValue: environment },
         ],
       });
 
@@ -59,14 +53,11 @@ describe('authGuard', () => {
     let authState: AuthStateService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
+      setupTestBed({
+        router: true,
         providers: [
           { provide: PLATFORM_ID, useValue: 'browser' },
-          provideRouter([]),
-          provideHttpClient(),
-          provideHttpClientTesting(),
           { provide: AUTH_PORT, useValue: createAuthPortStub() },
-          { provide: APP_CONFIG, useValue: environment },
         ],
       });
 

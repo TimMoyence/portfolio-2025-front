@@ -59,18 +59,44 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
 ## Factories de test obligatoires (DRY)
 
 - **Interdit de dupliquer les objets mock/stub dans chaque fichier `.spec.ts`.**
-- Toutes les factories partagees vivent dans `src/testing/factories/`.
+- Les factories partagees vivent dans `src/testing/factories/`. Les helpers qui
+  ne construisent pas d'objet (orchestration du TestBed, isolation d'un etat
+  global) vivent a la racine de `src/testing/`.
 - Creer ou reutiliser une factory pour chaque objet mock recurrent :
   - `buildAuthUser(overrides?)` — objet `AuthUser` avec valeurs par defaut
   - `createAuthPortStub()` — stub complet du port auth
   - `createWeatherPortStub()` — stub complet du port weather
-  - `setupTestBed(overrides?)` — orchestrateur configurant le TestBed avec les providers courants (AUTH_PORT, APP_CONFIG, Router, HttpClient)
+  - `buildAppConfig(overrides?)` — `AppConfig` derive de `environment`, chaque champ surchargeable
+- Helpers de test :
+  - `setupTestBed(options?)` (`src/testing/setup-test-bed.ts`) — configure le
+    TestBed avec le socle commun a la majorite des specs : `APP_CONFIG` alimente
+    par `buildAppConfig()`, plus `provideHttpClient()` et
+    `provideHttpClientTesting()`. Options reconnues :
+    - `appConfig` — surcharges passees a `buildAppConfig` (ex. un `baseUrl`
+      dont le spec verifie l'effet) ;
+    - `http: false` — n'installe pas HttpClient, pour un spec qui fournit son
+      propre double (spy, `withInterceptors`) ;
+    - `router: true` — ajoute `provideRouter([])`.
+
+    Tout autre champ (`imports`, `providers`, `declarations`, …) est transmis tel
+    quel a `TestBed.configureTestingModule`, et la valeur de retour reste celle
+    de `configureTestingModule` — `.compileComponents()` s'enchaine donc
+    normalement. Les `providers` de l'appelant sont declares apres le socle :
+    ils le surchargent.
+
+    `setupTestBed` ne fournit **pas** `AUTH_PORT` — les specs concernes gardent
+    une reference sur leur stub pour l'interroger, et passent donc eux-memes
+    `{ provide: AUTH_PORT, useValue: createAuthPortStub() }`.
+  - `isolateAnimReady()` (`src/testing/anim-ready.ts`) — retire la classe
+    `anim-ready` de `<html>` avant et apres chaque test, `<html>` etant partage
+    par toute l'execution Karma.
 - Chaque nouveau port cree sa propre factory de stub dans `src/testing/factories/`.
 - Pattern builder avec overrides pour les cas specifiques :
   ```typescript
   // OK
   const user = buildAuthUser({ email: "test@example.com", roles: ["budget"] });
   const authStub = createAuthPortStub();
+  setupTestBed({ providers: [WeatherHttpAdapter] });
   // INTERDIT
   const authStub = { login: () => {}, register: () => {}, me: () => {} }; // copie dans chaque spec
   ```

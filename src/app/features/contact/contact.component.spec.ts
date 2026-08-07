@@ -1,29 +1,19 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { APP_CONFIG } from '../../core/config/app-config.token';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
-import { environment } from '../../../environments/environment';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 
 describe('ContactComponent', () => {
   let component: ContactComponent;
   let fixture: ComponentFixture<ContactComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    await setupTestBed({
+      router: true,
       imports: [ContactComponent],
       providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        {
-          provide: APP_CONFIG,
-          useValue: environment,
-        },
         {
           provide: CONTACT_PORT,
           useValue: createContactPortStubWithDefault(),

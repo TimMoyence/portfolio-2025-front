@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
-import { APP_CONFIG } from '../../core/config/app-config.token';
-import type { AppConfig } from '../../core/config/app-config.model';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { SeoManagerComponent } from './seo-manager.component';
 
 describe('SeoManagerComponent', () => {
@@ -20,14 +19,6 @@ describe('SeoManagerComponent', () => {
     data: Subject<Record<string, unknown>>;
   };
   let routeData$: Subject<Record<string, unknown>>;
-
-  const mockAppConfig: AppConfig = {
-    production: false,
-    appName: 'test',
-    apiBaseUrl: 'http://localhost:3000/api/v1/portfolio25/',
-    baseUrl: 'https://example.com',
-    external: { sebastianUrl: '' },
-  };
 
   const baseSeoConfig: SeoConfig = {
     title: 'Page de test',
@@ -85,14 +76,15 @@ describe('SeoManagerComponent', () => {
       url: '/fr/test',
     };
 
-    await TestBed.configureTestingModule({
+    await setupTestBed({
+      http: false,
       imports: [SeoManagerComponent],
+      appConfig: { baseUrl: 'https://example.com' },
       providers: [
         { provide: Router, useValue: routerStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: SeoService, useValue: seoServiceSpy },
         { provide: SeoRegistryService, useValue: seoRegistrySpy },
-        { provide: APP_CONFIG, useValue: mockAppConfig },
       ],
     }).compileComponents();
 
