@@ -45,7 +45,13 @@ interface FieldNode {
   `,
 })
 export class AsiliBackgroundComponent implements AfterViewInit {
-  private static readonly LINK = 138;
+  /** Distance max de liaison entre deux noeuds (px). */
+  private static readonly LINK = 166;
+  /** Opacite max d'un trait de liaison (a distance nulle). */
+  private static readonly LINK_ALPHA = 0.43;
+  /** Opacite de remplissage d'un noeud standard / d'un noeud « glow ». */
+  private static readonly NODE_ALPHA = 0.6;
+  private static readonly NODE_GLOW_ALPHA = 1;
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
@@ -79,7 +85,8 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       return;
     }
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    this.reduce = motionQuery.matches;
     this.readColors();
     this.resize();
 
@@ -111,12 +118,27 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       this.visible = !document.hidden;
       this.toggleLoop();
     };
+    // L'utilisateur peut activer/desactiver « reduire les animations » en cours
+    // de session : on suit la media query au lieu de la lire une seule fois.
+    const onMotionChange = (event: MediaQueryListEvent): void => {
+      this.reduce = event.matches;
+      if (!this.reduce) {
+        this.toggleLoop();
+        return;
+      }
+      if (this.raf) {
+        cancelAnimationFrame(this.raf);
+        this.raf = 0;
+      }
+      this.renderFrame();
+    };
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseleave", onLeave);
     window.addEventListener("touchmove", onTouch, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
+    motionQuery.addEventListener("change", onMotionChange);
 
     if (typeof IntersectionObserver !== "undefined") {
       this.observer = new IntersectionObserver((entries) => {
@@ -141,6 +163,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       window.removeEventListener("mouseleave", onLeave);
       window.removeEventListener("touchmove", onTouch);
       document.removeEventListener("visibilitychange", onVisibility);
+      motionQuery.removeEventListener("change", onMotionChange);
       this.observer?.disconnect();
     });
   }
@@ -193,7 +216,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
         y: Math.random() * this.h,
         vx: (Math.random() - 0.5) * 0.2,
         vy: (Math.random() - 0.5) * 0.2,
-        r: Math.random() * 1.7 + 1,
+        r: Math.random() * 2.04 + 1.2,
         glow: Math.random() < 0.14,
         ph: Math.random() * Math.PI * 2,
       });
@@ -264,7 +287,9 @@ export class AsiliBackgroundComponent implements AfterViewInit {
         const dy = a.y - b.y;
         const d = Math.sqrt(dx * dx + dy * dy);
         if (d < AsiliBackgroundComponent.LINK) {
-          const o = (1 - d / AsiliBackgroundComponent.LINK) * 0.36;
+          const o =
+            (1 - d / AsiliBackgroundComponent.LINK) *
+            AsiliBackgroundComponent.LINK_ALPHA;
           const c = a.glow || b.glow ? glow : teal;
           ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${o})`;
           ctx.lineWidth = 1;
@@ -281,11 +306,14 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       const pulse = this.reduce ? 1 : 0.7 + Math.sin(this.t * 2 + n.ph) * 0.3;
       if (n.glow) {
         ctx.shadowColor = `rgba(${c[0]},${c[1]},${c[2]},0.9)`;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
       } else {
         ctx.shadowBlur = 0;
       }
-      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${n.glow ? 0.85 : 0.5})`;
+      const alpha = n.glow
+        ? AsiliBackgroundComponent.NODE_GLOW_ALPHA
+        : AsiliBackgroundComponent.NODE_ALPHA;
+      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha})`;
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
       ctx.fill();

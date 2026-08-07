@@ -166,15 +166,6 @@
       </segment>
     </unit>
 
-    <unit id="7215127729541696793">
-      <notes>
-        <note category="location">src/app/features/auth/auth.component.html:130</note>
-      </notes>
-      <segment>
-        <source>Inscrivez-vous avec Google</source>
-        <target>Sign up with Google</target>
-      </segment>
-    </unit>
 
     <unit id="authSignupGoogle">
       <notes>
@@ -237,15 +228,6 @@
       </segment>
     </unit>
 
-    <unit id="385129033471599880">
-      <notes>
-        <note category="location">src/app/features/auth/auth.component.html:208</note>
-      </notes>
-      <segment>
-        <source>Connectez-vous avec Google</source>
-        <target>Log in with Google</target>
-      </segment>
-    </unit>
 
     <unit id="authLoginGoogle">
       <notes>
@@ -967,65 +949,11 @@
       </segment>
     </unit>
 
-    <unit id="homeProject1Tag1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:223</note>
-      </notes>
-      <segment>
-        <source>Angular</source>
-        <target>Angular</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject1Tag2">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:224</note>
-      </notes>
-      <segment>
-        <source>NestJS</source>
-        <target>NestJS</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject1Tag3">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:225</note>
-      </notes>
-      <segment>
-        <source>IA</source>
-        <target>AI</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject1Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:227</note>
-      </notes>
-      <segment>
-        <source>Plateforme métier refondue de zéro</source>
-        <target>Business platform rebuilt from scratch</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject1Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:228</note>
-      </notes>
-      <segment>
-        <source>Du cadrage des usages à un produit qui tient la charge — et que l&apos;équipe sait faire évoluer seule.</source>
-        <target>From scoping the uses to a product that holds up under load — and that the team can evolve on its own.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject1ImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:230</note>
-      </notes>
-      <segment>
-        <source>capture — étude de cas client</source>
-        <target>screenshot — client case study</target>
-      </segment>
-    </unit>
 
     <unit id="homeProject2Tag1">
       <notes>
@@ -1502,15 +1430,6 @@
       </segment>
     </unit>
 
-    <unit id="7243381769177289361">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:134</note>
-      </notes>
-      <segment>
-        <source>Envoyer</source>
-        <target>Send</target>
-      </segment>
-    </unit>
 
     <unit id="contactFormSubmit">
       <notes>
@@ -2961,29 +2880,7 @@
   </segment>
 </unit>
 
-<unit id="navLinkAudit:Audit">
-  <notes>
-    <note category="location">src/app/shared/components/navbar/navbar.component.html:120</note>
-    <note category="description">Navbar primary link</note>
-    <note category="meaning">navbar.link.audit</note>
-  </notes>
-  <segment>
-    <source>Demander un devis</source>
-    <target>Request a Quote</target>
-  </segment>
-</unit>
 
-<unit id="navLinkAuditSpan:Audit">
-  <notes>
-    <note category="location">src/app/shared/components/navbar/navbar.component.html:122,126</note>
-    <note category="description">Navbar primary link</note>
-    <note category="meaning">navbar.link.audit</note>
-  </notes>
-  <segment>
-    <source>Audit</source>
-    <target>Audit</target>
-  </segment>
-</unit>
 
 
     <unit id="navCtaContactTitle">
@@ -9092,8 +8989,8 @@
         <note category="location">src/app/features/presentation/presentation.component.ts:241</note>
       </notes>
       <segment>
-        <source>Le studio sous sa forme actuelle, plus deux chantiers très actifs : &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (médiation culturelle IA pour musées) et &lt;strong&gt;ZenFirst Vision&lt;/strong&gt; (pilotage de rentabilité &amp; compta intelligente, France/Québec).</source>
-        <target>The studio in its current form, plus two very active builds: &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (AI cultural mediation for museums) and &lt;strong&gt;ZenFirst Vision&lt;/strong&gt; (profitability steering &amp; smart accounting, France/Quebec).</target>
+        <source>Le studio sous sa forme actuelle, plus un chantier très actif : &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (médiation culturelle IA pour musées).</source>
+        <target>The studio in its current form, plus one very active build: &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (AI cultural mediation for museums).</target>
       </segment>
     </unit>
     <unit id="presentationMilestone1Tag1">
@@ -9409,705 +9306,75 @@
 
 
 
-    <unit id="caseStudyBack">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:184</note>
-      </notes>
-      <segment>
-        <source>Projets</source>
-        <target>Projects</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTag1">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:188</note>
-      </notes>
-      <segment>
-        <source>Étude de cas</source>
-        <target>Case study</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTag2">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:189</note>
-      </notes>
-      <segment>
-        <source>2025 — 2026</source>
-        <target>2025 — 2026</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyKicker">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:191</note>
-      </notes>
-      <segment>
-        <source>ZenFirst Vision</source>
-        <target>ZenFirst Vision</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTitlePre">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:192</note>
-      </notes>
-      <segment>
-        <source>Piloter la rentabilité,</source>
-        <target>Steering profitability,</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTitleAccent">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:193</note>
-      </notes>
-      <segment>
-        <source>sans s&apos;y perdre</source>
-        <target>without getting lost</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTitlePost">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:194</note>
-      </notes>
-      <segment>
-        <source>.</source>
-        <target>.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyLead">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:195</note>
-      </notes>
-      <segment>
-        <source>Une plateforme de comptabilité intelligente pour la France et le Québec. Un cahier des charges vertigineux — conformité fiscale, sécurité, volumétrie — ramené à une interface que des dirigeants non-comptables comprennent en un coup d&apos;œil.</source>
-        <target>A smart accounting platform for France and Quebec. A dizzying set of requirements — tax compliance, security, data volume — distilled into an interface that non-accountant executives grasp at a glance.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta1Key">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:198</note>
-      </notes>
-      <segment>
-        <source>Rôle</source>
-        <target>Role</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta1Value">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:199</note>
-      </notes>
-      <segment>
-        <source>Conception &amp; développement</source>
-        <target>Design &amp; development</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta2Key">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:202</note>
-      </notes>
-      <segment>
-        <source>Stack</source>
-        <target>Stack</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta2Value">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:203</note>
-      </notes>
-      <segment>
-        <source>React 19 · NestJS · PostgreSQL</source>
-        <target>React 19 · NestJS · PostgreSQL</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta3Key">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:206</note>
-      </notes>
-      <segment>
-        <source>Secteur</source>
-        <target>Industry</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta3Value">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:207</note>
-      </notes>
-      <segment>
-        <source>FinTech · Comptabilité</source>
-        <target>FinTech · Accounting</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta4Key">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:210</note>
-      </notes>
-      <segment>
-        <source>Marchés</source>
-        <target>Markets</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyMeta4Value">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:211</note>
-      </notes>
-      <segment>
-        <source>France &amp; Québec</source>
-        <target>France &amp; Quebec</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyCoverCaption">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:215</note>
-      </notes>
-      <segment>
-        <source>capture — tableau de bord ZenFirst Vision</source>
-        <target>screenshot — ZenFirst Vision dashboard</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemLabel">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:219</note>
-      </notes>
-      <segment>
-        <source>Le problème</source>
-        <target>The problem</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemTitlePre">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:220</note>
-      </notes>
-      <segment>
-        <source>La comptabilité dit </source>
-        <target>Accounting says </target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemTitleAccent">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:221</note>
-      </notes>
-      <segment>
-        <source>quoi</source>
-        <target>what</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemTitlePost">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:222</note>
-      </notes>
-      <segment>
-        <source>. Rarement pourquoi.</source>
-        <target>. Rarely why.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemP1Pre">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:225</note>
-      </notes>
-      <segment>
-        <source>Les outils comptables produisent des chiffres exacts — et laissent souvent le dirigeant seul face à leur sens. Où part la marge ? Quel poste dérive ? Que décider ce mois-ci ? Entre l&apos;expert-comptable et le tableur, il manquait une vue qui </source>
-        <target>Accounting tools produce exact figures — and often leave the executive alone to make sense of them. Where is the margin going? Which line is drifting? What should we decide this month? Between the accountant and the spreadsheet, a view was missing — one that </target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemP1Strong">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:226</note>
-      </notes>
-      <segment>
-        <source>relie la donnée à la décision</source>
-        <target>connects the data to the decision</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemP1Post">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:227</note>
-      </notes>
-      <segment>
-        <source>.</source>
-        <target>.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProblemP2">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:230</note>
-      </notes>
-      <segment>
-        <source>Le défi technique était à la hauteur de l&apos;ambition : couvrir deux référentiels fiscaux (France et Québec), absorber une volumétrie importante, et tenir un niveau de conformité et de sécurité sans compromis — tout en restant lisible pour un utilisateur non-comptable.</source>
-        <target>The technical challenge matched the ambition: cover two tax frameworks (France and Quebec), absorb a heavy data volume, and hold an uncompromising level of compliance and security — all while staying readable for a non-accountant user.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyClarityLabel">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:235</note>
-      </notes>
-      <segment>
-        <source>La clarté</source>
-        <target>Clarity</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyClarityTitle">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:236</note>
-      </notes>
-      <segment>
-        <source>D&apos;abord cadrer, ensuite coder.</source>
-        <target>Frame first, then code.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyClarityP1">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:239</note>
-      </notes>
-      <segment>
-        <source>Avant la moindre ligne de code, nous avons cartographié les usages réels : quelles décisions l&apos;outil doit-il éclairer, pour qui, à quel moment. Cette étape a tranché des dizaines de questions de structure en amont — et évité de bâtir des fonctionnalités que personne n&apos;aurait utilisées.</source>
-        <target>Before a single line of code, we mapped the real usage: which decisions the tool must inform, for whom, and when. That step settled dozens of structural questions up front — and avoided building features no one would have used.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyClarityBullet1">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:243</note>
-      </notes>
-      <segment>
-        <source>Modélisation du domaine en Domain-Driven Design — le métier pilote l&apos;architecture, pas l&apos;inverse.</source>
-        <target>Domain modelling with Domain-Driven Design — the business drives the architecture, not the other way around.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyClarityBullet2">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:244</note>
-      </notes>
-      <segment>
-        <source>Séparation nette des deux référentiels fiscaux, pour faire évoluer l&apos;un sans casser l&apos;autre.</source>
-        <target>A clean separation of the two tax frameworks, so one can evolve without breaking the other.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyClarityBullet3">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:245</note>
-      </notes>
-      <segment>
-        <source>Priorisation des écrans par valeur de décision, pas par facilité technique.</source>
-        <target>Screens prioritised by decision value, not by technical convenience.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyDuo1Caption">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:250</note>
-      </notes>
-      <segment>
-        <source>capture — vue rentabilité</source>
-        <target>screenshot — profitability view</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyDuo2Caption">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:252</note>
-      </notes>
-      <segment>
-        <source>capture — rapprochement FEC</source>
-        <target>screenshot — FEC reconciliation</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionLabel">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:257</note>
-      </notes>
-      <segment>
-        <source>La solution</source>
-        <target>The solution</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionTitlePre">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:258</note>
-      </notes>
-      <segment>
-        <source>Une interface qui </source>
-        <target>An interface that </target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionTitleAccent">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:259</note>
-      </notes>
-      <segment>
-        <source>traduit</source>
-        <target>translates</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionTitlePost">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:260</note>
-      </notes>
-      <segment>
-        <source> la finance.</source>
-        <target> finance.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionP1">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:263</note>
-      </notes>
-      <segment>
-        <source>Le cœur du produit : transformer des écritures comptables en signaux lisibles. Des indicateurs de rentabilité en temps réel, des alertes quand un poste dérive, des projections claires. La complexité reste sous le capot ; en surface, on décide.</source>
-        <target>The heart of the product: turning accounting entries into readable signals. Real-time profitability indicators, alerts when a line drifts, clear projections. The complexity stays under the hood; on the surface, you decide.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionP2Pre">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:266</note>
-      </notes>
-      <segment>
-        <source>Côté ingénierie, l&apos;exigence était totale — parce que la confiance, en finance, ne se négocie pas : </source>
-        <target>On the engineering side, the bar was absolute — because in finance, trust is non-negotiable: </target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionP2Strong">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:267</note>
-      </notes>
-      <segment>
-        <source>Clean Architecture, tests automatisés sur les règles métier critiques, CI/CD complet, durcissement sécurité</source>
-        <target>Clean Architecture, automated tests on the critical business rules, full CI/CD, security hardening</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudySolutionP2Post">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:268</note>
-      </notes>
-      <segment>
-        <source>. Un socle fait pour durer et évoluer.</source>
-        <target>. A foundation built to last and to evolve.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProofLabel">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:273</note>
-      </notes>
-      <segment>
-        <source>La preuve</source>
-        <target>The proof</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProofTitle">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:274</note>
-      </notes>
-      <segment>
-        <source>Conforme, sécurisé, à l&apos;échelle.</source>
-        <target>Compliant, secure, at scale.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyProofP1">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:277</note>
-      </notes>
-      <segment>
-        <source>La rigueur ne se voit pas à l&apos;écran — elle se mesure dans ce que le produit garantit. Conformité aux référentiels fiscaux, traçabilité des données, robustesse face à la montée en charge : autant de fondations invisibles qui rendent l&apos;outil digne de confiance.</source>
-        <target>Rigour doesn't show on screen — it is measured in what the product guarantees. Compliance with the tax frameworks, data traceability, resilience under load: invisible foundations that make the tool worthy of trust.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope1N">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:284</note>
-      </notes>
-      <segment>
-        <source>455</source>
-        <target>455</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope1Label">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:285</note>
-      </notes>
-      <segment>
-        <source>tables de données structurées</source>
-        <target>structured data tables</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope2N">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:288</note>
-      </notes>
-      <segment>
-        <source>2</source>
-        <target>2</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope2Label">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:289</note>
-      </notes>
-      <segment>
-        <source>référentiels fiscaux : France &amp; Québec</source>
-        <target>tax frameworks: France &amp; Quebec</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope3N">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:292</note>
-      </notes>
-      <segment>
-        <source>100%</source>
-        <target>100%</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope3Label">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:293</note>
-      </notes>
-      <segment>
-        <source>conformité DGFiP · FEC · ANC · RGPD</source>
-        <target>DGFiP · FEC · ANC · GDPR compliance</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope4N">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:296</note>
-      </notes>
-      <segment>
-        <source>OWASP</source>
-        <target>OWASP</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyScope4Label">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:297</note>
-      </notes>
-      <segment>
-        <source>durcissement sécurité de bout en bout</source>
-        <target>end-to-end security hardening</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyQuotePre">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:301</note>
-      </notes>
-      <segment>
-        <source>« La performance d&apos;un outil financier, c&apos;est </source>
-        <target>&quot;The performance of a financial tool is </target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyQuoteAccent">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:302</note>
-      </notes>
-      <segment>
-        <source>la confiance</source>
-        <target>the trust</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyQuotePost">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:303</note>
-      </notes>
-      <segment>
-        <source> qu&apos;il inspire. Et la confiance se construit dans l&apos;invisible : la rigueur, la conformité, la clarté. »</source>
-        <target> it inspires. And trust is built in the invisible: rigour, compliance, clarity.&quot;</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyQuoteWho">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:304</note>
-      </notes>
-      <segment>
-        <source>— Tim Moyence · approche de conception</source>
-        <target>— Tim Moyence · design approach</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTechLabel">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:307</note>
-      </notes>
-      <segment>
-        <source>Sous le capot</source>
-        <target>Under the hood</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTechTitlePre">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:308</note>
-      </notes>
-      <segment>
-        <source>L&apos;ingénierie, au service de la </source>
-        <target>Engineering, in the service of </target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTechTitleAccent">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:309</note>
-      </notes>
-      <segment>
-        <source>confiance</source>
-        <target>trust</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTechTitlePost">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:310</note>
-      </notes>
-      <segment>
-        <source>.</source>
-        <target>.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTechIntro">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:311</note>
-      </notes>
-      <segment>
-        <source>Un socle moderne et éprouvé, choisi pour la robustesse et la maintenabilité dans la durée — pas pour la mode.</source>
-        <target>A modern, proven foundation, chosen for robustness and long-term maintainability — not for fashion.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTechItemDDD">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:317</note>
-      </notes>
-      <segment>
-        <source>Domain-Driven Design</source>
-        <target>Domain-Driven Design</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyTechItemClean">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:318</note>
-      </notes>
-      <segment>
-        <source>Clean Architecture</source>
-        <target>Clean Architecture</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyNextKicker">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:326</note>
-      </notes>
-      <segment>
-        <source>Projet suivant</source>
-        <target>Next project</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyNextLabel">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:327</note>
-      </notes>
-      <segment>
-        <source>Musaium — médiation IA</source>
-        <target>Musaium — AI mediation</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyCtaKicker">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:331</note>
-      </notes>
-      <segment>
-        <source>Un projet ambitieux ?</source>
-        <target>An ambitious project?</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyCtaTitle">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:332</note>
-      </notes>
-      <segment>
-        <source>Les cahiers des charges complexes sont mon terrain de jeu.</source>
-        <target>Complex specifications are my playground.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyCtaLead">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:333</note>
-      </notes>
-      <segment>
-        <source>Si votre projet a de la profondeur — métier, conformité, échelle — parlons-en. Je commence toujours par clarifier.</source>
-        <target>If your project has depth — business logic, compliance, scale — let's talk. I always start by getting clear.</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:334</note>
-      </notes>
-      <segment>
-        <source>Démarrer la conversation</source>
-        <target>Start the conversation</target>
-      </segment>
-    </unit>
-
-    <unit id="caseStudyCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/client-project/client-project.component.ts:336</note>
-      </notes>
-      <segment>
-        <source>Voir tous les projets</source>
-        <target>See all projects</target>
-      </segment>
-    </unit>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <unit id="projetsHeroTitle">
       <notes>
@@ -10149,65 +9416,11 @@
       </segment>
     </unit>
 
-    <unit id="projetsProject1Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:68</note>
-      </notes>
-      <segment>
-        <source>En production</source>
-        <target>In production</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject1Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:69</note>
-      </notes>
-      <segment>
-        <source>React 19</source>
-        <target>React 19</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject1Tag3">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:70</note>
-      </notes>
-      <segment>
-        <source>Conformité</source>
-        <target>Compliance</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject1Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:72</note>
-      </notes>
-      <segment>
-        <source>ZenFirst Vision — pilotage de rentabilité</source>
-        <target>ZenFirst Vision — profitability steering</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject1Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:73</note>
-      </notes>
-      <segment>
-        <source>Plateforme de comptabilité intelligente (France &amp; Québec). Très ambitieuse : 455 tables, conformité DGFiP/FEC/ANC, RGPD, durcissement OWASP. L&apos;ingénierie au service de la confiance.</source>
-        <target>Smart accounting platform (France &amp; Quebec). Highly ambitious: 455 tables, DGFiP/FEC/ANC compliance, GDPR, OWASP hardening. Engineering in the service of trust.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject1ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:75</note>
-      </notes>
-      <segment>
-        <source>capture — ZenFirst Vision</source>
-        <target>screenshot — ZenFirst Vision</target>
-      </segment>
-    </unit>
 
     <unit id="projetsProject2Tag1">
       <notes>
@@ -10364,8 +9577,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:108</note>
       </notes>
       <segment>
-        <source>capture — Morning-Brief</source>
-        <target>screenshot — Morning-Brief</target>
+        <source>illustration — Morning-Brief</source>
+        <target>illustration — Morning-Brief</target>
       </segment>
     </unit>
 
@@ -10634,8 +9847,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:161</note>
       </notes>
       <segment>
-        <source>capture — Le Jeu des Fourmis</source>
-        <target>screenshot — The Ant Game</target>
+        <source>illustration — Le Jeu des Fourmis</source>
+        <target>illustration — The Ant Game</target>
       </segment>
     </unit>
 
@@ -10724,8 +9937,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:179</note>
       </notes>
       <segment>
-        <source>capture — Voice IA</source>
-        <target>screenshot — Voice AI</target>
+        <source>illustration — Voice IA</source>
+        <target>illustration — Voice AI</target>
       </segment>
     </unit>
 
@@ -14082,6 +13295,244 @@
       <segment>
         <source>O</source>
         <target>W</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12Tag1">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:175</note>
+      </notes>
+      <segment>
+        <source>Refonte en cours</source>
+        <target>Rebuild in progress</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12Tag2">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:176</note>
+      </notes>
+      <segment>
+        <source>Réservation en ligne</source>
+        <target>Online booking</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12Tag3">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:177</note>
+      </notes>
+      <segment>
+        <source>Migration SEO</source>
+        <target>SEO migration</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12Title">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:179</note>
+      </notes>
+      <segment>
+        <source>AtlanticBike — location et réparation de vélos</source>
+        <target>AtlanticBike — bike rental and repair</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12Desc">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:180</note>
+      </notes>
+      <segment>
+        <source>Loueur-réparateur sur la côte atlantique : présenter l'activité, structurer l'offre et permettre la réservation en ligne. Demande en 6 étapes dont le devis est recalculé côté serveur uniquement, back-office du parc et de l'atelier, reprise des URL indexées.</source>
+        <target>Bike rental and repair business on the Atlantic coast: present the business, structure the offering and enable online booking. A six-step request whose quote is recalculated server-side only, a back office for the fleet and the workshop, and indexed URLs carried over.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12ImageAlt">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:182</note>
+      </notes>
+      <segment>
+        <source>capture — AtlanticBike</source>
+        <target>screenshot — AtlanticBike</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13Tag1">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:187</note>
+      </notes>
+      <segment>
+        <source>Prototype</source>
+        <target>Prototype</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13Tag2">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:188</note>
+      </notes>
+      <segment>
+        <source>Analyse de contenu</source>
+        <target>Content analysis</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13Title">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:190</note>
+      </notes>
+      <segment>
+        <source>Assistant IA Geev</source>
+        <target>Geev AI Assistant</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13Desc">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:191</note>
+      </notes>
+      <segment>
+        <source>Prototype d'assistant intelligent pour faciliter le tri et l'analyse d'annonces à partir de contenus visuels.</source>
+        <target>Intelligent assistant prototype to ease the sorting and analysis of listings from visual content.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13ImageAlt">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:193</note>
+      </notes>
+      <segment>
+        <source>capture — Assistant IA Geev</source>
+        <target>screenshot — Geev AI Assistant</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject14Tag1">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:198</note>
+      </notes>
+      <segment>
+        <source>Projet académique</source>
+        <target>Academic project</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject14Tag2">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:199</note>
+      </notes>
+      <segment>
+        <source>Modélisation prédictive</source>
+        <target>Predictive modeling</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject14Title">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:201</note>
+      </notes>
+      <segment>
+        <source>Modélisation prédictive de risques sanitaires</source>
+        <target>Predictive modeling of health risks</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject14Desc">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:202</note>
+      </notes>
+      <segment>
+        <source>Modélisation et analyse de données visant à anticiper l'apparition de risques sanitaires à partir de données épidémiologiques.</source>
+        <target>Data modeling and analysis aimed at anticipating emerging health risks from epidemiological data.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject14ImageAlt">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:204</note>
+      </notes>
+      <segment>
+        <source>capture — Modélisation prédictive de risques sanitaires</source>
+        <target>screenshot — Predictive modeling of health risks</target>
+      </segment>
+    </unit>
+    <unit id="385129033471599880">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.html:208</note>
+      </notes>
+      <segment>
+        <source>Connectez-vous avec Google</source>
+        <target>Log in with Google</target>
+      </segment>
+    </unit>
+    <unit id="7215127729541696793">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.html:130</note>
+      </notes>
+      <segment>
+        <source>Inscrivez-vous avec Google</source>
+        <target>Sign up with Google</target>
+      </segment>
+    </unit>
+    <unit id="7243381769177289361">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:134</note>
+      </notes>
+      <segment>
+        <source>Envoyer</source>
+        <target>Send</target>
+      </segment>
+    </unit>
+<unit id="navLinkAudit:Audit">
+  <notes>
+    <note category="location">src/app/shared/components/navbar/navbar.component.html:120</note>
+    <note category="description">Navbar primary link</note>
+    <note category="meaning">navbar.link.audit</note>
+  </notes>
+  <segment>
+    <source>Demander un devis</source>
+    <target>Request a Quote</target>
+  </segment>
+</unit>
+<unit id="navLinkAuditSpan:Audit">
+  <notes>
+    <note category="location">src/app/shared/components/navbar/navbar.component.html:122,126</note>
+    <note category="description">Navbar primary link</note>
+    <note category="meaning">navbar.link.audit</note>
+  </notes>
+  <segment>
+    <source>Audit</source>
+    <target>Audit</target>
+  </segment>
+</unit>
+    <unit id="projetsProject15Tag1">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:153</note>
+      </notes>
+      <segment>
+        <source>Vinification</source>
+        <target>Winemaking</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject15Tag2">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:154</note>
+      </notes>
+      <segment>
+        <source>Poste &amp; mobile</source>
+        <target>Desktop &amp; mobile</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject15Title">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:156</note>
+      </notes>
+      <segment>
+        <source>Gestion de chais — la vinification au quotidien</source>
+        <target>Cellar management — winemaking day to day</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject15Desc">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:157</note>
+      </notes>
+      <segment>
+        <source>Le même outil, côté terrain : les opérations de vinification se saisissent aussi bien au poste que sur mobile, pour que la traçabilité se remplisse là où le travail se fait.</source>
+        <target>The same tool, out in the field: winemaking operations can be logged from a desktop or a phone, so traceability fills in where the work actually happens.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject15ImageAlt">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:159</note>
+      </notes>
+      <segment>
+        <source>capture — Gestion de chais, vinification sur poste et mobile</source>
+        <target>screenshot — Cellar management, winemaking on desktop and mobile</target>
       </segment>
     </unit>
   </file>

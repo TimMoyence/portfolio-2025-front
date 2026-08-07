@@ -10,7 +10,7 @@ const PROJECTS: readonly AsiliProject[] = [
     title: "Plateforme metier refondue",
     desc: "Du cadrage des usages a un produit qui tient la charge.",
     tags: [{ label: "Angular" }, { label: "NestJS" }, { label: "IA" }],
-    href: "/client-project",
+    href: "/projets",
     size: "big",
   },
   {
@@ -27,6 +27,45 @@ const PROJECTS: readonly AsiliProject[] = [
     desc: "Newsletter IA livree chaque matin par Telegram.",
     tags: [{ label: "En production", prod: true }, { label: "Raspberry Pi" }],
     size: "small",
+  },
+];
+
+/**
+ * Jeu dedie aux assertions de chargement d'image : quatre cartes portant toutes
+ * une capture, avec les deux tailles (`small` = visuel 4/3, `big` = 16/10).
+ */
+const IMAGE_PROJECTS: readonly AsiliProject[] = [
+  {
+    title: "Carte 1",
+    desc: "Premiere carte, au-dessus de la ligne de flottaison.",
+    tags: [],
+    image: "/assets/images/projects/un.webp",
+    imageAlt: "capture 1",
+    size: "small",
+  },
+  {
+    title: "Carte 2",
+    desc: "Deuxieme carte, encore visible au chargement.",
+    tags: [],
+    image: "/assets/images/projects/deux.webp",
+    imageAlt: "capture 2",
+    size: "big",
+  },
+  {
+    title: "Carte 3",
+    desc: "Troisieme carte, sous la ligne de flottaison.",
+    tags: [],
+    image: "/assets/images/projects/trois.webp",
+    imageAlt: "capture 3",
+    size: "small",
+  },
+  {
+    title: "Carte 4",
+    desc: "Quatrieme carte, sous la ligne de flottaison.",
+    tags: [],
+    image: "/assets/images/projects/quatre.webp",
+    imageAlt: "capture 4",
+    size: "big",
   },
 ];
 
@@ -142,7 +181,7 @@ describe("AsiliProjectsGridComponent", () => {
     const links = host.querySelectorAll<HTMLAnchorElement>(".proj .proj-link");
     // Deux projets ont un href (plateforme + meteo).
     expect(links.length).toBe(2);
-    expect(links[0].getAttribute("href")).toBe("/client-project");
+    expect(links[0].getAttribute("href")).toBe("/projets");
   });
 
   it("n'enveloppe pas le visuel d'un lien quand href est absent", () => {
@@ -170,6 +209,84 @@ describe("AsiliProjectsGridComponent", () => {
     );
     const h2 = host.querySelector<HTMLElement>("h2.projects-head__title");
     expect(h2?.textContent?.trim()).toBe("Des realisations.");
+  });
+
+  describe("chargement des images", () => {
+    function images(): readonly HTMLImageElement[] {
+      const host = fixture.nativeElement as HTMLElement;
+      return Array.from(
+        host.querySelectorAll<HTMLImageElement>(".proj-shot img"),
+      );
+    }
+
+    it("charge toutes les captures en lazy par defaut", () => {
+      setup(IMAGE_PROJECTS);
+      fixture.detectChanges();
+      // Defaut = 0 : sur les deux pages qui montent cette grille, aucune capture
+      // n'est visible au chargement (/projets la place sous un hero de 89svh,
+      // l'accueil en bas de document). Aucune image n'est donc candidate LCP.
+      expect(images().map((img) => img.getAttribute("loading"))).toEqual([
+        "lazy",
+        "lazy",
+        "lazy",
+        "lazy",
+      ]);
+      // Corollaire : rien ne preempte la bande passante du vrai LCP.
+      expect(
+        images().every((img) => img.getAttribute("fetchpriority") === null),
+      ).toBeTrue();
+    });
+
+    it("bascule les premieres cartes en eager quand la page le demande", () => {
+      setup(IMAGE_PROJECTS);
+      fixture.componentRef.setInput("eagerImages", 2);
+      fixture.detectChanges();
+      expect(images().map((img) => img.getAttribute("loading"))).toEqual([
+        "eager",
+        "eager",
+        "lazy",
+        "lazy",
+      ]);
+    });
+
+    it("priorise la premiere image via fetchpriority=high uniquement en mode eager", () => {
+      setup(IMAGE_PROJECTS);
+      fixture.componentRef.setInput("eagerImages", 2);
+      fixture.detectChanges();
+      const [first, ...rest] = images();
+      expect(first.getAttribute("fetchpriority")).toBe("high");
+      expect(rest.map((img) => img.getAttribute("fetchpriority"))).toEqual([
+        null,
+        null,
+        null,
+      ]);
+    });
+
+    it("decode toutes les images en asynchrone", () => {
+      setup(IMAGE_PROJECTS);
+      fixture.detectChanges();
+      expect(
+        images().every((img) => img.getAttribute("decoding") === "async"),
+      ).toBeTrue();
+    });
+
+    it("declare des dimensions intrinseques au ratio de la boite de rendu", () => {
+      setup(IMAGE_PROJECTS);
+      fixture.detectChanges();
+      // Les captures sources ont des ratios heterogenes (0.87 a 1.44) mais sont
+      // recadrees en `object-fit: cover` : les attributs decrivent la boite
+      // (`.proj-shot` = 16/10 en big, 4/3 en small), pas le fichier.
+      const declared = images().map((img) => [
+        img.getAttribute("width"),
+        img.getAttribute("height"),
+      ]);
+      expect(declared).toEqual([
+        ["800", "600"],
+        ["1600", "1000"],
+        ["800", "600"],
+        ["1600", "1000"],
+      ]);
+    });
   });
 
   it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {

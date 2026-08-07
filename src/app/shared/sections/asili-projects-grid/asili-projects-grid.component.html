@@ -29,13 +29,13 @@
             <a class="proj-link" [href]="href">
               <ng-container
                 [ngTemplateOutlet]="shot"
-                [ngTemplateOutletContext]="{ $implicit: project }"
+                [ngTemplateOutletContext]="{ $implicit: project, index: i }"
               />
             </a>
           } @else {
             <ng-container
               [ngTemplateOutlet]="shot"
-              [ngTemplateOutletContext]="{ $implicit: project }"
+              [ngTemplateOutletContext]="{ $implicit: project, index: i }"
             />
           }
 
@@ -58,10 +58,18 @@
   </div>
 </section>
 
-<ng-template #shot let-project>
+<ng-template #shot let-project let-index="index">
   <div class="proj-shot">
     @if (project.image) {
-      <img [src]="project.image" [alt]="project.imageAlt ?? project.title" />
+      <img
+        [src]="project.image"
+        [alt]="project.imageAlt ?? project.title"
+        [attr.width]="imageWidth(project.size)"
+        [attr.height]="imageHeight(project.size)"
+        [attr.loading]="imageLoading(index)"
+        [attr.fetchpriority]="imageFetchPriority(index)"
+        decoding="async"
+      />
     } @else {
       <div class="placeholder" aria-hidden="true">
         <span>{{ project.imageAlt ?? project.title }}</span>

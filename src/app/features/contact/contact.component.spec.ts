@@ -119,4 +119,91 @@ describe("ContactComponent", () => {
     expect(component.contactForm.message).toBe("");
     expect(component.contactForm.terms).toBeFalse();
   });
+
+  // --- Contraste (WCAG 2.1 AA) ---
+  // Les champs sont transparents : le fond effectif est le champ de particules
+  // sous le voile. `--text-mute` y tombe a 3,53:1, sous le seuil AA de 4,5:1.
+  // Toute valeur saisie ou selectionnee doit donc s'afficher en `--text-strong`.
+
+  it("devrait afficher la valeur du sujet en couleur pleine et le placeholder en attenue", () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const select = compiled.querySelector(
+      'select[name="subject"]',
+    ) as HTMLSelectElement;
+
+    // Aucune valeur : le placeholder doit se distinguer d'une valeur saisie, donc
+    // ne pas etre en couleur pleine. On n'affirme PAS qu'il est `--text-mute` :
+    // sa teinte reste un point de contraste ouvert (~3,5:1 sur le fond veine),
+    // et figer la classe actuelle rendrait rouge toute correction future.
+    expect(select.classList.contains("text-scheme-text")).toBeFalse();
+
+    component.contactForm = {
+      ...component.contactForm,
+      subject: component.contactInfo.subjects[0],
+    };
+    fixture.componentRef.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    expect(select.classList.contains("text-scheme-text")).toBeTrue();
+    expect(select.classList.contains("text-scheme-text-muted")).toBeFalse();
+  });
+
+  it("devrait afficher les libelles de champs en couleur pleine, y compris au repos", () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const labelledIds = [
+      ...component.contactFields.map((field) => field.key),
+      "message",
+      "subject",
+    ];
+
+    // Formulaire vierge : c'est l'etat « au repos » des labels flottants,
+    // ou ils sont la seule indication de ce qu'il faut saisir.
+    for (const id of labelledIds) {
+      const label = compiled.querySelector(`label[for="${id}"]`);
+      expect(label).withContext(`label du champ ${id}`).not.toBeNull();
+      expect(label?.classList.contains("text-scheme-text"))
+        .withContext(`label du champ ${id}`)
+        .toBeTrue();
+      expect(label?.classList.contains("text-scheme-text-muted"))
+        .withContext(`label du champ ${id}`)
+        .toBeFalse();
+      // La variante `peer-placeholder-shown:` est plus specifique que la classe
+      // posee par [ngClass] : si elle reste attenuee, elle gagne au repos.
+      // Le nom est reconstitue par concatenation : Tailwind scanne aussi les
+      // `.spec.ts` (tailwind.config.js `content`), et le litteral entier
+      // suffirait a garder vivante dans le CSS de production l'utilitaire que
+      // ce test verifie justement comme absent.
+      const varianteAttenuee = `peer-placeholder-shown:${"text-scheme-text-muted"}`;
+      expect(label?.classList.contains(varianteAttenuee))
+        .withContext(`label du champ ${id}`)
+        .toBeFalse();
+    }
+  });
+
+  it("devrait afficher le libelle du groupe de roles en couleur pleine", () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const groupLabel =
+      compiled.querySelector("fieldset")?.previousElementSibling;
+
+    expect(groupLabel).not.toBeNull();
+    expect(groupLabel?.classList.contains("text-scheme-text")).toBeTrue();
+    expect(
+      groupLabel?.classList.contains("text-scheme-text-muted"),
+    ).toBeFalse();
+  });
+
+  it("devrait afficher les libelles de role en couleur pleine", () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const roleLabels = compiled.querySelectorAll("fieldset label p");
+
+    expect(roleLabels.length).toBe(component.contactInfo.roles.length);
+    for (const roleLabel of Array.from(roleLabels)) {
+      expect(roleLabel.classList.contains("text-scheme-text"))
+        .withContext(`role « ${roleLabel.textContent?.trim()} »`)
+        .toBeTrue();
+      expect(
+        roleLabel.classList.contains("text-scheme-text-muted"),
+      ).toBeFalse();
+    }
+  });
 });

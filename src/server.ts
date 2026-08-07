@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import bootstrap from "./main.server";
 import type { SeoMetadataFile } from "./app/core/seo/seo-metadata.model";
 import { isClientOnlyRoute, loadCsrShell } from "./server/csr-shell";
+import { registerPermanentRedirects } from "./server/redirects";
 import {
   buildLlmsFullTxt,
   buildLlmsTxt,
@@ -229,17 +230,12 @@ app.use(
   }),
 );
 
-app.get("/home", (_req, res) => {
-  return res.redirect(301, "/fr");
-});
+// Redirections 301 des anciennes URLs indexees (/home, /client-project).
+// Table et resolution dans ./server/redirects — verrouillees par redirects.spec.ts.
+// Position conservee : apres la normalisation d'URL et les express.static de
+// locale, avant le static racine et le rendu Angular.
+registerPermanentRedirects(app);
 
-app.get("/fr/home", (_req, res) => {
-  return res.redirect(301, "/fr");
-});
-
-app.get("/en/home", (_req, res) => {
-  return res.redirect(301, "/en");
-});
 /**
  * Serve other static files (css/js/map/woff2/...) if any are at browser root
  * Important: index:false so it never returns HTML for missing files

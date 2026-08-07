@@ -245,7 +245,7 @@ export class PresentationComponent {
     {
       year: $localize`:@@presentationMilestone1Year:2026 →`,
       title: $localize`:@@presentationMilestone1Title:Asili Design & projets actifs`,
-      descHtml: $localize`:@@presentationMilestone1Desc:Le studio sous sa forme actuelle, plus deux chantiers très actifs : <strong>Musaium / InnovMind</strong> (médiation culturelle IA pour musées) et <strong>ZenFirst Vision</strong> (pilotage de rentabilité & compta intelligente, France/Québec).`,
+      descHtml: $localize`:@@presentationMilestone1Desc:Le studio sous sa forme actuelle, plus un chantier très actif : <strong>Musaium / InnovMind</strong> (médiation culturelle IA pour musées).`,
       tags: [
         $localize`:@@presentationMilestone1Tag1:Monorepo`,
         $localize`:@@presentationMilestone1Tag2:Multi-LLM`,

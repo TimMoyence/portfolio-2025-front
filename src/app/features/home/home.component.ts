@@ -215,26 +215,24 @@ export class HomeComponent {
   /** Lien d'entete vers la page projets. */
   protected readonly projectsHeadLink = $localize`:@@homeProjectsHeadLink:Voir tous les projets`;
 
-  /** Cartes projet (teaser ~4 realisations). */
+  /**
+   * Cartes projet du teaser.
+   *
+   * Les trois cartes sont en `small` (span 2) : la grille desktop compte 6
+   * colonnes et n'active pas `grid-auto-flow: dense` (qui reordonnerait les
+   * cartes), donc 2 + 2 + 2 pave exactement une rangee. Un `big` (span 4) ici
+   * ferait 2 + 2 + 4 = 8, soit deux rangees trouees de 2 colonnes chacune.
+   * Toute carte ajoutee doit preserver ce pavage (multiples de 6 par rangee,
+   * dans l'ordre d'affichage).
+   */
   protected readonly projects: readonly AsiliProject[] = [
-    {
-      size: "big",
-      tags: [
-        { label: $localize`:@@homeProject1Tag1:Angular` },
-        { label: $localize`:@@homeProject1Tag2:NestJS` },
-        { label: $localize`:@@homeProject1Tag3:IA` },
-      ],
-      title: $localize`:@@homeProject1Title:Plateforme métier refondue de zéro`,
-      desc: $localize`:@@homeProject1Desc:Du cadrage des usages à un produit qui tient la charge — et que l'équipe sait faire évoluer seule.`,
-      href: "/client-project",
-      imageAlt: $localize`:@@homeProject1ImageAlt:capture — étude de cas client`,
-    },
     {
       size: "small",
       tags: [{ label: $localize`:@@homeProject2Tag1:Atelier` }],
       title: $localize`:@@homeProject2Title:Météo`,
       desc: $localize`:@@homeProject2Desc:Data-viz vivante : vent, UV, arc solaire.`,
       href: "/atelier/meteo",
+      image: "/assets/images/projects/weather.webp",
       imageAlt: $localize`:@@homeProject2ImageAlt:capture — app Météo`,
     },
     {
@@ -243,10 +241,11 @@ export class HomeComponent {
       title: $localize`:@@homeProject3Title:Sebastian`,
       desc: $localize`:@@homeProject3Desc:Suivi de consommation, app + bot Telegram.`,
       href: "/atelier/sebastian",
+      image: "/assets/images/projects/sebastian.webp",
       imageAlt: $localize`:@@homeProject3ImageAlt:capture — Sebastian`,
     },
     {
-      size: "big",
+      size: "small",
       tags: [
         { label: $localize`:@@homeProject4Tag1:Automatisation` },
         { label: $localize`:@@homeProject4Tag2:IA` },
@@ -254,6 +253,7 @@ export class HomeComponent {
       title: $localize`:@@homeProject4Title:Un système qui travaille en silence`,
       desc: $localize`:@@homeProject4Desc:Des tâches répétitives remplacées par une automatisation lisible, mesurée, sous contrôle humain.`,
       href: "/offer",
+      image: "/assets/images/projects/Automation-validation.webp",
       imageAlt: $localize`:@@homeProject4ImageAlt:capture — automatisation IA`,
     },
   ];

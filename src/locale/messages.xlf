@@ -438,13 +438,6 @@
         <note priority="1" from="description">Login panel description</note>
         <note priority="1" from="meaning">auth.login.lead</note>
       </trans-unit>
-      <trans-unit id="385129033471599880" datatype="html">
-        <source>Connectez-vous avec Google</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">91,92</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="authLoginGoogle" datatype="html">
         <source> Connectez-vous avec Google </source>
         <context-group purpose="location">
@@ -606,13 +599,6 @@
         </context-group>
         <note priority="1" from="description">Signup panel description</note>
         <note priority="1" from="meaning">auth.signup.lead</note>
-      </trans-unit>
-      <trans-unit id="7215127729541696793" datatype="html">
-        <source>Inscrivez-vous avec Google</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
-          <context context-type="linenumber">254,255</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="authSignupGoogle" datatype="html">
         <source> Inscrivez-vous avec Google </source>
@@ -1118,496 +1104,6 @@
         </context-group>
         <note priority="1" from="description">verify-email.error.generic</note>
       </trans-unit>
-      <trans-unit id="caseStudyBack" datatype="html">
-        <source>Projets</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">184</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTag1" datatype="html">
-        <source>Étude de cas</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">188</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTag2" datatype="html">
-        <source>2025 — 2026</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">189</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyKicker" datatype="html">
-        <source>ZenFirst Vision</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">191</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTitlePre" datatype="html">
-        <source>Piloter la rentabilité,</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">192</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTitleAccent" datatype="html">
-        <source>sans s&apos;y perdre</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">193</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTitlePost" datatype="html">
-        <source>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">194</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyLead" datatype="html">
-        <source>Une plateforme de comptabilité intelligente pour la France et le Québec. Un cahier des charges vertigineux — conformité fiscale, sécurité, volumétrie — ramené à une interface que des dirigeants non-comptables comprennent en un coup d&apos;œil.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">195</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta1Key" datatype="html">
-        <source>Rôle</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">198</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta1Value" datatype="html">
-        <source>Conception &amp; développement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">199</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta2Key" datatype="html">
-        <source>Stack</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">202</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta2Value" datatype="html">
-        <source>React 19 · NestJS · PostgreSQL</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">203</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta3Key" datatype="html">
-        <source>Secteur</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">206</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta3Value" datatype="html">
-        <source>FinTech · Comptabilité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">207</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta4Key" datatype="html">
-        <source>Marchés</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">210</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyMeta4Value" datatype="html">
-        <source>France &amp; Québec</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">211</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyCoverCaption" datatype="html">
-        <source>capture — tableau de bord ZenFirst Vision</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">215</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemLabel" datatype="html">
-        <source>Le problème</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">219</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemTitlePre" datatype="html">
-        <source>La comptabilité dit </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">220</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemTitleAccent" datatype="html">
-        <source>quoi</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">221</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemTitlePost" datatype="html">
-        <source>. Rarement pourquoi.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">222</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemP1Pre" datatype="html">
-        <source>Les outils comptables produisent des chiffres exacts — et laissent souvent le dirigeant seul face à leur sens. Où part la marge ? Quel poste dérive ? Que décider ce mois-ci ? Entre l&apos;expert-comptable et le tableur, il manquait une vue qui </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">225</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemP1Strong" datatype="html">
-        <source>relie la donnée à la décision</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">226</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemP1Post" datatype="html">
-        <source>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">227</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProblemP2" datatype="html">
-        <source>Le défi technique était à la hauteur de l&apos;ambition : couvrir deux référentiels fiscaux (France et Québec), absorber une volumétrie importante, et tenir un niveau de conformité et de sécurité sans compromis — tout en restant lisible pour un utilisateur non-comptable.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">230</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyClarityLabel" datatype="html">
-        <source>La clarté</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">235</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyClarityTitle" datatype="html">
-        <source>D&apos;abord cadrer, ensuite coder.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">236</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyClarityP1" datatype="html">
-        <source>Avant la moindre ligne de code, nous avons cartographié les usages réels : quelles décisions l&apos;outil doit-il éclairer, pour qui, à quel moment. Cette étape a tranché des dizaines de questions de structure en amont — et évité de bâtir des fonctionnalités que personne n&apos;aurait utilisées.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">239</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyClarityBullet1" datatype="html">
-        <source>Modélisation du domaine en Domain-Driven Design — le métier pilote l&apos;architecture, pas l&apos;inverse.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">243</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyClarityBullet2" datatype="html">
-        <source>Séparation nette des deux référentiels fiscaux, pour faire évoluer l&apos;un sans casser l&apos;autre.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">244</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyClarityBullet3" datatype="html">
-        <source>Priorisation des écrans par valeur de décision, pas par facilité technique.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">245</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyDuo1Caption" datatype="html">
-        <source>capture — vue rentabilité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">250</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyDuo2Caption" datatype="html">
-        <source>capture — rapprochement FEC</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">252</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionLabel" datatype="html">
-        <source>La solution</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">257</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionTitlePre" datatype="html">
-        <source>Une interface qui </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">258</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionTitleAccent" datatype="html">
-        <source>traduit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">259</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionTitlePost" datatype="html">
-        <source> la finance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">260</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionP1" datatype="html">
-        <source>Le cœur du produit : transformer des écritures comptables en signaux lisibles. Des indicateurs de rentabilité en temps réel, des alertes quand un poste dérive, des projections claires. La complexité reste sous le capot ; en surface, on décide.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">263</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionP2Pre" datatype="html">
-        <source>Côté ingénierie, l&apos;exigence était totale — parce que la confiance, en finance, ne se négocie pas : </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">266</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionP2Strong" datatype="html">
-        <source>Clean Architecture, tests automatisés sur les règles métier critiques, CI/CD complet, durcissement sécurité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">267</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudySolutionP2Post" datatype="html">
-        <source>. Un socle fait pour durer et évoluer.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">268</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProofLabel" datatype="html">
-        <source>La preuve</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">273</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProofTitle" datatype="html">
-        <source>Conforme, sécurisé, à l&apos;échelle.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">274</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyProofP1" datatype="html">
-        <source>La rigueur ne se voit pas à l&apos;écran — elle se mesure dans ce que le produit garantit. Conformité aux référentiels fiscaux, traçabilité des données, robustesse face à la montée en charge : autant de fondations invisibles qui rendent l&apos;outil digne de confiance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">277</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope1N" datatype="html">
-        <source>455</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">284</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope1Label" datatype="html">
-        <source>tables de données structurées</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">285</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope2N" datatype="html">
-        <source>2</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">288</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope2Label" datatype="html">
-        <source>référentiels fiscaux : France &amp; Québec</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">289</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope3N" datatype="html">
-        <source>100%</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">292</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope3Label" datatype="html">
-        <source>conformité DGFiP · FEC · ANC · RGPD</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">293</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope4N" datatype="html">
-        <source>OWASP</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">296</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyScope4Label" datatype="html">
-        <source>durcissement sécurité de bout en bout</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">297</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyQuotePre" datatype="html">
-        <source>« La performance d&apos;un outil financier, c&apos;est </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">301</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyQuoteAccent" datatype="html">
-        <source>la confiance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">302</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyQuotePost" datatype="html">
-        <source> qu&apos;il inspire. Et la confiance se construit dans l&apos;invisible : la rigueur, la conformité, la clarté. »</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">303</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyQuoteWho" datatype="html">
-        <source>— Tim Moyence · approche de conception</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">304</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTechLabel" datatype="html">
-        <source>Sous le capot</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">307</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTechTitlePre" datatype="html">
-        <source>L&apos;ingénierie, au service de la </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">308</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTechTitleAccent" datatype="html">
-        <source>confiance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">309</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTechTitlePost" datatype="html">
-        <source>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">310</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTechIntro" datatype="html">
-        <source>Un socle moderne et éprouvé, choisi pour la robustesse et la maintenabilité dans la durée — pas pour la mode.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">311</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTechItemDDD" datatype="html">
-        <source>Domain-Driven Design</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">317</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyTechItemClean" datatype="html">
-        <source>Clean Architecture</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">318</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyNextKicker" datatype="html">
-        <source>Projet suivant</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">326</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyNextLabel" datatype="html">
-        <source>Musaium — médiation IA</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">327</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyCtaKicker" datatype="html">
-        <source>Un projet ambitieux ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">331</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyCtaTitle" datatype="html">
-        <source>Les cahiers des charges complexes sont mon terrain de jeu.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">332</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyCtaLead" datatype="html">
-        <source>Si votre projet a de la profondeur — métier, conformité, échelle — parlons-en. Je commence toujours par clarifier.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">333</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyCtaPrimary" datatype="html">
-        <source>Démarrer la conversation</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">334</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="caseStudyCtaSecondary" datatype="html">
-        <source>Voir tous les projets</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/client-project/client-project.component.ts</context>
-          <context context-type="linenumber">336</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="contactFormHeading" datatype="html">
         <source> Formulaire de contact </source>
         <context-group purpose="location">
@@ -1655,13 +1151,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
           <context context-type="linenumber">233,235</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7243381769177289361" datatype="html">
-        <source>Envoyer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormSubmit" datatype="html">
@@ -6612,48 +6101,6 @@
           <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="homeProject1Tag1" datatype="html">
-        <source>Angular</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">223</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="homeProject1Tag2" datatype="html">
-        <source>NestJS</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">224</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="homeProject1Tag3" datatype="html">
-        <source>IA</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">225</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="homeProject1Title" datatype="html">
-        <source>Plateforme métier refondue de zéro</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">227</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="homeProject1Desc" datatype="html">
-        <source>Du cadrage des usages à un produit qui tient la charge — et que l&apos;équipe sait faire évoluer seule.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">228</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="homeProject1ImageAlt" datatype="html">
-        <source>capture — étude de cas client</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/home/home.component.ts</context>
-          <context context-type="linenumber">230</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="homeProject2Tag1" datatype="html">
         <source>Atelier</source>
         <context-group purpose="location">
@@ -7646,7 +7093,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="presentationMilestone1Desc" datatype="html">
-        <source>Le studio sous sa forme actuelle, plus deux chantiers très actifs : &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (médiation culturelle IA pour musées) et &lt;strong&gt;ZenFirst Vision&lt;/strong&gt; (pilotage de rentabilité &amp; compta intelligente, France/Québec).</source>
+        <source>Le studio sous sa forme actuelle, plus un chantier très actif : &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (médiation culturelle IA pour musées).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/presentation/presentation.component.ts</context>
           <context context-type="linenumber">248</context>
@@ -8705,48 +8152,6 @@
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="projetsProject1Tag1" datatype="html">
-        <source>En production</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="projetsProject1Tag2" datatype="html">
-        <source>React 19</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="projetsProject1Tag3" datatype="html">
-        <source>Conformité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="projetsProject1Title" datatype="html">
-        <source>ZenFirst Vision — pilotage de rentabilité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
-          <context context-type="linenumber">72</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="projetsProject1Desc" datatype="html">
-        <source>Plateforme de comptabilité intelligente (France &amp; Québec). Très ambitieuse : 455 tables, conformité DGFiP/FEC/ANC, RGPD, durcissement OWASP. L&apos;ingénierie au service de la confiance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="projetsProject1ImageAlt" datatype="html">
-        <source>capture — ZenFirst Vision</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="projetsProject2Tag1" datatype="html">
         <source>Atelier</source>
         <context-group purpose="location">
@@ -8853,7 +8258,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="projetsProject4ImageAlt" datatype="html">
-        <source>capture — Morning-Brief</source>
+        <source>illustration — Morning-Brief</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
           <context context-type="linenumber">108</context>
@@ -9042,7 +8447,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="projetsProject9ImageAlt" datatype="html">
-        <source>capture — Le Jeu des Fourmis</source>
+        <source>illustration — Le Jeu des Fourmis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
           <context context-type="linenumber">165</context>
@@ -9105,7 +8510,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="projetsProject11ImageAlt" datatype="html">
-        <source>capture — Voice IA</source>
+        <source>illustration — Voice IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
           <context context-type="linenumber">183</context>
@@ -12295,24 +11700,6 @@
         <note priority="1" from="description">Contact CTA label</note>
         <note priority="1" from="meaning">navbar.cta.contact.label</note>
       </trans-unit>
-      <trans-unit id="navLinkAudit:Audit" datatype="html">
-        <source>Demander un devis</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">390,391</context>
-        </context-group>
-        <note priority="1" from="description">Navbar primary link</note>
-        <note priority="1" from="meaning">navbar.link.audit</note>
-      </trans-unit>
-      <trans-unit id="navLinkAuditSpan:Audit" datatype="html">
-        <source>Audit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
-          <context context-type="linenumber">396,402</context>
-        </context-group>
-        <note priority="1" from="description">Navbar primary link</note>
-        <note priority="1" from="meaning">navbar.link.audit</note>
-      </trans-unit>
       <trans-unit id="navCtaContactTitle" datatype="html">
         <source>Me contacter</source>
         <context-group purpose="location">
@@ -12767,6 +12154,192 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html</context>
           <context context-type="linenumber">22,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject12Tag1" datatype="html">
+        <source>Refonte en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject12Tag2" datatype="html">
+        <source>Réservation en ligne</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject12Tag3" datatype="html">
+        <source>Migration SEO</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject12Title" datatype="html">
+        <source>AtlanticBike — location et réparation de vélos</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject12Desc" datatype="html">
+        <source>Loueur-réparateur sur la côte atlantique : présenter l'activité, structurer l'offre et permettre la réservation en ligne. Demande en 6 étapes dont le devis est recalculé côté serveur uniquement, back-office du parc et de l'atelier, reprise des URL indexées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject12ImageAlt" datatype="html">
+        <source>capture — AtlanticBike</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject13Tag1" datatype="html">
+        <source>Prototype</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject13Tag2" datatype="html">
+        <source>Analyse de contenu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject13Title" datatype="html">
+        <source>Assistant IA Geev</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject13Desc" datatype="html">
+        <source>Prototype d'assistant intelligent pour faciliter le tri et l'analyse d'annonces à partir de contenus visuels.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject13ImageAlt" datatype="html">
+        <source>capture — Assistant IA Geev</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject14Tag1" datatype="html">
+        <source>Projet académique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject14Tag2" datatype="html">
+        <source>Modélisation prédictive</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject14Title" datatype="html">
+        <source>Modélisation prédictive de risques sanitaires</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject14Desc" datatype="html">
+        <source>Modélisation et analyse de données visant à anticiper l'apparition de risques sanitaires à partir de données épidémiologiques.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject14ImageAlt" datatype="html">
+        <source>capture — Modélisation prédictive de risques sanitaires</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="385129033471599880" datatype="html">
+        <source>Connectez-vous avec Google</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">91,92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7215127729541696793" datatype="html">
+        <source>Inscrivez-vous avec Google</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.html</context>
+          <context context-type="linenumber">254,255</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7243381769177289361" datatype="html">
+        <source>Envoyer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
+          <context context-type="linenumber">251</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navLinkAudit:Audit" datatype="html">
+        <source>Demander un devis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">390,391</context>
+        </context-group>
+        <note priority="1" from="description">Navbar primary link</note>
+        <note priority="1" from="meaning">navbar.link.audit</note>
+      </trans-unit>
+      <trans-unit id="navLinkAuditSpan:Audit" datatype="html">
+        <source>Audit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.html</context>
+          <context context-type="linenumber">396,402</context>
+        </context-group>
+        <note priority="1" from="description">Navbar primary link</note>
+        <note priority="1" from="meaning">navbar.link.audit</note>
+      </trans-unit>
+      <trans-unit id="projetsProject15Tag1" datatype="html">
+        <source>Vinification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject15Tag2" datatype="html">
+        <source>Poste &amp; mobile</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject15Title" datatype="html">
+        <source>Gestion de chais — la vinification au quotidien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject15Desc" datatype="html">
+        <source>Le même outil, côté terrain : les opérations de vinification se saisissent aussi bien au poste que sur mobile, pour que la traçabilité se remplisse là où le travail se fait.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projetsProject15ImageAlt" datatype="html">
+        <source>capture — Gestion de chais, vinification sur poste et mobile</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/projets/projets.component.ts</context>
+          <context context-type="linenumber">159</context>
         </context-group>
       </trans-unit>
     </body>

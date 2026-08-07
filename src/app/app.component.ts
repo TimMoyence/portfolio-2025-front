@@ -28,7 +28,9 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
     <div class="min-h-screen text-scheme-text">
       <app-navbar></app-navbar>
       <main id="main-content" role="main">
-        <div class="pt-24 lg:pt-28 bg-scheme-background"></div>
+        <!-- Cale sous la navbar fixe : purement dimensionnelle, sans fond
+             opaque qui masquerait le champ de particules global. -->
+        <div class="pt-24 lg:pt-28"></div>
         <router-outlet></router-outlet>
       </main>
       <!--

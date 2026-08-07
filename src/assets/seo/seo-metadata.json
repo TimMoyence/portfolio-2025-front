@@ -111,7 +111,7 @@
       ],
       "url": [
         "https://asilidesign.fr/fr/presentation",
-        "https://asilidesign.fr/fr/client-project",
+        "https://asilidesign.fr/fr/projets",
         "https://asilidesign.fr/fr/offer",
         "https://asilidesign.fr/fr/formations",
         "https://asilidesign.fr/fr/growth-audit",
@@ -169,7 +169,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1,
-      "lastmod": "2026-07-06",
+      "lastmod": "2026-08-07",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -231,7 +231,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-07-06",
+      "lastmod": "2026-08-06",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -379,7 +379,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-06-06",
+      "lastmod": "2026-08-06",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -406,22 +406,13 @@
                 "position": 1,
                 "item": {
                   "@type": "CreativeWork",
-                  "name": "ZenFirst Vision — pilotage de rentabilité",
-                  "description": "Plateforme de comptabilité intelligente (France & Québec) : 455 tables, conformité DGFiP/FEC/ANC, RGPD, durcissement OWASP."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
                   "name": "Weather",
                   "description": "App météo : prévisions, qualité de l'air, alertes, circuit breaker multi-provider."
                 }
               },
               {
                 "@type": "ListItem",
-                "position": 3,
+                "position": 2,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Sebastian — suivi de consommation",
@@ -430,7 +421,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 4,
+                "position": 3,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Morning-Brief",
@@ -439,7 +430,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 5,
+                "position": 4,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Onboarding Telegram IFS — académie de formation",
@@ -448,7 +439,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 6,
+                "position": 5,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Musaium",
@@ -457,11 +448,20 @@
               },
               {
                 "@type": "ListItem",
-                "position": 7,
+                "position": 6,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Gestion de chais de Cognac — traçabilité",
                   "description": "Suivi de la production de la vigne à la mise en bouteille : centralisation, traçabilité complète, accompagnement des usages métier."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 7,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Gestion de chais — la vinification au quotidien",
+                  "description": "Le même outil côté terrain : les opérations de vinification se saisissent au poste comme sur mobile, pour que la traçabilité se remplisse là où le travail se fait."
                 }
               },
               {
@@ -499,6 +499,34 @@
                   "name": "Voice IA",
                   "description": "Assistant vocal Telegram : capture, transcrit et organise les idées vers Notion & Google Calendar."
                 }
+              },
+              {
+                "@type": "ListItem",
+                "position": 12,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "AtlanticBike — location et réparation de vélos",
+                  "description": "Loueur-réparateur sur la côte atlantique : présenter l'activité, structurer l'offre et permettre la réservation en ligne, avec back-office du parc et de l'atelier.",
+                  "url": "https://www.atlanticbike.fr/"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 13,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Assistant IA Geev",
+                  "description": "Prototype d'assistant intelligent pour faciliter le tri et l'analyse d'annonces à partir de contenus visuels."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 14,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Modélisation prédictive de risques sanitaires",
+                  "description": "Modélisation et analyse de données visant à anticiper l'apparition de risques sanitaires à partir de données épidémiologiques."
+                }
               }
             ]
           }
@@ -518,22 +546,13 @@
                 "position": 1,
                 "item": {
                   "@type": "CreativeWork",
-                  "name": "ZenFirst Vision — profitability steering",
-                  "description": "Intelligent accounting platform (France & Quebec): 455 tables, DGFiP/FEC/ANC compliance, GDPR, OWASP hardening."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
                   "name": "Weather",
                   "description": "Weather app: forecasts, air quality, alerts, multi-provider circuit breaker."
                 }
               },
               {
                 "@type": "ListItem",
-                "position": 3,
+                "position": 2,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Sebastian — consumption tracking",
@@ -542,7 +561,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 4,
+                "position": 3,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Morning-Brief",
@@ -551,7 +570,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 5,
+                "position": 4,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "IFS Telegram Onboarding — training academy",
@@ -560,7 +579,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 6,
+                "position": 5,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Musaium",
@@ -569,11 +588,20 @@
               },
               {
                 "@type": "ListItem",
-                "position": 7,
+                "position": 6,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Cognac cellar management — traceability",
                   "description": "Production tracking from vine to bottling: centralised information, full traceability, day-to-day business support."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 7,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Cellar management — winemaking day to day",
+                  "description": "The same tool out in the field: winemaking operations can be logged from a desktop or a phone, so traceability fills in where the work actually happens."
                 }
               },
               {
@@ -611,6 +639,34 @@
                   "name": "Voice AI",
                   "description": "Telegram voice assistant: captures, transcribes and organises ideas into Notion & Google Calendar."
                 }
+              },
+              {
+                "@type": "ListItem",
+                "position": 12,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "AtlanticBike — bike rental and repair",
+                  "description": "Bike rental and repair business on the Atlantic coast: present the business, structure the offering and enable online booking, with a back office for the fleet and the workshop.",
+                  "url": "https://www.atlanticbike.fr/"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 13,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Geev AI Assistant",
+                  "description": "Intelligent assistant prototype to ease the sorting and analysis of listings from visual content."
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 14,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Predictive modeling of health risks",
+                  "description": "Data modeling and analysis aimed at anticipating emerging health risks from epidemiological data."
+                }
               }
             ]
           }
@@ -623,7 +679,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-07-06",
+      "lastmod": "2026-08-06",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
@@ -811,7 +867,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-06-06",
+      "lastmod": "2026-08-07",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -861,130 +917,6 @@
                 "addressCountry": "FR"
               }
             }
-          }
-        }
-      }
-    },
-    {
-      "id": "client-project",
-      "path": "/client-project",
-      "index": true,
-      "changefreq": "monthly",
-      "priority": 0.6,
-      "lastmod": "2026-07-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Projets",
-          "path": "/client-project"
-        }
-      ],
-      "locales": {
-        "fr": {
-          "title": "Projets clients — Réalisations web",
-          "description": "Réalisations web à Bordeaux : sites vitrines, applications métier, automatisations. Projets concrets pour TPE, artisans et indépendants.",
-          "ogTitle": "Projets clients de Tim Moyence",
-          "ogDescription": "Une sélection de projets clients réussis, démontrant mes compétences en développement web.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "Projets clients — Asili Design",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "IFS Academy — Bot Telegram et automatisations",
-                  "description": "Automatisation complète autour d'un bot Telegram, Excel/Google Sheets comme base de données, et connecteurs pour piloter l'activité.",
-                  "url": "https://ifscourse.com/"
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Application métier pour la filière cognac",
-                  "description": "Structuration et suivi de la production viticole et de transformation."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "AtlanticBike — Location et réparation de vélos",
-                  "description": "Site informatif et opérationnel pour une activité locale de location et réparation de vélos.",
-                  "url": "https://www.atlanticbike.fr/"
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 4,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Louison — Site de présentation et réservation",
-                  "description": "Présence en ligne pour une activité de massage et bien-être.",
-                  "url": "https://www.louison-masseuse.com/accueil"
-                }
-              }
-            ]
-          }
-        },
-        "en": {
-          "title": "Client projects — Web work",
-          "description": "Web projects in Bordeaux: showcase sites, business applications, automation. Concrete projects for small businesses, artisans and independents.",
-          "ogTitle": "Tim Moyence's client projects",
-          "ogDescription": "A selection of successful client projects showcasing my web development skills.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "Client Projects — Asili Design",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "IFS Academy — Telegram Bot and Automations",
-                  "description": "Full automation around a Telegram bot, Excel/Google Sheets as database, and connectors to manage business activity.",
-                  "url": "https://ifscourse.com/"
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Business application for the cognac industry",
-                  "description": "Structuring and tracking of wine and spirit production."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "AtlanticBike — Bike rental and repair",
-                  "description": "Informational and operational website for a local bike rental and repair business.",
-                  "url": "https://www.atlanticbike.fr/"
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 4,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Louison — Presentation and booking site",
-                  "description": "Online presence for a massage and wellness business.",
-                  "url": "https://www.louison-masseuse.com/accueil"
-                }
-              }
-            ]
           }
         }
       }
@@ -1137,7 +1069,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-06-08",
+      "lastmod": "2026-07-06",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1211,7 +1143,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.5,
-      "lastmod": "2026-04-18",
+      "lastmod": "2026-07-06",
       "locales": {
         "fr": {
           "title": "Météo — L'Atelier",
@@ -1263,7 +1195,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.4,
-      "lastmod": "2026-04-18",
+      "lastmod": "2026-07-06",
       "locales": {
         "fr": {
           "title": "Sebastian — L'Atelier",
@@ -1701,7 +1633,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-04-10",
+      "lastmod": "2026-06-08",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1780,7 +1712,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-21",
+      "lastmod": "2026-07-06",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1976,7 +1908,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-04-21",
+      "lastmod": "2026-07-06",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -2174,7 +2106,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-04-21",
+      "lastmod": "2026-06-08",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -2234,7 +2166,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-04-21",
+      "lastmod": "2026-06-08",
       "breadcrumb": [
         {
           "name": "Accueil",

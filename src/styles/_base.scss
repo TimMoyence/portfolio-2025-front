@@ -42,6 +42,41 @@
     margin: 0;
     text-wrap: pretty;
   }
+  /* Champs de saisie : fond transparent pour épouser la surface qui les porte
+     (page cream, carte ivoire, panneau sombre) au lieu du blanc impose par
+     defaut par le navigateur.
+
+     Les cases a cocher et boutons radio sont exclus pour garder leur rendu
+     natif. Les autres types exclus ne sont pas utilises aujourd'hui : c'est
+     une precaution pour qu'un futur `type="file"` ou `type="range"` ne soit
+     pas aplati sans qu'on l'ait voulu. Aucun effet visuel aujourd'hui, et
+     aucun pour button/reset/submit, que le preflight Tailwind met de toute
+     facon deja en `background-color: transparent`.
+
+     `:where()` est indispensable : sa specificite est nulle, donc le selecteur
+     pese (0,0,1) comme `textarea` et `select`, et le moindre utilitaire de
+     composant (0,1,0) reprend la main. Sans lui, `:not()` heriterait de la
+     specificite de son argument le plus fort -- (0,1,1) -- et ecraserait les
+     `bg-*` des champs de Sebastian, de la recherche Meteo et des slides.
+     `@layer base` est une directive Tailwind 3, pas une couche CSS native
+     (aucun `@layer` dans la feuille compilee) : elle n'arbitre rien ici. */
+  input:where(
+    :not(
+      [type="checkbox"],
+      [type="radio"],
+      [type="submit"],
+      [type="button"],
+      [type="reset"],
+      [type="file"],
+      [type="color"],
+      [type="range"],
+      [type="image"]
+    )
+  ),
+  textarea,
+  select {
+    background-color: transparent;
+  }
   a {
     color: inherit;
     text-decoration: none;
@@ -54,7 +89,9 @@
     outline: 2px solid var(--glow);
     outline-offset: 3px;
   }
-  /* Voile chaud fixe derrière le contenu (lisibilité du canvas) */
+  /* Voile chaud fixe derrière le contenu (lisibilité du canvas).
+     Opacités allégées d'environ 20 % : le champ de particules reste lisible
+     sans que le texte perde son contraste. */
   body::before {
     content: "";
     position: fixed;
@@ -65,12 +102,12 @@
       radial-gradient(
         130% 75% at 82% 4%,
         rgba(255, 250, 242, 0) 30%,
-        rgba(255, 250, 242, 0.42) 78%
+        rgba(255, 250, 242, 0.34) 78%
       ),
       linear-gradient(
         180deg,
-        rgba(255, 250, 242, 0.28),
-        rgba(255, 250, 242, 0.42)
+        rgba(255, 250, 242, 0.22),
+        rgba(255, 250, 242, 0.34)
       );
   }
 }

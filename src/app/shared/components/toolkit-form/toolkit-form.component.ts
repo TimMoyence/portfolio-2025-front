@@ -63,7 +63,7 @@ export const TOOLKIT_FORM_TERMS_VERSION = "2026-04-10";
               (input)="firstName.set(readInputValue($event))"
               i18n-placeholder="@@toolkit-form.firstName.placeholder"
               placeholder="Votre prénom"
-              class="w-full rounded-lg border border-scheme-border bg-scheme-background px-4 py-3 text-sm text-scheme-text focus:outline-none focus:ring-2 focus:ring-scheme-accent-focus"
+              class="w-full rounded-lg border border-scheme-border px-4 py-3 text-sm text-scheme-text focus:outline-none focus:ring-2 focus:ring-scheme-accent-focus"
               autocomplete="given-name"
               required
             />
@@ -75,7 +75,7 @@ export const TOOLKIT_FORM_TERMS_VERSION = "2026-04-10";
               (input)="email.set(readInputValue($event))"
               i18n-placeholder="@@toolkit-form.email.placeholder"
               placeholder="Votre email"
-              class="w-full rounded-lg border border-scheme-border bg-scheme-background px-4 py-3 text-sm text-scheme-text focus:outline-none focus:ring-2 focus:ring-scheme-accent-focus"
+              class="w-full rounded-lg border border-scheme-border px-4 py-3 text-sm text-scheme-text focus:outline-none focus:ring-2 focus:ring-scheme-accent-focus"
               autocomplete="email"
               required
             />

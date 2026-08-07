@@ -40,16 +40,21 @@
               "
             />
 
+            <!-- La couleur est portee par le seul [ngClass] : `text-red-500` en
+                 [class.] serait inerte, les utilitaires `text-scheme-*` etant
+                 emis apres lui dans la feuille et de meme specificite (0,1,0). -->
             <label
               [for]="field.key"
-              class="absolute left-3 px-1 bg-scheme-surface text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+              class="absolute left-3 px-1 text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent peer-focus:bg-scheme-background"
               [ngClass]="
-                contactForm[field.key]
-                  ? '-top-3 text-sm md:text-base text-scheme-accent'
-                  : 'top-2 text-sm text-scheme-text-muted'
-              "
-              [class.text-red-500]="
-                control.invalid && (control.touched || isContactSubmitted)
+                (contactForm[field.key]
+                  ? '-top-3 text-sm md:text-base bg-scheme-background '
+                  : 'top-2 text-sm bg-transparent ') +
+                (control.invalid && (control.touched || isContactSubmitted)
+                  ? 'text-red-500'
+                  : contactForm[field.key]
+                    ? 'text-scheme-accent'
+                    : 'text-scheme-text')
               "
             >
               {{ field.label }}
@@ -84,15 +89,18 @@
       <div class="grid w-full gap-2">
         <label
           for="subject"
-          class="font-medium text-scheme-text-muted"
+          class="font-medium text-scheme-text"
           i18n="@@contactFormSubject"
         >
           Sujet de votre demande
         </label>
 
-        <!-- Wrapper owns border + bg -->
+        <!-- Le wrapper porte la bordure et le chevron ; le fond reste
+             transparent (parti pris « champs transparents »). La couleur du
+             texte est portee par le selecteur lui-meme, qui l'ajuste selon
+             qu'un sujet est choisi (contraste AA) ou non (placeholder). -->
         <div
-          class="rounded-form border border-scheme-border bg-scheme-surface w-full font-medium text-scheme-text-muted flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
+          class="rounded-form border border-scheme-border w-full font-medium flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
           [class.border-red-500]="
             subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)
           "
@@ -103,7 +111,12 @@
             required
             [(ngModel)]="contactForm.subject"
             #subjectCtrl="ngModel"
-            class="relative z-10 w-full appearance-none bg-transparent px-3 py-2 pr-12 font-medium text-scheme-text-muted focus:outline-none"
+            class="relative z-10 w-full appearance-none bg-transparent px-3 py-2 pr-12 font-medium focus:outline-none"
+            [ngClass]="
+              contactForm.subject
+                ? 'text-scheme-text'
+                : 'text-scheme-text-muted'
+            "
           >
             <option value="" disabled i18n="@@contactFormSubjectPlaceholder">
               Sélectionnez un sujet
@@ -130,7 +143,7 @@
       <!-- Rôle -->
       <div class="grid w-full items-center py-3 md:py-4">
         <span
-          class="mb-3 md:mb-4 font-medium text-scheme-text-muted"
+          class="mb-3 md:mb-4 font-medium text-scheme-text"
           i18n="@@contactFormRole"
           >Qui êtes-vous ?</span
         >
@@ -142,10 +155,10 @@
             <div>
               <label
                 for="{{ role }}"
-                class="flex items-center justify-between space-x-2 gap-2 rounded border border-scheme-border bg-scheme-surface p-3 text-sm font-medium shadow-sm transition-colors hover:bg-scheme-surface-hover has-checked:border-scheme-accent has-checked:ring-1 has-checked:ring-scheme-accent"
+                class="flex items-center justify-between space-x-2 gap-2 rounded border border-scheme-border p-3 text-sm font-medium shadow-sm transition-colors hover:bg-scheme-surface-hover has-checked:border-scheme-accent has-checked:ring-1 has-checked:ring-scheme-accent"
               >
                 <div>
-                  <p class="text-scheme-text-muted">{{ role }}</p>
+                  <p class="text-scheme-text">{{ role }}</p>
                 </div>
                 <input
                   [(ngModel)]="contactForm.role"
@@ -190,16 +203,20 @@
           "
         ></textarea>
 
+        <!-- Meme raison qu'au-dessus : la couleur passe par le seul [ngClass],
+             `text-red-500` en [class.] serait inerte. -->
         <label
           for="message"
-          class="absolute left-3 px-1 bg-scheme-surface text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+          class="absolute left-3 px-1 text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent peer-focus:bg-scheme-background"
           [ngClass]="
-            contactForm.message
-              ? '-top-3 text-sm md:text-base text-scheme-accent'
-              : 'top-2 text-sm text-scheme-text-muted'
-          "
-          [class.text-red-500]="
-            messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)
+            (contactForm.message
+              ? '-top-3 text-sm md:text-base bg-scheme-background '
+              : 'top-2 text-sm bg-transparent ') +
+            (messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)
+              ? 'text-red-500'
+              : contactForm.message
+                ? 'text-scheme-accent'
+                : 'text-scheme-text')
           "
           i18n="@@contactFormMessageLabel"
         >

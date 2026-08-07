@@ -86,7 +86,11 @@ const buildJsonLdScripts = (
   const scripts: string[] = [];
 
   const addScript = (data: Record<string, unknown>): void => {
-    const json = JSON.stringify(data).replace(/<\/script>/gi, "<\\/script>");
+    // Neutralise TOUS les `<`, pas seulement `</script>` : le parseur HTML a un
+    // etat « script data double escaped » ou un `<!--` suivi d'un `<script`
+    // empeche le `</script>` suivant de fermer le bloc (mXSS). `<` est un
+    // echappement JSON standard, le JSON-LD reste parsable a l'identique.
+    const json = JSON.stringify(data).replace(/</g, "\\u003c");
     scripts.push(`<script type="application/ld+json">${json}</script>`);
   };
 

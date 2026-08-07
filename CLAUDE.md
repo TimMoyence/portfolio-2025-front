@@ -48,7 +48,6 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3806 symbols, 8
 | Work in the Services area (46 symbols) | `.claude/skills/generated/services/SKILL.md` |
 | Work in the Growth-audit area (36 symbols) | `.claude/skills/generated/growth-audit/SKILL.md` |
 | Work in the Components area (32 symbols) | `.claude/skills/generated/components/SKILL.md` |
-| Work in the Interactions area (22 symbols) | `.claude/skills/generated/interactions/SKILL.md` |
 | Work in the Factories area (20 symbols) | `.claude/skills/generated/factories/SKILL.md` |
 | Work in the Adapters area (19 symbols) | `.claude/skills/generated/adapters/SKILL.md` |
 | Work in the Server area (18 symbols) | `.claude/skills/generated/server/SKILL.md` |
@@ -57,7 +56,6 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3806 symbols, 8
 | Work in the Seo area (14 symbols) | `.claude/skills/generated/seo/SKILL.md` |
 | Work in the Navbar area (11 symbols) | `.claude/skills/generated/navbar/SKILL.md` |
 | Work in the Deck area (11 symbols) | `.claude/skills/generated/deck/SKILL.md` |
-| Work in the Presentation-engine area (10 symbols) | `.claude/skills/generated/presentation-engine/SKILL.md` |
 | Work in the Learning-tooltip area (9 symbols) | `.claude/skills/generated/learning-tooltip/SKILL.md` |
 | Work in the Sebastian area (9 symbols) | `.claude/skills/generated/sebastian/SKILL.md` |
 | Work in the Sun-arc area (8 symbols) | `.claude/skills/generated/sun-arc/SKILL.md` |

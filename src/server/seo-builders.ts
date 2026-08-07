@@ -153,8 +153,10 @@ export const buildLlmsTxt = (
       p.id === "formations" ||
       p.id.startsWith("formations-"),
   );
+  // `projets` porte les realisations depuis le retrait de l'etude de cas dediee
+  // (`client-project`), qui occupait cette place dans le fichier curate.
   const aboutPages = indexablePages.filter((p) =>
-    ["presentation", "client-project"].includes(p.id),
+    ["presentation", "projets"].includes(p.id),
   );
   const appPages = indexablePages.filter((p) =>
     ["weather", "sebastian"].includes(p.id),
