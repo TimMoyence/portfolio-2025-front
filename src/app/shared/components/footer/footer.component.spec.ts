@@ -70,22 +70,6 @@ describe('FooterComponent', () => {
     expect(baseline?.textContent?.trim()).toBe(component.brandBaseline);
   });
 
-  it('should render the freshness chip with a live dot, label and <time>', () => {
-    const fresh = fixture.nativeElement.querySelector('.asili-footer__fresh');
-    expect(fresh).toBeTruthy();
-    expect(fresh.querySelector('.asili-footer__live-dot')).toBeTruthy();
-    expect(fresh.querySelector('.asili-footer__fresh-label')?.textContent).toBe(
-      component.freshLabel,
-    );
-  });
-
-  it('should expose a <time datetime> bound to siteLastUpdated for SEO', () => {
-    const time: HTMLTimeElement | null = fixture.nativeElement.querySelector('time[datetime]');
-    expect(time).toBeTruthy();
-    expect(time?.getAttribute('datetime')).toBe(component.siteLastUpdated);
-    expect(time?.textContent?.trim()).toBe(component.siteLastUpdated);
-  });
-
   it('should keep the structured <address> with postal address microdata', () => {
     const address = fixture.nativeElement.querySelector('address[itemscope]');
     expect(address).toBeTruthy();

@@ -16,11 +16,7 @@ import { SvgIconComponent } from '../svg-icon.component';
 export class FooterComponent {
   readonly contactMethods = CONTACT_METHODS;
 
-  readonly siteLastUpdated = '2026-04-17';
-
   readonly brandBaseline = $localize`:footer.brand.baseline|Footer brand baseline@@footerBrandBaseline:« Asili » — la racine, l'essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.`;
-
-  readonly freshLabel = $localize`:footer.fresh.label|Footer freshness chip label@@footerFreshLabel:Mis à jour le`;
 
   readonly copyright = $localize`:footer.copyright.asili|Footer copyright line@@footerCopyrightAsili:© 2026 Asili Design · Bordeaux`;
 
