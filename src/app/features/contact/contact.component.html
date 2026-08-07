@@ -42,10 +42,10 @@
 
             <label
               [for]="field.key"
-              class="absolute left-3 px-1 bg-scheme-surface text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+              class="absolute left-3 px-1 bg-transparent text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent peer-focus:bg-scheme-background"
               [ngClass]="
                 contactForm[field.key]
-                  ? '-top-3 text-sm md:text-base text-scheme-accent'
+                  ? '-top-3 text-sm md:text-base text-scheme-accent bg-scheme-background'
                   : 'top-2 text-sm text-scheme-text-muted'
               "
               [class.text-red-500]="
@@ -92,7 +92,7 @@
 
         <!-- Wrapper owns border + bg -->
         <div
-          class="rounded-form border border-scheme-border bg-scheme-surface w-full font-medium text-scheme-text-muted flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
+          class="rounded-form border border-scheme-border w-full font-medium text-scheme-text-muted flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
           [class.border-red-500]="
             subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)
           "
@@ -142,7 +142,7 @@
             <div>
               <label
                 for="{{ role }}"
-                class="flex items-center justify-between space-x-2 gap-2 rounded border border-scheme-border bg-scheme-surface p-3 text-sm font-medium shadow-sm transition-colors hover:bg-scheme-surface-hover has-checked:border-scheme-accent has-checked:ring-1 has-checked:ring-scheme-accent"
+                class="flex items-center justify-between space-x-2 gap-2 rounded border border-scheme-border p-3 text-sm font-medium shadow-sm transition-colors hover:bg-scheme-surface-hover has-checked:border-scheme-accent has-checked:ring-1 has-checked:ring-scheme-accent"
               >
                 <div>
                   <p class="text-scheme-text-muted">{{ role }}</p>
@@ -192,10 +192,10 @@
 
         <label
           for="message"
-          class="absolute left-3 px-1 bg-scheme-surface text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent"
+          class="absolute left-3 px-1 bg-transparent text-scheme-text text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-scheme-text-muted peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent peer-focus:bg-scheme-background"
           [ngClass]="
             contactForm.message
-              ? '-top-3 text-sm md:text-base text-scheme-accent'
+              ? '-top-3 text-sm md:text-base text-scheme-accent bg-scheme-background'
               : 'top-2 text-sm text-scheme-text-muted'
           "
           [class.text-red-500]="

@@ -42,6 +42,16 @@
     margin: 0;
     text-wrap: pretty;
   }
+  /* Champs de saisie : fond transparent pour épouser la surface qui les porte
+     (page cream, carte ivoire, panneau sombre) au lieu du blanc impose par
+     defaut par le navigateur. Cases a cocher et boutons radio gardent leur
+     rendu natif. Dans `@layer base` : tout style de composant reste
+     prioritaire et peut redonner un fond a un champ qui en a besoin. */
+  input:not([type="checkbox"], [type="radio"], [type="submit"]),
+  textarea,
+  select {
+    background-color: transparent;
+  }
   a {
     color: inherit;
     text-decoration: none;
