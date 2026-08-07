@@ -48,7 +48,6 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3806 symbols, 8
 | Work in the Services area (46 symbols) | `.claude/skills/generated/services/SKILL.md` |
 | Work in the Growth-audit area (36 symbols) | `.claude/skills/generated/growth-audit/SKILL.md` |
 | Work in the Components area (32 symbols) | `.claude/skills/generated/components/SKILL.md` |
-| Work in the Interactions area (22 symbols) | `.claude/skills/generated/interactions/SKILL.md` |
 | Work in the Factories area (20 symbols) | `.claude/skills/generated/factories/SKILL.md` |
 | Work in the Adapters area (19 symbols) | `.claude/skills/generated/adapters/SKILL.md` |
 | Work in the Server area (18 symbols) | `.claude/skills/generated/server/SKILL.md` |
