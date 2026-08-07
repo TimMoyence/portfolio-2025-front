@@ -85,7 +85,8 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       return;
     }
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    this.reduce = motionQuery.matches;
     this.readColors();
     this.resize();
 
@@ -117,12 +118,27 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       this.visible = !document.hidden;
       this.toggleLoop();
     };
+    // L'utilisateur peut activer/desactiver « reduire les animations » en cours
+    // de session : on suit la media query au lieu de la lire une seule fois.
+    const onMotionChange = (event: MediaQueryListEvent): void => {
+      this.reduce = event.matches;
+      if (!this.reduce) {
+        this.toggleLoop();
+        return;
+      }
+      if (this.raf) {
+        cancelAnimationFrame(this.raf);
+        this.raf = 0;
+      }
+      this.renderFrame();
+    };
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseleave", onLeave);
     window.addEventListener("touchmove", onTouch, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
+    motionQuery.addEventListener("change", onMotionChange);
 
     if (typeof IntersectionObserver !== "undefined") {
       this.observer = new IntersectionObserver((entries) => {
@@ -147,6 +163,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       window.removeEventListener("mouseleave", onLeave);
       window.removeEventListener("touchmove", onTouch);
       document.removeEventListener("visibilitychange", onVisibility);
+      motionQuery.removeEventListener("change", onMotionChange);
       this.observer?.disconnect();
     });
   }
