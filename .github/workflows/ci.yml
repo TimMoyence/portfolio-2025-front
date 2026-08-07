@@ -41,6 +41,16 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Tests des gardes d outillage
+        run: npm run test:guards
+
+      # Cliquet non-regressif sur les commentaires narratifs : le plafond vit
+      # dans `"guard-no-comments".maxOffenses` (package.json). Le gate echoue si
+      # le compte depasse le plafond, et imprime la valeur a poser quand il
+      # passe dessous.
+      - name: Garde no-comment (cliquet)
+        run: npm run guard:comments
+
       - name: Coverage gate
         run: npm run test:cov
 
