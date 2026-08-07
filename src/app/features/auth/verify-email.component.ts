@@ -1,17 +1,17 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
   inject,
-} from "@angular/core";
-import { ActivatedRoute, Router, RouterModule } from "@angular/router";
-import { AUTH_PORT, type AuthPort } from "../../core/ports/auth.port";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
-import { AuthShellComponent } from "../../shared/components/auth-shell/auth-shell.component";
-import { AuthSuccessComponent } from "../../shared/components/auth-success/auth-success.component";
-import { extractErrorMessage } from "../../shared/utils/http-error.utils";
+} from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AUTH_PORT, type AuthPort } from '../../core/ports/auth.port';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
+import { AuthSuccessComponent } from '../../shared/components/auth-success/auth-success.component';
+import { extractErrorMessage } from '../../shared/utils/http-error.utils';
 
 /**
  * Page de verification d'email.
@@ -24,7 +24,7 @@ import { extractErrorMessage } from "../../shared/utils/http-error.utils";
  * la maquette est purement cosmétique et n'est PAS implémentée.
  */
 @Component({
-  selector: "app-verify-email",
+  selector: 'app-verify-email',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,8 +33,8 @@ import { extractErrorMessage } from "../../shared/utils/http-error.utils";
     AuthShellComponent,
     AuthSuccessComponent,
   ],
-  templateUrl: "./verify-email.component.html",
-  styleUrl: "./verify-email.component.scss",
+  templateUrl: './verify-email.component.html',
+  styleUrl: './verify-email.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerifyEmailComponent implements OnInit {
@@ -48,7 +48,7 @@ export class VerifyEmailComponent implements OnInit {
   errorMessage?: string;
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get("token");
+    const token = this.route.snapshot.queryParamMap.get('token');
 
     if (!token) {
       this.isLoading = false;
@@ -63,7 +63,7 @@ export class VerifyEmailComponent implements OnInit {
         this.successMessage = result.message;
         this.cdr.markForCheck();
         setTimeout(() => {
-          void this.router.navigate(["/login"]);
+          void this.router.navigate(['/login']);
         }, 3000);
       },
       error: (err) => {

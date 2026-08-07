@@ -101,14 +101,7 @@
     "siteNavigation": {
       "@context": "https://schema.org",
       "@type": "SiteNavigationElement",
-      "name": [
-        "Présentation",
-        "Projets",
-        "Offres",
-        "Formations",
-        "Audit gratuit",
-        "Contact"
-      ],
+      "name": ["Présentation", "Projets", "Offres", "Formations", "Audit gratuit", "Contact"],
       "url": [
         "https://asilidesign.fr/fr/presentation",
         "https://asilidesign.fr/fr/projets",
@@ -156,10 +149,7 @@
         "Formation IA"
       ],
       "knowsLanguage": ["fr", "en"],
-      "sameAs": [
-        "https://www.linkedin.com/in/tim-moyence",
-        "https://www.facebook.com/tim.moyence/"
-      ]
+      "sameAs": ["https://www.linkedin.com/in/tim-moyence", "https://www.facebook.com/tim.moyence/"]
     }
   },
   "pages": [

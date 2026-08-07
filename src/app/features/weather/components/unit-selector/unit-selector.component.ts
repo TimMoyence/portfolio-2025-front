@@ -1,12 +1,7 @@
-import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from "@angular/core";
-import { BottomSheetComponent } from "../../../../shared/components/bottom-sheet/bottom-sheet.component";
-import { UnitPreferencesService } from "../../services/unit-preferences.service";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { BottomSheetComponent } from '../../../../shared/components/bottom-sheet/bottom-sheet.component';
+import { UnitPreferencesService } from '../../services/unit-preferences.service';
 
 /** Definition d'un choix d'unite pour le selecteur segmente. */
 interface UnitOption<T extends string> {
@@ -20,7 +15,7 @@ interface UnitOption<T extends string> {
  * Permet de choisir les unites de temperature, vitesse et pression.
  */
 @Component({
-  selector: "app-unit-selector",
+  selector: 'app-unit-selector',
   standalone: true,
   imports: [CommonModule, BottomSheetComponent],
   template: `
@@ -63,11 +58,7 @@ interface UnitOption<T extends string> {
     </button>
 
     <!-- Panneau de selection des unites -->
-    <app-bottom-sheet
-      [open]="isOpen()"
-      [title]="sheetTitle"
-      (openChange)="onOpenChange($event)"
-    >
+    <app-bottom-sheet [open]="isOpen()" [title]="sheetTitle" (openChange)="onOpenChange($event)">
       <div class="space-y-5">
         <!-- Temperature -->
         <div>
@@ -85,9 +76,7 @@ interface UnitOption<T extends string> {
               <button
                 type="button"
                 role="tab"
-                [attr.aria-selected]="
-                  unitService.temperatureUnit() === opt.value
-                "
+                [attr.aria-selected]="unitService.temperatureUnit() === opt.value"
                 class="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
                 [ngClass]="
                   unitService.temperatureUnit() === opt.value
@@ -179,21 +168,21 @@ export class UnitSelectorComponent {
   readonly sheetTitle = $localize`:weather.units.title|@@weatherUnitsTitle:Unités de mesure`;
 
   /** Options de temperature. */
-  readonly temperatureOptions: UnitOption<"celsius" | "fahrenheit">[] = [
-    { value: "celsius", label: "\u00B0C" },
-    { value: "fahrenheit", label: "\u00B0F" },
+  readonly temperatureOptions: UnitOption<'celsius' | 'fahrenheit'>[] = [
+    { value: 'celsius', label: '\u00B0C' },
+    { value: 'fahrenheit', label: '\u00B0F' },
   ];
 
   /** Options de vitesse. */
-  readonly speedOptions: UnitOption<"kmh" | "mph">[] = [
-    { value: "kmh", label: "km/h" },
-    { value: "mph", label: "mph" },
+  readonly speedOptions: UnitOption<'kmh' | 'mph'>[] = [
+    { value: 'kmh', label: 'km/h' },
+    { value: 'mph', label: 'mph' },
   ];
 
   /** Options de pression. */
-  readonly pressureOptions: UnitOption<"hpa" | "inhg">[] = [
-    { value: "hpa", label: "hPa" },
-    { value: "inhg", label: "inHg" },
+  readonly pressureOptions: UnitOption<'hpa' | 'inhg'>[] = [
+    { value: 'hpa', label: 'hPa' },
+    { value: 'inhg', label: 'inHg' },
   ];
 
   /** Bascule l'ouverture du panneau. */

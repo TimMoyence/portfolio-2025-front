@@ -1,8 +1,8 @@
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { HistoricalComparisonComponent } from "./historical-comparison.component";
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { HistoricalComparisonComponent } from './historical-comparison.component';
 
-describe("HistoricalComparisonComponent", () => {
+describe('HistoricalComparisonComponent', () => {
   let component: HistoricalComparisonComponent;
   let fixture: ComponentFixture<HistoricalComparisonComponent>;
 
@@ -16,15 +16,15 @@ describe("HistoricalComparisonComponent", () => {
     fixture.detectChanges();
   });
 
-  it("devrait se creer", () => {
+  it('devrait se creer', () => {
     expect(component).toBeTruthy();
   });
 
-  it("devrait avoir des donnees historiques nulles par defaut", () => {
+  it('devrait avoir des donnees historiques nulles par defaut', () => {
     expect(component.historical()).toBeNull();
   });
 
-  it("devrait avoir une temperature actuelle de 0 par defaut", () => {
+  it('devrait avoir une temperature actuelle de 0 par defaut', () => {
     expect(component.currentTemp()).toBe(0);
   });
 });

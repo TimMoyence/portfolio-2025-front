@@ -46,9 +46,9 @@
   --danger: #c0563c;
 
   /* — Typo — */
-  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-sans: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
 
   /* — Espacement — */
   --s-1: 6px;
@@ -68,14 +68,10 @@
   --r-lg: 20px;
   --r-xl: 30px;
   --r-pill: 999px;
-  --shadow-soft:
-    0 2px 8px rgba(28, 22, 10, 0.05), 0 12px 28px rgba(28, 22, 10, 0.06);
-  --shadow-card:
-    0 4px 14px rgba(28, 22, 10, 0.06), 0 22px 50px rgba(28, 22, 10, 0.09);
-  --shadow-lift:
-    0 10px 26px rgba(28, 22, 10, 0.1), 0 36px 80px rgba(28, 22, 10, 0.14);
-  --shadow-glow:
-    0 0 0 1px rgba(91, 140, 255, 0.2), 0 18px 60px rgba(91, 140, 255, 0.18);
+  --shadow-soft: 0 2px 8px rgba(28, 22, 10, 0.05), 0 12px 28px rgba(28, 22, 10, 0.06);
+  --shadow-card: 0 4px 14px rgba(28, 22, 10, 0.06), 0 22px 50px rgba(28, 22, 10, 0.09);
+  --shadow-lift: 0 10px 26px rgba(28, 22, 10, 0.1), 0 36px 80px rgba(28, 22, 10, 0.14);
+  --shadow-glow: 0 0 0 1px rgba(91, 140, 255, 0.2), 0 18px 60px rgba(91, 140, 255, 0.18);
 
   /* — Motion organique — */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);

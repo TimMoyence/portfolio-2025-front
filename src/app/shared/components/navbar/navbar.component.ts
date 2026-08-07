@@ -1,5 +1,5 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
-import type { ElementRef } from "@angular/core";
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import type { ElementRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -12,35 +12,35 @@ import {
   PLATFORM_ID,
   ViewChild,
   inject,
-} from "@angular/core";
-import { Router, RouterModule } from "@angular/router";
-import { BreakpointService } from "../../../core/services/breakpoint.service";
-import { AuthStateService } from "../../../core/services/auth-state.service";
-import type { DropdownSection, NavLink } from "../../models/navbar.model";
-import { A11yDialogService } from "../../services/a11y-dialog.service";
-import { SvgIconComponent } from "../svg-icon.component";
+} from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { BreakpointService } from '../../../core/services/breakpoint.service';
+import { AuthStateService } from '../../../core/services/auth-state.service';
+import type { DropdownSection, NavLink } from '../../models/navbar.model';
+import { A11yDialogService } from '../../services/a11y-dialog.service';
+import { SvgIconComponent } from '../svg-icon.component';
 
 @Component({
-  selector: "app-navbar",
+  selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterModule, SvgIconComponent],
-  templateUrl: "./navbar.component.html",
-  styleUrls: ["./navbar.component.scss"],
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
   readonly navLinks: NavLink[] = [
     {
       label: $localize`:navbar.link.presentation|Navbar primary link@@navLinkPresentation:Présentation`,
-      href: "/presentation",
+      href: '/presentation',
     },
     {
       label: $localize`:navbar.link.projects|Navbar primary link@@navLinkProjects:Projets`,
-      href: "/projets",
+      href: '/projets',
     },
     {
       label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Services`,
-      href: "/offer",
+      href: '/offer',
     },
   ];
 
@@ -48,22 +48,22 @@ export class NavbarComponent {
   readonly atelierDropdown: DropdownSection = {
     label: $localize`:navbar.atelier.label|Atelier dropdown label@@navAtelierLabel:L'Atelier`,
     subtitle: $localize`:navbar.atelier.subtitle|Atelier drawer subtitle@@navAtelierSubtitle:Météo · Sebastian`,
-    href: "/atelier",
+    href: '/atelier',
     isOpen: false,
     items: [
       {
         title: $localize`:navbar.atelier.meteo.title|@@navAtelierMeteoTitle:Météo`,
         description: $localize`:navbar.atelier.meteo.desc|@@navAtelierMeteoDesc:Explorez la météo en temps réel`,
-        icon: "cloud",
-        iconAlt: "Météo",
-        href: "/atelier/meteo",
+        icon: 'cloud',
+        iconAlt: 'Météo',
+        href: '/atelier/meteo',
       },
       {
         title: $localize`:navbar.atelier.sebastian.title|@@navAtelierSebastianTitle:Sebastian`,
         description: $localize`:navbar.atelier.sebastian.desc|@@navAtelierSebastianDesc:Votre majordome personnel`,
-        icon: "sebastian",
-        iconAlt: "Sebastian",
-        href: "/atelier/sebastian",
+        icon: 'sebastian',
+        iconAlt: 'Sebastian',
+        href: '/atelier/sebastian',
       },
     ],
   };
@@ -76,30 +76,30 @@ export class NavbarComponent {
       {
         title: $localize`:navbar.formations.ia.title|@@navFormationsIaTitle:IA pour Solopreneurs`,
         description: $localize`:navbar.formations.ia.desc|@@navFormationsIaDesc:Panorama des outils IA pour entrepreneurs`,
-        icon: "sparkles",
-        iconAlt: "IA",
-        href: "/formations/ia-solopreneurs",
+        icon: 'sparkles',
+        iconAlt: 'IA',
+        href: '/formations/ia-solopreneurs',
       },
       {
         title: $localize`:navbar.formations.auto.title|@@navFormationsAutoTitle:Automatiser avec l'IA`,
         description: $localize`:navbar.formations.auto.desc|@@navFormationsAutoDesc:5 workflows non-tech pour gagner 2h/semaine`,
-        icon: "sparkles",
-        iconAlt: "Automation",
-        href: "/formations/automatiser-avec-ia",
+        icon: 'sparkles',
+        iconAlt: 'Automation',
+        href: '/formations/automatiser-avec-ia',
       },
       {
         title: $localize`:navbar.formations.seo.title|@@navFormationsSeoTitle:Audit SEO DIY`,
         description: $localize`:navbar.formations.seo.desc|@@navFormationsSeoDesc:7 checks en 20 min avec 5 outils gratuits`,
-        icon: "sparkles",
-        iconAlt: "SEO",
-        href: "/formations/audit-seo-diy",
+        icon: 'sparkles',
+        iconAlt: 'SEO',
+        href: '/formations/audit-seo-diy',
       },
       {
         title: $localize`:navbar.formations.all.title|@@navFormationsAllTitle:Toutes les formations`,
         description: $localize`:navbar.formations.all.desc|@@navFormationsAllDesc:Voir le catalogue complet`,
-        icon: "sparkles",
-        iconAlt: "Liste",
-        href: "/formations",
+        icon: 'sparkles',
+        iconAlt: 'Liste',
+        href: '/formations',
       },
     ],
   };
@@ -117,17 +117,17 @@ export class NavbarComponent {
   /** Initiales de l'utilisateur connecte (ex: "TM" pour Tim Moyence). */
   readonly userInitials = computed(() => {
     const user = this.authState.user();
-    if (!user?.firstName && !user?.lastName) return "";
-    const first = (user.firstName ?? "").charAt(0).toUpperCase();
-    const last = (user.lastName ?? "").charAt(0).toUpperCase();
+    if (!user?.firstName && !user?.lastName) return '';
+    const first = (user.firstName ?? '').charAt(0).toUpperCase();
+    const last = (user.lastName ?? '').charAt(0).toUpperCase();
     return `${first}${last}`;
   });
 
   /** Couleur d'avatar derivee d'un hash simple du nom complet. */
   readonly avatarColor = computed(() => {
     const user = this.authState.user();
-    if (!user) return "#6b7280"; // gray fallback
-    const name = `${user.firstName ?? ""}${user.lastName ?? ""}`;
+    if (!user) return '#6b7280'; // gray fallback
+    const name = `${user.firstName ?? ''}${user.lastName ?? ''}`;
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -145,10 +145,10 @@ export class NavbarComponent {
     return this.breakpointService.isTabletOrBelow();
   }
 
-  @ViewChild("mobileMenuPanel", { static: false })
+  @ViewChild('mobileMenuPanel', { static: false })
   mobileMenuPanel?: ElementRef<HTMLElement>;
 
-  @ViewChild("burgerButton", { static: false })
+  @ViewChild('burgerButton', { static: false })
   burgerButton?: ElementRef<HTMLButtonElement>;
 
   constructor(
@@ -162,7 +162,7 @@ export class NavbarComponent {
       if (!mobile && this.mobileMenuOpen) {
         this.mobileMenuOpen = false;
         if (isPlatformBrowser(this.platformId)) {
-          document.body.style.overflow = "";
+          document.body.style.overflow = '';
         }
         this.cdr.markForCheck();
       }
@@ -181,19 +181,19 @@ export class NavbarComponent {
 
   /** Retourne l'URL vers l'autre locale en conservant le chemin courant. */
   getAlternateLocaleUrl(): string {
-    if (!isPlatformBrowser(this.platformId)) return "#";
-    const targetLocale = this.currentLocale.startsWith("fr") ? "en" : "fr";
+    if (!isPlatformBrowser(this.platformId)) return '#';
+    const targetLocale = this.currentLocale.startsWith('fr') ? 'en' : 'fr';
     const currentPath = window.location.pathname;
-    const pathWithoutLocale = currentPath.replace(/^\/(fr|en)/, "");
-    return `/${targetLocale}${pathWithoutLocale || ""}`;
+    const pathWithoutLocale = currentPath.replace(/^\/(fr|en)/, '');
+    return `/${targetLocale}${pathWithoutLocale || ''}`;
   }
 
   /** Retourne le label de la langue alternative. */
   getAlternateLocaleLabel(): string {
-    return this.currentLocale.startsWith("fr") ? "EN" : "FR";
+    return this.currentLocale.startsWith('fr') ? 'EN' : 'FR';
   }
 
-  @HostListener("window:scroll", [])
+  @HostListener('window:scroll', [])
   onWindowScroll() {
     if (!isPlatformBrowser(this.platformId)) return;
     const wasScrolled = this.scrolled;
@@ -207,7 +207,7 @@ export class NavbarComponent {
     this.closeUserDropdown();
     this.authState.logout();
     this.closeMobileMenu();
-    void this.router.navigate(["/"]);
+    void this.router.navigate(['/']);
   }
 
   /** Ouvre ou ferme le dropdown utilisateur. */
@@ -268,12 +268,11 @@ export class NavbarComponent {
     }
   }
 
-  @HostListener("document:keydown", ["$event"])
+  @HostListener('document:keydown', ['$event'])
   handleGlobalKeydown(event: KeyboardEvent): void {
     if (!isPlatformBrowser(this.platformId)) return;
     const activeElement = document.activeElement as HTMLElement | null;
-    const isSpace =
-      event.key === " " || event.key === "Spacebar" || event.code === "Space";
+    const isSpace = event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
 
     // 1) SPACE on burger button: open menu + prevent scroll
     if (activeElement === this.burgerButton?.nativeElement && isSpace) {
@@ -284,7 +283,7 @@ export class NavbarComponent {
     }
 
     // 2) ESC closes dropdowns if open
-    if (event.key === "Escape") {
+    if (event.key === 'Escape') {
       if (this.userDropdownOpen) {
         event.preventDefault();
         this.closeUserDropdown();
@@ -304,17 +303,14 @@ export class NavbarComponent {
 
     // 3) When mobile menu is open: ESC and Tab inside dialog
     if (this.mobileMenuOpen) {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         event.preventDefault();
         this.closeMobileMenu();
         return;
       }
 
-      if (event.key === "Tab") {
-        this.a11yDialog.trapFocus(
-          event,
-          this.mobileMenuPanel?.nativeElement ?? null,
-        );
+      if (event.key === 'Tab') {
+        this.a11yDialog.trapFocus(event, this.mobileMenuPanel?.nativeElement ?? null);
       }
     }
   }
@@ -328,7 +324,7 @@ export class NavbarComponent {
 
     this.mobileMenuOpen = true;
     this.cdr.markForCheck();
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
 
     // Save current focus (usually the burger button)
     this.a11yDialog.saveFocus();
@@ -347,7 +343,7 @@ export class NavbarComponent {
     if (!isPlatformBrowser(this.platformId)) return;
     this.mobileMenuOpen = false;
     this.cdr.markForCheck();
-    document.body.style.overflow = "";
+    document.body.style.overflow = '';
 
     // Restore focus to what opened the menu (e.g. burger button)
     this.a11yDialog.restoreFocus();

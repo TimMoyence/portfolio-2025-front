@@ -35,12 +35,7 @@
     <header class="wx-app-head gp gp-pad">
       <div class="wx-app-head-top">
         <div class="wx-app-title">
-          <h1
-            class="wx-title font-display"
-            i18n="weather.app.title|@@weatherAppTitle"
-          >
-            Météo
-          </h1>
+          <h1 class="wx-title font-display" i18n="weather.app.title|@@weatherAppTitle">Météo</h1>
           @if (selectedCity(); as city) {
             <p class="wx-place font-mono">
               <span class="wx-pin" aria-hidden="true"></span>
@@ -60,18 +55,12 @@
 
       <!-- Sélecteur de niveau + unités (bindings conservés à l'identique) -->
       <div class="wx-app-controls">
-        <app-level-selector
-          [darkMode]="hasForecast()"
-          (levelChanged)="onLevelChanged($event)"
-        />
+        <app-level-selector [darkMode]="hasForecast()" (levelChanged)="onLevelChanged($event)" />
         <app-unit-selector />
       </div>
 
       <!-- Recherche de ville (binding conservé) -->
-      <app-city-search
-        [darkMode]="hasForecast()"
-        (citySelected)="onCitySelected($event)"
-      />
+      <app-city-search [darkMode]="hasForecast()" (citySelected)="onCitySelected($event)" />
 
       <!-- Suggestion de transition de niveau -->
       <app-transition-prompt />
@@ -107,11 +96,7 @@
       @if (error(); as errorMsg) {
         <div class="wx-error gp gp-pad">
           <div class="wx-error-inner">
-            <img
-              src="/assets/images/meteo/nuage-erreur.png"
-              alt=""
-              class="wx-error-img"
-            />
+            <img src="/assets/images/meteo/nuage-erreur.png" alt="" class="wx-error-img" />
             <p class="wx-error-text">{{ errorMsg }}</p>
           </div>
         </div>
@@ -124,10 +109,7 @@
           class="content-transition"
           [class.content-transitioning]="contentTransitioning()"
         >
-          <app-current-conditions
-            [current]="data.current"
-            [detailed]="detailedCurrent()"
-          />
+          <app-current-conditions [current]="data.current" [detailed]="detailedCurrent()" />
         </div>
 
         <!-- Alertes meteo -->
@@ -157,10 +139,8 @@
         </div>
 
         <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
-        @if (levelService.level() !== "discovery") {
-          <div
-            class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3"
-          >
+        @if (levelService.level() !== 'discovery') {
+          <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3">
             <div appSlideIn>
               <app-uv-index-card
                 [uvIndex]="data.current.uv_index ?? 0"
@@ -185,10 +165,7 @@
               />
             </div>
             <div appSlideIn>
-              <app-sun-arc
-                [sunrise]="data.daily.sunrise[0]"
-                [sunset]="data.daily.sunset[0]"
-              />
+              <app-sun-arc [sunrise]="data.daily.sunrise[0]" [sunset]="data.daily.sunset[0]" />
             </div>
             <div appSlideIn>
               <app-humidity-card
@@ -208,19 +185,14 @@
           <!-- Carte radar -->
           @if (selectedCity(); as city) {
             <div appSlideIn>
-              <app-radar-map
-                [latitude]="city.latitude"
-                [longitude]="city.longitude"
-              />
+              <app-radar-map [latitude]="city.latitude" [longitude]="city.longitude" />
             </div>
           }
         }
 
         <!-- Expert : cartes expertes -->
-        @if (levelService.level() === "expert") {
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6"
-          >
+        @if (levelService.level() === 'expert') {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
             <div appSlideIn class="md:col-span-2 lg:col-span-3">
               @defer (on viewport) {
                 <app-model-comparison [ensemble]="ensemble()" />
@@ -249,10 +221,7 @@
               }
             </div>
             <div appSlideIn class="md:col-span-2 lg:col-span-3">
-              <app-data-export
-                [forecast]="forecast()"
-                [ensemble]="ensemble()"
-              />
+              <app-data-export [forecast]="forecast()" [ensemble]="ensemble()" />
             </div>
           </div>
         }
@@ -261,15 +230,8 @@
       <!-- Etat initial (restyle glass Asili, alt conservé) -->
       @if (!forecast() && !loading() && !error()) {
         <div class="wx-empty gp gp-pad">
-          <img
-            src="/assets/images/meteo/soleil-et-nuage.png"
-            alt=""
-            class="wx-empty-img"
-          />
-          <p
-            class="wx-empty-text"
-            i18n="weather.initial.hint|@@weatherInitialHint"
-          >
+          <img src="/assets/images/meteo/soleil-et-nuage.png" alt="" class="wx-empty-img" />
+          <p class="wx-empty-text" i18n="weather.initial.hint|@@weatherInitialHint">
             Recherchez une ville pour afficher la météo
           </p>
         </div>

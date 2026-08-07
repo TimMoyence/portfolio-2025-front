@@ -1,4 +1,4 @@
-@use "../../styles-shared/breakpoints" as bp;
+@use '../../styles-shared/breakpoints' as bp;
 /*
   Home Asili — styles propres a la section Atelier uniquement.
 
@@ -19,21 +19,13 @@
 
   /* Halo immersif teal/bleu (sans canvas : le fond constellation reste global). */
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(
-        80% 60% at 15% 0%,
-        rgba(var(--teal-rgb), 0.22),
-        transparent 60%
-      ),
-      radial-gradient(
-        70% 70% at 90% 100%,
-        rgba(91, 140, 255, 0.24),
-        transparent 60%
-      );
+      radial-gradient(80% 60% at 15% 0%, rgba(var(--teal-rgb), 0.22), transparent 60%),
+      radial-gradient(70% 70% at 90% 100%, rgba(91, 140, 255, 0.24), transparent 60%);
   }
 
   .wrap {

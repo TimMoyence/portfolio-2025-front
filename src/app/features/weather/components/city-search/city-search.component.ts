@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,30 +13,24 @@ import {
   PLATFORM_ID,
   signal,
   ViewChild,
-} from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { map, of, Subject, Subscription } from "rxjs";
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  switchMap,
-} from "rxjs/operators";
-import type { CityResult } from "../../../../core/models/weather.model";
-import type { WeatherPort } from "../../../../core/ports/weather.port";
-import { WEATHER_PORT } from "../../../../core/ports/weather.port";
-import { GeolocationService } from "../../services/geolocation.service";
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { map, of, Subject, Subscription } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import type { CityResult } from '../../../../core/models/weather.model';
+import type { WeatherPort } from '../../../../core/ports/weather.port';
+import { WEATHER_PORT } from '../../../../core/ports/weather.port';
+import { GeolocationService } from '../../services/geolocation.service';
 
 /**
  * Composant de recherche de ville.
  * Affiche un champ de saisie avec autocompletion et emet la ville selectionnee.
  */
 @Component({
-  selector: "app-city-search",
+  selector: 'app-city-search',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  host: { class: "block" },
+  host: { class: 'block' },
   template: `
     <!--
       Recherche de ville — re-skin Asili AsiliNewDesign/asili-app.css :
@@ -66,8 +60,7 @@ import { GeolocationService } from "../../services/geolocation.service";
             type="text"
             [ngModel]="query()"
             (ngModelChange)="onQueryChange($event)"
-            i18n-placeholder="
-              weather.search.placeholder|@@weatherSearchPlaceholder"
+            i18n-placeholder="weather.search.placeholder|@@weatherSearchPlaceholder"
             placeholder="Rechercher une ville..."
             class="w-full rounded-full border py-3 pl-11 pr-4 outline-none transition-colors"
             [ngClass]="
@@ -159,9 +152,7 @@ import { GeolocationService } from "../../services/geolocation.service";
               <span class="font-medium">{{ city.name }}</span>
               <span
                 class="ml-1 text-sm"
-                [ngClass]="
-                  darkMode() ? 'text-white/60' : 'text-scheme-text-muted'
-                "
+                [ngClass]="darkMode() ? 'text-white/60' : 'text-scheme-text-muted'"
               >
                 @if (city.admin1) {
                   {{ city.admin1 }},
@@ -183,9 +174,9 @@ export class CitySearchComponent implements OnInit, OnDestroy {
   /** Evenement emis lorsqu'une ville est selectionnee. */
   @Output() readonly citySelected = new EventEmitter<CityResult>();
 
-  @ViewChild("searchContainer", { static: true }) searchContainer!: ElementRef;
+  @ViewChild('searchContainer', { static: true }) searchContainer!: ElementRef;
 
-  readonly query = signal("");
+  readonly query = signal('');
   readonly results = signal<CityResult[]>([]);
   readonly showDropdown = signal(false);
   readonly locating = signal(false);
@@ -251,12 +242,10 @@ export class CitySearchComponent implements OnInit, OnDestroy {
       .locate()
       .pipe(
         switchMap((city) =>
-          this.geolocationService
-            .reverseGeocode(city.latitude, city.longitude)
-            .pipe(
-              map((name) => (name ? { ...city, name } : city)),
-              catchError(() => of(city)),
-            ),
+          this.geolocationService.reverseGeocode(city.latitude, city.longitude).pipe(
+            map((name) => (name ? { ...city, name } : city)),
+            catchError(() => of(city)),
+          ),
         ),
       )
       .subscribe({
@@ -282,7 +271,7 @@ export class CitySearchComponent implements OnInit, OnDestroy {
   }
 
   /** Ferme le menu deroulant lors d'un clic exterieur. */
-  @HostListener("document:click", ["$event"])
+  @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (!this.searchContainer?.nativeElement?.contains(event.target)) {
       this.showDropdown.set(false);

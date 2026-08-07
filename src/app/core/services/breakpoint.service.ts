@@ -1,11 +1,5 @@
-import { isPlatformBrowser } from "@angular/common";
-import {
-  computed,
-  inject,
-  Injectable,
-  PLATFORM_ID,
-  signal,
-} from "@angular/core";
+import { isPlatformBrowser } from '@angular/common';
+import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
 /**
  * Service centralise de detection des breakpoints responsive.
@@ -13,7 +7,7 @@ import {
  * Expose deux signaux reactifs : `isMobile` (< 768px) et `isTabletOrBelow` (< 1024px).
  */
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class BreakpointService {
   private readonly platformId = inject(PLATFORM_ID);
@@ -38,15 +32,13 @@ export class BreakpointService {
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
-      const mobileMq = window.matchMedia("(max-width: 768px)");
+      const mobileMq = window.matchMedia('(max-width: 768px)');
       this._isMobile.set(mobileMq.matches);
-      mobileMq.addEventListener("change", (e) => this._isMobile.set(e.matches));
+      mobileMq.addEventListener('change', (e) => this._isMobile.set(e.matches));
 
-      const tabletMq = window.matchMedia("(max-width: 1024px)");
+      const tabletMq = window.matchMedia('(max-width: 1024px)');
       this._isTabletOrBelow.set(tabletMq.matches);
-      tabletMq.addEventListener("change", (e) =>
-        this._isTabletOrBelow.set(e.matches),
-      );
+      tabletMq.addEventListener('change', (e) => this._isTabletOrBelow.set(e.matches));
     }
   }
 }

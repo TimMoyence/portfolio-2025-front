@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,16 +8,13 @@ import {
   computed,
   inject,
   signal,
-} from "@angular/core";
-import { LEAD_MAGNET_PORT } from "../../../core/ports/lead-magnet.port";
-import type { ToolkitRequest } from "../../../core/models/toolkit-request.model";
-import { InteractionCollectorService } from "../../services/interaction-collector.service";
-import {
-  readInputValue,
-  readCheckboxChecked,
-} from "../../utils/dom-event.utils";
+} from '@angular/core';
+import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
+import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
+import { InteractionCollectorService } from '../../services/interaction-collector.service';
+import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
 
-type FormState = "idle" | "loading" | "success" | "error";
+type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 /**
  * Version courante des Conditions Generales de Vente acceptees via le
@@ -25,31 +22,26 @@ type FormState = "idle" | "loading" | "success" | "error";
  * des CGV ; persistee telle quelle dans `LeadMagnetRequest.termsVersion`
  * comme preuve de consentement RGPD.
  */
-export const TOOLKIT_FORM_TERMS_VERSION = "2026-04-10";
+export const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
 
 /**
  * Formulaire de capture lead magnet (prenom + email + GDPR).
  * Reutilise dans la slide CTA et la page toolkit standalone.
  */
 @Component({
-  selector: "app-toolkit-form",
+  selector: 'app-toolkit-form',
   standalone: true,
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @switch (state()) {
-      @case ("success") {
+      @case ('success') {
         <div class="text-center py-6" data-toolkit-success>
-          <p
-            class="text-lg font-medium text-scheme-accent"
-            i18n="@@toolkit-form.success.title"
-          >
+          <p class="text-lg font-medium text-scheme-accent" i18n="@@toolkit-form.success.title">
             Envoyé !
           </p>
           <p class="mt-2 text-sm text-scheme-text-muted">
-            <span i18n="@@toolkit-form.success.checkInbox"
-              >Vérifiez votre boîte mail</span
-            >
+            <span i18n="@@toolkit-form.success.checkInbox">Vérifiez votre boîte mail</span>
             ({{ submittedEmail() }})
           </p>
         </div>
@@ -80,9 +72,7 @@ export const TOOLKIT_FORM_TERMS_VERSION = "2026-04-10";
               required
             />
           </div>
-          <label
-            class="flex items-start gap-2 text-xs text-scheme-text-muted cursor-pointer"
-          >
+          <label class="flex items-start gap-2 text-xs text-scheme-text-muted cursor-pointer">
             <input
               type="checkbox"
               [checked]="termsAccepted()"
@@ -90,17 +80,12 @@ export const TOOLKIT_FORM_TERMS_VERSION = "2026-04-10";
               class="mt-0.5 accent-scheme-accent"
             />
             <span i18n="@@toolkit-form.terms.label">
-              J'accepte que mes données soient utilisées pour recevoir la boîte
-              à outils.
+              J'accepte que mes données soient utilisées pour recevoir la boîte à outils.
             </span>
           </label>
 
-          @if (state() === "error") {
-            <p
-              class="text-sm text-red-600"
-              data-toolkit-error
-              i18n="@@toolkit-form.error.message"
-            >
+          @if (state() === 'error') {
+            <p class="text-sm text-red-600" data-toolkit-error i18n="@@toolkit-form.error.message">
               Une erreur est survenue. Réessayez.
             </p>
           }
@@ -110,10 +95,8 @@ export const TOOLKIT_FORM_TERMS_VERSION = "2026-04-10";
             [disabled]="!isValid() || state() === 'loading'"
             class="w-full rounded-full bg-scheme-accent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-scheme-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            @if (state() === "loading") {
-              <span i18n="@@toolkit-form.submit.loading"
-                >Envoi en cours...</span
-              >
+            @if (state() === 'loading') {
+              <span i18n="@@toolkit-form.submit.loading">Envoi en cours...</span>
             } @else {
               <span i18n="@@toolkit-form.submit.idle">{{ submitLabel }}</span>
             }
@@ -125,15 +108,14 @@ export const TOOLKIT_FORM_TERMS_VERSION = "2026-04-10";
 })
 export class ToolkitFormComponent {
   /** Slug de la formation dont le toolkit est demande. */
-  @Input() formationSlug = "ia-solopreneurs";
+  @Input() formationSlug = 'ia-solopreneurs';
 
   /**
    * Libelle du bouton principal. Par defaut "Recevoir la boite a
    * outils" (context toolkit), override-able par les contextes
    * futurs ("Acceder au rapport", "Telecharger le guide", etc).
    */
-  @Input() submitLabel =
-    $localize`:@@toolkit-form.submit.idle:Recevoir la boîte à outils`;
+  @Input() submitLabel = $localize`:@@toolkit-form.submit.idle:Recevoir la boîte à outils`;
 
   private readonly port = inject(LEAD_MAGNET_PORT);
   /** Collecteur optionnel — present uniquement si un parent le fournit. */
@@ -148,18 +130,16 @@ export class ToolkitFormComponent {
    */
   constructor(@Inject(LOCALE_ID) private readonly locale: string) {}
 
-  readonly firstName = signal("");
-  readonly email = signal("");
+  readonly firstName = signal('');
+  readonly email = signal('');
   readonly termsAccepted = signal(false);
-  readonly state = signal<FormState>("idle");
-  readonly submittedEmail = signal("");
+  readonly state = signal<FormState>('idle');
+  readonly submittedEmail = signal('');
 
   readonly isValid = computed(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return (
-      this.firstName().trim().length > 0 &&
-      emailRegex.test(this.email()) &&
-      this.termsAccepted()
+      this.firstName().trim().length > 0 && emailRegex.test(this.email()) && this.termsAccepted()
     );
   });
 
@@ -172,7 +152,7 @@ export class ToolkitFormComponent {
   onSubmit(): void {
     if (!this.isValid()) return;
 
-    this.state.set("loading");
+    this.state.set('loading');
     this.submittedEmail.set(this.email());
 
     const request: ToolkitRequest = {
@@ -193,8 +173,8 @@ export class ToolkitFormComponent {
     }
 
     this.port.requestToolkit(request).subscribe({
-      next: () => this.state.set("success"),
-      error: () => this.state.set("error"),
+      next: () => this.state.set('success'),
+      error: () => this.state.set('error'),
     });
   }
 }

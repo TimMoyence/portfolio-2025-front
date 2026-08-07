@@ -1,5 +1,5 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 /**
  * Un element d'une FAQ, compose d'une question et d'une reponse.
@@ -23,7 +23,7 @@ export interface FaqItem {
  * progressif sans JavaScript, ce qui est ideal pour le SEO et les crawlers.
  */
 @Component({
-  selector: "app-faq-section",
+  selector: 'app-faq-section',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -37,10 +37,7 @@ export interface FaqItem {
           @if (kicker) {
             <p class="mb-2 font-semibold text-sm md:text-base">{{ kicker }}</p>
           }
-          <h2
-            [id]="headingId"
-            class="font-heading heading-h3 text-h3 md:heading-h2 md:text-h2"
-          >
+          <h2 [id]="headingId" class="font-heading heading-h3 text-h3 md:heading-h2 md:text-h2">
             {{ title }}
           </h2>
           @if (description) {
@@ -97,5 +94,5 @@ export class FaqSectionComponent {
    * Identifiant HTML unique de l'en-tete FAQ, utilise pour `aria-labelledby`.
    * Par defaut `faq-heading`. A changer si plusieurs FAQ coexistent sur une page.
    */
-  @Input() headingId = "faq-heading";
+  @Input() headingId = 'faq-heading';
 }

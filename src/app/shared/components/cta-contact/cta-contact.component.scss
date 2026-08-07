@@ -9,10 +9,10 @@
 }
 
 .background-image-bordeaux::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
-  background-image: url("/assets/images/bordeaux-placeholder.webp");
+  background-image: url('/assets/images/bordeaux-placeholder.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

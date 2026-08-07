@@ -1,10 +1,5 @@
-import { isPlatformBrowser } from "@angular/common";
-import type {
-  AfterViewInit,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-} from "@angular/core";
+import { isPlatformBrowser } from '@angular/common';
+import type { AfterViewInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,9 +10,9 @@ import {
   input,
   PLATFORM_ID,
   ViewChild,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { RADAR_PORT } from "../../../../core/ports/radar.port";
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RADAR_PORT } from '../../../../core/ports/radar.port';
 
 /**
  * Carte radar meteorologique utilisant Leaflet + tuiles RainViewer.
@@ -25,7 +20,7 @@ import { RADAR_PORT } from "../../../../core/ports/radar.port";
  * Inclut une legende des precipitations et des controles stylises.
  */
 @Component({
-  selector: "app-radar-map",
+  selector: 'app-radar-map',
   standalone: true,
   styles: `
     :host {
@@ -61,9 +56,7 @@ import { RADAR_PORT } from "../../../../core/ports/radar.port";
       lat/long + placeholder/iframe Leaflet (SSR-safe via isPlatformBrowser)
       conservés ; conteneur/typo uniquement.
     -->
-    <div
-      class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
-    >
+    <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
       <h3
         class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
         i18n="weather.radar.title|@@weatherRadarTitle"
@@ -112,12 +105,12 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   /** Longitude du centre de la carte. */
   readonly longitude = input(2.35);
 
-  @ViewChild("mapContainer", { static: false })
+  @ViewChild('mapContainer', { static: false })
   mapContainer!: ElementRef<HTMLElement>;
 
-  private map: import("leaflet").Map | null = null;
-  private radarLayer: import("leaflet").TileLayer | null = null;
-  private leaflet: typeof import("leaflet") | null = null;
+  private map: import('leaflet').Map | null = null;
+  private radarLayer: import('leaflet').TileLayer | null = null;
+  private leaflet: typeof import('leaflet') | null = null;
   private resizeObserver: ResizeObserver | null = null;
 
   private readonly radarPort = inject(RADAR_PORT);
@@ -132,7 +125,7 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.map) return;
-    if (changes["latitude"] || changes["longitude"]) {
+    if (changes['latitude'] || changes['longitude']) {
       this.map.setView([this.latitude(), this.longitude()], 8, {
         animate: true,
         duration: 0.5,
@@ -146,10 +139,10 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private async initMap(): Promise<void> {
-    const leafletModule = await import("leaflet");
+    const leafletModule = await import('leaflet');
     const L = (
-      "default" in leafletModule ? leafletModule.default : leafletModule
-    ) as typeof import("leaflet");
+      'default' in leafletModule ? leafletModule.default : leafletModule
+    ) as typeof import('leaflet');
     this.leaflet = L;
 
     this.map = L.map(this.mapContainer.nativeElement, {
@@ -160,15 +153,12 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
     });
 
     // Fond de carte CartoDB Dark (meilleure lisibilite pour le radar)
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 18,
-        subdomains: "abcd",
-      },
-    ).addTo(this.map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+      maxZoom: 18,
+      subdomains: 'abcd',
+    }).addTo(this.map);
 
     // Tuiles radar RainViewer (via RadarPort, ADR 0002)
     this.loadRadarLayer();

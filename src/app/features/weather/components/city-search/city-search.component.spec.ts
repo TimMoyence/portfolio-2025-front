@@ -1,22 +1,19 @@
-import {
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from "@angular/common/http";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { of } from "rxjs";
-import { AUTH_PORT } from "../../../../core/ports/auth.port";
-import { WEATHER_PORT } from "../../../../core/ports/weather.port";
-import { createAuthPortStub } from "../../../../../testing/factories/auth.factory";
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { AUTH_PORT } from '../../../../core/ports/auth.port';
+import { WEATHER_PORT } from '../../../../core/ports/weather.port';
+import { createAuthPortStub } from '../../../../../testing/factories/auth.factory';
 import {
   buildCityResult,
   buildWeatherPreferences,
   createWeatherPortStub,
-} from "../../../../../testing/factories/weather.factory";
-import { CitySearchComponent } from "./city-search.component";
+} from '../../../../../testing/factories/weather.factory';
+import { CitySearchComponent } from './city-search.component';
 
-describe("CitySearchComponent", () => {
+describe('CitySearchComponent', () => {
   let component: CitySearchComponent;
   let fixture: ComponentFixture<CitySearchComponent>;
 
@@ -30,12 +27,8 @@ describe("CitySearchComponent", () => {
     const weatherPortStub = createWeatherPortStub();
     weatherPortStub.searchCity.and.returnValue(of({ results: [] }));
     weatherPortStub.getForecast.and.returnValue(of(null));
-    weatherPortStub.getPreferences.and.returnValue(
-      of(buildWeatherPreferences()),
-    );
-    weatherPortStub.updatePreferences.and.returnValue(
-      of(buildWeatherPreferences()),
-    );
+    weatherPortStub.getPreferences.and.returnValue(of(buildWeatherPreferences()));
+    weatherPortStub.updatePreferences.and.returnValue(of(buildWeatherPreferences()));
     weatherPortStub.recordUsage.and.returnValue(of(undefined));
 
     await TestBed.configureTestingModule({
@@ -53,29 +46,29 @@ describe("CitySearchComponent", () => {
     fixture.detectChanges();
   });
 
-  it("devrait se creer", () => {
+  it('devrait se creer', () => {
     expect(component).toBeTruthy();
   });
 
-  it("devrait initialiser la requete vide", () => {
-    expect(component.query()).toBe("");
+  it('devrait initialiser la requete vide', () => {
+    expect(component.query()).toBe('');
     expect(component.results()).toEqual([]);
     expect(component.showDropdown()).toBeFalse();
   });
 
-  it("devrait emettre la ville selectionnee", () => {
+  it('devrait emettre la ville selectionnee', () => {
     const city = buildCityResult();
 
-    spyOn(component.citySelected, "emit");
+    spyOn(component.citySelected, 'emit');
     component.selectCity(city);
 
     expect(component.citySelected.emit).toHaveBeenCalledWith(city);
-    expect(component.query()).toBe("Paris");
+    expect(component.query()).toBe('Paris');
     expect(component.showDropdown()).toBeFalse();
   });
 
-  it("devrait vider les resultats si la requete est trop courte", () => {
-    component.onQueryChange("a");
+  it('devrait vider les resultats si la requete est trop courte', () => {
+    component.onQueryChange('a');
 
     expect(component.results()).toEqual([]);
     expect(component.showDropdown()).toBeFalse();

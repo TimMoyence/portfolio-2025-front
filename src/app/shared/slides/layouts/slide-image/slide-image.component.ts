@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-  input,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input } from '@angular/core';
 
 /**
  * Item enrichi pour les layouts image / grid.
@@ -52,29 +46,28 @@ export interface RichListItem {
  * `<ng-content>` reste disponible pour insertions ad-hoc apres les listes.
  */
 @Component({
-  selector: "app-slide-image-left, app-slide-image-right",
+  selector: 'app-slide-image-left, app-slide-image-right',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-image.component.html",
-  styleUrl: "./slide-image.component.scss",
+  templateUrl: './slide-image.component.html',
+  styleUrl: './slide-image.component.scss',
 })
 export class SlideImageComponent {
   readonly image = input.required<string>();
   readonly imageAlt = input.required<string>();
-  readonly title = input<string>("");
-  readonly subtitle = input<string>("");
+  readonly title = input<string>('');
+  readonly subtitle = input<string>('');
   readonly paragraphs = input<string[]>([]);
   readonly items = input<string[]>([]);
   readonly richItems = input<RichListItem[]>([]);
-  readonly accent = input<string>("default");
+  readonly accent = input<string>('default');
 
   /**
    * `true` quand l'hote est `<app-slide-image-right>` (image a droite,
    * media rendu apres le contenu). Immuable, lu une fois — compatible OnPush.
    */
   protected readonly isReverse =
-    inject(ElementRef).nativeElement.tagName.toLowerCase() ===
-    "app-slide-image-right";
+    inject(ElementRef).nativeElement.tagName.toLowerCase() === 'app-slide-image-right';
 
   /** Renvoie l'initiale majuscule d'un libelle, pour la puce de logo. */
   protected initial(label: string): string {

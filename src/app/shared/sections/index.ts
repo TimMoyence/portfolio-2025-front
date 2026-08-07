@@ -7,13 +7,10 @@
 // barrel plutot que les fichiers individuels.
 
 // Hero
-export { AsiliHeroComponent } from "./asili-hero/asili-hero.component";
+export { AsiliHeroComponent } from './asili-hero/asili-hero.component';
 
 // Methode (4 etapes)
-export {
-  AsiliMethodComponent,
-  type AsiliMethodStep,
-} from "./asili-method/asili-method.component";
+export { AsiliMethodComponent, type AsiliMethodStep } from './asili-method/asili-method.component';
 
 // Piliers (services / formations)
 export {
@@ -21,10 +18,10 @@ export {
   type AsiliPillar,
   type AsiliPillarLink,
   type AsiliPillarVariant,
-} from "./asili-pillars/asili-pillars.component";
+} from './asili-pillars/asili-pillars.component';
 
 // Bande CTA
-export { AsiliCtaBandComponent } from "./asili-cta-band/asili-cta-band.component";
+export { AsiliCtaBandComponent } from './asili-cta-band/asili-cta-band.component';
 
 // Grille de projets
 export {
@@ -32,16 +29,16 @@ export {
   type AsiliProject,
   type AsiliProjectSize,
   type AsiliProjectTag,
-} from "./asili-projects-grid/asili-projects-grid.component";
+} from './asili-projects-grid/asili-projects-grid.component';
 
 // Manifeste (scrollytelling)
 export {
   AsiliManifestoComponent,
   type AsiliManifestoLine,
-} from "./asili-manifesto/asili-manifesto.component";
+} from './asili-manifesto/asili-manifesto.component';
 
 // Methode IA (theme night)
 export {
   AsiliAiMethodComponent,
   type AsiliAiMethodStep,
-} from "./asili-ai-method/asili-ai-method.component";
+} from './asili-ai-method/asili-ai-method.component';

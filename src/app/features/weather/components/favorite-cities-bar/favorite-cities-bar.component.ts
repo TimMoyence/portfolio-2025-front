@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,11 +7,8 @@ import {
   input,
   Output,
   output,
-} from "@angular/core";
-import type {
-  CityResult,
-  FavoriteCity,
-} from "../../../../core/models/weather.model";
+} from '@angular/core';
+import type { CityResult, FavoriteCity } from '../../../../core/models/weather.model';
 
 /**
  * Barre horizontale de villes favorites.
@@ -19,10 +16,10 @@ import type {
  * et un bouton etoile pour ajouter/retirer la ville courante.
  */
 @Component({
-  selector: "app-favorite-cities-bar",
+  selector: 'app-favorite-cities-bar',
   standalone: true,
   imports: [CommonModule],
-  host: { class: "block" },
+  host: { class: 'block' },
   template: `
     <!--
       Barre de villes favorites — re-skin Asili AsiliNewDesign/asili-sections.css :
@@ -43,9 +40,7 @@ import type {
               : 'border-scheme-border bg-scheme-surface text-scheme-text-muted hover:bg-scheme-border'
           "
           [class.text-teal]="isCurrentFavorite()"
-          [attr.aria-label]="
-            isCurrentFavorite() ? removeFromFavoritesLabel : addToFavoritesLabel
-          "
+          [attr.aria-label]="isCurrentFavorite() ? removeFromFavoritesLabel : addToFavoritesLabel"
         >
           <svg
             class="h-4 w-4"
@@ -94,9 +89,7 @@ import type {
             "
             [class.text-teal]="defaultCityIndex() === i"
             [attr.aria-label]="
-              defaultCityIndex() === i
-                ? defaultCityRemoveLabel
-                : defaultCitySetLabel
+              defaultCityIndex() === i ? defaultCityRemoveLabel : defaultCitySetLabel
             "
           >
             <svg
@@ -162,11 +155,7 @@ export class FavoriteCitiesBarComponent {
   /** Verifie si une ville favorite est la ville selectionnee. */
   isSelected(city: FavoriteCity): boolean {
     const sel = this.selectedCity();
-    return (
-      !!sel &&
-      sel.latitude === city.latitude &&
-      sel.longitude === city.longitude
-    );
+    return !!sel && sel.latitude === city.latitude && sel.longitude === city.longitude;
   }
 
   /** Selectionne une ville favorite pour charger ses previsions. */
@@ -177,7 +166,7 @@ export class FavoriteCitiesBarComponent {
       latitude: city.latitude,
       longitude: city.longitude,
       country: city.country,
-      country_code: "",
+      country_code: '',
     });
   }
 

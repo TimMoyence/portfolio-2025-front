@@ -1,9 +1,9 @@
-import { inject } from "@angular/core";
-import type { CanActivateFn } from "@angular/router";
-import { Router } from "@angular/router";
-import { toObservable } from "@angular/core/rxjs-interop";
-import { filter, map, take } from "rxjs";
-import { AuthStateService } from "../services/auth-state.service";
+import { inject } from '@angular/core';
+import type { CanActivateFn } from '@angular/router';
+import { Router } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, map, take } from 'rxjs';
+import { AuthStateService } from '../services/auth-state.service';
 
 /**
  * Guard fonctionnel SSR-safe qui attend la fin de l'initialisation
@@ -16,7 +16,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
 
   if (authState.isInitialized()) {
     if (authState.isLoggedIn()) return true;
-    return router.createUrlTree(["/login"], {
+    return router.createUrlTree(['/login'], {
       queryParams: { returnUrl: state.url },
     });
   }
@@ -26,7 +26,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
     take(1),
     map(() => {
       if (authState.isLoggedIn()) return true;
-      return router.createUrlTree(["/login"], {
+      return router.createUrlTree(['/login'], {
         queryParams: { returnUrl: state.url },
       });
     }),

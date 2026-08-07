@@ -64,7 +64,7 @@
     line-height: 1.6;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       top: 0.6em;
@@ -126,7 +126,7 @@
   }
 
   span {
-    font-family: theme("fontFamily.heading", inherit);
+    font-family: theme('fontFamily.heading', inherit);
     font-weight: 700;
     color: var(--accent, #4fb3a2);
     font-size: 1.25rem;

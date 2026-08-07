@@ -1,22 +1,19 @@
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from "@angular/common/http/testing";
-import { provideHttpClient } from "@angular/common/http";
-import { TestBed } from "@angular/core/testing";
-import { environment } from "../../../environments/environment";
-import { APP_CONFIG } from "../config/app-config.token";
-import type { GeocodingResponse } from "../models/weather.model";
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { environment } from '../../../environments/environment';
+import { APP_CONFIG } from '../config/app-config.token';
+import type { GeocodingResponse } from '../models/weather.model';
 import {
   buildAirQualityData,
   buildEnsembleData,
   buildForecastResponse,
   buildHistoricalData,
   buildWeatherPreferences,
-} from "../../../testing/factories/weather.factory";
-import { WeatherHttpAdapter } from "./weather-http.adapter";
+} from '../../../testing/factories/weather.factory';
+import { WeatherHttpAdapter } from './weather-http.adapter';
 
-describe("WeatherHttpAdapter", () => {
+describe('WeatherHttpAdapter', () => {
   let adapter: WeatherHttpAdapter;
   let httpMock: HttpTestingController;
 
@@ -46,28 +43,28 @@ describe("WeatherHttpAdapter", () => {
       results: [
         {
           id: 1,
-          name: "Paris",
+          name: 'Paris',
           latitude: 48.85,
           longitude: 2.35,
-          country: "France",
-          country_code: "FR",
-          admin1: "Île-de-France",
+          country: 'France',
+          country_code: 'FR',
+          admin1: 'Île-de-France',
         },
       ],
     };
 
-    adapter.searchCity("Paris").subscribe((result) => {
+    adapter.searchCity('Paris').subscribe((result) => {
       expect(result).toEqual(response);
     });
 
     const req = httpMock.expectOne(
       (r) =>
         r.url === `${environment.apiBaseUrl}/weather/geocoding` &&
-        r.params.get("name") === "Paris" &&
-        r.params.get("language") === "fr" &&
-        r.params.get("count") === "5",
+        r.params.get('name') === 'Paris' &&
+        r.params.get('language') === 'fr' &&
+        r.params.get('count') === '5',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(response);
   });
 
@@ -81,67 +78,59 @@ describe("WeatherHttpAdapter", () => {
     const req = httpMock.expectOne(
       (r) =>
         r.url === `${environment.apiBaseUrl}/weather/forecast` &&
-        r.params.get("latitude") === "48.85" &&
-        r.params.get("longitude") === "2.35" &&
-        r.params.get("timezone") === "auto",
+        r.params.get('latitude') === '48.85' &&
+        r.params.get('longitude') === '2.35' &&
+        r.params.get('timezone') === 'auto',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(response);
   });
 
-  it("devrait propager les erreurs HTTP", () => {
-    adapter.searchCity("test").subscribe({
-      next: () => fail("devrait echouer"),
+  it('devrait propager les erreurs HTTP', () => {
+    adapter.searchCity('test').subscribe({
+      next: () => fail('devrait echouer'),
       error: (error) => {
         expect(error.status).toBe(500);
       },
     });
 
-    const req = httpMock.expectOne(
-      (r) => r.url === `${environment.apiBaseUrl}/weather/geocoding`,
-    );
-    req.flush("Erreur serveur", {
+    const req = httpMock.expectOne((r) => r.url === `${environment.apiBaseUrl}/weather/geocoding`);
+    req.flush('Erreur serveur', {
       status: 500,
-      statusText: "Internal Server Error",
+      statusText: 'Internal Server Error',
     });
   });
 
   it("devrait envoyer un GET a l'endpoint preferences", () => {
-    const response = buildWeatherPreferences({ level: "curious" });
+    const response = buildWeatherPreferences({ level: 'curious' });
 
     adapter.getPreferences().subscribe((result) => {
       expect(result).toEqual(response);
     });
 
-    const req = httpMock.expectOne(
-      `${environment.apiBaseUrl}/weather/preferences`,
-    );
-    expect(req.request.method).toBe("GET");
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/weather/preferences`);
+    expect(req.request.method).toBe('GET');
     req.flush(response);
   });
 
   it("devrait envoyer un PATCH a l'endpoint preferences", () => {
-    const response = buildWeatherPreferences({ level: "expert" });
+    const response = buildWeatherPreferences({ level: 'expert' });
 
-    adapter.updatePreferences({ level: "expert" }).subscribe((result) => {
+    adapter.updatePreferences({ level: 'expert' }).subscribe((result) => {
       expect(result).toEqual(response);
     });
 
-    const req = httpMock.expectOne(
-      `${environment.apiBaseUrl}/weather/preferences`,
-    );
-    expect(req.request.method).toBe("PATCH");
-    expect(req.request.body).toEqual({ level: "expert" });
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/weather/preferences`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({ level: 'expert' });
     req.flush(response);
   });
 
   it("devrait envoyer un POST a l'endpoint record-usage", () => {
     adapter.recordUsage().subscribe();
 
-    const req = httpMock.expectOne(
-      `${environment.apiBaseUrl}/weather/preferences/record-usage`,
-    );
-    expect(req.request.method).toBe("POST");
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/weather/preferences/record-usage`);
+    expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({});
     req.flush(null);
   });
@@ -156,10 +145,10 @@ describe("WeatherHttpAdapter", () => {
     const req = httpMock.expectOne(
       (r) =>
         r.url === `${environment.apiBaseUrl}/weather/air-quality` &&
-        r.params.get("latitude") === "48.85" &&
-        r.params.get("longitude") === "2.35",
+        r.params.get('latitude') === '48.85' &&
+        r.params.get('longitude') === '2.35',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(response);
   });
 
@@ -173,61 +162,59 @@ describe("WeatherHttpAdapter", () => {
     const req = httpMock.expectOne(
       (r) =>
         r.url === `${environment.apiBaseUrl}/weather/ensemble` &&
-        r.params.get("latitude") === "48.85" &&
-        r.params.get("longitude") === "2.35",
+        r.params.get('latitude') === '48.85' &&
+        r.params.get('longitude') === '2.35',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(response);
   });
 
   it("devrait envoyer un GET a l'endpoint historical avec les parametres", () => {
     const response = buildHistoricalData();
 
-    adapter
-      .getHistorical(48.85, 2.35, "2026-03-01", "2026-03-30")
-      .subscribe((result: unknown) => {
-        expect(result).toEqual(response);
-      });
+    adapter.getHistorical(48.85, 2.35, '2026-03-01', '2026-03-30').subscribe((result: unknown) => {
+      expect(result).toEqual(response);
+    });
 
     const req = httpMock.expectOne(
       (r) =>
         r.url === `${environment.apiBaseUrl}/weather/historical` &&
-        r.params.get("latitude") === "48.85" &&
-        r.params.get("longitude") === "2.35" &&
-        r.params.get("startDate") === "2026-03-01" &&
-        r.params.get("endDate") === "2026-03-30",
+        r.params.get('latitude') === '48.85' &&
+        r.params.get('longitude') === '2.35' &&
+        r.params.get('startDate') === '2026-03-01' &&
+        r.params.get('endDate') === '2026-03-30',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(response);
   });
 
-  describe("reverseGeocode", () => {
-    const NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse";
+  describe('reverseGeocode', () => {
+    const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/reverse';
 
-    it("devrait retourner la ville (city) via Nominatim", () => {
-      let result: string | null = "UNSET";
+    it('devrait retourner la ville (city) via Nominatim', () => {
+      let result: string | null = 'UNSET';
       adapter.reverseGeocode(48.85, 2.35).subscribe((name) => {
         result = name;
       });
 
       const req = httpMock.expectOne((r) => r.url === NOMINATIM_URL);
-      expect(req.request.method).toBe("GET");
-      expect(req.request.params.get("lat")).toBe("48.85");
-      expect(req.request.params.get("lon")).toBe("2.35");
-      req.flush({ address: { city: "Paris", town: "Ignore" } });
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('lat')).toBe('48.85');
+      expect(req.request.params.get('lon')).toBe('2.35');
+      req.flush({ address: { city: 'Paris', town: 'Ignore' } });
 
-      expect(result).toBe("Paris");
+      expect(result).toBe('Paris');
     });
 
-    it("devrait retomber sur town/village/municipality si city absente", () => {
+    it('devrait retomber sur town/village/municipality si city absente', () => {
       const cases: Array<[Record<string, string>, string]> = [
-        [{ town: "Versailles" }, "Versailles"],
-        [{ village: "Giverny" }, "Giverny"],
-        [{ municipality: "Lyon Metropole" }, "Lyon Metropole"],
+        [{ town: 'Versailles' }, 'Versailles'],
+        [{ village: 'Giverny' }, 'Giverny'],
+        [{ municipality: 'Lyon Metropole' }, 'Lyon Metropole'],
       ];
 
       for (const [address, expected] of cases) {
-        let result: string | null = "UNSET";
+        let result: string | null = 'UNSET';
         adapter.reverseGeocode(1, 2).subscribe((name) => {
           result = name;
         });
@@ -238,27 +225,27 @@ describe("WeatherHttpAdapter", () => {
     });
 
     it("devrait retourner null si aucun champ d'adresse exploitable", () => {
-      let result: string | null = "UNSET";
+      let result: string | null = 'UNSET';
       adapter.reverseGeocode(1, 2).subscribe((name) => {
         result = name;
       });
 
       const req = httpMock.expectOne((r) => r.url === NOMINATIM_URL);
-      req.flush({ address: { country: "France" } });
+      req.flush({ address: { country: 'France' } });
 
       expect(result).toBeNull();
     });
 
     it("devrait retourner null en cas d'erreur HTTP", () => {
-      let result: string | null = "UNSET";
+      let result: string | null = 'UNSET';
       adapter.reverseGeocode(1, 2).subscribe((name) => {
         result = name;
       });
 
       const req = httpMock.expectOne((r) => r.url === NOMINATIM_URL);
-      req.flush("Erreur", {
+      req.flush('Erreur', {
         status: 500,
-        statusText: "Internal Server Error",
+        statusText: 'Internal Server Error',
       });
 
       expect(result).toBeNull();

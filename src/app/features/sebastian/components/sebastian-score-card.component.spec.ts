@@ -1,9 +1,9 @@
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { Component, signal } from "@angular/core";
-import type { SebastianHealthScore } from "../../../core/models/sebastian.model";
-import { buildSebastianHealthScore } from "../../../../testing/factories/sebastian.factory";
-import { SebastianScoreCardComponent } from "./sebastian-score-card.component";
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { Component, signal } from '@angular/core';
+import type { SebastianHealthScore } from '../../../core/models/sebastian.model';
+import { buildSebastianHealthScore } from '../../../../testing/factories/sebastian.factory';
+import { SebastianScoreCardComponent } from './sebastian-score-card.component';
 
 /**
  * Hote de test pour fournir l'input requis via un signal.
@@ -17,7 +17,7 @@ class TestHostComponent {
   readonly score = signal<SebastianHealthScore>(buildSebastianHealthScore());
 }
 
-describe("SebastianScoreCardComponent", () => {
+describe('SebastianScoreCardComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>;
   let host: TestHostComponent;
 
@@ -31,44 +31,42 @@ describe("SebastianScoreCardComponent", () => {
     fixture.detectChanges();
   });
 
-  it("devrait se creer", () => {
-    const card = fixture.nativeElement.querySelector(
-      "app-sebastian-score-card",
-    );
+  it('devrait se creer', () => {
+    const card = fixture.nativeElement.querySelector('app-sebastian-score-card');
     expect(card).toBeTruthy();
   });
 
-  it("devrait afficher le score numerique", () => {
+  it('devrait afficher le score numerique', () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("72");
+    expect(content).toContain('72');
   });
 
   it("devrait afficher l'indicateur de phase", () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("Phase 2");
+    expect(content).toContain('Phase 2');
   });
 
-  it("devrait afficher le message", () => {
+  it('devrait afficher le message', () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("Bonne progression, continuez !");
+    expect(content).toContain('Bonne progression, continuez !');
   });
 
   it("devrait afficher la barre d'adherence aux objectifs", () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("60");
+    expect(content).toContain('60');
   });
 
-  it("devrait afficher le bonus de tendance quand present", () => {
+  it('devrait afficher le bonus de tendance quand present', () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("8");
+    expect(content).toContain('8');
   });
 
-  it("devrait afficher le bonus de streak quand present", () => {
+  it('devrait afficher le bonus de streak quand present', () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("4");
+    expect(content).toContain('4');
   });
 
-  it("devrait ne pas afficher le bonus de tendance quand absent", () => {
+  it('devrait ne pas afficher le bonus de tendance quand absent', () => {
     host.score.set(
       buildSebastianHealthScore({
         breakdown: { goalAdherence: 70 },
@@ -76,13 +74,11 @@ describe("SebastianScoreCardComponent", () => {
     );
     fixture.detectChanges();
 
-    const bonusElements = fixture.nativeElement.querySelectorAll(
-      "[data-testid='trend-bonus']",
-    );
+    const bonusElements = fixture.nativeElement.querySelectorAll("[data-testid='trend-bonus']");
     expect(bonusElements.length).toBe(0);
   });
 
-  it("devrait ne pas afficher le bonus de streak quand absent", () => {
+  it('devrait ne pas afficher le bonus de streak quand absent', () => {
     host.score.set(
       buildSebastianHealthScore({
         breakdown: { goalAdherence: 70 },
@@ -90,30 +86,26 @@ describe("SebastianScoreCardComponent", () => {
     );
     fixture.detectChanges();
 
-    const bonusElements = fixture.nativeElement.querySelectorAll(
-      "[data-testid='streak-bonus']",
-    );
+    const bonusElements = fixture.nativeElement.querySelectorAll("[data-testid='streak-bonus']");
     expect(bonusElements.length).toBe(0);
   });
 
-  it("devrait mettre a jour quand le score change", () => {
+  it('devrait mettre a jour quand le score change', () => {
     host.score.set(buildSebastianHealthScore({ score: 95, phase: 3 }));
     fixture.detectChanges();
 
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain("95");
-    expect(content).toContain("Phase 3");
+    expect(content).toContain('95');
+    expect(content).toContain('Phase 3');
   });
 
-  it("devrait utiliser le glass Asili dark lounge ambré", () => {
-    const card: HTMLElement = fixture.nativeElement.querySelector(
-      "[data-testid='score-card']",
-    );
+  it('devrait utiliser le glass Asili dark lounge ambré', () => {
+    const card: HTMLElement = fixture.nativeElement.querySelector("[data-testid='score-card']");
     expect(card).toBeTruthy();
     // Restyle Lot 5 : glass dark lounge ambré (.panel) — bg-white/[0.04] +
     // bordure ambrée rgba(230,170,70,0.14) + rayon 20px.
-    expect(card.classList).toContain("bg-white/[0.04]");
-    expect(card.classList).toContain("border-[rgba(230,170,70,0.14)]");
-    expect(card.classList).toContain("rounded-[20px]");
+    expect(card.classList).toContain('bg-white/[0.04]');
+    expect(card.classList).toContain('border-[rgba(230,170,70,0.14)]');
+    expect(card.classList).toContain('rounded-[20px]');
   });
 });

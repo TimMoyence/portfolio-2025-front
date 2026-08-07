@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterLink } from "@angular/router";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import {
   AsiliAiMethodComponent,
   type AsiliAiMethodStep,
   AsiliCtaBandComponent,
   AsiliHeroComponent,
-} from "../../shared/sections";
+} from '../../shared/sections';
 
 /**
  * Une compétence / terrain d'expertise présenté sur la page Présentation.
@@ -20,7 +20,7 @@ interface PresentationSkill {
   title: string;
   desc: string;
   stack: readonly string[];
-  icon: "code" | "ai" | "chart";
+  icon: 'code' | 'ai' | 'chart';
   /** Délai de révélation au scroll (cascade visuelle des cartes). */
   revealDelay: 1 | 2 | 3 | 4 | null;
 }
@@ -74,7 +74,7 @@ interface PresentationFaq {
  * l'identité de tête reste « développeur ». Pas de social proof fictif.
  */
 @Component({
-  selector: "app-presentation",
+  selector: 'app-presentation',
   standalone: true,
   imports: [
     RouterLink,
@@ -83,8 +83,8 @@ interface PresentationFaq {
     AsiliAiMethodComponent,
     AsiliCtaBandComponent,
   ],
-  templateUrl: "./presentation.component.html",
-  styleUrl: "./presentation.component.scss",
+  templateUrl: './presentation.component.html',
+  styleUrl: './presentation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PresentationComponent {
@@ -135,8 +135,7 @@ export class PresentationComponent {
   protected readonly portraitPlaceholder = $localize`:@@presentationPortraitPlaceholder:portrait — photo du fondateur`;
 
   /** Portrait du fondateur (chemin absolu, SSR/i18n-safe). */
-  protected readonly portraitImage =
-    "/assets/images/portrait-tim-asili-design.webp";
+  protected readonly portraitImage = '/assets/images/portrait-tim-asili-design.webp';
 
   /** Texte alternatif du portrait (a11y). */
   protected readonly portraitAlt = $localize`:@@presentationPortraitAlt:Tim Moyence, fondateur d'Asili Design`;
@@ -152,7 +151,7 @@ export class PresentationComponent {
   /** Trois terrains d'expertise (développement / IA / conseil). */
   protected readonly skills: readonly PresentationSkill[] = [
     {
-      icon: "code",
+      icon: 'code',
       revealDelay: null,
       title: $localize`:@@presentationSkill1Title:Développement produit`,
       desc: $localize`:@@presentationSkill1Desc:Des applications web robustes, lisibles et maintenables. De l'architecture front à l'API, avec une obsession pour la clarté du code et de l'usage.`,
@@ -166,7 +165,7 @@ export class PresentationComponent {
       ],
     },
     {
-      icon: "ai",
+      icon: 'ai',
       revealDelay: 1,
       title: $localize`:@@presentationSkill2Title:IA utile & mesurée`,
       desc: $localize`:@@presentationSkill2Desc:L'IA comme levier, pas comme gadget. J'intègre des automatisations et des assistants qui font gagner du temps réel — sous contrôle humain, toujours.`,
@@ -178,7 +177,7 @@ export class PresentationComponent {
       ],
     },
     {
-      icon: "chart",
+      icon: 'chart',
       revealDelay: 2,
       title: $localize`:@@presentationSkill3Title:Conseil & stratégie`,
       desc: $localize`:@@presentationSkill3Desc:Avant la technique, la direction. Audit, cadrage, priorisation : je vous aide à décider quoi construire — et surtout quoi ne pas construire.`,
@@ -201,22 +200,22 @@ export class PresentationComponent {
   /** Étapes de la méthode de travail avec l'IA. */
   protected readonly aiMethodSteps: readonly AsiliAiMethodStep[] = [
     {
-      num: "01",
+      num: '01',
       title: $localize`:@@presentationAiMethodStep1Title:Un agent par tâche`,
       desc: $localize`:@@presentationAiMethodStep1Desc:Découpage clair, chaque agent a un rôle précis.`,
     },
     {
-      num: "02",
+      num: '02',
       title: $localize`:@@presentationAiMethodStep2Title:Revue croisée`,
       desc: $localize`:@@presentationAiMethodStep2Desc:Les agents se relisent ; rien ne passe sans contrôle.`,
     },
     {
-      num: "03",
+      num: '03',
       title: $localize`:@@presentationAiMethodStep3Title:Vérification adversariale`,
       desc: $localize`:@@presentationAiMethodStep3Desc:On cherche activement à casser avant de valider.`,
     },
     {
-      num: "04",
+      num: '04',
       title: $localize`:@@presentationAiMethodStep4Title:TDD + architecture durable`,
       desc: $localize`:@@presentationAiMethodStep4Desc:Un test qui échoue d'abord ; DDD & clean archi ensuite.`,
     },

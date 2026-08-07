@@ -1,23 +1,23 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
   inject,
-} from "@angular/core";
-import type { NgForm } from "@angular/forms";
-import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, RouterModule } from "@angular/router";
-import type { AuthPort } from "../../core/ports/auth.port";
-import { AUTH_PORT } from "../../core/ports/auth.port";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
-import { AuthShellComponent } from "../../shared/components/auth-shell/auth-shell.component";
-import { AuthSuccessComponent } from "../../shared/components/auth-success/auth-success.component";
-import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import type { AuthPort } from '../../core/ports/auth.port';
+import { AUTH_PORT } from '../../core/ports/auth.port';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
+import { AuthSuccessComponent } from '../../shared/components/auth-success/auth-success.component';
+import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 
 @Component({
-  selector: "app-reset-password",
+  selector: 'app-reset-password',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,8 +27,8 @@ import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
     AuthShellComponent,
     AuthSuccessComponent,
   ],
-  templateUrl: "./reset-password.component.html",
-  styleUrl: "./reset-password.component.scss",
+  templateUrl: './reset-password.component.html',
+  styleUrl: './reset-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
@@ -37,15 +37,15 @@ export class ResetPasswordComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
 
   token: string | null = null;
-  newPassword = "";
-  confirmPassword = "";
+  newPassword = '';
+  confirmPassword = '';
   submitted = false;
   isLoading = false;
   successMessage?: string;
   errorMessage?: string;
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get("token");
+    const token = this.route.snapshot.queryParamMap.get('token');
     this.token = token?.trim() || null;
 
     if (!this.token) {
@@ -79,9 +79,9 @@ export class ResetPasswordComponent implements OnInit {
         fallbackError: $localize`:auth.reset.error.generic@@authResetErrorGeneric:Impossible de réinitialiser le mot de passe.`,
         onSuccess: (result) => {
           this.successMessage = result.message;
-          this.newPassword = "";
-          this.confirmPassword = "";
-          form.resetForm({ newPassword: "", confirmPassword: "" });
+          this.newPassword = '';
+          this.confirmPassword = '';
+          form.resetForm({ newPassword: '', confirmPassword: '' });
           this.submitted = false;
         },
         onError: (message) => {

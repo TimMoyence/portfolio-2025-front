@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
  * Skeleton loader pour les cartes metriques weather.
  * Affiche une animation de pulsation glassmorphism pendant le chargement.
  */
 @Component({
-  selector: "app-weather-card-skeleton",
+  selector: 'app-weather-card-skeleton',
   standalone: true,
-  host: { class: "block" },
+  host: { class: 'block' },
   template: `
     <!--
       Skeleton carte instrument — re-skin Asili : glass .gp/.wx-card (rayon

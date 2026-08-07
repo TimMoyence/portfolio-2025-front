@@ -1,31 +1,23 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from "@angular/core";
-import { UnitPipe } from "../../pipes/unit.pipe";
-import { UnitPreferencesService } from "../../services/unit-preferences.service";
-import { MetricCardComponent } from "../metric-card/metric-card.component";
-import { SparklineComponent } from "../sparkline/sparkline.component";
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { UnitPipe } from '../../pipes/unit.pipe';
+import { UnitPreferencesService } from '../../services/unit-preferences.service';
+import { MetricCardComponent } from '../metric-card/metric-card.component';
+import { SparklineComponent } from '../sparkline/sparkline.component';
 
 /**
  * Carte de pression atmospherique avec tendance calculee
  * a partir des donnees horaires si disponibles.
  */
 @Component({
-  selector: "app-pressure-card",
+  selector: 'app-pressure-card',
   standalone: true,
   imports: [MetricCardComponent, SparklineComponent, UnitPipe],
   template: `
     <app-metric-card
       tooltipId="pressure"
-      i18n-tooltipTitle="
-        weather.pressure.tooltip.title|@@weatherPressureTooltipTitle"
+      i18n-tooltipTitle="weather.pressure.tooltip.title|@@weatherPressureTooltipTitle"
       tooltipTitle="Pression atmosphérique"
-      i18n-tooltipContent="
-        weather.pressure.tooltip.content|@@weatherPressureTooltipContent"
+      i18n-tooltipContent="weather.pressure.tooltip.content|@@weatherPressureTooltipContent"
       tooltipContent="La pression atmosphérique est le poids de l'air au-dessus de vous, mesurée en hectopascals (hPa). Une pression en hausse annonce généralement du beau temps, une baisse rapide signale l'arrivée d'une perturbation."
       [unavailable]="pressure() === null"
     >
@@ -76,40 +68,40 @@ export class PressureCardComponent {
    * Tendance de pression calculee a partir des 3 dernieres heures.
    * Retourne 'rising', 'falling' ou 'stable'.
    */
-  readonly trend = computed<"rising" | "falling" | "stable">(() => {
+  readonly trend = computed<'rising' | 'falling' | 'stable'>(() => {
     const hourly = this.hourlyPressure();
-    if (!hourly || hourly.length < 4) return "stable";
+    if (!hourly || hourly.length < 4) return 'stable';
     const recent = hourly.slice(-3);
     const oldest = recent[0];
     const newest = recent[recent.length - 1];
     const diff = newest - oldest;
-    if (diff > 1) return "rising";
-    if (diff < -1) return "falling";
-    return "stable";
+    if (diff > 1) return 'rising';
+    if (diff < -1) return 'falling';
+    return 'stable';
   });
 
   /** Fleche directionnelle de la tendance. */
   readonly trendArrow = computed(() => {
     const t = this.trend();
-    if (t === "rising") return "↑";
-    if (t === "falling") return "↓";
-    return "→";
+    if (t === 'rising') return '↑';
+    if (t === 'falling') return '↓';
+    return '→';
   });
 
   /** Classe de couleur de la tendance. */
   readonly trendColor = computed(() => {
     const t = this.trend();
-    if (t === "rising") return "text-green-400";
-    if (t === "falling") return "text-red-400";
-    return "text-white/50";
+    if (t === 'rising') return 'text-green-400';
+    if (t === 'falling') return 'text-red-400';
+    return 'text-white/50';
   });
 
   /** Description textuelle de la tendance de pression. */
   readonly trendDescription = computed(() => {
     const t = this.trend();
-    if (t === "rising")
+    if (t === 'rising')
       return $localize`:weather.pressure.rising|@@weatherPressureRising:En hausse`;
-    if (t === "falling")
+    if (t === 'falling')
       return $localize`:weather.pressure.falling|@@weatherPressureFalling:En baisse`;
     return $localize`:weather.pressure.stable|@@weatherPressureStable:Stable`;
   });

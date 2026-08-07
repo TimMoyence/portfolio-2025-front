@@ -71,7 +71,7 @@ export interface MeteoCityLabels {
 }
 
 /** Identifiants des 4 villes par defaut, dans l'ordre d'affichage. */
-export type MeteoCityId = "bordeaux" | "paris" | "nice" | "lyon";
+export type MeteoCityId = 'bordeaux' | 'paris' | 'nice' | 'lyon';
 
 /**
  * Coeur numerique partage d'une ville (tout sauf les 3 champs i18n).
@@ -86,8 +86,8 @@ type MeteoCityCore = Omit<DemoCity, keyof MeteoCityLabels>;
  */
 const METEO_CITY_CORES: readonly MeteoCityCore[] = [
   {
-    id: "bordeaux",
-    name: "Bordeaux",
+    id: 'bordeaux',
+    name: 'Bordeaux',
     temp: 19,
     feels: 18,
     hum: 64,
@@ -96,12 +96,12 @@ const METEO_CITY_CORES: readonly MeteoCityCore[] = [
     wind: 14,
     windDeg: 270,
     sun: 0.5,
-    sunrise: "06:42",
-    sunset: "21:18",
+    sunrise: '06:42',
+    sunset: '21:18',
   },
   {
-    id: "paris",
-    name: "Paris",
+    id: 'paris',
+    name: 'Paris',
     temp: 16,
     feels: 14,
     hum: 71,
@@ -110,12 +110,12 @@ const METEO_CITY_CORES: readonly MeteoCityCore[] = [
     wind: 18,
     windDeg: 0,
     sun: 0.32,
-    sunrise: "06:31",
-    sunset: "21:34",
+    sunrise: '06:31',
+    sunset: '21:34',
   },
   {
-    id: "nice",
-    name: "Nice",
+    id: 'nice',
+    name: 'Nice',
     temp: 24,
     feels: 25,
     hum: 52,
@@ -124,12 +124,12 @@ const METEO_CITY_CORES: readonly MeteoCityCore[] = [
     wind: 9,
     windDeg: 135,
     sun: 0.68,
-    sunrise: "06:18",
-    sunset: "21:06",
+    sunrise: '06:18',
+    sunset: '21:06',
   },
   {
-    id: "lyon",
-    name: "Lyon",
+    id: 'lyon',
+    name: 'Lyon',
     temp: 21,
     feels: 20,
     hum: 58,
@@ -138,8 +138,8 @@ const METEO_CITY_CORES: readonly MeteoCityCore[] = [
     wind: 12,
     windDeg: 180,
     sun: 0.45,
-    sunrise: "06:25",
-    sunset: "21:22",
+    sunrise: '06:25',
+    sunset: '21:22',
   },
 ] as const;
 

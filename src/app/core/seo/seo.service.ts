@@ -1,19 +1,19 @@
-import { DOCUMENT } from "@angular/common";
-import { Inject, Injectable, LOCALE_ID } from "@angular/core";
-import { Meta, Title } from "@angular/platform-browser";
-import type { SeoConfig } from "./seo.interface";
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
+import type { SeoConfig } from './seo.interface';
 
 /** Map locale ID (ex: "fr", "en") → tag Open Graph (ex: "fr_FR", "en_US"). */
 const OG_LOCALE_MAP: Record<string, string> = {
-  fr: "fr_FR",
-  en: "en_US",
+  fr: 'fr_FR',
+  en: 'en_US',
 };
 
 /** Compte Twitter / X associé au site, utilisé pour twitter:site et twitter:creator. */
-const TWITTER_HANDLE = "@timmoyence";
+const TWITTER_HANDLE = '@timmoyence';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class SeoService {
   constructor(
@@ -27,39 +27,37 @@ export class SeoService {
     if (!this.document) return;
 
     this.title.setTitle(config.title);
-    this.meta.updateTag({ name: "description", content: config.description });
+    this.meta.updateTag({ name: 'description', content: config.description });
 
     if (config.keywords && config.keywords.length > 0)
       this.meta.updateTag({
-        name: "keywords",
-        content: config.keywords.join(", "),
+        name: 'keywords',
+        content: config.keywords.join(', '),
       });
 
     // Open Graph
     this.meta.updateTag({
-      property: "og:title",
+      property: 'og:title',
       content: config.ogTitle || config.title,
     });
     this.meta.updateTag({
-      property: "og:description",
+      property: 'og:description',
       content: config.ogDescription || config.description,
     });
 
-    if (config.ogImage)
-      this.meta.updateTag({ property: "og:image", content: config.ogImage });
+    if (config.ogImage) this.meta.updateTag({ property: 'og:image', content: config.ogImage });
 
-    if (config.ogUrl)
-      this.meta.updateTag({ property: "og:url", content: config.ogUrl });
+    if (config.ogUrl) this.meta.updateTag({ property: 'og:url', content: config.ogUrl });
 
     this.meta.updateTag({
-      property: "og:type",
-      content: config.ogType || "website",
+      property: 'og:type',
+      content: config.ogType || 'website',
     });
 
     // og:locale et og:locale:alternate pour signaler les langues aux crawlers sociaux
     const currentLocale = this.resolveLocaleKey();
-    const currentOgLocale = OG_LOCALE_MAP[currentLocale] ?? OG_LOCALE_MAP["fr"];
-    this.meta.updateTag({ property: "og:locale", content: currentOgLocale });
+    const currentOgLocale = OG_LOCALE_MAP[currentLocale] ?? OG_LOCALE_MAP['fr'];
+    this.meta.updateTag({ property: 'og:locale', content: currentOgLocale });
 
     // Supprime les anciennes balises og:locale:alternate avant d'ajouter les nouvelles
     this.document
@@ -67,57 +65,54 @@ export class SeoService {
       .forEach((node) => node.remove());
     for (const [localeKey, ogLocale] of Object.entries(OG_LOCALE_MAP)) {
       if (localeKey === currentLocale) continue;
-      const meta = this.document.createElement("meta");
-      meta.setAttribute("property", "og:locale:alternate");
-      meta.setAttribute("content", ogLocale);
+      const meta = this.document.createElement('meta');
+      meta.setAttribute('property', 'og:locale:alternate');
+      meta.setAttribute('content', ogLocale);
       this.document.head.appendChild(meta);
     }
 
     // og:site_name aide les moteurs IA à identifier la marque
     this.meta.updateTag({
-      property: "og:site_name",
-      content: "Asili Design",
+      property: 'og:site_name',
+      content: 'Asili Design',
     });
 
     // Twitter Card
     this.meta.updateTag({
-      name: "twitter:card",
-      content: config.twitterCard || "summary",
+      name: 'twitter:card',
+      content: config.twitterCard || 'summary',
     });
-    this.meta.updateTag({ name: "twitter:site", content: TWITTER_HANDLE });
-    this.meta.updateTag({ name: "twitter:creator", content: TWITTER_HANDLE });
+    this.meta.updateTag({ name: 'twitter:site', content: TWITTER_HANDLE });
+    this.meta.updateTag({ name: 'twitter:creator', content: TWITTER_HANDLE });
     this.meta.updateTag({
-      name: "twitter:title",
+      name: 'twitter:title',
       content: config.twitterTitle || config.ogTitle || config.title,
     });
     this.meta.updateTag({
-      name: "twitter:description",
-      content:
-        config.twitterDescription || config.ogDescription || config.description,
+      name: 'twitter:description',
+      content: config.twitterDescription || config.ogDescription || config.description,
     });
 
     if (config.twitterImage)
       this.meta.updateTag({
-        name: "twitter:image",
+        name: 'twitter:image',
         content: config.twitterImage,
       });
 
     if (config.robots) {
-      this.meta.updateTag({ name: "robots", content: config.robots });
+      this.meta.updateTag({ name: 'robots', content: config.robots });
     }
 
     if (config.canonicalUrl) {
       // Remove existing canonical link if it exists
-      const existingCanonicalLink = this.document.querySelector(
-        'link[rel="canonical"]',
-      );
+      const existingCanonicalLink = this.document.querySelector('link[rel="canonical"]');
       if (existingCanonicalLink) {
         existingCanonicalLink.remove();
       }
 
-      const link = this.document.createElement("link");
-      link.setAttribute("rel", "canonical");
-      link.setAttribute("href", config.canonicalUrl);
+      const link = this.document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      link.setAttribute('href', config.canonicalUrl);
       this.document.head.appendChild(link);
     }
 
@@ -127,10 +122,10 @@ export class SeoService {
         .forEach((node) => node.remove());
 
       for (const [locale, href] of Object.entries(config.hreflangs)) {
-        const link = this.document.createElement("link");
-        link.setAttribute("rel", "alternate");
-        link.setAttribute("hreflang", locale);
-        link.setAttribute("href", href);
+        const link = this.document.createElement('link');
+        link.setAttribute('rel', 'alternate');
+        link.setAttribute('hreflang', locale);
+        link.setAttribute('href', href);
         this.document.head.appendChild(link);
       }
     }
@@ -153,13 +148,11 @@ export class SeoService {
 
     if (!config.jsonLd) return;
 
-    const blocks = Array.isArray(config.jsonLd)
-      ? config.jsonLd
-      : [config.jsonLd];
+    const blocks = Array.isArray(config.jsonLd) ? config.jsonLd : [config.jsonLd];
 
     for (const block of blocks) {
-      const script = this.document.createElement("script");
-      script.type = "application/ld+json";
+      const script = this.document.createElement('script');
+      script.type = 'application/ld+json';
       script.textContent = JSON.stringify(block);
       this.document.head.appendChild(script);
     }
@@ -170,6 +163,6 @@ export class SeoService {
    * Angular peut fournir "fr", "fr-FR", "en", "en-US"... selon la configuration.
    */
   private resolveLocaleKey(): string {
-    return (this.localeId ?? "fr").toLowerCase().split("-")[0];
+    return (this.localeId ?? 'fr').toLowerCase().split('-')[0];
   }
 }

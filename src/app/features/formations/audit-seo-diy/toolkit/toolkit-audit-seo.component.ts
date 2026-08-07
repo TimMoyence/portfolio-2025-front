@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ToolkitGatePageComponent } from "../../shared/toolkit-gate-page.component";
-import type { ToolkitGatePageData } from "../../shared/toolkit-gate-page.model";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ToolkitGatePageComponent } from '../../shared/toolkit-gate-page.component';
+import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
 
 /**
  * Page de capture email du toolkit « Audit SEO DIY » — refonte Asili (Lot 3e).
@@ -16,7 +16,7 @@ import type { ToolkitGatePageData } from "../../shared/toolkit-gate-page.model";
  * constellation global. Texte localise via `$localize`.
  */
 @Component({
-  selector: "app-toolkit-audit-seo",
+  selector: 'app-toolkit-audit-seo',
   standalone: true,
   imports: [ToolkitGatePageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

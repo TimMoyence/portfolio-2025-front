@@ -1,4 +1,4 @@
-@use "../../../styles-shared/breakpoints" as bp;
+@use '../../../styles-shared/breakpoints' as bp;
 :host {
   display: block;
 }
@@ -24,11 +24,7 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(
-      120% 90% at 78% 18%,
-      transparent 30%,
-      rgba(255, 250, 242, 0.5) 78%
-    ),
+    radial-gradient(120% 90% at 78% 18%, transparent 30%, rgba(255, 250, 242, 0.5) 78%),
     linear-gradient(180deg, rgba(255, 250, 242, 0) 60%, var(--cream) 100%);
 }
 

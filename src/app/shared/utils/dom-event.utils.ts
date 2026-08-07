@@ -11,13 +11,10 @@
  */
 export function readInputValue(event: Event): string {
   const target = event.target;
-  if (
-    target instanceof HTMLInputElement ||
-    target instanceof HTMLTextAreaElement
-  ) {
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
     return target.value;
   }
-  return "";
+  return '';
 }
 
 /**

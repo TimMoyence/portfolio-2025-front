@@ -1,14 +1,7 @@
-import { animate, style, transition, trigger } from "@angular/animations";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  model,
-} from "@angular/core";
-import { BreakpointService } from "../../../../core/services/breakpoint.service";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
+import { animate, style, transition, trigger } from '@angular/animations';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
+import { BreakpointService } from '../../../../core/services/breakpoint.service';
+import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.component';
 
 /**
  * Carte metrique generique (design system weather).
@@ -16,28 +9,22 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
  * le mode compact mobile-first et l'expand/collapse.
  */
 @Component({
-  selector: "app-metric-card",
+  selector: 'app-metric-card',
   standalone: true,
   imports: [LearningTooltipComponent],
   animations: [
-    trigger("expandCollapse", [
-      transition(":enter", [
-        style({ height: 0, opacity: 0, overflow: "hidden" }),
-        animate(
-          "200ms ease-out",
-          style({ height: "*", opacity: 1, overflow: "hidden" }),
-        ),
+    trigger('expandCollapse', [
+      transition(':enter', [
+        style({ height: 0, opacity: 0, overflow: 'hidden' }),
+        animate('200ms ease-out', style({ height: '*', opacity: 1, overflow: 'hidden' })),
       ]),
-      transition(":leave", [
-        style({ overflow: "hidden" }),
-        animate(
-          "200ms ease-in",
-          style({ height: 0, opacity: 0, overflow: "hidden" }),
-        ),
+      transition(':leave', [
+        style({ overflow: 'hidden' }),
+        animate('200ms ease-in', style({ height: 0, opacity: 0, overflow: 'hidden' })),
       ]),
     ]),
   ],
-  host: { class: "block" },
+  host: { class: 'block' },
   template: `
     <!--
       Carte instrument — wrapper glass Asili (levier central partagé).
@@ -65,9 +52,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
               class="flex h-6 w-6 items-center justify-center rounded-full text-white/40 transition-transform hover:text-teal"
               [class.rotate-180]="expanded()"
               [attr.aria-expanded]="expanded()"
-              [attr.aria-label]="
-                expanded() ? 'Réduire les détails' : 'Afficher les détails'
-              "
+              [attr.aria-label]="expanded() ? 'Réduire les détails' : 'Afficher les détails'"
               (click)="toggleExpand($event)"
             >
               <svg
@@ -99,10 +84,7 @@ import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.c
           </div>
         }
       } @else {
-        <p
-          class="text-sm text-white/40"
-          i18n="weather.card.unavailable|@@weatherCardUnavailable"
-        >
+        <p class="text-sm text-white/40" i18n="weather.card.unavailable|@@weatherCardUnavailable">
           Données indisponibles
         </p>
       }
@@ -130,14 +112,13 @@ export class MetricCardComponent {
   readonly expanded = model(false);
 
   /** Variante de taille : compact (mobile), default, wide (full-width). */
-  readonly variant = input<"default" | "compact" | "wide">("default");
+  readonly variant = input<'default' | 'compact' | 'wide'>('default');
 
   private readonly breakpointService = inject(BreakpointService);
 
   /** Variante effective tenant compte du mobile. */
   readonly effectiveVariant = computed(() => {
-    if (this.breakpointService.isMobile() && this.variant() === "default")
-      return "compact";
+    if (this.breakpointService.isMobile() && this.variant() === 'default') return 'compact';
     return this.variant();
   });
 
@@ -148,11 +129,11 @@ export class MetricCardComponent {
    */
   readonly containerClasses = computed(() => {
     const base =
-      "rounded-[20px] border border-teal/15 bg-white/5 backdrop-blur-xl transition-colors hover:border-teal/30";
+      'rounded-[20px] border border-teal/15 bg-white/5 backdrop-blur-xl transition-colors hover:border-teal/30';
     switch (this.effectiveVariant()) {
-      case "compact":
+      case 'compact':
         return `${base} p-3`;
-      case "wide":
+      case 'wide':
         return `${base} p-6`;
       default:
         return `${base} p-4`;
@@ -164,11 +145,8 @@ export class MetricCardComponent {
    * En-tête .gp-h .t : font-mono, uppercase, letterspacing — kicker Asili.
    */
   readonly titleClasses = computed(() => {
-    const base =
-      "font-mono uppercase tracking-[0.14em] font-medium text-white/55";
-    return this.effectiveVariant() === "compact"
-      ? `${base} text-[10px]`
-      : `${base} text-[11px]`;
+    const base = 'font-mono uppercase tracking-[0.14em] font-medium text-white/55';
+    return this.effectiveVariant() === 'compact' ? `${base} text-[10px]` : `${base} text-[11px]`;
   });
 
   /** Bascule l'etat expanded. */

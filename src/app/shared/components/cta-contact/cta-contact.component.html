@@ -10,10 +10,7 @@
       >
         Contact
       </p>
-      <h2
-        class="font-heading heading-h3 text-h3 mb-5 md:mb-6"
-        id="contact-heading"
-      >
+      <h2 class="font-heading heading-h3 text-h3 mb-5 md:mb-6" id="contact-heading">
         {{ title }}
       </h2>
       @for (p of leadParagraphs; track $index) {
@@ -28,10 +25,7 @@
     >
       <div class="grid grid-cols-1 gap-x-4 gap-y-4 py-2">
         @for (method of contactMethods; track $index) {
-          <div
-            class="flex flex-row"
-            [attr.data-testid]="'contact-method-' + $index"
-          >
+          <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
             <div class="mr-4 flex items-center justify-center md:mb-4">
               @if (method.icon) {
                 <app-svg-icon

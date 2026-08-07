@@ -26,48 +26,33 @@
           <h1 appReveal [appRevealDelay]="1" i18n="@@sebastianLandingHeroTitle">
             Vos habitudes,<br />en mode <em>jeu</em>.
           </h1>
-          <p
-            class="lp-lead"
-            appReveal
-            [appRevealDelay]="2"
-            i18n="@@sebastianLandingHeroLead"
-          >
-            Sebastian transforme le suivi de consommation (alcool/café) en geste
-            simple : un score de santé qui monte, une série à tenir, un calcul
-            d'alcoolémie en direct — et un bot Telegram pour logger un verre en
-            2 secondes. Cochez vos habitudes ci-contre, le score réagit.
+          <p class="lp-lead" appReveal [appRevealDelay]="2" i18n="@@sebastianLandingHeroLead">
+            Sebastian transforme le suivi de consommation (alcool/café) en geste simple : un score
+            de santé qui monte, une série à tenir, un calcul d'alcoolémie en direct — et un bot
+            Telegram pour logger un verre en 2 secondes. Cochez vos habitudes ci-contre, le score
+            réagit.
           </p>
           <div class="lp-cta" appReveal [appRevealDelay]="2">
             <a class="btn btn-gold" routerLink="/atelier/sebastian/app">
-              <span i18n="@@sebastianLandingHeroCtaPrimary"
-                >Accéder à Sebastian</span
-              >
+              <span i18n="@@sebastianLandingHeroCtaPrimary">Accéder à Sebastian</span>
               <span class="arrow" aria-hidden="true">→</span>
             </a>
             <a class="btn btn-ghost lp-ghost" href="#demo">
-              <span i18n="@@sebastianLandingHeroCtaSecondary"
-                >Voir la démo</span
-              >
+              <span i18n="@@sebastianLandingHeroCtaSecondary">Voir la démo</span>
             </a>
           </div>
           <div class="lp-hero-stats" appReveal [appRevealDelay]="3">
             <div>
               <div class="n">2s</div>
-              <div class="l" i18n="@@sebastianLandingStat1">
-                pour logger<br />via Telegram
-              </div>
+              <div class="l" i18n="@@sebastianLandingStat1">pour logger<br />via Telegram</div>
             </div>
             <div>
               <div class="n">5</div>
-              <div class="l" i18n="@@sebastianLandingStat2">
-                écrans<br />de suivi
-              </div>
+              <div class="l" i18n="@@sebastianLandingStat2">écrans<br />de suivi</div>
             </div>
             <div>
               <div class="n">∞</div>
-              <div class="l" i18n="@@sebastianLandingStat3">
-                habitudes<br />suivies
-              </div>
+              <div class="l" i18n="@@sebastianLandingStat3">habitudes<br />suivies</div>
             </div>
           </div>
         </div>
@@ -77,20 +62,13 @@
           <div class="glass seb-panel">
             <div class="seb-head">
               <div>
-                <div class="seb-loc" i18n="@@sebastianLandingDemoToday">
-                  Aujourd'hui
-                </div>
-                <div
-                  class="meteo-cond seb-head__sub"
-                  i18n="@@sebastianLandingDemoSub"
-                >
+                <div class="seb-loc" i18n="@@sebastianLandingDemoToday">Aujourd'hui</div>
+                <div class="meteo-cond seb-head__sub" i18n="@@sebastianLandingDemoSub">
                   Cochez vos habitudes du jour
                 </div>
               </div>
               <span class="meteo-cond">
-                <ng-container i18n="@@sebastianLandingDemoStreak"
-                  >SÉRIE ·</ng-container
-                >
+                <ng-container i18n="@@sebastianLandingDemoStreak">SÉRIE ·</ng-container>
                 {{ streak() }}
                 <ng-container i18n="@@sebastianLandingDemoDays">j</ng-container>
               </span>
@@ -122,9 +100,7 @@
                 </svg>
                 <div class="g-label">
                   <div class="gv">{{ gaugeValue() }}</div>
-                  <div class="gl" i18n="@@sebastianLandingGaugeLabel">
-                    score santé
-                  </div>
+                  <div class="gl" i18n="@@sebastianLandingGaugeLabel">score santé</div>
                 </div>
               </div>
               <div
@@ -150,11 +126,7 @@
             <div>
               <div class="heat-big" aria-hidden="true">
                 @for (lv of heatmap(); track $index) {
-                  <i
-                    [class.l1]="lv === 1"
-                    [class.l2]="lv === 2"
-                    [class.l3]="lv === 3"
-                  ></i>
+                  <i [class.l1]="lv === 1" [class.l2]="lv === 2" [class.l3]="lv === 3"></i>
                 }
               </div>
               <div class="heat-legend" i18n="@@sebastianLandingHeatLegend">
@@ -162,13 +134,7 @@
               </div>
             </div>
             <p class="meteo-hint seb-hint">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-              >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M9 11V6a3 3 0 0 1 6 0v5M5 11h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"
                   stroke="currentColor"
@@ -176,8 +142,7 @@
                 />
               </svg>
               <ng-container i18n="@@sebastianLandingHint"
-                >Cochez/décochez une habitude — le score bouge en
-                direct.</ng-container
+                >Cochez/décochez une habitude — le score bouge en direct.</ng-container
               >
             </p>
           </div>
@@ -189,29 +154,19 @@
     <section class="lp-section">
       <div class="lp-wrap">
         <div class="lp-sec-head" appReveal>
-          <span class="lp-kicker" i18n="@@sebastianLandingFeaturesKicker"
-            >La mécanique</span
-          >
-          <h2 i18n="@@sebastianLandingFeaturesTitle">
-            Le suivi devient une <em>progression</em>.
-          </h2>
+          <span class="lp-kicker" i18n="@@sebastianLandingFeaturesKicker">La mécanique</span>
+          <h2 i18n="@@sebastianLandingFeaturesTitle">Le suivi devient une <em>progression</em>.</h2>
           <p i18n="@@sebastianLandingFeaturesLead">
-            Plutôt que culpabiliser, Sebastian rend le suivi simple et lisible.
-            Chaque verre logué nourrit un score, alimente une série, affine le
-            calcul d'alcoolémie. La donnée informe au lieu de juger.
+            Plutôt que culpabiliser, Sebastian rend le suivi simple et lisible. Chaque verre logué
+            nourrit un score, alimente une série, affine le calcul d'alcoolémie. La donnée informe
+            au lieu de juger.
           </p>
         </div>
         <div class="lp-features">
           <div class="lp-feat" appReveal>
             <div class="fi" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="9"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                />
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
                 <path
                   d="M12 7v5l3 2"
                   stroke="currentColor"
@@ -222,8 +177,8 @@
             </div>
             <h3 i18n="@@sebastianLandingFeat1Title">Score de santé vivant</h3>
             <p i18n="@@sebastianLandingFeat1Desc">
-              Un indice synthétique qui agrège hydratation, sommeil, modération
-              et activité. Il monte avec vous.
+              Un indice synthétique qui agrège hydratation, sommeil, modération et activité. Il
+              monte avec vous.
             </p>
           </div>
           <div class="lp-feat" appReveal [appRevealDelay]="1">
@@ -239,9 +194,8 @@
             </div>
             <h3 i18n="@@sebastianLandingFeat2Title">Bot Telegram</h3>
             <p i18n="@@sebastianLandingFeat2Desc">
-              Loggez un verre en langage naturel — « j'ai bu 3 bières » — et
-              obtenez votre taux d'alcoolémie en une commande, sans ouvrir
-              l'app.
+              Loggez un verre en langage naturel — « j'ai bu 3 bières » — et obtenez votre taux
+              d'alcoolémie en une commande, sans ouvrir l'app.
             </p>
           </div>
           <div class="lp-feat" appReveal [appRevealDelay]="2">
@@ -255,12 +209,10 @@
                 />
               </svg>
             </div>
-            <h3 i18n="@@sebastianLandingFeat3Title">
-              Rapports &amp; tendances
-            </h3>
+            <h3 i18n="@@sebastianLandingFeat3Title">Rapports &amp; tendances</h3>
             <p i18n="@@sebastianLandingFeat3Desc">
-              Heatmap d'activité, évolution mensuelle, répartition. Export PDF
-              prêt à partager avec un soignant.
+              Heatmap d'activité, évolution mensuelle, répartition. Export PDF prêt à partager avec
+              un soignant.
             </p>
           </div>
         </div>
@@ -274,13 +226,10 @@
           <span class="lp-kicker" i18n="@@sebastianLandingDemoKicker"
             >Cinq écrans, une progression</span
           >
-          <h2 i18n="@@sebastianLandingDemoTitle">
-            Tout le parcours, <em>gamifié</em>.
-          </h2>
+          <h2 i18n="@@sebastianLandingDemoTitle">Tout le parcours, <em>gamifié</em>.</h2>
           <p i18n="@@sebastianLandingDemoLead">
-            Dashboard, Rapports, Telegram, Historique, Objectifs : chaque écran
-            raconte votre avancée. Une ambiance dark lounge ambrée, pensée pour
-            donner envie d'y revenir.
+            Dashboard, Rapports, Telegram, Historique, Objectifs : chaque écran raconte votre
+            avancée. Une ambiance dark lounge ambrée, pensée pour donner envie d'y revenir.
           </p>
           <ul class="lp-demo-list">
             <li>
@@ -334,9 +283,7 @@
           </ul>
           <div class="lp-cta">
             <a class="btn btn-gold" routerLink="/atelier/sebastian/app">
-              <span i18n="@@sebastianLandingDemoCta"
-                >Explorer les 5 écrans</span
-              >
+              <span i18n="@@sebastianLandingDemoCta">Explorer les 5 écrans</span>
               <span class="arrow" aria-hidden="true">→</span>
             </a>
           </div>
@@ -369,9 +316,7 @@
               </div>
               <div class="lp-goal">
                 <div class="lp-goal-top">
-                  <span i18n="@@sebastianLandingGoal3"
-                    >Score santé &gt; 85</span
-                  >
+                  <span i18n="@@sebastianLandingGoal3">Score santé &gt; 85</span>
                   <span class="pct">92%</span>
                 </div>
                 <div class="lp-goal-track">
@@ -393,29 +338,23 @@
     <!-- ===================== CTA FINAL ===================== -->
     <section class="lp-section lp-final">
       <div class="lp-wrap" appReveal>
-        <span
-          class="lp-kicker lp-kicker--center"
-          i18n="@@sebastianLandingFinalKicker"
+        <span class="lp-kicker lp-kicker--center" i18n="@@sebastianLandingFinalKicker"
           >Prêt à jouer ?</span
         >
         <h2 i18n="@@sebastianLandingFinalTitle">
           Votre meilleure série<br /><em>commence aujourd'hui</em>.
         </h2>
         <p i18n="@@sebastianLandingFinalLead">
-          Accédez à Sebastian — dashboard, calcul d'alcoolémie, rapports et bot
-          Telegram, dans une ambiance qui donne envie de tenir.
+          Accédez à Sebastian — dashboard, calcul d'alcoolémie, rapports et bot Telegram, dans une
+          ambiance qui donne envie de tenir.
         </p>
         <div class="lp-cta lp-cta--center">
           <a class="btn btn-gold" routerLink="/atelier/sebastian/app">
-            <span i18n="@@sebastianLandingFinalCtaPrimary"
-              >Ouvrir Sebastian</span
-            >
+            <span i18n="@@sebastianLandingFinalCtaPrimary">Ouvrir Sebastian</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
           <a class="btn btn-ghost lp-ghost" routerLink="/atelier/meteo">
-            <span i18n="@@sebastianLandingFinalCtaSecondary"
-              >Voir l'autre expérience</span
-            >
+            <span i18n="@@sebastianLandingFinalCtaSecondary">Voir l'autre expérience</span>
           </a>
         </div>
       </div>

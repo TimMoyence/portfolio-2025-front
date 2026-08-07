@@ -1,20 +1,16 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { CONTACT_METHODS } from "../../data/contact-methods";
-import type {
-  FooterColumn,
-  FooterLink,
-  SocialLink,
-} from "../../models/footer.model";
-import { SvgIconComponent } from "../svg-icon.component";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CONTACT_METHODS } from '../../data/contact-methods';
+import type { FooterColumn, FooterLink, SocialLink } from '../../models/footer.model';
+import { SvgIconComponent } from '../svg-icon.component';
 
 @Component({
-  selector: "app-footer",
+  selector: 'app-footer',
   standalone: true,
   imports: [CommonModule, RouterModule, SvgIconComponent],
-  templateUrl: "./footer.component.html",
-  styleUrls: ["./footer.component.scss"],
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {
@@ -25,7 +21,7 @@ export class FooterComponent {
    * le footer (P2.10 — signal de fraicheur pour ranking IA). Alimente aussi
    * le `dateModified` JSON-LD serveur via `enrichJsonLdBlock`.
    */
-  readonly siteLastUpdated = "2026-04-17";
+  readonly siteLastUpdated = '2026-04-17';
 
   /**
    * Baseline de marque affichee dans la colonne marque du footer Asili.
@@ -57,19 +53,19 @@ export class FooterComponent {
       links: [
         {
           label: $localize`:footer.nav.services|Footer nav link@@footerNavServices:Services`,
-          href: "/offer",
+          href: '/offer',
         },
         {
           label: $localize`:footer.nav.formations|Footer nav link@@footerNavFormations:Formations`,
-          href: "/formations",
+          href: '/formations',
         },
         {
           label: $localize`:footer.nav.projects|Footer nav link@@footerNavProjects:Projets`,
-          href: "/projets",
+          href: '/projets',
         },
         {
           label: $localize`:footer.nav.contact|Footer nav link@@footerNavContact:Contact`,
-          href: "/contact",
+          href: '/contact',
         },
       ],
     },
@@ -78,19 +74,19 @@ export class FooterComponent {
       links: [
         {
           label: $localize`:footer.nav.atelier|Footer nav link@@footerNavAtelier:L'Atelier`,
-          href: "/atelier",
+          href: '/atelier',
         },
         {
           label: $localize`:footer.nav.meteo|Footer nav link@@footerNavMeteo:Météo`,
-          href: "/atelier/meteo",
+          href: '/atelier/meteo',
         },
         {
           label: $localize`:footer.nav.sebastian|Footer nav link@@footerNavSebastian:Sebastian`,
-          href: "/atelier/sebastian",
+          href: '/atelier/sebastian',
         },
         {
           label: $localize`:footer.nav.growthAudit|Footer nav link@@footerNavGrowthAudit:Growth Audit`,
-          href: "/growth-audit",
+          href: '/growth-audit',
         },
       ],
     },
@@ -99,23 +95,23 @@ export class FooterComponent {
       links: [
         {
           label: $localize`:footer.nav.presentation|Footer nav link@@footerNavPresentation:Présentation`,
-          href: "/presentation",
+          href: '/presentation',
         },
         {
           label: $localize`:footer.nav.legal|Footer nav link@@footerNavLegal:Mentions légales`,
-          href: "/terms",
+          href: '/terms',
         },
         {
           label: $localize`:footer.nav.privacy|Footer nav link@@footerNavPrivacy:Confidentialité`,
-          href: "/privacy",
+          href: '/privacy',
         },
         {
           label: $localize`:footer.nav.cookies|Footer nav link@@footerNavCookies:Paramètres cookies`,
-          href: "/cookie-settings",
+          href: '/cookie-settings',
         },
         {
           label: $localize`:footer.nav.linkedin|Footer nav link@@footerNavLinkedin:LinkedIn`,
-          href: "https://www.linkedin.com/in/tim-moyence",
+          href: 'https://www.linkedin.com/in/tim-moyence',
           external: true,
         },
       ],
@@ -125,8 +121,8 @@ export class FooterComponent {
   readonly socialLinks: SocialLink[] = [
     {
       label: $localize`:footer.social.facebook|Footer social link@@footerSocialFacebook:Facebook`,
-      href: "https://www.facebook.com/tim.moyence/",
-      icon: "network/facebook",
+      href: 'https://www.facebook.com/tim.moyence/',
+      icon: 'network/facebook',
     },
     // {
     //   label: $localize`:footer.social.instagram|Footer social link@@footerSocialInstagram:Instagram`,
@@ -135,23 +131,23 @@ export class FooterComponent {
     // },
     {
       label: $localize`:footer.social.linkedin|Footer social link@@footerSocialLinkedin:LinkedIn`,
-      href: "https://www.linkedin.com/in/tim-moyence",
-      icon: "network/linkedin",
+      href: 'https://www.linkedin.com/in/tim-moyence',
+      icon: 'network/linkedin',
     },
   ];
 
   readonly legalLinks: FooterLink[] = [
     {
       label: $localize`:footer.legal.terms|Footer legal link@@footerLegalTerms:Conditions d'utilisation`,
-      href: "/terms",
+      href: '/terms',
     },
     {
       label: $localize`:footer.legal.privacy|Footer legal link@@footerLegalPrivacy:Politique de confidentialité`,
-      href: "/privacy",
+      href: '/privacy',
     },
     {
       label: $localize`:footer.legal.cookiesSettings|Footer legal link@@footerLegalCookies:Paramètres de cookies`,
-      href: "/cookie-settings",
+      href: '/cookie-settings',
     },
   ];
 }

@@ -1,11 +1,11 @@
-import { TestBed } from "@angular/core/testing";
-import { provideRouter } from "@angular/router";
-import { PRESENTATION_PORT } from "../../../core/ports/presentation.port";
-import { SlideDeckService } from "../../../shared/slides";
-import { createPresentationPortStub } from "../../../../testing/factories/presentation.factory";
-import { IaSolopreneursComponent } from "./ia-solopreneurs.component";
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { PRESENTATION_PORT } from '../../../core/ports/presentation.port';
+import { SlideDeckService } from '../../../shared/slides';
+import { createPresentationPortStub } from '../../../../testing/factories/presentation.factory';
+import { IaSolopreneursComponent } from './ia-solopreneurs.component';
 
-describe("IaSolopreneursComponent", () => {
+describe('IaSolopreneursComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [IaSolopreneursComponent],
@@ -20,60 +20,60 @@ describe("IaSolopreneursComponent", () => {
     });
   });
 
-  it("rend la slide hero avec le titre attendu", () => {
+  it('rend la slide hero avec le titre attendu', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
-    const hero = fixture.nativeElement.querySelector("app-slide-hero");
+    const hero = fixture.nativeElement.querySelector('app-slide-hero');
     expect(hero).toBeTruthy();
-    expect(hero.textContent).toContain("IA");
+    expect(hero.textContent).toContain('IA');
   });
 
-  it("rend la slide CTA toolkit en fin de presentation", () => {
+  it('rend la slide CTA toolkit en fin de presentation', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
-    const cta = fixture.nativeElement.querySelector("app-slide-cta");
+    const cta = fixture.nativeElement.querySelector('app-slide-cta');
     expect(cta).toBeTruthy();
-    expect(cta.textContent.toLowerCase()).toContain("toolkit");
+    expect(cta.textContent.toLowerCase()).toContain('toolkit');
   });
 
-  it("rend la 3e colonne Gemini dans la comparaison chat-produire", () => {
+  it('rend la 3e colonne Gemini dans la comparaison chat-produire', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
-    const text = root.textContent ?? "";
-    expect(text).toContain("Gemini");
-    expect(text).toContain("Workspace");
+    const text = root.textContent ?? '';
+    expect(text).toContain('Gemini');
+    expect(text).toContain('Workspace');
   });
 
-  it("rend la 3e colonne n8n dans la comparaison automatiser", () => {
+  it('rend la 3e colonne n8n dans la comparaison automatiser', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
-    const text = root.textContent ?? "";
-    expect(text).toContain("n8n");
-    expect(text).toContain("self-host");
+    const text = root.textContent ?? '';
+    expect(text).toContain('n8n');
+    expect(text).toContain('self-host');
   });
 
-  it("rend le palier intermediaire 60 euros sur stack-budget", () => {
+  it('rend le palier intermediaire 60 euros sur stack-budget', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
-    const text = root.textContent ?? "";
+    const text = root.textContent ?? '';
     // Palier intermediaire avec mention budget ~60-70 euros
     expect(text).toMatch(/intermédiaire/i);
-    expect(text).toContain("Perplexity Pro");
+    expect(text).toContain('Perplexity Pro');
   });
 
-  it("rend la slide outils-detail (table 16 outils) en mode scroll", () => {
+  it('rend la slide outils-detail (table 16 outils) en mode scroll', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
-    const table = fixture.nativeElement.querySelector("app-slide-table");
+    const table = fixture.nativeElement.querySelector('app-slide-table');
     expect(table).toBeTruthy();
-    const rows = table.querySelectorAll("tbody tr");
+    const rows = table.querySelectorAll('tbody tr');
     expect(rows.length).toBe(16);
   });
 
-  it("masque les slides present-only en mode scroll", () => {
+  it('masque les slides present-only en mode scroll', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
@@ -86,10 +86,10 @@ describe("IaSolopreneursComponent", () => {
     expect(oneMore).toBeNull();
   });
 
-  it("rend les polls accroche, clients et recap-8020", () => {
+  it('rend les polls accroche, clients et recap-8020', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
-    const polls = fixture.nativeElement.querySelectorAll("app-slide-poll");
+    const polls = fixture.nativeElement.querySelectorAll('app-slide-poll');
     expect(polls.length).toBeGreaterThanOrEqual(3);
   });
 });

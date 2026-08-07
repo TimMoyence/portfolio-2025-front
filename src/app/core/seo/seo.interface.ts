@@ -1,4 +1,4 @@
-import type { JsonLdBlock } from "./seo-metadata.model";
+import type { JsonLdBlock } from './seo-metadata.model';
 
 export interface SeoConfig {
   title: string;
@@ -9,9 +9,9 @@ export interface SeoConfig {
   ogImage?: string;
   ogUrl?: string;
   /** Type Open Graph: website (defaut), article, profile, product... */
-  ogType?: "website" | "article" | "profile" | "product";
+  ogType?: 'website' | 'article' | 'profile' | 'product';
   robots?: string;
-  twitterCard?: "summary" | "summary_large_image";
+  twitterCard?: 'summary' | 'summary_large_image';
   twitterTitle?: string;
   twitterDescription?: string;
   twitterImage?: string;

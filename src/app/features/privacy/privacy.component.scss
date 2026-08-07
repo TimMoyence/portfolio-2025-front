@@ -5,7 +5,7 @@
   scoper à ce composant. Primitives globales (.kicker, .wrap) + tokens
   (_tokens.scss) pour le reste.
 */
-@use "../legal-shared";
+@use '../legal-shared';
 
 :host {
   display: block;

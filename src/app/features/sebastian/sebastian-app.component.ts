@@ -1,23 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from "@angular/core";
-import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import type {
   CreateEntryPayload,
   SebastianCategory,
   SebastianEntry,
   SebastianGoal,
   SebastianStats,
-} from "../../core/models/sebastian.model";
-import {
-  SEBASTIAN_PORT,
-  type SebastianPort,
-} from "../../core/ports/sebastian.port";
-import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drink-sheet.component";
+} from '../../core/models/sebastian.model';
+import { SEBASTIAN_PORT, type SebastianPort } from '../../core/ports/sebastian.port';
+import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drink-sheet.component';
 
 /**
  * Shell du majordome Sebastian.
@@ -25,14 +16,9 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
  * la barre d'onglets et le router-outlet pour les pages enfant.
  */
 @Component({
-  selector: "app-sebastian-app",
+  selector: 'app-sebastian-app',
   standalone: true,
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    SebastianAddDrinkSheetComponent,
-  ],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, SebastianAddDrinkSheetComponent],
   template: `
     <!--
       Shell App Sebastian — thème "dark lounge ambré" porté de la maquette
@@ -55,10 +41,7 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
           >
             Sebastian
           </h1>
-          <p
-            class="text-lg text-white/55"
-            i18n="sebastian.description|@@sebastianDescription"
-          >
+          <p class="text-lg text-white/55" i18n="sebastian.description|@@sebastianDescription">
             Votre majordome de suivi de consommation
           </p>
         </header>
@@ -88,9 +71,7 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
                 >
                 <span>{{ todayAlcohol() }}/{{ goal.targetQuantity }}</span>
               </div>
-              <div
-                class="h-2 overflow-hidden rounded-full bg-[rgba(230,170,70,0.12)]"
-              >
+              <div class="h-2 overflow-hidden rounded-full bg-[rgba(230,170,70,0.12)]">
                 <div
                   class="h-full rounded-full bg-gradient-to-r from-gold to-gold-soft transition-all duration-500"
                   [style.width.%]="alcoholProgress()"
@@ -109,9 +90,7 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
                 i18n="sebastian.counter.coffee|@@sebastianCounterCoffee"
                 >Cafe aujourd'hui</span
               >
-              <span class="font-display text-4xl leading-none text-white">{{
-                todayCoffee()
-              }}</span>
+              <span class="font-display text-4xl leading-none text-white">{{ todayCoffee() }}</span>
             </div>
             @if (dailyCoffeeGoal(); as goal) {
               <div class="mb-1 flex justify-between text-xs text-white/45">
@@ -122,9 +101,7 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
                 >
                 <span>{{ todayCoffee() }}/{{ goal.targetQuantity }}</span>
               </div>
-              <div
-                class="h-2 overflow-hidden rounded-full bg-[rgba(230,170,70,0.12)]"
-              >
+              <div class="h-2 overflow-hidden rounded-full bg-[rgba(230,170,70,0.12)]">
                 <div
                   class="h-full rounded-full bg-gradient-to-r from-gold-deep to-gold transition-all duration-500"
                   [style.width.%]="coffeeProgress()"
@@ -135,9 +112,7 @@ import { SebastianAddDrinkSheetComponent } from "./components/sebastian-add-drin
         </section>
 
         <!-- Barre d'onglets restylée (pills ambrés, état actif gold .seb-nav button.on) -->
-        <nav
-          class="mb-6 flex gap-1.5 overflow-x-auto border-b border-[rgba(230,170,70,0.14)] pb-2"
-        >
+        <nav class="mb-6 flex gap-1.5 overflow-x-auto border-b border-[rgba(230,170,70,0.14)] pb-2">
           @for (tab of tabs; track tab.route) {
             <a
               [routerLink]="tab.route"
@@ -183,11 +158,11 @@ export class SebastianAppComponent {
 
   /** Configuration des onglets de navigation. */
   readonly tabs = [
-    { label: "Dashboard", route: "dashboard" },
-    { label: "Rapports", route: "rapports" },
-    { label: "Badges", route: "badges" },
-    { label: "Historique", route: "historique" },
-    { label: "Objectifs", route: "objectifs" },
+    { label: 'Dashboard', route: 'dashboard' },
+    { label: 'Rapports', route: 'rapports' },
+    { label: 'Badges', route: 'badges' },
+    { label: 'Historique', route: 'historique' },
+    { label: 'Objectifs', route: 'objectifs' },
   ] as const;
 
   /** Toutes les entrees chargees. */
@@ -209,31 +184,29 @@ export class SebastianAppComponent {
   /** Total alcool du jour. */
   readonly todayAlcohol = computed(() =>
     this.entries()
-      .filter((e) => e.category === "alcohol" && e.date === this.todayIso())
+      .filter((e) => e.category === 'alcohol' && e.date === this.todayIso())
       .reduce((sum, e) => sum + e.quantity, 0),
   );
 
   /** Total cafe du jour. */
   readonly todayCoffee = computed(() =>
     this.entries()
-      .filter((e) => e.category === "coffee" && e.date === this.todayIso())
+      .filter((e) => e.category === 'coffee' && e.date === this.todayIso())
       .reduce((sum, e) => sum + e.quantity, 0),
   );
 
   /** Objectif alcool quotidien. */
   readonly dailyAlcoholGoal = computed(
     () =>
-      this.goals().find(
-        (g) => g.category === "alcohol" && g.period === "daily" && g.isActive,
-      ) ?? null,
+      this.goals().find((g) => g.category === 'alcohol' && g.period === 'daily' && g.isActive) ??
+      null,
   );
 
   /** Objectif cafe quotidien. */
   readonly dailyCoffeeGoal = computed(
     () =>
-      this.goals().find(
-        (g) => g.category === "coffee" && g.period === "daily" && g.isActive,
-      ) ?? null,
+      this.goals().find((g) => g.category === 'coffee' && g.period === 'daily' && g.isActive) ??
+      null,
   );
 
   /** Progression alcool en pourcentage. */
@@ -286,12 +259,12 @@ export class SebastianAppComponent {
   private loadData(): void {
     this.port.getEntries().subscribe((entries) => this.entries.set(entries));
     this.port.getGoals().subscribe((goals) => this.goals.set(goals));
-    this.port.getStats("week").subscribe((stats) => this.stats.set(stats));
+    this.port.getStats('week').subscribe((stats) => this.stats.set(stats));
   }
 
   /** Declenche l'animation pulse sur le bouton correspondant. */
   private triggerPulse(category: SebastianCategory): void {
-    const sig = category === "alcohol" ? this.alcoholPulse : this.coffeePulse;
+    const sig = category === 'alcohol' ? this.alcoholPulse : this.coffeePulse;
     sig.set(true);
     setTimeout(() => sig.set(false), 600);
   }

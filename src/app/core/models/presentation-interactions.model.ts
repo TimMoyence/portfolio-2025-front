@@ -2,7 +2,7 @@
 
 /** Sondage à main levée — le présentateur clique pour compter les votes */
 export interface PollInteraction {
-  type: "poll";
+  type: 'poll';
   question: string;
   options: string[];
   /** Autorise la sélection de plusieurs options (défaut: false) */
@@ -21,7 +21,7 @@ export type PresentInteraction = PollInteraction;
 
 /** Question ouverte introspective */
 export interface ReflectionInteraction {
-  type: "reflection";
+  type: 'reflection';
   question: string;
   placeholder: string;
   rows?: number;
@@ -52,11 +52,11 @@ export interface QuizInteractionOption {
  * - `free-text` : champ texte libre (pas d'options).
  */
 export interface QuizInteraction {
-  type: "quiz";
+  type: 'quiz';
   /** Identifiant unique au sein de la slide — sert de cle analytics. */
   id: string;
   question: string;
-  kind: "single-choice" | "multi-choice" | "free-text";
+  kind: 'single-choice' | 'multi-choice' | 'free-text';
   /** Sous-titre explicatif affiché sous la question */
   hint?: string;
   /** Options (obligatoires pour single/multi-choice, absentes en free-text). */

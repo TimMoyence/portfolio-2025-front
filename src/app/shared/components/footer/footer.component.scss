@@ -1,5 +1,5 @@
-@use "../../../styles-shared/breakpoints" as bp;
-@use "../../../styles-shared/lists";
+@use '../../../styles-shared/breakpoints' as bp;
+@use '../../../styles-shared/lists';
 
 :host {
   display: block;
@@ -202,7 +202,7 @@
 }
 
 .asili-footer__live-dot::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: -4px;
   border-radius: 50%;

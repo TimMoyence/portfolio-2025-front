@@ -5,25 +5,25 @@ export function loadGoogleGis(): Promise<void> {
   if (gisLoadPromise) return gisLoadPromise;
 
   gisLoadPromise = new Promise<void>((resolve, reject) => {
-    if (typeof document === "undefined") {
+    if (typeof document === 'undefined') {
       gisLoadPromise = null;
-      reject(new Error("SSR: document not available"));
+      reject(new Error('SSR: document not available'));
       return;
     }
 
-    if (typeof google !== "undefined" && google.accounts?.id) {
+    if (typeof google !== 'undefined' && google.accounts?.id) {
       resolve();
       return;
     }
 
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
     script.onload = () => resolve();
     script.onerror = () => {
       gisLoadPromise = null;
-      reject(new Error("Failed to load Google Identity Services"));
+      reject(new Error('Failed to load Google Identity Services'));
     };
     document.head.appendChild(script);
   });

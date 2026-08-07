@@ -1,4 +1,4 @@
-@use "../../styles-shared/breakpoints" as bp;
+@use '../../styles-shared/breakpoints' as bp;
 /*
   Présentation Asili — styles propres aux blocs page-level non couverts par les
   composants de section du Lot 3a (hero, méthode IA, bande CTA, qui portent
@@ -91,11 +91,7 @@
   .placeholder {
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(
-      135deg,
-      var(--sand) 0 16px,
-      var(--ivory) 16px 32px
-    );
+    background: repeating-linear-gradient(135deg, var(--sand) 0 16px, var(--ivory) 16px 32px);
     display: grid;
     place-items: center;
   }

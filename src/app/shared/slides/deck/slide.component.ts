@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from "@angular/common";
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,9 +8,9 @@ import {
   inject,
   input,
   viewChild,
-} from "@angular/core";
-import { SlideDeckService } from "./slide-deck.service";
-import { SLIDE_DECK_HOST } from "./slide-deck.tokens";
+} from '@angular/core';
+import { SlideDeckService } from './slide-deck.service';
+import { SLIDE_DECK_HOST } from './slide-deck.tokens';
 
 /**
  * Visibilite d'une slide selon le mode courant du deck.
@@ -18,7 +18,7 @@ import { SLIDE_DECK_HOST } from "./slide-deck.tokens";
  * - `scroll-only` : masquee en mode fullscreen (notes, sources, etc.).
  * - `present-only` : masquee en mode scroll (slides reservees presentation).
  */
-export type SlideVisibility = "both" | "scroll-only" | "present-only";
+export type SlideVisibility = 'both' | 'scroll-only' | 'present-only';
 
 /**
  * Composant wrapper d'une slide individuelle. S'enregistre aupres
@@ -33,7 +33,7 @@ export type SlideVisibility = "both" | "scroll-only" | "present-only";
  * Sinon, rendu standalone via `*ngTemplateOutlet`.
  */
 @Component({
-  selector: "app-slide",
+  selector: 'app-slide',
   standalone: true,
   imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,12 +72,11 @@ export type SlideVisibility = "both" | "scroll-only" | "present-only";
 })
 export class SlideComponent implements OnInit {
   readonly id = input.required<string>();
-  readonly theme = input<string>("default");
-  readonly visibility = input<SlideVisibility>("both");
+  readonly theme = input<string>('default');
+  readonly visibility = input<SlideVisibility>('both');
 
   /** Template du contenu — projete par le deck dans `<swiper-slide>`. */
-  readonly contentTemplate =
-    viewChild.required<TemplateRef<unknown>>("slideContent");
+  readonly contentTemplate = viewChild.required<TemplateRef<unknown>>('slideContent');
 
   /**
    * Resolu une seule fois a la construction via DI : `true` si un

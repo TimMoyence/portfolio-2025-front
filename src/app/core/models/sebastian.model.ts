@@ -1,24 +1,24 @@
 /** Categorie de consommation Sebastian. */
-export type SebastianCategory = "alcohol" | "coffee";
+export type SebastianCategory = 'alcohol' | 'coffee';
 
 /** Unite de mesure par categorie. */
-export type SebastianUnit = "standard_drink" | "cup";
+export type SebastianUnit = 'standard_drink' | 'cup';
 
 /** Type de boisson pour le suivi v2. */
 export type SebastianDrinkType =
-  | "beer"
-  | "wine"
-  | "champagne"
-  | "coffee"
-  | "cocktail"
-  | "spiritueux"
-  | "cidre";
+  | 'beer'
+  | 'wine'
+  | 'champagne'
+  | 'coffee'
+  | 'cocktail'
+  | 'spiritueux'
+  | 'cidre';
 
 /** Periode pour les objectifs. */
-export type SebastianPeriod = "daily" | "weekly" | "monthly";
+export type SebastianPeriod = 'daily' | 'weekly' | 'monthly';
 
 /** Periode pour les statistiques agregees. */
-export type SebastianStatsPeriod = "week" | "month" | "year";
+export type SebastianStatsPeriod = 'week' | 'month' | 'year';
 
 /** Entree de consommation. */
 export interface SebastianEntry {
@@ -102,10 +102,10 @@ export interface CreateGoalPayload {
 }
 
 /** Periode pour les tendances. */
-export type SebastianTrendPeriod = "7d" | "30d";
+export type SebastianTrendPeriod = '7d' | '30d';
 
 /** Periode pour les rapports. */
-export type SebastianReportPeriod = "week" | "month" | "quarter";
+export type SebastianReportPeriod = 'week' | 'month' | 'quarter';
 
 /** Point de donnee pour les courbes de tendance. */
 export interface SebastianTrendDataPoint {

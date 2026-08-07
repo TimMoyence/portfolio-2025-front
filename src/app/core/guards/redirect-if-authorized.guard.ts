@@ -1,9 +1,9 @@
-import { inject } from "@angular/core";
-import type { CanActivateFn } from "@angular/router";
-import { Router } from "@angular/router";
-import { toObservable } from "@angular/core/rxjs-interop";
-import { filter, map, take } from "rxjs";
-import { AuthStateService } from "../services/auth-state.service";
+import { inject } from '@angular/core';
+import type { CanActivateFn } from '@angular/router';
+import { Router } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, map, take } from 'rxjs';
+import { AuthStateService } from '../services/auth-state.service';
 
 /**
  * Factory de guard fonctionnel pour les pages de presentation des ateliers.

@@ -1,5 +1,5 @@
-import { InjectionToken } from "@angular/core";
-import type { Observable } from "rxjs";
+import { InjectionToken } from '@angular/core';
+import type { Observable } from 'rxjs';
 import type {
   CreateEntryPayload,
   CreateGoalPayload,
@@ -16,7 +16,7 @@ import type {
   SebastianStatsPeriod,
   SebastianTrendData,
   SebastianTrendPeriod,
-} from "../models/sebastian.model";
+} from '../models/sebastian.model';
 
 /** Port d'acces aux donnees du majordome Sebastian. */
 export interface SebastianPort {
@@ -70,6 +70,4 @@ export interface SebastianPort {
   setProfile(payload: SebastianProfile): Observable<SebastianProfile>;
 }
 
-export const SEBASTIAN_PORT = new InjectionToken<SebastianPort>(
-  "SEBASTIAN_PORT",
-);
+export const SEBASTIAN_PORT = new InjectionToken<SebastianPort>('SEBASTIAN_PORT');

@@ -41,7 +41,7 @@
  * - Le bandeau de consentement cookies est visible sur les captures : c'est
  *   l'état réel d'une première visite, et il est déterministe.
  */
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from '@playwright/test';
 
 /**
  * Prépare une page pour une capture full-page complète et déterministe.
@@ -67,10 +67,10 @@ async function preparerCapture(page: Page, url: string): Promise<void> {
   //    (`matchMedia("(prefers-reduced-motion: reduce)")` reste `false` dans la
   //    page). Seul `page.emulateMedia()` fonctionne : ne pas retenter la voie
   //    config.
-  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
 
-  await page.goto(url, { waitUntil: "networkidle" });
-  await page.locator("body").waitFor({ state: "visible" });
+  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.locator('body').waitFor({ state: 'visible' });
 
   // 2. Chargement forcé des images `loading="lazy"`. Chromium ne déclenche pas
   //    le lazy-loading pour une capture `fullPage` : les images situées hors du
@@ -78,14 +78,14 @@ async function preparerCapture(page: Page, url: string): Promise<void> {
   //    toutes ses images en `lazy` par défaut (`eagerImages = 0`), donc les
   //    cartes projets de l'accueil et de `/projets` sont directement concernées.
   await page.evaluate(() => {
-    for (const img of Array.from(document.querySelectorAll("img"))) {
-      img.setAttribute("loading", "eager");
+    for (const img of Array.from(document.querySelectorAll('img'))) {
+      img.setAttribute('loading', 'eager');
     }
   });
   await page.evaluate(
     () =>
       Promise.all(
-        Array.from(document.querySelectorAll("img"))
+        Array.from(document.querySelectorAll('img'))
           .filter((img) => !img.complete)
           .map(
             (img) =>
@@ -96,25 +96,25 @@ async function preparerCapture(page: Page, url: string): Promise<void> {
           ),
       ) as Promise<unknown>,
   );
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState('networkidle');
 }
 
-test.describe("Regression visuelle — Pages publiques", () => {
+test.describe('Regression visuelle — Pages publiques', () => {
   test("page d'accueil — screenshot full-page", async ({ page }) => {
-    await preparerCapture(page, "/");
+    await preparerCapture(page, '/');
 
-    await expect(page).toHaveScreenshot("accueil.png", { fullPage: true });
+    await expect(page).toHaveScreenshot('accueil.png', { fullPage: true });
   });
 
-  test("page login — screenshot full-page", async ({ page }) => {
-    await preparerCapture(page, "/login");
+  test('page login — screenshot full-page', async ({ page }) => {
+    await preparerCapture(page, '/login');
 
-    await expect(page).toHaveScreenshot("login.png", { fullPage: true });
+    await expect(page).toHaveScreenshot('login.png', { fullPage: true });
   });
 
-  test("page contact — screenshot full-page", async ({ page }) => {
-    await preparerCapture(page, "/contact");
+  test('page contact — screenshot full-page', async ({ page }) => {
+    await preparerCapture(page, '/contact');
 
-    await expect(page).toHaveScreenshot("contact.png", { fullPage: true });
+    await expect(page).toHaveScreenshot('contact.png', { fullPage: true });
   });
 });

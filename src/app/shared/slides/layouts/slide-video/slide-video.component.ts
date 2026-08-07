@@ -1,11 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from "@angular/core";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 /**
  * Liste blanche des hotes autorises pour une iframe video.
@@ -15,25 +9,25 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
  * entree est neutralisee (source vide) avant `bypassSecurityTrustResourceUrl`.
  */
 const ALLOWED_IFRAME_PREFIXES = [
-  "youtube-nocookie.com/",
-  "youtube.com/embed/",
-  "player.vimeo.com/",
+  'youtube-nocookie.com/',
+  'youtube.com/embed/',
+  'player.vimeo.com/',
 ] as const;
 
 @Component({
-  selector: "app-slide-video",
+  selector: 'app-slide-video',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-video.component.html",
-  styleUrl: "./slide-video.component.scss",
+  templateUrl: './slide-video.component.html',
+  styleUrl: './slide-video.component.scss',
 })
 export class SlideVideoComponent {
   private readonly sanitizer = inject(DomSanitizer);
 
   readonly src = input.required<string>();
-  readonly type = input<"native" | "iframe">("native");
-  readonly poster = input<string>("");
-  readonly caption = input<string>("");
+  readonly type = input<'native' | 'iframe'>('native');
+  readonly poster = input<string>('');
+  readonly caption = input<string>('');
   readonly autoplay = input<boolean>(false);
 
   /**
@@ -50,13 +44,11 @@ export class SlideVideoComponent {
    * lit `src()` directement sans assainissement.
    */
   readonly safeIframeSrc = computed<SafeResourceUrl>(() => {
-    if (this.type() !== "iframe") {
-      return this.sanitizer.bypassSecurityTrustResourceUrl("");
+    if (this.type() !== 'iframe') {
+      return this.sanitizer.bypassSecurityTrustResourceUrl('');
     }
     const url = this.src();
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.isAllowedIframeUrl(url) ? url : "",
-    );
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.isAllowedIframeUrl(url) ? url : '');
   });
 
   /**
@@ -70,11 +62,11 @@ export class SlideVideoComponent {
    */
   private isAllowedIframeUrl(raw: string): boolean {
     const value = raw.trim();
-    if (value === "") {
+    if (value === '') {
       return false;
     }
     // Ressource locale relative (sert depuis l'origine de l'app).
-    if (value.startsWith("/") && !value.startsWith("//")) {
+    if (value.startsWith('/') && !value.startsWith('//')) {
       return true;
     }
     let parsed: URL;
@@ -83,10 +75,10 @@ export class SlideVideoComponent {
     } catch {
       return false;
     }
-    if (parsed.protocol !== "https:") {
+    if (parsed.protocol !== 'https:') {
       return false;
     }
-    const host = parsed.host.replace(/^www\./, "");
+    const host = parsed.host.replace(/^www\./, '');
     const target = `${host}${parsed.pathname}`;
     return ALLOWED_IFRAME_PREFIXES.some((prefix) => target.startsWith(prefix));
   }

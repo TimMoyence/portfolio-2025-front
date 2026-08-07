@@ -1,11 +1,11 @@
-import { TestBed } from "@angular/core/testing";
-import { provideRouter } from "@angular/router";
-import { PRESENTATION_PORT } from "../../core/ports/presentation.port";
-import { SlideDeckService } from "../../shared/slides";
-import { createPresentationPortStub } from "../../../testing/factories/presentation.factory";
-import { SlidesLibraryComponent } from "./slides-library.component";
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { PRESENTATION_PORT } from '../../core/ports/presentation.port';
+import { SlideDeckService } from '../../shared/slides';
+import { createPresentationPortStub } from '../../../testing/factories/presentation.factory';
+import { SlidesLibraryComponent } from './slides-library.component';
 
-describe("SlidesLibraryComponent", () => {
+describe('SlidesLibraryComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [SlidesLibraryComponent],
@@ -20,18 +20,18 @@ describe("SlidesLibraryComponent", () => {
     });
   });
 
-  it("rend au moins un echantillon de chaque layout", () => {
+  it('rend au moins un echantillon de chaque layout', () => {
     const fixture = TestBed.createComponent(SlidesLibraryComponent);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
-    expect(root.querySelector("app-slide-hero")).toBeTruthy();
-    expect(root.querySelector("app-slide-image-left")).toBeTruthy();
-    expect(root.querySelector("app-slide-image-right")).toBeTruthy();
-    expect(root.querySelector("app-slide-video")).toBeTruthy();
-    expect(root.querySelector("app-slide-stats")).toBeTruthy();
-    expect(root.querySelector("app-slide-quote")).toBeTruthy();
-    expect(root.querySelector("app-slide-comparison")).toBeTruthy();
-    expect(root.querySelector("app-slide-grid")).toBeTruthy();
-    expect(root.querySelector("app-slide-cta")).toBeTruthy();
+    expect(root.querySelector('app-slide-hero')).toBeTruthy();
+    expect(root.querySelector('app-slide-image-left')).toBeTruthy();
+    expect(root.querySelector('app-slide-image-right')).toBeTruthy();
+    expect(root.querySelector('app-slide-video')).toBeTruthy();
+    expect(root.querySelector('app-slide-stats')).toBeTruthy();
+    expect(root.querySelector('app-slide-quote')).toBeTruthy();
+    expect(root.querySelector('app-slide-comparison')).toBeTruthy();
+    expect(root.querySelector('app-slide-grid')).toBeTruthy();
+    expect(root.querySelector('app-slide-cta')).toBeTruthy();
   });
 });

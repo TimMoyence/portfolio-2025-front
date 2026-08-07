@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.directive";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
 /**
  * Une etape de la methode Asili.
@@ -35,11 +35,11 @@ export interface AsiliMethodStep {
  * appelante doit garantir la coherence de la hierarchie (un `<h1>` en amont).
  */
 @Component({
-  selector: "app-asili-method",
+  selector: 'app-asili-method',
   standalone: true,
   imports: [RevealOnScrollDirective],
-  templateUrl: "./asili-method.component.html",
-  styleUrls: ["./asili-method.component.scss"],
+  templateUrl: './asili-method.component.html',
+  styleUrls: ['./asili-method.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliMethodComponent {

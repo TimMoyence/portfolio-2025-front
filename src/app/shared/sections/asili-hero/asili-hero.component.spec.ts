@@ -1,16 +1,16 @@
-import { Component } from "@angular/core";
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { PLATFORM_ID } from "@angular/core";
-import { AsiliHeroComponent } from "./asili-hero.component";
+import { Component } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { PLATFORM_ID } from '@angular/core';
+import { AsiliHeroComponent } from './asili-hero.component';
 
-const KICKER = "Studio digital & IA · Bordeaux";
-const LEAD = "Developpeur & consultant Angular, NestJS et IA.";
+const KICKER = 'Studio digital & IA · Bordeaux';
+const LEAD = 'Developpeur & consultant Angular, NestJS et IA.';
 
-describe("AsiliHeroComponent", () => {
+describe('AsiliHeroComponent', () => {
   let fixture: ComponentFixture<AsiliHeroComponent>;
 
-  function setup(platformId: "browser" | "server" = "browser"): void {
+  function setup(platformId: 'browser' | 'server' = 'browser'): void {
     TestBed.configureTestingModule({
       imports: [AsiliHeroComponent],
       providers: [{ provide: PLATFORM_ID, useValue: platformId }],
@@ -25,99 +25,93 @@ describe("AsiliHeroComponent", () => {
   // rendu un `appReveal` en plateforme browser sans nettoyer, quel que soit
   // l'ordre d'exécution randomisé.
   beforeEach(() => {
-    document.documentElement.classList.remove("anim-ready");
+    document.documentElement.classList.remove('anim-ready');
   });
 
   afterEach(() => {
-    document.documentElement.classList.remove("anim-ready");
+    document.documentElement.classList.remove('anim-ready');
   });
 
-  it("se cree", () => {
+  it('se cree', () => {
     setup();
     fixture.detectChanges();
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it("structure le hero (.hero, .hero-inner, .hero-grid, voile)", () => {
+  it('structure le hero (.hero, .hero-inner, .hero-grid, voile)', () => {
     setup();
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
-    expect(root.querySelector("section.hero")).not.toBeNull();
-    expect(root.querySelector(".hero .hero-inner")).not.toBeNull();
-    expect(root.querySelector(".hero-inner .hero-grid")).not.toBeNull();
-    expect(root.querySelector(".hero-veil")).not.toBeNull();
+    expect(root.querySelector('section.hero')).not.toBeNull();
+    expect(root.querySelector('.hero .hero-inner')).not.toBeNull();
+    expect(root.querySelector('.hero-inner .hero-grid')).not.toBeNull();
+    expect(root.querySelector('.hero-veil')).not.toBeNull();
   });
 
   it("rend le titre via inputs avec l'accent italique teal", () => {
     setup();
-    fixture.componentRef.setInput("titlePre", "Clarifier ");
-    fixture.componentRef.setInput("accent", "avant");
-    fixture.componentRef.setInput("titlePost", " de construire.");
+    fixture.componentRef.setInput('titlePre', 'Clarifier ');
+    fixture.componentRef.setInput('accent', 'avant');
+    fixture.componentRef.setInput('titlePost', ' de construire.');
     fixture.detectChanges();
-    const h1 = fixture.nativeElement.querySelector("h1.hero-title");
+    const h1 = fixture.nativeElement.querySelector('h1.hero-title');
     expect(h1).not.toBeNull();
-    expect((h1 as HTMLElement).textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Clarifier avant de construire.",
+    expect((h1 as HTMLElement).textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      'Clarifier avant de construire.',
     );
-    const accent = (h1 as HTMLElement).querySelector(".accent");
-    expect(accent?.textContent).toBe("avant");
+    const accent = (h1 as HTMLElement).querySelector('.accent');
+    expect(accent?.textContent).toBe('avant');
   });
 
-  it("affiche la puce live quand `liveChip` est fourni", () => {
+  it('affiche la puce live quand `liveChip` est fourni', () => {
     setup();
-    fixture.componentRef.setInput("liveChip", KICKER);
+    fixture.componentRef.setInput('liveChip', KICKER);
     fixture.detectChanges();
-    const chip = fixture.nativeElement.querySelector(".live-chip");
+    const chip = fixture.nativeElement.querySelector('.live-chip');
     expect(chip?.textContent).toContain(KICKER);
-    expect(chip?.querySelector(".live-dot")).not.toBeNull();
+    expect(chip?.querySelector('.live-dot')).not.toBeNull();
   });
 
-  it("affiche le kicker mono quand `liveChip` est absent", () => {
+  it('affiche le kicker mono quand `liveChip` est absent', () => {
     setup();
-    fixture.componentRef.setInput("kicker", KICKER);
+    fixture.componentRef.setInput('kicker', KICKER);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector(".live-chip")).toBeNull();
-    expect(fixture.nativeElement.querySelector(".kicker")?.textContent).toBe(
-      KICKER,
-    );
+    expect(fixture.nativeElement.querySelector('.live-chip')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.kicker')?.textContent).toBe(KICKER);
   });
 
   it("affiche l'accroche et l'indicateur de scroll quand fournis", () => {
     setup();
-    fixture.componentRef.setInput("lead", LEAD);
-    fixture.componentRef.setInput("scrollHint", "Defiler");
+    fixture.componentRef.setInput('lead', LEAD);
+    fixture.componentRef.setInput('scrollHint', 'Defiler');
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector(".lead")?.textContent).toBe(
-      LEAD,
-    );
-    const scrollHint = fixture.nativeElement.querySelector(".scroll-hint");
+    expect(fixture.nativeElement.querySelector('.lead')?.textContent).toBe(LEAD);
+    const scrollHint = fixture.nativeElement.querySelector('.scroll-hint');
     expect(scrollHint).toBeTruthy();
-    expect(scrollHint?.querySelector(".bar")).toBeTruthy();
+    expect(scrollHint?.querySelector('.bar')).toBeTruthy();
   });
 
   it("n'affiche pas l'indication de scroll quand non fournie", () => {
     setup();
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector(".scroll-hint")).toBeNull();
+    expect(fixture.nativeElement.querySelector('.scroll-hint')).toBeNull();
   });
 
   it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
-    setup("server");
-    fixture.componentRef.setInput("titlePre", "Clarifier.");
+    setup('server');
+    fixture.componentRef.setInput('titlePre', 'Clarifier.');
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector("h1.hero-title")).not.toBeNull();
-    expect(document.documentElement.classList).not.toContain("anim-ready");
+    expect(fixture.nativeElement.querySelector('h1.hero-title')).not.toBeNull();
+    expect(document.documentElement.classList).not.toContain('anim-ready');
   });
 
-  describe("avec projection (page hote)", () => {
+  describe('avec projection (page hote)', () => {
     @Component({
       standalone: true,
       imports: [AsiliHeroComponent],
       template: `
         <app-asili-hero>
-          <span chip class="live-chip"
-            ><span class="live-dot"></span>Projection chip</span
-          >
+          <span chip class="live-chip"><span class="live-dot"></span>Projection chip</span>
           <ng-container title
             >Clarifier <span class="accent">avant</span> de construire.
           </ng-container>
@@ -132,34 +126,30 @@ describe("AsiliHeroComponent", () => {
     })
     class HostComponent {}
 
-    it("projette la puce, le titre, les CTA et la meta fournis par la page", () => {
+    it('projette la puce, le titre, les CTA et la meta fournis par la page', () => {
       const hostFixture = TestBed.configureTestingModule({
         imports: [HostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: "browser" }],
+        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
       }).createComponent(HostComponent);
       hostFixture.detectChanges();
 
       const host = hostFixture.nativeElement as HTMLElement;
-      expect(host.querySelector("[chip].live-chip")?.textContent).toContain(
-        "Projection chip",
-      );
+      expect(host.querySelector('[chip].live-chip')?.textContent).toContain('Projection chip');
 
-      const h1 = host.querySelector("h1.hero-title");
-      expect(h1?.querySelector(".accent")?.textContent).toBe("avant");
+      const h1 = host.querySelector('h1.hero-title');
+      expect(h1?.querySelector('.accent')?.textContent).toBe('avant');
 
-      const ctas = host.querySelectorAll(".hero-cta a[cta]");
+      const ctas = host.querySelectorAll('.hero-cta a[cta]');
       expect(ctas.length).toBe(2);
-      expect((ctas[0] as HTMLAnchorElement).getAttribute("href")).toBe(
-        "/services",
-      );
+      expect((ctas[0] as HTMLAnchorElement).getAttribute('href')).toBe('/services');
 
-      expect(host.querySelector(".hero-meta [meta] .n")?.textContent).toBe("2");
+      expect(host.querySelector('.hero-meta [meta] .n')?.textContent).toBe('2');
     });
 
-    it("applique le style scope au contenu projete (accent italique teal, meta serif via ::ng-deep)", () => {
+    it('applique le style scope au contenu projete (accent italique teal, meta serif via ::ng-deep)', () => {
       const hostFixture = TestBed.configureTestingModule({
         imports: [HostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: "browser" }],
+        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
       }).createComponent(HostComponent);
       // getComputedStyle ne reflete la cascade que si l'element est dans le
       // document : on attache le fixture pour verifier le style REEL du
@@ -169,19 +159,19 @@ describe("AsiliHeroComponent", () => {
 
       const host = hostFixture.nativeElement as HTMLElement;
 
-      const accent = host.querySelector(".hero-title .accent") as HTMLElement;
+      const accent = host.querySelector('.hero-title .accent') as HTMLElement;
       expect(accent).not.toBeNull();
-      expect(getComputedStyle(accent).fontStyle).toBe("italic");
+      expect(getComputedStyle(accent).fontStyle).toBe('italic');
 
-      const value = host.querySelector(".hero-meta .n") as HTMLElement;
+      const value = host.querySelector('.hero-meta .n') as HTMLElement;
       expect(value).not.toBeNull();
       // serif 30px : la regle `.hero-meta ::ng-deep .n` doit s'appliquer.
-      expect(getComputedStyle(value).fontSize).toBe("30px");
+      expect(getComputedStyle(value).fontSize).toBe('30px');
 
-      const divider = host.querySelector(".hero-meta div") as HTMLElement;
+      const divider = host.querySelector('.hero-meta div') as HTMLElement;
       expect(divider).not.toBeNull();
       // filet a gauche : border-left 1px.
-      expect(getComputedStyle(divider).borderLeftWidth).toBe("1px");
+      expect(getComputedStyle(divider).borderLeftWidth).toBe('1px');
 
       hostFixture.destroy();
       host.remove();

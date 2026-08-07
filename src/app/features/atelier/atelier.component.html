@@ -13,8 +13,7 @@
   <div class="wrap">
     <span class="kicker" appReveal>{{ heroKicker }}</span>
     <h1 appReveal [appRevealDelay]="1" i18n="@@atelierHeroTitle">
-      Un laboratoire vivant<br />où vous pouvez
-      <span class="accent">jouer</span>.
+      Un laboratoire vivant<br />où vous pouvez <span class="accent">jouer</span>.
     </h1>
     <p class="lead" appReveal [appRevealDelay]="2">{{ heroLead }}</p>
   </div>
@@ -29,13 +28,7 @@
         <div>
           <span class="lab-ic" aria-hidden="true">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-              <circle
-                cx="12"
-                cy="12"
-                r="4"
-                stroke="currentColor"
-                stroke-width="1.6"
-              />
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6" />
               <path
                 d="M12 2v3M12 19v3M2 12h3M19 12h3M5.5 5.5l2 2M16.5 16.5l2 2M18.5 5.5l-2 2M7.5 16.5l-2 2"
                 stroke="currentColor"
@@ -46,24 +39,19 @@
           </span>
           <h2 i18n="@@atelierMeteoFeatTitle">Météo</h2>
           <p i18n="@@atelierMeteoFeatDesc">
-            Données météo réalistes rendues vivantes : boussole de vent, arc
-            solaire, indice UV, qualité de l'air. Parallaxe et mode immersif
-            ciel.
+            Données météo réalistes rendues vivantes : boussole de vent, arc solaire, indice UV,
+            qualité de l'air. Parallaxe et mode immersif ciel.
           </p>
         </div>
         <div>
           <div class="lab-stats">
             <div>
               <div class="n">6</div>
-              <div class="l" i18n="@@atelierMeteoStat1">
-                indicateurs<br />temps réel
-              </div>
+              <div class="l" i18n="@@atelierMeteoStat1">indicateurs<br />temps réel</div>
             </div>
             <div>
               <div class="n">4</div>
-              <div class="l" i18n="@@atelierMeteoStat2">
-                villes<br />jouables
-              </div>
+              <div class="l" i18n="@@atelierMeteoStat2">villes<br />jouables</div>
             </div>
           </div>
           <a class="link-arrow" routerLink="/atelier/meteo">
@@ -89,9 +77,8 @@
           </span>
           <h2 i18n="@@atelierSebFeatTitle">Sebastian</h2>
           <p i18n="@@atelierSebFeatDesc">
-            Suivi de consommation, dans une ambiance dark lounge ambrée : jauge
-            de santé animée, calcul d'alcoolémie, heatmap d'activité, et un bot
-            Telegram pour logger en 2 secondes.
+            Suivi de consommation, dans une ambiance dark lounge ambrée : jauge de santé animée,
+            calcul d'alcoolémie, heatmap d'activité, et un bot Telegram pour logger en 2 secondes.
           </p>
         </div>
         <div>
@@ -102,9 +89,7 @@
             </div>
             <div>
               <div class="n">2s</div>
-              <div class="l" i18n="@@atelierSebStat2">
-                pour logger<br />via Telegram
-              </div>
+              <div class="l" i18n="@@atelierSebStat2">pour logger<br />via Telegram</div>
             </div>
           </div>
           <a class="link-arrow" routerLink="/atelier/sebastian">
@@ -128,8 +113,8 @@
         </h2>
       </div>
       <p class="lead" appReveal [appRevealDelay]="1" i18n="@@atelierDemoLead">
-        Les deux démos sont réelles et manipulables directement. Aucune
-        inscription : c'est la preuve par l'usage.
+        Les deux démos sont réelles et manipulables directement. Aucune inscription : c'est la
+        preuve par l'usage.
       </p>
     </div>
 
@@ -144,9 +129,7 @@
             </div>
             <div class="meteo-cond meteo-cond--sub">{{ city().cond }}</div>
           </div>
-          <span class="meteo-cond" i18n="@@atelierMeteoLive"
-            >EN DIRECT · 14:20</span
-          >
+          <span class="meteo-cond" i18n="@@atelierMeteoLive">EN DIRECT · 14:20</span>
         </div>
         <div class="meteo-temp">{{ city().temp }}°</div>
         <div class="meteo-cond meteo-cond--feels">
@@ -235,10 +218,7 @@
                 </text>
                 <g class="needle" [attr.transform]="needleTransform()">
                   <path d="M90 42 L99 92 L90 84 L81 92 Z" fill="#4fb3a2" />
-                  <path
-                    d="M90 138 L99 90 L90 98 L81 90 Z"
-                    fill="rgba(255,255,255,0.28)"
-                  />
+                  <path d="M90 138 L99 90 L90 98 L81 90 Z" fill="rgba(255,255,255,0.28)" />
                 </g>
                 <circle cx="90" cy="90" r="5" fill="#fff" />
               </svg>
@@ -315,9 +295,7 @@
                 </text>
               </svg>
             </div>
-            <div class="instr-cap" i18n="@@atelierMeteoSolarCap">
-              Arc solaire
-            </div>
+            <div class="instr-cap" i18n="@@atelierMeteoSolarCap">Arc solaire</div>
           </div>
         </div>
 
@@ -340,13 +318,7 @@
           }
         </div>
         <p class="meteo-hint">
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
               d="M9 11V6a3 3 0 0 1 6 0v5M5 11h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"
               stroke="currentColor"
@@ -368,9 +340,7 @@
               Semaine 23 · en forme
             </div>
           </div>
-          <span class="meteo-cond" i18n="@@atelierSebStreak"
-            >SÉRIE · 12 jours</span
-          >
+          <span class="meteo-cond" i18n="@@atelierSebStreak">SÉRIE · 12 jours</span>
         </div>
         <div class="seb-row">
           <div class="seb-gauge">
@@ -405,9 +375,7 @@
           <div class="seb-stats">
             <div class="seb-stat">
               <div class="sv">5/6</div>
-              <div class="sl" i18n="@@atelierSebStatHabits">
-                habitudes du jour
-              </div>
+              <div class="sl" i18n="@@atelierSebStatHabits">habitudes du jour</div>
             </div>
             <div class="seb-stat">
               <div class="sv">12j</div>
@@ -426,11 +394,7 @@
         <div>
           <div class="heatmap" aria-hidden="true">
             @for (lv of heatmap(); track $index) {
-              <i
-                [class.l1]="lv === 1"
-                [class.l2]="lv === 2"
-                [class.l3]="lv === 3"
-              ></i>
+              <i [class.l1]="lv === 1" [class.l2]="lv === 2" [class.l3]="lv === 3"></i>
             }
           </div>
           <div class="heatmap-cap" i18n="@@atelierSebHeatmapCap">
@@ -438,13 +402,7 @@
           </div>
         </div>
         <p class="meteo-hint seb-hint">
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
               d="M9 11V6a3 3 0 0 1 6 0v5M5 11h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"
               stroke="currentColor"

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.directive";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
 /**
  * Une etape de la methode de travail avec l'IA.
@@ -43,11 +43,11 @@ export interface AsiliAiMethodStep {
  * `<blockquote>` purement textuelle, sans titre.
  */
 @Component({
-  selector: "app-asili-ai-method",
+  selector: 'app-asili-ai-method',
   standalone: true,
   imports: [RevealOnScrollDirective],
-  templateUrl: "./asili-ai-method.component.html",
-  styleUrls: ["./asili-ai-method.component.scss"],
+  templateUrl: './asili-ai-method.component.html',
+  styleUrls: ['./asili-ai-method.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliAiMethodComponent {

@@ -28,21 +28,14 @@
         <h1 appReveal [appRevealDelay]="1" i18n="@@weatherLandingHeroTitle">
           La météo,<br />rendue <em>vivante</em>.
         </h1>
-        <p
-          class="lp-lead"
-          appReveal
-          [appRevealDelay]="2"
-          i18n="@@weatherLandingHeroLead"
-        >
-          Pas un widget de plus. Une interface qui respire : boussole de vent,
-          arc solaire, indice UV, qualité de l'air — chaque donnée prend forme
-          et réagit. Touchez-la ci-contre, sans rien installer.
+        <p class="lp-lead" appReveal [appRevealDelay]="2" i18n="@@weatherLandingHeroLead">
+          Pas un widget de plus. Une interface qui respire : boussole de vent, arc solaire, indice
+          UV, qualité de l'air — chaque donnée prend forme et réagit. Touchez-la ci-contre, sans
+          rien installer.
         </p>
         <div class="lp-cta" appReveal [appRevealDelay]="2">
           <a class="btn btn-teal" routerLink="/atelier/meteo/app">
-            <span i18n="@@weatherLandingHeroCtaPrimary"
-              >Essayer l'app complète</span
-            >
+            <span i18n="@@weatherLandingHeroCtaPrimary">Essayer l'app complète</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
           <a class="btn btn-ghost lp-ghost" href="#demo">
@@ -52,21 +45,15 @@
         <div class="lp-hero-stats" appReveal [appRevealDelay]="3">
           <div>
             <div class="n">6</div>
-            <div class="l" i18n="@@weatherLandingStat1">
-              indicateurs<br />temps réel
-            </div>
+            <div class="l" i18n="@@weatherLandingStat1">indicateurs<br />temps réel</div>
           </div>
           <div>
             <div class="n">4</div>
-            <div class="l" i18n="@@weatherLandingStat2">
-              villes<br />jouables
-            </div>
+            <div class="l" i18n="@@weatherLandingStat2">villes<br />jouables</div>
           </div>
           <div>
             <div class="n">0</div>
-            <div class="l" i18n="@@weatherLandingStat3">
-              inscription<br />requise
-            </div>
+            <div class="l" i18n="@@weatherLandingStat3">inscription<br />requise</div>
           </div>
         </div>
       </div>
@@ -82,9 +69,7 @@
               </div>
               <div class="meteo-cond meteo-cond--sub">{{ city().cond }}</div>
             </div>
-            <span class="meteo-cond" i18n="@@weatherLandingLive"
-              >EN DIRECT · 14:20</span
-            >
+            <span class="meteo-cond" i18n="@@weatherLandingLive">EN DIRECT · 14:20</span>
           </div>
           <div class="meteo-temp">{{ city().temp }}°</div>
           <div class="meteo-cond meteo-cond--feels">
@@ -173,10 +158,7 @@
                   </text>
                   <g class="needle" [attr.transform]="needleTransform()">
                     <path d="M90 42 L99 92 L90 84 L81 92 Z" fill="#4fb3a2" />
-                    <path
-                      d="M90 138 L99 90 L90 98 L81 90 Z"
-                      fill="rgba(255,255,255,0.28)"
-                    />
+                    <path d="M90 138 L99 90 L90 98 L81 90 Z" fill="rgba(255,255,255,0.28)" />
                   </g>
                   <circle cx="90" cy="90" r="5" fill="#fff" />
                 </svg>
@@ -253,9 +235,7 @@
                   </text>
                 </svg>
               </div>
-              <div class="instr-cap" i18n="@@weatherLandingSolarCap">
-                Arc solaire
-              </div>
+              <div class="instr-cap" i18n="@@weatherLandingSolarCap">Arc solaire</div>
             </div>
           </div>
 
@@ -278,13 +258,7 @@
             }
           </div>
           <p class="meteo-hint">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M9 11V6a3 3 0 0 1 6 0v5M5 11h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"
                 stroke="currentColor"
@@ -304,29 +278,18 @@
   <section class="lp-section">
     <div class="lp-wrap">
       <div class="lp-sec-head" appReveal>
-        <span class="lp-kicker" i18n="@@weatherLandingFeaturesKicker"
-          >Ce qui la distingue</span
-        >
-        <h2 i18n="@@weatherLandingFeaturesTitle">
-          Chaque donnée a sa <em>forme juste</em>.
-        </h2>
+        <span class="lp-kicker" i18n="@@weatherLandingFeaturesKicker">Ce qui la distingue</span>
+        <h2 i18n="@@weatherLandingFeaturesTitle">Chaque donnée a sa <em>forme juste</em>.</h2>
         <p i18n="@@weatherLandingFeaturesLead">
-          On ne se contente pas d'afficher des chiffres. On choisit la
-          représentation qui rend l'information immédiate — lisible d'un coup
-          d'œil, agréable à explorer.
+          On ne se contente pas d'afficher des chiffres. On choisit la représentation qui rend
+          l'information immédiate — lisible d'un coup d'œil, agréable à explorer.
         </p>
       </div>
       <div class="lp-features">
         <div class="lp-feat" appReveal>
           <div class="fi" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle
-                cx="12"
-                cy="12"
-                r="9"
-                stroke="currentColor"
-                stroke-width="1.6"
-              />
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
               <path
                 d="M12 5v7l4 2"
                 stroke="currentColor"
@@ -337,20 +300,13 @@
           </div>
           <h3 i18n="@@weatherLandingFeat1Title">Boussole de vent</h3>
           <p i18n="@@weatherLandingFeat1Desc">
-            Direction et force d'un seul regard. L'aiguille s'oriente, la
-            lecture est instantanée.
+            Direction et force d'un seul regard. L'aiguille s'oriente, la lecture est instantanée.
           </p>
         </div>
         <div class="lp-feat" appReveal [appRevealDelay]="1">
           <div class="fi" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle
-                cx="12"
-                cy="12"
-                r="4"
-                stroke="currentColor"
-                stroke-width="1.6"
-              />
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6" />
               <path
                 d="M12 2v3M12 19v3M3 12h3M18 12h3M5.5 5.5l2 2M16.5 16.5l2 2"
                 stroke="currentColor"
@@ -361,8 +317,7 @@
           </div>
           <h3 i18n="@@weatherLandingFeat2Title">Arc solaire</h3>
           <p i18n="@@weatherLandingFeat2Desc">
-            Lever, course, coucher. Le soleil suit sa trajectoire — et vous
-            pouvez le faire glisser.
+            Lever, course, coucher. Le soleil suit sa trajectoire — et vous pouvez le faire glisser.
           </p>
         </div>
         <div class="lp-feat" appReveal [appRevealDelay]="2">
@@ -378,8 +333,7 @@
           </div>
           <h3 i18n="@@weatherLandingFeat3Title">Qualité de l'air &amp; UV</h3>
           <p i18n="@@weatherLandingFeat3Desc">
-            Indices clairs, code couleur honnête. On comprend le risque sans
-            manuel.
+            Indices clairs, code couleur honnête. On comprend le risque sans manuel.
           </p>
         </div>
       </div>
@@ -390,14 +344,11 @@
   <section class="lp-section lp-demo-band" id="demo">
     <div class="lp-wrap lp-demo-grid">
       <div class="lp-demo-copy" appReveal>
-        <span class="lp-kicker" i18n="@@weatherLandingDemoKicker"
-          >La preuve par l'usage</span
-        >
+        <span class="lp-kicker" i18n="@@weatherLandingDemoKicker">La preuve par l'usage</span>
         <h2 i18n="@@weatherLandingDemoTitle">Touchez. Ça <em>répond</em>.</h2>
         <p i18n="@@weatherLandingDemoLead">
-          La démo en haut de page n'est pas une image : c'est l'app réelle, en
-          miniature. Changez de ville, faites glisser le soleil le long de son
-          arc — chaque instrument se met à jour.
+          La démo en haut de page n'est pas une image : c'est l'app réelle, en miniature. Changez de
+          ville, faites glisser le soleil le long de son arc — chaque instrument se met à jour.
         </p>
         <ul class="lp-demo-list">
           <li>
@@ -451,9 +402,7 @@
         </ul>
         <div class="lp-cta">
           <a class="btn btn-teal" routerLink="/atelier/meteo/app">
-            <span i18n="@@weatherLandingDemoCta"
-              >Ouvrir le tableau de bord complet</span
-            >
+            <span i18n="@@weatherLandingDemoCta">Ouvrir le tableau de bord complet</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -462,41 +411,31 @@
       <!-- Aperçu 7 jours (données fictives de présentation) -->
       <div class="lp-preview-wrap" appReveal [appRevealDelay]="1">
         <div class="glass lp-preview">
-          <div class="lp-preview-head" i18n="@@weatherLandingPreviewHead">
-            Aperçu · 7 jours
-          </div>
+          <div class="lp-preview-head" i18n="@@weatherLandingPreviewHead">Aperçu · 7 jours</div>
           <div class="lp-preview-rows">
             <div class="lp-preview-row">
               <span class="d" i18n="@@weatherLandingPreviewDayToday">Auj.</span>
               <span aria-hidden="true">⛅</span>
               <div class="bar"></div>
-              <span class="t"
-                ><span class="lo">13°</span><b class="hi">22°</b></span
-              >
+              <span class="t"><span class="lo">13°</span><b class="hi">22°</b></span>
             </div>
             <div class="lp-preview-row">
               <span class="d" i18n="@@weatherLandingPreviewDayFri">Ven</span>
               <span aria-hidden="true">☀️</span>
               <div class="bar" style="opacity: 0.85"></div>
-              <span class="t"
-                ><span class="lo">14°</span><b class="hi">25°</b></span
-              >
+              <span class="t"><span class="lo">14°</span><b class="hi">25°</b></span>
             </div>
             <div class="lp-preview-row">
               <span class="d" i18n="@@weatherLandingPreviewDaySat">Sam</span>
               <span aria-hidden="true">🌧️</span>
               <div class="bar" style="opacity: 0.6"></div>
-              <span class="t"
-                ><span class="lo">11°</span><b class="hi">18°</b></span
-              >
+              <span class="t"><span class="lo">11°</span><b class="hi">18°</b></span>
             </div>
             <div class="lp-preview-row">
               <span class="d" i18n="@@weatherLandingPreviewDaySun">Dim</span>
               <span aria-hidden="true">⛅</span>
               <div class="bar" style="opacity: 0.75"></div>
-              <span class="t"
-                ><span class="lo">12°</span><b class="hi">21°</b></span
-              >
+              <span class="t"><span class="lo">12°</span><b class="hi">21°</b></span>
             </div>
           </div>
           <p class="lp-preview-foot" i18n="@@weatherLandingPreviewFoot">
@@ -513,17 +452,13 @@
   <!-- ===================== CTA FINAL ===================== -->
   <section class="lp-section lp-final">
     <div class="lp-wrap" appReveal>
-      <span
-        class="lp-kicker lp-kicker--center"
-        i18n="@@weatherLandingFinalKicker"
+      <span class="lp-kicker lp-kicker--center" i18n="@@weatherLandingFinalKicker"
         >Prêt à explorer ?</span
       >
-      <h2 i18n="@@weatherLandingFinalTitle">
-        Le ciel, à <em>portée de doigt</em>.
-      </h2>
+      <h2 i18n="@@weatherLandingFinalTitle">Le ciel, à <em>portée de doigt</em>.</h2>
       <p i18n="@@weatherLandingFinalLead">
-        Ouvrez le tableau de bord complet — prévisions horaires, 7 jours,
-        alertes et tous les instruments.
+        Ouvrez le tableau de bord complet — prévisions horaires, 7 jours, alertes et tous les
+        instruments.
       </p>
       <div class="lp-cta lp-cta--center">
         <a class="btn btn-teal" routerLink="/atelier/meteo/app">
@@ -531,9 +466,7 @@
           <span class="arrow" aria-hidden="true">→</span>
         </a>
         <a class="btn btn-ghost lp-ghost" routerLink="/atelier/sebastian">
-          <span i18n="@@weatherLandingFinalCtaSecondary"
-            >Voir l'autre expérience</span
-          >
+          <span i18n="@@weatherLandingFinalCtaSecondary">Voir l'autre expérience</span>
         </a>
       </div>
     </div>

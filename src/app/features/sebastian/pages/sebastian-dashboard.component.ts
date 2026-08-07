@@ -1,22 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from "@angular/core";
-import { RouterLink } from "@angular/router";
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import type {
   SebastianBacResult,
   SebastianHealthScore,
   SebastianTrendData,
-} from "../../../core/models/sebastian.model";
-import {
-  SEBASTIAN_PORT,
-  type SebastianPort,
-} from "../../../core/ports/sebastian.port";
-import { SebastianBacCurveComponent } from "../components/sebastian-bac-curve.component";
-import { SebastianScoreCardComponent } from "../components/sebastian-score-card.component";
-import { SebastianTrendChartComponent } from "../components/sebastian-trend-chart.component";
+} from '../../../core/models/sebastian.model';
+import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastian.port';
+import { SebastianBacCurveComponent } from '../components/sebastian-bac-curve.component';
+import { SebastianScoreCardComponent } from '../components/sebastian-score-card.component';
+import { SebastianTrendChartComponent } from '../components/sebastian-trend-chart.component';
 
 /**
  * Page dashboard Sebastian.
@@ -24,7 +16,7 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
  * et un resume mensuel.
  */
 @Component({
-  selector: "app-sebastian-dashboard",
+  selector: 'app-sebastian-dashboard',
   standalone: true,
   imports: [
     SebastianBacCurveComponent,
@@ -73,12 +65,8 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
 
       <!-- Taux d'alcoolemie (en-tête .bac/.bac-info, seuils couleur 0.25/0.5) -->
       @if (bacResult(); as bac) {
-        <section
-          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6"
-        >
-          <h3 class="mb-3 font-display text-2xl text-white">
-            Taux d'alcoolemie
-          </h3>
+        <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
+          <h3 class="mb-3 font-display text-2xl text-white">Taux d'alcoolemie</h3>
           <div class="mb-3 flex items-center gap-4">
             <span
               class="font-display text-4xl leading-none"
@@ -106,34 +94,22 @@ import { SebastianTrendChartComponent } from "../components/sebastian-trend-char
 
       <!-- Grille des graphiques de tendance (.panel glass + barchart gold) -->
       <div class="grid gap-6 md:grid-cols-2">
-        <section
-          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6"
-        >
-          <h3 class="mb-3 font-display text-2xl text-white">
-            7 derniers jours
-          </h3>
+        <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
+          <h3 class="mb-3 font-display text-2xl text-white">7 derniers jours</h3>
           @if (trends7d()) {
             <app-sebastian-trend-chart [data]="trends7d()!" />
           }
         </section>
-        <section
-          class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6"
-        >
-          <h3 class="mb-3 font-display text-2xl text-white">
-            30 derniers jours
-          </h3>
+        <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
+          <h3 class="mb-3 font-display text-2xl text-white">30 derniers jours</h3>
           @if (trends30d()) {
             <app-sebastian-trend-chart [data]="trends30d()!" />
           }
           <!-- Resume mensuel sous le graphe 30d -->
           @if (trends30d()) {
             <div class="mt-3 flex justify-between text-sm text-white/55">
-              <span class="font-mono"
-                >Moy. alcool : {{ trends30d()!.summary.avgAlcohol }}/j</span
-              >
-              <span class="font-mono"
-                >Moy. cafe : {{ trends30d()!.summary.avgCoffee }}/j</span
-              >
+              <span class="font-mono">Moy. alcool : {{ trends30d()!.summary.avgAlcohol }}/j</span>
+              <span class="font-mono">Moy. cafe : {{ trends30d()!.summary.avgCoffee }}/j</span>
             </div>
           }
         </section>
@@ -163,19 +139,15 @@ export class SebastianDashboardComponent {
 
   /** Charge les donnees initiales (score, BAC, tendances 7d et 30d). */
   private loadData(): void {
-    this.port
-      .getHealthScore()
-      .subscribe((score) => this.healthScore.set(score));
+    this.port.getHealthScore().subscribe((score) => this.healthScore.set(score));
     this.port.getBac().subscribe((bac) => this.bacResult.set(bac));
-    this.port.getTrends("7d").subscribe((trends) => this.trends7d.set(trends));
-    this.port
-      .getTrends("30d")
-      .subscribe((trends) => this.trends30d.set(trends));
+    this.port.getTrends('7d').subscribe((trends) => this.trends7d.set(trends));
+    this.port.getTrends('30d').subscribe((trends) => this.trends30d.set(trends));
   }
 
   /** Formate une date ISO en HH:MM. */
   formatTime(iso: string): string {
     const d = new Date(iso);
-    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   }
 }

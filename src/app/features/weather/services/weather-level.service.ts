@@ -1,8 +1,8 @@
-import { computed, inject, Injectable, signal } from "@angular/core";
-import { take } from "rxjs/operators";
-import type { WeatherLevel } from "../../../core/models/weather.model";
-import type { WeatherPort } from "../../../core/ports/weather.port";
-import { WEATHER_PORT } from "../../../core/ports/weather.port";
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { take } from 'rxjs/operators';
+import type { WeatherLevel } from '../../../core/models/weather.model';
+import type { WeatherPort } from '../../../core/ports/weather.port';
+import { WEATHER_PORT } from '../../../core/ports/weather.port';
 
 /**
  * Service de gestion du niveau d'experience meteo.
@@ -14,7 +14,7 @@ export class WeatherLevelService {
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
 
   /** Niveau d'experience actuel de l'utilisateur. */
-  readonly level = signal<WeatherLevel>("discovery");
+  readonly level = signal<WeatherLevel>('discovery');
 
   /** Nombre de jours d'utilisation cumules. */
   readonly daysUsed = signal(0);
@@ -32,8 +32,8 @@ export class WeatherLevelService {
   readonly showTransitionPrompt = computed<WeatherLevel | null>(() => {
     const l = this.level();
     const d = this.daysUsed();
-    if (l === "discovery" && d >= 7) return "curious";
-    if (l === "curious" && d >= 30) return "expert";
+    if (l === 'discovery' && d >= 7) return 'curious';
+    if (l === 'curious' && d >= 30) return 'expert';
     return null;
   });
 
@@ -79,10 +79,7 @@ export class WeatherLevelService {
 
     const updated = [...current, tooltipId];
     this.tooltipsSeen.set(updated);
-    this.weatherService
-      .updatePreferences({ tooltipsSeen: updated })
-      .pipe(take(1))
-      .subscribe();
+    this.weatherService.updatePreferences({ tooltipsSeen: updated }).pipe(take(1)).subscribe();
   }
 
   /** Verifie si un tooltip a deja ete vu. */

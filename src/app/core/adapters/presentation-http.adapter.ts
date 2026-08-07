@@ -1,11 +1,11 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import type { Observable } from "rxjs";
-import { getApiBaseUrl } from "../http/api-config";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { getApiBaseUrl } from '../http/api-config';
 import type {
   PresentationInteractionsResponse,
   PresentationPort,
-} from "../ports/presentation.port";
+} from '../ports/presentation.port';
 
 /** Adaptateur HTTP pour le module presentations. */
 @Injectable()

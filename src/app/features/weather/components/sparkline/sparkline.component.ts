@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 /**
  * Mini graphique SVG en ligne (sparkline) pour visualiser
@@ -11,7 +6,7 @@ import {
  * Aucune dependance externe (pas de Chart.js).
  */
 @Component({
-  selector: "app-sparkline",
+  selector: 'app-sparkline',
   standalone: true,
   template: `
     @if (points().length > 1) {
@@ -42,7 +37,7 @@ export class SparklineComponent {
   readonly data = input<number[]>([]);
 
   /** Couleur de la courbe (CSS). Défaut : teal Asili. */
-  readonly color = input("rgba(79, 179, 162, 0.85)");
+  readonly color = input('rgba(79, 179, 162, 0.85)');
 
   /** Points normalises pour le SVG. */
   readonly points = computed(() => {
@@ -63,20 +58,20 @@ export class SparklineComponent {
   });
 
   /** ViewBox du SVG. */
-  readonly viewBox = computed(() => "0 0 100 30");
+  readonly viewBox = computed(() => '0 0 100 30');
 
   /** Attribut points de la polyline SVG. */
   readonly polylinePoints = computed(() =>
     this.points()
       .map((p) => `${p.x},${p.y}`)
-      .join(" "),
+      .join(' '),
   );
 
   /** Chemin SVG de la zone de remplissage sous la courbe. */
   readonly areaPath = computed(() => {
     const pts = this.points();
-    if (pts.length < 2) return "";
-    const line = pts.map((p) => `${p.x},${p.y}`).join(" L ");
+    if (pts.length < 2) return '';
+    const line = pts.map((p) => `${p.x},${p.y}`).join(' L ');
     return `M ${pts[0].x},30 L ${line} L ${pts[pts.length - 1].x},30 Z`;
   });
 }

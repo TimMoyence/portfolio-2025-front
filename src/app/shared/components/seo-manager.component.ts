@@ -1,24 +1,16 @@
-import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { of } from "rxjs";
-import { filter, map, mergeMap, switchMap } from "rxjs/operators";
-import { APP_CONFIG } from "../../core/config/app-config.token";
-import {
-  SeoRegistryService,
-  SeoResolvedConfig,
-} from "../../core/seo/seo-registry.service";
-import type { SeoConfig } from "../../core/seo/seo.interface";
-import { SeoService } from "../../core/seo/seo.service";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { of } from 'rxjs';
+import { filter, map, mergeMap, switchMap } from 'rxjs/operators';
+import { APP_CONFIG } from '../../core/config/app-config.token';
+import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
+import type { SeoConfig } from '../../core/seo/seo.interface';
+import { SeoService } from '../../core/seo/seo.service';
 
 @Component({
-  selector: "app-seo-manager",
+  selector: 'app-seo-manager',
   standalone: true,
   imports: [CommonModule],
   template: ``,
@@ -44,11 +36,11 @@ export class SeoManagerComponent {
           }
           return route;
         }),
-        filter((route) => route.outlet === "primary"),
+        filter((route) => route.outlet === 'primary'),
         mergeMap((route) => route.data),
         switchMap((data) => {
           const currentUrl = this.getCleanUrl(this.router.url);
-          const seoKey = data["seoKey"];
+          const seoKey = data['seoKey'];
 
           if (seoKey) {
             return this.seoRegistry
@@ -56,7 +48,7 @@ export class SeoManagerComponent {
               .pipe(map((resolved) => ({ data, resolved, currentUrl })));
           }
 
-          if (data["seo"]) {
+          if (data['seo']) {
             return of({ data, resolved: null, currentUrl });
           }
 
@@ -72,14 +64,8 @@ export class SeoManagerComponent {
           return;
         }
 
-        if (data["seo"]) {
-          this.applySeoConfig(
-            data["seo"],
-            currentUrl,
-            resolved,
-            data,
-            data["seoIndex"] === false,
-          );
+        if (data['seo']) {
+          this.applySeoConfig(data['seo'], currentUrl, resolved, data, data['seoIndex'] === false);
           return;
         }
 
@@ -97,32 +83,23 @@ export class SeoManagerComponent {
   ): void {
     const baseUrl = this.resolveBaseUrl();
     const canonicalState = this.resolveCanonicalState(currentUrl);
-    const canonicalUrl = this.buildAbsoluteUrl(
-      baseUrl,
-      canonicalState.canonicalPath,
-    );
-    const index =
-      typeof forceNoIndex === "boolean"
-        ? !forceNoIndex
-        : (resolved?.index ?? true);
+    const canonicalUrl = this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath);
+    const index = typeof forceNoIndex === 'boolean' ? !forceNoIndex : (resolved?.index ?? true);
     const robots =
-      typeof data["robots"] === "string"
-        ? (data["robots"] as string)
+      typeof data['robots'] === 'string'
+        ? (data['robots'] as string)
         : index
-          ? "index, follow"
-          : "noindex, nofollow";
+          ? 'index, follow'
+          : 'noindex, nofollow';
     const ogImage = this.resolveAbsoluteUrl(baseUrl, seo.ogImage);
-    const twitterImage = this.resolveAbsoluteUrl(
-      baseUrl,
-      seo.twitterImage ?? ogImage,
-    );
+    const twitterImage = this.resolveAbsoluteUrl(baseUrl, seo.twitterImage ?? ogImage);
 
     const locales = this.seoRegistry.getLocales();
     const hreflangs: Record<string, string> = {};
 
     for (const locale of locales) {
       const localizedPath =
-        canonicalState.relativePath === "/"
+        canonicalState.relativePath === '/'
           ? `/${locale}`
           : `/${locale}${canonicalState.relativePath}`;
       hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, localizedPath);
@@ -130,10 +107,10 @@ export class SeoManagerComponent {
     const defaultLocale = this.seoRegistry.getDefaultLocale();
     if (defaultLocale && locales.includes(defaultLocale)) {
       const defaultPath =
-        canonicalState.relativePath === "/"
+        canonicalState.relativePath === '/'
           ? `/${defaultLocale}`
           : `/${defaultLocale}${canonicalState.relativePath}`;
-      hreflangs["x-default"] = this.buildAbsoluteUrl(baseUrl, defaultPath);
+      hreflangs['x-default'] = this.buildAbsoluteUrl(baseUrl, defaultPath);
     }
 
     this.seoService.updateSeoMetadata({
@@ -147,16 +124,10 @@ export class SeoManagerComponent {
     });
   }
 
-  private setDefaultSeo(
-    currentUrl: string,
-    data: Record<string, unknown> = {},
-  ): void {
+  private setDefaultSeo(currentUrl: string, data: Record<string, unknown> = {}): void {
     const baseUrl = this.resolveBaseUrl();
     const canonicalState = this.resolveCanonicalState(currentUrl);
-    const canonicalUrl = this.buildAbsoluteUrl(
-      baseUrl,
-      canonicalState.canonicalPath,
-    );
+    const canonicalUrl = this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath);
 
     // Genere les hreflangs meme en fallback pour que toutes les pages
     // aient les liens alternatifs fr/en/x-default vers les moteurs de recherche.
@@ -164,7 +135,7 @@ export class SeoManagerComponent {
     const hreflangs: Record<string, string> = {};
     for (const locale of locales) {
       const localizedPath =
-        canonicalState.relativePath === "/"
+        canonicalState.relativePath === '/'
           ? `/${locale}`
           : `/${locale}${canonicalState.relativePath}`;
       hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, localizedPath);
@@ -172,10 +143,10 @@ export class SeoManagerComponent {
     const defaultLocale = this.seoRegistry.getDefaultLocale();
     if (defaultLocale && locales.includes(defaultLocale)) {
       const defaultPath =
-        canonicalState.relativePath === "/"
+        canonicalState.relativePath === '/'
           ? `/${defaultLocale}`
           : `/${defaultLocale}${canonicalState.relativePath}`;
-      hreflangs["x-default"] = this.buildAbsoluteUrl(baseUrl, defaultPath);
+      hreflangs['x-default'] = this.buildAbsoluteUrl(baseUrl, defaultPath);
     }
 
     const seoConfig: SeoConfig = {
@@ -190,11 +161,8 @@ export class SeoManagerComponent {
         $localize`:seo.default.keyword.developer|SEO keyword@@seoKeywordDeveloper:developer`,
       ],
       ogImage: `${baseUrl}/assets/images/logo.webp`,
-      twitterCard: "summary_large_image",
-      robots:
-        typeof data["robots"] === "string"
-          ? (data["robots"] as string)
-          : "index, follow",
+      twitterCard: 'summary_large_image',
+      robots: typeof data['robots'] === 'string' ? (data['robots'] as string) : 'index, follow',
       canonicalUrl,
       ogUrl: canonicalUrl,
       hreflangs,
@@ -204,15 +172,11 @@ export class SeoManagerComponent {
   }
 
   private resolveBaseUrl(): string {
-    return (
-      this.appConfig.baseUrl ||
-      this.seoRegistry.getBaseUrl() ||
-      "https://asilidesign.fr"
-    );
+    return this.appConfig.baseUrl || this.seoRegistry.getBaseUrl() || 'https://asilidesign.fr';
   }
 
   private getCleanUrl(url: string): string {
-    return url.split("?")[0].split("#")[0];
+    return url.split('?')[0].split('#')[0];
   }
 
   private buildCanonicalPath(currentUrl: string): string {
@@ -221,8 +185,8 @@ export class SeoManagerComponent {
 
   private normalizePath(path: string): string {
     const clean = this.getCleanUrl(path);
-    const trimmed = clean.replace(/^\/+/, "").replace(/\/+$/, "");
-    return trimmed ? `/${trimmed}` : "/";
+    const trimmed = clean.replace(/^\/+/, '').replace(/\/+$/, '');
+    return trimmed ? `/${trimmed}` : '/';
   }
 
   private resolveCanonicalState(currentUrl: string): {
@@ -233,26 +197,20 @@ export class SeoManagerComponent {
     const locales = this.seoRegistry.getLocales();
     const activeLocale = this.seoRegistry.getLocaleId();
     const matchedLocale = locales.find(
-      (locale) =>
-        normalized === `/${locale}` || normalized.startsWith(`/${locale}/`),
+      (locale) => normalized === `/${locale}` || normalized.startsWith(`/${locale}/`),
     );
 
     if (matchedLocale) {
-      const relativePath = this.normalizeRelativePath(
-        normalized,
-        matchedLocale,
-      );
+      const relativePath = this.normalizeRelativePath(normalized, matchedLocale);
       if (this.isHomeAlias(relativePath)) {
         return {
           canonicalPath: `/${matchedLocale}`,
-          relativePath: "/",
+          relativePath: '/',
         };
       }
       return {
         canonicalPath:
-          relativePath === "/"
-            ? `/${matchedLocale}`
-            : `/${matchedLocale}${relativePath}`,
+          relativePath === '/' ? `/${matchedLocale}` : `/${matchedLocale}${relativePath}`,
         relativePath,
       };
     }
@@ -260,42 +218,36 @@ export class SeoManagerComponent {
     if (this.isHomeAlias(normalized)) {
       return {
         canonicalPath: `/${activeLocale}`,
-        relativePath: "/",
+        relativePath: '/',
       };
     }
 
     return {
-      canonicalPath:
-        normalized === "/"
-          ? `/${activeLocale}`
-          : `/${activeLocale}${normalized}`,
-      relativePath: normalized === "/" ? "/" : normalized,
+      canonicalPath: normalized === '/' ? `/${activeLocale}` : `/${activeLocale}${normalized}`,
+      relativePath: normalized === '/' ? '/' : normalized,
     };
   }
 
   private normalizeRelativePath(path: string, locale: string): string {
     const localePrefix = `/${locale}`;
-    if (path === localePrefix) return "/";
+    if (path === localePrefix) return '/';
     const suffix = path.slice(localePrefix.length);
-    return suffix ? this.normalizePath(suffix) : "/";
+    return suffix ? this.normalizePath(suffix) : '/';
   }
 
   private isHomeAlias(path: string): boolean {
-    return path === "/" || path === "/home";
+    return path === '/' || path === '/home';
   }
 
   private buildAbsoluteUrl(baseUrl: string, path: string): string {
-    const trimmedBase = baseUrl.replace(/\/+$/, "");
-    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+    const trimmedBase = baseUrl.replace(/\/+$/, '');
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
     return `${trimmedBase}${normalizedPath}`;
   }
 
-  private resolveAbsoluteUrl(
-    baseUrl: string,
-    value?: string,
-  ): string | undefined {
+  private resolveAbsoluteUrl(baseUrl: string, value?: string): string | undefined {
     if (!value) return undefined;
-    if (value.startsWith("http://") || value.startsWith("https://")) {
+    if (value.startsWith('http://') || value.startsWith('https://')) {
       return value;
     }
     return this.buildAbsoluteUrl(baseUrl, value);

@@ -1,13 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from "@angular/core";
-import { RouterLink } from "@angular/router";
-import { RevealOnScrollDirective } from "../../../shared/directives/reveal-on-scroll.directive";
-import { ToolkitFormComponent } from "../../../shared/components/toolkit-form/toolkit-form.component";
-import type { ToolkitGatePageData } from "./toolkit-gate-page.model";
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
+import { ToolkitFormComponent } from '../../../shared/components/toolkit-form/toolkit-form.component';
+import type { ToolkitGatePageData } from './toolkit-gate-page.model';
 
 /**
  * Composant de page gate toolkit partage (capture email) — refonte Asili.
@@ -29,11 +24,11 @@ import type { ToolkitGatePageData } from "./toolkit-gate-page.model";
  * Niveaux de titre : le composant emet l'unique `<h1>` de la page hote.
  */
 @Component({
-  selector: "app-toolkit-gate-page",
+  selector: 'app-toolkit-gate-page',
   standalone: true,
   imports: [RouterLink, RevealOnScrollDirective, ToolkitFormComponent],
-  templateUrl: "./toolkit-gate-page.component.html",
-  styleUrl: "./toolkit-gate-page.component.scss",
+  templateUrl: './toolkit-gate-page.component.html',
+  styleUrl: './toolkit-gate-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolkitGatePageComponent {
@@ -52,7 +47,7 @@ export class ToolkitGatePageComponent {
    * en-tetes editoriaux (evite toute collision d'`id` entre instances). Par
    * defaut, le `formationSlug` ; `ia-solo` en repli.
    */
-  readonly headingKey = computed(() => this.formationSlug() ?? "ia-solo");
+  readonly headingKey = computed(() => this.formationSlug() ?? 'ia-solo');
 
   /** `id` de l'en-tete « ce que contient le toolkit ». */
   protected get contentsHeadingId(): string {

@@ -1,25 +1,25 @@
-import { isPlatformBrowser } from "@angular/common";
-import { Inject, Injectable, LOCALE_ID, PLATFORM_ID } from "@angular/core";
-import type { Observable } from "rxjs";
-import { BehaviorSubject } from "rxjs";
-import { APP_CONFIG } from "../config/app-config.token";
-import type { AppConfig } from "../config/app-config.model";
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { APP_CONFIG } from '../config/app-config.token';
+import type { AppConfig } from '../config/app-config.model';
 import type {
   CookieConsentAction,
   CookieConsentPayload,
   CookieConsentPreferences,
   CookieConsentSource,
   CookieConsentState,
-} from "../models/cookie-consent.model";
-import type { MessageResponse } from "../models/message.response";
-import type { CookieConsentPort } from "../ports/cookie-consent.port";
-import { COOKIE_CONSENT_PORT } from "../ports/cookie-consent.port";
+} from '../models/cookie-consent.model';
+import type { MessageResponse } from '../models/message.response';
+import type { CookieConsentPort } from '../ports/cookie-consent.port';
+import { COOKIE_CONSENT_PORT } from '../ports/cookie-consent.port';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class CookieConsentService {
-  private readonly consentCookieName = "moyence_cookie_consent";
+  private readonly consentCookieName = 'moyence_cookie_consent';
   private readonly defaultPreferences: CookieConsentPreferences = {
     essential: true,
     preferences: false,
@@ -27,8 +27,7 @@ export class CookieConsentService {
     marketing: false,
   };
   private readonly isBrowser: boolean;
-  private readonly consentSubject =
-    new BehaviorSubject<CookieConsentState | null>(null);
+  private readonly consentSubject = new BehaviorSubject<CookieConsentState | null>(null);
 
   constructor(
     @Inject(PLATFORM_ID) platformId: object,
@@ -48,9 +47,7 @@ export class CookieConsentService {
   }
 
   isConsentRequired(): boolean {
-    return (
-      this.appConfig.gdpr?.regionScope === "EU_UK" && this.isLocaleEligible()
-    );
+    return this.appConfig.gdpr?.regionScope === 'EU_UK' && this.isLocaleEligible();
   }
 
   shouldShowBanner(): boolean {
@@ -60,9 +57,7 @@ export class CookieConsentService {
 
   getPreferences(): CookieConsentPreferences {
     const stored = this.consentSubject.value?.preferences;
-    return stored
-      ? this.normalizePreferences(stored)
-      : { ...this.defaultPreferences };
+    return stored ? this.normalizePreferences(stored) : { ...this.defaultPreferences };
   }
 
   getDefaultPreferences(): CookieConsentPreferences {
@@ -102,30 +97,24 @@ export class CookieConsentService {
   }
 
   withdrawConsent(): Observable<MessageResponse> {
-    return this.saveConsent(
-      this.getDefaultPreferences(),
-      "settings",
-      "withdraw",
-    );
+    return this.saveConsent(this.getDefaultPreferences(), 'settings', 'withdraw');
   }
 
   private getPolicyVersion(): string {
-    return this.appConfig.gdpr?.policyVersion ?? "2026-02-11";
+    return this.appConfig.gdpr?.policyVersion ?? '2026-02-11';
   }
 
   private getRegionScope(): string {
-    return this.appConfig.gdpr?.regionScope ?? "EU_UK";
+    return this.appConfig.gdpr?.regionScope ?? 'EU_UK';
   }
 
   private isLocaleEligible(): boolean {
-    const locale = (this.localeId ?? "").toLowerCase();
-    const base = locale.split("-")[0];
-    return base === "fr" || base === "en";
+    const locale = (this.localeId ?? '').toLowerCase();
+    const base = locale.split('-')[0];
+    return base === 'fr' || base === 'en';
   }
 
-  private normalizePreferences(
-    preferences: CookieConsentPreferences,
-  ): CookieConsentPreferences {
+  private normalizePreferences(preferences: CookieConsentPreferences): CookieConsentPreferences {
     return {
       essential: true,
       preferences: Boolean(preferences.preferences),
@@ -153,13 +142,13 @@ export class CookieConsentService {
     const value = encodeURIComponent(JSON.stringify(state));
     const maxAgeDays = this.appConfig.gdpr?.cookieMaxAgeDays ?? 365;
     const maxAge = maxAgeDays * 24 * 60 * 60;
-    const secure = this.appConfig.production ? "; Secure" : "";
+    const secure = this.appConfig.production ? '; Secure' : '';
     document.cookie = `${this.consentCookieName}=${value}; Max-Age=${maxAge}; Path=/; SameSite=Lax${secure}`;
   }
 
   private getCookie(name: string): string | null {
     if (!this.isBrowser) return null;
-    const cookies = document.cookie.split(";");
+    const cookies = document.cookie.split(';');
     const prefix = `${name}=`;
 
     for (const cookie of cookies) {

@@ -1,17 +1,17 @@
-import { Injectable, computed, signal } from "@angular/core";
+import { Injectable, computed, signal } from '@angular/core';
 
-export type SlideDeckMode = "scroll" | "fullscreen";
+export type SlideDeckMode = 'scroll' | 'fullscreen';
 
 /**
  * Détient l'état réactif d'un slide deck : slides enregistrées (ordre stable),
  * slide courante, mode (scroll/fullscreen). Exposé via signaux pour
  * consommation OnPush par les composants enfants.
  */
-@Injectable({ providedIn: "any" })
+@Injectable({ providedIn: 'any' })
 export class SlideDeckService {
   private readonly slides = signal<string[]>([]);
   private readonly currentId = signal<string | null>(null);
-  private readonly modeSignal = signal<SlideDeckMode>("scroll");
+  private readonly modeSignal = signal<SlideDeckMode>('scroll');
 
   readonly current = this.currentId.asReadonly();
   readonly mode = this.modeSignal.asReadonly();

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.directive";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
 /**
  * Hero Asili : section d'ouverture pleine hauteur (`100svh`) avec puce live,
@@ -31,11 +31,11 @@ import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.direc
  * de la page hote.
  */
 @Component({
-  selector: "app-asili-hero",
+  selector: 'app-asili-hero',
   standalone: true,
   imports: [RevealOnScrollDirective],
-  templateUrl: "./asili-hero.component.html",
-  styleUrls: ["./asili-hero.component.scss"],
+  templateUrl: './asili-hero.component.html',
+  styleUrls: ['./asili-hero.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliHeroComponent {

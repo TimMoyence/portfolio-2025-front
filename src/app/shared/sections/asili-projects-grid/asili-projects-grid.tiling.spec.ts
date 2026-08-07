@@ -1,9 +1,6 @@
-import { HomeComponent } from "../../../features/home/home.component";
-import { ProjetsComponent } from "../../../features/projets/projets.component";
-import type {
-  AsiliProject,
-  AsiliProjectSize,
-} from "./asili-projects-grid.component";
+import { HomeComponent } from '../../../features/home/home.component';
+import { ProjetsComponent } from '../../../features/projets/projets.component';
+import type { AsiliProject, AsiliProjectSize } from './asili-projects-grid.component';
 
 /**
  * Nombre de colonnes de la grille desktop
@@ -54,9 +51,7 @@ function rowFills(projects: readonly AsiliProject[]): readonly number[] {
  * @returns Les remplissages des rangées intermédiaires qui ne font pas la
  *   largeur complète — tableau vide quand le pavage est sain.
  */
-function incompleteInnerRows(
-  projects: readonly AsiliProject[],
-): readonly number[] {
+function incompleteInnerRows(projects: readonly AsiliProject[]): readonly number[] {
   return rowFills(projects)
     .slice(0, -1)
     .filter((filled) => filled !== GRID_COLUMNS);
@@ -70,16 +65,14 @@ function incompleteInnerRows(
  * peut être vérifié qu'au niveau des données des pages : le composant subit les
  * tailles qu'on lui passe.
  */
-describe("Pavage de la grille projets", () => {
-  it("ne laisse aucune rangee incomplete pour le teaser de la home", () => {
+describe('Pavage de la grille projets', () => {
+  it('ne laisse aucune rangee incomplete pour le teaser de la home', () => {
     // Composant de presentation pur, sans injection : instanciable directement.
     const home = new HomeComponent() as unknown as {
       readonly projects: readonly AsiliProject[];
     };
 
-    const incomplete = rowFills(home.projects).filter(
-      (filled) => filled !== GRID_COLUMNS,
-    );
+    const incomplete = rowFills(home.projects).filter((filled) => filled !== GRID_COLUMNS);
 
     expect(incomplete).toEqual([]);
   });
@@ -92,7 +85,7 @@ describe("Pavage de la grille projets", () => {
   //
   // Seule la dernière rangée peut rester partielle : le jeu de 14 cartes ne
   // totalise pas nécessairement un multiple de 6 colonnes.
-  it("ne laisse aucune rangee intermediaire incomplete sur /projets", () => {
+  it('ne laisse aucune rangee intermediaire incomplete sur /projets', () => {
     const projets = new ProjetsComponent() as unknown as {
       readonly projects: readonly AsiliProject[];
     };

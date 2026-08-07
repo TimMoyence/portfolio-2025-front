@@ -1,9 +1,9 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import type { Observable } from "rxjs";
-import { of } from "rxjs";
-import { catchError, map } from "rxjs/operators";
-import { getApiBaseUrl } from "../http/api-config";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { getApiBaseUrl } from '../http/api-config';
 import type {
   AirQualityData,
   DetailedCurrentWeather,
@@ -14,8 +14,8 @@ import type {
   HistoricalData,
   WeatherAlertResult,
   WeatherPreferences,
-} from "../models/weather.model";
-import type { WeatherPort } from "../ports/weather.port";
+} from '../models/weather.model';
+import type { WeatherPort } from '../ports/weather.port';
 
 /** Reponse transport Nominatim (reverse geocoding, sous-ensemble utilise). */
 interface NominatimResponse {
@@ -41,17 +41,10 @@ export class WeatherHttpAdapter implements WeatherPort {
   constructor(private readonly http: HttpClient) {}
 
   /** Recherche de villes par nom via l'API de geocodage. */
-  searchCity(
-    name: string,
-    language = "fr",
-    count = 5,
-  ): Observable<GeocodingResponse> {
-    return this.http.get<GeocodingResponse>(
-      `${this.baseUrl}/weather/geocoding`,
-      {
-        params: { name, language, count: count.toString() },
-      },
-    );
+  searchCity(name: string, language = 'fr', count = 5): Observable<GeocodingResponse> {
+    return this.http.get<GeocodingResponse>(`${this.baseUrl}/weather/geocoding`, {
+      params: { name, language, count: count.toString() },
+    });
   }
 
   /**
@@ -61,24 +54,18 @@ export class WeatherHttpAdapter implements WeatherPort {
    */
   reverseGeocode(lat: number, lon: number): Observable<string | null> {
     return this.http
-      .get<NominatimResponse>("https://nominatim.openstreetmap.org/reverse", {
+      .get<NominatimResponse>('https://nominatim.openstreetmap.org/reverse', {
         params: {
           lat: lat.toString(),
           lon: lon.toString(),
-          format: "json",
-          zoom: "10",
+          format: 'json',
+          zoom: '10',
         },
       })
       .pipe(
         map((resp) => {
           const addr = resp.address;
-          return (
-            addr?.city ??
-            addr?.town ??
-            addr?.village ??
-            addr?.municipality ??
-            null
-          );
+          return addr?.city ?? addr?.town ?? addr?.village ?? addr?.municipality ?? null;
         }),
         catchError(() => of(null)),
       );
@@ -88,7 +75,7 @@ export class WeatherHttpAdapter implements WeatherPort {
   getForecast(
     latitude: number,
     longitude: number,
-    timezone = "auto",
+    timezone = 'auto',
     forecastDays?: number,
   ): Observable<ForecastResponse> {
     const params: Record<string, string> = {
@@ -97,7 +84,7 @@ export class WeatherHttpAdapter implements WeatherPort {
       timezone,
     };
     if (forecastDays) {
-      params["forecastDays"] = forecastDays.toString();
+      params['forecastDays'] = forecastDays.toString();
     }
     return this.http.get<ForecastResponse>(`${this.baseUrl}/weather/forecast`, {
       params,
@@ -106,9 +93,7 @@ export class WeatherHttpAdapter implements WeatherPort {
 
   /** Recuperation des preferences meteo de l'utilisateur connecte. */
   getPreferences(): Observable<WeatherPreferences> {
-    return this.http.get<WeatherPreferences>(
-      `${this.baseUrl}/weather/preferences`,
-    );
+    return this.http.get<WeatherPreferences>(`${this.baseUrl}/weather/preferences`);
   }
 
   /** Mise a jour partielle des preferences meteo. */
@@ -116,43 +101,31 @@ export class WeatherHttpAdapter implements WeatherPort {
     data: Partial<
       Pick<
         WeatherPreferences,
-        | "level"
-        | "favoriteCities"
-        | "tooltipsSeen"
-        | "units"
-        | "defaultCityIndex"
-        | "overviewGranularity"
+        | 'level'
+        | 'favoriteCities'
+        | 'tooltipsSeen'
+        | 'units'
+        | 'defaultCityIndex'
+        | 'overviewGranularity'
       >
     >,
   ): Observable<WeatherPreferences> {
-    return this.http.patch<WeatherPreferences>(
-      `${this.baseUrl}/weather/preferences`,
-      data,
-    );
+    return this.http.patch<WeatherPreferences>(`${this.baseUrl}/weather/preferences`, data);
   }
 
   /** Enregistrement de l'utilisation quotidienne de l'app meteo. */
   recordUsage(): Observable<void> {
-    return this.http.post<void>(
-      `${this.baseUrl}/weather/preferences/record-usage`,
-      {},
-    );
+    return this.http.post<void>(`${this.baseUrl}/weather/preferences/record-usage`, {});
   }
 
   /** Recuperation des donnees de qualite de l'air pour des coordonnees donnees. */
-  getAirQuality(
-    latitude: number,
-    longitude: number,
-  ): Observable<AirQualityData> {
-    return this.http.get<AirQualityData>(
-      `${this.baseUrl}/weather/air-quality`,
-      {
-        params: {
-          latitude: latitude.toString(),
-          longitude: longitude.toString(),
-        },
+  getAirQuality(latitude: number, longitude: number): Observable<AirQualityData> {
+    return this.http.get<AirQualityData>(`${this.baseUrl}/weather/air-quality`, {
+      params: {
+        latitude: latitude.toString(),
+        longitude: longitude.toString(),
       },
-    );
+    });
   }
 
   /** Recuperation des previsions multi-modeles (ensemble) pour des coordonnees donnees. */
@@ -183,42 +156,27 @@ export class WeatherHttpAdapter implements WeatherPort {
   }
 
   /** Donnees meteo detaillees courantes (OpenWeatherMap). */
-  getDetailedCurrent(
-    latitude: number,
-    longitude: number,
-  ): Observable<DetailedCurrentWeather> {
-    return this.http.get<DetailedCurrentWeather>(
-      `${this.baseUrl}/weather/current-detailed`,
-      {
-        params: {
-          latitude: latitude.toString(),
-          longitude: longitude.toString(),
-        },
+  getDetailedCurrent(latitude: number, longitude: number): Observable<DetailedCurrentWeather> {
+    return this.http.get<DetailedCurrentWeather>(`${this.baseUrl}/weather/current-detailed`, {
+      params: {
+        latitude: latitude.toString(),
+        longitude: longitude.toString(),
       },
-    );
+    });
   }
 
   /** Previsions detaillees (OpenWeatherMap). */
-  getDetailedForecast(
-    latitude: number,
-    longitude: number,
-  ): Observable<DetailedForecastResult> {
-    return this.http.get<DetailedForecastResult>(
-      `${this.baseUrl}/weather/forecast-detailed`,
-      {
-        params: {
-          latitude: latitude.toString(),
-          longitude: longitude.toString(),
-        },
+  getDetailedForecast(latitude: number, longitude: number): Observable<DetailedForecastResult> {
+    return this.http.get<DetailedForecastResult>(`${this.baseUrl}/weather/forecast-detailed`, {
+      params: {
+        latitude: latitude.toString(),
+        longitude: longitude.toString(),
       },
-    );
+    });
   }
 
   /** Alertes meteo synthetiques. */
-  getAlerts(
-    latitude: number,
-    longitude: number,
-  ): Observable<WeatherAlertResult> {
+  getAlerts(latitude: number, longitude: number): Observable<WeatherAlertResult> {
     return this.http.get<WeatherAlertResult>(`${this.baseUrl}/weather/alerts`, {
       params: {
         latitude: latitude.toString(),

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
  * Definition d'une colonne de tableau : `key` est la cle stable cote
@@ -26,18 +26,18 @@ export type TableRow = Record<string, string>;
  * chaque `row` doit fournir une valeur pour chaque `key` de colonne.
  */
 @Component({
-  selector: "app-slide-table",
+  selector: 'app-slide-table',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-table.component.html",
-  styleUrl: "./slide-table.component.scss",
+  templateUrl: './slide-table.component.html',
+  styleUrl: './slide-table.component.scss',
 })
 export class SlideTableComponent {
-  readonly title = input<string>("");
+  readonly title = input<string>('');
   readonly columns = input.required<TableColumn[]>();
   readonly rows = input.required<TableRow[]>();
 
   protected cellValue(row: TableRow, key: string): string {
-    return row[key] ?? "";
+    return row[key] ?? '';
   }
 }

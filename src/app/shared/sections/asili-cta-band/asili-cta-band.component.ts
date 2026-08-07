@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.directive";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
 /**
  * Bande d'appel a l'action Asili : bloc fond encre (`--ink`) avec halo radial
@@ -20,11 +20,11 @@ import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.direc
  * la coherence de la hierarchie (un `<h1>` en amont).
  */
 @Component({
-  selector: "app-asili-cta-band",
+  selector: 'app-asili-cta-band',
   standalone: true,
   imports: [RevealOnScrollDirective],
-  templateUrl: "./asili-cta-band.component.html",
-  styleUrls: ["./asili-cta-band.component.scss"],
+  templateUrl: './asili-cta-band.component.html',
+  styleUrls: ['./asili-cta-band.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliCtaBandComponent {

@@ -1,15 +1,6 @@
-import { isPlatformBrowser } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  PLATFORM_ID,
-} from "@angular/core";
-import type {
-  EnsembleData,
-  ForecastResponse,
-} from "../../../../core/models/weather.model";
+import { isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, input, PLATFORM_ID } from '@angular/core';
+import type { EnsembleData, ForecastResponse } from '../../../../core/models/weather.model';
 
 /**
  * Carte d'export des donnees meteo en CSV ou JSON.
@@ -18,7 +9,7 @@ import type {
  * protege par un guard isPlatformBrowser.
  */
 @Component({
-  selector: "app-data-export",
+  selector: 'app-data-export',
   standalone: true,
   template: `
     <!--
@@ -29,9 +20,7 @@ import type {
       Restyle visuel uniquement : exportCsv()/exportJson()/downloadFile() et
       les IDs @@weatherDataExport* sont inchangés.
     -->
-    <div
-      class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
-    >
+    <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
       <h3
         class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
         i18n="weather.dataExport.title|@@weatherDataExportTitle"
@@ -59,13 +48,10 @@ import type {
       </div>
 
       <!-- Placeholder radar -->
-      <div
-        class="mt-4 rounded-xl border border-dashed border-teal/15 p-3 text-center"
-      >
+      <div class="mt-4 rounded-xl border border-dashed border-teal/15 p-3 text-center">
         <p
           class="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40"
-          i18n="
-            weather.dataExport.radarPlaceholder|@@weatherDataExportRadarPlaceholder"
+          i18n="weather.dataExport.radarPlaceholder|@@weatherDataExportRadarPlaceholder"
         >
           Carte radar — bientôt disponible
         </p>
@@ -91,23 +77,18 @@ export class DataExportComponent {
     const data = this.forecast();
     if (!data) return;
 
-    const headers = [
-      "time",
-      "temperature_2m",
-      "precipitation",
-      "wind_speed_10m",
-    ];
+    const headers = ['time', 'temperature_2m', 'precipitation', 'wind_speed_10m'];
     const rows = data.hourly.time.map((t, i) =>
       [
         t,
         data.hourly.temperature_2m[i],
         data.hourly.precipitation[i],
         data.hourly.wind_speed_10m[i],
-      ].join(","),
+      ].join(','),
     );
 
-    const csv = [headers.join(","), ...rows].join("\n");
-    this.downloadFile(csv, "meteo-export.csv", "text/csv");
+    const csv = [headers.join(','), ...rows].join('\n');
+    this.downloadFile(csv, 'meteo-export.csv', 'text/csv');
   }
 
   /** Exporte les donnees brutes (previsions + ensemble) au format JSON. */
@@ -120,14 +101,14 @@ export class DataExportComponent {
     };
 
     const json = JSON.stringify(payload, null, 2);
-    this.downloadFile(json, "meteo-export.json", "application/json");
+    this.downloadFile(json, 'meteo-export.json', 'application/json');
   }
 
   /** Declenche le telechargement d'un fichier via un lien <a> temporaire. */
   private downloadFile(content: string, filename: string, mime: string): void {
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
+    const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = filename;
     anchor.click();

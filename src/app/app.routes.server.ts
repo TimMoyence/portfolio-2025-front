@@ -1,4 +1,4 @@
-import { RenderMode, type ServerRoute } from "@angular/ssr";
+import { RenderMode, type ServerRoute } from '@angular/ssr';
 
 /**
  * Configuration des routes serveur pour le SSR/SSG Angular.
@@ -21,32 +21,32 @@ import { RenderMode, type ServerRoute } from "@angular/ssr";
  */
 export const serverRoutes: ServerRoute[] = [
   // Routes protégées par authGuard — rendu client uniquement
-  { path: "profil", renderMode: RenderMode.Client },
-  { path: "atelier/meteo/app", renderMode: RenderMode.Client },
-  { path: "atelier/sebastian/app", renderMode: RenderMode.Client },
-  { path: "atelier/sebastian/app/dashboard", renderMode: RenderMode.Client },
-  { path: "atelier/sebastian/app/rapports", renderMode: RenderMode.Client },
-  { path: "atelier/sebastian/app/badges", renderMode: RenderMode.Client },
-  { path: "atelier/sebastian/app/historique", renderMode: RenderMode.Client },
-  { path: "atelier/sebastian/app/objectifs", renderMode: RenderMode.Client },
+  { path: 'profil', renderMode: RenderMode.Client },
+  { path: 'atelier/meteo/app', renderMode: RenderMode.Client },
+  { path: 'atelier/sebastian/app', renderMode: RenderMode.Client },
+  { path: 'atelier/sebastian/app/dashboard', renderMode: RenderMode.Client },
+  { path: 'atelier/sebastian/app/rapports', renderMode: RenderMode.Client },
+  { path: 'atelier/sebastian/app/badges', renderMode: RenderMode.Client },
+  { path: 'atelier/sebastian/app/historique', renderMode: RenderMode.Client },
+  { path: 'atelier/sebastian/app/objectifs', renderMode: RenderMode.Client },
 
   // Toolkit privé avec token dynamique — rendu serveur on-demand
   {
-    path: "formations/ia-solopreneurs/toolkit/:token",
+    path: 'formations/ia-solopreneurs/toolkit/:token',
     renderMode: RenderMode.Server,
   },
 
   // Page publique des réalisations — prérendue (landing SEO statique).
   // Déjà couverte par le catch-all `**` ci-dessous ; entrée explicite pour
   // rendre l'intention claire au build.
-  { path: "projets", renderMode: RenderMode.Prerender },
+  { path: 'projets', renderMode: RenderMode.Prerender },
 
   // Hub L'Atelier — landing SEO statique (démos simulées, aucun guard).
   // Déjà couverte par `**` ; entrée explicite pour rendre l'intention claire.
-  { path: "atelier", renderMode: RenderMode.Prerender },
+  { path: 'atelier', renderMode: RenderMode.Prerender },
 
   // Routes publiques (incluant les présentations atelier) — prérendues.
   // Les formations sont enregistrees en routes STATIQUES par slug dans
   // `app.routes.ts` (composants slide-driven dedies), donc capturees ici.
-  { path: "**", renderMode: RenderMode.Prerender },
+  { path: '**', renderMode: RenderMode.Prerender },
 ];

@@ -1,79 +1,70 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-  signal,
-} from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import type {
   CreateEntryPayload,
   SebastianDrinkType,
   SebastianEntry,
-} from "../../../core/models/sebastian.model";
-import { BottomSheetComponent } from "../../../shared/components/bottom-sheet/bottom-sheet.component";
+} from '../../../core/models/sebastian.model';
+import { BottomSheetComponent } from '../../../shared/components/bottom-sheet/bottom-sheet.component';
 
 /** Mode de selection temporelle pour l'heure de consommation. */
-export type TimeMode = "now" | "30m" | "1h" | "yesterday-evening" | "custom";
+export type TimeMode = 'now' | '30m' | '1h' | 'yesterday-evening' | 'custom';
 
 /** Valeurs par defaut de degre et volume par type de boisson. */
 const DRINK_DEFAULTS: Record<
   SebastianDrinkType,
-  { category: "alcohol" | "coffee"; degree: number; volumeCl: number }
+  { category: 'alcohol' | 'coffee'; degree: number; volumeCl: number }
 > = {
-  beer: { category: "alcohol", degree: 5, volumeCl: 25 },
-  wine: { category: "alcohol", degree: 12, volumeCl: 12.5 },
-  champagne: { category: "alcohol", degree: 12, volumeCl: 12.5 },
-  cocktail: { category: "alcohol", degree: 15, volumeCl: 20 },
-  spiritueux: { category: "alcohol", degree: 40, volumeCl: 4 },
-  cidre: { category: "alcohol", degree: 5, volumeCl: 25 },
-  coffee: { category: "coffee", degree: 0, volumeCl: 0 },
+  beer: { category: 'alcohol', degree: 5, volumeCl: 25 },
+  wine: { category: 'alcohol', degree: 12, volumeCl: 12.5 },
+  champagne: { category: 'alcohol', degree: 12, volumeCl: 12.5 },
+  cocktail: { category: 'alcohol', degree: 15, volumeCl: 20 },
+  spiritueux: { category: 'alcohol', degree: 40, volumeCl: 4 },
+  cidre: { category: 'alcohol', degree: 5, volumeCl: 25 },
+  coffee: { category: 'coffee', degree: 0, volumeCl: 0 },
 };
 
 /** Labels et icones pour l'affichage des types de boisson. */
-const DRINK_UI: Record<
-  SebastianDrinkType,
-  { label: string; icon: string; colorClass: string }
-> = {
-  beer: { label: "Biere", icon: "🍺", colorClass: "text-scheme-warning" },
-  wine: { label: "Vin", icon: "🍷", colorClass: "text-red-400" },
+const DRINK_UI: Record<SebastianDrinkType, { label: string; icon: string; colorClass: string }> = {
+  beer: { label: 'Biere', icon: '🍺', colorClass: 'text-scheme-warning' },
+  wine: { label: 'Vin', icon: '🍷', colorClass: 'text-red-400' },
   champagne: {
-    label: "Champagne",
-    icon: "🥂",
-    colorClass: "text-yellow-400",
+    label: 'Champagne',
+    icon: '🥂',
+    colorClass: 'text-yellow-400',
   },
-  cocktail: { label: "Cocktail", icon: "🍸", colorClass: "text-pink-400" },
+  cocktail: { label: 'Cocktail', icon: '🍸', colorClass: 'text-pink-400' },
   spiritueux: {
-    label: "Spiritueux",
-    icon: "🥃",
-    colorClass: "text-amber-600",
+    label: 'Spiritueux',
+    icon: '🥃',
+    colorClass: 'text-amber-600',
   },
-  cidre: { label: "Cidre", icon: "🍏", colorClass: "text-green-400" },
+  cidre: { label: 'Cidre', icon: '🍏', colorClass: 'text-green-400' },
   coffee: {
-    label: "Cafe",
-    icon: "☕",
-    colorClass: "text-scheme-accent-active",
+    label: 'Cafe',
+    icon: '☕',
+    colorClass: 'text-scheme-accent-active',
   },
 };
 
 /** Liste ordonnee des types de boisson pour la grille de selection. */
 const DRINK_TYPES: SebastianDrinkType[] = [
-  "beer",
-  "wine",
-  "champagne",
-  "cocktail",
-  "spiritueux",
-  "cidre",
-  "coffee",
+  'beer',
+  'wine',
+  'champagne',
+  'cocktail',
+  'spiritueux',
+  'cidre',
+  'coffee',
 ];
 
 /** Options de temps predefinies. */
 const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
-  { mode: "now", label: "Maintenant" },
-  { mode: "30m", label: "Il y a 30m" },
-  { mode: "1h", label: "Il y a 1h" },
-  { mode: "yesterday-evening", label: "Hier soir" },
-  { mode: "custom", label: "Personnalise" },
+  { mode: 'now', label: 'Maintenant' },
+  { mode: '30m', label: 'Il y a 30m' },
+  { mode: '1h', label: 'Il y a 1h' },
+  { mode: 'yesterday-evening', label: 'Hier soir' },
+  { mode: 'custom', label: 'Personnalise' },
 ];
 
 /**
@@ -82,7 +73,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
  * heure de consommation et notes avant d'emettre un payload de creation.
  */
 @Component({
-  selector: "app-sebastian-add-drink-sheet",
+  selector: 'app-sebastian-add-drink-sheet',
   standalone: true,
   imports: [BottomSheetComponent, FormsModule],
   template: `
@@ -115,9 +106,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
                   <span>{{ drinkIcon(entry.drinkType) }}</span>
                   <span>{{ drinkLabel(entry.drinkType) }}</span>
                   @if (entry.alcoholDegree) {
-                    <span class="text-white/40"
-                      >{{ entry.alcoholDegree }}%</span
-                    >
+                    <span class="text-white/40">{{ entry.alcoholDegree }}%</span>
                   }
                 </button>
               }
@@ -181,14 +170,12 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
         </section>
 
         <!-- Degre + Volume (masques pour coffee) -->
-        @if (selectedDrinkType() !== "coffee") {
+        @if (selectedDrinkType() !== 'coffee') {
           <section>
             <div class="grid grid-cols-2 gap-4">
               <!-- Degre -->
               <div>
-                <h4 class="mb-2 text-sm font-semibold text-white/60">
-                  Degre (%)
-                </h4>
+                <h4 class="mb-2 text-sm font-semibold text-white/60">Degre (%)</h4>
                 <div class="flex items-center gap-2">
                   <button
                     type="button"
@@ -220,9 +207,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
 
               <!-- Volume -->
               <div>
-                <h4 class="mb-2 text-sm font-semibold text-white/60">
-                  Volume (cL)
-                </h4>
+                <h4 class="mb-2 text-sm font-semibold text-white/60">Volume (cL)</h4>
                 <div class="flex items-center gap-2">
                   <button
                     type="button"
@@ -276,7 +261,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
             }
           </div>
 
-          @if (timeMode() === "custom") {
+          @if (timeMode() === 'custom') {
             <div class="mt-3 flex gap-3">
               <input
                 type="date"
@@ -339,7 +324,7 @@ export class SebastianAddDrinkSheetComponent {
   readonly addDrink = output<CreateEntryPayload>();
 
   /** Type de boisson selectionne. */
-  readonly selectedDrinkType = signal<SebastianDrinkType>("beer");
+  readonly selectedDrinkType = signal<SebastianDrinkType>('beer');
 
   /** Quantite de boissons. */
   readonly quantity = signal(1);
@@ -351,7 +336,7 @@ export class SebastianAddDrinkSheetComponent {
   readonly volumeCl = signal(DRINK_DEFAULTS.beer.volumeCl);
 
   /** Mode de selection temporelle. */
-  readonly timeMode = signal<TimeMode>("now");
+  readonly timeMode = signal<TimeMode>('now');
 
   /** Date personnalisee (format YYYY-MM-DD). */
   readonly customDate = signal(new Date().toISOString().slice(0, 10));
@@ -360,7 +345,7 @@ export class SebastianAddDrinkSheetComponent {
   readonly customTime = signal(new Date().toTimeString().slice(0, 5));
 
   /** Notes optionnelles. */
-  readonly notes = signal("");
+  readonly notes = signal('');
 
   /** Expose Math pour le template. */
   protected readonly Math = Math;
@@ -439,14 +424,14 @@ export class SebastianAddDrinkSheetComponent {
 
   /** Retourne l'icone emoji du type de boisson. */
   drinkIcon(drinkType: SebastianDrinkType | null): string {
-    if (!drinkType) return "";
-    return DRINK_UI[drinkType]?.icon ?? "";
+    if (!drinkType) return '';
+    return DRINK_UI[drinkType]?.icon ?? '';
   }
 
   /** Retourne le label du type de boisson. */
   drinkLabel(drinkType: SebastianDrinkType | null): string {
-    if (!drinkType) return "";
-    return DRINK_UI[drinkType]?.label ?? "";
+    if (!drinkType) return '';
+    return DRINK_UI[drinkType]?.label ?? '';
   }
 
   /**
@@ -461,28 +446,26 @@ export class SebastianAddDrinkSheetComponent {
     const mode = this.timeMode();
 
     switch (mode) {
-      case "now":
+      case 'now':
         return undefined;
-      case "30m": {
+      case '30m': {
         const d = new Date();
         d.setMinutes(d.getMinutes() - 30);
         return d.toISOString();
       }
-      case "1h": {
+      case '1h': {
         const d = new Date();
         d.setHours(d.getHours() - 1);
         return d.toISOString();
       }
-      case "yesterday-evening": {
+      case 'yesterday-evening': {
         const d = new Date();
         d.setDate(d.getDate() - 1);
         d.setHours(21, 0, 0, 0);
         return d.toISOString();
       }
-      case "custom":
-        return new Date(
-          `${this.customDate()}T${this.customTime()}:00`,
-        ).toISOString();
+      case 'custom':
+        return new Date(`${this.customDate()}T${this.customTime()}:00`).toISOString();
     }
   }
 }

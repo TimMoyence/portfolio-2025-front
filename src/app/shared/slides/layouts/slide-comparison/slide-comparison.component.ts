@@ -1,15 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
  * Tonalite visuelle d'une colonne de comparaison.
  * Mappe sur une palette semantique (danger, success, info, warning, neutral).
  */
-export type ComparisonTone =
-  | "danger"
-  | "success"
-  | "info"
-  | "warning"
-  | "neutral";
+export type ComparisonTone = 'danger' | 'success' | 'info' | 'warning' | 'neutral';
 
 /**
  * Description d'une colonne de la slide comparison.
@@ -32,13 +27,13 @@ export interface ComparisonColumn {
  * nombre arbitraire de colonnes typees `ComparisonColumn`.
  */
 @Component({
-  selector: "app-slide-comparison",
+  selector: 'app-slide-comparison',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-comparison.component.html",
-  styleUrl: "./slide-comparison.component.scss",
+  templateUrl: './slide-comparison.component.html',
+  styleUrl: './slide-comparison.component.scss',
 })
 export class SlideComparisonComponent {
-  readonly title = input<string>("");
+  readonly title = input<string>('');
   readonly columns = input.required<ComparisonColumn[]>();
 }

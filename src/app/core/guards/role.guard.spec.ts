@@ -1,18 +1,18 @@
-import { TestBed } from "@angular/core/testing";
-import type { ActivatedRouteSnapshot } from "@angular/router";
-import { provideRouter, UrlTree } from "@angular/router";
-import { provideHttpClient } from "@angular/common/http";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { AUTH_PORT } from "../ports/auth.port";
-import { APP_CONFIG } from "../config/app-config.token";
-import { AuthStateService } from "../services/auth-state.service";
-import { environment } from "../../../environments/environment";
+import { TestBed } from '@angular/core/testing';
+import type { ActivatedRouteSnapshot } from '@angular/router';
+import { provideRouter, UrlTree } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { AUTH_PORT } from '../ports/auth.port';
+import { APP_CONFIG } from '../config/app-config.token';
+import { AuthStateService } from '../services/auth-state.service';
+import { environment } from '../../../environments/environment';
 import {
   buildAuthSession,
   buildAuthUser,
   createAuthPortStub,
-} from "../../../testing/factories/auth.factory";
-import { roleGuard } from "./role.guard";
+} from '../../../testing/factories/auth.factory';
+import { roleGuard } from './role.guard';
 
 /**
  * Tests unitaires du guard fonctionnel roleGuard.
@@ -21,7 +21,7 @@ import { roleGuard } from "./role.guard";
  * - redirection vers /contact?reason=access&app={role} si le role manque
  * - redirection vers /contact?reason=access&app={role} si l'utilisateur n'est pas connecte
  */
-describe("roleGuard", () => {
+describe('roleGuard', () => {
   let authState: AuthStateService;
 
   beforeEach(() => {
@@ -38,12 +38,10 @@ describe("roleGuard", () => {
     authState = TestBed.inject(AuthStateService);
   });
 
-  it("devrait autoriser l acces si l utilisateur possede le role requis", () => {
-    authState.login(
-      buildAuthSession({ user: buildAuthUser({ roles: ["weather"] }) }),
-    );
+  it('devrait autoriser l acces si l utilisateur possede le role requis', () => {
+    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['weather'] }) }));
 
-    const guard = roleGuard("weather");
+    const guard = roleGuard('weather');
     const result = TestBed.runInInjectionContext(() =>
       guard({} as ActivatedRouteSnapshot, {} as never),
     );
@@ -51,31 +49,25 @@ describe("roleGuard", () => {
     expect(result).toBeTrue();
   });
 
-  it("devrait rediriger vers /contact avec queryParams si l utilisateur ne possede pas le role", () => {
-    authState.login(
-      buildAuthSession({ user: buildAuthUser({ roles: ["sebastian"] }) }),
-    );
+  it('devrait rediriger vers /contact avec queryParams si l utilisateur ne possede pas le role', () => {
+    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['sebastian'] }) }));
 
-    const guard = roleGuard("weather");
+    const guard = roleGuard('weather');
     const result = TestBed.runInInjectionContext(() =>
       guard({} as ActivatedRouteSnapshot, {} as never),
     );
 
     expect(result).toBeInstanceOf(UrlTree);
-    expect((result as UrlTree).toString()).toBe(
-      "/contact?reason=access&app=weather",
-    );
+    expect((result as UrlTree).toString()).toBe('/contact?reason=access&app=weather');
   });
 
-  it("devrait rediriger vers /contact avec queryParams si l utilisateur n est pas connecte", () => {
-    const guard = roleGuard("weather");
+  it('devrait rediriger vers /contact avec queryParams si l utilisateur n est pas connecte', () => {
+    const guard = roleGuard('weather');
     const result = TestBed.runInInjectionContext(() =>
       guard({} as ActivatedRouteSnapshot, {} as never),
     );
 
     expect(result).toBeInstanceOf(UrlTree);
-    expect((result as UrlTree).toString()).toBe(
-      "/contact?reason=access&app=weather",
-    );
+    expect((result as UrlTree).toString()).toBe('/contact?reason=access&app=weather');
   });
 });

@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,10 +9,10 @@ import {
   OnInit,
   PLATFORM_ID,
   signal,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { map, switchMap } from "rxjs";
-import { BreakpointService } from "../../core/services/breakpoint.service";
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map, switchMap } from 'rxjs';
+import { BreakpointService } from '../../core/services/breakpoint.service';
 import type {
   AirQualityData,
   CityResult,
@@ -24,41 +24,41 @@ import type {
   OverviewGranularity,
   WeatherAlert,
   WeatherLevel,
-} from "../../core/models/weather.model";
-import type { WeatherPort } from "../../core/ports/weather.port";
-import { WEATHER_PORT } from "../../core/ports/weather.port";
-import { AirQualityCardComponent } from "./components/air-quality-card/air-quality-card.component";
-import { CapeCardComponent } from "./components/cape-card/cape-card.component";
-import { CitySearchComponent } from "./components/city-search/city-search.component";
-import { CloudVisibilityCardComponent } from "./components/cloud-visibility-card/cloud-visibility-card.component";
-import { CurrentConditionsComponent } from "./components/current-conditions/current-conditions.component";
-import { DayDetailPanelComponent } from "./components/day-detail-panel/day-detail-panel.component";
-import { DataExportComponent } from "./components/data-export/data-export.component";
-import { WeeklyOverviewComponent } from "./components/weekly-overview/weekly-overview.component";
-import { FavoriteCitiesBarComponent } from "./components/favorite-cities-bar/favorite-cities-bar.component";
-import { WeatherAlertsCardComponent } from "./components/weather-alerts-card/weather-alerts-card.component";
-import { RadarMapComponent } from "./components/radar-map/radar-map.component";
-import { HistoricalComparisonComponent } from "./components/historical-comparison/historical-comparison.component";
-import { HourlyChartComponent } from "./components/hourly-chart/hourly-chart.component";
-import { HumidityCardComponent } from "./components/humidity-card/humidity-card.component";
-import { LevelSelectorComponent } from "./components/level-selector/level-selector.component";
-import { ModelComparisonComponent } from "./components/model-comparison/model-comparison.component";
-import { PressureCardComponent } from "./components/pressure-card/pressure-card.component";
-import { SpaghettiPlotComponent } from "./components/spaghetti-plot/spaghetti-plot.component";
-import { SunArcComponent } from "./components/sun-arc/sun-arc.component";
-import { TransitionPromptComponent } from "./components/transition-prompt/transition-prompt.component";
-import { UnitSelectorComponent } from "./components/unit-selector/unit-selector.component";
-import { UvIndexCardComponent } from "./components/uv-index-card/uv-index-card.component";
-import { WindCompassComponent } from "./components/wind-compass/wind-compass.component";
-import { BottomSheetComponent } from "../../shared/components/bottom-sheet/bottom-sheet.component";
-import { SlideInDirective } from "../../shared/directives/slide-in.directive";
-import { ChartSkeletonComponent } from "./components/skeleton/chart-skeleton.component";
-import { WeatherCardSkeletonComponent } from "./components/skeleton/weather-card-skeleton.component";
-import { GeolocationService } from "./services/geolocation.service";
-import { UnitPreferencesService } from "./services/unit-preferences.service";
-import { WeatherLevelService } from "./services/weather-level.service";
-import { extractErrorMessage } from "../../shared/utils/http-error.utils";
-import { weatherCodeToBackground } from "./utils/weather-code-background";
+} from '../../core/models/weather.model';
+import type { WeatherPort } from '../../core/ports/weather.port';
+import { WEATHER_PORT } from '../../core/ports/weather.port';
+import { AirQualityCardComponent } from './components/air-quality-card/air-quality-card.component';
+import { CapeCardComponent } from './components/cape-card/cape-card.component';
+import { CitySearchComponent } from './components/city-search/city-search.component';
+import { CloudVisibilityCardComponent } from './components/cloud-visibility-card/cloud-visibility-card.component';
+import { CurrentConditionsComponent } from './components/current-conditions/current-conditions.component';
+import { DayDetailPanelComponent } from './components/day-detail-panel/day-detail-panel.component';
+import { DataExportComponent } from './components/data-export/data-export.component';
+import { WeeklyOverviewComponent } from './components/weekly-overview/weekly-overview.component';
+import { FavoriteCitiesBarComponent } from './components/favorite-cities-bar/favorite-cities-bar.component';
+import { WeatherAlertsCardComponent } from './components/weather-alerts-card/weather-alerts-card.component';
+import { RadarMapComponent } from './components/radar-map/radar-map.component';
+import { HistoricalComparisonComponent } from './components/historical-comparison/historical-comparison.component';
+import { HourlyChartComponent } from './components/hourly-chart/hourly-chart.component';
+import { HumidityCardComponent } from './components/humidity-card/humidity-card.component';
+import { LevelSelectorComponent } from './components/level-selector/level-selector.component';
+import { ModelComparisonComponent } from './components/model-comparison/model-comparison.component';
+import { PressureCardComponent } from './components/pressure-card/pressure-card.component';
+import { SpaghettiPlotComponent } from './components/spaghetti-plot/spaghetti-plot.component';
+import { SunArcComponent } from './components/sun-arc/sun-arc.component';
+import { TransitionPromptComponent } from './components/transition-prompt/transition-prompt.component';
+import { UnitSelectorComponent } from './components/unit-selector/unit-selector.component';
+import { UvIndexCardComponent } from './components/uv-index-card/uv-index-card.component';
+import { WindCompassComponent } from './components/wind-compass/wind-compass.component';
+import { BottomSheetComponent } from '../../shared/components/bottom-sheet/bottom-sheet.component';
+import { SlideInDirective } from '../../shared/directives/slide-in.directive';
+import { ChartSkeletonComponent } from './components/skeleton/chart-skeleton.component';
+import { WeatherCardSkeletonComponent } from './components/skeleton/weather-card-skeleton.component';
+import { GeolocationService } from './services/geolocation.service';
+import { UnitPreferencesService } from './services/unit-preferences.service';
+import { WeatherLevelService } from './services/weather-level.service';
+import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import { weatherCodeToBackground } from './utils/weather-code-background';
 
 /**
  * Composant principal de l'application meteo.
@@ -66,7 +66,7 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
  * le systeme de niveaux et l'affichage des sous-composants.
  */
 @Component({
-  selector: "app-weather-app",
+  selector: 'app-weather-app',
   standalone: true,
   imports: [
     CommonModule,
@@ -98,8 +98,8 @@ import { weatherCodeToBackground } from "./utils/weather-code-background";
     ChartSkeletonComponent,
     WeatherCardSkeletonComponent,
   ],
-  templateUrl: "./weather-app.component.html",
-  styleUrl: "./weather-app.component.scss",
+  templateUrl: './weather-app.component.html',
+  styleUrl: './weather-app.component.scss',
   providers: [WeatherLevelService, UnitPreferencesService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -144,7 +144,7 @@ export class WeatherAppComponent implements OnInit {
   readonly forecastDays = signal<7 | 14>(7);
 
   /** Granularite de la vue d'ensemble hebdomadaire. */
-  readonly overviewGranularity = signal<OverviewGranularity>("day");
+  readonly overviewGranularity = signal<OverviewGranularity>('day');
 
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly destroyRef = inject(DestroyRef);
@@ -167,12 +167,12 @@ export class WeatherAppComponent implements OnInit {
   /** Classes CSS de gradient dynamique basees sur le code meteo courant. */
   readonly backgroundClasses = computed(() => {
     const data = this.forecast();
-    if (!data) return "";
+    if (!data) return '';
     return weatherCodeToBackground(data.current.weather_code);
   });
 
   /** Gradient precedent pour le crossfade de fond. */
-  readonly previousBackground = signal("");
+  readonly previousBackground = signal('');
 
   /** Indique que le fond est en transition (crossfade). */
   readonly backgroundTransitioning = signal(false);
@@ -181,9 +181,7 @@ export class WeatherAppComponent implements OnInit {
   readonly scrollY = signal(0);
 
   /** Offset parallax calcule a partir du scroll (max 60px). */
-  readonly parallaxOffset = computed(() =>
-    Math.min(Math.round(this.scrollY() * 0.15), 60),
-  );
+  readonly parallaxOffset = computed(() => Math.min(Math.round(this.scrollY() * 0.15), 60));
 
   /** Indique que le contenu est en transition lors d'un changement de ville. */
   readonly contentTransitioning = signal(false);
@@ -205,10 +203,8 @@ export class WeatherAppComponent implements OnInit {
     // Parallax : ecoute le scroll pour l'effet de fond (SSR-safe)
     if (this.isBrowser) {
       const handler = (): void => this.scrollY.set(window.scrollY);
-      window.addEventListener("scroll", handler, { passive: true });
-      this.destroyRef.onDestroy(() =>
-        window.removeEventListener("scroll", handler),
-      );
+      window.addEventListener('scroll', handler, { passive: true });
+      this.destroyRef.onDestroy(() => window.removeEventListener('scroll', handler));
     }
   }
 
@@ -247,12 +243,7 @@ export class WeatherAppComponent implements OnInit {
       });
 
     this.weatherService
-      .getForecast(
-        city.latitude,
-        city.longitude,
-        undefined,
-        this.forecastDays(),
-      )
+      .getForecast(city.latitude, city.longitude, undefined, this.forecastDays())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => {
@@ -269,7 +260,7 @@ export class WeatherAppComponent implements OnInit {
       });
 
     // Charge la qualite de l'air en parallele pour les niveaux Curieux+
-    if (this.levelService.level() !== "discovery") {
+    if (this.levelService.level() !== 'discovery') {
       this.weatherService
         .getAirQuality(city.latitude, city.longitude)
         .pipe(takeUntilDestroyed(this.destroyRef))
@@ -293,7 +284,7 @@ export class WeatherAppComponent implements OnInit {
     }
 
     // Charge les donnees Expert (ensemble + historique) pour le niveau expert
-    if (this.levelService.level() === "expert") {
+    if (this.levelService.level() === 'expert') {
       this.loadExpertData(city.latitude, city.longitude);
     }
   }
@@ -303,7 +294,7 @@ export class WeatherAppComponent implements OnInit {
     const city = this.selectedCity();
     if (!city) return;
 
-    if (level !== "discovery" && !this.airQuality()) {
+    if (level !== 'discovery' && !this.airQuality()) {
       this.weatherService
         .getAirQuality(city.latitude, city.longitude)
         .pipe(takeUntilDestroyed(this.destroyRef))
@@ -315,7 +306,7 @@ export class WeatherAppComponent implements OnInit {
         });
     }
 
-    if (level !== "discovery" && !this.detailedCurrent()) {
+    if (level !== 'discovery' && !this.detailedCurrent()) {
       if (city) {
         this.weatherService
           .getDetailedCurrent(city.latitude, city.longitude)
@@ -329,7 +320,7 @@ export class WeatherAppComponent implements OnInit {
       }
     }
 
-    if (level === "expert" && !this.ensemble()) {
+    if (level === 'expert' && !this.ensemble()) {
       this.loadExpertData(city.latitude, city.longitude);
     }
   }
@@ -342,7 +333,7 @@ export class WeatherAppComponent implements OnInit {
     const data = this.ensemble();
     if (!data) return null;
 
-    const gfs = data.models.find((m) => m.model === "GFS");
+    const gfs = data.models.find((m) => m.model === 'GFS');
     if (!gfs?.hourly.cape?.length) return null;
 
     return gfs.hourly.cape[0];
@@ -351,12 +342,7 @@ export class WeatherAppComponent implements OnInit {
   /** Ajoute une ville aux favoris et synchronise avec le backend. */
   addFavorite(city: FavoriteCity): void {
     const current = this.favoriteCities();
-    if (
-      current.some(
-        (c) => c.latitude === city.latitude && c.longitude === city.longitude,
-      )
-    )
-      return;
+    if (current.some((c) => c.latitude === city.latitude && c.longitude === city.longitude)) return;
     const updated = [...current, city];
     this.favoriteCities.set(updated);
     this.weatherService
@@ -443,14 +429,10 @@ export class WeatherAppComponent implements OnInit {
           this.favoriteCities.set(prefs.favoriteCities ?? []);
           this.unitService.loadFromPreferences(prefs);
           this.defaultCityIndex.set(prefs.defaultCityIndex ?? null);
-          this.overviewGranularity.set(prefs.overviewGranularity ?? "day");
+          this.overviewGranularity.set(prefs.overviewGranularity ?? 'day');
           // Chargement automatique de la ville par defaut
           const idx = prefs.defaultCityIndex;
-          if (
-            idx !== null &&
-            idx !== undefined &&
-            prefs.favoriteCities?.[idx]
-          ) {
+          if (idx !== null && idx !== undefined && prefs.favoriteCities?.[idx]) {
             const fav = prefs.favoriteCities[idx];
             this.onCitySelected({
               id: 0,
@@ -458,7 +440,7 @@ export class WeatherAppComponent implements OnInit {
               latitude: fav.latitude,
               longitude: fav.longitude,
               country: fav.country,
-              country_code: "",
+              country_code: '',
             });
           } else {
             // Pas de ville par defaut → tenter la geolocalisation automatique
@@ -488,7 +470,7 @@ export class WeatherAppComponent implements OnInit {
             map((name) => ({
               ...city,
               name: name ?? city.name,
-              country: name ? city.country : "",
+              country: name ? city.country : '',
             })),
           ),
         ),
@@ -534,15 +516,10 @@ export class WeatherAppComponent implements OnInit {
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 30);
 
-    const formatDate = (d: Date): string => d.toISOString().split("T")[0];
+    const formatDate = (d: Date): string => d.toISOString().split('T')[0];
 
     this.weatherService
-      .getHistorical(
-        latitude,
-        longitude,
-        formatDate(startDate),
-        formatDate(endDate),
-      )
+      .getHistorical(latitude, longitude, formatDate(startDate), formatDate(endDate))
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => this.historical.set(data),

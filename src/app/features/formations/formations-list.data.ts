@@ -36,7 +36,7 @@ export interface FormationCard {
    * Variante visuelle. `bonus` applique la bordure pointillée de la carte
    * toolkit ; `default` est une carte formation standard.
    */
-  variant: "default" | "bonus";
+  variant: 'default' | 'bonus';
 }
 
 /**
@@ -47,7 +47,7 @@ export interface FormationCard {
  * - `desc` : phrase de description.
  */
 export interface FormationBenefit {
-  icon: "interactive" | "screen" | "toolkit";
+  icon: 'interactive' | 'screen' | 'toolkit';
   title: string;
   desc: string;
 }
@@ -62,7 +62,7 @@ export interface FormationBenefit {
  */
 export const FORMATIONS: readonly FormationCard[] = [
   {
-    link: "/formations/ia-solopreneurs",
+    link: '/formations/ia-solopreneurs',
     badge: $localize`:@@formations-list.ia-solo.badge:Gratuit · 17 slides`,
     title: $localize`:@@formations-list.ia-solo.title:L'IA au service des solopreneurs`,
     description: $localize`:@@formations-list.ia-solo.description:16 outils IA triés, un cas pratique en live : on trie le bullshit du vraiment utile. De quoi repartir avec une boîte à outils claire, pas une liste de hype.`,
@@ -82,10 +82,10 @@ export const FORMATIONS: readonly FormationCard[] = [
     ],
     price: $localize`:@@formations-list.price.free:Gratuit`,
     cta: $localize`:@@formations-list.cta.view:Consulter`,
-    variant: "default",
+    variant: 'default',
   },
   {
-    link: "/formations/automatiser-avec-ia",
+    link: '/formations/automatiser-avec-ia',
     badge: $localize`:@@formations-list.auto-ia.badge:Gratuit · 13 slides`,
     title: $localize`:@@formations-list.auto-ia.title:Automatiser avec l'IA — 5 workflows pour non-tech`,
     description: $localize`:@@formations-list.auto-ia.description:5 workflows testés sans coder — devis, emails, réseaux, factures, veille — pour récupérer environ 2h par jour. Concrets, reproductibles, applicables tout de suite.`,
@@ -105,10 +105,10 @@ export const FORMATIONS: readonly FormationCard[] = [
     ],
     price: $localize`:@@formations-list.price.free:Gratuit`,
     cta: $localize`:@@formations-list.cta.view:Consulter`,
-    variant: "default",
+    variant: 'default',
   },
   {
-    link: "/formations/audit-seo-diy",
+    link: '/formations/audit-seo-diy',
     badge: $localize`:@@formations-list.audit-seo.badge:Gratuit · 14 slides`,
     title: $localize`:@@formations-list.audit-seo.title:Audit SEO DIY — 7 points en 20 minutes`,
     description: $localize`:@@formations-list.audit-seo.description:7 checks SEO concrets avec 5 outils gratuits, pour savoir si Google trouve votre site — et corriger vous-même ce qui coince.`,
@@ -128,10 +128,10 @@ export const FORMATIONS: readonly FormationCard[] = [
     ],
     price: $localize`:@@formations-list.price.free:Gratuit`,
     cta: $localize`:@@formations-list.cta.view:Consulter`,
-    variant: "default",
+    variant: 'default',
   },
   {
-    link: "/formations/ia-solopreneurs/toolkit",
+    link: '/formations/ia-solopreneurs/toolkit',
     badge: $localize`:@@formations-list.toolkit.badge:Bonus`,
     title: $localize`:@@formations-list.toolkit.title:Le toolkit à emporter`,
     description: $localize`:@@formations-list.toolkit.description:Chaque formation s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.`,
@@ -147,7 +147,7 @@ export const FORMATIONS: readonly FormationCard[] = [
     ],
     price: $localize`:@@formations-list.price.offered:Offert`,
     cta: $localize`:@@formations-list.cta.toolkit:Recevoir le toolkit`,
-    variant: "bonus",
+    variant: 'bonus',
   },
 ];
 
@@ -158,17 +158,17 @@ export const FORMATIONS: readonly FormationCard[] = [
  */
 export const FORMATION_BENEFITS: readonly FormationBenefit[] = [
   {
-    icon: "interactive",
+    icon: 'interactive',
     title: $localize`:@@formations-list.benefit.interactive.title:Interactif`,
     desc: $localize`:@@formations-list.benefit.interactive.desc:Des quiz et des sondages ponctuent chaque formation : on participe au lieu de subir.`,
   },
   {
-    icon: "screen",
+    icon: 'screen',
     title: $localize`:@@formations-list.benefit.screen.title:En ligne ou projeté`,
     desc: $localize`:@@formations-list.benefit.screen.desc:À consulter tranquillement chez soi, ou à projeter en présentation devant une équipe.`,
   },
   {
-    icon: "toolkit",
+    icon: 'toolkit',
     title: $localize`:@@formations-list.benefit.toolkit.title:Un toolkit à emporter`,
     desc: $localize`:@@formations-list.benefit.toolkit.desc:Chaque session se termine par un PDF actionnable, pour passer de l'écoute à la pratique.`,
   },

@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,22 +6,22 @@ import {
   computed,
   inject,
   signal,
-} from "@angular/core";
-import { RouterLink } from "@angular/router";
-import { AsiliCtaBandComponent } from "../../shared/sections";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
-import { animateValue } from "../../shared/utils/animate-value";
+} from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { AsiliCtaBandComponent } from '../../shared/sections';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { animateValue } from '../../shared/utils/animate-value';
 import {
   createMeteoCities,
   needleTransform,
   sunDot,
   type DemoCity,
-} from "../../shared/demos/meteo-demo";
+} from '../../shared/demos/meteo-demo';
 import {
   buildDeterministicHeatmap,
   buildRandomHeatmap,
   gaugeOffset,
-} from "../../shared/demos/sebastian-gauge";
+} from '../../shared/demos/sebastian-gauge';
 
 /**
  * Page hub de l'Atelier (`/atelier`) — le « bac a sable ».
@@ -46,11 +46,11 @@ import {
  * IDs `@@atelier*`) ; la traduction EN vit dans les XLF.
  */
 @Component({
-  selector: "app-atelier",
+  selector: 'app-atelier',
   standalone: true,
   imports: [RouterLink, RevealOnScrollDirective, AsiliCtaBandComponent],
-  templateUrl: "./atelier.component.html",
-  styleUrl: "./atelier.component.scss",
+  templateUrl: './atelier.component.html',
+  styleUrl: './atelier.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AtelierComponent {
@@ -103,18 +103,15 @@ export class AtelierComponent {
   });
 
   /** Identifiant de la ville actuellement selectionnee. */
-  protected readonly activeCityId = signal<string>("bordeaux");
+  protected readonly activeCityId = signal<string>('bordeaux');
 
   /** Ville selectionnee, derivee de `activeCityId`. */
   protected readonly city = computed<DemoCity>(
-    () =>
-      this.cities.find((c) => c.id === this.activeCityId()) ?? this.cities[0],
+    () => this.cities.find((c) => c.id === this.activeCityId()) ?? this.cities[0],
   );
 
   /** Transformation SVG de l'aiguille de la boussole selon la direction du vent. */
-  protected readonly needleTransform = computed(() =>
-    needleTransform(this.city().windDeg),
-  );
+  protected readonly needleTransform = computed(() => needleTransform(this.city().windDeg));
 
   /** Coordonnees (cx, cy) du soleil sur l'arc selon la progression `sun`. */
   protected readonly sunDot = computed(() => sunDot(this.city().sun));
@@ -137,9 +134,7 @@ export class AtelierComponent {
   protected readonly gaugeValue = signal<number>(this.healthTarget);
 
   /** `stroke-dashoffset` de la jauge derive de `gaugeValue`. */
-  protected readonly gaugeOffset = computed(() =>
-    gaugeOffset(this.gaugeValue()),
-  );
+  protected readonly gaugeOffset = computed(() => gaugeOffset(this.gaugeValue()));
 
   /**
    * Heatmap d'activite Sebastian sur 28 jours (4 semaines × 7).

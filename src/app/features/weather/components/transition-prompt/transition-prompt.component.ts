@@ -1,10 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from "@angular/core";
-import { WeatherLevelService } from "../../services/weather-level.service";
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { WeatherLevelService } from '../../services/weather-level.service';
 
 /**
  * Banniere de suggestion de transition de niveau.
@@ -13,9 +8,9 @@ import { WeatherLevelService } from "../../services/weather-level.service";
  * Permet d'activer le nouveau niveau ou de fermer la banniere.
  */
 @Component({
-  selector: "app-transition-prompt",
+  selector: 'app-transition-prompt',
   standalone: true,
-  host: { class: "block" },
+  host: { class: 'block' },
   template: `
     <!--
       Invite de transition de niveau — re-skin Asili : carte glass .gp
@@ -82,13 +77,13 @@ export class TransitionPromptComponent {
   /** Label du bouton d'activation, localise selon le niveau suggere. */
   get activateLabel(): string {
     const next = this.levelService.showTransitionPrompt();
-    if (next === "curious") {
+    if (next === 'curious') {
       return $localize`:weather.transition.activate.curious|@@weatherTransitionActivateCurious:Activer le mode Curieux`;
     }
-    if (next === "expert") {
+    if (next === 'expert') {
       return $localize`:weather.transition.activate.expert|@@weatherTransitionActivateExpert:Activer le mode Expert`;
     }
-    return "";
+    return '';
   }
 
   /** Label d'accessibilite du bouton de fermeture. */

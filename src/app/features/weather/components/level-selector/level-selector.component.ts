@@ -1,13 +1,7 @@
-import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  output,
-} from "@angular/core";
-import type { WeatherLevel } from "../../../../core/models/weather.model";
-import { WeatherLevelService } from "../../services/weather-level.service";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import type { WeatherLevel } from '../../../../core/models/weather.model';
+import { WeatherLevelService } from '../../services/weather-level.service';
 
 /** Definition d'un onglet de niveau pour le selecteur. */
 interface LevelTab {
@@ -21,7 +15,7 @@ interface LevelTab {
  * en glassmorphism. Emet le changement de niveau.
  */
 @Component({
-  selector: "app-level-selector",
+  selector: 'app-level-selector',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -81,15 +75,15 @@ export class LevelSelectorComponent {
   /** Liste des niveaux disponibles avec leurs labels localises. */
   readonly levels: LevelTab[] = [
     {
-      value: "discovery",
+      value: 'discovery',
       label: $localize`:weather.level.discovery|@@weatherLevelDiscovery:Découverte`,
     },
     {
-      value: "curious",
+      value: 'curious',
       label: $localize`:weather.level.curious|@@weatherLevelCurious:Curieux`,
     },
     {
-      value: "expert",
+      value: 'expert',
       label: $localize`:weather.level.expert|@@weatherLevelExpert:Expert`,
     },
   ];

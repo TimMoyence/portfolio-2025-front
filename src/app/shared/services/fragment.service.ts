@@ -1,4 +1,4 @@
-import { computed, Injectable, signal, type Signal } from "@angular/core";
+import { computed, Injectable, signal, type Signal } from '@angular/core';
 
 /**
  * Service de gestion des fragments d'une slide de presentation.
@@ -16,9 +16,7 @@ export class FragmentService {
   readonly visibleCount: Signal<number> = this._visibleCount.asReadonly();
 
   /** True si tous les fragments sont reveles. */
-  readonly isComplete: Signal<boolean> = computed(
-    () => this._visibleCount() >= this._total(),
-  );
+  readonly isComplete: Signal<boolean> = computed(() => this._visibleCount() >= this._total());
 
   /**
    * Initialise le service pour une slide contenant `total` fragments.

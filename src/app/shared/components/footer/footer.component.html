@@ -58,9 +58,7 @@
                     >{{ link.label }}</a
                   >
                 } @else {
-                  <a class="asili-footer__link" [routerLink]="link.href">{{
-                    link.label
-                  }}</a>
+                  <a class="asili-footer__link" [routerLink]="link.href">{{ link.label }}</a>
                 }
               </li>
             }
@@ -70,11 +68,7 @@
     </div>
 
     <!-- P2.11 : adresse postale visible + structuree pour SEO local Bordeaux -->
-    <address
-      class="asili-footer__address"
-      itemscope
-      itemtype="https://schema.org/LocalBusiness"
-    >
+    <address class="asili-footer__address" itemscope itemtype="https://schema.org/LocalBusiness">
       <meta itemprop="name" content="Asili Design" />
       <span
         class="asili-footer__address-line"
@@ -88,24 +82,18 @@
         <span itemprop="addressCountry">France</span>
       </span>
       @for (method of contactMethods; track $index) {
-        <span
-          class="asili-footer__address-line"
-          [attr.data-testid]="'contact-method-' + $index"
-        >
+        <span class="asili-footer__address-line" [attr.data-testid]="'contact-method-' + $index">
           @if (method.href) {
             <a
               [href]="method.href"
               [attr.aria-label]="method.label + ': ' + method.value"
               i18n-aria-label="
-                contact.method.linkAria|Aria label for contact method
-                link@@contactMethodLinkAria"
+                contact.method.linkAria|Aria label for contact method link@@contactMethodLinkAria"
               [attr.itemprop]="method.schemaProp || null"
               >{{ method.value }}</a
             >
           } @else {
-            <span [attr.itemprop]="method.schemaProp || null">{{
-              method.value
-            }}</span>
+            <span [attr.itemprop]="method.schemaProp || null">{{ method.value }}</span>
           }
         </span>
       }

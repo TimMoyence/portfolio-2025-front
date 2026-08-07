@@ -1,17 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from "@angular/core";
-import type { SebastianBadgeStatus } from "../../../core/models/sebastian.model";
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import type { SebastianBadgeStatus } from '../../../core/models/sebastian.model';
 
 /**
  * Carte affichant un badge Sebastian.
  * Affiche le badge en couleur s'il est debloque, en grise sinon.
  */
 @Component({
-  selector: "app-sebastian-badge-card",
+  selector: 'app-sebastian-badge-card',
   standalone: true,
   template: `
     <!--
@@ -73,17 +68,15 @@ export class SebastianBadgeCardComponent {
   readonly badge = input.required<SebastianBadgeStatus>();
 
   /** Chemin vers l'icone PNG du badge. */
-  readonly iconPath = computed(
-    () => `assets/icons/badges/${this.badge().key}.png`,
-  );
+  readonly iconPath = computed(() => `assets/icons/badges/${this.badge().key}.png`);
 
   /** Date de deblocage formatee en dd/MM/yyyy. */
   readonly formattedDate = computed(() => {
     const raw = this.badge().unlockedAt;
-    if (!raw) return "";
+    if (!raw) return '';
     const d = new Date(raw);
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
   });

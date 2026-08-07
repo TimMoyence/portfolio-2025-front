@@ -8,25 +8,23 @@ import type {
   SebastianProfile,
   SebastianStats,
   SebastianTrendData,
-} from "../../app/core/models/sebastian.model";
-import type { SebastianPort } from "../../app/core/ports/sebastian.port";
+} from '../../app/core/models/sebastian.model';
+import type { SebastianPort } from '../../app/core/ports/sebastian.port';
 
 /**
  * Construit un objet SebastianEntry avec des valeurs par defaut.
  * Accepte des surcharges partielles pour les cas de test specifiques.
  */
-export function buildSebastianEntry(
-  overrides?: Partial<SebastianEntry>,
-): SebastianEntry {
+export function buildSebastianEntry(overrides?: Partial<SebastianEntry>): SebastianEntry {
   return {
-    id: "entry-1",
-    userId: "user-1",
-    category: "coffee",
+    id: 'entry-1',
+    userId: 'user-1',
+    category: 'coffee',
     quantity: 1,
-    unit: "cup",
-    date: "2026-04-04",
+    unit: 'cup',
+    date: '2026-04-04',
     notes: null,
-    createdAt: "2026-04-04T08:00:00.000Z",
+    createdAt: '2026-04-04T08:00:00.000Z',
     drinkType: null,
     alcoholDegree: null,
     volumeCl: null,
@@ -39,17 +37,15 @@ export function buildSebastianEntry(
  * Construit un objet SebastianGoal avec des valeurs par defaut.
  * Accepte des surcharges partielles pour les cas de test specifiques.
  */
-export function buildSebastianGoal(
-  overrides?: Partial<SebastianGoal>,
-): SebastianGoal {
+export function buildSebastianGoal(overrides?: Partial<SebastianGoal>): SebastianGoal {
   return {
-    id: "goal-1",
-    userId: "user-1",
-    category: "coffee",
+    id: 'goal-1',
+    userId: 'user-1',
+    category: 'coffee',
     targetQuantity: 3,
-    period: "daily",
+    period: 'daily',
     isActive: true,
-    createdAt: "2026-04-01T00:00:00.000Z",
+    createdAt: '2026-04-01T00:00:00.000Z',
     ...overrides,
   };
 }
@@ -58,20 +54,18 @@ export function buildSebastianGoal(
  * Construit un objet SebastianStats avec des valeurs par defaut.
  * Accepte des surcharges partielles pour les cas de test specifiques.
  */
-export function buildSebastianStats(
-  overrides?: Partial<SebastianStats>,
-): SebastianStats {
+export function buildSebastianStats(overrides?: Partial<SebastianStats>): SebastianStats {
   return {
-    period: "week",
+    period: 'week',
     byCategory: [
       {
-        category: "coffee",
+        category: 'coffee',
         total: 14,
         average: 2,
         trend: -10,
       },
       {
-        category: "alcohol",
+        category: 'alcohol',
         total: 4,
         average: 0.57,
         trend: 5,
@@ -89,10 +83,10 @@ export function buildSebastianTrendData(
   overrides?: Partial<SebastianTrendData>,
 ): SebastianTrendData {
   return {
-    period: "7d",
+    period: '7d',
     dataPoints: [
-      { date: "2026-03-30", alcohol: 1, coffee: 2 },
-      { date: "2026-03-31", alcohol: 0, coffee: 3 },
+      { date: '2026-03-30', alcohol: 1, coffee: 2 },
+      { date: '2026-03-31', alcohol: 0, coffee: 3 },
     ],
     objectives: { alcohol: 2, coffee: 3 },
     summary: { avgAlcohol: 0.5, avgCoffee: 2.5 },
@@ -112,7 +106,7 @@ export function buildSebastianHealthScore(
     phase: 2,
     breakdown: { goalAdherence: 60, trendBonus: 8, streakBonus: 4 },
     streaks: { alcohol: 3, coffee: 5 },
-    message: "Bonne progression, continuez !",
+    message: 'Bonne progression, continuez !',
     ...overrides,
   };
 }
@@ -125,12 +119,12 @@ export function buildSebastianBadgeStatus(
   overrides?: Partial<SebastianBadgeStatus>,
 ): SebastianBadgeStatus {
   return {
-    key: "first-entry",
-    name: "Premiere entree",
-    description: "Enregistrer sa premiere consommation",
-    category: "onboarding",
+    key: 'first-entry',
+    name: 'Premiere entree',
+    description: 'Enregistrer sa premiere consommation',
+    category: 'onboarding',
     unlocked: true,
-    unlockedAt: "2026-04-01T10:00:00.000Z",
+    unlockedAt: '2026-04-01T10:00:00.000Z',
     ...overrides,
   };
 }
@@ -143,16 +137,16 @@ export function buildSebastianPeriodReport(
   overrides?: Partial<SebastianPeriodReport>,
 ): SebastianPeriodReport {
   return {
-    period: "week",
-    startDate: "2026-03-30",
-    endDate: "2026-04-05",
+    period: 'week',
+    startDate: '2026-03-30',
+    endDate: '2026-04-05',
     totals: { alcohol: 4, coffee: 14 },
     dailyAvg: { alcohol: 0.57, coffee: 2 },
-    best: { date: "2026-04-01", score: 90 },
-    worst: { date: "2026-04-03", score: 45 },
+    best: { date: '2026-04-01', score: 90 },
+    worst: { date: '2026-04-03', score: 45 },
     comparison: { alcoholDelta: -10, coffeeDelta: 5 },
     distribution: [{ dayOfWeek: 1, alcohol: 1, coffee: 2 }],
-    heatmap: [{ date: "2026-03-30", alcohol: 1, coffee: 2, combined: 3 }],
+    heatmap: [{ date: '2026-03-30', alcohol: 1, coffee: 2, combined: 3 }],
     ...overrides,
   };
 }
@@ -161,25 +155,22 @@ export function buildSebastianPeriodReport(
  * Cree un stub complet du port Sebastian avec des spies Jasmine.
  * Chaque methode est un spy independant, non configure par defaut.
  */
-export function createSebastianPortStub(): Record<
-  keyof SebastianPort,
-  jasmine.Spy
-> {
+export function createSebastianPortStub(): Record<keyof SebastianPort, jasmine.Spy> {
   return {
-    addEntry: jasmine.createSpy("addEntry"),
-    getEntries: jasmine.createSpy("getEntries"),
-    deleteEntry: jasmine.createSpy("deleteEntry"),
-    getStats: jasmine.createSpy("getStats"),
-    setGoal: jasmine.createSpy("setGoal"),
-    getGoals: jasmine.createSpy("getGoals"),
-    deleteGoal: jasmine.createSpy("deleteGoal"),
-    getTrends: jasmine.createSpy("getTrends"),
-    getHealthScore: jasmine.createSpy("getHealthScore"),
-    getBadges: jasmine.createSpy("getBadges"),
-    getPeriodReport: jasmine.createSpy("getPeriodReport"),
-    getBac: jasmine.createSpy("getBac"),
-    getProfile: jasmine.createSpy("getProfile"),
-    setProfile: jasmine.createSpy("setProfile"),
+    addEntry: jasmine.createSpy('addEntry'),
+    getEntries: jasmine.createSpy('getEntries'),
+    deleteEntry: jasmine.createSpy('deleteEntry'),
+    getStats: jasmine.createSpy('getStats'),
+    setGoal: jasmine.createSpy('setGoal'),
+    getGoals: jasmine.createSpy('getGoals'),
+    deleteGoal: jasmine.createSpy('deleteGoal'),
+    getTrends: jasmine.createSpy('getTrends'),
+    getHealthScore: jasmine.createSpy('getHealthScore'),
+    getBadges: jasmine.createSpy('getBadges'),
+    getPeriodReport: jasmine.createSpy('getPeriodReport'),
+    getBac: jasmine.createSpy('getBac'),
+    getProfile: jasmine.createSpy('getProfile'),
+    setProfile: jasmine.createSpy('setProfile'),
   };
 }
 
@@ -193,11 +184,11 @@ export function buildSebastianBacResult(
   return {
     currentBac: 0.15,
     curve: [
-      { time: "2026-04-06T18:00:00.000Z", bac: 0.0 },
-      { time: "2026-04-06T18:15:00.000Z", bac: 0.21 },
-      { time: "2026-04-06T18:30:00.000Z", bac: 0.17 },
+      { time: '2026-04-06T18:00:00.000Z', bac: 0.0 },
+      { time: '2026-04-06T18:15:00.000Z', bac: 0.21 },
+      { time: '2026-04-06T18:30:00.000Z', bac: 0.17 },
     ],
-    estimatedSoberAt: "2026-04-06T19:30:00.000Z",
+    estimatedSoberAt: '2026-04-06T19:30:00.000Z',
     legalLimit: 0.5,
     ...overrides,
   };
@@ -207,9 +198,7 @@ export function buildSebastianBacResult(
  * Construit un objet SebastianProfile avec des valeurs par defaut.
  * Accepte des surcharges partielles pour les cas de test specifiques.
  */
-export function buildSebastianProfile(
-  overrides?: Partial<SebastianProfile>,
-): SebastianProfile {
+export function buildSebastianProfile(overrides?: Partial<SebastianProfile>): SebastianProfile {
   return {
     weightKg: 70,
     widmarkR: 0.68,

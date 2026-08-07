@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
-import { SlideVideoComponent } from "./slide-video.component";
+import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { SlideVideoComponent } from './slide-video.component';
 
 @Component({
   standalone: true,
@@ -45,57 +45,51 @@ class HostNocookieComponent {}
   standalone: true,
   imports: [SlideVideoComponent],
   template: `
-    <app-slide-video
-      src="https://evil.example/x"
-      type="iframe"
-      caption="Hôte non autorisé"
-    />
+    <app-slide-video src="https://evil.example/x" type="iframe" caption="Hôte non autorisé" />
   `,
 })
 class HostEvilComponent {}
 
-describe("SlideVideoComponent", () => {
-  it("rend une balise <video> en mode natif", () => {
+describe('SlideVideoComponent', () => {
+  it('rend une balise <video> en mode natif', () => {
     const fixture = TestBed.createComponent(HostNativeComponent);
     fixture.detectChanges();
-    const video = fixture.nativeElement.querySelector("video");
+    const video = fixture.nativeElement.querySelector('video');
     expect(video).toBeTruthy();
-    expect(video.getAttribute("poster")).toBe("/images/demo-poster.webp");
+    expect(video.getAttribute('poster')).toBe('/images/demo-poster.webp');
   });
 
-  it("rend une iframe quand type=iframe", () => {
+  it('rend une iframe quand type=iframe', () => {
     const fixture = TestBed.createComponent(HostIframeComponent);
     fixture.detectChanges();
-    const iframe = fixture.nativeElement.querySelector("iframe");
+    const iframe = fixture.nativeElement.querySelector('iframe');
     expect(iframe).toBeTruthy();
-    expect(iframe.getAttribute("src")).toContain("youtube.com");
+    expect(iframe.getAttribute('src')).toContain('youtube.com');
   });
 
-  it("rend la source pour un hôte autorisé (youtube-nocookie)", () => {
+  it('rend la source pour un hôte autorisé (youtube-nocookie)', () => {
     const fixture = TestBed.createComponent(HostNocookieComponent);
     fixture.detectChanges();
-    const iframe = fixture.nativeElement.querySelector("iframe");
+    const iframe = fixture.nativeElement.querySelector('iframe');
     expect(iframe).toBeTruthy();
-    expect(iframe.getAttribute("src")).toContain("youtube-nocookie.com");
+    expect(iframe.getAttribute('src')).toContain('youtube-nocookie.com');
   });
 
-  it("neutralise la source pour un hôte non autorisé (defense en profondeur)", () => {
+  it('neutralise la source pour un hôte non autorisé (defense en profondeur)', () => {
     const fixture = TestBed.createComponent(HostEvilComponent);
     fixture.detectChanges();
-    const iframe = fixture.nativeElement.querySelector("iframe");
+    const iframe = fixture.nativeElement.querySelector('iframe');
     expect(iframe).toBeTruthy();
     // L'hôte hors allowlist produit une source vide/neutre — jamais l'URL brute.
-    const src = iframe.getAttribute("src") ?? "";
-    expect(src).not.toContain("evil.example");
-    expect(src).toBe("");
+    const src = iframe.getAttribute('src') ?? '';
+    expect(src).not.toContain('evil.example');
+    expect(src).toBe('');
   });
 
-  it("affiche la caption sous la vidéo", () => {
+  it('affiche la caption sous la vidéo', () => {
     const fixture = TestBed.createComponent(HostNativeComponent);
     fixture.detectChanges();
-    const caption = fixture.nativeElement.querySelector(
-      ".slide-video__caption",
-    );
-    expect(caption.textContent).toContain("Démonstration outil IA");
+    const caption = fixture.nativeElement.querySelector('.slide-video__caption');
+    expect(caption.textContent).toContain('Démonstration outil IA');
   });
 });

@@ -20,7 +20,7 @@ const CSP_REPORT_ONLY = [
   "script-src 'self' https://plausible.io https://accounts.google.com https://apis.google.com",
   "connect-src 'self' https://plausible.io https://nominatim.openstreetmap.org https://api.rainviewer.com",
   "font-src 'self' data:",
-].join("; ");
+].join('; ');
 
 /** Options de construction des headers de securite. */
 export interface SecurityHeadersOptions {
@@ -38,19 +38,16 @@ export interface SecurityHeadersOptions {
  * @param opts Options de construction (notamment `isHttps`).
  * @returns Un dictionnaire nom de header -> valeur, pret a etre applique.
  */
-export const buildSecurityHeaders = (
-  opts: SecurityHeadersOptions,
-): Record<string, string> => {
+export const buildSecurityHeaders = (opts: SecurityHeadersOptions): Record<string, string> => {
   const headers: Record<string, string> = {
-    "X-Frame-Options": "SAMEORIGIN",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy": "camera=(), microphone=(), geolocation=(self)",
-    "Content-Security-Policy-Report-Only": CSP_REPORT_ONLY,
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self)',
+    'Content-Security-Policy-Report-Only': CSP_REPORT_ONLY,
   };
 
   if (opts.isHttps) {
-    headers["Strict-Transport-Security"] =
-      "max-age=63072000; includeSubDomains";
+    headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains';
   }
 
   return headers;

@@ -36,20 +36,12 @@
   padding: clamp(32px, 4vw, 56px);
 }
 .auth-aside::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(
-      70% 50% at 15% 0%,
-      rgba(var(--teal-rgb), 0.2),
-      transparent 60%
-    ),
-    radial-gradient(
-      70% 60% at 95% 100%,
-      rgba(91, 140, 255, 0.22),
-      transparent 62%
-    );
+    radial-gradient(70% 50% at 15% 0%, rgba(var(--teal-rgb), 0.2), transparent 60%),
+    radial-gradient(70% 60% at 95% 100%, rgba(91, 140, 255, 0.22), transparent 62%);
   pointer-events: none;
 }
 .auth-aside > * {
@@ -186,7 +178,7 @@ h1 em {
 }
 .auth-or::before,
 .auth-or::after {
-  content: "";
+  content: '';
   flex: 1;
   height: 1px;
   background: var(--line);

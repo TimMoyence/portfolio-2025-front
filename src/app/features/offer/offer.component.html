@@ -34,12 +34,7 @@
   <div class="wrap">
     <div class="modes">
       @for (mode of modes; track mode.num) {
-        <a
-          class="mode"
-          [routerLink]="mode.link"
-          appReveal
-          [appRevealDelay]="mode.revealDelay"
-        >
+        <a class="mode" [routerLink]="mode.link" appReveal [appRevealDelay]="mode.revealDelay">
           <span class="mode-n">{{ mode.num }}</span>
           <h3>{{ mode.title }}</h3>
           <p>{{ mode.desc }}</p>
@@ -61,15 +56,9 @@
 </section>
 
 <!-- ===================== MÉTHODE ===================== -->
-<app-asili-method
-  [steps]="methodSteps"
-  [kicker]="methodKicker"
-  [intro]="methodIntro"
->
+<app-asili-method [steps]="methodSteps" [kicker]="methodKicker" [intro]="methodIntro">
   <h2 heading class="h-lg">
-    <ng-container i18n="@@offerMethodHeading"
-      >Comment on avance,<br />concrètement.</ng-container
-    >
+    <ng-container i18n="@@offerMethodHeading">Comment on avance,<br />concrètement.</ng-container>
   </h2>
 </app-asili-method>
 
@@ -79,9 +68,7 @@
     <div class="sec-head" appReveal>
       <div>
         <span class="kicker">{{ diffKicker }}</span>
-        <h2 class="h-lg" i18n="@@offerDiffHeading">
-          Trois engagements<br />qui changent tout.
-        </h2>
+        <h2 class="h-lg" i18n="@@offerDiffHeading">Trois engagements<br />qui changent tout.</h2>
       </div>
     </div>
     <div class="diff-grid">

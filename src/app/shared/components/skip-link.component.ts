@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: "app-skip-link",
+  selector: 'app-skip-link',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -22,9 +22,9 @@ import { CommonModule } from "@angular/common";
   styles: [
     `
       :host {
-        --skip-bg: theme("colors.scheme-surface");
-        --skip-text: theme("colors.scheme-text");
-        --skip-ring: theme("colors.scheme-accent");
+        --skip-bg: theme('colors.scheme-surface');
+        --skip-text: theme('colors.scheme-text');
+        --skip-ring: theme('colors.scheme-accent');
       }
 
       .skip-link {

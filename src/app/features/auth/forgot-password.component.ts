@@ -1,22 +1,17 @@
-import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-} from "@angular/core";
-import type { NgForm } from "@angular/forms";
-import { FormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
-import type { AuthPort } from "../../core/ports/auth.port";
-import { AUTH_PORT } from "../../core/ports/auth.port";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
-import { AuthShellComponent } from "../../shared/components/auth-shell/auth-shell.component";
-import { AuthSuccessComponent } from "../../shared/components/auth-success/auth-success.component";
-import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import type { AuthPort } from '../../core/ports/auth.port';
+import { AUTH_PORT } from '../../core/ports/auth.port';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
+import { AuthSuccessComponent } from '../../shared/components/auth-success/auth-success.component';
+import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 
 @Component({
-  selector: "app-forgot-password",
+  selector: 'app-forgot-password',
   standalone: true,
   imports: [
     CommonModule,
@@ -26,15 +21,15 @@ import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
     AuthShellComponent,
     AuthSuccessComponent,
   ],
-  templateUrl: "./forgot-password.component.html",
-  styleUrl: "./forgot-password.component.scss",
+  templateUrl: './forgot-password.component.html',
+  styleUrl: './forgot-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForgotPasswordComponent {
   private readonly authService: AuthPort = inject(AUTH_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  email = "";
+  email = '';
   submitted = false;
   isLoading = false;
   successMessage?: string;
@@ -56,8 +51,8 @@ export class ForgotPasswordComponent {
         fallbackError: $localize`:auth.forgot.error.generic@@authForgotErrorGeneric:Impossible d'envoyer le lien pour le moment.`,
         onSuccess: (result) => {
           this.successMessage = result.message;
-          this.email = "";
-          form.resetForm({ email: "" });
+          this.email = '';
+          form.resetForm({ email: '' });
           this.submitted = false;
         },
         onError: (message) => {

@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,21 +8,18 @@ import {
   LOCALE_ID,
   output,
   signal,
-} from "@angular/core";
+} from '@angular/core';
 import type {
   DailyForecast,
   HourlyForecast,
   OverviewGranularity,
   WeatherLevel,
-} from "../../../../core/models/weather.model";
-import { UnitPipe } from "../../pipes/unit.pipe";
-import { clamp } from "../../../../shared/utils/math.utils";
-import { UnitPreferencesService } from "../../services/unit-preferences.service";
-import {
-  groupHourlyByGranularity,
-  type WeatherTimeSlot,
-} from "../../utils/weekly-overview";
-import { weatherCodeToIcon } from "../../utils/weather-icons";
+} from '../../../../core/models/weather.model';
+import { UnitPipe } from '../../pipes/unit.pipe';
+import { clamp } from '../../../../shared/utils/math.utils';
+import { UnitPreferencesService } from '../../services/unit-preferences.service';
+import { groupHourlyByGranularity, type WeatherTimeSlot } from '../../utils/weekly-overview';
+import { weatherCodeToIcon } from '../../utils/weather-icons';
 
 /** Ligne affichee dans le tableau pour le mode "day". */
 interface DayRow {
@@ -50,10 +47,10 @@ interface SlotGroup {
  * Colonnes progressives selon le niveau (discovery → curious → expert).
  */
 @Component({
-  selector: "app-weekly-overview",
+  selector: 'app-weekly-overview',
   standalone: true,
   imports: [CommonModule, UnitPipe],
-  templateUrl: "./weekly-overview.component.html",
+  templateUrl: './weekly-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeeklyOverviewComponent {
@@ -64,38 +61,35 @@ export class WeeklyOverviewComponent {
   readonly daily = input<DailyForecast | null>(null);
 
   /** Niveau d'experience de l'utilisateur. */
-  readonly level = input<WeatherLevel>("discovery");
+  readonly level = input<WeatherLevel>('discovery');
 
   /** Granularite initiale (synchronisee depuis les preferences). */
-  readonly initialGranularity = input<OverviewGranularity>("day");
+  readonly initialGranularity = input<OverviewGranularity>('day');
 
   /** Emis quand l'utilisateur change la granularite. */
   readonly granularityChange = output<OverviewGranularity>();
 
   /** Granularite actuelle selectionnee. */
-  readonly granularity = signal<OverviewGranularity>("day");
+  readonly granularity = signal<OverviewGranularity>('day');
 
   readonly unitService = inject(UnitPreferencesService);
   private readonly localeId = inject(LOCALE_ID);
 
   /** Options de granularite. */
-  readonly granularityOptions: { value: OverviewGranularity; label: string }[] =
-    [
-      { value: "day", label: "Jour" },
-      { value: "3h", label: "3h" },
-      { value: "1h", label: "1h" },
-    ];
+  readonly granularityOptions: { value: OverviewGranularity; label: string }[] = [
+    { value: 'day', label: 'Jour' },
+    { value: '3h', label: '3h' },
+    { value: '1h', label: '1h' },
+  ];
 
   /** Expose weatherCodeToIcon pour le template. */
   readonly weatherCodeToIcon = weatherCodeToIcon;
 
   /** Niveau curious ou expert. */
-  readonly isCurious = computed(
-    () => this.level() === "curious" || this.level() === "expert",
-  );
+  readonly isCurious = computed(() => this.level() === 'curious' || this.level() === 'expert');
 
   /** Niveau expert. */
-  readonly isExpert = computed(() => this.level() === "expert");
+  readonly isExpert = computed(() => this.level() === 'expert');
 
   /** Creneaux horaires groupes (pour modes 3h/1h). */
   readonly slots = computed<WeatherTimeSlot[]>(() => {
@@ -110,7 +104,7 @@ export class WeeklyOverviewComponent {
     const h = this.hourly();
     if (!d) return [];
 
-    const hourlyByDay = h ? groupHourlyByGranularity(h, "day") : [];
+    const hourlyByDay = h ? groupHourlyByGranularity(h, 'day') : [];
 
     return d.time.map((time, i) => {
       const date = new Date(time);
@@ -118,8 +112,8 @@ export class WeeklyOverviewComponent {
         i === 0
           ? $localize`:weather.daily.today|@@weatherDailyToday:Aujourd'hui`
           : date.toLocaleDateString(this.localeId, {
-              weekday: "short",
-              day: "numeric",
+              weekday: 'short',
+              day: 'numeric',
             });
 
       const hourlySlot = hourlyByDay[i] ?? null;
@@ -132,10 +126,7 @@ export class WeeklyOverviewComponent {
         precipitationSum: d.precipitation_sum[i],
         windMax: d.wind_speed_10m_max?.[i] ?? hourlySlot?.maxWind ?? 0,
         gustsMax: d.wind_gusts_10m_max?.[i] ?? hourlySlot?.maxGusts ?? null,
-        windDir:
-          d.wind_direction_10m_dominant?.[i] ??
-          hourlySlot?.windDirection ??
-          null,
+        windDir: d.wind_direction_10m_dominant?.[i] ?? hourlySlot?.windDirection ?? null,
         humidity: hourlySlot?.avgHumidity ?? null,
         pressure: hourlySlot?.avgPressure ?? null,
       };
@@ -148,7 +139,7 @@ export class WeeklyOverviewComponent {
     if (allSlots.length === 0) return [];
 
     const groups: SlotGroup[] = [];
-    let currentDay = "";
+    let currentDay = '';
     let currentGroup: WeatherTimeSlot[] = [];
 
     for (const slot of allSlots) {
@@ -241,8 +232,8 @@ export class WeeklyOverviewComponent {
     }
 
     const label = date.toLocaleDateString(this.localeId, {
-      weekday: "short",
-      day: "numeric",
+      weekday: 'short',
+      day: 'numeric',
     });
     return label.charAt(0).toUpperCase() + label.slice(1);
   }

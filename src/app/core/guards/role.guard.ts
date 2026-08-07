@@ -1,7 +1,7 @@
-import { inject } from "@angular/core";
-import type { CanActivateFn } from "@angular/router";
-import { Router } from "@angular/router";
-import { AuthStateService } from "../services/auth-state.service";
+import { inject } from '@angular/core';
+import type { CanActivateFn } from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthStateService } from '../services/auth-state.service';
 
 /**
  * Factory de guard fonctionnel qui verifie que l'utilisateur
@@ -24,8 +24,8 @@ export function roleGuard(requiredRole: string): CanActivateFn {
       return true;
     }
 
-    return router.createUrlTree(["/contact"], {
-      queryParams: { reason: "access", app: requiredRole },
+    return router.createUrlTree(['/contact'], {
+      queryParams: { reason: 'access', app: requiredRole },
     });
   };
 }

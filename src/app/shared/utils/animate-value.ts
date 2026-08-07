@@ -40,7 +40,7 @@ export interface AnimateValueOptions {
 export function animateValue(options: AnimateValueOptions): AnimationHandle {
   const { to, durationMs, onFrame, from = 0, onComplete } = options;
 
-  if (durationMs <= 0 || typeof requestAnimationFrame !== "function") {
+  if (durationMs <= 0 || typeof requestAnimationFrame !== 'function') {
     onFrame(to);
     onComplete?.();
     return { cancel: () => {} };
@@ -79,7 +79,7 @@ export function animateValue(options: AnimateValueOptions): AnimationHandle {
         return;
       }
       cancelled = true;
-      if (rafId !== null && typeof cancelAnimationFrame === "function") {
+      if (rafId !== null && typeof cancelAnimationFrame === 'function') {
         cancelAnimationFrame(rafId);
         rafId = null;
       }

@@ -1,11 +1,6 @@
-import { DecimalPipe } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from "@angular/core";
-import type { EnsembleData } from "../../../../core/models/weather.model";
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import type { EnsembleData } from '../../../../core/models/weather.model';
 
 /**
  * Carte de comparaison multi-modeles (ECMWF, GFS, ICON).
@@ -13,7 +8,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
  * Les divergences significatives (> 3 degres C) sont signalees en orange.
  */
 @Component({
-  selector: "app-model-comparison",
+  selector: 'app-model-comparison',
   standalone: true,
   imports: [DecimalPipe],
   template: `
@@ -25,9 +20,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
       le tableau, columns()/tempDivergent() et la couleur sémantique orange de
       divergence sont inchangés.
     -->
-    <div
-      class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
-    >
+    <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
       <h3
         class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
         i18n="weather.modelComparison.title|@@weatherModelComparisonTitle"
@@ -42,8 +35,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
               <tr class="border-b border-teal/15">
                 <th
                   class="px-3 py-2 text-left font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-white/45"
-                  i18n="
-                    weather.modelComparison.metric|@@weatherModelComparisonMetric"
+                  i18n="weather.modelComparison.metric|@@weatherModelComparisonMetric"
                 >
                   Métrique
                 </th>
@@ -61,8 +53,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
               <tr class="border-b border-white/5">
                 <td
                   class="px-3 py-2 text-white/65"
-                  i18n="
-                    weather.modelComparison.avgTemp|@@weatherModelComparisonAvgTemp"
+                  i18n="weather.modelComparison.avgTemp|@@weatherModelComparisonAvgTemp"
                 >
                   Temp. moy. 24h
                 </td>
@@ -72,7 +63,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
                     [class.text-orange-400]="tempDivergent()"
                     [class.text-white]="!tempDivergent()"
                   >
-                    {{ col.avgTemp | number: "1.1-1" }}°C
+                    {{ col.avgTemp | number: '1.1-1' }}°C
                   </td>
                 }
               </tr>
@@ -80,14 +71,13 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
               <tr>
                 <td
                   class="px-3 py-2 text-white/65"
-                  i18n="
-                    weather.modelComparison.totalPrecip|@@weatherModelComparisonTotalPrecip"
+                  i18n="weather.modelComparison.totalPrecip|@@weatherModelComparisonTotalPrecip"
                 >
                   Précip. totales 24h
                 </td>
                 @for (col of columns(); track col.model) {
                   <td class="px-3 py-2 text-center text-white">
-                    {{ col.totalPrecip | number: "1.1-1" }} mm
+                    {{ col.totalPrecip | number: '1.1-1' }} mm
                   </td>
                 }
               </tr>
@@ -98,8 +88,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
         @if (tempDivergent()) {
           <p
             class="mt-2 text-xs text-orange-400"
-            i18n="
-              weather.modelComparison.divergence|@@weatherModelComparisonDivergence"
+            i18n="weather.modelComparison.divergence|@@weatherModelComparisonDivergence"
           >
             Les modèles divergent significativement (> 3 °C).
           </p>
@@ -107,8 +96,7 @@ import type { EnsembleData } from "../../../../core/models/weather.model";
       } @else {
         <p
           class="text-sm text-white/40"
-          i18n="
-            weather.modelComparison.unavailable|@@weatherModelComparisonUnavailable"
+          i18n="weather.modelComparison.unavailable|@@weatherModelComparisonUnavailable"
         >
           Données indisponibles
         </p>
@@ -129,8 +117,7 @@ export class ModelComparisonComponent {
     return data.models.map((m) => {
       const temps = m.hourly.temperature_2m.slice(0, 24);
       const precips = m.hourly.precipitation.slice(0, 24);
-      const avgTemp =
-        temps.length > 0 ? temps.reduce((a, b) => a + b, 0) / temps.length : 0;
+      const avgTemp = temps.length > 0 ? temps.reduce((a, b) => a + b, 0) / temps.length : 0;
       const totalPrecip = precips.reduce((a, b) => a + b, 0);
 
       return {

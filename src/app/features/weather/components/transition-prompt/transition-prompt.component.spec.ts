@@ -1,15 +1,15 @@
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { of } from "rxjs";
-import { WEATHER_PORT } from "../../../../core/ports/weather.port";
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { WEATHER_PORT } from '../../../../core/ports/weather.port';
 import {
   buildWeatherPreferences,
   createWeatherPortStub,
-} from "../../../../../testing/factories/weather.factory";
-import { WeatherLevelService } from "../../services/weather-level.service";
-import { TransitionPromptComponent } from "./transition-prompt.component";
+} from '../../../../../testing/factories/weather.factory';
+import { WeatherLevelService } from '../../services/weather-level.service';
+import { TransitionPromptComponent } from './transition-prompt.component';
 
-describe("TransitionPromptComponent", () => {
+describe('TransitionPromptComponent', () => {
   let component: TransitionPromptComponent;
   let fixture: ComponentFixture<TransitionPromptComponent>;
   let levelService: WeatherLevelService;
@@ -20,10 +20,7 @@ describe("TransitionPromptComponent", () => {
 
     await TestBed.configureTestingModule({
       imports: [TransitionPromptComponent],
-      providers: [
-        { provide: WEATHER_PORT, useValue: weatherPortStub },
-        WeatherLevelService,
-      ],
+      providers: [{ provide: WEATHER_PORT, useValue: weatherPortStub }, WeatherLevelService],
     }).compileComponents();
 
     levelService = TestBed.inject(WeatherLevelService);
@@ -31,7 +28,7 @@ describe("TransitionPromptComponent", () => {
     component = fixture.componentInstance;
   });
 
-  it("devrait se creer", () => {
+  it('devrait se creer', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
@@ -43,9 +40,9 @@ describe("TransitionPromptComponent", () => {
     expect(banner).toBeNull();
   });
 
-  it("devrait afficher la banniere quand un niveau est suggere", () => {
+  it('devrait afficher la banniere quand un niveau est suggere', () => {
     const prefs = buildWeatherPreferences({
-      level: "discovery",
+      level: 'discovery',
       daysUsed: 7,
     });
     weatherPortStub.getPreferences.and.returnValue(of(prefs));
@@ -57,26 +54,26 @@ describe("TransitionPromptComponent", () => {
     expect(banner).not.toBeNull();
   });
 
-  it("devrait activer le niveau suggere au clic", () => {
+  it('devrait activer le niveau suggere au clic', () => {
     const prefs = buildWeatherPreferences({
-      level: "discovery",
+      level: 'discovery',
       daysUsed: 7,
     });
     weatherPortStub.getPreferences.and.returnValue(of(prefs));
     weatherPortStub.updatePreferences.and.returnValue(
-      of(buildWeatherPreferences({ level: "curious" })),
+      of(buildWeatherPreferences({ level: 'curious' })),
     );
     levelService.loadPreferences();
 
     component.activate();
 
-    expect(levelService.level()).toBe("curious");
+    expect(levelService.level()).toBe('curious');
     expect(component.dismissed()).toBeTrue();
   });
 
-  it("devrait fermer la banniere sans changer de niveau", () => {
+  it('devrait fermer la banniere sans changer de niveau', () => {
     const prefs = buildWeatherPreferences({
-      level: "discovery",
+      level: 'discovery',
       daysUsed: 7,
     });
     weatherPortStub.getPreferences.and.returnValue(of(prefs));
@@ -85,12 +82,12 @@ describe("TransitionPromptComponent", () => {
     component.dismiss();
 
     expect(component.dismissed()).toBeTrue();
-    expect(levelService.level()).toBe("discovery");
+    expect(levelService.level()).toBe('discovery');
   });
 
-  it("ne devrait pas afficher la banniere apres fermeture", () => {
+  it('ne devrait pas afficher la banniere apres fermeture', () => {
     const prefs = buildWeatherPreferences({
-      level: "discovery",
+      level: 'discovery',
       daysUsed: 7,
     });
     weatherPortStub.getPreferences.and.returnValue(of(prefs));

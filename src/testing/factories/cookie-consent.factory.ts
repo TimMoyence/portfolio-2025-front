@@ -1,19 +1,19 @@
-import { of, BehaviorSubject } from "rxjs";
-import type { CookieConsentPayload } from "../../app/core/models/cookie-consent.model";
-import type { AppConfig } from "../../app/core/config/app-config.model";
-import type { CookieConsentPort } from "../../app/core/ports/cookie-consent.port";
-import type { CookieConsentService } from "../../app/core/services/cookie-consent.service";
+import { of, BehaviorSubject } from 'rxjs';
+import type { CookieConsentPayload } from '../../app/core/models/cookie-consent.model';
+import type { AppConfig } from '../../app/core/config/app-config.model';
+import type { CookieConsentPort } from '../../app/core/ports/cookie-consent.port';
+import type { CookieConsentService } from '../../app/core/services/cookie-consent.service';
 
 /** Construit un payload CookieConsentPayload avec des valeurs par defaut. */
 export function buildCookieConsentPayload(
   overrides?: Partial<CookieConsentPayload>,
 ): CookieConsentPayload {
   return {
-    policyVersion: "2026-02-11",
-    locale: "fr",
-    region: "EU_UK",
-    source: "banner",
-    action: "accept_all",
+    policyVersion: '2026-02-11',
+    locale: 'fr',
+    region: 'EU_UK',
+    source: 'banner',
+    action: 'accept_all',
     preferences: {
       essential: true,
       preferences: true,
@@ -26,10 +26,8 @@ export function buildCookieConsentPayload(
 
 /** Cree un stub complet du port cookie-consent avec des spies Jasmine. */
 export function createCookieConsentPortStub(): jasmine.SpyObj<CookieConsentPort> {
-  const stub = jasmine.createSpyObj<CookieConsentPort>("CookieConsentPort", [
-    "recordConsent",
-  ]);
-  stub.recordConsent.and.returnValue(of({ message: "ok", httpCode: 200 }));
+  const stub = jasmine.createSpyObj<CookieConsentPort>('CookieConsentPort', ['recordConsent']);
+  stub.recordConsent.and.returnValue(of({ message: 'ok', httpCode: 200 }));
   return stub;
 }
 
@@ -37,15 +35,15 @@ export function createCookieConsentPortStub(): jasmine.SpyObj<CookieConsentPort>
 export function createMockAppConfig(overrides?: Partial<AppConfig>): AppConfig {
   return {
     production: false,
-    appName: "test",
-    apiBaseUrl: "http://localhost:3000",
-    baseUrl: "http://localhost:4200",
-    external: { sebastianUrl: "" },
+    appName: 'test',
+    apiBaseUrl: 'http://localhost:3000',
+    baseUrl: 'http://localhost:4200',
+    external: { sebastianUrl: '' },
     gdpr: {
-      regionScope: "EU_UK",
-      policyVersion: "2026-02-11",
+      regionScope: 'EU_UK',
+      policyVersion: '2026-02-11',
       cookieMaxAgeDays: 365,
-      termsVersion: "1.0",
+      termsVersion: '1.0',
     },
     ...overrides,
   };
@@ -60,14 +58,14 @@ export function createCookieConsentServiceStub(): jasmine.SpyObj<CookieConsentSe
 } {
   const consentChanges$ = new BehaviorSubject<null>(null);
   const stub = jasmine.createSpyObj<CookieConsentService>(
-    "CookieConsentService",
+    'CookieConsentService',
     [
-      "shouldShowBanner",
-      "saveConsent",
-      "withdrawConsent",
-      "getPreferences",
-      "getDefaultPreferences",
-      "isConsentRequired",
+      'shouldShowBanner',
+      'saveConsent',
+      'withdrawConsent',
+      'getPreferences',
+      'getDefaultPreferences',
+      'isConsentRequired',
     ],
     { consentChanges$ },
   );
@@ -84,8 +82,8 @@ export function createCookieConsentServiceStub(): jasmine.SpyObj<CookieConsentSe
     analytics: false,
     marketing: false,
   });
-  stub.saveConsent.and.returnValue(of({ message: "ok", httpCode: 201 }));
-  stub.withdrawConsent.and.returnValue(of({ message: "ok", httpCode: 201 }));
+  stub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
+  stub.withdrawConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
   stub.isConsentRequired.and.returnValue(true);
   return stub as jasmine.SpyObj<CookieConsentService> & {
     consentChanges$: BehaviorSubject<null>;

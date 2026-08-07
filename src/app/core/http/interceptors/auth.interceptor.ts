@@ -1,9 +1,9 @@
-import type { HttpInterceptorFn } from "@angular/common/http";
-import { inject } from "@angular/core";
-import { Router } from "@angular/router";
-import { tap } from "rxjs/operators";
-import { APP_CONFIG } from "../../config/app-config.token";
-import { AuthStateService } from "../../services/auth-state.service";
+import type { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
+import { APP_CONFIG } from '../../config/app-config.token';
+import { AuthStateService } from '../../services/auth-state.service';
 
 /**
  * Intercepteur HTTP qui attache le Bearer token JWT aux requetes de notre API
@@ -23,16 +23,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authState.token();
   const targetsOwnApi = req.url.startsWith(config.apiBaseUrl);
   const authReq =
-    token && targetsOwnApi
-      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-      : req;
+    token && targetsOwnApi ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(authReq).pipe(
     tap({
       error: (error: { status?: number }) => {
         if (error.status === 401) {
           authState.logout();
-          void router.navigate(["/login"], {
+          void router.navigate(['/login'], {
             queryParams: { returnUrl: router.url },
           });
         }

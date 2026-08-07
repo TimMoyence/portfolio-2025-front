@@ -1,10 +1,7 @@
-import { InjectionToken } from "@angular/core";
-import type { Observable } from "rxjs";
-import type { ToolkitPageData } from "../models/toolkit-page.model";
-import type {
-  ToolkitRequest,
-  ToolkitResponse,
-} from "../models/toolkit-request.model";
+import { InjectionToken } from '@angular/core';
+import type { Observable } from 'rxjs';
+import type { ToolkitPageData } from '../models/toolkit-page.model';
+import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
 
 /** Port pour l'envoi de demandes de lead magnet et consultation du toolkit. */
 export interface LeadMagnetPort {
@@ -14,6 +11,4 @@ export interface LeadMagnetPort {
   getToolkitByToken(token: string): Observable<ToolkitPageData>;
 }
 
-export const LEAD_MAGNET_PORT = new InjectionToken<LeadMagnetPort>(
-  "LEAD_MAGNET_PORT",
-);
+export const LEAD_MAGNET_PORT = new InjectionToken<LeadMagnetPort>('LEAD_MAGNET_PORT');

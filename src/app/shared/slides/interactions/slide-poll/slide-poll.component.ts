@@ -6,15 +6,15 @@ import {
   inject,
   input,
   signal,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
-import { loadInteraction } from "../interactions.util";
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
+import { loadInteraction } from '../interactions.util';
 
 interface PollInteraction {
   id?: string;
   slideId?: string;
-  type: "poll";
+  type: 'poll';
   question: string;
   options: string[];
 }
@@ -25,11 +25,11 @@ interface PollInteraction {
  * (matche soit le `slideId` portant l'interaction, soit l'`id` legacy).
  */
 @Component({
-  selector: "app-slide-poll",
+  selector: 'app-slide-poll',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-poll.component.html",
-  styleUrl: "./slide-poll.component.scss",
+  templateUrl: './slide-poll.component.html',
+  styleUrl: './slide-poll.component.scss',
 })
 export class SlidePollComponent {
   readonly slug = input.required<string>();
@@ -88,7 +88,7 @@ export class SlidePollComponent {
   private load(): void {
     loadInteraction<PollInteraction>(
       this.port.getInteractions(this.slug()),
-      "poll",
+      'poll',
       this.interactionId(),
       () => this.error.set(true),
     )

@@ -6,10 +6,10 @@ import {
   input,
   LOCALE_ID,
   PLATFORM_ID,
-} from "@angular/core";
-import { isPlatformBrowser } from "@angular/common";
-import { LearningTooltipComponent } from "../learning-tooltip/learning-tooltip.component";
-import { clamp } from "../../../../shared/utils/math.utils";
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.component';
+import { clamp } from '../../../../shared/utils/math.utils';
 
 /**
  * Arc solaire SVG montrant la trajectoire du soleil entre lever et coucher.
@@ -17,7 +17,7 @@ import { clamp } from "../../../../shared/utils/math.utils";
  * Compatible SSR : pas d'acces direct a Date sans verification de plateforme.
  */
 @Component({
-  selector: "app-sun-arc",
+  selector: 'app-sun-arc',
   standalone: true,
   imports: [LearningTooltipComponent],
   template: `
@@ -49,11 +49,7 @@ import { clamp } from "../../../../shared/utils/math.utils";
       @if (sunrise() && sunset()) {
         <div class="flex flex-col items-center">
           <!-- Arc SVG -->
-          <svg
-            viewBox="0 0 200 110"
-            class="h-24 w-full max-w-[200px]"
-            aria-hidden="true"
-          >
+          <svg viewBox="0 0 200 110" class="h-24 w-full max-w-[200px]" aria-hidden="true">
             <!-- Arc de trajectoire (pointillé Asili) -->
             <path
               d="M 20 90 Q 100 -10 180 90"
@@ -128,10 +124,7 @@ import { clamp } from "../../../../shared/utils/math.utils";
           </div>
         </div>
       } @else {
-        <p
-          class="text-sm text-white/40"
-          i18n="weather.sun.unavailable|@@weatherSunUnavailable"
-        >
+        <p class="text-sm text-white/40" i18n="weather.sun.unavailable|@@weatherSunUnavailable">
           Données indisponibles
         </p>
       }
@@ -141,10 +134,10 @@ import { clamp } from "../../../../shared/utils/math.utils";
 })
 export class SunArcComponent {
   /** Heure de lever du soleil (chaine ISO). */
-  readonly sunrise = input<string>("");
+  readonly sunrise = input<string>('');
 
   /** Heure de coucher du soleil (chaine ISO). */
-  readonly sunset = input<string>("");
+  readonly sunset = input<string>('');
 
   private readonly localeId = inject(LOCALE_ID);
   private readonly platformId = inject(PLATFORM_ID);
@@ -213,15 +206,15 @@ export class SunArcComponent {
 
   /** Formate une chaine ISO en heure lisible selon la locale injectee. */
   private formatTime(iso: string): string {
-    if (!iso) return "";
+    if (!iso) return '';
     try {
       const date = new Date(iso);
       return date.toLocaleTimeString(this.localeId, {
-        hour: "2-digit",
-        minute: "2-digit",
+        hour: '2-digit',
+        minute: '2-digit',
       });
     } catch {
-      return "";
+      return '';
     }
   }
 

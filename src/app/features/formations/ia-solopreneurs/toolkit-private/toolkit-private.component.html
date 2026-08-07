@@ -9,7 +9,7 @@
   constellation global (Lot 0).
 -->
 @switch (state()) {
-  @case ("loading") {
+  @case ('loading') {
     <section class="tkp-state">
       <div class="tkp-state__inner">
         <div class="tkp-spinner" aria-hidden="true"></div>
@@ -20,27 +20,20 @@
     </section>
   }
 
-  @case ("error") {
+  @case ('error') {
     <section class="tkp-state">
       <div class="tkp-state__inner tkp-state__inner--error">
-        <p
-          class="tkp-state__title"
-          i18n="@@formations.toolkitPrivate.errorTitle"
-        >
+        <p class="tkp-state__title" i18n="@@formations.toolkitPrivate.errorTitle">
           Impossible de charger le toolkit
         </p>
-        <p
-          class="tkp-state__text"
-          i18n="@@formations.toolkitPrivate.errorDetail"
-        >
-          Le lien est peut-etre expire ou invalide. Verifiez votre email ou
-          refaites une demande.
+        <p class="tkp-state__text" i18n="@@formations.toolkitPrivate.errorDetail">
+          Le lien est peut-etre expire ou invalide. Verifiez votre email ou refaites une demande.
         </p>
       </div>
     </section>
   }
 
-  @case ("loaded") {
+  @case ('loaded') {
     @if (data(); as toolkit) {
       <section class="tkp">
         <div class="tkp-wrap">
@@ -57,51 +50,33 @@
                 />
               </svg>
             </div>
-            <h1 i18n="@@formations.toolkitPrivate.heroTitle">
-              Accès <em>débloqué</em>.
-            </h1>
+            <h1 i18n="@@formations.toolkitPrivate.heroTitle">Accès <em>débloqué</em>.</h1>
             <p class="lead" i18n="@@formations.toolkitPrivate.heroGreeting">
-              Bonjour {{ toolkit.recap.firstName }}, voici votre toolkit
-              personnalisé.
+              Bonjour {{ toolkit.recap.firstName }}, voici votre toolkit personnalisé.
             </p>
           </header>
 
           <!-- ===================== 1 · CHEATSHEET ===================== -->
           @if (toolkit.cheatsheet.length > 0) {
             <section class="tkp-section">
-              <h2
-                class="tkp-h2"
-                i18n="@@formations.toolkitPrivate.sectionCheatsheet"
-              >
+              <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionCheatsheet">
                 <span class="tkp-num">1.</span> Les 16 outils en un coup d'œil
               </h2>
               <div class="tkp-table-wrap">
                 <table class="tkp-table">
                   <thead>
                     <tr>
-                      <th i18n="@@formations.toolkitPrivate.tableTool">
-                        Outil
-                      </th>
-                      <th i18n="@@formations.toolkitPrivate.tableCategory">
-                        Catégorie
-                      </th>
-                      <th i18n="@@formations.toolkitPrivate.tablePrice">
-                        Prix
-                      </th>
-                      <th i18n="@@formations.toolkitPrivate.tableDescription">
-                        En une phrase
-                      </th>
+                      <th i18n="@@formations.toolkitPrivate.tableTool">Outil</th>
+                      <th i18n="@@formations.toolkitPrivate.tableCategory">Catégorie</th>
+                      <th i18n="@@formations.toolkitPrivate.tablePrice">Prix</th>
+                      <th i18n="@@formations.toolkitPrivate.tableDescription">En une phrase</th>
                     </tr>
                   </thead>
                   <tbody>
                     @for (entry of toolkit.cheatsheet; track entry.tool) {
                       <tr>
                         <td class="tkp-td-tool">
-                          <a
-                            [href]="entry.url"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <a [href]="entry.url" target="_blank" rel="noopener noreferrer">
                             {{ entry.tool }}
                           </a>
                         </td>
@@ -119,10 +94,7 @@
           <!-- ===================== 2 · PROMPTS ===================== -->
           @if (toolkit.prompts.length > 0) {
             <section class="tkp-section">
-              <h2
-                class="tkp-h2"
-                i18n="@@formations.toolkitPrivate.sectionPrompts"
-              >
+              <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionPrompts">
                 <span class="tkp-num">2.</span> Prompts prêts à copier
               </h2>
               <div class="tkp-stack">
@@ -152,10 +124,7 @@
           <!-- ===================== 3 · WORKFLOWS ===================== -->
           @if (toolkit.workflows.length > 0) {
             <section class="tkp-section">
-              <h2
-                class="tkp-h2"
-                i18n="@@formations.toolkitPrivate.sectionWorkflows"
-              >
+              <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionWorkflows">
                 <span class="tkp-num">3.</span> Workflows à mettre en place
               </h2>
               <div class="tkp-grid">
@@ -188,10 +157,7 @@
           <!-- ===================== 4 · TEMPLATES ===================== -->
           @if (toolkit.templates.length > 0) {
             <section class="tkp-section">
-              <h2
-                class="tkp-h2"
-                i18n="@@formations.toolkitPrivate.sectionTemplates"
-              >
+              <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionTemplates">
                 <span class="tkp-num">4.</span> Templates réutilisables
               </h2>
               <div class="tkp-grid tkp-grid--2">
@@ -216,10 +182,7 @@
           <!-- ===================== 5 · PROMPT GAMMA ===================== -->
           @if (toolkit.generatedPrompt) {
             <section class="tkp-section">
-              <h2
-                class="tkp-h2"
-                i18n="@@formations.toolkitPrivate.sectionGamma"
-              >
+              <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionGamma">
                 <span class="tkp-num">5.</span> Votre prompt Gamma personnalisé
               </h2>
               <div class="tkp-card tkp-card--accent">
@@ -233,15 +196,9 @@
                     {{ copyButtonLabel(toolkit.generatedPrompt) }}
                   </button>
                 </div>
-                <p
-                  class="tkp-gamma-cta"
-                  i18n="@@formations.toolkitPrivate.gammaCta"
-                >
+                <p class="tkp-gamma-cta" i18n="@@formations.toolkitPrivate.gammaCta">
                   Collez ce prompt dans
-                  <a
-                    href="https://gamma.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <a href="https://gamma.app" target="_blank" rel="noopener noreferrer"
                     >gamma.app</a
                   >
                   pour generer votre presentation en 60 secondes.
@@ -252,9 +209,7 @@
 
           <!-- ===================== FOOTER ===================== -->
           <footer class="tkp-foot">
-            <p i18n="@@formations.toolkitPrivate.brand">
-              Asili Design — asilidesign.fr
-            </p>
+            <p i18n="@@formations.toolkitPrivate.brand">Asili Design — asilidesign.fr</p>
           </footer>
         </div>
       </section>

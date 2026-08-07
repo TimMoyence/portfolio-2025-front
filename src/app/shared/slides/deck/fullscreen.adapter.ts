@@ -1,11 +1,11 @@
-import { isPlatformBrowser } from "@angular/common";
-import { Injectable, PLATFORM_ID, inject } from "@angular/core";
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 
 /**
  * Adapter SSR-safe pour l'API Fullscreen + chargement lazy de Swiper Element.
  * En environnement serveur, toutes les méthodes sont des no-ops.
  */
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class FullscreenAdapter {
   private readonly platformId = inject(PLATFORM_ID);
   private swiperLoaded = false;
@@ -18,7 +18,7 @@ export class FullscreenAdapter {
     if (!this.isBrowser()) {
       return;
     }
-    if (typeof element.requestFullscreen !== "function") {
+    if (typeof element.requestFullscreen !== 'function') {
       return;
     }
     try {
@@ -57,8 +57,8 @@ export class FullscreenAdapter {
     if (!this.isBrowser() || this.swiperLoaded) {
       return;
     }
-    const mod = await import("swiper/element/bundle");
-    if (typeof mod.register === "function") {
+    const mod = await import('swiper/element/bundle');
+    if (typeof mod.register === 'function') {
       mod.register();
     }
     this.swiperLoaded = true;

@@ -14,11 +14,7 @@
           <span class="slide-poll__label">{{ opt }}</span>
           @if (hasVoted()) {
             <span class="slide-poll__pct">{{ percent(i) }}%</span>
-            <span
-              class="slide-poll__bar"
-              [attr.data-index]="i"
-              [style.width.%]="percent(i)"
-            ></span>
+            <span class="slide-poll__bar" [attr.data-index]="i" [style.width.%]="percent(i)"></span>
           }
         </button>
       }
@@ -32,9 +28,7 @@
     -->
     <p class="slide-poll__status" role="status" aria-live="polite">
       @if (votedLabel(); as label) {
-        <span i18n="@@slidePollVoteRecorded"
-          >Vote enregistré : {{ label }}</span
-        >
+        <span i18n="@@slidePollVoteRecorded">Vote enregistré : {{ label }}</span>
       }
     </p>
   </div>

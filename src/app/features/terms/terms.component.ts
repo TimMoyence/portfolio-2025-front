@@ -1,7 +1,7 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 /** Entrée du sommaire (TOC) reliant une ancre à son libellé. */
 interface TermsTocItem {
@@ -18,11 +18,11 @@ interface TermsTocItem {
  * `<a href="#id">` (SSR-safe), liens internes via `routerLink`.
  */
 @Component({
-  selector: "app-terms",
+  selector: 'app-terms',
   standalone: true,
   imports: [CommonModule, RouterModule, RevealOnScrollDirective],
-  templateUrl: "./terms.component.html",
-  styleUrl: "./terms.component.scss",
+  templateUrl: './terms.component.html',
+  styleUrl: './terms.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermsComponent {
@@ -34,35 +34,35 @@ export class TermsComponent {
   /** Sommaire (TOC) : ancres + libellés des 8 sections. */
   readonly toc: readonly TermsTocItem[] = [
     {
-      anchor: "editeur",
+      anchor: 'editeur',
       label: $localize`:terms.toc.editeur@@termsTocEditeur:Éditeur du site`,
     },
     {
-      anchor: "objet",
+      anchor: 'objet',
       label: $localize`:terms.toc.objet@@termsTocObjet:Objet`,
     },
     {
-      anchor: "services",
+      anchor: 'services',
       label: $localize`:terms.toc.services@@termsTocServices:Services & formations`,
     },
     {
-      anchor: "paiement",
+      anchor: 'paiement',
       label: $localize`:terms.toc.paiement@@termsTocPaiement:Paiement & accès`,
     },
     {
-      anchor: "retractation",
+      anchor: 'retractation',
       label: $localize`:terms.toc.retractation@@termsTocRetractation:Rétractation`,
     },
     {
-      anchor: "propriete",
+      anchor: 'propriete',
       label: $localize`:terms.toc.propriete@@termsTocPropriete:Propriété intellectuelle`,
     },
     {
-      anchor: "responsabilite",
+      anchor: 'responsabilite',
       label: $localize`:terms.toc.responsabilite@@termsTocResponsabilite:Responsabilité`,
     },
     {
-      anchor: "droit",
+      anchor: 'droit',
       label: $localize`:terms.toc.droit@@termsTocDroit:Droit applicable`,
     },
   ];

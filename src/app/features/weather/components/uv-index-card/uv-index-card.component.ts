@@ -1,19 +1,14 @@
-import { DecimalPipe } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from "@angular/core";
-import { MetricCardComponent } from "../metric-card/metric-card.component";
-import { SparklineComponent } from "../sparkline/sparkline.component";
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { MetricCardComponent } from '../metric-card/metric-card.component';
+import { SparklineComponent } from '../sparkline/sparkline.component';
 
 /**
  * Carte d'indice UV avec jauge coloree horizontale.
  * Echelle de 0 a 11+ avec niveaux de risque en francais.
  */
 @Component({
-  selector: "app-uv-index-card",
+  selector: 'app-uv-index-card',
   standalone: true,
   imports: [DecimalPipe, MetricCardComponent, SparklineComponent],
   template: `
@@ -34,7 +29,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
       -->
       <div class="flex items-baseline gap-2">
         <span class="font-display text-4xl leading-none text-white">
-          {{ uvIndex() | number: "1.0-0" }}
+          {{ uvIndex() | number: '1.0-0' }}
         </span>
         <span [class]="'text-sm font-medium ' + labelColor()">
           {{ riskLabel() }}
@@ -61,9 +56,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
         ></div>
       </div>
 
-      <div
-        class="mt-2 flex justify-between font-mono text-[10px] text-white/40"
-      >
+      <div class="mt-2 flex justify-between font-mono text-[10px] text-white/40">
         <span>0</span>
         <span>3</span>
         <span>6</span>
@@ -73,10 +66,7 @@ import { SparklineComponent } from "../sparkline/sparkline.component";
 
       @if (hourlyUv().length > 1) {
         <div class="mt-2">
-          <app-sparkline
-            [data]="hourlyUv()"
-            [color]="'rgba(230, 198, 79, 0.85)'"
-          />
+          <app-sparkline [data]="hourlyUv()" [color]="'rgba(230, 198, 79, 0.85)'" />
         </div>
       }
     </app-metric-card>
@@ -94,22 +84,20 @@ export class UvIndexCardComponent {
   readonly riskLabel = computed(() => {
     const uv = this.uvIndex();
     if (uv <= 2) return $localize`:weather.uv.low|@@weatherUvLow:Faible`;
-    if (uv <= 5)
-      return $localize`:weather.uv.moderate|@@weatherUvModerate:Modéré`;
+    if (uv <= 5) return $localize`:weather.uv.moderate|@@weatherUvModerate:Modéré`;
     if (uv <= 7) return $localize`:weather.uv.high|@@weatherUvHigh:Élevé`;
-    if (uv <= 10)
-      return $localize`:weather.uv.veryHigh|@@weatherUvVeryHigh:Très élevé`;
+    if (uv <= 10) return $localize`:weather.uv.veryHigh|@@weatherUvVeryHigh:Très élevé`;
     return $localize`:weather.uv.extreme|@@weatherUvExtreme:Extrême`;
   });
 
   /** Classe de couleur du label selon le niveau de risque. */
   readonly labelColor = computed(() => {
     const uv = this.uvIndex();
-    if (uv <= 2) return "text-green-400";
-    if (uv <= 5) return "text-yellow-400";
-    if (uv <= 7) return "text-orange-400";
-    if (uv <= 10) return "text-red-400";
-    return "text-purple-400";
+    if (uv <= 2) return 'text-green-400';
+    if (uv <= 5) return 'text-yellow-400';
+    if (uv <= 7) return 'text-orange-400';
+    if (uv <= 10) return 'text-red-400';
+    return 'text-purple-400';
   });
 
   /** Position du curseur sur la jauge (0-100%). */

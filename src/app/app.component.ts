@@ -1,15 +1,15 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
-import { AsiliBackgroundComponent } from "./shared/components/asili-background/asili-background.component";
-import { FooterComponent } from "./shared/components/footer/footer.component";
-import { CookieBannerComponent } from "./shared/components/cookie-banner/cookie-banner.component";
-import { NavbarComponent } from "./shared/components/navbar/navbar.component";
-import { SeoManagerComponent } from "./shared/components/seo-manager.component";
-import { SkipLinkComponent } from "./shared/components/skip-link.component";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { AsiliBackgroundComponent } from './shared/components/asili-background/asili-background.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner.component';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { SeoManagerComponent } from './shared/components/seo-manager.component';
+import { SkipLinkComponent } from './shared/components/skip-link.component';
 
 @Component({
-  selector: "app-root",
+  selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
@@ -56,5 +56,5 @@ import { SkipLinkComponent } from "./shared/components/skip-link.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = "portfolio-app";
+  title = 'portfolio-app';
 }

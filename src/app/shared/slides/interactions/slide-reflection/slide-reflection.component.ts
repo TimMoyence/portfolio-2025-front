@@ -5,16 +5,16 @@ import {
   inject,
   input,
   signal,
-} from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
-import { loadInteraction } from "../interactions.util";
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
+import { loadInteraction } from '../interactions.util';
 
 interface ReflectionInteraction {
   id?: string;
   slideId?: string;
-  type: "reflection";
+  type: 'reflection';
   /** Texte de la question. Champ legacy `prompt` toujours supporte. */
   question?: string;
   prompt?: string;
@@ -26,12 +26,12 @@ interface ReflectionInteraction {
  * La saisie reste cliente — pas de transit reseau.
  */
 @Component({
-  selector: "app-slide-reflection",
+  selector: 'app-slide-reflection',
   standalone: true,
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-reflection.component.html",
-  styleUrl: "./slide-reflection.component.scss",
+  templateUrl: './slide-reflection.component.html',
+  styleUrl: './slide-reflection.component.scss',
 })
 export class SlideReflectionComponent {
   readonly slug = input.required<string>();
@@ -39,7 +39,7 @@ export class SlideReflectionComponent {
 
   protected readonly reflection = signal<ReflectionInteraction | null>(null);
   protected readonly error = signal<boolean>(false);
-  protected readonly value = signal<string>("");
+  protected readonly value = signal<string>('');
   protected readonly saved = signal<boolean>(false);
 
   private readonly port = inject(PRESENTATION_PORT);
@@ -70,14 +70,14 @@ export class SlideReflectionComponent {
    */
   protected promptText(): string {
     const r = this.reflection();
-    if (r === null) return "";
-    return r.question ?? r.prompt ?? "";
+    if (r === null) return '';
+    return r.question ?? r.prompt ?? '';
   }
 
   private load(): void {
     loadInteraction<ReflectionInteraction>(
       this.port.getInteractions(this.slug()),
-      "reflection",
+      'reflection',
       this.interactionId(),
       () => this.error.set(true),
     )

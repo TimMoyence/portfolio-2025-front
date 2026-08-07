@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -12,13 +12,13 @@ import {
   PLATFORM_ID,
   signal,
   ViewChild,
-} from "@angular/core";
-import { Chart, registerables } from "chart.js";
-import zoomPlugin from "chartjs-plugin-zoom";
-import "hammerjs";
-import type { HourlyForecast } from "../../../../core/models/weather.model";
-import { UnitPreferencesService } from "../../services/unit-preferences.service";
-import { CHART_PARAMETERS } from "./chart-datasets.config";
+} from '@angular/core';
+import { Chart, registerables } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
+import 'hammerjs';
+import type { HourlyForecast } from '../../../../core/models/weather.model';
+import { UnitPreferencesService } from '../../services/unit-preferences.service';
+import { CHART_PARAMETERS } from './chart-datasets.config';
 
 Chart.register(...registerables, zoomPlugin);
 
@@ -28,7 +28,7 @@ Chart.register(...registerables, zoomPlugin);
  * Reactif aux preferences d'unites de temperature (celsius/fahrenheit).
  */
 @Component({
-  selector: "app-hourly-chart",
+  selector: 'app-hourly-chart',
   standalone: true,
   template: `
     <!--
@@ -37,9 +37,7 @@ Chart.register(...registerables, zoomPlugin);
       Couleurs Chart.js portées sur la palette teal/glow (chart-datasets.config).
       Tailwind/couleurs uniquement : logique de dataset/timeRange inchangée.
     -->
-    <div
-      class="rounded-[20px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl"
-    >
+    <div class="rounded-[20px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
       <div class="mb-4 flex items-center justify-between gap-3">
         <h3
           class="font-mono text-[11px] uppercase tracking-[0.14em] text-white/55"
@@ -59,9 +57,7 @@ Chart.register(...registerables, zoomPlugin);
               [attr.aria-selected]="timeRange() === range"
               class="rounded-full px-2.5 py-0.5 font-medium transition-all"
               [class]="
-                timeRange() === range
-                  ? 'bg-teal/20 text-teal'
-                  : 'text-white/55 hover:text-white/80'
+                timeRange() === range ? 'bg-teal/20 text-teal' : 'text-white/55 hover:text-white/80'
               "
               (click)="setTimeRange(range)"
             >
@@ -117,7 +113,7 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
   /** Liste des parametres disponibles pour les toggles. */
   readonly availableParams = CHART_PARAMETERS;
 
-  @ViewChild("chartCanvas", { static: true })
+  @ViewChild('chartCanvas', { static: true })
   chartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private chart: Chart | null = null;
@@ -188,15 +184,15 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
     if (!canvas) return;
 
     const tempUnit = this.unitService.temperatureUnit();
-    const isFahrenheit = tempUnit === "fahrenheit";
+    const isFahrenheit = tempUnit === 'fahrenheit';
 
     // Limiter au nombre d'heures selectionne
     const count = Math.min(this.timeRange(), data.time.length);
     const labels = data.time.slice(0, count).map((t) => {
       const date = new Date(t);
       return date.toLocaleTimeString(this.localeId, {
-        hour: "2-digit",
-        minute: "2-digit",
+        hour: '2-digit',
+        minute: '2-digit',
       });
     });
 
@@ -209,14 +205,14 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
 
         let chartData = rawData.slice(0, count);
         // Conversion temperature si necessaire
-        if (param.id === "temperature" && isFahrenheit) {
+        if (param.id === 'temperature' && isFahrenheit) {
           chartData = chartData.map((t) => Math.round((t * 9) / 5 + 32));
         }
 
         return {
-          type: param.type as "line" | "bar",
+          type: param.type as 'line' | 'bar',
           label:
-            param.id === "temperature"
+            param.id === 'temperature'
               ? isFahrenheit
                 ? `${param.label} (°F)`
                 : `${param.label} (°C)`
@@ -225,11 +221,10 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
           borderColor: param.borderColor,
           backgroundColor: param.backgroundColor,
           borderWidth: 2,
-          pointRadius: param.type === "line" ? 2 : undefined,
-          pointBackgroundColor:
-            param.type === "line" ? param.borderColor : undefined,
-          tension: param.type === "line" ? 0.3 : undefined,
-          fill: param.type === "line",
+          pointRadius: param.type === 'line' ? 2 : undefined,
+          pointBackgroundColor: param.type === 'line' ? param.borderColor : undefined,
+          tension: param.type === 'line' ? 0.3 : undefined,
+          fill: param.type === 'line',
           yAxisID: param.yAxisID,
         };
       })
@@ -240,38 +235,37 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
     const scales: Record<string, any> = {
       x: {
         ticks: {
-          color: "rgba(255, 255, 255, 0.6)",
+          color: 'rgba(255, 255, 255, 0.6)',
           maxRotation: 45,
           font: { size: 10 },
         },
-        grid: { color: "rgba(255, 255, 255, 0.1)" },
+        grid: { color: 'rgba(255, 255, 255, 0.1)' },
       },
     };
 
     for (const param of CHART_PARAMETERS) {
       if (!visible.has(param.id)) continue;
       scales[param.yAxisID] = {
-        position: param.yAxisID === "y" ? "left" : "right",
-        display: param.yAxisID === "y" || param.yAxisID === "y1",
+        position: param.yAxisID === 'y' ? 'left' : 'right',
+        display: param.yAxisID === 'y' || param.yAxisID === 'y1',
         ticks: {
-          color: param.borderColor.replace("0.9", "0.7").replace("0.8", "0.7"),
+          color: param.borderColor.replace('0.9', '0.7').replace('0.8', '0.7'),
           callback: (value: number) => {
-            if (param.id === "temperature")
-              return isFahrenheit ? `${value}°F` : `${value}°`;
+            if (param.id === 'temperature') return isFahrenheit ? `${value}°F` : `${value}°`;
             if (param.unit) return `${value}${param.unit}`;
             return String(value);
           },
         },
         grid: {
-          display: param.yAxisID === "y",
-          color: "rgba(255,255,255,0.1)",
+          display: param.yAxisID === 'y',
+          color: 'rgba(255,255,255,0.1)',
         },
-        beginAtZero: param.id !== "temperature",
+        beginAtZero: param.id !== 'temperature',
       };
     }
 
     this.chart = new Chart(canvas, {
-      type: "bar",
+      type: 'bar',
       data: {
         labels,
         datasets,
@@ -280,32 +274,32 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
-          mode: "index",
+          mode: 'index',
           intersect: false,
         },
         plugins: {
           legend: {
             labels: {
-              color: "rgba(255, 255, 255, 0.7)",
+              color: 'rgba(255, 255, 255, 0.7)',
               font: { size: 11 },
             },
           },
           tooltip: {
-            backgroundColor: "rgba(10, 14, 18, 0.85)",
-            titleColor: "white",
-            bodyColor: "white",
-            borderColor: "rgba(79, 179, 162, 0.4)",
+            backgroundColor: 'rgba(10, 14, 18, 0.85)',
+            titleColor: 'white',
+            bodyColor: 'white',
+            borderColor: 'rgba(79, 179, 162, 0.4)',
             borderWidth: 1,
           },
           zoom: {
             pan: {
               enabled: true,
-              mode: "x",
+              mode: 'x',
             },
             zoom: {
               wheel: { enabled: true },
               pinch: { enabled: true },
-              mode: "x",
+              mode: 'x',
             },
           },
         },

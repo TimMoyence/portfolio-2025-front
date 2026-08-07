@@ -1,7 +1,7 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import type { Observable } from "rxjs";
-import { APP_CONFIG } from "../config/app-config.token";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { APP_CONFIG } from '../config/app-config.token';
 import type {
   CreateEntryPayload,
   CreateGoalPayload,
@@ -18,8 +18,8 @@ import type {
   SebastianStatsPeriod,
   SebastianTrendData,
   SebastianTrendPeriod,
-} from "../models/sebastian.model";
-import type { SebastianPort } from "../ports/sebastian.port";
+} from '../models/sebastian.model';
+import type { SebastianPort } from '../ports/sebastian.port';
 
 /**
  * Adaptateur HTTP pour le port Sebastian.
@@ -43,10 +43,9 @@ export class SebastianHttpAdapter implements SebastianPort {
     category?: SebastianCategory;
   }): Observable<SebastianEntry[]> {
     let httpParams = new HttpParams();
-    if (params?.from) httpParams = httpParams.set("from", params.from);
-    if (params?.to) httpParams = httpParams.set("to", params.to);
-    if (params?.category)
-      httpParams = httpParams.set("category", params.category);
+    if (params?.from) httpParams = httpParams.set('from', params.from);
+    if (params?.to) httpParams = httpParams.set('to', params.to);
+    if (params?.category) httpParams = httpParams.set('category', params.category);
     return this.http.get<SebastianEntry[]>(`${this.baseUrl}/entries`, {
       params: httpParams,
     });
@@ -59,7 +58,7 @@ export class SebastianHttpAdapter implements SebastianPort {
 
   /** Recupere les statistiques agregees pour une periode. */
   getStats(period: SebastianStatsPeriod): Observable<SebastianStats> {
-    const params = new HttpParams().set("period", period);
+    const params = new HttpParams().set('period', period);
     return this.http.get<SebastianStats>(`${this.baseUrl}/stats`, { params });
   }
 
@@ -87,9 +86,7 @@ export class SebastianHttpAdapter implements SebastianPort {
 
   /** Recupere le score de sante. */
   getHealthScore(): Observable<SebastianHealthScore> {
-    return this.http.get<SebastianHealthScore>(
-      `${this.baseUrl}/stats/health-score`,
-    );
+    return this.http.get<SebastianHealthScore>(`${this.baseUrl}/stats/health-score`);
   }
 
   /** Recupere les badges et leur statut. */
@@ -102,10 +99,9 @@ export class SebastianHttpAdapter implements SebastianPort {
     period: SebastianReportPeriod,
     startDate: string,
   ): Observable<SebastianPeriodReport> {
-    return this.http.get<SebastianPeriodReport>(
-      `${this.baseUrl}/stats/report`,
-      { params: { period, startDate } },
-    );
+    return this.http.get<SebastianPeriodReport>(`${this.baseUrl}/stats/report`, {
+      params: { period, startDate },
+    });
   }
 
   /** Recupere le taux d'alcoolemie actuel. */

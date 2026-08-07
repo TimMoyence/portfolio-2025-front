@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.directive";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
 /**
  * Variante visuelle d'un pilier Asili.
@@ -8,7 +8,7 @@ import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.direc
  * - `formations` : fond `--sand`, bordure `--sand-deep`, orbe blanc en bas
  *   a droite.
  */
-export type AsiliPillarVariant = "services" | "formations";
+export type AsiliPillarVariant = 'services' | 'formations';
 
 /**
  * Lien de pied de pilier (rendu en `.link-arrow`).
@@ -57,11 +57,11 @@ export interface AsiliPillar {
  * appelante doit garantir la coherence de la hierarchie (un `<h1>` en amont).
  */
 @Component({
-  selector: "app-asili-pillars",
+  selector: 'app-asili-pillars',
   standalone: true,
   imports: [RevealOnScrollDirective],
-  templateUrl: "./asili-pillars.component.html",
-  styleUrls: ["./asili-pillars.component.scss"],
+  templateUrl: './asili-pillars.component.html',
+  styleUrls: ['./asili-pillars.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliPillarsComponent {

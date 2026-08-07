@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import type { SebastianHealthScore } from "../../../core/models/sebastian.model";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import type { SebastianHealthScore } from '../../../core/models/sebastian.model';
 
 /**
  * Carte affichant le score de sante Sebastian.
  * Decompose le score en adherence aux objectifs, bonus de tendance et bonus de streak.
  */
 @Component({
-  selector: "app-sebastian-score-card",
+  selector: 'app-sebastian-score-card',
   standalone: true,
   template: `
     <!--
@@ -39,13 +39,9 @@ import type { SebastianHealthScore } from "../../../core/models/sebastian.model"
         <div>
           <div class="mb-1 flex justify-between text-sm text-white/70">
             <span>Adherence objectifs</span>
-            <span class="font-mono text-gold-soft"
-              >{{ score().breakdown.goalAdherence }}%</span
-            >
+            <span class="font-mono text-gold-soft">{{ score().breakdown.goalAdherence }}%</span>
           </div>
-          <div
-            class="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]"
-          >
+          <div class="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
             <div
               class="h-full rounded-full bg-gradient-to-r from-gold to-gold-soft transition-all duration-500"
               [style.width.%]="score().breakdown.goalAdherence"
@@ -55,27 +51,17 @@ import type { SebastianHealthScore } from "../../../core/models/sebastian.model"
 
         <!-- Bonus tendance (optionnel) -->
         @if (score().breakdown.trendBonus) {
-          <div
-            data-testid="trend-bonus"
-            class="flex justify-between text-sm text-white/70"
-          >
+          <div data-testid="trend-bonus" class="flex justify-between text-sm text-white/70">
             <span>Bonus tendance</span>
-            <span class="font-semibold text-gold-soft">
-              +{{ score().breakdown.trendBonus }}
-            </span>
+            <span class="font-semibold text-gold-soft"> +{{ score().breakdown.trendBonus }} </span>
           </div>
         }
 
         <!-- Bonus streak (optionnel) -->
         @if (score().breakdown.streakBonus) {
-          <div
-            data-testid="streak-bonus"
-            class="flex justify-between text-sm text-white/70"
-          >
+          <div data-testid="streak-bonus" class="flex justify-between text-sm text-white/70">
             <span>Bonus streak</span>
-            <span class="font-semibold text-gold-soft">
-              +{{ score().breakdown.streakBonus }}
-            </span>
+            <span class="font-semibold text-gold-soft"> +{{ score().breakdown.streakBonus }} </span>
           </div>
         }
       </div>

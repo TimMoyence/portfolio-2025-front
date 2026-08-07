@@ -1,5 +1,5 @@
-import { CommonModule } from "@angular/common";
-import type { OnInit } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,28 +7,28 @@ import {
   DestroyRef,
   inject,
   signal,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import type { NgForm } from "@angular/forms";
-import { FormsModule } from "@angular/forms";
-import { Router, RouterModule } from "@angular/router";
-import type { FavoriteCity } from "../../core/models/weather.model";
-import type { AuthPort } from "../../core/ports/auth.port";
-import { AUTH_PORT } from "../../core/ports/auth.port";
-import { AuthStateService } from "../../core/services/auth-state.service";
-import type { WeatherPort } from "../../core/ports/weather.port";
-import { WEATHER_PORT } from "../../core/ports/weather.port";
-import { WeatherLevelService } from "../weather/services/weather-level.service";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
-import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import type { FavoriteCity } from '../../core/models/weather.model';
+import type { AuthPort } from '../../core/ports/auth.port';
+import { AUTH_PORT } from '../../core/ports/auth.port';
+import { AuthStateService } from '../../core/services/auth-state.service';
+import type { WeatherPort } from '../../core/ports/weather.port';
+import { WEATHER_PORT } from '../../core/ports/weather.port';
+import { WeatherLevelService } from '../weather/services/weather-level.service';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 
 /** Page profil utilisateur : identite, mot de passe, preferences meteo. */
 @Component({
-  selector: "app-profile",
+  selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
-  templateUrl: "./profile.component.html",
-  styleUrl: "./profile.component.scss",
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss',
   providers: [WeatherLevelService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,23 +43,23 @@ export class ProfileComponent implements OnInit {
 
   /* — Edition du profil — */
   isEditing = signal(false);
-  editFirstName = "";
-  editLastName = "";
-  editPhone = "";
+  editFirstName = '';
+  editLastName = '';
+  editPhone = '';
   editProfileLoading = false;
   editProfileSuccess?: string;
   editProfileError?: string;
 
   /* — Set password (Google-only) — */
-  newPassword = "";
+  newPassword = '';
   setPasswordSubmitted = false;
   setPasswordLoading = false;
   setPasswordSuccess?: string;
   setPasswordError?: string;
 
   /* — Change password — */
-  currentPassword = "";
-  changeNewPassword = "";
+  currentPassword = '';
+  changeNewPassword = '';
   changePasswordSubmitted = false;
   changePasswordLoading = false;
   changePasswordSuccess?: string;
@@ -70,7 +70,7 @@ export class ProfileComponent implements OnInit {
   weatherLoading = false;
 
   ngOnInit(): void {
-    if (this.authState.hasRole("weather")) {
+    if (this.authState.hasRole('weather')) {
       this.loadWeatherPreferences();
     }
   }
@@ -80,14 +80,14 @@ export class ProfileComponent implements OnInit {
    * sinon de l'email. Purement cosmetique (.pf-avatar).
    */
   initial(firstName?: string, lastName?: string, email?: string): string {
-    const source = firstName || lastName || email || "?";
+    const source = firstName || lastName || email || '?';
     return source.charAt(0).toUpperCase();
   }
 
   /** Deconnexion : nettoie le state (parite navbar) puis retour accueil. */
   logout(): void {
     this.authState.logout();
-    void this.router.navigate(["/"]);
+    void this.router.navigate(['/']);
   }
 
   /* ========================= EDIT PROFILE ========================= */
@@ -98,7 +98,7 @@ export class ProfileComponent implements OnInit {
     if (!user) return;
     this.editFirstName = user.firstName;
     this.editLastName = user.lastName;
-    this.editPhone = user.phone ?? "";
+    this.editPhone = user.phone ?? '';
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
     this.isEditing.set(true);
@@ -152,27 +152,23 @@ export class ProfileComponent implements OnInit {
 
     this.setPasswordLoading = true;
 
-    handleFormSubmit(
-      this.authService.setPassword({ newPassword: this.newPassword }),
-      this.cdr,
-      {
-        fallbackError: $localize`:profile.password.error.generic@@profilePasswordErrorGeneric:Impossible de definir le mot de passe pour le moment.`,
-        onSuccess: () => {
-          this.setPasswordSuccess = $localize`:profile.password.success@@profilePasswordSuccess:Mot de passe defini avec succes.`;
-          this.newPassword = "";
-          form.resetForm({ newPassword: "" });
-          this.setPasswordSubmitted = false;
-          this.authState.restoreSession();
-        },
-        onError: (message) => {
-          this.setPasswordError = message;
-          this.setPasswordLoading = false;
-        },
-        onComplete: () => {
-          this.setPasswordLoading = false;
-        },
+    handleFormSubmit(this.authService.setPassword({ newPassword: this.newPassword }), this.cdr, {
+      fallbackError: $localize`:profile.password.error.generic@@profilePasswordErrorGeneric:Impossible de definir le mot de passe pour le moment.`,
+      onSuccess: () => {
+        this.setPasswordSuccess = $localize`:profile.password.success@@profilePasswordSuccess:Mot de passe defini avec succes.`;
+        this.newPassword = '';
+        form.resetForm({ newPassword: '' });
+        this.setPasswordSubmitted = false;
+        this.authState.restoreSession();
       },
-    );
+      onError: (message) => {
+        this.setPasswordError = message;
+        this.setPasswordLoading = false;
+      },
+      onComplete: () => {
+        this.setPasswordLoading = false;
+      },
+    });
   }
 
   /* ========================= CHANGE PASSWORD ========================= */
@@ -195,9 +191,9 @@ export class ProfileComponent implements OnInit {
         fallbackError: $localize`:profile.changePassword.error.generic@@profileChangePasswordErrorGeneric:Impossible de changer le mot de passe pour le moment.`,
         onSuccess: () => {
           this.changePasswordSuccess = $localize`:profile.changePassword.success@@profileChangePasswordSuccess:Mot de passe modifie avec succes.`;
-          this.currentPassword = "";
-          this.changeNewPassword = "";
-          form.resetForm({ currentPassword: "", changeNewPassword: "" });
+          this.currentPassword = '';
+          this.changeNewPassword = '';
+          form.resetForm({ currentPassword: '', changeNewPassword: '' });
           this.changePasswordSubmitted = false;
           this.authState.restoreSession();
         },

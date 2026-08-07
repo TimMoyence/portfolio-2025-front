@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   Directive,
   DestroyRef,
@@ -7,7 +7,7 @@ import {
   PLATFORM_ID,
   inject,
   input,
-} from "@angular/core";
+} from '@angular/core';
 
 /**
  * Révélation au scroll « fail-open ». Le contenu est visible par défaut ;
@@ -16,7 +16,7 @@ import {
  * et si le JS échoue. Respecte `prefers-reduced-motion` via le CSS (.reveal).
  */
 @Directive({
-  selector: "[appReveal]",
+  selector: '[appReveal]',
   standalone: true,
 })
 export class RevealOnScrollDirective implements OnInit {
@@ -32,15 +32,15 @@ export class RevealOnScrollDirective implements OnInit {
       return;
     }
     const host = this.el.nativeElement;
-    document.documentElement.classList.add("anim-ready");
-    host.classList.add("reveal");
+    document.documentElement.classList.add('anim-ready');
+    host.classList.add('reveal');
     const delay = this.appRevealDelay();
     if (delay) {
-      host.setAttribute("data-delay", String(delay));
+      host.setAttribute('data-delay', String(delay));
     }
 
-    if (typeof IntersectionObserver === "undefined") {
-      host.classList.add("in");
+    if (typeof IntersectionObserver === 'undefined') {
+      host.classList.add('in');
       return;
     }
 
@@ -48,7 +48,7 @@ export class RevealOnScrollDirective implements OnInit {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            host.classList.add("in");
+            host.classList.add('in');
             observer.disconnect();
           }
         }

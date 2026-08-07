@@ -1,5 +1,5 @@
-import { InjectionToken } from "@angular/core";
-import type { Observable } from "rxjs";
+import { InjectionToken } from '@angular/core';
+import type { Observable } from 'rxjs';
 import type {
   AuthActionMessage,
   AuthSession,
@@ -12,7 +12,7 @@ import type {
   ResetPasswordPayload,
   SetPasswordPayload,
   UpdateProfilePayload,
-} from "../models/auth.model";
+} from '../models/auth.model';
 
 export interface AuthPort {
   login(credentials: LoginCredentials): Observable<AuthSession>;
@@ -25,9 +25,7 @@ export interface AuthPort {
    * l'invitation magic-link associee apres signature du JWT.
    */
   googleAuth(idToken: string, inviteToken?: string): Observable<AuthSession>;
-  requestPasswordReset(
-    payload: ForgotPasswordPayload,
-  ): Observable<AuthActionMessage>;
+  requestPasswordReset(payload: ForgotPasswordPayload): Observable<AuthActionMessage>;
   resetPassword(payload: ResetPasswordPayload): Observable<AuthActionMessage>;
   setPassword(payload: SetPasswordPayload): Observable<AuthUser>;
   changePassword(payload: ChangePasswordPayload): Observable<AuthUser>;
@@ -40,9 +38,7 @@ export interface AuthPort {
   /** Verifie l'adresse email via le token recu par email. */
   verifyEmail(token: string): Observable<AuthActionMessage>;
   /** Renvoie l'email de verification. */
-  resendVerification(
-    payload: ResendVerificationPayload,
-  ): Observable<AuthActionMessage>;
+  resendVerification(payload: ResendVerificationPayload): Observable<AuthActionMessage>;
 }
 
-export const AUTH_PORT = new InjectionToken<AuthPort>("AUTH_PORT");
+export const AUTH_PORT = new InjectionToken<AuthPort>('AUTH_PORT');

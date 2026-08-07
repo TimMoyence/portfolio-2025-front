@@ -1,5 +1,5 @@
-import { InjectionToken } from "@angular/core";
-import type { Observable } from "rxjs";
+import { InjectionToken } from '@angular/core';
+import type { Observable } from 'rxjs';
 import type {
   AirQualityData,
   DetailedCurrentWeather,
@@ -10,16 +10,12 @@ import type {
   HistoricalData,
   WeatherAlertResult,
   WeatherPreferences,
-} from "../models/weather.model";
+} from '../models/weather.model';
 
 /** Port d'acces aux donnees meteorologiques. */
 export interface WeatherPort {
   /** Recherche de villes par nom. */
-  searchCity(
-    name: string,
-    language?: string,
-    count?: number,
-  ): Observable<GeocodingResponse>;
+  searchCity(name: string, language?: string, count?: number): Observable<GeocodingResponse>;
 
   /**
    * Reverse-geocoding : resout le nom de la ville a partir de coordonnees.
@@ -43,12 +39,12 @@ export interface WeatherPort {
     data: Partial<
       Pick<
         WeatherPreferences,
-        | "level"
-        | "favoriteCities"
-        | "tooltipsSeen"
-        | "units"
-        | "defaultCityIndex"
-        | "overviewGranularity"
+        | 'level'
+        | 'favoriteCities'
+        | 'tooltipsSeen'
+        | 'units'
+        | 'defaultCityIndex'
+        | 'overviewGranularity'
       >
     >,
   ): Observable<WeatherPreferences>;
@@ -57,10 +53,7 @@ export interface WeatherPort {
   recordUsage(): Observable<void>;
 
   /** Recuperation des donnees de qualite de l'air pour des coordonnees donnees. */
-  getAirQuality(
-    latitude: number,
-    longitude: number,
-  ): Observable<AirQualityData>;
+  getAirQuality(latitude: number, longitude: number): Observable<AirQualityData>;
 
   /** Recuperation des previsions multi-modeles (ensemble) pour des coordonnees donnees. */
   getEnsemble(latitude: number, longitude: number): Observable<EnsembleData>;
@@ -74,22 +67,13 @@ export interface WeatherPort {
   ): Observable<HistoricalData>;
 
   /** Recuperation des donnees meteo detaillees courantes (OpenWeatherMap). */
-  getDetailedCurrent(
-    latitude: number,
-    longitude: number,
-  ): Observable<DetailedCurrentWeather>;
+  getDetailedCurrent(latitude: number, longitude: number): Observable<DetailedCurrentWeather>;
 
   /** Recuperation des previsions detaillees (OpenWeatherMap). */
-  getDetailedForecast(
-    latitude: number,
-    longitude: number,
-  ): Observable<DetailedForecastResult>;
+  getDetailedForecast(latitude: number, longitude: number): Observable<DetailedForecastResult>;
 
   /** Recuperation des alertes meteo synthetiques. */
-  getAlerts(
-    latitude: number,
-    longitude: number,
-  ): Observable<WeatherAlertResult>;
+  getAlerts(latitude: number, longitude: number): Observable<WeatherAlertResult>;
 }
 
-export const WEATHER_PORT = new InjectionToken<WeatherPort>("WEATHER_PORT");
+export const WEATHER_PORT = new InjectionToken<WeatherPort>('WEATHER_PORT');

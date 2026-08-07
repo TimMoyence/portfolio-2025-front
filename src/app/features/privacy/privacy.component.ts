@@ -1,7 +1,7 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 /** Entrée du sommaire (TOC) reliant une ancre à son libellé. */
 interface PrivacyTocItem {
@@ -18,11 +18,11 @@ interface PrivacyTocItem {
  * `<a href="#id">` (SSR-safe), liens internes via `routerLink`.
  */
 @Component({
-  selector: "app-privacy",
+  selector: 'app-privacy',
   standalone: true,
   imports: [CommonModule, RouterModule, RevealOnScrollDirective],
-  templateUrl: "./privacy.component.html",
-  styleUrl: "./privacy.component.scss",
+  templateUrl: './privacy.component.html',
+  styleUrl: './privacy.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrivacyComponent {
@@ -34,35 +34,35 @@ export class PrivacyComponent {
   /** Sommaire (TOC) : ancres + libellés des 8 sections. */
   readonly toc: readonly PrivacyTocItem[] = [
     {
-      anchor: "principe",
+      anchor: 'principe',
       label: $localize`:privacy.toc.principe@@privacyTocPrincipe:Notre principe`,
     },
     {
-      anchor: "collecte",
+      anchor: 'collecte',
       label: $localize`:privacy.toc.collecte@@privacyTocCollecte:Données collectées`,
     },
     {
-      anchor: "usage",
+      anchor: 'usage',
       label: $localize`:privacy.toc.usage@@privacyTocUsage:Usage des données`,
     },
     {
-      anchor: "base",
+      anchor: 'base',
       label: $localize`:privacy.toc.base@@privacyTocBase:Base légale`,
     },
     {
-      anchor: "partage",
+      anchor: 'partage',
       label: $localize`:privacy.toc.partage@@privacyTocPartage:Partage`,
     },
     {
-      anchor: "conservation",
+      anchor: 'conservation',
       label: $localize`:privacy.toc.conservation@@privacyTocConservation:Conservation`,
     },
     {
-      anchor: "droits",
+      anchor: 'droits',
       label: $localize`:privacy.toc.droits@@privacyTocDroits:Vos droits`,
     },
     {
-      anchor: "contact",
+      anchor: 'contact',
       label: $localize`:privacy.toc.contact@@privacyTocContact:Nous contacter`,
     },
   ];

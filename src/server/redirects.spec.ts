@@ -1,10 +1,10 @@
-import type express from "express";
+import type express from 'express';
 import {
   PERMANENT_REDIRECTS,
   REDIRECT_SOURCES,
   registerPermanentRedirects,
   resolveRedirect,
-} from "./redirects";
+} from './redirects';
 
 /** Route capturee lors de l'enregistrement sur l'application Express stub. */
 interface RegisteredRoute {
@@ -62,49 +62,49 @@ const runHandler = (
   return { calls, nextCalled };
 };
 
-describe("redirects", () => {
-  describe("resolveRedirect", () => {
+describe('redirects', () => {
+  describe('resolveRedirect', () => {
     it("redirige l'ancienne etude de cas vers /projets, locale preservee", () => {
-      expect(resolveRedirect("/client-project")).toBe("/fr/projets");
-      expect(resolveRedirect("/fr/client-project")).toBe("/fr/projets");
-      expect(resolveRedirect("/en/client-project")).toBe("/en/projets");
+      expect(resolveRedirect('/client-project')).toBe('/fr/projets');
+      expect(resolveRedirect('/fr/client-project')).toBe('/fr/projets');
+      expect(resolveRedirect('/en/client-project')).toBe('/en/projets');
     });
 
-    it("redirige /home vers la racine localisee", () => {
-      expect(resolveRedirect("/home")).toBe("/fr");
-      expect(resolveRedirect("/fr/home")).toBe("/fr");
-      expect(resolveRedirect("/en/home")).toBe("/en");
+    it('redirige /home vers la racine localisee', () => {
+      expect(resolveRedirect('/home')).toBe('/fr');
+      expect(resolveRedirect('/fr/home')).toBe('/fr');
+      expect(resolveRedirect('/en/home')).toBe('/en');
     });
 
-    it("ne redirige pas un chemin hors table", () => {
-      expect(resolveRedirect("/projets")).toBeNull();
-      expect(resolveRedirect("/fr/projets")).toBeNull();
-      expect(resolveRedirect("/")).toBeNull();
-      expect(resolveRedirect("/fr/contact")).toBeNull();
-      expect(resolveRedirect("/client-project-bis")).toBeNull();
-      expect(resolveRedirect("/fr/client-project/detail")).toBeNull();
+    it('ne redirige pas un chemin hors table', () => {
+      expect(resolveRedirect('/projets')).toBeNull();
+      expect(resolveRedirect('/fr/projets')).toBeNull();
+      expect(resolveRedirect('/')).toBeNull();
+      expect(resolveRedirect('/fr/contact')).toBeNull();
+      expect(resolveRedirect('/client-project-bis')).toBeNull();
+      expect(resolveRedirect('/fr/client-project/detail')).toBeNull();
     });
 
-    it("reproduit le matching Express : insensible a la casse et au slash final", () => {
+    it('reproduit le matching Express : insensible a la casse et au slash final', () => {
       // Express est configure par defaut en `case sensitive routing: false`
       // et `strict routing: false` : ces variantes atteignaient deja les
       // anciens handlers `app.get("/client-project")`.
-      expect(resolveRedirect("/CLIENT-PROJECT")).toBe("/fr/projets");
-      expect(resolveRedirect("/FR/Client-Project")).toBe("/fr/projets");
-      expect(resolveRedirect("/home/")).toBe("/fr");
-      expect(resolveRedirect("/en/home/")).toBe("/en");
+      expect(resolveRedirect('/CLIENT-PROJECT')).toBe('/fr/projets');
+      expect(resolveRedirect('/FR/Client-Project')).toBe('/fr/projets');
+      expect(resolveRedirect('/home/')).toBe('/fr');
+      expect(resolveRedirect('/en/home/')).toBe('/en');
     });
 
-    it("expose la liste des chemins sources alignee sur la table", () => {
+    it('expose la liste des chemins sources alignee sur la table', () => {
       expect(REDIRECT_SOURCES).toEqual(Object.keys(PERMANENT_REDIRECTS));
-      expect(REDIRECT_SOURCES).toContain("/client-project");
-      expect(REDIRECT_SOURCES).toContain("/fr/client-project");
-      expect(REDIRECT_SOURCES).toContain("/en/client-project");
+      expect(REDIRECT_SOURCES).toContain('/client-project');
+      expect(REDIRECT_SOURCES).toContain('/fr/client-project');
+      expect(REDIRECT_SOURCES).toContain('/en/client-project');
     });
   });
 
-  describe("registerPermanentRedirects", () => {
-    it("enregistre les sources sur une seule route GET", () => {
+  describe('registerPermanentRedirects', () => {
+    it('enregistre les sources sur une seule route GET', () => {
       const { app, routes } = stubApp();
 
       registerPermanentRedirects(app);
@@ -113,7 +113,7 @@ describe("redirects", () => {
       expect(routes[0].paths).toEqual(REDIRECT_SOURCES);
     });
 
-    it("emet un vrai 301 vers la cible attendue pour chaque source", () => {
+    it('emet un vrai 301 vers la cible attendue pour chaque source', () => {
       const { app, routes } = stubApp();
       registerPermanentRedirects(app);
       const handler = routes[0].handler;
@@ -124,25 +124,23 @@ describe("redirects", () => {
         expect(calls)
           .withContext(`${source} devrait rediriger en 301 vers ${target}`)
           .toEqual([{ status: 301, location: target }]);
-        expect(nextCalled)
-          .withContext(`${source} ne devrait pas poursuivre la chaine`)
-          .toBeFalse();
+        expect(nextCalled).withContext(`${source} ne devrait pas poursuivre la chaine`).toBeFalse();
       }
     });
 
-    it("verrouille le comportement observable mesure en production", () => {
+    it('verrouille le comportement observable mesure en production', () => {
       const { app, routes } = stubApp();
       registerPermanentRedirects(app);
       const handler = routes[0].handler;
 
-      expect(runHandler(handler, "/client-project").calls).toEqual([
-        { status: 301, location: "/fr/projets" },
+      expect(runHandler(handler, '/client-project').calls).toEqual([
+        { status: 301, location: '/fr/projets' },
       ]);
-      expect(runHandler(handler, "/fr/client-project").calls).toEqual([
-        { status: 301, location: "/fr/projets" },
+      expect(runHandler(handler, '/fr/client-project').calls).toEqual([
+        { status: 301, location: '/fr/projets' },
       ]);
-      expect(runHandler(handler, "/en/client-project").calls).toEqual([
-        { status: 301, location: "/en/projets" },
+      expect(runHandler(handler, '/en/client-project').calls).toEqual([
+        { status: 301, location: '/en/projets' },
       ]);
     });
 
@@ -150,7 +148,7 @@ describe("redirects", () => {
       const { app, routes } = stubApp();
       registerPermanentRedirects(app);
 
-      const { calls, nextCalled } = runHandler(routes[0].handler, "/projets");
+      const { calls, nextCalled } = runHandler(routes[0].handler, '/projets');
 
       expect(calls).toEqual([]);
       expect(nextCalled).toBeTrue();
