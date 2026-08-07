@@ -56,10 +56,15 @@ export class AuthStateService {
   }
 
   logout(): void {
-    if (this.authPort) {
-      this.authPort.logout().subscribe({ error: () => {} });
+    try {
+      this.authPort?.logout().subscribe({ error: () => {} });
+    } catch {
+      // Une deconnexion ne doit jamais echouer cote client. Contrepartie assumee :
+      // serveur injoignable => le cookie de refresh HttpOnly survit cote serveur
+      // jusqu a son expiration, alors que la session locale est deja purgee.
+    } finally {
+      this.clearState();
     }
-    this.clearState();
   }
 
   hasRole(role: string): boolean {

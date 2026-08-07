@@ -23,9 +23,10 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "guard:comments": "node scripts/guard-no-comments.cli.mjs --root .",
     "guard:comments:count": "node scripts/guard-no-comments.cli.mjs --root . --count",
+    "guard:comments:tighten": "node scripts/guard-no-comments.cli.mjs --root . --tighten",
     "test:guards": "node --test \"scripts/**/*.test.mjs\"",
-    "pre-push:check": "npm run lint && npm run format:check && npm run typecheck && npm run test:ci",
-    "ci:check": "npm run lint && npm run format:check && npm run typecheck && npm run test:ci && npm run build",
+    "pre-push:check": "npm run lint && npm run format:check && npm run typecheck && npm run test:guards && npm run guard:comments && npm run test:ci",
+    "ci:check": "npm run lint && npm run format:check && npm run typecheck && npm run test:guards && npm run guard:comments && npm run test:ci && npm run build",
     "serve:ssr:portfolio-app": "node dist/portfolio-app/server/fr/server.mjs",
     "extract-i18n": "ng extract-i18n --output-path src/locale --format xlf",
     "formation:validate": "node scripts/validate-formation.mjs",
@@ -46,6 +47,9 @@
     ]
   },
   "private": true,
+  "guard-no-comments": {
+    "maxOffenses": 484
+  },
   "dependencies": {
     "@angular/animations": "^19.2.25",
     "@angular/common": "^19.2.25",

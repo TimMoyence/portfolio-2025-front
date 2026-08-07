@@ -2649,18 +2649,6 @@
       </segment>
     </unit>
 
-    <unit id="footerFreshLabel">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:40</note>
-        <note category="description">Footer freshness chip label</note>
-        <note category="meaning">footer.fresh.label</note>
-      </notes>
-      <segment>
-        <source>Mis à jour le</source>
-        <target>Updated on</target>
-      </segment>
-    </unit>
-
     <unit id="footerCopyrightAsili">
       <notes>
         <note category="location">src/app/shared/components/footer/footer.component.ts:45</note>

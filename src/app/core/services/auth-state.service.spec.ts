@@ -1,6 +1,6 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
@@ -109,6 +109,41 @@ describe('AuthStateService', () => {
       expect(authPortStub.logout).toHaveBeenCalledWith();
       expect(service.isLoggedIn()).toBeFalse();
     });
+
+    it('devrait purger la session locale meme si la revocation serveur echoue', () => {
+      const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
+      authPortStub.logout.and.returnValue(throwError(() => new Error('API injoignable')));
+      service.login(buildAuthSession());
+
+      expect(() => service.logout()).not.toThrow();
+
+      expect(service.isLoggedIn()).toBeFalse();
+      expect(service.user()).toBeNull();
+      expect(localStorage.getItem('portfolio_jwt')).toBeNull();
+    });
+
+    it("devrait purger la session locale meme si le port jette avant d'emettre", () => {
+      const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
+      authPortStub.logout.and.throwError('port indisponible');
+      service.login(buildAuthSession());
+
+      expect(() => service.logout()).not.toThrow();
+
+      expect(service.isLoggedIn()).toBeFalse();
+      expect(service.user()).toBeNull();
+      expect(localStorage.getItem('portfolio_jwt')).toBeNull();
+    });
+
+    it('devrait annuler le timer de refresh au logout', fakeAsync(() => {
+      const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
+
+      service.login(buildAuthSession({ expiresIn: 120 }));
+      service.logout();
+
+      tick(120_000);
+
+      expect(authPortStub.refresh).not.toHaveBeenCalled();
+    }));
 
     it('devrait annuler le timer au clearSession', fakeAsync(() => {
       const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
