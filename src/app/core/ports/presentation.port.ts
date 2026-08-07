@@ -2,13 +2,11 @@ import { InjectionToken } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type { SlideInteractions } from '../models/presentation-interactions.model';
 
-/** Réponse de l'API interactions de présentation. */
 export interface PresentationInteractionsResponse {
   slug: string;
   interactions: Record<string, SlideInteractions>;
 }
 
-/** Port pour récupérer les interactions d'une présentation. */
 export interface PresentationPort {
   getInteractions(slug: string): Observable<PresentationInteractionsResponse>;
 }

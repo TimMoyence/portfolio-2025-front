@@ -2,19 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ToolkitGatePageComponent } from '../../shared/toolkit-gate-page.component';
 import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
 
-/**
- * Page de capture email du toolkit « Audit SEO DIY » — refonte Asili (Lot 3e).
- *
- * Shell mince : il fournit ses chaines localisees au composant partage
- * `ToolkitGatePageComponent` et projette son titre a accent. Le slug
- * `audit-seo-diy` (cle metier d'attribution back-end) est transmis verbatim au
- * formulaire de capture, qui declenche l'envoi du PDF « Checklist audit SEO +
- * rapport type » via le pipeline lead-magnet.
- *
- * La logique de capture (port `LEAD_MAGNET_PORT`, `requestToolkit`) vit dans
- * `ToolkitFormComponent`, inchangee. Routes et `seoKey` inchanges ; fond
- * constellation global. Texte localise via `$localize`.
- */
 @Component({
   selector: 'app-toolkit-audit-seo',
   standalone: true,
@@ -29,7 +16,6 @@ import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
   `,
 })
 export class ToolkitAuditSeoComponent {
-  /** Contenu localise de la page gate. */
   protected readonly gateData: ToolkitGatePageData = {
     lead: $localize`:@@formations.audit-seo.toolkit.subtitle:Les 7 checks SEO de la formation — avec les liens directs vers les 5 outils gratuits, le template de rapport à imprimer et le script pour briefer un développeur — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement.`,
     items: [

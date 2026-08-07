@@ -20,7 +20,6 @@ import {
   standalone: true,
 })
 export class RevealOnScrollDirective implements OnInit {
-  /** Échelonnement optionnel (mappe sur [data-delay], 1..4). */
   readonly appRevealDelay = input<1 | 2 | 3 | 4 | null>(null);
 
   private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);

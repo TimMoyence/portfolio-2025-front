@@ -11,10 +11,6 @@ import type {
 } from '../../app/core/models/weather.model';
 import type { WeatherPort } from '../../app/core/ports/weather.port';
 
-/**
- * Construit un objet WeatherPreferences avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildWeatherPreferences(
   overrides?: Partial<WeatherPreferences>,
 ): WeatherPreferences {
@@ -32,10 +28,6 @@ export function buildWeatherPreferences(
   };
 }
 
-/**
- * Construit un objet CityResult avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildCityResult(overrides?: Partial<CityResult>): CityResult {
   return {
     id: 1,
@@ -48,10 +40,6 @@ export function buildCityResult(overrides?: Partial<CityResult>): CityResult {
   };
 }
 
-/**
- * Construit un objet DailyForecast avec 7 jours de donnees par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildDailyForecast(overrides?: Partial<DailyForecast>): DailyForecast {
   return {
     time: [
@@ -93,11 +81,6 @@ export function buildDailyForecast(overrides?: Partial<DailyForecast>): DailyFor
   };
 }
 
-/**
- * Construit un objet ForecastResponse avec des valeurs par defaut.
- * Inclut les champs etendus Curieux (UV, pression, humidite, etc.).
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildForecastResponse(overrides?: Partial<ForecastResponse>): ForecastResponse {
   return {
     current: {
@@ -147,10 +130,6 @@ export function buildForecastResponse(overrides?: Partial<ForecastResponse>): Fo
   };
 }
 
-/**
- * Construit un objet AirQualityData avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildAirQualityData(overrides?: Partial<AirQualityData>): AirQualityData {
   return {
     current: {
@@ -172,11 +151,6 @@ export function buildAirQualityData(overrides?: Partial<AirQualityData>): AirQua
   };
 }
 
-/**
- * Construit un objet EnsembleData avec trois modeles (ECMWF, GFS, ICON).
- * Le modele GFS inclut des donnees CAPE par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildEnsembleData(overrides?: Partial<EnsembleData>): EnsembleData {
   return {
     models: [
@@ -213,10 +187,6 @@ export function buildEnsembleData(overrides?: Partial<EnsembleData>): EnsembleDa
   };
 }
 
-/**
- * Construit un objet HistoricalData avec des valeurs journalieres sur 3 jours.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildHistoricalData(overrides?: Partial<HistoricalData>): HistoricalData {
   return {
     daily: {
@@ -230,20 +200,12 @@ export function buildHistoricalData(overrides?: Partial<HistoricalData>): Histor
   };
 }
 
-/**
- * Construit un objet WeatherAlertResult avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildWeatherAlertResult(
   overrides?: Partial<WeatherAlertResult>,
 ): WeatherAlertResult {
   return { alerts: [], ...overrides };
 }
 
-/**
- * Cree un stub complet du port meteo avec des spies Jasmine.
- * Chaque methode est un spy independant, non configure par defaut.
- */
 export function createWeatherPortStub(): Record<keyof WeatherPort, jasmine.Spy> {
   return {
     searchCity: jasmine.createSpy('searchCity'),

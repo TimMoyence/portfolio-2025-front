@@ -59,7 +59,6 @@ describe('IaSolopreneursComponent', () => {
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
     const text = root.textContent ?? '';
-    // Palier intermediaire avec mention budget ~60-70 euros
     expect(text).toMatch(/intermédiaire/i);
     expect(text).toContain('Perplexity Pro');
   });
@@ -77,7 +76,6 @@ describe('IaSolopreneursComponent', () => {
     const fixture = TestBed.createComponent(IaSolopreneursComponent);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
-    // En scroll, transition-pratique et one-more-thing sont present-only -> masques
     const transition = root.querySelector('[id="transition-pratique"]');
     const promesse = root.querySelector('[id="promesse"]');
     const oneMore = root.querySelector('[id="one-more-thing"]');

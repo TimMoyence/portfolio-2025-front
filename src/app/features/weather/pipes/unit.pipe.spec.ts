@@ -24,9 +24,7 @@ describe('UnitPipe', () => {
   });
 
   it('devrait convertir celsius vers fahrenheit', () => {
-    // 0°C = 32°F
     expect(pipe.transform(0, 'fahrenheit')).toBe('32\u00B0F');
-    // 100°C = 212°F
     expect(pipe.transform(100, 'fahrenheit')).toBe('212\u00B0F');
   });
 
@@ -35,7 +33,6 @@ describe('UnitPipe', () => {
   });
 
   it('devrait convertir km/h vers mph', () => {
-    // 100 km/h ≈ 62 mph
     expect(pipe.transform(100, 'mph')).toBe('62 mph');
   });
 
@@ -44,7 +41,6 @@ describe('UnitPipe', () => {
   });
 
   it('devrait convertir hPa vers inHg', () => {
-    // 1013 hPa × 0.02953 ≈ 29.91 inHg
     expect(pipe.transform(1013, 'inhg')).toBe('29.91 inHg');
   });
 

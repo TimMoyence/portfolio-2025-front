@@ -60,11 +60,6 @@ import { WeatherLevelService } from './services/weather-level.service';
 import { extractErrorMessage } from '../../shared/utils/http-error.utils';
 import { weatherCodeToBackground } from './utils/weather-code-background';
 
-/**
- * Composant principal de l'application meteo.
- * Orchestre la recherche de ville, le chargement des previsions,
- * le systeme de niveaux et l'affichage des sous-composants.
- */
 @Component({
   selector: 'app-weather-app',
   standalone: true,
@@ -104,46 +99,32 @@ import { weatherCodeToBackground } from './utils/weather-code-background';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherAppComponent implements OnInit {
-  /** Previsions meteo chargees depuis l'API. */
   readonly forecast = signal<ForecastResponse | null>(null);
 
-  /** Donnees de qualite de l'air chargees depuis l'API. */
   readonly airQuality = signal<AirQualityData | null>(null);
 
-  /** Donnees d'ensemble multi-modeles chargees depuis l'API. */
   readonly ensemble = signal<EnsembleData | null>(null);
 
-  /** Donnees historiques journalieres chargees depuis l'API. */
   readonly historical = signal<HistoricalData | null>(null);
 
-  /** Donnees meteo detaillees courantes (source OpenWeatherMap). */
   readonly detailedCurrent = signal<DetailedCurrentWeather | null>(null);
 
-  /** Alertes meteo pour la ville selectionnee. */
   readonly alerts = signal<WeatherAlert[]>([]);
 
-  /** Index de la ville favorite par defaut (chargement automatique). */
   readonly defaultCityIndex = signal<number | null>(null);
 
-  /** Ville actuellement selectionnee. */
   readonly selectedCity = signal<CityResult | null>(null);
 
-  /** Indicateur de chargement. */
   readonly loading = signal(false);
 
-  /** Message d'erreur eventuel. */
   readonly error = signal<string | null>(null);
 
-  /** Villes favorites de l'utilisateur. */
   readonly favoriteCities = signal<FavoriteCity[]>([]);
 
-  /** Index du jour selectionne pour le detail (bottom sheet mobile / expand desktop). */
   readonly selectedDayIndex = signal<number | null>(null);
 
-  /** Nombre de jours de prevision demandes (7 ou 14). */
   readonly forecastDays = signal<7 | 14>(7);
 
-  /** Granularite de la vue d'ensemble hebdomadaire. */
   readonly overviewGranularity = signal<OverviewGranularity>('day');
 
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
@@ -152,42 +133,31 @@ export class WeatherAppComponent implements OnInit {
   private readonly geoService = inject(GeolocationService);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  /** Service de gestion du niveau d'experience. */
   readonly levelService = inject(WeatherLevelService);
 
-  /** Service de gestion des preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
-  /** Detecte si on est en mode mobile (< 768px). Delegue au BreakpointService. */
   readonly isMobile = this.breakpointService.isMobile;
 
-  /** Indique si des previsions sont chargees (pour le style du fond). */
   readonly hasForecast = computed(() => !!this.forecast());
 
-  /** Classes CSS de gradient dynamique basees sur le code meteo courant. */
   readonly backgroundClasses = computed(() => {
     const data = this.forecast();
     if (!data) return '';
     return weatherCodeToBackground(data.current.weather_code);
   });
 
-  /** Gradient precedent pour le crossfade de fond. */
   readonly previousBackground = signal('');
 
-  /** Indique que le fond est en transition (crossfade). */
   readonly backgroundTransitioning = signal(false);
 
-  /** Position de scroll pour l'effet parallax. */
   readonly scrollY = signal(0);
 
-  /** Offset parallax calcule a partir du scroll (max 60px). */
   readonly parallaxOffset = computed(() => Math.min(Math.round(this.scrollY() * 0.15), 60));
 
-  /** Indique que le contenu est en transition lors d'un changement de ville. */
   readonly contentTransitioning = signal(false);
 
   constructor() {
-    // Crossfade : quand le gradient change, on anime la transition
     effect(() => {
       const current = this.backgroundClasses();
       const prev = this.previousBackground();
@@ -200,7 +170,6 @@ export class WeatherAppComponent implements OnInit {
       }
     });
 
-    // Parallax : ecoute le scroll pour l'effet de fond (SSR-safe)
     if (this.isBrowser) {
       const handler = (): void => this.scrollY.set(window.scrollY);
       window.addEventListener('scroll', handler, { passive: true });
@@ -214,9 +183,7 @@ export class WeatherAppComponent implements OnInit {
     this.loadFavorites();
   }
 
-  /** Charge les previsions meteo pour la ville selectionnee. */
   onCitySelected(city: CityResult): void {
-    // Transition animee si on a deja des donnees affichees
     if (this.forecast()) {
       this.contentTransitioning.set(true);
       setTimeout(() => this.contentTransitioning.set(false), 300);
@@ -231,7 +198,6 @@ export class WeatherAppComponent implements OnInit {
     this.detailedCurrent.set(null);
     this.alerts.set([]);
 
-    // Charge les alertes meteo en parallele (tous niveaux)
     this.weatherService
       .getAlerts(city.latitude, city.longitude)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -259,7 +225,6 @@ export class WeatherAppComponent implements OnInit {
         },
       });
 
-    // Charge la qualite de l'air en parallele pour les niveaux Curieux+
     if (this.levelService.level() !== 'discovery') {
       this.weatherService
         .getAirQuality(city.latitude, city.longitude)
@@ -271,7 +236,6 @@ export class WeatherAppComponent implements OnInit {
           },
         });
 
-      // Charge les donnees OWM detaillees en parallele (Curieux+)
       this.weatherService
         .getDetailedCurrent(city.latitude, city.longitude)
         .pipe(takeUntilDestroyed(this.destroyRef))
@@ -283,13 +247,11 @@ export class WeatherAppComponent implements OnInit {
         });
     }
 
-    // Charge les donnees Expert (ensemble + historique) pour le niveau expert
     if (this.levelService.level() === 'expert') {
       this.loadExpertData(city.latitude, city.longitude);
     }
   }
 
-  /** Charge les donnees supplementaires lors d'un changement de niveau. */
   onLevelChanged(level: WeatherLevel): void {
     const city = this.selectedCity();
     if (!city) return;
@@ -325,10 +287,6 @@ export class WeatherAppComponent implements OnInit {
     }
   }
 
-  /**
-   * Extrait la premiere valeur CAPE du modele GFS dans les donnees d'ensemble.
-   * Retourne null si les donnees sont indisponibles.
-   */
   extractCape(): number | null {
     const data = this.ensemble();
     if (!data) return null;
@@ -339,7 +297,6 @@ export class WeatherAppComponent implements OnInit {
     return gfs.hourly.cape[0];
   }
 
-  /** Ajoute une ville aux favoris et synchronise avec le backend. */
   addFavorite(city: FavoriteCity): void {
     const current = this.favoriteCities();
     if (current.some((c) => c.latitude === city.latitude && c.longitude === city.longitude)) return;
@@ -349,12 +306,10 @@ export class WeatherAppComponent implements OnInit {
       .updatePreferences({ favoriteCities: updated })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        // Rollback : restaure la liste precedente en cas d'echec backend
         error: () => this.favoriteCities.set(current),
       });
   }
 
-  /** Retire une ville des favoris et synchronise avec le backend. */
   removeFavorite(city: FavoriteCity): void {
     const previous = this.favoriteCities();
     const updated = previous.filter(
@@ -365,12 +320,10 @@ export class WeatherAppComponent implements OnInit {
       .updatePreferences({ favoriteCities: updated })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        // Rollback : restaure la liste precedente en cas d'echec backend
         error: () => this.favoriteCities.set(previous),
       });
   }
 
-  /** Definit ou retire la ville favorite par defaut. */
   setDefaultCity(index: number | null): void {
     const previous = this.defaultCityIndex();
     this.defaultCityIndex.set(index);
@@ -378,18 +331,14 @@ export class WeatherAppComponent implements OnInit {
       .updatePreferences({ defaultCityIndex: index })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        // Rollback : restaure l'index precedent en cas d'echec backend
         error: () => this.defaultCityIndex.set(previous),
       });
   }
 
-  /** Gere la selection d'un jour pour afficher le detail. */
   onDaySelected(index: number): void {
-    // Si meme jour, toggle la selection
     this.selectedDayIndex.set(this.selectedDayIndex() === index ? null : index);
   }
 
-  /** Met a jour la granularite de la vue d'ensemble et synchronise avec le backend. */
   onGranularityChange(granularity: OverviewGranularity): void {
     const previous = this.overviewGranularity();
     this.overviewGranularity.set(granularity);
@@ -397,12 +346,10 @@ export class WeatherAppComponent implements OnInit {
       .updatePreferences({ overviewGranularity: granularity })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        // Rollback : restaure la granularite precedente en cas d'echec backend
         error: () => this.overviewGranularity.set(previous),
       });
   }
 
-  /** Met a jour le nombre de jours de prevision et recharge les donnees. */
   onForecastDaysChange(days: number): void {
     this.forecastDays.set(days as 7 | 14);
     const city = this.selectedCity();
@@ -419,7 +366,6 @@ export class WeatherAppComponent implements OnInit {
     }
   }
 
-  /** Charge les villes favorites depuis le backend. */
   private loadFavorites(): void {
     this.weatherService
       .getPreferences()
@@ -430,7 +376,6 @@ export class WeatherAppComponent implements OnInit {
           this.unitService.loadFromPreferences(prefs);
           this.defaultCityIndex.set(prefs.defaultCityIndex ?? null);
           this.overviewGranularity.set(prefs.overviewGranularity ?? 'day');
-          // Chargement automatique de la ville par defaut
           const idx = prefs.defaultCityIndex;
           if (idx !== null && idx !== undefined && prefs.favoriteCities?.[idx]) {
             const fav = prefs.favoriteCities[idx];
@@ -443,23 +388,15 @@ export class WeatherAppComponent implements OnInit {
               country_code: '',
             });
           } else {
-            // Pas de ville par defaut → tenter la geolocalisation automatique
             this.autoGeolocate();
           }
         },
         error: () => {
-          // Preferences indisponibles → tenter la geolocalisation
           this.autoGeolocate();
         },
       });
   }
 
-  /**
-   * Tente de geolociser l'utilisateur automatiquement.
-   * Reverse-geocode la position pour obtenir le nom de la ville,
-   * puis charge la meteo et sauvegarde la ville comme favori par defaut.
-   * SSR-safe : le GeolocationService retourne une erreur cote serveur.
-   */
   private autoGeolocate(): void {
     this.geoService
       .locate()
@@ -493,12 +430,7 @@ export class WeatherAppComponent implements OnInit {
       });
   }
 
-  /**
-   * Charge les donnees ensemble et historiques pour le niveau Expert.
-   * Utilise les 30 derniers jours pour les donnees historiques.
-   */
   private loadExpertData(latitude: number, longitude: number): void {
-    // Donnees ensemble multi-modeles
     this.weatherService
       .getEnsemble(latitude, longitude)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -509,7 +441,6 @@ export class WeatherAppComponent implements OnInit {
         },
       });
 
-    // Donnees historiques : 30 derniers jours
     const today = new Date();
     const endDate = new Date(today);
     endDate.setDate(today.getDate() - 1);

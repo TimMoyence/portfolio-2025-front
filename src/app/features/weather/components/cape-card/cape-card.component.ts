@@ -2,11 +2,6 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MetricCardComponent } from '../metric-card/metric-card.component';
 
-/**
- * Carte CAPE (Convective Available Potential Energy).
- * Affiche la valeur CAPE avec une echelle d'instabilite coloree.
- * Inclut un tooltip pedagogique sur la signification du CAPE.
- */
 @Component({
   selector: 'app-cape-card',
   standalone: true,
@@ -33,12 +28,6 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
           </span>
         </div>
 
-        <!--
-          Jauge d'instabilité — piste façon .uv-track Asili (knob blanc liseré
-          sombre). Le dégradé reste l'échelle CAPE sémantique (vert stable →
-          violet extrême) alignée sur labelColor() — couleurs sémantiques
-          conservées, restyle du knob/piste uniquement.
-        -->
         <div
           class="relative mt-3 h-2 overflow-hidden rounded-full bg-white/10"
           role="meter"
@@ -72,10 +61,8 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CapeCardComponent {
-  /** Valeur CAPE en J/kg (depuis le modele GFS). */
   readonly cape = input<number | null>(null);
 
-  /** Label d'instabilite selon l'echelle CAPE. */
   readonly instabilityLabel = computed(() => {
     const value = this.cape();
     if (value === null) return '';
@@ -88,7 +75,6 @@ export class CapeCardComponent {
     return $localize`:weather.cape.extreme|@@weatherCapeExtreme:Instabilité extrême`;
   });
 
-  /** Classe de couleur du label selon le niveau d'instabilite. */
   readonly labelColor = computed(() => {
     const value = this.cape();
     if (value === null) return '';
@@ -99,7 +85,6 @@ export class CapeCardComponent {
     return 'text-purple-400';
   });
 
-  /** Position du curseur sur la jauge (0-100%). */
   readonly gaugePosition = computed(() => {
     const value = this.cape();
     if (value === null) return 0;

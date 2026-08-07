@@ -1,41 +1,19 @@
-/** Handle annulable retourne par {@link animateValue}. */
 export interface AnimationHandle {
-  /** Annule l'animation en cours (idempotent, sans effet si deja terminee). */
   cancel: () => void;
 }
 
-/** Options de {@link animateValue}. */
 export interface AnimateValueOptions {
-  /** Valeur cible finale. */
   to: number;
-  /** Duree en millisecondes. */
   durationMs: number;
-  /** Appele a chaque frame avec la valeur interpolee (NON arrondie). */
   onFrame: (value: number) => void;
-  /** Valeur de depart. Defaut 0. */
   from?: number;
-  /** Appele une fois quand l'animation atteint la cible (progress >= 1). */
   onComplete?: () => void;
 }
 
 /**
- * Anime une valeur numerique de `from` vers `to` via `requestAnimationFrame`,
- * courbe ease-out cubic `1 - (1 - p)^3`.
- *
- * `onFrame` recoit la valeur interpolee brute `from + (to - from) * eased`
- * (l'arrondi eventuel reste a la charge de l'appelant). La frame finale recoit
- * exactement `to`.
- *
- * Le t0 est capture depuis le timestamp de la 1re frame RAF (aucune dependance
- * a `performance`). Si `durationMs <= 0`, la fin est appliquee immediatement
- * (evite tout `NaN` issu d'une division par zero).
- *
- * SSR-safe : si `requestAnimationFrame` est indisponible (rendu serveur), la
- * valeur finale est appliquee immediatement (`onFrame(to)` puis `onComplete`)
- * et un handle no-op est retourne — aucun acces a `window`.
- *
- * @param options - Voir {@link AnimateValueOptions}
- * @returns Un {@link AnimationHandle} pour annuler l'animation
+ * `onFrame` recoit la valeur interpolee brute : l'arrondi eventuel reste a la
+ * charge de l'appelant. Le court-circuit `durationMs <= 0` evite le `NaN` d'une
+ * division par zero.
  */
 export function animateValue(options: AnimateValueOptions): AnimationHandle {
   const { to, durationMs, onFrame, from = 0, onComplete } = options;

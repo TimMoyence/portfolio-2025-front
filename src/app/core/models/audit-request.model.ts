@@ -17,7 +17,6 @@ export type PillarKey =
   | 'aiVisibility'
   | 'citationWorthiness';
 
-/** Liste ordonnee des 7 cles de piliers — source unique pour l'iteration typee. */
 export const PILLAR_KEYS: readonly PillarKey[] = [
   'seo',
   'performance',
@@ -77,10 +76,7 @@ export interface AuditCompletedEvent {
   keyChecks: Record<string, unknown>;
   quickWins: string[];
   pillarScores: Record<string, number>;
-  /**
-   * Synthèse client structurée produite par l'étape LLM.
-   * Optionnel pour rétro-compatibilité : ancien format sans clientReport.
-   */
+  /** Optionnel pour retro-compatibilite : ancien format sans clientReport. */
   clientReport?: ClientReport | null;
   updatedAt: string;
 }

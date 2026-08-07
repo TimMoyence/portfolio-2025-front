@@ -1,10 +1,3 @@
-<!--
-  Auth (login + register) — restyle Asili split-screen (source maquette
-  AsiliNewDesign/auth.html + asili-auth.css). Logique 100% préservée : tabs
-  (selectTab/isTabActive/resolveInitialTab), Google (handleGoogleAuth), toggle
-  mot de passe (showPassword), validation, messages, returnUrl. Restyle =
-  HTML/SCSS uniquement. Chrome globale conservée : .auth-back / topbar omis.
--->
 <app-auth-shell>
   <div aside class="auth-aside-mid" appReveal>
     @if (isTabActive('sign-up')) {
@@ -22,7 +15,6 @@
     }
   </div>
 
-  <!-- Onglets login / register -->
   <div
     class="auth-tabs"
     role="tablist"
@@ -56,7 +48,6 @@
     </button>
   </div>
 
-  <!-- ============ LOGIN ============ -->
   @if (isTabActive('log-in')) {
     <section
       class="auth-screen"
@@ -70,7 +61,6 @@
         Votre espace de croissance commence
       </p>
 
-      <!-- Google -->
       <button
         type="button"
         class="auth-google"
@@ -86,7 +76,6 @@
 
       <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
 
-      <!-- Formulaire login -->
       <form #loginFormRef="ngForm" (ngSubmit)="handleLoginSubmit(loginFormRef)" novalidate>
         @for (field of loginFields; track field.key) {
           <div class="auth-field">
@@ -183,7 +172,6 @@
     </section>
   }
 
-  <!-- ============ REGISTER ============ -->
   @if (isTabActive('sign-up')) {
     <section
       class="auth-screen"
@@ -199,7 +187,6 @@
         Un compte, tout l'écosystème Asili.
       </p>
 
-      <!-- Google -->
       <button
         type="button"
         class="auth-google"
@@ -215,7 +202,6 @@
 
       <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
 
-      <!-- Formulaire register -->
       <form #signupFormRef="ngForm" (ngSubmit)="handleSignupSubmit(signupFormRef)" novalidate>
         @for (field of signupFields; track field.key) {
           <div class="auth-field">
@@ -335,5 +321,4 @@
   }
 </app-auth-shell>
 
-<!-- Conteneur caché pour le bouton Google rendu par GIS -->
 <div #googleButtonContainer style="position: absolute; width: 0; height: 0; overflow: hidden"></div>

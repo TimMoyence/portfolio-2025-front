@@ -20,12 +20,6 @@ interface FieldNode {
   ph: number;
 }
 
-/**
- * Fond vivant global Asili : canvas fixe d'un champ de particules/données
- * qui dérive en continu et réagit au curseur. Client-only (rien en SSR),
- * densité allégée sur mobile, pause hors-écran, frame statique en
- * `prefers-reduced-motion`. Couleurs lues depuis les variables CSS (--teal/--glow).
- */
 @Component({
   selector: 'app-asili-background',
   standalone: true,
@@ -45,11 +39,8 @@ interface FieldNode {
   `,
 })
 export class AsiliBackgroundComponent implements AfterViewInit {
-  /** Distance max de liaison entre deux noeuds (px). */
   private static readonly LINK = 166;
-  /** Opacite max d'un trait de liaison (a distance nulle). */
   private static readonly LINK_ALPHA = 0.43;
-  /** Opacite de remplissage d'un noeud standard / d'un noeud « glow ». */
   private static readonly NODE_ALPHA = 0.6;
   private static readonly NODE_GLOW_ALPHA = 1;
 

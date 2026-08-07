@@ -5,10 +5,6 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
 import { SparklineComponent } from '../sparkline/sparkline.component';
 import { clamp } from '../../../../shared/utils/math.utils';
 
-/**
- * Carte d'humidite avec indicateur de progression circulaire CSS
- * et point de rosee. Affiche une zone de confort (sec / confortable / humide).
- */
 @Component({
   selector: 'app-humidity-card',
   standalone: true,
@@ -23,14 +19,7 @@ import { clamp } from '../../../../shared/utils/math.utils';
     >
       <span cardTitle i18n="weather.humidity.title|@@weatherHumidityTitle">Humidité</span>
 
-      <!--
-        Humidité — re-skin Asili : valeur centrale font-display, jauge circulaire
-        conservée (couleur progressColor() sémantique liée au confort). Couleurs/
-        typo uniquement — dashArray()/progressColor()/comfortLabel()/comfortColor()
-        inchangés.
-      -->
       <div class="flex items-center gap-4">
-        <!-- Indicateur circulaire -->
         <div
           class="relative h-20 w-20 flex-shrink-0"
           role="meter"
@@ -40,7 +29,6 @@ import { clamp } from '../../../../shared/utils/math.utils';
           [attr.aria-valuetext]="humidity() + '% — ' + comfortLabel()"
         >
           <svg viewBox="0 0 36 36" class="h-full w-full -rotate-90" aria-hidden="true">
-            <!-- Fond -->
             <circle
               cx="18"
               cy="18"
@@ -49,7 +37,6 @@ import { clamp } from '../../../../shared/utils/math.utils';
               stroke="rgba(255,255,255,0.1)"
               stroke-width="3"
             />
-            <!-- Progression -->
             <circle
               cx="18"
               cy="18"
@@ -68,12 +55,10 @@ import { clamp } from '../../../../shared/utils/math.utils';
         </div>
 
         <div class="flex flex-col gap-1">
-          <!-- Zone de confort -->
           <span [class]="'text-sm font-medium ' + comfortColor()">
             {{ comfortLabel() }}
           </span>
 
-          <!-- Point de rosee -->
           @if (dewPoint() !== null) {
             <span class="text-sm text-white/50">
               <span i18n="weather.humidity.dewPoint|@@weatherHumidityDewPoint">Point de rosée</span>
@@ -93,33 +78,26 @@ import { clamp } from '../../../../shared/utils/math.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HumidityCardComponent {
-  /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
-  /** Pourcentage d'humidite relative. */
   readonly humidity = input<number>(0);
 
-  /** Temperature du point de rosee en degres Celsius. */
   readonly dewPoint = input<number | null>(null);
 
-  /** Donnees horaires d'humidite pour le sparkline. */
   readonly hourlyHumidity = input<number[]>([]);
 
-  /** stroke-dasharray pour l'indicateur circulaire (perimetre = 100). */
   readonly dashArray = computed(() => {
     const pct = clamp(this.humidity(), 0, 100);
     return `${pct} ${100 - pct}`;
   });
 
-  /** Couleur de la progression circulaire selon le niveau d'humidite. */
   readonly progressColor = computed(() => {
     const h = this.humidity();
-    if (h < 30) return 'rgba(96,165,250,0.8)'; // bleu clair - sec
-    if (h <= 60) return 'rgba(74,222,128,0.8)'; // vert - confortable
-    return 'rgba(250,204,21,0.8)'; // jaune - humide
+    if (h < 30) return 'rgba(96,165,250,0.8)';
+    if (h <= 60) return 'rgba(74,222,128,0.8)';
+    return 'rgba(250,204,21,0.8)';
   });
 
-  /** Label de zone de confort en francais. */
   readonly comfortLabel = computed(() => {
     const h = this.humidity();
     if (h < 30) return $localize`:weather.humidity.dry|@@weatherHumidityDry:Sec`;
@@ -128,7 +106,6 @@ export class HumidityCardComponent {
     return $localize`:weather.humidity.humid|@@weatherHumidityHumid:Humide`;
   });
 
-  /** Classe de couleur du label de confort. */
   readonly comfortColor = computed(() => {
     const h = this.humidity();
     if (h < 30) return 'text-blue-400';

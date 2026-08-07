@@ -1,8 +1,3 @@
-<!--
-  Politique de confidentialité — restyle Asili (layout TOC).
-  Source maquette : AsiliNewDesign/privacy.html + asili-legal.css.
-  Chrome globale conservée (navbar/footer) ; 8 sections verbatim de la maquette.
--->
 <section class="lg-hero">
   <div class="wrap" appReveal>
     <span class="kicker">{{ hero.kicker }}</span>
@@ -13,7 +8,6 @@
 
 <section class="lg-section">
   <div class="wrap lg-layout">
-    <!-- TOC : ancres natives SSR-safe -->
     <nav class="lg-toc" aria-label="Sommaire" i18n-aria-label="@@privacyTocAria">
       <div class="toc-k" i18n="@@privacyTocHeading">Sommaire</div>
       <ol>
@@ -25,7 +19,6 @@
       </ol>
     </nav>
 
-    <!-- BODY : 8 sections verbatim -->
     <div class="lg-body">
       <section id="principe" appReveal>
         <h2 i18n="@@privacyPrincipeTitle">1. Notre principe</h2>

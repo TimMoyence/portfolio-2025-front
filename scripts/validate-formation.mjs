@@ -2,28 +2,10 @@
 // @ts-check
 
 /**
- * Validate all formations configured in the registry.
- *
- * Critères AEO-aware (Answer Engine Optimization) vérifiés au-delà de
- * `assertValidFormationConfig` :
- *  - TL;DR (metadata.description) : 134-167 mots fr/en (déjà runtime)
- *  - ≥ 3 slides dont le titre est au format question ("Comment...", "Pourquoi...", "Quand...", "Qui...", "Que...", "Combien...")
- *  - ≥ 5 entrées FAQ (déjà runtime)
- *  - Score de complétude sémantique ≥ 7/10 (lite) :
- *      +2 si TL;DR présent (134-167 mots)
- *      +2 si FAQ ≥ 5 entrées
- *      +1 si ≥ 3 H2-questions (titres de slides)
- *      +1 si keywords incluent le slug (cohérence brand/slug)
- *      +1 si teaches.length ≥ 3 (richesse pédagogique)
- *      +1 si heroImage absolue
- *      +1 si tags.length ≥ 3
- *      +1 si level explicite (beginner/intermediate/advanced)
- *
- * Exit code 0 = OK. Exit code 1 = au moins une formation invalide.
- * Sortie formattée pour être lue dans un pre-commit hook et CI GitHub.
- *
  * Usage (depuis portfolio-2025-front) :
  *   node scripts/validate-formation.mjs
+ *
+ * Exit code 0 = OK. Exit code 1 = au moins une formation invalide.
  */
 
 import { pathToFileURL } from "node:url";
@@ -72,10 +54,8 @@ function isQuestionTitle(title) {
 }
 
 /**
- * Runs `tsx` on a thin TS bridge that imports the registry and prints
- * every formation config as JSON. Using the real runtime ensures that
- * `assertValidFormationConfig` has already run (throws at module level
- * if a config is invalid).
+ * Passer par le vrai runtime garantit que `assertValidFormationConfig` a deja
+ * tourne : la registry leve au niveau module si une config est invalide.
  */
 function collectFormations() {
   return new Promise((resolveP, rejectP) => {
@@ -132,9 +112,6 @@ function validateAeo(config) {
 
   const questionSlides = config.slides.filter((s) => isQuestionTitle(s.title));
   if (questionSlides.length < 3) {
-    // Soft signal : les titres au format question boostent l'AEO mais ne
-    // sont pas bloquants. Conserve-le comme warning pour signaler la marge
-    // de progres sans invalider les formations editoriales existantes.
     warnings.push(
       `only ${questionSlides.length} slide titles are questions — AEO recommends >= 3 H2-questions`,
     );

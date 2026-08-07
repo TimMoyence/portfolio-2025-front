@@ -6,12 +6,6 @@ import type {
   HourlyForecast,
 } from '../../core/models/weather.model';
 
-/**
- * Donnees meteo fictives pour la page de presentation.
- * Simulent un apres-midi de printemps a Paris : partiellement nuageux, 18 °C.
- */
-
-/** Meteo courante : 18 °C, partiellement nuageux, vent 12 km/h SO. */
 export const MOCK_CURRENT: CurrentWeather = {
   time: '2026-04-09T14:00',
   temperature_2m: 18,
@@ -28,11 +22,6 @@ export const MOCK_CURRENT: CurrentWeather = {
   dew_point_2m: 11,
 };
 
-/**
- * Genere 48 heures de previsions horaires realistes.
- * Courbe de temperature avec pic a 20 °C l'apres-midi,
- * creux a 10 °C la nuit.
- */
 function generateHourlyData(): HourlyForecast {
   const times: string[] = [];
   const temps: number[] = [];
@@ -51,31 +40,26 @@ function generateHourlyData(): HourlyForecast {
     const date = new Date(2026, 3, 9 + dayOffset, hour);
     times.push(date.toISOString().slice(0, 16));
 
-    // Courbe de temperature sinusoidale : pic a 14h, creux a 4h
     const tempBase = 14;
     const tempAmplitude = 5;
     const tempPhase = ((hour - 14) * Math.PI) / 12;
     temps.push(Math.round((tempBase + tempAmplitude * Math.cos(tempPhase)) * 10) / 10);
 
-    // Codes meteo : clair la journee, couvert le soir du jour 2
     if (dayOffset === 0) {
       codes.push(hour >= 6 && hour <= 18 ? 2 : 1);
     } else {
       codes.push(hour >= 14 ? 3 : 2);
     }
 
-    // Vent avec legere variation
     winds.push(Math.round(10 + 4 * Math.sin((hour * Math.PI) / 12)));
     windDirs.push(200 + Math.round(40 * Math.sin((hour * Math.PI) / 24)));
     windGusts.push(Math.round(18 + 8 * Math.sin((hour * Math.PI) / 12)));
 
-    // Precipitations nulles jour 1, legeres jour 2 apres-midi
     precips.push(dayOffset === 1 && hour >= 16 && hour <= 20 ? 0.4 : 0);
 
     humidities.push(Math.round(55 + 15 * Math.cos(((hour - 4) * Math.PI) / 12)));
     pressures.push(1013 + Math.round(2 * Math.sin((i * Math.PI) / 24)));
 
-    // UV : pic a midi, nul la nuit
     uvIndices.push(
       hour >= 7 && hour <= 19 ? Math.round(5 * Math.sin(((hour - 7) * Math.PI) / 12)) : 0,
     );
@@ -95,7 +79,6 @@ function generateHourlyData(): HourlyForecast {
   };
 }
 
-/** Previsions journalieres sur 7 jours avec conditions variees. */
 export const MOCK_DAILY: DailyForecast = {
   time: [
     '2026-04-09',
@@ -134,17 +117,14 @@ export const MOCK_DAILY: DailyForecast = {
   wind_direction_10m_dominant: [220, 200, 190, 250, 280, 300, 210],
 };
 
-/** Previsions horaires generees. */
 export const MOCK_HOURLY: HourlyForecast = generateHourlyData();
 
-/** Reponse complete combinant courant + horaire + journalier. */
 export const MOCK_FORECAST: ForecastResponse = {
   current: MOCK_CURRENT,
   hourly: MOCK_HOURLY,
   daily: MOCK_DAILY,
 };
 
-/** Qualite de l'air : AQI 42, bon a correct. */
 export const MOCK_AIR_QUALITY: AirQualityData = {
   current: {
     european_aqi: 42,
@@ -174,7 +154,6 @@ export const MOCK_AIR_QUALITY: AirQualityData = {
   },
 };
 
-/** Icone meteo selon le code WMO. */
 const WEATHER_ICONS: Record<number, string> = {
   0: 'soleil.png',
   1: 'soleil-et-nuage.png',
@@ -192,7 +171,6 @@ const WEATHER_ICONS: Record<number, string> = {
   95: 'risques-de-tempête.png',
 };
 
-/** Noms de jours pour l'affichage du bandeau hebdomadaire. */
 const DAY_LABELS = [
   $localize`:@@weather-pres.day.sun:Dim.`,
   $localize`:@@weather-pres.day.mon:Lun.`,
@@ -203,7 +181,6 @@ const DAY_LABELS = [
   $localize`:@@weather-pres.day.sat:Sam.`,
 ];
 
-/** Element du bandeau de previsions hebdomadaire. */
 export interface WeekDay {
   date: string;
   label: string;
@@ -215,10 +192,6 @@ export interface WeekDay {
   isToday: boolean;
 }
 
-/**
- * Construit le tableau des 7 jours pour le bandeau hebdomadaire.
- * Le premier jour est marque comme "Auj." (aujourd'hui).
- */
 export function buildWeekDays(daily: DailyForecast): WeekDay[] {
   return daily.time.map((dateStr, i) => {
     const d = new Date(dateStr + 'T12:00:00');

@@ -134,11 +134,8 @@ describe('ProfileComponent', () => {
 
     component.removeFavoriteCity(component.favoriteCities[0]);
 
-    // Rollback : la liste d'origine est restauree
     expect(component.favoriteCities).toEqual(before);
   });
-
-  /* ========================= EDIT PROFILE ========================= */
 
   describe('mode edition du profil', () => {
     it('startEditing pre-remplit les champs et active le mode edition', () => {

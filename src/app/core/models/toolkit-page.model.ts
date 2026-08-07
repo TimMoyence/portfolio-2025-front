@@ -1,25 +1,17 @@
-/** Donnees completes d'une page toolkit privee. */
 export interface ToolkitPageData {
-  /** Recapitulatif du profil */
   recap: {
     firstName: string;
     aiLevel: string | null;
     sector: string | null;
     budgetTier: string | null;
   };
-  /** Tableau recapitulatif des outils presentes */
   cheatsheet: CheatsheetEntry[];
-  /** Prompts prets a copier */
   prompts: PromptEntry[];
-  /** Workflows automatises a mettre en place */
   workflows: WorkflowEntry[];
-  /** Templates reutilisables */
   templates: TemplateEntry[];
-  /** Prompt Gamma personnalise genere a partir du secteur */
   generatedPrompt: string | null;
 }
 
-/** Entree du tableau recapitulatif des outils. */
 export interface CheatsheetEntry {
   tool: string;
   category: string;
@@ -30,22 +22,17 @@ export interface CheatsheetEntry {
   alreadyUsed: boolean;
 }
 
-/** Prompt pret a copier avec contexte d'utilisation. */
 export interface PromptEntry {
   category: string;
   title: string;
   level: string;
   prompt: string;
   tool: string;
-  /** Description courte de ce que le prompt produit. Optionnel. */
   description?: string;
-  /** Exemple concret d'utilisation. Optionnel. */
   example?: string;
-  /** Conseil d'iteration pour ameliorer la sortie. Optionnel. */
   tip?: string;
 }
 
-/** Etape d'un workflow automatise. */
 export interface WorkflowStep {
   step: number;
   action: string;
@@ -53,7 +40,6 @@ export interface WorkflowStep {
   detail: string;
 }
 
-/** Workflow automatise avec etapes. */
 export interface WorkflowEntry {
   title: string;
   description: string;
@@ -63,7 +49,6 @@ export interface WorkflowEntry {
   tools: string[];
 }
 
-/** Template reutilisable pour un cas d'usage. */
 export interface TemplateEntry {
   name: string;
   platform: string;

@@ -12,25 +12,12 @@ import {
 import { SlideDeckService } from './slide-deck.service';
 import { SLIDE_DECK_HOST } from './slide-deck.tokens';
 
-/**
- * Visibilite d'une slide selon le mode courant du deck.
- * - `both` (defaut) : visible en scroll et en fullscreen.
- * - `scroll-only` : masquee en mode fullscreen (notes, sources, etc.).
- * - `present-only` : masquee en mode scroll (slides reservees presentation).
- */
 export type SlideVisibility = 'both' | 'scroll-only' | 'present-only';
 
 /**
- * Composant wrapper d'une slide individuelle. S'enregistre aupres
- * de `SlideDeckService` au montage et se desinscrit au demontage.
- *
- * Le contenu est expose via un `TemplateRef` (`contentTemplate`)
- * pour que `SlideDeckComponent` puisse le projeter dans un
- * `<swiper-slide>` direct en mode fullscreen — pre-requis Swiper Element.
- *
- * Detection d'un deck parent via le token `SLIDE_DECK_HOST` (DI). Si
- * present, la slide ne rend rien d'elle-meme (le deck rend les templates).
- * Sinon, rendu standalone via `*ngTemplateOutlet`.
+ * Le contenu passe par un `TemplateRef` pour que `SlideDeckComponent` puisse
+ * le projeter dans un `<swiper-slide>` enfant direct en mode fullscreen —
+ * pre-requis de Swiper Element.
  */
 @Component({
   selector: 'app-slide',
@@ -75,7 +62,6 @@ export class SlideComponent implements OnInit {
   readonly theme = input<string>('default');
   readonly visibility = input<SlideVisibility>('both');
 
-  /** Template du contenu — projete par le deck dans `<swiper-slide>`. */
   readonly contentTemplate = viewChild.required<TemplateRef<unknown>>('slideContent');
 
   /**

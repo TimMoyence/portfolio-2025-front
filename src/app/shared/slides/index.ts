@@ -1,4 +1,3 @@
-// shared/slides/index.ts
 export { SlideDeckComponent } from './deck/slide-deck.component';
 export { SlideComponent } from './deck/slide.component';
 export { SlideDeckService } from './deck/slide-deck.service';
@@ -7,7 +6,6 @@ export { SLIDE_DECK_CONFIG } from './deck/slide-deck.tokens';
 export type { SlideDeckConfig } from './deck/slide-deck.tokens';
 export type { SlideDeckMode } from './deck/slide-deck.service';
 
-// Layouts
 export { SlideHeroComponent } from './layouts/slide-hero/slide-hero.component';
 export {
   SlideImageComponent,
@@ -29,7 +27,6 @@ export {
   type TableRow,
 } from './layouts/slide-table/slide-table.component';
 
-// Interactions
 export { SlideQuizComponent } from './interactions/slide-quiz/slide-quiz.component';
 export { SlidePollComponent } from './interactions/slide-poll/slide-poll.component';
 export { SlideReflectionComponent } from './interactions/slide-reflection/slide-reflection.component';

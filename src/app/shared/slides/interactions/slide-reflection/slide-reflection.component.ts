@@ -15,16 +15,11 @@ interface ReflectionInteraction {
   id?: string;
   slideId?: string;
   type: 'reflection';
-  /** Texte de la question. Champ legacy `prompt` toujours supporte. */
   question?: string;
   prompt?: string;
   placeholder?: string;
 }
 
-/**
- * Affiche une question ouverte avec textarea + bouton de sauvegarde locale.
- * La saisie reste cliente — pas de transit reseau.
- */
 @Component({
   selector: 'app-slide-reflection',
   standalone: true,

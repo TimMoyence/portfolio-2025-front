@@ -9,10 +9,6 @@ import {
   normalizePath,
 } from './url-utils';
 
-/**
- * Construit un stub minimal d'`express.Request` pour tester la resolution
- * de base URL (headers + accesseur `get`).
- */
 const stubRequest = (opts: {
   headers?: Record<string, string>;
   host?: string;

@@ -1,18 +1,9 @@
 @use '../../../../styles-shared/breakpoints' as bp;
-/*
-  Toolkit prive (acces debloque) — refonte Asili (Lot 3e).
-  En-tete « debloque » porte de `.tk-unlocked` / `.check` de
-  AsiliNewDesign/asili-formation.css ; les sections personnalisees
-  (cheatsheet, prompts, workflows, templates, Gamma) sont restylees aux
-  tokens Asili. Les primitives globales et les design tokens fournissent le
-  reste — on ne re-stylise rien d'existant.
-*/
 
 :host {
   display: block;
 }
 
-/* --- Etats loading / error ----------------------------------------------- */
 .tkp-state {
   min-height: 100vh;
   display: grid;
@@ -59,14 +50,12 @@
   color: var(--ink-mute);
 }
 
-/* --- Conteneur charge ---------------------------------------------------- */
 .tkp-wrap {
   max-width: 880px;
   margin: 0 auto;
   padding: clamp(96px, 14vh, 150px) var(--gutter) 60px;
 }
 
-/* --- En-tete « debloque » (porte de .tk-unlocked / .check) --------------- */
 .tkp-head {
   text-align: center;
   margin-bottom: clamp(40px, 6vh, 64px);
@@ -103,7 +92,6 @@
   color: var(--ink-soft);
 }
 
-/* --- Sections ------------------------------------------------------------ */
 .tkp-section {
   margin-bottom: clamp(40px, 6vh, 64px);
 }
@@ -122,7 +110,6 @@
   color: var(--teal-deep);
 }
 
-/* --- Tableau cheatsheet -------------------------------------------------- */
 .tkp-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
@@ -165,7 +152,6 @@
   }
 }
 
-/* --- Cartes (prompts / workflows / templates / Gamma) -------------------- */
 .tkp-stack {
   display: grid;
   gap: 16px;
@@ -235,7 +221,6 @@
   color: var(--ink-mute);
 }
 
-/* --- Bloc code + bouton copier ------------------------------------------- */
 .tkp-code {
   position: relative;
   border: 1px solid var(--line);
@@ -273,7 +258,6 @@
   }
 }
 
-/* --- Tags & etapes (workflows) ------------------------------------------- */
 .tkp-tags {
   display: flex;
   flex-wrap: wrap;
@@ -311,7 +295,6 @@
   color: var(--teal-deep);
 }
 
-/* --- Prompt Gamma -------------------------------------------------------- */
 .tkp-gamma-cta {
   margin-top: 12px;
   font-size: 13px;
@@ -327,7 +310,6 @@
   }
 }
 
-/* --- Pied --------------------------------------------------------------- */
 .tkp-foot {
   text-align: center;
   padding-top: 32px;
@@ -339,7 +321,6 @@
   }
 }
 
-/* --- Responsive ---------------------------------------------------------- */
 @include bp.tablet {
   .tkp-grid,
   .tkp-grid--2 {

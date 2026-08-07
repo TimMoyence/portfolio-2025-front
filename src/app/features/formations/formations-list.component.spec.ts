@@ -21,8 +21,6 @@ describe('FormationsListComponent', () => {
     fixture.detectChanges();
   });
 
-  // Le rendu browser des sections `appReveal` pose `anim-ready` sur <html>
-  // (singleton partagé). On nettoie pour ne pas polluer les specs suivants.
   afterEach(() => {
     document.documentElement.classList.remove('anim-ready');
   });

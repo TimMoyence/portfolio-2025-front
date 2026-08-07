@@ -77,14 +77,6 @@ describe('Pavage de la grille projets', () => {
     expect(incomplete).toEqual([]);
   });
 
-  // `/projets` est soumis au même contrat que la home depuis que le trou de 2
-  // colonnes qui subsistait en rangée 5 a été fermé (« Voice IA » small → big,
-  // « AtlanticBike » big → small). Ce n'était pas un correctif technique mais un
-  // arbitrage éditorial sur la réalisation mise en avant : il est tranché, donc
-  // ce test cesse de caractériser l'existant et exige le pavage sain.
-  //
-  // Seule la dernière rangée peut rester partielle : le jeu de 14 cartes ne
-  // totalise pas nécessairement un multiple de 6 colonnes.
   it('ne laisse aucune rangee intermediaire incomplete sur /projets', () => {
     const projets = new ProjetsComponent() as unknown as {
       readonly projects: readonly AsiliProject[];

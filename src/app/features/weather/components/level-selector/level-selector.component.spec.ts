@@ -60,7 +60,6 @@ describe('LevelSelectorComponent', () => {
       fixture.nativeElement.querySelectorAll("button[role='tab']"),
     );
 
-    // Par defaut, discovery est actif
     expect(buttons[0].getAttribute('aria-selected')).toBe('true');
     expect(buttons[1].getAttribute('aria-selected')).toBe('false');
     expect(buttons[2].getAttribute('aria-selected')).toBe('false');

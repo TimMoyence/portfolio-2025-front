@@ -3,12 +3,6 @@
   display: block;
 }
 
-/* ============================================================
-   HERO ASILI — ouverture pleine hauteur, voile gradient,
-   titre serif geant a accent teal, meta serif, scroll-hint.
-   Porte de .hero / .hero-* (asili-sections.css). Le fond
-   constellation est global (Lot 0, #asili-field) : pas de canvas ici.
-   ============================================================ */
 .hero {
   position: relative;
   min-height: 89svh;
@@ -17,7 +11,6 @@
   overflow: hidden;
 }
 
-/* Voile : adoucit le champ global vers le haut-droite et fond vers le bas. */
 .hero-veil {
   position: absolute;
   inset: 0;
@@ -55,7 +48,6 @@
   color: var(--teal-deep);
 }
 
-/* Bandeau bas du hero : accroche a gauche, meta a droite (aligne en bas). */
 .hero-sub {
   display: flex;
   flex-wrap: wrap;
@@ -65,18 +57,15 @@
   margin-top: var(--s-4);
 }
 
-/* Conteneur des CTA projetes (.btn...). */
 .hero-cta {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
-/* Masque le conteneur quand aucun CTA n'est projete (evite gap/reveal vide). */
 .hero-cta:not(:has(*)) {
   display: none;
 }
 
-/* Meta : statistiques serif separees par un filet. */
 .hero-meta {
   display: flex;
   gap: var(--s-4);
@@ -104,7 +93,6 @@
   margin-top: 4px;
 }
 
-/* Indication de scroll, centree en bas, barre qui « tombe ». */
 .scroll-hint {
   position: absolute;
   bottom: 26px;
@@ -152,7 +140,6 @@
   }
 }
 
-/* La meta serif disparait sur mobile (cf. maquette @860). */
 @include bp.tablet {
   .hero-meta {
     display: none;

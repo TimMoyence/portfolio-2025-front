@@ -84,13 +84,6 @@ export class ContactComponent implements OnInit {
 
   contactForm: ContactFormState = { ...this.defaultContactFormState };
 
-  /**
-   * Prefill subject + message based on ?reason=access&app={role} query params.
-   * Called when a role-gated atelier landing (ex: /atelier/meteo) redirects a
-   * visitor without the required role — the destination context carries over
-   * into the contact form so the visitor doesn't re-type "Je veux acces a la
-   * meteo".
-   */
   ngOnInit(): void {
     const params = this.route.snapshot.queryParamMap;
     const reason = params.get('reason');

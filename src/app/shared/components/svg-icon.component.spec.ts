@@ -4,7 +4,6 @@ import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SvgIconComponent } from './svg-icon.component';
 
-/** SVG brut utilise comme fixture de test. */
 const MOCK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="M0 0h24v24H0z"/></svg>`;
 
 describe('SvgIconComponent', () => {
@@ -57,7 +56,6 @@ describe('SvgIconComponent', () => {
     });
 
     it('devrait utiliser le cache pour les icones deja chargees', () => {
-      // Premier chargement — peuple le cache
       component.name = 'cached-icon';
       component.ngOnChanges({
         name: {
@@ -71,7 +69,6 @@ describe('SvgIconComponent', () => {
       const req = httpMock.expectOne('assets/icons/cached-icon.svg');
       req.flush(MOCK_SVG);
 
-      // Deuxieme chargement — doit utiliser le cache, aucune requete HTTP
       component.ngOnChanges({
         name: {
           currentValue: 'cached-icon',
@@ -86,7 +83,6 @@ describe('SvgIconComponent', () => {
     });
 
     it('devrait vider le cache statique via clearCache()', () => {
-      // Peuple le cache avec une icone
       component.name = 'clearable-icon';
       component.ngOnChanges({
         name: {
@@ -98,10 +94,8 @@ describe('SvgIconComponent', () => {
       });
       httpMock.expectOne('assets/icons/clearable-icon.svg').flush(MOCK_SVG);
 
-      // Vide le cache
       SvgIconComponent.clearCache();
 
-      // Recharge la meme icone — doit emettre une nouvelle requete HTTP
       component.ngOnChanges({
         name: {
           currentValue: 'clearable-icon',
@@ -237,8 +231,6 @@ describe('SvgIconComponent', () => {
       expect(console.warn).toHaveBeenCalledWith(jasmine.stringContaining("Nom d'icone invalide"));
     });
 
-    // Securite : les sous-dossiers sont autorises (ex: "network/google"), mais un
-    // traversal via ".." a travers un slash doit rester rejete.
     it('ne devrait pas charger un SVG si le name contient un path traversal a travers un slash', () => {
       spyOn(console, 'warn');
 
@@ -257,7 +249,6 @@ describe('SvgIconComponent', () => {
       expect(console.warn).toHaveBeenCalledWith(jasmine.stringContaining("Nom d'icone invalide"));
     });
 
-    // Securite : un segment vide (double slash) ne doit pas etre accepte.
     it('ne devrait pas charger un SVG si le name contient un segment vide (a//b)', () => {
       spyOn(console, 'warn');
 

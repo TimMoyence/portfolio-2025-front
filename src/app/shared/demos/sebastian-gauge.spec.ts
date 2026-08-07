@@ -101,7 +101,6 @@ describe('sebastian-gauge — buildDeterministicHeatmap', () => {
 
 describe('sebastian-gauge — buildRandomHeatmap', () => {
   afterEach(() => {
-    // Restaure Math.random si un spy a ete pose.
     if ((Math.random as jasmine.Spy).and) {
       (Math.random as jasmine.Spy).and.callThrough();
     }

@@ -29,7 +29,6 @@ export class AuthHttpAdapter implements AuthPort {
     });
   }
 
-  /** Inscrit un nouvel utilisateur. Retourne un message (email de verification envoye). */
   register(payload: RegisterUserPayload): Observable<AuthActionMessage> {
     return this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/register`, payload);
   }
@@ -69,12 +68,10 @@ export class AuthHttpAdapter implements AuthPort {
     return this.http.patch<AuthUser>(`${this.baseUrl}/auth/change-password`, payload);
   }
 
-  /** Met a jour les informations du profil utilisateur. */
   updateProfile(payload: UpdateProfilePayload): Observable<AuthUser> {
     return this.http.patch<AuthUser>(`${this.baseUrl}/auth/profile`, payload);
   }
 
-  /** Rafraichit le JWT via le cookie HttpOnly refresh_token (envoye automatiquement). */
   refresh(): Observable<AuthSession> {
     return this.http.post<AuthSession>(
       `${this.baseUrl}/auth/refresh`,
@@ -83,7 +80,6 @@ export class AuthHttpAdapter implements AuthPort {
     );
   }
 
-  /** Revoque le refresh token et efface le cookie cote backend. */
   logout(): Observable<AuthActionMessage> {
     return this.http.post<AuthActionMessage>(
       `${this.baseUrl}/auth/logout`,
@@ -92,14 +88,12 @@ export class AuthHttpAdapter implements AuthPort {
     );
   }
 
-  /** Verifie l'adresse email via le token recu par email. */
   verifyEmail(token: string): Observable<AuthActionMessage> {
     return this.http.get<AuthActionMessage>(`${this.baseUrl}/auth/verify-email`, {
       params: { token },
     });
   }
 
-  /** Renvoie l'email de verification. */
   resendVerification(payload: ResendVerificationPayload): Observable<AuthActionMessage> {
     return this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/resend-verification`, payload);
   }

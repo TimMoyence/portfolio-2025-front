@@ -3,10 +3,6 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { requestIdInterceptor } from './request-id.interceptor';
 
-/**
- * Tests unitaires de l'intercepteur fonctionnel requestIdInterceptor.
- * Verifie l'ajout du header X-Request-Id et l'unicite des identifiants.
- */
 describe('requestIdInterceptor', () => {
   let http: HttpClient;
   let httpMock: HttpTestingController;

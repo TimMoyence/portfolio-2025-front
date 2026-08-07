@@ -17,35 +17,16 @@ import type { EnsembleData } from '../../../../core/models/weather.model';
 
 Chart.register(...registerables);
 
-/**
- * Couleurs associees a chaque modele meteorologique.
- * Palette Asili (src/styles/_tokens.scss) : teal #4fb3a2, glow #5b8cff,
- * glow-soft #8fb0ff — trois teintes distinctes du langage « ciel/glass ».
- * Restyle visuel uniquement : seules les couleurs des courbes changent.
- */
 const MODEL_COLORS: Record<string, string> = {
   ECMWF: 'rgba(79, 179, 162, 0.9)',
   GFS: 'rgba(91, 140, 255, 0.9)',
   ICON: 'rgba(143, 176, 255, 0.9)',
 };
 
-/**
- * Graphique spaghetti multi-modeles.
- * Affiche une courbe de temperature par modele sur un meme axe temporel.
- * Chaque modele a une couleur distincte (ECMWF=bleu, GFS=rouge, ICON=vert).
- * Compatible SSR : le graphique n'est rendu que cote navigateur.
- */
 @Component({
   selector: 'app-spaghetti-plot',
   standalone: true,
   template: `
-    <!--
-      Carte Expert spaghetti plot — conteneur glass Asili.
-      Re-skin AsiliNewDesign/asili-app.css : .gp/.wx-card (bg-white/5,
-      border-teal/15, rayon --r-lg 20px, backdrop-blur-xl) + titre font-display.
-      Restyle visuel uniquement : MODEL_COLORS (teal/glow), conteneur et titre.
-      Le pipeline Chart.js, ensemble() et la logique de dataset sont inchangés.
-    -->
     <div class="rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl">
       <h3
         class="mb-4 font-display text-xl font-normal text-white"
@@ -61,7 +42,6 @@ const MODEL_COLORS: Record<string, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpaghettiPlotComponent implements AfterViewInit, OnChanges, OnDestroy {
-  /** Donnees d'ensemble multi-modeles. */
   readonly ensemble = input<EnsembleData | null>(null);
 
   @ViewChild('chartCanvas', { static: true })
@@ -89,7 +69,6 @@ export class SpaghettiPlotComponent implements AfterViewInit, OnChanges, OnDestr
     this.chart = null;
   }
 
-  /** Construit le graphique Chart.js spaghetti avec une ligne par modele. */
   private buildChart(): void {
     if (!this.isBrowser) return;
 
@@ -99,7 +78,6 @@ export class SpaghettiPlotComponent implements AfterViewInit, OnChanges, OnDestr
     const canvas = this.chartCanvas?.nativeElement;
     if (!canvas) return;
 
-    // Utiliser les timestamps du premier modele pour l'axe X (24h)
     const firstModel = data.models[0];
     const labels = firstModel.hourly.time.slice(0, 24).map((t) => {
       const date = new Date(t);

@@ -13,20 +13,12 @@ import {
   createAuditRequestPortStub,
 } from '../../../testing/factories/audit-request.factory';
 
-/**
- * Cree un mock minimal de NgForm compatible avec GrowthAuditComponent.submit().
- * Utilise jasmine.createSpyObj avec proprietes pour eviter `as unknown as`.
- */
 function buildValidForm(): NgForm {
   return jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {
     valid: true,
   });
 }
 
-/**
- * Soumet le formulaire d'audit en configurant le stream pour emettre l'evenement donne.
- * Teste le composant via son interface publique (submit → startStream → handleStreamEvent).
- */
 function submitAndStream(
   component: GrowthAuditComponent,
   auditServiceMock: jasmine.SpyObj<AuditRequestPort>,
@@ -41,7 +33,6 @@ function submitAndStream(
     contactMethod: 'EMAIL',
     contactValue: 'test@example.com',
   };
-  // P0.4 : consentement RGPD obligatoire pour soumettre le formulaire.
   component.rgpdConsent = true;
 
   component.submit(buildValidForm());

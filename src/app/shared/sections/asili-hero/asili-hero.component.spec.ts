@@ -170,7 +170,6 @@ describe('AsiliHeroComponent', () => {
 
       const divider = host.querySelector('.hero-meta div') as HTMLElement;
       expect(divider).not.toBeNull();
-      // filet a gauche : border-left 1px.
       expect(getComputedStyle(divider).borderLeftWidth).toBe('1px');
 
       hostFixture.destroy();

@@ -7,7 +7,6 @@ import type {
   PresentationPort,
 } from '../ports/presentation.port';
 
-/** Adaptateur HTTP pour le module presentations. */
 @Injectable()
 export class PresentationHttpAdapter implements PresentationPort {
   private readonly baseUrl = getApiBaseUrl();

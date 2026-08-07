@@ -1,7 +1,6 @@
 <footer class="asili-footer" role="contentinfo">
   <div class="asili-footer__inner">
     <div class="asili-footer__grid">
-      <!-- Colonne marque : logo Asili + baseline -->
       <div class="asili-footer__brand">
         <a
           class="asili-logo"
@@ -40,7 +39,6 @@
         </ul>
       </div>
 
-      <!-- Colonnes de navigation (Travailler / L'Atelier / En savoir plus) -->
       @for (column of navColumns; track $index) {
         <nav class="asili-footer__col" [attr.aria-label]="column.heading">
           @if (column.heading) {
@@ -67,7 +65,6 @@
       }
     </div>
 
-    <!-- P2.11 : adresse postale visible + structuree pour SEO local Bordeaux -->
     <address class="asili-footer__address" itemscope itemtype="https://schema.org/LocalBusiness">
       <meta itemprop="name" content="Asili Design" />
       <span
@@ -99,11 +96,9 @@
       }
     </address>
 
-    <!-- Bas de footer : copyright (gauche) + chip fraicheur (droite) -->
     <div class="asili-footer__bot">
       <span class="asili-footer__copyright">{{ copyright }}</span>
 
-      <!-- P2.10 : time datetime visible pour signal fraicheur DOM (freshness ranking IA). -->
       <span class="asili-footer__fresh">
         <span class="asili-footer__live-dot" aria-hidden="true"></span>
         <span class="asili-footer__fresh-label">{{ freshLabel }}</span>
@@ -113,7 +108,6 @@
       </span>
     </div>
 
-    <!-- Liens legaux (maillage + conformite) -->
     <ul class="asili-footer__legal" data-testid="legal-links">
       @for (legalLink of legalLinks; track $index) {
         <li>

@@ -4,10 +4,6 @@ import { UnitPreferencesService } from '../../services/unit-preferences.service'
 import { MetricCardComponent } from '../metric-card/metric-card.component';
 import { SparklineComponent } from '../sparkline/sparkline.component';
 
-/**
- * Boussole de vent SVG avec directions cardinales en francais,
- * fleche directionnelle et affichage de la vitesse et des rafales.
- */
 @Component({
   selector: 'app-wind-compass',
   standalone: true,
@@ -22,16 +18,8 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
     >
       <span cardTitle i18n="weather.wind.title|@@weatherWindTitle">Vent</span>
 
-      <!--
-        Boussole SVG — re-skin Asili (.compass / #wind-needle) :
-        aiguille teal vers l'origine du vent, contre-aiguille translucide,
-        moyeu blanc. SVG/couleurs uniquement — arrowTransform()/cardinalDirection()/
-        displaySpeedValue() inchangés.
-      -->
       <div class="flex flex-col items-center">
-        <!-- Boussole SVG -->
         <svg viewBox="0 0 120 120" class="h-32 w-32" aria-hidden="true">
-          <!-- Cercle exterieur -->
           <circle
             cx="60"
             cy="60"
@@ -49,7 +37,6 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
             stroke-width="1"
           />
 
-          <!-- Directions cardinales (font-mono Geist) -->
           <text x="60" y="14" text-anchor="middle" class="fill-white/55 font-mono text-[10px]">
             N
           </text>
@@ -63,14 +50,12 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
             O
           </text>
 
-          <!-- Aiguille directionnelle (pointe vers l'origine du vent) -->
           <g [attr.transform]="arrowTransform()">
             <polygon points="60,22 54,46 66,46" fill="#4fb3a2" />
             <polygon points="60,98 54,74 66,74" fill="rgba(255,255,255,0.25)" />
           </g>
           <circle cx="60" cy="60" r="4" fill="#fff" />
 
-          <!-- Vitesse au centre -->
           <text x="60" y="57" text-anchor="middle" class="fill-white font-display text-[18px]">
             {{ displaySpeedValue() }}
           </text>
@@ -79,7 +64,6 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
           </text>
         </svg>
 
-        <!-- Rafales -->
         @if (gusts() !== null) {
           <p class="mt-2 text-sm text-white/60">
             <span i18n="weather.wind.gusts|@@weatherWindGusts">Rafales</span> :
@@ -87,7 +71,6 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
           </p>
         }
 
-        <!-- Direction textuelle -->
         <p class="mt-1 text-xs text-white/40">{{ cardinalDirection() }} ({{ direction() }}°)</p>
       </div>
 
@@ -101,37 +84,28 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WindCompassComponent {
-  /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
-  /** Vitesse du vent en km/h. */
   readonly speed = input<number>(0);
 
-  /** Direction du vent en degres (0 = Nord). */
   readonly direction = input<number>(0);
 
-  /** Rafales de vent en km/h. */
   readonly gusts = input<number | null>(null);
 
-  /** Donnees horaires de vitesse de vent pour le sparkline. */
   readonly hourlyWind = input<number[]>([]);
 
-  /** Transformation SVG pour orienter la fleche selon la direction du vent. */
   readonly arrowTransform = computed(() => `rotate(${this.direction()}, 60, 60)`);
 
-  /** Valeur de vitesse convertie pour l'affichage SVG. */
   readonly displaySpeedValue = computed(() => {
     const unit = this.unitService.speedUnit();
     const val = this.speed();
     return unit === 'mph' ? Math.round(val * 0.621371) : Math.round(val);
   });
 
-  /** Suffixe d'unite de vitesse pour l'affichage SVG. */
   readonly displaySpeedUnit = computed(() => {
     return this.unitService.speedUnit() === 'mph' ? 'mph' : 'km/h';
   });
 
-  /** Direction cardinale en francais (N, NE, E, SE, S, SO, O, NO). */
   readonly cardinalDirection = computed(() => {
     const deg = this.direction() % 360;
     const directions = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'];

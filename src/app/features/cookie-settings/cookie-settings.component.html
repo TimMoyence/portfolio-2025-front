@@ -1,11 +1,3 @@
-<!--
-  Préférences cookies — restyle Asili.
-  Source maquette : AsiliNewDesign/cookie-settings.html + asili-legal.css
-  (.lg-hero, .ck-list, .ck-item, .switch, .ck-actions, .ck-saved).
-  La logique de consentement (CookieConsentService) est conservée : les toggles
-  sont liés aux états `preferences.*` existants, les boutons appellent les
-  handlers du composant qui délèguent au service à l'identique.
--->
 <section class="lg-hero">
   <div class="wrap" appReveal>
     <span class="kicker">{{ hero.kicker }}</span>
@@ -19,7 +11,6 @@
     <p class="lead ck-intro">{{ intro }}</p>
 
     <div class="ck-list" appReveal>
-      <!-- Essentiels : toujours actifs, non désactivables -->
       <div class="ck-item">
         <div class="ck-txt">
           <h3>{{ categories.essential.title }}</h3>
@@ -51,7 +42,6 @@
         </label>
       </div>
 
-      <!-- Préférences → preferences.preferences -->
       <div class="ck-item">
         <div class="ck-txt">
           <h3>{{ categories.preferences.title }}</h3>

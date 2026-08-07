@@ -3,10 +3,6 @@
   display: block;
 }
 
-/* ============================================================
-   GRILLE PROJETS ASILI — grille editoriale 6 colonnes (big/small)
-   Porte de .proj-grid / .proj (asili-sections.css)
-   ============================================================ */
 .projects-head {
   display: flex;
   justify-content: space-between;
@@ -51,7 +47,6 @@
   grid-column: span 2;
 }
 
-/* Le lien englobe uniquement le visuel, comme la maquette. */
 .proj-link {
   display: block;
 }
@@ -74,7 +69,6 @@
   object-fit: cover;
 }
 
-/* Placeholder raye affiche tant qu'aucune capture n'est fournie. */
 .placeholder {
   position: absolute;
   inset: 0;

@@ -2,12 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import type { ClientReport } from '../../../../core/models/audit-client-report.model';
 
-/**
- * Affiche une scorecard de piliers sous forme de grille responsive.
- * Chaque pilier affiche son score actuel vs cible et un badge de statut.
- *
- * Composant purement présentationnel : reçoit sa donnée via `@Input` scorecard.
- */
 @Component({
   selector: 'app-pillar-scorecard',
   standalone: true,
@@ -19,12 +13,6 @@ import type { ClientReport } from '../../../../core/models/audit-client-report.m
 export class PillarScorecardComponent {
   @Input({ required: true }) scorecard!: ClientReport['pillarScorecard'];
 
-  /**
-   * Mapping des identifiants techniques (émis par le backend `ScoringService`)
-   * vers libellés français lisibles. Les 7 piliers attendus sont :
-   * `seo, performance, technical, trust, conversion, aiVisibility,
-   * citationWorthiness`. En fallback, la chaîne brute est renvoyée.
-   */
   private static readonly PILLAR_LABELS: Readonly<Record<string, string>> = {
     seo: 'SEO',
     performance: 'Performance',

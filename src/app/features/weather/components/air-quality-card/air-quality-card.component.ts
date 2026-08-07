@@ -3,10 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import type { AirQualityData } from '../../../../core/models/weather.model';
 import { MetricCardComponent } from '../metric-card/metric-card.component';
 
-/**
- * Carte de qualite de l'air avec indice AQI europeen et polluants principaux.
- * Echelle de 0 a 100+ avec 6 niveaux de qualite en francais.
- */
 @Component({
   selector: 'app-air-quality-card',
   standalone: true,
@@ -22,12 +18,6 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
     >
       <span cardTitle i18n="weather.aqi.title|@@weatherAqiTitle">Qualité de l'air</span>
 
-      <!--
-        Qualité de l'air — re-skin Asili (.aqi-ring) : indice AQI font-display,
-        badge sémantique conservé (couleurs liées au mapping), pastilles
-        polluants teal subtiles. Mapping AQI→label (qualityLabel/badgeClasses)
-        et état null→indisponible inchangés.
-      -->
       @if (airQuality(); as aq) {
         <div class="flex items-baseline gap-2">
           <span class="font-display text-4xl leading-none text-white">
@@ -38,7 +28,6 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
           </span>
         </div>
 
-        <!-- Polluants principaux -->
         <div class="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
           <span class="rounded-full border border-teal/15 bg-white/5 px-2 py-1 text-white/70">
             PM2.5 : {{ aq.current.pm2_5 | number: '1.0-1' }} µg/m³
@@ -56,10 +45,8 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AirQualityCardComponent {
-  /** Donnees de qualite de l'air. */
   readonly airQuality = input<AirQualityData | null>(null);
 
-  /** Label de qualite de l'air en francais selon l'echelle AQI europeenne. */
   readonly qualityLabel = computed(() => {
     const aq = this.airQuality();
     if (!aq) return '';
@@ -72,7 +59,6 @@ export class AirQualityCardComponent {
     return $localize`:weather.aqi.extremelyPoor|@@weatherAqiExtremelyPoor:Extrêmement mauvais`;
   });
 
-  /** Classes CSS du badge de couleur selon le niveau AQI. */
   readonly badgeClasses = computed(() => {
     const aq = this.airQuality();
     if (!aq) return '';

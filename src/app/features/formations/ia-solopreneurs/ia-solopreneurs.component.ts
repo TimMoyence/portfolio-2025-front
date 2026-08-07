@@ -16,13 +16,6 @@ import {
   type TableColumn,
 } from '../../../shared/slides';
 
-/**
- * Page de la formation "L'IA au service des solopreneurs".
- *
- * Composant slide-driven : chaque slide est explicitement declaree dans
- * le template. Le contenu est integralement transpose depuis l'ancien
- * `ia-solopreneurs.data.ts` (BIG BANG migration Task 19).
- */
 @Component({
   selector: 'app-ia-solopreneurs',
   standalone: true,
@@ -44,14 +37,12 @@ import {
   styleUrl: './ia-solopreneurs.component.scss',
 })
 export class IaSolopreneursComponent {
-  /** Bullets slide "promesse" — rendus en colonne dans le hero. */
   protected readonly promesseBullets = [
     $localize`:@@ia-solo.promesse.bullets.0:Tour d'horizon des outils qui comptent`,
     $localize`:@@ia-solo.promesse.bullets.1:Ce qui marche vraiment au quotidien`,
     $localize`:@@ia-solo.promesse.bullets.2:Un exercice pratique, vous repartez avec un résultat`,
   ];
 
-  /** Stats slide "probleme". */
   protected readonly problemeStats = [
     {
       value: '88%',
@@ -70,7 +61,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Recap stats slide "recap-8020". */
   protected readonly recap8020Stats = [
     {
       value: '16',
@@ -90,7 +80,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Slide "clients" — cycle client complet. */
   protected readonly clientsItems = [
     {
       title: 'Waalaxy',
@@ -110,7 +99,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Slide "culture-apprendre" — outils pour apprendre/veille. */
   protected readonly cultureApprendreSubtitle = $localize`:@@ia-solo.culture-apprendre.subtitle:Votre veille passe de 3h à 20 min`;
 
   protected readonly cultureApprendreItems: RichListItem[] = [
@@ -131,7 +119,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Slide "creer" — outils pour produire du contenu. */
   protected readonly creerSubtitle = $localize`:@@ia-solo.creer.subtitle:Texte, image, voix : 10× plus vite, qualité pro`;
 
   protected readonly creerItems: RichListItem[] = [
@@ -152,7 +139,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Slide "site-web" — outils no-code IA pour site full-stack. */
   protected readonly siteWebSubtitle = $localize`:@@ia-solo.site-web.subtitle:Du prompt au site déployé, sans une ligne de code`;
 
   protected readonly siteWebItems: RichListItem[] = [
@@ -173,7 +159,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Slide "workflows-detail". */
   protected readonly workflowsItems = [
     {
       title: $localize`:@@ia-solo.workflows-detail.grid.0.title:Prospection automatisée`,
@@ -189,7 +174,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Slide "pieges". */
   protected readonly piegesItems = [
     {
       title: $localize`:@@ia-solo.pieges.grid.0.title:Hallucinations`,
@@ -205,7 +189,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Comparison slide "chat-produire" — gauche ChatGPT vs droite Claude. */
   protected readonly chatGptItems = [
     $localize`:@@ia-solo.chat-produire.cgpt.0:Polyvalent, 900M users/sem, GPT Store`,
     $localize`:@@ia-solo.chat-produire.cgpt.1:Idéal pour brainstorm, code, analyse de données`,
@@ -224,7 +207,6 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.chat-produire.gemini.2:Gratuit / 20$/mois (Advanced)`,
   ];
 
-  /** Comparison slide "automatiser" — Zapier vs Make vs n8n. */
   protected readonly zapierItems = [
     $localize`:@@ia-solo.automatiser.zapier.0:Difficulté : facile`,
     $localize`:@@ia-solo.automatiser.zapier.1:Gratuit (100 tâches/mois)`,
@@ -243,7 +225,6 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.automatiser.n8n.2:Gratuit (self-host) / 24€/mois (cloud)`,
   ];
 
-  /** Comparison slide "stack-budget" — Débutant 0€ vs Intermédiaire 60€ vs Avancé 120€. */
   protected readonly stackBudgetDebutantItems = [
     $localize`:@@ia-solo.stack-budget.debutant.0:ChatGPT gratuit + Canva gratuit + Gamma`,
     $localize`:@@ia-solo.stack-budget.debutant.1:Zapier (100 tâches) + Brevo + NotebookLM`,
@@ -262,7 +243,6 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.stack-budget.avance.2:Fathom (19$) + Waalaxy (19€) — ~120€/mois`,
   ];
 
-  /** Colonnes du tableau récap "outils-detail" — 16 outils en mode scroll. */
   protected readonly outilsDetailColumns: TableColumn[] = [
     {
       key: 'tool',
@@ -381,7 +361,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Colonnes de comparaison "chat-produire" (ChatGPT, Claude, Gemini). */
   protected readonly chatProduireColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.chat-produire.left:ChatGPT (OpenAI)`,
@@ -400,7 +379,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Colonnes de comparaison "automatiser" (Zapier, Make, n8n). */
   protected readonly automatiserColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.automatiser.zapier.label:Zapier`,
@@ -419,7 +397,6 @@ export class IaSolopreneursComponent {
     },
   ];
 
-  /** Colonnes de comparaison "stack-budget" (debutant 0€, intermediaire 60€, avance 120€). */
   protected readonly stackBudgetColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.stack-budget.debutant.label:Stack débutant — 0€/mois`,

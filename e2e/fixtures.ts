@@ -1,22 +1,9 @@
-/**
- * Fixtures et helpers partages pour les tests E2E Playwright.
- * Centralise les donnees mockees et les utilitaires d'authentification
- * pour eviter la duplication dans chaque fichier de test.
- */
-
 import type { Page } from '@playwright/test';
 
-// ---------- Constantes ----------
-
-/** Prefixe API utilise par le frontend en dev. */
 export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';
 
-/** Cle localStorage utilisee par AuthStateService. */
 const TOKEN_KEY = 'portfolio_jwt';
 
-// ---------- Donnees mockees ----------
-
-/** Utilisateur fictif avec le role weather. */
 export const MOCK_USER = {
   id: '1',
   email: 'test@test.com',
@@ -31,14 +18,12 @@ export const MOCK_USER = {
   updatedOrCreatedBy: null,
 };
 
-/** Session d'authentification fictive. */
 export const MOCK_SESSION = {
   accessToken: 'fake-jwt-token-for-e2e-tests',
   expiresIn: 3600,
   user: MOCK_USER,
 };
 
-/** Preferences meteo fictives (niveau decouverte, pas de favoris). */
 export const MOCK_WEATHER_PREFERENCES = {
   id: 'pref-1',
   userId: '1',
@@ -50,7 +35,6 @@ export const MOCK_WEATHER_PREFERENCES = {
   units: undefined,
 };
 
-/** Resultat de geocodage fictif pour Paris. */
 export const MOCK_GEOCODING_RESPONSE = {
   results: [
     {
@@ -74,7 +58,6 @@ export const MOCK_GEOCODING_RESPONSE = {
   ],
 };
 
-/** Previsions meteo fictives minimales pour Paris. */
 export const MOCK_FORECAST = {
   current: {
     time: '2025-04-01T12:00',
@@ -107,18 +90,7 @@ export const MOCK_FORECAST = {
   },
 };
 
-// ---------- Helpers ----------
-
-/**
- * Simule une session authentifiee dans le navigateur.
- * Place le token JWT dans localStorage et configure le mock GET /auth/me
- * pour retourner l'utilisateur fictif.
- *
- * IMPORTANT : doit etre appele AVANT page.goto() pour que le token soit
- * present quand Angular demarre et restaure la session.
- */
 export async function authenticateUser(page: Page): Promise<void> {
-  // Mock GET /auth/me pour la restauration de session
   await page.route(`${API_BASE}/auth/me`, async (route) => {
     await route.fulfill({
       status: 200,
@@ -127,8 +99,6 @@ export async function authenticateUser(page: Page): Promise<void> {
     });
   });
 
-  // Naviguer d'abord vers la page pour avoir acces au localStorage
-  // puis injecter le token avant de recharger
   await page.goto('/');
   await page.evaluate(
     ([key, token]) => {
@@ -138,10 +108,6 @@ export async function authenticateUser(page: Page): Promise<void> {
   );
 }
 
-/**
- * Mock le endpoint POST /weather/preferences/record-usage
- * qui est appele au demarrage de l'app meteo.
- */
 export async function mockWeatherRecordUsage(page: Page): Promise<void> {
   await page.route(`${API_BASE}/weather/preferences/record-usage`, async (route) => {
     await route.fulfill({

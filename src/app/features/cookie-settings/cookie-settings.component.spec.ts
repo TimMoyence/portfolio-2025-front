@@ -5,13 +5,6 @@ import { CookieConsentService } from '../../core/services/cookie-consent.service
 import { CookieSettingsComponent } from './cookie-settings.component';
 import { createCookieConsentServiceStub } from '../../../testing/factories/cookie-consent.factory';
 
-/**
- * Tests unitaires du CookieSettingsComponent (restyle Asili — layout cookies).
- * Vérifie l'affichage des quatre catégories, la sauvegarde des préférences,
- * « Tout accepter », le retrait du consentement et la gestion des erreurs.
- * La logique de consentement (CookieConsentService) est préservée : on vérifie
- * que les handlers délèguent au service avec le contrat existant.
- */
 describe('CookieSettingsComponent', () => {
   const consentServiceStub = createCookieConsentServiceStub();
 
@@ -153,7 +146,6 @@ describe('CookieSettingsComponent', () => {
     const toggles = fixture.nativeElement.querySelectorAll(
       ".ck-item input[type='checkbox']",
     ) as NodeListOf<HTMLInputElement>;
-    // Ordre des catégories : essentiels, analytics, préférences, marketing.
     const [, analytics, preferences, marketing] = Array.from(toggles);
     expect(analytics.disabled)
       .withContext("Mesure d'audience non collectée → toggle désactivé")
@@ -161,7 +153,6 @@ describe('CookieSettingsComponent', () => {
     expect(analytics.checked).toBeFalse();
     expect(marketing.disabled).withContext('Marketing non utilisé → toggle désactivé').toBeTrue();
     expect(marketing.checked).toBeFalse();
-    // La seule catégorie optionnelle réellement pilotable reste activable.
     expect(preferences.disabled).toBeFalse();
   });
 
@@ -178,7 +169,6 @@ describe('CookieSettingsComponent', () => {
     expect(acceptBtn).toBeTruthy();
     acceptBtn!.click();
 
-    // analytics/marketing restent false : non collectés (et forcés par le service).
     expect(fixture.componentInstance.preferences).toEqual({
       essential: true,
       preferences: true,
@@ -231,7 +221,6 @@ describe('CookieSettingsComponent', () => {
 
     component.savePreferences();
 
-    // L'observable synchrone complete immediatement, donc isSaving revient a false
     expect(component.isSaving).toBeFalse();
   });
 });

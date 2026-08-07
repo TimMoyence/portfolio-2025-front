@@ -14,13 +14,6 @@ import {
 } from '../../../testing/factories/auth.factory';
 import { roleGuard } from './role.guard';
 
-/**
- * Tests unitaires du guard fonctionnel roleGuard.
- * Verifie la protection des routes par role :
- * - acces autorise si l'utilisateur possede le role requis
- * - redirection vers /contact?reason=access&app={role} si le role manque
- * - redirection vers /contact?reason=access&app={role} si l'utilisateur n'est pas connecte
- */
 describe('roleGuard', () => {
   let authState: AuthStateService;
 

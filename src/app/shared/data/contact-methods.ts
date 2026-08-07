@@ -1,8 +1,5 @@
 import type { ContactMethod } from '../models/contact.model';
 
-/**
- * Liste partagee des methodes de contact affichees dans le footer et le CTA contact.
- */
 export const CONTACT_METHODS: readonly ContactMethod[] = [
   {
     label: $localize`:contact.method.email.label|Contact method label@@contactMethodEmailLabel:Email`,

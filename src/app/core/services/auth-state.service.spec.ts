@@ -9,10 +9,6 @@ import { environment } from '../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
 import { AuthStateService } from './auth-state.service';
 
-/**
- * Tests unitaires de AuthStateService.
- * Verifie le signal isInitialized et la gestion de session.
- */
 describe('AuthStateService', () => {
   describe('en contexte navigateur', () => {
     let service: AuthStateService;
@@ -104,7 +100,6 @@ describe('AuthStateService', () => {
         }),
       );
 
-      // Avancer de 30s => le refresh doit se declencher
       tick(30_000);
 
       expect(authPortStub.refresh).toHaveBeenCalled();
@@ -127,7 +122,6 @@ describe('AuthStateService', () => {
       service.login(buildAuthSession({ expiresIn: 120 }));
       service.logout();
 
-      // Avancer au-dela du delai prevu => le refresh ne doit PAS se declencher
       tick(120_000);
 
       expect(authPortStub.refresh).not.toHaveBeenCalled();

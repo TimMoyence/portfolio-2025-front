@@ -1,23 +1,9 @@
 @use '../../styles-shared/breakpoints' as bp;
-/*
-  Hub L'Atelier (/atelier) — styles page-spécifiques portés des maquettes
-  AsiliNewDesign/asili-pages.css (.page-hero, .lab-feature, .lab-big,
-  .lab-stats, .seb-gauge, .seb-panel, .heatmap) et asili-sections.css
-  (.atelier, .atelier-head, .atelier-grid, .meteo*, .compass, .solar, .dial,
-  .city-btn, .instr-cap, .seb-* …). Les primitives globales (.wrap, .kicker,
-  .lead, .h-xl, .section-pad, .glass, .link-arrow, .btn*, .arrow) et les design
-  tokens (_tokens.scss) fournissent le reste — rien d'existant n'est re-stylisé.
-
-  Le fond constellation est global (Lot 0, app-asili-background) : la bande
-  immersive n'embarque pas le canvas `#atelier-stars` de la maquette (chrome
-  redondante). Elle conserve son voile gradient `.atelier::before`.
-*/
 
 :host {
   display: block;
 }
 
-/* ---------- HERO (asili-pages.css : .page-hero) ---------- */
 .page-hero {
   padding-top: clamp(140px, 18vh, 220px);
   padding-bottom: clamp(40px, 7vh, 90px);
@@ -44,7 +30,6 @@
   }
 }
 
-/* ---------- DEUX APPS EN VEDETTE (asili-pages.css : .lab-feature) ---------- */
 .atelier-feature-section {
   padding-bottom: clamp(40px, 6vh, 80px);
 }
@@ -143,9 +128,7 @@
   }
 }
 
-/* ---------- BANDE IMMERSIVE (asili-sections.css : .atelier) ---------- */
 .atelier {
-  /* Valeur d'intensité du voile (var maquette `--immersive-k`). */
   --immersive-k: 0.8;
 
   background: var(--night);
@@ -213,12 +196,10 @@
   align-items: stretch;
 }
 
-/* La bande immersive a un .glass plus arrondi que le primitif global. */
 .atelier .glass {
   border-radius: var(--r-xl);
 }
 
-/* ---------- MÉTÉO DEMO (asili-sections.css : .meteo*) ---------- */
 .meteo {
   padding: 30px;
   display: flex;
@@ -405,7 +386,6 @@
   }
 }
 
-/* ---------- SEBASTIAN DEMO (asili-pages.css : .seb-panel / .seb-gauge / .heatmap) ---------- */
 .seb-panel {
   padding: 30px;
   display: flex;
@@ -536,13 +516,11 @@
   margin-top: 10px;
 }
 
-/* CTA secondaire sur fond encre : bordure claire (parité maquette). */
 .atelier-cta-ghost {
   --fg: var(--ivory);
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-/* ---------- RESPONSIVE (asili-sections.css) ---------- */
 @media (max-width: 1024px) {
   .atelier-head,
   .atelier-grid {

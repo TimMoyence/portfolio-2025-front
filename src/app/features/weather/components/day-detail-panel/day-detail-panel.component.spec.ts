@@ -63,7 +63,7 @@ describe('DayDetailPanelComponent', () => {
 
     const data = component.dayData();
     expect(data!.uvMax).toBe(8);
-    expect(component.uvRiskLabel(8)).toContain('lev'); // "Tres eleve" ou "Eleve"
+    expect(component.uvRiskLabel(8)).toContain('lev');
   });
 
   it('devrait retourner Faible pour un UV <= 2', () => {

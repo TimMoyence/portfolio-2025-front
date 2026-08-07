@@ -1,13 +1,3 @@
-<!--
-  Présentation Asili — composition des sections du Lot 3a dans l'ordre de la
-  maquette AsiliNewDesign/presentation.html : hero (Le fondateur) → intro /
-  portrait → trois terrains d'expertise → méthode IA → timeline parcours → FAQ
-  → bande CTA. Le fond constellation est global (app-asili-background) : aucune
-  section ne recrée de canvas. Identité dev-forward : Tim Moyence, développeur
-  full-stack & IA, ex-manager Decathlon.
--->
-
-<!-- ===================== HERO ===================== -->
 <app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
   <ng-container title>
     {{ heroTitlePre }}<br />
@@ -26,7 +16,6 @@
   </ng-container>
 </app-asili-hero>
 
-<!-- ===================== INTRO / PORTRAIT ===================== -->
 <section class="section-pad">
   <div class="wrap intro-split">
     <div class="portrait" appReveal>
@@ -59,7 +48,6 @@
   </div>
 </section>
 
-<!-- ===================== COMPÉTENCES / APPROCHE ===================== -->
 <section class="section-pad">
   <div class="wrap">
     <div class="sec-head" appReveal>
@@ -129,7 +117,6 @@
   </div>
 </section>
 
-<!-- ===================== MÉTHODE IA ===================== -->
 <app-asili-ai-method
   [steps]="aiMethodSteps"
   [kicker]="aiMethodKicker"
@@ -144,7 +131,6 @@
   </h2>
 </app-asili-ai-method>
 
-<!-- ===================== PARCOURS (timeline) ===================== -->
 <section class="section-pad">
   <div class="wrap">
     <div class="sec-head" appReveal>
@@ -177,7 +163,6 @@
   </div>
 </section>
 
-<!-- ===================== FAQ ===================== -->
 <section class="section-pad">
   <div class="wrap">
     <div class="sec-head faq-head" appReveal>
@@ -209,7 +194,6 @@
   </div>
 </section>
 
-<!-- ===================== CTA ===================== -->
 <app-asili-cta-band [title]="ctaTitle">
   <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
   <ng-container cta>

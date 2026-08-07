@@ -10,14 +10,8 @@ export class A11yDialogService {
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
-  /**
-   * Remember the element that had focus before opening a dialog / mobile menu.
-   */
   private lastFocusedElement: HTMLElement | null = null;
 
-  /**
-   * Save the currently focused element so we can restore focus after closing.
-   */
   saveFocus(): void {
     if (!this.isBrowser) return;
     const activeElement = document.activeElement as HTMLElement | null;
@@ -26,9 +20,6 @@ export class A11yDialogService {
     }
   }
 
-  /**
-   * Restore focus to the element that was focused before the dialog opened.
-   */
   restoreFocus(): void {
     if (this.lastFocusedElement) {
       this.lastFocusedElement.focus();
@@ -36,10 +27,6 @@ export class A11yDialogService {
     }
   }
 
-  /**
-   * Move focus to the first focusable descendant of the container.
-   * Useful when a dialog / menu opens.
-   */
   focusFirstDescendant(container?: HTMLElement | null): void {
     if (!container) return;
     const focusableSelector =
@@ -50,12 +37,6 @@ export class A11yDialogService {
     firstFocusable?.focus();
   }
 
-  /**
-   * Trap focus within a container: when Tab/Shift+Tab reach the end,
-   * cycle focus back to the first / last focusable element.
-   *
-   * Call this from a keydown handler on the dialog container.
-   */
   trapFocus(event: KeyboardEvent, container?: HTMLElement | null): void {
     if (!container) return;
     if (event.key !== 'Tab') return;
@@ -76,13 +57,11 @@ export class A11yDialogService {
     const current = document.activeElement as HTMLElement | null;
 
     if (event.shiftKey) {
-      // Shift + Tab: go backwards
       if (current === first || !focusableElements.includes(current!)) {
         event.preventDefault();
         last.focus();
       }
     } else {
-      // Tab forwards
       if (current === last || !focusableElements.includes(current!)) {
         event.preventDefault();
         first.focus();

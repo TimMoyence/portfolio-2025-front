@@ -14,11 +14,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RADAR_PORT } from '../../../../core/ports/radar.port';
 
-/**
- * Carte radar meteorologique utilisant Leaflet + tuiles RainViewer.
- * Le chargement de Leaflet est differe cote navigateur (SSR-safe).
- * Inclut une legende des precipitations et des controles stylises.
- */
 @Component({
   selector: 'app-radar-map',
   standalone: true,
@@ -51,11 +46,6 @@ import { RADAR_PORT } from '../../../../core/ports/radar.port';
     }
   `,
   template: `
-    <!--
-      Carte radar — re-skin glass Asili (.gp r-lg 20px, border teal subtile).
-      lat/long + placeholder/iframe Leaflet (SSR-safe via isPlatformBrowser)
-      conservés ; conteneur/typo uniquement.
-    -->
     <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
       <h3
         class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
@@ -70,7 +60,6 @@ import { RADAR_PORT } from '../../../../core/ports/radar.port';
           role="img"
           aria-label="Carte radar des précipitations"
         ></div>
-        <!-- Legende des precipitations -->
         <div
           class="absolute bottom-3 left-3 z-[1000] rounded-lg border border-white/20 bg-black/60 px-3 py-2 backdrop-blur-sm"
         >
@@ -99,10 +88,8 @@ import { RADAR_PORT } from '../../../../core/ports/radar.port';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
-  /** Latitude du centre de la carte. */
   readonly latitude = input(48.85);
 
-  /** Longitude du centre de la carte. */
   readonly longitude = input(2.35);
 
   @ViewChild('mapContainer', { static: false })
@@ -152,7 +139,6 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
       attributionControl: true,
     });
 
-    // Fond de carte CartoDB Dark (meilleure lisibilite pour le radar)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
@@ -160,26 +146,18 @@ export class RadarMapComponent implements AfterViewInit, OnChanges, OnDestroy {
       subdomains: 'abcd',
     }).addTo(this.map);
 
-    // Tuiles radar RainViewer (via RadarPort, ADR 0002)
     this.loadRadarLayer();
 
-    // Observe le redimensionnement du container (animation slide-in, layout shifts)
     this.resizeObserver = new ResizeObserver(() => {
       this.map?.invalidateSize();
     });
     this.resizeObserver.observe(this.mapContainer.nativeElement);
 
-    // Force le recalcul apres la fin de l'animation slide-in (~500ms)
     setTimeout(() => {
       this.map?.invalidateSize();
     }, 600);
   }
 
-  /**
-   * Ajoute la couche de tuiles radar via le RadarPort.
-   * Degradation silencieuse : si le template est `null` (source indisponible),
-   * aucune couche radar n'est ajoutee.
-   */
   private loadRadarLayer(): void {
     this.radarPort
       .getLatestRadarTileUrlTemplate()

@@ -1,22 +1,9 @@
-/**
- * Fonctions utilitaires de formatage pour le composant GrowthAudit.
- *
- * Extraites du composant pour ameliorer la lisibilite, la testabilite
- * et reduire la taille du fichier principal.
- */
-
-/** Badge de section affiche dans la timeline de l'audit. */
 export interface AuditSectionBadge {
   key: string;
   label: string;
   status: string;
 }
 
-// ---------------------------------------------------------------------------
-// Formatage des labels
-// ---------------------------------------------------------------------------
-
-/** Traduit un identifiant de phase en libelle lisible. */
 export function formatPhaseLabel(phase: string): string {
   if (!phase) return '';
   switch (phase) {
@@ -31,7 +18,6 @@ export function formatPhaseLabel(phase: string): string {
   }
 }
 
-/** Traduit un identifiant de tache IA en libelle lisible. */
 export function formatTaskLabel(task: string): string {
   if (!task) return '';
   switch (task) {
@@ -46,13 +32,11 @@ export function formatTaskLabel(task: string): string {
   }
 }
 
-/** Traduit un identifiant de sous-tache en libelle lisible. */
 export function formatSubTaskLabel(subTask: string): string {
   if (!subTask) return '';
   return subTask.replaceAll('_', ' ');
 }
 
-/** Traduit un identifiant de section en libelle lisible. */
 export function formatSectionLabel(section: string): string {
   switch (section) {
     case 'summary':
@@ -70,7 +54,6 @@ export function formatSectionLabel(section: string): string {
   }
 }
 
-/** Retourne les classes CSS Tailwind pour un badge de section selon son statut. */
 export function sectionBadgeClass(status: string): string {
   switch (status) {
     case 'completed':
@@ -86,11 +69,6 @@ export function sectionBadgeClass(status: string): string {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Extraction safe de valeurs
-// ---------------------------------------------------------------------------
-
-/** Extrait un Record depuis une valeur inconnue, ou retourne null. */
 export function extractRecord(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return null;
@@ -98,22 +76,15 @@ export function extractRecord(value: unknown): Record<string, unknown> | null {
   return value as Record<string, unknown>;
 }
 
-/** Extrait une chaine depuis une valeur inconnue, ou retourne "". */
 export function extractString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : '';
 }
 
-/** Extrait un tableau de chaines depuis une valeur inconnue. */
 export function extractStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.map((entry) => extractString(entry)).filter((entry) => entry.length > 0);
 }
 
-// ---------------------------------------------------------------------------
-// Construction des badges de section
-// ---------------------------------------------------------------------------
-
-/** Construit la liste des badges de section a afficher. */
 export function buildSectionBadges(statuses: Record<string, unknown>): AuditSectionBadge[] {
   const sections = [
     'summary',
@@ -132,11 +103,6 @@ export function buildSectionBadges(statuses: Record<string, unknown>): AuditSect
     .filter((entry) => entry.status !== 'pending');
 }
 
-// ---------------------------------------------------------------------------
-// Formatage de l'etape de progression
-// ---------------------------------------------------------------------------
-
-/** Formate le libelle de l'etape de progression avec un compteur optionnel. */
 export function formatProgressStep(event: {
   step?: string | null;
   details?: Record<string, unknown>;
@@ -157,11 +123,6 @@ export function formatProgressStep(event: {
   return `${base} (${Math.max(0, done)}/${Math.max(1, total)})`;
 }
 
-// ---------------------------------------------------------------------------
-// Formatage du texte de resume
-// ---------------------------------------------------------------------------
-
-/** Formate le texte brut du resume d'audit en supprimant le markdown et en structurant les sections. */
 export function formatSummaryText(summaryText: string | null | undefined): string {
   if (!summaryText) return '';
 

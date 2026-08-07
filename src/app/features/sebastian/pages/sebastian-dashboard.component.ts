@@ -10,11 +10,6 @@ import { SebastianBacCurveComponent } from '../components/sebastian-bac-curve.co
 import { SebastianScoreCardComponent } from '../components/sebastian-score-card.component';
 import { SebastianTrendChartComponent } from '../components/sebastian-trend-chart.component';
 
-/**
- * Page dashboard Sebastian.
- * Affiche le score de sante, les tendances 7j et 30j,
- * et un resume mensuel.
- */
 @Component({
   selector: 'app-sebastian-dashboard',
   standalone: true,
@@ -25,18 +20,7 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
     RouterLink,
   ],
   template: `
-    <!--
-      Dashboard App Sebastian — thème "dark lounge ambré" porté de la maquette
-      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (glass
-      bg-white/4 + bordure ambrée rgba(230,170,70,0.14), titre font-display),
-      .bac/.bac-info (en-tête alcoolémie), .barchart (graphes de tendance).
-      Restyle 100 % visuel : seuils BAC 0.25/0.5, formatTime, bloc conditionnel
-      score/invitation, datasets Chart.js et strings assertées (« Taux
-      d'alcoolemie », « 7 derniers jours », « 30 derniers jours », « Moy.
-      alcool », « Moy. cafe ») conservés à l'identique (décision 6).
-    -->
     <div class="space-y-6">
-      <!-- Score card ou invitation a definir un objectif -->
       @if (healthScore(); as score) {
         @if (score.score === 0 && score.phase === 1) {
           <div
@@ -63,7 +47,6 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
         }
       }
 
-      <!-- Taux d'alcoolemie (en-tête .bac/.bac-info, seuils couleur 0.25/0.5) -->
       @if (bacResult(); as bac) {
         <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
           <h3 class="mb-3 font-display text-2xl text-white">Taux d'alcoolemie</h3>
@@ -92,7 +75,6 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
         </section>
       }
 
-      <!-- Grille des graphiques de tendance (.panel glass + barchart gold) -->
       <div class="grid gap-6 md:grid-cols-2">
         <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
           <h3 class="mb-3 font-display text-2xl text-white">7 derniers jours</h3>
@@ -105,7 +87,6 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
           @if (trends30d()) {
             <app-sebastian-trend-chart [data]="trends30d()!" />
           }
-          <!-- Resume mensuel sous le graphe 30d -->
           @if (trends30d()) {
             <div class="mt-3 flex justify-between text-sm text-white/55">
               <span class="font-mono">Moy. alcool : {{ trends30d()!.summary.avgAlcohol }}/j</span>
@@ -121,23 +102,18 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
 export class SebastianDashboardComponent {
   private readonly port: SebastianPort = inject(SEBASTIAN_PORT);
 
-  /** Score de sante courant. */
   readonly healthScore = signal<SebastianHealthScore | null>(null);
 
-  /** Resultat BAC courant. */
   readonly bacResult = signal<SebastianBacResult | null>(null);
 
-  /** Tendances sur 7 jours. */
   readonly trends7d = signal<SebastianTrendData | null>(null);
 
-  /** Tendances sur 30 jours. */
   readonly trends30d = signal<SebastianTrendData | null>(null);
 
   constructor() {
     this.loadData();
   }
 
-  /** Charge les donnees initiales (score, BAC, tendances 7d et 30d). */
   private loadData(): void {
     this.port.getHealthScore().subscribe((score) => this.healthScore.set(score));
     this.port.getBac().subscribe((bac) => this.bacResult.set(bac));
@@ -145,7 +121,6 @@ export class SebastianDashboardComponent {
     this.port.getTrends('30d').subscribe((trends) => this.trends30d.set(trends));
   }
 
-  /** Formate une date ISO en HH:MM. */
   formatTime(iso: string): string {
     const d = new Date(iso);
     return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;

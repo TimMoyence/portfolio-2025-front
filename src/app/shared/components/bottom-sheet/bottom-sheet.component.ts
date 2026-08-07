@@ -11,18 +11,11 @@ import {
 } from '@angular/core';
 import { BreakpointService } from '../../../core/services/breakpoint.service';
 
-/**
- * Bottom sheet generique mobile-first.
- * Mobile : slide-up depuis le bas avec backdrop et drag-to-dismiss.
- * Desktop (md+) : panel inline expand.
- * ARIA : role="dialog", aria-modal="true", Escape pour fermer.
- */
 @Component({
   selector: 'app-bottom-sheet',
   standalone: true,
   animations: [
     trigger('panelAnimation', [
-      // Entree mobile : slide-up
       transition('void => mobile', [
         style({ transform: 'translateY(100%)', opacity: 0 }),
         animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
@@ -30,7 +23,6 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
       transition('mobile => void', [
         animate('200ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
       ]),
-      // Entree desktop : fade-in
       transition('void => desktop', [
         style({ opacity: 0 }),
         animate('200ms ease-out', style({ opacity: 1 })),
@@ -48,7 +40,6 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
   host: { class: 'block' },
   template: `
     @if (open()) {
-      <!-- Mobile : backdrop fixe -->
       @if (isMobile()) {
         <div
           data-testid="bottom-sheet-backdrop"
@@ -62,7 +53,6 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
         ></div>
       }
 
-      <!-- Panel : slide-up mobile / inline desktop -->
       <div
         data-testid="bottom-sheet-overlay"
         [class]="isMobile() ? 'fixed inset-x-0 bottom-0 z-50' : 'mt-4'"
@@ -77,7 +67,6 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
           (keydown.escape)="close()"
           #panelRef
         >
-          <!-- Barre de drag (mobile uniquement) -->
           @if (isMobile()) {
             <div
               class="mx-auto mb-4 h-1 w-10 rounded-full bg-white/30"
@@ -87,7 +76,6 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
             ></div>
           }
 
-          <!-- Header -->
           <div class="mb-4 flex items-center justify-between">
             <h3 data-testid="bottom-sheet-title" class="text-lg font-semibold text-white">
               {{ title() }}
@@ -124,21 +112,16 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BottomSheetComponent {
-  /** Controle l'ouverture du bottom sheet. */
   readonly open = input(false);
 
-  /** Titre affiche dans le header. */
   readonly title = input('');
 
-  /** Emis quand l'etat ouvert/ferme change (two-way binding). */
   readonly openChange = output<boolean>();
 
   private readonly breakpointService = inject(BreakpointService);
 
-  /** Detecte si on est en mode mobile (< 768px). Delegue au BreakpointService. */
   readonly isMobile = this.breakpointService.isMobile;
 
-  /** Classes CSS du panel selon le mode mobile/desktop. */
   readonly panelClasses = computed(() => {
     return this.isMobile()
       ? 'max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-white/20 bg-gray-900/95 p-4 backdrop-blur-lg'
@@ -150,17 +133,14 @@ export class BottomSheetComponent {
   private dragStartY = 0;
   private currentTranslateY = 0;
 
-  /** Ferme le bottom sheet. */
   close(): void {
     this.openChange.emit(false);
   }
 
-  /** Demarre le drag-to-dismiss sur mobile. */
   onDragStart(event: TouchEvent): void {
     this.dragStartY = event.touches[0].clientY;
   }
 
-  /** Suivi du mouvement de drag. */
   onDragMove(event: TouchEvent): void {
     const deltaY = event.touches[0].clientY - this.dragStartY;
     if (deltaY > 0) {
@@ -172,7 +152,6 @@ export class BottomSheetComponent {
     }
   }
 
-  /** Finalise le drag : ferme si > 100px, sinon revient en place. */
   onDragEnd(): void {
     const panel = this.panelRef()?.nativeElement;
     if (this.currentTranslateY > 100) {

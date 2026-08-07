@@ -13,16 +13,6 @@ import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shel
 import { AuthSuccessComponent } from '../../shared/components/auth-success/auth-success.component';
 import { extractErrorMessage } from '../../shared/utils/http-error.utils';
 
-/**
- * Page de verification d'email.
- * Recupere le token depuis le query param et appelle l'API de verification.
- * Affiche le resultat (succes ou erreur) et redirige vers /login apres succes.
- *
- * Restyle Asili split-screen (source maquette AsiliNewDesign/auth.html écran
- * « verify » + asili-auth.css). Le flux par lien magique (token query param +
- * verifyEmail + redirect 3 s) est PRÉSERVÉ : la saisie de code à 6 chiffres de
- * la maquette est purement cosmétique et n'est PAS implémentée.
- */
 @Component({
   selector: 'app-verify-email',
   standalone: true,

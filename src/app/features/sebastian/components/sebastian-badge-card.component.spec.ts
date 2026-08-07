@@ -5,9 +5,6 @@ import type { SebastianBadgeStatus } from '../../../core/models/sebastian.model'
 import { buildSebastianBadgeStatus } from '../../../../testing/factories/sebastian.factory';
 import { SebastianBadgeCardComponent } from './sebastian-badge-card.component';
 
-/**
- * Hote de test pour fournir l'input requis via un signal.
- */
 @Component({
   standalone: true,
   imports: [SebastianBadgeCardComponent],
@@ -49,13 +46,11 @@ describe('SebastianBadgeCardComponent', () => {
   it('devrait afficher un badge debloque avec bordure accent', () => {
     const card: HTMLElement = fixture.nativeElement.querySelector("[data-testid='badge-card']");
     expect(card).toBeTruthy();
-    // Bordure gold Asili pour un badge débloqué (thème dark lounge ambré).
     expect(card.classList).toContain('border-gold');
   });
 
   it('devrait afficher la date de deblocage pour un badge debloque', () => {
     const content = fixture.nativeElement.textContent as string;
-    // La date formatee doit etre presente
     expect(content).toContain('01/04/2026');
   });
 

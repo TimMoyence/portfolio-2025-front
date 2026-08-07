@@ -22,7 +22,6 @@ import { WeatherLevelService } from '../weather/services/weather-level.service';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 
-/** Page profil utilisateur : identite, mot de passe, preferences meteo. */
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -41,7 +40,6 @@ export class ProfileComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  /* — Edition du profil — */
   isEditing = signal(false);
   editFirstName = '';
   editLastName = '';
@@ -50,14 +48,12 @@ export class ProfileComponent implements OnInit {
   editProfileSuccess?: string;
   editProfileError?: string;
 
-  /* — Set password (Google-only) — */
   newPassword = '';
   setPasswordSubmitted = false;
   setPasswordLoading = false;
   setPasswordSuccess?: string;
   setPasswordError?: string;
 
-  /* — Change password — */
   currentPassword = '';
   changeNewPassword = '';
   changePasswordSubmitted = false;
@@ -65,7 +61,6 @@ export class ProfileComponent implements OnInit {
   changePasswordSuccess?: string;
   changePasswordError?: string;
 
-  /* — Weather — */
   favoriteCities: FavoriteCity[] = [];
   weatherLoading = false;
 
@@ -75,24 +70,16 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  /**
-   * Initiale de l'avatar : premiere lettre du prenom, sinon du nom,
-   * sinon de l'email. Purement cosmetique (.pf-avatar).
-   */
   initial(firstName?: string, lastName?: string, email?: string): string {
     const source = firstName || lastName || email || '?';
     return source.charAt(0).toUpperCase();
   }
 
-  /** Deconnexion : nettoie le state (parite navbar) puis retour accueil. */
   logout(): void {
     this.authState.logout();
     void this.router.navigate(['/']);
   }
 
-  /* ========================= EDIT PROFILE ========================= */
-
-  /** Active le mode edition en pre-remplissant les champs avec les valeurs actuelles. */
   startEditing(): void {
     const user = this.authState.user();
     if (!user) return;
@@ -104,14 +91,12 @@ export class ProfileComponent implements OnInit {
     this.isEditing.set(true);
   }
 
-  /** Annule l'edition et revient en mode lecture. */
   cancelEditing(): void {
     this.isEditing.set(false);
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
   }
 
-  /** Enregistre les modifications du profil via le port auth. */
   saveProfile(): void {
     this.editProfileLoading = true;
     this.editProfileSuccess = undefined;
@@ -142,8 +127,6 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  /* ========================= SET PASSWORD ========================= */
-
   setPassword(form: NgForm): void {
     this.setPasswordSubmitted = true;
     this.setPasswordSuccess = undefined;
@@ -170,8 +153,6 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
-
-  /* ========================= CHANGE PASSWORD ========================= */
 
   changePassword(form: NgForm): void {
     this.changePasswordSubmitted = true;
@@ -208,8 +189,6 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  /* ========================= WEATHER ========================= */
-
   removeFavoriteCity(city: FavoriteCity): void {
     const previous = this.favoriteCities;
     this.favoriteCities = this.favoriteCities.filter(
@@ -219,7 +198,6 @@ export class ProfileComponent implements OnInit {
       .updatePreferences({ favoriteCities: this.favoriteCities })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        // Rollback : restaure la liste precedente en cas d'echec backend
         error: () => {
           this.favoriteCities = previous;
           this.cdr.markForCheck();
@@ -227,7 +205,6 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  /** Libelle lisible du niveau meteo. */
   levelLabel(level: string): string {
     const labels: Record<string, string> = {
       discovery: $localize`:profile.weather.level.discovery@@profileWeatherLevelDiscovery:Decouverte`,

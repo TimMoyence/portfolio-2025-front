@@ -2,15 +2,8 @@ import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-// ROUGE (TDD) : ce composant n'existe pas encore — Batch 6 DRY P3 auth.
 import { AuthShellComponent } from './auth-shell.component';
 
-/**
- * Hote de test : reproduit le contrat d'usage des 4 pages auth.
- * - slot nomme [aside] : le wrapper `.auth-aside-mid` complet (kicker/h2/p),
- *   projete verbatim depuis la page pour preserver les IDs i18n `@@` + `<em>`.
- * - slot par defaut : corps de la carte (formulaire ou bloc succes).
- */
 @Component({
   standalone: true,
   imports: [AuthShellComponent],
@@ -28,7 +21,6 @@ import { AuthShellComponent } from './auth-shell.component';
 class HostComponent {}
 
 describe('AuthShellComponent', () => {
-  /** Configure le TestBed avec le shell seul (chrome statique, sans projection). */
   function setupBare(): ComponentFixture<AuthShellComponent> {
     TestBed.configureTestingModule({
       imports: [AuthShellComponent],
@@ -39,7 +31,6 @@ describe('AuthShellComponent', () => {
     return fixture;
   }
 
-  /** Configure le TestBed avec l'hote projetant aside + corps de carte. */
   function setupWithHost(): ComponentFixture<HostComponent> {
     const fixture = TestBed.configureTestingModule({
       imports: [HostComponent],
@@ -67,7 +58,6 @@ describe('AuthShellComponent', () => {
     const logo = el.querySelector('a.auth-logo') as HTMLAnchorElement | null;
     expect(logo).not.toBeNull();
     expect(logo?.getAttribute('href')).toBe('/');
-    // Puce decorative + wordmark Asili / design.
     expect(logo?.querySelector('span.dot[aria-hidden]')).not.toBeNull();
     expect(logo?.textContent).toContain('Asili');
     expect(logo?.querySelector('small')?.textContent).toContain('design');
@@ -97,7 +87,6 @@ describe('AuthShellComponent', () => {
 
   it("n'importe pas RevealOnScrollDirective (chrome statique, appReveal reste porte par la page)", () => {
     const el = setupBare().nativeElement as HTMLElement;
-    // Le shell ne rend aucun `.auth-aside-mid` en propre : il est projete.
     expect(el.querySelector('.auth-aside > .auth-aside-mid')).toBeNull();
   });
 });

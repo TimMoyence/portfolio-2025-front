@@ -5,9 +5,6 @@
   display: block;
 }
 
-/* ============================================================
-   FOOTER ASILI — grille 4 colonnes (marque + 3 colonnes liens)
-   ============================================================ */
 .asili-footer {
   background: rgba(251, 243, 230, 0.5);
   backdrop-filter: blur(6px);
@@ -29,7 +26,6 @@
   gap: var(--s-4);
 }
 
-/* ---------- Colonne marque ---------- */
 .asili-footer__brand {
   display: flex;
   flex-direction: column;
@@ -109,7 +105,6 @@
   align-self: center;
 }
 
-/* ---------- Colonnes de liens ---------- */
 .asili-footer__col {
   min-width: 0;
 }
@@ -142,7 +137,6 @@
   color: var(--teal-deep);
 }
 
-/* ---------- Adresse (SEO local — visible mais discrète) ---------- */
 .asili-footer__address {
   display: flex;
   flex-wrap: wrap;
@@ -164,7 +158,6 @@
   color: var(--teal-deep);
 }
 
-/* ---------- Bas de footer ---------- */
 .asili-footer__bot {
   display: flex;
   justify-content: space-between;
@@ -182,7 +175,6 @@
   font-family: var(--font-sans);
 }
 
-/* Chip de fraîcheur P2.10 */
 .asili-footer__fresh {
   display: inline-flex;
   align-items: center;
@@ -214,7 +206,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Liens légaux ---------- */
 .asili-footer__legal {
   @include lists.list-reset;
   margin: 16px 0 0;
@@ -235,9 +226,6 @@
   color: var(--teal-deep);
 }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
 @keyframes asiliFooterPing {
   0% {
     opacity: 0.7;
@@ -250,9 +238,6 @@
   }
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 1024px) {
   .asili-footer__grid {
     grid-template-columns: 1fr 1fr;

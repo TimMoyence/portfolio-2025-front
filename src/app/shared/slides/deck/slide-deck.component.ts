@@ -21,21 +21,6 @@ import { SlideComponent } from './slide.component';
 import { SlideDeckService, type SlideDeckMode } from './slide-deck.service';
 import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from './slide-deck.tokens';
 
-/**
- * Wrapper principal du moteur de presentation. Gere le mode scroll/fullscreen,
- * la navigation clavier (F, fleches, espace, echap), et emet `slideChanged`.
- *
- * Mode scroll : CSS scroll-snap natif + IntersectionObserver pour synchroniser
- * `currentId` quand l'utilisateur scroll. Les slides sont rendues directement
- * via leur `TemplateRef`.
- *
- * Mode fullscreen : Swiper Element wrappe chaque slide dans un `<swiper-slide>`
- * direct (pre-requis swiper.js).
- *
- * Resync sur sortie native du fullscreen (Esc, F11) via
- * `document:fullscreenchange` — sinon le deck restait en mode `fullscreen`
- * affichant Swiper alors que l'utilisateur etait revenu en page normale.
- */
 @Component({
   selector: 'app-slide-deck',
   standalone: true,

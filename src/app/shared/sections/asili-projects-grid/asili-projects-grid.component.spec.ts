@@ -30,10 +30,6 @@ const PROJECTS: readonly AsiliProject[] = [
   },
 ];
 
-/**
- * Jeu dedie aux assertions de chargement d'image : quatre cartes portant toutes
- * une capture, avec les deux tailles (`small` = visuel 4/3, `big` = 16/10).
- */
 const IMAGE_PROJECTS: readonly AsiliProject[] = [
   {
     title: 'Carte 1',
@@ -147,7 +143,6 @@ describe('AsiliProjectsGridComponent', () => {
     setup();
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
-    // Deux cartes sans image (Plateforme metier + Morning-Brief).
     const placeholders = host.querySelectorAll<HTMLElement>('.placeholder');
     expect(placeholders.length).toBe(2);
     const legends = Array.from(placeholders).map((p) => p.textContent?.trim());
@@ -177,7 +172,6 @@ describe('AsiliProjectsGridComponent', () => {
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
     const links = host.querySelectorAll<HTMLAnchorElement>('.proj .proj-link');
-    // Deux projets ont un href (plateforme + meteo).
     expect(links.length).toBe(2);
     expect(links[0].getAttribute('href')).toBe('/projets');
   });
@@ -225,7 +219,6 @@ describe('AsiliProjectsGridComponent', () => {
         'lazy',
         'lazy',
       ]);
-      // Corollaire : rien ne preempte la bande passante du vrai LCP.
       expect(images().every((img) => img.getAttribute('fetchpriority') === null)).toBeTrue();
     });
 

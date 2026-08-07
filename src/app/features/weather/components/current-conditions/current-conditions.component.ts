@@ -16,11 +16,6 @@ import { UnitPreferencesService } from '../../services/unit-preferences.service'
 import { animateValue, type AnimationHandle } from '../../../../shared/utils/animate-value';
 import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather-icons';
 
-/**
- * Composant d'affichage des conditions meteo actuelles.
- * Affiche la temperature, l'icone, la description, la temperature ressentie et le vent.
- * Inclut un count-up anime sur la temperature principale.
- */
 @Component({
   selector: 'app-current-conditions',
   standalone: true,
@@ -42,13 +37,6 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
   `,
   template: `
     @if (current()) {
-      <!--
-        Hero conditions courantes — re-skin Asili « wx-hero »
-        (AsiliNewDesign/asili-app.css : .wx-hero/.wx-temp/.wx-cond/.wx-hi).
-        Glass .gp (bg-white/5 border-white/10 r-lg), température font-display
-        Instrument Serif géante, <sup>°</sup> teal, ligne Ressenti/Vent mono.
-        Tailwind inline conservé (décision 2). Logique inchangée.
-      -->
       <div class="rounded-[20px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
         <div class="flex flex-col items-center gap-5 sm:flex-row sm:items-end sm:gap-8">
           <div class="flex flex-col items-center sm:items-start">
@@ -81,10 +69,8 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
           </div>
         </div>
 
-        <!-- Donnees enrichies OWM -->
         @if (detailed(); as detail) {
           <div class="mt-5 grid grid-cols-3 gap-2 border-t border-white/10 pt-4">
-            <!-- Probabilite de precipitation -->
             @if (detail.precipitationProbability > 0 || detail.rain1h > 0) {
               <div class="text-center">
                 <p
@@ -102,7 +88,6 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
                 </p>
               </div>
             }
-            <!-- Humidite -->
             <div class="text-center">
               <p
                 class="font-mono text-[10px] uppercase tracking-wider text-white/50"
@@ -112,7 +97,6 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
               </p>
               <p class="mt-1 text-sm font-medium text-white">{{ detail.humidity }}%</p>
             </div>
-            <!-- Visibilite -->
             <div class="text-center">
               <p
                 class="font-mono text-[10px] uppercase tracking-wider text-white/50"
@@ -134,26 +118,20 @@ export class CurrentConditionsComponent {
   private readonly destroyRef = inject(DestroyRef);
   private animHandle: AnimationHandle | null = null;
 
-  /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
-  /** Donnees meteo courantes. */
   readonly current = input<CurrentWeather | null>(null);
 
-  /** Donnees meteo detaillees courantes (source OpenWeatherMap). */
   readonly detailed = input<DetailedCurrentWeather | null>(null);
 
-  /** Temperature animee pour le count-up (0 → valeur reelle en 500ms, easeOutCubic). */
   readonly animatedTemp = signal(0);
 
-  /** Chemin vers l'icone meteo correspondant au code WMO. */
   readonly icon = computed(() => {
     const data = this.current();
     if (!data) return '';
     return weatherCodeToIcon(data.weather_code);
   });
 
-  /** Description textuelle du code meteo. */
   readonly description = computed(() => {
     const data = this.current();
     if (!data) return '';
@@ -170,7 +148,6 @@ export class CurrentConditionsComponent {
     });
   }
 
-  /** Anime la temperature de la valeur actuelle vers la cible en 500ms avec easeOutCubic. */
   private animateCountUp(target: number): void {
     if (!this.isBrowser || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.animatedTemp.set(target);

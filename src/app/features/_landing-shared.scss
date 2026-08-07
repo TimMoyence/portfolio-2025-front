@@ -1,20 +1,3 @@
-/*
-  Système de landing `.lp-*` mutualisé (Batch 4 — CSS DUP-1). Porté verbatim des
-  maquettes AsiliNewDesign/asili-landing.css et partagé par les 2 landings
-  d'atelier (météo / sebastian). L'accent est PARAMÉTRÉ via des variables posées
-  par chaque composant sur `:host` :
-    --lp-accent        couleur d'accent (em, .fi)      teal | gold
-    --lp-accent-rgb    triplet RGB pour les rgba()     79,179,162 | 230,170,70
-    --lp-kicker        couleur texte du kicker         glow-soft | gold-soft
-    --lp-kicker-line   couleur de la barre du kicker   glow | gold
-    --lp-tk-alpha      alpha de la puce .tk            0.18 | 0.2
-    --lp-preview-pad   padding de l'aperçu             30px (défaut) | 26px
-  Reste page-spécifique (résiduel) dans chaque composant : :host, .lp-sky, la
-  démo (.meteo* / .seb-*), et les internes d'aperçu (.lp-preview-row* /
-  .lp-goal*).
-  Volontairement sans :host (composable via @use), comme _legal-shared.
-*/
-
 .lp-shell {
   position: relative;
   z-index: 2;
@@ -26,7 +9,6 @@
   padding-inline: clamp(18px, 4vw, 40px);
 }
 
-/* ---------- HERO ---------- */
 .lp-hero {
   min-height: 100svh;
   display: flex;
@@ -99,7 +81,6 @@
   }
 }
 
-/* Bouton fantôme sur fond sombre : bordure claire (parité maquette). */
 .lp-ghost {
   --btn-fg: #fff;
   color: #fff;
@@ -129,7 +110,6 @@
   }
 }
 
-/* ---------- SECTIONS ---------- */
 .lp-section {
   padding-block: clamp(80px, 13vh, 170px);
   position: relative;
@@ -165,7 +145,6 @@
   }
 }
 
-/* ---------- FEATURES ---------- */
 .lp-features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -173,7 +152,6 @@
 }
 
 .lp-feat {
-  /* glass-dark (DUP-5) : consomme les tokens couleur, blur 14px page-spécifique */
   background: var(--glass-dark);
   border: 1px solid var(--glass-dark-line);
   border-radius: var(--r-lg);
@@ -215,7 +193,6 @@
   }
 }
 
-/* ---------- DEMO BAND ---------- */
 .lp-demo-grid {
   display: grid;
   grid-template-columns: 1fr 0.9fr;
@@ -270,7 +247,6 @@
   }
 }
 
-/* ---------- APERÇU (calque du second .glass de la demo band) ---------- */
 .lp-preview-wrap {
   display: grid;
   place-items: center;
@@ -307,7 +283,6 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
-/* ---------- CTA FINAL ---------- */
 .lp-final {
   text-align: center;
 
@@ -334,7 +309,6 @@
   }
 }
 
-/* ---------- RESPONSIVE (part commune .lp-*) ---------- */
 @media (max-width: 900px) {
   .lp-hero-grid,
   .lp-demo-grid {

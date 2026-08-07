@@ -8,32 +8,14 @@ import {
   AsiliHeroComponent,
 } from '../../shared/sections';
 
-/**
- * Une compétence / terrain d'expertise présenté sur la page Présentation.
- *
- * - `title` : intitulé du terrain (ex. « Développement produit »).
- * - `desc` : phrase de description.
- * - `stack` : étiquettes mono (technos / mots-clés) sous la description.
- * - `icon` : identifiant de l'icône SVG inline (`code` / `ai` / `chart`).
- */
 interface PresentationSkill {
   title: string;
   desc: string;
   stack: readonly string[];
   icon: 'code' | 'ai' | 'chart';
-  /** Délai de révélation au scroll (cascade visuelle des cartes). */
   revealDelay: 1 | 2 | 3 | 4 | null;
 }
 
-/**
- * Un jalon de la timeline « parcours » de la page Présentation.
- *
- * - `year` : libellé d'année mono teal (ex. « 2026 → »), affiché tel quel.
- * - `title` : intitulé du jalon.
- * - `descHtml` : description, contenu de confiance (statique) pouvant contenir
- *   des `<strong>` ; injecté via `[innerHTML]`.
- * - `tags` : étiquettes mono sous la description.
- */
 interface PresentationMilestone {
   year: string;
   title: string;
@@ -41,38 +23,11 @@ interface PresentationMilestone {
   tags: readonly string[];
 }
 
-/**
- * Une question / réponse de la FAQ de la page Présentation.
- *
- * - `q` : question (libellé de l'accordéon `<summary>`).
- * - `a` : réponse en texte brut.
- */
 interface PresentationFaq {
   q: string;
   a: string;
 }
 
-/**
- * Page Présentation Asili (`/presentation`) — refonte dev-forward du Lot 3c.
- *
- * Compose les sections de la bibliothèque marketing du Lot 3a
- * (`shared/sections/*`) dans l'ordre de la maquette
- * `AsiliNewDesign/presentation.html` : hero (kicker « Le fondateur »,
- * titre dev-first), intro/portrait (récit Decathlon → reconversion, signature
- * Tim Moyence), trois terrains d'expertise (Développement produit / IA utile &
- * mesurée / Conseil & stratégie), section « Ma manière de travailler avec
- * l'IA » (`asili-ai-method`, orchestration multi-agents + règle d'or), timeline
- * parcours (2026 / 2025 / 2023 / 2017-23), FAQ et bande CTA (`asili-cta-band`).
- *
- * Tout le texte est fourni en `$localize` (source FR verbatim de la maquette,
- * IDs `@@presentation*`) ; la traduction EN vit dans les XLF. Le fond
- * constellation est global (Lot 0, `<app-asili-background>`) : la page ne
- * recrée aucun canvas.
- *
- * Identité : Tim Moyence — développeur full-stack & IA, ex-manager Decathlon.
- * Le récit management est raconté en profondeur (intro + timeline) mais
- * l'identité de tête reste « développeur ». Pas de social proof fictif.
- */
 @Component({
   selector: 'app-presentation',
   standalone: true,
@@ -88,24 +43,16 @@ interface PresentationFaq {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PresentationComponent {
-  // --- Hero -----------------------------------------------------------------
-
-  /** Sur-titre mono du hero. */
   protected readonly heroKicker = $localize`:@@presentationHeroKicker:Le fondateur`;
 
-  /** Début du titre du hero, avant l'accent italique teal. */
   protected readonly heroTitlePre = $localize`:@@presentationHeroTitlePre:Développeur full-stack & IA.`;
 
-  /** Mot accentué (italique teal) du titre du hero. */
   protected readonly heroTitleAccent = $localize`:@@presentationHeroTitleAccent:Manager`;
 
-  /** Fin du titre du hero, après l'accent. */
   protected readonly heroTitlePost = $localize`:@@presentationHeroTitlePost:avant tout.`;
 
-  /** Accroche du hero. */
   protected readonly heroLead = $localize`:@@presentationHeroLead:Je m'appelle Tim Moyence — développeur full-stack & IA, freelance à Bordeaux (remote). Six ans manager chez Decathlon avant de me reconvertir au code. J'aide TPE, PME et solopreneurs à transformer un besoin flou en outils nets, robustes et durables — avec une exigence d'ingénierie forte.`;
 
-  /** Lignes de méta du hero : clé mono + valeur. */
   protected readonly heroMeta: readonly { key: string; value: string }[] = [
     {
       key: $localize`:@@presentationHeroMeta1Key:Basé à`,
@@ -129,26 +76,16 @@ export class PresentationComponent {
     },
   ];
 
-  // --- Intro / portrait -----------------------------------------------------
-
-  /** Libellé du placeholder de portrait (fallback si l'image est absente). */
   protected readonly portraitPlaceholder = $localize`:@@presentationPortraitPlaceholder:portrait — photo du fondateur`;
 
-  /** Portrait du fondateur (chemin absolu, SSR/i18n-safe). */
   protected readonly portraitImage = '/assets/images/portrait-tim-asili-design.webp';
 
-  /** Texte alternatif du portrait (a11y). */
   protected readonly portraitAlt = $localize`:@@presentationPortraitAlt:Tim Moyence, fondateur d'Asili Design`;
 
-  /** Signature serif italique sous l'intro. */
   protected readonly introSignature = $localize`:@@presentationIntroSignature:— Tim Moyence, Asili Design`;
 
-  // --- Compétences / approche ----------------------------------------------
-
-  /** Sur-titre de la section compétences. */
   protected readonly skillsKicker = $localize`:@@presentationSkillsKicker:Compétences & approche`;
 
-  /** Trois terrains d'expertise (développement / IA / conseil). */
   protected readonly skills: readonly PresentationSkill[] = [
     {
       icon: 'code',
@@ -189,15 +126,10 @@ export class PresentationComponent {
     },
   ];
 
-  // --- Méthode IA -----------------------------------------------------------
-
-  /** Sur-titre de la section « Ma manière de travailler avec l'IA ». */
   protected readonly aiMethodKicker = $localize`:@@presentationAiMethodKicker:Ma manière de travailler avec l'IA`;
 
-  /** Accroche de la section méthode IA. */
   protected readonly aiMethodLead = $localize`:@@presentationAiMethodLead:Je travaille en orchestration multi-agents : un agent par tâche, revue croisée, vérification adversariale avant de valider. Chaque changement commence par un test qui échoue (TDD), et l'architecture est pensée pour durer (DDD, clean architecture) — même sur mes projets perso.`;
 
-  /** Étapes de la méthode de travail avec l'IA. */
   protected readonly aiMethodSteps: readonly AsiliAiMethodStep[] = [
     {
       num: '01',
@@ -221,25 +153,14 @@ export class PresentationComponent {
     },
   ];
 
-  /**
-   * Règle d'or de la section méthode IA. Contenu de confiance (statique)
-   * contenant un accent teal italique (`<em>`) et un saut de ligne (`<br>`) ;
-   * injecté via `[innerHTML]` par la section `asili-ai-method`.
-   */
   protected readonly aiMethodRule = $localize`:@@presentationAiMethodRule:« L'IA génère du contenu.<br/><em>Un expert génère des résultats.</em> »`;
 
-  /** Signature sous la règle d'or. */
   protected readonly aiMethodRuleWho = $localize`:@@presentationAiMethodRuleWho:La règle d'or — la même que dans mes formations`;
 
-  // --- Parcours (timeline) --------------------------------------------------
-
-  /** Sur-titre de la section parcours. */
   protected readonly timelineKicker = $localize`:@@presentationTimelineKicker:Le parcours`;
 
-  /** Lien d'en-tête de la section parcours vers les projets. */
   protected readonly timelineHeadLink = $localize`:@@presentationTimelineHeadLink:Voir les projets`;
 
-  /** Jalons du parcours (du plus récent au plus ancien). */
   protected readonly milestones: readonly PresentationMilestone[] = [
     {
       year: $localize`:@@presentationMilestone1Year:2026 →`,
@@ -281,15 +202,10 @@ export class PresentationComponent {
     },
   ];
 
-  // --- FAQ ------------------------------------------------------------------
-
-  /** Sur-titre de la FAQ. */
   protected readonly faqKicker = $localize`:@@presentationFaqKicker:Questions fréquentes`;
 
-  /** Titre de la FAQ. */
   protected readonly faqTitle = $localize`:@@presentationFaqTitle:Ce qu'on me demande souvent.`;
 
-  /** Questions / réponses de la FAQ. */
   protected readonly faqItems: readonly PresentationFaq[] = [
     {
       q: $localize`:@@presentationFaq1Q:Travaillez-vous avec des non-techniciens ?`,
@@ -309,17 +225,11 @@ export class PresentationComponent {
     },
   ];
 
-  // --- Bande CTA ------------------------------------------------------------
-
-  /** Sur-titre de la bande CTA. */
   protected readonly ctaKicker = $localize`:@@presentationCtaKicker:On en parle ?`;
 
-  /** Titre de la bande CTA. */
   protected readonly ctaTitle = $localize`:@@presentationCtaTitle:Votre projet mérite d'être clarifié avant d'être construit.`;
 
-  /** CTA primaire de la bande. */
   protected readonly ctaPrimary = $localize`:@@presentationCtaPrimary:Démarrer la conversation`;
 
-  /** CTA secondaire de la bande. */
   protected readonly ctaSecondary = $localize`:@@presentationCtaSecondary:Voir les services`;
 }

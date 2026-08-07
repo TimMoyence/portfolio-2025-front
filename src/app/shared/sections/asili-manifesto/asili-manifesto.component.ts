@@ -11,13 +11,8 @@ import {
 } from '@angular/core';
 
 /**
- * Une ligne du manifeste (scrollytelling).
- *
- * - `step` : court intitule mono teal affiche au-dessus de la ligne
- *   (ex. `"Le probleme"`). Optionnel.
- * - `html` : contenu de la ligne. Peut contenir un accent teal italique via
- *   `<span class="t">...</span>`. Fourni par la page appelante (texte de
- *   confiance, statique) et assaini par Angular avant injection.
+ * `html` est injecte dans le DOM : il doit rester du contenu de confiance
+ * (statique, fourni par la page appelante), jamais une saisie utilisateur.
  */
 export interface AsiliManifestoLine {
   step?: string;
@@ -25,24 +20,9 @@ export interface AsiliManifestoLine {
 }
 
 /**
- * Section « Manifeste » Asili : suite de lignes serif geantes en
- * scrollytelling. Au repos chaque ligne est attenuee (`--ink-faint`) ; elle
- * s'allume (`.lit`, `--ink`) lorsqu'elle traverse le centre vertical de
- * l'ecran. Portee de `.manifesto` / `.mani-line` / `.mani-step` de la maquette
- * `AsiliNewDesign/asili-sections.css`.
- *
- * Composant de presentation pur : tout le texte arrive via l'input `lines`
- * (l'i18n est delegue aux pages appelantes). Standalone, OnPush.
- *
- * SSR / fail-open : les lignes sont rendues allumees (`lit`) par defaut, donc
- * pleinement lisibles cote serveur, en prerender, en print et si le JS echoue.
- * Cote browser uniquement, le composant retire `lit` puis l'applique
- * dynamiquement via un `IntersectionObserver` centre sur le milieu de l'ecran
- * (bande etroite reproduisant le seuil `mid = 52%` de la maquette). Aucun
- * acces a `window`/`document` au rendu serveur.
- *
- * Niveaux de titre : le manifeste est purement textuel (`<p>`) et n'introduit
- * pas de titre — il s'insere entre deux sections sans rompre la hierarchie.
+ * Fail-open : les lignes sont rendues allumees (`lit`) par defaut, donc
+ * lisibles cote serveur, en prerender, en print et si le JS echoue. C'est le
+ * browser qui retire `lit` avant de le repiloter a l'IntersectionObserver.
  */
 @Component({
   selector: 'app-asili-manifesto',
@@ -52,7 +32,6 @@ export interface AsiliManifestoLine {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliManifestoComponent implements AfterViewInit {
-  /** Lignes du manifeste a afficher dans l'ordre. */
   readonly lines = input.required<readonly AsiliManifestoLine[]>();
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -71,12 +50,10 @@ export class AsiliManifestoComponent implements AfterViewInit {
       return;
     }
 
-    // Sans IntersectionObserver, on garde les lignes allumees (fail-open).
     if (typeof IntersectionObserver === 'undefined') {
       return;
     }
 
-    // Bascule en mode anime : tout est attenue, l'observer rallumera au scroll.
     for (const el of elements) {
       el.classList.remove('lit');
     }

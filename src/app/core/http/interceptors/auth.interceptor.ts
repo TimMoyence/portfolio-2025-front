@@ -6,9 +6,6 @@ import { APP_CONFIG } from '../../config/app-config.token';
 import { AuthStateService } from '../../services/auth-state.service';
 
 /**
- * Intercepteur HTTP qui attache le Bearer token JWT aux requetes de notre API
- * et gere les reponses 401 (logout + redirect /login).
- *
  * Le header `Authorization` n'est ajoute QUE si l'URL cible notre API
  * (`req.url.startsWith(apiBaseUrl)`), afin de ne jamais fuiter le JWT vers
  * des API tierces (RainViewer, Nominatim, etc.). Les adapters utilisent tous

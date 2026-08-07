@@ -10,30 +10,13 @@ import type {
 import { SEBASTIAN_PORT, type SebastianPort } from '../../core/ports/sebastian.port';
 import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drink-sheet.component';
 
-/**
- * Shell du majordome Sebastian.
- * Affiche l'en-tete avec ajout rapide, les compteurs journaliers,
- * la barre d'onglets et le router-outlet pour les pages enfant.
- */
 @Component({
   selector: 'app-sebastian-app',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, SebastianAddDrinkSheetComponent],
   template: `
-    <!--
-      Shell App Sebastian — thème "dark lounge ambré" porté de la maquette
-      AsiliNewDesign/sebastian-app.html + asili-app.css :
-      .seb-app { --app-bg:#14100a }, .seb-pagehead, .seb-cards, .sc (sk/sv),
-      .app-pill, .seb-nav button(.on). Décision nav (3) = OPTION A : on conserve
-      l'ossature réelle (header + barre d'onglets HORIZONTALE + router-outlet)
-      et on lui applique le STYLE Asili (pas la sidebar .seb-side, qui ferait
-      double chrome avec la navbar globale conservée — décisions Lot 3f/4).
-      Tokens : --gold/--gold-soft/--gold-deep, --font-display (Instrument Serif),
-      --font-mono (Geist Mono), opacités ambrées rgba(230,170,70,x) de la maquette.
-    -->
     <div class="min-h-screen bg-[#14100a] px-4 py-8 font-sans sm:px-6 lg:px-8">
       <div class="mx-auto max-w-7xl">
-        <!-- Header — titre display, sous-titre mono ambré (.seb-pagehead h1/.sub) -->
         <header class="mb-8 text-center">
           <h1
             class="mb-2 font-display text-4xl text-white sm:text-5xl"
@@ -46,9 +29,7 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
           </p>
         </header>
 
-        <!-- Compteurs journaliers (format .sc Asili : sk mono / sv display / barre gold) -->
         <section class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <!-- Compteur Alcool -->
           <div
             class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-5 transition-colors duration-300 hover:border-[rgba(230,170,70,0.35)]"
           >
@@ -80,7 +61,6 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
             }
           </div>
 
-          <!-- Compteur Cafe (décision 5 : café conservé, teinte gold-deep) -->
           <div
             class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-5 transition-colors duration-300 hover:border-[rgba(230,170,70,0.35)]"
           >
@@ -111,7 +91,6 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
           </div>
         </section>
 
-        <!-- Barre d'onglets restylée (pills ambrés, état actif gold .seb-nav button.on) -->
         <nav class="mb-6 flex gap-1.5 overflow-x-auto border-b border-[rgba(230,170,70,0.14)] pb-2">
           @for (tab of tabs; track tab.route) {
             <a
@@ -124,14 +103,12 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
           }
         </nav>
 
-        <!-- Contenu des pages enfant (router-outlet pour les routes nestees) -->
         <main>
           <router-outlet />
         </main>
       </div>
     </div>
 
-    <!-- FAB Ajout — gold glow (cercle ambré lumineux) -->
     <div class="fixed bottom-6 right-6 z-40">
       <button
         type="button"
@@ -143,7 +120,6 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
       </button>
     </div>
 
-    <!-- Bottom Sheet Ajout -->
     <app-sebastian-add-drink-sheet
       [open]="addSheetOpen()"
       [recentEntries]="recentEntries()"
@@ -156,7 +132,6 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
 export class SebastianAppComponent {
   private readonly port: SebastianPort = inject(SEBASTIAN_PORT);
 
-  /** Configuration des onglets de navigation. */
   readonly tabs = [
     { label: 'Dashboard', route: 'dashboard' },
     { label: 'Rapports', route: 'rapports' },
@@ -165,65 +140,53 @@ export class SebastianAppComponent {
     { label: 'Objectifs', route: 'objectifs' },
   ] as const;
 
-  /** Toutes les entrees chargees. */
   readonly entries = signal<SebastianEntry[]>([]);
 
-  /** Objectifs actifs. */
   readonly goals = signal<SebastianGoal[]>([]);
 
-  /** Statistiques de la semaine. */
   readonly stats = signal<SebastianStats | null>(null);
 
-  /** Controle l'ouverture du bottom sheet d'ajout. */
   readonly addSheetOpen = signal(false);
 
-  /** Animations pulse apres ajout rapide. */
   readonly alcoholPulse = signal(false);
   readonly coffeePulse = signal(false);
 
-  /** Total alcool du jour. */
   readonly todayAlcohol = computed(() =>
     this.entries()
       .filter((e) => e.category === 'alcohol' && e.date === this.todayIso())
       .reduce((sum, e) => sum + e.quantity, 0),
   );
 
-  /** Total cafe du jour. */
   readonly todayCoffee = computed(() =>
     this.entries()
       .filter((e) => e.category === 'coffee' && e.date === this.todayIso())
       .reduce((sum, e) => sum + e.quantity, 0),
   );
 
-  /** Objectif alcool quotidien. */
   readonly dailyAlcoholGoal = computed(
     () =>
       this.goals().find((g) => g.category === 'alcohol' && g.period === 'daily' && g.isActive) ??
       null,
   );
 
-  /** Objectif cafe quotidien. */
   readonly dailyCoffeeGoal = computed(
     () =>
       this.goals().find((g) => g.category === 'coffee' && g.period === 'daily' && g.isActive) ??
       null,
   );
 
-  /** Progression alcool en pourcentage. */
   readonly alcoholProgress = computed(() => {
     const goal = this.dailyAlcoholGoal();
     if (!goal) return 0;
     return Math.min(100, (this.todayAlcohol() / goal.targetQuantity) * 100);
   });
 
-  /** Progression cafe en pourcentage. */
   readonly coffeeProgress = computed(() => {
     const goal = this.dailyCoffeeGoal();
     if (!goal) return 0;
     return Math.min(100, (this.todayCoffee() / goal.targetQuantity) * 100);
   });
 
-  /** 3 dernieres entrees distinctes par drinkType pour le quick-add. */
   readonly recentEntries = computed(() => {
     const seen = new Set<string>();
     const recents: SebastianEntry[] = [];
@@ -242,7 +205,6 @@ export class SebastianAppComponent {
     this.loadData();
   }
 
-  /** Callback quand le bottom sheet emet un ajout. */
   onAddDrink(payload: CreateEntryPayload): void {
     this.port.addEntry(payload).subscribe((entry) => {
       this.entries.update((list) => [entry, ...list]);
@@ -250,19 +212,16 @@ export class SebastianAppComponent {
     });
   }
 
-  /** Retourne la date du jour au format ISO (YYYY-MM-DD). */
   private todayIso(): string {
     return new Date().toISOString().slice(0, 10);
   }
 
-  /** Charge les donnees initiales (entrees, objectifs, stats). */
   private loadData(): void {
     this.port.getEntries().subscribe((entries) => this.entries.set(entries));
     this.port.getGoals().subscribe((goals) => this.goals.set(goals));
     this.port.getStats('week').subscribe((stats) => this.stats.set(stats));
   }
 
-  /** Declenche l'animation pulse sur le bouton correspondant. */
   private triggerPulse(category: SebastianCategory): void {
     const sig = category === 'alcohol' ? this.alcoholPulse : this.coffeePulse;
     sig.set(true);

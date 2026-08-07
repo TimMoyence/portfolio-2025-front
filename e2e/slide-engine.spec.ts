@@ -23,7 +23,6 @@ test.describe('Slide engine', () => {
     await expect(btn).toBeVisible();
     await btn.click();
     await page.waitForTimeout(300);
-    // Swiper container présent en mode fullscreen
     await expect(page.locator('swiper-container')).toBeVisible();
   });
 

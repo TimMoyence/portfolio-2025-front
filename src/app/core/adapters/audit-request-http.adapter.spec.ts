@@ -45,7 +45,6 @@ describe('AuditRequestHttpAdapter', () => {
       result.subscribe({
         next: (val) => emissions.push(val),
         complete: () => {
-          // EMPTY complete immediatement sans emettre
           expect(emissions.length).toBe(0);
           done();
         },
@@ -79,7 +78,6 @@ describe('AuditRequestHttpAdapter', () => {
     });
 
     it("stream() devrait transmettre clientReport dans l'evenement completed", (done) => {
-      // Fake EventSource pour simuler la reception d'un event SSE 'completed'
       const listeners = new Map<string, (event: Event) => void>();
       const closeSpy = jasmine.createSpy('close');
       const fakeEventSource = {
@@ -90,7 +88,6 @@ describe('AuditRequestHttpAdapter', () => {
         onerror: null,
       };
 
-      // Remplace temporairement le constructeur global EventSource
       const originalEventSource = (globalThis as unknown as { EventSource: unknown }).EventSource;
       (globalThis as unknown as { EventSource: unknown }).EventSource = function FakeES() {
         return fakeEventSource;
@@ -131,7 +128,6 @@ describe('AuditRequestHttpAdapter', () => {
         },
       });
 
-      // Simule l'arrivee du message SSE 'completed'
       const completedListener = listeners.get('completed');
       expect(completedListener).toBeDefined();
       const messageEvent = new MessageEvent('completed', {

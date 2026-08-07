@@ -1,31 +1,13 @@
 @use '../../styles-shared/breakpoints' as bp;
-/*
-  Shell App Météo (/atelier/meteo/app) — styles scopés portés des maquettes
-  AsiliNewDesign/asili-app.css (.app-main, .gp/.gp-pad/.gp-h, .app-pill/.live-dot,
-  .wx-grid + responsive @media 900/560px) et meteo-app.js (palette ciel SKIES,
-  voile radial). Le langage visuel est l'immersif glass « ciel / teal / glow ».
-
-  Décision chrome (3) : pas de topbar .app-top concurrent de la navbar globale —
-  on intègre titre + sélecteurs existants dans un header d'app interne (.wx-app-head).
-  Décision fond (4) : le système data-driven (gradient par code météo + crossfade
-  + parallax, piloté en TS) est CONSERVÉ ; .wx-sky-veil ne fait qu'HARMONISER la
-  profondeur radiale Asili par-dessus, sans toucher aux signals de fond.
-
-  Tokens globaux (src/styles/_tokens.scss) : --teal, --glow, --glow-soft, --r-lg,
-  --r-pill, --ease, --font-display, --font-mono.
-*/
 
 :host {
   display: block;
 }
 
-/* ---------- SHELL + FOND CIEL (asili-app.css : .app-body / .sky-bg) ---------- */
 .wx-shell {
   padding: clamp(16px, 4vw, 40px) clamp(12px, 4vw, 36px) 80px;
 }
 
-/* Voile ciel Asili : profondeur radiale par-dessus le gradient data-driven.
-   Source maquette : meteo-app.js → SKIES (radial-gradient 120% at 70% -10%). */
 .wx-sky-veil {
   position: absolute;
   inset: -4rem 0;
@@ -40,7 +22,6 @@
   mix-blend-mode: soft-light;
 }
 
-/* ---------- CONTENEUR (asili-app.css : .app-main) ---------- */
 .wx-main {
   max-width: 1240px;
   margin: 0 auto;
@@ -55,9 +36,7 @@
   gap: 24px;
 }
 
-/* ---------- GLASS PANEL (asili-app.css : .gp / .gp-pad / .gp-h) ---------- */
 .gp {
-  /* glass-dark (DUP-5) : consomme les tokens couleur, blur 18px */
   background: var(--glass-dark);
   border: 1px solid var(--glass-dark-line);
   border-radius: var(--r-lg);
@@ -69,7 +48,6 @@
   padding: clamp(18px, 2.4vw, 26px);
 }
 
-/* ---------- HEADER D'APP INTERNE (décision 3) ---------- */
 .wx-app-head {
   display: flex;
   flex-direction: column;
@@ -88,7 +66,6 @@
   min-width: 0;
 }
 
-/* Titre — typo display Asili (asili-app.css : .app-brand / .wx-temp scale). */
 .wx-title {
   font-size: clamp(34px, 5vw, 46px);
   line-height: 1;
@@ -96,7 +73,6 @@
   color: #fff;
 }
 
-/* Localisation courante — mono + pin glow (asili-app.css : .wx-loc .pin). */
 .wx-place {
   display: inline-flex;
   align-items: center;
@@ -115,7 +91,6 @@
   box-shadow: 0 0 14px var(--glow);
 }
 
-/* Pill « En direct » (asili-app.css : .app-pill / .live-dot teal). */
 .wx-pill {
   display: inline-flex;
   align-items: center;
@@ -151,7 +126,6 @@
   }
 }
 
-/* Rangée sélecteurs niveau + unités (bindings inchangés côté composants). */
 .wx-app-controls {
   display: flex;
   align-items: center;
@@ -160,7 +134,6 @@
   gap: 10px;
 }
 
-/* ---------- ÉTATS ERREUR / VIDE (restyle glass Asili) ---------- */
 .wx-error {
   border-color: rgba(230, 100, 100, 0.3);
   background: rgba(220, 70, 70, 0.1);
@@ -206,7 +179,6 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-/* ---------- RESPONSIVE (asili-app.css : @media 900 / 560px) ---------- */
 @media (max-width: 900px) {
   .wx-app-head-top {
     align-items: center;
@@ -222,7 +194,6 @@
   }
 }
 
-/* ---- Slide-in animation (préservé) ---- */
 :host ::ng-deep .slide-in-hidden {
   opacity: 0;
   transform: translateY(24px);
@@ -236,7 +207,6 @@
     transform 0.5s ease-out;
 }
 
-/* Staggered delays for grid cards */
 :host ::ng-deep .slide-in-visible:nth-child(2) {
   transition-delay: 0.08s;
 }
@@ -256,7 +226,6 @@
   transition-delay: 0.48s;
 }
 
-/* ---- Chevron pulse (transition prompt) ---- */
 @keyframes chevronPulse {
   0%,
   100% {
@@ -273,7 +242,6 @@
   animation: chevronPulse 1.5s ease-in-out infinite;
 }
 
-/* ---- City transition (fade entre villes) ---- */
 .content-transition {
   transition:
     opacity 0.3s ease-out,
@@ -285,7 +253,6 @@
   transform: translateY(4px);
 }
 
-/* ---- Accessibilite : desactiver les animations si l'utilisateur le demande ---- */
 @media (prefers-reduced-motion: reduce) {
   :host ::ng-deep .slide-in-hidden {
     opacity: 1;

@@ -10,25 +10,13 @@ import {
 } from '@angular/core';
 import type { CityResult, FavoriteCity } from '../../../../core/models/weather.model';
 
-/**
- * Barre horizontale de villes favorites.
- * Affiche les villes favorites sous forme de chips cliquables
- * et un bouton etoile pour ajouter/retirer la ville courante.
- */
 @Component({
   selector: 'app-favorite-cities-bar',
   standalone: true,
   imports: [CommonModule],
   host: { class: 'block' },
   template: `
-    <!--
-      Barre de villes favorites — re-skin Asili AsiliNewDesign/asili-sections.css :
-      .meteo-cities (rangée flex) + .city-btn (pill border subtile, hover teal,
-      .on = fond teal sur foncé). Restyle visuel uniquement — add/remove/
-      setDefault, [darkMode] et les bindings inchangés.
-    -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-      <!-- Bouton etoile : ajouter/retirer la ville courante -->
       @if (selectedCity()) {
         <button
           type="button"
@@ -59,7 +47,6 @@ import type { CityResult, FavoriteCity } from '../../../../core/models/weather.m
         </button>
       }
 
-      <!-- Chips des villes favorites -->
       @for (city of favorites(); track city.name; let i = $index) {
         <div class="flex-shrink-0 flex items-center gap-0.5">
           <button
@@ -114,28 +101,20 @@ import type { CityResult, FavoriteCity } from '../../../../core/models/weather.m
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FavoriteCitiesBarComponent {
-  /** Mode sombre (fond gradient) ou clair (fond blanc). */
   readonly darkMode = input(true);
 
-  /** Liste des villes favorites. */
   readonly favorites = input<FavoriteCity[]>([]);
 
-  /** Ville actuellement selectionnee. */
   readonly selectedCity = input<CityResult | null>(null);
 
-  /** Emet la ville selectionnee parmi les favoris. */
   @Output() readonly favoriteSelected = new EventEmitter<CityResult>();
 
-  /** Emet l'ajout d'une ville aux favoris. */
   @Output() readonly addFavorite = new EventEmitter<FavoriteCity>();
 
-  /** Emet la suppression d'une ville des favoris. */
   @Output() readonly removeFavorite = new EventEmitter<FavoriteCity>();
 
-  /** Index de la ville favorite par defaut. */
   readonly defaultCityIndex = input<number | null>(null);
 
-  /** Emet le changement de ville par defaut. */
   readonly defaultCityChange = output<number | null>();
 
   readonly addToFavoritesLabel = $localize`:weather.favorites.add|@@weatherFavoritesAdd:Ajouter aux favoris`;
@@ -143,7 +122,6 @@ export class FavoriteCitiesBarComponent {
   readonly defaultCitySetLabel = $localize`:weather.favorites.setDefault|@@weatherFavoritesSetDefault:Definir comme ville par defaut`;
   readonly defaultCityRemoveLabel = $localize`:weather.favorites.removeDefault|@@weatherFavoritesRemoveDefault:Retirer la ville par defaut`;
 
-  /** Verifie si la ville courante est deja en favori. */
   readonly isCurrentFavorite = computed(() => {
     const city = this.selectedCity();
     if (!city) return false;
@@ -152,13 +130,11 @@ export class FavoriteCitiesBarComponent {
     );
   });
 
-  /** Verifie si une ville favorite est la ville selectionnee. */
   isSelected(city: FavoriteCity): boolean {
     const sel = this.selectedCity();
     return !!sel && sel.latitude === city.latitude && sel.longitude === city.longitude;
   }
 
-  /** Selectionne une ville favorite pour charger ses previsions. */
   onCityClick(city: FavoriteCity): void {
     this.favoriteSelected.emit({
       id: -1,
@@ -170,7 +146,6 @@ export class FavoriteCitiesBarComponent {
     });
   }
 
-  /** Definit ou retire la ville par defaut parmi les favoris. */
   toggleDefault(index: number): void {
     if (this.defaultCityIndex() === index) {
       this.defaultCityChange.emit(null);
@@ -179,7 +154,6 @@ export class FavoriteCitiesBarComponent {
     }
   }
 
-  /** Ajoute ou retire la ville courante des favoris. */
   toggleFavorite(): void {
     const city = this.selectedCity();
     if (!city) return;

@@ -1,18 +1,9 @@
-/*
-  Auth (login / register) — restyle Asili split-screen. Les classes `.auth-*` /
-  `.pw-strength` sont mutualisées dans le partiel `_auth-shared.scss` (porté de
-  AsiliNewDesign/asili-auth.css) et partagées avec forgot / reset / verify. On
-  les `@use` ici pour les scoper à ce composant. Restyle = HTML/SCSS uniquement ;
-  la logique (tabs, AUTH_PORT.login/register/googleAuth, validation, returnUrl)
-  est inchangée.
-*/
 @use './auth-shared';
 
 :host {
   display: block;
 }
 
-/* — Onglets login / register (port de la maquette : segmented switch) — */
 .auth-tabs {
   display: inline-flex;
   gap: 4px;
@@ -42,7 +33,6 @@
   box-shadow: var(--shadow-soft);
 }
 
-/* Animation d'apparition d'écran (port .auth-screen.on). */
 .auth-screen {
   animation: authIn 0.45s var(--ease);
 }

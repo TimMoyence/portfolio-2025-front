@@ -23,7 +23,6 @@ describe('AuthComponent', () => {
   let fixture: ComponentFixture<AuthComponent>;
   let authService: jasmine.SpyObj<AuthPort>;
 
-  /** Configure le TestBed avec le seoKey donne et un map de queryParams. */
   async function setupWithSeoKey(
     seoKey: string,
     queryParams: Record<string, string | null> = {},
@@ -73,7 +72,6 @@ describe('AuthComponent', () => {
     expect(component.activeTab).toBe('log-in');
   });
 
-  /** Cree un mock type de NgForm via jasmine.createSpyObj (PE-012). */
   const buildForm = (invalid: boolean): NgForm =>
     jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {
       invalid,
@@ -236,7 +234,6 @@ describe('AuthComponent', () => {
       const navigateSpy = spyOn(router, 'navigateByUrl');
       authService.googleAuth.and.returnValue(of(buildAuthSession()));
 
-      // Acces direct au callback prive via cast — simule la callback GIS.
       (
         component as unknown as {
           onGoogleCredential: (

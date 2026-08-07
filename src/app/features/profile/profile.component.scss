@@ -1,17 +1,7 @@
-/*
-  Profil — styles page-spécifiques portés de la maquette
-  AsiliNewDesign/asili-auth.css (section PROFIL : .pf-hero, .pf-top, .pf-avatar,
-  .pf-badge, .pf-grid, .pf-card, .pf-line, .pf-access, .pf-acc). Les champs de
-  formulaire (.pf-field input) reprennent le style .auth-field input de la même
-  feuille. Primitives globales (.btn*, .wrap) + tokens (_tokens.scss) fournissent
-  le reste. Restyle = visuel uniquement ; logique inchangée.
-*/
-
 :host {
   display: block;
 }
 
-/* ---------- HERO (asili-auth.css : .pf-hero, .pf-top, .pf-avatar) ---------- */
 .pf-hero {
   padding-top: clamp(130px, 16vh, 190px);
   padding-bottom: clamp(36px, 6vh, 64px);
@@ -66,7 +56,6 @@
   border: 1px solid rgba(var(--teal-rgb), 0.22);
 }
 
-/* ---------- GRILLE DE CARTES (asili-auth.css : .pf-grid, .pf-card) ---------- */
 .pf-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -98,7 +87,6 @@
   margin-bottom: 22px;
 }
 
-/* ---------- LIGNES INFO (asili-auth.css : .pf-line) ---------- */
 .pf-line {
   display: flex;
   align-items: center;
@@ -147,7 +135,6 @@
   color: var(--danger);
 }
 
-/* ---------- ACCÈS ATELIER (asili-auth.css : .pf-access, .pf-acc) ---------- */
 .pf-access {
   display: grid;
   gap: 12px;
@@ -220,7 +207,6 @@
   padding: 11px 18px;
 }
 
-/* ---------- FORMULAIRES (parité asili-auth.css : .auth-field) ---------- */
 .pf-edit,
 .pf-form {
   display: grid;
@@ -242,7 +228,6 @@
   font-family: var(--font-sans);
   font-size: 16px;
   color: var(--ink);
-  /* Fond transparent : le champ epouse la carte qui le porte. */
   background: transparent;
   border: 1px solid var(--line);
   border-radius: var(--r);
@@ -286,7 +271,6 @@
   color: var(--danger);
 }
 
-/* ---------- PRÉFÉRENCES MÉTÉO ---------- */
 .pf-weather-level {
   display: grid;
   gap: 8px;

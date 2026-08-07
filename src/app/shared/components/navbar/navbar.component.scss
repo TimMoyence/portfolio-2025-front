@@ -2,9 +2,6 @@
   display: block;
 }
 
-/* ============================================================
-   NAVBAR ASILI — barre fixe transparente → blur au scroll
-   ============================================================ */
 .asili-nav {
   position: fixed;
   inset: 0 0 auto 0;
@@ -32,7 +29,6 @@
   gap: var(--s-4);
 }
 
-/* ---------- Logo ---------- */
 .asili-logo {
   display: flex;
   align-items: baseline;
@@ -56,7 +52,6 @@
   align-self: center;
 }
 
-/* ---------- Liens primaires (desktop) ---------- */
 .asili-nav__links {
   display: none;
   align-items: center;
@@ -117,11 +112,6 @@
   transform: rotate(180deg);
 }
 
-/*
-  Variante « trigger lié » (desktop) : le label est un lien réel vers le hub
-  (/atelier) et le chevron une bascule du dropdown. Le wrapper regroupe les
-  deux comme un seul item de nav, sans padding propre (porté par le label).
-*/
 .asili-nav__trigger--linked {
   display: inline-flex;
   align-items: center;
@@ -149,7 +139,6 @@
   color: var(--ink);
 }
 
-/* ---------- Dropdowns desktop ---------- */
 .asili-dropdown {
   position: absolute;
   top: calc(100% + 10px);
@@ -228,7 +217,6 @@
   color: var(--ink-mute);
 }
 
-/* Variante simple (profil / déconnexion) */
 .asili-drop-item--simple {
   width: 100%;
   align-items: center;
@@ -252,7 +240,6 @@
   background: rgba(192, 86, 60, 0.08);
 }
 
-/* En-tête utilisateur dans le dropdown */
 .asili-user-head {
   display: flex;
   align-items: center;
@@ -281,7 +268,6 @@
   white-space: nowrap;
 }
 
-/* ---------- Zone droite ---------- */
 .asili-nav__side {
   display: flex;
   align-items: center;
@@ -293,7 +279,6 @@
   font-size: 14px;
 }
 
-/* ---------- Pill langue FR / EN ---------- */
 .asili-lang {
   display: inline-flex;
   align-items: stretch;
@@ -332,7 +317,6 @@
   background: var(--ivory);
 }
 
-/* ---------- Avatar ---------- */
 .asili-avatar {
   width: 38px;
   height: 38px;
@@ -374,7 +358,6 @@
   user-select: none;
 }
 
-/* ---------- Burger ---------- */
 .asili-burger {
   display: grid;
   place-items: center;
@@ -397,9 +380,6 @@
   }
 }
 
-/* ============================================================
-   DRAWER MOBILE — slide depuis la droite
-   ============================================================ */
 .asili-drawer-overlay {
   position: fixed;
   inset: 0;
@@ -451,7 +431,6 @@
   flex-wrap: wrap;
 }
 
-/* Liens de premier niveau dans le drawer (serif ~32px) */
 .asili-nav__link.is-mobile {
   display: flex;
   align-items: center;
@@ -505,13 +484,11 @@
   color: var(--teal-deep);
 }
 
-/* Lien hub « L'Atelier » en tête du sous-menu mobile — mis en avant. */
 .asili-drawer__sublink--hub {
   color: var(--ink);
   font-weight: 600;
 }
 
-/* Zone actions + compte dans le drawer */
 .asili-nav__side.is-mobile {
   flex-direction: column;
   align-items: stretch;
@@ -544,9 +521,6 @@
   margin-bottom: 6px;
 }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
 @keyframes asiliDrawerSlide {
   from {
     transform: translateX(100%);

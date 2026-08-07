@@ -2,7 +2,6 @@ import { of, throwError } from 'rxjs';
 import type { LeadMagnetPort } from '../../app/core/ports/lead-magnet.port';
 import type { ToolkitPageData } from '../../app/core/models/toolkit-page.model';
 
-/** Cree un stub du port lead magnet avec une reponse succes par defaut. */
 export function createLeadMagnetPortStub(): jasmine.SpyObj<LeadMagnetPort> {
   const stub = jasmine.createSpyObj<LeadMagnetPort>('LeadMagnetPort', [
     'requestToolkit',
@@ -17,11 +16,6 @@ export function createLeadMagnetPortStub(): jasmine.SpyObj<LeadMagnetPort> {
   return stub;
 }
 
-/**
- * Construit une `ToolkitPageData` minimale mais structurellement complete pour
- * les tests (recap + une entree par section : cheatsheet, prompts, workflows,
- * templates, prompt Gamma). Surchargable champ par champ.
- */
 export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): ToolkitPageData {
   return {
     recap: {
@@ -81,7 +75,6 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
   };
 }
 
-/** Cree un stub du port lead magnet qui retourne une erreur. */
 export function createLeadMagnetPortStubWithError(): jasmine.SpyObj<LeadMagnetPort> {
   const stub = jasmine.createSpyObj<LeadMagnetPort>('LeadMagnetPort', [
     'requestToolkit',

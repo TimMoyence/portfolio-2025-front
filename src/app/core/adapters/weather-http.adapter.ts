@@ -17,7 +17,6 @@ import type {
 } from '../models/weather.model';
 import type { WeatherPort } from '../ports/weather.port';
 
-/** Reponse transport Nominatim (reverse geocoding, sous-ensemble utilise). */
 interface NominatimResponse {
   address?: {
     city?: string;
@@ -29,29 +28,18 @@ interface NominatimResponse {
   };
 }
 
-/**
- * Adaptateur HTTP pour le port meteo.
- * Communique avec les endpoints `/weather/geocoding`, `/weather/forecast`
- * et `/weather/preferences`. Le reverse-geocoding passe par Nominatim (OSM).
- */
 @Injectable()
 export class WeatherHttpAdapter implements WeatherPort {
   private readonly baseUrl = getApiBaseUrl();
 
   constructor(private readonly http: HttpClient) {}
 
-  /** Recherche de villes par nom via l'API de geocodage. */
   searchCity(name: string, language = 'fr', count = 5): Observable<GeocodingResponse> {
     return this.http.get<GeocodingResponse>(`${this.baseUrl}/weather/geocoding`, {
       params: { name, language, count: count.toString() },
     });
   }
 
-  /**
-   * Reverse-geocoding via Nominatim (OpenStreetMap).
-   * Retourne le nom de la ville (city > town > village > municipality)
-   * ou `null` si indisponible.
-   */
   reverseGeocode(lat: number, lon: number): Observable<string | null> {
     return this.http
       .get<NominatimResponse>('https://nominatim.openstreetmap.org/reverse', {
@@ -71,7 +59,6 @@ export class WeatherHttpAdapter implements WeatherPort {
       );
   }
 
-  /** Recuperation des previsions meteo pour des coordonnees donnees. */
   getForecast(
     latitude: number,
     longitude: number,
@@ -91,12 +78,10 @@ export class WeatherHttpAdapter implements WeatherPort {
     });
   }
 
-  /** Recuperation des preferences meteo de l'utilisateur connecte. */
   getPreferences(): Observable<WeatherPreferences> {
     return this.http.get<WeatherPreferences>(`${this.baseUrl}/weather/preferences`);
   }
 
-  /** Mise a jour partielle des preferences meteo. */
   updatePreferences(
     data: Partial<
       Pick<
@@ -113,12 +98,10 @@ export class WeatherHttpAdapter implements WeatherPort {
     return this.http.patch<WeatherPreferences>(`${this.baseUrl}/weather/preferences`, data);
   }
 
-  /** Enregistrement de l'utilisation quotidienne de l'app meteo. */
   recordUsage(): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/weather/preferences/record-usage`, {});
   }
 
-  /** Recuperation des donnees de qualite de l'air pour des coordonnees donnees. */
   getAirQuality(latitude: number, longitude: number): Observable<AirQualityData> {
     return this.http.get<AirQualityData>(`${this.baseUrl}/weather/air-quality`, {
       params: {
@@ -128,7 +111,6 @@ export class WeatherHttpAdapter implements WeatherPort {
     });
   }
 
-  /** Recuperation des previsions multi-modeles (ensemble) pour des coordonnees donnees. */
   getEnsemble(latitude: number, longitude: number): Observable<EnsembleData> {
     return this.http.get<EnsembleData>(`${this.baseUrl}/weather/ensemble`, {
       params: {
@@ -138,7 +120,6 @@ export class WeatherHttpAdapter implements WeatherPort {
     });
   }
 
-  /** Recuperation des donnees historiques journalieres pour une plage de dates. */
   getHistorical(
     latitude: number,
     longitude: number,
@@ -155,7 +136,6 @@ export class WeatherHttpAdapter implements WeatherPort {
     });
   }
 
-  /** Donnees meteo detaillees courantes (OpenWeatherMap). */
   getDetailedCurrent(latitude: number, longitude: number): Observable<DetailedCurrentWeather> {
     return this.http.get<DetailedCurrentWeather>(`${this.baseUrl}/weather/current-detailed`, {
       params: {
@@ -165,7 +145,6 @@ export class WeatherHttpAdapter implements WeatherPort {
     });
   }
 
-  /** Previsions detaillees (OpenWeatherMap). */
   getDetailedForecast(latitude: number, longitude: number): Observable<DetailedForecastResult> {
     return this.http.get<DetailedForecastResult>(`${this.baseUrl}/weather/forecast-detailed`, {
       params: {
@@ -175,7 +154,6 @@ export class WeatherHttpAdapter implements WeatherPort {
     });
   }
 
-  /** Alertes meteo synthetiques. */
   getAlerts(latitude: number, longitude: number): Observable<WeatherAlertResult> {
     return this.http.get<WeatherAlertResult>(`${this.baseUrl}/weather/alerts`, {
       params: {

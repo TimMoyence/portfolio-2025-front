@@ -140,15 +140,14 @@ describe('SebastianGoalsComponent', () => {
 
   it('devrait afficher les icones de categorie', () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('\u2615'); // ☕
-    expect(content).toContain('\uD83C\uDF7A'); // 🍺
+    expect(content).toContain('\u2615');
+    expect(content).toContain('\uD83C\uDF7A');
   });
 
   it('devrait appliquer le glass dark Asili et avoir purge le token surface creme', () => {
     const cards = Array.from(fixture.nativeElement.querySelectorAll('div')) as HTMLElement[];
     const glassCard = cards.find((d) => d.className.includes('bg-white/[0.04]'));
     expect(glassCard).withContext('un panneau glass dark Asili doit exister').toBeTruthy();
-    // Migration dark complete : plus aucun token surface creme residuel.
     expect(fixture.nativeElement.querySelectorAll('.bg-scheme-surface').length).toBe(0);
   });
 });

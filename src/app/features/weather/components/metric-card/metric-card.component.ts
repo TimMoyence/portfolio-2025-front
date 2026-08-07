@@ -3,11 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, model } fr
 import { BreakpointService } from '../../../../core/services/breakpoint.service';
 import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.component';
 
-/**
- * Carte metrique generique (design system weather).
- * Encapsule le pattern glassmorphism, le header titre+tooltip,
- * le mode compact mobile-first et l'expand/collapse.
- */
 @Component({
   selector: 'app-metric-card',
   standalone: true,
@@ -26,16 +21,7 @@ import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.c
   ],
   host: { class: 'block' },
   template: `
-    <!--
-      Carte instrument — wrapper glass Asili (levier central partagé).
-      Re-skin AsiliNewDesign/asili-app.css : .gp (bg-white/5 border-white/10
-      r-lg 20px backdrop-blur) + .wx-card + en-tête .gp-h (.t : font-mono 11px
-      letterspacing .14em uppercase, teal subtil). Restyle visuel uniquement —
-      containerClasses()/titleClasses() retournent des classes Tailwind, la
-      logique (variant/expand/unavailable/a11y) est inchangée.
-    -->
     <div [class]="containerClasses()">
-      <!-- Header (.gp-h) -->
       <div class="mb-3 flex items-center justify-between">
         <h3 [class]="titleClasses()">
           <ng-content select="[cardTitle]" />
@@ -74,7 +60,6 @@ import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.c
         </div>
       </div>
 
-      <!-- Contenu principal -->
       @if (!unavailable()) {
         <ng-content />
 
@@ -93,40 +78,27 @@ import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetricCardComponent {
-  /** Identifiant du tooltip pedagogique. */
   readonly tooltipId = input.required<string>();
 
-  /** Titre du tooltip. */
   readonly tooltipTitle = input.required<string>();
 
-  /** Contenu du tooltip. */
   readonly tooltipContent = input.required<string>();
 
-  /** Affiche le fallback "Donnees indisponibles". */
   readonly unavailable = input(false);
 
-  /** Active le comportement expand/collapse. */
   readonly expandable = input(false);
 
-  /** Etat expanded (two-way binding). */
   readonly expanded = model(false);
 
-  /** Variante de taille : compact (mobile), default, wide (full-width). */
   readonly variant = input<'default' | 'compact' | 'wide'>('default');
 
   private readonly breakpointService = inject(BreakpointService);
 
-  /** Variante effective tenant compte du mobile. */
   readonly effectiveVariant = computed(() => {
     if (this.breakpointService.isMobile() && this.variant() === 'default') return 'compact';
     return this.variant();
   });
 
-  /**
-   * Classes CSS du conteneur selon la variante.
-   * Glass Asili .gp/.wx-card : rayon --r-lg (20px), border teal subtile,
-   * fond translucide, backdrop-blur. Restyle visuel uniquement.
-   */
   readonly containerClasses = computed(() => {
     const base =
       'rounded-[20px] border border-teal/15 bg-white/5 backdrop-blur-xl transition-colors hover:border-teal/30';
@@ -140,16 +112,11 @@ export class MetricCardComponent {
     }
   });
 
-  /**
-   * Classes CSS du titre selon la variante.
-   * En-tête .gp-h .t : font-mono, uppercase, letterspacing — kicker Asili.
-   */
   readonly titleClasses = computed(() => {
     const base = 'font-mono uppercase tracking-[0.14em] font-medium text-white/55';
     return this.effectiveVariant() === 'compact' ? `${base} text-[10px]` : `${base} text-[11px]`;
   });
 
-  /** Bascule l'etat expanded. */
   toggleExpand(event: Event): void {
     event.stopPropagation();
     this.expanded.update((v) => !v);

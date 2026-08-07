@@ -26,20 +26,15 @@ import {
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 
-// On est dans dist/portfolio-app/server/<locale>/
-// donc distRoot = dist/portfolio-app
 const distRoot = resolve(serverDistFolder, '../..');
 
-// dist/portfolio-app/browser
 const browserDistFolder = resolve(distRoot, 'browser');
 
-// index SSR propre a la locale: dist/portfolio-app/server/<locale>/index.server.html
 // Le container peut recevoir des requetes pour une autre locale (nginx, fallback),
 // donc on resout dynamiquement le bon index.server.html selon l'URL.
 const defaultIndexHtml = join(serverDistFolder, 'index.server.html');
 const serverRoot = resolve(serverDistFolder, '..');
 
-/** Retourne le index.server.html correspondant a la locale de l'URL. */
 const resolveIndexHtml = (locale: string | null): string => {
   if (!locale) return defaultIndexHtml;
   const localeIndex = join(serverRoot, locale, 'index.server.html');
@@ -50,10 +45,7 @@ const resolveIndexHtml = (locale: string | null): string => {
 const app = express();
 
 /**
- * Normalisation d'URL : collapse les slashes multiples et supprime
- * le trailing slash (sauf racine / et chemins locale-seul /fr/, /en/).
- *
- * Les chemins /fr/ et /en/ sont exempts car le reverse-proxy (nginx
+ * Les chemins /fr/ et /en/ sont exempts de la normalisation car le reverse-proxy (nginx
  * ou Cloudflare) ajoute systematiquement un trailing slash sur ces
  * chemins, ce qui cree une boucle 301 si on le retire.
  */
@@ -72,13 +64,6 @@ app.use((req, res, next) => {
   next();
 });
 
-/**
- * Headers de securite (defense en profondeur) poses sur TOUTES les reponses,
- * tot dans la chaine middleware. HSTS n'est emis qu'en HTTPS (detecte via
- * `req.secure` ou le header `X-Forwarded-Proto` du reverse-proxy en amont).
- * Le `X-Content-Type-Options` existant sur certaines routes reste en place
- * (non duplique ici).
- */
 app.use((req, res, next) => {
   const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
   const headers = buildSecurityHeaders({ isHttps });
@@ -145,11 +130,6 @@ app.get('/robots.txt', (req, res) => {
   res.type('text/plain').send(robots);
 });
 
-/**
- * Sert le fichier llms.txt conforme au standard https://llmstxt.org/
- * Permet aux LLMs (ChatGPT, Perplexity, Google AI Overview, Bing Copilot)
- * de decouvrir la structure du site et son intention editoriale.
- */
 app.get('/llms.txt', (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
@@ -163,11 +143,6 @@ app.get('/llms.txt', (req, res) => {
   res.type('text/plain').send(content);
 });
 
-/**
- * Sert le fichier /llms-full.txt (P1.8) : agregation complete du contenu
- * indexable pour les moteurs IA generatifs. Extension du standard llms.txt
- * proposee pour faciliter l'ingestion multi-pages en un seul fetch.
- */
 app.get('/llms-full.txt', (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
@@ -181,7 +156,6 @@ app.get('/llms-full.txt', (req, res) => {
   res.type('text/plain').send(content);
 });
 
-/** Bing Webmaster Tools — verification XML */
 app.get('/BingSiteAuth.xml', (_req, res) => {
   res
     .type('application/xml')
@@ -190,11 +164,6 @@ app.get('/BingSiteAuth.xml', (_req, res) => {
     );
 });
 
-/**
- *  Serve i18n static files correctly
- * - Do NOT serve index.html for asset requests
- * - Serve locale folders explicitly
- */
 app.use(
   '/fr',
   express.static(resolve(browserDistFolder, 'fr'), {
@@ -212,9 +181,6 @@ app.use(
   }),
 );
 
-/**
- * si certains assets sont demandés sans préfixe (rare)
- */
 app.use(
   '/assets',
   express.static(resolve(browserDistFolder, 'fr/assets'), {
@@ -224,16 +190,8 @@ app.use(
   }),
 );
 
-// Redirections 301 des anciennes URLs indexees (/home, /client-project).
-// Table et resolution dans ./server/redirects — verrouillees par redirects.spec.ts.
-// Position conservee : apres la normalisation d'URL et les express.static de
-// locale, avant le static racine et le rendu Angular.
 registerPermanentRedirects(app);
 
-/**
- * Serve other static files (css/js/map/woff2/...) if any are at browser root
- * Important: index:false so it never returns HTML for missing files
- */
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
@@ -242,22 +200,15 @@ app.use(
   }),
 );
 
-/**
- * Handle all other requests by rendering the Angular application.
- */
 app.get('**', (req, res, next) => {
   const { protocol, originalUrl, headers } = req;
 
-  // Extraire la locale depuis l'URL pour servir le bon index.server.html.
-  // Chaque locale a son propre bundle SSR (traductions, <base href>, lang).
-  // On resout dynamiquement pour eviter les problemes de cross-locale.
   const localeMatch = originalUrl.match(LOCALE_PREFIX_RE);
   const urlLocale = localeMatch ? localeMatch[1] : null;
   const baseHref = urlLocale ? `/${urlLocale}` : '/';
 
-  // Servir les fichiers HTML pre-rendus (SSG au build) si disponibles.
-  // Les fichiers pre-rendus contiennent le contenu complet (meta, texte, JSON-LD)
-  // et ne dependent pas du rendu SSR dynamique (CommonEngine) qui peut echouer
+  // Les fichiers pre-rendus (SSG au build) sont servis en priorite : ils ne
+  // dependent pas du rendu SSR dynamique (CommonEngine), qui peut echouer
   // silencieusement en production.
   if (urlLocale) {
     const routePath = originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
@@ -281,12 +232,9 @@ app.get('**', (req, res, next) => {
       return void res.send(html);
     }
 
-    // Routes client-only : servir la coquille CSR, pas de SSR.
-    // Le client gère le routing après hydratation (lecture du token localStorage).
     if (isClientOnlyRoute(routePath)) {
       const shell = loadCsrShell(urlLocale, browserDistFolder);
       if (shell) {
-        // Corriger le <base href> pour la locale courante
         const withBase = shell.replace(
           /<base\s+href="[^"]*"\s*\/?>/,
           `<base href="${baseHref}/" />`,
@@ -300,7 +248,6 @@ app.get('**', (req, res, next) => {
     }
   }
 
-  // Fallback SSR dynamique pour les routes non pre-rendues.
   const documentFilePath = resolveIndexHtml(urlLocale);
 
   // publicPath doit pointer vers le dossier de la locale pour que
@@ -330,10 +277,6 @@ app.get('**', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-/**
- * Start the server if this module is the main entry point.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, () => {

@@ -69,7 +69,6 @@ export class SeoManagerComponent {
           return;
         }
 
-        // Default SEO config if none provided in route data
         this.setDefaultSeo(currentUrl, data);
       });
   }

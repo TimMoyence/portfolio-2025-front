@@ -1,13 +1,6 @@
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
 import { buildLocalizedPath, normalizePath } from './url-utils';
 
-/**
- * User-agents des moteurs IA generatifs a whitelister explicitement (P1.7).
- * L'Allow: / explicite produit un signal positif de crawlabilite pour
- * ChatGPT, Perplexity, Google AI Overview et Bing Copilot. Les pages non
- * indexables (`index:false`) restent disallowed globalement via le bloc
- * `User-agent: *` en amont.
- */
 const AI_USER_AGENTS: ReadonlyArray<string> = [
   'GPTBot',
   'ChatGPT-User',
@@ -26,11 +19,6 @@ const escapeXml = (value: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
-/**
- * Construit un sitemap.xml standard Google : pour chaque page indexable,
- * emet un <url> avec <loc>, alternates hreflang (+ x-default) et les
- * attributs optionnels lastmod/changefreq/priority.
- */
 export const buildSitemapXml = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const locales = metadata.site.locales ?? [];
   const activeLocales = locales.length > 0 ? locales : [''];
@@ -91,12 +79,7 @@ export const buildSitemapXml = (metadata: SeoMetadataFile, baseUrl: string): str
   ].join('\n');
 };
 
-/**
- * Construit le contenu llms.txt standard (https://llmstxt.org/).
- * Ce fichier aide les LLMs (ChatGPT, Perplexity, Claude, Google AI Overview)
- * a comprendre la structure et l'intention du site pour citer le contenu
- * de maniere pertinente.
- */
+/** Format defini par le standard https://llmstxt.org/. */
 export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const defaultLocale = metadata.site.defaultLocale ?? 'fr';
   const indexablePages = metadata.pages.filter((page) => page.index !== false);
@@ -126,17 +109,12 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
   const siteDescription = site?.description ?? '';
   const founderName = site?.founder?.name ?? 'Tim Moyence';
 
-  // Toutes les pages formations (hub + formations + toolkits) sont considerees
-  // comme services : prefixe "formations" absorbe les nouvelles formations
-  // ajoutees via la registry sans toucher cette liste.
   const servicePages = indexablePages.filter(
     (p) =>
       ['offer', 'growth-audit'].includes(p.id) ||
       p.id === 'formations' ||
       p.id.startsWith('formations-'),
   );
-  // `projets` porte les realisations depuis le retrait de l'etude de cas dediee
-  // (`client-project`), qui occupait cette place dans le fichier curate.
   const aboutPages = indexablePages.filter((p) => ['presentation', 'projets'].includes(p.id));
   const appPages = indexablePages.filter((p) => ['weather', 'sebastian'].includes(p.id));
   const contactPages = indexablePages.filter((p) => p.id === 'contact');
@@ -167,11 +145,6 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
   return lines.filter((line) => line !== undefined).join('\n') + '\n';
 };
 
-/**
- * Construit le contenu robots.txt avec un bloc `User-agent: *` par defaut
- * puis un bloc par user-agent IA (P1.7) listant les `Disallow` des pages
- * non indexables + un `Allow: /` explicite.
- */
 export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const locales = metadata.site.locales ?? [];
   const disallowPaths = new Set<string>();
@@ -179,12 +152,9 @@ export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): stri
   for (const page of metadata.pages) {
     if (page.index !== false) continue;
 
-    // Skip route-parameter patterns ("/foo/:token") : the literal `:token`
-    // never matches a real URL, so the Disallow line is dead weight that
-    // pollutes robots.txt without restricting any crawl.
     if (page.path.includes(':')) continue;
 
-    // Skip cookie-settings : la page RGPD doit rester crawlable pour que
+    // La page RGPD doit rester crawlable pour que
     // Google puisse lire son <meta name="robots" content="noindex">. Un
     // Disallow bloque le crawl avant que le meta soit vu, ce qui declenche
     // l'alerte GSC "Bloquée par robots.txt" alors que la page est noindex
@@ -223,13 +193,6 @@ export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): stri
   return `${lines.join('\n')}\n`;
 };
 
-/**
- * Construit le contenu /llms-full.txt (P1.8). Extension proposee au
- * standard llms.txt : agrege pour chaque page indexable son titre, sa
- * description, son URL, son dateModified et ses mots-cles principaux.
- * Les LLMs peuvent ainsi "charger" l'ensemble des pages cles en un
- * seul fetch pour citer le site avec contexte.
- */
 export const buildLlmsFullTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const defaultLocale = metadata.site.defaultLocale ?? 'fr';
   const indexablePages = metadata.pages.filter((page) => page.index !== false);

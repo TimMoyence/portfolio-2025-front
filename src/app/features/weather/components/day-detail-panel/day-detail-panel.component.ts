@@ -12,25 +12,13 @@ import { UnitPipe } from '../../pipes/unit.pipe';
 import { UnitPreferencesService } from '../../services/unit-preferences.service';
 import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather-icons';
 
-/**
- * Panneau de detail d'un jour selectionne.
- * Utilise en inline (desktop) dans DailyForecast et dans le BottomSheet (mobile).
- * Affiche les informations detaillees : UV, vent, precipitations, lever/coucher du soleil.
- */
 @Component({
   selector: 'app-day-detail-panel',
   standalone: true,
   imports: [CommonModule, UnitPipe],
   template: `
-    <!--
-      Panneau détail jour — re-skin Asili : conteneur glass .gp (border teal
-      subtile, backdrop-blur) + tuiles internes glass. Le dégradé température
-      reste sémantique (froid bleu → chaud orange). Restyle visuel uniquement —
-      dayData()/uvRisk*, unités, IDs i18n inchangés.
-    -->
     @if (dayData(); as data) {
       <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
-        <!-- Header : nom du jour + date + icone -->
         <div class="mb-4 flex items-center gap-3">
           <img [src]="data.icon" [alt]="data.description" class="h-12 w-12 drop-shadow" />
           <div>
@@ -44,7 +32,6 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
           </div>
         </div>
 
-        <!-- Temperatures min/max avec gradient -->
         <div class="mb-4 flex items-center gap-3">
           <span class="text-sm text-white/50">
             {{ data.tempMin | unit: unitService.temperatureUnit() }}
@@ -60,9 +47,7 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
           </span>
         </div>
 
-        <!-- Grille de details -->
         <div class="grid grid-cols-2 gap-3">
-          <!-- UV max -->
           <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p class="mb-1 text-xs text-white/50" i18n="weather.dayDetail.uv|@@weatherDayDetailUv">
               UV max
@@ -75,7 +60,6 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
             </p>
           </div>
 
-          <!-- Vent max + rafales -->
           <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p
               class="mb-1 text-xs text-white/50"
@@ -94,7 +78,6 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
             }
           </div>
 
-          <!-- Precipitations -->
           <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p
               class="mb-1 text-xs text-white/50"
@@ -108,7 +91,6 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
             </p>
           </div>
 
-          <!-- Lever / coucher du soleil -->
           <div class="rounded-xl border border-teal/10 bg-white/[0.03] p-3">
             <p
               class="mb-1 text-xs text-white/50"
@@ -130,21 +112,16 @@ import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayDetailPanelComponent {
-  /** Donnees journalieres completes. */
   readonly daily = input.required<DailyForecast>();
 
-  /** Index du jour a afficher. */
   readonly dayIndex = input.required<number>();
 
-  /** Donnees horaires pour filtrer sur ce jour (optionnel). */
   readonly hourly = input<HourlyForecast | null>(null);
 
-  /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
   private readonly localeId = inject(LOCALE_ID);
 
-  /** Donnees formatees du jour selectionne. */
   readonly dayData = computed(() => {
     const data = this.daily();
     const idx = this.dayIndex();
@@ -187,7 +164,6 @@ export class DayDetailPanelComponent {
     };
   });
 
-  /** Retourne le label de risque UV. */
   uvRiskLabel(uvMax: number): string {
     if (uvMax <= 2) return $localize`:weather.uv.low|@@weatherUvLow:Faible`;
     if (uvMax <= 5) return $localize`:weather.uv.moderate|@@weatherUvModerate:Modéré`;
@@ -196,7 +172,6 @@ export class DayDetailPanelComponent {
     return $localize`:weather.uv.extreme|@@weatherUvExtreme:Extrême`;
   }
 
-  /** Retourne la classe CSS pour la couleur du risque UV. */
   uvRiskClass(uvMax: number): string {
     if (uvMax <= 2) return 'text-green-400';
     if (uvMax <= 5) return 'text-yellow-400';

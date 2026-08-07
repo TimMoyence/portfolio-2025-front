@@ -4,10 +4,6 @@ import { injectSeoHead, isKnownRoute } from './seo-injector';
 const BASE_URL = 'https://asilidesign.fr';
 const EMPTY_HTML = '<html><head><title>x</title></head><body></body></html>';
 
-/**
- * Construit un `SeoMetadataFile` minimal centre sur un unique bloc JSON-LD
- * global, suffisant pour exercer la serialisation des scripts injectes.
- */
 const buildMetadata = (
   localBusiness: Record<string, unknown>,
   overrides: Partial<SeoMetadataFile> = {},
@@ -24,7 +20,6 @@ const buildMetadata = (
     ...overrides,
   }) as unknown as SeoMetadataFile;
 
-/** Extrait le contenu brut du premier bloc `application/ld+json` du HTML. */
 const extractFirstJsonLd = (html: string): string => {
   const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   return match ? match[1] : '';
@@ -32,8 +27,6 @@ const extractFirstJsonLd = (html: string): string => {
 
 describe('injectSeoHead — echappement JSON-LD', () => {
   it('neutralise tout `<` dans le JSON serialise, pas seulement `</script>`', () => {
-    // Sequence qui ouvre l'etat « script data double escaped » du parseur HTML :
-    // `<!--` puis `<script` empeche le `</script>` suivant de fermer le bloc.
     const metadata = buildMetadata({
       '@type': 'LocalBusiness',
       name: '<!--<script>alert(1)</script>-->',
@@ -43,7 +36,6 @@ describe('injectSeoHead — echappement JSON-LD', () => {
 
     expect(html).not.toContain('<!--');
     expect(html).not.toContain('<script>alert');
-    // Aucun `<` residuel a l'interieur du bloc JSON-LD.
     expect(extractFirstJsonLd(html)).not.toContain('<');
   });
 

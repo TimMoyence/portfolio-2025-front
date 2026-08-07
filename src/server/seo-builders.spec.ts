@@ -305,9 +305,6 @@ describe('buildLlmsTxt', () => {
   });
 
   it('liste la page des realisations (/projets) dans le fichier curate', () => {
-    // La page des realisations doit apparaitre dans llms.txt : c'est le fichier
-    // de decouverte curate pour les crawlers LLM. Avant le retrait de l'etude
-    // de cas dediee, c'est elle qui portait ce role.
     const metadata = buildMetadata(
       [
         {

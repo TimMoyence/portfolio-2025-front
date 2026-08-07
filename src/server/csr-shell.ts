@@ -18,20 +18,11 @@ const CLIENT_ONLY_ROUTE_PATTERNS: RegExp[] = [
   /^atelier\/sebastian\/app(\/|$)/,
 ];
 
-/** Retourne true si la route doit etre rendue cote client uniquement. */
 export const isClientOnlyRoute = (routePath: string): boolean => {
   const normalized = routePath.replace(/^\//, '');
   return CLIENT_ONLY_ROUTE_PATTERNS.some((pattern) => pattern.test(normalized));
 };
 
-/**
- * Sert la coquille CSR (index.csr.html) pour les routes client-only.
- * Le chemin est resolu dans le dossier de la locale correspondante.
- * Si la coquille n'existe pas (ex. build dev sans locales), retourne null.
- *
- * `browserDistFolder` doit etre fourni par l'appelant pour eviter la
- * duplication de la resolution dist-root (bound to SSR server setup).
- */
 export const loadCsrShell = (locale: string | null, browserDistFolder: string): string | null => {
   const candidates = [
     locale ? resolve(browserDistFolder, locale, 'index.csr.html') : null,

@@ -1,4 +1,3 @@
-/** Charge dynamiquement le script Google Identity Services. */
 let gisLoadPromise: Promise<void> | null = null;
 
 export function loadGoogleGis(): Promise<void> {

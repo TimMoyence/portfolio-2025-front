@@ -85,7 +85,6 @@ describe('CurrentConditionsComponent', () => {
     });
     fixture.detectChanges();
 
-    // Apres la duree de l'animation (500ms + marge)
     setTimeout(() => {
       expect(component.animatedTemp()).toBe(18);
       done();
@@ -105,7 +104,6 @@ describe('CurrentConditionsComponent', () => {
     setTimeout(() => {
       expect(component.animatedTemp()).toBe(18);
 
-      // Changement de temperature
       fixture.componentRef.setInput('current', {
         time: '2026-03-31T13:00',
         temperature_2m: 22,

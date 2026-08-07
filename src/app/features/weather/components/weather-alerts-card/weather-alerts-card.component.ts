@@ -2,28 +2,17 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { WeatherAlert } from '../../../../core/models/weather.model';
 
-/** Carte d'alertes meteo avec codes couleur par severite. */
 @Component({
   selector: 'app-weather-alerts-card',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!--
-      Alertes météo — re-skin Asili AsiliNewDesign/asili-app.css :
-      .alert-item (ligne flex, séparateur subtil) + .alert-ic (badge carré
-      30px rayon 8px, icône sévérité) + .alert-t/.alert-d. Carte conteneur
-      glass .gp (border teal subtile, backdrop-blur). Restyle visuel
-      uniquement — severityClasses()/severityIcon() et leurs couleurs
-      sémantiques (jaune/orange/rouge) inchangés.
-    -->
     @if (alerts().length > 0) {
       <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
         @for (alert of alerts(); track alert.type + alert.severity) {
-          <!-- .alert-item : ligne avec séparateur entre alertes -->
           <div
             class="flex items-start gap-3 border-white/[0.08] py-3 first:pt-0 last:pb-0 [&:not(:first-child)]:border-t"
           >
-            <!-- .alert-ic : badge sévérité carré, couleur sémantique conservée -->
             <span
               class="grid h-[30px] w-[30px] flex-none place-items-center rounded-lg border text-base"
               [ngClass]="severityClasses(alert.severity)"
@@ -46,10 +35,8 @@ import type { WeatherAlert } from '../../../../core/models/weather.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherAlertsCardComponent {
-  /** Liste des alertes meteo a afficher. */
   readonly alerts = input.required<WeatherAlert[]>();
 
-  /** Retourne les classes CSS correspondant a la severite de l'alerte. */
   severityClasses(severity: string): Record<string, boolean> {
     return {
       'bg-yellow-500/20 border-yellow-400/30 text-yellow-100': severity === 'minor',
@@ -59,7 +46,6 @@ export class WeatherAlertsCardComponent {
     };
   }
 
-  /** Retourne l'icone correspondant a la severite de l'alerte. */
   severityIcon(severity: string): string {
     switch (severity) {
       case 'minor':

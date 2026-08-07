@@ -22,21 +22,10 @@ import { CHART_PARAMETERS } from './chart-datasets.config';
 
 Chart.register(...registerables, zoomPlugin);
 
-/**
- * Composant affichant un graphique horaire des temperatures et precipitations.
- * Utilise Chart.js avec un guard SSR pour le rendu cote navigateur uniquement.
- * Reactif aux preferences d'unites de temperature (celsius/fahrenheit).
- */
 @Component({
   selector: 'app-hourly-chart',
   standalone: true,
   template: `
-    <!--
-      Graphe horaire — re-skin Asili « gp / gp-h » (AsiliNewDesign/asili-app.css).
-      Glass .gp, en-tête kicker font-mono uppercase, onglets segmentés teal actif.
-      Couleurs Chart.js portées sur la palette teal/glow (chart-datasets.config).
-      Tailwind/couleurs uniquement : logique de dataset/timeRange inchangée.
-    -->
     <div class="rounded-[20px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
       <div class="mb-4 flex items-center justify-between gap-3">
         <h3
@@ -45,7 +34,6 @@ Chart.register(...registerables, zoomPlugin);
         >
           Prévisions horaires
         </h3>
-        <!-- Selecteur de plage temporelle -->
         <nav
           class="inline-flex rounded-full border border-white/15 bg-white/[0.06] p-0.5 font-mono text-xs"
           role="tablist"
@@ -66,7 +54,6 @@ Chart.register(...registerables, zoomPlugin);
           }
         </nav>
       </div>
-      <!-- Toggles parametres -->
       <div class="mb-3 flex flex-wrap gap-1.5">
         @for (param of availableParams; track param.id) {
           <button
@@ -96,21 +83,16 @@ Chart.register(...registerables, zoomPlugin);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HourlyChartComponent implements AfterViewInit, OnDestroy {
-  /** Donnees de prevision horaire. */
   readonly hourly = input<HourlyForecast | null>(null);
 
-  /** Plage temporelle selectionnee (en heures). */
   readonly timeRange = signal<6 | 12 | 24 | 48>(24);
 
-  /** Options de plage temporelle disponibles. */
   readonly timeRangeOptions = [6, 12, 24, 48] as const;
 
-  /** Ensemble des parametres actuellement visibles sur le graphique. */
   readonly visibleParams = signal<Set<string>>(
     new Set(CHART_PARAMETERS.filter((p) => p.defaultVisible).map((p) => p.id)),
   );
 
-  /** Liste des parametres disponibles pour les toggles. */
   readonly availableParams = CHART_PARAMETERS;
 
   @ViewChild('chartCanvas', { static: true })
@@ -122,19 +104,15 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly unitService = inject(UnitPreferencesService);
 
-  /** Flag pour empecher l'effect de builder avant que le ViewChild soit pret. */
   private initialized = false;
 
   constructor() {
-    // Effect reactif : rebuild le chart quand les donnees, l'unite ou la plage changent
     effect(() => {
-      // Lecture des signaux pour creer les dependances reactives
       this.hourly();
       this.unitService.temperatureUnit();
       this.timeRange();
       this.visibleParams();
 
-      // Rebuild uniquement si le composant est initialise (ViewChild pret)
       if (this.initialized) {
         if (this.chart) {
           this.chart.destroy();
@@ -145,12 +123,10 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  /** Met a jour la plage temporelle affichee dans le graphique. */
   setTimeRange(range: 6 | 12 | 24 | 48): void {
     this.timeRange.set(range);
   }
 
-  /** Active ou desactive un parametre sur le graphique (minimum 1 visible). */
   toggleParam(id: string): void {
     this.visibleParams.update((set) => {
       const next = new Set(set);
@@ -173,7 +149,6 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
     this.chart = null;
   }
 
-  /** Construit le graphique Chart.js avec les donnees horaires. */
   private buildChart(): void {
     if (!this.isBrowser || !this.initialized) return;
 
@@ -186,7 +161,6 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
     const tempUnit = this.unitService.temperatureUnit();
     const isFahrenheit = tempUnit === 'fahrenheit';
 
-    // Limiter au nombre d'heures selectionne
     const count = Math.min(this.timeRange(), data.time.length);
     const labels = data.time.slice(0, count).map((t) => {
       const date = new Date(t);
@@ -196,7 +170,6 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
       });
     });
 
-    // Construction dynamique des datasets selon les parametres visibles
     const visible = this.visibleParams();
     const datasets = CHART_PARAMETERS.filter((p) => visible.has(p.id))
       .map((param) => {
@@ -204,7 +177,6 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
         if (!rawData) return null;
 
         let chartData = rawData.slice(0, count);
-        // Conversion temperature si necessaire
         if (param.id === 'temperature' && isFahrenheit) {
           chartData = chartData.map((t) => Math.round((t * 9) / 5 + 32));
         }
@@ -230,7 +202,6 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
       })
       .filter((d): d is NonNullable<typeof d> => d !== null);
 
-    // Construction dynamique des axes Y selon les parametres visibles
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const scales: Record<string, any> = {
       x: {

@@ -12,10 +12,6 @@ import { WeatherLevelService } from '../../services/weather-level.service';
 import { UnitPreferencesService } from '../../services/unit-preferences.service';
 import { MetricCardComponent } from './metric-card.component';
 
-/**
- * Composant hote de test pour valider la content projection
- * et le two-way binding du MetricCardComponent.
- */
 @Component({
   standalone: true,
   imports: [MetricCardComponent],
@@ -90,7 +86,6 @@ describe('MetricCardComponent', () => {
     fixture.detectChanges();
 
     const el: HTMLElement = fixture.nativeElement;
-    // Selectionner le bouton expand via son aria-label (pas le tooltip)
     const expandBtn = el.querySelector<HTMLButtonElement>(
       'button[aria-label*="détails"], button[aria-label*="Afficher"], button[aria-label*="Réduire"]',
     );

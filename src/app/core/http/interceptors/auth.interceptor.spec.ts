@@ -9,10 +9,6 @@ import { environment } from '../../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
 import { authInterceptor } from './auth.interceptor';
 
-/**
- * Tests unitaires de l'intercepteur fonctionnel authInterceptor.
- * Verifie l'ajout du header Authorization et la gestion des erreurs 401.
- */
 describe('authInterceptor', () => {
   let http: HttpClient;
   let httpMock: HttpTestingController;

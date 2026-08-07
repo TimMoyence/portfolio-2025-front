@@ -1,16 +1,5 @@
-/*
-  Styles partagés des pages légales « layout TOC » (terms / privacy) — refonte
-  Asili (Lot 3f). Portés verbatim de `AsiliNewDesign/asili-legal.css` :
-  `.lg-hero`, `.lg-layout`, `.lg-toc`, `.lg-body`, `.lg-note`. Les primitives
-  globales (.kicker, design tokens _tokens.scss) fournissent le reste.
-
-  Les classes `.lg-*` ne sont PAS globales : chaque page légale `@use` ce
-  partiel pour les scoper. Volontairement sans sélecteur racine `:host`
-  (laissé à chaque composant) afin d'être composable via `@use`.
-*/
 @use '../styles-shared/lists';
 
-/* --- Hero (asili-legal.css : .lg-hero) ----------------------------------- */
 .lg-hero {
   padding-top: clamp(130px, 16vh, 190px);
   padding-bottom: clamp(30px, 5vh, 50px);
@@ -44,12 +33,10 @@
   background: var(--teal);
 }
 
-/* --- Section englobante (padding bas porté du style inline maquette) ------ */
 .lg-section {
   padding-bottom: clamp(60px, 9vh, 120px);
 }
 
-/* --- Layout TOC + corps (asili-legal.css : .lg-layout) ------------------- */
 .lg-layout {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -58,7 +45,6 @@
   align-items: start;
 }
 
-/* TOC sticky */
 .lg-toc {
   position: sticky;
   top: 100px;
@@ -106,7 +92,6 @@
   background: rgba(var(--teal-rgb), 0.06);
 }
 
-/* Corps lisible */
 .lg-body {
   max-width: 680px;
 }

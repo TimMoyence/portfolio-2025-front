@@ -11,10 +11,6 @@ import type {
 } from '../../app/core/models/sebastian.model';
 import type { SebastianPort } from '../../app/core/ports/sebastian.port';
 
-/**
- * Construit un objet SebastianEntry avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianEntry(overrides?: Partial<SebastianEntry>): SebastianEntry {
   return {
     id: 'entry-1',
@@ -33,10 +29,6 @@ export function buildSebastianEntry(overrides?: Partial<SebastianEntry>): Sebast
   };
 }
 
-/**
- * Construit un objet SebastianGoal avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianGoal(overrides?: Partial<SebastianGoal>): SebastianGoal {
   return {
     id: 'goal-1',
@@ -50,10 +42,6 @@ export function buildSebastianGoal(overrides?: Partial<SebastianGoal>): Sebastia
   };
 }
 
-/**
- * Construit un objet SebastianStats avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianStats(overrides?: Partial<SebastianStats>): SebastianStats {
   return {
     period: 'week',
@@ -75,10 +63,6 @@ export function buildSebastianStats(overrides?: Partial<SebastianStats>): Sebast
   };
 }
 
-/**
- * Construit un objet SebastianTrendData avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianTrendData(
   overrides?: Partial<SebastianTrendData>,
 ): SebastianTrendData {
@@ -94,10 +78,6 @@ export function buildSebastianTrendData(
   };
 }
 
-/**
- * Construit un objet SebastianHealthScore avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianHealthScore(
   overrides?: Partial<SebastianHealthScore>,
 ): SebastianHealthScore {
@@ -111,10 +91,6 @@ export function buildSebastianHealthScore(
   };
 }
 
-/**
- * Construit un objet SebastianBadgeStatus avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianBadgeStatus(
   overrides?: Partial<SebastianBadgeStatus>,
 ): SebastianBadgeStatus {
@@ -129,10 +105,6 @@ export function buildSebastianBadgeStatus(
   };
 }
 
-/**
- * Construit un objet SebastianPeriodReport avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianPeriodReport(
   overrides?: Partial<SebastianPeriodReport>,
 ): SebastianPeriodReport {
@@ -151,10 +123,6 @@ export function buildSebastianPeriodReport(
   };
 }
 
-/**
- * Cree un stub complet du port Sebastian avec des spies Jasmine.
- * Chaque methode est un spy independant, non configure par defaut.
- */
 export function createSebastianPortStub(): Record<keyof SebastianPort, jasmine.Spy> {
   return {
     addEntry: jasmine.createSpy('addEntry'),
@@ -174,10 +142,6 @@ export function createSebastianPortStub(): Record<keyof SebastianPort, jasmine.S
   };
 }
 
-/**
- * Construit un objet SebastianBacResult avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianBacResult(
   overrides?: Partial<SebastianBacResult>,
 ): SebastianBacResult {
@@ -194,10 +158,6 @@ export function buildSebastianBacResult(
   };
 }
 
-/**
- * Construit un objet SebastianProfile avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildSebastianProfile(overrides?: Partial<SebastianProfile>): SebastianProfile {
   return {
     weightKg: 70,

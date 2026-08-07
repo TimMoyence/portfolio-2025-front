@@ -9,11 +9,6 @@ import {
   Renderer2,
 } from '@angular/core';
 
-/**
- * Directive d'animation d'entree au scroll.
- * Utilise IntersectionObserver pour ajouter la classe `slide-in-visible`
- * quand l'element entre dans le viewport (SSR-safe).
- */
 @Directive({
   selector: '[appSlideIn]',
   standalone: true,

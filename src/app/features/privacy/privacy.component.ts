@@ -3,20 +3,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
-/** Entrée du sommaire (TOC) reliant une ancre à son libellé. */
 interface PrivacyTocItem {
   readonly anchor: string;
   readonly label: string;
 }
 
-/**
- * Page « Politique de confidentialité ».
- *
- * Restyle Asili (layout TOC) porté de la maquette `AsiliNewDesign/privacy.html`
- * + `asili-legal.css` (`.lg-hero`, `.lg-layout`, `.lg-toc`, `.lg-body`,
- * `.lg-note`). Contenu statique : 8 sections verbatim, ancres natives
- * `<a href="#id">` (SSR-safe), liens internes via `routerLink`.
- */
 @Component({
   selector: 'app-privacy',
   standalone: true,
@@ -31,7 +22,6 @@ export class PrivacyComponent {
     updated: $localize`:privacy.hero.updated@@privacyMetaLastUpdated:Dernière mise à jour : 4 juin 2026`,
   };
 
-  /** Sommaire (TOC) : ancres + libellés des 8 sections. */
   readonly toc: readonly PrivacyTocItem[] = [
     {
       anchor: 'principe',

@@ -8,10 +8,6 @@ import {
 } from '../../../../testing/factories/weather.factory';
 import { UnitPreferencesService } from './unit-preferences.service';
 
-/**
- * Cree un UnitPreferencesService via TestBed pour la locale donnee.
- * Retourne le service et le stub du port meteo.
- */
 function setup(locale: string) {
   const weatherPortStub = createWeatherPortStub();
   weatherPortStub.updatePreferences.and.returnValue(of(buildWeatherPreferences()));

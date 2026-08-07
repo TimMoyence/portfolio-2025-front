@@ -1,65 +1,25 @@
-/**
- * Une ligne méta (clé / valeur) affichée dans le pied descriptif d'une carte
- * formation (ex. « Durée » / « 30 min · 17 slides »).
- */
 export interface FormationMeta {
-  /** Libellé de la ligne (mono, majuscules). */
   key: string;
-  /** Valeur de la ligne. */
   value: string;
 }
 
-/**
- * Une carte de la page liste `/formations`.
- *
- * Trois formations gratuites (slides interactives, hors périmètre du restyle :
- * elles pointent vers les pages slide-decks existantes) plus une carte bonus
- * « toolkit » qui mène à la capture email. Le modèle est conçu pour accueillir
- * un éventuel palier premium plus tard (`bonus`/`premium` réservés).
- */
 export interface FormationCard {
-  /** Route interne cible (slide-deck existant ou page toolkit). */
   link: string;
-  /** Étiquette du badge (ex. « Gratuit · 17 slides », « Bonus »). */
   badge: string;
-  /** Intitulé de la formation, rendu en `<h3>`. */
   title: string;
-  /** Phrase de présentation. */
   description: string;
-  /** Lignes méta clé/valeur (Durée, Format, Toolkit…). */
   meta: readonly FormationMeta[];
-  /** Libellé du prix (« Gratuit », « Offert »). */
   price: string;
-  /** Libellé du lien d'action (« Consulter », « Recevoir le toolkit »). */
   cta: string;
-  /**
-   * Variante visuelle. `bonus` applique la bordure pointillée de la carte
-   * toolkit ; `default` est une carte formation standard.
-   */
   variant: 'default' | 'bonus';
 }
 
-/**
- * Un bénéfice de la section « le format diapo » (trois colonnes).
- *
- * - `icon` : nom de l'icône inline (clé du `switch` dans le template).
- * - `title` : intitulé du bénéfice.
- * - `desc` : phrase de description.
- */
 export interface FormationBenefit {
   icon: 'interactive' | 'screen' | 'toolkit';
   title: string;
   desc: string;
 }
 
-/**
- * Cartes de la grille `/formations`, reprises verbatim de la maquette
- * `AsiliNewDesign/formations.html` (ordre, badges, titres, descriptions et
- * lignes méta authored par l'utilisateur). Les liens internes pointent vers les
- * routes existantes : les slide-decks (`/formations/<slug>`) pour les trois
- * formations, la capture email (`/formations/ia-solopreneurs/toolkit`) pour la
- * carte bonus. Les chaînes utilisateur sont internationalisées via `$localize`.
- */
 export const FORMATIONS: readonly FormationCard[] = [
   {
     link: '/formations/ia-solopreneurs',
@@ -151,11 +111,6 @@ export const FORMATIONS: readonly FormationCard[] = [
   },
 ];
 
-/**
- * Trois bénéfices de la section « le format diapo », repris verbatim de la
- * maquette (intitulés et descriptions authored par l'utilisateur). Localisés
- * via `$localize`.
- */
 export const FORMATION_BENEFITS: readonly FormationBenefit[] = [
   {
     icon: 'interactive',

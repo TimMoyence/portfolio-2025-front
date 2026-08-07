@@ -1,19 +1,7 @@
 @use '../../styles-shared/breakpoints' as bp;
-/*
-  Landing Sebastian (/atelier/sebastian) — résiduel page-spécifique. Le système
-  `.lp-*` commun (hero, sections, features, demo band, aperçu, CTA final) est
-  mutualisé dans le partiel `_landing-shared.scss` (@use ci-dessous) ; l'accent
-  gold est injecté via les variables `--lp-*` posées sur `:host`. Ne reste ici
-  que le résiduel : fond de repli ambré, ciel .lp-sky, bouton .btn-gold, aperçu
-  objectifs (.lp-goal*) et démo (.seb-panel, .seb-gauge, .d-habit, heatmap
-  .heat-big). Les primitives globales (.glass, .btn*) et les tokens (_tokens.scss)
-  fournissent le reste ; --gold reste intact pour les strokes SVG inline du
-  template.
-*/
 @use '../landing-shared';
 
 :host {
-  /* Accent gold du système .lp-* partagé (cf. _landing-shared.scss) */
   --lp-accent: var(--gold);
   --lp-accent-rgb: 230, 170, 70;
   --lp-kicker: var(--gold-soft);
@@ -24,7 +12,6 @@
   display: block;
   position: relative;
   color: #fff;
-  /* Fond de repli sous le ciel fixe (parité gradient maquette). */
   background: #14100a;
 }
 
@@ -33,7 +20,6 @@
   position: relative;
 }
 
-/* ---------- CIEL FIXE AMBRÉ (asili-landing.css : .lp-sky) ---------- */
 .lp-sky {
   position: fixed;
   inset: 0;
@@ -42,13 +28,11 @@
   background: radial-gradient(125% 100% at 70% -8%, #3a2c16 0%, #221810 46%, #14100a 100%);
 }
 
-/* Bouton gold (maquette : style inline --bg:var(--gold);--fg:#1a1206). */
 .btn-gold {
   --btn-bg: var(--gold);
   --btn-fg: #1a1206;
 }
 
-/* Aperçu objectifs : bordure teintée gold (padding via --lp-preview-pad). */
 .lp-preview {
   border-color: rgba(230, 170, 70, 0.18);
 }
@@ -84,10 +68,6 @@
   }
 }
 
-/* ============================================================
-   DÉMO SEBASTIAN (asili-landing.css : .seb-panel / .seb-gauge ;
-   <style> inline maquette : .d-habit ; heatmap .heat-big)
-   ============================================================ */
 .seb-panel {
   padding: 30px;
   display: flex;
@@ -169,7 +149,6 @@
   gap: 9px;
 }
 
-/* .d-habit — porté du <style> inline de landing-sebastian.html */
 .d-habit {
   display: flex;
   align-items: center;
@@ -219,7 +198,6 @@
   }
 }
 
-/* Heatmap 56 jours (calque .heat-big du script maquette). */
 .heat-big {
   display: grid;
   grid-template-columns: repeat(14, 1fr);
@@ -267,7 +245,6 @@
   }
 }
 
-/* ---------- RESPONSIVE (résiduel démo ; part .lp-* dans le partiel) ---------- */
 @media (max-width: 900px) {
   .seb-panel {
     max-width: 460px;

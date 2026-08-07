@@ -12,12 +12,6 @@ import { environment } from '../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
 import { authGuard } from './auth.guard';
 
-/**
- * Tests unitaires du guard fonctionnel authGuard.
- * Verifie la protection des routes authentifiees avec support SSR :
- * - chemin synchrone (isInitialized = true) : acces direct ou redirection
- * - chemin asynchrone (isInitialized = false) : attente via Observable
- */
 describe('authGuard', () => {
   describe('chemin synchrone (SSR — isInitialized = true)', () => {
     let authState: AuthStateService;
@@ -104,8 +98,6 @@ describe('authGuard', () => {
 
       expect(result).toBeInstanceOf(Observable);
 
-      // Simuler manuellement l'initialisation via le signal interne
-      // En forçant isInitialized via la propriete privee pour le test
       (
         authState as unknown as {
           _isInitialized: { set: (v: boolean) => void };
@@ -126,7 +118,6 @@ describe('authGuard', () => {
 
       expect(result).toBeInstanceOf(Observable);
 
-      // Simuler l'initialisation sans login
       (
         authState as unknown as {
           _isInitialized: { set: (v: boolean) => void };

@@ -4,10 +4,6 @@ import { UnitPreferencesService } from '../../services/unit-preferences.service'
 import { MetricCardComponent } from '../metric-card/metric-card.component';
 import { SparklineComponent } from '../sparkline/sparkline.component';
 
-/**
- * Carte de pression atmospherique avec tendance calculee
- * a partir des donnees horaires si disponibles.
- */
 @Component({
   selector: 'app-pressure-card',
   standalone: true,
@@ -25,11 +21,6 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
         >Pression atmosphérique</span
       >
 
-      <!--
-        Pression — re-skin Asili : valeur font-display, tendance sémantique
-        conservée (flèche/couleur liées à trend()). Couleurs uniquement —
-        trend()/trendArrow()/trendColor()/trendDescription() inchangés.
-      -->
       <div class="flex items-baseline gap-2">
         <span class="font-display text-4xl leading-none text-white">
           {{ pressure() | unit: unitService.pressureUnit() }}
@@ -55,19 +46,12 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PressureCardComponent {
-  /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
-  /** Pression courante en hPa. */
   readonly pressure = input<number | null>(null);
 
-  /** Tableau horaire de pression pour calculer la tendance. */
   readonly hourlyPressure = input<number[] | null>(null);
 
-  /**
-   * Tendance de pression calculee a partir des 3 dernieres heures.
-   * Retourne 'rising', 'falling' ou 'stable'.
-   */
   readonly trend = computed<'rising' | 'falling' | 'stable'>(() => {
     const hourly = this.hourlyPressure();
     if (!hourly || hourly.length < 4) return 'stable';
@@ -80,7 +64,6 @@ export class PressureCardComponent {
     return 'stable';
   });
 
-  /** Fleche directionnelle de la tendance. */
   readonly trendArrow = computed(() => {
     const t = this.trend();
     if (t === 'rising') return '↑';
@@ -88,7 +71,6 @@ export class PressureCardComponent {
     return '→';
   });
 
-  /** Classe de couleur de la tendance. */
   readonly trendColor = computed(() => {
     const t = this.trend();
     if (t === 'rising') return 'text-green-400';
@@ -96,7 +78,6 @@ export class PressureCardComponent {
     return 'text-white/50';
   });
 
-  /** Description textuelle de la tendance de pression. */
   readonly trendDescription = computed(() => {
     const t = this.trend();
     if (t === 'rising')

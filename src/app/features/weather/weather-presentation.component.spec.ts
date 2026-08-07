@@ -4,16 +4,6 @@ import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { WeatherPresentationComponent } from './weather-presentation.component';
 
-/**
- * Tests comportementaux de WeatherPresentationComponent (landing Météo).
- *
- * Landing marketing à données fictives. On teste le comportement observable
- * et stable, pas le wording marketing (qui évolue sans que ce soit un bug) :
- *   1. Le rendu basique (smoke) pour détecter un crash d'initialisation.
- *   2. L'exposition des mock data de présentation (préservées).
- *   3. La démo jouable : la sélection d'une ville recalcule l'état dérivé.
- *   4. Le CTA qui engage l'utilisateur vers l'app complète.
- */
 describe('WeatherPresentationComponent', () => {
   let fixture: ComponentFixture<WeatherPresentationComponent>;
   let component: WeatherPresentationComponent;

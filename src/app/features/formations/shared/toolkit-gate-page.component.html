@@ -1,15 +1,5 @@
-<!--
-  Scaffold partage des pages gate toolkit (capture email) — refonte Asili.
-  Porte de la maquette AsiliNewDesign/toolkit.html : carte centree (.tk-card)
-  avec icone enveloppe, titre projete a accent italique, accroche, items
-  inclus (coche), le formulaire de capture lead-magnet (app-toolkit-form,
-  logique INCHANGEE) et le contenu editorial (« ce que contient », FAQ). Les
-  donnees arrivent deja localisees via inputs ; chaque page shell ne fait que
-  les fournir. Le fond constellation est global (Lot 0).
--->
 <section class="tk-wrap">
   <div class="tk-card" appReveal>
-    <!-- ===================== GATE ===================== -->
     <div class="tk-icon" aria-hidden="true">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
         <path
@@ -46,7 +36,6 @@
       }
     </div>
 
-    <!-- Formulaire de capture lead-magnet — logique INCHANGEE. -->
     <div class="tk-form-host">
       @if (formationSlug(); as slug) {
         <app-toolkit-form [formationSlug]="slug" />
@@ -58,7 +47,6 @@
     <p class="tk-foot">{{ data().foot }}</p>
   </div>
 
-  <!-- ===================== CONTENU ÉDITORIAL (SEO/AEO) ===================== -->
   <div class="tk-editorial">
     <section class="tk-section" [attr.aria-labelledby]="contentsHeadingId">
       <h2 [id]="contentsHeadingId">{{ data().contentsTitle }}</h2>

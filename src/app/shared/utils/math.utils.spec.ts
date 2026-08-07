@@ -45,7 +45,6 @@ describe('clamp', () => {
   });
 
   it("devrait rester coherent avec l'expression Math.max(min, Math.min(max, value))", () => {
-    // Verifie l'equivalence octet-pour-octet sur un echantillon de valeurs.
     const cases: Array<[number, number, number]> = [
       [5, 0, 10],
       [-3, 0, 10],

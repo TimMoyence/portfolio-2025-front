@@ -3,29 +3,16 @@ import { ChangeDetectionStrategy, Component, inject, input, output } from '@angu
 import type { WeatherLevel } from '../../../../core/models/weather.model';
 import { WeatherLevelService } from '../../services/weather-level.service';
 
-/** Definition d'un onglet de niveau pour le selecteur. */
 interface LevelTab {
   value: WeatherLevel;
   label: string;
 }
 
-/**
- * Selecteur de niveau d'experience meteo.
- * Affiche trois onglets (Decouverte, Curieux, Expert) sous forme de pilules
- * en glassmorphism. Emet le changement de niveau.
- */
 @Component({
   selector: 'app-level-selector',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!--
-      Sélecteur de niveau — re-skin Asili AsiliNewDesign/asili-app.css :
-      .unit-toggle (segment pill, bordure subtile) + onglet actif .on
-      (fond teal sur foncé, libellé font-mono). Restyle visuel uniquement —
-      WeatherLevelService, (levelChanged), role=tablist/aria-selected/
-      aria-label inchangés.
-    -->
     <nav
       class="inline-flex overflow-hidden rounded-full border p-1 font-mono"
       [ngClass]="
@@ -61,18 +48,14 @@ interface LevelTab {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LevelSelectorComponent {
-  /** Mode sombre (fond gradient) ou clair (fond blanc). */
   readonly darkMode = input(true);
 
   readonly levelService = inject(WeatherLevelService);
 
-  /** Emis lorsqu'un nouveau niveau est selectionne. */
   readonly levelChanged = output<WeatherLevel>();
 
-  /** Label d'accessibilite pour la barre de navigation. */
   readonly ariaLabel = $localize`:weather.level.selector.aria|@@weatherLevelSelectorAria:Sélecteur de niveau météo`;
 
-  /** Liste des niveaux disponibles avec leurs labels localises. */
   readonly levels: LevelTab[] = [
     {
       value: 'discovery',
@@ -88,7 +71,6 @@ export class LevelSelectorComponent {
     },
   ];
 
-  /** Change le niveau via le service et emet l'evenement. */
   onLevelChange(level: WeatherLevel): void {
     this.levelService.setLevel(level);
     this.levelChanged.emit(level);

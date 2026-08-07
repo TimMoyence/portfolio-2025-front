@@ -11,22 +11,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.component';
 import { clamp } from '../../../../shared/utils/math.utils';
 
-/**
- * Arc solaire SVG montrant la trajectoire du soleil entre lever et coucher.
- * Position courante affichee sous forme de point sur l'arc.
- * Compatible SSR : pas d'acces direct a Date sans verification de plateforme.
- */
 @Component({
   selector: 'app-sun-arc',
   standalone: true,
   imports: [LearningTooltipComponent],
   template: `
-    <!--
-      Arc solaire — re-skin Asili (.solar / #solar-svg) : glass .gp (r-lg 20px,
-      border teal subtile), arc pointillé, rayon + halo glow #5b8cff, point
-      soleil glow. Data-driven conservé (décision 5 : pas de drag) — sunProgress()/
-      sunX()/sunY()/litArcPath() et la SSR-safety inchangés.
-    -->
     <div
       class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl transition-colors hover:border-teal/30"
     >
@@ -48,9 +37,7 @@ import { clamp } from '../../../../shared/utils/math.utils';
 
       @if (sunrise() && sunset()) {
         <div class="flex flex-col items-center">
-          <!-- Arc SVG -->
           <svg viewBox="0 0 200 110" class="h-24 w-full max-w-[200px]" aria-hidden="true">
-            <!-- Arc de trajectoire (pointillé Asili) -->
             <path
               d="M 20 90 Q 100 -10 180 90"
               fill="none"
@@ -60,7 +47,6 @@ import { clamp } from '../../../../shared/utils/math.utils';
               stroke-dasharray="3 5"
             />
 
-            <!-- Portion eclairee de l'arc (du lever a la position courante) -->
             @if (sunProgress() > 0 && sunProgress() <= 1) {
               <path
                 [attr.d]="litArcPath()"
@@ -71,7 +57,6 @@ import { clamp } from '../../../../shared/utils/math.utils';
               />
             }
 
-            <!-- Point de position du soleil (glow Asili) -->
             @if (sunProgress() > 0 && sunProgress() <= 1) {
               <line
                 x1="100"
@@ -98,7 +83,6 @@ import { clamp } from '../../../../shared/utils/math.utils';
               />
             }
 
-            <!-- Ligne d'horizon -->
             <line
               x1="15"
               y1="90"
@@ -109,7 +93,6 @@ import { clamp } from '../../../../shared/utils/math.utils';
             />
           </svg>
 
-          <!-- Heures de lever et coucher (font-mono Geist) -->
           <div
             class="mt-2 flex w-full max-w-[200px] justify-between font-mono text-[11px] text-white/60"
           >
@@ -133,26 +116,17 @@ import { clamp } from '../../../../shared/utils/math.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SunArcComponent {
-  /** Heure de lever du soleil (chaine ISO). */
   readonly sunrise = input<string>('');
 
-  /** Heure de coucher du soleil (chaine ISO). */
   readonly sunset = input<string>('');
 
   private readonly localeId = inject(LOCALE_ID);
   private readonly platformId = inject(PLATFORM_ID);
 
-  /** Heure de lever formatee selon la locale. */
   readonly sunriseFormatted = computed(() => this.formatTime(this.sunrise()));
 
-  /** Heure de coucher formatee selon la locale. */
   readonly sunsetFormatted = computed(() => this.formatTime(this.sunset()));
 
-  /**
-   * Progression du soleil sur l'arc (0 = lever, 1 = coucher).
-   * Retourne -1 avant le lever et 2 apres le coucher (hors arc).
-   * Retourne 0.5 par defaut cote serveur (SSR).
-   */
   readonly sunProgress = computed(() => {
     if (!isPlatformBrowser(this.platformId)) return 0.5;
     const rise = this.parseTime(this.sunrise());
@@ -166,13 +140,11 @@ export class SunArcComponent {
     return elapsed / total;
   });
 
-  /** Coordonnee X du soleil sur l'arc SVG. */
   readonly sunX = computed(() => {
     const t = clamp(this.sunProgress(), 0, 1);
     return 20 + t * 160;
   });
 
-  /** Coordonnee Y du soleil sur l'arc SVG (courbe quadratique). */
   readonly sunY = computed(() => {
     const t = clamp(this.sunProgress(), 0, 1);
     // Courbe de Bezier quadratique : P = (1-t)²*P0 + 2*(1-t)*t*P1 + t²*P2
@@ -182,7 +154,6 @@ export class SunArcComponent {
     return (1 - t) * (1 - t) * p0y + 2 * (1 - t) * t * p1y + t * t * p2y;
   });
 
-  /** Chemin SVG de la portion eclairee de l'arc (du lever au point courant). */
   readonly litArcPath = computed(() => {
     const t = clamp(this.sunProgress(), 0, 1);
     // Approximation : on coupe l'arc quadratique au parametre t
@@ -204,7 +175,6 @@ export class SunArcComponent {
     return `M ${q0.x} ${q0.y} Q ${q1.x} ${q1.y} ${q2.x} ${q2.y}`;
   });
 
-  /** Formate une chaine ISO en heure lisible selon la locale injectee. */
   private formatTime(iso: string): string {
     if (!iso) return '';
     try {
@@ -218,7 +188,6 @@ export class SunArcComponent {
     }
   }
 
-  /** Parse une chaine ISO en timestamp. Retourne null si invalide. */
   private parseTime(iso: string): number | null {
     if (!iso) return null;
     const ts = new Date(iso).getTime();

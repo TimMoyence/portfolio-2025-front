@@ -209,7 +209,6 @@ export class AuthComponent {
     const trimmed = raw.trim();
     if (!trimmed.startsWith('/')) return '/';
     if (trimmed.startsWith('//')) return '/';
-    // Rejet des caracteres de controle / whitespace (evite les injections)
     for (const ch of trimmed) {
       const code = ch.charCodeAt(0);
       if (code <= 32 || code === 127) return '/';
@@ -246,7 +245,6 @@ export class AuthComponent {
     });
   }
 
-  /** Lance le flux d'authentification Google via GIS One Tap. */
   async handleGoogleAuth(context: AuthTab): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -278,7 +276,6 @@ export class AuthComponent {
     google.accounts.id.prompt();
   }
 
-  /** Traite la reponse du jeton Google apres authentification. */
   private onGoogleCredential(
     response: google.accounts.id.CredentialResponse,
     context: AuthTab,
@@ -301,7 +298,6 @@ export class AuthComponent {
     });
   }
 
-  /** Affiche un message d'erreur Google dans le contexte (inscription ou connexion). */
   private setGoogleError(context: AuthTab, message: string): void {
     if (context === 'sign-up') {
       this.signupErrorMessage = message;
@@ -317,7 +313,6 @@ export class AuthComponent {
     this.isSignupSubmitted = false;
   }
 
-  /** Determine l'onglet initial selon la route active (login par defaut). */
   private resolveInitialTab(): AuthTab {
     const seoKey = this.route.snapshot.data['seoKey'];
     return seoKey === 'register' ? 'sign-up' : 'log-in';

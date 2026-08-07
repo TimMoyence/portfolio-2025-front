@@ -1,13 +1,3 @@
-<!--
-  Services Asili — composition des sections du Lot 3a dans l'ordre de la
-  maquette AsiliNewDesign/services.html : hero (Services premium) → quatre
-  modes d'intervention → méthode (asili-method) → trois différenciateurs → FAQ
-  → bande CTA. Le fond constellation est global (app-asili-background) : aucune
-  section ne recrée de canvas. Pas de grille de prix figée ; pas de social
-  proof fictif.
--->
-
-<!-- ===================== HERO ===================== -->
 <app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
   <ng-container title>
     <span data-testid="hero-title">
@@ -29,7 +19,6 @@
   </ng-container>
 </app-asili-hero>
 
-<!-- ===================== MODES D'INTERVENTION ===================== -->
 <section class="section-pad" data-testid="modes-section">
   <div class="wrap">
     <div class="modes">
@@ -55,14 +44,12 @@
   </div>
 </section>
 
-<!-- ===================== MÉTHODE ===================== -->
 <app-asili-method [steps]="methodSteps" [kicker]="methodKicker" [intro]="methodIntro">
   <h2 heading class="h-lg">
     <ng-container i18n="@@offerMethodHeading">Comment on avance,<br />concrètement.</ng-container>
   </h2>
 </app-asili-method>
 
-<!-- ===================== CE QUI DIFFÉRENCIE ===================== -->
 <section class="section-pad" data-testid="diff-section">
   <div class="wrap">
     <div class="sec-head" appReveal>
@@ -83,7 +70,6 @@
   </div>
 </section>
 
-<!-- ===================== FAQ ===================== -->
 <section class="section-pad">
   <div class="wrap">
     <div class="sec-head faq-head" appReveal>
@@ -115,7 +101,6 @@
   </div>
 </section>
 
-<!-- ===================== CTA ===================== -->
 <app-asili-cta-band [title]="ctaTitle">
   <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
   <ng-container cta>

@@ -8,11 +8,6 @@ import {
   type MeteoCityLabels,
 } from './meteo-demo';
 
-/**
- * Fabrique un jeu de libelles i18n stub pour les 4 villes de demo.
- * Les vraies valeurs `$localize` restent LOCALES aux composants ; ici on
- * injecte des marqueurs distincts par ville pour prouver le report exact.
- */
 function buildMeteoLabels(
   overrides: Partial<Record<MeteoCityId, Partial<MeteoCityLabels>>> = {},
 ): Record<MeteoCityId, MeteoCityLabels> {

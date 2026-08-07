@@ -32,7 +32,6 @@ describe('WeatherAppComponent', () => {
     authPortStub = createAuthPortStub();
     geoServiceSpy = jasmine.createSpyObj('GeolocationService', ['locate', 'reverseGeocode']);
 
-    // Configuration par defaut des stubs
     weatherPortStub.searchCity.and.returnValue(of({ results: [] }));
     weatherPortStub.getForecast.and.returnValue(of(buildForecastResponse()));
     weatherPortStub.getPreferences.and.returnValue(of(buildWeatherPreferences()));
@@ -46,7 +45,6 @@ describe('WeatherAppComponent', () => {
     authPortStub.me.and.returnValue(of(null));
     authPortStub.googleAuth.and.returnValue(of(null));
 
-    // Par defaut, la geolocalisation echoue (pas de permission)
     geoServiceSpy.locate.and.returnValue(throwError(() => new Error('Geolocation non disponible')));
 
     await TestBed.configureTestingModule({
@@ -121,7 +119,6 @@ describe('WeatherAppComponent', () => {
   it('devrait calculer le gradient dynamique selon le code meteo', () => {
     component.onCitySelected(buildCityResult());
 
-    // Code 0 = ciel degage → gradient sky/blue
     expect(component.backgroundClasses()).toContain('from-sky-400');
   });
 
@@ -175,8 +172,6 @@ describe('WeatherAppComponent', () => {
     expect(component.extractCape()).toBeNull();
   });
 
-  // --- Tests Phase 4 : parallax ---
-
   it('devrait initialiser scrollY a 0', () => {
     expect(component.scrollY()).toBe(0);
   });
@@ -189,34 +184,24 @@ describe('WeatherAppComponent', () => {
     expect(component.parallaxOffset()).toBe(60);
   });
 
-  // --- Tests Phase 4 : transition ville ---
-
   it('devrait activer contentTransitioning quand on change de ville avec des donnees', () => {
-    // Charger une premiere ville
     component.onCitySelected(buildCityResult());
     expect(component.forecast()).toBeTruthy();
 
-    // Changer de ville → transition
     component.onCitySelected(buildCityResult({ name: 'Lyon', latitude: 45.75, longitude: 4.85 }));
     expect(component.contentTransitioning()).toBeTrue();
   });
 
   it('devrait ne pas activer contentTransitioning sans donnees prealables', () => {
-    // Premier chargement, pas de forecast encore
     component.onCitySelected(buildCityResult());
     expect(component.contentTransitioning()).toBeFalse();
   });
 
-  // --- Tests Phase 4 : geolocalisation automatique ---
-
   it('devrait tenter la geolocalisation si pas de ville par defaut', () => {
-    // getPreferences retourne deja des prefs sans defaultCityIndex
-    // la geolocalisation est appelee dans loadFavorites()
     expect(geoServiceSpy.locate).toHaveBeenCalled();
   });
 
   it('devrait charger la meteo apres geolocalisation reussie', () => {
-    // Reconfigurer pour une geolocalisation reussie
     const geoCity = buildCityResult({
       id: -1,
       name: 'Ma position',
@@ -227,16 +212,12 @@ describe('WeatherAppComponent', () => {
     geoServiceSpy.locate.and.returnValue(of(geoCity));
     geoServiceSpy.reverseGeocode.and.returnValue(of('Toulouse'));
 
-    // Re-declencher loadFavorites via ngOnInit
     component.ngOnInit();
 
-    // Verifie que la ville geolocisee a ete chargee
     expect(geoServiceSpy.reverseGeocode).toHaveBeenCalledWith(43.6, 1.44);
     expect(component.selectedCity()).toBeTruthy();
     expect(component.selectedCity()?.name).toBe('Toulouse');
   });
-
-  // --- Tests rollback updates optimistes ---
 
   it('devrait restaurer favoriteCities si removeFavorite echoue cote backend', () => {
     const paris = {
@@ -257,7 +238,6 @@ describe('WeatherAppComponent', () => {
 
     component.removeFavorite(lyon);
 
-    // Rollback : la liste d'origine est restauree
     expect(component.favoriteCities()).toEqual([paris, lyon]);
   });
 

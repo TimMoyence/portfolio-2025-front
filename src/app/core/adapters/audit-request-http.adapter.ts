@@ -37,7 +37,6 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
   }
 
   stream(auditId: string): Observable<AuditStreamEvent> {
-    // Guard SSR : EventSource n'est pas disponible cote serveur
     if (!this.isBrowser) return EMPTY;
 
     return new Observable<AuditStreamEvent>((subscriber) => {

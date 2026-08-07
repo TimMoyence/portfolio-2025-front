@@ -1,10 +1,7 @@
-/** Categorie de consommation Sebastian. */
 export type SebastianCategory = 'alcohol' | 'coffee';
 
-/** Unite de mesure par categorie. */
 export type SebastianUnit = 'standard_drink' | 'cup';
 
-/** Type de boisson pour le suivi v2. */
 export type SebastianDrinkType =
   | 'beer'
   | 'wine'
@@ -14,13 +11,10 @@ export type SebastianDrinkType =
   | 'spiritueux'
   | 'cidre';
 
-/** Periode pour les objectifs. */
 export type SebastianPeriod = 'daily' | 'weekly' | 'monthly';
 
-/** Periode pour les statistiques agregees. */
 export type SebastianStatsPeriod = 'week' | 'month' | 'year';
 
-/** Entree de consommation. */
 export interface SebastianEntry {
   id: string;
   userId: string;
@@ -36,7 +30,6 @@ export interface SebastianEntry {
   consumedAt: string | null;
 }
 
-/** Objectif de consommation. */
 export interface SebastianGoal {
   id: string;
   userId: string;
@@ -47,7 +40,6 @@ export interface SebastianGoal {
   createdAt: string;
 }
 
-/** Statistique par categorie. */
 export interface SebastianCategoryStat {
   category: SebastianCategory;
   total: number;
@@ -56,13 +48,11 @@ export interface SebastianCategoryStat {
   trend: number;
 }
 
-/** Resultat des statistiques agregees. */
 export interface SebastianStats {
   byCategory: SebastianCategoryStat[];
   period: SebastianStatsPeriod;
 }
 
-/** Payload pour creer une entree. */
 export interface CreateEntryPayload {
   category: SebastianCategory;
   quantity: number;
@@ -74,13 +64,11 @@ export interface CreateEntryPayload {
   consumedAt?: string;
 }
 
-/** Point de la courbe BAC. */
 export interface SebastianBacDataPoint {
   time: string;
   bac: number;
 }
 
-/** Resultat du calcul BAC. */
 export interface SebastianBacResult {
   currentBac: number;
   curve: SebastianBacDataPoint[];
@@ -88,45 +76,37 @@ export interface SebastianBacResult {
   legalLimit: number;
 }
 
-/** Profil utilisateur pour le calcul BAC. */
 export interface SebastianProfile {
   weightKg: number;
   widmarkR: number;
 }
 
-/** Payload pour creer un objectif. */
 export interface CreateGoalPayload {
   category: SebastianCategory;
   targetQuantity: number;
   period: SebastianPeriod;
 }
 
-/** Periode pour les tendances. */
 export type SebastianTrendPeriod = '7d' | '30d';
 
-/** Periode pour les rapports. */
 export type SebastianReportPeriod = 'week' | 'month' | 'quarter';
 
-/** Point de donnee pour les courbes de tendance. */
 export interface SebastianTrendDataPoint {
   date: string;
   alcohol: number;
   coffee: number;
 }
 
-/** Objectifs journaliers derives. */
 export interface SebastianTrendObjectives {
   alcohol: number;
   coffee: number;
 }
 
-/** Resume des tendances. */
 export interface SebastianTrendSummary {
   avgAlcohol: number;
   avgCoffee: number;
 }
 
-/** Donnees de tendance pour les courbes. */
 export interface SebastianTrendData {
   period: SebastianTrendPeriod;
   dataPoints: SebastianTrendDataPoint[];
@@ -134,20 +114,17 @@ export interface SebastianTrendData {
   summary: SebastianTrendSummary;
 }
 
-/** Decomposition du score de sante. */
 export interface SebastianScoreBreakdown {
   goalAdherence: number;
   trendBonus?: number;
   streakBonus?: number;
 }
 
-/** Streaks par categorie. */
 export interface SebastianStreaks {
   alcohol: number;
   coffee: number;
 }
 
-/** Score de sante. */
 export interface SebastianHealthScore {
   score: number;
   phase: 1 | 2 | 3;
@@ -156,7 +133,6 @@ export interface SebastianHealthScore {
   message: string;
 }
 
-/** Statut d'un badge. */
 export interface SebastianBadgeStatus {
   key: string;
   name: string;
@@ -166,14 +142,12 @@ export interface SebastianBadgeStatus {
   unlockedAt?: string;
 }
 
-/** Distribution par jour de semaine. */
 export interface SebastianDayDistribution {
   dayOfWeek: number;
   alcohol: number;
   coffee: number;
 }
 
-/** Point du heatmap. */
 export interface SebastianHeatmapPoint {
   date: string;
   alcohol: number;
@@ -181,7 +155,6 @@ export interface SebastianHeatmapPoint {
   combined: number;
 }
 
-/** Rapport de periode. */
 export interface SebastianPeriodReport {
   period: SebastianReportPeriod;
   startDate: string;

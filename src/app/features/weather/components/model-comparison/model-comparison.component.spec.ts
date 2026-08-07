@@ -41,7 +41,6 @@ describe('ModelComparisonComponent', () => {
     fixture.detectChanges();
 
     const ecmwf = component.columns()[0];
-    // (18 + 19) / 2 = 18.5
     expect(ecmwf.avgTemp).toBe(18.5);
   });
 
@@ -50,7 +49,6 @@ describe('ModelComparisonComponent', () => {
     fixture.detectChanges();
 
     const gfs = component.columns()[1];
-    // 0.1 + 0.3 = 0.4
     expect(gfs.totalPrecip).toBeCloseTo(0.4, 1);
   });
 
@@ -63,7 +61,6 @@ describe('ModelComparisonComponent', () => {
 
   it('devrait signaler une divergence pour des ecarts > 3 degres', () => {
     const data = buildEnsembleData();
-    // Forcer un ecart > 3°C entre ECMWF et ICON
     data.models[0].hourly.temperature_2m = [10, 10];
     data.models[2].hourly.temperature_2m = [25, 25];
 

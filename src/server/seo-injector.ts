@@ -1,12 +1,6 @@
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
 import { LOCALE_PREFIX_RE, STRIP_LOCALE_RE, buildLocalizedPath, normalizePath } from './url-utils';
 
-/**
- * Types de schema Schema.org dans lesquels il est pertinent d'injecter
- * automatiquement un `dateModified` a partir de `page.lastmod`.
- * Les types comme BreadcrumbList ou SiteNavigationElement ne portent
- * pas naturellement cette notion.
- */
 const FRESHNESS_ENABLED_TYPES = new Set([
   'WebPage',
   'ProfilePage',
@@ -24,14 +18,6 @@ const FRESHNESS_ENABLED_TYPES = new Set([
   'WebSite',
 ]);
 
-/**
- * Enrichit un bloc JSON-LD avec des signaux de fraicheur (dateModified)
- * et d'autorite (author) quand le type le permet. Ces champs sont cruciaux
- * pour :
- * - Perplexity (favorise le contenu < 6-18 mois)
- * - ChatGPT (E-E-A-T : named authorship)
- * - Google AI Overview (freshness as ranking signal)
- */
 const enrichJsonLdBlock = (
   block: Record<string, unknown>,
   page: { lastmod?: string },
@@ -60,12 +46,6 @@ const enrichJsonLdBlock = (
   return enriched;
 };
 
-/**
- * Construit les balises <script type="application/ld+json"> a injecter dans le HTML.
- * Inclut les schemas globaux (LocalBusiness, SiteNavigationElement) + les schemas
- * specifiques a la page + les breadcrumbs. Enrichit automatiquement les blocs
- * eligibles avec des signaux de fraicheur et d'autorite.
- */
 const buildJsonLdScripts = (metadata: SeoMetadataFile, originalUrl: string): string => {
   const localeMatch = originalUrl.match(LOCALE_PREFIX_RE);
   const locale = localeMatch ? localeMatch[1] : metadata.site.defaultLocale;
@@ -129,15 +109,6 @@ const buildJsonLdScripts = (metadata: SeoMetadataFile, originalUrl: string): str
   return scripts.join('\n');
 };
 
-/**
- * Construit les balises `<link rel="canonical">` et `<link rel="alternate"
- * hreflang="...">` pour la page courante. Corrige le bug P1.6 ou le HTML
- * prerendu ne contenait aucun hreflang/canonical (ils etaient injectes
- * seulement apres hydratation cote client, donc invisibles pour les
- * crawlers SEO).
- *
- * Ne retourne rien si la page n'est pas indexable ou introuvable.
- */
 const buildSeoLinkTags = (
   metadata: SeoMetadataFile,
   originalUrl: string,
@@ -175,22 +146,11 @@ const buildSeoLinkTags = (
   return tags.join('\n');
 };
 
-/**
- * Verifie si un chemin correspond a une route connue dans les metadata SEO.
- * Utilise pour detecter les 404 cote SSR et envoyer le statut HTTP approprie
- * (evite les soft-404 qui dupent les crawlers Google en 200+contenu not-found).
- */
 export const isKnownRoute = (routePath: string, metadata: SeoMetadataFile): boolean => {
   const normalized = routePath === '' ? '/' : routePath;
   return metadata.pages.some((page) => page.path === normalized);
 };
 
-/**
- * Injecte les balises SEO (<link canonical>, <link hreflang>, <script
- * JSON-LD>) dans le HTML avant </head>. Supprime au passage les tags
- * canonical/hreflang deja presents pour eviter les collisions quand le
- * SSR dynamique les aurait partiellement generes cote client.
- */
 export const injectSeoHead = (
   html: string,
   metadata: SeoMetadataFile,

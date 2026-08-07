@@ -5,10 +5,6 @@
   display: block;
 }
 
-/* ============================================================
-   PILIERS ASILI — deux cartes opposant services & formations
-   Porte de .pillars / .pillar (asili-sections.css)
-   ============================================================ */
 .pillars-head {
   margin-bottom: 48px;
 }
@@ -46,7 +42,6 @@
   box-shadow: var(--shadow-lift);
 }
 
-/* La couleur de la coche (.tick utilise currentColor) varie selon la variante. */
 .pillar.services {
   --tick: var(--teal);
   background: var(--ink);

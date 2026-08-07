@@ -86,7 +86,6 @@
   </div>
 }
 
-<!-- SHARED NAV CONTENT -->
 <ng-template #navContent let-isMobile="isMobile">
   @for (item of navLinks; track $index) {
     <div class="asili-nav__item" [class.is-mobile]="isMobile">
@@ -105,7 +104,6 @@
     </div>
   }
 
-  <!-- Dropdown L'Atelier — desktop -->
   @if (!isMobile) {
     <div
       class="asili-nav__item"
@@ -178,7 +176,6 @@
     </div>
   }
 
-  <!-- Dropdown L'Atelier — mobile -->
   @if (isMobile) {
     <div class="asili-nav__item is-mobile asili-drawer__group">
       <button
@@ -236,7 +233,6 @@
     </div>
   }
 
-  <!-- Dropdown Formations — desktop -->
   @if (!isMobile) {
     <div
       class="asili-nav__item"
@@ -291,7 +287,6 @@
     </div>
   }
 
-  <!-- Dropdown Formations — mobile -->
   @if (isMobile) {
     <div class="asili-nav__item is-mobile asili-drawer__group">
       <button
@@ -335,7 +330,6 @@
     </div>
   }
 
-  <!-- Lien Contact (drawer mobile uniquement, parité maquette) -->
   @if (isMobile) {
     <div class="asili-nav__item is-mobile">
       <a
@@ -351,7 +345,6 @@
     </div>
   }
 
-  <!-- Zone droite : actions + langue + compte -->
   <div class="asili-nav__side" [class.is-mobile]="isMobile">
     <button
       type="button"
@@ -376,7 +369,6 @@
       </button>
     }
 
-    <!-- Sélecteur de langue FR/EN -->
     <div class="asili-lang">
       <span class="asili-lang__current" aria-hidden="true">{{
         getAlternateLocaleLabel() === 'EN' ? 'FR' : 'EN'
@@ -391,7 +383,6 @@
     </div>
 
     @if (authState.isLoggedIn()) {
-      <!-- Dropdown profil — desktop -->
       @if (!isMobile) {
         <div class="asili-nav__item" (mouseleave)="closeUserDropdown()">
           <button
@@ -444,7 +435,6 @@
           }
         </div>
       }
-      <!-- Menu profil — mobile -->
       @if (isMobile) {
         <div class="asili-drawer__account">
           @if (authState.user(); as u) {

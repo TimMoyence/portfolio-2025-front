@@ -19,11 +19,6 @@ interface PollInteraction {
   options: string[];
 }
 
-/**
- * Affiche un sondage interactif avec vote local et barres de pourcentage.
- * Charge la definition depuis `PRESENTATION_PORT` par `slug` + `interactionId`
- * (matche soit le `slideId` portant l'interaction, soit l'`id` legacy).
- */
 @Component({
   selector: 'app-slide-poll',
   standalone: true,
@@ -40,7 +35,6 @@ export class SlidePollComponent {
   protected readonly votes = signal<Record<number, number>>({});
   protected readonly hasVoted = signal<boolean>(false);
 
-  /** Index de l'option choisie, ou `null` tant que l'utilisateur n'a pas vote. */
   protected readonly votedIndex = signal<number | null>(null);
 
   protected readonly totalVotes = computed(() =>
