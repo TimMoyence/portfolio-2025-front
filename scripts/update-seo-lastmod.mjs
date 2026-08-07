@@ -3,20 +3,10 @@
 // src/assets/seo/seo-metadata.json a partir de la date du dernier commit
 // qui a modifie les fichiers sources associes a la page.
 //
-// Mapping page -> sources derive par convention :
-//   - "/" -> src/app/features/home/
-//   - "/presentation" -> src/app/features/presentation/
-//   - "/projets" -> src/app/features/projets/
-//   - "/contact" -> src/app/features/contact/
-//   - "/offer" -> src/app/features/offer/
-//   - "/growth-audit" -> src/app/features/growth-audit/
-//   - "/formations" -> src/app/features/formations/
-//   - "/formations/ia-solopreneurs" -> src/app/features/formations/ia-solopreneurs/
-//   - "/cookie-settings" -> src/app/features/cookie-settings/
-//   - "/terms" -> src/app/features/terms/
-//   - "/privacy" -> src/app/features/privacy/
-//   - "/login", "/register", "/forgot-password", "/reset-password", "/verify-email",
-//     "/profil" -> src/app/features/auth/ et src/app/features/profil/
+// Le mapping page -> sources est declare explicitement dans `pathToSources`
+// ci-dessous : repertoire de feature quand la page occupe tout un dossier,
+// fichiers precis quand plusieurs pages cohabitent dans le meme dossier
+// (ex: les landings /atelier/* vivent a cote du code de l'app correspondante).
 //
 // Les routes non-indexables (index: false) sont ignorees pour eviter le
 // bruit sur les ateliers.
@@ -25,16 +15,18 @@
 //   --check : n'ecrit pas, log les diff et exit 1 si desynchro (pour CI).
 
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { format, resolveConfig } from 'prettier';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const metadataPath = resolve(__dirname, '../src/assets/seo/seo-metadata.json');
 
 /**
- * Table de correspondance explicite path URL -> repertoires sources.
- * Plusieurs repertoires possibles pour une page (ex: auth partage les 6 routes).
+ * Table de correspondance explicite path URL -> sources (repertoires ou
+ * fichiers). Plusieurs sources possibles pour une page (ex: auth partage
+ * les 6 routes d'authentification).
  */
 const pathToSources = {
   '/': ['src/app/features/home', 'src/app/app.component.ts'],
@@ -43,9 +35,38 @@ const pathToSources = {
   '/contact': ['src/app/features/contact'],
   '/offer': ['src/app/features/offer'],
   '/growth-audit': ['src/app/features/growth-audit'],
+  '/atelier': ['src/app/features/atelier'],
+  // Les landings marketing des ateliers cohabitent avec le code des apps :
+  // on cible les fichiers de la page, pas tout le dossier de l'app, sinon
+  // le moindre commit sur l'app decalerait le lastmod de la landing.
+  '/atelier/meteo': [
+    'src/app/features/weather/weather-presentation.component.ts',
+    'src/app/features/weather/weather-presentation.component.html',
+    'src/app/features/weather/weather-presentation.component.scss',
+    'src/app/features/weather/weather-presentation-data.ts',
+  ],
+  '/atelier/sebastian': [
+    'src/app/features/sebastian/sebastian-presentation.component.ts',
+    'src/app/features/sebastian/sebastian-presentation.component.html',
+    'src/app/features/sebastian/sebastian-presentation.component.scss',
+    'src/app/features/sebastian/sebastian-presentation-data.ts',
+  ],
   '/formations': ['src/app/features/formations'],
   '/formations/ia-solopreneurs': [
     'src/app/features/formations/ia-solopreneurs',
+  ],
+  '/formations/ia-solopreneurs/toolkit': [
+    'src/app/features/formations/ia-solopreneurs/toolkit',
+  ],
+  '/formations/automatiser-avec-ia': [
+    'src/app/features/formations/automatiser-avec-ia',
+  ],
+  '/formations/automatiser-avec-ia/toolkit': [
+    'src/app/features/formations/automatiser-avec-ia/toolkit',
+  ],
+  '/formations/audit-seo-diy': ['src/app/features/formations/audit-seo-diy'],
+  '/formations/audit-seo-diy/toolkit': [
+    'src/app/features/formations/audit-seo-diy/toolkit',
   ],
   '/cookie-settings': ['src/app/features/cookie-settings'],
   '/terms': ['src/app/features/terms'],
@@ -55,7 +76,7 @@ const pathToSources = {
   '/forgot-password': ['src/app/features/auth'],
   '/reset-password': ['src/app/features/auth'],
   '/verify-email': ['src/app/features/auth'],
-  '/profil': ['src/app/features/profil'],
+  '/profil': ['src/app/features/profile'],
 };
 
 /**
@@ -75,10 +96,37 @@ function lastCommitDate(paths) {
   }
 }
 
-function main() {
+/**
+ * Verifie que chaque source declaree dans `pathToSources` existe reellement.
+ * Un chemin obsolete rend le mapping silencieusement inoperant (git log ne
+ * retourne rien, le lastmod reste fige) : on le signale explicitement.
+ *
+ * @returns La liste des entrees `page -> source` introuvables.
+ */
+function findMissingSources() {
+  const missing = [];
+  for (const [path, sources] of Object.entries(pathToSources)) {
+    for (const source of sources) {
+      if (!existsSync(resolve(__dirname, '..', source))) {
+        missing.push({ path, source });
+      }
+    }
+  }
+  return missing;
+}
+
+async function main() {
   const check = process.argv.includes('--check');
   const raw = readFileSync(metadataPath, 'utf-8');
   const metadata = JSON.parse(raw);
+
+  const missingSources = findMissingSources();
+  if (missingSources.length > 0) {
+    console.error('[seo-lastmod] Sources declarees introuvables :');
+    for (const m of missingSources) {
+      console.error(`  ${m.path} -> ${m.source}`);
+    }
+  }
 
   const diffs = [];
   let updatedCount = 0;
@@ -98,25 +146,40 @@ function main() {
     }
   }
 
+  if (check) {
+    if (diffs.length > 0) {
+      console.error('[seo-lastmod] Desynchronisation detectee :');
+      for (const d of diffs) {
+        console.error(`  ${d.path} : ${d.old} -> ${d.new}`);
+      }
+      console.error('Executez "npm run seo:lastmod" pour regenerer.');
+    }
+    if (diffs.length === 0 && missingSources.length === 0) {
+      console.log('[seo-lastmod] Aucun changement (seo-metadata a jour)');
+      return;
+    }
+    process.exit(1);
+  }
+
   if (diffs.length === 0) {
     console.log('[seo-lastmod] Aucun changement (seo-metadata a jour)');
     return;
   }
 
-  if (check) {
-    console.error('[seo-lastmod] Desynchronisation detectee :');
-    for (const d of diffs) {
-      console.error(`  ${d.path} : ${d.old} -> ${d.new}`);
-    }
-    console.error('Executez "npm run seo:lastmod" pour regenerer.');
-    process.exit(1);
-  }
-
-  writeFileSync(metadataPath, JSON.stringify(metadata, null, 2) + '\n');
+  // Le fichier reste edite a la main (titres, descriptions) et donc soumis a
+  // `format:check` : on le reformate avec Prettier lui-meme plutot que de se
+  // fier a JSON.stringify, dont l'eclatement systematique des tableaux courts
+  // laissait le depot non conforme apres chaque `npm run build`.
+  const prettierOptions = await resolveConfig(metadataPath);
+  const formatted = await format(JSON.stringify(metadata, null, 2), {
+    ...prettierOptions,
+    filepath: metadataPath,
+  });
+  writeFileSync(metadataPath, formatted);
   console.log(`[seo-lastmod] ${updatedCount} page(s) mise(s) a jour :`);
   for (const d of diffs) {
     console.log(`  ${d.path} : ${d.old} -> ${d.new}`);
   }
 }
 
-main();
+await main();

@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import bootstrap from "./main.server";
 import type { SeoMetadataFile } from "./app/core/seo/seo-metadata.model";
 import { isClientOnlyRoute, loadCsrShell } from "./server/csr-shell";
+import { registerPermanentRedirects } from "./server/redirects";
 import {
   buildLlmsFullTxt,
   buildLlmsTxt,
@@ -229,34 +230,12 @@ app.use(
   }),
 );
 
-app.get("/home", (_req, res) => {
-  return res.redirect(301, "/fr");
-});
+// Redirections 301 des anciennes URLs indexees (/home, /client-project).
+// Table et resolution dans ./server/redirects — verrouillees par redirects.spec.ts.
+// Position conservee : apres la normalisation d'URL et les express.static de
+// locale, avant le static racine et le rendu Angular.
+registerPermanentRedirects(app);
 
-app.get("/fr/home", (_req, res) => {
-  return res.redirect(301, "/fr");
-});
-
-app.get("/en/home", (_req, res) => {
-  return res.redirect(301, "/en");
-});
-
-// L'etude de cas dediee a ete retiree ; son URL etait indexee. La redirection
-// declaree dans le router Angular ne suffit pas : le SSR la resout en interne
-// et renverrait un 200 portant le contenu de /projets a l'ancienne URL — un
-// duplicata indexable sans canonical, puisque la page n'a plus d'entree dans
-// seo-metadata.json. Il faut donc un vrai 301 au niveau HTTP, comme /home.
-app.get("/client-project", (_req, res) => {
-  return res.redirect(301, "/fr/projets");
-});
-
-app.get("/fr/client-project", (_req, res) => {
-  return res.redirect(301, "/fr/projets");
-});
-
-app.get("/en/client-project", (_req, res) => {
-  return res.redirect(301, "/en/projets");
-});
 /**
  * Serve other static files (css/js/map/woff2/...) if any are at browser root
  * Important: index:false so it never returns HTML for missing files

@@ -28,6 +28,7 @@ describe("app routes", () => {
       "presentation",
       "offer",
       "contact",
+      "projets",
       "client-project",
       "cookie-settings",
       "terms",
