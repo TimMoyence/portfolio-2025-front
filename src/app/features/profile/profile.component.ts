@@ -76,7 +76,7 @@ export class ProfileComponent implements OnInit {
   }
 
   logout(): void {
-    this.authState.clearSession();
+    this.authState.logout();
     void this.router.navigate(['/']);
   }
 

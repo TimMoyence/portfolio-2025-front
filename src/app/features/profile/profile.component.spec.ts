@@ -23,6 +23,7 @@ function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: 
     restoreSession: jasmine.createSpy('restoreSession'),
     updateUser: jasmine.createSpy('updateUser'),
     clearSession: jasmine.createSpy('clearSession'),
+    logout: jasmine.createSpy('logout'),
     user: signal(user),
     isLoggedIn: signal(true),
     hasRole: (role: string) => user.roles.includes(role),
@@ -89,14 +90,22 @@ describe('ProfileComponent', () => {
     expect(component.initial()).toBe('?');
   });
 
-  it("logout nettoie le state et redirige vers l'accueil", () => {
+  it("logout revoque la session serveur et redirige vers l'accueil", () => {
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate').and.resolveTo(true);
 
     component.logout();
 
-    expect(authState.clearSession).toHaveBeenCalled();
+    expect(authState.logout).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
+  });
+
+  it('logout ne doit pas se limiter a la purge locale (cookie de refresh a revoquer)', () => {
+    spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+
+    component.logout();
+
+    expect(authState.clearSession).not.toHaveBeenCalled();
   });
 
   it('appelle setPassword et rafraichit la session', () => {

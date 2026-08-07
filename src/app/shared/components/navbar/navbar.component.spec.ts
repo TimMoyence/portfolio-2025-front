@@ -2,18 +2,22 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { throwError } from 'rxjs';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
+import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
 import { NavbarComponent } from './navbar.component';
 
 describe('NavbarComponent', () => {
   describe('en contexte navigateur', () => {
     let component: NavbarComponent;
     let fixture: ComponentFixture<NavbarComponent>;
+    let authPort: ReturnType<typeof createAuthPortStub>;
 
     beforeEach(async () => {
       localStorage.removeItem('portfolio_jwt');
+      authPort = createAuthPortStub();
 
       await TestBed.configureTestingModule({
         imports: [NavbarComponent],
@@ -24,14 +28,7 @@ describe('NavbarComponent', () => {
           { provide: ActivatedRoute, useValue: {} },
           provideHttpClient(withInterceptorsFromDi()),
           provideHttpClientTesting(),
-          {
-            provide: AUTH_PORT,
-            useValue: {
-              login: () => ({ subscribe: () => {} }),
-              register: () => ({ subscribe: () => {} }),
-              me: () => ({ subscribe: () => {} }),
-            },
-          },
+          { provide: AUTH_PORT, useValue: authPort },
         ],
       }).compileComponents();
 
@@ -146,6 +143,43 @@ describe('NavbarComponent', () => {
       const userMenuBtn = nav.querySelector('button[aria-label="Menu utilisateur"]');
       expect(userMenuBtn).toBeTruthy();
     });
+
+    describe('deconnexion', () => {
+      let authState: AuthStateService;
+
+      beforeEach(() => {
+        authState = TestBed.inject(AuthStateService);
+        authState.login(buildAuthSession());
+      });
+
+      it('devrait revoquer la session serveur via authPort.logout()', () => {
+        component.logout();
+
+        expect(authPort.logout).toHaveBeenCalledWith();
+      });
+
+      it("devrait purger la session locale et rediriger vers l'accueil", () => {
+        const navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+
+        component.logout();
+
+        expect(authState.isLoggedIn()).toBeFalse();
+        expect(localStorage.getItem('portfolio_jwt')).toBeNull();
+        expect(navigateSpy).toHaveBeenCalledWith(['/']);
+      });
+
+      it('devrait deconnecter localement meme si la revocation serveur echoue', () => {
+        authPort.logout.and.returnValue(throwError(() => new Error('API injoignable')));
+        const navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+
+        expect(() => component.logout()).not.toThrow();
+
+        expect(authPort.logout).toHaveBeenCalledWith();
+        expect(authState.isLoggedIn()).toBeFalse();
+        expect(localStorage.getItem('portfolio_jwt')).toBeNull();
+        expect(navigateSpy).toHaveBeenCalledWith(['/']);
+      });
+    });
   });
 
   describe('en contexte serveur (SSR)', () => {
@@ -161,14 +195,7 @@ describe('NavbarComponent', () => {
           { provide: ActivatedRoute, useValue: {} },
           provideHttpClient(withInterceptorsFromDi()),
           provideHttpClientTesting(),
-          {
-            provide: AUTH_PORT,
-            useValue: {
-              login: () => ({ subscribe: () => {} }),
-              register: () => ({ subscribe: () => {} }),
-              me: () => ({ subscribe: () => {} }),
-            },
-          },
+          { provide: AUTH_PORT, useValue: createAuthPortStub() },
         ],
       }).compileComponents();
 
