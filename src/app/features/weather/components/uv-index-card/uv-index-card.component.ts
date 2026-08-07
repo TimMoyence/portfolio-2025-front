@@ -3,10 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MetricCardComponent } from '../metric-card/metric-card.component';
 import { SparklineComponent } from '../sparkline/sparkline.component';
 
-/**
- * Carte d'indice UV avec jauge coloree horizontale.
- * Echelle de 0 a 11+ avec niveaux de risque en francais.
- */
 @Component({
   selector: 'app-uv-index-card',
   standalone: true,
@@ -21,12 +17,6 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
     >
       <span cardTitle i18n="weather.uv.title|@@weatherUvTitle">Indice UV</span>
 
-      <!--
-        Indice UV — re-skin Asili (.uv-track / .knob) : valeur font-display
-        géante, piste dégradée teal→ambre→rouge→violet, knob blanc liseré sombre.
-        SVG/couleurs uniquement — uvIndex()/riskLabel()/labelColor()/gaugePosition()
-        inchangés.
-      -->
       <div class="flex items-baseline gap-2">
         <span class="font-display text-4xl leading-none text-white">
           {{ uvIndex() | number: '1.0-0' }}
@@ -36,7 +26,6 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
         </span>
       </div>
 
-      <!-- Jauge horizontale a gradient (.uv-track) -->
       <div
         class="relative mt-3 h-2 overflow-visible rounded-full"
         role="meter"
@@ -49,7 +38,6 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
           class="absolute inset-0 rounded-full"
           style="background: linear-gradient(90deg, #4fb3a2, #e6c64f, #e6884f, #e64f6b, #b04fe6)"
         ></div>
-        <!-- Curseur de position (.knob) -->
         <div
           class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-[#0a0e12] bg-white shadow-md"
           [style.left.%]="gaugePosition()"
@@ -74,13 +62,10 @@ import { SparklineComponent } from '../sparkline/sparkline.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UvIndexCardComponent {
-  /** Valeur de l'indice UV courant. */
   readonly uvIndex = input<number>(0);
 
-  /** Donnees horaires d'UV pour le sparkline. */
   readonly hourlyUv = input<number[]>([]);
 
-  /** Label de risque UV en francais selon l'echelle OMS. */
   readonly riskLabel = computed(() => {
     const uv = this.uvIndex();
     if (uv <= 2) return $localize`:weather.uv.low|@@weatherUvLow:Faible`;
@@ -90,7 +75,6 @@ export class UvIndexCardComponent {
     return $localize`:weather.uv.extreme|@@weatherUvExtreme:Extrême`;
   });
 
-  /** Classe de couleur du label selon le niveau de risque. */
   readonly labelColor = computed(() => {
     const uv = this.uvIndex();
     if (uv <= 2) return 'text-green-400';
@@ -100,7 +84,6 @@ export class UvIndexCardComponent {
     return 'text-purple-400';
   });
 
-  /** Position du curseur sur la jauge (0-100%). */
   readonly gaugePosition = computed(() => {
     const uv = this.uvIndex();
     return Math.min((uv / 12) * 100, 100);

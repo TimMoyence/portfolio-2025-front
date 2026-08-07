@@ -34,14 +34,6 @@ describe('FooterComponent', () => {
     });
   });
 
-  // it('should display the address and contact information', () => {
-  //   const compiled: HTMLElement = fixture.nativeElement;
-
-  //   expect(compiled.textContent).toContain(component.address.city);
-  //   expect(compiled.textContent).toContain(component.address.phone);
-  //   expect(compiled.textContent).toContain(component.address.email);
-  // });
-
   it('should point the « Projets » work link to /projets', () => {
     const workColumn = component.navColumns.find((column) => column.heading === 'Travailler');
     const projetsLink = workColumn?.links.find((link) => link.label === 'Projets');
@@ -87,7 +79,6 @@ describe('FooterComponent', () => {
     );
   });
 
-  // P2.10 : signal de fraicheur SEO/IA — le <time datetime> doit rester dans le DOM.
   it('should expose a <time datetime> bound to siteLastUpdated for SEO', () => {
     const time: HTMLTimeElement | null = fixture.nativeElement.querySelector('time[datetime]');
     expect(time).toBeTruthy();
@@ -95,7 +86,6 @@ describe('FooterComponent', () => {
     expect(time?.textContent?.trim()).toBe(component.siteLastUpdated);
   });
 
-  // P2.11 : adresse postale structuree visible pour SEO local Bordeaux.
   it('should keep the structured <address> with postal address microdata', () => {
     const address = fixture.nativeElement.querySelector('address[itemscope]');
     expect(address).toBeTruthy();

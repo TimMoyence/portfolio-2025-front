@@ -1,14 +1,4 @@
-<!--
-  Shell App Météo (/atelier/meteo/app) — re-skin Asili immersif « ciel / glass ».
-  Source maquette : AsiliNewDesign/meteo-app.html + asili-app.css
-  (.app-body, .sky-bg, .app-shell, .app-main, .gp/.gp-pad/.gp-h, .wx-grid,
-  .app-pill/.live-dot) + meteo-app.js (palettes SKIES). Le système de fond
-  data-driven existant (gradient par code météo + crossfade + parallax) est
-  CONSERVÉ tel quel et harmonisé visuellement à la palette ciel Asili via le
-  voile radial scopé (.wx-sky-veil). Aucun binding/signal/effect modifié.
--->
 <section class="wx-shell relative min-h-screen overflow-hidden">
-  <!-- Fond avec crossfade + parallax : ancien gradient en dessous, nouveau au-dessus avec fade-in -->
   @if (hasForecast()) {
     <div
       class="absolute -inset-y-16 inset-x-0 bg-gradient-to-br"
@@ -21,17 +11,12 @@
       [class.opacity-0]="backgroundTransitioning()"
       [style.transform]="'translateY(' + parallaxOffset() + 'px)'"
     ></div>
-    <!-- Voile ciel Asili (asili-app.css : .sky-bg) : harmonise le gradient
-         data-driven avec la profondeur radiale immersive de la maquette. -->
     <div class="wx-sky-veil" aria-hidden="true"></div>
   } @else {
     <div class="absolute inset-0 bg-scheme-background"></div>
   }
 
-  <!-- Conteneur principal (asili-app.css : .app-main) -->
   <div class="wx-main relative z-10">
-    <!-- Header d'app interne (décision 3) : bandeau glass Asili regroupant titre
-         + sélecteurs existants. PAS de back/brand redondants avec la navbar. -->
     <header class="wx-app-head gp gp-pad">
       <div class="wx-app-head-top">
         <div class="wx-app-title">
@@ -44,7 +29,6 @@
           }
         </div>
 
-        <!-- Pill « En direct » (live-dot teal, cf. asili-app.css) -->
         @if (hasForecast()) {
           <span class="wx-pill font-mono">
             <span class="wx-live-dot" aria-hidden="true"></span>
@@ -53,19 +37,15 @@
         }
       </div>
 
-      <!-- Sélecteur de niveau + unités (bindings conservés à l'identique) -->
       <div class="wx-app-controls">
         <app-level-selector [darkMode]="hasForecast()" (levelChanged)="onLevelChanged($event)" />
         <app-unit-selector />
       </div>
 
-      <!-- Recherche de ville (binding conservé) -->
       <app-city-search [darkMode]="hasForecast()" (citySelected)="onCitySelected($event)" />
 
-      <!-- Suggestion de transition de niveau -->
       <app-transition-prompt />
 
-      <!-- Barre de villes favorites -->
       @if (favoriteCities().length > 0 || selectedCity()) {
         <app-favorite-cities-bar
           [darkMode]="hasForecast()"
@@ -81,7 +61,6 @@
     </header>
 
     <div class="wx-content">
-      <!-- Chargement : skeleton loaders -->
       @if (loading()) {
         <app-chart-skeleton />
         <app-chart-skeleton />
@@ -92,7 +71,6 @@
         </div>
       }
 
-      <!-- Erreur (restyle glass Asili, alt conservé) -->
       @if (error(); as errorMsg) {
         <div class="wx-error gp gp-pad">
           <div class="wx-error-inner">
@@ -102,7 +80,6 @@
         </div>
       }
 
-      <!-- Previsions (Decouverte+) : toujours visibles -->
       @if (forecast(); as data) {
         <div
           appSlideIn
@@ -112,14 +89,12 @@
           <app-current-conditions [current]="data.current" [detailed]="detailedCurrent()" />
         </div>
 
-        <!-- Alertes meteo -->
         @if (alerts().length > 0) {
           <div appSlideIn>
             <app-weather-alerts-card [alerts]="alerts()" />
           </div>
         }
 
-        <!-- Tableau unifié prévisions (remplace daily-forecast + weekly-overview) -->
         <div appSlideIn>
           <app-weekly-overview
             [hourly]="data.hourly"
@@ -138,7 +113,6 @@
           }
         </div>
 
-        <!-- Curieux+ : cartes avancees — responsive 1/2/3 colonnes -->
         @if (levelService.level() !== 'discovery') {
           <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3">
             <div appSlideIn>
@@ -182,7 +156,6 @@
             </div>
           </div>
 
-          <!-- Carte radar -->
           @if (selectedCity(); as city) {
             <div appSlideIn>
               <app-radar-map [latitude]="city.latitude" [longitude]="city.longitude" />
@@ -190,7 +163,6 @@
           }
         }
 
-        <!-- Expert : cartes expertes -->
         @if (levelService.level() === 'expert') {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
             <div appSlideIn class="md:col-span-2 lg:col-span-3">
@@ -227,7 +199,6 @@
         }
       }
 
-      <!-- Etat initial (restyle glass Asili, alt conservé) -->
       @if (!forecast() && !loading() && !error()) {
         <div class="wx-empty gp gp-pad">
           <img src="/assets/images/meteo/soleil-et-nuage.png" alt="" class="wx-empty-img" />

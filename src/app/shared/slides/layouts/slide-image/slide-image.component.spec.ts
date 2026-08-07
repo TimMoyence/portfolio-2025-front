@@ -2,25 +2,6 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { SlideImageComponent } from './slide-image.component';
 
-/**
- * Specs unifiees du composant fusionne `SlideImageComponent`.
- *
- * Le composant expose un selector multiple
- * (`app-slide-image-left, app-slide-image-right`) et derive la position du
- * media (`isReverse`) du `tagName` de l'hote — SSR-safe (lecture sur
- * l'ElementRef injecte, aucun acces `window`/`document`).
- *
- * Les HostComponents ci-dessous exercent chaque balise :
- * - `app-slide-image-left`  -> media AVANT contenu (image a gauche)
- * - `app-slide-image-right` -> contenu AVANT media (image a droite / reverse)
- *
- * Couverture miroir des deux anciennes specs supprimees
- * (slide-image-left.spec + slide-image-right.spec) : 5 `it()` par position,
- * assertions ancrees sur le nouveau prefixe BEM `.slide-image__`.
- */
-
-// --- Position LEFT (balise app-slide-image-left) ------------------------
-
 @Component({
   standalone: true,
   imports: [SlideImageComponent],
@@ -55,8 +36,6 @@ class HostLeftFullComponent {
   readonly paragraphs = ['Premier paragraphe', 'Second paragraphe'];
   readonly items = ['Item un', 'Item deux', 'Item trois'];
 }
-
-// --- Position RIGHT (balise app-slide-image-right) ----------------------
 
 @Component({
   standalone: true,

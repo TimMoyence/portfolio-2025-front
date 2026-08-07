@@ -8,7 +8,6 @@ import type {
 } from '../../app/core/models/audit-request.model';
 import type { AuditRequestPort } from '../../app/core/ports/audit-request.port';
 
-/** Construit un payload AuditRequestPayload avec des valeurs par defaut. */
 export function buildAuditRequestPayload(
   overrides?: Partial<AuditRequestPayload>,
 ): AuditRequestPayload {
@@ -21,7 +20,6 @@ export function buildAuditRequestPayload(
   };
 }
 
-/** Construit une reponse AuditCreateResponse avec des valeurs par defaut. */
 export function buildAuditCreateResponse(
   overrides?: Partial<AuditCreateResponse>,
 ): AuditCreateResponse {
@@ -34,7 +32,6 @@ export function buildAuditCreateResponse(
   };
 }
 
-/** Construit une reponse AuditSummaryResponse avec des valeurs par defaut. */
 export function buildAuditSummaryResponse(
   overrides?: Partial<AuditSummaryResponse>,
 ): AuditSummaryResponse {
@@ -51,15 +48,10 @@ export function buildAuditSummaryResponse(
   };
 }
 
-/** Construit un evenement AuditStreamEvent de type heartbeat par defaut. */
 export function buildAuditStreamHeartbeat(): AuditStreamEvent {
   return { type: 'heartbeat', data: { ts: 'now' } };
 }
 
-/**
- * Construit un ClientReport complet avec 7 piliers, 3 quickWins, CTA renseigné.
- * Utilisé par les specs des composants du rapport client (Phase 8).
- */
 export function buildClientReport(overrides?: Partial<ClientReport>): ClientReport {
   return {
     executiveSummary:
@@ -131,9 +123,6 @@ export function buildClientReport(overrides?: Partial<ClientReport>): ClientRepo
   };
 }
 
-/**
- * Construit un AuditCompletedEvent avec valeurs par défaut + clientReport optionnel.
- */
 export function buildAuditCompletedEvent(
   overrides?: Partial<AuditCompletedEvent>,
 ): AuditCompletedEvent {
@@ -152,7 +141,6 @@ export function buildAuditCompletedEvent(
   };
 }
 
-/** Cree un stub complet du port audit-request avec des spies Jasmine. */
 export function createAuditRequestPortStub(): jasmine.SpyObj<AuditRequestPort> {
   return jasmine.createSpyObj<AuditRequestPort>('AuditRequestPort', [
     'submit',

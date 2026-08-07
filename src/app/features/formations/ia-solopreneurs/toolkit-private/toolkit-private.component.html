@@ -1,13 +1,3 @@
-<!--
-  Toolkit prive (acces debloque par token) — refonte Asili (Lot 3e).
-  Etat « debloque » inspire de AsiliNewDesign/toolkit.html : icone de
-  validation + titre « Accès débloqué. » + accroche, suivi des sections
-  personnalisees reellement resolues par token (cheatsheet, prompts,
-  workflows, templates, prompt Gamma). La logique d'etat et la resolution
-  de token (constructeur, getToolkitByToken, copyToClipboard) sont
-  INCHANGEES : seul le markup/style passe au design Asili. Fond
-  constellation global (Lot 0).
--->
 @switch (state()) {
   @case ('loading') {
     <section class="tkp-state">
@@ -37,7 +27,6 @@
     @if (data(); as toolkit) {
       <section class="tkp">
         <div class="tkp-wrap">
-          <!-- ===================== EN-TÊTE « DÉBLOQUÉ » ===================== -->
           <header class="tkp-head">
             <div class="tkp-check" aria-hidden="true">
               <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
@@ -56,7 +45,6 @@
             </p>
           </header>
 
-          <!-- ===================== 1 · CHEATSHEET ===================== -->
           @if (toolkit.cheatsheet.length > 0) {
             <section class="tkp-section">
               <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionCheatsheet">
@@ -91,7 +79,6 @@
             </section>
           }
 
-          <!-- ===================== 2 · PROMPTS ===================== -->
           @if (toolkit.prompts.length > 0) {
             <section class="tkp-section">
               <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionPrompts">
@@ -121,7 +108,6 @@
             </section>
           }
 
-          <!-- ===================== 3 · WORKFLOWS ===================== -->
           @if (toolkit.workflows.length > 0) {
             <section class="tkp-section">
               <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionWorkflows">
@@ -154,7 +140,6 @@
             </section>
           }
 
-          <!-- ===================== 4 · TEMPLATES ===================== -->
           @if (toolkit.templates.length > 0) {
             <section class="tkp-section">
               <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionTemplates">
@@ -179,7 +164,6 @@
             </section>
           }
 
-          <!-- ===================== 5 · PROMPT GAMMA ===================== -->
           @if (toolkit.generatedPrompt) {
             <section class="tkp-section">
               <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionGamma">
@@ -207,7 +191,6 @@
             </section>
           }
 
-          <!-- ===================== FOOTER ===================== -->
           <footer class="tkp-foot">
             <p i18n="@@formations.toolkitPrivate.brand">Asili Design — asilidesign.fr</p>
           </footer>

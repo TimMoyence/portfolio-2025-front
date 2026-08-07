@@ -4,9 +4,6 @@ import { Component, signal } from '@angular/core';
 import type { SebastianHeatmapPoint } from '../../../core/models/sebastian.model';
 import { SebastianHeatmapComponent } from './sebastian-heatmap.component';
 
-/**
- * Hote de test pour fournir l'input requis via un signal.
- */
 @Component({
   standalone: true,
   imports: [SebastianHeatmapComponent],
@@ -56,7 +53,6 @@ describe('SebastianHeatmapComponent', () => {
   });
 
   it('devrait avoir le mode combined actif par defaut', () => {
-    // Restyle Lot 5 : pill active = bg-gold (dark lounge ambré).
     const activeButton: HTMLButtonElement | null = fixture.nativeElement.querySelector(
       "[data-testid='mode-button'].bg-gold",
     );
@@ -92,12 +88,9 @@ describe('SebastianHeatmapComponent', () => {
     const cells: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
       "[data-testid='heatmap-cell']",
     );
-    // La cellule du 2026-04-02 a combined=0
     const zeroCell = Array.from(cells).find((c) => c.textContent!.includes('2'));
     expect(zeroCell).toBeTruthy();
-    // Restyle Lot 5 : niveau gold le plus faible (.heat-big base
-    // rgba(230,170,70,0.1)) pour une cellule a zero.
-    const zeroCellApril2 = cells[3]; // 4eme jour dans l'ordre
+    const zeroCellApril2 = cells[3];
     expect(zeroCellApril2.className).toContain('bg-[rgba(230,170,70,0.1)]');
   });
 
@@ -105,15 +98,11 @@ describe('SebastianHeatmapComponent', () => {
     const cells: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
       "[data-testid='heatmap-cell']",
     );
-    // La cellule du 2026-04-03 a combined=7 (la plus haute)
-    // Restyle Lot 5 : niveau gold le plus fort (.heat-big l3
-    // rgba(230,170,70,0.85)).
-    const highCell = cells[4]; // 5eme jour
+    const highCell = cells[4];
     expect(highCell.className).toContain('bg-[rgba(230,170,70,0.85)]');
   });
 
   it('devrait utiliser le glass Asili dark lounge ambré', () => {
-    // Restyle Lot 5 : conteneur au glass .panel — bg-white/[0.04] + rayon 20px.
     const container: HTMLElement | null = fixture.nativeElement.querySelector(
       "[data-testid='heatmap-container']",
     );

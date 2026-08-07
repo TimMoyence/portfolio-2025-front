@@ -8,29 +8,12 @@ import type {
 } from '../../../core/models/sebastian.model';
 import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastian.port';
 
-/**
- * Page de gestion des objectifs Sebastian.
- * Permet de creer, visualiser et supprimer des objectifs
- * de consommation (alcool, cafe).
- */
 @Component({
   selector: 'app-sebastian-goals',
   standalone: true,
   imports: [FormsModule],
   template: `
-    <!--
-      Objectifs App Sebastian — thème "dark lounge ambré" porté de la maquette
-      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (glass) pour le
-      formulaire, .goal/.goal-top/.gmeta pour chaque objectif. PAS de barre de
-      progression : le modèle SebastianGoal n'expose aucun avancement réel, on
-      n'affiche donc pas la jauge gold de la maquette (donnée fictive proscrite).
-      Restyle 100 % visuel : goalCategory/goalQuantity/goalPeriod, addGoal/
-      removeGoal/loadGoals, emoji 🍺/☕ par catégorie, état vide et tous les
-      data-testid (goal-category/goal-quantity/goal-period/goal-submit,
-      goal-item, delete-goal, empty-state) conservés.
-    -->
     <div class="space-y-6">
-      <!-- Formulaire d'ajout d'objectif (glass .panel, champs dark ambrés) -->
       <div
         class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6 backdrop-blur-[18px]"
       >
@@ -72,14 +55,12 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
         </div>
       </div>
 
-      <!-- Liste des objectifs actifs (.goal/.goal-top/.goal-track/.gmeta) -->
       <div class="space-y-3">
         @for (goal of goals(); track goal.id) {
           <div
             data-testid="goal-item"
             class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-5"
           >
-            <!-- .goal-top : libellé + suppression -->
             <div class="mb-3 flex items-center justify-between gap-3">
               <span class="flex items-center gap-2 text-base font-semibold text-white">
                 <span class="text-xl">{{ goal.category === 'alcohol' ? '🍺' : '☕' }}</span>
@@ -96,7 +77,6 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
                 Supprimer
               </button>
             </div>
-            <!-- .gmeta : période (factuelle ; pas de jauge d'avancement fictive) -->
             <div class="flex gap-5 font-mono text-xs text-white/55">
               <span>{{
                 goal.period === 'daily'
@@ -120,10 +100,8 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
 export class SebastianGoalsComponent {
   private readonly port: SebastianPort = inject(SEBASTIAN_PORT);
 
-  /** Objectifs actifs. */
   readonly goals = signal<SebastianGoal[]>([]);
 
-  /** Champs du formulaire. */
   goalCategory: SebastianCategory = 'coffee';
   goalQuantity = 3;
   goalPeriod: SebastianPeriod = 'daily';
@@ -132,12 +110,10 @@ export class SebastianGoalsComponent {
     this.loadGoals();
   }
 
-  /** Charge les objectifs depuis le port. */
   loadGoals(): void {
     this.port.getGoals().subscribe((goals) => this.goals.set(goals));
   }
 
-  /** Ajoute un nouvel objectif et met a jour la liste. */
   addGoal(): void {
     const payload: CreateGoalPayload = {
       category: this.goalCategory,
@@ -149,7 +125,6 @@ export class SebastianGoalsComponent {
     });
   }
 
-  /** Supprime un objectif et met a jour la liste locale. */
   removeGoal(id: string): void {
     this.port.deleteGoal(id).subscribe(() => {
       this.goals.update((list) => list.filter((g) => g.id !== id));

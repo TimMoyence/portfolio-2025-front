@@ -33,10 +33,6 @@ export class SvgIconComponent implements OnChanges {
 
   private static cache = new Map<string, string>();
 
-  /**
-   * Vide le cache statique d'icones SVG.
-   * Utile pour le nettoyage entre tests ou pour forcer le rechargement de toutes les icones.
-   */
   static clearCache(): void {
     SvgIconComponent.cache.clear();
   }
@@ -87,7 +83,6 @@ export class SvgIconComponent implements OnChanges {
       return;
     }
 
-    // Validation du nom pour prevenir les injections de chemin (path traversal)
     if (!SvgIconComponent.VALID_NAME.test(this.name)) {
       console.warn(
         `[SvgIconComponent] Nom d'icone invalide : "${this.name}". Seuls les caracteres alphanumeriques et tirets sont autorises.`,
@@ -123,10 +118,6 @@ export class SvgIconComponent implements OnChanges {
       .pipe(tap((raw) => SvgIconComponent.cache.set(name, raw)));
   }
 
-  /**
-   * Supprime les elements et attributs dangereux d'un SVG parse
-   * (scripts, event handlers, iframes, etc.) pour prevenir les attaques XSS.
-   */
   private sanitizeSvgElement(root: Element): void {
     const dangerousTags = ['script', 'iframe', 'object', 'embed', 'foreignobject', 'use'];
     for (const tag of dangerousTags) {

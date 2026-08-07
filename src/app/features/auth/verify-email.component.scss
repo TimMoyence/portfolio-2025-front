@@ -1,10 +1,3 @@
-/*
-  Vérification d'email — restyle Asili split-screen. Les classes `.auth-*` sont
-  mutualisées dans le partiel `_auth-shared.scss` (porté de
-  AsiliNewDesign/asili-auth.css), partagé avec login/register/forgot/reset. On
-  les `@use` ici pour les scoper. Restyle = HTML/SCSS uniquement ; le flux token
-  magic-link est préservé.
-*/
 @use './auth-shared';
 
 :host {

@@ -21,21 +21,6 @@ import { SlideComponent } from './slide.component';
 import { SlideDeckService, type SlideDeckMode } from './slide-deck.service';
 import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from './slide-deck.tokens';
 
-/**
- * Wrapper principal du moteur de presentation. Gere le mode scroll/fullscreen,
- * la navigation clavier (F, fleches, espace, echap), et emet `slideChanged`.
- *
- * Mode scroll : CSS scroll-snap natif + IntersectionObserver pour synchroniser
- * `currentId` quand l'utilisateur scroll. Les slides sont rendues directement
- * via leur `TemplateRef`.
- *
- * Mode fullscreen : Swiper Element wrappe chaque slide dans un `<swiper-slide>`
- * direct (pre-requis swiper.js).
- *
- * Resync sur sortie native du fullscreen (Esc, F11) via
- * `document:fullscreenchange` — sinon le deck restait en mode `fullscreen`
- * affichant Swiper alors que l'utilisateur etait revenu en page normale.
- */
 @Component({
   selector: 'app-slide-deck',
   standalone: true,
@@ -77,14 +62,6 @@ export class SlideDeckComponent implements AfterViewInit {
   });
 
   /**
-   * Position de la slide courante **dans la liste filtree** (`visibleSlides`).
-   *
-   * `SlideDeckService.currentIndex` indexe la liste complete des slides
-   * enregistrees, visibilite comprise : l'utiliser face a
-   * `visibleSlides().length` compare deux referentiels differents et peut
-   * produire un numerateur superieur au denominateur (ex. « 3 / 1 » en mode
-   * scroll quand les slides precedentes sont `present-only`).
-   *
    * Retourne -1 si aucune slide n'est visible, et 0 par defaut tant que la
    * slide courante n'est pas resynchronisee sur le referentiel filtre
    * (changement de mode) — coherent avec `scrollToSibling`.
@@ -109,7 +86,7 @@ export class SlideDeckComponent implements AfterViewInit {
 
     effect(() => {
       const id = this.service.current();
-      const idx = this.service.currentIndex();
+      const idx = this.service.currentIndexInAllSlides();
       if (id !== null && idx >= 0) {
         this.slideChanged.emit({ id, index: idx });
         if (isPlatformBrowser(this.platformId)) {

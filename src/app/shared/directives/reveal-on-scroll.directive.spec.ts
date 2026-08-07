@@ -1,5 +1,6 @@
 import { Component, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { isolateAnimReady } from '../../../testing/anim-ready';
 import { RevealOnScrollDirective } from './reveal-on-scroll.directive';
 
 @Component({
@@ -10,17 +11,7 @@ import { RevealOnScrollDirective } from './reveal-on-scroll.directive';
 class HostComponent {}
 
 describe('RevealOnScrollDirective', () => {
-  // Isolation : la classe `anim-ready` vit sur <html> (singleton partagé entre
-  // tous les specs). On la retire avant ET après chaque test pour immuniser les
-  // assertions SSR contre une fuite d'état laissée par un spec précédent qui
-  // aurait rendu un `appReveal` en plateforme browser sans nettoyer.
-  beforeEach(() => {
-    document.documentElement.classList.remove('anim-ready');
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
-  });
+  isolateAnimReady();
 
   describe('en environnement browser', () => {
     beforeEach(() => {

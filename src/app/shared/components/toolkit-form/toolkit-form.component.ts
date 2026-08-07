@@ -24,10 +24,6 @@ type FormState = 'idle' | 'loading' | 'success' | 'error';
  */
 export const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
 
-/**
- * Formulaire de capture lead magnet (prenom + email + GDPR).
- * Reutilise dans la slide CTA et la page toolkit standalone.
- */
 @Component({
   selector: 'app-toolkit-form',
   standalone: true,
@@ -107,18 +103,11 @@ export const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
   `,
 })
 export class ToolkitFormComponent {
-  /** Slug de la formation dont le toolkit est demande. */
   @Input() formationSlug = 'ia-solopreneurs';
 
-  /**
-   * Libelle du bouton principal. Par defaut "Recevoir la boite a
-   * outils" (context toolkit), override-able par les contextes
-   * futurs ("Acceder au rapport", "Telecharger le guide", etc).
-   */
   @Input() submitLabel = $localize`:@@toolkit-form.submit.idle:Recevoir la boîte à outils`;
 
   private readonly port = inject(LEAD_MAGNET_PORT);
-  /** Collecteur optionnel — present uniquement si un parent le fournit. */
   private readonly collector = inject(InteractionCollectorService, {
     optional: true,
   });
@@ -143,10 +132,8 @@ export class ToolkitFormComponent {
     );
   });
 
-  /** Helper typ-safe pour lire la valeur d'un input depuis un Event (utilise dans le template). */
   protected readInputValue = readInputValue;
 
-  /** Helper typ-safe pour lire la checked d'une checkbox depuis un Event (utilise dans le template). */
   protected readCheckboxChecked = readCheckboxChecked;
 
   onSubmit(): void {
@@ -167,7 +154,6 @@ export class ToolkitFormComponent {
       termsAcceptedAt: new Date().toISOString(),
     };
 
-    // Enrichit la requete avec le profil d'interaction si disponible
     if (this.collector?.hasData()) {
       request.profile = this.collector.profile();
     }

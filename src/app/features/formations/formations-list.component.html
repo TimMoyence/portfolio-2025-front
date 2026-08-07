@@ -1,14 +1,3 @@
-<!--
-  Formations Asili — page liste, composition de la maquette
-  AsiliNewDesign/formations.html : hero (asili-hero) → grille de quatre cartes
-  (trois formations gratuites vers les slide-decks existants + carte bonus
-  toolkit vers la capture email) → section « le format diapo » (trois bénéfices)
-  → bande CTA (asili-cta-band). Le fond constellation est global
-  (app-asili-background) : aucune section ne recrée de canvas. Les slide-decks
-  sont hors périmètre — la page ne fait que les référencer.
--->
-
-<!-- ===================== HERO ===================== -->
 <app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
   <ng-container title>
     <ng-container i18n="@@formationsHeroTitle"
@@ -17,7 +6,6 @@
   </ng-container>
 </app-asili-hero>
 
-<!-- ===================== GRILLE DES FORMATIONS ===================== -->
 <section class="formations-grid-section">
   <div class="wrap">
     <div class="formation-grid">
@@ -50,7 +38,6 @@
   </div>
 </section>
 
-<!-- ===================== LE FORMAT DIAPO ===================== -->
 <section class="format-section section-pad">
   <div class="wrap">
     <div class="sec-head format-head" appReveal>
@@ -116,7 +103,6 @@
   </div>
 </section>
 
-<!-- ===================== CTA ===================== -->
 <app-asili-cta-band [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead">
   <ng-container cta>
     <a class="btn btn-teal" routerLink="/formations/ia-solopreneurs">

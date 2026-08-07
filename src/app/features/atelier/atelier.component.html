@@ -1,14 +1,3 @@
-<!--
-  Hub L'Atelier (/atelier) — composition de la maquette AsiliNewDesign/atelier.html :
-  hero .page-hero → deux blocs .lab-big (teasers Météo / Sebastian) → bande
-  immersive .atelier de deux démos jouables SIMULÉES (météo 4 villes + panneau
-  Sebastian) → bande CTA (app-asili-cta-band). Le fond constellation est global
-  (app-asili-background) : aucune section ne recrée de canvas. Les démos sont
-  autonomes — aucune dépendance aux vraies apps Météo/Sebastian (Lots 4/5).
-  Wording verbatim maquette, en $localize (@@atelier*).
--->
-
-<!-- ===================== HERO ===================== -->
 <section class="page-hero">
   <div class="wrap">
     <span class="kicker" appReveal>{{ heroKicker }}</span>
@@ -19,11 +8,9 @@
   </div>
 </section>
 
-<!-- ===================== DEUX APPS EN VEDETTE ===================== -->
 <section class="atelier-feature-section">
   <div class="wrap">
     <div class="lab-feature">
-      <!-- Météo -->
       <article class="lab-big meteo-feat" appReveal>
         <div>
           <span class="lab-ic" aria-hidden="true">
@@ -61,7 +48,6 @@
         </div>
       </article>
 
-      <!-- Sebastian -->
       <article class="lab-big seb-feat" appReveal [appRevealDelay]="1">
         <div>
           <span class="lab-ic" aria-hidden="true">
@@ -102,7 +88,6 @@
   </div>
 </section>
 
-<!-- ===================== BANDE JOUABLE IMMERSIVE ===================== -->
 <section class="atelier section-pad">
   <div class="wrap">
     <div class="atelier-head">
@@ -119,7 +104,6 @@
     </div>
 
     <div class="atelier-grid">
-      <!-- MÉTÉO DEMO (simulée, autonome) -->
       <div class="glass meteo" appReveal>
         <div class="meteo-top">
           <div>
@@ -331,7 +315,6 @@
         </p>
       </div>
 
-      <!-- SEBASTIAN DEMO (simulée, autonome) -->
       <div class="glass seb-panel seb-c" appReveal [appRevealDelay]="1">
         <div class="seb-head">
           <div>
@@ -418,7 +401,6 @@
   </div>
 </section>
 
-<!-- ===================== CTA ===================== -->
 <app-asili-cta-band [title]="ctaTitle" [kicker]="ctaKicker">
   <ng-container cta>
     <a class="btn btn-teal" routerLink="/offer">

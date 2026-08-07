@@ -13,9 +13,8 @@ export interface AuthUser {
 }
 
 /**
- * Session d'authentification retournee par le backend.
- * Le refresh token n'est plus inclus dans le body JSON — il est emis
- * dans un cookie HttpOnly securise, gere automatiquement par le navigateur.
+ * Le refresh token n'est pas inclus dans le body JSON — il est emis dans un
+ * cookie HttpOnly securise, gere automatiquement par le navigateur.
  */
 export interface AuthSession {
   accessToken: string;
@@ -49,7 +48,6 @@ export interface RegisterUserPayload {
 export interface InviteWarning {
   /** Code identifiant la cause (INVITATION_NOT_FOUND, INVITATION_EXPIRED, ...). */
   code: string;
-  /** Message lisible pour l'utilisateur. */
   message: string;
 }
 

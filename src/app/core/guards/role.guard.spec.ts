@@ -1,38 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot } from '@angular/router';
-import { provideRouter, UrlTree } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { UrlTree } from '@angular/router';
 import { AUTH_PORT } from '../ports/auth.port';
-import { APP_CONFIG } from '../config/app-config.token';
 import { AuthStateService } from '../services/auth-state.service';
-import { environment } from '../../../environments/environment';
 import {
   buildAuthSession,
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { roleGuard } from './role.guard';
 
-/**
- * Tests unitaires du guard fonctionnel roleGuard.
- * Verifie la protection des routes par role :
- * - acces autorise si l'utilisateur possede le role requis
- * - redirection vers /contact?reason=access&app={role} si le role manque
- * - redirection vers /contact?reason=access&app={role} si l'utilisateur n'est pas connecte
- */
 describe('roleGuard', () => {
   let authState: AuthStateService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        { provide: AUTH_PORT, useValue: createAuthPortStub() },
-        { provide: APP_CONFIG, useValue: environment },
-      ],
+    setupTestBed({
+      router: true,
+      providers: [{ provide: AUTH_PORT, useValue: createAuthPortStub() }],
     });
 
     authState = TestBed.inject(AuthStateService);

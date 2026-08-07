@@ -59,18 +59,44 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
 ## Factories de test obligatoires (DRY)
 
 - **Interdit de dupliquer les objets mock/stub dans chaque fichier `.spec.ts`.**
-- Toutes les factories partagees vivent dans `src/testing/factories/`.
+- Les factories partagees vivent dans `src/testing/factories/`. Les helpers qui
+  ne construisent pas d'objet (orchestration du TestBed, isolation d'un etat
+  global) vivent a la racine de `src/testing/`.
 - Creer ou reutiliser une factory pour chaque objet mock recurrent :
   - `buildAuthUser(overrides?)` — objet `AuthUser` avec valeurs par defaut
   - `createAuthPortStub()` — stub complet du port auth
   - `createWeatherPortStub()` — stub complet du port weather
-  - `setupTestBed(overrides?)` — orchestrateur configurant le TestBed avec les providers courants (AUTH_PORT, APP_CONFIG, Router, HttpClient)
+  - `buildAppConfig(overrides?)` — `AppConfig` derive de `environment`, chaque champ surchargeable
+- Helpers de test :
+  - `setupTestBed(options?)` (`src/testing/setup-test-bed.ts`) — configure le
+    TestBed avec le socle commun a la majorite des specs : `APP_CONFIG` alimente
+    par `buildAppConfig()`, plus `provideHttpClient()` et
+    `provideHttpClientTesting()`. Options reconnues :
+    - `appConfig` — surcharges passees a `buildAppConfig` (ex. un `baseUrl`
+      dont le spec verifie l'effet) ;
+    - `http: false` — n'installe pas HttpClient, pour un spec qui fournit son
+      propre double (spy, `withInterceptors`) ;
+    - `router: true` — ajoute `provideRouter([])`.
+
+    Tout autre champ (`imports`, `providers`, `declarations`, …) est transmis tel
+    quel a `TestBed.configureTestingModule`, et la valeur de retour reste celle
+    de `configureTestingModule` — `.compileComponents()` s'enchaine donc
+    normalement. Les `providers` de l'appelant sont declares apres le socle :
+    ils le surchargent.
+
+    `setupTestBed` ne fournit **pas** `AUTH_PORT` — les specs concernes gardent
+    une reference sur leur stub pour l'interroger, et passent donc eux-memes
+    `{ provide: AUTH_PORT, useValue: createAuthPortStub() }`.
+  - `isolateAnimReady()` (`src/testing/anim-ready.ts`) — retire la classe
+    `anim-ready` de `<html>` avant et apres chaque test, `<html>` etant partage
+    par toute l'execution Karma.
 - Chaque nouveau port cree sa propre factory de stub dans `src/testing/factories/`.
 - Pattern builder avec overrides pour les cas specifiques :
   ```typescript
   // OK
   const user = buildAuthUser({ email: "test@example.com", roles: ["budget"] });
   const authStub = createAuthPortStub();
+  setupTestBed({ providers: [WeatherHttpAdapter] });
   // INTERDIT
   const authStub = { login: () => {}, register: () => {}, me: () => {} }; // copie dans chaque spec
   ```
@@ -78,12 +104,33 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
 
 ## Regles de code
 
-- JSDoc obligatoire sur :
-  - services, adapters, interceptors et tokens exportes ;
-  - fonctions exportees ou utilitaires non triviaux ;
-  - logique de transformation ou d'orchestration RxJS non evidente ;
-  - composants dont le contrat, les invariants ou le comportement SSR/i18n merite une explication.
-- Les commentaires expliquent le pourquoi, pas l'evidence.
+- **Le code se documente par lui-meme. Un commentaire est une exception qui se justifie.**
+
+  Un commentaire n'est verifie par rien : ni le compilateur, ni les tests, ni la
+  CI. Le code change, le commentaire reste, et il devient faux sans que rien ne
+  le signale. Un commentaire faux coute plus cher que pas de commentaire, parce
+  qu'on lui fait confiance.
+
+  **Critere unique — avant d'ecrire un commentaire, se demander : « quelqu'un
+  peut-il redecouvrir cette information en lisant le code ? »**
+  - **Oui** → ne pas l'ecrire. Renommer, extraire une fonction au nom explicite,
+    ou introduire un type qui porte l'intention.
+  - **Non** → l'ecrire, et citer le fait verifiable.
+
+  Ce qui ne passe donc PAS : paraphraser un nom (`/** Construit un payload. */`
+  sur `buildPayload`), redire une signature (`@param page La page`), annoncer une
+  section (`// --- Getters ---`), ou raconter l'historique (`// ancienne version`)
+  — c'est le role de `git log`.
+
+  Ce qui passe : une contrainte **externe** au depot, qu'aucune lecture du code
+  ne revele. Une version de bibliotheque qui se comporte autrement que documente,
+  une regle de cascade CSS contre-intuitive, un format impose par une API tierce,
+  un choix pris contre l'evidence apparente. Ces commentaires nomment la source
+  (`Playwright 1.59.1`, `specificite (0,1,1)`) : ils sont donc verifiables, et
+  refutables le jour ou la contrainte disparait.
+
+- Pas de JSDoc de forme. Un bloc `/** */` qui se contente de reformuler la
+  signature est du bruit ; s'il porte une contrainte externe, il est legitime.
 - Le code doit rester compatible SSR et prerender :
   - aucun acces direct a `window`, `document`, `localStorage`, `navigator` ou APIs navigateur sans garde explicite.
 - Toute UI asynchrone gere au minimum les etats `loading`, `success`, `error` et, quand pertinent, `empty`.
@@ -167,7 +214,7 @@ L'agent ne doit jamais declarer une tache "terminee" si une verification attendu
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **portfolio-2025-front** (3510 symbols, 8126 relationships, 150 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **portfolio-2025-front** (3634 symbols, 8432 relationships, 161 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
 
@@ -206,7 +253,7 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3510 symbols, 8
 | Rename / extract / split / refactor | `.claude/skills/gitnexus/gitnexus-refactoring/SKILL.md` |
 | Tools, resources, schema reference | `.claude/skills/gitnexus/gitnexus-guide/SKILL.md` |
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
-| Work in the Scripts area (58 symbols) | `.claude/skills/generated/scripts/SKILL.md` |
+| Work in the Scripts area (80 symbols) | `.claude/skills/generated/scripts/SKILL.md` |
 | Work in the Ports area (53 symbols) | `.claude/skills/generated/ports/SKILL.md` |
 | Work in the Services area (46 symbols) | `.claude/skills/generated/services/SKILL.md` |
 | Work in the Growth-audit area (36 symbols) | `.claude/skills/generated/growth-audit/SKILL.md` |
@@ -216,15 +263,15 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3510 symbols, 8
 | Work in the Auth area (16 symbols) | `.claude/skills/generated/auth/SKILL.md` |
 | Work in the Pages area (15 symbols) | `.claude/skills/generated/pages/SKILL.md` |
 | Work in the Seo area (14 symbols) | `.claude/skills/generated/seo/SKILL.md` |
-| Work in the Factories area (12 symbols) | `.claude/skills/generated/factories/SKILL.md` |
+| Work in the Factories area (14 symbols) | `.claude/skills/generated/factories/SKILL.md` |
 | Work in the Navbar area (11 symbols) | `.claude/skills/generated/navbar/SKILL.md` |
 | Work in the Deck area (11 symbols) | `.claude/skills/generated/deck/SKILL.md` |
 | Work in the Interactions area (10 symbols) | `.claude/skills/generated/interactions/SKILL.md` |
+| Work in the Sebastian area (10 symbols) | `.claude/skills/generated/sebastian/SKILL.md` |
 | Work in the Learning-tooltip area (9 symbols) | `.claude/skills/generated/learning-tooltip/SKILL.md` |
-| Work in the Sebastian area (9 symbols) | `.claude/skills/generated/sebastian/SKILL.md` |
 | Work in the Asili-background area (8 symbols) | `.claude/skills/generated/asili-background/SKILL.md` |
 | Work in the Demos area (8 symbols) | `.claude/skills/generated/demos/SKILL.md` |
-| Work in the Profile area (6 symbols) | `.claude/skills/generated/profile/SKILL.md` |
-| Work in the Sun-arc area (6 symbols) | `.claude/skills/generated/sun-arc/SKILL.md` |
+| Work in the Cluster_7 area (7 symbols) | `.claude/skills/generated/cluster-7/SKILL.md` |
+| Work in the Cluster_8 area (6 symbols) | `.claude/skills/generated/cluster-8/SKILL.md` |
 
 <!-- gitnexus:end -->

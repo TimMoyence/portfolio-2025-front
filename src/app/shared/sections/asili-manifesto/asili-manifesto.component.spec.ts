@@ -53,7 +53,6 @@ describe('AsiliManifestoComponent', () => {
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
     const steps = host.querySelectorAll<HTMLElement>('.mani-step');
-    // Deux lignes sur trois portent un step.
     expect(steps.length).toBe(2);
     expect(steps[0].textContent?.trim()).toBe('Le probleme');
   });
@@ -71,7 +70,6 @@ describe('AsiliManifestoComponent', () => {
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
     expect(host.querySelectorAll('.mani-line').length).toBe(LINES.length);
-    // Toutes les lignes restent lisibles (lit) en SSR.
     expect(host.querySelectorAll('.mani-line.lit').length).toBe(LINES.length);
   });
 
@@ -111,7 +109,6 @@ describe('AsiliManifestoComponent', () => {
       setup();
       fixture.detectChanges();
       const host = fixture.nativeElement as HTMLElement;
-      // En browser, l'observer prend le relais : plus aucune ligne lit au repos.
       expect(host.querySelectorAll('.mani-line.lit').length).toBe(0);
       expect(observe).toHaveBeenCalledTimes(LINES.length);
     });

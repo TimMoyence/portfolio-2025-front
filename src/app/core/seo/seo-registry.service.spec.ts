@@ -3,15 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { SeoRegistryService } from './seo-registry.service';
 
-/**
- * Tests du SeoRegistryService.
- *
- * Le service charge le fichier seo-metadata.json a l'initialisation.
- * Les tests verifient la resolution par cle, par chemin, la gestion
- * des locales, les fallbacks et les cas limites.
- */
 describe('SeoRegistryService', () => {
-  /** Cree le service avec la locale donnee. */
   function createService(locale: string): SeoRegistryService {
     TestBed.configureTestingModule({
       providers: [SeoRegistryService, { provide: LOCALE_ID, useValue: locale }],
@@ -100,12 +92,9 @@ describe('SeoRegistryService', () => {
       const result = await firstValueFrom(service.getSeoByKey('home'));
 
       expect(result).not.toBeNull();
-      // Les keywords viennent des defaults car la page 'home' n'en definit pas
       expect(result!.seo.keywords).toBeDefined();
       expect(result!.seo.keywords!.length).toBeGreaterThan(0);
-      // ogImage vient des defaults
       expect(result!.seo.ogImage).toBe('/assets/images/logo.webp');
-      // twitterCard vient des defaults
       expect(result!.seo.twitterCard).toBe('summary_large_image');
     });
 
@@ -193,7 +182,6 @@ describe('SeoRegistryService', () => {
       const result = await firstValueFrom(service.getSeoByKey('home'));
 
       expect(result).not.toBeNull();
-      // Fallback vers 'fr' (defaultLocale) puisque 'ja' n'existe pas
       expect(result!.seo.title).toBe('Accueil — Tim Moyence Portfolio');
     });
 
@@ -202,7 +190,6 @@ describe('SeoRegistryService', () => {
       const result = await firstValueFrom(service.getSeoByKey('home'));
 
       expect(result).not.toBeNull();
-      // fr-CA n'existe pas, mais fr (base) oui
       expect(result!.seo.title).toBe('Accueil — Tim Moyence Portfolio');
     });
   });

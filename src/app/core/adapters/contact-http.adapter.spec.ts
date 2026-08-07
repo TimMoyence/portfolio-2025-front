@@ -1,8 +1,7 @@
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { APP_CONFIG } from '../config/app-config.token';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { ContactFormState } from '../models/contact.model';
 import type { MessageResponse } from '../models/message.response';
 import { ContactHttpAdapter } from './contact-http.adapter';
@@ -12,17 +11,7 @@ describe('ContactHttpAdapter', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        ContactHttpAdapter,
-        {
-          provide: APP_CONFIG,
-          useValue: environment,
-        },
-      ],
-    });
+    setupTestBed({ providers: [ContactHttpAdapter] });
 
     adapter = TestBed.inject(ContactHttpAdapter);
     httpMock = TestBed.inject(HttpTestingController);

@@ -14,23 +14,10 @@ import {
 } from '@angular/core';
 import { WeatherLevelService } from '../../services/weather-level.service';
 
-/**
- * Tooltip pedagogique reutilisable.
- * Affiche une icone "?" qui ouvre un popover glassmorphism.
- * La premiere fois, le tooltip s'affiche brievement puis se masque.
- * Les vues sont memorisees via le WeatherLevelService.
- * Compatible SSR : le timer n'est declenche que cote navigateur.
- */
 @Component({
   selector: 'app-learning-tooltip',
   standalone: true,
   template: `
-    <!--
-      Tooltip pédagogique — re-skin Asili : déclencheur "?" glass teal +
-      popover en portail glass .gp. Restyle visuel uniquement — portail,
-      positionnement, escapeHtml, a11y (aria-label/aria-expanded/role)
-      inchangés.
-    -->
     <span class="relative inline-block">
       <button
         type="button"
@@ -46,16 +33,12 @@ import { WeatherLevelService } from '../../services/weather-level.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LearningTooltipComponent implements OnInit, OnDestroy {
-  /** Identifiant unique du tooltip pour le suivi de visibilite. */
   readonly id = input.required<string>();
 
-  /** Titre affiche dans le popover. */
   readonly title = input.required<string>();
 
-  /** Contenu explicatif affiche dans le popover. */
   readonly content = input.required<string>();
 
-  /** Etat de visibilite du popover. */
   readonly visible = signal(false);
 
   private readonly levelService = inject(WeatherLevelService);
@@ -65,7 +48,6 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
   private readonly doc = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  /** Element du panel injecte dans document.body (portail). */
   private portalEl: HTMLElement | null = null;
 
   ngOnInit(): void {
@@ -85,7 +67,6 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
     this.destroyPortal();
   }
 
-  /** Bascule la visibilite du popover au clic. */
   toggle(event: Event): void {
     event.stopPropagation();
     this.visible.update((v) => !v);
@@ -101,7 +82,6 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Cree et positionne le panel en portail sur document.body. */
   private showPortal(): void {
     if (!this.isBrowser) return;
 
@@ -112,7 +92,6 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
       this.renderer.setStyle(this.portalEl, 'z-index', '9999');
       this.renderer.setStyle(this.portalEl, 'width', '16rem');
       this.renderer.setStyle(this.portalEl, 'max-width', 'min(16rem, calc(100vw - 2rem))');
-      // Popover glass Asili .gp : rayon --r-lg, border teal subtile, blur.
       this.renderer.addClass(this.portalEl, 'rounded-[20px]');
       this.renderer.addClass(this.portalEl, 'border');
       this.renderer.addClass(this.portalEl, 'border-teal/20');
@@ -131,7 +110,6 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
     this.positionPortal();
   }
 
-  /** Cache le panel portail. */
   private hidePortal(): void {
     this.visible.set(false);
     if (this.portalEl) {
@@ -139,7 +117,6 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Supprime le portail du DOM. */
   private destroyPortal(): void {
     if (this.portalEl) {
       this.portalEl.remove();
@@ -147,7 +124,6 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Positionne le portail par rapport au bouton, clamp dans le viewport. */
   private positionPortal(): void {
     if (!this.portalEl) return;
 
@@ -175,14 +151,12 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
     this.renderer.setStyle(this.portalEl, 'top', `${top}px`);
   }
 
-  /** Echappe le HTML pour eviter les injections XSS. */
   private escapeHtml(text: string): string {
     const div = this.doc.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
-  /** Ferme le popover lors d'un clic en dehors du composant. */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (

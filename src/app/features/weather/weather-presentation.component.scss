@@ -1,19 +1,7 @@
 @use '../../styles-shared/breakpoints' as bp;
-/*
-  Landing Météo (/atelier/meteo) — résiduel page-spécifique. Le système `.lp-*`
-  commun (hero, sections, features, demo band, aperçu, CTA final) est mutualisé
-  dans le partiel `_landing-shared.scss` (@use ci-dessous) ; l'accent teal est
-  injecté via les variables `--lp-*` posées sur `:host`. Ne reste ici que le
-  résiduel : fond de repli, ciel bleu parallaxe (.lp-sky), l'aperçu 7 jours
-  (.lp-preview-row*) et la démo instrumentée (.meteo*, .dial, .compass, .solar,
-  .city-btn) portée d'asili-sections.css. Les primitives globales (.glass, .btn*)
-  et les tokens (_tokens.scss) fournissent le reste ; --teal reste intact pour
-  les strokes SVG inline du template.
-*/
 @use '../landing-shared';
 
 :host {
-  /* Accent teal du système .lp-* partagé (cf. _landing-shared.scss) */
   --lp-accent: var(--teal);
   --lp-accent-rgb: 79, 179, 162;
   --lp-kicker: var(--glow-soft);
@@ -23,11 +11,9 @@
   display: block;
   position: relative;
   color: #fff;
-  /* Fond de repli sous le ciel fixe (parité gradient maquette). */
   background: #0a1722;
 }
 
-/* ---------- CIEL FIXE + PARALLAXE (asili-landing.css : .lp-sky) ---------- */
 .lp-sky {
   position: fixed;
   inset: 0;
@@ -37,7 +23,6 @@
   will-change: transform;
 }
 
-/* Aperçu 7 jours (weather-only : internes de .lp-preview). */
 .lp-preview-rows {
   display: grid;
   gap: 8px;
@@ -70,10 +55,6 @@
   }
 }
 
-/* ============================================================
-   DÉMO MÉTÉO INSTRUMENTÉE (asili-sections.css : .meteo*)
-   Markup SVG porté verbatim ; valeurs pilotées par signaux.
-   ============================================================ */
 .meteo {
   padding: 30px;
   display: flex;
@@ -256,7 +237,6 @@
   gap: 7px;
 }
 
-/* ---------- RESPONSIVE (résiduel démo ; part .lp-* dans le partiel) ---------- */
 @media (max-width: 900px) {
   .meteo {
     max-width: 460px;

@@ -4,28 +4,12 @@ import { FormsModule } from '@angular/forms';
 import type { SebastianCategory, SebastianEntry } from '../../../core/models/sebastian.model';
 import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastian.port';
 
-/**
- * Page d'historique des consommations Sebastian.
- * Affiche la liste des entrees avec filtres par categorie et dates,
- * et permet la suppression d'entrees individuelles.
- */
 @Component({
   selector: 'app-sebastian-history',
   standalone: true,
   imports: [FormsModule, DatePipe],
   template: `
-    <!--
-      Historique App Sebastian — thème "dark lounge ambré" porté de la maquette
-      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel (barre de
-      filtres glass), .histlog/.logrow (journal : emoji, libellé, date mono,
-      suppression). Restyle 100 % visuel : filtres (onCategoryChange/
-      onFromChange/onToChange), loadEntries, removeEntry, mapping emoji par
-      drinkType/category, DatePipe, état vide et tous les data-testid
-      (category-filter, date-from, date-to, entry-item, delete-entry,
-      empty-state) conservés.
-    -->
     <div class="space-y-6">
-      <!-- Barre de filtres (glass .panel, champs dark) -->
       <div
         class="flex flex-wrap gap-3 rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
       >
@@ -58,7 +42,6 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
         />
       </div>
 
-      <!-- Liste des entrees (.histlog/.logrow) -->
       <div class="space-y-1">
         @for (entry of entries(); track entry.id) {
           <div
@@ -124,23 +107,18 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
 export class SebastianHistoryComponent {
   private readonly port: SebastianPort = inject(SEBASTIAN_PORT);
 
-  /** Liste des entrees chargees. */
   readonly entries = signal<SebastianEntry[]>([]);
 
-  /** Filtre par categorie. */
   readonly filterCategory = signal<SebastianCategory | ''>('');
 
-  /** Filtre date de debut. */
   readonly filterFrom = signal<string>('');
 
-  /** Filtre date de fin. */
   readonly filterTo = signal<string>('');
 
   constructor() {
     this.loadEntries();
   }
 
-  /** Charge les entrees depuis le port avec les filtres actifs. */
   loadEntries(): void {
     const params: {
       from?: string;
@@ -166,25 +144,21 @@ export class SebastianHistoryComponent {
       .subscribe((entries) => this.entries.set(entries));
   }
 
-  /** Met a jour le filtre de categorie et recharge. */
   onCategoryChange(value: SebastianCategory | ''): void {
     this.filterCategory.set(value);
     this.loadEntries();
   }
 
-  /** Met a jour le filtre date de debut et recharge. */
   onFromChange(value: string): void {
     this.filterFrom.set(value);
     this.loadEntries();
   }
 
-  /** Met a jour le filtre date de fin et recharge. */
   onToChange(value: string): void {
     this.filterTo.set(value);
     this.loadEntries();
   }
 
-  /** Supprime une entree et met a jour la liste locale. */
   removeEntry(id: string): void {
     this.port.deleteEntry(id).subscribe(() => {
       this.entries.update((list) => list.filter((e) => e.id !== id));

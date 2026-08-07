@@ -14,24 +14,6 @@ import {
   type AsiliProject,
 } from '../../shared/sections';
 
-/**
- * Page d'accueil Asili (page pilote du Lot 3b).
- *
- * Compose la bibliotheque de sections marketing du Lot 3a
- * (`shared/sections/*`) dans l'ordre de la maquette
- * `AsiliNewDesign/index.html` : hero → methode → piliers → Atelier (bloc
- * immersif `theme-night` avec deux lab-cards) → manifeste → grille de projets
- * (teaser) → bande CTA. Tout le texte est fourni en `$localize` (source FR
- * verbatim de la maquette, IDs `@@home*`) ; la traduction EN vit dans les XLF.
- *
- * Le fond constellation est global (Lot 0, `<app-asili-background>`) : la home
- * ne recree aucun canvas. La demo Meteo jouable inline de la maquette est
- * reportee au Lot 4 — ici l'Atelier expose seulement les deux cartes labo et
- * leurs liens (`/atelier/meteo`, `/atelier/sebastian`).
- *
- * Identite : Tim Moyence, developpeur & consultant Angular / NestJS / IA. Pas
- * de social proof ni de temoignage fictif (apps en lancement).
- */
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -50,49 +32,30 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  // --- Hero -----------------------------------------------------------------
-
-  /** Puce live mono surmontant le titre du hero. */
   protected readonly heroChip = $localize`:@@homeHeroChip:Studio digital & IA · Bordeaux`;
 
-  /** Debut du titre du hero, avant l'accent italique teal. */
   protected readonly heroTitlePre = $localize`:@@homeHeroTitlePre:Clarifier`;
 
-  /** Mot accentue (italique teal) du titre du hero. */
   protected readonly heroTitleAccent = $localize`:@@homeHeroTitleAccent:avant`;
 
-  /** Fin du titre du hero, apres l'accent. */
   protected readonly heroTitlePost = $localize`:@@homeHeroTitlePost:de construire.`;
 
-  /** Accroche du hero. */
   protected readonly heroLead = $localize`:@@homeHeroLead:Développeur & consultant spécialisé Angular, NestJS et IA. Je structure les usages avant de déployer la techno — pour des TPE, PME et solopreneurs qui veulent des leviers concrets, pas du jargon.`;
 
-  /** Libelle de l'indication de scroll. */
   protected readonly heroScrollHint = $localize`:@@homeHeroScrollHint:Défiler`;
 
-  /** Statistique 1 du hero : nombre. */
   protected readonly heroStat1Num = $localize`:@@homeHeroStat1Num:2`;
-  /** Statistique 1 du hero : libelle. */
   protected readonly heroStat1Label = $localize`:@@homeHeroStat1Label:piliers : services & formations`;
 
-  /** Statistique 2 du hero : nombre. */
   protected readonly heroStat2Num = $localize`:@@homeHeroStat2Num:∞`;
-  /** Statistique 2 du hero : libelle. */
   protected readonly heroStat2Label = $localize`:@@homeHeroStat2Label:l'Atelier, un labo vivant à essayer`;
 
-  /** CTA primaire du hero. */
   protected readonly heroCtaPrimary = $localize`:@@homeHeroCtaPrimary:Voir comment je travaille`;
-  /** CTA secondaire du hero. */
   protected readonly heroCtaSecondary = $localize`:@@homeHeroCtaSecondary:Essayer l'Atelier`;
 
-  // --- Methode --------------------------------------------------------------
-
-  /** Sur-titre de la section methode. */
   protected readonly methodKicker = $localize`:@@homeMethodKicker:La méthode`;
-  /** Introduction (lead) de la section methode. */
   protected readonly methodIntro = $localize`:@@homeMethodIntro:Le digital et l'IA sont des leviers, jamais des finalités. On commence par comprendre, on déploie ensuite — et on garde ce qui marche.`;
 
-  /** Etapes de la methode. */
   protected readonly methodSteps: readonly AsiliMethodStep[] = [
     {
       num: '01',
@@ -120,12 +83,8 @@ export class HomeComponent {
     },
   ];
 
-  // --- Piliers --------------------------------------------------------------
-
-  /** Sur-titre de la section piliers. */
   protected readonly pillarsKicker = $localize`:@@homePillarsKicker:Deux façons de travailler ensemble`;
 
-  /** Piliers : services premium puis formations premium. */
   protected readonly pillars: readonly AsiliPillar[] = [
     {
       variant: 'services',
@@ -159,34 +118,19 @@ export class HomeComponent {
     },
   ];
 
-  // --- Atelier (bloc immersif, cards) --------------------------------------
-
-  /** Sur-titre de la section Atelier. */
   protected readonly atelierKicker = $localize`:@@homeAtelierKicker:L'Atelier — le bac à sable`;
-  /** Debut du titre Atelier, avant l'accent serif. */
   protected readonly atelierTitlePre = $localize`:@@homeAtelierTitlePre:Un laboratoire vivant où vous pouvez`;
-  /** Accent serif italique du titre Atelier. */
   protected readonly atelierTitleAccent = $localize`:@@homeAtelierTitleAccent:jouer`;
-  /** Accroche de la section Atelier (la demo jouable inline arrive au Lot 4). */
   protected readonly atelierLead = $localize`:@@homeAtelierLead:Pas des produits à vendre : des preuves jouables. Je teste des idées en vrai, et vous les manipulez directement — sans inscription.`;
 
-  /** Carte labo Meteo : titre. */
   protected readonly atelierMeteoTitle = $localize`:@@homeAtelierMeteoTitle:Météo`;
-  /** Carte labo Meteo : description. */
   protected readonly atelierMeteoDesc = $localize`:@@homeAtelierMeteoDesc:Données réalistes, parallaxe, mode immersif ciel. La preuve d'une interface vivante et précise.`;
-  /** Carte labo Meteo : lien. */
   protected readonly atelierMeteoLink = $localize`:@@homeAtelierMeteoLink:Essayer l'app`;
 
-  /** Carte labo Sebastian : titre. */
   protected readonly atelierSebTitle = $localize`:@@homeAtelierSebTitle:Sebastian`;
-  /** Carte labo Sebastian : description. */
   protected readonly atelierSebDesc = $localize`:@@homeAtelierSebDesc:Suivi de consommation : jauge de santé, calcul d'alcoolémie, heatmap, et un bot Telegram. Le dark lounge ambré.`;
-  /** Carte labo Sebastian : lien. */
   protected readonly atelierSebLink = $localize`:@@homeAtelierSebLink:Accéder à Sebastian`;
 
-  // --- Manifeste ------------------------------------------------------------
-
-  /** Lignes du manifeste (scrollytelling). */
   protected readonly manifestoLines: readonly AsiliManifestoLine[] = [
     {
       step: $localize`:@@homeManifestoStep1:Le problème`,
@@ -208,11 +152,7 @@ export class HomeComponent {
     },
   ];
 
-  // --- Projets (teaser) -----------------------------------------------------
-
-  /** Sur-titre de la grille de projets. */
   protected readonly projectsKicker = $localize`:@@homeProjectsKicker:Preuve de savoir-faire`;
-  /** Lien d'entete vers la page projets. */
   protected readonly projectsHeadLink = $localize`:@@homeProjectsHeadLink:Voir tous les projets`;
 
   /**
@@ -258,16 +198,9 @@ export class HomeComponent {
     },
   ];
 
-  // --- Bande CTA ------------------------------------------------------------
-
-  /** Sur-titre de la bande CTA. */
   protected readonly ctaKicker = $localize`:@@homeCtaKicker:Parlons de votre situation`;
-  /** Titre de la bande CTA. */
   protected readonly ctaTitle = $localize`:@@homeCtaTitle:Et si on clarifiait, ensemble, avant de construire ?`;
-  /** Accroche de la bande CTA. */
   protected readonly ctaLead = $localize`:@@homeCtaLead:Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.`;
-  /** CTA primaire de la bande. */
   protected readonly ctaPrimary = $localize`:@@homeCtaPrimary:Démarrer la conversation`;
-  /** CTA secondaire de la bande. */
   protected readonly ctaSecondary = $localize`:@@homeCtaSecondary:Explorer l'Atelier`;
 }

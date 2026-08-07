@@ -7,13 +7,6 @@ import { createLeadMagnetPortStub } from '../../../../../testing/factories/lead-
 import { ToolkitFormComponent } from '../../../../shared/components/toolkit-form/toolkit-form.component';
 import { ToolkitAutoComponent } from './toolkit-auto.component';
 
-/**
- * Couvre les invariants editoriaux et SEO de la page toolkit de la
- * formation "Automatiser avec l'IA" : presence du H1, de la FAQ, du
- * formulaire de capture et du slug de formation transmis au composant
- * partage `ToolkitFormComponent` (critique pour l'attribution back-end
- * via `lead-magnets`).
- */
 describe('ToolkitAutoComponent', () => {
   let component: ToolkitAutoComponent;
   let fixture: ComponentFixture<ToolkitAutoComponent>;
@@ -44,10 +37,6 @@ describe('ToolkitAutoComponent', () => {
   });
 
   it('devrait rendre le composant toolkit-form avec le slug correct', () => {
-    // Le slug est critique : il sert de cle metier pour le mailer
-    // (template PDF, sequence drip, attribution de la conversion). Il transite
-    // par une liaison de propriete (`@Input`), non reflechie en attribut DOM :
-    // on lit donc l'instance du composant enfant, pas `getAttribute`.
     const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
     expect(form).not.toBeNull();
     expect(form.componentInstance.formationSlug).toBe('automatiser-avec-ia');

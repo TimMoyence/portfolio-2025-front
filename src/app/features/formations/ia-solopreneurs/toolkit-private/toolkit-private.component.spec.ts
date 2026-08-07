@@ -10,21 +10,12 @@ import {
 } from '../../../../../testing/factories/lead-magnet.factory';
 import { ToolkitPrivateComponent } from './toolkit-private.component';
 
-/** Options de configuration d'un cas de test. */
 interface SetupOptions {
-  /** Token present dans la route (`null` = absent). */
   token?: string | null;
-  /** Comportement du port : succes, erreur, ou jamais resolu (loading). */
   behaviour?: 'success' | 'error' | 'pending';
-  /** Plateforme simulee pour le guard SSR. */
   platform?: 'browser' | 'server';
 }
 
-/**
- * Configure le TestBed et instancie le composant. La logique vit dans le
- * constructeur : on construit donc le composant APRES avoir fixe le token et le
- * comportement du port.
- */
 function setup(opts: SetupOptions = {}): {
   fixture: ComponentFixture<ToolkitPrivateComponent>;
   component: ToolkitPrivateComponent;
@@ -63,7 +54,6 @@ function setup(opts: SetupOptions = {}): {
   return { fixture, component: fixture.componentInstance, port };
 }
 
-/** Remplace `navigator.clipboard` par un spy controlable (robuste headless). */
 function stubClipboard(writeText: jasmine.Spy): void {
   Object.defineProperty(navigator, 'clipboard', {
     value: { writeText },
@@ -72,7 +62,6 @@ function stubClipboard(writeText: jasmine.Spy): void {
 }
 
 describe('ToolkitPrivateComponent', () => {
-  // `appReveal`/animations posent `anim-ready` sur <html> (singleton partage).
   afterEach(() => {
     document.documentElement.classList.remove('anim-ready');
   });
@@ -114,7 +103,6 @@ describe('ToolkitPrivateComponent', () => {
     expect(headings.length).toBe(1);
     expect(headings[0]?.textContent).toContain('Accès');
     expect(headings[0]?.querySelector('em')?.textContent).toContain('débloqué');
-    // Sections personnalisees reellement rendues depuis les donnees du token.
     expect(compiled.querySelector('.tkp-table')).not.toBeNull();
     expect(compiled.textContent).toContain('Email de relance');
   });
@@ -132,7 +120,6 @@ describe('ToolkitPrivateComponent', () => {
     expect(component.copyErrorText()).toBeNull();
     expect(component['copyButtonLabel']('mon-prompt')).toBe(component['copiedLabel']);
 
-    // Le feedback est temporaire : il disparait apres le delai.
     tick(2000);
     expect(component.copiedText()).toBeNull();
   }));

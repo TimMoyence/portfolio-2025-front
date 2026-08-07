@@ -22,7 +22,6 @@ describe('animateValue', () => {
   let originalRaf: typeof globalThis.requestAnimationFrame;
   let originalCaf: typeof globalThis.cancelAnimationFrame;
 
-  /** Execute la prochaine frame planifiee avec le timestamp fourni. */
   function runFrame(timestamp: number): void {
     const entry = queue.shift();
     if (!entry) {
@@ -87,7 +86,7 @@ describe('animateValue', () => {
     expect(frames[1]).toBeCloseTo(87.5, 5); // 100 * (1 - (1 - 0.5)^3)
     expect(frames[frames.length - 1]).toBe(100);
     expect(onComplete).toHaveBeenCalledTimes(1);
-    expect(queue.length).toBe(0); // plus aucune frame planifiee apres completion
+    expect(queue.length).toBe(0);
   });
 
   it('devrait transmettre la valeur brute non arrondie a onFrame', () => {
@@ -170,7 +169,7 @@ describe('animateValue', () => {
 
       expect(onFrame).toHaveBeenCalledOnceWith(100);
       expect(onComplete).toHaveBeenCalledTimes(1);
-      expect(queue.length).toBe(0); // aucune frame planifiee
+      expect(queue.length).toBe(0);
     });
 
     it('ne devrait jamais transmettre NaN a onFrame pour durationMs === 0', () => {
@@ -226,12 +225,12 @@ describe('animateValue', () => {
         onComplete,
       });
 
-      runFrame(1000); // premiere frame executee
+      runFrame(1000);
       const callsBeforeCancel = onFrame.calls.count();
       handle.cancel();
 
-      expect(queue.length).toBe(0); // frame suivante annulee
-      expect(onFrame.calls.count()).toBe(callsBeforeCancel); // aucune frame de plus
+      expect(queue.length).toBe(0);
+      expect(onFrame.calls.count()).toBe(callsBeforeCancel);
       expect(onComplete).not.toHaveBeenCalled();
     });
 
@@ -250,7 +249,7 @@ describe('animateValue', () => {
       runFrame(1100); // complet
 
       expect(() => handle.cancel()).not.toThrow();
-      expect(onComplete).toHaveBeenCalledTimes(1); // pas d'appel supplementaire
+      expect(onComplete).toHaveBeenCalledTimes(1);
     });
 
     it('devrait empecher tout onFrame quand appele avant la 1re frame', () => {

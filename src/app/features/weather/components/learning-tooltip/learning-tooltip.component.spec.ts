@@ -69,13 +69,10 @@ describe('LearningTooltipComponent', () => {
   it('devrait marquer le tooltip comme vu au premier clic', () => {
     fixture.detectChanges();
 
-    // Le tooltip s'auto-affiche, on simule un clic avant le timeout
     spyOn(levelService, 'markTooltipSeen').and.callThrough();
 
     component.toggle(new Event('click'));
 
-    // markTooltipSeen a ete appele via ngOnInit (timer) OU via toggle
-    // Ici on verifie que le service a bien ete notifie
     expect(levelService.isTooltipSeen('test-tip')).toBeTrue();
   });
 
@@ -86,7 +83,6 @@ describe('LearningTooltipComponent', () => {
     component.toggle(new Event('click'));
     expect(component.visible()).toBeTrue();
 
-    // Simule un clic en dehors du composant
     component.onDocumentClick(new MouseEvent('click'));
     expect(component.visible()).toBeFalse();
   });

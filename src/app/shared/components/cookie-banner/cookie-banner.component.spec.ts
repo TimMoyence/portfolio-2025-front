@@ -5,11 +5,6 @@ import { CookieConsentService } from '../../../core/services/cookie-consent.serv
 import { CookieBannerComponent } from './cookie-banner.component';
 import { createCookieConsentServiceStub } from '../../../../testing/factories/cookie-consent.factory';
 
-/**
- * Tests unitaires du CookieBannerComponent.
- * Verifie la logique de visibilite, les actions d'acceptation,
- * et le nettoyage de la souscription a la destruction.
- */
 describe('CookieBannerComponent', () => {
   const consentServiceStub = createCookieConsentServiceStub();
 

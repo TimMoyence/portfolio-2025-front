@@ -16,7 +16,6 @@ export class GeolocationService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly weatherPort = inject(WEATHER_PORT);
 
-  /** Demande la position du navigateur et retourne un CityResult. */
   locate(): Observable<CityResult> {
     if (!this.isBrowser || !navigator.geolocation) {
       return new Observable((subscriber) =>
@@ -52,10 +51,6 @@ export class GeolocationService {
     );
   }
 
-  /**
-   * Enrichit le nom de la ville via reverse geocoding.
-   * Delegue au WeatherPort (adapter core). Retourne le nom ou `null`.
-   */
   reverseGeocode(lat: number, lon: number): Observable<string | null> {
     return this.weatherPort.reverseGeocode(lat, lon);
   }

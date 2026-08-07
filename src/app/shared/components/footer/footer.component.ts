@@ -16,37 +16,14 @@ import { SvgIconComponent } from '../svg-icon.component';
 export class FooterComponent {
   readonly contactMethods = CONTACT_METHODS;
 
-  /**
-   * Derniere date de mise a jour du site, rendue en `<time datetime>` dans
-   * le footer (P2.10 — signal de fraicheur pour ranking IA). Alimente aussi
-   * le `dateModified` JSON-LD serveur via `enrichJsonLdBlock`.
-   */
   readonly siteLastUpdated = '2026-04-17';
 
-  /**
-   * Baseline de marque affichee dans la colonne marque du footer Asili.
-   * Explicite l'origine du nom "Asili" (la racine, l'essentiel).
-   */
   readonly brandBaseline = $localize`:footer.brand.baseline|Footer brand baseline@@footerBrandBaseline:« Asili » — la racine, l'essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.`;
 
-  /**
-   * Libelle de la chip de fraicheur (P2.10) precedant le `<time datetime>`.
-   * Ex. rendu : « Mis à jour le 17 avril 2026 ».
-   */
   readonly freshLabel = $localize`:footer.fresh.label|Footer freshness chip label@@footerFreshLabel:Mis à jour le`;
 
-  /**
-   * Ligne de copyright affichee en bas du footer Asili.
-   */
   readonly copyright = $localize`:footer.copyright.asili|Footer copyright line@@footerCopyrightAsili:© 2026 Asili Design · Bordeaux`;
 
-  /**
-   * P2.12 : maillage interne enrichi pour topical authority, structure en
-   * 4 colonnes facon maquette Asili (marque + Travailler + L'Atelier + En
-   * savoir plus). La colonne marque est rendue a part (logo + `brandBaseline`).
-   * Les liens couvrent tous les piliers metiers : Présentation, Projets,
-   * Services, Formations, Growth Audit, Contact.
-   */
   readonly navColumns: FooterColumn[] = [
     {
       heading: $localize`:footer.column.work|Footer column heading@@footerColumnWork:Travailler`,
@@ -124,11 +101,6 @@ export class FooterComponent {
       href: 'https://www.facebook.com/tim.moyence/',
       icon: 'network/facebook',
     },
-    // {
-    //   label: $localize`:footer.social.instagram|Footer social link@@footerSocialInstagram:Instagram`,
-    //   href: "https://www.instagram.com/tim-moyence",
-    //   icon: "instagram",
-    // },
     {
       label: $localize`:footer.social.linkedin|Footer social link@@footerSocialLinkedin:LinkedIn`,
       href: 'https://www.linkedin.com/in/tim-moyence',

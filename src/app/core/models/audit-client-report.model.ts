@@ -1,11 +1,6 @@
 /**
- * Synthèse stratégique (rapport client) destinée à l'affichage public.
- *
  * Miroir du type backend `ClientReportSynthesis`
  * (cf. `portfolio-2025-back/src/modules/audit-requests/domain/AuditReportTiers.ts`).
- *
- * Orientée décideur non technique : impact business, matrice Google/IA,
- * scorecard des piliers, quick wins et CTA.
  */
 export interface ClientReport {
   readonly executiveSummary: string;

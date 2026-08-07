@@ -12,11 +12,6 @@ import type { SebastianBacResult } from '../../../core/models/sebastian.model';
 
 Chart.register(...registerables);
 
-/**
- * Courbe du taux d'alcoolemie (BAC) au cours de la journee.
- * Affiche une ligne de BAC avec une ligne pointillee rouge a 0.5 g/L (limite legale).
- * SSR-safe : le Chart.js est initialise uniquement via afterNextRender().
- */
 @Component({
   selector: 'app-sebastian-bac-curve',
   standalone: true,
@@ -24,7 +19,6 @@ Chart.register(...registerables);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SebastianBacCurveComponent implements OnDestroy {
-  /** Donnees BAC a afficher. */
   readonly data = input.required<SebastianBacResult>();
 
   private readonly canvasRef = viewChild<ElementRef<HTMLCanvasElement>>('chartCanvas');
@@ -41,7 +35,6 @@ export class SebastianBacCurveComponent implements OnDestroy {
     this.chartInstance = null;
   }
 
-  /** Construit le graphique Chart.js avec la courbe BAC et la limite legale. */
   private buildChart(): void {
     const canvas = this.canvasRef()?.nativeElement;
     if (!canvas) return;
@@ -85,9 +78,6 @@ export class SebastianBacCurveComponent implements OnDestroy {
         maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         plugins: {
-          // Thème dark lounge ambré (maquette asili-app.css) : libellés/ticks/grid
-          // en rgba(255,255,255,…) au lieu du crème. Couleurs des datasets (BAC
-          // rouge danger sémantique + limite légale) inchangées — décision 6.
           legend: {
             labels: {
               color: 'rgba(255, 255, 255, 0.8)',

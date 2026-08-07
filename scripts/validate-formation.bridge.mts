@@ -1,12 +1,8 @@
 /**
- * Bridge tsx minimal : stub Angular `$localize` pour pouvoir importer
- * la registry des formations hors contexte Angular, puis serialise
- * chaque config en JSON.
- *
- * Les tag-templates `$localize` retournent simplement la valeur FR
- * reconstituee. On perd la traduction EN mais ce n'est pas grave — le
- * validateur AEO teste uniquement les invariants structurels (mots FR/EN
- * mesures separement dans `metadata.description`, meme $localize-stub).
+ * Stub d'Angular `$localize` : sans lui, importer la registry des formations
+ * hors contexte Angular echoue. Les tag-templates retournent la valeur FR
+ * reconstituee — on perd la traduction EN, sans consequence pour le validateur
+ * AEO qui ne teste que des invariants structurels.
  */
 
 // @ts-expect-error global shim injected at runtime by Angular — we simulate it.

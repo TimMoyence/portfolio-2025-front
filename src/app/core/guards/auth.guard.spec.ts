@@ -1,36 +1,24 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot } from '@angular/router';
-import { provideRouter, UrlTree } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { AUTH_PORT } from '../ports/auth.port';
-import { APP_CONFIG } from '../config/app-config.token';
 import { AuthStateService } from '../services/auth-state.service';
-import { environment } from '../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { authGuard } from './auth.guard';
 
-/**
- * Tests unitaires du guard fonctionnel authGuard.
- * Verifie la protection des routes authentifiees avec support SSR :
- * - chemin synchrone (isInitialized = true) : acces direct ou redirection
- * - chemin asynchrone (isInitialized = false) : attente via Observable
- */
 describe('authGuard', () => {
   describe('chemin synchrone (SSR — isInitialized = true)', () => {
     let authState: AuthStateService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
+      setupTestBed({
+        router: true,
         providers: [
           { provide: PLATFORM_ID, useValue: 'server' },
-          provideRouter([]),
-          provideHttpClient(),
-          provideHttpClientTesting(),
           { provide: AUTH_PORT, useValue: createAuthPortStub() },
-          { provide: APP_CONFIG, useValue: environment },
         ],
       });
 
@@ -65,14 +53,11 @@ describe('authGuard', () => {
     let authState: AuthStateService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
+      setupTestBed({
+        router: true,
         providers: [
           { provide: PLATFORM_ID, useValue: 'browser' },
-          provideRouter([]),
-          provideHttpClient(),
-          provideHttpClientTesting(),
           { provide: AUTH_PORT, useValue: createAuthPortStub() },
-          { provide: APP_CONFIG, useValue: environment },
         ],
       });
 
@@ -104,8 +89,6 @@ describe('authGuard', () => {
 
       expect(result).toBeInstanceOf(Observable);
 
-      // Simuler manuellement l'initialisation via le signal interne
-      // En forçant isInitialized via la propriete privee pour le test
       (
         authState as unknown as {
           _isInitialized: { set: (v: boolean) => void };
@@ -126,7 +109,6 @@ describe('authGuard', () => {
 
       expect(result).toBeInstanceOf(Observable);
 
-      // Simuler l'initialisation sans login
       (
         authState as unknown as {
           _isInitialized: { set: (v: boolean) => void };

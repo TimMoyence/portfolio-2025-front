@@ -43,7 +43,6 @@ describe('SebastianReportsComponent', () => {
   });
 
   it('devrait afficher le selecteur Semaine comme actif par defaut', () => {
-    // Restyle Lot 5 : pill active = bg-gold (dark lounge ambré).
     const activeButton: HTMLButtonElement | null = fixture.nativeElement.querySelector(
       "[data-testid='period-button'].bg-gold",
     );
@@ -106,8 +105,8 @@ describe('SebastianReportsComponent', () => {
 
   it('devrait afficher les totaux du rapport', () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('4'); // total alcohol
-    expect(content).toContain('14'); // total coffee
+    expect(content).toContain('4');
+    expect(content).toContain('14');
   });
 
   it('devrait afficher la comparaison avec la periode precedente', () => {
@@ -133,8 +132,6 @@ describe('SebastianReportsComponent', () => {
   });
 
   it('devrait utiliser le glass Asili dark lounge ambré', () => {
-    // Restyle Lot 5 : cartes au glass .panel — bg-white/[0.04] + bordure
-    // ambrée rgba(230,170,70,0.14) + rayon 20px.
     const cards: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(
       '.bg-white\\/\\[0\\.04\\]',
     );

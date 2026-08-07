@@ -1,25 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Setup Budget Dev — Portfolio 2025
- *
- * Script d'onboarding pour le developpement du budget partage.
- * Configure tout l'environnement en une seule commande :
- * 1. Rebase la branche Commonbudget sur origin/master
- * 2. Clone et configure le backend
- * 3. Installe PostgreSQL, Redis, deps, migrations
- * 4. Lance les deux serveurs
- * 5. Analyse la branche et propose les taches d'integration
- *
- * Usage :
- *   node portfolio-2025-front/scripts/setup-budget-dev.mjs [options]
- *
- * Options :
- *   --dry-run       Affiche sans executer
- *   --skip-servers  Ne pas lancer les serveurs
- *   --help          Affiche cette aide
- */
-
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,10 +22,6 @@ const LOCAL_DB_ROLE = 'portfolio_dev';
 const LOCAL_DB_PASSWORD = 'portfolio_dev';
 const LOCAL_DB_NAME = 'portfolio_2025_dev';
 
-// ---------------------------------------------------------------------------
-// CLI
-// ---------------------------------------------------------------------------
-
 function parseOptions(args) {
   const opts = { dryRun: false, skipServers: false };
   for (const arg of args) {
@@ -61,10 +37,6 @@ function parseOptions(args) {
   }
   return opts;
 }
-
-// ---------------------------------------------------------------------------
-// Shell helpers
-// ---------------------------------------------------------------------------
 
 function run(command, args, options = {}) {
   const { cwd = PARENT_DIR, dryRun = false, env = process.env, captureOutput = false, description, allowFailure = false } = options;
@@ -85,10 +57,6 @@ function prependToPath(env, dir) {
   const entries = (env.PATH ?? '').split(':').filter(Boolean);
   if (!entries.includes(dir)) env.PATH = [dir, ...entries].join(':');
 }
-
-// ---------------------------------------------------------------------------
-// Homebrew + system deps
-// ---------------------------------------------------------------------------
 
 function applyBrewEnv(env, opts) {
   const out = run('brew', ['shellenv'], { captureOutput: true, dryRun: opts.dryRun, env, description: 'Chargement Homebrew' }).stdout;
@@ -129,10 +97,6 @@ function ensurePnpm(opts, env) {
   run('npm', ['install', '-g', `pnpm@${PNPM_VERSION}`], { dryRun: opts.dryRun, env, description: `Installation pnpm ${PNPM_VERSION}` });
 }
 
-// ---------------------------------------------------------------------------
-// PostgreSQL + Redis
-// ---------------------------------------------------------------------------
-
 function ensurePostgres(opts, env) {
   ensureBrewFormula(POSTGRES_FORMULA, opts, env);
   ensureFormulaBin(POSTGRES_FORMULA, opts, env);
@@ -159,17 +123,12 @@ function ensureRedis(opts, env) {
   run('brew', ['services', 'start', REDIS_FORMULA], { dryRun: opts.dryRun, env, description: 'Demarrage Redis' });
 }
 
-// ---------------------------------------------------------------------------
-// Git operations
-// ---------------------------------------------------------------------------
-
 function rebaseFrontendBranch(opts, env) {
   console.log('\n--- REBASE FRONTEND ---');
   run('git', ['fetch', 'origin'], { cwd: FRONT_DIR, dryRun: opts.dryRun, env, description: 'Fetch origin (frontend)' });
   const currentBranch = run('git', ['branch', '--show-current'], { cwd: FRONT_DIR, captureOutput: true, dryRun: opts.dryRun, env, description: 'Branche courante' }).stdout.trim();
   if (currentBranch !== 'Commonbudget') {
     run('git', ['checkout', 'Commonbudget'], { cwd: FRONT_DIR, dryRun: opts.dryRun, env, description: 'Checkout Commonbudget', allowFailure: true });
-    // If the branch does not exist locally, create it from origin
     if (!opts.dryRun) {
       const check = run('git', ['branch', '--show-current'], { cwd: FRONT_DIR, captureOutput: true, env, description: 'Verify checkout' }).stdout.trim();
       if (check !== 'Commonbudget') {
@@ -178,7 +137,6 @@ function rebaseFrontendBranch(opts, env) {
     }
   }
 
-  // Sauvegarder le travail local avant rebase (commit + push)
   const status = run('git', ['status', '--porcelain'], { cwd: FRONT_DIR, captureOutput: true, dryRun: opts.dryRun, env, description: 'Verification changements locaux' }).stdout.trim();
   if (status.length > 0) {
     console.log('  Changements locaux detectes — sauvegarde avant rebase...');
@@ -204,10 +162,6 @@ function setupBackendBranch(opts, env) {
   run('git', ['checkout', '-b', 'Commonbudget'], { cwd: BACK_DIR, dryRun: opts.dryRun, env, description: 'Creer branche Commonbudget backend', allowFailure: true });
   run('git', ['push', '-u', 'origin', 'Commonbudget'], { cwd: BACK_DIR, dryRun: opts.dryRun, env, description: 'Push branche Commonbudget vers origin', allowFailure: true });
 }
-
-// ---------------------------------------------------------------------------
-// Backend setup
-// ---------------------------------------------------------------------------
 
 function parseEnvFile(filePath) {
   if (!existsSync(filePath)) return {};
@@ -264,10 +218,6 @@ function runMigrations(opts, env) {
   run('pnpm', ['run', 'migration:run'], { cwd: BACK_DIR, dryRun: opts.dryRun, env: migrationEnv, description: 'Migrations', allowFailure: true });
 }
 
-// ---------------------------------------------------------------------------
-// Servers + health
-// ---------------------------------------------------------------------------
-
 function launchServers(opts, env) {
   if (opts.dryRun || opts.skipServers) { console.log('\n> [skip] Lancement serveurs'); return { back: null, front: null }; }
   console.log('\n--- LANCEMENT SERVEURS ---');
@@ -284,17 +234,12 @@ function launchServers(opts, env) {
 function healthCheck(opts, env) {
   if (opts.dryRun || opts.skipServers) return;
   console.log('\n--- HEALTH CHECK ---');
-  // Wait for servers to start
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 8000);
   const apiCheck = run('curl', ['-sf', '-o', '/dev/null', '-w', '%{http_code}', 'http://localhost:3000/api/v1/portfolio25/docs'], { captureOutput: true, allowFailure: true, dryRun: opts.dryRun, env, description: 'Health check API' });
   console.log(`  API: ${apiCheck.stdout.trim() === '200' ? 'OK' : 'En attente (normal au premier demarrage)'}`);
   const frontCheck = run('curl', ['-sf', '-o', '/dev/null', '-w', '%{http_code}', 'http://localhost:4200'], { captureOutput: true, allowFailure: true, dryRun: opts.dryRun, env, description: 'Health check Frontend' });
   console.log(`  Frontend: ${frontCheck.stdout.trim() === '200' ? 'OK' : 'En attente (normal au premier demarrage)'}`);
 }
-
-// ---------------------------------------------------------------------------
-// Branch analysis + tasks
-// ---------------------------------------------------------------------------
 
 function analyzeBranch(opts, env) {
   console.log('\n' + '='.repeat(60));
@@ -345,10 +290,6 @@ Swagger : http://localhost:3000/docs (tous les endpoints documentes)
 `);
 }
 
-// ---------------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------------
-
 function main() {
   const opts = parseOptions(process.argv.slice(2));
   const env = { ...process.env };
@@ -359,37 +300,29 @@ function main() {
   console.log('  Budget Dev Setup — Common Budget T&M');
   console.log('='.repeat(60));
 
-  // 1. Git operations
   rebaseFrontendBranch(opts, env);
 
-  // 2. System deps
   ensureHomebrew(opts, env);
   ensureNode(opts, env);
   ensurePnpm(opts, env);
 
-  // 3. Backend
   console.log('\n--- BACKEND ---');
   cloneBackend(opts, env);
   setupBackendBranch(opts, env);
 
-  // 4. Database + Redis
   ensurePostgres(opts, env);
   ensureLocalDatabase(opts, env);
   ensureRedis(opts, env);
 
-  // 5. Backend config + deps + migrations
   setupBackendEnv(opts);
   installBackendDeps(opts, env);
   runMigrations(opts, env);
 
-  // 6. Frontend deps
   installFrontendDeps(opts, env);
 
-  // 7. Launch servers
   launchServers(opts, env);
   healthCheck(opts, env);
 
-  // 8. Analysis
   analyzeBranch(opts, env);
   printIntegrationTasks();
 }

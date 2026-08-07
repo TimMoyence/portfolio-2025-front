@@ -5,9 +5,6 @@ import type { SebastianTrendData } from '../../../core/models/sebastian.model';
 import { buildSebastianTrendData } from '../../../../testing/factories/sebastian.factory';
 import { SebastianTrendChartComponent } from './sebastian-trend-chart.component';
 
-/**
- * Hote de test pour fournir l'input requis via un signal.
- */
 @Component({
   standalone: true,
   imports: [SebastianTrendChartComponent],

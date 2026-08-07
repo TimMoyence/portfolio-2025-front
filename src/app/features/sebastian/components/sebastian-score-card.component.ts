@@ -1,27 +1,14 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { SebastianHealthScore } from '../../../core/models/sebastian.model';
 
-/**
- * Carte affichant le score de sante Sebastian.
- * Decompose le score en adherence aux objectifs, bonus de tendance et bonus de streak.
- */
 @Component({
   selector: 'app-sebastian-score-card',
   standalone: true,
   template: `
-    <!--
-      Carte score santé — thème "dark lounge ambré" porté de la maquette
-      AsiliNewDesign/sebastian-app.html + asili-app.css : .panel/.health-big
-      (valeur font-display, pill phase ambrée) + .health-list/.hrow/.htrk
-      (barres breakdown gold via gradient gold→gold-soft). Restyle 100 %
-      visuel : score().score/phase/breakdown.*/message, data-testid (score-card,
-      trend-bonus, streak-bonus) et template inline conservés (décision 6).
-    -->
     <div
       data-testid="score-card"
       class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6"
     >
-      <!-- Score et phase -->
       <div class="mb-4 flex items-center justify-between">
         <span class="font-display text-5xl leading-none text-white">
           {{ score().score }}
@@ -33,9 +20,7 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
         </span>
       </div>
 
-      <!-- Decomposition du score (.health-list/.hrow/.htrk gold) -->
       <div class="mb-4 space-y-2">
-        <!-- Adherence aux objectifs -->
         <div>
           <div class="mb-1 flex justify-between text-sm text-white/70">
             <span>Adherence objectifs</span>
@@ -49,7 +34,6 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
           </div>
         </div>
 
-        <!-- Bonus tendance (optionnel) -->
         @if (score().breakdown.trendBonus) {
           <div data-testid="trend-bonus" class="flex justify-between text-sm text-white/70">
             <span>Bonus tendance</span>
@@ -57,7 +41,6 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
           </div>
         }
 
-        <!-- Bonus streak (optionnel) -->
         @if (score().breakdown.streakBonus) {
           <div data-testid="streak-bonus" class="flex justify-between text-sm text-white/70">
             <span>Bonus streak</span>
@@ -66,7 +49,6 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
         }
       </div>
 
-      <!-- Message -->
       <p class="text-sm text-white/55">
         {{ score().message }}
       </p>
@@ -75,6 +57,5 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SebastianScoreCardComponent {
-  /** Score de sante a afficher. */
   readonly score = input.required<SebastianHealthScore>();
 }

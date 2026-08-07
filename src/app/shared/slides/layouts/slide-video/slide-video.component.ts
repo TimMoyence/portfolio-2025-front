@@ -65,7 +65,6 @@ export class SlideVideoComponent {
     if (value === '') {
       return false;
     }
-    // Ressource locale relative (sert depuis l'origine de l'app).
     if (value.startsWith('/') && !value.startsWith('//')) {
       return true;
     }

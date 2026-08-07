@@ -2,11 +2,6 @@ import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AsiliBackgroundComponent } from './asili-background.component';
 
-/**
- * Stub de `MediaQueryList` capable de rejouer un evenement `change`, pour
- * simuler un utilisateur qui bascule « reduire les animations » pendant la
- * session. Expose l'ecouteur enregistre et le spy de desabonnement.
- */
 const createMotionQueryStub = (
   initialMatches: boolean,
 ): {

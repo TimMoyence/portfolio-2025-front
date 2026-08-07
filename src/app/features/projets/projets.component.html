@@ -1,13 +1,3 @@
-<!--
-  Projets Asili — composition des sections du Lot 3a dans l'ordre de la maquette
-  AsiliNewDesign/projets.html : hero (Réalisations) → grille des onze
-  réalisations (asili-projects-grid) → bandeau méthode « le fil rouge »
-  (asili-method) → bande CTA (asili-cta-band). Le fond constellation est global
-  (app-asili-background) : aucune section ne recrée de canvas. Les réalisations
-  sont authored par l'utilisateur (maquette) — rien n'est inventé ni retiré.
--->
-
-<!-- ===================== HERO ===================== -->
 <app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
   <ng-container title>
     <ng-container i18n="@@projetsHeroTitle"
@@ -16,10 +6,8 @@
   </ng-container>
 </app-asili-hero>
 
-<!-- ===================== GRILLE DES RÉALISATIONS ===================== -->
 <app-asili-projects-grid [projects]="projects" />
 
-<!-- ===================== BANDEAU MÉTHODE (le fil rouge) ===================== -->
 <app-asili-method [steps]="methodSteps" [kicker]="methodKicker">
   <h2 heading class="h-lg method-head__title" style="max-width: 20ch">
     <ng-container i18n="@@projetsMethodHeading"
@@ -28,7 +16,6 @@
   </h2>
 </app-asili-method>
 
-<!-- ===================== CTA ===================== -->
 <app-asili-cta-band [title]="ctaTitle">
   <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
   <ng-container cta>

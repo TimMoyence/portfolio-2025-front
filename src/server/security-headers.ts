@@ -22,21 +22,13 @@ const CSP_REPORT_ONLY = [
   "font-src 'self' data:",
 ].join('; ');
 
-/** Options de construction des headers de securite. */
 export interface SecurityHeadersOptions {
-  /** Indique si la requete est servie en HTTPS (active HSTS). */
   isHttps: boolean;
 }
 
 /**
- * Construit le jeu de headers de securite a poser sur les reponses SSR.
- *
- * Fonction pure : aucun effet de bord, sortie deterministe pour des options
- * donnees. Le `Strict-Transport-Security` n'est emis qu'en HTTPS pour ne pas
- * forcer le HTTPS en developpement local (http://localhost).
- *
- * @param opts Options de construction (notamment `isHttps`).
- * @returns Un dictionnaire nom de header -> valeur, pret a etre applique.
+ * Le `Strict-Transport-Security` n'est emis qu'en HTTPS pour ne pas forcer le
+ * HTTPS en developpement local (http://localhost).
  */
 export const buildSecurityHeaders = (opts: SecurityHeadersOptions): Record<string, string> => {
   const headers: Record<string, string> = {

@@ -2,11 +2,6 @@ import { Injectable, computed, signal } from '@angular/core';
 
 export type SlideDeckMode = 'scroll' | 'fullscreen';
 
-/**
- * Détient l'état réactif d'un slide deck : slides enregistrées (ordre stable),
- * slide courante, mode (scroll/fullscreen). Exposé via signaux pour
- * consommation OnPush par les composants enfants.
- */
 @Injectable({ providedIn: 'any' })
 export class SlideDeckService {
   private readonly slides = signal<string[]>([]);
@@ -16,7 +11,7 @@ export class SlideDeckService {
   readonly current = this.currentId.asReadonly();
   readonly mode = this.modeSignal.asReadonly();
   readonly total = computed(() => this.slides().length);
-  readonly currentIndex = computed(() => {
+  readonly currentIndexInAllSlides = computed(() => {
     const id = this.currentId();
     if (id === null) {
       return -1;
@@ -47,9 +42,8 @@ export class SlideDeckService {
     if (list.length === 0) {
       return;
     }
-    const idx = this.currentIndex();
+    const idx = this.currentIndexInAllSlides();
     if (idx < 0) {
-      // Pas de slide courante : démarre sur la première
       this.currentId.set(list[0]);
       return;
     }
@@ -64,7 +58,7 @@ export class SlideDeckService {
     if (list.length === 0) {
       return;
     }
-    const idx = this.currentIndex();
+    const idx = this.currentIndexInAllSlides();
     if (idx < 0) {
       this.currentId.set(list[0]);
       return;

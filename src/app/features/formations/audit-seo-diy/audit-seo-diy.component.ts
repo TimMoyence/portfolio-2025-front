@@ -10,13 +10,6 @@ import {
   SlideStatsComponent,
 } from '../../../shared/slides';
 
-/**
- * Page de la formation "Audit SEO DIY".
- *
- * Composant slide-driven : chaque slide est explicitement declaree dans
- * le template. Contenu integralement transpose depuis l'ancien
- * `audit-seo-diy.slides.data.ts` (BIG BANG migration Task 21).
- */
 @Component({
   selector: 'app-audit-seo-diy',
   standalone: true,
@@ -35,7 +28,6 @@ import {
   styleUrl: './audit-seo-diy.component.scss',
 })
 export class AuditSeoDiyComponent {
-  /** Stats slide "constat". */
   protected readonly constatStats = [
     {
       value: '68%',
@@ -54,7 +46,6 @@ export class AuditSeoDiyComponent {
     },
   ];
 
-  /** Items grid "pratique-procedure". */
   protected readonly procedureItems = [
     {
       title: $localize`:@@formations.audit-seo-diy.pratique.item0.title:Minutes 1-5 — Indexation`,
@@ -74,7 +65,6 @@ export class AuditSeoDiyComponent {
     },
   ];
 
-  /** Items grid "pratique-outils". */
   protected readonly outilsItems = [
     {
       title: $localize`:@@formations.audit-seo-diy.outils.item0.title:Google Search Console`,
@@ -98,7 +88,6 @@ export class AuditSeoDiyComponent {
     },
   ];
 
-  /** Items grid "ancrer-faq". */
   protected readonly faqItems = [
     {
       title: $localize`:@@formations.audit-seo-diy.faq.item0.title:Combien de temps avant de voir des resultats ?`,

@@ -22,7 +22,7 @@ function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: 
   return {
     restoreSession: jasmine.createSpy('restoreSession'),
     updateUser: jasmine.createSpy('updateUser'),
-    logout: jasmine.createSpy('logout'),
+    clearSession: jasmine.createSpy('clearSession'),
     user: signal(user),
     isLoggedIn: signal(true),
     hasRole: (role: string) => user.roles.includes(role),
@@ -95,7 +95,7 @@ describe('ProfileComponent', () => {
 
     component.logout();
 
-    expect(authState.logout).toHaveBeenCalled();
+    expect(authState.clearSession).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
   });
 
@@ -134,11 +134,8 @@ describe('ProfileComponent', () => {
 
     component.removeFavoriteCity(component.favoriteCities[0]);
 
-    // Rollback : la liste d'origine est restauree
     expect(component.favoriteCities).toEqual(before);
   });
-
-  /* ========================= EDIT PROFILE ========================= */
 
   describe('mode edition du profil', () => {
     it('startEditing pre-remplit les champs et active le mode edition', () => {

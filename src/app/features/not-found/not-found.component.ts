@@ -11,18 +11,6 @@ import {
 import { RouterModule } from '@angular/router';
 import { clamp } from '../../shared/utils/math.utils';
 
-/**
- * Page 404 ludique — restyle Asili.
- *
- * Portée de `AsiliNewDesign/404.html` + `asili-legal.css`
- * (`.nf-body`, `.nf-inner`, `.nf-kicker`, `.nf-code`, `.nf-cta`, `.nf-hint`).
- *
- * Le « 0 » qui suit le curseur est un bonus purement décoratif, activé
- * uniquement en environnement browser (`isPlatformBrowser`) et respectant
- * `prefers-reduced-motion` ; en SSR/prerender ou sans JS, le « 0 » reste centré
- * (dégradation gracieuse). Conserve `seoKey:'not-found'` et le catch-all `**`
- * (définis dans `app.routes.ts`, non modifiés ici).
- */
 @Component({
   selector: 'app-not-found',
   standalone: true,
@@ -160,14 +148,12 @@ export class NotFoundComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
-  /** Le « 0 » du code 404, cible de l'effet de suivi du curseur. */
   private readonly zero = viewChild<ElementRef<HTMLElement>>('zero');
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    // Respecte prefers-reduced-motion : pas d'effet si l'utilisateur le demande.
     const prefersReduced =
       typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
@@ -176,10 +162,6 @@ export class NotFoundComponent {
     this.enableCursorFollow();
   }
 
-  /**
-   * Active le suivi léger du curseur par le « 0 » (effet décoratif, browser only).
-   * S'auto-nettoie via DestroyRef.
-   */
   private enableCursorFollow(): void {
     const onMove = (event: PointerEvent): void => {
       const el = this.zero()?.nativeElement;

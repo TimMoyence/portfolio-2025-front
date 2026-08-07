@@ -8,11 +8,8 @@ const TOKEN_KEY = 'portfolio_jwt';
 const REFRESH_MARGIN_S = 30;
 
 /**
- * Service central de gestion de l'etat d'authentification.
- * Stocke le token JWT en localStorage et expose des signals reactifs.
  * Le refresh token est gere exclusivement par un cookie HttpOnly securise
  * cote backend — il n'est jamais accessible en JavaScript.
- * Utilise afterNextRender pour restaurer la session apres l'hydratation SSR.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthStateService {
@@ -31,17 +28,14 @@ export class AuthStateService {
   readonly token = this._token.asReadonly();
   readonly user = this._user.asReadonly();
   readonly isLoggedIn = computed(() => !!this._token());
-  /** Indique si la restauration de session est terminee (true immediatement cote SSR). */
   readonly isInitialized = this._isInitialized.asReadonly();
 
   constructor() {
     this.destroyRef.onDestroy(() => this.clearRefreshTimer());
 
-    // Cote serveur, pas de localStorage : on considere l'initialisation terminee
     if (!this.isBrowser) {
       this._isInitialized.set(true);
     }
-    // afterNextRender garantit l'execution cote client apres l'hydratation SSR
     afterNextRender(() => {
       this.restoreToken();
       this._isInitialized.set(true);
@@ -57,13 +51,11 @@ export class AuthStateService {
     this.scheduleRefresh(session.expiresIn);
   }
 
-  /** Logout silencieux (401 interceptor) : nettoie sans appel backend. */
-  logout(): void {
+  clearSession(): void {
     this.clearState();
   }
 
-  /** Logout complet : revoque le refresh token cote backend puis nettoie le state. */
-  logoutFull(): void {
+  logout(): void {
     if (this.authPort) {
       this.authPort.logout().subscribe({ error: () => {} });
     }
@@ -74,19 +66,17 @@ export class AuthStateService {
     return this._user()?.roles?.includes(role) ?? false;
   }
 
-  /** Met a jour l'utilisateur courant dans le state (apres un PATCH profil par ex.). */
   updateUser(user: AuthUser): void {
     this._user.set(user);
   }
 
-  /** Restaure la session depuis le token en localStorage via GET /auth/me. */
   restoreSession(): void {
     const token = this._token();
     if (!token || !this.authPort) return;
 
     this.authPort.me().subscribe({
       next: (user) => this._user.set(user),
-      error: () => this.logout(),
+      error: () => this.clearSession(),
     });
   }
 
@@ -100,7 +90,7 @@ export class AuthStateService {
     if (!this.authPort) return;
     this.authPort.refresh().subscribe({
       next: (session) => this.login(session),
-      error: () => this.logout(),
+      error: () => this.clearSession(),
     });
   }
 

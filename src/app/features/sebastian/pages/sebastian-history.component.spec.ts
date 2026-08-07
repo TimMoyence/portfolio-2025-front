@@ -56,8 +56,8 @@ describe('SebastianHistoryComponent', () => {
 
   it("devrait afficher l'icone de categorie appropriee", () => {
     const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('\u2615'); // ☕
-    expect(content).toContain('\uD83C\uDF7A'); // 🍺
+    expect(content).toContain('\u2615');
+    expect(content).toContain('\uD83C\uDF7A');
   });
 
   it('devrait afficher les notes quand presentes', () => {
@@ -100,7 +100,6 @@ describe('SebastianHistoryComponent', () => {
 
   it('devrait mettre a jour la liste apres suppression', () => {
     portStub.deleteEntry.and.returnValue(of(void 0));
-    // Re-configure getEntries pour le rechargement
     portStub.getEntries.and.returnValue(
       of([
         buildSebastianEntry({
@@ -136,7 +135,6 @@ describe('SebastianHistoryComponent', () => {
   });
 
   it('devrait utiliser le glass Asili dark lounge ambré', () => {
-    // Restyle Lot 5 : barre de filtres au glass .panel — bg-white/[0.04].
     const surface = fixture.nativeElement.querySelectorAll('.bg-white\\/\\[0\\.04\\]');
     expect(surface.length).toBeGreaterThan(0);
   });

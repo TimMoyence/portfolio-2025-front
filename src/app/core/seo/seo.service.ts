@@ -3,13 +3,11 @@ import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import type { SeoConfig } from './seo.interface';
 
-/** Map locale ID (ex: "fr", "en") → tag Open Graph (ex: "fr_FR", "en_US"). */
 const OG_LOCALE_MAP: Record<string, string> = {
   fr: 'fr_FR',
   en: 'en_US',
 };
 
-/** Compte Twitter / X associé au site, utilisé pour twitter:site et twitter:creator. */
 const TWITTER_HANDLE = '@timmoyence';
 
 @Injectable({
@@ -35,7 +33,6 @@ export class SeoService {
         content: config.keywords.join(', '),
       });
 
-    // Open Graph
     this.meta.updateTag({
       property: 'og:title',
       content: config.ogTitle || config.title,
@@ -54,12 +51,10 @@ export class SeoService {
       content: config.ogType || 'website',
     });
 
-    // og:locale et og:locale:alternate pour signaler les langues aux crawlers sociaux
     const currentLocale = this.resolveLocaleKey();
     const currentOgLocale = OG_LOCALE_MAP[currentLocale] ?? OG_LOCALE_MAP['fr'];
     this.meta.updateTag({ property: 'og:locale', content: currentOgLocale });
 
-    // Supprime les anciennes balises og:locale:alternate avant d'ajouter les nouvelles
     this.document
       .querySelectorAll('meta[property="og:locale:alternate"]')
       .forEach((node) => node.remove());
@@ -71,13 +66,11 @@ export class SeoService {
       this.document.head.appendChild(meta);
     }
 
-    // og:site_name aide les moteurs IA à identifier la marque
     this.meta.updateTag({
       property: 'og:site_name',
       content: 'Asili Design',
     });
 
-    // Twitter Card
     this.meta.updateTag({
       name: 'twitter:card',
       content: config.twitterCard || 'summary',
@@ -104,7 +97,6 @@ export class SeoService {
     }
 
     if (config.canonicalUrl) {
-      // Remove existing canonical link if it exists
       const existingCanonicalLink = this.document.querySelector('link[rel="canonical"]');
       if (existingCanonicalLink) {
         existingCanonicalLink.remove();
@@ -133,15 +125,9 @@ export class SeoService {
     this.updateJsonLd(config);
   }
 
-  /**
-   * Injecte ou met a jour les donnees structurees JSON-LD dans le head.
-   * Supprime tous les scripts JSON-LD existants avant d'en creer de nouveaux (SSR-safe).
-   * Accepte un seul bloc JSON-LD ou un tableau — chaque bloc est injecte dans son propre script.
-   */
   private updateJsonLd(config: SeoConfig): void {
     if (!this.document) return;
 
-    // Supprime tous les scripts JSON-LD existants (pas seulement le premier)
     this.document.head
       .querySelectorAll('script[type="application/ld+json"]')
       .forEach((node) => node.remove());
@@ -158,10 +144,7 @@ export class SeoService {
     }
   }
 
-  /**
-   * Extrait la cle de locale courte (fr/en) depuis le LOCALE_ID d'Angular.
-   * Angular peut fournir "fr", "fr-FR", "en", "en-US"... selon la configuration.
-   */
+  /** Angular peut fournir "fr", "fr-FR", "en", "en-US"... selon la configuration. */
   private resolveLocaleKey(): string {
     return (this.localeId ?? 'fr').toLowerCase().split('-')[0];
   }

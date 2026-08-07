@@ -16,15 +16,6 @@ import {
   SlideVideoComponent,
 } from '../../shared/slides';
 
-/**
- * Catalogue interne des layouts et interactions de la lib `shared/slides`.
- *
- * Cette page n'est pas destinee a etre indexee : elle ajoute la balise
- * `robots: noindex, nofollow` via le service `Meta` au moment de
- * l'instanciation du composant. Elle sert de reference visuelle et de
- * smoke test pour verifier qu'une instance de chaque layout / interaction
- * se rend correctement.
- */
 @Component({
   selector: 'app-slides-library',
   standalone: true,

@@ -45,7 +45,6 @@ describe('NavbarComponent', () => {
     });
 
     it('devrait mettre scrolled a true quand scrollY > 50', () => {
-      // Simule un scroll
       spyOnProperty(window, 'scrollY', 'get').and.returnValue(100);
       component.onWindowScroll();
       expect(component.scrolled).toBeTrue();
@@ -94,7 +93,6 @@ describe('NavbarComponent', () => {
       expect(component.atelierDropdown.href).toBe('/atelier');
 
       const nav = fixture.nativeElement as HTMLElement;
-      // Le label « L'Atelier » est un lien réel vers le hub (desktop).
       const hubLink = nav.querySelector('a.asili-nav__trigger-label[href="/atelier"]');
       expect(hubLink).toBeTruthy();
       expect(hubLink?.textContent).toContain("L'Atelier");

@@ -7,10 +7,6 @@ import {
   viewChild,
 } from '@angular/core';
 
-/**
- * Composant QR code stylise avec dots arrondis et couleur personnalisable.
- * SSR-safe : le rendu ne se fait que cote client via afterNextRender.
- */
 @Component({
   selector: 'app-qr-code',
   standalone: true,

@@ -6,16 +6,11 @@ import {
   resolveRedirect,
 } from './redirects';
 
-/** Route capturee lors de l'enregistrement sur l'application Express stub. */
 interface RegisteredRoute {
   paths: string[];
   handler: express.RequestHandler;
 }
 
-/**
- * Construit un stub minimal d'`express.Application` qui capture les routes
- * enregistrees au lieu de demarrer un serveur.
- */
 const stubApp = (): { app: express.Application; routes: RegisteredRoute[] } => {
   const routes: RegisteredRoute[] = [];
   const app = {
@@ -29,13 +24,11 @@ const stubApp = (): { app: express.Application; routes: RegisteredRoute[] } => {
   return { app, routes };
 };
 
-/** Redirection observee sur la reponse stub (code HTTP + entete Location). */
 interface RedirectCall {
   status: number;
   location: string;
 }
 
-/** Construit un stub d'`express.Response` qui enregistre les `res.redirect`. */
 const stubResponse = (): { res: express.Response; calls: RedirectCall[] } => {
   const calls: RedirectCall[] = [];
   const res = {
@@ -46,10 +39,6 @@ const stubResponse = (): { res: express.Response; calls: RedirectCall[] } => {
   return { res, calls };
 };
 
-/**
- * Joue le handler enregistre pour un chemin donne et retourne ce qui a ete
- * observe : redirection eventuelle et passage au middleware suivant.
- */
 const runHandler = (
   handler: express.RequestHandler,
   path: string,
@@ -86,9 +75,6 @@ describe('redirects', () => {
     });
 
     it('reproduit le matching Express : insensible a la casse et au slash final', () => {
-      // Express est configure par defaut en `case sensitive routing: false`
-      // et `strict routing: false` : ces variantes atteignaient deja les
-      // anciens handlers `app.get("/client-project")`.
       expect(resolveRedirect('/CLIENT-PROJECT')).toBe('/fr/projets');
       expect(resolveRedirect('/FR/Client-Project')).toBe('/fr/projets');
       expect(resolveRedirect('/home/')).toBe('/fr');

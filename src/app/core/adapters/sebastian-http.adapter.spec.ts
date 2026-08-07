@@ -1,7 +1,6 @@
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { APP_CONFIG } from '../config/app-config.token';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import {
   buildSebastianBadgeStatus,
   buildSebastianEntry,
@@ -19,19 +18,9 @@ describe('SebastianHttpAdapter', () => {
   const sebastianUrl = 'http://localhost:3000/api/v1/portfolio25/sebastian';
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        SebastianHttpAdapter,
-        {
-          provide: APP_CONFIG,
-          useValue: {
-            apiBaseUrl: 'http://localhost:3000/api/v1/portfolio25',
-            external: { sebastianUrl },
-          },
-        },
-      ],
+    setupTestBed({
+      providers: [SebastianHttpAdapter],
+      appConfig: { external: { sebastianUrl } },
     });
 
     adapter = TestBed.inject(SebastianHttpAdapter);

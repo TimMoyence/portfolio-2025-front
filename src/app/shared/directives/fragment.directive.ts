@@ -1,19 +1,6 @@
 import { computed, Directive, input } from '@angular/core';
 import { FragmentService } from '../services/fragment.service';
 
-/**
- * Directive de visibilite progressive pour les fragments de presentation.
- * Applique les classes CSS `.fragment-visible` ou `.fragment-hidden` selon
- * l'etat du FragmentService parent, avec une transition animee.
- *
- * Usage :
- * ```html
- * <li [appFragment]="0">Premier point</li>
- * <li [appFragment]="1">Deuxieme point</li>
- * ```
- *
- * Le composant parent doit fournir `FragmentService` dans ses providers.
- */
 @Directive({
   selector: '[appFragment]',
   standalone: true,
@@ -26,12 +13,10 @@ import { FragmentService } from '../services/fragment.service';
   },
 })
 export class FragmentDirective {
-  /** Index 0-based du fragment dans la slide. */
   readonly appFragment = input.required<number>();
 
   private readonly fragmentService: FragmentService;
 
-  /** Computed : true si ce fragment doit etre visible. */
   readonly isVisible = computed(() => this.fragmentService.visibleCount() > this.appFragment());
 
   constructor(fragmentService: FragmentService) {

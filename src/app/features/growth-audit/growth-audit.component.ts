@@ -77,7 +77,6 @@ export class GrowthAuditComponent implements OnDestroy {
   auditProgress = 0;
   auditStep = '';
   auditSummary?: AuditSummaryResponse;
-  /** Rapport client structuré produit par l'étape LLM (Phase 7+ backend). */
   clientReport: ClientReport | null = null;
   auditPhaseLabel = '';
   auditCurrentUrl = '';
@@ -185,7 +184,6 @@ export class GrowthAuditComponent implements OnDestroy {
     contactValue: '',
   };
 
-  /** Consentement RGPD explicite requis avant toute soumission (P0.4). */
   rgpdConsent = false;
 
   get contactInputType(): 'email' | 'tel' {

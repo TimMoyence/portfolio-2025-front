@@ -2,24 +2,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, PLATFORM_ID } from '@angular/core';
 import type { EnsembleData, ForecastResponse } from '../../../../core/models/weather.model';
 
-/**
- * Carte d'export des donnees meteo en CSV ou JSON.
- * Permet a l'utilisateur expert de telecharger les donnees brutes.
- * Compatible SSR : le telechargement utilise document.createElement('a')
- * protege par un guard isPlatformBrowser.
- */
 @Component({
   selector: 'app-data-export',
   standalone: true,
   template: `
-    <!--
-      Carte Expert export de données — conteneur glass Asili.
-      Re-skin AsiliNewDesign/asili-app.css : .gp/.wx-card (bg-white/5,
-      border-teal/15, rayon --r-lg 20px, backdrop-blur-xl) + en-tête kicker
-      .gp-h (font-mono uppercase) + boutons glass accent teal au survol.
-      Restyle visuel uniquement : exportCsv()/exportJson()/downloadFile() et
-      les IDs @@weatherDataExport* sont inchangés.
-    -->
     <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
       <h3
         class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
@@ -47,7 +33,6 @@ import type { EnsembleData, ForecastResponse } from '../../../../core/models/wea
         </button>
       </div>
 
-      <!-- Placeholder radar -->
       <div class="mt-4 rounded-xl border border-dashed border-teal/15 p-3 text-center">
         <p
           class="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40"
@@ -61,16 +46,13 @@ import type { EnsembleData, ForecastResponse } from '../../../../core/models/wea
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataExportComponent {
-  /** Previsions meteo standards a exporter. */
   readonly forecast = input<ForecastResponse | null>(null);
 
-  /** Donnees d'ensemble multi-modeles a exporter. */
   readonly ensemble = input<EnsembleData | null>(null);
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  /** Exporte les donnees horaires de prevision au format CSV. */
   exportCsv(): void {
     if (!this.isBrowser) return;
 
@@ -91,7 +73,6 @@ export class DataExportComponent {
     this.downloadFile(csv, 'meteo-export.csv', 'text/csv');
   }
 
-  /** Exporte les donnees brutes (previsions + ensemble) au format JSON. */
   exportJson(): void {
     if (!this.isBrowser) return;
 
@@ -104,7 +85,6 @@ export class DataExportComponent {
     this.downloadFile(json, 'meteo-export.json', 'application/json');
   }
 
-  /** Declenche le telechargement d'un fichier via un lien <a> temporaire. */
   private downloadFile(content: string, filename: string, mime: string): void {
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);

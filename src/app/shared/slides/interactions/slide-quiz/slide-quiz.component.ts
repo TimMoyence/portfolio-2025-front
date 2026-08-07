@@ -19,11 +19,6 @@ interface QuizInteraction {
   correctIndex: number;
 }
 
-/**
- * Affiche un quiz interactif charge depuis `PRESENTATION_PORT`.
- * Le `slug` identifie la presentation, `interactionId` la question
- * (matche soit le `slideId` portant l'interaction, soit l'`id` legacy).
- */
 @Component({
   selector: 'app-slide-quiz',
   standalone: true,

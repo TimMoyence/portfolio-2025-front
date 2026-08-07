@@ -12,11 +12,6 @@ import type { SebastianTrendData } from '../../../core/models/sebastian.model';
 
 Chart.register(...registerables);
 
-/**
- * Graphique de tendance Sebastian (ligne).
- * Affiche les courbes alcool, cafe et les objectifs sous forme de lignes en pointilles.
- * SSR-safe : le Chart.js est initialise uniquement via afterNextRender().
- */
 @Component({
   selector: 'app-sebastian-trend-chart',
   standalone: true,
@@ -24,7 +19,6 @@ Chart.register(...registerables);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SebastianTrendChartComponent implements OnDestroy {
-  /** Donnees de tendance a afficher. */
   readonly data = input.required<SebastianTrendData>();
 
   private readonly canvasRef = viewChild<ElementRef<HTMLCanvasElement>>('chartCanvas');
@@ -41,7 +35,6 @@ export class SebastianTrendChartComponent implements OnDestroy {
     this.chartInstance = null;
   }
 
-  /** Construit le graphique Chart.js avec les datasets et objectifs. */
   private buildChart(): void {
     const canvas = this.canvasRef()?.nativeElement;
     if (!canvas) return;
@@ -58,10 +51,6 @@ export class SebastianTrendChartComponent implements OnDestroy {
       type: 'line',
       data: {
         labels,
-        // Palette Asili dark lounge ambré (maquette asili-app.css, décisions 5/6) :
-        // alcool = --gold (#e6aa46), café = --gold-deep (#b8822c, teinte ambre
-        // foncée), objectifs = ambré pointillé. Seules les COULEURS changent —
-        // datasets, tension, fill et labels conservés à l'identique.
         datasets: [
           {
             label: 'Alcool',
@@ -108,7 +97,6 @@ export class SebastianTrendChartComponent implements OnDestroy {
         maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         plugins: {
-          // Thème dark : libellés/ticks/grid en rgba(255,255,255,…) — décision 6.
           legend: {
             labels: {
               color: 'rgba(255, 255, 255, 0.8)',

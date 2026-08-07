@@ -3,12 +3,6 @@
   display: block;
 }
 
-/* ============================================================
-   MA MANIERE DE TRAVAILLER AVEC L'IA — bloc immersif sombre
-   Porte de .ai-method (asili-sections.css). Le theme-night
-   bascule les tokens semantiques ; le bloc applique son fond
-   night local + halo radial (sans re-creer le canvas global).
-   ============================================================ */
 .ai-method {
   position: relative;
   background: var(--night);
@@ -18,7 +12,6 @@
   overflow: hidden;
 }
 
-/* Halo radial froid (teal + glow), reproduit l'ambiance .atelier. */
 .ai-method::before {
   content: '';
   position: absolute;
@@ -44,7 +37,6 @@
   color: #fff;
 }
 
-/* Accent serif italique teal dans le titre (« remplace pas »). */
 .ai-method-title :is(em, .it) {
   font-style: italic;
   color: var(--teal);

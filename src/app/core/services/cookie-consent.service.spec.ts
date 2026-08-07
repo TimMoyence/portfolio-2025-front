@@ -90,7 +90,6 @@ describe('CookieConsentService', () => {
     let mockConsentPort: ReturnType<typeof createCookieConsentPortStub>;
 
     beforeEach(() => {
-      // Nettoyer le cookie
       document.cookie = 'moyence_cookie_consent=; Max-Age=0; Path=/; SameSite=Lax';
       mockConsentPort = createCookieConsentPortStub();
       TestBed.configureTestingModule({

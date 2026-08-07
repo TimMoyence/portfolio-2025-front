@@ -78,7 +78,7 @@ describe('WindCompassComponent', () => {
     fixture.componentRef.setInput('speed', 100);
     fixture.detectChanges();
     const text = (fixture.nativeElement as HTMLElement).textContent;
-    expect(text).toContain('62'); // 100 * 0.621371 ≈ 62
+    expect(text).toContain('62');
     expect(text).toContain('mph');
   });
 });

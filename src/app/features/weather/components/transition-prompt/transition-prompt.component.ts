@@ -1,23 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { WeatherLevelService } from '../../services/weather-level.service';
 
-/**
- * Banniere de suggestion de transition de niveau.
- * S'affiche lorsque l'utilisateur a accumule suffisamment de jours
- * pour debloquer le niveau suivant (Curieux ou Expert).
- * Permet d'activer le nouveau niveau ou de fermer la banniere.
- */
 @Component({
   selector: 'app-transition-prompt',
   standalone: true,
   host: { class: 'block' },
   template: `
-    <!--
-      Invite de transition de niveau — re-skin Asili : carte glass .gp
-      (border teal subtile, backdrop-blur) + bouton d'activation teal.
-      Restyle visuel uniquement — chevron-pulse, WeatherLevelService et
-      la logique d'activation/fermeture inchangés.
-    -->
     @if (levelService.showTransitionPrompt() && !dismissed()) {
       <div
         class="relative rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
@@ -71,10 +59,8 @@ import { WeatherLevelService } from '../../services/weather-level.service';
 export class TransitionPromptComponent {
   readonly levelService = inject(WeatherLevelService);
 
-  /** Indique si l'utilisateur a ferme la banniere. */
   readonly dismissed = signal(false);
 
-  /** Label du bouton d'activation, localise selon le niveau suggere. */
   get activateLabel(): string {
     const next = this.levelService.showTransitionPrompt();
     if (next === 'curious') {
@@ -86,10 +72,8 @@ export class TransitionPromptComponent {
     return '';
   }
 
-  /** Label d'accessibilite du bouton de fermeture. */
   readonly dismissLabel = $localize`:weather.transition.dismiss|@@weatherTransitionDismiss:Fermer la suggestion`;
 
-  /** Active le niveau suggere. */
   activate(): void {
     const next = this.levelService.showTransitionPrompt();
     if (next) {
@@ -98,7 +82,6 @@ export class TransitionPromptComponent {
     }
   }
 
-  /** Ferme la banniere sans changer de niveau. */
   dismiss(): void {
     this.dismissed.set(true);
   }

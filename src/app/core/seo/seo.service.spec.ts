@@ -10,10 +10,6 @@ describe('SeoService', () => {
   let metaSpy: jasmine.SpyObj<Meta>;
   let titleSpy: jasmine.SpyObj<Title>;
 
-  /**
-   * Cree un document minimal compatible SSR (sans navigateur reel).
-   * Simule head, querySelector, querySelectorAll, et createElement.
-   */
   function createMockDocument(): Document {
     const appendedChildren: Record<string, unknown>[] = [];
 
@@ -35,7 +31,6 @@ describe('SeoService', () => {
           }
           return [];
         }),
-      /** Expose les enfants ajoutes au head pour les assertions dans les tests. */
       get children(): Record<string, unknown>[] {
         return appendedChildren;
       },
@@ -193,8 +188,6 @@ describe('SeoService', () => {
       });
 
       it('devrait creer les liens hreflang pour chaque locale', () => {
-        // On filtre par type de tag pour ignorer les <meta og:locale:alternate>
-        // crees systematiquement par updateSeoMetadata (une par locale alternative).
         const createSpy = mockDocument.createElement as jasmine.Spy;
         const linkCalls = createSpy.calls.allArgs().filter((args) => args[0] === 'link');
         // 1 canonical + 2 hreflangs = 3 appels createElement("link")
@@ -278,13 +271,10 @@ describe('SeoService', () => {
       });
 
       it('ne devrait pas creer de lien canonical si absent', () => {
-        // createElement peut etre appele pour <meta og:locale:alternate>,
-        // mais jamais pour <link> si aucun canonicalUrl n'est fourni.
         expect(mockDocument.createElement).not.toHaveBeenCalledWith('link');
       });
 
       it('ne devrait pas creer de liens hreflang si absent', () => {
-        // Les hreflangs sont des <link>, distincts des <meta og:locale:alternate>.
         expect(mockDocument.createElement).not.toHaveBeenCalledWith('link');
       });
     });

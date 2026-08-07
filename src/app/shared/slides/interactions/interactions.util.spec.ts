@@ -16,7 +16,6 @@ describe('interactions.util', () => {
 
       flattenInteractions(source).subscribe((list) => {
         expect(list.length).toBe(2);
-        // L'aplatissement parcourt `present` avant `scroll` (ordre preserve).
         expect(list[0].slideId).toBe('slide-a');
         expect(list[0].type).toBe('poll');
         expect(list[1].slideId).toBe('slide-a');
@@ -33,10 +32,8 @@ describe('interactions.util', () => {
 
       flattenInteractions(source).subscribe((list) => {
         expect(list.length).toBe(2);
-        // slideId derive de id quand slideId absent
         expect(list[0].slideId).toBe('q1');
         expect(list[0].type).toBe('quiz');
-        // slideId explicite preserve
         expect(list[1].slideId).toBe('s2');
         done();
       });

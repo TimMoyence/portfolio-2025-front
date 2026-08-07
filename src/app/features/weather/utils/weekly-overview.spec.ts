@@ -1,10 +1,6 @@
 import type { HourlyForecast } from '../../../core/models/weather.model';
 import { groupHourlyByGranularity, type WeatherTimeSlot } from './weekly-overview';
 
-/**
- * Construit un jeu de donnees horaires sur 2 jours (48h) pour les tests.
- * Chaque heure a des valeurs distinctes pour verifier l'aggregation.
- */
 function buildHourly48h(): HourlyForecast {
   const times: string[] = [];
   const temps: number[] = [];
@@ -16,8 +12,8 @@ function buildHourly48h(): HourlyForecast {
     for (let h = 0; h < 24; h++) {
       const day = d === 0 ? '2026-04-01' : '2026-04-02';
       times.push(`${day}T${h.toString().padStart(2, '0')}:00`);
-      temps.push(10 + h); // 10..33 sur jour 1, 10..33 sur jour 2
-      codes.push(h < 12 ? 0 : 61); // matin clair, aprem pluie
+      temps.push(10 + h);
+      codes.push(h < 12 ? 0 : 61);
       winds.push(5 + h);
       precips.push(h >= 12 ? 1.5 : 0);
     }
@@ -52,7 +48,6 @@ describe('groupHourlyByGranularity', () => {
     });
 
     it('devrait calculer la moyenne de temperature', () => {
-      // Jour 1 : 10,11,...,33 => moyenne = (10+33)/2 = 21.5
       expect(slots[0].avgTemp).toBeCloseTo(21.5, 1);
     });
 
@@ -62,17 +57,14 @@ describe('groupHourlyByGranularity', () => {
     });
 
     it('devrait sommer les precipitations', () => {
-      // 12 heures a 1.5mm = 18mm par jour
       expect(slots[0].totalPrecipitation).toBeCloseTo(18, 1);
     });
 
     it('devrait prendre le code meteo dominant (le plus frequent)', () => {
-      // 12 heures code 0, 12 heures code 61 => ex aequo, prend le premier
       expect([0, 61]).toContain(slots[0].dominantWeatherCode);
     });
 
     it('devrait calculer la vitesse max du vent', () => {
-      // Heure 23 => vent = 5+23 = 28
       expect(slots[0].maxWind).toBe(28);
     });
 
@@ -108,14 +100,11 @@ describe('groupHourlyByGranularity', () => {
     });
 
     it('devrait calculer la moyenne sur 3 heures', () => {
-      // Heures 0,1,2 => temps 10,11,12 => moyenne = 11
       expect(slots[0].avgTemp).toBeCloseTo(11, 1);
     });
 
     it('devrait sommer les precipitations sur 3 heures', () => {
-      // Premier slot (0-2h) : tout a 0mm
       expect(slots[0].totalPrecipitation).toBe(0);
-      // Slot 12-14h (index 4 du jour 1) : 3 heures a 1.5mm = 4.5mm
       expect(slots[4].totalPrecipitation).toBeCloseTo(4.5, 1);
     });
   });
@@ -158,7 +147,7 @@ describe('groupHourlyByGranularity', () => {
       const slots = groupHourlyByGranularity(rich, '3h');
       expect(slots.length).toBe(1);
       expect(slots[0].maxGusts).toBe(30);
-      expect(slots[0].windDirection).toBe(180); // mode
+      expect(slots[0].windDirection).toBe(180);
       expect(slots[0].avgHumidity).toBe(70);
       expect(slots[0].avgPressure).toBe(1015);
     });
@@ -191,7 +180,6 @@ describe('groupHourlyByGranularity', () => {
         precipitation: [0, 0, 0, 0, 0],
       };
       const slots = groupHourlyByGranularity(partial, '3h');
-      // 3 + 2 => 2 slots (le dernier avec 2 heures)
       expect(slots.length).toBe(2);
       expect(slots[0].hourCount).toBe(3);
       expect(slots[1].hourCount).toBe(2);

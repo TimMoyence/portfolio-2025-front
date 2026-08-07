@@ -1,11 +1,4 @@
-<!--
-  Tableau prévisions unifié — re-skin Asili « wx-week / gp-h »
-  (AsiliNewDesign/asili-app.css : .gp-h, .wx-day, .wx-bar gradient glow→teal).
-  Glass .gp, en-tête kicker font-mono uppercase, onglets segmentés teal actif.
-  Tailwind/SVG uniquement (décision 2) : dayRows/hourRows/granularity intacts.
--->
 <div class="rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl md:p-6">
-  <!-- Header (.gp-h) -->
   <div class="mb-4 flex items-center justify-between gap-3">
     <h3
       class="font-mono text-[11px] uppercase tracking-[0.14em] text-white/55"
@@ -38,7 +31,6 @@
     </nav>
   </div>
 
-  <!-- ========== MODE JOUR ========== -->
   @if (granularity() === 'day' && dayRows().length > 0) {
     <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-white/20">
       <table class="w-full text-sm text-white border-separate border-spacing-y-0.5">
@@ -66,7 +58,6 @@
             >
               Vent
             </th>
-            <!-- Curious+ -->
             @if (isCurious()) {
               <th
                 class="py-2 px-2 text-right font-medium"
@@ -75,7 +66,6 @@
                 Hum.
               </th>
             }
-            <!-- Expert -->
             @if (isExpert()) {
               <th
                 class="py-2 px-2 text-right font-medium"
@@ -137,13 +127,11 @@
                 {{ row.windMax | number: '1.0-0' }}
                 <span class="text-white/40 text-xs"> km/h</span>
               </td>
-              <!-- Curious+ -->
               @if (isCurious()) {
                 <td class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]">
                   {{ row.humidity !== null ? row.humidity + ' %' : '—' }}
                 </td>
               }
-              <!-- Expert -->
               @if (isExpert()) {
                 <td class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]">
                   {{ row.gustsMax !== null ? (row.gustsMax | number: '1.0-0') + ' km/h' : '—' }}
@@ -161,7 +149,6 @@
     </div>
   }
 
-  <!-- ========== MODE 3H / 1H ========== -->
   @if (granularity() !== 'day' && slotGroups().length > 0) {
     <div
       class="overflow-x-auto overflow-y-auto max-h-[72vh] scrollbar-thin scrollbar-thumb-white/20"
@@ -202,7 +189,6 @@
             >
               Vent
             </th>
-            <!-- Curious+ -->
             @if (isCurious()) {
               <th
                 class="py-2 px-2 text-right font-medium"
@@ -211,7 +197,6 @@
                 Hum.
               </th>
             }
-            <!-- Expert -->
             @if (isExpert()) {
               <th
                 class="py-2 px-2 text-right font-medium"
@@ -230,7 +215,6 @@
         </thead>
         <tbody>
           @for (group of slotGroups(); track group.dayLabel) {
-            <!-- Separateur jour -->
             <tr>
               <td
                 [attr.colspan]="isCurious() ? (isExpert() ? 9 : 7) : 6"
@@ -283,13 +267,11 @@
                   }
                   {{ slot.maxWind | number: '1.0-0' }}
                 </td>
-                <!-- Curious+ -->
                 @if (isCurious()) {
                   <td class="py-2 px-2 text-right text-white/50">
                     {{ slot.avgHumidity !== null ? slot.avgHumidity + ' %' : '—' }}
                   </td>
                 }
-                <!-- Expert -->
                 @if (isExpert()) {
                   <td class="py-2 px-2 text-right text-white/50">
                     {{ slot.maxGusts !== null ? (slot.maxGusts | number: '1.0-0') : '—' }}

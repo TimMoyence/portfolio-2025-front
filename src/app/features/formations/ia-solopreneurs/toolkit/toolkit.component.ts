@@ -2,20 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ToolkitGatePageComponent } from '../../shared/toolkit-gate-page.component';
 import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
 
-/**
- * Page de capture email du toolkit IA solopreneurs — refonte Asili (Lot 3e).
- *
- * Shell mince : il fournit ses chaines localisees au composant partage
- * `ToolkitGatePageComponent` (scaffold carte + items + formulaire + editorial)
- * et projette son titre a accent. Le toolkit envoie le PDF « 30 prompts +
- * checklist + mini-guide » via le pipeline lead-magnet ; ce shell ne specifie
- * pas de `formationSlug`, le formulaire applique donc son defaut
- * (`ia-solopreneurs`).
- *
- * La logique de capture (port `LEAD_MAGNET_PORT`, `requestToolkit`) vit dans
- * `ToolkitFormComponent`, inchangee. Routes et `seoKey` inchanges ; fond
- * constellation global. Texte localise via `$localize`.
- */
 @Component({
   selector: 'app-toolkit',
   standalone: true,
@@ -30,7 +16,6 @@ import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
   `,
 })
 export class ToolkitComponent {
-  /** Contenu localise de la page gate. */
   protected readonly gateData: ToolkitGatePageData = {
     lead: $localize`:@@formations.toolkit.subtitle:Un kit de démarrage concret, offert. De quoi vous faire une idée juste — et passer à l'action dès aujourd'hui.`,
     items: [

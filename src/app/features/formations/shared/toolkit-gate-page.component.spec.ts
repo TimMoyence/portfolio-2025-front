@@ -9,7 +9,6 @@ import { ToolkitFormComponent } from '../../../shared/components/toolkit-form/to
 import { ToolkitGatePageComponent } from './toolkit-gate-page.component';
 import type { ToolkitGatePageData } from './toolkit-gate-page.model';
 
-/** Donnees de test minimales mais representatives d'une page gate. */
 function buildGateData(overrides: Partial<ToolkitGatePageData> = {}): ToolkitGatePageData {
   return {
     lead: 'Un kit de demarrage concret, offert.',
@@ -28,10 +27,6 @@ function buildGateData(overrides: Partial<ToolkitGatePageData> = {}): ToolkitGat
   };
 }
 
-/**
- * Hote de test : projette un titre (avec accent `<em>`) et fournit les inputs,
- * comme le font les pages shell reelles.
- */
 @Component({
   standalone: true,
   imports: [ToolkitGatePageComponent],
@@ -64,7 +59,6 @@ describe('ToolkitGatePageComponent', () => {
     fixture.detectChanges();
   });
 
-  // `appReveal` pose `anim-ready` sur <html> (singleton partage) : on nettoie.
   afterEach(() => {
     document.documentElement.classList.remove('anim-ready');
   });
@@ -93,7 +87,6 @@ describe('ToolkitGatePageComponent', () => {
     expect(compiled.textContent).toContain('Ce que contient le toolkit');
     expect(compiled.querySelectorAll('.tk-list li').length).toBe(host.data.contents.length);
     expect(compiled.querySelectorAll('.tk-faq .tk-qa').length).toBe(host.data.faq.length);
-    // FAQ AEO : une question = un <h3>.
     expect(compiled.querySelectorAll('.tk-faq h3').length).toBeGreaterThanOrEqual(2);
   });
 
@@ -110,9 +103,6 @@ describe('ToolkitGatePageComponent', () => {
   it('devrait embarquer le formulaire de capture sans slug par defaut', () => {
     const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
     expect(form).not.toBeNull();
-    // Aucun slug fourni : le formulaire applique son defaut (ia-solopreneurs).
-    // Le slug transite par une liaison de propriete (`@Input`), non reflechie
-    // en attribut DOM : on lit donc l'instance du composant enfant.
     expect(form.componentInstance.formationSlug).toBe('ia-solopreneurs');
   });
 

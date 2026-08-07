@@ -4,7 +4,6 @@ import type { AppConfig } from '../../app/core/config/app-config.model';
 import type { CookieConsentPort } from '../../app/core/ports/cookie-consent.port';
 import type { CookieConsentService } from '../../app/core/services/cookie-consent.service';
 
-/** Construit un payload CookieConsentPayload avec des valeurs par defaut. */
 export function buildCookieConsentPayload(
   overrides?: Partial<CookieConsentPayload>,
 ): CookieConsentPayload {
@@ -24,14 +23,12 @@ export function buildCookieConsentPayload(
   };
 }
 
-/** Cree un stub complet du port cookie-consent avec des spies Jasmine. */
 export function createCookieConsentPortStub(): jasmine.SpyObj<CookieConsentPort> {
   const stub = jasmine.createSpyObj<CookieConsentPort>('CookieConsentPort', ['recordConsent']);
   stub.recordConsent.and.returnValue(of({ message: 'ok', httpCode: 200 }));
   return stub;
 }
 
-/** Construit un mock AppConfig avec des valeurs par defaut. */
 export function createMockAppConfig(overrides?: Partial<AppConfig>): AppConfig {
   return {
     production: false,
@@ -49,10 +46,6 @@ export function createMockAppConfig(overrides?: Partial<AppConfig>): AppConfig {
   };
 }
 
-/**
- * Cree un stub complet du CookieConsentService avec des spies Jasmine.
- * Fournit consentChanges$ comme BehaviorSubject pour simuler les changements.
- */
 export function createCookieConsentServiceStub(): jasmine.SpyObj<CookieConsentService> & {
   consentChanges$: BehaviorSubject<null>;
 } {

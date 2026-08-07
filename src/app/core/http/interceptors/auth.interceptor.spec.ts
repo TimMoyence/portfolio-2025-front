@@ -1,18 +1,14 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
-import { APP_CONFIG } from '../../../core/config/app-config.token';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { environment } from '../../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
+import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { authInterceptor } from './auth.interceptor';
 
-/**
- * Tests unitaires de l'intercepteur fonctionnel authInterceptor.
- * Verifie l'ajout du header Authorization et la gestion des erreurs 401.
- */
 describe('authInterceptor', () => {
   let http: HttpClient;
   let httpMock: HttpTestingController;
@@ -20,13 +16,13 @@ describe('authInterceptor', () => {
   let router: Router;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
+    setupTestBed({
+      http: false,
+      router: true,
       providers: [
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
-        provideRouter([]),
         { provide: AUTH_PORT, useValue: createAuthPortStub() },
-        { provide: APP_CONFIG, useValue: environment },
       ],
     });
 
@@ -93,15 +89,15 @@ describe('authInterceptor', () => {
     req.flush({});
   });
 
-  it('devrait appeler logout et naviguer vers /login sur erreur 401', () => {
+  it('devrait appeler clearSession et naviguer vers /login sur erreur 401', () => {
     authState.login(buildAuthSession());
-    spyOn(authState, 'logout').and.callThrough();
+    spyOn(authState, 'clearSession').and.callThrough();
     spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
 
     http.get('/api/protected').subscribe({
       next: () => fail('devrait echouer'),
       error: () => {
-        expect(authState.logout).toHaveBeenCalled();
+        expect(authState.clearSession).toHaveBeenCalled();
         expect(router.navigate).toHaveBeenCalledWith(['/login'], {
           queryParams: { returnUrl: router.url },
         });
@@ -112,16 +108,16 @@ describe('authInterceptor', () => {
     req.flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
   });
 
-  it('devrait propager les erreurs non-401 sans logout', () => {
+  it('devrait propager les erreurs non-401 sans clearSession', () => {
     authState.login(buildAuthSession());
-    spyOn(authState, 'logout');
+    spyOn(authState, 'clearSession');
     spyOn(router, 'navigate');
 
     http.get('/api/other').subscribe({
       next: () => fail('devrait echouer'),
       error: (error) => {
         expect(error.status).toBe(500);
-        expect(authState.logout).not.toHaveBeenCalled();
+        expect(authState.clearSession).not.toHaveBeenCalled();
         expect(router.navigate).not.toHaveBeenCalled();
       },
     });

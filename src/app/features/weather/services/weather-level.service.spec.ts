@@ -58,7 +58,6 @@ describe('WeatherLevelService', () => {
     it('devrait positionner loading a true pendant le chargement', () => {
       weatherPortStub.getPreferences.and.returnValue(of(buildWeatherPreferences()));
 
-      // Le loading est mis a true puis false synchroniquement dans ce test
       service.loadPreferences();
       expect(service.loading()).toBeFalse();
     });

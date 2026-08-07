@@ -1,15 +1,4 @@
 @use '../../styles-shared/breakpoints' as bp;
-/*
-  Home Asili — styles propres a la section Atelier uniquement.
-
-  Les autres sections (hero, methode, piliers, manifeste, projets, CTA) sont des
-  composants Lot 3a avec leurs styles scopes : on ne re-stylise rien ici. Les
-  primitives globales (.glass, .link-arrow, .kicker, .lead, .h-xl, .section-pad,
-  .wrap) et le theme .theme-night fournissent le reste. Bloc porte de
-  `.atelier` / `.atelier-head` / `.atelier-grid` / `.lab-card` de la maquette
-  AsiliNewDesign/asili-sections.css. La demo Meteo jouable inline est reportee
-  au Lot 4 — ici : entete immersive + deux lab-cards.
-*/
 
 .atelier {
   position: relative;
@@ -17,7 +6,6 @@
   background: var(--night);
   color: var(--ivory);
 
-  /* Halo immersif teal/bleu (sans canvas : le fond constellation reste global). */
   &::before {
     content: '';
     position: absolute;
@@ -33,7 +21,6 @@
     z-index: 2;
   }
 
-  /* Sur-titre : pastille glow bleue (et non teal) dans le contexte sombre. */
   .kicker {
     color: var(--glow-soft);
 

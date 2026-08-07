@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-/**
- * Mini graphique SVG en ligne (sparkline) pour visualiser
- * l'evolution d'une metrique horaire dans une carte compacte.
- * Aucune dependance externe (pas de Chart.js).
- */
 @Component({
   selector: 'app-sparkline',
   standalone: true,
@@ -16,9 +11,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <!-- Zone de remplissage sous la courbe -->
         <path [attr.d]="areaPath()" [attr.fill]="color()" fill-opacity="0.15" />
-        <!-- Ligne de la courbe -->
         <polyline
           [attr.points]="polylinePoints()"
           fill="none"
@@ -33,13 +26,10 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SparklineComponent {
-  /** Donnees a tracer (tableau de nombres). */
   readonly data = input<number[]>([]);
 
-  /** Couleur de la courbe (CSS). Défaut : teal Asili. */
   readonly color = input('rgba(79, 179, 162, 0.85)');
 
-  /** Points normalises pour le SVG. */
   readonly points = computed(() => {
     const raw = this.data();
     if (!raw || raw.length < 2) return [];
@@ -57,17 +47,14 @@ export class SparklineComponent {
     }));
   });
 
-  /** ViewBox du SVG. */
   readonly viewBox = computed(() => '0 0 100 30');
 
-  /** Attribut points de la polyline SVG. */
   readonly polylinePoints = computed(() =>
     this.points()
       .map((p) => `${p.x},${p.y}`)
       .join(' '),
   );
 
-  /** Chemin SVG de la zone de remplissage sous la courbe. */
   readonly areaPath = computed(() => {
     const pts = this.points();
     if (pts.length < 2) return '';

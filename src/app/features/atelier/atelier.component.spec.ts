@@ -4,21 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { AtelierComponent } from './atelier.component';
 
-/**
- * Specs du hub L'Atelier (`/atelier`).
- *
- * Couvrent : la composition des sections clés (hero unique, deux teasers
- * `.lab-big`, les deux démos jouables, la bande CTA), l'interactivité de la
- * démo météo simulée (changement de ville → recalcul des valeurs), le câblage
- * de navigation (teasers → landings, CTA → /offer et /formations), et la
- * SSR-safety (rendu serveur sans crash, jauge/heatmap à un état lisible).
- *
- * Pas de mocks dupliqués : la page ne dépend d'aucun port (démos autonomes),
- * seuls Router (RouterLink) sont fournis.
- */
 describe('AtelierComponent', () => {
-  // Le rendu browser des sections `appReveal` pose `anim-ready` sur <html>
-  // (singleton partagé). On nettoie pour ne pas polluer les specs suivants.
   afterEach(() => {
     document.documentElement.classList.remove('anim-ready');
   });
@@ -66,7 +52,6 @@ describe('AtelierComponent', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       expect(compiled.querySelector('.atelier-grid .meteo')).not.toBeNull();
       expect(compiled.querySelector('.atelier-grid .seb-panel')).not.toBeNull();
-      // 4 villes jouables
       expect(compiled.querySelectorAll('.meteo-cities .city-btn').length).toBe(4);
     });
 
@@ -100,8 +85,6 @@ describe('AtelierComponent', () => {
     });
 
     it('devrait animer la jauge depuis 0 en navigateur', () => {
-      // En contexte navigateur le constructeur réinitialise la jauge à 0
-      // avant l'animation requestAnimationFrame.
       expect(component['gaugeValue']()).toBeLessThanOrEqual(component['healthTarget']);
     });
   });

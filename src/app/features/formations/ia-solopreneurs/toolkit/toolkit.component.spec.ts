@@ -5,12 +5,6 @@ import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
 import { createLeadMagnetPortStub } from '../../../../../testing/factories/lead-magnet.factory';
 import { ToolkitComponent } from './toolkit.component';
 
-/**
- * Couvre les invariants de la page de capture du toolkit IA solopreneurs apres
- * refonte Asili (Lot 3e) : presence du H1 (wording maquette), du formulaire de
- * capture lead-magnet (`<app-toolkit-form>` — logique inchangee), du contenu
- * editorial conserve (« ce que contient », FAQ) et du nom de la marque.
- */
 describe('ToolkitComponent', () => {
   let component: ToolkitComponent;
   let fixture: ComponentFixture<ToolkitComponent>;
@@ -20,8 +14,6 @@ describe('ToolkitComponent', () => {
       imports: [ToolkitComponent],
       providers: [
         { provide: LEAD_MAGNET_PORT, useValue: createLeadMagnetPortStub() },
-        // La page utilise RouterLink vers /privacy (sans prefixe de locale) —
-        // fournir un routeur vide pour satisfaire l'injection ActivatedRoute.
         provideRouter([]),
       ],
     }).compileComponents();
@@ -31,8 +23,6 @@ describe('ToolkitComponent', () => {
     fixture.detectChanges();
   });
 
-  // Le rendu browser de `appReveal` pose `anim-ready` sur <html> (singleton
-  // partage). On nettoie pour ne pas polluer les specs suivants.
   afterEach(() => {
     document.documentElement.classList.remove('anim-ready');
   });

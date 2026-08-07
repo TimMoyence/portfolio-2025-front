@@ -3,7 +3,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BottomSheetComponent } from './bottom-sheet.component';
 
-/** Composant hote pour tester le bottom sheet avec content projection. */
 @Component({
   standalone: true,
   imports: [BottomSheetComponent],

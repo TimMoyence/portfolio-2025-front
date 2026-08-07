@@ -41,6 +41,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Rapports generes par les outils qualite (jscpd --reporters html, etc.)
+/reports
+
 
 # Ignore the todo and other markdown files
 /chargeCanvas.md
@@ -68,3 +71,8 @@ e2e/test-results/
 # Hook local de re-index GitNexus : chemin absolu machine + script cible non
 # versionne, donc inutilisable sur un autre clone.
 .husky/post-commit
+
+# Ce projet est en npm. Un lockfile pnpm ici est le residu d une commande
+# lancee dans le mauvais repertoire (le back est en pnpm) — jamais un livrable.
+pnpm-lock.yaml
+pnpm-workspace.yaml

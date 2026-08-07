@@ -1,16 +1,4 @@
 #!/usr/bin/env node
-// Met a jour automatiquement la valeur `lastmod` de chaque page dans
-// src/assets/seo/seo-metadata.json a partir de la date du dernier commit
-// qui a modifie les fichiers sources associes a la page.
-//
-// Le mapping page -> sources est declare explicitement dans `pathToSources`
-// ci-dessous : repertoire de feature quand la page occupe tout un dossier,
-// fichiers precis quand plusieurs pages cohabitent dans le meme dossier
-// (ex: les landings /atelier/* vivent a cote du code de l'app correspondante).
-//
-// Les routes non-indexables (index: false) sont ignorees pour eviter le
-// bruit sur les ateliers.
-//
 // Usage : node scripts/update-seo-lastmod.mjs [--check]
 //   --check : n'ecrit pas, log les diff et exit 1 si desynchro (pour CI).
 
@@ -23,11 +11,6 @@ import { format, resolveConfig } from 'prettier';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const metadataPath = resolve(__dirname, '../src/assets/seo/seo-metadata.json');
 
-/**
- * Table de correspondance explicite path URL -> sources (repertoires ou
- * fichiers). Plusieurs sources possibles pour une page (ex: auth partage
- * les 6 routes d'authentification).
- */
 const pathToSources = {
   '/': ['src/app/features/home', 'src/app/app.component.ts'],
   '/presentation': ['src/app/features/presentation'],
@@ -79,10 +62,6 @@ const pathToSources = {
   '/profil': ['src/app/features/profile'],
 };
 
-/**
- * Retourne la date ISO (YYYY-MM-DD) du dernier commit ayant touche
- * l'un des chemins fournis. Retourne null si aucun commit.
- */
 function lastCommitDate(paths) {
   try {
     const result = execSync(
@@ -97,11 +76,8 @@ function lastCommitDate(paths) {
 }
 
 /**
- * Verifie que chaque source declaree dans `pathToSources` existe reellement.
- * Un chemin obsolete rend le mapping silencieusement inoperant (git log ne
- * retourne rien, le lastmod reste fige) : on le signale explicitement.
- *
- * @returns La liste des entrees `page -> source` introuvables.
+ * Un chemin obsolete rend le mapping silencieusement inoperant : `git log` ne
+ * retourne rien et le lastmod reste fige, sans erreur.
  */
 function findMissingSources() {
   const missing = [];
@@ -132,9 +108,9 @@ async function main() {
   let updatedCount = 0;
 
   for (const page of metadata.pages) {
-    if (page.index === false) continue; // skip non-indexables
+    if (page.index === false) continue;
     const sources = pathToSources[page.path];
-    if (!sources) continue; // pas de mapping declare, on preserve le lastmod existant
+    if (!sources) continue;
 
     const date = lastCommitDate(sources);
     if (!date) continue;

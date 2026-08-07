@@ -13,13 +13,6 @@ import {
   SlideStatsComponent,
 } from '../../../shared/slides';
 
-/**
- * Page de la formation "Automatiser avec l'IA".
- *
- * Composant slide-driven : chaque slide est explicitement declaree dans
- * le template. Contenu integralement transpose depuis l'ancien
- * `automatiser-avec-ia.slides.data.ts` (BIG BANG migration Task 20).
- */
 @Component({
   selector: 'app-automatiser-avec-ia',
   standalone: true,
@@ -40,7 +33,6 @@ import {
   styleUrl: './automatiser-avec-ia.component.scss',
 })
 export class AutomatiserAvecIaComponent {
-  /** Stats slide "constat". */
   protected readonly constatStats = [
     {
       value: '13h',
@@ -59,7 +51,6 @@ export class AutomatiserAvecIaComponent {
     },
   ];
 
-  /** Items grid "par-ou-commencer". */
   protected readonly parOuCommencerItems = [
     {
       title: $localize`:@@formations.automatiser-avec-ia.pratiquer.items.0.title:Photographe`,
@@ -87,7 +78,6 @@ export class AutomatiserAvecIaComponent {
     },
   ];
 
-  /** Items grid "faq-rapide". */
   protected readonly faqItems = [
     {
       title: $localize`:@@formations.automatiser-avec-ia.faq.items.0.title:Et si l'IA se trompe ?`,
@@ -103,7 +93,6 @@ export class AutomatiserAvecIaComponent {
     },
   ];
 
-  /** Comparison slide "erreurs" — gauche fonctionne vs droite a eviter. */
   protected readonly fonctionneItems = [
     $localize`:@@formations.automatiser-avec-ia.erreurs.rows.0.0:Automatiser 1 tache a la fois, mesurer, puis en ajouter`,
     $localize`:@@formations.automatiser-avec-ia.erreurs.rows.1.0:Relire systematiquement avant d'envoyer au client`,
@@ -118,7 +107,6 @@ export class AutomatiserAvecIaComponent {
     $localize`:@@formations.automatiser-avec-ia.erreurs.rows.3.1:Accepter le ton robotique par defaut — on perd la personnalite`,
   ];
 
-  /** Colonnes de comparaison "erreurs" (fonctionne vs a eviter). */
   protected readonly erreursColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@formations.automatiser-avec-ia.erreurs.headers.0:Ce qui fonctionne`,

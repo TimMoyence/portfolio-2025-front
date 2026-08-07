@@ -44,7 +44,6 @@ export class NavbarComponent {
     },
   ];
 
-  /** Dropdown "L'Atelier" regroupant les side-projects. */
   readonly atelierDropdown: DropdownSection = {
     label: $localize`:navbar.atelier.label|Atelier dropdown label@@navAtelierLabel:L'Atelier`,
     subtitle: $localize`:navbar.atelier.subtitle|Atelier drawer subtitle@@navAtelierSubtitle:Météo · Sebastian`,
@@ -68,7 +67,6 @@ export class NavbarComponent {
     ],
   };
 
-  /** Dropdown "Formations" regroupant les presentations et ressources. */
   readonly formationsDropdown: DropdownSection = {
     label: $localize`:navbar.formations.label|Formations dropdown label@@navFormationsLabel:Formations`,
     isOpen: false,
@@ -114,7 +112,6 @@ export class NavbarComponent {
   private readonly router = inject(Router);
   private readonly breakpointService = inject(BreakpointService);
 
-  /** Initiales de l'utilisateur connecte (ex: "TM" pour Tim Moyence). */
   readonly userInitials = computed(() => {
     const user = this.authState.user();
     if (!user?.firstName && !user?.lastName) return '';
@@ -123,10 +120,9 @@ export class NavbarComponent {
     return `${first}${last}`;
   });
 
-  /** Couleur d'avatar derivee d'un hash simple du nom complet. */
   readonly avatarColor = computed(() => {
     const user = this.authState.user();
-    if (!user) return '#6b7280'; // gray fallback
+    if (!user) return '#6b7280';
     const name = `${user.firstName ?? ''}${user.lastName ?? ''}`;
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -140,7 +136,6 @@ export class NavbarComponent {
   mobileMenuOpen = false;
   userDropdownOpen = false;
 
-  /** Delegue au BreakpointService (< 1024px). */
   get isMobile(): boolean {
     return this.breakpointService.isTabletOrBelow();
   }
@@ -156,7 +151,6 @@ export class NavbarComponent {
     private readonly cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private readonly platformId: object,
   ) {
-    // Ferme le menu mobile si on passe en mode desktop
     effect(() => {
       const mobile = this.isMobile;
       if (!mobile && this.mobileMenuOpen) {
@@ -179,7 +173,6 @@ export class NavbarComponent {
     });
   }
 
-  /** Retourne l'URL vers l'autre locale en conservant le chemin courant. */
   getAlternateLocaleUrl(): string {
     if (!isPlatformBrowser(this.platformId)) return '#';
     const targetLocale = this.currentLocale.startsWith('fr') ? 'en' : 'fr';
@@ -188,7 +181,6 @@ export class NavbarComponent {
     return `/${targetLocale}${pathWithoutLocale || ''}`;
   }
 
-  /** Retourne le label de la langue alternative. */
   getAlternateLocaleLabel(): string {
     return this.currentLocale.startsWith('fr') ? 'EN' : 'FR';
   }
@@ -205,18 +197,16 @@ export class NavbarComponent {
 
   logout(): void {
     this.closeUserDropdown();
-    this.authState.logout();
+    this.authState.clearSession();
     this.closeMobileMenu();
     void this.router.navigate(['/']);
   }
 
-  /** Ouvre ou ferme le dropdown utilisateur. */
   toggleUserDropdown(): void {
     this.userDropdownOpen = !this.userDropdownOpen;
     this.cdr.markForCheck();
   }
 
-  /** Ferme le dropdown utilisateur s'il est ouvert. */
   closeUserDropdown(): void {
     if (this.userDropdownOpen) {
       this.userDropdownOpen = false;
@@ -224,13 +214,11 @@ export class NavbarComponent {
     }
   }
 
-  /** Ouvre ou ferme le dropdown Atelier. */
   toggleAtelierDropdown(): void {
     this.atelierDropdown.isOpen = !this.atelierDropdown.isOpen;
     this.cdr.markForCheck();
   }
 
-  /** Ouvre le dropdown Atelier. */
   openAtelierDropdown(): void {
     if (!this.atelierDropdown.isOpen) {
       this.atelierDropdown.isOpen = true;
@@ -238,7 +226,6 @@ export class NavbarComponent {
     }
   }
 
-  /** Ferme le dropdown Atelier s'il est ouvert. */
   closeAtelierDropdown(): void {
     if (this.atelierDropdown.isOpen) {
       this.atelierDropdown.isOpen = false;
@@ -246,13 +233,11 @@ export class NavbarComponent {
     }
   }
 
-  /** Ouvre ou ferme le dropdown Formations. */
   toggleFormationsDropdown(): void {
     this.formationsDropdown.isOpen = !this.formationsDropdown.isOpen;
     this.cdr.markForCheck();
   }
 
-  /** Ouvre le dropdown Formations. */
   openFormationsDropdown(): void {
     if (!this.formationsDropdown.isOpen) {
       this.formationsDropdown.isOpen = true;
@@ -260,7 +245,6 @@ export class NavbarComponent {
     }
   }
 
-  /** Ferme le dropdown Formations s'il est ouvert. */
   closeFormationsDropdown(): void {
     if (this.formationsDropdown.isOpen) {
       this.formationsDropdown.isOpen = false;
@@ -274,7 +258,6 @@ export class NavbarComponent {
     const activeElement = document.activeElement as HTMLElement | null;
     const isSpace = event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
 
-    // 1) SPACE on burger button: open menu + prevent scroll
     if (activeElement === this.burgerButton?.nativeElement && isSpace) {
       event.preventDefault();
       event.stopPropagation();
@@ -282,7 +265,6 @@ export class NavbarComponent {
       return;
     }
 
-    // 2) ESC closes dropdowns if open
     if (event.key === 'Escape') {
       if (this.userDropdownOpen) {
         event.preventDefault();
@@ -301,7 +283,6 @@ export class NavbarComponent {
       }
     }
 
-    // 3) When mobile menu is open: ESC and Tab inside dialog
     if (this.mobileMenuOpen) {
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -315,9 +296,6 @@ export class NavbarComponent {
     }
   }
 
-  /**
-   * Called on the burger button click.
-   */
   openMobileMenu(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     if (this.mobileMenuOpen) return this.closeMobileMenu();
@@ -326,26 +304,20 @@ export class NavbarComponent {
     this.cdr.markForCheck();
     document.body.style.overflow = 'hidden';
 
-    // Save current focus (usually the burger button)
     this.a11yDialog.saveFocus();
 
-    // After the view updates, move focus inside the dialog
     requestAnimationFrame(() => {
       const panel = this.mobileMenuPanel?.nativeElement ?? null;
       this.a11yDialog.focusFirstDescendant(panel);
     });
   }
 
-  /**
-   * Called by the close button, backdrop click or Esc key.
-   */
   closeMobileMenu(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.mobileMenuOpen = false;
     this.cdr.markForCheck();
     document.body.style.overflow = '';
 
-    // Restore focus to what opened the menu (e.g. burger button)
     this.a11yDialog.restoreFocus();
   }
 }

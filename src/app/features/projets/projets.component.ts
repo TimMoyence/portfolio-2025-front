@@ -9,27 +9,6 @@ import {
   AsiliProjectsGridComponent,
 } from '../../shared/sections';
 
-/**
- * Page Projets Asili (`/projets`) — liste des réalisations.
- *
- * Compose les sections de la bibliothèque marketing du Lot 3a
- * (`shared/sections/*`) dans l'ordre de la maquette
- * `AsiliNewDesign/projets.html` : hero (kicker « Réalisations », titre « Des
- * preuves, pas des promesses. ») → grille `asili-projects-grid` reprenant les
- * réalisations verbatim de la maquette → bandeau `asili-method` (« le fil
- * rouge », quatre étapes Comprendre / Déployer / Éprouver / Faire durer) →
- * bande `asili-cta-band`.
- *
- * Les réalisations sont authored par l'utilisateur (maquette) : titres,
- * descriptions, étiquettes et statut « En production » sont repris tels quels —
- * rien n'est inventé. Les liens internes pointent vers les pages existantes
- * (ateliers, growth audit) ; les réalisations sans page dédiée restent non
- * cliquables.
- *
- * Tout le texte est fourni en `$localize` (source FR verbatim de la maquette,
- * IDs `@@projets*`) ; la traduction EN vit dans les XLF. Le fond constellation
- * est global (Lot 0, `<app-asili-background>`) : la page ne recrée aucun canvas.
- */
 @Component({
   selector: 'app-projets',
   standalone: true,
@@ -45,36 +24,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjetsComponent {
-  // --- Hero -----------------------------------------------------------------
-
-  /** Sur-titre mono du hero. */
   protected readonly heroKicker = $localize`:@@projetsHeroKicker:Réalisations`;
 
-  /** Accroche du hero. */
   protected readonly heroLead = $localize`:@@projetsHeroLead:Chaque projet part d'un besoin réel et finit par un outil qui tient dans le temps. Voici quelques réalisations — des plateformes métier aux expériences de l'Atelier.`;
 
-  // --- Grille des réalisations ---------------------------------------------
-
-  /**
-   * Réalisations reprises verbatim de `AsiliNewDesign/projets.html` (ordre,
-   * titres, descriptions, étiquettes et statut « En production » authored par
-   * l'utilisateur), complétées par AtlanticBike, Assistant IA Geev et
-   * Modélisation prédictive — dont les textes sont repris verbatim de
-   * l'ancienne section « Réalisations » de `/presentation`.
-   *
-   * Les liens internes ne sont posés que pour les réalisations disposant d'une
-   * page dédiée dans l'app. Une réalisation sans `image` s'affiche avec le
-   * placeholder rayé de `asili-projects-grid` tant qu'aucune capture n'existe.
-   *
-   * Trois réalisations sans capture possible (Morning-Brief, Le Jeu des Fourmis,
-   * Voice IA) sont illustrées par des photos Pexels — licence libre, usage
-   * commercial, sans attribution obligatoire — et leur `imageAlt` dit
-   * « illustration » et non « capture » pour ne pas les faire passer pour des
-   * copies d'écran du produit :
-   * - `morning-brief.webp`   → pexels.com/photo/27164054
-   * - `jeu-des-fourmis.webp` → pexels.com/photo/842401
-   * - `voice-ia.webp`        → pexels.com/photo/7120126
-   */
   protected readonly projects: readonly AsiliProject[] = [
     {
       size: 'small',
@@ -236,16 +189,8 @@ export class ProjetsComponent {
     },
   ];
 
-  // --- Bandeau méthode (le fil rouge) --------------------------------------
-
-  /** Sur-titre mono du bandeau méthode. */
   protected readonly methodKicker = $localize`:@@projetsMethodKicker:Le fil rouge`;
 
-  /**
-   * Quatre étapes du fil rouge (verbatim maquette) : Clarifier / Construire /
-   * Tester / Évoluer, déclinées en Comprendre / Déployer / Éprouver / Faire
-   * durer.
-   */
   protected readonly methodSteps: readonly AsiliMethodStep[] = [
     {
       num: '01',
@@ -273,17 +218,11 @@ export class ProjetsComponent {
     },
   ];
 
-  // --- Bande CTA ------------------------------------------------------------
-
-  /** Sur-titre de la bande CTA. */
   protected readonly ctaKicker = $localize`:@@projetsCtaKicker:Un projet en tête ?`;
 
-  /** Titre de la bande CTA. */
   protected readonly ctaTitle = $localize`:@@projetsCtaTitle:Racontez-moi votre situation. On verra ce qui mérite d'être construit.`;
 
-  /** CTA primaire de la bande. */
   protected readonly ctaPrimary = $localize`:@@projetsCtaPrimary:Démarrer la conversation`;
 
-  /** CTA secondaire de la bande. */
   protected readonly ctaSecondary = $localize`:@@projetsCtaSecondary:Explorer l'Atelier`;
 }

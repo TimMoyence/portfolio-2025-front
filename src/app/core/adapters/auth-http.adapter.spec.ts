@@ -1,8 +1,7 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { APP_CONFIG } from '../config/app-config.token';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import {
   buildAuthSession,
   buildAuthUser,
@@ -18,17 +17,7 @@ describe('AuthHttpAdapter', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        AuthHttpAdapter,
-        {
-          provide: APP_CONFIG,
-          useValue: environment,
-        },
-      ],
-    });
+    setupTestBed({ providers: [AuthHttpAdapter] });
 
     adapter = TestBed.inject(AuthHttpAdapter);
     httpMock = TestBed.inject(HttpTestingController);

@@ -7,13 +7,6 @@ import type {
   SebastianTrendData,
 } from '../../core/models/sebastian.model';
 
-/**
- * Donnees fictives pour la page de presentation Sebastian.
- * Simulent un utilisateur en phase 2 avec un score de sante de 78/100,
- * des streaks actives et un BAC en decroissance apres une soiree legere.
- */
-
-/** Score de sante : 78/100, phase 2, bonne forme. */
 export const MOCK_HEALTH_SCORE: SebastianHealthScore = {
   score: 78,
   phase: 2,
@@ -29,7 +22,6 @@ export const MOCK_HEALTH_SCORE: SebastianHealthScore = {
   message: $localize`:@@sebastian-pres.health.message:Bonne forme, continuez !`,
 };
 
-/** Courbe BAC : 9 points de 20h00 a 00h00, pic a 0.38 puis decroissance. */
 const BAC_CURVE: SebastianBacDataPoint[] = [
   { time: '2026-04-08T20:00:00.000Z', bac: 0.0 },
   { time: '2026-04-08T20:30:00.000Z', bac: 0.18 },
@@ -42,7 +34,6 @@ const BAC_CURVE: SebastianBacDataPoint[] = [
   { time: '2026-04-09T00:00:00.000Z', bac: 0.12 },
 ];
 
-/** Resultat BAC : 0.12 g/L actuel, sobre dans ~1h20. */
 export const MOCK_BAC: SebastianBacResult = {
   currentBac: 0.12,
   curve: BAC_CURVE,
@@ -50,7 +41,6 @@ export const MOCK_BAC: SebastianBacResult = {
   legalLimit: 0.5,
 };
 
-/** 10 badges, tous verrouilles (page de presentation, non authentifie). */
 export const MOCK_BADGES: SebastianBadgeStatus[] = [
   {
     key: 'first-log',
@@ -124,7 +114,6 @@ export const MOCK_BADGES: SebastianBadgeStatus[] = [
   },
 ];
 
-/** Tendances sur 7 jours avec valeurs realistes. */
 export const MOCK_TRENDS: SebastianTrendData = {
   period: '7d',
   dataPoints: [
@@ -140,7 +129,6 @@ export const MOCK_TRENDS: SebastianTrendData = {
   summary: { avgAlcohol: 1.14, avgCoffee: 2.14 },
 };
 
-/** Heatmap : 28 jours d'activite combinee. */
 export const MOCK_HEATMAP: SebastianHeatmapPoint[] = [
   { date: '2026-03-13', alcohol: 1, coffee: 2, combined: 3 },
   { date: '2026-03-14', alcohol: 0, coffee: 1, combined: 1 },
@@ -172,13 +160,11 @@ export const MOCK_HEATMAP: SebastianHeatmapPoint[] = [
   { date: '2026-04-09', alcohol: 1, coffee: 2, combined: 3 },
 ];
 
-/** Compteurs journaliers : cafe 2/4, alcool 1/3. */
 export const MOCK_DAILY_COUNTS = {
   coffee: { current: 2, goal: 4 },
   alcohol: { current: 1, goal: 3 },
 } as const;
 
-/** Labels des jours de la semaine pour la heatmap. */
 export const HEATMAP_DAY_LABELS: readonly string[] = [
   $localize`:@@sebastian-pres.heatmap.day.mon:L`,
   $localize`:@@sebastian-pres.heatmap.day.tue:M`,
@@ -189,7 +175,6 @@ export const HEATMAP_DAY_LABELS: readonly string[] = [
   $localize`:@@sebastian-pres.heatmap.day.sun:D`,
 ];
 
-/** Labels des jours pour le graphique de tendance hebdomadaire. */
 export const TREND_DAY_LABELS: readonly string[] = [
   $localize`:@@sebastian-pres.trend.day.mon:Lun`,
   $localize`:@@sebastian-pres.trend.day.tue:Mar`,
@@ -200,10 +185,6 @@ export const TREND_DAY_LABELS: readonly string[] = [
   $localize`:@@sebastian-pres.trend.day.sun:Dim`,
 ];
 
-/**
- * Calcule le niveau d'intensite d'un point heatmap (0-4)
- * pour determiner l'opacite CSS.
- */
 export function getHeatmapLevel(point: SebastianHeatmapPoint): number {
   if (point.combined === 0) return 0;
   if (point.combined <= 1) return 1;

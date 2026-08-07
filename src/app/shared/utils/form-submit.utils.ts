@@ -2,10 +2,6 @@ import type { ChangeDetectorRef } from '@angular/core';
 import type { Observable, Subscription } from 'rxjs';
 import { extractErrorMessage } from './http-error.utils';
 
-/**
- * Options pour {@link handleFormSubmit}.
- * Chaque callback est optionnel sauf `fallbackError`.
- */
 export interface FormSubmitOptions<T> {
   onSuccess?: (result: T) => void;
   onError?: (message: string) => void;
@@ -13,11 +9,6 @@ export interface FormSubmitOptions<T> {
   fallbackError: string;
 }
 
-/**
- * Souscrit a un Observable de soumission de formulaire en centralisant
- * la gestion d'erreur (extraction du message) et le rafraichissement
- * du change detector apres chaque callback.
- */
 export function handleFormSubmit<T>(
   source$: Observable<T>,
   cdr: ChangeDetectorRef,

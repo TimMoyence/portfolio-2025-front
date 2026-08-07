@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
+import { isolateAnimReady } from '../../../../testing/anim-ready';
 import { AsiliHeroComponent } from './asili-hero.component';
 
 const KICKER = 'Studio digital & IA · Bordeaux';
@@ -18,19 +19,7 @@ describe('AsiliHeroComponent', () => {
     fixture = TestBed.createComponent(AsiliHeroComponent);
   }
 
-  // Isolation : la classe `anim-ready` vit sur <html> (singleton partagé entre
-  // tous les specs Karma). On la retire avant ET après chaque test pour
-  // immuniser l'assertion SSR « pas d'anim-ready » contre une fuite d'état
-  // laissée par un spec précédent (ex. home/presentation/offer) qui aurait
-  // rendu un `appReveal` en plateforme browser sans nettoyer, quel que soit
-  // l'ordre d'exécution randomisé.
-  beforeEach(() => {
-    document.documentElement.classList.remove('anim-ready');
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
-  });
+  isolateAnimReady();
 
   it('se cree', () => {
     setup();
@@ -165,12 +154,10 @@ describe('AsiliHeroComponent', () => {
 
       const value = host.querySelector('.hero-meta .n') as HTMLElement;
       expect(value).not.toBeNull();
-      // serif 30px : la regle `.hero-meta ::ng-deep .n` doit s'appliquer.
       expect(getComputedStyle(value).fontSize).toBe('30px');
 
       const divider = host.querySelector('.hero-meta div') as HTMLElement;
       expect(divider).not.toBeNull();
-      // filet a gauche : border-left 1px.
       expect(getComputedStyle(divider).borderLeftWidth).toBe('1px');
 
       hostFixture.destroy();

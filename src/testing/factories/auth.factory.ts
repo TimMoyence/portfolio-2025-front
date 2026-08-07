@@ -10,10 +10,6 @@ import type {
 } from '../../app/core/models/auth.model';
 import type { AuthPort } from '../../app/core/ports/auth.port';
 
-/**
- * Construit un objet AuthUser avec des valeurs par defaut.
- * Accepte des surcharges partielles pour les cas de test specifiques.
- */
 export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
   return {
     id: 'user-1',
@@ -27,10 +23,6 @@ export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
   };
 }
 
-/**
- * Construit une session auth avec des valeurs par defaut.
- * Le refresh token n'est plus dans le body — il est gere par cookie HttpOnly.
- */
 export function buildAuthSession(overrides?: Partial<AuthSession>): AuthSession {
   return {
     accessToken: 'jwt-token',
@@ -40,7 +32,6 @@ export function buildAuthSession(overrides?: Partial<AuthSession>): AuthSession 
   };
 }
 
-/** Construit des credentials de login. */
 export function buildLoginCredentials(overrides?: Partial<LoginCredentials>): LoginCredentials {
   return {
     email: 'test@example.com',
@@ -49,7 +40,6 @@ export function buildLoginCredentials(overrides?: Partial<LoginCredentials>): Lo
   };
 }
 
-/** Construit un payload forgot-password. */
 export function buildForgotPasswordPayload(
   overrides?: Partial<ForgotPasswordPayload>,
 ): ForgotPasswordPayload {
@@ -59,7 +49,6 @@ export function buildForgotPasswordPayload(
   };
 }
 
-/** Construit un payload reset-password. */
 export function buildResetPasswordPayload(
   overrides?: Partial<ResetPasswordPayload>,
 ): ResetPasswordPayload {
@@ -74,7 +63,6 @@ export function buildResetPasswordPayload(
   };
 }
 
-/** Construit un payload set-password. */
 export function buildSetPasswordPayload(
   overrides?: Partial<SetPasswordPayload>,
 ): SetPasswordPayload {
@@ -84,7 +72,6 @@ export function buildSetPasswordPayload(
   };
 }
 
-/** Construit un payload change-password. */
 export function buildChangePasswordPayload(
   overrides?: Partial<ChangePasswordPayload>,
 ): ChangePasswordPayload {
@@ -95,12 +82,6 @@ export function buildChangePasswordPayload(
   };
 }
 
-/**
- * Cree un stub complet du port auth avec des spies Jasmine.
- * Les spies retournent of(null) par defaut pour eviter les erreurs
- * de subscribe dans AuthStateService.restoreSession().
- * refresh() et logout() n'acceptent plus de parametre (cookie HttpOnly).
- */
 export function createAuthPortStub(): Record<keyof AuthPort, jasmine.Spy> {
   return {
     login: jasmine.createSpy('login').and.returnValue(of(null)),

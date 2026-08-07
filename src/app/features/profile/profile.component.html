@@ -1,10 +1,3 @@
-<!--
-  Profil — restyle Asili (source maquette AsiliNewDesign/profil.html +
-  asili-auth.css : .pf-hero, .pf-top, .pf-avatar, .pf-badge, .pf-grid,
-  .pf-card, .pf-line, .pf-access, .pf-acc). Logique inchangée : édition profil,
-  set/change password, préférences météo (AUTH_PORT + WEATHER_PORT +
-  AuthStateService). Restyle = HTML/SCSS uniquement.
--->
 <section class="pf-hero">
   <div class="wrap">
     @if (authState.user(); as user) {
@@ -20,13 +13,11 @@
       </div>
 
       <div class="pf-grid">
-        <!-- ============ INFORMATIONS ============ -->
         <article class="pf-card" appReveal>
           <h2 class="pf-card-title" i18n="@@profileIdentityTitle">Informations personnelles</h2>
           <p class="ch-sub" i18n="@@profileIdentitySub">Vos coordonnées de compte.</p>
 
           @if (!isEditing()) {
-            <!-- Mode lecture -->
             <div class="pf-line">
               <div>
                 <div class="k" i18n="@@profileFirstNameLabel">Prénom</div>
@@ -66,7 +57,6 @@
               </button>
             </div>
           } @else {
-            <!-- Mode édition -->
             <div class="pf-edit">
               <div class="pf-field">
                 <label for="editFirstName" i18n="@@profileEditFirstNameLabel">Prénom</label>
@@ -130,7 +120,6 @@
           }
         </article>
 
-        <!-- ============ ACCÈS ATELIER ============ -->
         <article class="pf-card" appReveal [appRevealDelay]="1">
           <h2 class="pf-card-title" i18n="@@profileAccessTitle">Accès Atelier</h2>
           <p class="ch-sub" i18n="@@profileAccessSub">Vos expériences déverrouillées.</p>
@@ -205,8 +194,6 @@
           </div>
         </article>
 
-        <!-- ============ MOT DE PASSE ============ -->
-        <!-- Définir un mot de passe (compte Google-only) -->
         @if (user.hasPassword !== true) {
           <article class="pf-card" appReveal>
             <h2 class="pf-card-title" i18n="@@profileSetPasswordTitle">Définir un mot de passe</h2>
@@ -260,7 +247,6 @@
           </article>
         }
 
-        <!-- Changer le mot de passe -->
         @if (user.hasPassword === true) {
           <article class="pf-card" appReveal>
             <h2 class="pf-card-title" i18n="@@profileChangePasswordTitle">
@@ -334,7 +320,6 @@
           </article>
         }
 
-        <!-- ============ PRÉFÉRENCES MÉTÉO ============ -->
         @if (authState.hasRole('weather')) {
           <article class="pf-card full" appReveal>
             <h2 class="pf-card-title" i18n="@@profileWeatherTitle">Préférences météo</h2>
@@ -342,7 +327,6 @@
               Votre progression et vos villes favorites.
             </p>
 
-            <!-- Niveau + progression -->
             <div class="pf-weather-level">
               <p class="pf-level-line">
                 <strong i18n="@@profileWeatherLevelLabel">Niveau :</strong>
@@ -383,7 +367,6 @@
               </p>
             </div>
 
-            <!-- Villes favorites -->
             <div class="pf-favorites">
               <h3 class="pf-fav-title" i18n="@@profileWeatherFavoritesTitle">Villes favorites</h3>
               @if (weatherLoading) {
@@ -414,7 +397,6 @@
           </article>
         }
 
-        <!-- ============ PRÉFÉRENCES & SESSION ============ -->
         <article class="pf-card full" appReveal [appRevealDelay]="1">
           <h2 class="pf-card-title" i18n="@@profileSessionTitle">Préférences &amp; session</h2>
           <p class="ch-sub" i18n="@@profileSessionSub">Gérez votre accès à l'écosystème Asili.</p>

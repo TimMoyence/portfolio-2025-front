@@ -22,22 +22,12 @@ import type { WeatherPort } from '../../../../core/ports/weather.port';
 import { WEATHER_PORT } from '../../../../core/ports/weather.port';
 import { GeolocationService } from '../../services/geolocation.service';
 
-/**
- * Composant de recherche de ville.
- * Affiche un champ de saisie avec autocompletion et emet la ville selectionnee.
- */
 @Component({
   selector: 'app-city-search',
   standalone: true,
   imports: [CommonModule, FormsModule],
   host: { class: 'block' },
   template: `
-    <!--
-      Recherche de ville — re-skin Asili AsiliNewDesign/asili-app.css :
-      .app-search (champ pill glass, loupe, placeholder atténué) + dropdown
-      résultats glass .gp. Restyle visuel uniquement — recherche live,
-      géolocalisation, (citySelected) et l'a11y combobox/listbox inchangés.
-    -->
     <div class="relative w-full max-w-md mx-auto" #searchContainer>
       <div class="relative flex gap-2">
         <div class="relative flex-1">
@@ -168,10 +158,8 @@ import { GeolocationService } from '../../services/geolocation.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CitySearchComponent implements OnInit, OnDestroy {
-  /** Mode sombre (fond gradient) ou clair (fond blanc). */
   readonly darkMode = input(true);
 
-  /** Evenement emis lorsqu'une ville est selectionnee. */
   @Output() readonly citySelected = new EventEmitter<CityResult>();
 
   @ViewChild('searchContainer', { static: true }) searchContainer!: ElementRef;
@@ -214,7 +202,6 @@ export class CitySearchComponent implements OnInit, OnDestroy {
     this.searchSubscription?.unsubscribe();
   }
 
-  /** Traite le changement de saisie dans le champ de recherche. */
   onQueryChange(value: string): void {
     this.query.set(value);
     if (value.length < 2) {
@@ -225,7 +212,6 @@ export class CitySearchComponent implements OnInit, OnDestroy {
     this.searchSubject.next(value);
   }
 
-  /** Selectionne une ville et ferme le menu deroulant. */
   selectCity(city: CityResult): void {
     this.query.set(city.name);
     this.showDropdown.set(false);
@@ -233,7 +219,6 @@ export class CitySearchComponent implements OnInit, OnDestroy {
     this.citySelected.emit(city);
   }
 
-  /** Localise l'utilisateur via le navigateur et emet la ville. */
   locateMe(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.locating.set(true);
@@ -270,7 +255,6 @@ export class CitySearchComponent implements OnInit, OnDestroy {
       });
   }
 
-  /** Ferme le menu deroulant lors d'un clic exterieur. */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (!this.searchContainer?.nativeElement?.contains(event.target)) {

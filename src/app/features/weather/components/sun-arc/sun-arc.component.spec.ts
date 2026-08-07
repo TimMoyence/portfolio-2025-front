@@ -51,7 +51,6 @@ describe('SunArcComponent', () => {
     fixture.componentRef.setInput('sunset', '2026-03-31T19:30');
     fixture.detectChanges();
 
-    // En mode navigateur, la progression depend de l'heure courante
     const progress = component.sunProgress();
     expect(typeof progress).toBe('number');
   });

@@ -39,7 +39,6 @@ describe('HourlyChartComponent', () => {
   });
 
   it("devrait utiliser le label Fahrenheit quand l'unite change", () => {
-    // Preparer des donnees horaires suffisantes (24h)
     const forecast = buildForecastResponse();
     const hourlyData = {
       ...forecast.hourly,
@@ -50,16 +49,13 @@ describe('HourlyChartComponent', () => {
       wind_speed_10m: Array.from({ length: 24 }, () => 10),
     };
 
-    // Configurer en Fahrenheit AVANT de fournir les donnees
     unitService.temperatureUnit.set('fahrenheit');
     fixture.componentRef.setInput('hourly', hourlyData);
     fixture.detectChanges();
 
-    // Le chart doit etre construit avec le label Fahrenheit
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chart = (component as any).chart;
     expect(chart).toBeTruthy();
-    // Verifier que le label du dataset contient °F
     expect(chart.data.datasets[0].label).toContain('°F');
   });
 });

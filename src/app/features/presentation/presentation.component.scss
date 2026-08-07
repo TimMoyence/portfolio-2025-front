@@ -1,17 +1,4 @@
 @use '../../styles-shared/breakpoints' as bp;
-/*
-  Présentation Asili — styles propres aux blocs page-level non couverts par les
-  composants de section du Lot 3a (hero, méthode IA, bande CTA, qui portent
-  leurs styles scopés). Blocs portés de `.page-hero-meta` / `.intro-split` /
-  `.skills-grid` / `.timeline` / `.faq` de la maquette
-  AsiliNewDesign/asili-pages.css. Les primitives globales (.kicker, .h-lg,
-  .h-xl, .lead, .wrap, .section-pad, .link-arrow, .btn, .accent) et les design
-  tokens fournissent le reste — on ne re-stylise rien d'existant.
-
-  La FAQ utilise des <details>/<summary> natifs (SSR-safe, accessibles au
-  clavier, sans JavaScript) plutôt que l'accordéon JS de la maquette ; le
-  microdata schema.org/FAQPage reste rendu pour le SEO.
-*/
 
 /* --- Hero : méta clé/valeur (porté de .page-hero-meta) --------------------
    Le slot [meta] de <app-asili-hero> est pensé pour des statistiques serif :
@@ -24,7 +11,6 @@
   display: grid;
   gap: 18px;
   width: 100%;
-  /* Neutralise le filet/padding hérités du slot [meta] (stats serif). */
   border-left: 0;
   padding-left: 0;
 
@@ -33,7 +19,6 @@
     justify-content: space-between;
     gap: 16px;
     padding-bottom: 14px;
-    /* Neutralise le filet/padding gauches hérités du slot [meta]. */
     border-left: 0;
     padding-left: 0;
     border-bottom: 1px solid var(--line);
@@ -55,8 +40,6 @@
   }
 }
 
-/* --- En-têtes de section — base globale dans styles/_base.scss (.sec-head).
-   Seule la variante centrée FAQ reste locale. ------------------------------ */
 .sec-head.faq-head {
   justify-content: center;
   text-align: center;
@@ -66,7 +49,6 @@
   }
 }
 
-/* --- Intro / portrait (porté de .intro-split) ----------------------------- */
 .intro-split {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
@@ -130,7 +112,6 @@
   margin-top: 10px;
 }
 
-/* --- Compétences (porté de .skills-grid / .skill) ------------------------- */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -193,7 +174,6 @@
   }
 }
 
-/* --- Timeline (porté de .timeline / .tl-item) ----------------------------- */
 .timeline {
   display: grid;
   gap: 0;
@@ -247,9 +227,6 @@
   }
 }
 
-/* --- FAQ <details> — bloc global partagé dans styles/_faq.scss ------------ */
-
-/* --- Responsive (porté de la media-query 860px de la maquette) ------------ */
 @include bp.tablet {
   .skills-grid {
     grid-template-columns: 1fr;

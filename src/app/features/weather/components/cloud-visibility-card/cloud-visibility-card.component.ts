@@ -2,10 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MetricCardComponent } from '../metric-card/metric-card.component';
 
-/**
- * Carte de couverture nuageuse et visibilite.
- * Utilise les icones PNG du projet selon le niveau de couverture.
- */
 @Component({
   selector: 'app-cloud-visibility-card',
   standalone: true,
@@ -20,11 +16,6 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
     >
       <span cardTitle i18n="weather.cloud.title|@@weatherCloudTitle">Couverture nuageuse</span>
 
-      <!--
-        Nuages / visibilité — re-skin Asili : couverture font-display, libellé
-        de visibilité font-mono. Typo/couleurs uniquement — cloudIcon()/
-        cloudLabel()/visibilityKm() inchangés.
-      -->
       <div class="flex items-center gap-4">
         <img [src]="cloudIcon()" alt="" class="h-12 w-12 drop-shadow-md" />
 
@@ -49,13 +40,10 @@ import { MetricCardComponent } from '../metric-card/metric-card.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CloudVisibilityCardComponent {
-  /** Pourcentage de couverture nuageuse (0-100). */
   readonly cloudCover = input<number>(0);
 
-  /** Visibilite en metres. */
   readonly visibility = input<number | null>(null);
 
-  /** Icone PNG appropriee selon le niveau de couverture nuageuse. */
   readonly cloudIcon = computed(() => {
     const cover = this.cloudCover();
     const base = '/assets/images/meteo/';
@@ -64,7 +52,6 @@ export class CloudVisibilityCardComponent {
     return base + 'nuage.png';
   });
 
-  /** Label descriptif de la couverture nuageuse en francais. */
   readonly cloudLabel = computed(() => {
     const cover = this.cloudCover();
     if (cover <= 10) return $localize`:weather.cloud.clear|@@weatherCloudClear:Dégagé`;
@@ -76,7 +63,6 @@ export class CloudVisibilityCardComponent {
     return $localize`:weather.cloud.overcast|@@weatherCloudOvercast:Couvert`;
   });
 
-  /** Visibilite convertie en kilometres (arrondie a 1 decimale). */
   readonly visibilityKm = computed(() => {
     const v = this.visibility();
     if (v === null) return 0;

@@ -6,7 +6,6 @@ import type { ToolkitPageData } from '../models/toolkit-page.model';
 import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
 import type { LeadMagnetPort } from '../ports/lead-magnet.port';
 
-/** Adaptateur HTTP pour le module lead-magnets. */
 @Injectable()
 export class LeadMagnetHttpAdapter implements LeadMagnetPort {
   private readonly baseUrl = getApiBaseUrl();

@@ -1,8 +1,7 @@
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { APP_CONFIG } from '../config/app-config.token';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { GeocodingResponse } from '../models/weather.model';
 import {
   buildAirQualityData,
@@ -18,17 +17,7 @@ describe('WeatherHttpAdapter', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        WeatherHttpAdapter,
-        {
-          provide: APP_CONFIG,
-          useValue: environment,
-        },
-      ],
-    });
+    setupTestBed({ providers: [WeatherHttpAdapter] });
 
     adapter = TestBed.inject(WeatherHttpAdapter);
     httpMock = TestBed.inject(HttpTestingController);

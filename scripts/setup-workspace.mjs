@@ -1,28 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Setup Workspace — Portfolio 2025
- *
- * Ce script configure le dossier parent comme workspace complet :
- * 1. Clone le backend si absent
- * 2. Installe les dependances systeme (Homebrew, Node, pnpm, PostgreSQL, Redis)
- * 3. Configure le .env backend avec des secrets generes
- * 4. Lance les migrations
- * 5. Cree le .claude/ avec skills, team, agents et hooks
- * 6. Cree le CLAUDE.md global
- *
- * Usage :
- *   node portfolio-2025-front/scripts/setup-workspace.mjs [options]
- *
- * Options :
- *   --dry-run           Affiche sans executer
- *   --skip-backend      Ne pas cloner/configurer le backend
- *   --skip-database     Ne pas installer PostgreSQL
- *   --skip-redis        Ne pas installer Redis
- *   --skip-claude       Ne pas creer le setup .claude/
- *   --help              Affiche cette aide
- */
-
 import {
   copyFileSync,
   existsSync,
@@ -51,10 +28,6 @@ const REDIS_FORMULA = "redis";
 const LOCAL_DB_ROLE = "portfolio_dev";
 const LOCAL_DB_PASSWORD = "portfolio_dev";
 const LOCAL_DB_NAME = "portfolio_2025_dev";
-
-// ---------------------------------------------------------------------------
-// CLI
-// ---------------------------------------------------------------------------
 
 function printHelp() {
   console.log(`Setup Workspace — Portfolio 2025
@@ -108,10 +81,6 @@ function parseOptions(args) {
   return opts;
 }
 
-// ---------------------------------------------------------------------------
-// Shell helpers
-// ---------------------------------------------------------------------------
-
 function run(command, args, options = {}) {
   const {
     cwd = PARENT_DIR,
@@ -159,10 +128,6 @@ function prependToPath(env, dir) {
   const entries = (env.PATH ?? "").split(":").filter(Boolean);
   if (!entries.includes(dir)) env.PATH = [dir, ...entries].join(":");
 }
-
-// ---------------------------------------------------------------------------
-// Homebrew + system deps
-// ---------------------------------------------------------------------------
 
 function applyBrewEnv(env, opts) {
   const out = run("brew", ["shellenv"], {
@@ -267,10 +232,6 @@ function ensurePnpm(opts, env) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// PostgreSQL + Redis
-// ---------------------------------------------------------------------------
-
 function ensurePostgres(opts, env) {
   ensureBrewFormula(POSTGRES_FORMULA, opts, env);
   ensureFormulaBin(POSTGRES_FORMULA, opts, env);
@@ -279,7 +240,6 @@ function ensurePostgres(opts, env) {
     env,
     description: `Demarrage ${POSTGRES_FORMULA}`,
   });
-  // Wait for readiness
   const max = opts.dryRun ? 1 : 15;
   for (let i = 1; i <= max; i++) {
     const r = run(
@@ -349,17 +309,12 @@ function ensureRedis(opts, env) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// Backend clone + setup
-// ---------------------------------------------------------------------------
-
 function cloneBackend(opts, env) {
   if (existsSync(BACK_DIR)) {
     console.log("\n> Backend deja present, skip clone.");
     return;
   }
 
-  // Try SSH first, fallback to HTTPS
   const sshResult = run("git", ["clone", BACK_REPO, "portfolio-2025-back"], {
     dryRun: opts.dryRun,
     env,
@@ -469,10 +424,6 @@ function runMigrations(opts, env) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// .claude/ setup
-// ---------------------------------------------------------------------------
-
 function setupClaude(opts) {
   if (opts.skipClaude) return;
 
@@ -567,7 +518,6 @@ function setupClaude(opts) {
     }
   }
 
-  // CLAUDE.md
   const claudeMd = `# CLAUDE.md — Workspace Portfolio 2025
 
 ## Structure
@@ -640,10 +590,6 @@ pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm run build
   }
 }
 
-// ---------------------------------------------------------------------------
-// Summary
-// ---------------------------------------------------------------------------
-
 function printSummary(opts) {
   console.log("\n" + "=".repeat(60));
   console.log("  Setup termine !");
@@ -673,10 +619,6 @@ Pour Claude Code :
   Le CLAUDE.md et .claude/ sont en place.
 `);
 }
-
-// ---------------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------------
 
 function main() {
   const opts = parseOptions(process.argv.slice(2));

@@ -170,7 +170,6 @@ describe('SebastianAppComponent', () => {
       ]),
     );
 
-    // Recharger les donnees
     const freshFixture = TestBed.createComponent(SebastianAppComponent);
     freshFixture.detectChanges();
     expect(freshFixture.componentInstance.todayAlcohol()).toBe(3);

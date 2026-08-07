@@ -5,11 +5,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, map, take } from 'rxjs';
 import { AuthStateService } from '../services/auth-state.service';
 
-/**
- * Guard fonctionnel SSR-safe qui attend la fin de l'initialisation
- * de l'AuthStateService avant de verifier l'authentification.
- * Redirige vers /login avec returnUrl si l'utilisateur n'est pas connecte.
- */
 export const authGuard: CanActivateFn = (_route, state) => {
   const authState = inject(AuthStateService);
   const router = inject(Router);

@@ -5,9 +5,6 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
 import { buildSebastianHealthScore } from '../../../../testing/factories/sebastian.factory';
 import { SebastianScoreCardComponent } from './sebastian-score-card.component';
 
-/**
- * Hote de test pour fournir l'input requis via un signal.
- */
 @Component({
   standalone: true,
   imports: [SebastianScoreCardComponent],
@@ -102,8 +99,6 @@ describe('SebastianScoreCardComponent', () => {
   it('devrait utiliser le glass Asili dark lounge ambré', () => {
     const card: HTMLElement = fixture.nativeElement.querySelector("[data-testid='score-card']");
     expect(card).toBeTruthy();
-    // Restyle Lot 5 : glass dark lounge ambré (.panel) — bg-white/[0.04] +
-    // bordure ambrée rgba(230,170,70,0.14) + rayon 20px.
     expect(card.classList).toContain('bg-white/[0.04]');
     expect(card.classList).toContain('border-[rgba(230,170,70,0.14)]');
     expect(card.classList).toContain('rounded-[20px]');

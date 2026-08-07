@@ -13,11 +13,10 @@
   background-image: url('/assets/images/audit.webp');
   background-position: bottom right;
   background-repeat: no-repeat;
-  opacity: 0.15; /* transparency only on image */
+  opacity: 0.15;
   z-index: 0;
 }
 
-/* Ensure content stays above the background */
 .image-background-audit > * {
   position: relative;
   z-index: 1;

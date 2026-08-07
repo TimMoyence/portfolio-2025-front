@@ -1,18 +1,9 @@
-/*
-  Préférences cookies (/cookie-settings) — restyle Asili.
-  Le hero `.lg-hero` est mutualisé dans le partiel `_legal-shared.scss` ; les
-  classes `.ck-*` / `.switch` sont portées ici, verbatim de
-  AsiliNewDesign/asili-legal.css (.ck-list, .ck-item, .switch, .ck-actions,
-  .ck-saved). Primitives globales (.btn, .btn-teal, .btn-ghost, .arrow, .kicker,
-  .lead, .wrap) + tokens (_tokens.scss) pour le reste.
-*/
 @use '../legal-shared';
 
 :host {
   display: block;
 }
 
-/* Section englobante (porté du style inline maquette : padding-block) */
 .ck-section {
   padding-block: clamp(40px, 6vh, 70px) clamp(60px, 9vh, 120px);
 }
@@ -21,7 +12,6 @@
   margin-bottom: 36px;
 }
 
-/* --- Liste de catégories (asili-legal.css : .ck-list / .ck-item) --------- */
 .ck-list {
   display: grid;
   gap: 14px;
@@ -56,7 +46,6 @@
   display: inline-block;
 }
 
-/* --- Switch (asili-legal.css : .switch) ---------------------------------- */
 .switch {
   position: relative;
   width: 50px;
@@ -107,7 +96,6 @@
   box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.4);
 }
 
-/* --- Actions (asili-legal.css : .ck-actions / .ck-saved) ----------------- */
 .ck-actions {
   display: flex;
   gap: 12px;
@@ -131,7 +119,6 @@
   color: var(--danger);
 }
 
-/* --- Note confidentialité (porté du style inline maquette) --------------- */
 .ck-privacy-note {
   font-size: 14px;
   color: var(--ink-mute);

@@ -6,11 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!--
-      Skip link:
-      - Visible only when focused
-      - Jumps directly to the main content landmark
-    -->
     <a
       class="skip-link"
       href="#main-content"
@@ -39,7 +34,6 @@ import { CommonModule } from '@angular/common';
         font-weight: 600;
         text-decoration: none;
         box-shadow: 0 0 0 2px var(--skip-ring);
-        /* Hidden by default */
         transform: translateY(-200%);
         transition: transform 0.15s ease-out;
       }

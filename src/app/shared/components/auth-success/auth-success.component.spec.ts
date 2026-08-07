@@ -2,18 +2,10 @@ import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, RouterModule } from '@angular/router';
-// ROUGE (TDD) : ce composant n'existe pas encore — Batch 6 DRY P3 auth.
 import { AuthSuccessComponent } from './auth-success.component';
 
 const MESSAGE = 'Un email de réinitialisation vous a été envoyé.';
 
-/**
- * Hote de test : reproduit le contrat d'usage des 3 pages a succes.
- * - [message] : le successMessage de la page, rendu sous le titre.
- * - slot [title] : le <h1 i18n="@@…"> propre a la page (i18n + <em> preserves).
- * - slot par defaut : l'action (lien .auth-alt OU <div><a.btn.btn-teal>),
- *   plus, pour verify, le <p class="sub" i18n="@@verifyEmailRedirect">.
- */
 @Component({
   standalone: true,
   imports: [AuthSuccessComponent, RouterModule],
@@ -32,7 +24,6 @@ class HostComponent {
 }
 
 describe('AuthSuccessComponent', () => {
-  /** Monte le composant seul avec un message via setInput. */
   function setupBare(message = MESSAGE): ComponentFixture<AuthSuccessComponent> {
     TestBed.configureTestingModule({
       imports: [AuthSuccessComponent],
@@ -43,7 +34,6 @@ describe('AuthSuccessComponent', () => {
     return fixture;
   }
 
-  /** Monte via l'hote projetant titre + message + action. */
   function setupWithHost(): ComponentFixture<HostComponent> {
     const fixture = TestBed.configureTestingModule({
       imports: [HostComponent],
@@ -104,11 +94,9 @@ describe('AuthSuccessComponent', () => {
 
   it('rend le message pilote (input) + le sous-titre projete (ex. redirect verify)', () => {
     const el = setupWithHost().nativeElement as HTMLElement;
-    // Le message input.
     const subs = el.querySelectorAll('.auth-success p.sub');
     const texts = Array.from(subs).map((n) => n.textContent?.trim());
     expect(texts).toContain(MESSAGE);
-    // Le sous-titre projete (slot par defaut) coexiste.
     expect(el.querySelector('.auth-success .redirect-probe')).not.toBeNull();
   });
 });

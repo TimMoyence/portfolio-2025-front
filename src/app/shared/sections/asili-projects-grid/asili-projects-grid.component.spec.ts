@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
+import { isolateAnimReady } from '../../../../testing/anim-ready';
 import type { AsiliProject } from './asili-projects-grid.component';
 import { AsiliProjectsGridComponent } from './asili-projects-grid.component';
 
@@ -30,10 +31,6 @@ const PROJECTS: readonly AsiliProject[] = [
   },
 ];
 
-/**
- * Jeu dedie aux assertions de chargement d'image : quatre cartes portant toutes
- * une capture, avec les deux tailles (`small` = visuel 4/3, `big` = 16/10).
- */
 const IMAGE_PROJECTS: readonly AsiliProject[] = [
   {
     title: 'Carte 1',
@@ -84,19 +81,7 @@ describe('AsiliProjectsGridComponent', () => {
     fixture.componentRef.setInput('projects', projects);
   }
 
-  // Isolation : la classe `anim-ready` vit sur <html> (singleton partagé entre
-  // tous les specs Karma). On la retire avant ET après chaque test pour
-  // immuniser l'assertion SSR « pas d'anim-ready » contre une fuite d'état
-  // laissée par un spec précédent (ex. home/presentation/offer) qui aurait
-  // rendu un `appReveal` en plateforme browser sans nettoyer, quel que soit
-  // l'ordre d'exécution randomisé.
-  beforeEach(() => {
-    document.documentElement.classList.remove('anim-ready');
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
-  });
+  isolateAnimReady();
 
   it('se cree', () => {
     setup();
@@ -147,7 +132,6 @@ describe('AsiliProjectsGridComponent', () => {
     setup();
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
-    // Deux cartes sans image (Plateforme metier + Morning-Brief).
     const placeholders = host.querySelectorAll<HTMLElement>('.placeholder');
     expect(placeholders.length).toBe(2);
     const legends = Array.from(placeholders).map((p) => p.textContent?.trim());
@@ -177,7 +161,6 @@ describe('AsiliProjectsGridComponent', () => {
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
     const links = host.querySelectorAll<HTMLAnchorElement>('.proj .proj-link');
-    // Deux projets ont un href (plateforme + meteo).
     expect(links.length).toBe(2);
     expect(links[0].getAttribute('href')).toBe('/projets');
   });
@@ -216,16 +199,12 @@ describe('AsiliProjectsGridComponent', () => {
     it('charge toutes les captures en lazy par defaut', () => {
       setup(IMAGE_PROJECTS);
       fixture.detectChanges();
-      // Defaut = 0 : sur les deux pages qui montent cette grille, aucune capture
-      // n'est visible au chargement (/projets la place sous un hero de 89svh,
-      // l'accueil en bas de document). Aucune image n'est donc candidate LCP.
       expect(images().map((img) => img.getAttribute('loading'))).toEqual([
         'lazy',
         'lazy',
         'lazy',
         'lazy',
       ]);
-      // Corollaire : rien ne preempte la bande passante du vrai LCP.
       expect(images().every((img) => img.getAttribute('fetchpriority') === null)).toBeTrue();
     });
 
@@ -259,9 +238,6 @@ describe('AsiliProjectsGridComponent', () => {
     it('declare des dimensions intrinseques au ratio de la boite de rendu', () => {
       setup(IMAGE_PROJECTS);
       fixture.detectChanges();
-      // Les captures sources ont des ratios heterogenes (0.87 a 1.44) mais sont
-      // recadrees en `object-fit: cover` : les attributs decrivent la boite
-      // (`.proj-shot` = 16/10 en big, 4/3 en small), pas le fichier.
       const declared = images().map((img) => [
         img.getAttribute('width'),
         img.getAttribute('height'),

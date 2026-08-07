@@ -1,26 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-/**
- * Un element d'une FAQ, compose d'une question et d'une reponse.
- */
 export interface FaqItem {
-  /** Question visible et utilisee comme label de l'element details. */
   readonly question: string;
-  /** Reponse en texte brut (ou HTML echappe cote serveur). */
   readonly answer: string;
 }
 
 /**
- * Composant FAQ reutilisable avec accordeons natifs `<details>`.
- *
  * Le rendu HTML visible est indispensable pour que le contenu declare dans
- * les schemas JSON-LD `FAQPage` soit indexe par Google et les moteurs IA :
- * depuis 2024, Google exige que les Q&R soient visibles sur la page pour
- * que le schema soit valide.
- *
- * Les `<details>` natifs offrent l'accessibilite clavier et un rendu
- * progressif sans JavaScript, ce qui est ideal pour le SEO et les crawlers.
+ * les schemas JSON-LD `FAQPage` soit indexe : depuis 2024, Google exige que
+ * les Q&R soient visibles sur la page pour que le schema soit valide.
  */
 @Component({
   selector: 'app-faq-section',
@@ -90,9 +79,5 @@ export class FaqSectionComponent {
   @Input({ required: true }) items: readonly FaqItem[] = [];
   @Input() kicker?: string;
   @Input() description?: string;
-  /**
-   * Identifiant HTML unique de l'en-tete FAQ, utilise pour `aria-labelledby`.
-   * Par defaut `faq-heading`. A changer si plusieurs FAQ coexistent sur une page.
-   */
   @Input() headingId = 'faq-heading';
 }

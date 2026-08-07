@@ -1,4 +1,3 @@
-/** Resultat de recherche de ville via l'API de geocodage. */
 export interface CityResult {
   id: number;
   name: string;
@@ -9,12 +8,10 @@ export interface CityResult {
   admin1?: string;
 }
 
-/** Reponse de l'endpoint de geocodage. */
 export interface GeocodingResponse {
   results: CityResult[];
 }
 
-/** Donnees meteo courantes retournees par l'API. */
 export interface CurrentWeather {
   time: string;
   temperature_2m: number;
@@ -31,7 +28,6 @@ export interface CurrentWeather {
   dew_point_2m?: number;
 }
 
-/** Previsions horaires retournees par l'API. */
 export interface HourlyForecast {
   time: string[];
   temperature_2m: number[];
@@ -48,7 +44,6 @@ export interface HourlyForecast {
   visibility?: number[];
 }
 
-/** Previsions journalieres retournees par l'API. */
 export interface DailyForecast {
   time: string[];
   weather_code: number[];
@@ -63,20 +58,16 @@ export interface DailyForecast {
   wind_direction_10m_dominant?: number[];
 }
 
-/** Reponse complete de l'endpoint de previsions meteo. */
 export interface ForecastResponse {
   current: CurrentWeather;
   hourly: HourlyForecast;
   daily: DailyForecast;
 }
 
-/** Niveau d'experience meteo de l'utilisateur. */
 export type WeatherLevel = 'discovery' | 'curious' | 'expert';
 
-/** Granularite de la vue d'ensemble hebdomadaire. */
 export type OverviewGranularity = 'day' | '3h' | '1h';
 
-/** Ville favorite enregistree dans les preferences. */
 export interface FavoriteCity {
   name: string;
   latitude: number;
@@ -84,7 +75,6 @@ export interface FavoriteCity {
   country: string;
 }
 
-/** Donnees de qualite de l'air retournees par l'API. */
 export interface AirQualityData {
   current: {
     european_aqi: number;
@@ -103,7 +93,6 @@ export interface AirQualityData {
   };
 }
 
-/** Previsions d'un modele meteorologique dans un ensemble multi-modeles. */
 export interface EnsembleModel {
   model: string;
   hourly: {
@@ -115,12 +104,10 @@ export interface EnsembleModel {
   };
 }
 
-/** Donnees d'ensemble multi-modeles (ECMWF, GFS, ICON). */
 export interface EnsembleData {
   models: EnsembleModel[];
 }
 
-/** Donnees historiques journalieres pour comparaison climatologique. */
 export interface HistoricalData {
   daily: {
     time: string[];
@@ -131,14 +118,12 @@ export interface HistoricalData {
   };
 }
 
-/** Preferences d'unites de mesure de l'utilisateur. */
 export interface UnitPreferences {
   temperature: 'celsius' | 'fahrenheit';
   speed: 'kmh' | 'mph';
   pressure: 'hpa' | 'inhg';
 }
 
-/** Preferences meteo de l'utilisateur, synchronisees avec le backend. */
 export interface WeatherPreferences {
   id: string;
   userId: string;
@@ -152,7 +137,6 @@ export interface WeatherPreferences {
   overviewGranularity: OverviewGranularity;
 }
 
-/** Donnees meteo detaillees courantes (source OpenWeatherMap). */
 export interface DetailedCurrentWeather {
   temperature: number;
   feelsLike: number;
@@ -180,7 +164,6 @@ export interface DetailedCurrentWeather {
   timezoneOffset: number;
 }
 
-/** Element horaire detaille (source OpenWeatherMap, 3h). */
 export interface DetailedHourlyItem {
   time: string;
   temperature: number;
@@ -203,7 +186,6 @@ export interface DetailedHourlyItem {
   partOfDay: 'd' | 'n';
 }
 
-/** Element journalier detaille (source OpenWeatherMap). */
 export interface DetailedDailyItem {
   date: string;
   minTemp: number;
@@ -214,7 +196,6 @@ export interface DetailedDailyItem {
   conditionIcon: string;
 }
 
-/** Resultat des previsions detaillees (source OpenWeatherMap). */
 export interface DetailedForecastResult {
   cityName: string;
   country: string;
@@ -225,10 +206,8 @@ export interface DetailedForecastResult {
   daily: DetailedDailyItem[];
 }
 
-/** Severite d'une alerte meteo. */
 export type AlertSeverity = 'minor' | 'moderate' | 'severe' | 'extreme';
 
-/** Alerte meteo synthetique. */
 export interface WeatherAlert {
   type: string;
   severity: AlertSeverity;
@@ -238,7 +217,6 @@ export interface WeatherAlert {
   endTime: string;
 }
 
-/** Resultat des alertes meteo. */
 export interface WeatherAlertResult {
   alerts: WeatherAlert[];
 }

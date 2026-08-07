@@ -1,8 +1,7 @@
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { APP_CONFIG } from '../config/app-config.token';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { PresentationInteractionsResponse } from '../ports/presentation.port';
 import { PresentationHttpAdapter } from './presentation-http.adapter';
 
@@ -11,17 +10,7 @@ describe('PresentationHttpAdapter', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        PresentationHttpAdapter,
-        {
-          provide: APP_CONFIG,
-          useValue: environment,
-        },
-      ],
-    });
+    setupTestBed({ providers: [PresentationHttpAdapter] });
 
     adapter = TestBed.inject(PresentationHttpAdapter);
     httpMock = TestBed.inject(HttpTestingController);

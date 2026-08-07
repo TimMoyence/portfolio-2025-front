@@ -1,18 +1,5 @@
 import { Pipe, type PipeTransform } from '@angular/core';
 
-/**
- * Pipe de conversion et formatage des unites meteorologiques.
- * Transforme une valeur brute (toujours en unite SI) vers l'unite cible
- * et retourne une chaine formatee avec le suffixe.
- *
- * Conversions supportees :
- * - celsius : affiche la valeur telle quelle en °C
- * - fahrenheit : convertit de Celsius vers Fahrenheit
- * - kmh : affiche la valeur telle quelle en km/h
- * - mph : convertit de km/h vers mph
- * - hpa : affiche la valeur telle quelle en hPa
- * - inhg : convertit de hPa vers inHg
- */
 @Pipe({ name: 'unit', standalone: true, pure: true })
 export class UnitPipe implements PipeTransform {
   transform(value: number | null | undefined, unit: string): string {

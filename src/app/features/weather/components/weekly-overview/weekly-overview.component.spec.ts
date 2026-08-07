@@ -5,7 +5,6 @@ import { WEATHER_PORT } from '../../../../core/ports/weather.port';
 import { createWeatherPortStub } from '../../../../../testing/factories/weather.factory';
 import type { DailyForecast, HourlyForecast } from '../../../../core/models/weather.model';
 
-/** Construit un jeu horaire minimal de 24h pour les tests. */
 function buildTestHourly(): HourlyForecast {
   const times: string[] = [];
   const temps: number[] = [];
@@ -30,7 +29,6 @@ function buildTestHourly(): HourlyForecast {
   };
 }
 
-/** Construit un DailyForecast minimal pour les tests. */
 function buildTestDaily(): DailyForecast {
   return {
     time: ['2026-04-01'],

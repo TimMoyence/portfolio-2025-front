@@ -1,29 +1,19 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { APP_CONFIG } from '../../core/config/app-config.token';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
-import { environment } from '../../../environments/environment';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 
 describe('ContactComponent', () => {
   let component: ContactComponent;
   let fixture: ComponentFixture<ContactComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    await setupTestBed({
+      router: true,
       imports: [ContactComponent],
       providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        {
-          provide: APP_CONFIG,
-          useValue: environment,
-        },
         {
           provide: CONTACT_PORT,
           useValue: createContactPortStubWithDefault(),
@@ -46,18 +36,14 @@ describe('ContactComponent', () => {
     expect(heading?.textContent).toContain(component.hero.title);
   });
 
-  // --- Presence du formulaire ---
-
   it('devrait afficher le formulaire de contact avec les champs texte', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const form = compiled.querySelector('form');
     expect(form).not.toBeNull();
 
-    // Les 4 champs sont rendus via @for sur contactFields
     const inputs = form?.querySelectorAll('input:not([type=radio]):not([type=checkbox])');
     expect(inputs?.length).toBeGreaterThanOrEqual(component.contactFields.length);
 
-    // Verifie la presence de chaque champ par son id
     for (const field of component.contactFields) {
       const input = compiled.querySelector(`#${field.key}`);
       expect(input).withContext(`champ ${field.key} attendu`).not.toBeNull();
@@ -69,16 +55,13 @@ describe('ContactComponent', () => {
     const subjectSelect = compiled.querySelector('select[name="subject"]');
     expect(subjectSelect).not.toBeNull();
 
-    // Verifie que les options de sujet sont presentes (+ l'option placeholder)
     const options = subjectSelect?.querySelectorAll('option');
-    // 1 placeholder + 3 sujets = 4 options
     expect(options?.length).toBeGreaterThanOrEqual(4);
   });
 
   it('devrait afficher les boutons radio de role', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const roleRadios = compiled.querySelectorAll('input[name="role"]');
-    // 6 roles definis dans le composant
     expect(roleRadios.length).toBe(component.contactInfo.roles.length);
   });
 
@@ -100,8 +83,6 @@ describe('ContactComponent', () => {
     expect(submitButton).not.toBeNull();
   });
 
-  // --- Etat initial ---
-
   it('devrait initialiser le formulaire avec isContactLoading a false', () => {
     expect(component.isContactLoading).toBeFalse();
     expect(component.isContactSubmitted).toBeFalse();
@@ -114,7 +95,6 @@ describe('ContactComponent', () => {
     expect(component.contactForm.terms).toBeFalse();
   });
 
-  // --- Contraste (WCAG 2.1 AA) ---
   // Les champs sont transparents : le fond effectif est le champ de particules
   // sous le voile. `--text-mute` y tombe a 3,53:1, sous le seuil AA de 4,5:1.
   // Toute valeur saisie ou selectionnee doit donc s'afficher en `--text-strong`.
@@ -148,8 +128,6 @@ describe('ContactComponent', () => {
       'subject',
     ];
 
-    // Formulaire vierge : c'est l'etat « au repos » des labels flottants,
-    // ou ils sont la seule indication de ce qu'il faut saisir.
     for (const id of labelledIds) {
       const label = compiled.querySelector(`label[for="${id}"]`);
       expect(label).withContext(`label du champ ${id}`).not.toBeNull();

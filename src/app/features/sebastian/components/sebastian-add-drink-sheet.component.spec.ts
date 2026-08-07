@@ -6,9 +6,6 @@ import type { SebastianEntry } from '../../../core/models/sebastian.model';
 import { buildSebastianEntry } from '../../../../testing/factories/sebastian.factory';
 import { SebastianAddDrinkSheetComponent } from './sebastian-add-drink-sheet.component';
 
-/**
- * Hote de test pour fournir les inputs via des signaux.
- */
 @Component({
   standalone: true,
   imports: [SebastianAddDrinkSheetComponent],
@@ -106,7 +103,6 @@ describe('SebastianAddDrinkSheetComponent', () => {
     expect(payload.consumedAt).toBeDefined();
 
     const consumedAtMs = new Date(payload.consumedAt).getTime();
-    // consumedAt devrait etre ~30 minutes avant maintenant (tolerance 2s)
     const thirtyMinMs = 30 * 60 * 1000;
     expect(consumedAtMs).toBeGreaterThanOrEqual(before - thirtyMinMs - 2000);
     expect(consumedAtMs).toBeLessThanOrEqual(after - thirtyMinMs + 2000);

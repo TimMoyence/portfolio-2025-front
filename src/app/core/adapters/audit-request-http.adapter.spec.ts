@@ -1,33 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { APP_CONFIG } from '../config/app-config.token';
-import type { AppConfig } from '../config/app-config.model';
 import type { AuditCompletedEvent, AuditStreamEvent } from '../models/audit-request.model';
 import { buildClientReport } from '../../../testing/factories/audit-request.factory';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuditRequestHttpAdapter } from './audit-request-http.adapter';
 
 describe('AuditRequestHttpAdapter', () => {
-  const mockAppConfig: AppConfig = {
-    production: false,
-    appName: 'test',
-    apiBaseUrl: 'http://localhost:3000/api/v1/portfolio25/',
-    baseUrl: 'http://localhost:4200',
-    external: { sebastianUrl: '' },
-  };
-
   describe('en contexte serveur (SSR)', () => {
     let adapter: AuditRequestHttpAdapter;
 
     beforeEach(() => {
       const httpSpy = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'post']);
 
-      TestBed.configureTestingModule({
+      setupTestBed({
+        http: false,
         providers: [
           AuditRequestHttpAdapter,
           { provide: HttpClient, useValue: httpSpy },
           { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: APP_CONFIG, useValue: mockAppConfig },
         ],
       });
 
@@ -45,7 +36,6 @@ describe('AuditRequestHttpAdapter', () => {
       result.subscribe({
         next: (val) => emissions.push(val),
         complete: () => {
-          // EMPTY complete immediatement sans emettre
           expect(emissions.length).toBe(0);
           done();
         },
@@ -62,12 +52,12 @@ describe('AuditRequestHttpAdapter', () => {
     beforeEach(() => {
       const httpSpy = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'post']);
 
-      TestBed.configureTestingModule({
+      setupTestBed({
+        http: false,
         providers: [
           AuditRequestHttpAdapter,
           { provide: HttpClient, useValue: httpSpy },
           { provide: PLATFORM_ID, useValue: 'browser' },
-          { provide: APP_CONFIG, useValue: mockAppConfig },
         ],
       });
 
@@ -79,7 +69,6 @@ describe('AuditRequestHttpAdapter', () => {
     });
 
     it("stream() devrait transmettre clientReport dans l'evenement completed", (done) => {
-      // Fake EventSource pour simuler la reception d'un event SSE 'completed'
       const listeners = new Map<string, (event: Event) => void>();
       const closeSpy = jasmine.createSpy('close');
       const fakeEventSource = {
@@ -90,7 +79,6 @@ describe('AuditRequestHttpAdapter', () => {
         onerror: null,
       };
 
-      // Remplace temporairement le constructeur global EventSource
       const originalEventSource = (globalThis as unknown as { EventSource: unknown }).EventSource;
       (globalThis as unknown as { EventSource: unknown }).EventSource = function FakeES() {
         return fakeEventSource;
@@ -131,7 +119,6 @@ describe('AuditRequestHttpAdapter', () => {
         },
       });
 
-      // Simule l'arrivee du message SSE 'completed'
       const completedListener = listeners.get('completed');
       expect(completedListener).toBeDefined();
       const messageEvent = new MessageEvent('completed', {

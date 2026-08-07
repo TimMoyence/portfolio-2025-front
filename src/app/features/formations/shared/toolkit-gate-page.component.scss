@@ -1,9 +1,3 @@
-/*
-  Page gate toolkit partagee (capture) — refonte Asili.
-  Les styles `.tk-*` sont mutualises dans le partiel `_toolkit-page.scss`
-  (porte de AsiliNewDesign/asili-formation.css). On ne fait que les importer
-  et les scoper a ce composant.
-*/
 @use '../toolkit-page';
 
 :host {

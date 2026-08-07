@@ -2,24 +2,11 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import type { EnsembleData } from '../../../../core/models/weather.model';
 
-/**
- * Carte de comparaison multi-modeles (ECMWF, GFS, ICON).
- * Affiche un tableau avec les metriques cles sur les 24 premieres heures.
- * Les divergences significatives (> 3 degres C) sont signalees en orange.
- */
 @Component({
   selector: 'app-model-comparison',
   standalone: true,
   imports: [DecimalPipe],
   template: `
-    <!--
-      Carte Expert comparaison de modèles — conteneur glass Asili.
-      Re-skin AsiliNewDesign/asili-app.css : .gp/.wx-card (bg-white/5,
-      border-teal/15, rayon --r-lg 20px, backdrop-blur-xl) + en-tête kicker
-      .gp-h (font-mono uppercase tracking .14em). Restyle visuel uniquement —
-      le tableau, columns()/tempDivergent() et la couleur sémantique orange de
-      divergence sont inchangés.
-    -->
     <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
       <h3
         class="mb-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white/55"
@@ -49,7 +36,6 @@ import type { EnsembleData } from '../../../../core/models/weather.model';
               </tr>
             </thead>
             <tbody>
-              <!-- Temperature moyenne 24h -->
               <tr class="border-b border-white/5">
                 <td
                   class="px-3 py-2 text-white/65"
@@ -67,7 +53,6 @@ import type { EnsembleData } from '../../../../core/models/weather.model';
                   </td>
                 }
               </tr>
-              <!-- Precipitations totales 24h -->
               <tr>
                 <td
                   class="px-3 py-2 text-white/65"
@@ -106,10 +91,8 @@ import type { EnsembleData } from '../../../../core/models/weather.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelComparisonComponent {
-  /** Donnees d'ensemble multi-modeles. */
   readonly ensemble = input<EnsembleData | null>(null);
 
-  /** Colonnes du tableau avec metriques calculees par modele sur 24h. */
   readonly columns = computed(() => {
     const data = this.ensemble();
     if (!data) return [];
@@ -128,7 +111,6 @@ export class ModelComparisonComponent {
     });
   });
 
-  /** Indique si les temperatures moyennes divergent de plus de 3 degres entre modeles. */
   readonly tempDivergent = computed(() => {
     const cols = this.columns();
     if (cols.length < 2) return false;

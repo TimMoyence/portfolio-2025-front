@@ -2,20 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ToolkitGatePageComponent } from '../../shared/toolkit-gate-page.component';
 import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
 
-/**
- * Page de capture email du toolkit « Automatiser avec l'IA » — refonte Asili
- * (Lot 3e).
- *
- * Shell mince : il fournit ses chaines localisees au composant partage
- * `ToolkitGatePageComponent` et projette son titre a accent. Le slug
- * `automatiser-avec-ia` (cle metier d'attribution back-end) est transmis
- * verbatim au formulaire de capture, qui declenche l'envoi du PDF « 5 workflows
- * prets a l'emploi » via le pipeline lead-magnet.
- *
- * La logique de capture (port `LEAD_MAGNET_PORT`, `requestToolkit`) vit dans
- * `ToolkitFormComponent`, inchangee. Routes et `seoKey` inchanges ; fond
- * constellation global. Texte localise via `$localize`.
- */
 @Component({
   selector: 'app-toolkit-auto',
   standalone: true,
@@ -30,7 +16,6 @@ import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
   `,
 })
 export class ToolkitAutoComponent {
-  /** Contenu localise de la page gate. */
   protected readonly gateData: ToolkitGatePageData = {
     lead: $localize`:@@formations.auto.toolkit.subtitle:Les cinq workflows testés de la formation — avec les prompts exacts, les pièges à éviter et la checklist de relecture — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement.`,
     items: [

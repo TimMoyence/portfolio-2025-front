@@ -1,9 +1,5 @@
 import { readInputValue, readCheckboxChecked } from './dom-event.utils';
 
-/**
- * Fabrique un `Event` factice dont la cible est l'element fourni.
- * DOM reel disponible via Karma/Chrome (headless).
- */
 function eventWithTarget(target: EventTarget | null): Event {
   return { target } as unknown as Event;
 }

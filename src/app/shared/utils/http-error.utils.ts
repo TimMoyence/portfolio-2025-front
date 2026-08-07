@@ -1,4 +1,3 @@
-/** Options de {@link extractErrorMessage}. */
 export interface ExtractErrorMessageOptions {
   /**
    * Autorise le repli sur `error.message` (message HTTP top-level) quand aucun

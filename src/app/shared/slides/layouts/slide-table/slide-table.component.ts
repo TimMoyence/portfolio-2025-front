@@ -11,20 +11,8 @@ export interface TableColumn {
   label: string;
 }
 
-/**
- * Une ligne de tableau : record clés-valeurs ou les cles correspondent
- * aux `TableColumn.key`. Les colonnes manquantes affichent "".
- */
 export type TableRow = Record<string, string>;
 
-/**
- * Layout de slide tabulaire pour donnees denses.
- *
- * Conçu pour le mode `visibility="scroll-only"` : un tableau de N
- * colonnes et M lignes, scroll horizontal sur mobile, alignements DS
- * (vert teal). Les `columns` definissent l'ordre + libelle (i18n) ;
- * chaque `row` doit fournir une valeur pour chaque `key` de colonne.
- */
 @Component({
   selector: 'app-slide-table',
   standalone: true,

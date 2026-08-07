@@ -4,31 +4,18 @@ import type { WeatherLevel } from '../../../core/models/weather.model';
 import type { WeatherPort } from '../../../core/ports/weather.port';
 import { WEATHER_PORT } from '../../../core/ports/weather.port';
 
-/**
- * Service de gestion du niveau d'experience meteo.
- * Synchronise le niveau, les tooltips vus et l'utilisation quotidienne
- * avec le backend via le port meteo.
- */
 @Injectable()
 export class WeatherLevelService {
   private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
 
-  /** Niveau d'experience actuel de l'utilisateur. */
   readonly level = signal<WeatherLevel>('discovery');
 
-  /** Nombre de jours d'utilisation cumules. */
   readonly daysUsed = signal(0);
 
-  /** Identifiants des tooltips deja vus par l'utilisateur. */
   readonly tooltipsSeen = signal<string[]>([]);
 
-  /** Indicateur de chargement des preferences. */
   readonly loading = signal(false);
 
-  /**
-   * Niveau suggere pour la prochaine transition.
-   * Retourne null si l'utilisateur n'est pas eligible a une transition.
-   */
   readonly showTransitionPrompt = computed<WeatherLevel | null>(() => {
     const l = this.level();
     const d = this.daysUsed();
@@ -37,7 +24,6 @@ export class WeatherLevelService {
     return null;
   });
 
-  /** Charge les preferences depuis le backend. */
   loadPreferences(): void {
     this.loading.set(true);
     this.weatherService
@@ -56,7 +42,6 @@ export class WeatherLevelService {
       });
   }
 
-  /** Change le niveau et synchronise avec le backend. */
   setLevel(level: WeatherLevel): void {
     this.level.set(level);
     this.weatherService
@@ -72,7 +57,6 @@ export class WeatherLevelService {
       });
   }
 
-  /** Marque un tooltip comme vu et synchronise avec le backend. */
   markTooltipSeen(tooltipId: string): void {
     const current = this.tooltipsSeen();
     if (current.includes(tooltipId)) return;
@@ -82,12 +66,10 @@ export class WeatherLevelService {
     this.weatherService.updatePreferences({ tooltipsSeen: updated }).pipe(take(1)).subscribe();
   }
 
-  /** Verifie si un tooltip a deja ete vu. */
   isTooltipSeen(tooltipId: string): boolean {
     return this.tooltipsSeen().includes(tooltipId);
   }
 
-  /** Enregistre l'utilisation quotidienne aupres du backend. */
   recordUsage(): void {
     this.weatherService.recordUsage().pipe(take(1)).subscribe();
   }

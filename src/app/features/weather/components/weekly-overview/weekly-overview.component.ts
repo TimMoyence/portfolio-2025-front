@@ -21,7 +21,6 @@ import { UnitPreferencesService } from '../../services/unit-preferences.service'
 import { groupHourlyByGranularity, type WeatherTimeSlot } from '../../utils/weekly-overview';
 import { weatherCodeToIcon } from '../../utils/weather-icons';
 
-/** Ligne affichee dans le tableau pour le mode "day". */
 interface DayRow {
   dayLabel: string;
   icon: string;
@@ -35,17 +34,11 @@ interface DayRow {
   pressure: number | null;
 }
 
-/** Groupe de lignes 3h/1h rattachees a un meme jour. */
 interface SlotGroup {
   dayLabel: string;
   slots: WeatherTimeSlot[];
 }
 
-/**
- * Tableau de previsions unifie avec design glassmorphism.
- * Remplace daily-forecast + ancien weekly-overview.
- * Colonnes progressives selon le niveau (discovery → curious → expert).
- */
 @Component({
   selector: 'app-weekly-overview',
   standalone: true,
@@ -54,51 +47,39 @@ interface SlotGroup {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeeklyOverviewComponent {
-  /** Donnees horaires brutes a grouper. */
   readonly hourly = input<HourlyForecast | null>(null);
 
-  /** Donnees journalieres pour le mode "Jour". */
   readonly daily = input<DailyForecast | null>(null);
 
-  /** Niveau d'experience de l'utilisateur. */
   readonly level = input<WeatherLevel>('discovery');
 
-  /** Granularite initiale (synchronisee depuis les preferences). */
   readonly initialGranularity = input<OverviewGranularity>('day');
 
-  /** Emis quand l'utilisateur change la granularite. */
   readonly granularityChange = output<OverviewGranularity>();
 
-  /** Granularite actuelle selectionnee. */
   readonly granularity = signal<OverviewGranularity>('day');
 
   readonly unitService = inject(UnitPreferencesService);
   private readonly localeId = inject(LOCALE_ID);
 
-  /** Options de granularite. */
   readonly granularityOptions: { value: OverviewGranularity; label: string }[] = [
     { value: 'day', label: 'Jour' },
     { value: '3h', label: '3h' },
     { value: '1h', label: '1h' },
   ];
 
-  /** Expose weatherCodeToIcon pour le template. */
   readonly weatherCodeToIcon = weatherCodeToIcon;
 
-  /** Niveau curious ou expert. */
   readonly isCurious = computed(() => this.level() === 'curious' || this.level() === 'expert');
 
-  /** Niveau expert. */
   readonly isExpert = computed(() => this.level() === 'expert');
 
-  /** Creneaux horaires groupes (pour modes 3h/1h). */
   readonly slots = computed<WeatherTimeSlot[]>(() => {
     const h = this.hourly();
     if (!h) return [];
     return groupHourlyByGranularity(h, this.granularity());
   });
 
-  /** Lignes du tableau en mode "Jour" (depuis DailyForecast). */
   readonly dayRows = computed<DayRow[]>(() => {
     const d = this.daily();
     const h = this.hourly();
@@ -133,7 +114,6 @@ export class WeeklyOverviewComponent {
     });
   });
 
-  /** Groupe les slots 3h/1h par jour pour le rowspan du tableau. */
   readonly slotGroups = computed<SlotGroup[]>(() => {
     const allSlots = this.slots();
     if (allSlots.length === 0) return [];
@@ -167,22 +147,16 @@ export class WeeklyOverviewComponent {
     return groups;
   });
 
-  /** Change la granularite et emet l'evenement. */
   setGranularity(value: OverviewGranularity): void {
     if (this.granularity() === value) return;
     this.granularity.set(value);
     this.granularityChange.emit(value);
   }
 
-  /** Formate l'heure d'un slot (HH:mm). */
   formatTime(label: string): string {
     return label.slice(11, 16);
   }
 
-  /**
-   * Couleur de fond temperature — gradient froid→chaud.
-   * Bleu (#3b82f6) → Cyan → Vert → Jaune → Orange → Rouge (#ef4444).
-   */
   tempColor(temp: number, alpha: number): string {
     const t = clamp(temp, -10, 40);
     const ratio = (t + 10) / 50;
@@ -218,7 +192,6 @@ export class WeeklyOverviewComponent {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  /** Formate un label de jour a partir d'une date ISO. */
   private formatDayLabel(isoDate: string): string {
     const date = new Date(isoDate);
     const today = new Date();

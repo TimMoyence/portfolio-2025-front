@@ -3,30 +3,16 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { BottomSheetComponent } from '../../../../shared/components/bottom-sheet/bottom-sheet.component';
 import { UnitPreferencesService } from '../../services/unit-preferences.service';
 
-/** Definition d'un choix d'unite pour le selecteur segmente. */
 interface UnitOption<T extends string> {
   value: T;
   label: string;
 }
 
-/**
- * Bouton engrenage ouvrant un panneau de selection des unites de mesure.
- * Utilise le BottomSheet en mobile et en desktop.
- * Permet de choisir les unites de temperature, vitesse et pression.
- */
 @Component({
   selector: 'app-unit-selector',
   standalone: true,
   imports: [CommonModule, BottomSheetComponent],
   template: `
-    <!--
-      Sélecteur d'unités — re-skin Asili AsiliNewDesign/asili-app.css :
-      bouton engrenage glass + segments .unit-toggle (pill, bordure subtile,
-      onglet actif .on fond teal sur foncé, libellés font-mono). Restyle
-      visuel uniquement — UnitPreferencesService, BottomSheetComponent,
-      role=tablist/aria-selected inchangés.
-    -->
-    <!-- Bouton engrenage -->
     <button
       type="button"
       class="flex h-11 w-11 items-center justify-center rounded-full border border-teal/15 bg-white/5 backdrop-blur-xl transition-colors hover:border-teal/40"
@@ -57,10 +43,8 @@ interface UnitOption<T extends string> {
       </svg>
     </button>
 
-    <!-- Panneau de selection des unites -->
     <app-bottom-sheet [open]="isOpen()" [title]="sheetTitle" (openChange)="onOpenChange($event)">
       <div class="space-y-5">
-        <!-- Temperature -->
         <div>
           <p
             class="mb-2 text-sm font-medium text-white/70"
@@ -91,7 +75,6 @@ interface UnitOption<T extends string> {
           </nav>
         </div>
 
-        <!-- Vitesse -->
         <div>
           <p
             class="mb-2 text-sm font-medium text-white/70"
@@ -122,7 +105,6 @@ interface UnitOption<T extends string> {
           </nav>
         </div>
 
-        <!-- Pression -->
         <div>
           <p
             class="mb-2 text-sm font-medium text-white/70"
@@ -158,39 +140,31 @@ interface UnitOption<T extends string> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnitSelectorComponent {
-  /** Service de preferences d'unites. */
   readonly unitService = inject(UnitPreferencesService);
 
-  /** Etat d'ouverture du panneau. */
   readonly isOpen = signal(false);
 
-  /** Titre du bottom sheet. */
   readonly sheetTitle = $localize`:weather.units.title|@@weatherUnitsTitle:Unités de mesure`;
 
-  /** Options de temperature. */
   readonly temperatureOptions: UnitOption<'celsius' | 'fahrenheit'>[] = [
     { value: 'celsius', label: '\u00B0C' },
     { value: 'fahrenheit', label: '\u00B0F' },
   ];
 
-  /** Options de vitesse. */
   readonly speedOptions: UnitOption<'kmh' | 'mph'>[] = [
     { value: 'kmh', label: 'km/h' },
     { value: 'mph', label: 'mph' },
   ];
 
-  /** Options de pression. */
   readonly pressureOptions: UnitOption<'hpa' | 'inhg'>[] = [
     { value: 'hpa', label: 'hPa' },
     { value: 'inhg', label: 'inHg' },
   ];
 
-  /** Bascule l'ouverture du panneau. */
   toggleOpen(): void {
     this.isOpen.update((v) => !v);
   }
 
-  /** Gere le changement d'etat du bottom sheet. */
   onOpenChange(open: boolean): void {
     this.isOpen.set(open);
   }

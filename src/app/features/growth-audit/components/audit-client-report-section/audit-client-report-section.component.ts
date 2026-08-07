@@ -4,17 +4,6 @@ import type { ClientReport } from '../../../../core/models/audit-client-report.m
 import { EngineCoverageMatrixComponent } from '../engine-coverage-matrix/engine-coverage-matrix.component';
 import { PillarScorecardComponent } from '../pillar-scorecard/pillar-scorecard.component';
 
-/**
- * Section composite du rapport client Growth Audit.
- * Agrège :
- * - résumé exécutif
- * - matrice Google vs IA
- * - scorecard des piliers
- * - quick wins (business impact + effort)
- * - CTA final
- *
- * Strictement présentationnel : aucune logique métier, tout via @Input.
- */
 @Component({
   selector: 'app-audit-client-report-section',
   standalone: true,

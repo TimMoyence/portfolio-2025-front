@@ -49,7 +49,6 @@ describe('SparklineComponent', () => {
     fixture.componentRef.setInput('data', [0, 10]);
     fixture.detectChanges();
     const polylinePoints = component.polylinePoints();
-    // 2 points : x=0,y=30 (min en bas) et x=100,y=0 (max en haut)
     expect(polylinePoints).toBe('0,30 100,0');
   });
 

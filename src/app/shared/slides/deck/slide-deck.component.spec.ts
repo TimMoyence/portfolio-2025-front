@@ -152,7 +152,6 @@ describe('SlideDeckComponent — visibility filter', () => {
     fix.detectChanges();
     const swiper = fix.nativeElement.querySelector('swiper-container') as HTMLElement;
     const slides = swiper.querySelectorAll(':scope > swiper-slide');
-    // both + present-only visibles, scroll-only filtree
     expect(slides.length).toBe(2);
   });
 
@@ -218,7 +217,6 @@ describe('SlideDeckComponent — visibility filter', () => {
     const fix = TestBed.createComponent(HostScrollComponent);
     fix.detectChanges();
     const sections = fix.nativeElement.querySelectorAll('section.slide');
-    // both + scroll-only visibles, present-only filtree
     expect(sections.length).toBe(2);
   });
 });

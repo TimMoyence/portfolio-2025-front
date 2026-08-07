@@ -1,16 +1,3 @@
-<!--
-  Landing Météo (/atelier/meteo) — composition de la maquette
-  AsiliNewDesign/landing-meteo.html au format landing Asili : ciel parallaxe
-  fixe (.lp-sky) → hero split (.lp-hero / .lp-hero-grid) avec démo jouable
-  SIMULÉE (sélecteur 4 villes → boussole + arc solaire + dials) → features
-  (.lp-features) → demo band (.lp-demo-grid) → CTA final (.lp-final). Chrome
-  globale conservée : le topbar .lp-top et le footer .lp-foot de la maquette
-  sont omis (redondants). Le disclaimer « données simulées pour la démo » est
-  conservé. Démo autonome — aucune dépendance aux vraies apps (Lots 4/5).
-  Wording verbatim maquette, en $localize (@@weatherLanding*).
--->
-
-<!-- Ciel fixe + parallaxe (porté de .lp-sky de la maquette). -->
 <div
   class="lp-sky"
   aria-hidden="true"
@@ -18,7 +5,6 @@
 ></div>
 
 <div class="lp-shell">
-  <!-- ===================== HERO ===================== -->
   <section class="lp-hero">
     <div class="lp-wrap lp-hero-grid">
       <div>
@@ -58,7 +44,6 @@
         </div>
       </div>
 
-      <!-- DÉMO JOUABLE (simulée, autonome) -->
       <div appReveal [appRevealDelay]="1">
         <div class="glass meteo">
           <div class="meteo-top">
@@ -274,7 +259,6 @@
     </div>
   </section>
 
-  <!-- ===================== FEATURES ===================== -->
   <section class="lp-section">
     <div class="lp-wrap">
       <div class="lp-sec-head" appReveal>
@@ -340,7 +324,6 @@
     </div>
   </section>
 
-  <!-- ===================== DEMO BAND ===================== -->
   <section class="lp-section lp-demo-band" id="demo">
     <div class="lp-wrap lp-demo-grid">
       <div class="lp-demo-copy" appReveal>
@@ -408,7 +391,6 @@
         </div>
       </div>
 
-      <!-- Aperçu 7 jours (données fictives de présentation) -->
       <div class="lp-preview-wrap" appReveal [appRevealDelay]="1">
         <div class="glass lp-preview">
           <div class="lp-preview-head" i18n="@@weatherLandingPreviewHead">Aperçu · 7 jours</div>
@@ -449,7 +431,6 @@
     </div>
   </section>
 
-  <!-- ===================== CTA FINAL ===================== -->
   <section class="lp-section lp-final">
     <div class="lp-wrap" appReveal>
       <span class="lp-kicker lp-kicker--center" i18n="@@weatherLandingFinalKicker"

@@ -20,12 +20,6 @@ interface FieldNode {
   ph: number;
 }
 
-/**
- * Fond vivant global Asili : canvas fixe d'un champ de particules/données
- * qui dérive en continu et réagit au curseur. Client-only (rien en SSR),
- * densité allégée sur mobile, pause hors-écran, frame statique en
- * `prefers-reduced-motion`. Couleurs lues depuis les variables CSS (--teal/--glow).
- */
 @Component({
   selector: 'app-asili-background',
   standalone: true,
@@ -45,12 +39,9 @@ interface FieldNode {
   `,
 })
 export class AsiliBackgroundComponent implements AfterViewInit {
-  /** Distance max de liaison entre deux noeuds (px). */
-  private static readonly LINK = 166;
-  /** Opacite max d'un trait de liaison (a distance nulle). */
-  private static readonly LINK_ALPHA = 0.43;
-  /** Opacite de remplissage d'un noeud standard / d'un noeud « glow ». */
-  private static readonly NODE_ALPHA = 0.6;
+  private static readonly LINK_DISTANCE_PX = 166;
+  private static readonly LINK_MAX_ALPHA = 0.43;
+  private static readonly NODE_FILL_ALPHA = 0.6;
   private static readonly NODE_GLOW_ALPHA = 1;
 
   private readonly platformId = inject(PLATFORM_ID);
@@ -284,8 +275,10 @@ export class AsiliBackgroundComponent implements AfterViewInit {
         const dx = a.x - b.x;
         const dy = a.y - b.y;
         const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < AsiliBackgroundComponent.LINK) {
-          const o = (1 - d / AsiliBackgroundComponent.LINK) * AsiliBackgroundComponent.LINK_ALPHA;
+        if (d < AsiliBackgroundComponent.LINK_DISTANCE_PX) {
+          const o =
+            (1 - d / AsiliBackgroundComponent.LINK_DISTANCE_PX) *
+            AsiliBackgroundComponent.LINK_MAX_ALPHA;
           const c = a.glow || b.glow ? glow : teal;
           ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${o})`;
           ctx.lineWidth = 1;
@@ -308,7 +301,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       }
       const alpha = n.glow
         ? AsiliBackgroundComponent.NODE_GLOW_ALPHA
-        : AsiliBackgroundComponent.NODE_ALPHA;
+        : AsiliBackgroundComponent.NODE_FILL_ALPHA;
       ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha})`;
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
