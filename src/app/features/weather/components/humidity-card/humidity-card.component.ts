@@ -1,37 +1,27 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from "@angular/core";
-import { UnitPipe } from "../../pipes/unit.pipe";
-import { UnitPreferencesService } from "../../services/unit-preferences.service";
-import { MetricCardComponent } from "../metric-card/metric-card.component";
-import { SparklineComponent } from "../sparkline/sparkline.component";
-import { clamp } from "../../../../shared/utils/math.utils";
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { UnitPipe } from '../../pipes/unit.pipe';
+import { UnitPreferencesService } from '../../services/unit-preferences.service';
+import { MetricCardComponent } from '../metric-card/metric-card.component';
+import { SparklineComponent } from '../sparkline/sparkline.component';
+import { clamp } from '../../../../shared/utils/math.utils';
 
 /**
  * Carte d'humidite avec indicateur de progression circulaire CSS
  * et point de rosee. Affiche une zone de confort (sec / confortable / humide).
  */
 @Component({
-  selector: "app-humidity-card",
+  selector: 'app-humidity-card',
   standalone: true,
   imports: [MetricCardComponent, SparklineComponent, UnitPipe],
   template: `
     <app-metric-card
       tooltipId="humidity"
-      i18n-tooltipTitle="
-        weather.humidity.tooltip.title|@@weatherHumidityTooltipTitle"
+      i18n-tooltipTitle="weather.humidity.tooltip.title|@@weatherHumidityTooltipTitle"
       tooltipTitle="Humidité"
-      i18n-tooltipContent="
-        weather.humidity.tooltip.content|@@weatherHumidityTooltipContent"
+      i18n-tooltipContent="weather.humidity.tooltip.content|@@weatherHumidityTooltipContent"
       tooltipContent="L'humidité relative indique le pourcentage de vapeur d'eau dans l'air par rapport au maximum possible. Le point de rosée est la température à laquelle l'air devient saturé : plus il est proche de la température réelle, plus l'air semble moite."
     >
-      <span cardTitle i18n="weather.humidity.title|@@weatherHumidityTitle"
-        >Humidité</span
-      >
+      <span cardTitle i18n="weather.humidity.title|@@weatherHumidityTitle">Humidité</span>
 
       <!--
         Humidité — re-skin Asili : valeur centrale font-display, jauge circulaire
@@ -49,11 +39,7 @@ import { clamp } from "../../../../shared/utils/math.utils";
           aria-valuemax="100"
           [attr.aria-valuetext]="humidity() + '% — ' + comfortLabel()"
         >
-          <svg
-            viewBox="0 0 36 36"
-            class="h-full w-full -rotate-90"
-            aria-hidden="true"
-          >
+          <svg viewBox="0 0 36 36" class="h-full w-full -rotate-90" aria-hidden="true">
             <!-- Fond -->
             <circle
               cx="18"
@@ -77,9 +63,7 @@ import { clamp } from "../../../../shared/utils/math.utils";
             />
           </svg>
           <div class="absolute inset-0 flex items-center justify-center">
-            <span class="font-display text-xl leading-none text-white"
-              >{{ humidity() }}%</span
-            >
+            <span class="font-display text-xl leading-none text-white">{{ humidity() }}%</span>
           </div>
         </div>
 
@@ -92,9 +76,7 @@ import { clamp } from "../../../../shared/utils/math.utils";
           <!-- Point de rosee -->
           @if (dewPoint() !== null) {
             <span class="text-sm text-white/50">
-              <span i18n="weather.humidity.dewPoint|@@weatherHumidityDewPoint"
-                >Point de rosée</span
-              >
+              <span i18n="weather.humidity.dewPoint|@@weatherHumidityDewPoint">Point de rosée</span>
               : {{ dewPoint() | unit: unitService.temperatureUnit() }}
             </span>
           }
@@ -103,10 +85,7 @@ import { clamp } from "../../../../shared/utils/math.utils";
 
       @if (hourlyHumidity().length > 1) {
         <div class="mt-2">
-          <app-sparkline
-            [data]="hourlyHumidity()"
-            [color]="'rgba(143, 176, 255, 0.8)'"
-          />
+          <app-sparkline [data]="hourlyHumidity()" [color]="'rgba(143, 176, 255, 0.8)'" />
         </div>
       }
     </app-metric-card>
@@ -135,16 +114,15 @@ export class HumidityCardComponent {
   /** Couleur de la progression circulaire selon le niveau d'humidite. */
   readonly progressColor = computed(() => {
     const h = this.humidity();
-    if (h < 30) return "rgba(96,165,250,0.8)"; // bleu clair - sec
-    if (h <= 60) return "rgba(74,222,128,0.8)"; // vert - confortable
-    return "rgba(250,204,21,0.8)"; // jaune - humide
+    if (h < 30) return 'rgba(96,165,250,0.8)'; // bleu clair - sec
+    if (h <= 60) return 'rgba(74,222,128,0.8)'; // vert - confortable
+    return 'rgba(250,204,21,0.8)'; // jaune - humide
   });
 
   /** Label de zone de confort en francais. */
   readonly comfortLabel = computed(() => {
     const h = this.humidity();
-    if (h < 30)
-      return $localize`:weather.humidity.dry|@@weatherHumidityDry:Sec`;
+    if (h < 30) return $localize`:weather.humidity.dry|@@weatherHumidityDry:Sec`;
     if (h <= 60)
       return $localize`:weather.humidity.comfortable|@@weatherHumidityComfortable:Confortable`;
     return $localize`:weather.humidity.humid|@@weatherHumidityHumid:Humide`;
@@ -153,8 +131,8 @@ export class HumidityCardComponent {
   /** Classe de couleur du label de confort. */
   readonly comfortColor = computed(() => {
     const h = this.humidity();
-    if (h < 30) return "text-blue-400";
-    if (h <= 60) return "text-green-400";
-    return "text-yellow-400";
+    if (h < 30) return 'text-blue-400';
+    if (h <= 60) return 'text-green-400';
+    return 'text-yellow-400';
   });
 }

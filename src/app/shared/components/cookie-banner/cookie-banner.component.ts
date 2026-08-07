@@ -1,20 +1,15 @@
-import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { RouterModule } from "@angular/router";
-import { CookieConsentService } from "../../../core/services/cookie-consent.service";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
+import { CookieConsentService } from '../../../core/services/cookie-consent.service';
 
 @Component({
-  selector: "app-cookie-banner",
+  selector: 'app-cookie-banner',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: "./cookie-banner.component.html",
-  styleUrl: "./cookie-banner.component.scss",
+  templateUrl: './cookie-banner.component.html',
+  styleUrl: './cookie-banner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CookieBannerComponent {
@@ -31,11 +26,9 @@ export class CookieBannerComponent {
 
   constructor() {
     this.updateVisibility();
-    this.consentService.consentChanges$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.updateVisibility();
-      });
+    this.consentService.consentChanges$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.updateVisibility();
+    });
   }
 
   acceptAll(): void {
@@ -47,8 +40,8 @@ export class CookieBannerComponent {
           analytics: false,
           marketing: false,
         },
-        "banner",
-        "accept_all",
+        'banner',
+        'accept_all',
       )
       .subscribe({
         next: () => this.updateVisibility(),
@@ -65,8 +58,8 @@ export class CookieBannerComponent {
           analytics: false,
           marketing: false,
         },
-        "banner",
-        "essential_only",
+        'banner',
+        'essential_only',
       )
       .subscribe({
         next: () => this.updateVisibility(),

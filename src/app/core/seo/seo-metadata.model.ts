@@ -1,11 +1,11 @@
 export type SeoChangeFreq =
-  | "always"
-  | "hourly"
-  | "daily"
-  | "weekly"
-  | "monthly"
-  | "yearly"
-  | "never";
+  | 'always'
+  | 'hourly'
+  | 'daily'
+  | 'weekly'
+  | 'monthly'
+  | 'yearly'
+  | 'never';
 
 export type JsonLdBlock = Record<string, unknown> | Record<string, unknown>[];
 
@@ -16,7 +16,7 @@ export interface SeoLocaleMeta {
   ogTitle?: string;
   ogDescription?: string;
   ogImage?: string;
-  twitterCard?: "summary" | "summary_large_image";
+  twitterCard?: 'summary' | 'summary_large_image';
   twitterTitle?: string;
   twitterDescription?: string;
   twitterImage?: string;
@@ -42,7 +42,7 @@ export interface SeoPageEntry {
 export interface SeoMetadataDefaults {
   keywords?: string[];
   ogImage?: string;
-  twitterCard?: "summary" | "summary_large_image";
+  twitterCard?: 'summary' | 'summary_large_image';
 }
 
 export interface SeoMetadataSite {

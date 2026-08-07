@@ -5,11 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  background: linear-gradient(
-    135deg,
-    var(--accent, #4fb3a2),
-    var(--accent-dark, var(--teal-dark))
-  );
+  background: linear-gradient(135deg, var(--accent, #4fb3a2), var(--accent-dark, var(--teal-dark)));
   color: white;
 }
 

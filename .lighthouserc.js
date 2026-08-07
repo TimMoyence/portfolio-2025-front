@@ -9,24 +9,24 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: "node dist/portfolio-app/server/fr/server.mjs",
-      startServerReadyPattern: "Node Express server listening on",
-      url: ["http://localhost:4000/"],
+      startServerCommand: 'node dist/portfolio-app/server/fr/server.mjs',
+      startServerReadyPattern: 'Node Express server listening on',
+      url: ['http://localhost:4000/'],
       numberOfRuns: 3,
       settings: {
-        preset: "desktop",
+        preset: 'desktop',
       },
     },
     assert: {
       assertions: {
-        "categories:performance": ["warn", { minScore: 0.8 }],
-        "categories:accessibility": ["error", { minScore: 0.9 }],
-        "categories:best-practices": ["warn", { minScore: 0.8 }],
-        "categories:seo": ["warn", { minScore: 0.9 }],
+        'categories:performance': ['warn', { minScore: 0.8 }],
+        'categories:accessibility': ['error', { minScore: 0.9 }],
+        'categories:best-practices': ['warn', { minScore: 0.8 }],
+        'categories:seo': ['warn', { minScore: 0.9 }],
       },
     },
     upload: {
-      target: "temporary-public-storage",
+      target: 'temporary-public-storage',
     },
   },
 };

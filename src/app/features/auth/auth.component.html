@@ -7,20 +7,15 @@
 -->
 <app-auth-shell>
   <div aside class="auth-aside-mid" appReveal>
-    @if (isTabActive("sign-up")) {
+    @if (isTabActive('sign-up')) {
       <span class="kicker" i18n="@@authAsideRegisterKicker">Bienvenue</span>
-      <h2 i18n="@@authAsideRegisterTitle">
-        Un compte, <em>tout l'écosystème</em> Asili.
-      </h2>
+      <h2 i18n="@@authAsideRegisterTitle">Un compte, <em>tout l'écosystème</em> Asili.</h2>
       <p i18n="@@authAsideRegisterSub">
-        Créez votre espace pour accéder à l'Atelier, aux formations et à votre
-        profil.
+        Créez votre espace pour accéder à l'Atelier, aux formations et à votre profil.
       </p>
     } @else {
       <span class="kicker" i18n="@@authAsideLoginKicker">Bon retour</span>
-      <h2 i18n="@@authAsideLoginTitle">
-        Reprenez là où vous <em>vous étiez arrêté</em>.
-      </h2>
+      <h2 i18n="@@authAsideLoginTitle">Reprenez là où vous <em>vous étiez arrêté</em>.</h2>
       <p i18n="@@authAsideLoginSub">
         Accédez à vos formations, à l'Atelier et à votre espace personnel.
       </p>
@@ -45,9 +40,7 @@
       [attr.tabindex]="isTabActive('log-in') ? 0 : -1"
       (click)="selectTab('log-in')"
     >
-      <span i18n="auth.tabs.login|Login tab label@@authTabLogin"
-        >Connexion</span
-      >
+      <span i18n="auth.tabs.login|Login tab label@@authTabLogin">Connexion</span>
     </button>
     <button
       type="button"
@@ -59,14 +52,12 @@
       [attr.tabindex]="isTabActive('sign-up') ? 0 : -1"
       (click)="selectTab('sign-up')"
     >
-      <span i18n="auth.tabs.signup|Signup tab label@@authTabSignup"
-        >S'inscrire</span
-      >
+      <span i18n="auth.tabs.signup|Signup tab label@@authTabSignup">S'inscrire</span>
     </button>
   </div>
 
   <!-- ============ LOGIN ============ -->
-  @if (isTabActive("log-in")) {
+  @if (isTabActive('log-in')) {
     <section
       class="auth-screen"
       role="tabpanel"
@@ -74,13 +65,8 @@
       [attr.aria-labelledby]="'auth-trigger-log-in'"
       tabindex="0"
     >
-      <h1 i18n="auth.login.title|Login panel heading@@authLoginTitle">
-        Se connecter
-      </h1>
-      <p
-        class="sub"
-        i18n="auth.login.lead|Login panel description@@authLoginLead"
-      >
+      <h1 i18n="auth.login.title|Login panel heading@@authLoginTitle">Se connecter</h1>
+      <p class="sub" i18n="auth.login.lead|Login panel description@@authLoginLead">
         Votre espace de croissance commence
       </p>
 
@@ -92,11 +78,7 @@
         i18n-title
         (click)="handleGoogleAuth('log-in')"
       >
-        <app-svg-icon
-          name="network/google"
-          [fill]="'keep'"
-          [size]="1.4"
-        ></app-svg-icon>
+        <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.4"></app-svg-icon>
         <span i18n="auth.login.google|Login with Google@@authLoginGoogle">
           Connectez-vous avec Google
         </span>
@@ -105,19 +87,13 @@
       <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
 
       <!-- Formulaire login -->
-      <form
-        #loginFormRef="ngForm"
-        (ngSubmit)="handleLoginSubmit(loginFormRef)"
-        novalidate
-      >
+      <form #loginFormRef="ngForm" (ngSubmit)="handleLoginSubmit(loginFormRef)" novalidate>
         @for (field of loginFields; track field.key) {
           <div class="auth-field">
             <label [for]="'login-' + field.key">{{ field.label }}</label>
             <div class="ip">
               <input
-                [type]="
-                  field.key === 'password' && showPassword ? 'text' : field.type
-                "
+                [type]="field.key === 'password' && showPassword ? 'text' : field.type"
                 [id]="'login-' + field.key"
                 [name]="field.key"
                 [(ngModel)]="loginForm[field.key]"
@@ -125,20 +101,16 @@
                 [minlength]="field.key === 'password' ? 8 : null"
                 [email]="field.type === 'email' ? '' : false"
                 #control="ngModel"
-                [class.invalid]="
-                  control.invalid && (control.touched || isLoginSubmitted)
-                "
+                [class.invalid]="control.invalid && (control.touched || isLoginSubmitted)"
               />
-              @if (field.key === "password") {
+              @if (field.key === 'password') {
                 <span class="ic">
                   <button
                     type="button"
                     class="toggle-pw"
                     (click)="showPassword = !showPassword"
                     [attr.aria-label]="
-                      showPassword
-                        ? 'Masquer le mot de passe'
-                        : 'Afficher le mot de passe'
+                      showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
                     "
                     i18n-aria-label="@@authTogglePassword"
                   >
@@ -153,23 +125,16 @@
             </div>
             @if (control.invalid && (control.touched || isLoginSubmitted)) {
               <p class="err">
-                @if (control.errors?.["required"]) {
-                  <span
-                    i18n="
-                      auth.error.required|Required field
-                      error@@authErrorRequired"
+                @if (control.errors?.['required']) {
+                  <span i18n="auth.error.required|Required field error@@authErrorRequired"
                     >Ce champ est obligatoire.</span
                   >
-                } @else if (control.errors?.["email"]) {
-                  <span
-                    i18n="auth.error.email|Invalid email error@@authErrorEmail"
+                } @else if (control.errors?.['email']) {
+                  <span i18n="auth.error.email|Invalid email error@@authErrorEmail"
                     >Merci d’entrer une adresse email valide.</span
                   >
                 } @else {
-                  <span
-                    i18n="
-                      auth.error.generic|Generic validation
-                      error@@authErrorGeneric"
+                  <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric"
                     >Valeur invalide.</span
                   >
                 }
@@ -180,10 +145,7 @@
 
         <div class="auth-row">
           <span></span>
-          <a
-            class="auth-link"
-            routerLink="/forgot-password"
-            i18n="@@authLoginForgotPassword"
+          <a class="auth-link" routerLink="/forgot-password" i18n="@@authLoginForgotPassword"
             >Mot de passe oublié ?</a
           >
         </div>
@@ -195,13 +157,10 @@
           [attr.aria-busy]="isLoginLoading"
         >
           @if (!isLoginLoading) {
-            <span i18n="auth.login.submit|Login submit label@@authLoginSubmit"
-              >Se connecter</span
-            >
+            <span i18n="auth.login.submit|Login submit label@@authLoginSubmit">Se connecter</span>
             <span class="arrow" aria-hidden="true">→</span>
           } @else {
-            <span
-              i18n="auth.login.loading|Login loading state@@authLoginLoading"
+            <span i18n="auth.login.loading|Login loading state@@authLoginLoading"
               >Connexion en cours...</span
             >
           }
@@ -217,11 +176,7 @@
 
       <p class="auth-alt">
         <span i18n="@@authAltNoAccount">Pas encore de compte ?</span>
-        <button
-          type="button"
-          (click)="selectTab('sign-up')"
-          i18n="@@authAltCreate"
-        >
+        <button type="button" (click)="selectTab('sign-up')" i18n="@@authAltCreate">
           Créer un compte
         </button>
       </p>
@@ -229,7 +184,7 @@
   }
 
   <!-- ============ REGISTER ============ -->
-  @if (isTabActive("sign-up")) {
+  @if (isTabActive('sign-up')) {
     <section
       class="auth-screen"
       role="tabpanel"
@@ -240,10 +195,7 @@
       <h1 i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
         Créer un <em>compte</em>
       </h1>
-      <p
-        class="sub"
-        i18n="auth.signup.lead|Signup panel description@@authSignupLead"
-      >
+      <p class="sub" i18n="auth.signup.lead|Signup panel description@@authSignupLead">
         Un compte, tout l'écosystème Asili.
       </p>
 
@@ -255,11 +207,7 @@
         i18n-title
         (click)="handleGoogleAuth('sign-up')"
       >
-        <app-svg-icon
-          name="network/google"
-          [fill]="'keep'"
-          [size]="1.4"
-        ></app-svg-icon>
+        <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.4"></app-svg-icon>
         <span i18n="auth.signup.google|Signup with Google@@authSignupGoogle">
           Inscrivez-vous avec Google
         </span>
@@ -268,19 +216,13 @@
       <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
 
       <!-- Formulaire register -->
-      <form
-        #signupFormRef="ngForm"
-        (ngSubmit)="handleSignupSubmit(signupFormRef)"
-        novalidate
-      >
+      <form #signupFormRef="ngForm" (ngSubmit)="handleSignupSubmit(signupFormRef)" novalidate>
         @for (field of signupFields; track field.key) {
           <div class="auth-field">
             <label [for]="'reg-' + field.key">
               {{ field.label }}
               @if (!field.required) {
-                <span
-                  i18n="
-                    auth.field.optional|Optional field helper@@authFieldOptional"
+                <span i18n="auth.field.optional|Optional field helper@@authFieldOptional"
                   >(facultatif)</span
                 >
               }
@@ -288,8 +230,7 @@
             <div class="ip">
               <input
                 [type]="
-                  (field.key === 'password' || field.key === 'verifPassword') &&
-                  showPassword
+                  (field.key === 'password' || field.key === 'verifPassword') && showPassword
                     ? 'text'
                     : field.type
                 "
@@ -300,20 +241,16 @@
                 [minlength]="field.key === 'password' ? 8 : null"
                 [email]="field.type === 'email' ? '' : false"
                 #control="ngModel"
-                [class.invalid]="
-                  control.invalid && (control.touched || isSignupSubmitted)
-                "
+                [class.invalid]="control.invalid && (control.touched || isSignupSubmitted)"
               />
-              @if (field.key === "password" || field.key === "verifPassword") {
+              @if (field.key === 'password' || field.key === 'verifPassword') {
                 <span class="ic">
                   <button
                     type="button"
                     class="toggle-pw"
                     (click)="showPassword = !showPassword"
                     [attr.aria-label]="
-                      showPassword
-                        ? 'Masquer le mot de passe'
-                        : 'Afficher le mot de passe'
+                      showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
                     "
                     i18n-aria-label="@@authTogglePassword"
                   >
@@ -328,32 +265,21 @@
             </div>
             @if (control.invalid && (control.touched || isSignupSubmitted)) {
               <p class="err">
-                @if (control.errors?.["required"]) {
-                  <span
-                    i18n="
-                      auth.error.required|Required field
-                      error@@authErrorRequired"
+                @if (control.errors?.['required']) {
+                  <span i18n="auth.error.required|Required field error@@authErrorRequired"
                     >Ce champ est obligatoire.</span
                   >
-                } @else if (control.errors?.["email"]) {
-                  <span
-                    i18n="auth.error.email|Invalid email error@@authErrorEmail"
+                } @else if (control.errors?.['email']) {
+                  <span i18n="auth.error.email|Invalid email error@@authErrorEmail"
                     >Merci d’entrer une adresse email valide.</span
                   >
-                } @else if (
-                  control.errors?.["minlength"] && field.key === "password"
-                ) {
+                } @else if (control.errors?.['minlength'] && field.key === 'password') {
                   <span
-                    i18n="
-                      auth.error.passwordLength|Password length
-                      error@@authErrorPasswordLength"
+                    i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength"
                     >Le mot de passe doit contenir au moins 8 caractères.</span
                   >
                 } @else {
-                  <span
-                    i18n="
-                      auth.error.generic|Generic validation
-                      error@@authErrorGeneric"
+                  <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric"
                     >Valeur invalide.</span
                   >
                 }
@@ -378,14 +304,12 @@
           [attr.aria-busy]="isSignupLoading"
         >
           @if (!isSignupLoading) {
-            <span
-              i18n="auth.signup.submit|Signup submit label@@authSignupSubmit"
+            <span i18n="auth.signup.submit|Signup submit label@@authSignupSubmit"
               >Créer mon compte</span
             >
             <span class="arrow" aria-hidden="true">→</span>
           } @else {
-            <span
-              i18n="auth.signup.loading|Signup loading state@@authSignupLoading"
+            <span i18n="auth.signup.loading|Signup loading state@@authSignupLoading"
               >Création en cours...</span
             >
           }
@@ -403,11 +327,7 @@
 
       <p class="auth-alt">
         <span i18n="@@authAltHasAccount">Déjà inscrit ?</span>
-        <button
-          type="button"
-          (click)="selectTab('log-in')"
-          i18n="@@authAltLogin"
-        >
+        <button type="button" (click)="selectTab('log-in')" i18n="@@authAltLogin">
           Se connecter
         </button>
       </p>
@@ -416,7 +336,4 @@
 </app-auth-shell>
 
 <!-- Conteneur caché pour le bouton Google rendu par GIS -->
-<div
-  #googleButtonContainer
-  style="position: absolute; width: 0; height: 0; overflow: hidden"
-></div>
+<div #googleButtonContainer style="position: absolute; width: 0; height: 0; overflow: hidden"></div>

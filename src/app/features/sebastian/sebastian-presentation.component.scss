@@ -1,4 +1,4 @@
-@use "../../styles-shared/breakpoints" as bp;
+@use '../../styles-shared/breakpoints' as bp;
 /*
   Landing Sebastian (/atelier/sebastian) — résiduel page-spécifique. Le système
   `.lp-*` commun (hero, sections, features, demo band, aperçu, CTA final) est
@@ -10,7 +10,7 @@
   fournissent le reste ; --gold reste intact pour les strokes SVG inline du
   template.
 */
-@use "../landing-shared";
+@use '../landing-shared';
 
 :host {
   /* Accent gold du système .lp-* partagé (cf. _landing-shared.scss) */
@@ -39,12 +39,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(
-    125% 100% at 70% -8%,
-    #3a2c16 0%,
-    #221810 46%,
-    #14100a 100%
-  );
+  background: radial-gradient(125% 100% at 70% -8%, #3a2c16 0%, #221810 46%, #14100a 100%);
 }
 
 /* Bouton gold (maquette : style inline --bg:var(--gold);--fg:#1a1206). */
@@ -98,11 +93,7 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
-  background: linear-gradient(
-    165deg,
-    rgba(42, 32, 18, 0.6),
-    rgba(22, 16, 10, 0.55)
-  );
+  background: linear-gradient(165deg, rgba(42, 32, 18, 0.6), rgba(22, 16, 10, 0.55));
   border-color: rgba(230, 170, 70, 0.18);
 }
 

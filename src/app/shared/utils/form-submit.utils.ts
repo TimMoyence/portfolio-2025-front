@@ -1,6 +1,6 @@
-import type { ChangeDetectorRef } from "@angular/core";
-import type { Observable, Subscription } from "rxjs";
-import { extractErrorMessage } from "./http-error.utils";
+import type { ChangeDetectorRef } from '@angular/core';
+import type { Observable, Subscription } from 'rxjs';
+import { extractErrorMessage } from './http-error.utils';
 
 /**
  * Options pour {@link handleFormSubmit}.

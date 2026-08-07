@@ -22,12 +22,8 @@
       <div class="pf-grid">
         <!-- ============ INFORMATIONS ============ -->
         <article class="pf-card" appReveal>
-          <h2 class="pf-card-title" i18n="@@profileIdentityTitle">
-            Informations personnelles
-          </h2>
-          <p class="ch-sub" i18n="@@profileIdentitySub">
-            Vos coordonnées de compte.
-          </p>
+          <h2 class="pf-card-title" i18n="@@profileIdentityTitle">Informations personnelles</h2>
+          <p class="ch-sub" i18n="@@profileIdentitySub">Vos coordonnées de compte.</p>
 
           @if (!isEditing()) {
             <!-- Mode lecture -->
@@ -56,9 +52,7 @@
                   @if (user.phone) {
                     {{ user.phone }}
                   } @else {
-                    <span class="muted" i18n="@@profilePhoneEmpty"
-                      >Non renseigné</span
-                    >
+                    <span class="muted" i18n="@@profilePhoneEmpty">Non renseigné</span>
                   }
                 </div>
               </div>
@@ -75,9 +69,7 @@
             <!-- Mode édition -->
             <div class="pf-edit">
               <div class="pf-field">
-                <label for="editFirstName" i18n="@@profileEditFirstNameLabel"
-                  >Prénom</label
-                >
+                <label for="editFirstName" i18n="@@profileEditFirstNameLabel">Prénom</label>
                 <input
                   id="editFirstName"
                   name="editFirstName"
@@ -86,9 +78,7 @@
                 />
               </div>
               <div class="pf-field">
-                <label for="editLastName" i18n="@@profileEditLastNameLabel"
-                  >Nom</label
-                >
+                <label for="editLastName" i18n="@@profileEditLastNameLabel">Nom</label>
                 <input
                   id="editLastName"
                   name="editLastName"
@@ -97,22 +87,13 @@
                 />
               </div>
               <div class="pf-field">
-                <label for="editPhone" i18n="@@profileEditPhoneLabel"
-                  >Téléphone</label
-                >
-                <input
-                  id="editPhone"
-                  name="editPhone"
-                  type="tel"
-                  [(ngModel)]="editPhone"
-                />
+                <label for="editPhone" i18n="@@profileEditPhoneLabel">Téléphone</label>
+                <input id="editPhone" name="editPhone" type="tel" [(ngModel)]="editPhone" />
               </div>
               <p class="pf-note">
                 <strong i18n="@@profileEmailLabel">Email</strong> :
                 {{ user.email }}
-                <span class="muted" i18n="@@profileEmailReadonly"
-                  >(non modifiable)</span
-                >
+                <span class="muted" i18n="@@profileEmailReadonly">(non modifiable)</span>
               </p>
               <div class="pf-actions">
                 <button
@@ -125,9 +106,7 @@
                   @if (!editProfileLoading) {
                     <span i18n="@@profileEditSaveButton">Enregistrer</span>
                   } @else {
-                    <span i18n="@@profileEditSavingButton"
-                      >Enregistrement...</span
-                    >
+                    <span i18n="@@profileEditSavingButton">Enregistrement...</span>
                   }
                 </button>
                 <button
@@ -153,24 +132,14 @@
 
         <!-- ============ ACCÈS ATELIER ============ -->
         <article class="pf-card" appReveal [appRevealDelay]="1">
-          <h2 class="pf-card-title" i18n="@@profileAccessTitle">
-            Accès Atelier
-          </h2>
-          <p class="ch-sub" i18n="@@profileAccessSub">
-            Vos expériences déverrouillées.
-          </p>
+          <h2 class="pf-card-title" i18n="@@profileAccessTitle">Accès Atelier</h2>
+          <p class="ch-sub" i18n="@@profileAccessSub">Vos expériences déverrouillées.</p>
 
           <div class="pf-access">
             <div class="pf-acc meteo">
               <span class="ai" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="4"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                  />
+                  <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6" />
                   <path
                     d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"
                     stroke="currentColor"
@@ -181,16 +150,12 @@
               </span>
               <div>
                 <div class="at" i18n="@@profileAccessMeteoTitle">Météo</div>
-                <div class="ad" i18n="@@profileAccessMeteoDesc">
-                  Tableau de bord météo immersif
-                </div>
+                <div class="ad" i18n="@@profileAccessMeteoDesc">Tableau de bord météo immersif</div>
               </div>
-              @if (authState.hasRole("weather")) {
+              @if (authState.hasRole('weather')) {
                 <span class="pill" i18n="@@profileAccessActive">Actif</span>
               } @else {
-                <span class="pill locked" i18n="@@profileAccessLocked"
-                  >Verrouillé</span
-                >
+                <span class="pill locked" i18n="@@profileAccessLocked">Verrouillé</span>
               }
             </div>
 
@@ -208,22 +173,18 @@
               </span>
               <div>
                 <div class="at" i18n="@@profileAccessSebTitle">Sebastian</div>
-                <div class="ad" i18n="@@profileAccessSebDesc">
-                  Suivi d'habitudes gamifié
-                </div>
+                <div class="ad" i18n="@@profileAccessSebDesc">Suivi d'habitudes gamifié</div>
               </div>
-              @if (authState.hasRole("sebastian")) {
+              @if (authState.hasRole('sebastian')) {
                 <span class="pill" i18n="@@profileAccessActive">Actif</span>
               } @else {
-                <span class="pill locked" i18n="@@profileAccessLocked"
-                  >Verrouillé</span
-                >
+                <span class="pill locked" i18n="@@profileAccessLocked">Verrouillé</span>
               }
             </div>
           </div>
 
           <div class="pf-acc-links">
-            @if (authState.hasRole("weather")) {
+            @if (authState.hasRole('weather')) {
               <a class="btn btn-ghost" routerLink="/atelier/meteo/app">
                 <span i18n="@@profileAccessOpenMeteo">Ouvrir Météo</span>
               </a>
@@ -232,15 +193,13 @@
                 <span i18n="@@profileAccessDiscoverMeteo">Découvrir Météo</span>
               </a>
             }
-            @if (authState.hasRole("sebastian")) {
+            @if (authState.hasRole('sebastian')) {
               <a class="btn btn-ghost" routerLink="/atelier/sebastian/app">
                 <span i18n="@@profileAccessOpenSeb">Ouvrir Sebastian</span>
               </a>
             } @else {
               <a class="btn btn-ghost" routerLink="/atelier/sebastian">
-                <span i18n="@@profileAccessDiscoverSeb"
-                  >Découvrir Sebastian</span
-                >
+                <span i18n="@@profileAccessDiscoverSeb">Découvrir Sebastian</span>
               </a>
             }
           </div>
@@ -250,9 +209,7 @@
         <!-- Définir un mot de passe (compte Google-only) -->
         @if (user.hasPassword !== true) {
           <article class="pf-card" appReveal>
-            <h2 class="pf-card-title" i18n="@@profileSetPasswordTitle">
-              Définir un mot de passe
-            </h2>
+            <h2 class="pf-card-title" i18n="@@profileSetPasswordTitle">Définir un mot de passe</h2>
             <p class="ch-sub" i18n="@@profileSetPasswordSub">
               Sécurisez votre compte avec un mot de passe.
             </p>
@@ -275,8 +232,7 @@
                   [(ngModel)]="newPassword"
                   #newPasswordCtrl="ngModel"
                   [class.invalid]="
-                    newPasswordCtrl.invalid &&
-                    (newPasswordCtrl.touched || setPasswordSubmitted)
+                    newPasswordCtrl.invalid && (newPasswordCtrl.touched || setPasswordSubmitted)
                   "
                 />
               </div>
@@ -290,9 +246,7 @@
                 @if (!setPasswordLoading) {
                   <span i18n="@@profileSetPasswordSubmit">Enregistrer</span>
                 } @else {
-                  <span i18n="@@profileSetPasswordLoading"
-                    >Enregistrement...</span
-                  >
+                  <span i18n="@@profileSetPasswordLoading">Enregistrement...</span>
                 }
               </button>
 
@@ -322,9 +276,7 @@
               class="pf-form"
             >
               <div class="pf-field">
-                <label
-                  for="currentPassword"
-                  i18n="@@profileCurrentPasswordLabel"
+                <label for="currentPassword" i18n="@@profileCurrentPasswordLabel"
                   >Mot de passe actuel</label
                 >
                 <input
@@ -368,9 +320,7 @@
                 @if (!changePasswordLoading) {
                   <span i18n="@@profileChangePasswordSubmit">Modifier</span>
                 } @else {
-                  <span i18n="@@profileChangePasswordLoading"
-                    >Modification...</span
-                  >
+                  <span i18n="@@profileChangePasswordLoading">Modification...</span>
                 }
               </button>
 
@@ -385,11 +335,9 @@
         }
 
         <!-- ============ PRÉFÉRENCES MÉTÉO ============ -->
-        @if (authState.hasRole("weather")) {
+        @if (authState.hasRole('weather')) {
           <article class="pf-card full" appReveal>
-            <h2 class="pf-card-title" i18n="@@profileWeatherTitle">
-              Préférences météo
-            </h2>
+            <h2 class="pf-card-title" i18n="@@profileWeatherTitle">Préférences météo</h2>
             <p class="ch-sub" i18n="@@profileWeatherSub">
               Votre progression et vos villes favorites.
             </p>
@@ -401,7 +349,7 @@
                 {{ levelLabel(levelService.level()) }}
               </p>
               <div class="pf-progress">
-                @if (levelService.level() === "discovery") {
+                @if (levelService.level() === 'discovery') {
                   <div
                     class="pf-progress-bar"
                     [style.width.%]="
@@ -410,7 +358,7 @@
                         : (levelService.daysUsed() / 7) * 100
                     "
                   ></div>
-                } @else if (levelService.level() === "curious") {
+                } @else if (levelService.level() === 'curious') {
                   <div
                     class="pf-progress-bar"
                     [style.width.%]="
@@ -428,9 +376,7 @@
                 <span i18n="@@profileWeatherDaysUsed">jours d'utilisation</span>
                 @if (levelService.showTransitionPrompt()) {
                   &mdash;
-                  <span
-                    class="pf-progress-ready"
-                    i18n="@@profileWeatherTransitionReady"
+                  <span class="pf-progress-ready" i18n="@@profileWeatherTransitionReady"
                     >Prêt pour le niveau suivant !</span
                   >
                 }
@@ -439,13 +385,9 @@
 
             <!-- Villes favorites -->
             <div class="pf-favorites">
-              <h3 class="pf-fav-title" i18n="@@profileWeatherFavoritesTitle">
-                Villes favorites
-              </h3>
+              <h3 class="pf-fav-title" i18n="@@profileWeatherFavoritesTitle">Villes favorites</h3>
               @if (weatherLoading) {
-                <p class="muted" i18n="@@profileWeatherLoading">
-                  Chargement...
-                </p>
+                <p class="muted" i18n="@@profileWeatherLoading">Chargement...</p>
               } @else if (favoriteCities.length === 0) {
                 <p class="muted" i18n="@@profileWeatherNoFavorites">
                   Aucune ville favorite. Ajoutez-en depuis l'app météo.
@@ -459,15 +401,10 @@
                         type="button"
                         class="pf-fav-remove"
                         (click)="removeFavoriteCity(city)"
-                        [attr.aria-label]="
-                          'Supprimer ' + city.name + ' des favoris'
-                        "
-                        i18n-aria-label="
-                          @@profileWeatherRemoveFavoriteAriaLabel"
+                        [attr.aria-label]="'Supprimer ' + city.name + ' des favoris'"
+                        i18n-aria-label="@@profileWeatherRemoveFavoriteAriaLabel"
                       >
-                        <span i18n="@@profileWeatherRemoveFavorite"
-                          >Supprimer</span
-                        >
+                        <span i18n="@@profileWeatherRemoveFavorite">Supprimer</span>
                       </button>
                     </li>
                   }
@@ -479,25 +416,14 @@
 
         <!-- ============ PRÉFÉRENCES & SESSION ============ -->
         <article class="pf-card full" appReveal [appRevealDelay]="1">
-          <h2 class="pf-card-title" i18n="@@profileSessionTitle">
-            Préférences &amp; session
-          </h2>
-          <p class="ch-sub" i18n="@@profileSessionSub">
-            Gérez votre accès à l'écosystème Asili.
-          </p>
+          <h2 class="pf-card-title" i18n="@@profileSessionTitle">Préférences &amp; session</h2>
+          <p class="ch-sub" i18n="@@profileSessionSub">Gérez votre accès à l'écosystème Asili.</p>
           <div class="pf-line">
             <div>
               <div class="k" i18n="@@profileSessionLabel">Session</div>
-              <div class="v" i18n="@@profileSessionValue">
-                Connecté sur cet appareil
-              </div>
+              <div class="v" i18n="@@profileSessionValue">Connecté sur cet appareil</div>
             </div>
-            <button
-              type="button"
-              class="edit danger"
-              (click)="logout()"
-              i18n="@@profileLogout"
-            >
+            <button type="button" class="edit danger" (click)="logout()" i18n="@@profileLogout">
               Se déconnecter
             </button>
           </div>

@@ -1,11 +1,11 @@
-import { Component } from "@angular/core";
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { provideRouter, RouterModule } from "@angular/router";
+import { Component } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, RouterModule } from '@angular/router';
 // ROUGE (TDD) : ce composant n'existe pas encore — Batch 6 DRY P3 auth.
-import { AuthSuccessComponent } from "./auth-success.component";
+import { AuthSuccessComponent } from './auth-success.component';
 
-const MESSAGE = "Un email de réinitialisation vous a été envoyé.";
+const MESSAGE = 'Un email de réinitialisation vous a été envoyé.';
 
 /**
  * Hote de test : reproduit le contrat d'usage des 3 pages a succes.
@@ -31,16 +31,14 @@ class HostComponent {
   message = MESSAGE;
 }
 
-describe("AuthSuccessComponent", () => {
+describe('AuthSuccessComponent', () => {
   /** Monte le composant seul avec un message via setInput. */
-  function setupBare(
-    message = MESSAGE,
-  ): ComponentFixture<AuthSuccessComponent> {
+  function setupBare(message = MESSAGE): ComponentFixture<AuthSuccessComponent> {
     TestBed.configureTestingModule({
       imports: [AuthSuccessComponent],
     });
     const fixture = TestBed.createComponent(AuthSuccessComponent);
-    fixture.componentRef.setInput("message", message);
+    fixture.componentRef.setInput('message', message);
     fixture.detectChanges();
     return fixture;
   }
@@ -55,62 +53,62 @@ describe("AuthSuccessComponent", () => {
     return fixture;
   }
 
-  it("se cree", () => {
+  it('se cree', () => {
     expect(setupBare().componentInstance).toBeTruthy();
   });
 
-  it("rend le conteneur .auth-success avec role=status + aria-live=polite", () => {
+  it('rend le conteneur .auth-success avec role=status + aria-live=polite', () => {
     const el = setupBare().nativeElement as HTMLElement;
-    const box = el.querySelector(".auth-success");
+    const box = el.querySelector('.auth-success');
     expect(box).not.toBeNull();
-    expect(box?.getAttribute("role")).toBe("status");
-    expect(box?.getAttribute("aria-live")).toBe("polite");
+    expect(box?.getAttribute('role')).toBe('status');
+    expect(box?.getAttribute('aria-live')).toBe('polite');
   });
 
-  it("rend la coche SVG (chemin exact) dans .check[aria-hidden]", () => {
+  it('rend la coche SVG (chemin exact) dans .check[aria-hidden]', () => {
     const el = setupBare().nativeElement as HTMLElement;
-    const check = el.querySelector(".auth-success .check[aria-hidden]");
+    const check = el.querySelector('.auth-success .check[aria-hidden]');
     expect(check).not.toBeNull();
-    const path = check?.querySelector("svg path");
-    expect(path?.getAttribute("d")).toBe("M5 12.5 10 17l9-10");
+    const path = check?.querySelector('svg path');
+    expect(path?.getAttribute('d')).toBe('M5 12.5 10 17l9-10');
   });
 
   it('rend le message (input) dans <p class="sub">', () => {
-    const el = setupBare("Message de test").nativeElement as HTMLElement;
-    const sub = el.querySelector("p.sub");
+    const el = setupBare('Message de test').nativeElement as HTMLElement;
+    const sub = el.querySelector('p.sub');
     expect(sub).not.toBeNull();
-    expect(sub?.textContent?.trim()).toBe("Message de test");
+    expect(sub?.textContent?.trim()).toBe('Message de test');
   });
 
   it("met a jour le rendu quand l'input message change", () => {
-    const fixture = setupBare("initial");
-    fixture.componentRef.setInput("message", "actualise");
+    const fixture = setupBare('initial');
+    fixture.componentRef.setInput('message', 'actualise');
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelector("p.sub")?.textContent?.trim()).toBe("actualise");
+    expect(el.querySelector('p.sub')?.textContent?.trim()).toBe('actualise');
   });
 
-  it("projette le titre [title] (avec <em>) fourni par la page", () => {
+  it('projette le titre [title] (avec <em>) fourni par la page', () => {
     const el = setupWithHost().nativeElement as HTMLElement;
-    const h1 = el.querySelector(".auth-success h1");
+    const h1 = el.querySelector('.auth-success h1');
     expect(h1).not.toBeNull();
-    expect(h1?.querySelector("em")?.textContent).toContain("envoyé");
+    expect(h1?.querySelector('em')?.textContent).toContain('envoyé');
   });
 
   it("projette l'action par defaut (lien / bouton) fournie par la page", () => {
     const el = setupWithHost().nativeElement as HTMLElement;
-    const back = el.querySelector(".auth-success .back-probe");
+    const back = el.querySelector('.auth-success .back-probe');
     expect(back).not.toBeNull();
-    expect((back as HTMLAnchorElement).getAttribute("href")).toBe("/login");
+    expect((back as HTMLAnchorElement).getAttribute('href')).toBe('/login');
   });
 
-  it("rend le message pilote (input) + le sous-titre projete (ex. redirect verify)", () => {
+  it('rend le message pilote (input) + le sous-titre projete (ex. redirect verify)', () => {
     const el = setupWithHost().nativeElement as HTMLElement;
     // Le message input.
-    const subs = el.querySelectorAll(".auth-success p.sub");
+    const subs = el.querySelectorAll('.auth-success p.sub');
     const texts = Array.from(subs).map((n) => n.textContent?.trim());
     expect(texts).toContain(MESSAGE);
     // Le sous-titre projete (slot par defaut) coexiste.
-    expect(el.querySelector(".auth-success .redirect-probe")).not.toBeNull();
+    expect(el.querySelector('.auth-success .redirect-probe')).not.toBeNull();
   });
 });

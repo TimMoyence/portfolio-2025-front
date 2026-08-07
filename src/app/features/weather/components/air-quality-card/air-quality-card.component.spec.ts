@@ -1,10 +1,10 @@
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { buildAirQualityData } from "../../../../../testing/factories/weather.factory";
-import { WeatherLevelService } from "../../services/weather-level.service";
-import { AirQualityCardComponent } from "./air-quality-card.component";
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { buildAirQualityData } from '../../../../../testing/factories/weather.factory';
+import { WeatherLevelService } from '../../services/weather-level.service';
+import { AirQualityCardComponent } from './air-quality-card.component';
 
-describe("AirQualityCardComponent", () => {
+describe('AirQualityCardComponent', () => {
   let component: AirQualityCardComponent;
   let fixture: ComponentFixture<AirQualityCardComponent>;
 
@@ -27,24 +27,24 @@ describe("AirQualityCardComponent", () => {
     fixture.detectChanges();
   });
 
-  it("devrait se creer", () => {
+  it('devrait se creer', () => {
     expect(component).toBeTruthy();
   });
 
   it("devrait afficher 'Donnees indisponibles' sans donnees", () => {
     const el: HTMLElement = fixture.nativeElement;
-    expect(el.textContent).toContain("indisponibles");
+    expect(el.textContent).toContain('indisponibles');
   });
 
   it("devrait afficher le label 'Correct' pour un AQI de 25", () => {
-    fixture.componentRef.setInput("airQuality", buildAirQualityData());
+    fixture.componentRef.setInput('airQuality', buildAirQualityData());
     fixture.detectChanges();
-    expect(component.qualityLabel()).toContain("Correct");
+    expect(component.qualityLabel()).toContain('Correct');
   });
 
   it("devrait afficher 'Bon' pour un AQI <= 20", () => {
     fixture.componentRef.setInput(
-      "airQuality",
+      'airQuality',
       buildAirQualityData({
         current: {
           european_aqi: 15,
@@ -57,14 +57,14 @@ describe("AirQualityCardComponent", () => {
       }),
     );
     fixture.detectChanges();
-    expect(component.qualityLabel()).toContain("Bon");
+    expect(component.qualityLabel()).toContain('Bon');
   });
 
-  it("devrait afficher les polluants quand les donnees sont presentes", () => {
-    fixture.componentRef.setInput("airQuality", buildAirQualityData());
+  it('devrait afficher les polluants quand les donnees sont presentes', () => {
+    fixture.componentRef.setInput('airQuality', buildAirQualityData());
     fixture.detectChanges();
     const el: HTMLElement = fixture.nativeElement;
-    expect(el.textContent).toContain("PM2.5");
-    expect(el.textContent).toContain("PM10");
+    expect(el.textContent).toContain('PM2.5');
+    expect(el.textContent).toContain('PM10');
   });
 });

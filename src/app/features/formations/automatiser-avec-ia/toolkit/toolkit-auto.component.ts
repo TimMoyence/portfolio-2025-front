@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ToolkitGatePageComponent } from "../../shared/toolkit-gate-page.component";
-import type { ToolkitGatePageData } from "../../shared/toolkit-gate-page.model";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ToolkitGatePageComponent } from '../../shared/toolkit-gate-page.component';
+import type { ToolkitGatePageData } from '../../shared/toolkit-gate-page.model';
 
 /**
  * Page de capture email du toolkit « Automatiser avec l'IA » — refonte Asili
@@ -17,15 +17,12 @@ import type { ToolkitGatePageData } from "../../shared/toolkit-gate-page.model";
  * constellation global. Texte localise via `$localize`.
  */
 @Component({
-  selector: "app-toolkit-auto",
+  selector: 'app-toolkit-auto',
   standalone: true,
   imports: [ToolkitGatePageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-toolkit-gate-page
-      [data]="gateData"
-      formationSlug="automatiser-avec-ia"
-    >
+    <app-toolkit-gate-page [data]="gateData" formationSlug="automatiser-avec-ia">
       <ng-container title i18n="@@formations.auto.toolkit.title"
         >Vos 5 workflows<br />prêts à <em>l'emploi</em>.</ng-container
       >

@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,21 +9,12 @@ import {
   input,
   PLATFORM_ID,
   signal,
-} from "@angular/core";
-import type {
-  CurrentWeather,
-  DetailedCurrentWeather,
-} from "../../../../core/models/weather.model";
-import { UnitPipe } from "../../pipes/unit.pipe";
-import { UnitPreferencesService } from "../../services/unit-preferences.service";
-import {
-  animateValue,
-  type AnimationHandle,
-} from "../../../../shared/utils/animate-value";
-import {
-  weatherCodeToDescription,
-  weatherCodeToIcon,
-} from "../../utils/weather-icons";
+} from '@angular/core';
+import type { CurrentWeather, DetailedCurrentWeather } from '../../../../core/models/weather.model';
+import { UnitPipe } from '../../pipes/unit.pipe';
+import { UnitPreferencesService } from '../../services/unit-preferences.service';
+import { animateValue, type AnimationHandle } from '../../../../shared/utils/animate-value';
+import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather-icons';
 
 /**
  * Composant d'affichage des conditions meteo actuelles.
@@ -31,7 +22,7 @@ import {
  * Inclut un count-up anime sur la temperature principale.
  */
 @Component({
-  selector: "app-current-conditions",
+  selector: 'app-current-conditions',
   standalone: true,
   imports: [CommonModule, UnitPipe],
   styles: `
@@ -58,12 +49,8 @@ import {
         Instrument Serif géante, <sup>°</sup> teal, ligne Ressenti/Vent mono.
         Tailwind inline conservé (décision 2). Logique inchangée.
       -->
-      <div
-        class="rounded-[20px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8"
-      >
-        <div
-          class="flex flex-col items-center gap-5 sm:flex-row sm:items-end sm:gap-8"
-        >
+      <div class="rounded-[20px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+        <div class="flex flex-col items-center gap-5 sm:flex-row sm:items-end sm:gap-8">
           <div class="flex flex-col items-center sm:items-start">
             <p
               class="font-display text-7xl font-normal leading-none text-white sm:text-8xl temp-count-up"
@@ -76,8 +63,7 @@ import {
               <span i18n="weather.current.feelsLike|@@weatherCurrentFeelsLike">
                 Ressenti
                 <b class="font-medium text-white">{{
-                  current()!.apparent_temperature
-                    | unit: unitService.temperatureUnit()
+                  current()!.apparent_temperature | unit: unitService.temperatureUnit()
                 }}</b>
               </span>
               <span i18n="weather.current.wind|@@weatherCurrentWind">
@@ -90,20 +76,14 @@ import {
           </div>
 
           <div class="flex flex-col items-center gap-1 sm:ml-auto sm:items-end">
-            <img
-              [src]="icon()"
-              [alt]="description()"
-              class="h-16 w-16 drop-shadow-lg"
-            />
+            <img [src]="icon()" [alt]="description()" class="h-16 w-16 drop-shadow-lg" />
             <p class="text-base text-white/80">{{ description() }}</p>
           </div>
         </div>
 
         <!-- Donnees enrichies OWM -->
         @if (detailed(); as detail) {
-          <div
-            class="mt-5 grid grid-cols-3 gap-2 border-t border-white/10 pt-4"
-          >
+          <div class="mt-5 grid grid-cols-3 gap-2 border-t border-white/10 pt-4">
             <!-- Probabilite de precipitation -->
             @if (detail.precipitationProbability > 0 || detail.rain1h > 0) {
               <div class="text-center">
@@ -115,9 +95,9 @@ import {
                 </p>
                 <p class="mt-1 text-sm font-medium text-teal">
                   @if (detail.rain1h > 0) {
-                    {{ detail.rain1h | number: "1.0-1" }}mm/h
+                    {{ detail.rain1h | number: '1.0-1' }}mm/h
                   } @else {
-                    {{ detail.precipitationProbability | number: "1.0-0" }}%
+                    {{ detail.precipitationProbability | number: '1.0-0' }}%
                   }
                 </p>
               </div>
@@ -130,9 +110,7 @@ import {
               >
                 Humidité
               </p>
-              <p class="mt-1 text-sm font-medium text-white">
-                {{ detail.humidity }}%
-              </p>
+              <p class="mt-1 text-sm font-medium text-white">{{ detail.humidity }}%</p>
             </div>
             <!-- Visibilite -->
             <div class="text-center">
@@ -142,9 +120,7 @@ import {
               >
                 Visibilité
               </p>
-              <p class="mt-1 text-sm font-medium text-white">
-                {{ detail.visibility }} km
-              </p>
+              <p class="mt-1 text-sm font-medium text-white">{{ detail.visibility }} km</p>
             </div>
           </div>
         }
@@ -173,14 +149,14 @@ export class CurrentConditionsComponent {
   /** Chemin vers l'icone meteo correspondant au code WMO. */
   readonly icon = computed(() => {
     const data = this.current();
-    if (!data) return "";
+    if (!data) return '';
     return weatherCodeToIcon(data.weather_code);
   });
 
   /** Description textuelle du code meteo. */
   readonly description = computed(() => {
     const data = this.current();
-    if (!data) return "";
+    if (!data) return '';
     return weatherCodeToDescription(data.weather_code);
   });
 
@@ -196,10 +172,7 @@ export class CurrentConditionsComponent {
 
   /** Anime la temperature de la valeur actuelle vers la cible en 500ms avec easeOutCubic. */
   private animateCountUp(target: number): void {
-    if (
-      !this.isBrowser ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
+    if (!this.isBrowser || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.animatedTemp.set(target);
       return;
     }

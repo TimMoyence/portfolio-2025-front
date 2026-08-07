@@ -1,13 +1,10 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import type { Observable } from "rxjs";
-import { getApiBaseUrl } from "../http/api-config";
-import type { ToolkitPageData } from "../models/toolkit-page.model";
-import type {
-  ToolkitRequest,
-  ToolkitResponse,
-} from "../models/toolkit-request.model";
-import type { LeadMagnetPort } from "../ports/lead-magnet.port";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { getApiBaseUrl } from '../http/api-config';
+import type { ToolkitPageData } from '../models/toolkit-page.model';
+import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
+import type { LeadMagnetPort } from '../ports/lead-magnet.port';
 
 /** Adaptateur HTTP pour le module lead-magnets. */
 @Injectable()

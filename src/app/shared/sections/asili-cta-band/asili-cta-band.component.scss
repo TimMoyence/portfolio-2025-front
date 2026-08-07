@@ -18,14 +18,10 @@
 
 /* Halo radial teal qui monte depuis le bas. */
 .cta::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    60% 80% at 50% 120%,
-    rgba(var(--teal-rgb), 0.25),
-    transparent 70%
-  );
+  background: radial-gradient(60% 80% at 50% 120%, rgba(var(--teal-rgb), 0.25), transparent 70%);
   pointer-events: none;
 }
 

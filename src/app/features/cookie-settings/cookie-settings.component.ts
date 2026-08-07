@@ -1,10 +1,10 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
-import type { CookieConsentPreferences } from "../../core/models/cookie-consent.model";
-import { CookieConsentService } from "../../core/services/cookie-consent.service";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import type { CookieConsentPreferences } from '../../core/models/cookie-consent.model';
+import { CookieConsentService } from '../../core/services/cookie-consent.service';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 /**
  * Page « Préférences cookies ».
@@ -22,11 +22,11 @@ import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scrol
  * par le modèle), sans modifier la logique de persistance.
  */
 @Component({
-  selector: "app-cookie-settings",
+  selector: 'app-cookie-settings',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
-  templateUrl: "./cookie-settings.component.html",
-  styleUrl: "./cookie-settings.component.scss",
+  templateUrl: './cookie-settings.component.html',
+  styleUrl: './cookie-settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CookieSettingsComponent {
@@ -89,13 +89,7 @@ export class CookieSettingsComponent {
 
   /** Enregistre les préférences courantes via le service (logique conservée). */
   savePreferences(): void {
-    this.persist(
-      this.consentService.saveConsent(
-        this.preferences,
-        "settings",
-        "save_preferences",
-      ),
-    );
+    this.persist(this.consentService.saveConsent(this.preferences, 'settings', 'save_preferences'));
   }
 
   /**
@@ -113,13 +107,7 @@ export class CookieSettingsComponent {
       analytics: false,
       marketing: false,
     };
-    this.persist(
-      this.consentService.saveConsent(
-        this.preferences,
-        "settings",
-        "accept_all",
-      ),
-    );
+    this.persist(this.consentService.saveConsent(this.preferences, 'settings', 'accept_all'));
   }
 
   /**
@@ -133,7 +121,7 @@ export class CookieSettingsComponent {
   }
 
   /** Abonne un appel de consentement et reflète le résultat dans l'UI. */
-  private persist(call: ReturnType<CookieConsentService["saveConsent"]>): void {
+  private persist(call: ReturnType<CookieConsentService['saveConsent']>): void {
     this.isSaving = true;
     this.statusMessage = undefined;
     this.showSaved = false;

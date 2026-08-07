@@ -1,4 +1,4 @@
-import { NgTemplateOutlet, isPlatformBrowser } from "@angular/common";
+import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -15,11 +15,11 @@ import {
   input,
   output,
   viewChild,
-} from "@angular/core";
-import { FullscreenAdapter } from "./fullscreen.adapter";
-import { SlideComponent } from "./slide.component";
-import { SlideDeckService, type SlideDeckMode } from "./slide-deck.service";
-import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from "./slide-deck.tokens";
+} from '@angular/core';
+import { FullscreenAdapter } from './fullscreen.adapter';
+import { SlideComponent } from './slide.component';
+import { SlideDeckService, type SlideDeckMode } from './slide-deck.service';
+import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from './slide-deck.tokens';
 
 /**
  * Wrapper principal du moteur de presentation. Gere le mode scroll/fullscreen,
@@ -37,22 +37,22 @@ import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from "./slide-deck.tokens";
  * affichant Swiper alors que l'utilisateur etait revenu en page normale.
  */
 @Component({
-  selector: "app-slide-deck",
+  selector: 'app-slide-deck',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-deck.component.html",
-  styleUrl: "./slide-deck.component.scss",
+  templateUrl: './slide-deck.component.html',
+  styleUrl: './slide-deck.component.scss',
   imports: [NgTemplateOutlet],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [{ provide: SLIDE_DECK_HOST, useValue: true }],
 })
 export class SlideDeckComponent implements AfterViewInit {
-  readonly mode = input<SlideDeckMode>("scroll");
+  readonly mode = input<SlideDeckMode>('scroll');
   readonly allowFullscreen = input<boolean>(true);
-  readonly theme = input<string>("default");
+  readonly theme = input<string>('default');
   readonly slideChanged = output<{ id: string; index: number }>();
 
-  readonly deckRef = viewChild.required<ElementRef<HTMLElement>>("deckRoot");
+  readonly deckRef = viewChild.required<ElementRef<HTMLElement>>('deckRoot');
   readonly slides = contentChildren(SlideComponent);
 
   protected readonly service = inject(SlideDeckService);
@@ -69,9 +69,9 @@ export class SlideDeckComponent implements AfterViewInit {
     const m = this.service.mode();
     return this.slides().filter((slide) => {
       const v = slide.visibility();
-      if (v === "both") return true;
-      if (m === "scroll" && v === "scroll-only") return true;
-      if (m === "fullscreen" && v === "present-only") return true;
+      if (v === 'both') return true;
+      if (m === 'scroll' && v === 'scroll-only') return true;
+      if (m === 'fullscreen' && v === 'present-only') return true;
       return false;
     });
   });
@@ -115,11 +115,7 @@ export class SlideDeckComponent implements AfterViewInit {
         if (isPlatformBrowser(this.platformId)) {
           const url = new URL(window.location.href);
           if (url.hash !== `#${id}`) {
-            history.replaceState(
-              null,
-              "",
-              `${url.pathname}${url.search}#${id}`,
-            );
+            history.replaceState(null, '', `${url.pathname}${url.search}#${id}`);
           }
         }
       }
@@ -156,8 +152,8 @@ export class SlideDeckComponent implements AfterViewInit {
         this.syncCurrentFromScroll();
       });
     };
-    root.addEventListener("scroll", onScroll, { passive: true });
-    this.scrollListener = () => root.removeEventListener("scroll", onScroll);
+    root.addEventListener('scroll', onScroll, { passive: true });
+    this.scrollListener = () => root.removeEventListener('scroll', onScroll);
     this.destroyRef.onDestroy(() => {
       this.scrollListener?.();
       if (this.rafId !== null) {
@@ -173,16 +169,12 @@ export class SlideDeckComponent implements AfterViewInit {
    */
   private syncCurrentFromScroll(): void {
     const root = this.deckRef().nativeElement;
-    const sections = Array.from(
-      root.querySelectorAll<HTMLElement>("section.slide"),
-    );
+    const sections = Array.from(root.querySelectorAll<HTMLElement>('section.slide'));
     if (sections.length === 0) {
       return;
     }
     const mid = root.scrollTop + root.clientHeight / 2;
-    const current = sections.find(
-      (s) => s.offsetTop <= mid && s.offsetTop + s.clientHeight > mid,
-    );
+    const current = sections.find((s) => s.offsetTop <= mid && s.offsetTop + s.clientHeight > mid);
     if (current && current.id && current.id !== this.service.current()) {
       this.service.goTo(current.id);
     }
@@ -192,61 +184,58 @@ export class SlideDeckComponent implements AfterViewInit {
     if (!this.allowFullscreen() || !isPlatformBrowser(this.platformId)) {
       return;
     }
-    if (this.service.mode() === "fullscreen") {
+    if (this.service.mode() === 'fullscreen') {
       await this.fullscreen.exit();
-      this.service.setMode("scroll");
+      this.service.setMode('scroll');
       return;
     }
     const enterPromise = this.fullscreen.enter(this.deckRef().nativeElement);
     await this.fullscreen.loadSwiperElement();
     await enterPromise;
-    this.service.setMode("fullscreen");
+    this.service.setMode('fullscreen');
   }
 
-  @HostListener("document:fullscreenchange")
-  @HostListener("document:webkitfullscreenchange")
+  @HostListener('document:fullscreenchange')
+  @HostListener('document:webkitfullscreenchange')
   protected onFullscreenChange(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    if (
-      document.fullscreenElement === null &&
-      this.service.mode() === "fullscreen"
-    ) {
-      this.service.setMode("scroll");
+    if (document.fullscreenElement === null && this.service.mode() === 'fullscreen') {
+      this.service.setMode('scroll');
     }
   }
 
-  @HostListener("document:keydown", ["$event"])
+  @HostListener('document:keydown', ['$event'])
   protected handleKeyboard(event: KeyboardEvent): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
     // En fullscreen, Swiper gere sa propre navigation.
-    const inFullscreen = this.service.mode() === "fullscreen";
+    const inFullscreen = this.service.mode() === 'fullscreen';
 
     switch (event.key) {
-      case "f":
-      case "F":
+      case 'f':
+      case 'F':
         event.preventDefault();
         void this.toggleFullscreen();
         break;
-      case "ArrowDown":
-      case "ArrowRight":
-      case " ":
+      case 'ArrowDown':
+      case 'ArrowRight':
+      case ' ':
         if (!inFullscreen) {
           event.preventDefault();
           this.scrollToSibling(1);
         }
         break;
-      case "ArrowUp":
-      case "ArrowLeft":
+      case 'ArrowUp':
+      case 'ArrowLeft':
         if (!inFullscreen) {
           event.preventDefault();
           this.scrollToSibling(-1);
         }
         break;
-      case "Escape":
+      case 'Escape':
         if (inFullscreen) {
           event.preventDefault();
           void this.toggleFullscreen();
@@ -262,21 +251,16 @@ export class SlideDeckComponent implements AfterViewInit {
    */
   private scrollToSibling(direction: 1 | -1): void {
     const root = this.deckRef().nativeElement;
-    const sections = Array.from(
-      root.querySelectorAll<HTMLElement>("section.slide"),
-    );
+    const sections = Array.from(root.querySelectorAll<HTMLElement>('section.slide'));
     if (sections.length === 0) {
       return;
     }
     const currentId = this.service.current();
     const idx = currentId ? sections.findIndex((s) => s.id === currentId) : 0;
-    const targetIdx = Math.max(
-      0,
-      Math.min(sections.length - 1, idx + direction),
-    );
+    const targetIdx = Math.max(0, Math.min(sections.length - 1, idx + direction));
     const target = sections[targetIdx];
     if (target) {
-      root.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+      root.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
     }
   }
 }

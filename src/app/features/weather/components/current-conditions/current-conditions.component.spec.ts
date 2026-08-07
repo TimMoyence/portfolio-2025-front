@@ -1,27 +1,23 @@
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { of } from "rxjs";
-import { WEATHER_PORT } from "../../../../core/ports/weather.port";
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { WEATHER_PORT } from '../../../../core/ports/weather.port';
 import {
   createWeatherPortStub,
   buildWeatherPreferences,
-} from "../../../../../testing/factories/weather.factory";
-import { WeatherLevelService } from "../../services/weather-level.service";
-import { UnitPreferencesService } from "../../services/unit-preferences.service";
-import { CurrentConditionsComponent } from "./current-conditions.component";
+} from '../../../../../testing/factories/weather.factory';
+import { WeatherLevelService } from '../../services/weather-level.service';
+import { UnitPreferencesService } from '../../services/unit-preferences.service';
+import { CurrentConditionsComponent } from './current-conditions.component';
 
-describe("CurrentConditionsComponent", () => {
+describe('CurrentConditionsComponent', () => {
   let component: CurrentConditionsComponent;
   let fixture: ComponentFixture<CurrentConditionsComponent>;
 
   beforeEach(async () => {
     const weatherPortStub = createWeatherPortStub();
-    weatherPortStub.getPreferences.and.returnValue(
-      of(buildWeatherPreferences()),
-    );
-    weatherPortStub.updatePreferences.and.returnValue(
-      of(buildWeatherPreferences()),
-    );
+    weatherPortStub.getPreferences.and.returnValue(of(buildWeatherPreferences()));
+    weatherPortStub.updatePreferences.and.returnValue(of(buildWeatherPreferences()));
     weatherPortStub.recordUsage.and.returnValue(of(void 0));
 
     await TestBed.configureTestingModule({
@@ -38,22 +34,22 @@ describe("CurrentConditionsComponent", () => {
     fixture.detectChanges();
   });
 
-  it("devrait se creer", () => {
+  it('devrait se creer', () => {
     expect(component).toBeTruthy();
   });
 
-  it("devrait retourner une chaine vide si aucune donnee courante", () => {
-    expect(component.icon()).toBe("");
-    expect(component.description()).toBe("");
+  it('devrait retourner une chaine vide si aucune donnee courante', () => {
+    expect(component.icon()).toBe('');
+    expect(component.description()).toBe('');
   });
 
-  it("devrait initialiser animatedTemp a 0", () => {
+  it('devrait initialiser animatedTemp a 0', () => {
     expect(component.animatedTemp()).toBe(0);
   });
 
   it("devrait calculer l'icone et la description quand les donnees sont presentes", () => {
-    fixture.componentRef.setInput("current", {
-      time: "2026-03-31T12:00",
+    fixture.componentRef.setInput('current', {
+      time: '2026-03-31T12:00',
       temperature_2m: 18,
       weather_code: 0,
       wind_speed_10m: 12,
@@ -61,13 +57,13 @@ describe("CurrentConditionsComponent", () => {
     });
     fixture.detectChanges();
 
-    expect(component.icon()).toContain("soleil.png");
-    expect(component.description()).toBe("Ciel dégagé");
+    expect(component.icon()).toContain('soleil.png');
+    expect(component.description()).toBe('Ciel dégagé');
   });
 
   it("devrait afficher l'icone nuage pour un code couvert", () => {
-    fixture.componentRef.setInput("current", {
-      time: "2026-03-31T12:00",
+    fixture.componentRef.setInput('current', {
+      time: '2026-03-31T12:00',
       temperature_2m: 10,
       weather_code: 3,
       wind_speed_10m: 20,
@@ -75,13 +71,13 @@ describe("CurrentConditionsComponent", () => {
     });
     fixture.detectChanges();
 
-    expect(component.icon()).toContain("nuage.png");
-    expect(component.description()).toBe("Couvert");
+    expect(component.icon()).toContain('nuage.png');
+    expect(component.description()).toBe('Couvert');
   });
 
-  it("devrait animer la temperature vers la valeur cible", (done) => {
-    fixture.componentRef.setInput("current", {
-      time: "2026-03-31T12:00",
+  it('devrait animer la temperature vers la valeur cible', (done) => {
+    fixture.componentRef.setInput('current', {
+      time: '2026-03-31T12:00',
       temperature_2m: 18,
       weather_code: 0,
       wind_speed_10m: 12,
@@ -96,9 +92,9 @@ describe("CurrentConditionsComponent", () => {
     }, 600);
   });
 
-  it("devrait re-animer vers une nouvelle valeur quand la temperature change", (done) => {
-    fixture.componentRef.setInput("current", {
-      time: "2026-03-31T12:00",
+  it('devrait re-animer vers une nouvelle valeur quand la temperature change', (done) => {
+    fixture.componentRef.setInput('current', {
+      time: '2026-03-31T12:00',
       temperature_2m: 18,
       weather_code: 0,
       wind_speed_10m: 12,
@@ -110,8 +106,8 @@ describe("CurrentConditionsComponent", () => {
       expect(component.animatedTemp()).toBe(18);
 
       // Changement de temperature
-      fixture.componentRef.setInput("current", {
-        time: "2026-03-31T13:00",
+      fixture.componentRef.setInput('current', {
+        time: '2026-03-31T13:00',
         temperature_2m: 22,
         weather_code: 0,
         wind_speed_10m: 10,

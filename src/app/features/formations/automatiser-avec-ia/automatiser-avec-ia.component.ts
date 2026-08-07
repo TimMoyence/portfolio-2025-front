@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   type ComparisonColumn,
   SlideComparisonComponent,
@@ -11,7 +11,7 @@ import {
   SlidePollComponent,
   SlideQuoteComponent,
   SlideStatsComponent,
-} from "../../../shared/slides";
+} from '../../../shared/slides';
 
 /**
  * Page de la formation "Automatiser avec l'IA".
@@ -21,7 +21,7 @@ import {
  * `automatiser-avec-ia.slides.data.ts` (BIG BANG migration Task 20).
  */
 @Component({
-  selector: "app-automatiser-avec-ia",
+  selector: 'app-automatiser-avec-ia',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -36,24 +36,24 @@ import {
     SlidePollComponent,
     SlideCtaComponent,
   ],
-  templateUrl: "./automatiser-avec-ia.component.html",
-  styleUrl: "./automatiser-avec-ia.component.scss",
+  templateUrl: './automatiser-avec-ia.component.html',
+  styleUrl: './automatiser-avec-ia.component.scss',
 })
 export class AutomatiserAvecIaComponent {
   /** Stats slide "constat". */
   protected readonly constatStats = [
     {
-      value: "13h",
+      value: '13h',
       label: $localize`:@@formations.automatiser-avec-ia.constat.stats.0.label:par semaine en moyenne sur des taches automatisables (devis, emails, reseaux sociaux)`,
       source: $localize`:@@formations.automatiser-avec-ia.constat.stats.0.source:Enquete BPI France / OpinionWay, 2025`,
     },
     {
-      value: "72%",
+      value: '72%',
       label: $localize`:@@formations.automatiser-avec-ia.constat.stats.1.label:des dirigeants de TPE disent manquer de temps pour developper leur activite`,
       source: $localize`:@@formations.automatiser-avec-ia.constat.stats.1.source:CPME, barometre 2025`,
     },
     {
-      value: "0 €",
+      value: '0 €',
       label: $localize`:@@formations.automatiser-avec-ia.constat.stats.2.label:c'est le budget IA necessaire pour demarrer — les 5 workflows montres tournent sur du gratuit`,
       source: $localize`:@@formations.automatiser-avec-ia.constat.stats.2.source:Benchmark asilidesign.fr, 2026`,
     },
@@ -122,12 +122,12 @@ export class AutomatiserAvecIaComponent {
   protected readonly erreursColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@formations.automatiser-avec-ia.erreurs.headers.0:Ce qui fonctionne`,
-      tone: "success",
+      tone: 'success',
       items: this.fonctionneItems,
     },
     {
       label: $localize`:@@formations.automatiser-avec-ia.erreurs.headers.1:A eviter au depart`,
-      tone: "danger",
+      tone: 'danger',
       items: this.aEviterItems,
     },
   ];

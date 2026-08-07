@@ -1,9 +1,9 @@
-import { Inject, Injectable, LOCALE_ID } from "@angular/core";
-import type { Observable } from "rxjs";
-import { of } from "rxjs";
-import seoMetadata from "../../../assets/seo/seo-metadata.json";
-import type { SeoConfig } from "./seo.interface";
-import type { SeoMetadataFile, SeoPageEntry } from "./seo-metadata.model";
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import seoMetadata from '../../../assets/seo/seo-metadata.json';
+import type { SeoConfig } from './seo.interface';
+import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
 
 export interface SeoResolvedConfig {
   seo: SeoConfig;
@@ -12,7 +12,7 @@ export interface SeoResolvedConfig {
 }
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class SeoRegistryService {
   private readonly data = seoMetadata as SeoMetadataFile;
@@ -28,7 +28,7 @@ export class SeoRegistryService {
   }
 
   getLocaleId(): string {
-    const normalizedLocale = this.localeId.split("-")[0];
+    const normalizedLocale = this.localeId.split('-')[0];
     const locales = this.getLocales();
     if (locales.includes(normalizedLocale)) {
       return normalizedLocale;
@@ -68,8 +68,7 @@ export class SeoRegistryService {
       twitterCard: localeMeta.twitterCard ?? defaults.twitterCard,
       twitterTitle: localeMeta.twitterTitle,
       twitterDescription: localeMeta.twitterDescription,
-      twitterImage:
-        localeMeta.twitterImage ?? localeMeta.ogImage ?? defaults.ogImage,
+      twitterImage: localeMeta.twitterImage ?? localeMeta.ogImage ?? defaults.ogImage,
     };
 
     return {
@@ -82,7 +81,7 @@ export class SeoRegistryService {
   private resolveLocaleKey(page: SeoPageEntry): string {
     const locales = [
       this.localeId,
-      this.localeId.split("-")[0],
+      this.localeId.split('-')[0],
       this.data.site.defaultLocale,
     ].filter(Boolean);
 
@@ -97,38 +96,38 @@ export class SeoRegistryService {
   }
 
   private normalizeRequestPath(rawPath: string): string {
-    const clean = rawPath.split("?")[0].split("#")[0];
+    const clean = rawPath.split('?')[0].split('#')[0];
     const trimmed = this.trimSlashes(clean);
     const withoutLocale = this.stripLocalePrefix(trimmed);
-    const normalized = withoutLocale ? `/${withoutLocale}` : "/";
+    const normalized = withoutLocale ? `/${withoutLocale}` : '/';
 
-    if (normalized === "/" || normalized === "/home") {
-      return this.normalizePagePath(this.data.site.homePath ?? "/");
+    if (normalized === '/' || normalized === '/home') {
+      return this.normalizePagePath(this.data.site.homePath ?? '/');
     }
 
     return normalized;
   }
 
   private normalizePagePath(path: string): string {
-    const clean = path.split("?")[0].split("#")[0];
+    const clean = path.split('?')[0].split('#')[0];
     const trimmed = this.trimSlashes(clean);
-    return trimmed ? `/${trimmed}` : "/";
+    return trimmed ? `/${trimmed}` : '/';
   }
 
   private trimSlashes(path: string): string {
-    return path.replace(/^\/+/, "").replace(/\/+$/, "");
+    return path.replace(/^\/+/, '').replace(/\/+$/, '');
   }
 
   private stripLocalePrefix(path: string): string {
-    if (!path) return "";
+    if (!path) return '';
 
     const locales = this.data.site.locales ?? [];
-    const segments = path.split("/").filter(Boolean);
+    const segments = path.split('/').filter(Boolean);
 
     if (segments.length && locales.includes(segments[0])) {
       segments.shift();
     }
 
-    return segments.join("/");
+    return segments.join('/');
   }
 }

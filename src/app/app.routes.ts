@@ -1,316 +1,287 @@
-import type { Routes } from "@angular/router";
-import { authGuard } from "./core/guards/auth.guard";
-import { redirectIfAuthorizedGuard } from "./core/guards/redirect-if-authorized.guard";
-import { roleGuard } from "./core/guards/role.guard";
+import type { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { redirectIfAuthorizedGuard } from './core/guards/redirect-if-authorized.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
-    path: "",
-    loadComponent: () =>
-      import("./features/home/home.component").then((m) => m.HomeComponent),
+    path: '',
+    loadComponent: () => import('./features/home/home.component').then((m) => m.HomeComponent),
     data: {
-      seoKey: "home",
+      seoKey: 'home',
     },
   },
   {
-    path: "home",
-    pathMatch: "full",
-    redirectTo: "",
+    path: 'home',
+    pathMatch: 'full',
+    redirectTo: '',
   },
   {
-    path: "login",
-    loadComponent: () =>
-      import("./features/auth/auth.component").then((m) => m.AuthComponent),
+    path: 'login',
+    loadComponent: () => import('./features/auth/auth.component').then((m) => m.AuthComponent),
     data: {
-      seoKey: "login",
+      seoKey: 'login',
     },
   },
   {
-    path: "register",
-    loadComponent: () =>
-      import("./features/auth/auth.component").then((m) => m.AuthComponent),
+    path: 'register',
+    loadComponent: () => import('./features/auth/auth.component').then((m) => m.AuthComponent),
     data: {
-      seoKey: "register",
+      seoKey: 'register',
     },
   },
   {
-    path: "forgot-password",
+    path: 'forgot-password',
     loadComponent: () =>
-      import("./features/auth/forgot-password.component").then(
-        (m) => m.ForgotPasswordComponent,
-      ),
+      import('./features/auth/forgot-password.component').then((m) => m.ForgotPasswordComponent),
     data: {
-      seoKey: "forgot-password",
+      seoKey: 'forgot-password',
     },
   },
   {
-    path: "reset-password",
+    path: 'reset-password',
     loadComponent: () =>
-      import("./features/auth/reset-password.component").then(
-        (m) => m.ResetPasswordComponent,
-      ),
+      import('./features/auth/reset-password.component').then((m) => m.ResetPasswordComponent),
     data: {
-      seoKey: "reset-password",
+      seoKey: 'reset-password',
     },
   },
   {
-    path: "verify-email",
+    path: 'verify-email',
     loadComponent: () =>
-      import("./features/auth/verify-email.component").then(
-        (m) => m.VerifyEmailComponent,
-      ),
+      import('./features/auth/verify-email.component').then((m) => m.VerifyEmailComponent),
     data: {
-      seoKey: "verify-email",
+      seoKey: 'verify-email',
     },
   },
   {
-    path: "profil",
+    path: 'profil',
     canActivate: [authGuard],
     loadComponent: () =>
-      import("./features/profile/profile.component").then(
-        (m) => m.ProfileComponent,
-      ),
+      import('./features/profile/profile.component').then((m) => m.ProfileComponent),
     data: {
-      seoKey: "profile",
+      seoKey: 'profile',
     },
   },
   {
-    path: "presentation",
+    path: 'presentation',
     loadComponent: () =>
-      import("./features/presentation/presentation.component").then(
-        (m) => m.PresentationComponent,
-      ),
+      import('./features/presentation/presentation.component').then((m) => m.PresentationComponent),
     data: {
-      seoKey: "presentation",
+      seoKey: 'presentation',
     },
   },
   {
-    path: "projets",
+    path: 'projets',
     loadComponent: () =>
-      import("./features/projets/projets.component").then(
-        (m) => m.ProjetsComponent,
-      ),
+      import('./features/projets/projets.component').then((m) => m.ProjetsComponent),
     data: {
-      seoKey: "projets",
+      seoKey: 'projets',
     },
   },
   {
-    path: "offer",
-    loadComponent: () =>
-      import("./features/offer/offer.component").then((m) => m.OfferComponent),
+    path: 'offer',
+    loadComponent: () => import('./features/offer/offer.component').then((m) => m.OfferComponent),
     data: {
-      seoKey: "offer",
+      seoKey: 'offer',
     },
   },
   {
-    path: "contact",
+    path: 'contact',
     loadComponent: () =>
-      import("./features/contact/contact.component").then(
-        (m) => m.ContactComponent,
-      ),
+      import('./features/contact/contact.component').then((m) => m.ContactComponent),
     data: {
-      seoKey: "contact",
+      seoKey: 'contact',
     },
   },
   {
     // L'étude de cas dédiée a été retirée ; l'URL était indexée, on la
     // redirige vers la grille des réalisations plutôt que de servir une 404.
-    path: "client-project",
-    redirectTo: "projets",
-    pathMatch: "full" as const,
+    path: 'client-project',
+    redirectTo: 'projets',
+    pathMatch: 'full' as const,
   },
   {
-    path: "cookie-settings",
+    path: 'cookie-settings',
     loadComponent: () =>
-      import("./features/cookie-settings/cookie-settings.component").then(
+      import('./features/cookie-settings/cookie-settings.component').then(
         (m) => m.CookieSettingsComponent,
       ),
     data: {
-      seoKey: "cookie-settings",
+      seoKey: 'cookie-settings',
     },
   },
   {
-    path: "terms",
-    loadComponent: () =>
-      import("./features/terms/terms.component").then((m) => m.TermsComponent),
+    path: 'terms',
+    loadComponent: () => import('./features/terms/terms.component').then((m) => m.TermsComponent),
     data: {
-      seoKey: "terms",
+      seoKey: 'terms',
     },
   },
   {
-    path: "privacy",
+    path: 'privacy',
     loadComponent: () =>
-      import("./features/privacy/privacy.component").then(
-        (m) => m.PrivacyComponent,
-      ),
+      import('./features/privacy/privacy.component').then((m) => m.PrivacyComponent),
     data: {
-      seoKey: "privacy",
+      seoKey: 'privacy',
     },
   },
   {
-    path: "growth-audit",
+    path: 'growth-audit',
     loadComponent: () =>
-      import("./features/growth-audit/growth-audit.component").then(
-        (m) => m.GrowthAuditComponent,
-      ),
+      import('./features/growth-audit/growth-audit.component').then((m) => m.GrowthAuditComponent),
     data: {
-      seoKey: "growth-audit",
+      seoKey: 'growth-audit',
     },
   },
   // Hub L'Atelier — page vitrine indexable regroupant les deux experiences
   // jouables (Meteo + Sebastian) avec demos simulees autonomes.
   {
-    path: "atelier",
-    pathMatch: "full",
+    path: 'atelier',
+    pathMatch: 'full',
     loadComponent: () =>
-      import("./features/atelier/atelier.component").then(
-        (m) => m.AtelierComponent,
-      ),
+      import('./features/atelier/atelier.component').then((m) => m.AtelierComponent),
     data: {
-      seoKey: "atelier",
+      seoKey: 'atelier',
     },
   },
   // Pages publiques de presentation des ateliers (indexables, marketing).
   // Affichent une marketing page invitant a s'inscrire / acceder a l'app.
   {
-    path: "atelier/meteo",
-    canActivate: [redirectIfAuthorizedGuard("weather")],
+    path: 'atelier/meteo',
+    canActivate: [redirectIfAuthorizedGuard('weather')],
     loadComponent: () =>
-      import("./features/weather/weather-presentation.component").then(
+      import('./features/weather/weather-presentation.component').then(
         (m) => m.WeatherPresentationComponent,
       ),
     data: {
-      seoKey: "weather",
+      seoKey: 'weather',
     },
   },
   {
-    path: "atelier/sebastian",
-    canActivate: [redirectIfAuthorizedGuard("sebastian")],
+    path: 'atelier/sebastian',
+    canActivate: [redirectIfAuthorizedGuard('sebastian')],
     loadComponent: () =>
-      import("./features/sebastian/sebastian-presentation.component").then(
+      import('./features/sebastian/sebastian-presentation.component').then(
         (m) => m.SebastianPresentationComponent,
       ),
     data: {
-      seoKey: "sebastian",
+      seoKey: 'sebastian',
     },
   },
 
   // Apps reelles, protegees par auth + role. Non indexables.
   {
-    path: "atelier/meteo/app",
-    canActivate: [authGuard, roleGuard("weather")],
+    path: 'atelier/meteo/app',
+    canActivate: [authGuard, roleGuard('weather')],
     loadComponent: () =>
-      import("./features/weather/weather-app.component").then(
-        (m) => m.WeatherAppComponent,
-      ),
+      import('./features/weather/weather-app.component').then((m) => m.WeatherAppComponent),
     data: {
-      seoKey: "weather-app",
+      seoKey: 'weather-app',
     },
   },
   {
-    path: "atelier/sebastian/app",
-    canActivate: [authGuard, roleGuard("sebastian")],
+    path: 'atelier/sebastian/app',
+    canActivate: [authGuard, roleGuard('sebastian')],
     loadComponent: () =>
-      import("./features/sebastian/sebastian-app.component").then(
-        (m) => m.SebastianAppComponent,
-      ),
+      import('./features/sebastian/sebastian-app.component').then((m) => m.SebastianAppComponent),
     data: {
-      seoKey: "sebastian-app",
+      seoKey: 'sebastian-app',
     },
     children: [
-      { path: "", redirectTo: "dashboard", pathMatch: "full" },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
-        path: "dashboard",
+        path: 'dashboard',
         loadComponent: () =>
-          import("./features/sebastian/pages/sebastian-dashboard.component").then(
+          import('./features/sebastian/pages/sebastian-dashboard.component').then(
             (m) => m.SebastianDashboardComponent,
           ),
       },
       {
-        path: "rapports",
+        path: 'rapports',
         loadComponent: () =>
-          import("./features/sebastian/pages/sebastian-reports.component").then(
+          import('./features/sebastian/pages/sebastian-reports.component').then(
             (m) => m.SebastianReportsComponent,
           ),
       },
       {
-        path: "badges",
+        path: 'badges',
         loadComponent: () =>
-          import("./features/sebastian/pages/sebastian-badges.component").then(
+          import('./features/sebastian/pages/sebastian-badges.component').then(
             (m) => m.SebastianBadgesComponent,
           ),
       },
       {
-        path: "historique",
+        path: 'historique',
         loadComponent: () =>
-          import("./features/sebastian/pages/sebastian-history.component").then(
+          import('./features/sebastian/pages/sebastian-history.component').then(
             (m) => m.SebastianHistoryComponent,
           ),
       },
       {
-        path: "objectifs",
+        path: 'objectifs',
         loadComponent: () =>
-          import("./features/sebastian/pages/sebastian-goals.component").then(
+          import('./features/sebastian/pages/sebastian-goals.component').then(
             (m) => m.SebastianGoalsComponent,
           ),
       },
     ],
   },
   {
-    path: "commonbudgetTM",
-    redirectTo: "",
-    pathMatch: "full" as const,
+    path: 'commonbudgetTM',
+    redirectTo: '',
+    pathMatch: 'full' as const,
   },
   {
-    path: "formations",
+    path: 'formations',
     loadComponent: () =>
-      import("./features/formations/formations-list.component").then(
+      import('./features/formations/formations-list.component').then(
         (m) => m.FormationsListComponent,
       ),
     data: {
-      seoKey: "formations",
+      seoKey: 'formations',
     },
   },
   // Routes specifiques toolkit — declarees AVANT `formations/:slug` pour
   // prioriser le matching Angular Router (plus specifique d'abord).
   {
-    path: "formations/ia-solopreneurs/toolkit/:token",
+    path: 'formations/ia-solopreneurs/toolkit/:token',
     loadComponent: () =>
-      import("./features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component").then(
+      import('./features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component').then(
         (m) => m.ToolkitPrivateComponent,
       ),
     data: {
-      seoKey: "formations-ia-solopreneurs-toolkit-private",
+      seoKey: 'formations-ia-solopreneurs-toolkit-private',
     },
   },
   {
-    path: "formations/ia-solopreneurs/toolkit",
+    path: 'formations/ia-solopreneurs/toolkit',
     loadComponent: () =>
-      import("./features/formations/ia-solopreneurs/toolkit/toolkit.component").then(
+      import('./features/formations/ia-solopreneurs/toolkit/toolkit.component').then(
         (m) => m.ToolkitComponent,
       ),
     data: {
-      seoKey: "formations-ia-solopreneurs-toolkit",
+      seoKey: 'formations-ia-solopreneurs-toolkit',
     },
   },
   {
-    path: "formations/automatiser-avec-ia/toolkit",
+    path: 'formations/automatiser-avec-ia/toolkit',
     loadComponent: () =>
-      import("./features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component").then(
+      import('./features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component').then(
         (m) => m.ToolkitAutoComponent,
       ),
     data: {
-      seoKey: "formations-automatiser-avec-ia-toolkit",
+      seoKey: 'formations-automatiser-avec-ia-toolkit',
     },
   },
   {
-    path: "formations/audit-seo-diy/toolkit",
+    path: 'formations/audit-seo-diy/toolkit',
     loadComponent: () =>
-      import("./features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component").then(
+      import('./features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component').then(
         (m) => m.ToolkitAuditSeoComponent,
       ),
     data: {
-      seoKey: "formations-audit-seo-diy-toolkit",
+      seoKey: 'formations-audit-seo-diy-toolkit',
     },
   },
   // Routes dediees aux formations migrees en composants slide-driven
@@ -318,54 +289,52 @@ export const routes: Routes = [
   // son propre composant standalone plutot que la generic page-driven
   // historique (registry + buildFormationRoutes supprimes en Task 22).
   {
-    path: "formations/ia-solopreneurs",
+    path: 'formations/ia-solopreneurs',
     loadComponent: () =>
-      import("./features/formations/ia-solopreneurs/ia-solopreneurs.component").then(
+      import('./features/formations/ia-solopreneurs/ia-solopreneurs.component').then(
         (m) => m.IaSolopreneursComponent,
       ),
     data: {
-      seoKey: "formations-ia-solopreneurs",
+      seoKey: 'formations-ia-solopreneurs',
     },
   },
   {
-    path: "formations/automatiser-avec-ia",
+    path: 'formations/automatiser-avec-ia',
     loadComponent: () =>
-      import("./features/formations/automatiser-avec-ia/automatiser-avec-ia.component").then(
+      import('./features/formations/automatiser-avec-ia/automatiser-avec-ia.component').then(
         (m) => m.AutomatiserAvecIaComponent,
       ),
     data: {
-      seoKey: "formations-automatiser-avec-ia",
+      seoKey: 'formations-automatiser-avec-ia',
     },
   },
   {
-    path: "formations/audit-seo-diy",
+    path: 'formations/audit-seo-diy',
     loadComponent: () =>
-      import("./features/formations/audit-seo-diy/audit-seo-diy.component").then(
+      import('./features/formations/audit-seo-diy/audit-seo-diy.component').then(
         (m) => m.AuditSeoDiyComponent,
       ),
     data: {
-      seoKey: "formations-audit-seo-diy",
+      seoKey: 'formations-audit-seo-diy',
     },
   },
   {
-    path: "slides/library",
+    path: 'slides/library',
     loadComponent: () =>
-      import("./features/slides-library/slides-library.component").then(
+      import('./features/slides-library/slides-library.component').then(
         (m) => m.SlidesLibraryComponent,
       ),
     data: {
-      seoKey: "slides-library",
-      robots: "noindex, nofollow",
+      seoKey: 'slides-library',
+      robots: 'noindex, nofollow',
     },
   },
   {
-    path: "**",
+    path: '**',
     loadComponent: () =>
-      import("./features/not-found/not-found.component").then(
-        (m) => m.NotFoundComponent,
-      ),
+      import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),
     data: {
-      seoKey: "not-found",
+      seoKey: 'not-found',
     },
   },
 ];

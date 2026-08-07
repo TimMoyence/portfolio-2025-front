@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -6,30 +6,24 @@ import {
   inject,
   LOCALE_ID,
   OnInit,
-} from "@angular/core";
-import type { NgForm } from "@angular/forms";
-import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, RouterModule } from "@angular/router";
-import { APP_CONFIG } from "../../core/config/app-config.token";
-import type { ContactFormState } from "../../core/models/contact.model";
-import type { ContactPort } from "../../core/ports/contact.port";
-import { CONTACT_PORT } from "../../core/ports/contact.port";
-import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
-import { ContactCtaComponent } from "../../shared/components/cta-contact/cta-contact.component";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { APP_CONFIG } from '../../core/config/app-config.token';
+import type { ContactFormState } from '../../core/models/contact.model';
+import type { ContactPort } from '../../core/ports/contact.port';
+import { CONTACT_PORT } from '../../core/ports/contact.port';
+import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
+import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
 
 @Component({
-  selector: "app-contact",
+  selector: 'app-contact',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    HeroSectionComponent,
-    ContactCtaComponent,
-  ],
-  templateUrl: "./contact.component.html",
-  styleUrl: "./contact.component.scss",
+  imports: [CommonModule, RouterModule, FormsModule, HeroSectionComponent, ContactCtaComponent],
+  templateUrl: './contact.component.html',
+  styleUrl: './contact.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactComponent implements OnInit {
@@ -75,17 +69,17 @@ export class ContactComponent implements OnInit {
   };
 
   private readonly defaultContactFormState: ContactFormState = {
-    email: "",
-    firstName: "",
-    lastName: "",
+    email: '',
+    firstName: '',
+    lastName: '',
     phone: null,
-    subject: "",
-    message: "",
-    role: "",
+    subject: '',
+    message: '',
+    role: '',
     terms: false,
-    termsVersion: this.appConfig.gdpr?.termsVersion ?? "2026-02-11",
+    termsVersion: this.appConfig.gdpr?.termsVersion ?? '2026-02-11',
     termsLocale: this.localeId,
-    termsMethod: "contact_form_checkbox",
+    termsMethod: 'contact_form_checkbox',
   };
 
   contactForm: ContactFormState = { ...this.defaultContactFormState };
@@ -99,9 +93,9 @@ export class ContactComponent implements OnInit {
    */
   ngOnInit(): void {
     const params = this.route.snapshot.queryParamMap;
-    const reason = params.get("reason");
-    const app = params.get("app");
-    if (reason === "access" && app) {
+    const reason = params.get('reason');
+    const app = params.get('app');
+    if (reason === 'access' && app) {
       this.contactForm = {
         ...this.contactForm,
         subject: $localize`:contact.form.subject.access@@contactFormSubjectAccess:Demande d'accès application`,
@@ -113,45 +107,42 @@ export class ContactComponent implements OnInit {
   private buildAccessRequestMessage(app: string): string {
     const normalizedApp = app.trim().toLowerCase();
     const appLabel =
-      normalizedApp === "weather"
+      normalizedApp === 'weather'
         ? $localize`:contact.access.app.weather@@contactAccessAppWeather:l'application Météo`
-        : normalizedApp === "sebastian"
+        : normalizedApp === 'sebastian'
           ? $localize`:contact.access.app.sebastian@@contactAccessAppSebastian:l'application Sebastian`
           : $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'atelier ${normalizedApp}:app:`;
     return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
   }
 
   contactFields: {
-    key: Extract<
-      keyof ContactFormState,
-      "firstName" | "lastName" | "email" | "phone"
-    >;
+    key: Extract<keyof ContactFormState, 'firstName' | 'lastName' | 'email' | 'phone'>;
     label: string;
-    type: "text" | "email" | "tel";
+    type: 'text' | 'email' | 'tel';
     required: boolean;
   }[] = [
     {
-      key: "firstName",
+      key: 'firstName',
       label: $localize`:contact.form.field.firstName@@contactFormFieldFirstName:Prénom`,
-      type: "text",
+      type: 'text',
       required: true,
     },
     {
-      key: "lastName",
+      key: 'lastName',
       label: $localize`:contact.form.field.lastName@@contactFormFieldLastName:Nom`,
-      type: "text",
+      type: 'text',
       required: true,
     },
     {
-      key: "email",
+      key: 'email',
       label: $localize`:contact.form.field.email@@contactFormFieldEmail:Email`,
-      type: "email",
+      type: 'email',
       required: true,
     },
     {
-      key: "phone",
+      key: 'phone',
       label: $localize`:contact.form.field.phone@@contactFormFieldPhone:Téléphone`,
-      type: "tel",
+      type: 'tel',
       required: false,
     },
   ];
@@ -173,8 +164,7 @@ export class ContactComponent implements OnInit {
     handleFormSubmit(this.contactPort.contact(payload), this.cdr, {
       fallbackError: $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`,
       onSuccess: (response) => {
-        if (response.httpCode !== 201)
-          this.contactErrorMessage = response.message;
+        if (response.httpCode !== 201) this.contactErrorMessage = response.message;
         else
           this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
       },
@@ -192,9 +182,7 @@ export class ContactComponent implements OnInit {
   private normalizeContactPayload(form: ContactFormState): ContactFormState {
     const trimOrEmpty = (value: string): string => value.trim();
     const trimmedPhone =
-      form.phone === undefined || form.phone === null
-        ? null
-        : trimOrEmpty(form.phone);
+      form.phone === undefined || form.phone === null ? null : trimOrEmpty(form.phone);
     return {
       ...form,
       email: trimOrEmpty(form.email),
@@ -203,11 +191,11 @@ export class ContactComponent implements OnInit {
       subject: trimOrEmpty(form.subject),
       message: trimOrEmpty(form.message),
       role: trimOrEmpty(form.role),
-      phone: trimmedPhone === "" ? null : trimmedPhone,
+      phone: trimmedPhone === '' ? null : trimmedPhone,
       termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
       termsLocale: this.localeId,
       termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
-      termsMethod: form.termsMethod ?? "contact_form_checkbox",
+      termsMethod: form.termsMethod ?? 'contact_form_checkbox',
     };
   }
 }

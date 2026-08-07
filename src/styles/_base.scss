@@ -1,4 +1,4 @@
-@use "../app/styles-shared/breakpoints" as bp;
+@use '../app/styles-shared/breakpoints' as bp;
 /* ============================================================
    ASILI — Base typographique & helpers
    ============================================================ */
@@ -62,15 +62,15 @@
      (aucun `@layer` dans la feuille compilee) : elle n'arbitre rien ici. */
   input:where(
     :not(
-      [type="checkbox"],
-      [type="radio"],
-      [type="submit"],
-      [type="button"],
-      [type="reset"],
-      [type="file"],
-      [type="color"],
-      [type="range"],
-      [type="image"]
+      [type='checkbox'],
+      [type='radio'],
+      [type='submit'],
+      [type='button'],
+      [type='reset'],
+      [type='file'],
+      [type='color'],
+      [type='range'],
+      [type='image']
     )
   ),
   textarea,
@@ -93,7 +93,7 @@
      Opacités allégées d'environ 20 % : le champ de particules reste lisible
      sans que le texte perde son contraste. */
   body::before {
-    content: "";
+    content: '';
     position: fixed;
     inset: 0;
     z-index: -1;
@@ -104,11 +104,7 @@
         rgba(255, 250, 242, 0) 30%,
         rgba(255, 250, 242, 0.34) 78%
       ),
-      linear-gradient(
-        180deg,
-        rgba(255, 250, 242, 0.22),
-        rgba(255, 250, 242, 0.34)
-      );
+      linear-gradient(180deg, rgba(255, 250, 242, 0.22), rgba(255, 250, 242, 0.34));
   }
 }
 
@@ -166,7 +162,7 @@
   font-weight: 500;
 }
 .kicker::before {
-  content: "";
+  content: '';
   width: 22px;
   height: 1px;
   background: var(--accent);

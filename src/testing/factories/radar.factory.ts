@@ -1,5 +1,5 @@
-import { of } from "rxjs";
-import type { RadarPort } from "../../app/core/ports/radar.port";
+import { of } from 'rxjs';
+import type { RadarPort } from '../../app/core/ports/radar.port';
 
 /**
  * Cree un stub complet du port radar avec un spy Jasmine.
@@ -8,7 +8,7 @@ import type { RadarPort } from "../../app/core/ports/radar.port";
 export function createRadarPortStub(): Record<keyof RadarPort, jasmine.Spy> {
   return {
     getLatestRadarTileUrlTemplate: jasmine
-      .createSpy("getLatestRadarTileUrlTemplate")
+      .createSpy('getLatestRadarTileUrlTemplate')
       .and.returnValue(of(null)),
   };
 }

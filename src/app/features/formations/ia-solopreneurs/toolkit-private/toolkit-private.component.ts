@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,12 +6,12 @@ import {
   inject,
   PLATFORM_ID,
   signal,
-} from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { LEAD_MAGNET_PORT } from "../../../../core/ports/lead-magnet.port";
-import type { ToolkitPageData } from "../../../../core/models/toolkit-page.model";
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
+import type { ToolkitPageData } from '../../../../core/models/toolkit-page.model';
 
-type PageState = "loading" | "loaded" | "error";
+type PageState = 'loading' | 'loaded' | 'error';
 
 /**
  * Page privee du toolkit personnalise — refonte Asili (Lot 3e).
@@ -26,11 +26,11 @@ type PageState = "loading" | "loaded" | "error";
  * `state`/`data`, `copyToClipboard`) sont INCHANGEES.
  */
 @Component({
-  selector: "app-toolkit-private",
+  selector: 'app-toolkit-private',
   standalone: true,
   imports: [],
-  templateUrl: "./toolkit-private.component.html",
-  styleUrl: "./toolkit-private.component.scss",
+  templateUrl: './toolkit-private.component.html',
+  styleUrl: './toolkit-private.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolkitPrivateComponent {
@@ -38,7 +38,7 @@ export class ToolkitPrivateComponent {
   private readonly port = inject(LEAD_MAGNET_PORT);
   private readonly platformId = inject(PLATFORM_ID);
 
-  readonly state = signal<PageState>("loading");
+  readonly state = signal<PageState>('loading');
   readonly data = signal<ToolkitPageData | null>(null);
   /** Texte qui vient d'etre copie, pour le feedback visuel. */
   readonly copiedText = signal<string | null>(null);
@@ -55,23 +55,21 @@ export class ToolkitPrivateComponent {
   protected readonly copyErrorLabel = $localize`:@@formations.toolkitPrivate.copyError:Échec — copiez à la main`;
 
   /** Vrai si les donnees sont chargees — raccourci pour le template. */
-  readonly isLoaded = computed(
-    () => this.state() === "loaded" && this.data() !== null,
-  );
+  readonly isLoaded = computed(() => this.state() === 'loaded' && this.data() !== null);
 
   constructor() {
-    const token = this.route.snapshot.paramMap.get("token");
+    const token = this.route.snapshot.paramMap.get('token');
     if (!token) {
-      this.state.set("error");
+      this.state.set('error');
       return;
     }
     this.port.getToolkitByToken(token).subscribe({
       next: (pageData) => {
         this.data.set(pageData);
-        this.state.set("loaded");
+        this.state.set('loaded');
       },
       error: () => {
-        this.state.set("error");
+        this.state.set('error');
       },
     });
   }
@@ -101,7 +99,7 @@ export class ToolkitPrivateComponent {
 
     const clipboard = navigator.clipboard;
     if (!clipboard) {
-      this.signalCopyFailure(text, new Error("Clipboard API indisponible"));
+      this.signalCopyFailure(text, new Error('Clipboard API indisponible'));
       return;
     }
 
@@ -120,7 +118,7 @@ export class ToolkitPrivateComponent {
    * texte concerne (jamais d'echec silencieux).
    */
   private signalCopyFailure(text: string, err: unknown): void {
-    console.error("Echec de copie dans le presse-papier", err);
+    console.error('Echec de copie dans le presse-papier', err);
     this.copiedText.set(null);
     this.copyErrorText.set(text);
     setTimeout(() => this.copyErrorText.set(null), 2500);

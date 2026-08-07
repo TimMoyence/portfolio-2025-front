@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,9 +7,9 @@ import {
   PLATFORM_ID,
   inject,
   viewChild,
-} from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { clamp } from "../../shared/utils/math.utils";
+} from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { clamp } from '../../shared/utils/math.utils';
 
 /**
  * Page 404 ludique — restyle Asili.
@@ -24,7 +24,7 @@ import { clamp } from "../../shared/utils/math.utils";
  * (définis dans `app.routes.ts`, non modifiés ici).
  */
 @Component({
-  selector: "app-not-found",
+  selector: 'app-not-found',
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
@@ -51,18 +51,14 @@ import { clamp } from "../../shared/utils/math.utils";
           Cette page a quitté <em>l'atelier</em>.
         </h1>
         <p i18n="@@notFoundDescription">
-          La page que vous cherchez a peut-être été déplacée, ou n'a jamais
-          existé. Mais l'expérimentation, elle, continue.
+          La page que vous cherchez a peut-être été déplacée, ou n'a jamais existé. Mais
+          l'expérimentation, elle, continue.
         </p>
         <div class="nf-cta">
           <a class="btn btn-teal" routerLink="/" i18n="@@notFoundCta">
             Retour à l'accueil <span class="arrow">→</span>
           </a>
-          <a
-            class="btn btn-ghost"
-            routerLink="/atelier"
-            i18n="@@notFoundCtaAtelier"
-          >
+          <a class="btn btn-ghost" routerLink="/atelier" i18n="@@notFoundCtaAtelier">
             Explorer l'Atelier
           </a>
         </div>
@@ -165,7 +161,7 @@ export class NotFoundComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   /** Le « 0 » du code 404, cible de l'effet de suivi du curseur. */
-  private readonly zero = viewChild<ElementRef<HTMLElement>>("zero");
+  private readonly zero = viewChild<ElementRef<HTMLElement>>('zero');
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {
@@ -173,8 +169,7 @@ export class NotFoundComponent {
     }
     // Respecte prefers-reduced-motion : pas d'effet si l'utilisateur le demande.
     const prefersReduced =
-      typeof matchMedia === "function" &&
-      matchMedia("(prefers-reduced-motion: reduce)").matches;
+      typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
       return;
     }
@@ -204,14 +199,14 @@ export class NotFoundComponent {
     const onLeave = (): void => {
       const el = this.zero()?.nativeElement;
       if (el) {
-        el.style.transform = "";
+        el.style.transform = '';
       }
     };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerleave", onLeave, { passive: true });
+    window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerleave', onLeave, { passive: true });
     this.destroyRef.onDestroy(() => {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerleave', onLeave);
     });
   }
 }

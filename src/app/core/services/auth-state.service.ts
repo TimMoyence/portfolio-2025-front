@@ -1,16 +1,10 @@
-import { isPlatformBrowser } from "@angular/common";
-import {
-  afterNextRender,
-  DestroyRef,
-  Injectable,
-  PLATFORM_ID,
-  inject,
-} from "@angular/core";
-import { computed, signal } from "@angular/core";
-import type { AuthSession, AuthUser } from "../models/auth.model";
-import { AUTH_PORT, type AuthPort } from "../ports/auth.port";
+import { isPlatformBrowser } from '@angular/common';
+import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { computed, signal } from '@angular/core';
+import type { AuthSession, AuthUser } from '../models/auth.model';
+import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 
-const TOKEN_KEY = "portfolio_jwt";
+const TOKEN_KEY = 'portfolio_jwt';
 const REFRESH_MARGIN_S = 30;
 
 /**
@@ -20,7 +14,7 @@ const REFRESH_MARGIN_S = 30;
  * cote backend — il n'est jamais accessible en JavaScript.
  * Utilise afterNextRender pour restaurer la session apres l'hydratation SSR.
  */
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class AuthStateService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly authPort = inject(AUTH_PORT, {
@@ -98,10 +92,7 @@ export class AuthStateService {
 
   private scheduleRefresh(expiresInSeconds: number): void {
     this.clearRefreshTimer();
-    const delayMs = Math.max(
-      (expiresInSeconds - REFRESH_MARGIN_S) * 1000,
-      5000,
-    );
+    const delayMs = Math.max((expiresInSeconds - REFRESH_MARGIN_S) * 1000, 5000);
     this.refreshTimer = setTimeout(() => this.doRefresh(), delayMs);
   }
 

@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -8,7 +8,7 @@ import {
   PLATFORM_ID,
   inject,
   viewChild,
-} from "@angular/core";
+} from '@angular/core';
 
 interface FieldNode {
   x: number;
@@ -27,7 +27,7 @@ interface FieldNode {
  * `prefers-reduced-motion`. Couleurs lues depuis les variables CSS (--teal/--glow).
  */
 @Component({
-  selector: "app-asili-background",
+  selector: 'app-asili-background',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `@if (isBrowser) {
@@ -56,7 +56,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly fieldRef = viewChild<ElementRef<HTMLCanvasElement>>("field");
+  private readonly fieldRef = viewChild<ElementRef<HTMLCanvasElement>>('field');
 
   private ctx: CanvasRenderingContext2D | null = null;
   private w = 0;
@@ -68,8 +68,8 @@ export class AsiliBackgroundComponent implements AfterViewInit {
   private t = 0;
   private reduce = false;
   private visible = true;
-  private teal = "#4fb3a2";
-  private glow = "#5b8cff";
+  private teal = '#4fb3a2';
+  private glow = '#5b8cff';
   private observer: IntersectionObserver | null = null;
 
   ngAfterViewInit(): void {
@@ -80,12 +80,12 @@ export class AsiliBackgroundComponent implements AfterViewInit {
     if (!canvas) {
       return;
     }
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
     if (!this.ctx) {
       return;
     }
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.reduce = motionQuery.matches;
     this.readColors();
     this.resize();
@@ -133,14 +133,14 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       this.renderFrame();
     };
 
-    window.addEventListener("resize", onResize);
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseleave", onLeave);
-    window.addEventListener("touchmove", onTouch, { passive: true });
-    document.addEventListener("visibilitychange", onVisibility);
-    motionQuery.addEventListener("change", onMotionChange);
+    window.addEventListener('resize', onResize);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseleave', onLeave);
+    window.addEventListener('touchmove', onTouch, { passive: true });
+    document.addEventListener('visibilitychange', onVisibility);
+    motionQuery.addEventListener('change', onMotionChange);
 
-    if (typeof IntersectionObserver !== "undefined") {
+    if (typeof IntersectionObserver !== 'undefined') {
       this.observer = new IntersectionObserver((entries) => {
         this.visible = entries.some((entry) => entry.isIntersecting);
         this.toggleLoop();
@@ -158,12 +158,12 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       if (this.raf) {
         cancelAnimationFrame(this.raf);
       }
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseleave", onLeave);
-      window.removeEventListener("touchmove", onTouch);
-      document.removeEventListener("visibilitychange", onVisibility);
-      motionQuery.removeEventListener("change", onMotionChange);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('touchmove', onTouch);
+      document.removeEventListener('visibilitychange', onVisibility);
+      motionQuery.removeEventListener('change', onMotionChange);
       this.observer?.disconnect();
     });
   }
@@ -188,17 +188,17 @@ export class AsiliBackgroundComponent implements AfterViewInit {
 
   private readColors(): void {
     const cs = getComputedStyle(document.documentElement);
-    this.teal = cs.getPropertyValue("--teal").trim() || this.teal;
-    this.glow = cs.getPropertyValue("--glow").trim() || this.glow;
+    this.teal = cs.getPropertyValue('--teal').trim() || this.teal;
+    this.glow = cs.getPropertyValue('--glow').trim() || this.glow;
   }
 
   private hexToRgb(hex: string): [number, number, number] {
-    let s = (hex || "").replace("#", "");
+    let s = (hex || '').replace('#', '');
     if (s.length === 3) {
       s = s
-        .split("")
+        .split('')
         .map((c) => c + c)
-        .join("");
+        .join('');
     }
     const n = parseInt(s, 16) || 0;
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
@@ -207,9 +207,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
   private buildNodes(): void {
     this.nodes.length = 0;
     const cap = this.w < 768 ? 46 : 80;
-    const count = Math.round(
-      Math.min(cap, Math.max(18, (this.w * this.h) / 22000)),
-    );
+    const count = Math.round(Math.min(cap, Math.max(18, (this.w * this.h) / 22000)));
     for (let i = 0; i < count; i++) {
       this.nodes.push({
         x: Math.random() * this.w,
@@ -287,9 +285,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
         const dy = a.y - b.y;
         const d = Math.sqrt(dx * dx + dy * dy);
         if (d < AsiliBackgroundComponent.LINK) {
-          const o =
-            (1 - d / AsiliBackgroundComponent.LINK) *
-            AsiliBackgroundComponent.LINK_ALPHA;
+          const o = (1 - d / AsiliBackgroundComponent.LINK) * AsiliBackgroundComponent.LINK_ALPHA;
           const c = a.glow || b.glow ? glow : teal;
           ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${o})`;
           ctx.lineWidth = 1;

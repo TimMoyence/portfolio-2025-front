@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   type ComparisonColumn,
   type RichListItem,
@@ -14,7 +14,7 @@ import {
   SlideStatsComponent,
   SlideTableComponent,
   type TableColumn,
-} from "../../../shared/slides";
+} from '../../../shared/slides';
 
 /**
  * Page de la formation "L'IA au service des solopreneurs".
@@ -24,7 +24,7 @@ import {
  * `ia-solopreneurs.data.ts` (BIG BANG migration Task 19).
  */
 @Component({
-  selector: "app-ia-solopreneurs",
+  selector: 'app-ia-solopreneurs',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -40,8 +40,8 @@ import {
     SlideCtaComponent,
     SlideTableComponent,
   ],
-  templateUrl: "./ia-solopreneurs.component.html",
-  styleUrl: "./ia-solopreneurs.component.scss",
+  templateUrl: './ia-solopreneurs.component.html',
+  styleUrl: './ia-solopreneurs.component.scss',
 })
 export class IaSolopreneursComponent {
   /** Bullets slide "promesse" — rendus en colonne dans le hero. */
@@ -54,17 +54,17 @@ export class IaSolopreneursComponent {
   /** Stats slide "probleme". */
   protected readonly problemeStats = [
     {
-      value: "88%",
+      value: '88%',
       label: $localize`:@@ia-solo.probleme.stats.0.label:des organisations utilisent déjà l'IA`,
       source: $localize`:@@ia-solo.probleme.stats.0.source:McKinsey, 2025`,
     },
     {
-      value: "72%",
+      value: '72%',
       label: $localize`:@@ia-solo.probleme.stats.1.label:utilisent l'IA générative (vs 33% un an avant)`,
       source: $localize`:@@ia-solo.probleme.stats.1.source:McKinsey, 2025`,
     },
     {
-      value: "+760%",
+      value: '+760%',
       label: $localize`:@@ia-solo.probleme.stats.2.label:de tâches IA sur Zapier en 2 ans`,
       source: $localize`:@@ia-solo.probleme.stats.2.source:Zapier Blog, 2025`,
     },
@@ -73,19 +73,19 @@ export class IaSolopreneursComponent {
   /** Recap stats slide "recap-8020". */
   protected readonly recap8020Stats = [
     {
-      value: "16",
+      value: '16',
       label: $localize`:@@ia-solo.recap-8020.stats.0.label:outils testés et comparés`,
     },
     {
-      value: "80%",
+      value: '80%',
       label: $localize`:@@ia-solo.recap-8020.stats.1.label:du travail opérationnel accéléré par l'IA`,
     },
     {
-      value: "20%",
+      value: '20%',
       label: $localize`:@@ia-solo.recap-8020.stats.2.label:d'expertise humaine qui fait la différence`,
     },
     {
-      value: "0€",
+      value: '0€',
       label: $localize`:@@ia-solo.recap-8020.stats.3.label:pour démarrer avec un stack complet`,
     },
   ];
@@ -93,19 +93,19 @@ export class IaSolopreneursComponent {
   /** Slide "clients" — cycle client complet. */
   protected readonly clientsItems = [
     {
-      title: "Waalaxy",
+      title: 'Waalaxy',
       description: $localize`:@@ia-solo.clients.grid.0.description:Prospection LinkedIn automatisée. 300 invitations/mois, follow-up auto, détection de réponses. (Prospecter — 19€/mois)`,
     },
     {
-      title: "Notion AI",
+      title: 'Notion AI',
       description: $localize`:@@ia-solo.clients.grid.1.description:CRM léger + pipeline visuel + agents custom qui bossent sur votre workspace 24/7. (Convertir — 10$/mois)`,
     },
     {
-      title: "Brevo",
+      title: 'Brevo',
       description: $localize`:@@ia-solo.clients.grid.2.description:Email marketing IA, français, RGPD-friendly. Séquences automatisées. 300 emails/jour gratuits. (Fidéliser — Gratuit)`,
     },
     {
-      title: "Canva AI",
+      title: 'Canva AI',
       description: $localize`:@@ia-solo.clients.grid.3.description:Visuels pro pour vos emails, posts, newsletters. 220M+ d'utilisateurs. Le design sans designer. (Communiquer — Gratuit)`,
     },
   ];
@@ -115,17 +115,17 @@ export class IaSolopreneursComponent {
 
   protected readonly cultureApprendreItems: RichListItem[] = [
     {
-      title: "NotebookLM",
+      title: 'NotebookLM',
       description: $localize`:@@ia-solo.culture-apprendre.items.0.description:Uploadez un PDF, récupérez un podcast de 10 min avec deux voix IA qui l'analysent. Mode interactif : interrompez les hosts pour poser vos questions.`,
       meta: $localize`:@@ia-solo.culture-apprendre.items.0.meta:Gratuit (Google)`,
     },
     {
-      title: "Perplexity",
+      title: 'Perplexity',
       description: $localize`:@@ia-solo.culture-apprendre.items.1.description:Moteur de recherche IA. 100M+ utilisateurs/mois. Réponses sourcées avec citations, pas de liens bleus à trier.`,
       meta: $localize`:@@ia-solo.culture-apprendre.items.1.meta:Gratuit / 20$/mois`,
     },
     {
-      title: "Fathom",
+      title: 'Fathom',
       description: $localize`:@@ia-solo.culture-apprendre.items.2.description:Notes de réunion automatiques sur Zoom/Meet/Teams. Transcription + résumé + actions. 5 résumés IA/mois en gratuit.`,
       meta: $localize`:@@ia-solo.culture-apprendre.items.2.meta:Gratuit / 19$/mois`,
     },
@@ -136,17 +136,17 @@ export class IaSolopreneursComponent {
 
   protected readonly creerItems: RichListItem[] = [
     {
-      title: "Ideogram",
+      title: 'Ideogram',
       description: $localize`:@@ia-solo.creer.items.0.description:Génération d'images avec du texte lisible dedans. Aucun autre outil ne fait ça aussi bien.`,
       meta: $localize`:@@ia-solo.creer.items.0.meta:Gratuit (10/jour)`,
     },
     {
-      title: "Gamma",
+      title: 'Gamma',
       description: $localize`:@@ia-solo.creer.items.1.description:70M d'utilisateurs. Tapez un prompt, récupérez une présentation complète en moins d'une minute. Gamma Agent restructure et donne du feedback design.`,
       meta: $localize`:@@ia-solo.creer.items.1.meta:Gratuit / 10$/mois`,
     },
     {
-      title: "ElevenLabs",
+      title: 'ElevenLabs',
       description: $localize`:@@ia-solo.creer.items.2.description:Clonage vocal ultra-réaliste. Valorisé 11Md$. Votre voix dans 29 langues.`,
       meta: $localize`:@@ia-solo.creer.items.2.meta:Gratuit (10 min) / 5$/mois`,
     },
@@ -157,17 +157,17 @@ export class IaSolopreneursComponent {
 
   protected readonly siteWebItems: RichListItem[] = [
     {
-      title: "Lovable",
+      title: 'Lovable',
       description: $localize`:@@ia-solo.site-web.items.0.description:Du prompt au site full-stack. 8M d'utilisateurs, valorisé 6,6Md$.`,
       meta: $localize`:@@ia-solo.site-web.items.0.meta:Gratuit (50 actions IA/jour)`,
     },
     {
-      title: "Bolt.new",
+      title: 'Bolt.new',
       description: $localize`:@@ia-solo.site-web.items.1.description:Même concept, tout dans le navigateur. Frontend, backend, déploiement.`,
       meta: $localize`:@@ia-solo.site-web.items.1.meta:25$/mois`,
     },
     {
-      title: "v0",
+      title: 'v0',
       description: $localize`:@@ia-solo.site-web.items.2.description:Par Vercel. Génère du React/Next.js/Tailwind. Plus technique, plus propre.`,
       meta: $localize`:@@ia-solo.site-web.items.2.meta:Gratuit (5$ crédits) / 20$/mois`,
     },
@@ -265,116 +265,116 @@ export class IaSolopreneursComponent {
   /** Colonnes du tableau récap "outils-detail" — 16 outils en mode scroll. */
   protected readonly outilsDetailColumns: TableColumn[] = [
     {
-      key: "tool",
+      key: 'tool',
       label: $localize`:@@ia-solo.outils-detail.headers.tool:Outil`,
     },
     {
-      key: "category",
+      key: 'category',
       label: $localize`:@@ia-solo.outils-detail.headers.category:Catégorie`,
     },
     {
-      key: "price",
+      key: 'price',
       label: $localize`:@@ia-solo.outils-detail.headers.price:Prix`,
     },
     {
-      key: "tagline",
+      key: 'tagline',
       label: $localize`:@@ia-solo.outils-detail.headers.tagline:Tagline`,
     },
   ];
 
   protected readonly outilsDetailRows = [
     {
-      tool: "NotebookLM",
+      tool: 'NotebookLM',
       category: $localize`:@@ia-solo.outils-detail.cat.apprendre:Apprendre`,
       price: $localize`:@@ia-solo.outils-detail.row.0.price:Gratuit`,
       tagline: $localize`:@@ia-solo.outils-detail.row.0.tagline:PDF → podcast en 47 secondes`,
     },
     {
-      tool: "Perplexity",
+      tool: 'Perplexity',
       category: $localize`:@@ia-solo.outils-detail.cat.apprendre:Apprendre`,
       price: $localize`:@@ia-solo.outils-detail.row.1.price:Gratuit / 20$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.1.tagline:Recherche IA sourcée, 100M+ users/mois`,
     },
     {
-      tool: "Fathom",
+      tool: 'Fathom',
       category: $localize`:@@ia-solo.outils-detail.cat.apprendre:Apprendre`,
       price: $localize`:@@ia-solo.outils-detail.row.2.price:Gratuit (limité) / 19$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.2.tagline:Notes de réunion automatiques`,
     },
     {
-      tool: "ChatGPT",
+      tool: 'ChatGPT',
       category: $localize`:@@ia-solo.outils-detail.cat.produire:Produire`,
       price: $localize`:@@ia-solo.outils-detail.row.3.price:Gratuit / 20$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.3.tagline:Le couteau suisse, 900M users/semaine`,
     },
     {
-      tool: "Claude",
+      tool: 'Claude',
       category: $localize`:@@ia-solo.outils-detail.cat.produire:Produire`,
       price: $localize`:@@ia-solo.outils-detail.row.4.price:Gratuit / 20$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.4.tagline:N°1 rédaction, 1M tokens de contexte`,
     },
     {
-      tool: "Gemini",
+      tool: 'Gemini',
       category: $localize`:@@ia-solo.outils-detail.cat.produire:Produire`,
       price: $localize`:@@ia-solo.outils-detail.row.5.price:Gratuit / 20$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.5.tagline:Branché Google Workspace, analyse vidéo`,
     },
     {
-      tool: "Ideogram",
+      tool: 'Ideogram',
       category: $localize`:@@ia-solo.outils-detail.cat.creer:Créer`,
       price: $localize`:@@ia-solo.outils-detail.row.6.price:Gratuit (10/jour)`,
       tagline: $localize`:@@ia-solo.outils-detail.row.6.tagline:Images avec texte lisible, imbattable`,
     },
     {
-      tool: "Gamma",
+      tool: 'Gamma',
       category: $localize`:@@ia-solo.outils-detail.cat.creer:Créer`,
       price: $localize`:@@ia-solo.outils-detail.row.7.price:Gratuit / 10$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.7.tagline:Présentation complète en 60 secondes`,
     },
     {
-      tool: "ElevenLabs",
+      tool: 'ElevenLabs',
       category: $localize`:@@ia-solo.outils-detail.cat.creer:Créer`,
       price: $localize`:@@ia-solo.outils-detail.row.8.price:Gratuit / 5$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.8.tagline:Clonage vocal, valorisé 11Md$`,
     },
     {
-      tool: "Zapier",
+      tool: 'Zapier',
       category: $localize`:@@ia-solo.outils-detail.cat.automatiser:Automatiser`,
       price: $localize`:@@ia-solo.outils-detail.row.9.price:Gratuit (100 tâches)`,
       tagline: $localize`:@@ia-solo.outils-detail.row.9.tagline:Branchez deux apps en 5 min`,
     },
     {
-      tool: "Make.com",
+      tool: 'Make.com',
       category: $localize`:@@ia-solo.outils-detail.cat.automatiser:Automatiser`,
       price: $localize`:@@ia-solo.outils-detail.row.10.price:9€/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.10.tagline:Scénarios visuels, 10K opérations`,
     },
     {
-      tool: "n8n",
+      tool: 'n8n',
       category: $localize`:@@ia-solo.outils-detail.cat.automatiser:Automatiser`,
       price: $localize`:@@ia-solo.outils-detail.row.11.price:Gratuit (self-hosted)`,
       tagline: $localize`:@@ia-solo.outils-detail.row.11.tagline:Open source, illimité, pour les bidouilleurs`,
     },
     {
-      tool: "Waalaxy",
+      tool: 'Waalaxy',
       category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
       price: $localize`:@@ia-solo.outils-detail.row.12.price:19€/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.12.tagline:Prospection LinkedIn automatisée`,
     },
     {
-      tool: "Notion AI",
+      tool: 'Notion AI',
       category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
       price: $localize`:@@ia-solo.outils-detail.row.13.price:10$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.13.tagline:CRM léger + agents custom`,
     },
     {
-      tool: "Brevo",
+      tool: 'Brevo',
       category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
       price: $localize`:@@ia-solo.outils-detail.row.14.price:Gratuit (300/jour)`,
       tagline: $localize`:@@ia-solo.outils-detail.row.14.tagline:Email marketing IA, français, RGPD`,
     },
     {
-      tool: "Canva AI",
+      tool: 'Canva AI',
       category: $localize`:@@ia-solo.outils-detail.cat.clients:Clients`,
       price: $localize`:@@ia-solo.outils-detail.row.15.price:Gratuit / 15$/mois`,
       tagline: $localize`:@@ia-solo.outils-detail.row.15.tagline:Visuels pro, 220M+ utilisateurs`,
@@ -385,17 +385,17 @@ export class IaSolopreneursComponent {
   protected readonly chatProduireColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.chat-produire.left:ChatGPT (OpenAI)`,
-      tone: "info",
+      tone: 'info',
       items: this.chatGptItems,
     },
     {
       label: $localize`:@@ia-solo.chat-produire.right:Claude (Anthropic)`,
-      tone: "success",
+      tone: 'success',
       items: this.claudeItems,
     },
     {
       label: $localize`:@@ia-solo.chat-produire.gemini.label:Gemini (Google)`,
-      tone: "warning",
+      tone: 'warning',
       items: this.geminiItems,
     },
   ];
@@ -404,17 +404,17 @@ export class IaSolopreneursComponent {
   protected readonly automatiserColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.automatiser.zapier.label:Zapier`,
-      tone: "info",
+      tone: 'info',
       items: this.zapierItems,
     },
     {
       label: $localize`:@@ia-solo.automatiser.make.label:Make.com`,
-      tone: "warning",
+      tone: 'warning',
       items: this.makeItems,
     },
     {
       label: $localize`:@@ia-solo.automatiser.n8n.label:n8n`,
-      tone: "success",
+      tone: 'success',
       items: this.n8nItems,
     },
   ];
@@ -423,17 +423,17 @@ export class IaSolopreneursComponent {
   protected readonly stackBudgetColumns: ComparisonColumn[] = [
     {
       label: $localize`:@@ia-solo.stack-budget.debutant.label:Stack débutant — 0€/mois`,
-      tone: "success",
+      tone: 'success',
       items: this.stackBudgetDebutantItems,
     },
     {
       label: $localize`:@@ia-solo.stack-budget.intermediaire.label:Stack intermédiaire — ~60€/mois`,
-      tone: "warning",
+      tone: 'warning',
       items: this.stackBudgetIntermediaireItems,
     },
     {
       label: $localize`:@@ia-solo.stack-budget.avance.label:Stack avancé — ~120€/mois`,
-      tone: "danger",
+      tone: 'danger',
       items: this.stackBudgetAvanceItems,
     },
   ];

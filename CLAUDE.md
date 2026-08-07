@@ -4,7 +4,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **portfolio-2025-front** (3806 symbols, 8996 relationships, 164 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **portfolio-2025-front** (3510 symbols, 8126 relationships, 150 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
 
@@ -43,23 +43,25 @@ This project is indexed by GitNexus as **portfolio-2025-front** (3806 symbols, 8
 | Rename / extract / split / refactor | `.claude/skills/gitnexus/gitnexus-refactoring/SKILL.md` |
 | Tools, resources, schema reference | `.claude/skills/gitnexus/gitnexus-guide/SKILL.md` |
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
-| Work in the Scripts area (57 symbols) | `.claude/skills/generated/scripts/SKILL.md` |
+| Work in the Scripts area (58 symbols) | `.claude/skills/generated/scripts/SKILL.md` |
 | Work in the Ports area (53 symbols) | `.claude/skills/generated/ports/SKILL.md` |
 | Work in the Services area (46 symbols) | `.claude/skills/generated/services/SKILL.md` |
 | Work in the Growth-audit area (36 symbols) | `.claude/skills/generated/growth-audit/SKILL.md` |
 | Work in the Components area (32 symbols) | `.claude/skills/generated/components/SKILL.md` |
-| Work in the Factories area (20 symbols) | `.claude/skills/generated/factories/SKILL.md` |
+| Work in the Server area (23 symbols) | `.claude/skills/generated/server/SKILL.md` |
 | Work in the Adapters area (19 symbols) | `.claude/skills/generated/adapters/SKILL.md` |
-| Work in the Server area (18 symbols) | `.claude/skills/generated/server/SKILL.md` |
 | Work in the Auth area (16 symbols) | `.claude/skills/generated/auth/SKILL.md` |
 | Work in the Pages area (15 symbols) | `.claude/skills/generated/pages/SKILL.md` |
 | Work in the Seo area (14 symbols) | `.claude/skills/generated/seo/SKILL.md` |
+| Work in the Factories area (12 symbols) | `.claude/skills/generated/factories/SKILL.md` |
 | Work in the Navbar area (11 symbols) | `.claude/skills/generated/navbar/SKILL.md` |
 | Work in the Deck area (11 symbols) | `.claude/skills/generated/deck/SKILL.md` |
+| Work in the Interactions area (10 symbols) | `.claude/skills/generated/interactions/SKILL.md` |
 | Work in the Learning-tooltip area (9 symbols) | `.claude/skills/generated/learning-tooltip/SKILL.md` |
 | Work in the Sebastian area (9 symbols) | `.claude/skills/generated/sebastian/SKILL.md` |
-| Work in the Sun-arc area (8 symbols) | `.claude/skills/generated/sun-arc/SKILL.md` |
 | Work in the Asili-background area (8 symbols) | `.claude/skills/generated/asili-background/SKILL.md` |
 | Work in the Demos area (8 symbols) | `.claude/skills/generated/demos/SKILL.md` |
+| Work in the Profile area (6 symbols) | `.claude/skills/generated/profile/SKILL.md` |
+| Work in the Sun-arc area (6 symbols) | `.claude/skills/generated/sun-arc/SKILL.md` |
 
 <!-- gitnexus:end -->

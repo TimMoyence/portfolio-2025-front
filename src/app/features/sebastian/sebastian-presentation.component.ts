@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,15 +6,15 @@ import {
   inject,
   PLATFORM_ID,
   signal,
-} from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
-import { animateValue } from "../../shared/utils/animate-value";
+} from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { animateValue } from '../../shared/utils/animate-value';
 import {
   buildDeterministicHeatmap,
   buildRandomHeatmap,
   gaugeOffset,
-} from "../../shared/demos/sebastian-gauge";
+} from '../../shared/demos/sebastian-gauge';
 import {
   MOCK_BAC,
   MOCK_BADGES,
@@ -22,7 +22,7 @@ import {
   MOCK_HEALTH_SCORE,
   MOCK_HEATMAP,
   MOCK_TRENDS,
-} from "./sebastian-presentation-data";
+} from './sebastian-presentation-data';
 
 /**
  * Habitude cochable de la demo jouable Sebastian.
@@ -62,11 +62,11 @@ interface DemoHabit {
  * IDs `@@sebastianLanding*`) ; la traduction EN vit dans les XLF.
  */
 @Component({
-  selector: "app-sebastian-presentation",
+  selector: 'app-sebastian-presentation',
   standalone: true,
   imports: [RouterModule, RevealOnScrollDirective],
-  templateUrl: "./sebastian-presentation.component.html",
-  styleUrl: "./sebastian-presentation.component.scss",
+  templateUrl: './sebastian-presentation.component.html',
+  styleUrl: './sebastian-presentation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SebastianPresentationComponent {
@@ -100,22 +100,22 @@ export class SebastianPresentationComponent {
    */
   readonly habits: readonly DemoHabit[] = [
     {
-      id: "hydration",
+      id: 'hydration',
       label: $localize`:@@sebastianLandingHabitHydration:💧 Hydratation`,
       weight: 22,
     },
     {
-      id: "sleep",
+      id: 'sleep',
       label: $localize`:@@sebastianLandingHabitSleep:🌙 Sommeil 7h+`,
       weight: 18,
     },
     {
-      id: "moderation",
+      id: 'moderation',
       label: $localize`:@@sebastianLandingHabitModeration:🚫 Pas d'excès`,
       weight: 32,
     },
     {
-      id: "activity",
+      id: 'activity',
       label: $localize`:@@sebastianLandingHabitActivity:🏃 Activité`,
       weight: 16,
     },
@@ -123,16 +123,13 @@ export class SebastianPresentationComponent {
 
   /** Ensemble des identifiants d'habitudes actuellement cochees. */
   readonly checkedHabits = signal<ReadonlySet<string>>(
-    new Set(["hydration", "sleep", "moderation"]),
+    new Set(['hydration', 'sleep', 'moderation']),
   );
 
   /** Score de sante cible derive des habitudes cochees (plafonne a 100). */
   readonly targetScore = computed(() => {
     const checked = this.checkedHabits();
-    const sum = this.habits.reduce(
-      (acc, h) => (checked.has(h.id) ? acc + h.weight : acc),
-      0,
-    );
+    const sum = this.habits.reduce((acc, h) => (checked.has(h.id) ? acc + h.weight : acc), 0);
     return Math.min(100, sum);
   });
 

@@ -1,5 +1,5 @@
-import { of, type Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { of, type Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 /**
  * Interaction normalisee aplatie consommee par les composants
@@ -33,9 +33,7 @@ export interface FlatInteraction {
  * @param source Observable du port (ou stub flat).
  * @returns Observable d'une liste plate normalisee.
  */
-export function flattenInteractions(
-  source: Observable<unknown>,
-): Observable<FlatInteraction[]> {
+export function flattenInteractions(source: Observable<unknown>): Observable<FlatInteraction[]> {
   return source.pipe(map((value) => normaliseInteractions(value)));
 }
 
@@ -74,9 +72,7 @@ export function loadInteraction<T>(
     }),
     map((list) => {
       const found = list.find(
-        (i) =>
-          i.type === type &&
-          (i.id === interactionId || i.slideId === interactionId),
+        (i) => i.type === type && (i.id === interactionId || i.slideId === interactionId),
       );
       return found ? (found as unknown as T) : null;
     }),
@@ -91,12 +87,12 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
       .filter((item): item is Record<string, unknown> => isRecord(item))
       .map((item) => ({
         slideId:
-          typeof item["slideId"] === "string"
-            ? (item["slideId"] as string)
-            : typeof item["id"] === "string"
-              ? (item["id"] as string)
-              : "",
-        type: typeof item["type"] === "string" ? (item["type"] as string) : "",
+          typeof item['slideId'] === 'string'
+            ? (item['slideId'] as string)
+            : typeof item['id'] === 'string'
+              ? (item['id'] as string)
+              : '',
+        type: typeof item['type'] === 'string' ? (item['type'] as string) : '',
         ...item,
       })) as FlatInteraction[];
   }
@@ -105,7 +101,7 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
     return [];
   }
 
-  const interactions = value["interactions"];
+  const interactions = value['interactions'];
   if (!isRecord(interactions)) {
     return [];
   }
@@ -115,7 +111,7 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
     if (!isRecord(slideInteractions)) {
       continue;
     }
-    for (const bucket of ["present", "scroll"] as const) {
+    for (const bucket of ['present', 'scroll'] as const) {
       const list = slideInteractions[bucket];
       if (!Array.isArray(list)) {
         continue;
@@ -124,8 +120,7 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
         if (!isRecord(item)) {
           continue;
         }
-        const type =
-          typeof item["type"] === "string" ? (item["type"] as string) : "";
+        const type = typeof item['type'] === 'string' ? (item['type'] as string) : '';
         out.push({
           slideId,
           type,
@@ -138,5 +133,5 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

@@ -43,9 +43,7 @@
             @if (project.tags.length) {
               <div class="proj-meta">
                 @for (tag of project.tags; track tag.label) {
-                  <span class="tag" [class.tag-prod]="tag.prod">{{
-                    tag.label
-                  }}</span>
+                  <span class="tag" [class.tag-prod]="tag.prod">{{ tag.label }}</span>
                 }
               </div>
             }

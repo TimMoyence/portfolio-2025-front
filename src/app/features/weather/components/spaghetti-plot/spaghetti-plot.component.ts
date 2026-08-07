@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -11,9 +11,9 @@ import {
   OnDestroy,
   PLATFORM_ID,
   ViewChild,
-} from "@angular/core";
-import { Chart, registerables } from "chart.js";
-import type { EnsembleData } from "../../../../core/models/weather.model";
+} from '@angular/core';
+import { Chart, registerables } from 'chart.js';
+import type { EnsembleData } from '../../../../core/models/weather.model';
 
 Chart.register(...registerables);
 
@@ -24,9 +24,9 @@ Chart.register(...registerables);
  * Restyle visuel uniquement : seules les couleurs des courbes changent.
  */
 const MODEL_COLORS: Record<string, string> = {
-  ECMWF: "rgba(79, 179, 162, 0.9)",
-  GFS: "rgba(91, 140, 255, 0.9)",
-  ICON: "rgba(143, 176, 255, 0.9)",
+  ECMWF: 'rgba(79, 179, 162, 0.9)',
+  GFS: 'rgba(91, 140, 255, 0.9)',
+  ICON: 'rgba(143, 176, 255, 0.9)',
 };
 
 /**
@@ -36,7 +36,7 @@ const MODEL_COLORS: Record<string, string> = {
  * Compatible SSR : le graphique n'est rendu que cote navigateur.
  */
 @Component({
-  selector: "app-spaghetti-plot",
+  selector: 'app-spaghetti-plot',
   standalone: true,
   template: `
     <!--
@@ -46,9 +46,7 @@ const MODEL_COLORS: Record<string, string> = {
       Restyle visuel uniquement : MODEL_COLORS (teal/glow), conteneur et titre.
       Le pipeline Chart.js, ensemble() et la logique de dataset sont inchangés.
     -->
-    <div
-      class="rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl"
-    >
+    <div class="rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl">
       <h3
         class="mb-4 font-display text-xl font-normal text-white"
         i18n="weather.spaghettiPlot.title|@@weatherSpaghettiPlotTitle"
@@ -62,13 +60,11 @@ const MODEL_COLORS: Record<string, string> = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SpaghettiPlotComponent
-  implements AfterViewInit, OnChanges, OnDestroy
-{
+export class SpaghettiPlotComponent implements AfterViewInit, OnChanges, OnDestroy {
   /** Donnees d'ensemble multi-modeles. */
   readonly ensemble = input<EnsembleData | null>(null);
 
-  @ViewChild("chartCanvas", { static: true })
+  @ViewChild('chartCanvas', { static: true })
   chartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private chart: Chart | null = null;
@@ -108,16 +104,16 @@ export class SpaghettiPlotComponent
     const labels = firstModel.hourly.time.slice(0, 24).map((t) => {
       const date = new Date(t);
       return date.toLocaleTimeString(this.localeId, {
-        hour: "2-digit",
-        minute: "2-digit",
+        hour: '2-digit',
+        minute: '2-digit',
       });
     });
 
     const datasets = data.models.map((m) => ({
       label: m.model,
       data: m.hourly.temperature_2m.slice(0, 24),
-      borderColor: MODEL_COLORS[m.model] ?? "rgba(255, 255, 255, 0.7)",
-      backgroundColor: "transparent",
+      borderColor: MODEL_COLORS[m.model] ?? 'rgba(255, 255, 255, 0.7)',
+      backgroundColor: 'transparent',
       borderWidth: 2,
       pointRadius: 1,
       tension: 0.3,
@@ -125,43 +121,43 @@ export class SpaghettiPlotComponent
     }));
 
     this.chart = new Chart(canvas, {
-      type: "line",
+      type: 'line',
       data: { labels, datasets },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
-          mode: "index",
+          mode: 'index',
           intersect: false,
         },
         plugins: {
           legend: {
             labels: {
-              color: "rgba(255, 255, 255, 0.7)",
+              color: 'rgba(255, 255, 255, 0.7)',
               font: { size: 11 },
             },
           },
           tooltip: {
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            titleColor: "white",
-            bodyColor: "white",
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            titleColor: 'white',
+            bodyColor: 'white',
           },
         },
         scales: {
           x: {
             ticks: {
-              color: "rgba(255, 255, 255, 0.6)",
+              color: 'rgba(255, 255, 255, 0.6)',
               maxRotation: 45,
               font: { size: 10 },
             },
-            grid: { color: "rgba(255, 255, 255, 0.1)" },
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
           },
           y: {
             ticks: {
-              color: "rgba(255, 255, 255, 0.6)",
+              color: 'rgba(255, 255, 255, 0.6)',
               callback: (value) => `${value}°`,
             },
-            grid: { color: "rgba(255, 255, 255, 0.1)" },
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
           },
         },
       },

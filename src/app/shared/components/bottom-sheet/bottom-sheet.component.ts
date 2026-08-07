@@ -1,4 +1,4 @@
-import { animate, style, transition, trigger } from "@angular/animations";
+import { animate, style, transition, trigger } from '@angular/animations';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,8 +8,8 @@ import {
   input,
   output,
   viewChild,
-} from "@angular/core";
-import { BreakpointService } from "../../../core/services/breakpoint.service";
+} from '@angular/core';
+import { BreakpointService } from '../../../core/services/breakpoint.service';
 
 /**
  * Bottom sheet generique mobile-first.
@@ -18,42 +18,34 @@ import { BreakpointService } from "../../../core/services/breakpoint.service";
  * ARIA : role="dialog", aria-modal="true", Escape pour fermer.
  */
 @Component({
-  selector: "app-bottom-sheet",
+  selector: 'app-bottom-sheet',
   standalone: true,
   animations: [
-    trigger("panelAnimation", [
+    trigger('panelAnimation', [
       // Entree mobile : slide-up
-      transition("void => mobile", [
-        style({ transform: "translateY(100%)", opacity: 0 }),
-        animate(
-          "300ms ease-out",
-          style({ transform: "translateY(0)", opacity: 1 }),
-        ),
+      transition('void => mobile', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
       ]),
-      transition("mobile => void", [
-        animate(
-          "200ms ease-in",
-          style({ transform: "translateY(100%)", opacity: 0 }),
-        ),
+      transition('mobile => void', [
+        animate('200ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
       ]),
       // Entree desktop : fade-in
-      transition("void => desktop", [
+      transition('void => desktop', [
         style({ opacity: 0 }),
-        animate("200ms ease-out", style({ opacity: 1 })),
+        animate('200ms ease-out', style({ opacity: 1 })),
       ]),
-      transition("desktop => void", [
-        animate("150ms ease-in", style({ opacity: 0 })),
-      ]),
+      transition('desktop => void', [animate('150ms ease-in', style({ opacity: 0 }))]),
     ]),
-    trigger("fadeIn", [
-      transition(":enter", [
+    trigger('fadeIn', [
+      transition(':enter', [
         style({ opacity: 0 }),
-        animate("200ms ease-out", style({ opacity: 1 })),
+        animate('200ms ease-out', style({ opacity: 1 })),
       ]),
-      transition(":leave", [animate("150ms ease-in", style({ opacity: 0 }))]),
+      transition(':leave', [animate('150ms ease-in', style({ opacity: 0 }))]),
     ]),
   ],
-  host: { class: "block" },
+  host: { class: 'block' },
   template: `
     @if (open()) {
       <!-- Mobile : backdrop fixe -->
@@ -97,10 +89,7 @@ import { BreakpointService } from "../../../core/services/breakpoint.service";
 
           <!-- Header -->
           <div class="mb-4 flex items-center justify-between">
-            <h3
-              data-testid="bottom-sheet-title"
-              class="text-lg font-semibold text-white"
-            >
+            <h3 data-testid="bottom-sheet-title" class="text-lg font-semibold text-white">
               {{ title() }}
             </h3>
             <button
@@ -139,7 +128,7 @@ export class BottomSheetComponent {
   readonly open = input(false);
 
   /** Titre affiche dans le header. */
-  readonly title = input("");
+  readonly title = input('');
 
   /** Emis quand l'etat ouvert/ferme change (two-way binding). */
   readonly openChange = output<boolean>();
@@ -152,11 +141,11 @@ export class BottomSheetComponent {
   /** Classes CSS du panel selon le mode mobile/desktop. */
   readonly panelClasses = computed(() => {
     return this.isMobile()
-      ? "max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-white/20 bg-gray-900/95 p-4 backdrop-blur-lg"
-      : "rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md";
+      ? 'max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-white/20 bg-gray-900/95 p-4 backdrop-blur-lg'
+      : 'rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md';
   });
 
-  readonly panelRef = viewChild<ElementRef<HTMLElement>>("panelRef");
+  readonly panelRef = viewChild<ElementRef<HTMLElement>>('panelRef');
 
   private dragStartY = 0;
   private currentTranslateY = 0;
@@ -189,7 +178,7 @@ export class BottomSheetComponent {
     if (this.currentTranslateY > 100) {
       this.close();
     } else if (panel) {
-      panel.style.transform = "";
+      panel.style.transform = '';
     }
     this.currentTranslateY = 0;
   }

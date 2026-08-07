@@ -1,5 +1,5 @@
 <div #deckRoot [class]="cssClasses()" tabindex="0">
-  @if (service.mode() === "fullscreen") {
+  @if (service.mode() === 'fullscreen') {
     <swiper-container
       navigation="true"
       keyboard="true"
@@ -25,9 +25,7 @@
       data-testid="slide-deck-fullscreen-toggle"
       (click)="toggleFullscreen()"
       [attr.aria-label]="
-        service.mode() === 'fullscreen'
-          ? 'Quitter le plein écran'
-          : 'Passer en plein écran'
+        service.mode() === 'fullscreen' ? 'Quitter le plein écran' : 'Passer en plein écran'
       "
       i18n-aria-label="@@slideDeckFullscreenToggle"
     >

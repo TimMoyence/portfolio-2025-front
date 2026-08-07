@@ -30,10 +30,7 @@
       --swiper-navigation-color: var(--accent, #4fb3a2);
       --swiper-pagination-color: var(--accent, #4fb3a2);
       --swiper-navigation-size: 28px;
-      --swiper-pagination-bullet-inactive-color: var(
-        --text-muted,
-        var(--slide-text-muted)
-      );
+      --swiper-pagination-bullet-inactive-color: var(--text-muted, var(--slide-text-muted));
       --swiper-pagination-bullet-inactive-opacity: 0.35;
     }
 

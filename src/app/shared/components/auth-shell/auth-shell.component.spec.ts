@@ -1,9 +1,9 @@
-import { Component } from "@angular/core";
-import type { ComponentFixture } from "@angular/core/testing";
-import { TestBed } from "@angular/core/testing";
-import { provideRouter } from "@angular/router";
+import { Component } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 // ROUGE (TDD) : ce composant n'existe pas encore — Batch 6 DRY P3 auth.
-import { AuthShellComponent } from "./auth-shell.component";
+import { AuthShellComponent } from './auth-shell.component';
 
 /**
  * Hote de test : reproduit le contrat d'usage des 4 pages auth.
@@ -27,7 +27,7 @@ import { AuthShellComponent } from "./auth-shell.component";
 })
 class HostComponent {}
 
-describe("AuthShellComponent", () => {
+describe('AuthShellComponent', () => {
   /** Configure le TestBed avec le shell seul (chrome statique, sans projection). */
   function setupBare(): ComponentFixture<AuthShellComponent> {
     TestBed.configureTestingModule({
@@ -49,59 +49,55 @@ describe("AuthShellComponent", () => {
     return fixture;
   }
 
-  it("se cree", () => {
+  it('se cree', () => {
     const fixture = setupBare();
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it("structure le split-screen : .auth-split > .auth-aside + .auth-main > .auth-card", () => {
+  it('structure le split-screen : .auth-split > .auth-aside + .auth-main > .auth-card', () => {
     const el = setupBare().nativeElement as HTMLElement;
-    expect(el.querySelector(".auth-split")).not.toBeNull();
-    expect(el.querySelector(".auth-split > .auth-aside")).not.toBeNull();
-    expect(el.querySelector(".auth-split > .auth-main")).not.toBeNull();
-    expect(el.querySelector(".auth-main > .auth-card")).not.toBeNull();
+    expect(el.querySelector('.auth-split')).not.toBeNull();
+    expect(el.querySelector('.auth-split > .auth-aside')).not.toBeNull();
+    expect(el.querySelector('.auth-split > .auth-main')).not.toBeNull();
+    expect(el.querySelector('.auth-main > .auth-card')).not.toBeNull();
   });
 
   it("rend le logo Asili en lien vers l'accueil (routerLink /)", () => {
     const el = setupBare().nativeElement as HTMLElement;
-    const logo = el.querySelector("a.auth-logo") as HTMLAnchorElement | null;
+    const logo = el.querySelector('a.auth-logo') as HTMLAnchorElement | null;
     expect(logo).not.toBeNull();
-    expect(logo?.getAttribute("href")).toBe("/");
+    expect(logo?.getAttribute('href')).toBe('/');
     // Puce decorative + wordmark Asili / design.
-    expect(logo?.querySelector("span.dot[aria-hidden]")).not.toBeNull();
-    expect(logo?.textContent).toContain("Asili");
-    expect(logo?.querySelector("small")?.textContent).toContain("design");
+    expect(logo?.querySelector('span.dot[aria-hidden]')).not.toBeNull();
+    expect(logo?.textContent).toContain('Asili');
+    expect(logo?.querySelector('small')?.textContent).toContain('design');
   });
 
-  it("rend la citation de pied dans .auth-aside-foot (i18n @@authAsideQuote)", () => {
+  it('rend la citation de pied dans .auth-aside-foot (i18n @@authAsideQuote)', () => {
     const el = setupBare().nativeElement as HTMLElement;
-    const foot = el.querySelector(".auth-aside-foot");
+    const foot = el.querySelector('.auth-aside-foot');
     expect(foot).not.toBeNull();
-    expect(foot?.textContent).toContain("Clarifier avant de construire");
+    expect(foot?.textContent).toContain('Clarifier avant de construire');
   });
 
   it("projette le contenu [aside] (kicker/titre/em) dans l'aside", () => {
     const el = setupWithHost().nativeElement as HTMLElement;
-    const asideMid = el.querySelector(".auth-aside .auth-aside-mid");
+    const asideMid = el.querySelector('.auth-aside .auth-aside-mid');
     expect(asideMid).not.toBeNull();
-    expect(asideMid?.querySelector(".kicker")?.textContent).toContain(
-      "Bon retour",
-    );
-    expect(asideMid?.querySelector("h2 em")?.textContent).toContain(
-      "vous étiez arrêté",
-    );
+    expect(asideMid?.querySelector('.kicker')?.textContent).toContain('Bon retour');
+    expect(asideMid?.querySelector('h2 em')?.textContent).toContain('vous étiez arrêté');
   });
 
-  it("projette le corps par defaut dans .auth-card", () => {
+  it('projette le corps par defaut dans .auth-card', () => {
     const el = setupWithHost().nativeElement as HTMLElement;
-    const body = el.querySelector(".auth-card .card-body-probe");
+    const body = el.querySelector('.auth-card .card-body-probe');
     expect(body).not.toBeNull();
-    expect(body?.textContent).toContain("Corps de carte projeté");
+    expect(body?.textContent).toContain('Corps de carte projeté');
   });
 
   it("n'importe pas RevealOnScrollDirective (chrome statique, appReveal reste porte par la page)", () => {
     const el = setupBare().nativeElement as HTMLElement;
     // Le shell ne rend aucun `.auth-aside-mid` en propre : il est projete.
-    expect(el.querySelector(".auth-aside > .auth-aside-mid")).toBeNull();
+    expect(el.querySelector('.auth-aside > .auth-aside-mid')).toBeNull();
   });
 });

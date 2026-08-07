@@ -1,8 +1,8 @@
 declare namespace google.accounts.id {
   interface GsiButtonConfiguration {
-    type?: "standard" | "icon";
-    theme?: "outline" | "filled_blue" | "filled_black";
-    size?: "large" | "medium" | "small";
+    type?: 'standard' | 'icon';
+    theme?: 'outline' | 'filled_blue' | 'filled_black';
+    size?: 'large' | 'medium' | 'small';
   }
 
   interface CredentialResponse {
@@ -16,17 +16,12 @@ declare namespace google.accounts.id {
     callback: (response: CredentialResponse) => void;
     auto_select?: boolean;
     cancel_on_tap_outside?: boolean;
-    context?: "signin" | "signup" | "use";
+    context?: 'signin' | 'signup' | 'use';
   }
 
   function initialize(config: IdConfiguration): void;
-  function prompt(
-    momentListener?: (notification: PromptMomentNotification) => void,
-  ): void;
-  function renderButton(
-    parent: HTMLElement,
-    options: GsiButtonConfiguration,
-  ): void;
+  function prompt(momentListener?: (notification: PromptMomentNotification) => void): void;
+  function renderButton(parent: HTMLElement, options: GsiButtonConfiguration): void;
   function disableAutoSelect(): void;
 
   interface PromptMomentNotification {

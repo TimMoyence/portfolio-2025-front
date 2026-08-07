@@ -1,8 +1,8 @@
-import { isPlatformBrowser } from "@angular/common";
-import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class A11yDialogService {
   private readonly isBrowser: boolean;
@@ -43,11 +43,10 @@ export class A11yDialogService {
   focusFirstDescendant(container?: HTMLElement | null): void {
     if (!container) return;
     const focusableSelector =
-      "a[href], button:not([disabled]), textarea, input, select, " +
+      'a[href], button:not([disabled]), textarea, input, select, ' +
       '[tabindex]:not([tabindex="-1"])';
 
-    const firstFocusable =
-      container.querySelector<HTMLElement>(focusableSelector);
+    const firstFocusable = container.querySelector<HTMLElement>(focusableSelector);
     firstFocusable?.focus();
   }
 
@@ -59,17 +58,15 @@ export class A11yDialogService {
    */
   trapFocus(event: KeyboardEvent, container?: HTMLElement | null): void {
     if (!container) return;
-    if (event.key !== "Tab") return;
+    if (event.key !== 'Tab') return;
 
     const focusableSelector =
-      "a[href], button:not([disabled]), textarea, input, select, " +
+      'a[href], button:not([disabled]), textarea, input, select, ' +
       '[tabindex]:not([tabindex="-1"])';
 
     const focusableElements = Array.from(
       container.querySelectorAll<HTMLElement>(focusableSelector),
-    ).filter(
-      (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden"),
-    );
+    ).filter((el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
 
     if (!focusableElements.length) return;
 

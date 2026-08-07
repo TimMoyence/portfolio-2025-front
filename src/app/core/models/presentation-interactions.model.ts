@@ -2,54 +2,29 @@
 
 /** Sondage à main levée — le présentateur clique pour compter les votes */
 export interface PollInteraction {
-  type: "poll";
+  type: 'poll';
   question: string;
   options: string[];
   /** Autorise la sélection de plusieurs options (défaut: false) */
   multiSelect?: boolean;
 }
 
-/** Compte à rebours — pause dramatique avant de continuer */
-export interface CountdownInteraction {
-  type: "countdown";
-  label: string;
-  durationSeconds: number;
-}
-
-export type PresentInteraction = PollInteraction | CountdownInteraction;
+/**
+ * Interactions servies dans le bucket `present`. Le sondage est aujourd'hui la
+ * seule variante disposant d'un composant de rendu (`slide-poll`) : l'alias
+ * reste nommé pour que `SlideInteractions.present` garde un point d'extension
+ * si une seconde variante réapparaît.
+ */
+export type PresentInteraction = PollInteraction;
 
 // ── Interactions mode Scroll (le lecteur interagit seul, à son rythme) ──
 
 /** Question ouverte introspective */
 export interface ReflectionInteraction {
-  type: "reflection";
+  type: 'reflection';
   question: string;
   placeholder: string;
   rows?: number;
-}
-
-/** Checklist interactive — "lesquels utilisez-vous deja ?" */
-export interface ChecklistInteraction {
-  type: "checklist";
-  question: string;
-  items: string[];
-  /** Sous-titre explicatif affiché sous la question */
-  hint?: string;
-  /** Champ du profil d'interaction a alimenter avec les items coches */
-  profileField?: string;
-}
-
-/** Échelle d'auto-évaluation (slider ou radio) */
-export interface SelfRatingInteraction {
-  type: "self-rating";
-  question: string;
-  min: number;
-  max: number;
-  labels: { min: string; max: string };
-  /** Sous-titre explicatif affiché sous la question */
-  hint?: string;
-  /** Champ du profil d'interaction a alimenter avec la valeur selectionnee */
-  profileField?: string;
 }
 
 /**
@@ -77,11 +52,11 @@ export interface QuizInteractionOption {
  * - `free-text` : champ texte libre (pas d'options).
  */
 export interface QuizInteraction {
-  type: "quiz";
+  type: 'quiz';
   /** Identifiant unique au sein de la slide — sert de cle analytics. */
   id: string;
   question: string;
-  kind: "single-choice" | "multi-choice" | "free-text";
+  kind: 'single-choice' | 'multi-choice' | 'free-text';
   /** Sous-titre explicatif affiché sous la question */
   hint?: string;
   /** Options (obligatoires pour single/multi-choice, absentes en free-text). */
@@ -93,29 +68,10 @@ export interface QuizInteraction {
 }
 
 /**
- * Mini-exercice live : materialise un cas pratique en generant un prompt pret
- * a copier apres que le lecteur saisit un parametre (`{{sector}}`). La
- * substitution est executee cote front, la valeur saisie ne transite jamais
- * sur le reseau.
+ * Interactions servies dans le bucket `scroll` — une variante par composant de
+ * rendu vivant (`slide-reflection`, `slide-quiz`).
  */
-export interface PromptBuilderInteraction {
-  type: "prompt-builder";
-  /** Phrase de contexte / persona affichee en haut de l'exercice. */
-  context: string;
-  /** Template de prompt contenant le placeholder `{{sector}}`. */
-  promptTemplate: string;
-  /** Texte d'aide affiche dans le champ de saisie. */
-  placeholder: string;
-  /** Libelle du bouton de copie ; libelle par defaut du composant si absent. */
-  ctaLabel?: string;
-}
-
-export type ScrollInteraction =
-  | ReflectionInteraction
-  | ChecklistInteraction
-  | SelfRatingInteraction
-  | QuizInteraction
-  | PromptBuilderInteraction;
+export type ScrollInteraction = ReflectionInteraction | QuizInteraction;
 
 /** Interactions par mode, servies par le backend et attachées à chaque slide */
 export interface SlideInteractions {

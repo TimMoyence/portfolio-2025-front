@@ -1,10 +1,10 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import type { WeatherAlert } from "../../../../core/models/weather.model";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import type { WeatherAlert } from '../../../../core/models/weather.model';
 
 /** Carte d'alertes meteo avec codes couleur par severite. */
 @Component({
-  selector: "app-weather-alerts-card",
+  selector: 'app-weather-alerts-card',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -17,9 +17,7 @@ import type { WeatherAlert } from "../../../../core/models/weather.model";
       sémantiques (jaune/orange/rouge) inchangés.
     -->
     @if (alerts().length > 0) {
-      <div
-        class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl"
-      >
+      <div class="rounded-[20px] border border-teal/15 bg-white/5 p-4 backdrop-blur-xl">
         @for (alert of alerts(); track alert.type + alert.severity) {
           <!-- .alert-item : ligne avec séparateur entre alertes -->
           <div
@@ -54,28 +52,26 @@ export class WeatherAlertsCardComponent {
   /** Retourne les classes CSS correspondant a la severite de l'alerte. */
   severityClasses(severity: string): Record<string, boolean> {
     return {
-      "bg-yellow-500/20 border-yellow-400/30 text-yellow-100":
-        severity === "minor",
-      "bg-orange-500/20 border-orange-400/30 text-orange-100":
-        severity === "moderate",
-      "bg-red-500/20 border-red-400/30 text-red-100": severity === "severe",
-      "bg-red-700/30 border-red-500/40 text-red-50": severity === "extreme",
+      'bg-yellow-500/20 border-yellow-400/30 text-yellow-100': severity === 'minor',
+      'bg-orange-500/20 border-orange-400/30 text-orange-100': severity === 'moderate',
+      'bg-red-500/20 border-red-400/30 text-red-100': severity === 'severe',
+      'bg-red-700/30 border-red-500/40 text-red-50': severity === 'extreme',
     };
   }
 
   /** Retourne l'icone correspondant a la severite de l'alerte. */
   severityIcon(severity: string): string {
     switch (severity) {
-      case "minor":
-        return "\u26A0\uFE0F";
-      case "moderate":
-        return "\uD83D\uDFE0";
-      case "severe":
-        return "\uD83D\uDD34";
-      case "extreme":
-        return "\uD83C\uDD98";
+      case 'minor':
+        return '\u26A0\uFE0F';
+      case 'moderate':
+        return '\uD83D\uDFE0';
+      case 'severe':
+        return '\uD83D\uDD34';
+      case 'extreme':
+        return '\uD83C\uDD98';
       default:
-        return "\u2139\uFE0F";
+        return '\u2139\uFE0F';
     }
   }
 }

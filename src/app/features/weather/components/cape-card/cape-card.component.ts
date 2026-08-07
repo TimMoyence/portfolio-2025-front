@@ -1,11 +1,6 @@
-import { DecimalPipe } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from "@angular/core";
-import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { MetricCardComponent } from '../metric-card/metric-card.component';
 
 /**
  * Carte CAPE (Convective Available Potential Energy).
@@ -13,7 +8,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
  * Inclut un tooltip pedagogique sur la signification du CAPE.
  */
 @Component({
-  selector: "app-cape-card",
+  selector: 'app-cape-card',
   standalone: true,
   imports: [DecimalPipe, MetricCardComponent],
   template: `
@@ -21,19 +16,16 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
       tooltipId="cape-explanation"
       i18n-tooltipTitle="weather.cape.tooltip.title|@@weatherCapeTooltipTitle"
       tooltipTitle="Qu'est-ce que le CAPE ?"
-      i18n-tooltipContent="
-        weather.cape.tooltip.content|@@weatherCapeTooltipContent"
+      i18n-tooltipContent="weather.cape.tooltip.content|@@weatherCapeTooltipContent"
       tooltipContent="CAPE mesure l'énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents."
       [unavailable]="cape() === null"
     >
-      <span cardTitle i18n="weather.cape.title|@@weatherCapeTitle"
-        >CAPE (instabilité)</span
-      >
+      <span cardTitle i18n="weather.cape.title|@@weatherCapeTitle">CAPE (instabilité)</span>
 
       @if (cape() !== null) {
         <div class="flex items-baseline gap-2">
           <span class="font-display text-4xl font-normal text-white">
-            {{ cape()! | number: "1.0-0" }}
+            {{ cape()! | number: '1.0-0' }}
           </span>
           <span class="font-mono text-xs text-white/50">J/kg</span>
           <span [class]="'text-sm font-medium ' + labelColor()">
@@ -86,27 +78,25 @@ export class CapeCardComponent {
   /** Label d'instabilite selon l'echelle CAPE. */
   readonly instabilityLabel = computed(() => {
     const value = this.cape();
-    if (value === null) return "";
-    if (value < 500)
-      return $localize`:weather.cape.stable|@@weatherCapeStable:Stable`;
+    if (value === null) return '';
+    if (value < 500) return $localize`:weather.cape.stable|@@weatherCapeStable:Stable`;
     if (value < 1000)
       return $localize`:weather.cape.marginal|@@weatherCapeMarginal:Instabilité marginale`;
     if (value < 2000)
       return $localize`:weather.cape.moderate|@@weatherCapeModerate:Instabilité modérée`;
-    if (value < 3000)
-      return $localize`:weather.cape.strong|@@weatherCapeStrong:Instabilité forte`;
+    if (value < 3000) return $localize`:weather.cape.strong|@@weatherCapeStrong:Instabilité forte`;
     return $localize`:weather.cape.extreme|@@weatherCapeExtreme:Instabilité extrême`;
   });
 
   /** Classe de couleur du label selon le niveau d'instabilite. */
   readonly labelColor = computed(() => {
     const value = this.cape();
-    if (value === null) return "";
-    if (value < 500) return "text-green-400";
-    if (value < 1000) return "text-yellow-400";
-    if (value < 2000) return "text-orange-400";
-    if (value < 3000) return "text-red-400";
-    return "text-purple-400";
+    if (value === null) return '';
+    if (value < 500) return 'text-green-400';
+    if (value < 1000) return 'text-yellow-400';
+    if (value < 2000) return 'text-orange-400';
+    if (value < 3000) return 'text-red-400';
+    return 'text-purple-400';
   });
 
   /** Position du curseur sur la jauge (0-100%). */

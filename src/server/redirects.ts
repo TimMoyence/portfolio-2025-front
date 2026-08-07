@@ -1,4 +1,4 @@
-import type express from "express";
+import type express from 'express';
 
 /**
  * Table des redirections HTTP permanentes (301) servies par le serveur Express.
@@ -14,12 +14,12 @@ import type express from "express";
  * l'entete `Location`.
  */
 export const PERMANENT_REDIRECTS: Readonly<Record<string, string>> = {
-  "/home": "/fr",
-  "/fr/home": "/fr",
-  "/en/home": "/en",
-  "/client-project": "/fr/projets",
-  "/fr/client-project": "/fr/projets",
-  "/en/client-project": "/en/projets",
+  '/home': '/fr',
+  '/fr/home': '/fr',
+  '/en/home': '/en',
+  '/client-project': '/fr/projets',
+  '/fr/client-project': '/fr/projets',
+  '/en/client-project': '/en/projets',
 };
 
 /** Chemins sources enregistres aupres d'Express, dans l'ordre de la table. */
@@ -34,8 +34,8 @@ export const REDIRECT_SOURCES: string[] = Object.keys(PERMANENT_REDIRECTS);
  */
 const normalizeForLookup = (path: string): string => {
   const lower = path.toLowerCase();
-  if (lower.length > 1 && lower.endsWith("/")) {
-    return lower.replace(/\/+$/, "");
+  if (lower.length > 1 && lower.endsWith('/')) {
+    return lower.replace(/\/+$/, '');
   }
   return lower;
 };

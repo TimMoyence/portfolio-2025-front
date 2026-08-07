@@ -1,43 +1,35 @@
-import {
-  provideHttpClient,
-  withFetch,
-  withInterceptors,
-} from "@angular/common/http";
-import type { ApplicationConfig } from "@angular/core";
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import type { ApplicationConfig } from '@angular/core';
 import {
   provideClientHydration,
   withEventReplay,
   withHttpTransferCacheOptions,
-} from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import {
-  provideRouter,
-  withComponentInputBinding,
-  withInMemoryScrolling,
-} from "@angular/router";
-import { environment } from "../environments/environment";
-import { routes } from "./app.routes";
-import { AuthHttpAdapter } from "./core/adapters/auth-http.adapter";
-import { AuditRequestHttpAdapter } from "./core/adapters/audit-request-http.adapter";
-import { ContactHttpAdapter } from "./core/adapters/contact-http.adapter";
-import { LeadMagnetHttpAdapter } from "./core/adapters/lead-magnet-http.adapter";
-import { PresentationHttpAdapter } from "./core/adapters/presentation-http.adapter";
-import { RadarHttpAdapter } from "./core/adapters/radar-http.adapter";
-import { CookieConsentHttpAdapter } from "./core/adapters/cookie-consent-http.adapter";
-import { SebastianHttpAdapter } from "./core/adapters/sebastian-http.adapter";
-import { WeatherHttpAdapter } from "./core/adapters/weather-http.adapter";
-import { APP_CONFIG } from "./core/config/app-config.token";
-import { authInterceptor } from "./core/http/interceptors/auth.interceptor";
-import { requestIdInterceptor } from "./core/http/interceptors/request-id.interceptor";
-import { AUTH_PORT } from "./core/ports/auth.port";
-import { AUDIT_REQUEST_PORT } from "./core/ports/audit-request.port";
-import { CONTACT_PORT } from "./core/ports/contact.port";
-import { LEAD_MAGNET_PORT } from "./core/ports/lead-magnet.port";
-import { PRESENTATION_PORT } from "./core/ports/presentation.port";
-import { RADAR_PORT } from "./core/ports/radar.port";
-import { COOKIE_CONSENT_PORT } from "./core/ports/cookie-consent.port";
-import { SEBASTIAN_PORT } from "./core/ports/sebastian.port";
-import { WEATHER_PORT } from "./core/ports/weather.port";
+} from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import { environment } from '../environments/environment';
+import { routes } from './app.routes';
+import { AuthHttpAdapter } from './core/adapters/auth-http.adapter';
+import { AuditRequestHttpAdapter } from './core/adapters/audit-request-http.adapter';
+import { ContactHttpAdapter } from './core/adapters/contact-http.adapter';
+import { LeadMagnetHttpAdapter } from './core/adapters/lead-magnet-http.adapter';
+import { PresentationHttpAdapter } from './core/adapters/presentation-http.adapter';
+import { RadarHttpAdapter } from './core/adapters/radar-http.adapter';
+import { CookieConsentHttpAdapter } from './core/adapters/cookie-consent-http.adapter';
+import { SebastianHttpAdapter } from './core/adapters/sebastian-http.adapter';
+import { WeatherHttpAdapter } from './core/adapters/weather-http.adapter';
+import { APP_CONFIG } from './core/config/app-config.token';
+import { authInterceptor } from './core/http/interceptors/auth.interceptor';
+import { requestIdInterceptor } from './core/http/interceptors/request-id.interceptor';
+import { AUTH_PORT } from './core/ports/auth.port';
+import { AUDIT_REQUEST_PORT } from './core/ports/audit-request.port';
+import { CONTACT_PORT } from './core/ports/contact.port';
+import { LEAD_MAGNET_PORT } from './core/ports/lead-magnet.port';
+import { PRESENTATION_PORT } from './core/ports/presentation.port';
+import { RADAR_PORT } from './core/ports/radar.port';
+import { COOKIE_CONSENT_PORT } from './core/ports/cookie-consent.port';
+import { SEBASTIAN_PORT } from './core/ports/sebastian.port';
+import { WEATHER_PORT } from './core/ports/weather.port';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -45,22 +37,19 @@ export const appConfig: ApplicationConfig = {
       routes,
       withComponentInputBinding(),
       withInMemoryScrolling({
-        scrollPositionRestoration: "enabled",
-        anchorScrolling: "enabled",
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
       }),
     ),
     provideClientHydration(
       withEventReplay(),
       withHttpTransferCacheOptions({
         includePostRequests: false,
-        filter: (req) => !req.url.includes("/auth/"),
+        filter: (req) => !req.url.includes('/auth/'),
       }),
     ),
     provideAnimations(),
-    provideHttpClient(
-      withInterceptors([authInterceptor, requestIdInterceptor]),
-      withFetch(),
-    ),
+    provideHttpClient(withInterceptors([authInterceptor, requestIdInterceptor]), withFetch()),
 
     {
       provide: APP_CONFIG,

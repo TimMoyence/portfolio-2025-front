@@ -8,41 +8,21 @@
 <app-auth-shell>
   <div aside class="auth-aside-mid" appReveal>
     <span class="kicker" i18n="@@authVerifyAsideKicker">Vérification</span>
-    <h2 i18n="@@authVerifyAsideTitle">
-      Dernière étape avant <em>l'Atelier</em>.
-    </h2>
+    <h2 i18n="@@authVerifyAsideTitle">Dernière étape avant <em>l'Atelier</em>.</h2>
     <p i18n="@@authVerifyAsideSub">
-      On confirme votre adresse email : votre espace personnel vous attend juste
-      après.
+      On confirme votre adresse email : votre espace personnel vous attend juste après.
     </p>
   </div>
 
   @if (isLoading) {
     <div class="auth-illus" aria-hidden="true">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M3 8l9 6 9-6"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linejoin="round"
-        />
-        <rect
-          x="3"
-          y="5"
-          width="18"
-          height="14"
-          rx="2"
-          stroke="currentColor"
-          stroke-width="1.6"
-        />
+        <path d="M3 8l9 6 9-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+        <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6" />
       </svg>
     </div>
-    <h1 i18n="@@authVerifyLoadingTitle">
-      Vérification de votre <em>email</em>
-    </h1>
-    <p class="sub" i18n="verify-email.loading@@verifyEmailLoading">
-      Verification en cours...
-    </p>
+    <h1 i18n="@@authVerifyLoadingTitle">Vérification de votre <em>email</em></h1>
+    <p class="sub" i18n="verify-email.loading@@verifyEmailLoading">Verification en cours...</p>
   }
 
   @if (successMessage) {
@@ -64,13 +44,7 @@
     <div role="alert" aria-live="assertive">
       <div class="auth-illus" aria-hidden="true">
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-          <circle
-            cx="12"
-            cy="12"
-            r="9"
-            stroke="currentColor"
-            stroke-width="1.6"
-          />
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
           <path
             d="M12 7v6M12 16.5v.5"
             stroke="currentColor"
@@ -82,10 +56,7 @@
       <h1 i18n="@@authVerifyErrorTitle">Vérification <em>impossible</em></h1>
       <p class="auth-msg err">{{ errorMessage }}</p>
       <p class="auth-alt">
-        <a
-          routerLink="/login"
-          i18n="verify-email.backToLogin@@verifyEmailBackToLogin"
-        >
+        <a routerLink="/login" i18n="verify-email.backToLogin@@verifyEmailBackToLogin">
           Retour a la connexion
         </a>
       </p>

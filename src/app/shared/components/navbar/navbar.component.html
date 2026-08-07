@@ -13,16 +13,11 @@
         src="/assets/images/logo.webp"
         alt="Asili Design logo"
       />
-      <span class="asili-logo__name" i18n="@@NavbarCompanyTitle"
-        >Asili design</span
-      >
+      <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili design</span>
     </a>
 
     <div class="asili-nav__links">
-      <ng-container
-        *ngTemplateOutlet="navContent; context: { isMobile: false }"
-      >
-      </ng-container>
+      <ng-container *ngTemplateOutlet="navContent; context: { isMobile: false }"> </ng-container>
     </div>
 
     <button
@@ -36,11 +31,7 @@
       [attr.aria-label]="mobileMenuOpen ? closeMenuLabel : openMenuLabel"
     >
       @if (mobileMenuOpen) {
-        <app-svg-icon
-          [ariaLabel]="closeMenuIconLabel"
-          name="close"
-          [size]="1.4"
-        ></app-svg-icon>
+        <app-svg-icon [ariaLabel]="closeMenuIconLabel" name="close" [size]="1.4"></app-svg-icon>
       } @else {
         <app-svg-icon
           [ariaLabel]="openMenuIconLabel"
@@ -84,18 +75,12 @@
           [attr.aria-label]="closeMenuLabel"
           (click)="closeMobileMenu()"
         >
-          <app-svg-icon
-            [ariaLabel]="closeMenuIconLabel"
-            name="close"
-            [size]="1.4"
-          ></app-svg-icon>
+          <app-svg-icon [ariaLabel]="closeMenuIconLabel" name="close" [size]="1.4"></app-svg-icon>
         </button>
       </div>
       <h2 id="mobile-nav-label" class="sr-only">{{ mobileNavHeading }}</h2>
       <div class="asili-drawer__body">
-        <ng-container
-          *ngTemplateOutlet="navContent; context: { isMobile: true }"
-        ></ng-container>
+        <ng-container *ngTemplateOutlet="navContent; context: { isMobile: true }"></ng-container>
       </div>
     </div>
   </div>
@@ -151,8 +136,7 @@
           aria-haspopup="true"
           class="asili-nav__chevron-btn"
           aria-label="Ouvrir le menu L'Atelier"
-          i18n-aria-label="
-            navbar.atelier.toggle|Atelier dropdown toggle@@navAtelierToggle"
+          i18n-aria-label="navbar.atelier.toggle|Atelier dropdown toggle@@navAtelierToggle"
         >
           <svg
             class="asili-nav__chevron"
@@ -173,11 +157,7 @@
           </svg>
         </button>
       </span>
-      <div
-        class="asili-dropdown"
-        [class.open]="atelierDropdown.isOpen"
-        role="menu"
-      >
+      <div class="asili-dropdown" [class.open]="atelierDropdown.isOpen" role="menu">
         @for (item of atelierDropdown.items; track item.href) {
           <a
             [routerLink]="item.href"
@@ -210,9 +190,7 @@
         <span class="asili-drawer__group-label"
           >{{ atelierDropdown.label }}
           @if (atelierDropdown.subtitle) {
-            <span class="asili-drawer__sub">{{
-              atelierDropdown.subtitle
-            }}</span>
+            <span class="asili-drawer__sub">{{ atelierDropdown.subtitle }}</span>
           }
         </span>
         <svg
@@ -292,11 +270,7 @@
           />
         </svg>
       </button>
-      <div
-        class="asili-dropdown"
-        [class.open]="formationsDropdown.isOpen"
-        role="menu"
-      >
+      <div class="asili-dropdown" [class.open]="formationsDropdown.isOpen" role="menu">
         @for (item of formationsDropdown.items; track item.href) {
           <a
             [routerLink]="item.href"
@@ -326,9 +300,7 @@
         [attr.aria-expanded]="formationsDropdown.isOpen"
         class="asili-nav__link asili-nav__trigger is-mobile"
       >
-        <span class="asili-drawer__group-label">{{
-          formationsDropdown.label
-        }}</span>
+        <span class="asili-drawer__group-label">{{ formationsDropdown.label }}</span>
         <svg
           class="asili-nav__chevron"
           [class.open]="formationsDropdown.isOpen"
@@ -374,10 +346,7 @@
         class="asili-nav__link is-mobile"
         (click)="closeMobileMenu()"
       >
-        <span
-          i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel"
-          >Contact</span
-        >
+        <span i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel">Contact</span>
       </a>
     </div>
   }
@@ -392,9 +361,7 @@
       [routerLink]="'/growth-audit'"
       (click)="isMobile && closeMobileMenu()"
     >
-      <span i18n="navbar.link.audit|Navbar primary link@@navLinkAuditSpan:Audit"
-        >Audit</span
-      >
+      <span i18n="navbar.link.audit|Navbar primary link@@navLinkAuditSpan:Audit">Audit</span>
     </button>
 
     @if (!isMobile) {
@@ -402,21 +369,17 @@
         type="button"
         class="btn btn-ghost asili-nav__cta asili-nav__cta--ghost"
         title="Me contacter"
-        i18n-title="
-          navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
+        i18n-title="navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
         [routerLink]="'/contact'"
       >
-        <span
-          i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel"
-          >Contact</span
-        >
+        <span i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel">Contact</span>
       </button>
     }
 
     <!-- Sélecteur de langue FR/EN -->
     <div class="asili-lang">
       <span class="asili-lang__current" aria-hidden="true">{{
-        getAlternateLocaleLabel() === "EN" ? "FR" : "EN"
+        getAlternateLocaleLabel() === 'EN' ? 'FR' : 'EN'
       }}</span>
       <a
         [href]="getAlternateLocaleUrl()"
@@ -438,8 +401,7 @@
             aria-haspopup="true"
             class="asili-avatar"
             [attr.aria-label]="'Menu utilisateur'"
-            i18n-aria-label="
-              navbar.user.label|User dropdown label@@navUserMenuLabel"
+            i18n-aria-label="navbar.user.label|User dropdown label@@navUserMenuLabel"
           >
             @if (userInitials()) {
               <span class="asili-avatar__initials">{{ userInitials() }}</span>
@@ -453,15 +415,11 @@
                 <div class="asili-user-head">
                   @if (userInitials()) {
                     <span class="asili-avatar asili-avatar--sm">
-                      <span class="asili-avatar__initials">{{
-                        userInitials()
-                      }}</span>
+                      <span class="asili-avatar__initials">{{ userInitials() }}</span>
                     </span>
                   }
                   <div class="asili-user-head__meta">
-                    <p class="asili-user-head__name">
-                      {{ u.firstName }} {{ u.lastName }}
-                    </p>
+                    <p class="asili-user-head__name">{{ u.firstName }} {{ u.lastName }}</p>
                     <p class="asili-user-head__email">{{ u.email }}</p>
                   </div>
                 </div>
@@ -493,14 +451,10 @@
             <div class="asili-drawer__account-head">
               @if (userInitials()) {
                 <span class="asili-avatar asili-avatar--sm">
-                  <span class="asili-avatar__initials">{{
-                    userInitials()
-                  }}</span>
+                  <span class="asili-avatar__initials">{{ userInitials() }}</span>
                 </span>
               }
-              <p class="asili-user-head__name">
-                {{ u.firstName }} {{ u.lastName }}
-              </p>
+              <p class="asili-user-head__name">{{ u.firstName }} {{ u.lastName }}</p>
             </div>
           }
           <a

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   SlideComponent,
   SlideCtaComponent,
@@ -8,7 +8,7 @@ import {
   SlideImageComponent,
   SlideQuoteComponent,
   SlideStatsComponent,
-} from "../../../shared/slides";
+} from '../../../shared/slides';
 
 /**
  * Page de la formation "Audit SEO DIY".
@@ -18,7 +18,7 @@ import {
  * `audit-seo-diy.slides.data.ts` (BIG BANG migration Task 21).
  */
 @Component({
-  selector: "app-audit-seo-diy",
+  selector: 'app-audit-seo-diy',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -31,24 +31,24 @@ import {
     SlideQuoteComponent,
     SlideCtaComponent,
   ],
-  templateUrl: "./audit-seo-diy.component.html",
-  styleUrl: "./audit-seo-diy.component.scss",
+  templateUrl: './audit-seo-diy.component.html',
+  styleUrl: './audit-seo-diy.component.scss',
 })
 export class AuditSeoDiyComponent {
   /** Stats slide "constat". */
   protected readonly constatStats = [
     {
-      value: "68%",
+      value: '68%',
       label: $localize`:@@formations.audit-seo-diy.constat.stats.0.label:des recherches Google ne donnent jamais un clic au dela du premier ecran`,
       source: $localize`:@@formations.audit-seo-diy.constat.stats.0.source:Sistrix, analyse 2025`,
     },
     {
-      value: "93%",
+      value: '93%',
       label: $localize`:@@formations.audit-seo-diy.constat.stats.1.label:des experiences en ligne commencent par une recherche — si vous n'y etes pas, vous n'existez pas`,
       source: $localize`:@@formations.audit-seo-diy.constat.stats.1.source:BrightEdge Research, 2024`,
     },
     {
-      value: "20 min",
+      value: '20 min',
       label: $localize`:@@formations.audit-seo-diy.constat.stats.2.label:suffisent pour reperer 80% des problemes SEO d'un site de petite entreprise, avec les bons outils gratuits`,
       source: $localize`:@@formations.audit-seo-diy.constat.stats.2.source:Benchmark asilidesign.fr, 2026`,
     },

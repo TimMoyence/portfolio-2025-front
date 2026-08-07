@@ -6,7 +6,7 @@
   la logique (tabs, AUTH_PORT.login/register/googleAuth, validation, returnUrl)
   est inchangée.
 */
-@use "./auth-shared";
+@use './auth-shared';
 
 :host {
   display: block;
@@ -36,7 +36,7 @@
     color 0.25s,
     box-shadow 0.25s;
 }
-.auth-tab[aria-selected="true"] {
+.auth-tab[aria-selected='true'] {
   background: var(--cream);
   color: var(--ink);
   box-shadow: var(--shadow-soft);

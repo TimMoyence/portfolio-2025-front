@@ -1,8 +1,8 @@
-import type express from "express";
+import type express from 'express';
 
 /** Locales supportees — unique source de verite pour le routing SSR. */
-export const SUPPORTED_LOCALES = ["fr", "en"] as const;
-const LOCALE_PATTERN = SUPPORTED_LOCALES.join("|");
+export const SUPPORTED_LOCALES = ['fr', 'en'] as const;
+const LOCALE_PATTERN = SUPPORTED_LOCALES.join('|');
 
 /** Detecte un chemin locale-seul (/fr/, /en/) pour exempter de la normalisation. */
 export const LOCALE_BARE_PATH = new RegExp(`^\\/(${LOCALE_PATTERN})\\/$`);
@@ -18,9 +18,9 @@ export const STRIP_LOCALE_RE = new RegExp(`^\\/(${LOCALE_PATTERN})\\/?`);
  * initiaux et finaux, garantit un prefixe `/` (ou `/` racine seule).
  */
 export const normalizePath = (path: string): string => {
-  const clean = path.split("?")[0].split("#")[0];
-  const trimmed = clean.replace(/^\/+/, "").replace(/\/+$/, "");
-  return trimmed ? `/${trimmed}` : "/";
+  const clean = path.split('?')[0].split('#')[0];
+  const trimmed = clean.replace(/^\/+/, '').replace(/\/+$/, '');
+  return trimmed ? `/${trimmed}` : '/';
 };
 
 /**
@@ -36,7 +36,7 @@ export const normalizePath = (path: string): string => {
 export const buildLocalizedPath = (locale: string, path: string): string => {
   const normalized = normalizePath(path);
   if (!locale) return normalized;
-  if (normalized === "/") return `/${locale}/`;
+  if (normalized === '/') return `/${locale}/`;
   return normalizePath(`/${locale}${normalized}`);
 };
 
@@ -49,17 +49,15 @@ export const buildLocalizedPath = (locale: string, path: string): string => {
  * dans `server.ts`. Toute divergence entre les deux est ainsi evitee.
  */
 export const ALLOWED_HOSTS = [
-  "asilidesign.fr",
-  "www.asilidesign.fr",
-  "localhost",
-  "127.0.0.1",
-  "portfolio-web-fr",
-  "portfolio-web-en",
+  'asilidesign.fr',
+  'www.asilidesign.fr',
+  'localhost',
+  '127.0.0.1',
+  'portfolio-web-fr',
+  'portfolio-web-en',
 ] as const;
 
-const ALLOWED_HOSTS_SET = new Set<string>(
-  ALLOWED_HOSTS.map((h) => h.toLowerCase()),
-);
+const ALLOWED_HOSTS_SET = new Set<string>(ALLOWED_HOSTS.map((h) => h.toLowerCase()));
 
 /**
  * Indique si un host (avec port eventuel) fait partie de l'allowlist.
@@ -67,7 +65,7 @@ const ALLOWED_HOSTS_SET = new Set<string>(
  */
 const isAllowedHost = (host: string | undefined): host is string => {
   if (!host) return false;
-  const bareHost = host.split(":")[0].trim().toLowerCase();
+  const bareHost = host.split(':')[0].trim().toLowerCase();
   return ALLOWED_HOSTS_SET.has(bareHost);
 };
 
@@ -86,18 +84,13 @@ const isAllowedHost = (host: string | undefined): host is string => {
  * @param fallback Base URL de repli si aucun host legitime n'est trouve.
  * @returns Une base URL (`scheme://host`) avec un host garanti allowliste.
  */
-export const buildBaseUrlFromRequest = (
-  req: express.Request,
-  fallback?: string,
-): string => {
-  const forwardedProto = (req.headers["x-forwarded-proto"] as string)
-    ?.split(",")[0]
+export const buildBaseUrlFromRequest = (req: express.Request, fallback?: string): string => {
+  const forwardedProto = (req.headers['x-forwarded-proto'] as string)
+    ?.split(',')[0]
     ?.trim()
     ?.toLowerCase();
-  const forwardedHost = (req.headers["x-forwarded-host"] as string)
-    ?.split(",")[0]
-    ?.trim();
-  const rawHost = req.get("host");
+  const forwardedHost = (req.headers['x-forwarded-host'] as string)?.split(',')[0]?.trim();
+  const rawHost = req.get('host');
 
   // Choisit le premier host allowliste : forwarded puis req.host.
   const host = isAllowedHost(forwardedHost)
@@ -108,11 +101,9 @@ export const buildBaseUrlFromRequest = (
 
   if (host) {
     const protocol =
-      forwardedProto === "http" || forwardedProto === "https"
-        ? forwardedProto
-        : req.protocol;
+      forwardedProto === 'http' || forwardedProto === 'https' ? forwardedProto : req.protocol;
     return `${protocol}://${host}`;
   }
 
-  return fallback ?? "https://asilidesign.fr";
+  return fallback ?? 'https://asilidesign.fr';
 };

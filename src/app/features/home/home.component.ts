@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterLink } from "@angular/router";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import {
   AsiliCtaBandComponent,
   AsiliHeroComponent,
@@ -12,7 +12,7 @@ import {
   type AsiliPillar,
   AsiliProjectsGridComponent,
   type AsiliProject,
-} from "../../shared/sections";
+} from '../../shared/sections';
 
 /**
  * Page d'accueil Asili (page pilote du Lot 3b).
@@ -33,7 +33,7 @@ import {
  * de social proof ni de temoignage fictif (apps en lancement).
  */
 @Component({
-  selector: "app-home",
+  selector: 'app-home',
   standalone: true,
   imports: [
     RouterLink,
@@ -45,8 +45,8 @@ import {
     AsiliProjectsGridComponent,
     AsiliCtaBandComponent,
   ],
-  templateUrl: "./home.component.html",
-  styleUrl: "./home.component.scss",
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
@@ -95,25 +95,25 @@ export class HomeComponent {
   /** Etapes de la methode. */
   protected readonly methodSteps: readonly AsiliMethodStep[] = [
     {
-      num: "01",
+      num: '01',
       index: $localize`:@@homeMethodStep1Index:— Clarifier`,
       title: $localize`:@@homeMethodStep1Title:Comprendre`,
       desc: $localize`:@@homeMethodStep1Desc:On cartographie le besoin réel et les usages avant la moindre ligne de code.`,
     },
     {
-      num: "02",
+      num: '02',
       index: $localize`:@@homeMethodStep2Index:— Construire`,
       title: $localize`:@@homeMethodStep2Title:Déployer`,
       desc: $localize`:@@homeMethodStep2Desc:Des outils robustes et lisibles, dimensionnés sur le périmètre réel.`,
     },
     {
-      num: "03",
+      num: '03',
       index: $localize`:@@homeMethodStep3Index:— Tester`,
       title: $localize`:@@homeMethodStep3Title:Éprouver`,
       desc: $localize`:@@homeMethodStep3Desc:On confronte à l'usage, on mesure, on ajuste sans dogme.`,
     },
     {
-      num: "04",
+      num: '04',
       index: $localize`:@@homeMethodStep4Index:— Évoluer`,
       title: $localize`:@@homeMethodStep4Title:Faire durer`,
       desc: $localize`:@@homeMethodStep4Desc:Continuité humaine : l'outil grandit avec vous, pas contre vous.`,
@@ -128,7 +128,7 @@ export class HomeComponent {
   /** Piliers : services premium puis formations premium. */
   protected readonly pillars: readonly AsiliPillar[] = [
     {
-      variant: "services",
+      variant: 'services',
       tag: $localize`:@@homePillarServicesTag:01 — Services premium`,
       title: $localize`:@@homePillarServicesTitle:On bâtit exactement ce qu'il vous faut.`,
       desc: $localize`:@@homePillarServicesDesc:Interventions ciblées, projets structurants, accompagnement dans la durée. Un périmètre défini sur votre situation réelle — pas un catalogue de prix figés.`,
@@ -139,11 +139,11 @@ export class HomeComponent {
       ],
       link: {
         label: $localize`:@@homePillarServicesLink:Découvrir l'offre`,
-        href: "/offer",
+        href: '/offer',
       },
     },
     {
-      variant: "formations",
+      variant: 'formations',
       tag: $localize`:@@homePillarFormationsTag:02 — Formations premium`,
       title: $localize`:@@homePillarFormationsTitle:On vous rend autonome, pour de bon.`,
       desc: $localize`:@@homePillarFormationsDesc:Des formations qui font monter en gamme : de l'usage flou à un système qui travaille pour vous. Le gratuit reste un point d'entrée — le premium va au fond des choses.`,
@@ -154,7 +154,7 @@ export class HomeComponent {
       ],
       link: {
         label: $localize`:@@homePillarFormationsLink:Voir les formations`,
-        href: "/formations",
+        href: '/formations',
       },
     },
   ];
@@ -227,33 +227,33 @@ export class HomeComponent {
    */
   protected readonly projects: readonly AsiliProject[] = [
     {
-      size: "small",
+      size: 'small',
       tags: [{ label: $localize`:@@homeProject2Tag1:Atelier` }],
       title: $localize`:@@homeProject2Title:Météo`,
       desc: $localize`:@@homeProject2Desc:Data-viz vivante : vent, UV, arc solaire.`,
-      href: "/atelier/meteo",
-      image: "/assets/images/projects/weather.webp",
+      href: '/atelier/meteo',
+      image: '/assets/images/projects/weather.webp',
       imageAlt: $localize`:@@homeProject2ImageAlt:capture — app Météo`,
     },
     {
-      size: "small",
+      size: 'small',
       tags: [{ label: $localize`:@@homeProject3Tag1:Atelier` }],
       title: $localize`:@@homeProject3Title:Sebastian`,
       desc: $localize`:@@homeProject3Desc:Suivi de consommation, app + bot Telegram.`,
-      href: "/atelier/sebastian",
-      image: "/assets/images/projects/sebastian.webp",
+      href: '/atelier/sebastian',
+      image: '/assets/images/projects/sebastian.webp',
       imageAlt: $localize`:@@homeProject3ImageAlt:capture — Sebastian`,
     },
     {
-      size: "small",
+      size: 'small',
       tags: [
         { label: $localize`:@@homeProject4Tag1:Automatisation` },
         { label: $localize`:@@homeProject4Tag2:IA` },
       ],
       title: $localize`:@@homeProject4Title:Un système qui travaille en silence`,
       desc: $localize`:@@homeProject4Desc:Des tâches répétitives remplacées par une automatisation lisible, mesurée, sous contrôle humain.`,
-      href: "/offer",
-      image: "/assets/images/projects/Automation-validation.webp",
+      href: '/offer',
+      image: '/assets/images/projects/Automation-validation.webp',
       imageAlt: $localize`:@@homeProject4ImageAlt:capture — automatisation IA`,
     },
   ];

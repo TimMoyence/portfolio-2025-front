@@ -4,10 +4,7 @@
   }
   <div class="slide-comparison__grid" [style.--cols]="columns().length">
     @for (col of columns(); track col.label) {
-      <div
-        class="slide-comparison__column"
-        [class]="'tone-' + (col.tone ?? 'neutral')"
-      >
+      <div class="slide-comparison__column" [class]="'tone-' + (col.tone ?? 'neutral')">
         <h3>{{ col.label }}</h3>
         <ul>
           @for (item of col.items; track item) {

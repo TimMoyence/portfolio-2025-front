@@ -8,7 +8,7 @@
   partiel pour les scoper. Volontairement sans sélecteur racine `:host`
   (laissé à chaque composant) afin d'être composable via `@use`.
 */
-@use "../styles-shared/lists";
+@use '../styles-shared/lists';
 
 /* --- Hero (asili-legal.css : .lg-hero) ----------------------------------- */
 .lg-hero {
@@ -91,7 +91,7 @@
   counter-increment: toc;
 }
 .lg-toc a::before {
-  content: counter(toc, decimal-leading-zero) "  ";
+  content: counter(toc, decimal-leading-zero) '  ';
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--ink-faint);
@@ -147,7 +147,7 @@
   color: var(--ink-soft);
 }
 .lg-body ul li::before {
-  content: "";
+  content: '';
   width: 6px;
   height: 6px;
   border-radius: 50%;

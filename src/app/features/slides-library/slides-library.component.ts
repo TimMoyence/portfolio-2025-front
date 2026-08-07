@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { Meta } from "@angular/platform-browser";
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Meta } from '@angular/platform-browser';
 import {
   SlideComparisonComponent,
   SlideComponent,
@@ -14,7 +14,7 @@ import {
   SlideReflectionComponent,
   SlideStatsComponent,
   SlideVideoComponent,
-} from "../../shared/slides";
+} from '../../shared/slides';
 
 /**
  * Catalogue interne des layouts et interactions de la lib `shared/slides`.
@@ -26,7 +26,7 @@ import {
  * se rend correctement.
  */
 @Component({
-  selector: "app-slides-library",
+  selector: 'app-slides-library',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -44,12 +44,12 @@ import {
     SlidePollComponent,
     SlideReflectionComponent,
   ],
-  templateUrl: "./slides-library.component.html",
-  styleUrl: "./slides-library.component.scss",
+  templateUrl: './slides-library.component.html',
+  styleUrl: './slides-library.component.scss',
 })
 export class SlidesLibraryComponent {
   constructor() {
     const meta = inject(Meta);
-    meta.updateTag({ name: "robots", content: "noindex, nofollow" });
+    meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
   }
 }

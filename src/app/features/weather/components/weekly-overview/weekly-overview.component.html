@@ -4,9 +4,7 @@
   Glass .gp, en-tête kicker font-mono uppercase, onglets segmentés teal actif.
   Tailwind/SVG uniquement (décision 2) : dayRows/hourRows/granularity intacts.
 -->
-<div
-  class="rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl md:p-6"
->
+<div class="rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl md:p-6">
   <!-- Header (.gp-h) -->
   <div class="mb-4 flex items-center justify-between gap-3">
     <h3
@@ -19,8 +17,7 @@
       class="inline-flex rounded-full border border-white/15 bg-white/[0.06] p-0.5 font-mono text-xs backdrop-blur-md"
       role="tablist"
       aria-label="Granularité"
-      i18n-aria-label="
-        weather.overview.granularity.aria|@@weatherOverviewGranularityAria"
+      i18n-aria-label="weather.overview.granularity.aria|@@weatherOverviewGranularityAria"
     >
       @for (option of granularityOptions; track option.value) {
         <button
@@ -42,32 +39,19 @@
   </div>
 
   <!-- ========== MODE JOUR ========== -->
-  @if (granularity() === "day" && dayRows().length > 0) {
+  @if (granularity() === 'day' && dayRows().length > 0) {
     <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-white/20">
-      <table
-        class="w-full text-sm text-white border-separate border-spacing-y-0.5"
-      >
+      <table class="w-full text-sm text-white border-separate border-spacing-y-0.5">
         <thead>
-          <tr
-            class="font-mono text-[10px] uppercase tracking-[0.12em] text-white/45"
-          >
-            <th
-              class="py-2 pr-3 text-left font-medium"
-              i18n="weather.table.day|@@weatherTableDay"
-            >
+          <tr class="font-mono text-[10px] uppercase tracking-[0.12em] text-white/45">
+            <th class="py-2 pr-3 text-left font-medium" i18n="weather.table.day|@@weatherTableDay">
               Jour
             </th>
             <th class="py-2 w-9"></th>
-            <th
-              class="py-2 px-2 text-right font-medium"
-              i18n="weather.table.min|@@weatherTableMin"
-            >
+            <th class="py-2 px-2 text-right font-medium" i18n="weather.table.min|@@weatherTableMin">
               Min
             </th>
-            <th
-              class="py-2 px-2 text-right font-medium"
-              i18n="weather.table.max|@@weatherTableMax"
-            >
+            <th class="py-2 px-2 text-right font-medium" i18n="weather.table.max|@@weatherTableMax">
               Max
             </th>
             <th
@@ -120,11 +104,7 @@
                 {{ row.dayLabel }}
               </td>
               <td class="py-3 group-hover:bg-teal/[0.06]">
-                <img
-                  [src]="row.icon"
-                  alt=""
-                  class="h-8 w-8 drop-shadow-lg mx-auto"
-                />
+                <img [src]="row.icon" alt="" class="h-8 w-8 drop-shadow-lg mx-auto" />
               </td>
               <td
                 class="py-3 px-2 text-right font-semibold rounded-md group-hover:bg-teal/[0.06]"
@@ -140,21 +120,13 @@
               </td>
               <td
                 class="py-3 px-2 text-right group-hover:bg-teal/[0.06]"
-                [ngClass]="
-                  row.precipitationSum > 0
-                    ? 'text-blue-300 font-medium'
-                    : 'text-white/30'
-                "
+                [ngClass]="row.precipitationSum > 0 ? 'text-blue-300 font-medium' : 'text-white/30'"
               >
                 {{
-                  row.precipitationSum > 0
-                    ? (row.precipitationSum | number: "1.0-1") + " mm"
-                    : "—"
+                  row.precipitationSum > 0 ? (row.precipitationSum | number: '1.0-1') + ' mm' : '—'
                 }}
               </td>
-              <td
-                class="py-3 px-2 text-right whitespace-nowrap group-hover:bg-teal/[0.06]"
-              >
+              <td class="py-3 px-2 text-right whitespace-nowrap group-hover:bg-teal/[0.06]">
                 @if (row.windDir !== null) {
                   <span
                     class="inline-block text-white/50 mr-0.5"
@@ -162,32 +134,24 @@
                     >↑</span
                   >
                 }
-                {{ row.windMax | number: "1.0-0" }}
+                {{ row.windMax | number: '1.0-0' }}
                 <span class="text-white/40 text-xs"> km/h</span>
               </td>
               <!-- Curious+ -->
               @if (isCurious()) {
-                <td
-                  class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]"
-                >
-                  {{ row.humidity !== null ? row.humidity + " %" : "—" }}
+                <td class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]">
+                  {{ row.humidity !== null ? row.humidity + ' %' : '—' }}
                 </td>
               }
               <!-- Expert -->
               @if (isExpert()) {
-                <td
-                  class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]"
-                >
-                  {{
-                    row.gustsMax !== null
-                      ? (row.gustsMax | number: "1.0-0") + " km/h"
-                      : "—"
-                  }}
+                <td class="py-3 px-2 text-right text-white/60 group-hover:bg-teal/[0.06]">
+                  {{ row.gustsMax !== null ? (row.gustsMax | number: '1.0-0') + ' km/h' : '—' }}
                 </td>
                 <td
                   class="py-3 px-2 text-right text-white/60 rounded-r-lg group-hover:bg-teal/[0.06]"
                 >
-                  {{ row.pressure !== null ? row.pressure + " hPa" : "—" }}
+                  {{ row.pressure !== null ? row.pressure + ' hPa' : '—' }}
                 </td>
               }
             </tr>
@@ -198,13 +162,11 @@
   }
 
   <!-- ========== MODE 3H / 1H ========== -->
-  @if (granularity() !== "day" && slotGroups().length > 0) {
+  @if (granularity() !== 'day' && slotGroups().length > 0) {
     <div
       class="overflow-x-auto overflow-y-auto max-h-[72vh] scrollbar-thin scrollbar-thumb-white/20"
     >
-      <table
-        class="w-full text-sm text-white border-separate border-spacing-y-px"
-      >
+      <table class="w-full text-sm text-white border-separate border-spacing-y-px">
         <thead class="sticky top-0 z-10">
           <tr
             class="font-mono text-[10px] uppercase tracking-[0.12em] text-white/45 bg-white/[0.07] backdrop-blur-xl"
@@ -302,48 +264,38 @@
                 <td
                   class="py-2 px-2 text-right"
                   [ngClass]="
-                    slot.totalPrecipitation > 0
-                      ? 'text-blue-300 font-medium'
-                      : 'text-white/30'
+                    slot.totalPrecipitation > 0 ? 'text-blue-300 font-medium' : 'text-white/30'
                   "
                 >
                   {{
                     slot.totalPrecipitation > 0
-                      ? (slot.totalPrecipitation | number: "1.0-1") + " mm"
-                      : "—"
+                      ? (slot.totalPrecipitation | number: '1.0-1') + ' mm'
+                      : '—'
                   }}
                 </td>
                 <td class="py-2 px-2 text-right whitespace-nowrap">
                   @if (slot.windDirection !== null) {
                     <span
                       class="inline-block text-white/50 text-xs mr-0.5"
-                      [style.transform]="
-                        'rotate(' + (slot.windDirection + 180) + 'deg)'
-                      "
+                      [style.transform]="'rotate(' + (slot.windDirection + 180) + 'deg)'"
                       >↑</span
                     >
                   }
-                  {{ slot.maxWind | number: "1.0-0" }}
+                  {{ slot.maxWind | number: '1.0-0' }}
                 </td>
                 <!-- Curious+ -->
                 @if (isCurious()) {
                   <td class="py-2 px-2 text-right text-white/50">
-                    {{
-                      slot.avgHumidity !== null ? slot.avgHumidity + " %" : "—"
-                    }}
+                    {{ slot.avgHumidity !== null ? slot.avgHumidity + ' %' : '—' }}
                   </td>
                 }
                 <!-- Expert -->
                 @if (isExpert()) {
                   <td class="py-2 px-2 text-right text-white/50">
-                    {{
-                      slot.maxGusts !== null
-                        ? (slot.maxGusts | number: "1.0-0")
-                        : "—"
-                    }}
+                    {{ slot.maxGusts !== null ? (slot.maxGusts | number: '1.0-0') : '—' }}
                   </td>
                   <td class="py-2 px-2 text-right text-white/50">
-                    {{ slot.avgPressure !== null ? slot.avgPressure : "—" }}
+                    {{ slot.avgPressure !== null ? slot.avgPressure : '—' }}
                   </td>
                 }
               </tr>

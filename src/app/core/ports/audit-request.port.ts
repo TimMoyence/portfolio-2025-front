@@ -1,11 +1,11 @@
-import { InjectionToken } from "@angular/core";
-import type { Observable } from "rxjs";
+import { InjectionToken } from '@angular/core';
+import type { Observable } from 'rxjs';
 import type {
   AuditCreateResponse,
   AuditRequestPayload,
   AuditStreamEvent,
   AuditSummaryResponse,
-} from "../models/audit-request.model";
+} from '../models/audit-request.model';
 
 export interface AuditRequestPort {
   submit(payload: AuditRequestPayload): Observable<AuditCreateResponse>;
@@ -13,6 +13,4 @@ export interface AuditRequestPort {
   stream(auditId: string): Observable<AuditStreamEvent>;
 }
 
-export const AUDIT_REQUEST_PORT = new InjectionToken<AuditRequestPort>(
-  "AUDIT_REQUEST_PORT",
-);
+export const AUDIT_REQUEST_PORT = new InjectionToken<AuditRequestPort>('AUDIT_REQUEST_PORT');

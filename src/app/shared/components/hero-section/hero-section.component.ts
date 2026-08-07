@@ -1,9 +1,9 @@
-import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { SvgIconComponent } from "../svg-icon.component";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SvgIconComponent } from '../svg-icon.component';
 
-type HeroActionVariant = "primary" | "secondary" | "ghost";
+type HeroActionVariant = 'primary' | 'secondary' | 'ghost';
 
 export interface HeroAction {
   label: string;
@@ -12,7 +12,7 @@ export interface HeroAction {
 }
 
 @Component({
-  selector: "app-hero-section",
+  selector: 'app-hero-section',
   standalone: true,
   imports: [CommonModule, RouterModule, SvgIconComponent],
   template: `
@@ -24,7 +24,7 @@ export interface HeroAction {
           @if (label) {
             <p class="mb-3 col-span-full font-semibold md:mb-4">{{ label }}</p>
           }
-          @if (titleLevel === "h1") {
+          @if (titleLevel === 'h1') {
             <h1
               class="col-span-full font-heading md:heading-h2 md:text-h2 heading-h3 text-h3 mb-5 md:mb-6"
               data-testid="hero-title"
@@ -40,18 +40,14 @@ export interface HeroAction {
             </h2>
           }
           @if (description) {
-            <p
-              class="col-start-4 col-end-10 text-xs md:text-base lg:text-medium"
-            >
+            <p class="col-start-4 col-end-10 text-xs md:text-base lg:text-medium">
               {{ description }}
             </p>
           }
           @if (actions.length) {
             <div
               class="mt-6 col-span-full flex flex-wrap items-center gap-4 md:mt-8"
-              [ngClass]="
-                align === 'center' ? 'justify-center' : 'justify-start'
-              "
+              [ngClass]="align === 'center' ? 'justify-center' : 'justify-start'"
             >
               @for (action of actions; track action.href ?? action.label) {
                 <button
@@ -73,7 +69,7 @@ export interface HeroAction {
                   {{ action.label }}
                 </button>
 
-                @if (action.variant === "ghost") {
+                @if (action.variant === 'ghost') {
                   <app-svg-icon
                     aria-hidden="true"
                     [name]="'chevron-right'"
@@ -93,7 +89,7 @@ export class HeroSectionComponent {
   @Input() label?: string;
   @Input() description?: string;
   @Input({ required: true }) title!: string;
-  @Input() align: "center" | "left" = "center";
-  @Input() titleLevel: "h1" | "h2" = "h1";
+  @Input() align: 'center' | 'left' = 'center';
+  @Input() titleLevel: 'h1' | 'h2' = 'h1';
   @Input() actions: HeroAction[] = [];
 }

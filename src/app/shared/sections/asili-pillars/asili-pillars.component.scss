@@ -1,5 +1,5 @@
-@use "../../../styles-shared/breakpoints" as bp;
-@use "../../../styles-shared/lists";
+@use '../../../styles-shared/breakpoints' as bp;
+@use '../../../styles-shared/lists';
 
 :host {
   display: block;
@@ -162,11 +162,7 @@
   height: 220px;
   right: -60px;
   bottom: -60px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.8),
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent 70%);
 }
 
 @include bp.tablet {

@@ -31,12 +31,7 @@
   <div class="wrap intro-split">
     <div class="portrait" appReveal>
       @if (portraitImage) {
-        <img
-          [src]="portraitImage"
-          [alt]="portraitAlt"
-          loading="lazy"
-          decoding="async"
-        />
+        <img [src]="portraitImage" [alt]="portraitAlt" loading="lazy" decoding="async" />
       } @else {
         <div class="placeholder">
           <span>{{ portraitPlaceholder }}</span>
@@ -45,24 +40,19 @@
     </div>
     <div class="intro-body" appReveal [appRevealDelay]="1">
       <p i18n="@@presentationIntroP1">
-        J'ai d'abord managé des équipes pendant six ans chez Decathlon. Le
-        terrain, les gens, les priorités. Puis je me suis reconverti au code —
-        en gardant cette obsession :
-        <strong
-          >comprendre le besoin réel avant de produire quoi que ce soit.</strong
-        >
+        J'ai d'abord managé des équipes pendant six ans chez Decathlon. Le terrain, les gens, les
+        priorités. Puis je me suis reconverti au code — en gardant cette obsession :
+        <strong>comprendre le besoin réel avant de produire quoi que ce soit.</strong>
       </p>
       <p i18n="@@presentationIntroP2">
-        Aujourd'hui je conçois des applications en production, avec de vrais
-        utilisateurs, sous une exigence d'ingénierie forte : DDD, Clean
-        Architecture, TDD obligatoire, CI/CD complet. L'IA est mon copilote au
-        quotidien — Claude Code, LangChain, agents autonomes — jamais un gadget.
+        Aujourd'hui je conçois des applications en production, avec de vrais utilisateurs, sous une
+        exigence d'ingénierie forte : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. L'IA
+        est mon copilote au quotidien — Claude Code, LangChain, agents autonomes — jamais un gadget.
       </p>
       <p i18n="@@presentationIntroP3">
-        Je crois aux outils qui <strong>durent</strong>, aux interfaces qu'on
-        comprend sans manuel, et à une relation humaine qui ne s'arrête pas à la
-        livraison. Mon passé de manager n'a pas disparu : il guide chaque
-        cadrage.
+        Je crois aux outils qui <strong>durent</strong>, aux interfaces qu'on comprend sans manuel,
+        et à une relation humaine qui ne s'arrête pas à la livraison. Mon passé de manager n'a pas
+        disparu : il guide chaque cadrage.
       </p>
       <div class="signature">{{ introSignature }}</div>
     </div>
@@ -85,7 +75,7 @@
         <article class="skill" appReveal [appRevealDelay]="skill.revealDelay">
           <div class="s-ic" aria-hidden="true">
             @switch (skill.icon) {
-              @case ("code") {
+              @case ('code') {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path
                     d="m8 6-6 6 6 6M16 6l6 6-6 6"
@@ -96,15 +86,9 @@
                   />
                 </svg>
               }
-              @case ("ai") {
+              @case ('ai') {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="3.2"
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                  />
+                  <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.7" />
                   <path
                     d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"
                     stroke="currentColor"
@@ -113,7 +97,7 @@
                   />
                 </svg>
               }
-              @case ("chart") {
+              @case ('chart') {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M3 3v18h18"
@@ -155,8 +139,7 @@
 >
   <h2 heading class="h-xl ai-method-title" style="max-width: 18ch">
     <ng-container i18n="@@presentationAiMethodHeading"
-      >L'IA amplifie une expertise. Elle ne la
-      <em>remplace pas</em>.</ng-container
+      >L'IA amplifie une expertise. Elle ne la <em>remplace pas</em>.</ng-container
     >
   </h2>
 </app-asili-ai-method>

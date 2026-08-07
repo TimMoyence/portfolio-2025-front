@@ -24,13 +24,7 @@ const MID_THRESHOLD = 0.55;
  * @internal
  */
 function toLevel(v: number, lowThreshold: number): number {
-  return v > HIGH_THRESHOLD
-    ? 3
-    : v > MID_THRESHOLD
-      ? 2
-      : v > lowThreshold
-        ? 1
-        : 0;
+  return v > HIGH_THRESHOLD ? 3 : v > MID_THRESHOLD ? 2 : v > lowThreshold ? 1 : 0;
 }
 
 /**
@@ -50,10 +44,7 @@ export function gaugeOffset(value: number): number {
  * @param lowThreshold - Seuil du niveau 1. Defaut 0.3.
  * @returns `number[]` de longueur `length`, valeurs 0–3.
  */
-export function buildDeterministicHeatmap(
-  length: number,
-  lowThreshold = 0.3,
-): number[] {
+export function buildDeterministicHeatmap(length: number, lowThreshold = 0.3): number[] {
   return Array.from({ length }, (_, i) => {
     const v = (Math.sin(i * 1.7) + 1) / 2; // 0..1 deterministe
     return toLevel(v, lowThreshold);
@@ -67,9 +58,6 @@ export function buildDeterministicHeatmap(
  * @param lowThreshold - Seuil du niveau 1. Defaut 0.3.
  * @returns `number[]` de longueur `length`, valeurs 0–3.
  */
-export function buildRandomHeatmap(
-  length: number,
-  lowThreshold = 0.3,
-): number[] {
+export function buildRandomHeatmap(length: number, lowThreshold = 0.3): number[] {
   return Array.from({ length }, () => toLevel(Math.random(), lowThreshold));
 }

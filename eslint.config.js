@@ -1,22 +1,22 @@
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
-const globals = require("globals");
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const angular = require('angular-eslint');
+const globals = require('globals');
 
 module.exports = tseslint.config(
   {
     ignores: [
-      "dist/**",
-      "coverage/**",
-      ".angular/**",
-      ".claude/**",
-      "e2e/**",
-      "playwright-report/**",
-      "test-results/**",
+      'dist/**',
+      'coverage/**',
+      '.angular/**',
+      '.claude/**',
+      'e2e/**',
+      'playwright-report/**',
+      'test-results/**',
     ],
   },
   {
-    files: ["src/**/*.ts"],
+    files: ['src/**/*.ts'],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -34,22 +34,13 @@ module.exports = tseslint.config(
       },
     },
     rules: {
-      "@angular-eslint/component-class-suffix": [
-        "error",
-        { suffixes: ["Component"] },
-      ],
-      "@angular-eslint/directive-class-suffix": [
-        "error",
-        { suffixes: ["Directive"] },
-      ],
-      "@typescript-eslint/no-explicit-any": "warn",
+      '@angular-eslint/component-class-suffix': ['error', { suffixes: ['Component'] }],
+      '@angular-eslint/directive-class-suffix': ['error', { suffixes: ['Directive'] }],
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
   {
-    files: ["src/**/*.html"],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
+    files: ['src/**/*.html'],
+    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
   },
 );

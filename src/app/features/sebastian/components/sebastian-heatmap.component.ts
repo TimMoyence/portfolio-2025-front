@@ -1,15 +1,9 @@
-import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  signal,
-} from "@angular/core";
-import type { SebastianHeatmapPoint } from "../../../core/models/sebastian.model";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import type { SebastianHeatmapPoint } from '../../../core/models/sebastian.model';
 
 /** Mode d'affichage du heatmap. */
-type HeatmapMode = "combined" | "alcohol" | "coffee";
+type HeatmapMode = 'combined' | 'alcohol' | 'coffee';
 
 /** Configuration d'un bouton de mode. */
 interface ModeOption {
@@ -23,7 +17,7 @@ interface ModeOption {
  * basee sur les niveaux de consommation (combine, alcool ou cafe).
  */
 @Component({
-  selector: "app-sebastian-heatmap",
+  selector: 'app-sebastian-heatmap',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -86,17 +80,17 @@ export class SebastianHeatmapComponent {
   readonly data = input.required<SebastianHeatmapPoint[]>();
 
   /** Mode d'affichage actif. */
-  readonly mode = signal<HeatmapMode>("combined");
+  readonly mode = signal<HeatmapMode>('combined');
 
   /** Options de mode disponibles. */
   readonly modes: ModeOption[] = [
-    { value: "combined", label: "Combine" },
-    { value: "alcohol", label: "Alcool" },
-    { value: "coffee", label: "Cafe" },
+    { value: 'combined', label: 'Combine' },
+    { value: 'alcohol', label: 'Alcool' },
+    { value: 'coffee', label: 'Cafe' },
   ];
 
   /** Labels des jours de la semaine. */
-  readonly dayLabels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+  readonly dayLabels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
   /** Cellules calculees a partir des donnees et du mode. */
   readonly cells = computed(() => {
@@ -121,21 +115,21 @@ export class SebastianHeatmapComponent {
    */
   cellClass(cell: { value: number }): string {
     if (cell.value === 0) {
-      return "bg-[rgba(230,170,70,0.1)] text-white/40";
+      return 'bg-[rgba(230,170,70,0.1)] text-white/40';
     }
 
     const ratio = cell.value / this.maxValue();
 
     if (ratio <= 0.25) {
-      return "bg-[rgba(230,170,70,0.3)] text-white/80";
+      return 'bg-[rgba(230,170,70,0.3)] text-white/80';
     }
     if (ratio <= 0.5) {
-      return "bg-[rgba(230,170,70,0.55)] text-[#1a1206]";
+      return 'bg-[rgba(230,170,70,0.55)] text-[#1a1206]';
     }
     if (ratio <= 0.75) {
-      return "bg-[rgba(230,170,70,0.7)] text-[#1a1206]";
+      return 'bg-[rgba(230,170,70,0.7)] text-[#1a1206]';
     }
-    return "bg-[rgba(230,170,70,0.85)] text-[#1a1206]";
+    return 'bg-[rgba(230,170,70,0.85)] text-[#1a1206]';
   }
 
   /**
@@ -143,11 +137,11 @@ export class SebastianHeatmapComponent {
    */
   private getValue(point: SebastianHeatmapPoint): number {
     switch (this.mode()) {
-      case "alcohol":
+      case 'alcohol':
         return point.alcohol;
-      case "coffee":
+      case 'coffee':
         return point.coffee;
-      case "combined":
+      case 'combined':
       default:
         return point.combined;
     }

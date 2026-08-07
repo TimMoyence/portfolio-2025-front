@@ -34,21 +34,21 @@ export function extractErrorMessage(
   )?.error;
 
   const detail = nested?.detail;
-  if (typeof detail === "string") {
+  if (typeof detail === 'string') {
     return detail;
   }
 
   const nestedMessage = nested?.message;
   if (Array.isArray(nestedMessage)) {
-    return nestedMessage.join(" ");
+    return nestedMessage.join(' ');
   }
-  if (typeof nestedMessage === "string") {
+  if (typeof nestedMessage === 'string') {
     return nestedMessage;
   }
 
   if (options?.includeTopLevelMessage !== false) {
     const topLevelMessage = (error as { message?: string })?.message;
-    if (typeof topLevelMessage === "string") {
+    if (typeof topLevelMessage === 'string') {
       return topLevelMessage;
     }
   }

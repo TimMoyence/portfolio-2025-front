@@ -1,12 +1,12 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { LEAD_MAGNET_PORT } from "../../../core/ports/lead-magnet.port";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import {
   createLeadMagnetPortStub,
   createLeadMagnetPortStubWithError,
-} from "../../../../testing/factories/lead-magnet.factory";
-import { ToolkitFormComponent } from "./toolkit-form.component";
+} from '../../../../testing/factories/lead-magnet.factory';
+import { ToolkitFormComponent } from './toolkit-form.component';
 
-describe("ToolkitFormComponent", () => {
+describe('ToolkitFormComponent', () => {
   let component: ToolkitFormComponent;
   let fixture: ComponentFixture<ToolkitFormComponent>;
   let portStub: ReturnType<typeof createLeadMagnetPortStub>;
@@ -24,32 +24,30 @@ describe("ToolkitFormComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it("should render firstName and email inputs", () => {
+  it('should render firstName and email inputs', () => {
     const inputs = fixture.nativeElement.querySelectorAll(
       'input[type="text"], input[type="email"]',
     );
     expect(inputs.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("should render GDPR checkbox", () => {
-    const checkbox = fixture.nativeElement.querySelector(
-      'input[type="checkbox"]',
-    );
+  it('should render GDPR checkbox', () => {
+    const checkbox = fixture.nativeElement.querySelector('input[type="checkbox"]');
     expect(checkbox).toBeTruthy();
   });
 
-  it("should disable submit when form is invalid", () => {
+  it('should disable submit when form is invalid', () => {
     const button = fixture.nativeElement.querySelector('button[type="submit"]');
     expect(button.disabled).toBeTrue();
   });
 
-  it("should enable submit when form is valid", () => {
-    component.firstName.set("Marie");
-    component.email.set("marie@example.com");
+  it('should enable submit when form is valid', () => {
+    component.firstName.set('Marie');
+    component.email.set('marie@example.com');
     component.termsAccepted.set(true);
     fixture.detectChanges();
 
@@ -57,9 +55,9 @@ describe("ToolkitFormComponent", () => {
     expect(button.disabled).toBeFalse();
   });
 
-  it("should call port and show success on valid submit", async () => {
-    component.firstName.set("Marie");
-    component.email.set("marie@example.com");
+  it('should call port and show success on valid submit', async () => {
+    component.firstName.set('Marie');
+    component.email.set('marie@example.com');
     component.termsAccepted.set(true);
     fixture.detectChanges();
 
@@ -68,10 +66,10 @@ describe("ToolkitFormComponent", () => {
     fixture.detectChanges();
 
     expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
-    expect(component.state()).toBe("success");
+    expect(component.state()).toBe('success');
   });
 
-  it("should show error state on failure", async () => {
+  it('should show error state on failure', async () => {
     const errorPort = createLeadMagnetPortStubWithError();
 
     TestBed.resetTestingModule();
@@ -84,8 +82,8 @@ describe("ToolkitFormComponent", () => {
     const errorComponent = errorFixture.componentInstance;
     errorFixture.detectChanges();
 
-    errorComponent.firstName.set("Marie");
-    errorComponent.email.set("marie@example.com");
+    errorComponent.firstName.set('Marie');
+    errorComponent.email.set('marie@example.com');
     errorComponent.termsAccepted.set(true);
     errorFixture.detectChanges();
 
@@ -93,13 +91,13 @@ describe("ToolkitFormComponent", () => {
     await errorFixture.whenStable();
     errorFixture.detectChanges();
 
-    expect(errorComponent.state()).toBe("error");
+    expect(errorComponent.state()).toBe('error');
   });
 
-  it("transmet le formationSlug en @Input au port.requestToolkit", async () => {
-    fixture.componentRef.setInput("formationSlug", "automatiser-avec-ia");
-    component.firstName.set("Marie");
-    component.email.set("marie@example.com");
+  it('transmet le formationSlug en @Input au port.requestToolkit', async () => {
+    fixture.componentRef.setInput('formationSlug', 'automatiser-avec-ia');
+    component.firstName.set('Marie');
+    component.email.set('marie@example.com');
     component.termsAccepted.set(true);
     fixture.detectChanges();
 
@@ -108,14 +106,14 @@ describe("ToolkitFormComponent", () => {
 
     expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
     const payload = portStub.requestToolkit.calls.mostRecent().args[0];
-    expect(payload.formationSlug).toBe("automatiser-avec-ia");
-    expect(payload.email).toBe("marie@example.com");
-    expect(payload.firstName).toBe("Marie");
+    expect(payload.formationSlug).toBe('automatiser-avec-ia');
+    expect(payload.email).toBe('marie@example.com');
+    expect(payload.firstName).toBe('Marie');
   });
 
   it("affiche l'email soumis dans le bloc succes (data-toolkit-success)", async () => {
-    component.firstName.set("Marie");
-    component.email.set("marie@example.com");
+    component.firstName.set('Marie');
+    component.email.set('marie@example.com');
     component.termsAccepted.set(true);
     fixture.detectChanges();
     component.onSubmit();
@@ -123,9 +121,9 @@ describe("ToolkitFormComponent", () => {
     fixture.detectChanges();
 
     const successBlock: HTMLElement | null =
-      fixture.nativeElement.querySelector("[data-toolkit-success]");
+      fixture.nativeElement.querySelector('[data-toolkit-success]');
     expect(successBlock).not.toBeNull();
-    expect(successBlock?.textContent).toContain("marie@example.com");
+    expect(successBlock?.textContent).toContain('marie@example.com');
   });
 
   it("affiche le bloc erreur (data-toolkit-error) quand l'envoi echoue", async () => {
@@ -138,27 +136,27 @@ describe("ToolkitFormComponent", () => {
 
     const f = TestBed.createComponent(ToolkitFormComponent);
     f.detectChanges();
-    f.componentInstance.firstName.set("Marie");
-    f.componentInstance.email.set("marie@example.com");
+    f.componentInstance.firstName.set('Marie');
+    f.componentInstance.email.set('marie@example.com');
     f.componentInstance.termsAccepted.set(true);
     f.detectChanges();
     f.componentInstance.onSubmit();
     await f.whenStable();
     f.detectChanges();
 
-    const errorBlock = f.nativeElement.querySelector("[data-toolkit-error]");
+    const errorBlock = f.nativeElement.querySelector('[data-toolkit-error]');
     expect(errorBlock).not.toBeNull();
   });
 
   it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {
-    component.firstName.set("Marie");
-    component.email.set("marie@example.com");
+    component.firstName.set('Marie');
+    component.email.set('marie@example.com');
     component.termsAccepted.set(true);
     fixture.detectChanges();
     component.onSubmit();
     await fixture.whenStable();
 
     const payload = portStub.requestToolkit.calls.mostRecent().args[0];
-    expect(payload.formationSlug).toBe("ia-solopreneurs");
+    expect(payload.formationSlug).toBe('ia-solopreneurs');
   });
 });

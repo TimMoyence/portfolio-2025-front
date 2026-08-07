@@ -1,16 +1,16 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
-import type { OnDestroy } from "@angular/core";
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import type { OnDestroy } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   PLATFORM_ID,
   inject,
-} from "@angular/core";
-import type { NgForm } from "@angular/forms";
-import { FormsModule } from "@angular/forms";
-import type { Subscription } from "rxjs";
-import type { ClientReport } from "../../core/models/audit-client-report.model";
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import type { Subscription } from 'rxjs';
+import type { ClientReport } from '../../core/models/audit-client-report.model';
 import {
   type AuditContactMethod,
   type AuditRequestPayload,
@@ -18,14 +18,14 @@ import {
   type AuditSummaryResponse,
   type PillarKey,
   PILLAR_KEYS,
-} from "../../core/models/audit-request.model";
-import type { AuditRequestPort } from "../../core/ports/audit-request.port";
-import { AUDIT_REQUEST_PORT } from "../../core/ports/audit-request.port";
-import { handleFormSubmit } from "../../shared/utils/form-submit.utils";
-import type { FaqItem } from "../../shared/components/faq-section/faq-section.component";
-import { FaqSectionComponent } from "../../shared/components/faq-section/faq-section.component";
-import { HeroSectionComponent } from "../../shared/components/hero-section/hero-section.component";
-import { AuditClientReportSectionComponent } from "./components/audit-client-report-section/audit-client-report-section.component";
+} from '../../core/models/audit-request.model';
+import type { AuditRequestPort } from '../../core/ports/audit-request.port';
+import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
+import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import type { FaqItem } from '../../shared/components/faq-section/faq-section.component';
+import { FaqSectionComponent } from '../../shared/components/faq-section/faq-section.component';
+import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,
   buildSectionBadges,
@@ -38,7 +38,7 @@ import {
   formatSubTaskLabel,
   formatTaskLabel,
   sectionBadgeClass as sectionBadgeClassFn,
-} from "./growth-audit-format.utils";
+} from './growth-audit-format.utils';
 
 interface AuditPillar {
   title: string;
@@ -46,7 +46,7 @@ interface AuditPillar {
 }
 
 @Component({
-  selector: "app-growth-audit",
+  selector: 'app-growth-audit',
   standalone: true,
   imports: [
     CommonModule,
@@ -55,8 +55,8 @@ interface AuditPillar {
     FaqSectionComponent,
     AuditClientReportSectionComponent,
   ],
-  templateUrl: "./growth-audit.component.html",
-  styleUrl: "./growth-audit.component.scss",
+  templateUrl: './growth-audit.component.html',
+  styleUrl: './growth-audit.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GrowthAuditComponent implements OnDestroy {
@@ -75,14 +75,14 @@ export class GrowthAuditComponent implements OnDestroy {
   errorMessage?: string;
   auditId?: string;
   auditProgress = 0;
-  auditStep = "";
+  auditStep = '';
   auditSummary?: AuditSummaryResponse;
   /** Rapport client structuré produit par l'étape LLM (Phase 7+ backend). */
   clientReport: ClientReport | null = null;
-  auditPhaseLabel = "";
-  auditCurrentUrl = "";
-  auditIaTask = "";
-  auditIaSubTask = "";
+  auditPhaseLabel = '';
+  auditCurrentUrl = '';
+  auditIaTask = '';
+  auditIaSubTask = '';
   auditRecentCompletedUrls: string[] = [];
   auditSectionBadges: AuditSectionBadge[] = [];
 
@@ -180,20 +180,20 @@ export class GrowthAuditComponent implements OnDestroy {
   };
 
   auditFormState: AuditRequestPayload = {
-    websiteName: "",
-    contactMethod: "EMAIL" as AuditContactMethod,
-    contactValue: "",
+    websiteName: '',
+    contactMethod: 'EMAIL' as AuditContactMethod,
+    contactValue: '',
   };
 
   /** Consentement RGPD explicite requis avant toute soumission (P0.4). */
   rgpdConsent = false;
 
-  get contactInputType(): "email" | "tel" {
-    return this.auditFormState.contactMethod === "EMAIL" ? "email" : "tel";
+  get contactInputType(): 'email' | 'tel' {
+    return this.auditFormState.contactMethod === 'EMAIL' ? 'email' : 'tel';
   }
 
   get contactPlaceholder(): string {
-    return this.auditFormState.contactMethod === "EMAIL"
+    return this.auditFormState.contactMethod === 'EMAIL'
       ? this.formLabels.emailPlaceholder
       : this.formLabels.phonePlaceholder;
   }
@@ -201,34 +201,31 @@ export class GrowthAuditComponent implements OnDestroy {
   get scoreEntries(): Array<{ key: PillarKey; score: number }> {
     if (!this.auditSummary) return [];
     const scores = this.auditSummary.pillarScores;
-    return PILLAR_KEYS.filter((key) => Number.isFinite(scores[key])).map(
-      (key) => ({
-        key,
-        score: scores[key],
-      }),
-    );
+    return PILLAR_KEYS.filter((key) => Number.isFinite(scores[key])).map((key) => ({
+      key,
+      score: scores[key],
+    }));
   }
 
   get formattedSummaryText(): string {
     return formatSummaryText(this.auditSummary?.summaryText);
   }
 
-  private getLocaleUrlPrefix(): "fr" | "en" {
+  private getLocaleUrlPrefix(): 'fr' | 'en' {
     if (!this.isBrowser) {
-      return "fr";
+      return 'fr';
     }
 
-    const [, locale] =
-      window.location.pathname.toLowerCase().match(/\/(fr|en)(?=\/|$)/) ?? [];
+    const [, locale] = window.location.pathname.toLowerCase().match(/\/(fr|en)(?=\/|$)/) ?? [];
 
-    if (locale === undefined) return "fr";
+    if (locale === undefined) return 'fr';
 
-    return locale === "fr" ? "fr" : "en";
+    return locale === 'fr' ? 'fr' : 'en';
   }
 
   onContactMethodToggle(event: Event): void {
     const isPhone = (event.target as HTMLInputElement).checked;
-    const method: AuditContactMethod = isPhone ? "PHONE" : "EMAIL";
+    const method: AuditContactMethod = isPhone ? 'PHONE' : 'EMAIL';
     this.handleMethodChange(method);
   }
 
@@ -236,7 +233,7 @@ export class GrowthAuditComponent implements OnDestroy {
     const changed = this.auditFormState.contactMethod !== method;
     this.auditFormState.contactMethod = method;
     if (changed) {
-      this.auditFormState.contactValue = "";
+      this.auditFormState.contactValue = '';
     }
   }
 
@@ -273,8 +270,8 @@ export class GrowthAuditComponent implements OnDestroy {
       onSuccess: (response) => {
         if (response.httpCode !== 201 || !response.auditId) {
           this.errorMessage = response.message || this.formLabels.error;
-          this.trackAuditEvent("audit_rejected", {
-            reason: response.message ?? "unknown",
+          this.trackAuditEvent('audit_rejected', {
+            reason: response.message ?? 'unknown',
           });
           return;
         }
@@ -286,7 +283,7 @@ export class GrowthAuditComponent implements OnDestroy {
         this.resetAuditTimeline();
         this.isAuditRunning = true;
         this.reconnectAttempts = 0;
-        this.trackAuditEvent("audit_submitted", {
+        this.trackAuditEvent('audit_submitted', {
           auditId: response.auditId,
           contactMethod: payload.contactMethod,
           locale: payload.locale,
@@ -295,15 +292,15 @@ export class GrowthAuditComponent implements OnDestroy {
       },
       onError: (message) => {
         this.errorMessage = message;
-        this.trackAuditEvent("audit_error", { reason: message });
+        this.trackAuditEvent('audit_error', { reason: message });
       },
       onComplete: () => {
         this.isSubmitting = false;
         this.isSubmitted = false;
         this.auditFormState = {
-          websiteName: "",
-          contactMethod: "EMAIL",
-          contactValue: "",
+          websiteName: '',
+          contactMethod: 'EMAIL',
+          contactValue: '',
         };
         this.rgpdConsent = false;
         form.resetForm(this.auditFormState);
@@ -319,24 +316,16 @@ export class GrowthAuditComponent implements OnDestroy {
    * pret a emettre sans redeploy lorsque la config arrive.
    */
   private trackAuditEvent(
-    name:
-      | "audit_submitted"
-      | "audit_completed"
-      | "audit_failed"
-      | "audit_error"
-      | "audit_rejected",
+    name: 'audit_submitted' | 'audit_completed' | 'audit_failed' | 'audit_error' | 'audit_rejected',
     props: Record<string, string>,
   ): void {
     if (!this.isBrowser) return;
     const plausible = (
       window as unknown as {
-        plausible?: (
-          event: string,
-          opts: { props: Record<string, string> },
-        ) => void;
+        plausible?: (event: string, opts: { props: Record<string, string> }) => void;
       }
     ).plausible;
-    if (typeof plausible !== "function") return;
+    if (typeof plausible !== 'function') return;
     try {
       plausible(name, { props });
     } catch {
@@ -358,11 +347,11 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   private handleStreamEvent(event: AuditStreamEvent): void {
-    if (event.type === "heartbeat") {
+    if (event.type === 'heartbeat') {
       return;
     }
 
-    if (event.type === "progress") {
+    if (event.type === 'progress') {
       this.auditProgress = event.data.progress ?? 0;
       this.auditStep = formatProgressStep(event.data);
       this.applyProgressDetails(event.data.details);
@@ -371,7 +360,7 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    if (event.type === "completed") {
+    if (event.type === 'completed') {
       this.auditProgress = event.data.progress ?? 100;
       this.auditStep = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
       this.resetAuditTimeline();
@@ -387,7 +376,7 @@ export class GrowthAuditComponent implements OnDestroy {
         pillarScores: event.data.pillarScores,
       };
       this.clientReport = event.data.clientReport ?? null;
-      this.trackAuditEvent("audit_completed", {
+      this.trackAuditEvent('audit_completed', {
         auditId: event.data.auditId,
         status: event.data.status,
       });
@@ -400,9 +389,9 @@ export class GrowthAuditComponent implements OnDestroy {
     this.errorMessage =
       event.data.error ||
       $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
-    this.trackAuditEvent("audit_failed", {
+    this.trackAuditEvent('audit_failed', {
       auditId: event.data.auditId,
-      reason: event.data.error ?? "unknown",
+      reason: event.data.error ?? 'unknown',
     });
     this.cdr.markForCheck();
   }
@@ -410,7 +399,7 @@ export class GrowthAuditComponent implements OnDestroy {
   private recoverFromSummary(auditId: string): void {
     this.auditService.getSummary(auditId).subscribe({
       next: (summary) => {
-        if (summary.ready || summary.status === "COMPLETED") {
+        if (summary.ready || summary.status === 'COMPLETED') {
           this.auditSummary = summary;
           this.auditProgress = summary.progress;
           this.auditStep = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
@@ -421,7 +410,7 @@ export class GrowthAuditComponent implements OnDestroy {
           return;
         }
 
-        if (summary.status === "FAILED") {
+        if (summary.status === 'FAILED') {
           this.isAuditRunning = false;
           this.resetAuditTimeline();
           this.errorMessage = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
@@ -461,20 +450,16 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    const phase = extractString(payload["phase"]);
+    const phase = extractString(payload['phase']);
     this.auditPhaseLabel = formatPhaseLabel(phase);
-    this.auditCurrentUrl = extractString(payload["currentUrl"]);
-    this.auditIaTask = formatTaskLabel(extractString(payload["iaTask"]));
-    this.auditIaSubTask = formatSubTaskLabel(
-      extractString(payload["iaSubTask"]),
-    );
-    this.auditRecentCompletedUrls = extractStringArray(
-      payload["recentCompletedUrls"],
-    ).slice(-5);
+    this.auditCurrentUrl = extractString(payload['currentUrl']);
+    this.auditIaTask = formatTaskLabel(extractString(payload['iaTask']));
+    this.auditIaSubTask = formatSubTaskLabel(extractString(payload['iaSubTask']));
+    this.auditRecentCompletedUrls = extractStringArray(payload['recentCompletedUrls']).slice(-5);
 
-    const statuses = extractRecord(payload["sectionStatuses"]) ?? {};
-    const section = extractString(payload["section"]);
-    const sectionStatus = extractString(payload["sectionStatus"]);
+    const statuses = extractRecord(payload['sectionStatuses']) ?? {};
+    const section = extractString(payload['section']);
+    const sectionStatus = extractString(payload['sectionStatus']);
     if (section && sectionStatus) {
       statuses[section] = sectionStatus;
     }
@@ -486,10 +471,10 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   private resetAuditTimeline(): void {
-    this.auditPhaseLabel = "";
-    this.auditCurrentUrl = "";
-    this.auditIaTask = "";
-    this.auditIaSubTask = "";
+    this.auditPhaseLabel = '';
+    this.auditCurrentUrl = '';
+    this.auditIaTask = '';
+    this.auditIaSubTask = '';
     this.auditRecentCompletedUrls = [];
     this.auditSectionBadges = [];
   }

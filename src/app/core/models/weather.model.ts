@@ -71,10 +71,10 @@ export interface ForecastResponse {
 }
 
 /** Niveau d'experience meteo de l'utilisateur. */
-export type WeatherLevel = "discovery" | "curious" | "expert";
+export type WeatherLevel = 'discovery' | 'curious' | 'expert';
 
 /** Granularite de la vue d'ensemble hebdomadaire. */
-export type OverviewGranularity = "day" | "3h" | "1h";
+export type OverviewGranularity = 'day' | '3h' | '1h';
 
 /** Ville favorite enregistree dans les preferences. */
 export interface FavoriteCity {
@@ -133,9 +133,9 @@ export interface HistoricalData {
 
 /** Preferences d'unites de mesure de l'utilisateur. */
 export interface UnitPreferences {
-  temperature: "celsius" | "fahrenheit";
-  speed: "kmh" | "mph";
-  pressure: "hpa" | "inhg";
+  temperature: 'celsius' | 'fahrenheit';
+  speed: 'kmh' | 'mph';
+  pressure: 'hpa' | 'inhg';
 }
 
 /** Preferences meteo de l'utilisateur, synchronisees avec le backend. */
@@ -176,7 +176,7 @@ export interface DetailedCurrentWeather {
   sunrise: string;
   sunset: string;
   isDaytime: boolean;
-  partOfDay: "d" | "n";
+  partOfDay: 'd' | 'n';
   timezoneOffset: number;
 }
 
@@ -200,7 +200,7 @@ export interface DetailedHourlyItem {
   conditionName: string;
   conditionText: string;
   conditionIcon: string;
-  partOfDay: "d" | "n";
+  partOfDay: 'd' | 'n';
 }
 
 /** Element journalier detaille (source OpenWeatherMap). */
@@ -226,7 +226,7 @@ export interface DetailedForecastResult {
 }
 
 /** Severite d'une alerte meteo. */
-export type AlertSeverity = "minor" | "moderate" | "severe" | "extreme";
+export type AlertSeverity = 'minor' | 'moderate' | 'severe' | 'extreme';
 
 /** Alerte meteo synthetique. */
 export interface WeatherAlert {

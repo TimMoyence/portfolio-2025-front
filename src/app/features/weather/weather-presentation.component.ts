@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,22 +8,22 @@ import {
   OnInit,
   PLATFORM_ID,
   signal,
-} from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
+} from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import {
   createMeteoCities,
   needleTransform,
   sunDot,
   type DemoCity,
-} from "../../shared/demos/meteo-demo";
+} from '../../shared/demos/meteo-demo';
 import {
   MOCK_AIR_QUALITY,
   MOCK_CURRENT,
   MOCK_DAILY,
   MOCK_FORECAST,
   MOCK_HOURLY,
-} from "./weather-presentation-data";
+} from './weather-presentation-data';
 
 /**
  * Landing marketing de l'application Meteo (`/atelier/meteo`).
@@ -50,11 +50,11 @@ import {
  * IDs `@@weatherLanding*`) ; la traduction EN vit dans les XLF.
  */
 @Component({
-  selector: "app-weather-presentation",
+  selector: 'app-weather-presentation',
   standalone: true,
   imports: [RouterModule, RevealOnScrollDirective],
-  templateUrl: "./weather-presentation.component.html",
-  styleUrl: "./weather-presentation.component.scss",
+  templateUrl: './weather-presentation.component.html',
+  styleUrl: './weather-presentation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherPresentationComponent implements OnInit {
@@ -111,18 +111,15 @@ export class WeatherPresentationComponent implements OnInit {
   });
 
   /** Identifiant de la ville actuellement selectionnee. */
-  readonly activeCityId = signal<string>("bordeaux");
+  readonly activeCityId = signal<string>('bordeaux');
 
   /** Ville selectionnee, derivee de `activeCityId`. */
   readonly city = computed<DemoCity>(
-    () =>
-      this.cities.find((c) => c.id === this.activeCityId()) ?? this.cities[0],
+    () => this.cities.find((c) => c.id === this.activeCityId()) ?? this.cities[0],
   );
 
   /** Transformation SVG de l'aiguille de la boussole selon la direction du vent. */
-  readonly needleTransform = computed(() =>
-    needleTransform(this.city().windDeg),
-  );
+  readonly needleTransform = computed(() => needleTransform(this.city().windDeg));
 
   /** Coordonnees (cx, cy) du soleil sur l'arc selon la progression `sun`. */
   readonly sunDot = computed(() => sunDot(this.city().sun));
@@ -147,10 +144,10 @@ export class WeatherPresentationComponent implements OnInit {
       }
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     this.destroyRef.onDestroy(() => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener('scroll', onScroll);
     });
   }
 }

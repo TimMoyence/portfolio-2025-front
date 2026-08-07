@@ -1,18 +1,13 @@
-import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from "@angular/core";
-import { MetricCardComponent } from "../metric-card/metric-card.component";
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { MetricCardComponent } from '../metric-card/metric-card.component';
 
 /**
  * Carte de couverture nuageuse et visibilite.
  * Utilise les icones PNG du projet selon le niveau de couverture.
  */
 @Component({
-  selector: "app-cloud-visibility-card",
+  selector: 'app-cloud-visibility-card',
   standalone: true,
   imports: [CommonModule, MetricCardComponent],
   template: `
@@ -20,13 +15,10 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
       tooltipId="cloud-cover"
       i18n-tooltipTitle="weather.cloud.tooltip.title|@@weatherCloudTooltipTitle"
       tooltipTitle="Couverture nuageuse"
-      i18n-tooltipContent="
-        weather.cloud.tooltip.content|@@weatherCloudTooltipContent"
+      i18n-tooltipContent="weather.cloud.tooltip.content|@@weatherCloudTooltipContent"
       tooltipContent="La couverture nuageuse indique le pourcentage du ciel masqué par les nuages. La visibilité mesure la distance maximale à laquelle on distingue un objet : elle diminue avec le brouillard, la pluie ou les particules en suspension."
     >
-      <span cardTitle i18n="weather.cloud.title|@@weatherCloudTitle"
-        >Couverture nuageuse</span
-      >
+      <span cardTitle i18n="weather.cloud.title|@@weatherCloudTitle">Couverture nuageuse</span>
 
       <!--
         Nuages / visibilité — re-skin Asili : couverture font-display, libellé
@@ -38,9 +30,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 
         <div class="flex flex-col gap-1">
           <div class="flex items-baseline gap-2">
-            <span class="font-display text-3xl leading-none text-white">
-              {{ cloudCover() }}%
-            </span>
+            <span class="font-display text-3xl leading-none text-white"> {{ cloudCover() }}% </span>
             <span class="text-sm text-white/50">
               {{ cloudLabel() }}
             </span>
@@ -48,9 +38,7 @@ import { MetricCardComponent } from "../metric-card/metric-card.component";
 
           @if (visibility() !== null) {
             <span class="font-mono text-[11px] text-white/50">
-              <span i18n="weather.cloud.visibility|@@weatherCloudVisibility"
-                >Visibilité</span
-              >
+              <span i18n="weather.cloud.visibility|@@weatherCloudVisibility">Visibilité</span>
               : {{ visibilityKm() }} km
             </span>
           }
@@ -70,19 +58,17 @@ export class CloudVisibilityCardComponent {
   /** Icone PNG appropriee selon le niveau de couverture nuageuse. */
   readonly cloudIcon = computed(() => {
     const cover = this.cloudCover();
-    const base = "/assets/images/meteo/";
-    if (cover <= 20) return base + "soleil.png";
-    if (cover <= 70) return base + "soleil-et-nuage.png";
-    return base + "nuage.png";
+    const base = '/assets/images/meteo/';
+    if (cover <= 20) return base + 'soleil.png';
+    if (cover <= 70) return base + 'soleil-et-nuage.png';
+    return base + 'nuage.png';
   });
 
   /** Label descriptif de la couverture nuageuse en francais. */
   readonly cloudLabel = computed(() => {
     const cover = this.cloudCover();
-    if (cover <= 10)
-      return $localize`:weather.cloud.clear|@@weatherCloudClear:Dégagé`;
-    if (cover <= 30)
-      return $localize`:weather.cloud.fewClouds|@@weatherCloudFewClouds:Peu nuageux`;
+    if (cover <= 10) return $localize`:weather.cloud.clear|@@weatherCloudClear:Dégagé`;
+    if (cover <= 30) return $localize`:weather.cloud.fewClouds|@@weatherCloudFewClouds:Peu nuageux`;
     if (cover <= 70)
       return $localize`:weather.cloud.partlyCloudy|@@weatherCloudPartlyCloudy:Partiellement nuageux`;
     if (cover <= 90)

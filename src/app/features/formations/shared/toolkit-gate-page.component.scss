@@ -4,7 +4,7 @@
   (porte de AsiliNewDesign/asili-formation.css). On ne fait que les importer
   et les scoper a ce composant.
 */
-@use "../toolkit-page";
+@use '../toolkit-page';
 
 :host {
   display: block;

@@ -5,7 +5,7 @@
   les `@use` ici pour les scoper. Restyle = HTML/SCSS uniquement ; le flux token
   magic-link est préservé.
 */
-@use "./auth-shared";
+@use './auth-shared';
 
 :host {
   display: block;

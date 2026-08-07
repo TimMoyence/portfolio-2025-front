@@ -7,10 +7,10 @@
 }
 
 .image-background-audit::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
-  background-image: url("/assets/images/audit.webp");
+  background-image: url('/assets/images/audit.webp');
   background-position: bottom right;
   background-repeat: no-repeat;
   opacity: 0.15; /* transparency only on image */

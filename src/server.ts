@@ -1,48 +1,48 @@
-import { APP_BASE_HREF } from "@angular/common";
-import { CommonEngine, isMainModule } from "@angular/ssr/node";
-import express from "express";
-import fs from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import bootstrap from "./main.server";
-import type { SeoMetadataFile } from "./app/core/seo/seo-metadata.model";
-import { isClientOnlyRoute, loadCsrShell } from "./server/csr-shell";
-import { registerPermanentRedirects } from "./server/redirects";
+import { APP_BASE_HREF } from '@angular/common';
+import { CommonEngine, isMainModule } from '@angular/ssr/node';
+import express from 'express';
+import fs from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import bootstrap from './main.server';
+import type { SeoMetadataFile } from './app/core/seo/seo-metadata.model';
+import { isClientOnlyRoute, loadCsrShell } from './server/csr-shell';
+import { registerPermanentRedirects } from './server/redirects';
 import {
   buildLlmsFullTxt,
   buildLlmsTxt,
   buildRobotsTxt,
   buildSitemapXml,
-} from "./server/seo-builders";
-import { buildSecurityHeaders } from "./server/security-headers";
-import { injectSeoHead, isKnownRoute } from "./server/seo-injector";
+} from './server/seo-builders';
+import { buildSecurityHeaders } from './server/security-headers';
+import { injectSeoHead, isKnownRoute } from './server/seo-injector';
 import {
   ALLOWED_HOSTS,
   LOCALE_BARE_PATH,
   LOCALE_PREFIX_RE,
   STRIP_LOCALE_RE,
   buildBaseUrlFromRequest,
-} from "./server/url-utils";
+} from './server/url-utils';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 
 // On est dans dist/portfolio-app/server/<locale>/
 // donc distRoot = dist/portfolio-app
-const distRoot = resolve(serverDistFolder, "../..");
+const distRoot = resolve(serverDistFolder, '../..');
 
 // dist/portfolio-app/browser
-const browserDistFolder = resolve(distRoot, "browser");
+const browserDistFolder = resolve(distRoot, 'browser');
 
 // index SSR propre a la locale: dist/portfolio-app/server/<locale>/index.server.html
 // Le container peut recevoir des requetes pour une autre locale (nginx, fallback),
 // donc on resout dynamiquement le bon index.server.html selon l'URL.
-const defaultIndexHtml = join(serverDistFolder, "index.server.html");
-const serverRoot = resolve(serverDistFolder, "..");
+const defaultIndexHtml = join(serverDistFolder, 'index.server.html');
+const serverRoot = resolve(serverDistFolder, '..');
 
 /** Retourne le index.server.html correspondant a la locale de l'URL. */
 const resolveIndexHtml = (locale: string | null): string => {
   if (!locale) return defaultIndexHtml;
-  const localeIndex = join(serverRoot, locale, "index.server.html");
+  const localeIndex = join(serverRoot, locale, 'index.server.html');
   if (fs.existsSync(localeIndex)) return localeIndex;
   return defaultIndexHtml;
 };
@@ -59,18 +59,14 @@ const app = express();
  */
 app.use((req, res, next) => {
   const original = req.path;
-  let normalized = original.replace(/\/{2,}/g, "/");
-  if (
-    normalized.length > 1 &&
-    normalized.endsWith("/") &&
-    !LOCALE_BARE_PATH.test(normalized)
-  ) {
-    normalized = normalized.replace(/\/+$/, "");
+  let normalized = original.replace(/\/{2,}/g, '/');
+  if (normalized.length > 1 && normalized.endsWith('/') && !LOCALE_BARE_PATH.test(normalized)) {
+    normalized = normalized.replace(/\/+$/, '');
   }
   if (normalized !== original) {
-    const query = req.originalUrl.includes("?")
-      ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
-      : "";
+    const query = req.originalUrl.includes('?')
+      ? req.originalUrl.slice(req.originalUrl.indexOf('?'))
+      : '';
     return void res.redirect(301, normalized + query);
   }
   next();
@@ -84,7 +80,7 @@ app.use((req, res, next) => {
  * (non duplique ici).
  */
 app.use((req, res, next) => {
-  const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https";
+  const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
   const headers = buildSecurityHeaders({ isHttps });
   for (const [name, value] of Object.entries(headers)) {
     res.setHeader(name, value);
@@ -97,9 +93,9 @@ const commonEngine = new CommonEngine({
 });
 
 const SEO_METADATA_CANDIDATES = [
-  resolve(browserDistFolder, "fr/assets/seo/seo-metadata.json"),
-  resolve(browserDistFolder, "en/assets/seo/seo-metadata.json"),
-  resolve(process.cwd(), "src/assets/seo/seo-metadata.json"),
+  resolve(browserDistFolder, 'fr/assets/seo/seo-metadata.json'),
+  resolve(browserDistFolder, 'en/assets/seo/seo-metadata.json'),
+  resolve(process.cwd(), 'src/assets/seo/seo-metadata.json'),
 ];
 
 let cachedSeoMetadata: SeoMetadataFile | null = null;
@@ -110,7 +106,7 @@ const loadSeoMetadata = (): SeoMetadataFile | null => {
   for (const candidate of SEO_METADATA_CANDIDATES) {
     if (!fs.existsSync(candidate)) continue;
     try {
-      const raw = fs.readFileSync(candidate, "utf-8");
+      const raw = fs.readFileSync(candidate, 'utf-8');
       cachedSeoMetadata = JSON.parse(raw) as SeoMetadataFile;
       return cachedSeoMetadata;
     } catch {
@@ -121,34 +117,32 @@ const loadSeoMetadata = (): SeoMetadataFile | null => {
   return null;
 };
 
-app.get("/sitemap.xml", (req, res) => {
+app.get('/sitemap.xml', (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
-    res.status(404).type("text/plain").send("Sitemap not available");
+    res.status(404).type('text/plain').send('Sitemap not available');
     return;
   }
 
   const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
   const xml = buildSitemapXml(metadata, baseUrl);
-  res.setHeader("Content-Type", "application/xml");
-  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
+  res.setHeader('Content-Type', 'application/xml');
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
   res.send(xml);
 });
 
-app.get("/robots.txt", (req, res) => {
+app.get('/robots.txt', (req, res) => {
   const metadata = loadSeoMetadata();
   const baseUrl = buildBaseUrlFromRequest(req, metadata?.site.baseUrl);
 
   if (!metadata) {
-    res
-      .type("text/plain")
-      .send(`User-agent: *\nDisallow:\nSitemap: ${baseUrl}/sitemap.xml\n`);
+    res.type('text/plain').send(`User-agent: *\nDisallow:\nSitemap: ${baseUrl}/sitemap.xml\n`);
     return;
   }
 
   const robots = buildRobotsTxt(metadata, baseUrl);
-  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
-  res.type("text/plain").send(robots);
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+  res.type('text/plain').send(robots);
 });
 
 /**
@@ -156,17 +150,17 @@ app.get("/robots.txt", (req, res) => {
  * Permet aux LLMs (ChatGPT, Perplexity, Google AI Overview, Bing Copilot)
  * de decouvrir la structure du site et son intention editoriale.
  */
-app.get("/llms.txt", (req, res) => {
+app.get('/llms.txt', (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
-    res.status(404).type("text/plain").send("llms.txt not available");
+    res.status(404).type('text/plain').send('llms.txt not available');
     return;
   }
 
   const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
   const content = buildLlmsTxt(metadata, baseUrl);
-  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
-  res.type("text/plain").send(content);
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+  res.type('text/plain').send(content);
 });
 
 /**
@@ -174,23 +168,23 @@ app.get("/llms.txt", (req, res) => {
  * indexable pour les moteurs IA generatifs. Extension du standard llms.txt
  * proposee pour faciliter l'ingestion multi-pages en un seul fetch.
  */
-app.get("/llms-full.txt", (req, res) => {
+app.get('/llms-full.txt', (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
-    res.status(404).type("text/plain").send("llms-full.txt not available");
+    res.status(404).type('text/plain').send('llms-full.txt not available');
     return;
   }
 
   const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
   const content = buildLlmsFullTxt(metadata, baseUrl);
-  res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
-  res.type("text/plain").send(content);
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+  res.type('text/plain').send(content);
 });
 
 /** Bing Webmaster Tools — verification XML */
-app.get("/BingSiteAuth.xml", (_req, res) => {
+app.get('/BingSiteAuth.xml', (_req, res) => {
   res
-    .type("application/xml")
+    .type('application/xml')
     .send(
       `<?xml version="1.0"?>\n<users>\n\t<user>86F57D63382B5EEFCB5BFE5B78CCD868</user>\n</users>`,
     );
@@ -202,17 +196,17 @@ app.get("/BingSiteAuth.xml", (_req, res) => {
  * - Serve locale folders explicitly
  */
 app.use(
-  "/fr",
-  express.static(resolve(browserDistFolder, "fr"), {
-    maxAge: "1y",
+  '/fr',
+  express.static(resolve(browserDistFolder, 'fr'), {
+    maxAge: '1y',
     index: false,
     redirect: false,
   }),
 );
 app.use(
-  "/en",
-  express.static(resolve(browserDistFolder, "en"), {
-    maxAge: "1y",
+  '/en',
+  express.static(resolve(browserDistFolder, 'en'), {
+    maxAge: '1y',
     index: false,
     redirect: false,
   }),
@@ -222,9 +216,9 @@ app.use(
  * si certains assets sont demandés sans préfixe (rare)
  */
 app.use(
-  "/assets",
-  express.static(resolve(browserDistFolder, "fr/assets"), {
-    maxAge: "1y",
+  '/assets',
+  express.static(resolve(browserDistFolder, 'fr/assets'), {
+    maxAge: '1y',
     index: false,
     redirect: false,
   }),
@@ -242,7 +236,7 @@ registerPermanentRedirects(app);
  */
 app.use(
   express.static(browserDistFolder, {
-    maxAge: "1y",
+    maxAge: '1y',
     index: false,
     redirect: false,
   }),
@@ -251,7 +245,7 @@ app.use(
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.get("**", (req, res, next) => {
+app.get('**', (req, res, next) => {
   const { protocol, originalUrl, headers } = req;
 
   // Extraire la locale depuis l'URL pour servir le bon index.server.html.
@@ -259,40 +253,28 @@ app.get("**", (req, res, next) => {
   // On resout dynamiquement pour eviter les problemes de cross-locale.
   const localeMatch = originalUrl.match(LOCALE_PREFIX_RE);
   const urlLocale = localeMatch ? localeMatch[1] : null;
-  const baseHref = urlLocale ? `/${urlLocale}` : "/";
+  const baseHref = urlLocale ? `/${urlLocale}` : '/';
 
   // Servir les fichiers HTML pre-rendus (SSG au build) si disponibles.
   // Les fichiers pre-rendus contiennent le contenu complet (meta, texte, JSON-LD)
   // et ne dependent pas du rendu SSR dynamique (CommonEngine) qui peut echouer
   // silencieusement en production.
   if (urlLocale) {
-    const routePath = originalUrl
-      .replace(STRIP_LOCALE_RE, "")
-      .split("?")[0]
-      .split("#")[0];
-    const prerendered = resolve(
-      browserDistFolder,
-      urlLocale,
-      routePath || ".",
-      "index.html",
-    );
-    if (
-      prerendered.startsWith(browserDistFolder) &&
-      fs.existsSync(prerendered)
-    ) {
+    const routePath = originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
+    const prerendered = resolve(browserDistFolder, urlLocale, routePath || '.', 'index.html');
+    if (prerendered.startsWith(browserDistFolder) && fs.existsSync(prerendered)) {
       const metadata = loadSeoMetadata();
-      let html = fs.readFileSync(prerendered, "utf-8");
-      const normalizedRoutePath = routePath === "" ? "/" : `/${routePath}`;
-      const isNotFound =
-        metadata !== null && !isKnownRoute(normalizedRoutePath, metadata);
+      let html = fs.readFileSync(prerendered, 'utf-8');
+      const normalizedRoutePath = routePath === '' ? '/' : `/${routePath}`;
+      const isNotFound = metadata !== null && !isKnownRoute(normalizedRoutePath, metadata);
       if (metadata) {
         const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
         html = injectSeoHead(html, metadata, originalUrl, baseUrl);
       }
-      res.setHeader("Content-Type", "text/html; charset=utf-8");
-      res.setHeader("Content-Language", urlLocale);
-      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
-      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Content-Language', urlLocale);
+      res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=14400');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
       if (isNotFound) {
         res.status(404);
       }
@@ -309,10 +291,10 @@ app.get("**", (req, res, next) => {
           /<base\s+href="[^"]*"\s*\/?>/,
           `<base href="${baseHref}/" />`,
         );
-        res.setHeader("Content-Type", "text/html; charset=utf-8");
-        res.setHeader("Content-Language", urlLocale);
-        res.setHeader("Cache-Control", "private, no-store");
-        res.setHeader("X-Content-Type-Options", "nosniff");
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.setHeader('Content-Language', urlLocale);
+        res.setHeader('Cache-Control', 'private, no-store');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
         return void res.send(withBase);
       }
     }
@@ -324,9 +306,7 @@ app.get("**", (req, res, next) => {
   // publicPath doit pointer vers le dossier de la locale pour que
   // CommonEngine trouve les stylesheets hashees (styles-XXXX.css)
   // qui sont dans browser/fr/ ou browser/en/, pas browser/.
-  const ssrPublicPath = urlLocale
-    ? resolve(browserDistFolder, urlLocale)
-    : browserDistFolder;
+  const ssrPublicPath = urlLocale ? resolve(browserDistFolder, urlLocale) : browserDistFolder;
 
   commonEngine
     .render({
@@ -342,12 +322,9 @@ app.get("**", (req, res, next) => {
         const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
         html = injectSeoHead(html, metadata, originalUrl, baseUrl);
       }
-      res.setHeader(
-        "Content-Language",
-        urlLocale ?? metadata?.site.defaultLocale ?? "fr",
-      );
-      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=14400");
-      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader('Content-Language', urlLocale ?? metadata?.site.defaultLocale ?? 'fr');
+      res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=14400');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
       res.send(html);
     })
     .catch((err) => next(err));
@@ -358,7 +335,7 @@ app.get("**", (req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url)) {
-  const port = process.env["PORT"] || 4000;
+  const port = process.env['PORT'] || 4000;
   app.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });

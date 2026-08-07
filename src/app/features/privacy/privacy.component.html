@@ -14,11 +14,7 @@
 <section class="lg-section">
   <div class="wrap lg-layout">
     <!-- TOC : ancres natives SSR-safe -->
-    <nav
-      class="lg-toc"
-      aria-label="Sommaire"
-      i18n-aria-label="@@privacyTocAria"
-    >
+    <nav class="lg-toc" aria-label="Sommaire" i18n-aria-label="@@privacyTocAria">
       <div class="toc-k" i18n="@@privacyTocHeading">Sommaire</div>
       <ol>
         @for (item of toc; track item.anchor) {
@@ -35,38 +31,34 @@
         <h2 i18n="@@privacyPrincipeTitle">1. Notre principe</h2>
         <p i18n="@@privacyPrincipeBody">
           La même exigence guide notre rapport à vos données que notre travail :
-          <strong>clarté et sobriété</strong>. On ne collecte que ce qui est
-          utile, on l'explique simplement, et on ne le partage pas pour de la
-          publicité.
+          <strong>clarté et sobriété</strong>. On ne collecte que ce qui est utile, on l'explique
+          simplement, et on ne le partage pas pour de la publicité.
         </p>
         <div class="lg-note" i18n="@@privacyPrincipeNote">
-          En résumé : votre email sert à vous envoyer ce que vous avez demandé
-          et à gérer votre compte. Rien de plus, sans votre accord.
+          En résumé : votre email sert à vous envoyer ce que vous avez demandé et à gérer votre
+          compte. Rien de plus, sans votre accord.
         </div>
       </section>
 
       <section id="collecte" appReveal>
         <h2 i18n="@@privacyCollecteTitle">2. Données collectées</h2>
-        <p i18n="@@privacyCollecteBody1">
-          Selon votre usage du site, nous pouvons traiter :
-        </p>
+        <p i18n="@@privacyCollecteBody1">Selon votre usage du site, nous pouvons traiter :</p>
         <ul>
           <li i18n="@@privacyCollecteItem1">
-            <strong>Données de compte</strong> : nom, adresse email, mot de
-            passe (chiffré).
+            <strong>Données de compte</strong> : nom, adresse email, mot de passe (chiffré).
           </li>
           <li i18n="@@privacyCollecteItem2">
-            <strong>Données de contact</strong> : les informations que vous nous
-            transmettez via le formulaire.
+            <strong>Données de contact</strong> : les informations que vous nous transmettez via le
+            formulaire.
           </li>
           <li i18n="@@privacyCollecteItem3">
-            <strong>Données d'usage</strong> : statistiques de navigation
-            anonymisées, pour améliorer le site.
+            <strong>Données d'usage</strong> : statistiques de navigation anonymisées, pour
+            améliorer le site.
           </li>
         </ul>
         <p i18n="@@privacyCollecteBody2">
-          Les expériences de l'Atelier fonctionnent sans collecte personnelle
-          pour leur démonstration.
+          Les expériences de l'Atelier fonctionnent sans collecte personnelle pour leur
+          démonstration.
         </p>
       </section>
 
@@ -74,70 +66,60 @@
         <h2 i18n="@@privacyUsageTitle">3. Usage des données</h2>
         <p i18n="@@privacyUsageBody">Vos données servent uniquement à :</p>
         <ul>
-          <li i18n="@@privacyUsageItem1">
-            Gérer votre compte et vos accès (formations, Atelier).
-          </li>
+          <li i18n="@@privacyUsageItem1">Gérer votre compte et vos accès (formations, Atelier).</li>
           <li i18n="@@privacyUsageItem2">
             Vous envoyer les ressources demandées (toolkit, rapport d'audit).
           </li>
           <li i18n="@@privacyUsageItem3">Répondre à vos messages.</li>
-          <li i18n="@@privacyUsageItem4">
-            Améliorer le site, de façon agrégée et anonyme.
-          </li>
+          <li i18n="@@privacyUsageItem4">Améliorer le site, de façon agrégée et anonyme.</li>
         </ul>
       </section>
 
       <section id="base" appReveal>
         <h2 i18n="@@privacyBaseTitle">4. Base légale</h2>
         <p i18n="@@privacyBaseBody">
-          Le traitement repose, selon les cas, sur l'exécution d'un contrat
-          (votre achat), votre consentement (newsletter, toolkit), ou notre
-          intérêt légitime (sécurité et amélioration du site).
+          Le traitement repose, selon les cas, sur l'exécution d'un contrat (votre achat), votre
+          consentement (newsletter, toolkit), ou notre intérêt légitime (sécurité et amélioration du
+          site).
         </p>
       </section>
 
       <section id="partage" appReveal>
         <h2 i18n="@@privacyPartageTitle">5. Partage des données</h2>
         <p i18n="@@privacyPartageBody">
-          Nous ne vendons ni ne louons vos données. Elles peuvent être traitées
-          par des prestataires techniques de confiance (hébergement, paiement,
-          envoi d'emails), strictement pour fournir le service, et situés dans
-          l'Union européenne autant que possible.
+          Nous ne vendons ni ne louons vos données. Elles peuvent être traitées par des prestataires
+          techniques de confiance (hébergement, paiement, envoi d'emails), strictement pour fournir
+          le service, et situés dans l'Union européenne autant que possible.
         </p>
       </section>
 
       <section id="conservation" appReveal>
         <h2 i18n="@@privacyConservationTitle">6. Conservation</h2>
         <p i18n="@@privacyConservationBody">
-          Vos données sont conservées le temps nécessaire à la finalité
-          concernée : la durée de vie de votre compte, puis les délais légaux
-          applicables (par exemple, comptables). Au-delà, elles sont supprimées
-          ou anonymisées.
+          Vos données sont conservées le temps nécessaire à la finalité concernée : la durée de vie
+          de votre compte, puis les délais légaux applicables (par exemple, comptables). Au-delà,
+          elles sont supprimées ou anonymisées.
         </p>
       </section>
 
       <section id="droits" appReveal>
         <h2 i18n="@@privacyDroitsTitle">7. Vos droits</h2>
         <p i18n="@@privacyDroitsBody">
-          Conformément au RGPD, vous disposez d'un droit d'accès, de
-          rectification, d'effacement, de portabilité et d'opposition sur vos
-          données.
+          Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de
+          portabilité et d'opposition sur vos données.
         </p>
         <ul>
           <li>
             <span i18n="@@privacyDroitsItem1"
               >Consulter ou corriger vos informations depuis votre</span
             >
-            <a class="inl" routerLink="/profil" i18n="@@privacyDroitsProfilLink"
-              >espace personnel</a
+            <a class="inl" routerLink="/profil" i18n="@@privacyDroitsProfilLink">espace personnel</a
             ><span i18n="@@privacyDroitsItem1End">.</span>
           </li>
           <li i18n="@@privacyDroitsItem2">
             Demander la suppression de votre compte à tout moment.
           </li>
-          <li i18n="@@privacyDroitsItem3">
-            Vous désinscrire des emails en un clic.
-          </li>
+          <li i18n="@@privacyDroitsItem3">Vous désinscrire des emails en un clic.</li>
         </ul>
       </section>
 
@@ -145,21 +127,12 @@
         <h2 i18n="@@privacyContactTitle">8. Nous contacter</h2>
         <p>
           <span i18n="@@privacyContactBody1"
-            >Pour exercer vos droits ou poser une question sur vos données,
-            écrivez-nous via la</span
+            >Pour exercer vos droits ou poser une question sur vos données, écrivez-nous via
+            la</span
           >
-          <a
-            class="inl"
-            routerLink="/contact"
-            i18n="@@privacyContactContactLink"
-            >page de contact</a
-          ><span i18n="@@privacyContactBody2"
-            >. Vous pouvez aussi régler vos</span
-          >
-          <a
-            class="inl"
-            routerLink="/cookie-settings"
-            i18n="@@privacyContactCookiesLink"
+          <a class="inl" routerLink="/contact" i18n="@@privacyContactContactLink">page de contact</a
+          ><span i18n="@@privacyContactBody2">. Vous pouvez aussi régler vos</span>
+          <a class="inl" routerLink="/cookie-settings" i18n="@@privacyContactCookiesLink"
             >préférences cookies</a
           >
           <span i18n="@@privacyContactBody3">à tout moment.</span>

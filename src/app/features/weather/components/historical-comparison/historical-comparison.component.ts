@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -11,9 +11,9 @@ import {
   OnDestroy,
   PLATFORM_ID,
   ViewChild,
-} from "@angular/core";
-import { Chart, Filler, registerables } from "chart.js";
-import type { HistoricalData } from "../../../../core/models/weather.model";
+} from '@angular/core';
+import { Chart, Filler, registerables } from 'chart.js';
+import type { HistoricalData } from '../../../../core/models/weather.model';
 
 Chart.register(...registerables, Filler);
 
@@ -24,7 +24,7 @@ Chart.register(...registerables, Filler);
  * Compatible SSR : le graphique n'est rendu que cote navigateur.
  */
 @Component({
-  selector: "app-historical-comparison",
+  selector: 'app-historical-comparison',
   standalone: true,
   template: `
     <!--
@@ -35,9 +35,7 @@ Chart.register(...registerables, Filler);
       Chart.js (teal/glow/ambre). historical(), currentTemp(), la structure des
       datasets (fill +1, refLine, borderDash) et la logique sont inchangées.
     -->
-    <div
-      class="rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl"
-    >
+    <div class="rounded-[20px] border border-teal/15 bg-white/5 p-6 backdrop-blur-xl">
       <h3
         class="mb-4 font-display text-xl font-normal text-white"
         i18n="weather.historical.title|@@weatherHistoricalTitle"
@@ -51,16 +49,14 @@ Chart.register(...registerables, Filler);
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HistoricalComparisonComponent
-  implements AfterViewInit, OnChanges, OnDestroy
-{
+export class HistoricalComparisonComponent implements AfterViewInit, OnChanges, OnDestroy {
   /** Donnees historiques journalieres. */
   readonly historical = input<HistoricalData | null>(null);
 
   /** Temperature actuelle pour la ligne de reference horizontale. */
   readonly currentTemp = input<number>(0);
 
-  @ViewChild("chartCanvas", { static: true })
+  @ViewChild('chartCanvas', { static: true })
   chartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private chart: Chart | null = null;
@@ -98,8 +94,8 @@ export class HistoricalComparisonComponent
     const labels = data.daily.time.map((t) => {
       const date = new Date(t);
       return date.toLocaleDateString(this.localeId, {
-        day: "2-digit",
-        month: "short",
+        day: '2-digit',
+        month: 'short',
       });
     });
 
@@ -112,7 +108,7 @@ export class HistoricalComparisonComponent
     const refLine = new Array(labels.length).fill(currentTempValue);
 
     this.chart = new Chart(canvas, {
-      type: "line",
+      type: 'line',
       data: {
         labels,
         datasets: [
@@ -120,19 +116,19 @@ export class HistoricalComparisonComponent
             // Couleur Asili : ambre chaud (limite haute de la bande min/max).
             label: $localize`:weather.historical.max|@@weatherHistoricalMax:Max`,
             data: maxTemps,
-            borderColor: "rgba(217, 160, 91, 0.45)",
-            backgroundColor: "rgba(217, 160, 91, 0.08)",
+            borderColor: 'rgba(217, 160, 91, 0.45)',
+            backgroundColor: 'rgba(217, 160, 91, 0.08)',
             borderWidth: 1,
             pointRadius: 0,
-            fill: "+1",
+            fill: '+1',
             tension: 0.3,
           },
           {
             // Couleur Asili : teal (limite basse de la bande min/max).
             label: $localize`:weather.historical.min|@@weatherHistoricalMin:Min`,
             data: minTemps,
-            borderColor: "rgba(79, 179, 162, 0.45)",
-            backgroundColor: "transparent",
+            borderColor: 'rgba(79, 179, 162, 0.45)',
+            backgroundColor: 'transparent',
             borderWidth: 1,
             pointRadius: 0,
             fill: false,
@@ -142,8 +138,8 @@ export class HistoricalComparisonComponent
             // Ligne principale : blanc (lisibilité sur fond ciel).
             label: $localize`:weather.historical.mean|@@weatherHistoricalMean:Moyenne`,
             data: meanTemps,
-            borderColor: "rgba(255, 255, 255, 0.9)",
-            backgroundColor: "transparent",
+            borderColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: 'transparent',
             borderWidth: 2,
             pointRadius: 1,
             fill: false,
@@ -153,8 +149,8 @@ export class HistoricalComparisonComponent
             // Référence température actuelle : glow Asili (pointillé).
             label: $localize`:weather.historical.current|@@weatherHistoricalCurrent:Actuelle`,
             data: refLine,
-            borderColor: "rgba(91, 140, 255, 0.8)",
-            backgroundColor: "transparent",
+            borderColor: 'rgba(91, 140, 255, 0.8)',
+            backgroundColor: 'transparent',
             borderWidth: 2,
             borderDash: [6, 3],
             pointRadius: 0,
@@ -166,37 +162,37 @@ export class HistoricalComparisonComponent
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
-          mode: "index",
+          mode: 'index',
           intersect: false,
         },
         plugins: {
           legend: {
             labels: {
-              color: "rgba(255, 255, 255, 0.7)",
+              color: 'rgba(255, 255, 255, 0.7)',
               font: { size: 11 },
             },
           },
           tooltip: {
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            titleColor: "white",
-            bodyColor: "white",
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            titleColor: 'white',
+            bodyColor: 'white',
           },
         },
         scales: {
           x: {
             ticks: {
-              color: "rgba(255, 255, 255, 0.6)",
+              color: 'rgba(255, 255, 255, 0.6)',
               maxRotation: 45,
               font: { size: 10 },
             },
-            grid: { color: "rgba(255, 255, 255, 0.1)" },
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
           },
           y: {
             ticks: {
-              color: "rgba(255, 255, 255, 0.6)",
+              color: 'rgba(255, 255, 255, 0.6)',
               callback: (value) => `${value}°`,
             },
-            grid: { color: "rgba(255, 255, 255, 0.1)" },
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
           },
         },
       },

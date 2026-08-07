@@ -1,15 +1,15 @@
 /* Design tokens Asili (variables CSS + thèmes night/gold) */
-@import "./styles/tokens";
+@import './styles/tokens';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Base typographique Asili */
-@import "./styles/base";
+@import './styles/base';
 
 /* Primitives Asili */
-@import "./styles/primitives";
+@import './styles/primitives';
 
 /* Bloc FAQ <details> partagé */
-@import "./styles/faq";
+@import './styles/faq';

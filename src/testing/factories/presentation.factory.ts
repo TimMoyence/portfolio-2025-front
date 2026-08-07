@@ -1,8 +1,8 @@
-import { of } from "rxjs";
+import { of } from 'rxjs';
 import type {
   PresentationInteractionsResponse,
   PresentationPort,
-} from "../../app/core/ports/presentation.port";
+} from '../../app/core/ports/presentation.port';
 
 /**
  * Construit une `PresentationInteractionsResponse` avec des valeurs par
@@ -14,7 +14,7 @@ export function buildInteractionsResponse(
   overrides?: Partial<PresentationInteractionsResponse>,
 ): PresentationInteractionsResponse {
   return {
-    slug: "ia-solopreneurs",
+    slug: 'ia-solopreneurs',
     interactions: {},
     ...overrides,
   };
@@ -32,9 +32,7 @@ export function buildInteractionsResponse(
 export function createPresentationPortStub(
   response: PresentationInteractionsResponse = buildInteractionsResponse(),
 ): jasmine.SpyObj<PresentationPort> {
-  const stub = jasmine.createSpyObj<PresentationPort>("PresentationPort", [
-    "getInteractions",
-  ]);
+  const stub = jasmine.createSpyObj<PresentationPort>('PresentationPort', ['getInteractions']);
   stub.getInteractions.and.returnValue(of(response));
   return stub;
 }

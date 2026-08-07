@@ -1,1 +1,27 @@
+# Faux positifs du scan de secrets (job `security` de la CI).
+#
+# Un fingerprint vaut `<commit>:<fichier>:<regle>:<ligne>` : il est donc lie a un
+# commit ET a un numero de ligne precis. Toute reecriture du fichier — un
+# reformatage suffit — deplace la ligne et invalide l'entree, qu'il faut alors
+# reajouter. C'est ce qui s'est produit lors de l'harmonisation Prettier.
+
+# --- Noms de champs de l'API Open-Meteo --------------------------------------
+# `chart-datasets.config.ts` decrit l'affichage du graphique horaire meteo :
+# libelles, couleurs, unites, et le nom du champ a lire dans la reponse de
+# l'API. La regle `generic-api-key` se declenche sur `relative_humidity_2m` a
+# cause de son entropie, alors que c'est un identifiant publiquement documente,
+# au meme titre que `temperature_2m` ou `uv_index`. Le fichier fait 83 lignes et
+# ne contient aucune occurrence de `http`, `apiKey`, `secret`, `password`,
+# `token` ni `Bearer` — et il est compile dans le bundle navigateur, ou aucun
+# secret n'aurait de sens.
 fe53aeace4a59cf32ccedc4fc1d2a5d94a004f7a:src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:generic-api-key:52
+9edc8b6d548587d2271144b73ac3458e2e64a038:src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:generic-api-key:64
+
+# --- Jeton factice d'une factory de test -------------------------------------
+# `buildResetPasswordPayload` servait un hexadecimal aleatoire de 64 caracteres
+# (entropie 3,81), pris pour une vraie cle. La valeur a ete corrigee A LA SOURCE
+# dans le commit suivant — elle est desormais sans entropie — mais gitleaks
+# scanne l'HISTORIQUE des commits de la PR, pas l'etat final : le commit de
+# reformatage porte encore l'ancienne valeur. D'ou cette entree, qui ne couvre
+# que ce commit precis.
+9edc8b6d548587d2271144b73ac3458e2e64a038:src/testing/factories/auth.factory.ts:generic-api-key:67

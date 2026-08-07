@@ -1,9 +1,5 @@
-export type CookieConsentSource = "banner" | "settings";
-export type CookieConsentAction =
-  | "accept_all"
-  | "essential_only"
-  | "save_preferences"
-  | "withdraw";
+export type CookieConsentSource = 'banner' | 'settings';
+export type CookieConsentAction = 'accept_all' | 'essential_only' | 'save_preferences' | 'withdraw';
 
 export interface CookieConsentPreferences {
   essential: boolean;

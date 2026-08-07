@@ -1,6 +1,6 @@
-import { NgTemplateOutlet } from "@angular/common";
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
-import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.directive";
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
 /**
  * Taille d'une carte projet dans la grille 6 colonnes.
@@ -8,7 +8,7 @@ import { RevealOnScrollDirective } from "../../directives/reveal-on-scroll.direc
  * - `big` : occupe 4 colonnes (carte large, visuel 16/10).
  * - `small` : occupe 2 colonnes (carte compacte, visuel 4/3).
  */
-export type AsiliProjectSize = "big" | "small";
+export type AsiliProjectSize = 'big' | 'small';
 
 /**
  * Etiquette technique d'un projet (rendue en `.tag`).
@@ -84,11 +84,11 @@ const IMAGE_DIMENSIONS: Readonly<
  * d'`alt` (obligatoire pour l'accessibilite).
  */
 @Component({
-  selector: "app-asili-projects-grid",
+  selector: 'app-asili-projects-grid',
   standalone: true,
   imports: [RevealOnScrollDirective, NgTemplateOutlet],
-  templateUrl: "./asili-projects-grid.component.html",
-  styleUrls: ["./asili-projects-grid.component.scss"],
+  templateUrl: './asili-projects-grid.component.html',
+  styleUrls: ['./asili-projects-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliProjectsGridComponent {
@@ -122,8 +122,8 @@ export class AsiliProjectsGridComponent {
    *
    * @param index Rang de la carte dans la grille (0-based).
    */
-  protected imageLoading(index: number): "eager" | "lazy" {
-    return index < this.eagerImages() ? "eager" : "lazy";
+  protected imageLoading(index: number): 'eager' | 'lazy' {
+    return index < this.eagerImages() ? 'eager' : 'lazy';
   }
 
   /**
@@ -133,8 +133,8 @@ export class AsiliProjectsGridComponent {
    *
    * @param index Rang de la carte dans la grille (0-based).
    */
-  protected imageFetchPriority(index: number): "high" | null {
-    return index === 0 && this.eagerImages() > 0 ? "high" : null;
+  protected imageFetchPriority(index: number): 'high' | null {
+    return index === 0 && this.eagerImages() > 0 ? 'high' : null;
   }
 
   /** Largeur intrinseque declaree sur la capture, selon la taille de carte. */

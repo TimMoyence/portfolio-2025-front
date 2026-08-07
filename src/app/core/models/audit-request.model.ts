@@ -1,11 +1,7 @@
-import type { ClientReport } from "./audit-client-report.model";
+import type { ClientReport } from './audit-client-report.model';
 
-export type AuditContactMethod = "EMAIL" | "PHONE";
-export type AuditProcessingStatus =
-  | "PENDING"
-  | "RUNNING"
-  | "COMPLETED"
-  | "FAILED";
+export type AuditContactMethod = 'EMAIL' | 'PHONE';
+export type AuditProcessingStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
 
 /**
  * Cle litterale d'un pilier d'audit. Duplique du type backend
@@ -13,30 +9,30 @@ export type AuditProcessingStatus =
  * Toute evolution cote backend doit etre resynchronisee ici manuellement.
  */
 export type PillarKey =
-  | "seo"
-  | "performance"
-  | "technical"
-  | "trust"
-  | "conversion"
-  | "aiVisibility"
-  | "citationWorthiness";
+  | 'seo'
+  | 'performance'
+  | 'technical'
+  | 'trust'
+  | 'conversion'
+  | 'aiVisibility'
+  | 'citationWorthiness';
 
 /** Liste ordonnee des 7 cles de piliers — source unique pour l'iteration typee. */
 export const PILLAR_KEYS: readonly PillarKey[] = [
-  "seo",
-  "performance",
-  "technical",
-  "trust",
-  "conversion",
-  "aiVisibility",
-  "citationWorthiness",
+  'seo',
+  'performance',
+  'technical',
+  'trust',
+  'conversion',
+  'aiVisibility',
+  'citationWorthiness',
 ] as const;
 
 export interface AuditRequestPayload {
   websiteName: string;
   contactMethod: AuditContactMethod;
   contactValue: string;
-  locale?: "fr" | "en";
+  locale?: 'fr' | 'en';
 }
 
 export interface AuditCreateResponse {
@@ -74,7 +70,7 @@ export interface AuditProgressEvent {
 
 export interface AuditCompletedEvent {
   auditId: string;
-  status: "COMPLETED";
+  status: 'COMPLETED';
   progress: number;
   done: boolean;
   summaryText: string | null;
@@ -91,7 +87,7 @@ export interface AuditCompletedEvent {
 
 export interface AuditFailedEvent {
   auditId: string;
-  status: "FAILED";
+  status: 'FAILED';
   progress: number;
   done: boolean;
   error: string | null;
@@ -99,7 +95,7 @@ export interface AuditFailedEvent {
 }
 
 export type AuditStreamEvent =
-  | { type: "progress"; data: AuditProgressEvent }
-  | { type: "completed"; data: AuditCompletedEvent }
-  | { type: "failed"; data: AuditFailedEvent }
-  | { type: "heartbeat"; data: { ts: string } };
+  | { type: 'progress'; data: AuditProgressEvent }
+  | { type: 'completed'; data: AuditCompletedEvent }
+  | { type: 'failed'; data: AuditFailedEvent }
+  | { type: 'heartbeat'; data: { ts: string } };

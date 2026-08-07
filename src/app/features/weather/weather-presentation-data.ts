@@ -4,7 +4,7 @@ import type {
   DailyForecast,
   ForecastResponse,
   HourlyForecast,
-} from "../../core/models/weather.model";
+} from '../../core/models/weather.model';
 
 /**
  * Donnees meteo fictives pour la page de presentation.
@@ -13,7 +13,7 @@ import type {
 
 /** Meteo courante : 18 °C, partiellement nuageux, vent 12 km/h SO. */
 export const MOCK_CURRENT: CurrentWeather = {
-  time: "2026-04-09T14:00",
+  time: '2026-04-09T14:00',
   temperature_2m: 18,
   weather_code: 2,
   wind_speed_10m: 12,
@@ -55,9 +55,7 @@ function generateHourlyData(): HourlyForecast {
     const tempBase = 14;
     const tempAmplitude = 5;
     const tempPhase = ((hour - 14) * Math.PI) / 12;
-    temps.push(
-      Math.round((tempBase + tempAmplitude * Math.cos(tempPhase)) * 10) / 10,
-    );
+    temps.push(Math.round((tempBase + tempAmplitude * Math.cos(tempPhase)) * 10) / 10);
 
     // Codes meteo : clair la journee, couvert le soir du jour 2
     if (dayOffset === 0) {
@@ -74,16 +72,12 @@ function generateHourlyData(): HourlyForecast {
     // Precipitations nulles jour 1, legeres jour 2 apres-midi
     precips.push(dayOffset === 1 && hour >= 16 && hour <= 20 ? 0.4 : 0);
 
-    humidities.push(
-      Math.round(55 + 15 * Math.cos(((hour - 4) * Math.PI) / 12)),
-    );
+    humidities.push(Math.round(55 + 15 * Math.cos(((hour - 4) * Math.PI) / 12)));
     pressures.push(1013 + Math.round(2 * Math.sin((i * Math.PI) / 24)));
 
     // UV : pic a midi, nul la nuit
     uvIndices.push(
-      hour >= 7 && hour <= 19
-        ? Math.round(5 * Math.sin(((hour - 7) * Math.PI) / 12))
-        : 0,
+      hour >= 7 && hour <= 19 ? Math.round(5 * Math.sin(((hour - 7) * Math.PI) / 12)) : 0,
     );
   }
 
@@ -104,34 +98,34 @@ function generateHourlyData(): HourlyForecast {
 /** Previsions journalieres sur 7 jours avec conditions variees. */
 export const MOCK_DAILY: DailyForecast = {
   time: [
-    "2026-04-09",
-    "2026-04-10",
-    "2026-04-11",
-    "2026-04-12",
-    "2026-04-13",
-    "2026-04-14",
-    "2026-04-15",
+    '2026-04-09',
+    '2026-04-10',
+    '2026-04-11',
+    '2026-04-12',
+    '2026-04-13',
+    '2026-04-14',
+    '2026-04-15',
   ],
   weather_code: [2, 0, 0, 3, 61, 61, 2],
   temperature_2m_max: [18, 21, 23, 19, 16, 14, 17],
   temperature_2m_min: [11, 12, 14, 13, 10, 9, 10],
   sunrise: [
-    "2026-04-09T07:05",
-    "2026-04-10T07:03",
-    "2026-04-11T07:01",
-    "2026-04-12T06:59",
-    "2026-04-13T06:57",
-    "2026-04-14T06:55",
-    "2026-04-15T06:53",
+    '2026-04-09T07:05',
+    '2026-04-10T07:03',
+    '2026-04-11T07:01',
+    '2026-04-12T06:59',
+    '2026-04-13T06:57',
+    '2026-04-14T06:55',
+    '2026-04-15T06:53',
   ],
   sunset: [
-    "2026-04-09T20:32",
-    "2026-04-10T20:34",
-    "2026-04-11T20:35",
-    "2026-04-12T20:37",
-    "2026-04-13T20:38",
-    "2026-04-14T20:40",
-    "2026-04-15T20:42",
+    '2026-04-09T20:32',
+    '2026-04-10T20:34',
+    '2026-04-11T20:35',
+    '2026-04-12T20:37',
+    '2026-04-13T20:38',
+    '2026-04-14T20:40',
+    '2026-04-15T20:42',
   ],
   precipitation_sum: [0, 0, 0, 0.5, 8.2, 12.4, 1.1],
   uv_index_max: [3, 5, 6, 2, 1, 1, 4],
@@ -182,20 +176,20 @@ export const MOCK_AIR_QUALITY: AirQualityData = {
 
 /** Icone meteo selon le code WMO. */
 const WEATHER_ICONS: Record<number, string> = {
-  0: "soleil.png",
-  1: "soleil-et-nuage.png",
-  2: "soleil-et-nuage.png",
-  3: "nuage.png",
-  45: "brouillard-de-jour.png",
-  48: "brouillard-de-jour.png",
-  51: "pluie.png",
-  53: "pluie.png",
-  55: "pluie.png",
-  61: "pluie.png",
-  63: "pluie-torrentielle.png",
-  65: "pluie-torrentielle.png",
-  80: "partiellement-nuageux-avec-pluie.png",
-  95: "risques-de-tempête.png",
+  0: 'soleil.png',
+  1: 'soleil-et-nuage.png',
+  2: 'soleil-et-nuage.png',
+  3: 'nuage.png',
+  45: 'brouillard-de-jour.png',
+  48: 'brouillard-de-jour.png',
+  51: 'pluie.png',
+  53: 'pluie.png',
+  55: 'pluie.png',
+  61: 'pluie.png',
+  63: 'pluie-torrentielle.png',
+  65: 'pluie-torrentielle.png',
+  80: 'partiellement-nuageux-avec-pluie.png',
+  95: 'risques-de-tempête.png',
 };
 
 /** Noms de jours pour l'affichage du bandeau hebdomadaire. */
@@ -227,15 +221,12 @@ export interface WeekDay {
  */
 export function buildWeekDays(daily: DailyForecast): WeekDay[] {
   return daily.time.map((dateStr, i) => {
-    const d = new Date(dateStr + "T12:00:00");
+    const d = new Date(dateStr + 'T12:00:00');
     const dayIndex = d.getDay();
     return {
       date: dateStr,
-      label:
-        i === 0
-          ? $localize`:@@weather-pres.day.today:Auj.`
-          : DAY_LABELS[dayIndex],
-      icon: `assets/images/meteo/${WEATHER_ICONS[daily.weather_code[i]] ?? "nuage.png"}`,
+      label: i === 0 ? $localize`:@@weather-pres.day.today:Auj.` : DAY_LABELS[dayIndex],
+      icon: `assets/images/meteo/${WEATHER_ICONS[daily.weather_code[i]] ?? 'nuage.png'}`,
       tempMax: daily.temperature_2m_max[i],
       tempMin: daily.temperature_2m_min[i],
       precipSum: daily.precipitation_sum[i],

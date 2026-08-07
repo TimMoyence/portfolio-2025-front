@@ -1,15 +1,12 @@
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from "@angular/common/http/testing";
-import { provideHttpClient } from "@angular/common/http";
-import { TestBed } from "@angular/core/testing";
-import { environment } from "../../../environments/environment";
-import { APP_CONFIG } from "../config/app-config.token";
-import type { PresentationInteractionsResponse } from "../ports/presentation.port";
-import { PresentationHttpAdapter } from "./presentation-http.adapter";
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { environment } from '../../../environments/environment';
+import { APP_CONFIG } from '../config/app-config.token';
+import type { PresentationInteractionsResponse } from '../ports/presentation.port';
+import { PresentationHttpAdapter } from './presentation-http.adapter';
 
-describe("PresentationHttpAdapter", () => {
+describe('PresentationHttpAdapter', () => {
   let adapter: PresentationHttpAdapter;
   let httpMock: HttpTestingController;
 
@@ -34,17 +31,17 @@ describe("PresentationHttpAdapter", () => {
     httpMock.verify();
   });
 
-  it("appelle GET /presentations/{slug}/interactions et mappe la reponse", () => {
-    const slug = "ia-solopreneurs";
+  it('appelle GET /presentations/{slug}/interactions et mappe la reponse', () => {
+    const slug = 'ia-solopreneurs';
     const response: PresentationInteractionsResponse = {
       slug,
       interactions: {
-        "slide-a": {
+        'slide-a': {
           scroll: [
             {
-              type: "reflection",
-              question: "Quelle tâche déléguer ?",
-              placeholder: "Ex: relances",
+              type: 'reflection',
+              question: 'Quelle tâche déléguer ?',
+              placeholder: 'Ex: relances',
             },
           ],
         },
@@ -56,30 +53,26 @@ describe("PresentationHttpAdapter", () => {
       received = result;
     });
 
-    const req = httpMock.expectOne(
-      `${environment.apiBaseUrl}/presentations/${slug}/interactions`,
-    );
-    expect(req.request.method).toBe("GET");
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/presentations/${slug}/interactions`);
+    expect(req.request.method).toBe('GET');
     req.flush(response);
 
     expect(received).toEqual(response);
   });
 
-  it("propage les erreurs HTTP", () => {
-    const slug = "inconnu";
+  it('propage les erreurs HTTP', () => {
+    const slug = 'inconnu';
     let status: number | undefined;
 
     adapter.getInteractions(slug).subscribe({
-      next: () => fail("aurait dû échouer"),
+      next: () => fail('aurait dû échouer'),
       error: (error) => {
         status = error.status;
       },
     });
 
-    const req = httpMock.expectOne(
-      `${environment.apiBaseUrl}/presentations/${slug}/interactions`,
-    );
-    req.flush("Not found", { status: 404, statusText: "Not Found" });
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/presentations/${slug}/interactions`);
+    req.flush('Not found', { status: 404, statusText: 'Not Found' });
 
     expect(status).toBe(404);
   });

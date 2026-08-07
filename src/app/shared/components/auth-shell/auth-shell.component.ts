@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterModule } from "@angular/router";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 /**
  * Chrome partagé des écrans d'authentification (login / register / forgot /
@@ -17,11 +17,11 @@ import { RouterModule } from "@angular/router";
  * Aucun input : le chrome est 100 % statique.
  */
 @Component({
-  selector: "app-auth-shell",
+  selector: 'app-auth-shell',
   standalone: true,
   imports: [RouterModule],
-  templateUrl: "./auth-shell.component.html",
-  styleUrl: "./auth-shell.component.scss",
+  templateUrl: './auth-shell.component.html',
+  styleUrl: './auth-shell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthShellComponent {}

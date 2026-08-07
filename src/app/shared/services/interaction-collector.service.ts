@@ -1,5 +1,5 @@
-import { computed, Injectable, signal } from "@angular/core";
-import type { InteractionProfile } from "../../core/models/interaction-profile.model";
+import { computed, Injectable, signal } from '@angular/core';
+import type { InteractionProfile } from '../../core/models/interaction-profile.model';
 
 /**
  * Service de collecte du profil d'interaction du lecteur.
@@ -10,9 +10,9 @@ import type { InteractionProfile } from "../../core/models/interaction-profile.m
  */
 @Injectable()
 export class InteractionCollectorService {
-  private readonly _aiLevel = signal<InteractionProfile["aiLevel"]>(null);
+  private readonly _aiLevel = signal<InteractionProfile['aiLevel']>(null);
   private readonly _toolsAlreadyUsed = signal<string[]>([]);
-  private readonly _budgetTier = signal<InteractionProfile["budgetTier"]>(null);
+  private readonly _budgetTier = signal<InteractionProfile['budgetTier']>(null);
   private readonly _sector = signal<string | null>(null);
   private readonly _generatedPrompt = signal<string | null>(null);
 
@@ -37,7 +37,7 @@ export class InteractionCollectorService {
   });
 
   /** Met a jour le niveau IA auto-evalue. */
-  setAiLevel(level: InteractionProfile["aiLevel"]): void {
+  setAiLevel(level: InteractionProfile['aiLevel']): void {
     this._aiLevel.set(level);
   }
 
@@ -47,7 +47,7 @@ export class InteractionCollectorService {
   }
 
   /** Met a jour la tranche budgetaire. */
-  setBudgetTier(tier: InteractionProfile["budgetTier"]): void {
+  setBudgetTier(tier: InteractionProfile['budgetTier']): void {
     this._budgetTier.set(tier);
   }
 

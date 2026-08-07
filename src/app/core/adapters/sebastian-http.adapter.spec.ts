@@ -1,10 +1,7 @@
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from "@angular/common/http/testing";
-import { provideHttpClient } from "@angular/common/http";
-import { TestBed } from "@angular/core/testing";
-import { APP_CONFIG } from "../config/app-config.token";
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { APP_CONFIG } from '../config/app-config.token';
 import {
   buildSebastianBadgeStatus,
   buildSebastianEntry,
@@ -13,13 +10,13 @@ import {
   buildSebastianPeriodReport,
   buildSebastianStats,
   buildSebastianTrendData,
-} from "../../../testing/factories/sebastian.factory";
-import { SebastianHttpAdapter } from "./sebastian-http.adapter";
+} from '../../../testing/factories/sebastian.factory';
+import { SebastianHttpAdapter } from './sebastian-http.adapter';
 
-describe("SebastianHttpAdapter", () => {
+describe('SebastianHttpAdapter', () => {
   let adapter: SebastianHttpAdapter;
   let httpMock: HttpTestingController;
-  const sebastianUrl = "http://localhost:3000/api/v1/portfolio25/sebastian";
+  const sebastianUrl = 'http://localhost:3000/api/v1/portfolio25/sebastian';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -30,7 +27,7 @@ describe("SebastianHttpAdapter", () => {
         {
           provide: APP_CONFIG,
           useValue: {
-            apiBaseUrl: "http://localhost:3000/api/v1/portfolio25",
+            apiBaseUrl: 'http://localhost:3000/api/v1/portfolio25',
             external: { sebastianUrl },
           },
         },
@@ -48,9 +45,9 @@ describe("SebastianHttpAdapter", () => {
   it("devrait envoyer un POST a l'endpoint entries pour ajouter une entree", () => {
     const entry = buildSebastianEntry();
     const payload = {
-      category: "coffee" as const,
+      category: 'coffee' as const,
       quantity: 1,
-      date: "2026-04-04",
+      date: '2026-04-04',
     };
 
     adapter.addEntry(payload).subscribe((result) => {
@@ -58,7 +55,7 @@ describe("SebastianHttpAdapter", () => {
     });
 
     const req = httpMock.expectOne(`${sebastianUrl}/entries`);
-    expect(req.request.method).toBe("POST");
+    expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(payload);
     req.flush(entry);
   });
@@ -71,7 +68,7 @@ describe("SebastianHttpAdapter", () => {
     });
 
     const req = httpMock.expectOne(`${sebastianUrl}/entries`);
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(entries);
   });
 
@@ -79,7 +76,7 @@ describe("SebastianHttpAdapter", () => {
     const entries = [buildSebastianEntry()];
 
     adapter
-      .getEntries({ from: "2026-04-01", to: "2026-04-04", category: "coffee" })
+      .getEntries({ from: '2026-04-01', to: '2026-04-04', category: 'coffee' })
       .subscribe((result) => {
         expect(result).toEqual(entries);
       });
@@ -87,43 +84,42 @@ describe("SebastianHttpAdapter", () => {
     const req = httpMock.expectOne(
       (r) =>
         r.url === `${sebastianUrl}/entries` &&
-        r.params.get("from") === "2026-04-01" &&
-        r.params.get("to") === "2026-04-04" &&
-        r.params.get("category") === "coffee",
+        r.params.get('from') === '2026-04-01' &&
+        r.params.get('to') === '2026-04-04' &&
+        r.params.get('category') === 'coffee',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(entries);
   });
 
   it("devrait envoyer un DELETE a l'endpoint entries/:id", () => {
-    adapter.deleteEntry("entry-1").subscribe();
+    adapter.deleteEntry('entry-1').subscribe();
 
     const req = httpMock.expectOne(`${sebastianUrl}/entries/entry-1`);
-    expect(req.request.method).toBe("DELETE");
+    expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });
 
   it("devrait envoyer un GET a l'endpoint stats avec la periode", () => {
     const stats = buildSebastianStats();
 
-    adapter.getStats("week").subscribe((result) => {
+    adapter.getStats('week').subscribe((result) => {
       expect(result).toEqual(stats);
     });
 
     const req = httpMock.expectOne(
-      (r) =>
-        r.url === `${sebastianUrl}/stats` && r.params.get("period") === "week",
+      (r) => r.url === `${sebastianUrl}/stats` && r.params.get('period') === 'week',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(stats);
   });
 
   it("devrait envoyer un POST a l'endpoint goals pour definir un objectif", () => {
     const goal = buildSebastianGoal();
     const payload = {
-      category: "coffee" as const,
+      category: 'coffee' as const,
       targetQuantity: 3,
-      period: "daily" as const,
+      period: 'daily' as const,
     };
 
     adapter.setGoal(payload).subscribe((result) => {
@@ -131,7 +127,7 @@ describe("SebastianHttpAdapter", () => {
     });
 
     const req = httpMock.expectOne(`${sebastianUrl}/goals`);
-    expect(req.request.method).toBe("POST");
+    expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(payload);
     req.flush(goal);
   });
@@ -144,31 +140,29 @@ describe("SebastianHttpAdapter", () => {
     });
 
     const req = httpMock.expectOne(`${sebastianUrl}/goals`);
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(goals);
   });
 
   it("devrait envoyer un DELETE a l'endpoint goals/:id", () => {
-    adapter.deleteGoal("goal-1").subscribe();
+    adapter.deleteGoal('goal-1').subscribe();
 
     const req = httpMock.expectOne(`${sebastianUrl}/goals/goal-1`);
-    expect(req.request.method).toBe("DELETE");
+    expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });
 
   it("devrait envoyer un GET a l'endpoint stats/trends avec la periode", () => {
     const trendData = buildSebastianTrendData();
 
-    adapter.getTrends("7d").subscribe((result) => {
+    adapter.getTrends('7d').subscribe((result) => {
       expect(result).toEqual(trendData);
     });
 
     const req = httpMock.expectOne(
-      (r) =>
-        r.url === `${sebastianUrl}/stats/trends` &&
-        r.params.get("period") === "7d",
+      (r) => r.url === `${sebastianUrl}/stats/trends` && r.params.get('period') === '7d',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(trendData);
   });
 
@@ -180,7 +174,7 @@ describe("SebastianHttpAdapter", () => {
     });
 
     const req = httpMock.expectOne(`${sebastianUrl}/stats/health-score`);
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(healthScore);
   });
 
@@ -192,39 +186,39 @@ describe("SebastianHttpAdapter", () => {
     });
 
     const req = httpMock.expectOne(`${sebastianUrl}/badges`);
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(badges);
   });
 
   it("devrait envoyer un GET a l'endpoint stats/report avec les parametres", () => {
     const report = buildSebastianPeriodReport();
 
-    adapter.getPeriodReport("week", "2026-03-30").subscribe((result) => {
+    adapter.getPeriodReport('week', '2026-03-30').subscribe((result) => {
       expect(result).toEqual(report);
     });
 
     const req = httpMock.expectOne(
       (r) =>
         r.url === `${sebastianUrl}/stats/report` &&
-        r.params.get("period") === "week" &&
-        r.params.get("startDate") === "2026-03-30",
+        r.params.get('period') === 'week' &&
+        r.params.get('startDate') === '2026-03-30',
     );
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(report);
   });
 
-  it("devrait propager les erreurs HTTP", () => {
+  it('devrait propager les erreurs HTTP', () => {
     adapter.getEntries().subscribe({
-      next: () => fail("devrait echouer"),
+      next: () => fail('devrait echouer'),
       error: (error) => {
         expect(error.status).toBe(500);
       },
     });
 
     const req = httpMock.expectOne(`${sebastianUrl}/entries`);
-    req.flush("Erreur serveur", {
+    req.flush('Erreur serveur', {
       status: 500,
-      statusText: "Internal Server Error",
+      statusText: 'Internal Server Error',
     });
   });
 });

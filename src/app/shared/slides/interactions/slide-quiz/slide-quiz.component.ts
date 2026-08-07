@@ -5,15 +5,15 @@ import {
   inject,
   input,
   signal,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { PRESENTATION_PORT } from "../../../../core/ports/presentation.port";
-import { loadInteraction } from "../interactions.util";
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
+import { loadInteraction } from '../interactions.util';
 
 interface QuizInteraction {
   id?: string;
   slideId?: string;
-  type: "quiz";
+  type: 'quiz';
   question: string;
   options: string[];
   correctIndex: number;
@@ -25,11 +25,11 @@ interface QuizInteraction {
  * (matche soit le `slideId` portant l'interaction, soit l'`id` legacy).
  */
 @Component({
-  selector: "app-slide-quiz",
+  selector: 'app-slide-quiz',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./slide-quiz.component.html",
-  styleUrl: "./slide-quiz.component.scss",
+  templateUrl: './slide-quiz.component.html',
+  styleUrl: './slide-quiz.component.scss',
 })
 export class SlideQuizComponent {
   readonly slug = input.required<string>();
@@ -62,7 +62,7 @@ export class SlideQuizComponent {
   private load(): void {
     loadInteraction<QuizInteraction>(
       this.port.getInteractions(this.slug()),
-      "quiz",
+      'quiz',
       this.interactionId(),
       () => this.error.set(true),
     )

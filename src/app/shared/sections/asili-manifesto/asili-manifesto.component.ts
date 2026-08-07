@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -8,7 +8,7 @@ import {
   PLATFORM_ID,
   inject,
   input,
-} from "@angular/core";
+} from '@angular/core';
 
 /**
  * Une ligne du manifeste (scrollytelling).
@@ -45,10 +45,10 @@ export interface AsiliManifestoLine {
  * pas de titre — il s'insere entre deux sections sans rompre la hierarchie.
  */
 @Component({
-  selector: "app-asili-manifesto",
+  selector: 'app-asili-manifesto',
   standalone: true,
-  templateUrl: "./asili-manifesto.component.html",
-  styleUrls: ["./asili-manifesto.component.scss"],
+  templateUrl: './asili-manifesto.component.html',
+  styleUrls: ['./asili-manifesto.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliManifestoComponent implements AfterViewInit {
@@ -65,20 +65,20 @@ export class AsiliManifestoComponent implements AfterViewInit {
     }
 
     const elements = Array.from(
-      this.host.nativeElement.querySelectorAll<HTMLElement>(".mani-line"),
+      this.host.nativeElement.querySelectorAll<HTMLElement>('.mani-line'),
     );
     if (elements.length === 0) {
       return;
     }
 
     // Sans IntersectionObserver, on garde les lignes allumees (fail-open).
-    if (typeof IntersectionObserver === "undefined") {
+    if (typeof IntersectionObserver === 'undefined') {
       return;
     }
 
     // Bascule en mode anime : tout est attenue, l'observer rallumera au scroll.
     for (const el of elements) {
-      el.classList.remove("lit");
+      el.classList.remove('lit');
     }
 
     // Bande etroite (~4%) centree sur le milieu vertical de la fenetre : une
@@ -86,10 +86,10 @@ export class AsiliManifestoComponent implements AfterViewInit {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          entry.target.classList.toggle("lit", entry.isIntersecting);
+          entry.target.classList.toggle('lit', entry.isIntersecting);
         }
       },
-      { rootMargin: "-48% 0px -48% 0px", threshold: 0 },
+      { rootMargin: '-48% 0px -48% 0px', threshold: 0 },
     );
     for (const el of elements) {
       observer.observe(el);

@@ -1,20 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import type {
   CreateGoalPayload,
   SebastianCategory,
   SebastianGoal,
   SebastianPeriod,
-} from "../../../core/models/sebastian.model";
-import {
-  SEBASTIAN_PORT,
-  type SebastianPort,
-} from "../../../core/ports/sebastian.port";
+} from '../../../core/models/sebastian.model';
+import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastian.port';
 
 /**
  * Page de gestion des objectifs Sebastian.
@@ -22,7 +14,7 @@ import {
  * de consommation (alcool, cafe).
  */
 @Component({
-  selector: "app-sebastian-goals",
+  selector: 'app-sebastian-goals',
   standalone: true,
   imports: [FormsModule],
   template: `
@@ -89,18 +81,10 @@ import {
           >
             <!-- .goal-top : libellé + suppression -->
             <div class="mb-3 flex items-center justify-between gap-3">
-              <span
-                class="flex items-center gap-2 text-base font-semibold text-white"
-              >
-                <span class="text-xl">{{
-                  goal.category === "alcohol" ? "🍺" : "☕"
-                }}</span>
+              <span class="flex items-center gap-2 text-base font-semibold text-white">
+                <span class="text-xl">{{ goal.category === 'alcohol' ? '🍺' : '☕' }}</span>
                 {{ goal.targetQuantity }}/{{
-                  goal.period === "daily"
-                    ? "jour"
-                    : goal.period === "weekly"
-                      ? "sem."
-                      : "mois"
+                  goal.period === 'daily' ? 'jour' : goal.period === 'weekly' ? 'sem.' : 'mois'
                 }}
               </span>
               <button
@@ -115,19 +99,16 @@ import {
             <!-- .gmeta : période (factuelle ; pas de jauge d'avancement fictive) -->
             <div class="flex gap-5 font-mono text-xs text-white/55">
               <span>{{
-                goal.period === "daily"
-                  ? "Quotidien"
-                  : goal.period === "weekly"
-                    ? "Hebdomadaire"
-                    : "Mensuel"
+                goal.period === 'daily'
+                  ? 'Quotidien'
+                  : goal.period === 'weekly'
+                    ? 'Hebdomadaire'
+                    : 'Mensuel'
               }}</span>
             </div>
           </div>
         } @empty {
-          <p
-            data-testid="empty-state"
-            class="text-center text-sm text-white/45"
-          >
+          <p data-testid="empty-state" class="text-center text-sm text-white/45">
             Aucun objectif actif
           </p>
         }
@@ -143,9 +124,9 @@ export class SebastianGoalsComponent {
   readonly goals = signal<SebastianGoal[]>([]);
 
   /** Champs du formulaire. */
-  goalCategory: SebastianCategory = "coffee";
+  goalCategory: SebastianCategory = 'coffee';
   goalQuantity = 3;
-  goalPeriod: SebastianPeriod = "daily";
+  goalPeriod: SebastianPeriod = 'daily';
 
   constructor() {
     this.loadGoals();

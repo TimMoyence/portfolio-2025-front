@@ -1,16 +1,13 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterLink } from "@angular/router";
-import { RevealOnScrollDirective } from "../../shared/directives/reveal-on-scroll.directive";
-import {
-  AsiliCtaBandComponent,
-  AsiliHeroComponent,
-} from "../../shared/sections";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { AsiliCtaBandComponent, AsiliHeroComponent } from '../../shared/sections';
 import {
   FORMATION_BENEFITS,
   FORMATIONS,
   type FormationBenefit,
   type FormationCard,
-} from "./formations-list.data";
+} from './formations-list.data';
 
 /**
  * Page liste `/formations` — refonte Asili (Lot 3e).
@@ -32,16 +29,11 @@ import {
  * la page ne recrée aucun canvas. Routes et `seoKey` inchangés.
  */
 @Component({
-  selector: "app-formations-list",
+  selector: 'app-formations-list',
   standalone: true,
-  imports: [
-    RouterLink,
-    RevealOnScrollDirective,
-    AsiliHeroComponent,
-    AsiliCtaBandComponent,
-  ],
-  templateUrl: "./formations-list.component.html",
-  styleUrl: "./formations-list.component.scss",
+  imports: [RouterLink, RevealOnScrollDirective, AsiliHeroComponent, AsiliCtaBandComponent],
+  templateUrl: './formations-list.component.html',
+  styleUrl: './formations-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormationsListComponent {

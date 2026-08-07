@@ -1,4 +1,4 @@
-import { DOCUMENT, isPlatformBrowser } from "@angular/common";
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,8 +11,8 @@ import {
   PLATFORM_ID,
   Renderer2,
   signal,
-} from "@angular/core";
-import { WeatherLevelService } from "../../services/weather-level.service";
+} from '@angular/core';
+import { WeatherLevelService } from '../../services/weather-level.service';
 
 /**
  * Tooltip pedagogique reutilisable.
@@ -22,7 +22,7 @@ import { WeatherLevelService } from "../../services/weather-level.service";
  * Compatible SSR : le timer n'est declenche que cote navigateur.
  */
 @Component({
-  selector: "app-learning-tooltip",
+  selector: 'app-learning-tooltip',
   standalone: true,
   template: `
     <!--
@@ -106,24 +106,20 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
     if (!this.isBrowser) return;
 
     if (!this.portalEl) {
-      this.portalEl = this.renderer.createElement("div");
-      this.renderer.setAttribute(this.portalEl, "role", "tooltip");
-      this.renderer.setStyle(this.portalEl, "position", "fixed");
-      this.renderer.setStyle(this.portalEl, "z-index", "9999");
-      this.renderer.setStyle(this.portalEl, "width", "16rem");
-      this.renderer.setStyle(
-        this.portalEl,
-        "max-width",
-        "min(16rem, calc(100vw - 2rem))",
-      );
+      this.portalEl = this.renderer.createElement('div');
+      this.renderer.setAttribute(this.portalEl, 'role', 'tooltip');
+      this.renderer.setStyle(this.portalEl, 'position', 'fixed');
+      this.renderer.setStyle(this.portalEl, 'z-index', '9999');
+      this.renderer.setStyle(this.portalEl, 'width', '16rem');
+      this.renderer.setStyle(this.portalEl, 'max-width', 'min(16rem, calc(100vw - 2rem))');
       // Popover glass Asili .gp : rayon --r-lg, border teal subtile, blur.
-      this.renderer.addClass(this.portalEl, "rounded-[20px]");
-      this.renderer.addClass(this.portalEl, "border");
-      this.renderer.addClass(this.portalEl, "border-teal/20");
-      this.renderer.addClass(this.portalEl, "bg-white/[0.07]");
-      this.renderer.addClass(this.portalEl, "p-4");
-      this.renderer.addClass(this.portalEl, "shadow-xl");
-      this.renderer.addClass(this.portalEl, "backdrop-blur-xl");
+      this.renderer.addClass(this.portalEl, 'rounded-[20px]');
+      this.renderer.addClass(this.portalEl, 'border');
+      this.renderer.addClass(this.portalEl, 'border-teal/20');
+      this.renderer.addClass(this.portalEl, 'bg-white/[0.07]');
+      this.renderer.addClass(this.portalEl, 'p-4');
+      this.renderer.addClass(this.portalEl, 'shadow-xl');
+      this.renderer.addClass(this.portalEl, 'backdrop-blur-xl');
       this.doc.body.appendChild(this.portalEl!);
     }
 
@@ -131,7 +127,7 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
       <p class="mb-1 text-sm font-semibold text-white">${this.escapeHtml(this.title())}</p>
       <p class="text-xs leading-relaxed text-white/80">${this.escapeHtml(this.content())}</p>
     `;
-    this.renderer.setStyle(this.portalEl, "display", "block");
+    this.renderer.setStyle(this.portalEl, 'display', 'block');
     this.positionPortal();
   }
 
@@ -139,7 +135,7 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
   private hidePortal(): void {
     this.visible.set(false);
     if (this.portalEl) {
-      this.renderer.setStyle(this.portalEl, "display", "none");
+      this.renderer.setStyle(this.portalEl, 'display', 'none');
     }
   }
 
@@ -155,7 +151,7 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
   private positionPortal(): void {
     if (!this.portalEl) return;
 
-    const button = this.elementRef.nativeElement.querySelector("button");
+    const button = this.elementRef.nativeElement.querySelector('button');
     if (!button) return;
 
     const btnRect = button.getBoundingClientRect();
@@ -175,19 +171,19 @@ export class LearningTooltipComponent implements OnInit, OnDestroy {
       top = btnRect.bottom + 8;
     }
 
-    this.renderer.setStyle(this.portalEl, "left", `${left}px`);
-    this.renderer.setStyle(this.portalEl, "top", `${top}px`);
+    this.renderer.setStyle(this.portalEl, 'left', `${left}px`);
+    this.renderer.setStyle(this.portalEl, 'top', `${top}px`);
   }
 
   /** Echappe le HTML pour eviter les injections XSS. */
   private escapeHtml(text: string): string {
-    const div = this.doc.createElement("div");
+    const div = this.doc.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
   /** Ferme le popover lors d'un clic en dehors du composant. */
-  @HostListener("document:click", ["$event"])
+  @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (
       !this.elementRef.nativeElement.contains(event.target) &&

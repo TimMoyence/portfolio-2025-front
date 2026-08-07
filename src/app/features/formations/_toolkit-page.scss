@@ -10,7 +10,7 @@
   Ce partiel est volontairement sans selecteur racine `:host` (laisse a chaque
   composant) afin d'etre composable via `@use`.
 */
-@use "../../styles-shared/lists";
+@use '../../styles-shared/lists';
 
 /* --- Conteneur centre (porte de .tk-wrap) -------------------------------- */
 .tk-wrap {
@@ -143,7 +143,7 @@
     color: var(--ink-soft);
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       top: 9px;

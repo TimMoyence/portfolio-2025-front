@@ -1,5 +1,5 @@
-import { InjectionToken } from "@angular/core";
-import type { Observable } from "rxjs";
+import { InjectionToken } from '@angular/core';
+import type { Observable } from 'rxjs';
 
 /**
  * Port d'acces aux tuiles radar meteorologiques.
@@ -14,4 +14,4 @@ export interface RadarPort {
   getLatestRadarTileUrlTemplate(): Observable<string | null>;
 }
 
-export const RADAR_PORT = new InjectionToken<RadarPort>("RADAR_PORT");
+export const RADAR_PORT = new InjectionToken<RadarPort>('RADAR_PORT');

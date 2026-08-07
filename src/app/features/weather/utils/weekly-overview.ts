@@ -1,7 +1,4 @@
-import type {
-  HourlyForecast,
-  OverviewGranularity,
-} from "../../../core/models/weather.model";
+import type { HourlyForecast, OverviewGranularity } from '../../../core/models/weather.model';
 
 /** Creneau temporel agrege pour l'affichage weekly-overview. */
 export interface WeatherTimeSlot {
@@ -43,7 +40,7 @@ export function groupHourlyByGranularity(
 ): WeatherTimeSlot[] {
   if (hourly.time.length === 0) return [];
 
-  if (granularity === "1h") {
+  if (granularity === '1h') {
     return hourly.time.map((time, i) => ({
       label: time,
       avgTemp: hourly.temperature_2m[i],
@@ -67,24 +64,17 @@ export function groupHourlyByGranularity(
     const precips = indices.map((i) => hourly.precipitation[i]);
     const codes = indices.map((i) => hourly.weather_code[i]);
     const winds = indices.map((i) => hourly.wind_speed_10m[i]);
-    const gusts = hourly.wind_gusts_10m
-      ? indices.map((i) => hourly.wind_gusts_10m![i])
-      : null;
+    const gusts = hourly.wind_gusts_10m ? indices.map((i) => hourly.wind_gusts_10m![i]) : null;
     const dirs = hourly.wind_direction_10m
       ? indices.map((i) => hourly.wind_direction_10m![i])
       : null;
     const humidities = hourly.relative_humidity_2m
       ? indices.map((i) => hourly.relative_humidity_2m![i])
       : null;
-    const pressures = hourly.pressure_msl
-      ? indices.map((i) => hourly.pressure_msl![i])
-      : null;
+    const pressures = hourly.pressure_msl ? indices.map((i) => hourly.pressure_msl![i]) : null;
 
     return {
-      label:
-        granularity === "day"
-          ? hourly.time[indices[0]].slice(0, 10)
-          : hourly.time[indices[0]],
+      label: granularity === 'day' ? hourly.time[indices[0]].slice(0, 10) : hourly.time[indices[0]],
       avgTemp: temps.reduce((a, b) => a + b, 0) / temps.length,
       minTemp: Math.min(...temps),
       maxTemp: Math.max(...temps),
@@ -105,8 +95,8 @@ export function groupHourlyByGranularity(
 }
 
 /** Regroupe les indices horaires selon la granularite. */
-function groupIndices(times: string[], granularity: "day" | "3h"): number[][] {
-  if (granularity === "day") {
+function groupIndices(times: string[], granularity: 'day' | '3h'): number[][] {
+  if (granularity === 'day') {
     const map = new Map<string, number[]>();
     for (let i = 0; i < times.length; i++) {
       const day = times[i].slice(0, 10);

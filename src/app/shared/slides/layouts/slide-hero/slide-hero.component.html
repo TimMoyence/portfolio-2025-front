@@ -1,11 +1,6 @@
 <div class="slide-hero" [class]="'accent-' + accent()">
   <div class="slide-hero__bg">
-    <img
-      [src]="bgImage()"
-      [alt]="bgImageAlt()"
-      loading="lazy"
-      decoding="async"
-    />
+    <img [src]="bgImage()" [alt]="bgImageAlt()" loading="lazy" decoding="async" />
   </div>
   <div class="slide-hero__content">
     <h1>{{ title() }}</h1>

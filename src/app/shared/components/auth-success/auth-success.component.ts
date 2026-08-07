@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
  * Bloc de confirmation partagé des écrans d'authentification (forgot / reset /
@@ -11,10 +11,10 @@ import { ChangeDetectionStrategy, Component, input } from "@angular/core";
  *   `<a class="btn btn-teal">`) et, pour verify, le sous-titre de redirection.
  */
 @Component({
-  selector: "app-auth-success",
+  selector: 'app-auth-success',
   standalone: true,
-  templateUrl: "./auth-success.component.html",
-  styleUrl: "./auth-success.component.scss",
+  templateUrl: './auth-success.component.html',
+  styleUrl: './auth-success.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthSuccessComponent {

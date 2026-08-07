@@ -1,4 +1,4 @@
-@use "../../styles-shared/breakpoints" as bp;
+@use '../../styles-shared/breakpoints' as bp;
 /*
   Landing Météo (/atelier/meteo) — résiduel page-spécifique. Le système `.lp-*`
   commun (hero, sections, features, demo band, aperçu, CTA final) est mutualisé
@@ -10,7 +10,7 @@
   et les tokens (_tokens.scss) fournissent le reste ; --teal reste intact pour
   les strokes SVG inline du template.
 */
-@use "../landing-shared";
+@use '../landing-shared';
 
 :host {
   /* Accent teal du système .lp-* partagé (cf. _landing-shared.scss) */
@@ -33,12 +33,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(
-    125% 100% at 72% -8%,
-    #2a6fb0 0%,
-    #15324d 46%,
-    #0a1722 100%
-  );
+  background: radial-gradient(125% 100% at 72% -8%, #2a6fb0 0%, #15324d 46%, #0a1722 100%);
   will-change: transform;
 }
 

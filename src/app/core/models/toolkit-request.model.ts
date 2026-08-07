@@ -1,4 +1,4 @@
-import type { InteractionProfile } from "./interaction-profile.model";
+import type { InteractionProfile } from './interaction-profile.model';
 
 /** Requete d'envoi du lead magnet toolkit. */
 export interface ToolkitRequest {

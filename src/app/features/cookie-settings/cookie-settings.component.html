@@ -27,12 +27,7 @@
           <span class="ck-tag">{{ categories.essential.tag }}</span>
         </div>
         <label class="switch">
-          <input
-            type="checkbox"
-            checked
-            disabled
-            [attr.aria-label]="toggleAria.essential"
-          />
+          <input type="checkbox" checked disabled [attr.aria-label]="toggleAria.essential" />
           <span class="track"></span>
         </label>
       </div>
@@ -94,20 +89,10 @@
     </div>
 
     <div class="ck-actions">
-      <button
-        type="button"
-        class="btn btn-teal"
-        (click)="savePreferences()"
-        [disabled]="isSaving"
-      >
+      <button type="button" class="btn btn-teal" (click)="savePreferences()" [disabled]="isSaving">
         {{ actions.save }} <span class="arrow">→</span>
       </button>
-      <button
-        type="button"
-        class="btn btn-ghost"
-        (click)="acceptAll()"
-        [disabled]="isSaving"
-      >
+      <button type="button" class="btn btn-ghost" (click)="acceptAll()" [disabled]="isSaving">
         {{ actions.acceptAll }}
       </button>
       <span class="ck-saved" [class.show]="showSaved">

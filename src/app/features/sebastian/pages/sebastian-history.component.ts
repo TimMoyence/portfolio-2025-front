@@ -1,19 +1,8 @@
-import { DatePipe } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import type {
-  SebastianCategory,
-  SebastianEntry,
-} from "../../../core/models/sebastian.model";
-import {
-  SEBASTIAN_PORT,
-  type SebastianPort,
-} from "../../../core/ports/sebastian.port";
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import type { SebastianCategory, SebastianEntry } from '../../../core/models/sebastian.model';
+import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastian.port';
 
 /**
  * Page d'historique des consommations Sebastian.
@@ -21,7 +10,7 @@ import {
  * et permet la suppression d'entrees individuelles.
  */
 @Component({
-  selector: "app-sebastian-history",
+  selector: 'app-sebastian-history',
   standalone: true,
   imports: [FormsModule, DatePipe],
   template: `
@@ -78,25 +67,25 @@ import {
           >
             <div class="flex items-center gap-3">
               <span class="text-xl">{{
-                entry.drinkType === "wine"
-                  ? "🍷"
-                  : entry.drinkType === "champagne"
-                    ? "🍾"
-                    : entry.category === "alcohol"
-                      ? "🍺"
-                      : "☕"
+                entry.drinkType === 'wine'
+                  ? '🍷'
+                  : entry.drinkType === 'champagne'
+                    ? '🍾'
+                    : entry.category === 'alcohol'
+                      ? '🍺'
+                      : '☕'
               }}</span>
               <div>
                 <span class="font-medium text-white">
                   {{ entry.quantity }}
                   {{
-                    entry.drinkType === "wine"
-                      ? "verre(s) de vin"
-                      : entry.drinkType === "champagne"
-                        ? "coupe(s) de champagne"
-                        : entry.category === "alcohol"
-                          ? "biere(s)"
-                          : "tasse(s)"
+                    entry.drinkType === 'wine'
+                      ? 'verre(s) de vin'
+                      : entry.drinkType === 'champagne'
+                        ? 'coupe(s) de champagne'
+                        : entry.category === 'alcohol'
+                          ? 'biere(s)'
+                          : 'tasse(s)'
                   }}
                   @if (entry.alcoholDegree) {
                     {{ entry.alcoholDegree }}°
@@ -106,7 +95,7 @@ import {
                   }
                 </span>
                 <p class="font-mono text-xs text-white/45">
-                  {{ entry.date | date: "dd/MM/yyyy" }}
+                  {{ entry.date | date: 'dd/MM/yyyy' }}
                   @if (entry.notes) {
                     — {{ entry.notes }}
                   }
@@ -123,10 +112,7 @@ import {
             </button>
           </div>
         } @empty {
-          <p
-            data-testid="empty-state"
-            class="text-center text-sm text-white/45"
-          >
+          <p data-testid="empty-state" class="text-center text-sm text-white/45">
             Aucune entree enregistree
           </p>
         }
@@ -142,13 +128,13 @@ export class SebastianHistoryComponent {
   readonly entries = signal<SebastianEntry[]>([]);
 
   /** Filtre par categorie. */
-  readonly filterCategory = signal<SebastianCategory | "">("");
+  readonly filterCategory = signal<SebastianCategory | ''>('');
 
   /** Filtre date de debut. */
-  readonly filterFrom = signal<string>("");
+  readonly filterFrom = signal<string>('');
 
   /** Filtre date de fin. */
-  readonly filterTo = signal<string>("");
+  readonly filterTo = signal<string>('');
 
   constructor() {
     this.loadEntries();
@@ -181,7 +167,7 @@ export class SebastianHistoryComponent {
   }
 
   /** Met a jour le filtre de categorie et recharge. */
-  onCategoryChange(value: SebastianCategory | ""): void {
+  onCategoryChange(value: SebastianCategory | ''): void {
     this.filterCategory.set(value);
     this.loadEntries();
   }

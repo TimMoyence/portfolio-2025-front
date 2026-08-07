@@ -1,4 +1,4 @@
-@use "../../../styles-shared/breakpoints" as bp;
+@use '../../../styles-shared/breakpoints' as bp;
 :host {
   display: block;
 }
@@ -78,11 +78,7 @@
 .placeholder {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    135deg,
-    var(--sand) 0 14px,
-    var(--ivory) 14px 28px
-  );
+  background: repeating-linear-gradient(135deg, var(--sand) 0 14px, var(--ivory) 14px 28px);
   display: grid;
   place-items: center;
 }

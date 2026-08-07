@@ -19,7 +19,7 @@ export interface ClientReport {
 export interface ClientReportFinding {
   readonly title: string;
   readonly impact: string;
-  readonly severity: "high" | "medium" | "low";
+  readonly severity: 'high' | 'medium' | 'low';
 }
 
 export interface ClientReportEngineMatrix {
@@ -36,13 +36,13 @@ export interface ClientReportPillar {
   readonly pillar: string;
   readonly score: number;
   readonly target: number;
-  readonly status: "critical" | "warning" | "ok";
+  readonly status: 'critical' | 'warning' | 'ok';
 }
 
 export interface ClientReportQuickWin {
   readonly title: string;
   readonly businessImpact: string;
-  readonly effort: "low" | "medium" | "high";
+  readonly effort: 'low' | 'medium' | 'high';
 }
 
 export interface ClientReportCta {

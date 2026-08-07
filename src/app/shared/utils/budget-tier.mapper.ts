@@ -1,11 +1,11 @@
-import type { InteractionProfile } from "../../core/models/interaction-profile.model";
+import type { InteractionProfile } from '../../core/models/interaction-profile.model';
 
 /**
  * Tranche budgetaire telle que persistee dans `InteractionProfile`.
  * Reprise stricte du type domaine : valeurs en euros/mois, `null` quand
  * inconnu.
  */
-export type BudgetTier = NonNullable<InteractionProfile["budgetTier"]>;
+export type BudgetTier = NonNullable<InteractionProfile['budgetTier']>;
 
 /**
  * Convertit une valeur d'echelle self-rating (1-5) en tranche budgetaire.
@@ -14,9 +14,9 @@ export type BudgetTier = NonNullable<InteractionProfile["budgetTier"]>;
  * sur le tier premium.
  */
 export function selfRatingToBudgetTier(value: number): BudgetTier {
-  if (value <= 2) return "0";
-  if (value <= 3) return "60";
-  return "120";
+  if (value <= 2) return '0';
+  if (value <= 3) return '60';
+  return '120';
 }
 
 /**
@@ -28,7 +28,7 @@ export function selfRatingToBudgetTier(value: number): BudgetTier {
  *  - "large" / autre → 500+ euros/mois
  */
 export function quizValueToBudgetTier(value: string): BudgetTier {
-  if (value === "zero" || value === "small") return "0";
-  if (value === "medium") return "60";
-  return "120";
+  if (value === 'zero' || value === 'small') return '0';
+  if (value === 'medium') return '60';
+  return '120';
 }
