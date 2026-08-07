@@ -1,0 +1,24 @@
+{
+  "minLines": 5,
+  "minTokens": 50,
+  "mode": "weak",
+  "format": ["typescript", "markup", "scss", "css", "javascript"],
+  "threshold": 4,
+  "reporters": ["console", "threshold"],
+  "gitignore": true,
+  "absolute": false,
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.angular/**",
+    "**/coverage/**",
+    "**/playwright-report/**",
+    "**/test-results/**",
+    "src/locale/**",
+    "src/assets/**",
+    "public/**",
+    "**/*.spec.ts",
+    "src/testing/**",
+    "e2e/**"
+  ]
+}

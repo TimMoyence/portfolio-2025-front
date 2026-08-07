@@ -1,11 +1,4 @@
-/**
- * Configuration Lighthouse CI pour le projet portfolio-2025-front.
- *
- * Lance le serveur SSR Angular (locale fr), exécute 3 audits desktop
- * et vérifie les seuils de performance, accessibilité, bonnes pratiques et SEO.
- *
- * @see https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md
- */
+/** @see https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md */
 module.exports = {
   ci: {
     collect: {

@@ -9,7 +9,6 @@ module.exports = {
     },
     extend: {
       colors: {
-        // Compat : tokens existants remappés sur les sémantiques Asili (variables CSS)
         'scheme-background': 'var(--bg)',
         'scheme-surface': 'var(--surface)',
         'scheme-surface-hover': 'var(--ivory)',
@@ -25,13 +24,11 @@ module.exports = {
         'scheme-accent-active': 'var(--teal-ink)',
         'scheme-accent-focus': '#4fb3a233',
         'scheme-on-accent': 'var(--on-accent)',
-        // App tokens
         'weather-sky': '#38bdf8',
         'weather-surface': '#f8faf9',
         'sebastian-gold': '#d4a854',
         'sebastian-muted': '#54524d',
         'sebastian-amber': '#b8965a',
-        // Tokens Asili nommés (nouveaux composants)
         cream: 'var(--cream)',
         ivory: 'var(--ivory)',
         sand: 'var(--sand)',
