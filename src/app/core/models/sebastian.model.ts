@@ -3,7 +3,13 @@ export type SebastianCategory = 'alcohol' | 'coffee';
 export type SebastianUnit = 'standard_drink' | 'cup';
 
 export type SebastianDrinkType =
-  'beer' | 'wine' | 'champagne' | 'coffee' | 'cocktail' | 'spiritueux' | 'cidre';
+  | 'beer'
+  | 'wine'
+  | 'champagne'
+  | 'coffee'
+  | 'cocktail'
+  | 'spiritueux'
+  | 'cidre';
 
 export type SebastianPeriod = 'daily' | 'weekly' | 'monthly';
 
