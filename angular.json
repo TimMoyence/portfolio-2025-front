@@ -43,8 +43,6 @@
             ],
             "styles": [
               "node_modules/leaflet/dist/leaflet.css",
-              "node_modules/aos/dist/aos.css",
-              "node_modules/animate.css/animate.min.css",
               "node_modules/@fontsource/instrument-serif/400.css",
               "node_modules/@fontsource/instrument-serif/400-italic.css",
               "node_modules/@fontsource/hanken-grotesk/400.css",
@@ -146,11 +144,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "node_modules/aos/dist/aos.css",
-              "node_modules/animate.css/animate.min.css",
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         }
