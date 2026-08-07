@@ -80,8 +80,6 @@ describe('SlidePollComponent', () => {
     tick();
     fixture.detectChanges();
 
-    // Avant le vote : la region live existe (elle doit preexister pour que
-    // les lecteurs d'ecran annoncent la mise a jour) mais reste vide.
     const live = fixture.nativeElement.querySelector('.slide-poll__status');
     expect(live).toBeTruthy();
     expect(live.getAttribute('aria-live')).toBe('polite');

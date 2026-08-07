@@ -210,9 +210,6 @@ describe('AsiliProjectsGridComponent', () => {
     it('charge toutes les captures en lazy par defaut', () => {
       setup(IMAGE_PROJECTS);
       fixture.detectChanges();
-      // Defaut = 0 : sur les deux pages qui montent cette grille, aucune capture
-      // n'est visible au chargement (/projets la place sous un hero de 89svh,
-      // l'accueil en bas de document). Aucune image n'est donc candidate LCP.
       expect(images().map((img) => img.getAttribute('loading'))).toEqual([
         'lazy',
         'lazy',
@@ -252,9 +249,6 @@ describe('AsiliProjectsGridComponent', () => {
     it('declare des dimensions intrinseques au ratio de la boite de rendu', () => {
       setup(IMAGE_PROJECTS);
       fixture.detectChanges();
-      // Les captures sources ont des ratios heterogenes (0.87 a 1.44) mais sont
-      // recadrees en `object-fit: cover` : les attributs decrivent la boite
-      // (`.proj-shot` = 16/10 en big, 4/3 en small), pas le fichier.
       const declared = images().map((img) => [
         img.getAttribute('width'),
         img.getAttribute('height'),

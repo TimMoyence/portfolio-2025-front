@@ -165,7 +165,6 @@ describe('AsiliHeroComponent', () => {
 
       const value = host.querySelector('.hero-meta .n') as HTMLElement;
       expect(value).not.toBeNull();
-      // serif 30px : la regle `.hero-meta ::ng-deep .n` doit s'appliquer.
       expect(getComputedStyle(value).fontSize).toBe('30px');
 
       const divider = host.querySelector('.hero-meta div') as HTMLElement;
