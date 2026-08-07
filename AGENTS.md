@@ -78,12 +78,33 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
 
 ## Regles de code
 
-- JSDoc obligatoire sur :
-  - services, adapters, interceptors et tokens exportes ;
-  - fonctions exportees ou utilitaires non triviaux ;
-  - logique de transformation ou d'orchestration RxJS non evidente ;
-  - composants dont le contrat, les invariants ou le comportement SSR/i18n merite une explication.
-- Les commentaires expliquent le pourquoi, pas l'evidence.
+- **Le code se documente par lui-meme. Un commentaire est une exception qui se justifie.**
+
+  Un commentaire n'est verifie par rien : ni le compilateur, ni les tests, ni la
+  CI. Le code change, le commentaire reste, et il devient faux sans que rien ne
+  le signale. Un commentaire faux coute plus cher que pas de commentaire, parce
+  qu'on lui fait confiance.
+
+  **Critere unique — avant d'ecrire un commentaire, se demander : « quelqu'un
+  peut-il redecouvrir cette information en lisant le code ? »**
+  - **Oui** → ne pas l'ecrire. Renommer, extraire une fonction au nom explicite,
+    ou introduire un type qui porte l'intention.
+  - **Non** → l'ecrire, et citer le fait verifiable.
+
+  Ce qui ne passe donc PAS : paraphraser un nom (`/** Construit un payload. */`
+  sur `buildPayload`), redire une signature (`@param page La page`), annoncer une
+  section (`// --- Getters ---`), ou raconter l'historique (`// ancienne version`)
+  — c'est le role de `git log`.
+
+  Ce qui passe : une contrainte **externe** au depot, qu'aucune lecture du code
+  ne revele. Une version de bibliotheque qui se comporte autrement que documente,
+  une regle de cascade CSS contre-intuitive, un format impose par une API tierce,
+  un choix pris contre l'evidence apparente. Ces commentaires nomment la source
+  (`Playwright 1.59.1`, `specificite (0,1,1)`) : ils sont donc verifiables, et
+  refutables le jour ou la contrainte disparait.
+
+- Pas de JSDoc de forme. Un bloc `/** */` qui se contente de reformuler la
+  signature est du bruit ; s'il porte une contrainte externe, il est legitime.
 - Le code doit rester compatible SSR et prerender :
   - aucun acces direct a `window`, `document`, `localStorage`, `navigator` ou APIs navigateur sans garde explicite.
 - Toute UI asynchrone gere au minimum les etats `loading`, `success`, `error` et, quand pertinent, `empty`.
