@@ -215,7 +215,16 @@ export class HomeComponent {
   /** Lien d'entete vers la page projets. */
   protected readonly projectsHeadLink = $localize`:@@homeProjectsHeadLink:Voir tous les projets`;
 
-  /** Cartes projet (teaser ~4 realisations). */
+  /**
+   * Cartes projet du teaser.
+   *
+   * Les trois cartes sont en `small` (span 2) : la grille desktop compte 6
+   * colonnes et n'active pas `grid-auto-flow: dense` (qui reordonnerait les
+   * cartes), donc 2 + 2 + 2 pave exactement une rangee. Un `big` (span 4) ici
+   * ferait 2 + 2 + 4 = 8, soit deux rangees trouees de 2 colonnes chacune.
+   * Toute carte ajoutee doit preserver ce pavage (multiples de 6 par rangee,
+   * dans l'ordre d'affichage).
+   */
   protected readonly projects: readonly AsiliProject[] = [
     {
       size: "small",
@@ -236,7 +245,7 @@ export class HomeComponent {
       imageAlt: $localize`:@@homeProject3ImageAlt:capture — Sebastian`,
     },
     {
-      size: "big",
+      size: "small",
       tags: [
         { label: $localize`:@@homeProject4Tag1:Automatisation` },
         { label: $localize`:@@homeProject4Tag2:IA` },
