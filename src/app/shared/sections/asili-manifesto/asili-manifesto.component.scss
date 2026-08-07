@@ -6,14 +6,21 @@
    MANIFESTE ASILI — scrollytelling, lignes serif geantes
    Porte de .manifesto / .mani-line / .mani-step (asili-sections.css)
    ============================================================ */
+/* Voile cream translucide : la section garde sa teinte propre sans masquer
+   le champ de particules global (`app-asili-background`, z-index -2). */
 .manifesto {
-  background: var(--cream);
+  background: rgba(255, 250, 242, 0.5);
 }
 
+/* Largeur en rem et non en `ch` : l'unite `ch` se calcule sur la police du
+   conteneur (sans 17px) et non sur la display geante des lignes, ce qui
+   ecrasait la colonne a ~210px et hachait chaque phrase sur 3-4 rangees.
+   62rem laisse chaque phrase tenir sur une rangee (deux pour la plus longue)
+   tout en gardant la colonne centree et respirante. */
 .manifesto-track {
   display: grid;
   gap: clamp(20px, 5vh, 50px);
-  max-width: 22ch;
+  max-width: min(100%, 62rem);
   margin: 0 auto;
 }
 

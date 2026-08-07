@@ -16,7 +16,9 @@ export interface HeroAction {
   standalone: true,
   imports: [CommonModule, RouterModule, SvgIconComponent],
   template: `
-    <section class="bg-scheme-background px-[5%] pb-12 md:pb-18 lg:pb-22">
+    <!-- Pas de fond opaque : le hero laisse passer le champ de particules
+         global (app-asili-background), comme les autres sections vitrine. -->
+    <section class="px-[5%] pb-12 md:pb-18 lg:pb-22">
       <div class="container" data-testid="hero-section">
         <div class="w-full grid grid-cols-12 sm:px-6 md:px-10 lg:px-16">
           @if (label) {
