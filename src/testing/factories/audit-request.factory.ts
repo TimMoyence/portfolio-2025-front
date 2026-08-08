@@ -1,24 +1,10 @@
 import type { ClientReport } from '../../app/core/models/audit-client-report.model';
 import type {
-  AuditCompletedEvent,
   AuditCreateResponse,
-  AuditRequestPayload,
   AuditStreamEvent,
   AuditSummaryResponse,
 } from '../../app/core/models/audit-request.model';
 import type { AuditRequestPort } from '../../app/core/ports/audit-request.port';
-
-export function buildAuditRequestPayload(
-  overrides?: Partial<AuditRequestPayload>,
-): AuditRequestPayload {
-  return {
-    websiteName: 'example.com',
-    contactMethod: 'EMAIL',
-    contactValue: 'test@example.com',
-    locale: 'fr',
-    ...overrides,
-  };
-}
 
 export function buildAuditCreateResponse(
   overrides?: Partial<AuditCreateResponse>,
@@ -119,24 +105,6 @@ export function buildClientReport(overrides?: Partial<ClientReport>): ClientRepo
       description: 'Discutons de la mise en œuvre des recommandations sur votre site.',
       actionLabel: 'Réserver un appel de 30 min',
     },
-    ...overrides,
-  };
-}
-
-export function buildAuditCompletedEvent(
-  overrides?: Partial<AuditCompletedEvent>,
-): AuditCompletedEvent {
-  return {
-    auditId: 'audit-1',
-    status: 'COMPLETED',
-    progress: 100,
-    done: true,
-    summaryText: "Résumé de l'audit",
-    keyChecks: {},
-    quickWins: [],
-    pillarScores: {},
-    clientReport: null,
-    updatedAt: '2026-04-15T09:00:00.000Z',
     ...overrides,
   };
 }

@@ -12,10 +12,6 @@ export interface AuthUser {
   updatedOrCreatedBy?: string | null;
 }
 
-/**
- * Le refresh token n'est pas inclus dans le body JSON — il est emis dans un
- * cookie HttpOnly securise, gere automatiquement par le navigateur.
- */
 export interface AuthSession {
   accessToken: string;
   expiresIn: number;
@@ -33,20 +29,10 @@ export interface RegisterUserPayload {
   firstName: string;
   lastName: string;
   phone?: string | null;
-  /**
-   * Token clair d'invitation magic-link (issu du query param `?invite=`).
-   * Si fourni, le backend tentera de l'accepter apres creation du user et
-   * pourra retourner un `inviteWarning` en cas d'echec metier.
-   */
   inviteToken?: string;
 }
 
-/**
- * Detail d'echec d'acceptation d'invitation (rapporte en plus du succes
- * d'inscription) — voir CreateUsersUseCase.tryAcceptInvitation cote backend.
- */
-export interface InviteWarning {
-  /** Code identifiant la cause (INVITATION_NOT_FOUND, INVITATION_EXPIRED, ...). */
+interface InviteWarning {
   code: string;
   message: string;
 }
@@ -77,11 +63,6 @@ export interface UpdateProfilePayload {
 
 export interface AuthActionMessage {
   message: string;
-  /**
-   * Renseigne uniquement quand l'utilisateur a fourni un `inviteToken` lors de
-   * l'inscription et que son acceptation a echoue cote backend (ex: token
-   * expire, email mismatch). Le compte est cree malgre tout.
-   */
   inviteWarning?: InviteWarning;
 }
 

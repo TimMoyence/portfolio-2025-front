@@ -190,8 +190,9 @@ describe('SeoService', () => {
       it('devrait creer les liens hreflang pour chaque locale', () => {
         const createSpy = mockDocument.createElement as jasmine.Spy;
         const linkCalls = createSpy.calls.allArgs().filter((args) => args[0] === 'link');
-        // 1 canonical + 2 hreflangs = 3 appels createElement("link")
-        expect(linkCalls.length).toBe(3);
+        const canonicalLinkCount = 1;
+        const hreflangLinkCount = Object.keys(fullConfig.hreflangs!).length;
+        expect(linkCalls.length).toBe(canonicalLinkCount + hreflangLinkCount);
       });
     });
 
@@ -463,7 +464,6 @@ describe('SeoService', () => {
       const localMetaSpy = jasmine.createSpyObj<Meta>('Meta', ['updateTag']);
       const localTitleSpy = jasmine.createSpyObj<Title>('Title', ['setTitle']);
 
-      // Instanciation manuelle pour eviter que TestBed n'utilise le DOCUMENT null
       const svc = new SeoService(localMetaSpy, localTitleSpy, null as unknown as Document, 'fr');
 
       svc.updateSeoMetadata({

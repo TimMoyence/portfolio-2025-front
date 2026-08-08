@@ -8,18 +8,6 @@ export interface FlatInteraction {
   [key: string]: unknown;
 }
 
-/**
- * Shape backend reelle expose par `PresentationPort.getInteractions` :
- * `{ slug, interactions: Record<slideId, { present?: [...], scroll?: [...] }> }`.
- *
- * Les composants quiz/poll/reflection consomment cependant une liste plate.
- * Cet util adapte la reponse port vers une liste plate stable, tout en
- * tolerant la shape legacy `Array<FlatInteraction>` deja utilisee dans les
- * stubs de tests existants.
- *
- * @param source Observable du port (ou stub flat).
- * @returns Observable d'une liste plate normalisee.
- */
 export function flattenInteractions(source: Observable<unknown>): Observable<FlatInteraction[]> {
   return source.pipe(map((value) => normaliseInteractions(value)));
 }
@@ -46,55 +34,62 @@ export function loadInteraction<T>(
 
 function normaliseInteractions(value: unknown): FlatInteraction[] {
   if (Array.isArray(value)) {
-    // Legacy flat shape (stubs): on ajoute `slideId = id` quand absent
-    // pour que le matching reste compatible cote composant.
-    return value
-      .filter((item): item is Record<string, unknown> => isRecord(item))
-      .map((item) => ({
-        slideId:
-          typeof item['slideId'] === 'string'
-            ? (item['slideId'] as string)
-            : typeof item['id'] === 'string'
-              ? (item['id'] as string)
-              : '',
-        type: typeof item['type'] === 'string' ? (item['type'] as string) : '',
-        ...item,
-      })) as FlatInteraction[];
+    return fromFlatList(value);
   }
-
   if (!isRecord(value)) {
     return [];
   }
-
   const interactions = value['interactions'];
-  if (!isRecord(interactions)) {
-    return [];
-  }
+  return isRecord(interactions) ? fromGroupedBySlide(interactions) : [];
+}
 
-  const out: FlatInteraction[] = [];
-  for (const [slideId, slideInteractions] of Object.entries(interactions)) {
-    if (!isRecord(slideInteractions)) {
-      continue;
+function fromFlatList(items: readonly unknown[]): FlatInteraction[] {
+  return items.filter(isRecord).map(
+    (item) =>
+      ({
+        slideId: flatSlideIdOf(item),
+        type: stringField(item, 'type'),
+        ...item,
+      }) as FlatInteraction,
+  );
+}
+
+function fromGroupedBySlide(interactions: Record<string, unknown>): FlatInteraction[] {
+  return Object.entries(interactions).flatMap(([slideId, slideInteractions]) =>
+    isRecord(slideInteractions) ? fromSlideBuckets(slideId, slideInteractions) : [],
+  );
+}
+
+function fromSlideBuckets(
+  slideId: string,
+  slideInteractions: Record<string, unknown>,
+): FlatInteraction[] {
+  return (['present', 'scroll'] as const).flatMap((bucket) => {
+    const list = slideInteractions[bucket];
+    if (!Array.isArray(list)) {
+      return [];
     }
-    for (const bucket of ['present', 'scroll'] as const) {
-      const list = slideInteractions[bucket];
-      if (!Array.isArray(list)) {
-        continue;
-      }
-      for (const item of list) {
-        if (!isRecord(item)) {
-          continue;
-        }
-        const type = typeof item['type'] === 'string' ? (item['type'] as string) : '';
-        out.push({
+    return list.filter(isRecord).map(
+      (item) =>
+        ({
           slideId,
-          type,
+          type: stringField(item, 'type'),
           ...item,
-        } as FlatInteraction);
-      }
-    }
+        }) as FlatInteraction,
+    );
+  });
+}
+
+function flatSlideIdOf(item: Record<string, unknown>): string {
+  if (typeof item['slideId'] === 'string') {
+    return item['slideId'];
   }
-  return out;
+  return stringField(item, 'id');
+}
+
+function stringField(item: Record<string, unknown>, key: string): string {
+  const value = item[key];
+  return typeof value === 'string' ? value : '';
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

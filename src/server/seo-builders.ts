@@ -1,4 +1,4 @@
-import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
+import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
 import { buildLocalizedPath, normalizePath } from './url-utils';
 
 const AI_USER_AGENTS: ReadonlyArray<string> = [
@@ -19,56 +19,66 @@ const escapeXml = (value: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
+type SitemapContext = {
+  activeLocales: string[];
+  defaultLocale: string;
+  baseUrl: string;
+};
+
+const localizedHref = (locale: string, pagePath: string, baseUrl: string): string =>
+  new URL(buildLocalizedPath(locale, pagePath), baseUrl).toString();
+
+const alternateLink = (hreflang: string, href: string): string =>
+  `    <xhtml:link rel="alternate" hreflang="${escapeXml(hreflang)}" href="${escapeXml(href)}" />`;
+
+const alternatesMarkupOf = (pagePath: string, ctx: SitemapContext): string => {
+  const { activeLocales, defaultLocale, baseUrl } = ctx;
+  const links = activeLocales.map((locale) =>
+    alternateLink(locale || defaultLocale, localizedHref(locale, pagePath, baseUrl)),
+  );
+  if (defaultLocale) {
+    links.push(alternateLink('x-default', localizedHref(defaultLocale, pagePath, baseUrl)));
+  }
+  return links.length ? `\n${links.join('\n')}\n` : '';
+};
+
+const indentedTag = (name: string, value: string | undefined): string =>
+  value ? `    <${name}>${value}</${name}>` : '';
+
+const priorityValueOf = (page: SeoPageEntry): string | undefined =>
+  typeof page.priority === 'number' ? page.priority.toFixed(1) : undefined;
+
+const urlEntryOf = (page: SeoPageEntry, loc: string, alternatesMarkup: string): string =>
+  [
+    '  <url>',
+    `    <loc>${escapeXml(loc)}</loc>`,
+    alternatesMarkup ? alternatesMarkup.trimEnd() : '',
+    indentedTag('lastmod', page.lastmod),
+    indentedTag('changefreq', page.changefreq),
+    indentedTag('priority', priorityValueOf(page)),
+    '  </url>',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
 export const buildSitemapXml = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const locales = metadata.site.locales ?? [];
   const activeLocales = locales.length > 0 ? locales : [''];
-  const defaultLocale = metadata.site.defaultLocale ?? activeLocales[0];
-  const urls = metadata.pages.filter((page) => page.index !== false);
-  const urlEntries: string[] = [];
+  const ctx: SitemapContext = {
+    activeLocales,
+    defaultLocale: metadata.site.defaultLocale ?? activeLocales[0],
+    baseUrl,
+  };
 
-  for (const page of urls) {
-    const pagePath = page.id === 'home' ? '/' : page.path;
-    const lastmod = page.lastmod ? `<lastmod>${page.lastmod}</lastmod>` : '';
-    const changefreq = page.changefreq ? `<changefreq>${page.changefreq}</changefreq>` : '';
-    const priority =
-      typeof page.priority === 'number' ? `<priority>${page.priority.toFixed(1)}</priority>` : '';
-
-    const alternateLinks = activeLocales.map((locale) => {
-      const path = buildLocalizedPath(locale, pagePath);
-      const href = new URL(path, baseUrl).toString();
-      return `    <xhtml:link rel="alternate" hreflang="${escapeXml(
-        locale || defaultLocale,
-      )}" href="${escapeXml(href)}" />`;
+  const urlEntries = metadata.pages
+    .filter((page) => page.index !== false)
+    .flatMap((page) => {
+      const pagePath = page.id === 'home' ? '/' : page.path;
+      const alternatesMarkup = alternatesMarkupOf(pagePath, ctx);
+      return activeLocales.map((locale) =>
+        urlEntryOf(page, localizedHref(locale, pagePath, baseUrl), alternatesMarkup),
+      );
     });
-
-    if (defaultLocale) {
-      const path = buildLocalizedPath(defaultLocale, pagePath);
-      const href = new URL(path, baseUrl).toString();
-      alternateLinks.push(
-        `    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(href)}" />`,
-      );
-    }
-
-    const alternatesMarkup = alternateLinks.length ? `\n${alternateLinks.join('\n')}\n` : '';
-
-    for (const locale of activeLocales) {
-      const path = buildLocalizedPath(locale, pagePath);
-      const loc = new URL(path, baseUrl).toString();
-      urlEntries.push(
-        [
-          '  <url>',
-          `    <loc>${escapeXml(loc)}</loc>`,
-          alternatesMarkup ? alternatesMarkup.trimEnd() : '',
-          lastmod ? `    ${lastmod}` : '',
-          changefreq ? `    ${changefreq}` : '',
-          priority ? `    ${priority}` : '',
-          '  </url>',
-        ]
-          .filter(Boolean)
-          .join('\n'),
-      );
-    }
-  }
 
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
@@ -129,11 +139,13 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
 
   const homeMeta = indexablePages.find((p) => p.id === 'home');
   const homeTagline = homeMeta ? resolveLocaleMeta(homeMeta).description : '';
+  const heading = founderName ? `${siteName} — ${founderName}` : siteName;
+  const tagline = homeTagline || siteDescription;
 
   const lines: string[] = [
-    `# ${siteName}${founderName ? ` — ${founderName}` : ''}`,
+    `# ${heading}`,
     '',
-    homeTagline ? `> ${homeTagline}` : siteDescription ? `> ${siteDescription}` : '',
+    tagline ? `> ${tagline}` : '',
     '',
     ...section('Services', servicePages),
     ...section('A propos', aboutPages),
@@ -142,7 +154,7 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
     ...section('Legal', legalPages),
   ];
 
-  return lines.filter((line) => line !== undefined).join('\n') + '\n';
+  return lines.join('\n') + '\n';
 };
 
 export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
@@ -154,11 +166,8 @@ export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): stri
 
     if (page.path.includes(':')) continue;
 
-    // La page RGPD doit rester crawlable pour que
-    // Google puisse lire son <meta name="robots" content="noindex">. Un
-    // Disallow bloque le crawl avant que le meta soit vu, ce qui declenche
-    // l'alerte GSC "Bloquée par robots.txt" alors que la page est noindex
-    // par design.
+    // Une page bloquee par robots.txt ne voit jamais son `noindex` lu par Google :
+    // https://developers.google.com/search/docs/crawling-indexing/block-indexing
     if (page.id === 'cookie-settings') continue;
 
     disallowPaths.add(normalizePath(page.path));

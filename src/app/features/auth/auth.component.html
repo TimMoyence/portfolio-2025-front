@@ -93,23 +93,7 @@
                 [class.invalid]="control.invalid && (control.touched || isLoginSubmitted)"
               />
               @if (field.key === 'password') {
-                <span class="ic">
-                  <button
-                    type="button"
-                    class="toggle-pw"
-                    (click)="showPassword = !showPassword"
-                    [attr.aria-label]="
-                      showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
-                    "
-                    i18n-aria-label="@@authTogglePassword"
-                  >
-                    <app-svg-icon
-                      [name]="showPassword ? 'visibility_off' : 'visibility'"
-                      [fill]="'keep'"
-                      [size]="1.1"
-                    ></app-svg-icon>
-                  </button>
-                </span>
+                <ng-container [ngTemplateOutlet]="passwordToggle" />
               }
             </div>
             @if (control.invalid && (control.touched || isLoginSubmitted)) {
@@ -230,23 +214,7 @@
                 [class.invalid]="control.invalid && (control.touched || isSignupSubmitted)"
               />
               @if (field.key === 'password' || field.key === 'verifPassword') {
-                <span class="ic">
-                  <button
-                    type="button"
-                    class="toggle-pw"
-                    (click)="showPassword = !showPassword"
-                    [attr.aria-label]="
-                      showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
-                    "
-                    i18n-aria-label="@@authTogglePassword"
-                  >
-                    <app-svg-icon
-                      [name]="showPassword ? 'visibility_off' : 'visibility'"
-                      [fill]="'keep'"
-                      [size]="1.1"
-                    ></app-svg-icon>
-                  </button>
-                </span>
+                <ng-container [ngTemplateOutlet]="passwordToggle" />
               }
             </div>
             @if (control.invalid && (control.touched || isSignupSubmitted)) {
@@ -322,3 +290,21 @@
 </app-auth-shell>
 
 <div #googleButtonContainer style="position: absolute; width: 0; height: 0; overflow: hidden"></div>
+
+<ng-template #passwordToggle>
+  <span class="ic">
+    <button
+      type="button"
+      class="toggle-pw"
+      (click)="showPassword = !showPassword"
+      [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+      i18n-aria-label="@@authTogglePassword"
+    >
+      <app-svg-icon
+        [name]="showPassword ? 'visibility_off' : 'visibility'"
+        [fill]="'keep'"
+        [size]="1.1"
+      ></app-svg-icon>
+    </button>
+  </span>
+</ng-template>

@@ -21,7 +21,7 @@ const buildMetadata = (
   }) as unknown as SeoMetadataFile;
 
 const extractFirstJsonLd = (html: string): string => {
-  const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  const match = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html);
   return match ? match[1] : '';
 };
 

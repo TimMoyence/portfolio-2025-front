@@ -64,11 +64,6 @@ export class SlideComponent implements OnInit {
 
   readonly contentTemplate = viewChild.required<TemplateRef<unknown>>('slideContent');
 
-  /**
-   * Resolu une seule fois a la construction via DI : `true` si un
-   * `SlideDeckComponent` ancetre fournit le token, `false` sinon.
-   * Lecture stable (pas de change detection requise).
-   */
   protected readonly hostedByDeck = inject(SLIDE_DECK_HOST, {
     optional: true,
     skipSelf: true,

@@ -93,7 +93,7 @@ export interface AirQualityData {
   };
 }
 
-export interface EnsembleModel {
+interface EnsembleModel {
   model: string;
   hourly: {
     time: string[];
@@ -118,7 +118,7 @@ export interface HistoricalData {
   };
 }
 
-export interface UnitPreferences {
+interface UnitPreferences {
   temperature: 'celsius' | 'fahrenheit';
   speed: 'kmh' | 'mph';
   pressure: 'hpa' | 'inhg';
@@ -164,7 +164,7 @@ export interface DetailedCurrentWeather {
   timezoneOffset: number;
 }
 
-export interface DetailedHourlyItem {
+interface DetailedHourlyItem {
   time: string;
   temperature: number;
   feelsLike: number;
@@ -186,7 +186,7 @@ export interface DetailedHourlyItem {
   partOfDay: 'd' | 'n';
 }
 
-export interface DetailedDailyItem {
+interface DetailedDailyItem {
   date: string;
   minTemp: number;
   maxTemp: number;
@@ -206,7 +206,7 @@ export interface DetailedForecastResult {
   daily: DetailedDailyItem[];
 }
 
-export type AlertSeverity = 'minor' | 'moderate' | 'severe' | 'extreme';
+type AlertSeverity = 'minor' | 'moderate' | 'severe' | 'extreme';
 
 export interface WeatherAlert {
   type: string;

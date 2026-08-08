@@ -1,6 +1,6 @@
 import type express from 'express';
 
-export const SUPPORTED_LOCALES = ['fr', 'en'] as const;
+const SUPPORTED_LOCALES = ['fr', 'en'] as const;
 const LOCALE_PATTERN = SUPPORTED_LOCALES.join('|');
 
 export const LOCALE_BARE_PATH = new RegExp(`^\\/(${LOCALE_PATTERN})\\/$`);
@@ -9,20 +9,24 @@ export const LOCALE_PREFIX_RE = new RegExp(`^\\/(${LOCALE_PATTERN})(?=\\/|$)`);
 
 export const STRIP_LOCALE_RE = new RegExp(`^\\/(${LOCALE_PATTERN})\\/?`);
 
+export const trimTrailingSlashes = (value: string): string => {
+  let end = value.length;
+  while (end > 0 && value[end - 1] === '/') end -= 1;
+  return value.slice(0, end);
+};
+
+const trimLeadingSlashes = (value: string): string => {
+  let start = 0;
+  while (start < value.length && value[start] === '/') start += 1;
+  return value.slice(start);
+};
+
 export const normalizePath = (path: string): string => {
   const clean = path.split('?')[0].split('#')[0];
-  const trimmed = clean.replace(/^\/+/, '').replace(/\/+$/, '');
+  const trimmed = trimTrailingSlashes(trimLeadingSlashes(clean));
   return trimmed ? `/${trimmed}` : '/';
 };
 
-/**
- * La racine locale est emise AVEC trailing slash (`/fr/`, `/en/`) pour
- * coherence avec le comportement nginx en production : le reverse-proxy
- * ajoute systematiquement un slash a `/fr` -> 301 -> `/fr/`. Sitemap et
- * canonical doivent donc pointer directement sur `/fr/` pour eviter une
- * contradiction canonique (`<loc>/fr</loc>` -> 301 -> page servie en
- * `/fr/` dont le canonical pointerait a nouveau sur `/fr`).
- */
 export const buildLocalizedPath = (locale: string, path: string): string => {
   const normalized = normalizePath(path);
   if (!locale) return normalized;
@@ -47,6 +51,9 @@ const isAllowedHost = (host: string | undefined): host is string => {
   return ALLOWED_HOSTS_SET.has(bareHost);
 };
 
+const firstAllowedHost = (...candidates: (string | undefined)[]): string | undefined =>
+  candidates.find(isAllowedHost);
+
 export const buildBaseUrlFromRequest = (req: express.Request, fallback?: string): string => {
   const forwardedProto = (req.headers['x-forwarded-proto'] as string)
     ?.split(',')[0]
@@ -55,11 +62,7 @@ export const buildBaseUrlFromRequest = (req: express.Request, fallback?: string)
   const forwardedHost = (req.headers['x-forwarded-host'] as string)?.split(',')[0]?.trim();
   const rawHost = req.get('host');
 
-  const host = isAllowedHost(forwardedHost)
-    ? forwardedHost
-    : isAllowedHost(rawHost)
-      ? rawHost
-      : undefined;
+  const host = firstAllowedHost(forwardedHost, rawHost);
 
   if (host) {
     const protocol =

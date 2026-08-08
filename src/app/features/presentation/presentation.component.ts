@@ -5,6 +5,8 @@ import {
   AsiliAiMethodComponent,
   type AsiliAiMethodStep,
   AsiliCtaBandComponent,
+  AsiliFaqComponent,
+  type AsiliFaqItem,
   AsiliHeroComponent,
 } from '../../shared/sections';
 
@@ -23,11 +25,6 @@ interface PresentationMilestone {
   tags: readonly string[];
 }
 
-interface PresentationFaq {
-  q: string;
-  a: string;
-}
-
 @Component({
   selector: 'app-presentation',
   standalone: true,
@@ -37,6 +34,7 @@ interface PresentationFaq {
     AsiliHeroComponent,
     AsiliAiMethodComponent,
     AsiliCtaBandComponent,
+    AsiliFaqComponent,
   ],
   templateUrl: './presentation.component.html',
   styleUrl: './presentation.component.scss',
@@ -206,7 +204,7 @@ export class PresentationComponent {
 
   protected readonly faqTitle = $localize`:@@presentationFaqTitle:Ce qu'on me demande souvent.`;
 
-  protected readonly faqItems: readonly PresentationFaq[] = [
+  protected readonly faqItems: readonly AsiliFaqItem[] = [
     {
       q: $localize`:@@presentationFaq1Q:Travaillez-vous avec des non-techniciens ?`,
       a: $localize`:@@presentationFaq1A:Absolument — c'est même mon terrain de prédilection. Je traduis le technique en décisions claires, sans jargon. Vous n'avez pas besoin de comprendre le code pour piloter un bon projet.`,

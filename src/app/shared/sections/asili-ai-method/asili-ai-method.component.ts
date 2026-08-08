@@ -24,11 +24,6 @@ export class AsiliAiMethodComponent {
 
   readonly lead = input<string | null>(null);
 
-  /**
-   * Citation « regle d'or » : contenu de confiance (statique) pouvant contenir
-   * `<em>` (accent teal italique) et `<br>`. Injecte via `[innerHTML]`.
-   * Optionnel : si absent, la regle d'or n'est pas rendue.
-   */
   readonly rule = input<string | null>(null);
 
   readonly ruleWho = input<string | null>(null);

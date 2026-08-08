@@ -214,54 +214,22 @@
             avancée. Une ambiance dark lounge ambrée, pensée pour donner envie d'y revenir.
           </p>
           <ul class="lp-demo-list">
-            <li>
-              <span class="tk" aria-hidden="true">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 12.5 10 17l9-10"
-                    stroke="var(--gold)"
-                    stroke-width="2.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <ng-container i18n="@@sebastianLandingDemoItem1"
-                >Simulateur d'alcoolémie interactif</ng-container
-              >
-            </li>
-            <li>
-              <span class="tk" aria-hidden="true">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 12.5 10 17l9-10"
-                    stroke="var(--gold)"
-                    stroke-width="2.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <ng-container i18n="@@sebastianLandingDemoItem2"
-                >Heatmap d'activité sur 26 semaines</ng-container
-              >
-            </li>
-            <li>
-              <span class="tk" aria-hidden="true">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 12.5 10 17l9-10"
-                    stroke="var(--gold)"
-                    stroke-width="2.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <ng-container i18n="@@sebastianLandingDemoItem3"
-                >Bot Telegram pour journaliser en un message</ng-container
-              >
-            </li>
+            @for (item of demoItems; track item) {
+              <li>
+                <span class="tk" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5 12.5 10 17l9-10"
+                      stroke="var(--gold)"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                {{ item }}
+              </li>
+            }
           </ul>
           <div class="lp-cta">
             <a class="btn btn-gold" routerLink="/atelier/sebastian/app">

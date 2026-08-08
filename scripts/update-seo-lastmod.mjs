@@ -2,7 +2,7 @@
 // Usage : node scripts/update-seo-lastmod.mjs [--check]
 //   --check : n'ecrit pas, log les diff et exit 1 si desynchro (pour CI).
 
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,9 +19,6 @@ const pathToSources = {
   '/offer': ['src/app/features/offer'],
   '/growth-audit': ['src/app/features/growth-audit'],
   '/atelier': ['src/app/features/atelier'],
-  // Les landings marketing des ateliers cohabitent avec le code des apps :
-  // on cible les fichiers de la page, pas tout le dossier de l'app, sinon
-  // le moindre commit sur l'app decalerait le lastmod de la landing.
   '/atelier/meteo': [
     'src/app/features/weather/weather-presentation.component.ts',
     'src/app/features/weather/weather-presentation.component.html',
@@ -64,21 +61,18 @@ const pathToSources = {
 
 function lastCommitDate(paths) {
   try {
-    const result = execSync(
-      `git log -1 --format=%ad --date=short -- ${paths.map((p) => `"${p}"`).join(' ')}`,
-      { encoding: 'utf-8', cwd: resolve(__dirname, '..') },
-    )
-      .trim();
+    const gitArgs = ['log', '-1', '--format=%ad', '--date=short', '--', ...paths];
+    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
+    const result = execFileSync('git', gitArgs, {
+      encoding: 'utf-8',
+      cwd: resolve(__dirname, '..'),
+    }).trim();
     return result || null;
   } catch {
     return null;
   }
 }
 
-/**
- * Un chemin obsolete rend le mapping silencieusement inoperant : `git log` ne
- * retourne rien et le lastmod reste fige, sans erreur.
- */
 function findMissingSources() {
   const missing = [];
   for (const [path, sources] of Object.entries(pathToSources)) {
@@ -91,22 +85,18 @@ function findMissingSources() {
   return missing;
 }
 
-async function main() {
-  const check = process.argv.includes('--check');
-  const raw = readFileSync(metadataPath, 'utf-8');
-  const metadata = JSON.parse(raw);
+const UP_TO_DATE_MESSAGE = '[seo-lastmod] Aucun changement (seo-metadata a jour)';
 
-  const missingSources = findMissingSources();
-  if (missingSources.length > 0) {
-    console.error('[seo-lastmod] Sources declarees introuvables :');
-    for (const m of missingSources) {
-      console.error(`  ${m.path} -> ${m.source}`);
-    }
+function reportMissingSources(missingSources) {
+  if (missingSources.length === 0) return;
+  console.error('[seo-lastmod] Sources declarees introuvables :');
+  for (const m of missingSources) {
+    console.error(`  ${m.path} -> ${m.source}`);
   }
+}
 
+function collectLastmodDiffs(metadata) {
   const diffs = [];
-  let updatedCount = 0;
-
   for (const page of metadata.pages) {
     if (page.index === false) continue;
     const sources = pathToSources[page.path];
@@ -114,45 +104,64 @@ async function main() {
 
     const date = lastCommitDate(sources);
     if (!date) continue;
+    if (page.lastmod === date) continue;
 
-    if (page.lastmod !== date) {
-      diffs.push({ path: page.path, old: page.lastmod, new: date });
-      page.lastmod = date;
-      updatedCount++;
-    }
+    diffs.push({ path: page.path, old: page.lastmod, new: date });
+    page.lastmod = date;
   }
+  return diffs;
+}
 
-  if (check) {
-    if (diffs.length > 0) {
-      console.error('[seo-lastmod] Desynchronisation detectee :');
-      for (const d of diffs) {
-        console.error(`  ${d.path} : ${d.old} -> ${d.new}`);
-      }
-      console.error('Executez "npm run seo:lastmod" pour regenerer.');
+function checkExitCode(diffs, missingSources) {
+  if (diffs.length > 0) {
+    console.error('[seo-lastmod] Desynchronisation detectee :');
+    for (const d of diffs) {
+      console.error(`  ${d.path} : ${d.old} -> ${d.new}`);
     }
-    if (diffs.length === 0 && missingSources.length === 0) {
-      console.log('[seo-lastmod] Aucun changement (seo-metadata a jour)');
-      return;
-    }
-    process.exit(1);
+    console.error('Executez "npm run seo:lastmod" pour regenerer.');
   }
-
-  if (diffs.length === 0) {
-    console.log('[seo-lastmod] Aucun changement (seo-metadata a jour)');
-    return;
+  if (diffs.length === 0 && missingSources.length === 0) {
+    console.log(UP_TO_DATE_MESSAGE);
+    return 0;
   }
+  return 1;
+}
 
-  // Le fichier reste edite a la main (titres, descriptions) et donc soumis a
-  // `format:check` : on le reformate avec Prettier lui-meme plutot que de se
-  // fier a JSON.stringify, dont l'eclatement systematique des tableaux courts
-  // laissait le depot non conforme apres chaque `npm run build`.
+// Le fichier reste edite a la main (titres, descriptions) et donc soumis a
+// `format:check` : on le reformate avec Prettier lui-meme plutot que de se
+// fier a JSON.stringify, dont l'eclatement systematique des tableaux courts
+// laissait le depot non conforme apres chaque `npm run build`.
+async function writeFormattedMetadata(metadata) {
   const prettierOptions = await resolveConfig(metadataPath);
   const formatted = await format(JSON.stringify(metadata, null, 2), {
     ...prettierOptions,
     filepath: metadataPath,
   });
   writeFileSync(metadataPath, formatted);
-  console.log(`[seo-lastmod] ${updatedCount} page(s) mise(s) a jour :`);
+}
+
+async function main() {
+  const check = process.argv.includes('--check');
+  const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
+
+  const missingSources = findMissingSources();
+  reportMissingSources(missingSources);
+
+  const diffs = collectLastmodDiffs(metadata);
+
+  if (check) {
+    const code = checkExitCode(diffs, missingSources);
+    if (code !== 0) process.exit(code);
+    return;
+  }
+
+  if (diffs.length === 0) {
+    console.log(UP_TO_DATE_MESSAGE);
+    return;
+  }
+
+  await writeFormattedMetadata(metadata);
+  console.log(`[seo-lastmod] ${diffs.length} page(s) mise(s) a jour :`);
   for (const d of diffs) {
     console.log(`  ${d.path} : ${d.old} -> ${d.new}`);
   }

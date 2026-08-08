@@ -1,4 +1,6 @@
 @use '../../styles-shared/breakpoints' as bp;
+@use '../../styles-shared/heads' as heads;
+@use '../../styles-shared/surfaces' as surfaces;
 
 .atelier {
   position: relative;
@@ -7,13 +9,7 @@
   color: var(--ivory);
 
   &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(80% 60% at 15% 0%, rgba(var(--teal-rgb), 0.22), transparent 60%),
-      radial-gradient(70% 70% at 90% 100%, rgba(91, 140, 255, 0.24), transparent 60%);
+    @include surfaces.teal-glow-veil;
   }
 
   .wrap {
@@ -41,11 +37,7 @@
 }
 
 .atelier-head {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: var(--s-5);
-  align-items: end;
-  margin-bottom: var(--s-5);
+  @include heads.split-head;
 
   p {
     color: rgba(251, 243, 230, 0.66);

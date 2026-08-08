@@ -5,13 +5,6 @@ import { tap } from 'rxjs/operators';
 import { APP_CONFIG } from '../../config/app-config.token';
 import { AuthStateService } from '../../services/auth-state.service';
 
-/**
- * Le header `Authorization` n'est ajoute QUE si l'URL cible notre API
- * (`req.url.startsWith(apiBaseUrl)`), afin de ne jamais fuiter le JWT vers
- * des API tierces (RainViewer, Nominatim, etc.). Les adapters utilisent tous
- * `apiBaseUrl` ; `sebastianUrl` commence par `apiBaseUrl` donc reste couvert.
- * La gestion du 401 reste globale (toutes requetes).
- */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authState = inject(AuthStateService);
   const router = inject(Router);

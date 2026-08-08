@@ -95,8 +95,6 @@ describe('ToolkitGatePageComponent', () => {
     expect(compiled.textContent).toContain('Asili Design');
     const link = compiled.querySelector('.tk-brand a');
     expect(link).not.toBeNull();
-    // Bug corrige : route privacy = `/privacy` (pas `/fr/privacy`), sinon le
-    // build EN casse.
     expect(link?.getAttribute('href')).toBe('/privacy');
   });
 

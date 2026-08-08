@@ -18,6 +18,10 @@ import {
   type DemoCity,
 } from '../../shared/demos/meteo-demo';
 import {
+  MeteoDemoCardComponent,
+  type MeteoDemoCardLabels,
+} from '../../shared/demos/meteo-demo-card/meteo-demo-card.component';
+import {
   MOCK_AIR_QUALITY,
   MOCK_CURRENT,
   MOCK_DAILY,
@@ -28,7 +32,7 @@ import {
 @Component({
   selector: 'app-weather-presentation',
   standalone: true,
-  imports: [RouterModule, RevealOnScrollDirective],
+  imports: [RouterModule, RevealOnScrollDirective, MeteoDemoCardComponent],
   templateUrl: './weather-presentation.component.html',
   styleUrl: './weather-presentation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +50,12 @@ export class WeatherPresentationComponent implements OnInit {
   readonly forecast = MOCK_FORECAST;
 
   readonly airQuality = MOCK_AIR_QUALITY;
+
+  readonly demoItems: readonly string[] = [
+    $localize`:@@weatherLandingDemoItem1:Quatre villes, des données réalistes`,
+    $localize`:@@weatherLandingDemoItem2:Soleil draggable, boussole animée`,
+    $localize`:@@weatherLandingDemoItem3:Architecture multi-provider avec circuit breaker`,
+  ];
 
   parallaxOffset = 0;
 
@@ -71,6 +81,20 @@ export class WeatherPresentationComponent implements OnInit {
       windTxt: $localize`:@@weatherLandingWindS:S`,
     },
   });
+
+  readonly meteoLabels: MeteoDemoCardLabels = {
+    live: $localize`:@@weatherLandingLive:EN DIRECT · 14:20`,
+    feels: $localize`:@@weatherLandingFeels:Ressenti`,
+    humidity: $localize`:@@weatherLandingHumidity:Humidité`,
+    uv: $localize`:@@weatherLandingUv:Indice UV`,
+    air: $localize`:@@weatherLandingAir:Qualité air`,
+    compassLabel: $localize`:@@weatherLandingCompassLabel:Boussole de vent`,
+    windCap: $localize`:@@weatherLandingWindCap:Vent`,
+    solarLabel: $localize`:@@weatherLandingSolarLabel:Arc solaire`,
+    solarCap: $localize`:@@weatherLandingSolarCap:Arc solaire`,
+    citiesLabel: $localize`:@@weatherLandingCitiesLabel:Choisir une ville`,
+    hint: $localize`:@@weatherLandingHint:Changez de ville — tout réagit, sans login.`,
+  };
 
   readonly activeCityId = signal<string>('bordeaux');
 

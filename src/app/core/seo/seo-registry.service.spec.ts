@@ -29,25 +29,27 @@ describe('SeoRegistryService', () => {
   });
 
   describe('getLocaleId', () => {
-    it("devrait retourner 'fr' quand la locale est 'fr'", () => {
-      const service = createService('fr');
-      expect(service.getLocaleId()).toBe('fr');
-    });
+    const localeCases: { label: string; locale: string; expected: string }[] = [
+      { label: "devrait retourner 'fr' quand la locale est 'fr'", locale: 'fr', expected: 'fr' },
+      { label: "devrait retourner 'en' quand la locale est 'en'", locale: 'en', expected: 'en' },
+      {
+        label: "devrait extraire la langue de base d'une locale composee (ex: fr-FR)",
+        locale: 'fr-FR',
+        expected: 'fr',
+      },
+      {
+        label: 'devrait retourner la locale par defaut pour une locale inconnue',
+        locale: 'ja',
+        expected: 'fr',
+      },
+    ];
 
-    it("devrait retourner 'en' quand la locale est 'en'", () => {
-      const service = createService('en');
-      expect(service.getLocaleId()).toBe('en');
-    });
-
-    it("devrait extraire la langue de base d'une locale composee (ex: fr-FR)", () => {
-      const service = createService('fr-FR');
-      expect(service.getLocaleId()).toBe('fr');
-    });
-
-    it('devrait retourner la locale par defaut pour une locale inconnue', () => {
-      const service = createService('ja');
-      expect(service.getLocaleId()).toBe('fr');
-    });
+    for (const { label, locale, expected } of localeCases) {
+      it(label, () => {
+        const service = createService(locale);
+        expect(service.getLocaleId()).toBe(expected);
+      });
+    }
   });
 
   describe('getDefaultLocale', () => {
@@ -76,7 +78,6 @@ describe('SeoRegistryService', () => {
       const result = await firstValueFrom(service.getSeoByKey('home'));
 
       expect(result).not.toBeNull();
-      // P1.10 : titre EN enrichi pour respecter la cible 50-60 char.
       expect(result!.seo.title).toBe('Home — Tim Moyence, freelance web developer Bordeaux');
     });
 
@@ -119,13 +120,53 @@ describe('SeoRegistryService', () => {
   });
 
   describe('getSeoByPath', () => {
-    it("devrait retourner la config SEO pour le chemin '/'", async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByPath('/'));
+    const pathCases: { label: string; path: string; expectedId: string }[] = [
+      {
+        label: "devrait retourner la config SEO pour le chemin '/'",
+        path: '/',
+        expectedId: 'home',
+      },
+      {
+        label: 'devrait normaliser le chemin en supprimant le prefixe de locale',
+        path: '/fr/presentation',
+        expectedId: 'presentation',
+      },
+      {
+        label: "devrait normaliser le chemin '/home' vers la page d'accueil",
+        path: '/home',
+        expectedId: 'home',
+      },
+      {
+        label: 'devrait ignorer les query params et fragments',
+        path: '/contact?source=test#section',
+        expectedId: 'contact',
+      },
+      {
+        label: 'devrait normaliser les slashs en trop',
+        path: '///contact///',
+        expectedId: 'contact',
+      },
+      {
+        label: 'devrait normaliser un chemin fait uniquement de slashs',
+        path: '//////',
+        expectedId: 'home',
+      },
+      {
+        label: 'devrait normaliser un slash final isole',
+        path: '/contact/',
+        expectedId: 'contact',
+      },
+    ];
 
-      expect(result).not.toBeNull();
-      expect(result!.page.id).toBe('home');
-    });
+    for (const { label, path, expectedId } of pathCases) {
+      it(label, async () => {
+        const service = createService('fr');
+        const result = await firstValueFrom(service.getSeoByPath(path));
+
+        expect(result).not.toBeNull();
+        expect(result!.page.id).toBe(expectedId);
+      });
+    }
 
     it("devrait retourner la config SEO pour '/presentation'", async () => {
       const service = createService('fr');
@@ -136,43 +177,11 @@ describe('SeoRegistryService', () => {
       expect(result!.seo.title).toBe('Présentation — Tim Moyence Portfolio');
     });
 
-    it('devrait normaliser le chemin en supprimant le prefixe de locale', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByPath('/fr/presentation'));
-
-      expect(result).not.toBeNull();
-      expect(result!.page.id).toBe('presentation');
-    });
-
-    it("devrait normaliser le chemin '/home' vers la page d'accueil", async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByPath('/home'));
-
-      expect(result).not.toBeNull();
-      expect(result!.page.id).toBe('home');
-    });
-
     it('devrait retourner null pour un chemin inexistant', async () => {
       const service = createService('fr');
       const result = await firstValueFrom(service.getSeoByPath('/chemin-inexistant'));
 
       expect(result).toBeNull();
-    });
-
-    it('devrait ignorer les query params et fragments', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByPath('/contact?source=test#section'));
-
-      expect(result).not.toBeNull();
-      expect(result!.page.id).toBe('contact');
-    });
-
-    it('devrait normaliser les slashs en trop', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByPath('///contact///'));
-
-      expect(result).not.toBeNull();
-      expect(result!.page.id).toBe('contact');
     });
   });
 

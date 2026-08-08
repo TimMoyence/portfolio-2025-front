@@ -1,4 +1,5 @@
 @use '../../../styles-shared/breakpoints' as bp;
+@use '../../../styles-shared/heads' as heads;
 :host {
   display: block;
 }
@@ -9,12 +10,7 @@
 }
 
 .method-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--s-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--s-6);
+  @include heads.section-head(var(--s-6));
 }
 
 .method-head__title {
@@ -85,8 +81,6 @@
   margin: 22px 0 8px;
 }
 
-/* Quand l'intitule d'etape (.ix) precede le titre, c'est lui qui porte la
-   marge haute : on neutralise celle du titre pour eviter un double espace. */
 .step .ix + h3 {
   margin-top: 8px;
 }

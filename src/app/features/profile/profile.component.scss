@@ -1,3 +1,5 @@
+@use '../../styles-shared/forms' as forms;
+
 :host {
   display: block;
 }
@@ -117,14 +119,7 @@
 }
 
 .edit {
-  font-size: 13px;
-  color: var(--teal-deep);
-  font-weight: 600;
-  cursor: pointer;
-  background: none;
-  border: 0;
-  padding: 0;
-  font-family: var(--font-sans);
+  @include forms.text-button(13px);
 }
 
 .edit:hover {
@@ -214,33 +209,15 @@
 }
 
 .pf-field label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  margin-bottom: 8px;
+  @include forms.field-label;
 }
 
 .pf-field input {
-  width: 100%;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  color: var(--ink);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  padding: 13px 15px;
-  transition:
-    border-color 0.3s,
-    box-shadow 0.3s;
+  @include forms.field-input;
 }
 
 .pf-field input:focus {
-  outline: none;
-  border-color: var(--teal);
-  box-shadow: 0 0 0 4px rgba(var(--teal-rgb), 0.14);
+  @include forms.field-input-focus;
 }
 
 .pf-field input.invalid {

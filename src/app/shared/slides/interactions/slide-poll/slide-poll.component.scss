@@ -1,19 +1,11 @@
+@use '../../slide-section' as slide;
+
 .slide-poll {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  max-width: 50rem;
-  margin: 0 auto;
+  @include slide.interaction;
 }
 
 .slide-poll__question {
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  text-align: center;
-  margin: 0 0 2rem;
+  @include slide.interaction-question;
 }
 
 .slide-poll__options {
@@ -30,9 +22,6 @@
   align-items: center;
   padding: 1rem 1.5rem;
   background: var(--card-bg, var(--slide-card-soft));
-  // Bordure visible DES LE REPOS : avec une bordure transparente, seul le
-  // survol signalait la cliquabilite — donc rien au tactile, ou le survol
-  // n'existe pas.
   border: 2px solid rgba(var(--teal-rgb), 0.25);
   border-radius: 0.75rem;
   cursor: pointer;
@@ -55,8 +44,6 @@
     border-color: transparent;
   }
 
-  // L'option votee reste identifiable apres coup, sans dependre de la
-  // seule couleur : la bordure pleine la distingue des options grisees.
   &.is-voted {
     border-color: var(--accent, #4fb3a2);
   }

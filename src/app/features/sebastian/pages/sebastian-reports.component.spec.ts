@@ -103,17 +103,20 @@ describe('SebastianReportsComponent', () => {
     expect(component.currentStartDate()).not.toBe(initialDate);
   });
 
-  it('devrait afficher les totaux du rapport', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('4');
-    expect(content).toContain('14');
-  });
+  const REPORT_TEXTS: readonly (readonly [string, readonly string[]])[] = [
+    ['les totaux du rapport', ['4', '14']],
+    ['la comparaison avec la periode precedente', ['-10%', '+5%']],
+    ['les labels des jours de la semaine', ['Lun', 'Dim']],
+  ];
 
-  it('devrait afficher la comparaison avec la periode precedente', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('-10%');
-    expect(content).toContain('+5%');
-  });
+  for (const [libelle, attendus] of REPORT_TEXTS) {
+    it(`devrait afficher ${libelle}`, () => {
+      const content = fixture.nativeElement.textContent as string;
+      for (const attendu of attendus) {
+        expect(content).toContain(attendu);
+      }
+    });
+  }
 
   it('devrait afficher le composant heatmap', () => {
     const heatmap = fixture.nativeElement.querySelector('app-sebastian-heatmap');
@@ -123,12 +126,6 @@ describe('SebastianReportsComponent', () => {
   it('devrait afficher la distribution par jour', () => {
     const distSection = fixture.nativeElement.querySelector("[data-testid='day-distribution']");
     expect(distSection).toBeTruthy();
-  });
-
-  it('devrait afficher les labels des jours de la semaine', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('Lun');
-    expect(content).toContain('Dim');
   });
 
   it('devrait utiliser le glass Asili dark lounge ambré', () => {

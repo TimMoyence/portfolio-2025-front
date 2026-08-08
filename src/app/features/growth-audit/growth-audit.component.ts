@@ -214,11 +214,9 @@ export class GrowthAuditComponent implements OnDestroy {
       return 'fr';
     }
 
-    const [, locale] = window.location.pathname.toLowerCase().match(/\/(fr|en)(?=\/|$)/) ?? [];
+    const localeMatch = /\/(fr|en)(?=\/|$)/.exec(window.location.pathname.toLowerCase());
 
-    if (locale === undefined) return 'fr';
-
-    return locale === 'fr' ? 'fr' : 'en';
+    return localeMatch?.[1] === 'en' ? 'en' : 'fr';
   }
 
   onContactMethodToggle(event: Event): void {

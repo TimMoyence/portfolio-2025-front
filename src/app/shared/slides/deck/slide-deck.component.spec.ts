@@ -155,7 +155,7 @@ describe('SlideDeckComponent — visibility filter', () => {
     expect(slides.length).toBe(2);
   });
 
-  it('compte la slide courante dans le referentiel filtre, pas global', () => {
+  it('compte "c", 3e slide enregistree mais 1re visible en mode scroll, comme 1 / 1', () => {
     @Component({
       standalone: true,
       imports: [SlideDeckComponent, SlideComponent],
@@ -181,9 +181,6 @@ describe('SlideDeckComponent — visibility filter', () => {
     const fix = TestBed.createComponent(HostCounterComponent);
     fix.detectChanges();
 
-    // "c" est la 3e slide enregistree mais la 1re *visible* en mode scroll :
-    // les deux present-only sont filtrees. Le compteur doit parler du
-    // referentiel filtre, sinon il affiche un numerateur > denominateur.
     TestBed.inject(SlideDeckService).goTo('c');
     fix.detectChanges();
 

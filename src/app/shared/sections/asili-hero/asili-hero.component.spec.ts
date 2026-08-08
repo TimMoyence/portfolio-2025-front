@@ -8,6 +8,10 @@ import { AsiliHeroComponent } from './asili-hero.component';
 const KICKER = 'Studio digital & IA · Bordeaux';
 const LEAD = 'Developpeur & consultant Angular, NestJS et IA.';
 
+function attachSoGetComputedStyleAppliesTheCascade(fixture: ComponentFixture<unknown>): void {
+  document.body.appendChild(fixture.nativeElement);
+}
+
 describe('AsiliHeroComponent', () => {
   let fixture: ComponentFixture<AsiliHeroComponent>;
 
@@ -140,10 +144,7 @@ describe('AsiliHeroComponent', () => {
         imports: [HostComponent],
         providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
       }).createComponent(HostComponent);
-      // getComputedStyle ne reflete la cascade que si l'element est dans le
-      // document : on attache le fixture pour verifier le style REEL du
-      // contenu projete (sinon une regression d'encapsulation passe inapercue).
-      document.body.appendChild(hostFixture.nativeElement);
+      attachSoGetComputedStyleAppliesTheCascade(hostFixture);
       hostFixture.detectChanges();
 
       const host = hostFixture.nativeElement as HTMLElement;

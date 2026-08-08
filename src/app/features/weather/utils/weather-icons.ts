@@ -1,32 +1,37 @@
-import { getWeatherDescription } from './weather-descriptions';
+const ICON_BASE = '/assets/images/meteo/';
+const FALLBACK_ICON = 'nuage.png';
+
+const NIGHT_ICON_BY_CODE: ReadonlyMap<number, string> = new Map([
+  [0, 'lune-et-étoiles.png'],
+  [1, 'nuit-partiellement-nuageuse.png'],
+]);
+
+interface IconRange {
+  readonly from: number;
+  readonly to: number;
+  readonly icon: string;
+}
+
+const ICON_RANGES: readonly IconRange[] = [
+  { from: 0, to: 0, icon: 'soleil.png' },
+  { from: 1, to: 2, icon: 'soleil-et-nuage.png' },
+  { from: 3, to: 3, icon: 'nuage.png' },
+  { from: 45, to: 48, icon: 'brouillard-de-jour.png' },
+  { from: 51, to: 55, icon: 'partiellement-nuageux-avec-pluie.png' },
+  { from: 56, to: 57, icon: 'pluie.png' },
+  { from: 61, to: 65, icon: 'pluie.png' },
+  { from: 66, to: 67, icon: 'pluie-torrentielle.png' },
+  { from: 71, to: 77, icon: 'pluie.png' },
+  { from: 80, to: 82, icon: 'pluie-torrentielle.png' },
+  { from: 85, to: 86, icon: 'pluie-torrentielle.png' },
+  { from: 95, to: 99, icon: 'éclair-dans-un-nuage.png' },
+];
 
 /**
- * @deprecated Utiliser {@link getWeatherDescription} directement.
- * Re-export pour compatibilite avec les imports existants.
- */
-export const weatherCodeToDescription = getWeatherDescription;
-
-/**
- * Mappe un code meteo WMO vers le fichier PNG correspondant.
  * @see https://open-meteo.com/en/docs#weathervariables
  */
 export function weatherCodeToIcon(code: number, isNight = false): string {
-  const base = '/assets/images/meteo/';
-
-  if (code === 0) return base + (isNight ? 'lune-et-étoiles.png' : 'soleil.png');
-  if (code === 1)
-    return base + (isNight ? 'nuit-partiellement-nuageuse.png' : 'soleil-et-nuage.png');
-  if (code === 2) return base + 'soleil-et-nuage.png';
-  if (code === 3) return base + 'nuage.png';
-  if (code >= 45 && code <= 48) return base + 'brouillard-de-jour.png';
-  if (code >= 51 && code <= 55) return base + 'partiellement-nuageux-avec-pluie.png';
-  if (code >= 56 && code <= 57) return base + 'pluie.png';
-  if (code >= 61 && code <= 65) return base + 'pluie.png';
-  if (code >= 66 && code <= 67) return base + 'pluie-torrentielle.png';
-  if (code >= 71 && code <= 77) return base + 'pluie.png';
-  if (code >= 80 && code <= 82) return base + 'pluie-torrentielle.png';
-  if (code >= 85 && code <= 86) return base + 'pluie-torrentielle.png';
-  if (code >= 95 && code <= 99) return base + 'éclair-dans-un-nuage.png';
-
-  return base + 'nuage.png';
+  const nightIcon = isNight ? NIGHT_ICON_BY_CODE.get(code) : undefined;
+  const dayIcon = ICON_RANGES.find((range) => code >= range.from && code <= range.to)?.icon;
+  return ICON_BASE + (nightIcon ?? dayIcon ?? FALLBACK_ICON);
 }

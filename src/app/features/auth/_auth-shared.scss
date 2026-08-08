@@ -1,3 +1,5 @@
+@use '../../styles-shared/forms' as forms;
+
 .auth-split {
   display: grid;
   grid-template-columns: 0.92fr 1.08fr;
@@ -48,8 +50,6 @@
   color: rgba(255, 255, 255, 0.5);
 }
 .auth-aside-mid {
-  /* Projeté dans le shell : re-déclare l'empilement que `.auth-aside > *`
-     assurait avant l'extraction (contenu au-dessus du gradient `::before`). */
   position: relative;
   z-index: 2;
   margin-top: auto;
@@ -101,9 +101,9 @@
   width: 100%;
   max-width: 408px;
 }
-/* h1 / .sub sans l'ancêtre `.auth-card` : le contenu est désormais projeté
-   dans le shell (scope différent), un sélecteur descendant ne traverserait
-   pas la frontière de projection en encapsulation Emulated. */
+/* Sélecteurs sans l'ancêtre `.auth-card` : ces noeuds sont projetés par
+   `ng-content`, et en encapsulation Angular Emulated ils portent l'attribut
+   `_ngcontent` du composant qui les déclare, pas celui du shell. */
 h1 {
   font-family: var(--font-display);
   font-size: clamp(30px, 3.4vw, 40px);
@@ -165,34 +165,16 @@ h1 em {
   margin-bottom: 18px;
 }
 .auth-field label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  margin-bottom: 8px;
+  @include forms.field-label;
 }
 .auth-field .ip {
   position: relative;
 }
 .auth-field input {
-  width: 100%;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  color: var(--ink);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  padding: 13px 44px 13px 15px;
-  transition:
-    border-color 0.3s,
-    box-shadow 0.3s;
+  @include forms.field-input(13px 44px 13px 15px);
 }
 .auth-field input:focus {
-  outline: none;
-  border-color: var(--teal);
-  box-shadow: 0 0 0 4px rgba(var(--teal-rgb), 0.14);
+  @include forms.field-input-focus;
 }
 .auth-field input.invalid {
   border-color: var(--danger);
@@ -275,14 +257,7 @@ h1 em {
   accent-color: var(--teal);
 }
 .auth-link {
-  font-size: 14px;
-  color: var(--teal-deep);
-  font-weight: 600;
-  cursor: pointer;
-  background: none;
-  border: 0;
-  padding: 0;
-  font-family: var(--font-sans);
+  @include forms.text-button;
 }
 .auth-link:hover {
   text-decoration: underline;
@@ -337,14 +312,7 @@ h1 em {
   text-align: center;
 }
 .auth-success .check {
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  background: rgba(var(--teal-rgb), 0.16);
-  color: var(--teal-deep);
-  display: grid;
-  place-items: center;
-  margin: 0 auto 24px;
+  @include forms.success-check;
 }
 
 @media (max-width: 880px) {

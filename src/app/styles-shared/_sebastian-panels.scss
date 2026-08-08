@@ -1,0 +1,41 @@
+@mixin seb-panel {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background: linear-gradient(165deg, rgba(42, 32, 18, 0.6), rgba(22, 16, 10, 0.6));
+  border-color: rgba(230, 170, 70, 0.18);
+}
+
+@mixin heat-grid($interactive: false) {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 5px;
+
+  i {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: rgba(230, 170, 70, 0.12);
+    transition: transform 0.3s var(--ease);
+
+    @if $interactive {
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.25);
+      }
+    }
+
+    &.l1 {
+      background: rgba(230, 170, 70, 0.3);
+    }
+
+    &.l2 {
+      background: rgba(230, 170, 70, 0.55);
+    }
+
+    &.l3 {
+      background: rgba(230, 170, 70, 0.85);
+    }
+  }
+}

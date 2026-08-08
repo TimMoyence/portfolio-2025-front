@@ -14,7 +14,8 @@ import type { CurrentWeather, DetailedCurrentWeather } from '../../../../core/mo
 import { UnitPipe } from '../../pipes/unit.pipe';
 import { UnitPreferencesService } from '../../services/unit-preferences.service';
 import { animateValue, type AnimationHandle } from '../../../../shared/utils/animate-value';
-import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather-icons';
+import { getWeatherDescription } from '../../utils/weather-descriptions';
+import { weatherCodeToIcon } from '../../utils/weather-icons';
 
 @Component({
   selector: 'app-current-conditions',
@@ -135,7 +136,7 @@ export class CurrentConditionsComponent {
   readonly description = computed(() => {
     const data = this.current();
     if (!data) return '';
-    return weatherCodeToDescription(data.weather_code);
+    return getWeatherDescription(data.weather_code);
   });
 
   constructor() {

@@ -1,27 +1,7 @@
 import { of, BehaviorSubject } from 'rxjs';
-import type { CookieConsentPayload } from '../../app/core/models/cookie-consent.model';
 import type { AppConfig } from '../../app/core/config/app-config.model';
 import type { CookieConsentPort } from '../../app/core/ports/cookie-consent.port';
 import type { CookieConsentService } from '../../app/core/services/cookie-consent.service';
-
-export function buildCookieConsentPayload(
-  overrides?: Partial<CookieConsentPayload>,
-): CookieConsentPayload {
-  return {
-    policyVersion: '2026-02-11',
-    locale: 'fr',
-    region: 'EU_UK',
-    source: 'banner',
-    action: 'accept_all',
-    preferences: {
-      essential: true,
-      preferences: true,
-      analytics: false,
-      marketing: false,
-    },
-    ...overrides,
-  };
-}
 
 export function createCookieConsentPortStub(): jasmine.SpyObj<CookieConsentPort> {
   const stub = jasmine.createSpyObj<CookieConsentPort>('CookieConsentPort', ['recordConsent']);

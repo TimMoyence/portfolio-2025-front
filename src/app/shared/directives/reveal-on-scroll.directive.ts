@@ -9,12 +9,6 @@ import {
   input,
 } from '@angular/core';
 
-/**
- * Révélation au scroll « fail-open ». Le contenu est visible par défaut ;
- * l'état caché/animé n'est appliqué qu'en environnement browser (classe
- * `anim-ready` sur <html>). Garantit l'affichage en SSR/prerender, en print
- * et si le JS échoue. Respecte `prefers-reduced-motion` via le CSS (.reveal).
- */
 @Directive({
   selector: '[appReveal]',
   standalone: true,

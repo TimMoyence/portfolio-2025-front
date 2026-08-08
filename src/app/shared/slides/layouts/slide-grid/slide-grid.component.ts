@@ -1,6 +1,7 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export interface SlideGridItem {
+interface SlideGridItem {
   title: string;
   description: string;
   icon?: string;
@@ -10,6 +11,7 @@ export interface SlideGridItem {
 @Component({
   selector: 'app-slide-grid',
   standalone: true,
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-grid.component.html',
   styleUrl: './slide-grid.component.scss',

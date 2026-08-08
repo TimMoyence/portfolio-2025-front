@@ -38,22 +38,14 @@ export class SlideDeckService {
   }
 
   next(): void {
-    const list = this.slides();
-    if (list.length === 0) {
-      return;
-    }
-    const idx = this.currentIndexInAllSlides();
-    if (idx < 0) {
-      this.currentId.set(list[0]);
-      return;
-    }
-    if (idx >= list.length - 1) {
-      return;
-    }
-    this.currentId.set(list[idx + 1]);
+    this.step(1);
   }
 
   previous(): void {
+    this.step(-1);
+  }
+
+  private step(direction: 1 | -1): void {
     const list = this.slides();
     if (list.length === 0) {
       return;
@@ -63,10 +55,11 @@ export class SlideDeckService {
       this.currentId.set(list[0]);
       return;
     }
-    if (idx <= 0) {
+    const target = idx + direction;
+    if (target < 0 || target > list.length - 1) {
       return;
     }
-    this.currentId.set(list[idx - 1]);
+    this.currentId.set(list[target]);
   }
 
   setMode(mode: SlideDeckMode): void {

@@ -46,23 +46,19 @@ describe('HumidityCardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it("devrait afficher 'Sec' pour une humidite inferieure a 30%", () => {
-    fixture.componentRef.setInput('humidity', 20);
-    fixture.detectChanges();
-    expect(component.comfortLabel()).toContain('Sec');
-  });
+  const COMFORT_CASES: readonly (readonly [number, string, string])[] = [
+    [20, 'Sec', 'humidite inferieure a 30%'],
+    [50, 'Confortable', 'humidite entre 30% et 60%'],
+    [80, 'Humide', 'humidite superieure a 60%'],
+  ];
 
-  it("devrait afficher 'Confortable' pour une humidite entre 30% et 60%", () => {
-    fixture.componentRef.setInput('humidity', 50);
-    fixture.detectChanges();
-    expect(component.comfortLabel()).toContain('Confortable');
-  });
-
-  it("devrait afficher 'Humide' pour une humidite superieure a 60%", () => {
-    fixture.componentRef.setInput('humidity', 80);
-    fixture.detectChanges();
-    expect(component.comfortLabel()).toContain('Humide');
-  });
+  for (const [humidity, attendu, contexte] of COMFORT_CASES) {
+    it(`devrait afficher '${attendu}' pour une ${contexte}`, () => {
+      fixture.componentRef.setInput('humidity', humidity);
+      fixture.detectChanges();
+      expect(component.comfortLabel()).toContain(attendu);
+    });
+  }
 
   it('devrait calculer le dashArray proportionnellement', () => {
     fixture.componentRef.setInput('humidity', 75);

@@ -45,8 +45,8 @@ describe('GeolocationService', () => {
 
       service.locate().subscribe({
         next: (city: CityResult) => {
-          expect(city.latitude).toBe(43.6);
-          expect(city.longitude).toBe(1.44);
+          expect(city.latitude).toBeCloseTo(43.6, 5);
+          expect(city.longitude).toBeCloseTo(1.44, 5);
           expect(city.id).toBe(-1);
           done();
         },

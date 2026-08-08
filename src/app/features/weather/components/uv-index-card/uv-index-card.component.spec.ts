@@ -30,35 +30,21 @@ describe('UvIndexCardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it("devrait afficher 'Faible' pour un UV de 2", () => {
-    fixture.componentRef.setInput('uvIndex', 2);
-    fixture.detectChanges();
-    expect(component.riskLabel()).toContain('Faible');
-  });
+  const RISK_CASES: readonly (readonly [number, string, string])[] = [
+    [2, 'Faible', 'Faible'],
+    [4, 'Mod', 'Modéré'],
+    [7, 'lev', 'Élevé'],
+    [9, 'lev', 'Très élevé'],
+    [12, 'Extr', 'Extrême'],
+  ];
 
-  it("devrait afficher 'Modéré' pour un UV de 4", () => {
-    fixture.componentRef.setInput('uvIndex', 4);
-    fixture.detectChanges();
-    expect(component.riskLabel()).toContain('Mod');
-  });
-
-  it("devrait afficher 'Élevé' pour un UV de 7", () => {
-    fixture.componentRef.setInput('uvIndex', 7);
-    fixture.detectChanges();
-    expect(component.riskLabel()).toContain('lev');
-  });
-
-  it("devrait afficher 'Très élevé' pour un UV de 9", () => {
-    fixture.componentRef.setInput('uvIndex', 9);
-    fixture.detectChanges();
-    expect(component.riskLabel()).toContain('lev');
-  });
-
-  it("devrait afficher 'Extrême' pour un UV de 12", () => {
-    fixture.componentRef.setInput('uvIndex', 12);
-    fixture.detectChanges();
-    expect(component.riskLabel()).toContain('Extr');
-  });
+  for (const [uvIndex, attendu, libelle] of RISK_CASES) {
+    it(`devrait afficher '${libelle}' pour un UV de ${uvIndex}`, () => {
+      fixture.componentRef.setInput('uvIndex', uvIndex);
+      fixture.detectChanges();
+      expect(component.riskLabel()).toContain(attendu);
+    });
+  }
 
   it('devrait limiter la position de jauge a 100%', () => {
     fixture.componentRef.setInput('uvIndex', 15);

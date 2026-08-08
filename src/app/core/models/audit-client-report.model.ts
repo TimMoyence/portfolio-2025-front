@@ -11,36 +11,36 @@ export interface ClientReport {
   readonly cta: ClientReportCta;
 }
 
-export interface ClientReportFinding {
+interface ClientReportFinding {
   readonly title: string;
   readonly impact: string;
   readonly severity: 'high' | 'medium' | 'low';
 }
 
-export interface ClientReportEngineMatrix {
+interface ClientReportEngineMatrix {
   readonly googleVisibility: ClientReportEngineScore;
   readonly aiVisibility: ClientReportEngineScore;
 }
 
-export interface ClientReportEngineScore {
+interface ClientReportEngineScore {
   readonly score: number;
   readonly summary: string;
 }
 
-export interface ClientReportPillar {
+interface ClientReportPillar {
   readonly pillar: string;
   readonly score: number;
   readonly target: number;
   readonly status: 'critical' | 'warning' | 'ok';
 }
 
-export interface ClientReportQuickWin {
+interface ClientReportQuickWin {
   readonly title: string;
   readonly businessImpact: string;
   readonly effort: 'low' | 'medium' | 'high';
 }
 
-export interface ClientReportCta {
+interface ClientReportCta {
   readonly title: string;
   readonly description: string;
   readonly actionLabel: string;

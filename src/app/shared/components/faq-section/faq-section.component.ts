@@ -6,11 +6,6 @@ export interface FaqItem {
   readonly answer: string;
 }
 
-/**
- * Le rendu HTML visible est indispensable pour que le contenu declare dans
- * les schemas JSON-LD `FAQPage` soit indexe : depuis 2024, Google exige que
- * les Q&R soient visibles sur la page pour que le schema soit valide.
- */
 @Component({
   selector: 'app-faq-section',
   standalone: true,

@@ -19,6 +19,7 @@ import 'hammerjs';
 import type { HourlyForecast } from '../../../../core/models/weather.model';
 import { UnitPreferencesService } from '../../services/unit-preferences.service';
 import { CHART_PARAMETERS } from './chart-datasets.config';
+import { buildChartLegend, buildTimeAxisScale } from '../../utils/weather-chart-options';
 
 Chart.register(...registerables, zoomPlugin);
 
@@ -171,6 +172,7 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
     });
 
     const visible = this.visibleParams();
+    const temperatureUnit = isFahrenheit ? '°F' : '°C';
     const datasets = CHART_PARAMETERS.filter((p) => visible.has(p.id))
       .map((param) => {
         const rawData = data[param.dataKey] as number[] | undefined;
@@ -185,9 +187,7 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
           type: param.type as 'line' | 'bar',
           label:
             param.id === 'temperature'
-              ? isFahrenheit
-                ? `${param.label} (°F)`
-                : `${param.label} (°C)`
+              ? `${param.label} (${temperatureUnit})`
               : `${param.label} (${param.unit})`,
           data: chartData,
           borderColor: param.borderColor,
@@ -204,14 +204,7 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const scales: Record<string, any> = {
-      x: {
-        ticks: {
-          color: 'rgba(255, 255, 255, 0.6)',
-          maxRotation: 45,
-          font: { size: 10 },
-        },
-        grid: { color: 'rgba(255, 255, 255, 0.1)' },
-      },
+      x: buildTimeAxisScale(),
     };
 
     for (const param of CHART_PARAMETERS) {
@@ -249,12 +242,7 @@ export class HourlyChartComponent implements AfterViewInit, OnDestroy {
           intersect: false,
         },
         plugins: {
-          legend: {
-            labels: {
-              color: 'rgba(255, 255, 255, 0.7)',
-              font: { size: 11 },
-            },
-          },
+          legend: buildChartLegend(),
           tooltip: {
             backgroundColor: 'rgba(10, 14, 18, 0.85)',
             titleColor: 'white',

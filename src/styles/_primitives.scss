@@ -1,6 +1,3 @@
-/* ============================================================
-   ASILI — Primitives (boutons, liens, tags, glass, reveal)
-   ============================================================ */
 @keyframes asili-pulse {
   50% {
     box-shadow: 0 0 0 7px rgba(var(--teal-rgb), 0);
@@ -141,7 +138,6 @@
     }
   }
 
-  /* Reveal — fail-open : visible par défaut, l'état caché n'existe que sous .anim-ready */
   .anim-ready .reveal {
     opacity: 0;
     transform: translateY(26px);

@@ -85,10 +85,6 @@
           Sujet de votre demande
         </label>
 
-        <!-- Le wrapper porte la bordure et le chevron ; le fond reste
-             transparent (parti pris « champs transparents »). La couleur du
-             texte est portee par le selecteur lui-meme, qui l'ajuste selon
-             qu'un sujet est choisi (contraste AA) ou non (placeholder). -->
         <div
           class="rounded-form border border-scheme-border w-full font-medium flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
           [class.border-red-500]="
@@ -179,8 +175,6 @@
           "
         ></textarea>
 
-        <!-- Meme raison qu'au-dessus : la couleur passe par le seul [ngClass],
-             `text-red-500` en [class.] serait inerte. -->
         <label
           for="message"
           class="absolute left-3 px-1 text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent peer-focus:bg-scheme-background"

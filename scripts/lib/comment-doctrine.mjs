@@ -2,6 +2,7 @@ const DIRECTIVE_RES = [
   /^(?:eslint-disable(?:-next-line|-line)?|eslint-enable|eslint-env)\b/,
   /^@(?:ts-(?:ignore|expect-error|nocheck|check))\b/,
   /^(?:prettier-ignore|istanbul ignore|c8 ignore|v8 ignore|Stryker (?:disable|restore))\b/,
+  /^gitleaks:allow\b/,
   /^@(?:jest|vitest)-environment(?:-options)?\b/,
   /^@deprecated\b/,
   /^<reference\b/,
@@ -20,8 +21,18 @@ const UNFINISHED_RES = [/\bTODO\b/, /\bFIXME\b/, /\bXXX\b/, /\bHACK\b/, /\bWIP\b
 const COMMENTED_CODE_RES = [
   /^(?:const|let|var|function|class|import|export|return|await|if|for|while|switch|try|throw|new)\b.*[;{(]/,
   /^[\w.$[\]'"]+\s*\([^)]*\)\s*[;,]?$/,
-  /^[\w.$]+\s*[:=]\s*.+[;,]$/,
 ];
+
+const ASSIGNMENT_HEAD_RE = /^[\w.$]+\s*[:=].{2,}$/;
+const STATEMENT_TERMINATOR_RE = /[;,]$/;
+
+/**
+ * @param {string} content
+ * @returns {boolean}
+ */
+function isAssignmentStatement(content) {
+  return ASSIGNMENT_HEAD_RE.test(content) && STATEMENT_TERMINATOR_RE.test(content);
+}
 
 const ANCHOR_RES = [
   /https?:\/\/\S+/,
@@ -43,7 +54,7 @@ const ANCHOR_RES = [
  * @param {string} content
  * @returns {boolean}
  */
-export function isExempt(content) {
+function isExempt(content) {
   if (DIRECTIVE_RES.some((re) => re.test(content))) return true;
   return GENERATED_RE.test(content) && DO_NOT_EDIT_RE.test(content);
 }
@@ -52,7 +63,7 @@ export function isExempt(content) {
  * @param {string} content
  * @returns {boolean}
  */
-export function isUnfinished(content) {
+function isUnfinished(content) {
   return UNFINISHED_RES.some((re) => re.test(content));
 }
 
@@ -60,8 +71,8 @@ export function isUnfinished(content) {
  * @param {string} content
  * @returns {boolean}
  */
-export function isCommentedCode(content) {
-  return COMMENTED_CODE_RES.some((re) => re.test(content));
+function isCommentedCode(content) {
+  return COMMENTED_CODE_RES.some((re) => re.test(content)) || isAssignmentStatement(content);
 }
 
 const DEPENDENCY_MIN_LENGTH = 3;
@@ -115,7 +126,7 @@ function namesDependency(text, dependencies) {
  * @param {{ dependencies?: string[] }} [options]
  * @returns {boolean}
  */
-export function hasExternalAnchor(text, { dependencies = [] } = {}) {
+function hasExternalAnchor(text, { dependencies = [] } = {}) {
   if (ANCHOR_RES.some((re) => re.test(text))) return true;
   return namesDependency(text, dependencies);
 }
@@ -124,7 +135,7 @@ export function hasExternalAnchor(text, { dependencies = [] } = {}) {
  * @param {string} line
  * @returns {string}
  */
-export function stripMarkers(line) {
+function stripMarkers(line) {
   let s = line.trim();
   if (s.startsWith('/**')) s = s.slice(3);
   else if (s.startsWith('/*')) s = s.slice(2);
@@ -167,7 +178,7 @@ function typedJsdocIndexes(contents) {
  * @param {{ jsdocTypes?: boolean }} [options]
  * @returns {number[]}
  */
-export function proseLines({ raw, startLine }, { jsdocTypes = false } = {}) {
+function proseLines({ raw, startLine }, { jsdocTypes = false } = {}) {
   const contents = raw.split('\n').map(stripMarkers);
   const typed = jsdocTypes && raw.startsWith('/**');
   const indexes = typed ? typedJsdocIndexes(contents) : proseIndexes(contents);
@@ -179,7 +190,7 @@ export function proseLines({ raw, startLine }, { jsdocTypes = false } = {}) {
  * @param {{ jsdocTypes?: boolean }} [options]
  * @returns {{ line: number, reason: string }[]}
  */
-export function alwaysOffending({ raw, startLine }, { jsdocTypes = false } = {}) {
+function alwaysOffending({ raw, startLine }, { jsdocTypes = false } = {}) {
   const kept = new Set(proseLines({ raw, startLine }, { jsdocTypes }));
   return raw
     .split('\n')

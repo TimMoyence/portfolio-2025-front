@@ -44,7 +44,7 @@ describe('ContactCtaComponent', () => {
     const links = Array.from(compiled.querySelectorAll('a[href]')) as HTMLAnchorElement[];
     expect(links.length).toBeGreaterThan(0);
     component.contactMethods
-      .filter((method: ContactMethod) => !!method.href)
+      .filter((method: ContactMethod): method is ContactMethod & { href: string } => !!method.href)
       .forEach((method) => {
         const match = links.find(
           (link) =>

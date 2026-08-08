@@ -58,11 +58,6 @@ export class SlideReflectionComponent {
     }
   }
 
-  /**
-   * Renvoie le texte de la question — l'API reelle utilise `question`,
-   * tandis que les stubs legacy de tests utilisent `prompt`. On expose
-   * un seul accessor pour la couche template.
-   */
   protected promptText(): string {
     const r = this.reflection();
     if (r === null) return '';

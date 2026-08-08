@@ -19,7 +19,7 @@ const PNPM_VERSION = '9.15.3';
 const POSTGRES_FORMULA = 'postgresql@16';
 const REDIS_FORMULA = 'redis';
 const LOCAL_DB_ROLE = 'portfolio_dev';
-const LOCAL_DB_PASSWORD = 'portfolio_dev';
+const LOCAL_DB_PASSWORD = process.env.PORTFOLIO_DEV_DB_PASSWORD ?? LOCAL_DB_ROLE;
 const LOCAL_DB_NAME = 'portfolio_2025_dev';
 
 function parseOptions(args) {
@@ -222,9 +222,11 @@ function launchServers(opts, env) {
   if (opts.dryRun || opts.skipServers) { console.log('\n> [skip] Lancement serveurs'); return { back: null, front: null }; }
   console.log('\n--- LANCEMENT SERVEURS ---');
   const backEnv = { ...env, ...parseEnvFile(resolve(BACK_DIR, '.env')) };
+  // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
   const back = spawn('pnpm', ['run', 'start:dev'], { cwd: BACK_DIR, env: backEnv, stdio: 'ignore', detached: true });
   back.unref();
   console.log(`  Backend PID: ${back.pid}`);
+  // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
   const front = spawn('npm', ['start'], { cwd: FRONT_DIR, env, stdio: 'ignore', detached: true });
   front.unref();
   console.log(`  Frontend PID: ${front.pid}`);

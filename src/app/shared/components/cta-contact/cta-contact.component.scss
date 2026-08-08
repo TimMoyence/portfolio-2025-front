@@ -1,6 +1,6 @@
 .background-image-bordeaux {
   position: relative;
-  min-height: 100%; /* or explicit height, see next section */
+  min-height: 100%;
   display: flex;
 }
 
@@ -16,7 +16,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.15; /* transparency only on image */
+  opacity: 0.15;
   z-index: 0;
 }
 

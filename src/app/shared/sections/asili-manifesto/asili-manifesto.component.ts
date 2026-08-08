@@ -10,20 +10,16 @@ import {
   input,
 } from '@angular/core';
 
-/**
- * `html` est injecte dans le DOM : il doit rester du contenu de confiance
- * (statique, fourni par la page appelante), jamais une saisie utilisateur.
- */
 export interface AsiliManifestoLine {
   step?: string;
   html: string;
 }
 
-/**
- * Fail-open : les lignes sont rendues allumees (`lit`) par defaut, donc
- * lisibles cote serveur, en prerender, en print et si le JS echoue. C'est le
- * browser qui retire `lit` avant de le repiloter a l'IntersectionObserver.
- */
+const MID_VIEWPORT_BAND: IntersectionObserverInit = {
+  rootMargin: '-48% 0px -48% 0px',
+  threshold: 0,
+};
+
 @Component({
   selector: 'app-asili-manifesto',
   standalone: true,
@@ -39,37 +35,30 @@ export class AsiliManifestoComponent implements AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
 
   ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') {
       return;
     }
 
-    const elements = Array.from(
-      this.host.nativeElement.querySelectorAll<HTMLElement>('.mani-line'),
-    );
-    if (elements.length === 0) {
+    const lines = Array.from(this.host.nativeElement.querySelectorAll<HTMLElement>('.mani-line'));
+    if (lines.length === 0) {
       return;
     }
 
-    if (typeof IntersectionObserver === 'undefined') {
-      return;
+    this.replaceServerRenderedLitByScrollPiloting(lines);
+  }
+
+  private replaceServerRenderedLitByScrollPiloting(lines: readonly HTMLElement[]): void {
+    for (const line of lines) {
+      line.classList.remove('lit');
     }
 
-    for (const el of elements) {
-      el.classList.remove('lit');
-    }
-
-    // Bande etroite (~4%) centree sur le milieu vertical de la fenetre : une
-    // ligne est « lit » quand elle la traverse, comme `mid = 52%` de la maquette.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          entry.target.classList.toggle('lit', entry.isIntersecting);
-        }
-      },
-      { rootMargin: '-48% 0px -48% 0px', threshold: 0 },
-    );
-    for (const el of elements) {
-      observer.observe(el);
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        entry.target.classList.toggle('lit', entry.isIntersecting);
+      }
+    }, MID_VIEWPORT_BAND);
+    for (const line of lines) {
+      observer.observe(line);
     }
     this.destroyRef.onDestroy(() => observer.disconnect());
   }

@@ -17,8 +17,7 @@ describe('BreakpointService', () => {
       expect(service).toBeTruthy();
     });
 
-    it('devrait exposer un signal isMobile', () => {
-      // La valeur depend de la taille reelle du viewport de test
+    it('devrait exposer un signal isMobile booleen quelle que soit la taille du viewport', () => {
       expect(typeof service.isMobile()).toBe('boolean');
     });
 

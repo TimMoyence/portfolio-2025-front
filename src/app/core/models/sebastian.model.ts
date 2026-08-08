@@ -1,6 +1,6 @@
 export type SebastianCategory = 'alcohol' | 'coffee';
 
-export type SebastianUnit = 'standard_drink' | 'cup';
+type SebastianUnit = 'standard_drink' | 'cup';
 
 export type SebastianDrinkType =
   | 'beer'
@@ -40,11 +40,10 @@ export interface SebastianGoal {
   createdAt: string;
 }
 
-export interface SebastianCategoryStat {
+interface SebastianCategoryStat {
   category: SebastianCategory;
   total: number;
   average: number;
-  /** Pourcentage de variation par rapport a la periode precedente. */
   trend: number;
 }
 
@@ -91,18 +90,18 @@ export type SebastianTrendPeriod = '7d' | '30d';
 
 export type SebastianReportPeriod = 'week' | 'month' | 'quarter';
 
-export interface SebastianTrendDataPoint {
+interface SebastianTrendDataPoint {
   date: string;
   alcohol: number;
   coffee: number;
 }
 
-export interface SebastianTrendObjectives {
+interface SebastianTrendObjectives {
   alcohol: number;
   coffee: number;
 }
 
-export interface SebastianTrendSummary {
+interface SebastianTrendSummary {
   avgAlcohol: number;
   avgCoffee: number;
 }
@@ -114,13 +113,13 @@ export interface SebastianTrendData {
   summary: SebastianTrendSummary;
 }
 
-export interface SebastianScoreBreakdown {
+interface SebastianScoreBreakdown {
   goalAdherence: number;
   trendBonus?: number;
   streakBonus?: number;
 }
 
-export interface SebastianStreaks {
+interface SebastianStreaks {
   alcohol: number;
   coffee: number;
 }
@@ -142,7 +141,7 @@ export interface SebastianBadgeStatus {
   unlockedAt?: string;
 }
 
-export interface SebastianDayDistribution {
+interface SebastianDayDistribution {
   dayOfWeek: number;
   alcohol: number;
   coffee: number;

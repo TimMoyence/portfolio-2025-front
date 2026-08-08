@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import type { CanActivateFn } from '@angular/router';
+import type { CanActivateFn, GuardResult } from '@angular/router';
 import { Router } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, map, take } from 'rxjs';
@@ -10,24 +10,17 @@ export function redirectIfAuthorizedGuard(requiredRole: string): CanActivateFn {
     const authState = inject(AuthStateService);
     const router = inject(Router);
 
-    const appUrl = `${state.url}/app`;
+    const decide = (): GuardResult =>
+      authState.isLoggedIn() && authState.hasRole(requiredRole)
+        ? router.createUrlTree([`${state.url}/app`])
+        : true;
 
-    if (authState.isInitialized()) {
-      if (authState.isLoggedIn() && authState.hasRole(requiredRole)) {
-        return router.createUrlTree([appUrl]);
-      }
-      return true;
-    }
-
-    return toObservable(authState.isInitialized).pipe(
-      filter((initialized) => initialized),
-      take(1),
-      map(() => {
-        if (authState.isLoggedIn() && authState.hasRole(requiredRole)) {
-          return router.createUrlTree([appUrl]);
-        }
-        return true;
-      }),
-    );
+    return authState.isInitialized()
+      ? decide()
+      : toObservable(authState.isInitialized).pipe(
+          filter((initialized) => initialized),
+          take(1),
+          map(decide),
+        );
   };
 }

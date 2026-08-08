@@ -1,4 +1,5 @@
 @use '../../../styles-shared/breakpoints' as bp;
+@use '../../../styles-shared/surfaces' as surfaces;
 :host {
   display: block;
 }
@@ -13,13 +14,7 @@
 }
 
 .ai-method::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(80% 60% at 15% 0%, rgba(var(--teal-rgb), 0.22), transparent 60%),
-    radial-gradient(70% 70% at 90% 100%, rgba(91, 140, 255, 0.24), transparent 60%);
+  @include surfaces.teal-glow-veil;
 }
 
 .ai-method-grid {

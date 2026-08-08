@@ -62,7 +62,7 @@ function isContiguous(previous, next) {
  * @param {ExtractedBlock[]} blocks
  * @returns {ExtractedBlock[]}
  */
-export function mergeContiguous(blocks) {
+function mergeContiguous(blocks) {
   const ordered = [...blocks].sort((a, b) => a.startLine - b.startLine || a.column - b.column);
   /** @type {ExtractedBlock[]} */
   const merged = [];

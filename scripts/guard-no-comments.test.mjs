@@ -29,6 +29,7 @@ const L = (...parts) => parts.join('\n');
 const withRepo = ({ files = {}, ratchet }, run) => {
   const root = mkdtempSync(join(tmpdir(), 'guard-no-comments-'));
   try {
+    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
     execFileSync('git', ['-C', root, 'init', '-q']);
     const manifest = { name: 'guard-fixture', ...(ratchet && { [GATE]: ratchet }) };
     writeFileSync(join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
@@ -36,6 +37,7 @@ const withRepo = ({ files = {}, ratchet }, run) => {
       mkdirSync(join(root, dirname(rel)), { recursive: true });
       writeFileSync(join(root, rel), text);
     }
+    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
     execFileSync('git', ['-C', root, 'add', '-A']);
     run(root);
   } finally {
@@ -123,6 +125,7 @@ void test('EXCEPTION 1 : directives fonctionnelles -> 0 offense', () => {
     '/// <reference types="node" />',
     '/** @deprecated utiliser `next()` a la place */',
     '// istanbul ignore next',
+    '// gitleaks:allow',
   ];
   for (const directive of directives) {
     assert.deepEqual(ts(L(directive, 'const a = 1;')), [], `directive refusee : ${directive}`);
@@ -487,8 +490,8 @@ void test('CLIQUET : au plafond ou au-dessus, aucune annotation n est emise', ()
 });
 
 void test('parseArgs : --root, --count et --tighten sont lus depuis argv', () => {
-  assert.deepEqual(parseArgs(['--root', '/tmp/x']), {
-    root: '/tmp/x',
+  assert.deepEqual(parseArgs(['--root', '/depot/x']), {
+    root: '/depot/x',
     count: false,
     tighten: false,
   });

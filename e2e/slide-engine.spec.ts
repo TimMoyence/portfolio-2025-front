@@ -2,27 +2,27 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Slide engine', () => {
   test('/formations/ia-solopreneurs : navigation scroll keyboard', async ({ page }) => {
+    const currentHash = (): Promise<string> => page.evaluate(() => window.location.hash);
+
     await page.goto('/formations/ia-solopreneurs');
     await expect(page.locator('app-slide-hero').first()).toBeVisible();
+
+    const atLoad = await currentHash();
     await page.keyboard.press('ArrowDown');
-    await page.waitForTimeout(400);
-    const initial = await page.evaluate(() => window.location.hash);
+    await expect.poll(currentHash).not.toBe(atLoad);
+
+    const afterFirstPress = await currentHash();
     await page.keyboard.press('ArrowDown');
-    await page.waitForTimeout(400);
-    const after = await page.evaluate(() => window.location.hash);
-    expect(after).not.toBe(initial);
+    await expect.poll(currentHash).not.toBe(afterFirstPress);
   });
 
-  // Note : `requestFullscreen` est interdit en headless Chromium (CI),
-  // donc le bouton ne peut pas réellement basculer en plein écran sans
-  // gesture utilisateur natif. Ce scénario fonctionne en dev local mais
-  // pas en CI headless ; on le marque skip pour ne pas bloquer le pipeline.
-  test.skip('/formations/ia-solopreneurs : toggle fullscreen via bouton', async ({ page }) => {
+  test.skip('/formations/ia-solopreneurs : toggle fullscreen via bouton — non rejouable en Chromium headless (requestFullscreen sans gesture natif)', async ({
+    page,
+  }) => {
     await page.goto('/formations/ia-solopreneurs');
     const btn = page.getByTestId('slide-deck-fullscreen-toggle');
     await expect(btn).toBeVisible();
     await btn.click();
-    await page.waitForTimeout(300);
     await expect(page.locator('swiper-container')).toBeVisible();
   });
 

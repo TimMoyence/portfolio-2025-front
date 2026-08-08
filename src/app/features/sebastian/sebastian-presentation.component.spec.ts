@@ -24,7 +24,7 @@ describe('SebastianPresentationComponent', () => {
 
   it('devrait préserver les mock data de présentation', () => {
     expect(component.healthScore.score).toBe(78);
-    expect(component.bac.currentBac).toBe(0.12);
+    expect(component.bac.currentBac).toBeCloseTo(0.12, 5);
     expect(component.badges.length).toBe(10);
   });
 

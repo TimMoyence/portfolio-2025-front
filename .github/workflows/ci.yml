@@ -32,7 +32,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
+      # Couvre src/, e2e/ et scripts/ avec l integralite d eslint-plugin-sonarjs
+      # en `error`, plus --max-warnings=0 : une directive eslint-disable devenue
+      # inutile echoue au meme titre qu une violation.
+      - name: Lint (ESLint + sonarjs)
         run: npm run lint
 
       - name: Format check
@@ -40,6 +43,15 @@ jobs:
 
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Duplication (jscpd)
+        run: npm run quality:dup
+
+      - name: Duplication des suites de tests (jscpd)
+        run: npm run quality:dup:tests
+
+      - name: Code mort (knip)
+        run: npm run quality:knip
 
       - name: Tests des gardes d outillage
         run: npm run test:guards

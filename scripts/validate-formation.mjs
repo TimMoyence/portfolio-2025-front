@@ -53,18 +53,15 @@ function isQuestionTitle(title) {
   return QUESTION_PREFIXES.some((p) => t.startsWith(p));
 }
 
-/**
- * Passer par le vrai runtime garantit que `assertValidFormationConfig` a deja
- * tourne : la registry leve au niveau module si une config est invalide.
- */
 function collectFormations() {
   return new Promise((resolveP, rejectP) => {
     const bridgePath = resolve(__dirname, "validate-formation.bridge.mts");
-    const child = spawn(
-      "npx",
-      ["-y", "tsx", bridgePath],
-      { cwd: REPO_ROOT, stdio: ["ignore", "pipe", "inherit"] },
-    );
+    const bridgeArgs = ["-y", "tsx", bridgePath];
+    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
+    const child = spawn("npx", bridgeArgs, {
+      cwd: REPO_ROOT,
+      stdio: ["ignore", "pipe", "inherit"],
+    });
     let stdout = "";
     child.stdout.on("data", (chunk) => {
       stdout += chunk.toString();

@@ -102,8 +102,6 @@
 
 <app-asili-manifesto [lines]="manifestoLines"></app-asili-manifesto>
 
-<!-- eagerImages=0 : le teaser vit en bas de page, aucune capture n'est visible
-     au chargement ni candidate LCP. -->
 <app-asili-projects-grid [projects]="projects" [kicker]="projectsKicker" [eagerImages]="0">
   <h2 heading class="h-xl projects-head__title">
     <ng-container i18n="@@homeProjectsHeading"

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import {
-  copyFileSync,
   existsSync,
   mkdirSync,
   readFileSync,
@@ -26,7 +25,8 @@ const PNPM_VERSION = "9.15.3";
 const POSTGRES_FORMULA = "postgresql@16";
 const REDIS_FORMULA = "redis";
 const LOCAL_DB_ROLE = "portfolio_dev";
-const LOCAL_DB_PASSWORD = "portfolio_dev";
+const LOCAL_DB_PASSWORD =
+  process.env.PORTFOLIO_DEV_DB_PASSWORD ?? LOCAL_DB_ROLE;
 const LOCAL_DB_NAME = "portfolio_2025_dev";
 
 function printHelp() {

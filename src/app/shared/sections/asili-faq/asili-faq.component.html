@@ -1,0 +1,30 @@
+<section class="section-pad">
+  <div class="wrap">
+    <div class="sec-head faq-head" appReveal>
+      <div>
+        <span class="kicker">{{ kicker() }}</span>
+        <h2 class="h-lg">{{ title() }}</h2>
+      </div>
+    </div>
+    <div class="faq" appReveal itemscope itemtype="https://schema.org/FAQPage">
+      @for (item of items(); track item.q) {
+        <details
+          class="faq-item"
+          itemscope
+          itemprop="mainEntity"
+          itemtype="https://schema.org/Question"
+        >
+          <summary class="faq-q" itemprop="name">{{ item.q }}</summary>
+          <div
+            class="faq-a"
+            itemscope
+            itemprop="acceptedAnswer"
+            itemtype="https://schema.org/Answer"
+          >
+            <div class="faq-a-inner" itemprop="text">{{ item.a }}</div>
+          </div>
+        </details>
+      }
+    </div>
+  </div>
+</section>

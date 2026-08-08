@@ -1,51 +1,13 @@
 @use '../../styles-shared/breakpoints' as bp;
+@use '../../styles-shared/hero-meta' as hero;
 
-/* --- Hero : méta clé/valeur (porté de .page-hero-meta) --------------------
-   Le slot [meta] de <app-asili-hero> est pensé pour des statistiques serif :
-   la section applique via ::ng-deep un filet/padding gauche à chaque <div>
-   projeté. On neutralise ce filet ici (panneau de lignes clé/valeur). */
+/* `asili-hero.component.scss` stylise le slot [meta] pour des statistiques :
+   `.hero-meta ::ng-deep div` y pose un filet gauche et un padding, neutralisés
+   ici parce que ce panneau aligne des lignes clé/valeur. */
 /* Double classe : spécificité (0,2,0) > `.hero-meta div` (0,1,1) hérité du
    slot, pour bien neutraliser le filet gauche sur le conteneur lui-même. */
 .offer-hero-meta.offer-hero-meta {
-  display: grid;
-  gap: 18px;
-  width: 100%;
-  border-left: 0;
-  padding-left: 0;
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 14px;
-    border-left: 0;
-    padding-left: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .k {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-
-  .v {
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 15px;
-    text-align: right;
-  }
-}
-
-.sec-head.faq-head {
-  justify-content: center;
-  text-align: center;
-
-  .kicker {
-    justify-content: center;
-  }
+  @include hero.key-value-rows;
 }
 
 .modes {

@@ -19,6 +19,7 @@ describe('SeoManagerComponent', () => {
     data: Subject<Record<string, unknown>>;
   };
   let routeData$: Subject<Record<string, unknown>>;
+  let routerStub: { events: unknown; url: string };
 
   const baseSeoConfig: SeoConfig = {
     title: 'Page de test',
@@ -71,15 +72,19 @@ describe('SeoManagerComponent', () => {
       data: routeData$,
     };
 
-    const routerStub = {
+    routerStub = {
       events: routerEvents$.asObservable(),
       url: '/fr/test',
     };
 
+    await configure('https://example.com');
+  });
+
+  async function configure(appBaseUrl: string): Promise<void> {
     await setupTestBed({
       http: false,
       imports: [SeoManagerComponent],
-      appConfig: { baseUrl: 'https://example.com' },
+      appConfig: { baseUrl: appBaseUrl },
       providers: [
         { provide: Router, useValue: routerStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
@@ -90,7 +95,7 @@ describe('SeoManagerComponent', () => {
 
     fixture = TestBed.createComponent(SeoManagerComponent);
     component = fixture.componentInstance;
-  });
+  }
 
   it('devrait se creer', () => {
     expect(component).toBeTruthy();
@@ -188,5 +193,31 @@ describe('SeoManagerComponent', () => {
 
     const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
     expect(call.ogImage).toBe('https://example.com/assets/images/og.webp');
+  });
+
+  describe('normalisation des slashes', () => {
+    it('retire les slashes de tete et de queue du chemin', () => {
+      routerStub.url = '//fr//test//';
+
+      fixture.detectChanges();
+      routerEvents$.next(new NavigationEnd(1, '//fr//test//', '//fr//test//'));
+      routeData$.next({ seoKey: 'test-page' });
+
+      const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
+      expect(call.canonicalUrl).toBe('https://example.com/fr/test');
+      expect(call.hreflangs!['en']).toBe('https://example.com/en/test');
+    });
+
+    it('retire les slashes finaux de la base URL', async () => {
+      TestBed.resetTestingModule();
+      await configure('https://example.com//');
+
+      fixture.detectChanges();
+      routerEvents$.next(new NavigationEnd(1, '/fr/test', '/fr/test'));
+      routeData$.next({ seoKey: 'test-page' });
+
+      const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
+      expect(call.canonicalUrl).toBe('https://example.com/fr/test');
+    });
   });
 });

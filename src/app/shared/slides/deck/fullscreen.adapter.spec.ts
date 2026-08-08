@@ -21,7 +21,7 @@ describe('FullscreenAdapter', () => {
     it('ne lance pas si requestFullscreen indisponible', async () => {
       const adapter = TestBed.inject(FullscreenAdapter);
       const el = { requestFullscreen: undefined } as unknown as HTMLElement;
-      await expectAsync(adapter.enter(el)).toBeResolved();
+      expect(await adapter.enter(el)).toBeUndefined();
     });
 
     it('appelle document.exitFullscreen quand sorti', async () => {
@@ -53,7 +53,7 @@ describe('FullscreenAdapter', () => {
 
     it('loadSwiperElement() est un no-op en SSR', async () => {
       const adapter = TestBed.inject(FullscreenAdapter);
-      await expectAsync(adapter.loadSwiperElement()).toBeResolved();
+      expect(await adapter.loadSwiperElement()).toBeUndefined();
     });
   });
 });

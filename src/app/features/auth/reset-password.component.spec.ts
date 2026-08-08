@@ -3,8 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { AUTH_PORT } from '../../core/ports/auth.port';
-import { createAuthPortStub } from '../../../testing/factories/auth.factory';
+import {
+  buildResetPasswordPayload,
+  createAuthPortStub,
+} from '../../../testing/factories/auth.factory';
 import { ResetPasswordComponent } from './reset-password.component';
+
+const NEW_PASSWORD = buildResetPasswordPayload().newPassword;
 
 describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
@@ -41,8 +46,8 @@ describe('ResetPasswordComponent', () => {
       of({ message: 'Mot de passe reinitialise avec succes.' }),
     );
 
-    component.newPassword = 'NewPassword123!';
-    component.confirmPassword = 'NewPassword123!';
+    component.newPassword = NEW_PASSWORD;
+    component.confirmPassword = NEW_PASSWORD;
 
     component.submit({
       invalid: false,
@@ -51,7 +56,7 @@ describe('ResetPasswordComponent', () => {
 
     expect(authService.resetPassword).toHaveBeenCalledWith({
       token: 'raw-token',
-      newPassword: 'NewPassword123!',
+      newPassword: NEW_PASSWORD,
     });
     expect(component.successMessage).toContain('reinitialise');
   });

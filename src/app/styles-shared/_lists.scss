@@ -1,13 +1,3 @@
-/*
-  Mixin partagé de reset de liste (list-style/margin/padding).
-
-  Sous ViewEncapsulation.Emulated, aucun composant ne `@use` la couche
-  globale `styles/`, donc ni un `%placeholder` global ni un utilitaire
-  `.list-reset` global (qui imposerait du markup) ne conviennent. Ce mixin de
-  partiel composant partagé fournit le reset zéro-markup : chaque site fait
-  `@include lists.list-reset;` puis redéclare sa marge spécifique après
-  l'include (qui écrase le `margin: 0` émis → computed identique à l'origine).
-*/
 @mixin list-reset {
   list-style: none;
   margin: 0;

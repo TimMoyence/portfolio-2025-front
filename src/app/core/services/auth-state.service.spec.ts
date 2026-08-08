@@ -24,8 +24,7 @@ describe('AuthStateService', () => {
       expect(service).toBeTruthy();
     });
 
-    it('devrait avoir isInitialized a false avant afterNextRender', () => {
-      // afterNextRender ne s'execute pas dans le contexte de test navigateur
+    it("devrait avoir isInitialized a false tant qu'afterNextRender n'a pas ete execute", () => {
       expect(service.isInitialized()).toBeFalse();
     });
 
@@ -86,15 +85,18 @@ describe('AuthStateService', () => {
       });
       authPortStub.refresh.and.returnValue(of(renewedSession));
 
-      // expiresIn = 60s, marge = 30s => delayMs = max((60-30)*1000, 5000) = 30000
+      const expiresInS = 60;
+      const refreshMarginS = 30;
+      const expectedRefreshDelayMs = (expiresInS - refreshMarginS) * 1000;
+
       service.login(
         buildAuthSession({
           accessToken: 'jwt-initial',
-          expiresIn: 60,
+          expiresIn: expiresInS,
         }),
       );
 
-      tick(30_000);
+      tick(expectedRefreshDelayMs);
 
       expect(authPortStub.refresh).toHaveBeenCalled();
       expect(service.token()).toBe('jwt-renewed');

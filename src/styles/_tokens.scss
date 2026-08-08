@@ -1,56 +1,48 @@
-/* ============================================================
-   ASILI — Design tokens (variables CSS)
-   Couches : primitifs → sémantiques → thèmes (night / gold)
-   ============================================================ */
 :root {
-  /* — Neutres chauds — */
   --cream: #fffaf2;
   --ivory: #fbf3e6;
   --sand: #f1e7d6;
   --sand-deep: #e7d9c2;
   --line: #e4d8c4;
-  /* — Encre chaude — */
+
   --ink: #0c0902;
   --ink-rgb: 12, 9, 2;
   --ink-soft: #3c3529;
   --ink-mute: #756c5d;
   --ink-faint: #9c9384;
-  /* — Teal signature — */
+
   --teal: #4fb3a2;
   --teal-rgb: 79, 179, 162;
   --teal-deep: #2f8a78;
   --teal-dark: #2f7f74;
   --teal-ink: #1c5a50;
-  /* — Neutres slides (formations / decks) — */
+
   --slide-card-soft: #f6fbfa;
   --slide-text-muted: #54524d;
-  /* — Lueur froide (moment IA) — */
+
   --glow: #5b8cff;
   --glow-soft: #8fb0ff;
-  /* — Gold Sebastian — */
+
   --gold: #e6aa46;
   --gold-soft: #f4d18a;
   --gold-deep: #b8822c;
-  /* — Nuit immersive — */
+
   --night: #0a0e12;
   --night-2: #0e141b;
   --night-3: #131c25;
   --glass: rgba(255, 255, 255, 0.05);
   --glass-line: rgba(255, 255, 255, 0.12);
-  /* — Glass sombre (panneaux atelier/app : bordure .1) — */
   --glass-dark: rgba(255, 255, 255, 0.05);
   --glass-dark-line: rgba(255, 255, 255, 0.1);
-  /* — Sémantiques d'état — */
+
   --success: #6cae3e;
   --warning: #e6884f;
   --danger: #c0563c;
 
-  /* — Typo — */
   --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --font-sans: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
 
-  /* — Espacement — */
   --s-1: 6px;
   --s-2: 12px;
   --s-3: 20px;
@@ -62,7 +54,6 @@
   --maxw: 1280px;
   --gutter: clamp(20px, 5vw, 72px);
 
-  /* — Rayons & ombres — */
   --r-sm: 8px;
   --r: 12px;
   --r-lg: 20px;
@@ -73,12 +64,10 @@
   --shadow-lift: 0 10px 26px rgba(28, 22, 10, 0.1), 0 36px 80px rgba(28, 22, 10, 0.14);
   --shadow-glow: 0 0 0 1px rgba(91, 140, 255, 0.2), 0 18px 60px rgba(91, 140, 255, 0.18);
 
-  /* — Motion organique — */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-soft: cubic-bezier(0.33, 0.02, 0.13, 1);
   --dur: 0.7s;
 
-  /* — Sémantiques (thème clair par défaut) — */
   --bg: var(--cream);
   --surface: var(--ivory);
   --text: var(--ink-soft);
@@ -90,7 +79,6 @@
   --border: var(--line);
 }
 
-/* Thème immersif sombre (sections moment IA, atelier, app météo) */
 .theme-night {
   --bg: var(--night);
   --surface: var(--night-2);
@@ -103,7 +91,6 @@
   --border: var(--glass-line);
 }
 
-/* Thème gold (dark lounge Sebastian) */
 .theme-sebastian {
   --bg: #14100a;
   --surface: rgba(255, 255, 255, 0.04);

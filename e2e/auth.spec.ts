@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { API_BASE, MOCK_SESSION, MOCK_USER } from './fixtures';
+import { API_BASE, MOCK_SESSION } from './fixtures';
 
 test.describe('Auth — Page de connexion', () => {
   test('la page login affiche le formulaire avec email et mot de passe', async ({ page }) => {

@@ -11,11 +11,10 @@ describe('readInputValue', () => {
     expect(readInputValue(eventWithTarget(input))).toBe('abc');
   });
 
-  it("devrait retourner la value par defaut d'une checkbox cochee", () => {
+  it("devrait retourner 'on', la value par defaut d'une checkbox cochee", () => {
     const input = document.createElement('input');
     input.type = 'checkbox';
     input.checked = true;
-    // value par defaut d'une checkbox = "on"
     expect(readInputValue(eventWithTarget(input))).toBe('on');
   });
 

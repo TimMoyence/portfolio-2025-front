@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine, isMainModule } from '@angular/ssr/node';
-import express from 'express';
+import express, { type NextFunction, type Request, type Response } from 'express';
 import fs from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +22,7 @@ import {
   LOCALE_PREFIX_RE,
   STRIP_LOCALE_RE,
   buildBaseUrlFromRequest,
+  trimTrailingSlashes,
 } from './server/url-utils';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -44,22 +45,20 @@ const resolveIndexHtml = (locale: string | null): string => {
 
 const app = express();
 
-/**
- * Les chemins /fr/ et /en/ sont exempts de la normalisation car le reverse-proxy (nginx
- * ou Cloudflare) ajoute systematiquement un trailing slash sur ces
- * chemins, ce qui cree une boucle 301 si on le retire.
- */
+const keepsTrailingSlash = (path: string): boolean => LOCALE_BARE_PATH.test(path);
+
 app.use((req, res, next) => {
   const original = req.path;
   let normalized = original.replace(/\/{2,}/g, '/');
-  if (normalized.length > 1 && normalized.endsWith('/') && !LOCALE_BARE_PATH.test(normalized)) {
-    normalized = normalized.replace(/\/+$/, '');
+  if (normalized.length > 1 && normalized.endsWith('/') && !keepsTrailingSlash(normalized)) {
+    normalized = trimTrailingSlashes(normalized);
   }
   if (normalized !== original) {
     const query = req.originalUrl.includes('?')
       ? req.originalUrl.slice(req.originalUrl.indexOf('?'))
       : '';
-    return void res.redirect(301, normalized + query);
+    res.redirect(301, normalized + query);
+    return;
   }
   next();
 });
@@ -200,81 +199,109 @@ app.use(
   }),
 );
 
-app.get('**', (req, res, next) => {
-  const { protocol, originalUrl, headers } = req;
+const DOCUMENT_CACHE_CONTROL = 'public, max-age=3600, s-maxage=14400';
 
-  const localeMatch = originalUrl.match(LOCALE_PREFIX_RE);
-  const urlLocale = localeMatch ? localeMatch[1] : null;
-  const baseHref = urlLocale ? `/${urlLocale}` : '/';
+const localeOf = (originalUrl: string): string | null =>
+  LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? null;
 
-  // Les fichiers pre-rendus (SSG au build) sont servis en priorite : ils ne
-  // dependent pas du rendu SSR dynamique (CommonEngine), qui peut echouer
-  // silencieusement en production.
-  if (urlLocale) {
-    const routePath = originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
-    const prerendered = resolve(browserDistFolder, urlLocale, routePath || '.', 'index.html');
-    if (prerendered.startsWith(browserDistFolder) && fs.existsSync(prerendered)) {
-      const metadata = loadSeoMetadata();
-      let html = fs.readFileSync(prerendered, 'utf-8');
-      const normalizedRoutePath = routePath === '' ? '/' : `/${routePath}`;
-      const isNotFound = metadata !== null && !isKnownRoute(normalizedRoutePath, metadata);
-      if (metadata) {
-        const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-        html = injectSeoHead(html, metadata, originalUrl, baseUrl);
-      }
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.setHeader('Content-Language', urlLocale);
-      res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=14400');
-      res.setHeader('X-Content-Type-Options', 'nosniff');
-      if (isNotFound) {
-        res.status(404);
-      }
-      return void res.send(html);
-    }
+const routePathOf = (originalUrl: string): string =>
+  originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
 
-    if (isClientOnlyRoute(routePath)) {
-      const shell = loadCsrShell(urlLocale, browserDistFolder);
-      if (shell) {
-        const withBase = shell.replace(
-          /<base\s+href="[^"]*"\s*\/?>/,
-          `<base href="${baseHref}/" />`,
-        );
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.setHeader('Content-Language', urlLocale);
-        res.setHeader('Cache-Control', 'private, no-store');
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-        return void res.send(withBase);
-      }
+const prerenderedFileOf = (urlLocale: string, routePath: string): string | null => {
+  const candidate = resolve(browserDistFolder, urlLocale, routePath || '.', 'index.html');
+  if (!candidate.startsWith(browserDistFolder)) return null;
+  return fs.existsSync(candidate) ? candidate : null;
+};
+
+const sendPrerendered = (
+  req: Request,
+  res: Response,
+  input: { urlLocale: string; routePath: string; file: string },
+): void => {
+  const { urlLocale, routePath, file } = input;
+  const metadata = loadSeoMetadata();
+  let html = fs.readFileSync(file, 'utf-8');
+  if (metadata) {
+    const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
+    html = injectSeoHead(html, metadata, req.originalUrl, baseUrl);
+    if (!isKnownRoute(routePath === '' ? '/' : `/${routePath}`, metadata)) {
+      res.status(404);
     }
   }
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Content-Language', urlLocale);
+  res.setHeader('Cache-Control', DOCUMENT_CACHE_CONTROL);
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.send(html);
+};
 
-  const documentFilePath = resolveIndexHtml(urlLocale);
+const sendCsrShell = (res: Response, input: { urlLocale: string; baseHref: string }): boolean => {
+  const { urlLocale, baseHref } = input;
+  const shell = loadCsrShell(urlLocale, browserDistFolder);
+  if (!shell) return false;
+  const withBase = shell.replace(/<base\s+href="[^"]*"\s*\/?>/, `<base href="${baseHref}/" />`);
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Content-Language', urlLocale);
+  res.setHeader('Cache-Control', 'private, no-store');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.send(withBase);
+  return true;
+};
 
-  // publicPath doit pointer vers le dossier de la locale pour que
-  // CommonEngine trouve les stylesheets hashees (styles-XXXX.css)
-  // qui sont dans browser/fr/ ou browser/en/, pas browser/.
-  const ssrPublicPath = urlLocale ? resolve(browserDistFolder, urlLocale) : browserDistFolder;
+// publicPath doit pointer vers le dossier de la locale pour que
+// CommonEngine trouve les stylesheets hashees (styles-XXXX.css)
+// qui sont dans browser/fr/ ou browser/en/, pas browser/.
+const ssrPublicPathOf = (urlLocale: string | null): string =>
+  urlLocale ? resolve(browserDistFolder, urlLocale) : browserDistFolder;
 
+const renderWithSsr = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  input: { urlLocale: string | null; baseHref: string },
+): void => {
+  const { urlLocale, baseHref } = input;
+  const { protocol, originalUrl, headers } = req;
   commonEngine
     .render({
       bootstrap,
-      documentFilePath,
+      documentFilePath: resolveIndexHtml(urlLocale),
       url: `${protocol}://${headers.host}${originalUrl}`,
-      publicPath: ssrPublicPath,
+      publicPath: ssrPublicPathOf(urlLocale),
       providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
     })
-    .then((html) => {
+    .then((rendered) => {
       const metadata = loadSeoMetadata();
+      let html = rendered;
       if (metadata) {
         const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
         html = injectSeoHead(html, metadata, originalUrl, baseUrl);
       }
       res.setHeader('Content-Language', urlLocale ?? metadata?.site.defaultLocale ?? 'fr');
-      res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=14400');
+      res.setHeader('Cache-Control', DOCUMENT_CACHE_CONTROL);
       res.setHeader('X-Content-Type-Options', 'nosniff');
       res.send(html);
     })
     .catch((err) => next(err));
+};
+
+app.get('**', (req, res, next) => {
+  const urlLocale = localeOf(req.originalUrl);
+  const baseHref = urlLocale ? `/${urlLocale}` : '/';
+
+  if (urlLocale) {
+    const routePath = routePathOf(req.originalUrl);
+    const prerendered = prerenderedFileOf(urlLocale, routePath);
+    if (prerendered) {
+      sendPrerendered(req, res, { urlLocale, routePath, file: prerendered });
+      return;
+    }
+    if (isClientOnlyRoute(routePath) && sendCsrShell(res, { urlLocale, baseHref })) {
+      return;
+    }
+  }
+
+  renderWithSsr(req, res, next, { urlLocale, baseHref });
 });
 
 if (isMainModule(import.meta.url)) {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export type ComparisonTone = 'danger' | 'success' | 'info' | 'warning' | 'neutral';
+type ComparisonTone = 'danger' | 'success' | 'info' | 'warning' | 'neutral';
 
 export interface ComparisonColumn {
   label: string;

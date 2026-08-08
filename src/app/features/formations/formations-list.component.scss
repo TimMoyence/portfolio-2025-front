@@ -1,4 +1,5 @@
 @use '../../styles-shared/breakpoints' as bp;
+@use '../../styles-shared/surfaces' as surfaces;
 
 :host {
   display: block;
@@ -144,14 +145,7 @@
   }
 
   .bi {
-    width: 46px;
-    height: 46px;
-    border-radius: var(--r);
-    background: var(--sand);
-    color: var(--teal-deep);
-    display: grid;
-    place-items: center;
-    margin-bottom: 18px;
+    @include surfaces.icon-tile;
   }
 
   h3 {

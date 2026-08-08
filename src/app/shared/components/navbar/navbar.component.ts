@@ -214,40 +214,22 @@ export class NavbarComponent {
     }
   }
 
-  toggleAtelierDropdown(): void {
-    this.atelierDropdown.isOpen = !this.atelierDropdown.isOpen;
+  toggleDropdown(dropdown: DropdownSection): void {
+    dropdown.isOpen = !dropdown.isOpen;
     this.cdr.markForCheck();
   }
 
-  openAtelierDropdown(): void {
-    if (!this.atelierDropdown.isOpen) {
-      this.atelierDropdown.isOpen = true;
-      this.cdr.markForCheck();
-    }
+  openDropdown(dropdown: DropdownSection): void {
+    this.setDropdownOpen(dropdown, true);
   }
 
-  closeAtelierDropdown(): void {
-    if (this.atelierDropdown.isOpen) {
-      this.atelierDropdown.isOpen = false;
-      this.cdr.markForCheck();
-    }
+  closeDropdown(dropdown: DropdownSection): void {
+    this.setDropdownOpen(dropdown, false);
   }
 
-  toggleFormationsDropdown(): void {
-    this.formationsDropdown.isOpen = !this.formationsDropdown.isOpen;
-    this.cdr.markForCheck();
-  }
-
-  openFormationsDropdown(): void {
-    if (!this.formationsDropdown.isOpen) {
-      this.formationsDropdown.isOpen = true;
-      this.cdr.markForCheck();
-    }
-  }
-
-  closeFormationsDropdown(): void {
-    if (this.formationsDropdown.isOpen) {
-      this.formationsDropdown.isOpen = false;
+  private setDropdownOpen(dropdown: DropdownSection, isOpen: boolean): void {
+    if (dropdown.isOpen !== isOpen) {
+      dropdown.isOpen = isOpen;
       this.cdr.markForCheck();
     }
   }
@@ -255,44 +237,52 @@ export class NavbarComponent {
   @HostListener('document:keydown', ['$event'])
   handleGlobalKeydown(event: KeyboardEvent): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const activeElement = document.activeElement as HTMLElement | null;
+
+    if (this.openMobileMenuOnSpace(event)) return;
+    if (this.closeTopmostOverlayOnEscape(event)) return;
+    this.trapFocusInMobileMenu(event);
+  }
+
+  private openMobileMenuOnSpace(event: KeyboardEvent): boolean {
+    const burger = this.burgerButton?.nativeElement;
     const isSpace = event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
+    if (!burger || !isSpace || document.activeElement !== burger) {
+      return false;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.openMobileMenu();
+    return true;
+  }
 
-    if (activeElement === this.burgerButton?.nativeElement && isSpace) {
+  private closeTopmostOverlayOnEscape(event: KeyboardEvent): boolean {
+    if (event.key !== 'Escape') {
+      return false;
+    }
+    if (this.userDropdownOpen) {
       event.preventDefault();
-      event.stopPropagation();
-      this.openMobileMenu();
-      return;
+      this.closeUserDropdown();
+      return true;
     }
-
-    if (event.key === 'Escape') {
-      if (this.userDropdownOpen) {
-        event.preventDefault();
-        this.closeUserDropdown();
-        return;
-      }
-      if (this.atelierDropdown.isOpen) {
-        event.preventDefault();
-        this.closeAtelierDropdown();
-        return;
-      }
-      if (this.formationsDropdown.isOpen) {
-        event.preventDefault();
-        this.closeFormationsDropdown();
-        return;
-      }
+    const openDropdown = [this.atelierDropdown, this.formationsDropdown].find(
+      (dropdown) => dropdown.isOpen,
+    );
+    if (openDropdown) {
+      event.preventDefault();
+      this.closeDropdown(openDropdown);
+      return true;
     }
-
     if (this.mobileMenuOpen) {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        this.closeMobileMenu();
-        return;
-      }
+      event.preventDefault();
+      this.closeMobileMenu();
+      return true;
+    }
+    return false;
+  }
 
-      if (event.key === 'Tab') {
-        this.a11yDialog.trapFocus(event, this.mobileMenuPanel?.nativeElement ?? null);
-      }
+  private trapFocusInMobileMenu(event: KeyboardEvent): void {
+    if (this.mobileMenuOpen && event.key === 'Tab') {
+      this.a11yDialog.trapFocus(event, this.mobileMenuPanel?.nativeElement ?? null);
     }
   }
 

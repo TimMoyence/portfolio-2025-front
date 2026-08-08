@@ -20,6 +20,17 @@ interface FieldNode {
   ph: number;
 }
 
+type Rgb = [number, number, number];
+
+interface FieldPalette {
+  teal: Rgb;
+  glow: Rgb;
+}
+
+function rgba([r, g, b]: Rgb, alpha: number): string {
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 @Component({
   selector: 'app-asili-background',
   standalone: true,
@@ -43,6 +54,8 @@ export class AsiliBackgroundComponent implements AfterViewInit {
   private static readonly LINK_MAX_ALPHA = 0.43;
   private static readonly NODE_FILL_ALPHA = 0.6;
   private static readonly NODE_GLOW_ALPHA = 1;
+  private static readonly MOUSE_REPULSION_RADIUS_SQ = 30000;
+  private static readonly WRAP_MARGIN_PX = 20;
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
@@ -109,8 +122,6 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       this.visible = !document.hidden;
       this.toggleLoop();
     };
-    // L'utilisateur peut activer/desactiver « reduire les animations » en cours
-    // de session : on suit la media query au lieu de la lire une seule fois.
     const onMotionChange = (event: MediaQueryListEvent): void => {
       this.reduce = event.matches;
       if (!this.reduce) {
@@ -183,7 +194,12 @@ export class AsiliBackgroundComponent implements AfterViewInit {
     this.glow = cs.getPropertyValue('--glow').trim() || this.glow;
   }
 
-  private hexToRgb(hex: string): [number, number, number] {
+  private randomUnit(): number {
+    // eslint-disable-next-line sonarjs/pseudo-random -- champ de particules decoratif : aucune valeur n'est utilisee a des fins de securite
+    return Math.random();
+  }
+
+  private hexToRgb(hex: string): Rgb {
     let s = (hex || '').replace('#', '');
     if (s.length === 3) {
       s = s
@@ -201,13 +217,13 @@ export class AsiliBackgroundComponent implements AfterViewInit {
     const count = Math.round(Math.min(cap, Math.max(18, (this.w * this.h) / 22000)));
     for (let i = 0; i < count; i++) {
       this.nodes.push({
-        x: Math.random() * this.w,
-        y: Math.random() * this.h,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        r: Math.random() * 2.04 + 1.2,
-        glow: Math.random() < 0.14,
-        ph: Math.random() * Math.PI * 2,
+        x: this.randomUnit() * this.w,
+        y: this.randomUnit() * this.h,
+        vx: (this.randomUnit() - 0.5) * 0.2,
+        vy: (this.randomUnit() - 0.5) * 0.2,
+        r: this.randomUnit() * 2.04 + 1.2,
+        glow: this.randomUnit() < 0.14,
+        ph: this.randomUnit() * Math.PI * 2,
       });
     }
   }
@@ -235,82 +251,110 @@ export class AsiliBackgroundComponent implements AfterViewInit {
     }
     this.t += 0.004;
     ctx.clearRect(0, 0, this.w, this.h);
-    const teal = this.hexToRgb(this.teal);
-    const glow = this.hexToRgb(this.glow);
 
-    for (const n of this.nodes) {
-      if (!this.reduce) {
-        n.x += n.vx + Math.sin(this.t + n.ph) * 0.05;
-        n.y += n.vy + Math.cos(this.t * 0.8 + n.ph) * 0.05;
-        if (this.mouse.active) {
-          const dx = n.x - this.mouse.x;
-          const dy = n.y - this.mouse.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < 30000) {
-            const f = (30000 - d2) / 30000;
-            const dist = Math.sqrt(d2) + 1;
-            n.x += (dx / dist) * f * 1.5;
-            n.y += (dy / dist) * f * 1.5;
-          }
-        }
-      }
-      if (n.x < -20) {
-        n.x = this.w + 20;
-      }
-      if (n.x > this.w + 20) {
-        n.x = -20;
-      }
-      if (n.y < -20) {
-        n.y = this.h + 20;
-      }
-      if (n.y > this.h + 20) {
-        n.y = -20;
-      }
+    const palette: FieldPalette = {
+      teal: this.hexToRgb(this.teal),
+      glow: this.hexToRgb(this.glow),
+    };
+
+    this.stepNodes();
+    this.drawLinks(ctx, palette);
+    this.drawNodes(ctx, palette);
+    ctx.shadowBlur = 0;
+
+    if (!this.reduce && this.visible) {
+      this.raf = requestAnimationFrame(() => this.renderFrame());
     }
+  }
 
+  private stepNodes(): void {
+    for (const node of this.nodes) {
+      if (!this.reduce) {
+        this.drift(node);
+        this.repelFromPointer(node);
+      }
+      this.wrapAroundViewport(node);
+    }
+  }
+
+  private drift(node: FieldNode): void {
+    node.x += node.vx + Math.sin(this.t + node.ph) * 0.05;
+    node.y += node.vy + Math.cos(this.t * 0.8 + node.ph) * 0.05;
+  }
+
+  private repelFromPointer(node: FieldNode): void {
+    if (!this.mouse.active) {
+      return;
+    }
+    const radiusSq = AsiliBackgroundComponent.MOUSE_REPULSION_RADIUS_SQ;
+    const dx = node.x - this.mouse.x;
+    const dy = node.y - this.mouse.y;
+    const distanceSq = dx * dx + dy * dy;
+    if (distanceSq >= radiusSq) {
+      return;
+    }
+    const force = (radiusSq - distanceSq) / radiusSq;
+    const distance = Math.sqrt(distanceSq) + 1;
+    node.x += (dx / distance) * force * 1.5;
+    node.y += (dy / distance) * force * 1.5;
+  }
+
+  private wrapAroundViewport(node: FieldNode): void {
+    const margin = AsiliBackgroundComponent.WRAP_MARGIN_PX;
+    if (node.x < -margin) {
+      node.x = this.w + margin;
+    } else if (node.x > this.w + margin) {
+      node.x = -margin;
+    }
+    if (node.y < -margin) {
+      node.y = this.h + margin;
+    } else if (node.y > this.h + margin) {
+      node.y = -margin;
+    }
+  }
+
+  private drawLinks(ctx: CanvasRenderingContext2D, palette: FieldPalette): void {
+    const maxDistance = AsiliBackgroundComponent.LINK_DISTANCE_PX;
     for (let i = 0; i < this.nodes.length; i++) {
       const a = this.nodes[i];
       for (let j = i + 1; j < this.nodes.length; j++) {
         const b = this.nodes[j];
         const dx = a.x - b.x;
         const dy = a.y - b.y;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < AsiliBackgroundComponent.LINK_DISTANCE_PX) {
-          const o =
-            (1 - d / AsiliBackgroundComponent.LINK_DISTANCE_PX) *
-            AsiliBackgroundComponent.LINK_MAX_ALPHA;
-          const c = a.glow || b.glow ? glow : teal;
-          ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${o})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance >= maxDistance) {
+          continue;
         }
+        const alpha = (1 - distance / maxDistance) * AsiliBackgroundComponent.LINK_MAX_ALPHA;
+        ctx.strokeStyle = rgba(a.glow || b.glow ? palette.glow : palette.teal, alpha);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
       }
     }
+  }
 
-    for (const n of this.nodes) {
-      const c = n.glow ? glow : teal;
-      const pulse = this.reduce ? 1 : 0.7 + Math.sin(this.t * 2 + n.ph) * 0.3;
-      if (n.glow) {
-        ctx.shadowColor = `rgba(${c[0]},${c[1]},${c[2]},0.9)`;
+  private drawNodes(ctx: CanvasRenderingContext2D, palette: FieldPalette): void {
+    for (const node of this.nodes) {
+      const color = node.glow ? palette.glow : palette.teal;
+      const pulse = this.reduce ? 1 : 0.7 + Math.sin(this.t * 2 + node.ph) * 0.3;
+      if (node.glow) {
+        ctx.shadowColor = rgba(color, 0.9);
         ctx.shadowBlur = 12;
       } else {
         ctx.shadowBlur = 0;
       }
-      const alpha = n.glow
-        ? AsiliBackgroundComponent.NODE_GLOW_ALPHA
-        : AsiliBackgroundComponent.NODE_FILL_ALPHA;
-      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha})`;
+      ctx.fillStyle = rgba(
+        color,
+        node.glow
+          ? AsiliBackgroundComponent.NODE_GLOW_ALPHA
+          : AsiliBackgroundComponent.NODE_FILL_ALPHA,
+      );
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
+      ctx.arc(node.x, node.y, node.r * pulse, 0, Math.PI * 2);
       ctx.fill();
-    }
-    ctx.shadowBlur = 0;
-
-    if (!this.reduce && this.visible) {
-      this.raf = requestAnimationFrame(() => this.renderFrame());
     }
   }
 }

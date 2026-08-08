@@ -22,14 +22,7 @@ import { catchError, map, take, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SvgIconComponent implements OnChanges {
-  /**
-   * Regex de validation du nom d'icone.
-   * Autorise des segments alphanumeriques (lettres, chiffres, tirets) separes par
-   * des slashes pour les icones rangees en sous-dossier (ex: "network/google").
-   * Aucun point n'est admis : "..", "../etc/passwd" et tout traversal restent rejetes,
-   * de meme que les slashes en debut/fin et les segments vides ("a//b", "a/").
-   */
-  private static readonly VALID_NAME = /^[a-zA-Z0-9-]+(?:\/[a-zA-Z0-9-]+)*$/;
+  private static readonly TRAVERSAL_SAFE_NAME = /^[a-zA-Z0-9-]+(?:\/[a-zA-Z0-9-]+)*$/;
 
   private static cache = new Map<string, string>();
 
@@ -83,7 +76,7 @@ export class SvgIconComponent implements OnChanges {
       return;
     }
 
-    if (!SvgIconComponent.VALID_NAME.test(this.name)) {
+    if (!SvgIconComponent.TRAVERSAL_SAFE_NAME.test(this.name)) {
       console.warn(
         `[SvgIconComponent] Nom d'icone invalide : "${this.name}". Seuls les caracteres alphanumeriques et tirets sont autorises.`,
       );
@@ -99,6 +92,7 @@ export class SvgIconComponent implements OnChanges {
         take(1),
         map((raw) => this.prepareSvg(raw)),
         tap((html) => {
+          // eslint-disable-next-line sonarjs/no-angular-bypass-sanitization -- markup produit par prepareSvg a partir d'un fichier de assets/icons (nom valide par TRAVERSAL_SAFE_NAME, contenu passe par sanitizeSvgElement) ; le sanitizer Angular viderait le SVG
           this.svgContent = this.sanitizer.bypassSecurityTrustHtml(html);
           this.cdr.markForCheck();
         }),

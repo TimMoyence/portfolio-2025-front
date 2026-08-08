@@ -8,18 +8,3 @@ export function buildSlideDeckConfig(overrides?: Partial<SlideDeckConfig>): Slid
     ...overrides,
   };
 }
-
-export interface SlideDeckStateStub {
-  current: string | null;
-  total: number;
-  mode: 'scroll' | 'fullscreen';
-}
-
-export function buildSlideDeckState(overrides?: Partial<SlideDeckStateStub>): SlideDeckStateStub {
-  return {
-    current: 'hero',
-    total: 5,
-    mode: 'scroll',
-    ...overrides,
-  };
-}

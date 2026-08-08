@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export interface SlideStat {
+interface SlideStat {
   value: string;
   label: string;
   source?: string;
