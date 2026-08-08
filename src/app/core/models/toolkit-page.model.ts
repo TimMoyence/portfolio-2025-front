@@ -12,7 +12,7 @@ export interface ToolkitPageData {
   generatedPrompt: string | null;
 }
 
-export interface CheatsheetEntry {
+interface CheatsheetEntry {
   tool: string;
   category: string;
   price: string;
@@ -22,7 +22,7 @@ export interface CheatsheetEntry {
   alreadyUsed: boolean;
 }
 
-export interface PromptEntry {
+interface PromptEntry {
   category: string;
   title: string;
   level: string;
@@ -33,14 +33,14 @@ export interface PromptEntry {
   tip?: string;
 }
 
-export interface WorkflowStep {
+interface WorkflowStep {
   step: number;
   action: string;
   tool: string;
   detail: string;
 }
 
-export interface WorkflowEntry {
+interface WorkflowEntry {
   title: string;
   description: string;
   setupTime: string;
@@ -49,7 +49,7 @@ export interface WorkflowEntry {
   tools: string[];
 }
 
-export interface TemplateEntry {
+interface TemplateEntry {
   name: string;
   platform: string;
   url: string;

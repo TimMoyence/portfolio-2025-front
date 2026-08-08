@@ -1,7 +1,6 @@
 @use '../app/styles-shared/breakpoints' as bp;
-/* ============================================================
-   ASILI — Base typographique & helpers
-   ============================================================ */
+@use '../app/styles-shared/heads' as heads;
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -89,9 +88,6 @@
     outline: 2px solid var(--glow);
     outline-offset: 3px;
   }
-  /* Voile chaud fixe derrière le contenu (lisibilité du canvas).
-     Opacités allégées d'environ 20 % : le champ de particules reste lisible
-     sans que le texte perde son contraste. */
   body::before {
     content: '';
     position: fixed;
@@ -119,7 +115,6 @@
   }
 }
 
-/* Helpers typographiques (surchargeables par les utilities Tailwind) */
 .wrap {
   max-width: var(--maxw);
   margin: 0 auto;
@@ -168,15 +163,8 @@
   background: var(--accent);
   display: inline-block;
 }
-/* En-tête de section partagé (offer / presentation / formations).
-   Base commune ; variantes centrées (.faq-head / .format-head) restent locales. */
 .sec-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--s-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--s-5);
+  @include heads.section-head;
 }
 .sec-head h2 {
   margin-top: 16px;

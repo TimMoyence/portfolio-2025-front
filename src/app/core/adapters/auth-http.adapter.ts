@@ -37,11 +37,6 @@ export class AuthHttpAdapter implements AuthPort {
     return this.http.get<AuthUser>(`${this.baseUrl}/auth/me`);
   }
 
-  /**
-   * Envoie le jeton Google au backend pour authentification OAuth. Inclut
-   * eventuellement `inviteToken` pour declencher l'acceptation d'invitation
-   * magic-link cote serveur (hook AuthenticateGoogleUser.tryAcceptInvitation).
-   */
   googleAuth(idToken: string, inviteToken?: string): Observable<AuthSession> {
     const body: { idToken: string; inviteToken?: string } = { idToken };
     if (inviteToken) {

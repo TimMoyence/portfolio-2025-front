@@ -83,7 +83,7 @@ describe('animateValue', () => {
     runFrame(1100); // progress 1 -> frame finale = to
 
     expect(frames[0]).toBe(0);
-    expect(frames[1]).toBeCloseTo(87.5, 5); // 100 * (1 - (1 - 0.5)^3)
+    expect(frames[1]).toBeCloseTo(87.5, 5);
     expect(frames[frames.length - 1]).toBe(100);
     expect(onComplete).toHaveBeenCalledTimes(1);
     expect(queue.length).toBe(0);
@@ -116,7 +116,7 @@ describe('animateValue', () => {
       onFrame: (v) => frames.push(v),
     });
 
-    runFrame(1000); // progress 0 -> doit valoir 0
+    runFrame(1000);
 
     expect(frames[0]).toBe(0);
   });
@@ -132,7 +132,7 @@ describe('animateValue', () => {
     });
 
     runFrame(1000);
-    runFrame(1050); // 30 + (10 - 30) * 0.875 = 12.5
+    runFrame(1050);
     runFrame(1100);
 
     expect(frames[0]).toBe(30);
@@ -206,7 +206,7 @@ describe('animateValue', () => {
     });
 
     runFrame(1000);
-    runFrame(1100); // progress 1 -> onFrame(to) = onFrame(NaN)
+    runFrame(1100);
 
     expect(Number.isNaN(frames[frames.length - 1])).toBe(true);
     expect(onComplete).toHaveBeenCalledTimes(1);
@@ -246,7 +246,7 @@ describe('animateValue', () => {
       });
 
       runFrame(1000);
-      runFrame(1100); // complet
+      runFrame(1100);
 
       expect(() => handle.cancel()).not.toThrow();
       expect(onComplete).toHaveBeenCalledTimes(1);

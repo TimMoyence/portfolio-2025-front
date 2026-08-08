@@ -95,8 +95,6 @@ export const routes: Routes = [
     },
   },
   {
-    // L'étude de cas dédiée a été retirée ; l'URL était indexée, on la
-    // redirige vers la grille des réalisations plutôt que de servir une 404.
     path: 'client-project',
     redirectTo: 'projets',
     pathMatch: 'full' as const,
@@ -134,8 +132,6 @@ export const routes: Routes = [
       seoKey: 'growth-audit',
     },
   },
-  // Hub L'Atelier — page vitrine indexable regroupant les deux experiences
-  // jouables (Meteo + Sebastian) avec demos simulees autonomes.
   {
     path: 'atelier',
     pathMatch: 'full',
@@ -145,8 +141,6 @@ export const routes: Routes = [
       seoKey: 'atelier',
     },
   },
-  // Pages publiques de presentation des ateliers (indexables, marketing).
-  // Affichent une marketing page invitant a s'inscrire / acceder a l'app.
   {
     path: 'atelier/meteo',
     canActivate: [redirectIfAuthorizedGuard('weather')],
@@ -170,7 +164,6 @@ export const routes: Routes = [
     },
   },
 
-  // Apps reelles, protegees par auth + role. Non indexables.
   {
     path: 'atelier/meteo/app',
     canActivate: [authGuard, roleGuard('weather')],
@@ -284,10 +277,6 @@ export const routes: Routes = [
       seoKey: 'formations-audit-seo-diy-toolkit',
     },
   },
-  // Routes dediees aux formations migrees en composants slide-driven
-  // (Tasks 19/20/21 — BIG BANG slide-engine). Chaque formation expose
-  // son propre composant standalone plutot que la generic page-driven
-  // historique (registry + buildFormationRoutes supprimes en Task 22).
   {
     path: 'formations/ia-solopreneurs',
     loadComponent: () =>

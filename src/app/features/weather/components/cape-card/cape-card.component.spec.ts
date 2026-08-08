@@ -57,35 +57,21 @@ describe('CapeCardComponent', () => {
     expect(component.cape()).toBeNull();
   });
 
-  it("devrait afficher 'Stable' pour un CAPE < 500", () => {
-    fixture.componentRef.setInput('cape', 200);
-    fixture.detectChanges();
-    expect(component.instabilityLabel()).toContain('Stable');
-  });
+  const INSTABILITY_CASES: readonly (readonly [number, string, string])[] = [
+    [200, 'Stable', 'CAPE < 500'],
+    [750, 'marginale', 'CAPE entre 500 et 1000'],
+    [1500, 'mod', 'CAPE entre 1000 et 2000'],
+    [2500, 'forte', 'CAPE entre 2000 et 3000'],
+    [3500, 'extr', 'CAPE >= 3000'],
+  ];
 
-  it("devrait afficher 'marginale' pour un CAPE entre 500 et 1000", () => {
-    fixture.componentRef.setInput('cape', 750);
-    fixture.detectChanges();
-    expect(component.instabilityLabel()).toContain('marginale');
-  });
-
-  it("devrait afficher 'modérée' pour un CAPE entre 1000 et 2000", () => {
-    fixture.componentRef.setInput('cape', 1500);
-    fixture.detectChanges();
-    expect(component.instabilityLabel()).toContain('mod');
-  });
-
-  it("devrait afficher 'forte' pour un CAPE entre 2000 et 3000", () => {
-    fixture.componentRef.setInput('cape', 2500);
-    fixture.detectChanges();
-    expect(component.instabilityLabel()).toContain('forte');
-  });
-
-  it("devrait afficher 'extrême' pour un CAPE >= 3000", () => {
-    fixture.componentRef.setInput('cape', 3500);
-    fixture.detectChanges();
-    expect(component.instabilityLabel()).toContain('extr');
-  });
+  for (const [cape, attendu, contexte] of INSTABILITY_CASES) {
+    it(`devrait afficher '${attendu}' pour un ${contexte}`, () => {
+      fixture.componentRef.setInput('cape', cape);
+      fixture.detectChanges();
+      expect(component.instabilityLabel()).toContain(attendu);
+    });
+  }
 
   it('devrait limiter la position de jauge a 100%', () => {
     fixture.componentRef.setInput('cape', 5000);

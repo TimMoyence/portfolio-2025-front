@@ -1,0 +1,11 @@
+@mixin deck-tokens($accent, $accent-hover, $accent-dark) {
+  --accent: #{$accent};
+  --accent-hover: #{$accent-hover};
+  --accent-dark: #{$accent-dark};
+  --slide-deck-bg: #ffffff;
+  --card-bg: #ffffff;
+  --card-bg-soft: var(--slide-card-soft);
+  --text: var(--ink);
+  --text-muted: var(--slide-text-muted);
+  --border: rgba(var(--ink-rgb), 0.12);
+}

@@ -66,9 +66,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    // Le footer contient <address itemprop> + <time datetime> + 7 liens
-    // internal linking qui doivent etre dans le HTML prerendu pour SEO.
-    // Il ne doit donc pas etre sous @defer (on viewport) (P6 fix).
     const footerElement = compiled.querySelector('app-footer');
     expect(footerElement).not.toBeNull();
   });

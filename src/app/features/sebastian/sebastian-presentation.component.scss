@@ -1,4 +1,6 @@
 @use '../../styles-shared/breakpoints' as bp;
+@use '../../styles-shared/sebastian-panels' as seb;
+@use '../../styles-shared/surfaces' as surfaces;
 @use '../landing-shared';
 
 :host {
@@ -69,12 +71,7 @@
 }
 
 .seb-panel {
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  background: linear-gradient(165deg, rgba(42, 32, 18, 0.6), rgba(22, 16, 10, 0.55));
-  border-color: rgba(230, 170, 70, 0.18);
+  @include seb.seb-panel;
 }
 
 .seb-head {
@@ -199,37 +196,11 @@
 }
 
 .heat-big {
-  display: grid;
-  grid-template-columns: repeat(14, 1fr);
-  gap: 5px;
-
-  i {
-    aspect-ratio: 1;
-    border-radius: 3px;
-    background: rgba(230, 170, 70, 0.12);
-    transition: transform 0.3s var(--ease);
-
-    &.l1 {
-      background: rgba(230, 170, 70, 0.3);
-    }
-
-    &.l2 {
-      background: rgba(230, 170, 70, 0.55);
-    }
-
-    &.l3 {
-      background: rgba(230, 170, 70, 0.85);
-    }
-  }
+  @include seb.heat-grid;
 }
 
 .heat-legend {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-  margin-top: 10px;
+  @include surfaces.mono-caption;
 }
 
 .meteo-hint {

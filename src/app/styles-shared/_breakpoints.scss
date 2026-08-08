@@ -1,14 +1,3 @@
-/*
-  Mixins de breakpoints partagés (compile-time, zéro output tant que non inclus).
-
-  Valeurs figées depuis les media queries récurrentes du design Asili :
-  - tablet : max-width 860px
-  - mobile : max-width 560px
-
-  Usage : `@use "…/styles-shared/breakpoints" as bp;` puis
-  `@include bp.tablet { … }` / `@include bp.mobile { … }`.
-  Rendu strictement identique aux media queries d'origine (le corps passe via @content).
-*/
 @mixin tablet {
   @media (max-width: 860px) {
     @content;

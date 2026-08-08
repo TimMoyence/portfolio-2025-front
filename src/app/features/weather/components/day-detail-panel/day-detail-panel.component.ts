@@ -10,7 +10,8 @@ import {
 import type { DailyForecast, HourlyForecast } from '../../../../core/models/weather.model';
 import { UnitPipe } from '../../pipes/unit.pipe';
 import { UnitPreferencesService } from '../../services/unit-preferences.service';
-import { weatherCodeToDescription, weatherCodeToIcon } from '../../utils/weather-icons';
+import { getWeatherDescription } from '../../utils/weather-descriptions';
+import { weatherCodeToIcon } from '../../utils/weather-icons';
 
 @Component({
   selector: 'app-day-detail-panel',
@@ -146,7 +147,7 @@ export class DayDetailPanelComponent {
       dayName: dayName.charAt(0).toUpperCase() + dayName.slice(1),
       dateFormatted,
       icon: weatherCodeToIcon(data.weather_code[idx]),
-      description: weatherCodeToDescription(data.weather_code[idx]),
+      description: getWeatherDescription(data.weather_code[idx]),
       tempMax: data.temperature_2m_max[idx],
       tempMin: data.temperature_2m_min[idx],
       uvMax: data.uv_index_max?.[idx] ?? 0,

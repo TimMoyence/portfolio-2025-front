@@ -80,7 +80,6 @@ describe('SlideVideoComponent', () => {
     fixture.detectChanges();
     const iframe = fixture.nativeElement.querySelector('iframe');
     expect(iframe).toBeTruthy();
-    // L'hôte hors allowlist produit une source vide/neutre — jamais l'URL brute.
     const src = iframe.getAttribute('src') ?? '';
     expect(src).not.toContain('evil.example');
     expect(src).toBe('');

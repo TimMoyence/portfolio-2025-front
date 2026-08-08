@@ -1,12 +1,6 @@
+@use '../../../styles-shared/deck-tokens' as deck;
+
 :host {
-  --accent: #0f7b65;
-  --accent-hover: #0c6452;
-  --accent-dark: #094d3f;
-  --slide-deck-bg: #ffffff;
-  --card-bg: #ffffff;
-  --card-bg-soft: var(--slide-card-soft);
-  --text: var(--ink);
-  --text-muted: var(--slide-text-muted);
-  --border: rgba(var(--ink-rgb), 0.12);
+  @include deck.deck-tokens(#0f7b65, #0c6452, #094d3f);
   display: block;
 }

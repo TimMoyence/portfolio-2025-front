@@ -1,7 +1,7 @@
 import type { ClientReport } from './audit-client-report.model';
 
 export type AuditContactMethod = 'EMAIL' | 'PHONE';
-export type AuditProcessingStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+type AuditProcessingStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
 
 /**
  * Cle litterale d'un pilier d'audit. Duplique du type backend
@@ -49,11 +49,6 @@ export interface AuditSummaryResponse {
   summaryText: string | null;
   keyChecks: Record<string, unknown>;
   quickWins: string[];
-  /**
-   * Piliers scores par le backend. Type `Record<string, number>` a la boundary
-   * HTTP pour tolerer une eventuelle evolution de la liste cote serveur.
-   * Pour l'iteration typee, utiliser `PILLAR_KEYS`.
-   */
   pillarScores: Record<string, number>;
 }
 
@@ -76,7 +71,6 @@ export interface AuditCompletedEvent {
   keyChecks: Record<string, unknown>;
   quickWins: string[];
   pillarScores: Record<string, number>;
-  /** Optionnel pour retro-compatibilite : ancien format sans clientReport. */
   clientReport?: ClientReport | null;
   updatedAt: string;
 }

@@ -61,11 +61,6 @@ export class SlideDeckComponent implements AfterViewInit {
     });
   });
 
-  /**
-   * Retourne -1 si aucune slide n'est visible, et 0 par defaut tant que la
-   * slide courante n'est pas resynchronisee sur le referentiel filtre
-   * (changement de mode) — coherent avec `scrollToSibling`.
-   */
   protected readonly currentVisibleIndex = computed(() => {
     const list = this.visibleSlides();
     if (list.length === 0) {
@@ -103,12 +98,14 @@ export class SlideDeckComponent implements AfterViewInit {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    // Laisse le temps aux templates outlet'd de materialiser dans le DOM
-    // avant d'enregistrer la premiere slide + binder le scroll listener.
-    setTimeout(() => {
+    this.whenOutletTemplatesRendered(() => {
       this.bootstrapInitialSlide();
       this.attachScrollListener();
-    }, 0);
+    });
+  }
+
+  private whenOutletTemplatesRendered(run: () => void): void {
+    setTimeout(run, 0);
   }
 
   private bootstrapInitialSlide(): void {
@@ -139,21 +136,18 @@ export class SlideDeckComponent implements AfterViewInit {
     });
   }
 
-  /**
-   * Synchronise `currentId` selon la slide qui occupe la moitie du
-   * viewport. Plus fiable qu'un IntersectionObserver avec scroll-snap :
-   * on travaille sur `scrollTop` + `clientHeight` mesures, sans flicker.
-   */
   private syncCurrentFromScroll(): void {
     const root = this.deckRef().nativeElement;
     const sections = Array.from(root.querySelectorAll<HTMLElement>('section.slide'));
     if (sections.length === 0) {
       return;
     }
-    const mid = root.scrollTop + root.clientHeight / 2;
-    const current = sections.find((s) => s.offsetTop <= mid && s.offsetTop + s.clientHeight > mid);
-    if (current && current.id && current.id !== this.service.current()) {
-      this.service.goTo(current.id);
+    const viewportMiddle = root.scrollTop + root.clientHeight / 2;
+    const sectionAtMiddle = sections.find(
+      (s) => s.offsetTop <= viewportMiddle && s.offsetTop + s.clientHeight > viewportMiddle,
+    );
+    if (sectionAtMiddle?.id && sectionAtMiddle.id !== this.service.current()) {
+      this.service.goTo(sectionAtMiddle.id);
     }
   }
 
@@ -221,11 +215,6 @@ export class SlideDeckComponent implements AfterViewInit {
     }
   }
 
-  /**
-   * Fait defiler le deck vers la slide voisine (`+1` ou `-1`).
-   * Utilise `scrollTo` direct sur le container — plus fiable que
-   * `scrollIntoView` qui scroll le mauvais ancestor avec scroll-snap.
-   */
   private scrollToSibling(direction: 1 | -1): void {
     const root = this.deckRef().nativeElement;
     const sections = Array.from(root.querySelectorAll<HTMLElement>('section.slide'));

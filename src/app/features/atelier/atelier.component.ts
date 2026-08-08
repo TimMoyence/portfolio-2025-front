@@ -18,6 +18,10 @@ import {
   type DemoCity,
 } from '../../shared/demos/meteo-demo';
 import {
+  MeteoDemoCardComponent,
+  type MeteoDemoCardLabels,
+} from '../../shared/demos/meteo-demo-card/meteo-demo-card.component';
+import {
   buildDeterministicHeatmap,
   buildRandomHeatmap,
   gaugeOffset,
@@ -26,7 +30,7 @@ import {
 @Component({
   selector: 'app-atelier',
   standalone: true,
-  imports: [RouterLink, RevealOnScrollDirective, AsiliCtaBandComponent],
+  imports: [RouterLink, RevealOnScrollDirective, AsiliCtaBandComponent, MeteoDemoCardComponent],
   templateUrl: './atelier.component.html',
   styleUrl: './atelier.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,6 +68,20 @@ export class AtelierComponent {
       windTxt: $localize`:@@atelierMeteoWindS:S`,
     },
   });
+
+  protected readonly meteoLabels: MeteoDemoCardLabels = {
+    live: $localize`:@@atelierMeteoLive:EN DIRECT · 14:20`,
+    feels: $localize`:@@atelierMeteoFeels:Ressenti`,
+    humidity: $localize`:@@atelierMeteoHumidity:Humidité`,
+    uv: $localize`:@@atelierMeteoUv:Indice UV`,
+    air: $localize`:@@atelierMeteoAir:Qualité air`,
+    compassLabel: $localize`:@@atelierMeteoCompassLabel:Boussole de vent`,
+    windCap: $localize`:@@atelierMeteoWindCap:Vent`,
+    solarLabel: $localize`:@@atelierMeteoSolarLabel:Arc solaire`,
+    solarCap: $localize`:@@atelierMeteoSolarCap:Arc solaire`,
+    citiesLabel: $localize`:@@atelierMeteoCitiesLabel:Choisir une ville`,
+    hint: $localize`:@@atelierMeteoHint:Changez de ville — tout réagit, sans login.`,
+  };
 
   protected readonly activeCityId = signal<string>('bordeaux');
 

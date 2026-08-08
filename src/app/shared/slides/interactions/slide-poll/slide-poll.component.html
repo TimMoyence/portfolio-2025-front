@@ -20,12 +20,6 @@
       }
     </div>
 
-    <!--
-      Region live presente des le rendu et vide tant qu'aucun vote n'a eu
-      lieu : une region inseree APRES le vote ne serait pas annoncee par la
-      plupart des lecteurs d'ecran, qui n'observent que les regions deja
-      presentes dans l'arbre.
-    -->
     <p class="slide-poll__status" role="status" aria-live="polite">
       @if (votedLabel(); as label) {
         <span i18n="@@slidePollVoteRecorded">Vote enregistré : {{ label }}</span>

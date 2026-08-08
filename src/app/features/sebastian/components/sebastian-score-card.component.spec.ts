@@ -33,35 +33,21 @@ describe('SebastianScoreCardComponent', () => {
     expect(card).toBeTruthy();
   });
 
-  it('devrait afficher le score numerique', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('72');
-  });
+  const SCORE_CARD_TEXTS: readonly (readonly [string, string])[] = [
+    ['le score numerique', '72'],
+    ["l'indicateur de phase", 'Phase 2'],
+    ['le message', 'Bonne progression, continuez !'],
+    ["la barre d'adherence aux objectifs", '60'],
+    ['le bonus de tendance quand present', '8'],
+    ['le bonus de streak quand present', '4'],
+  ];
 
-  it("devrait afficher l'indicateur de phase", () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('Phase 2');
-  });
-
-  it('devrait afficher le message', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('Bonne progression, continuez !');
-  });
-
-  it("devrait afficher la barre d'adherence aux objectifs", () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('60');
-  });
-
-  it('devrait afficher le bonus de tendance quand present', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('8');
-  });
-
-  it('devrait afficher le bonus de streak quand present', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('4');
-  });
+  for (const [libelle, attendu] of SCORE_CARD_TEXTS) {
+    it(`devrait afficher ${libelle}`, () => {
+      const content = fixture.nativeElement.textContent as string;
+      expect(content).toContain(attendu);
+    });
+  }
 
   it('devrait ne pas afficher le bonus de tendance quand absent', () => {
     host.score.set(

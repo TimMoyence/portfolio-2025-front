@@ -164,31 +164,3 @@ export const MOCK_DAILY_COUNTS = {
   coffee: { current: 2, goal: 4 },
   alcohol: { current: 1, goal: 3 },
 } as const;
-
-export const HEATMAP_DAY_LABELS: readonly string[] = [
-  $localize`:@@sebastian-pres.heatmap.day.mon:L`,
-  $localize`:@@sebastian-pres.heatmap.day.tue:M`,
-  $localize`:@@sebastian-pres.heatmap.day.wed:M`,
-  $localize`:@@sebastian-pres.heatmap.day.thu:J`,
-  $localize`:@@sebastian-pres.heatmap.day.fri:V`,
-  $localize`:@@sebastian-pres.heatmap.day.sat:S`,
-  $localize`:@@sebastian-pres.heatmap.day.sun:D`,
-];
-
-export const TREND_DAY_LABELS: readonly string[] = [
-  $localize`:@@sebastian-pres.trend.day.mon:Lun`,
-  $localize`:@@sebastian-pres.trend.day.tue:Mar`,
-  $localize`:@@sebastian-pres.trend.day.wed:Mer`,
-  $localize`:@@sebastian-pres.trend.day.thu:Jeu`,
-  $localize`:@@sebastian-pres.trend.day.fri:Ven`,
-  $localize`:@@sebastian-pres.trend.day.sat:Sam`,
-  $localize`:@@sebastian-pres.trend.day.sun:Dim`,
-];
-
-export function getHeatmapLevel(point: SebastianHeatmapPoint): number {
-  if (point.combined === 0) return 0;
-  if (point.combined <= 1) return 1;
-  if (point.combined <= 3) return 2;
-  if (point.combined <= 4) return 3;
-  return 4;
-}

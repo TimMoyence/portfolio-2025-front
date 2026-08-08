@@ -1,3 +1,4 @@
+@use '../../../styles-shared/surfaces' as surfaces;
 :host {
   display: block;
 }
@@ -30,15 +31,7 @@
 }
 
 .asili-logo {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  font-family: var(--font-display);
-  font-size: 27px;
-  line-height: 1;
-  color: var(--ink);
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+  @include surfaces.asili-logo(flex);
 }
 
 .asili-logo__name {

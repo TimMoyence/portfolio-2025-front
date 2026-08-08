@@ -5,7 +5,6 @@ import type {
   SebastianGoal,
   SebastianHealthScore,
   SebastianPeriodReport,
-  SebastianProfile,
   SebastianStats,
   SebastianTrendData,
 } from '../../app/core/models/sebastian.model';
@@ -154,14 +153,6 @@ export function buildSebastianBacResult(
     ],
     estimatedSoberAt: '2026-04-06T19:30:00.000Z',
     legalLimit: 0.5,
-    ...overrides,
-  };
-}
-
-export function buildSebastianProfile(overrides?: Partial<SebastianProfile>): SebastianProfile {
-  return {
-    weightKg: 70,
-    widmarkR: 0.68,
     ...overrides,
   };
 }

@@ -4,7 +4,7 @@ export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';
 
 const TOKEN_KEY = 'portfolio_jwt';
 
-export const MOCK_USER = {
+const MOCK_USER = {
   id: '1',
   email: 'test@test.com',
   firstName: 'Test',

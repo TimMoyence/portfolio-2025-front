@@ -98,9 +98,9 @@ describe('NavbarComponent', () => {
     it("devrait conserver la bascule du dropdown L'Atelier (chevron)", () => {
       fixture.detectChanges();
       expect(component.atelierDropdown.isOpen).toBeFalse();
-      component.toggleAtelierDropdown();
+      component.toggleDropdown(component.atelierDropdown);
       expect(component.atelierDropdown.isOpen).toBeTrue();
-      component.closeAtelierDropdown();
+      component.closeDropdown(component.atelierDropdown);
       expect(component.atelierDropdown.isOpen).toBeFalse();
     });
 

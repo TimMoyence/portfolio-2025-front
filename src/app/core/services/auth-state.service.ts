@@ -7,10 +7,6 @@ import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 const TOKEN_KEY = 'portfolio_jwt';
 const REFRESH_MARGIN_S = 30;
 
-/**
- * Le refresh token est gere exclusivement par un cookie HttpOnly securise
- * cote backend — il n'est jamais accessible en JavaScript.
- */
 @Injectable({ providedIn: 'root' })
 export class AuthStateService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));

@@ -2,7 +2,6 @@ import { of } from 'rxjs';
 import type {
   AuthSession,
   AuthUser,
-  ChangePasswordPayload,
   ForgotPasswordPayload,
   LoginCredentials,
   ResetPasswordPayload,
@@ -35,6 +34,7 @@ export function buildAuthSession(overrides?: Partial<AuthSession>): AuthSession 
 export function buildLoginCredentials(overrides?: Partial<LoginCredentials>): LoginCredentials {
   return {
     email: 'test@example.com',
+    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
     password: 'Password123!',
     ...overrides,
   };
@@ -53,11 +53,8 @@ export function buildResetPasswordPayload(
   overrides?: Partial<ResetPasswordPayload>,
 ): ResetPasswordPayload {
   return {
-    // Jeton factice, volontairement sans entropie : la valeur precedente etait
-    // un hexadecimal aleatoire de 64 caracteres que le scan de secrets prenait
-    // pour une vraie cle. Aucun test ne depend de son contenu — les specs
-    // comparent le corps de la requete au payload lui-meme.
     token: '0'.repeat(64),
+    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
     newPassword: 'NewPassword123!',
     ...overrides,
   };
@@ -67,17 +64,8 @@ export function buildSetPasswordPayload(
   overrides?: Partial<SetPasswordPayload>,
 ): SetPasswordPayload {
   return {
+    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
     newPassword: 'NewPassword123!',
-    ...overrides,
-  };
-}
-
-export function buildChangePasswordPayload(
-  overrides?: Partial<ChangePasswordPayload>,
-): ChangePasswordPayload {
-  return {
-    currentPassword: 'OldPassword123!',
-    newPassword: 'NewPassword456!',
     ...overrides,
   };
 }

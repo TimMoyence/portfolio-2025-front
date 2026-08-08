@@ -46,40 +46,10 @@
             <th class="py-2 px-2 text-right font-medium" i18n="weather.table.max|@@weatherTableMax">
               Max
             </th>
-            <th
-              class="py-2 px-2 text-right font-medium"
-              i18n="weather.table.rain|@@weatherTableRain"
-            >
-              Pluie
-            </th>
-            <th
-              class="py-2 px-2 text-right font-medium"
-              i18n="weather.table.wind|@@weatherTableWind"
-            >
-              Vent
-            </th>
-            @if (isCurious()) {
-              <th
-                class="py-2 px-2 text-right font-medium"
-                i18n="weather.table.humidity|@@weatherTableHumidity"
-              >
-                Hum.
-              </th>
-            }
-            @if (isExpert()) {
-              <th
-                class="py-2 px-2 text-right font-medium"
-                i18n="weather.table.gusts|@@weatherTableGusts"
-              >
-                Raf.
-              </th>
-              <th
-                class="py-2 px-2 text-right font-medium"
-                i18n="weather.table.pressure|@@weatherTablePressure"
-              >
-                Pression
-              </th>
-            }
+            <ng-container
+              [ngTemplateOutlet]="measureHeaders"
+              [ngTemplateOutletContext]="{ pressureRounded: false }"
+            />
           </tr>
         </thead>
         <tbody>
@@ -177,40 +147,10 @@
             >
               Temp.
             </th>
-            <th
-              class="py-2 px-2 text-right font-medium"
-              i18n="weather.table.rain|@@weatherTableRain"
-            >
-              Pluie
-            </th>
-            <th
-              class="py-2 px-2 text-right font-medium"
-              i18n="weather.table.wind|@@weatherTableWind"
-            >
-              Vent
-            </th>
-            @if (isCurious()) {
-              <th
-                class="py-2 px-2 text-right font-medium"
-                i18n="weather.table.humidity|@@weatherTableHumidity"
-              >
-                Hum.
-              </th>
-            }
-            @if (isExpert()) {
-              <th
-                class="py-2 px-2 text-right font-medium"
-                i18n="weather.table.gusts|@@weatherTableGusts"
-              >
-                Raf.
-              </th>
-              <th
-                class="py-2 px-2 text-right font-medium rounded-r-lg"
-                i18n="weather.table.pressure|@@weatherTablePressure"
-              >
-                Pression
-              </th>
-            }
+            <ng-container
+              [ngTemplateOutlet]="measureHeaders"
+              [ngTemplateOutletContext]="{ pressureRounded: true }"
+            />
           </tr>
         </thead>
         <tbody>
@@ -288,3 +228,32 @@
     </div>
   }
 </div>
+
+<ng-template #measureHeaders let-pressureRounded="pressureRounded">
+  <th class="py-2 px-2 text-right font-medium" i18n="weather.table.rain|@@weatherTableRain">
+    Pluie
+  </th>
+  <th class="py-2 px-2 text-right font-medium" i18n="weather.table.wind|@@weatherTableWind">
+    Vent
+  </th>
+  @if (isCurious()) {
+    <th
+      class="py-2 px-2 text-right font-medium"
+      i18n="weather.table.humidity|@@weatherTableHumidity"
+    >
+      Hum.
+    </th>
+  }
+  @if (isExpert()) {
+    <th class="py-2 px-2 text-right font-medium" i18n="weather.table.gusts|@@weatherTableGusts">
+      Raf.
+    </th>
+    <th
+      class="py-2 px-2 text-right font-medium"
+      [class.rounded-r-lg]="pressureRounded"
+      i18n="weather.table.pressure|@@weatherTablePressure"
+    >
+      Pression
+    </th>
+  }
+</ng-template>

@@ -7,6 +7,7 @@ import {
   buildBaseUrlFromRequest,
   buildLocalizedPath,
   normalizePath,
+  trimTrailingSlashes,
 } from './url-utils';
 
 const stubRequest = (opts: {
@@ -37,6 +38,31 @@ describe('url-utils', () => {
 
     it('supprime les query et fragment', () => {
       expect(normalizePath('/fr/presentation?utm=x#section')).toBe('/fr/presentation');
+    });
+
+    it('replie les slashs de bordure multiples', () => {
+      expect(normalizePath('///contact///')).toBe('/contact');
+      expect(normalizePath('//')).toBe('/');
+      expect(normalizePath('/'.repeat(2048))).toBe('/');
+      expect(normalizePath(`${'/'.repeat(2048)}contact`)).toBe('/contact');
+    });
+
+    it('preserve les slashs internes', () => {
+      expect(normalizePath('/fr/atelier//meteo/')).toBe('/fr/atelier//meteo');
+    });
+
+    it('accepte un chemin sans slash initial', () => {
+      expect(normalizePath('contact')).toBe('/contact');
+      expect(normalizePath('')).toBe('/');
+    });
+  });
+
+  describe('trimTrailingSlashes', () => {
+    it('ne retire que les slashs finaux', () => {
+      expect(trimTrailingSlashes('/fr/contact///')).toBe('/fr/contact');
+      expect(trimTrailingSlashes('///')).toBe('');
+      expect(trimTrailingSlashes('/fr/contact')).toBe('/fr/contact');
+      expect(trimTrailingSlashes('')).toBe('');
     });
   });
 
@@ -72,13 +98,13 @@ describe('url-utils', () => {
 
   describe('LOCALE_PREFIX_RE', () => {
     it('extrait le prefixe locale en debut de chemin', () => {
-      expect('/fr/contact'.match(LOCALE_PREFIX_RE)?.[1]).toBe('fr');
-      expect('/en'.match(LOCALE_PREFIX_RE)?.[1]).toBe('en');
+      expect(LOCALE_PREFIX_RE.exec('/fr/contact')?.[1]).toBe('fr');
+      expect(LOCALE_PREFIX_RE.exec('/en')?.[1]).toBe('en');
     });
 
     it('ignore les chemins sans prefixe locale reconnu', () => {
-      expect('/contact'.match(LOCALE_PREFIX_RE)).toBeNull();
-      expect('/de/contact'.match(LOCALE_PREFIX_RE)).toBeNull();
+      expect(LOCALE_PREFIX_RE.exec('/contact')).toBeNull();
+      expect(LOCALE_PREFIX_RE.exec('/de/contact')).toBeNull();
     });
   });
 

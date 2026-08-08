@@ -134,12 +134,12 @@ export function formatSummaryText(summaryText: string | null | undefined): strin
     .replace(/\r\n?/g, '\n')
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/__([^_]+)__/g, '$1')
-    .replace(/[ \t]+/g, ' ')
-    .replace(/ *\n */g, '\n')
+    .replace(/[^\S\n]+/g, ' ')
+    .replace(/ ?\n ?/g, '\n')
     .trim()
     .replace(new RegExp(`([^\\n])\\s+${sectionLabels}\\s*:`, 'gi'), '$1\n\n$2 :')
     .replace(new RegExp(`${prioritiesLabel}\\s*:\\s*(\\d+[).])`, 'gi'), '$1 :\n$2')
-    .replace(/\s+(\d+[).])\s*/g, '\n$1 ')
+    .replace(/[ \n]{1,2}(\d+[).]) ?/g, '\n$1 ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }

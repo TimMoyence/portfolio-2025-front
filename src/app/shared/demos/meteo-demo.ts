@@ -1,10 +1,3 @@
-/**
- * Les 3 champs localises (`cond`, `aqiLabel`, `windTxt`) restent hors de ce
- * module : leurs IDs de traduction `$localize` divergent entre le hub Atelier
- * (`@@atelierMeteo*`) et la landing Meteo (`@@weatherLanding*`) et doivent
- * donc rester LOCAUX a chaque composant.
- */
-
 export const ARC = {
   cx: 95,
   cy: 92,

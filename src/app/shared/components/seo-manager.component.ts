@@ -9,6 +9,22 @@ import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-regist
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
 
+function trimLeadingSlashes(value: string): string {
+  let start = 0;
+  while (start < value.length && value[start] === '/') {
+    start += 1;
+  }
+  return value.slice(start);
+}
+
+function trimTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value[end - 1] === '/') {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
+
 @Component({
   selector: 'app-seo-manager',
   standalone: true,
@@ -84,33 +100,8 @@ export class SeoManagerComponent {
     const canonicalState = this.resolveCanonicalState(currentUrl);
     const canonicalUrl = this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath);
     const index = typeof forceNoIndex === 'boolean' ? !forceNoIndex : (resolved?.index ?? true);
-    const robots =
-      typeof data['robots'] === 'string'
-        ? (data['robots'] as string)
-        : index
-          ? 'index, follow'
-          : 'noindex, nofollow';
     const ogImage = this.resolveAbsoluteUrl(baseUrl, seo.ogImage);
     const twitterImage = this.resolveAbsoluteUrl(baseUrl, seo.twitterImage ?? ogImage);
-
-    const locales = this.seoRegistry.getLocales();
-    const hreflangs: Record<string, string> = {};
-
-    for (const locale of locales) {
-      const localizedPath =
-        canonicalState.relativePath === '/'
-          ? `/${locale}`
-          : `/${locale}${canonicalState.relativePath}`;
-      hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, localizedPath);
-    }
-    const defaultLocale = this.seoRegistry.getDefaultLocale();
-    if (defaultLocale && locales.includes(defaultLocale)) {
-      const defaultPath =
-        canonicalState.relativePath === '/'
-          ? `/${defaultLocale}`
-          : `/${defaultLocale}${canonicalState.relativePath}`;
-      hreflangs['x-default'] = this.buildAbsoluteUrl(baseUrl, defaultPath);
-    }
 
     this.seoService.updateSeoMetadata({
       ...seo,
@@ -118,9 +109,34 @@ export class SeoManagerComponent {
       twitterImage,
       ogUrl: canonicalUrl,
       canonicalUrl,
-      robots,
-      hreflangs,
+      robots: this.resolveRobots(data, index),
+      hreflangs: this.buildHreflangs(baseUrl, canonicalState.relativePath),
     });
+  }
+
+  private resolveRobots(data: Record<string, unknown>, index: boolean): string {
+    const declared = data['robots'];
+    if (typeof declared === 'string') {
+      return declared;
+    }
+    return index ? 'index, follow' : 'noindex, nofollow';
+  }
+
+  private buildHreflangs(baseUrl: string, relativePath: string): Record<string, string> {
+    const pathFor = (locale: string): string =>
+      relativePath === '/' ? `/${locale}` : `/${locale}${relativePath}`;
+
+    const locales = this.seoRegistry.getLocales();
+    const hreflangs: Record<string, string> = {};
+    for (const locale of locales) {
+      hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, pathFor(locale));
+    }
+
+    const defaultLocale = this.seoRegistry.getDefaultLocale();
+    if (defaultLocale && locales.includes(defaultLocale)) {
+      hreflangs['x-default'] = this.buildAbsoluteUrl(baseUrl, pathFor(defaultLocale));
+    }
+    return hreflangs;
   }
 
   private setDefaultSeo(currentUrl: string, data: Record<string, unknown> = {}): void {
@@ -128,25 +144,7 @@ export class SeoManagerComponent {
     const canonicalState = this.resolveCanonicalState(currentUrl);
     const canonicalUrl = this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath);
 
-    // Genere les hreflangs meme en fallback pour que toutes les pages
-    // aient les liens alternatifs fr/en/x-default vers les moteurs de recherche.
-    const locales = this.seoRegistry.getLocales();
-    const hreflangs: Record<string, string> = {};
-    for (const locale of locales) {
-      const localizedPath =
-        canonicalState.relativePath === '/'
-          ? `/${locale}`
-          : `/${locale}${canonicalState.relativePath}`;
-      hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, localizedPath);
-    }
-    const defaultLocale = this.seoRegistry.getDefaultLocale();
-    if (defaultLocale && locales.includes(defaultLocale)) {
-      const defaultPath =
-        canonicalState.relativePath === '/'
-          ? `/${defaultLocale}`
-          : `/${defaultLocale}${canonicalState.relativePath}`;
-      hreflangs['x-default'] = this.buildAbsoluteUrl(baseUrl, defaultPath);
-    }
+    const hreflangs = this.buildHreflangs(baseUrl, canonicalState.relativePath);
 
     const seoConfig: SeoConfig = {
       title: $localize`:seo.default.title|Fallback SEO title@@seoDefaultTitle:Professional Portfolio | Web Developer & Designer`,
@@ -161,7 +159,7 @@ export class SeoManagerComponent {
       ],
       ogImage: `${baseUrl}/assets/images/logo.webp`,
       twitterCard: 'summary_large_image',
-      robots: typeof data['robots'] === 'string' ? (data['robots'] as string) : 'index, follow',
+      robots: this.resolveRobots(data, true),
       canonicalUrl,
       ogUrl: canonicalUrl,
       hreflangs,
@@ -178,13 +176,9 @@ export class SeoManagerComponent {
     return url.split('?')[0].split('#')[0];
   }
 
-  private buildCanonicalPath(currentUrl: string): string {
-    return this.resolveCanonicalState(currentUrl).canonicalPath;
-  }
-
   private normalizePath(path: string): string {
     const clean = this.getCleanUrl(path);
-    const trimmed = clean.replace(/^\/+/, '').replace(/\/+$/, '');
+    const trimmed = trimTrailingSlashes(trimLeadingSlashes(clean));
     return trimmed ? `/${trimmed}` : '/';
   }
 
@@ -239,7 +233,7 @@ export class SeoManagerComponent {
   }
 
   private buildAbsoluteUrl(baseUrl: string, path: string): string {
-    const trimmedBase = baseUrl.replace(/\/+$/, '');
+    const trimmedBase = trimTrailingSlashes(baseUrl);
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
     return `${trimmedBase}${normalizedPath}`;
   }

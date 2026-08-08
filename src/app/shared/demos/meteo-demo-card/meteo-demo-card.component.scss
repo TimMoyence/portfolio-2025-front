@@ -1,0 +1,14 @@
+@use '../../../styles-shared/breakpoints' as bp;
+@use '../../../styles-shared/meteo-mockup' as meteo;
+
+@include meteo.meteo-mockup;
+
+@include bp.mobile {
+  .meteo-instruments {
+    grid-template-columns: 1fr;
+  }
+
+  .meteo-temp {
+    font-size: 72px;
+  }
+}

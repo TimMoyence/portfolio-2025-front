@@ -16,13 +16,9 @@ import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * Version courante des Conditions Generales de Vente acceptees via le
- * formulaire de capture. Doit etre bumpee a chaque evolution juridique
- * des CGV ; persistee telle quelle dans `LeadMagnetRequest.termsVersion`
- * comme preuve de consentement RGPD.
- */
-export const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
+const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
 
 @Component({
   selector: 'app-toolkit-form',
@@ -125,12 +121,12 @@ export class ToolkitFormComponent {
   readonly state = signal<FormState>('idle');
   readonly submittedEmail = signal('');
 
-  readonly isValid = computed(() => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return (
-      this.firstName().trim().length > 0 && emailRegex.test(this.email()) && this.termsAccepted()
-    );
-  });
+  readonly isValid = computed(
+    () =>
+      this.firstName().trim().length > 0 &&
+      EMAIL_PATTERN.test(this.email()) &&
+      this.termsAccepted(),
+  );
 
   protected readInputValue = readInputValue;
 

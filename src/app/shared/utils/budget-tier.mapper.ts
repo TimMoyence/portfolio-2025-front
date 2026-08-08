@@ -1,10 +1,5 @@
 import type { InteractionProfile } from '../../core/models/interaction-profile.model';
 
-/**
- * Tranche budgetaire telle que persistee dans `InteractionProfile`.
- * Reprise stricte du type domaine : valeurs en euros/mois, `null` quand
- * inconnu.
- */
 export type BudgetTier = NonNullable<InteractionProfile['budgetTier']>;
 
 export function selfRatingToBudgetTier(value: number): BudgetTier {

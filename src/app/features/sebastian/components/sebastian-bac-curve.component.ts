@@ -9,6 +9,11 @@ import {
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import type { SebastianBacResult } from '../../../core/models/sebastian.model';
+import {
+  buildDarkLineChartOptions,
+  buildReferenceLineDataset,
+  formatBloodAlcoholTooltip,
+} from './sebastian-chart.utils';
 
 Chart.register(...registerables);
 
@@ -62,56 +67,15 @@ export class SebastianBacCurveComponent implements OnDestroy {
             tension: 0.4,
             fill: true,
           },
-          {
-            label: 'Limite legale',
-            data: Array(bacData.curve.length).fill(bacData.legalLimit),
-            borderColor: '#dc2626',
-            borderWidth: 1,
-            borderDash: [8, 4],
-            pointRadius: 0,
-            fill: false,
-          },
+          buildReferenceLineDataset(
+            'Limite legale',
+            bacData.legalLimit,
+            bacData.curve.length,
+            '#dc2626',
+          ),
         ],
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            labels: {
-              color: 'rgba(255, 255, 255, 0.8)',
-              font: { size: 11 },
-            },
-          },
-          tooltip: {
-            backgroundColor: 'rgba(12, 9, 2, 0.85)',
-            titleColor: '#ffffff',
-            bodyColor: '#ffffff',
-            callbacks: {
-              label: (ctx) => `${ctx.dataset.label}: ${(ctx.parsed.y ?? 0).toFixed(3)} g/L`,
-            },
-          },
-        },
-        scales: {
-          x: {
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.6)',
-              maxRotation: 45,
-              font: { size: 10 },
-            },
-            grid: { color: 'rgba(255, 255, 255, 0.08)' },
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.6)',
-              font: { size: 10 },
-            },
-            grid: { color: 'rgba(255, 255, 255, 0.08)' },
-          },
-        },
-      },
+      options: buildDarkLineChartOptions({ label: formatBloodAlcoholTooltip }),
     });
   }
 }

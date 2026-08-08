@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import type { EnsembleData } from '../../../../core/models/weather.model';
+import { buildTemperatureLineChartOptions } from '../../utils/weather-chart-options';
 
 Chart.register(...registerables);
 
@@ -101,44 +102,7 @@ export class SpaghettiPlotComponent implements AfterViewInit, OnChanges, OnDestr
     this.chart = new Chart(canvas, {
       type: 'line',
       data: { labels, datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-          mode: 'index',
-          intersect: false,
-        },
-        plugins: {
-          legend: {
-            labels: {
-              color: 'rgba(255, 255, 255, 0.7)',
-              font: { size: 11 },
-            },
-          },
-          tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            titleColor: 'white',
-            bodyColor: 'white',
-          },
-        },
-        scales: {
-          x: {
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.6)',
-              maxRotation: 45,
-              font: { size: 10 },
-            },
-            grid: { color: 'rgba(255, 255, 255, 0.1)' },
-          },
-          y: {
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.6)',
-              callback: (value) => `${value}°`,
-            },
-            grid: { color: 'rgba(255, 255, 255, 0.1)' },
-          },
-        },
-      },
+      options: buildTemperatureLineChartOptions(),
     });
   }
 }

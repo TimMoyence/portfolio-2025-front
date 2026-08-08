@@ -10,10 +10,14 @@ import { AUTH_PORT } from '../../core/ports/auth.port';
 import {
   buildAuthSession,
   buildAuthUser,
+  buildLoginCredentials,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthComponent } from './auth.component';
+
+const VALID_PASSWORD = buildLoginCredentials().password;
+const MISMATCHED_PASSWORD = `${VALID_PASSWORD}-different`;
 
 describe('AuthComponent', () => {
   let component: AuthComponent;
@@ -73,8 +77,8 @@ describe('AuthComponent', () => {
     const form = buildForm(false);
     component.signupForm = {
       email: 'john@example.com',
-      password: 'Password123!',
-      verifPassword: 'Password123!',
+      password: VALID_PASSWORD,
+      verifPassword: VALID_PASSWORD,
       firstName: 'John',
       lastName: 'Doe',
       phone: '  +33 6 12 34 56 78  ',
@@ -89,7 +93,7 @@ describe('AuthComponent', () => {
 
     expect(authService.register).toHaveBeenCalledWith({
       email: 'john@example.com',
-      password: 'Password123!',
+      password: VALID_PASSWORD,
       firstName: 'John',
       lastName: 'Doe',
       phone: '+33 6 12 34 56 78',
@@ -102,8 +106,8 @@ describe('AuthComponent', () => {
     component.activeTab = 'sign-up';
     component.signupForm = {
       email: 'john@example.com',
-      password: 'Password123!',
-      verifPassword: 'Password123!',
+      password: VALID_PASSWORD,
+      verifPassword: VALID_PASSWORD,
       firstName: 'John',
       lastName: 'Doe',
       phone: '',
@@ -123,8 +127,8 @@ describe('AuthComponent', () => {
     const form = buildForm(false);
     component.signupForm = {
       email: 'john@example.com',
-      password: 'Password123!',
-      verifPassword: 'Password456!',
+      password: VALID_PASSWORD,
+      verifPassword: MISMATCHED_PASSWORD,
       firstName: 'John',
       lastName: 'Doe',
       phone: '',
@@ -140,7 +144,7 @@ describe('AuthComponent', () => {
     const form = buildForm(false);
     component.loginForm = {
       email: 'john@example.com',
-      password: 'Password123!',
+      password: VALID_PASSWORD,
     };
     const session: AuthSession = buildAuthSession({
       accessToken: 'token',
@@ -173,7 +177,7 @@ describe('AuthComponent', () => {
     const form = buildForm(false);
     component.loginForm = {
       email: 'john@example.com',
-      password: 'Password123!',
+      password: VALID_PASSWORD,
     };
     authService.login.and.returnValue(
       of(buildAuthSession({ user: buildAuthUser({ firstName: 'John' }) })),
@@ -191,7 +195,7 @@ describe('AuthComponent', () => {
     const form = buildForm(false);
     component.loginForm = {
       email: 'john@example.com',
-      password: 'Password123!',
+      password: VALID_PASSWORD,
     };
     authService.login.and.returnValue(
       of(buildAuthSession({ user: buildAuthUser({ firstName: 'John' }) })),

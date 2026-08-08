@@ -117,7 +117,6 @@ describe('CookieBannerComponent', () => {
     consentServiceStub.shouldShowBanner.and.returnValue(false);
     consentServiceStub.consentChanges$.next(null);
 
-    // Apres destruction, isVisible ne devrait plus etre mis a jour
     expect(fixture.componentInstance.isVisible).toBeTrue();
   });
 

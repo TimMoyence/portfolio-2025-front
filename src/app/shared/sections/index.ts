@@ -2,20 +2,15 @@ export { AsiliHeroComponent } from './asili-hero/asili-hero.component';
 
 export { AsiliMethodComponent, type AsiliMethodStep } from './asili-method/asili-method.component';
 
-export {
-  AsiliPillarsComponent,
-  type AsiliPillar,
-  type AsiliPillarLink,
-  type AsiliPillarVariant,
-} from './asili-pillars/asili-pillars.component';
+export { AsiliPillarsComponent, type AsiliPillar } from './asili-pillars/asili-pillars.component';
 
 export { AsiliCtaBandComponent } from './asili-cta-band/asili-cta-band.component';
+
+export { AsiliFaqComponent, type AsiliFaqItem } from './asili-faq/asili-faq.component';
 
 export {
   AsiliProjectsGridComponent,
   type AsiliProject,
-  type AsiliProjectSize,
-  type AsiliProjectTag,
 } from './asili-projects-grid/asili-projects-grid.component';
 
 export {

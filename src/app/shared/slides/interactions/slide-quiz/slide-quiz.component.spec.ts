@@ -21,12 +21,7 @@ describe('SlideQuizComponent', () => {
   let portStub: jasmine.SpyObj<PresentationPort>;
 
   beforeEach(() => {
-    // `SlideQuizComponent` consomme une shape de quiz « connaissance »
-    // (options: string[], correctIndex) distincte du contrat de profilage
-    // `QuizInteraction`. Le port aplatit la reponse en `unknown`, donc ce
-    // payload legacy reste valide a l'execution ; on le caste localement
-    // pour satisfaire le typage strict de `SlideInteractions`.
-    const scroll = [
+    const knowledgeQuizPayload = [
       {
         type: 'quiz',
         question: 'Quel est le premier réflexe IA ?',
@@ -38,7 +33,7 @@ describe('SlideQuizComponent', () => {
     portStub = createPresentationPortStub(
       buildInteractionsResponse({
         interactions: {
-          'quiz-intro': { scroll },
+          'quiz-intro': { scroll: knowledgeQuizPayload },
         },
       }),
     );

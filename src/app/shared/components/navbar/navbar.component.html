@@ -107,14 +107,9 @@
   @if (!isMobile) {
     <div
       class="asili-nav__item"
-      (mouseenter)="openAtelierDropdown()"
-      (mouseleave)="closeAtelierDropdown()"
+      (mouseenter)="openDropdown(atelierDropdown)"
+      (mouseleave)="closeDropdown(atelierDropdown)"
     >
-      <!--
-        Le label « L'Atelier » navigue vers le hub /atelier (lien réel) ; le
-        chevron reste une bascule du dropdown. Cela rend la section accessible
-        au clic sans casser l'ouverture du menu (survol + chevron).
-      -->
       <span
         class="asili-nav__trigger asili-nav__trigger--linked"
         [class.active]="atelierDropdown.isOpen"
@@ -129,205 +124,59 @@
         >
         <button
           type="button"
-          (click)="toggleAtelierDropdown()"
+          (click)="toggleDropdown(atelierDropdown)"
           [attr.aria-expanded]="atelierDropdown.isOpen"
           aria-haspopup="true"
           class="asili-nav__chevron-btn"
           aria-label="Ouvrir le menu L'Atelier"
           i18n-aria-label="navbar.atelier.toggle|Atelier dropdown toggle@@navAtelierToggle"
         >
-          <svg
-            class="asili-nav__chevron"
-            [class.open]="atelierDropdown.isOpen"
-            width="11"
-            height="11"
-            viewBox="0 0 12 12"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M3 4.5 6 7.5 9 4.5"
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <ng-container
+            *ngTemplateOutlet="navChevron; context: { open: atelierDropdown.isOpen, size: 11 }"
+          ></ng-container>
         </button>
       </span>
-      <div class="asili-dropdown" [class.open]="atelierDropdown.isOpen" role="menu">
-        @for (item of atelierDropdown.items; track item.href) {
-          <a
-            [routerLink]="item.href"
-            (click)="closeAtelierDropdown()"
-            class="asili-drop-item"
-            role="menuitem"
-          >
-            <span class="asili-drop-item__ic">
-              <app-svg-icon [name]="item.icon" [size]="1.25"></app-svg-icon>
-            </span>
-            <span class="asili-drop-item__body">
-              <span class="asili-drop-item__title">{{ item.title }}</span>
-              <span class="asili-drop-item__desc">{{ item.description }}</span>
-            </span>
-          </a>
-        }
-      </div>
+      <ng-container
+        *ngTemplateOutlet="dropdownMenu; context: { $implicit: atelierDropdown }"
+      ></ng-container>
     </div>
   }
 
   @if (isMobile) {
-    <div class="asili-nav__item is-mobile asili-drawer__group">
-      <button
-        type="button"
-        (click)="toggleAtelierDropdown()"
-        [attr.aria-expanded]="atelierDropdown.isOpen"
-        class="asili-nav__link asili-nav__trigger is-mobile"
-      >
-        <span class="asili-drawer__group-label"
-          >{{ atelierDropdown.label }}
-          @if (atelierDropdown.subtitle) {
-            <span class="asili-drawer__sub">{{ atelierDropdown.subtitle }}</span>
-          }
-        </span>
-        <svg
-          class="asili-nav__chevron"
-          [class.open]="atelierDropdown.isOpen"
-          width="13"
-          height="13"
-          viewBox="0 0 12 12"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M3 4.5 6 7.5 9 4.5"
-            stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
-      @if (atelierDropdown.isOpen) {
-        <div class="asili-drawer__sublist">
-          @if (atelierDropdown.href) {
-            <a
-              [routerLink]="atelierDropdown.href"
-              (click)="closeMobileMenu(); closeAtelierDropdown()"
-              class="asili-drawer__sublink asili-drawer__sublink--hub"
-            >
-              {{ atelierDropdown.label }}
-            </a>
-          }
-          @for (item of atelierDropdown.items; track item.href) {
-            <a
-              [routerLink]="item.href"
-              (click)="closeMobileMenu(); closeAtelierDropdown()"
-              class="asili-drawer__sublink"
-            >
-              {{ item.title }}
-            </a>
-          }
-        </div>
-      }
-    </div>
+    <ng-container
+      *ngTemplateOutlet="drawerGroup; context: { $implicit: atelierDropdown }"
+    ></ng-container>
   }
 
   @if (!isMobile) {
     <div
       class="asili-nav__item"
-      (mouseenter)="openFormationsDropdown()"
-      (mouseleave)="closeFormationsDropdown()"
+      (mouseenter)="openDropdown(formationsDropdown)"
+      (mouseleave)="closeDropdown(formationsDropdown)"
     >
       <button
         type="button"
-        (click)="toggleFormationsDropdown()"
+        (click)="toggleDropdown(formationsDropdown)"
         [attr.aria-expanded]="formationsDropdown.isOpen"
         aria-haspopup="true"
         class="asili-nav__link asili-nav__trigger"
         [class.active]="formationsDropdown.isOpen"
       >
         <span>{{ formationsDropdown.label }}</span>
-        <svg
-          class="asili-nav__chevron"
-          [class.open]="formationsDropdown.isOpen"
-          width="11"
-          height="11"
-          viewBox="0 0 12 12"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M3 4.5 6 7.5 9 4.5"
-            stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        <ng-container
+          *ngTemplateOutlet="navChevron; context: { open: formationsDropdown.isOpen, size: 11 }"
+        ></ng-container>
       </button>
-      <div class="asili-dropdown" [class.open]="formationsDropdown.isOpen" role="menu">
-        @for (item of formationsDropdown.items; track item.href) {
-          <a
-            [routerLink]="item.href"
-            (click)="closeFormationsDropdown()"
-            class="asili-drop-item"
-            role="menuitem"
-          >
-            <span class="asili-drop-item__ic">
-              <app-svg-icon [name]="item.icon" [size]="1.25"></app-svg-icon>
-            </span>
-            <span class="asili-drop-item__body">
-              <span class="asili-drop-item__title">{{ item.title }}</span>
-              <span class="asili-drop-item__desc">{{ item.description }}</span>
-            </span>
-          </a>
-        }
-      </div>
+      <ng-container
+        *ngTemplateOutlet="dropdownMenu; context: { $implicit: formationsDropdown }"
+      ></ng-container>
     </div>
   }
 
   @if (isMobile) {
-    <div class="asili-nav__item is-mobile asili-drawer__group">
-      <button
-        type="button"
-        (click)="toggleFormationsDropdown()"
-        [attr.aria-expanded]="formationsDropdown.isOpen"
-        class="asili-nav__link asili-nav__trigger is-mobile"
-      >
-        <span class="asili-drawer__group-label">{{ formationsDropdown.label }}</span>
-        <svg
-          class="asili-nav__chevron"
-          [class.open]="formationsDropdown.isOpen"
-          width="13"
-          height="13"
-          viewBox="0 0 12 12"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M3 4.5 6 7.5 9 4.5"
-            stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
-      @if (formationsDropdown.isOpen) {
-        <div class="asili-drawer__sublist">
-          @for (item of formationsDropdown.items; track item.href) {
-            <a
-              [routerLink]="item.href"
-              (click)="closeMobileMenu(); closeFormationsDropdown()"
-              class="asili-drawer__sublink"
-            >
-              {{ item.title }}
-            </a>
-          }
-        </div>
-      }
-    </div>
+    <ng-container
+      *ngTemplateOutlet="drawerGroup; context: { $implicit: formationsDropdown }"
+    ></ng-container>
   }
 
   @if (isMobile) {
@@ -415,22 +264,9 @@
                   </div>
                 </div>
               }
-              <a
-                routerLink="/profil"
-                (click)="closeUserDropdown()"
-                class="asili-drop-item asili-drop-item--simple"
-              >
-                <app-svg-icon name="person" [size]="1.05"></app-svg-icon>
-                <span i18n="@@navProfileLabel">Profil</span>
-              </a>
-              <button
-                type="button"
-                (click)="logout()"
-                class="asili-drop-item asili-drop-item--simple asili-drop-item--danger"
-              >
-                <app-svg-icon name="close" [size]="1.05"></app-svg-icon>
-                <span i18n="@@navLogoutLabel">Déconnexion</span>
-              </button>
+              <ng-container
+                *ngTemplateOutlet="accountActions; context: { mobile: false }"
+              ></ng-container>
             </div>
           }
         </div>
@@ -447,22 +283,9 @@
               <p class="asili-user-head__name">{{ u.firstName }} {{ u.lastName }}</p>
             </div>
           }
-          <a
-            routerLink="/profil"
-            (click)="closeMobileMenu()"
-            class="asili-drop-item asili-drop-item--simple"
-          >
-            <app-svg-icon name="person" [size]="1.05"></app-svg-icon>
-            <span i18n="@@navProfileLabel">Profil</span>
-          </a>
-          <button
-            type="button"
-            (click)="logout()"
-            class="asili-drop-item asili-drop-item--simple asili-drop-item--danger"
-          >
-            <app-svg-icon name="close" [size]="1.05"></app-svg-icon>
-            <span i18n="@@navLogoutLabel">Déconnexion</span>
-          </button>
+          <ng-container
+            *ngTemplateOutlet="accountActions; context: { mobile: true }"
+          ></ng-container>
         </div>
       }
     } @else {
@@ -478,4 +301,107 @@
       </button>
     }
   </div>
+</ng-template>
+
+<ng-template #navChevron let-open="open" let-size="size">
+  <svg
+    class="asili-nav__chevron"
+    [class.open]="open"
+    [attr.width]="size"
+    [attr.height]="size"
+    viewBox="0 0 12 12"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M3 4.5 6 7.5 9 4.5"
+      stroke="currentColor"
+      stroke-width="1.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</ng-template>
+
+<ng-template #dropdownMenu let-dropdown>
+  <div class="asili-dropdown" [class.open]="dropdown.isOpen" role="menu">
+    @for (item of dropdown.items; track item.href) {
+      <a
+        [routerLink]="item.href"
+        (click)="closeDropdown(dropdown)"
+        class="asili-drop-item"
+        role="menuitem"
+      >
+        <span class="asili-drop-item__ic">
+          <app-svg-icon [name]="item.icon" [size]="1.25"></app-svg-icon>
+        </span>
+        <span class="asili-drop-item__body">
+          <span class="asili-drop-item__title">{{ item.title }}</span>
+          <span class="asili-drop-item__desc">{{ item.description }}</span>
+        </span>
+      </a>
+    }
+  </div>
+</ng-template>
+
+<ng-template #drawerGroup let-dropdown>
+  <div class="asili-nav__item is-mobile asili-drawer__group">
+    <button
+      type="button"
+      (click)="toggleDropdown(dropdown)"
+      [attr.aria-expanded]="dropdown.isOpen"
+      class="asili-nav__link asili-nav__trigger is-mobile"
+    >
+      <span class="asili-drawer__group-label"
+        >{{ dropdown.label }}
+        @if (dropdown.subtitle) {
+          <span class="asili-drawer__sub">{{ dropdown.subtitle }}</span>
+        }
+      </span>
+      <ng-container
+        *ngTemplateOutlet="navChevron; context: { open: dropdown.isOpen, size: 13 }"
+      ></ng-container>
+    </button>
+    @if (dropdown.isOpen) {
+      <div class="asili-drawer__sublist">
+        @if (dropdown.href) {
+          <a
+            [routerLink]="dropdown.href"
+            (click)="closeMobileMenu(); closeDropdown(dropdown)"
+            class="asili-drawer__sublink asili-drawer__sublink--hub"
+          >
+            {{ dropdown.label }}
+          </a>
+        }
+        @for (item of dropdown.items; track item.href) {
+          <a
+            [routerLink]="item.href"
+            (click)="closeMobileMenu(); closeDropdown(dropdown)"
+            class="asili-drawer__sublink"
+          >
+            {{ item.title }}
+          </a>
+        }
+      </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #accountActions let-mobile="mobile">
+  <a
+    routerLink="/profil"
+    (click)="mobile ? closeMobileMenu() : closeUserDropdown()"
+    class="asili-drop-item asili-drop-item--simple"
+  >
+    <app-svg-icon name="person" [size]="1.05"></app-svg-icon>
+    <span i18n="@@navProfileLabel">Profil</span>
+  </a>
+  <button
+    type="button"
+    (click)="logout()"
+    class="asili-drop-item asili-drop-item--simple asili-drop-item--danger"
+  >
+    <app-svg-icon name="close" [size]="1.05"></app-svg-icon>
+    <span i18n="@@navLogoutLabel">Déconnexion</span>
+  </button>
 </ng-template>

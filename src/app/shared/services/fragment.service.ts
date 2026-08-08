@@ -1,8 +1,10 @@
 import { computed, Injectable, signal, type Signal } from '@angular/core';
 
 /**
- * Volontairement pas `providedIn: 'root'` : chaque slide doit fournir le
- * service pour disposer de son propre compteur.
+ * `@Injectable()` sans `providedIn` : `@angular/core` instancie le service une
+ * fois par injecteur qui le declare dans ses `providers`, donc un compteur par
+ * hote. Un `providedIn: 'root'` partagerait un compteur unique entre toutes les
+ * series de fragments de l'application.
  */
 @Injectable()
 export class FragmentService {

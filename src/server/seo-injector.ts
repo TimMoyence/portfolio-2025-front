@@ -1,4 +1,4 @@
-import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
+import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
 import { LOCALE_PREFIX_RE, STRIP_LOCALE_RE, buildLocalizedPath, normalizePath } from './url-utils';
 
 const FRESHNESS_ENABLED_TYPES = new Set([
@@ -17,6 +17,8 @@ const FRESHNESS_ENABLED_TYPES = new Set([
   'FAQPage',
   'WebSite',
 ]);
+
+const DEFAULT_BASE_URL = 'https://asilidesign.fr';
 
 const enrichJsonLdBlock = (
   block: Record<string, unknown>,
@@ -40,73 +42,87 @@ const enrichJsonLdBlock = (
     typeStr !== 'LocalBusiness' &&
     typeStr !== 'ProfessionalService'
   ) {
-    enriched['author'] = { '@id': 'https://asilidesign.fr/#person' };
+    enriched['author'] = { '@id': `${DEFAULT_BASE_URL}/#person` };
   }
 
   return enriched;
 };
 
-const buildJsonLdScripts = (metadata: SeoMetadataFile, originalUrl: string): string => {
-  const localeMatch = originalUrl.match(LOCALE_PREFIX_RE);
-  const locale = localeMatch ? localeMatch[1] : metadata.site.defaultLocale;
+const routeOf = (originalUrl: string): string => {
   const routePath = originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
-  const normalizedRoute = routePath ? `/${routePath}` : '/';
+  return routePath ? `/${routePath}` : '/';
+};
 
-  const scripts: string[] = [];
-
-  const addScript = (data: Record<string, unknown>): void => {
-    // Neutralise TOUS les `<`, pas seulement `</script>` : le parseur HTML a un
-    // etat « script data double escaped » ou un `<!--` suivi d'un `<script`
-    // empeche le `</script>` suivant de fermer le bloc (mXSS). `<` est un
-    // echappement JSON standard, le JSON-LD reste parsable a l'identique.
-    const json = JSON.stringify(data).replace(/</g, '\\u003c');
-    scripts.push(`<script type="application/ld+json">${json}</script>`);
-  };
-
-  if (metadata.global?.localBusiness) {
-    addScript(metadata.global.localBusiness);
-  }
-  if (metadata.global?.siteNavigation) {
-    addScript(metadata.global.siteNavigation);
-  }
-  const isPresentationRoute = normalizedRoute === '/presentation';
-  if (metadata.global?.person && !isPresentationRoute) {
-    addScript(metadata.global.person);
-  }
-
-  const page = metadata.pages.find(
-    (p) =>
-      normalizePath(p.path) === normalizePath(normalizedRoute) ||
-      (normalizedRoute === '/' && p.id === 'home'),
+const findPage = (metadata: SeoMetadataFile, route: string): SeoPageEntry | undefined =>
+  metadata.pages.find(
+    (p) => normalizePath(p.path) === normalizePath(route) || (route === '/' && p.id === 'home'),
   );
 
-  if (page) {
-    const localeMeta = page.locales[locale] ?? page.locales[metadata.site.defaultLocale];
-    if (localeMeta?.jsonLd) {
-      const blocks: Record<string, unknown>[] = Array.isArray(localeMeta.jsonLd)
-        ? localeMeta.jsonLd
-        : [localeMeta.jsonLd];
-      for (const block of blocks) {
-        addScript(enrichJsonLdBlock(block, page));
-      }
-    }
+const toJsonLdScript = (data: Record<string, unknown>): string => {
+  // Tous les `<` sont echappes, pas seulement `</script>` : apres un `<!--<script`,
+  // l'etat « script data double escaped » du tokenizer HTML empeche le `</script>`
+  // suivant de fermer le bloc (mXSS).
+  // https://html.spec.whatwg.org/multipage/parsing.html#script-data-double-escaped-state
+  const json = JSON.stringify(data).replace(/</g, '\\u003c');
+  return `<script type="application/ld+json">${json}</script>`;
+};
 
-    if (page.breadcrumb && page.breadcrumb.length > 0) {
-      const baseUrl = metadata.site.baseUrl ?? 'https://asilidesign.fr';
-      addScript({
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: page.breadcrumb.map((entry, i) => ({
-          '@type': 'ListItem',
-          position: i + 1,
-          name: entry.name,
-          item: `${baseUrl}/${locale}${entry.path === '/' ? '' : entry.path}`,
-        })),
-      });
+const globalBlocks = (metadata: SeoMetadataFile, route: string): Record<string, unknown>[] => {
+  const global = metadata.global;
+  if (!global) return [];
+  const blocks: Record<string, unknown>[] = [];
+  if (global.localBusiness) blocks.push(global.localBusiness);
+  if (global.siteNavigation) blocks.push(global.siteNavigation);
+  if (global.person && route !== '/presentation') blocks.push(global.person);
+  return blocks;
+};
+
+const pageBlocks = (
+  page: SeoPageEntry,
+  locale: string,
+  defaultLocale: string,
+): Record<string, unknown>[] => {
+  const localeMeta = page.locales[locale] ?? page.locales[defaultLocale];
+  if (!localeMeta?.jsonLd) return [];
+  return Array.isArray(localeMeta.jsonLd) ? localeMeta.jsonLd : [localeMeta.jsonLd];
+};
+
+const breadcrumbBlocks = (
+  page: SeoPageEntry,
+  metadata: SeoMetadataFile,
+  locale: string,
+): Record<string, unknown>[] => {
+  const breadcrumb = page.breadcrumb;
+  if (!breadcrumb || breadcrumb.length === 0) return [];
+  const baseUrl = metadata.site.baseUrl ?? DEFAULT_BASE_URL;
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumb.map((entry, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: entry.name,
+        item: `${baseUrl}/${locale}${entry.path === '/' ? '' : entry.path}`,
+      })),
+    },
+  ];
+};
+
+const buildJsonLdScripts = (metadata: SeoMetadataFile, originalUrl: string): string => {
+  const locale = LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? metadata.site.defaultLocale;
+  const route = routeOf(originalUrl);
+  const page = findPage(metadata, route);
+
+  const blocks = [...globalBlocks(metadata, route)];
+  if (page) {
+    for (const block of pageBlocks(page, locale, metadata.site.defaultLocale)) {
+      blocks.push(enrichJsonLdBlock(block, page));
     }
+    blocks.push(...breadcrumbBlocks(page, metadata, locale));
   }
 
-  return scripts.join('\n');
+  return blocks.map(toJsonLdScript).join('\n');
 };
 
 const buildSeoLinkTags = (
@@ -117,33 +133,21 @@ const buildSeoLinkTags = (
   const locales = metadata.site.locales ?? [];
   const defaultLocale = metadata.site.defaultLocale ?? locales[0] ?? 'fr';
 
-  const routePath = originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
-  const normalizedRoute = routePath ? `/${routePath}` : '/';
-
-  const page = metadata.pages.find(
-    (p) =>
-      normalizePath(p.path) === normalizePath(normalizedRoute) ||
-      (normalizedRoute === '/' && p.id === 'home'),
-  );
-
+  const page = findPage(metadata, routeOf(originalUrl));
   if (!page || page.index === false) return '';
 
   const pagePath = page.id === 'home' ? '/' : page.path;
-  const currentLocale = originalUrl.match(LOCALE_PREFIX_RE)?.[1] ?? defaultLocale;
-  const tags: string[] = [];
+  const currentLocale = LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? defaultLocale;
+  const hrefFor = (locale: string): string =>
+    new URL(buildLocalizedPath(locale, pagePath), baseUrl).toString();
 
-  const canonicalHref = new URL(buildLocalizedPath(currentLocale, pagePath), baseUrl).toString();
-  tags.push(`<link rel="canonical" href="${canonicalHref}" />`);
-
-  for (const locale of locales) {
-    const href = new URL(buildLocalizedPath(locale, pagePath), baseUrl).toString();
-    tags.push(`<link rel="alternate" hreflang="${locale}" href="${href}" />`);
-  }
-
-  const defaultHref = new URL(buildLocalizedPath(defaultLocale, pagePath), baseUrl).toString();
-  tags.push(`<link rel="alternate" hreflang="x-default" href="${defaultHref}" />`);
-
-  return tags.join('\n');
+  return [
+    `<link rel="canonical" href="${hrefFor(currentLocale)}" />`,
+    ...locales.map(
+      (locale) => `<link rel="alternate" hreflang="${locale}" href="${hrefFor(locale)}" />`,
+    ),
+    `<link rel="alternate" hreflang="x-default" href="${hrefFor(defaultLocale)}" />`,
+  ].join('\n');
 };
 
 export const isKnownRoute = (routePath: string, metadata: SeoMetadataFile): boolean => {

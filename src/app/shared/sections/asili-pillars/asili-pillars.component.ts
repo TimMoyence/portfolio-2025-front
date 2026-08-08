@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
-export type AsiliPillarVariant = 'services' | 'formations';
+type AsiliPillarVariant = 'services' | 'formations';
 
-export interface AsiliPillarLink {
+interface AsiliPillarLink {
   label: string;
   href: string;
 }

@@ -7,12 +7,18 @@ import { AUTH_PORT } from '../../core/ports/auth.port';
 import { WEATHER_PORT } from '../../core/ports/weather.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { WeatherLevelService } from '../weather/services/weather-level.service';
-import { buildAuthUser, createAuthPortStub } from '../../../testing/factories/auth.factory';
+import {
+  buildAuthUser,
+  buildSetPasswordPayload,
+  createAuthPortStub,
+} from '../../../testing/factories/auth.factory';
 import {
   createWeatherPortStub,
   buildWeatherPreferences,
 } from '../../../testing/factories/weather.factory';
 import { ProfileComponent } from './profile.component';
+
+const NEW_PASSWORD = buildSetPasswordPayload().newPassword;
 
 function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: string[] }>) {
   const user = buildAuthUser({
@@ -111,14 +117,14 @@ describe('ProfileComponent', () => {
   it('appelle setPassword et rafraichit la session', () => {
     authService.setPassword.and.returnValue(of(buildAuthUser({ hasPassword: true })));
 
-    component.newPassword = 'NewPassword123!';
+    component.newPassword = NEW_PASSWORD;
     component.setPassword({
       invalid: false,
       resetForm: jasmine.createSpy('resetForm'),
     } as never);
 
     expect(authService.setPassword).toHaveBeenCalledWith({
-      newPassword: 'NewPassword123!',
+      newPassword: NEW_PASSWORD,
     });
     expect(authState.restoreSession).toHaveBeenCalled();
     expect(component.setPasswordSuccess).toBeDefined();

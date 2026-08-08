@@ -6,7 +6,6 @@ import type {
   EnsembleData,
   ForecastResponse,
   HistoricalData,
-  WeatherAlertResult,
   WeatherPreferences,
 } from '../../app/core/models/weather.model';
 import type { WeatherPort } from '../../app/core/ports/weather.port';
@@ -198,12 +197,6 @@ export function buildHistoricalData(overrides?: Partial<HistoricalData>): Histor
     },
     ...overrides,
   };
-}
-
-export function buildWeatherAlertResult(
-  overrides?: Partial<WeatherAlertResult>,
-): WeatherAlertResult {
-  return { alerts: [], ...overrides };
 }
 
 export function createWeatherPortStub(): Record<keyof WeatherPort, jasmine.Spy> {

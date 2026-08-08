@@ -1,36 +1,65 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PLATFORM_ID } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SvgIconComponent } from './svg-icon.component';
 
 const MOCK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="M0 0h24v24H0z"/></svg>`;
 
+const REJECTED_NAMES: readonly { readonly label: string; readonly name: string }[] = [
+  { label: 'un path traversal (../)', name: '../etc/passwd' },
+  { label: 'du HTML (<script>)', name: '<script>alert(1)</script>' },
+  { label: 'un path traversal a travers un slash', name: 'network/../../etc/passwd' },
+  { label: 'un segment vide (a//b)', name: 'network//google' },
+];
+
+function nameChange(currentValue: string, previousValue?: string): SimpleChanges {
+  const firstChange = previousValue === undefined;
+  return {
+    name: {
+      currentValue,
+      previousValue,
+      firstChange,
+      isFirstChange: () => firstChange,
+    },
+  };
+}
+
+async function configureTestBed(platformId: 'browser' | 'server'): Promise<void> {
+  SvgIconComponent.clearCache();
+
+  await TestBed.configureTestingModule({
+    imports: [SvgIconComponent],
+    providers: [
+      { provide: PLATFORM_ID, useValue: platformId },
+      provideHttpClient(withInterceptorsFromDi()),
+      provideHttpClientTesting(),
+    ],
+  }).compileComponents();
+}
+
 describe('SvgIconComponent', () => {
+  let component: SvgIconComponent;
+  let fixture: ComponentFixture<SvgIconComponent>;
+  let httpMock: HttpTestingController;
+
+  function loadIcon(name: string, previousValue?: string): void {
+    component.name = name;
+    component.ngOnChanges(nameChange(name, previousValue));
+  }
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
   describe('en contexte navigateur', () => {
-    let component: SvgIconComponent;
-    let fixture: ComponentFixture<SvgIconComponent>;
-    let httpMock: HttpTestingController;
-
     beforeEach(async () => {
-      SvgIconComponent.clearCache();
-
-      await TestBed.configureTestingModule({
-        imports: [SvgIconComponent],
-        providers: [
-          { provide: PLATFORM_ID, useValue: 'browser' },
-          provideHttpClient(withInterceptorsFromDi()),
-          provideHttpClientTesting(),
-        ],
-      }).compileComponents();
+      await configureTestBed('browser');
 
       httpMock = TestBed.inject(HttpTestingController);
       fixture = TestBed.createComponent(SvgIconComponent);
       component = fixture.componentInstance;
-    });
-
-    afterEach(() => {
-      httpMock.verify();
     });
 
     it('devrait se creer', () => {
@@ -38,15 +67,7 @@ describe('SvgIconComponent', () => {
     });
 
     it('devrait charger une icone SVG via HTTP', () => {
-      component.name = 'test-icon';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'test-icon',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
+      loadIcon('test-icon');
 
       const req = httpMock.expectOne('assets/icons/test-icon.svg');
       expect(req.request.method).toBe('GET');
@@ -56,73 +77,31 @@ describe('SvgIconComponent', () => {
     });
 
     it('devrait utiliser le cache pour les icones deja chargees', () => {
-      component.name = 'cached-icon';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'cached-icon',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
+      loadIcon('cached-icon');
+      httpMock.expectOne('assets/icons/cached-icon.svg').flush(MOCK_SVG);
 
-      const req = httpMock.expectOne('assets/icons/cached-icon.svg');
-      req.flush(MOCK_SVG);
-
-      component.ngOnChanges({
-        name: {
-          currentValue: 'cached-icon',
-          previousValue: 'cached-icon',
-          firstChange: false,
-          isFirstChange: () => false,
-        },
-      });
+      component.ngOnChanges(nameChange('cached-icon', 'cached-icon'));
 
       httpMock.expectNone('assets/icons/cached-icon.svg');
       expect(component.svgContent).not.toBeNull();
     });
 
     it('devrait vider le cache statique via clearCache()', () => {
-      component.name = 'clearable-icon';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'clearable-icon',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
+      loadIcon('clearable-icon');
       httpMock.expectOne('assets/icons/clearable-icon.svg').flush(MOCK_SVG);
 
       SvgIconComponent.clearCache();
 
-      component.ngOnChanges({
-        name: {
-          currentValue: 'clearable-icon',
-          previousValue: 'clearable-icon',
-          firstChange: false,
-          isFirstChange: () => false,
-        },
-      });
-      const req = httpMock.expectOne('assets/icons/clearable-icon.svg');
-      req.flush(MOCK_SVG);
+      component.ngOnChanges(nameChange('clearable-icon', 'clearable-icon'));
+      httpMock.expectOne('assets/icons/clearable-icon.svg').flush(MOCK_SVG);
 
       expect(component.svgContent).not.toBeNull();
     });
 
     it('devrait appliquer le fill currentColor par defaut', () => {
-      component.name = 'fill-icon';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'fill-icon',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
+      loadIcon('fill-icon');
 
-      const req = httpMock.expectOne('assets/icons/fill-icon.svg');
-      req.flush(MOCK_SVG);
+      httpMock.expectOne('assets/icons/fill-icon.svg').flush(MOCK_SVG);
 
       const content = component.svgContent?.toString() ?? '';
       expect(content).toContain('currentColor');
@@ -132,12 +111,7 @@ describe('SvgIconComponent', () => {
       component.name = 'size-icon';
       component.size = 2;
       component.ngOnChanges({
-        name: {
-          currentValue: 'size-icon',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
+        ...nameChange('size-icon'),
         size: {
           currentValue: 2,
           previousValue: undefined,
@@ -146,26 +120,18 @@ describe('SvgIconComponent', () => {
         },
       });
 
-      const req = httpMock.expectOne('assets/icons/size-icon.svg');
-      req.flush(MOCK_SVG);
+      httpMock.expectOne('assets/icons/size-icon.svg').flush(MOCK_SVG);
 
       expect(component.hostWidth).toBe('2rem');
       expect(component.hostHeight).toBe('2rem');
     });
 
     it('devrait gerer les erreurs HTTP gracieusement', () => {
-      component.name = 'missing-icon';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'missing-icon',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
+      loadIcon('missing-icon');
 
-      const req = httpMock.expectOne('assets/icons/missing-icon.svg');
-      req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+      httpMock
+        .expectOne('assets/icons/missing-icon.svg')
+        .flush('Not Found', { status: 404, statusText: 'Not Found' });
 
       expect(component.svgContent).toBeNull();
     });
@@ -177,15 +143,7 @@ describe('SvgIconComponent', () => {
     it('devrait charger une icone en sous-dossier (network/google)', () => {
       spyOn(console, 'warn');
 
-      component.name = 'network/google';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'network/google',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
+      loadIcon('network/google');
 
       const req = httpMock.expectOne('assets/icons/network/google.svg');
       expect(req.request.method).toBe('GET');
@@ -195,115 +153,30 @@ describe('SvgIconComponent', () => {
       expect(console.warn).not.toHaveBeenCalled();
     });
 
-    it('ne devrait pas charger un SVG si le name contient un path traversal (../)', () => {
-      spyOn(console, 'warn');
+    for (const { label, name } of REJECTED_NAMES) {
+      it(`ne devrait pas charger un SVG si le name contient ${label}`, () => {
+        spyOn(console, 'warn');
 
-      component.name = '../etc/passwd';
-      component.ngOnChanges({
-        name: {
-          currentValue: '../etc/passwd',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
+        loadIcon(name);
+
+        httpMock.expectNone(`assets/icons/${name}.svg`);
+        expect(component.svgContent).toBeNull();
+        expect(console.warn).toHaveBeenCalledWith(jasmine.stringContaining("Nom d'icone invalide"));
       });
-
-      httpMock.expectNone('assets/icons/../etc/passwd.svg');
-      expect(component.svgContent).toBeNull();
-      expect(console.warn).toHaveBeenCalledWith(jasmine.stringContaining("Nom d'icone invalide"));
-    });
-
-    it('ne devrait pas charger un SVG si le name contient du HTML (<script>)', () => {
-      spyOn(console, 'warn');
-
-      component.name = '<script>alert(1)</script>';
-      component.ngOnChanges({
-        name: {
-          currentValue: '<script>alert(1)</script>',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
-
-      httpMock.expectNone('assets/icons/<script>alert(1)</script>.svg');
-      expect(component.svgContent).toBeNull();
-      expect(console.warn).toHaveBeenCalledWith(jasmine.stringContaining("Nom d'icone invalide"));
-    });
-
-    it('ne devrait pas charger un SVG si le name contient un path traversal a travers un slash', () => {
-      spyOn(console, 'warn');
-
-      component.name = 'network/../../etc/passwd';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'network/../../etc/passwd',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
-
-      httpMock.expectNone('assets/icons/network/../../etc/passwd.svg');
-      expect(component.svgContent).toBeNull();
-      expect(console.warn).toHaveBeenCalledWith(jasmine.stringContaining("Nom d'icone invalide"));
-    });
-
-    it('ne devrait pas charger un SVG si le name contient un segment vide (a//b)', () => {
-      spyOn(console, 'warn');
-
-      component.name = 'network//google';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'network//google',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
-
-      httpMock.expectNone('assets/icons/network//google.svg');
-      expect(component.svgContent).toBeNull();
-      expect(console.warn).toHaveBeenCalledWith(jasmine.stringContaining("Nom d'icone invalide"));
-    });
+    }
   });
 
   describe('en contexte serveur (SSR)', () => {
-    let component: SvgIconComponent;
-    let fixture: ComponentFixture<SvgIconComponent>;
-    let httpMock: HttpTestingController;
-
     beforeEach(async () => {
-      SvgIconComponent.clearCache();
-
-      await TestBed.configureTestingModule({
-        imports: [SvgIconComponent],
-        providers: [
-          { provide: PLATFORM_ID, useValue: 'server' },
-          provideHttpClient(withInterceptorsFromDi()),
-          provideHttpClientTesting(),
-        ],
-      }).compileComponents();
+      await configureTestBed('server');
 
       httpMock = TestBed.inject(HttpTestingController);
       fixture = TestBed.createComponent(SvgIconComponent);
       component = fixture.componentInstance;
     });
 
-    afterEach(() => {
-      httpMock.verify();
-    });
-
     it("devrait ne pas charger d'icone en SSR", () => {
-      component.name = 'ssr-icon';
-      component.ngOnChanges({
-        name: {
-          currentValue: 'ssr-icon',
-          previousValue: undefined,
-          firstChange: true,
-          isFirstChange: () => true,
-        },
-      });
+      loadIcon('ssr-icon');
 
       httpMock.expectNone('assets/icons/ssr-icon.svg');
       expect(component.svgContent).toBeNull();

@@ -225,5 +225,28 @@ describe('growth-audit-format.utils', () => {
       const result = formatSummaryText(input);
       expect(result).toContain('Contexte :');
     });
+
+    it('devrait reduire les blancs horizontaux et ceux qui entourent un saut de ligne', () => {
+      expect(formatSummaryText('Bloc  \n  suite')).toBe('Bloc\nsuite');
+      expect(formatSummaryText('tab\tsepare')).toBe('tab separe');
+      expect(formatSummaryText('  espaces   multiples \n\n  et sauts  ')).toBe(
+        'espaces multiples\n\net sauts',
+      );
+    });
+
+    it('devrait mettre chaque element numerote sur sa propre ligne', () => {
+      expect(formatSummaryText('Priorités immédiates : 1) faire ceci 2) faire cela')).toBe(
+        'Priorités immédiates :\n1) faire ceci\n2) faire cela',
+      );
+      expect(formatSummaryText('liste 1) a\n2) b\n\n3) c')).toBe('liste\n1) a\n2) b\n3) c');
+      expect(formatSummaryText('Immediate priorities: 1) alpha 2) beta')).toBe(
+        'Immediate priorities :\n1) alpha\n2) beta',
+      );
+    });
+
+    it('devrait normaliser les fins de ligne Windows et plafonner les lignes vides', () => {
+      expect(formatSummaryText('texte\r\nligne\r\nfin')).toBe('texte\nligne\nfin');
+      expect(formatSummaryText('a\n\n\n\nb')).toBe('a\n\nb');
+    });
   });
 });

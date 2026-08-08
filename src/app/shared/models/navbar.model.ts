@@ -3,7 +3,7 @@ export type NavLink = {
   href: string;
 };
 
-export type DropdownItem = {
+type DropdownItem = {
   title: string;
   description: string;
   icon: string;

@@ -104,7 +104,7 @@ describe('DayDetailPanelComponent', () => {
     fixture.detectChanges();
 
     const data = component.dayData();
-    expect(data!.precipitationSum).toBe(5.2);
+    expect(data!.precipitationSum).toBeCloseTo(5.2, 5);
   });
 
   it('devrait afficher les symboles fleche pour lever et coucher du soleil', () => {

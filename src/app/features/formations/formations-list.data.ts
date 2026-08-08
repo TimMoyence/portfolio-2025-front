@@ -1,4 +1,4 @@
-export interface FormationMeta {
+interface FormationMeta {
   key: string;
   value: string;
 }

@@ -1,15 +1,8 @@
-export type SeoChangeFreq =
-  | 'always'
-  | 'hourly'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'yearly'
-  | 'never';
+type SeoChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
 export type JsonLdBlock = Record<string, unknown> | Record<string, unknown>[];
 
-export interface SeoLocaleMeta {
+interface SeoLocaleMeta {
   title: string;
   description: string;
   keywords?: string[];
@@ -23,7 +16,7 @@ export interface SeoLocaleMeta {
   jsonLd?: JsonLdBlock;
 }
 
-export interface SeoBreadcrumbEntry {
+interface SeoBreadcrumbEntry {
   name: string;
   path: string;
 }
@@ -39,20 +32,20 @@ export interface SeoPageEntry {
   locales: Record<string, SeoLocaleMeta>;
 }
 
-export interface SeoMetadataDefaults {
+interface SeoMetadataDefaults {
   keywords?: string[];
   ogImage?: string;
   twitterCard?: 'summary' | 'summary_large_image';
 }
 
-export interface SeoMetadataSite {
+interface SeoMetadataSite {
   baseUrl?: string;
   defaultLocale: string;
   locales: string[];
   homePath?: string;
 }
 
-export interface SeoMetadataGlobal {
+interface SeoMetadataGlobal {
   localBusiness: Record<string, unknown>;
   siteNavigation: Record<string, unknown>;
   /**

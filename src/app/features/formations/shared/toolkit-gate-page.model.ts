@@ -1,8 +1,8 @@
-export interface ToolkitGateItem {
+interface ToolkitGateItem {
   label: string;
 }
 
-export interface ToolkitGateFaq {
+interface ToolkitGateFaq {
   question: string;
   answer: string;
 }

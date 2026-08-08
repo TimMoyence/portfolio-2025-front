@@ -33,25 +33,23 @@ describe('SebastianBadgeCardComponent', () => {
     expect(card).toBeTruthy();
   });
 
-  it('devrait afficher le nom du badge', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('Premiere entree');
-  });
+  const UNLOCKED_BADGE_TEXTS: readonly (readonly [string, string])[] = [
+    ['le nom du badge', 'Premiere entree'],
+    ['la description du badge', 'Enregistrer sa premiere consommation'],
+    ['la date de deblocage', '01/04/2026'],
+  ];
 
-  it('devrait afficher la description du badge', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('Enregistrer sa premiere consommation');
-  });
+  for (const [libelle, attendu] of UNLOCKED_BADGE_TEXTS) {
+    it(`devrait afficher ${libelle}`, () => {
+      const content = fixture.nativeElement.textContent as string;
+      expect(content).toContain(attendu);
+    });
+  }
 
   it('devrait afficher un badge debloque avec bordure accent', () => {
     const card: HTMLElement = fixture.nativeElement.querySelector("[data-testid='badge-card']");
     expect(card).toBeTruthy();
     expect(card.classList).toContain('border-gold');
-  });
-
-  it('devrait afficher la date de deblocage pour un badge debloque', () => {
-    const content = fixture.nativeElement.textContent as string;
-    expect(content).toContain('01/04/2026');
   });
 
   it('devrait afficher un badge verrouille avec opacite reduite', () => {

@@ -1,52 +1,11 @@
 @use '../../styles-shared/breakpoints' as bp;
+@use '../../styles-shared/hero-meta' as hero;
+@use '../../styles-shared/surfaces' as surfaces;
 
-/* --- Hero : méta clé/valeur (porté de .page-hero-meta) --------------------
-   Le slot [meta] de <app-asili-hero> est pensé pour des statistiques serif :
-   la section applique via ::ng-deep un filet/padding gauche à chaque <div>
-   projeté. On neutralise explicitement ce filet ici, car la présentation
-   utilise un panneau de lignes clé/valeur (et non des stats côte à côte). */
 /* Double classe : spécificité (0,2,0) > `.hero-meta div` (0,1,1) hérité du
    slot, pour bien neutraliser le filet gauche sur le conteneur lui-même. */
 .presentation-hero-meta.presentation-hero-meta {
-  display: grid;
-  gap: 18px;
-  width: 100%;
-  border-left: 0;
-  padding-left: 0;
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 14px;
-    border-left: 0;
-    padding-left: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .k {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-
-  .v {
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 15px;
-    text-align: right;
-  }
-}
-
-.sec-head.faq-head {
-  justify-content: center;
-  text-align: center;
-
-  .kicker {
-    justify-content: center;
-  }
+  @include hero.key-value-rows;
 }
 
 .intro-split {
@@ -137,14 +96,7 @@
   }
 
   .s-ic {
-    width: 46px;
-    height: 46px;
-    border-radius: var(--r);
-    background: var(--sand);
-    color: var(--teal-deep);
-    display: grid;
-    place-items: center;
-    margin-bottom: 18px;
+    @include surfaces.icon-tile;
   }
 
   h3 {

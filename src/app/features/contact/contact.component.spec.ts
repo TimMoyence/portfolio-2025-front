@@ -95,18 +95,15 @@ describe('ContactComponent', () => {
     expect(component.contactForm.terms).toBeFalse();
   });
 
-  // Les champs sont transparents : le fond effectif est le champ de particules
-  // sous le voile. `--text-mute` y tombe a 3,53:1, sous le seuil AA de 4,5:1.
-  // Toute valeur saisie ou selectionnee doit donc s'afficher en `--text-strong`.
-
+  // Contraste mesuré sur le fond de particules qu'un champ transparent laisse
+  // voir : `--text-mute` y donne 3,53:1, sous le minimum 4,5:1 de WCAG 2.1 pour
+  // du texte normal. La valeur choisie doit donc passer en couleur pleine ; le
+  // placeholder est seulement contraint à ne pas l'être, sa teinte restant un
+  // point ouvert.
   it('devrait afficher la valeur du sujet en couleur pleine et le placeholder en attenue', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const select = compiled.querySelector('select[name="subject"]') as HTMLSelectElement;
 
-    // Aucune valeur : le placeholder doit se distinguer d'une valeur saisie, donc
-    // ne pas etre en couleur pleine. On n'affirme PAS qu'il est `--text-mute` :
-    // sa teinte reste un point de contraste ouvert (~3,5:1 sur le fond veine),
-    // et figer la classe actuelle rendrait rouge toute correction future.
     expect(select.classList.contains('text-scheme-text')).toBeFalse();
 
     component.contactForm = {

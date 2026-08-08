@@ -99,7 +99,6 @@ describe('SlideHeroComponent', () => {
     const ol = content.querySelector('.slide-hero__bullets');
     expect(subtitle).toBeTruthy();
     expect(ol).toBeTruthy();
-    // ordre DOM : subtitle avant bullets
     expect(subtitle.compareDocumentPosition(ol) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

@@ -22,60 +22,65 @@ export const MOCK_CURRENT: CurrentWeather = {
   dew_point_2m: 11,
 };
 
+interface MockHour {
+  readonly index: number;
+  readonly hour: number;
+  readonly dayOffset: number;
+}
+
+const MOCK_HOURS: readonly MockHour[] = Array.from({ length: 48 }, (_, index) => ({
+  index,
+  hour: index % 24,
+  dayOffset: Math.floor(index / 24),
+}));
+
+function hourlyTime({ hour, dayOffset }: MockHour): string {
+  return new Date(2026, 3, 9 + dayOffset, hour).toISOString().slice(0, 16);
+}
+
+function hourlyTemperature(hour: number): number {
+  const base = 14;
+  const amplitude = 5;
+  const phase = ((hour - 14) * Math.PI) / 12;
+  return Math.round((base + amplitude * Math.cos(phase)) * 10) / 10;
+}
+
+function hourlyWeatherCode({ hour, dayOffset }: MockHour): number {
+  if (dayOffset === 0) return hour >= 6 && hour <= 18 ? 2 : 1;
+  return hour >= 14 ? 3 : 2;
+}
+
+function hourlyPrecipitation({ hour, dayOffset }: MockHour): number {
+  return dayOffset === 1 && hour >= 16 && hour <= 20 ? 0.4 : 0;
+}
+
+function hourlyUvIndex(hour: number): number {
+  if (hour < 7 || hour > 19) return 0;
+  return Math.round(5 * Math.sin(((hour - 7) * Math.PI) / 12));
+}
+
 function generateHourlyData(): HourlyForecast {
-  const times: string[] = [];
-  const temps: number[] = [];
-  const codes: number[] = [];
-  const winds: number[] = [];
-  const precips: number[] = [];
-  const humidities: number[] = [];
-  const pressures: number[] = [];
-  const uvIndices: number[] = [];
-  const windDirs: number[] = [];
-  const windGusts: number[] = [];
-
-  for (let i = 0; i < 48; i++) {
-    const hour = i % 24;
-    const dayOffset = Math.floor(i / 24);
-    const date = new Date(2026, 3, 9 + dayOffset, hour);
-    times.push(date.toISOString().slice(0, 16));
-
-    const tempBase = 14;
-    const tempAmplitude = 5;
-    const tempPhase = ((hour - 14) * Math.PI) / 12;
-    temps.push(Math.round((tempBase + tempAmplitude * Math.cos(tempPhase)) * 10) / 10);
-
-    if (dayOffset === 0) {
-      codes.push(hour >= 6 && hour <= 18 ? 2 : 1);
-    } else {
-      codes.push(hour >= 14 ? 3 : 2);
-    }
-
-    winds.push(Math.round(10 + 4 * Math.sin((hour * Math.PI) / 12)));
-    windDirs.push(200 + Math.round(40 * Math.sin((hour * Math.PI) / 24)));
-    windGusts.push(Math.round(18 + 8 * Math.sin((hour * Math.PI) / 12)));
-
-    precips.push(dayOffset === 1 && hour >= 16 && hour <= 20 ? 0.4 : 0);
-
-    humidities.push(Math.round(55 + 15 * Math.cos(((hour - 4) * Math.PI) / 12)));
-    pressures.push(1013 + Math.round(2 * Math.sin((i * Math.PI) / 24)));
-
-    uvIndices.push(
-      hour >= 7 && hour <= 19 ? Math.round(5 * Math.sin(((hour - 7) * Math.PI) / 12)) : 0,
-    );
-  }
-
   return {
-    time: times,
-    temperature_2m: temps,
-    weather_code: codes,
-    wind_speed_10m: winds,
-    precipitation: precips,
-    relative_humidity_2m: humidities,
-    pressure_msl: pressures,
-    uv_index: uvIndices,
-    wind_direction_10m: windDirs,
-    wind_gusts_10m: windGusts,
+    time: MOCK_HOURS.map(hourlyTime),
+    temperature_2m: MOCK_HOURS.map(({ hour }) => hourlyTemperature(hour)),
+    weather_code: MOCK_HOURS.map(hourlyWeatherCode),
+    wind_speed_10m: MOCK_HOURS.map(({ hour }) =>
+      Math.round(10 + 4 * Math.sin((hour * Math.PI) / 12)),
+    ),
+    precipitation: MOCK_HOURS.map(hourlyPrecipitation),
+    relative_humidity_2m: MOCK_HOURS.map(({ hour }) =>
+      Math.round(55 + 15 * Math.cos(((hour - 4) * Math.PI) / 12)),
+    ),
+    pressure_msl: MOCK_HOURS.map(
+      ({ index }) => 1013 + Math.round(2 * Math.sin((index * Math.PI) / 24)),
+    ),
+    uv_index: MOCK_HOURS.map(({ hour }) => hourlyUvIndex(hour)),
+    wind_direction_10m: MOCK_HOURS.map(
+      ({ hour }) => 200 + Math.round(40 * Math.sin((hour * Math.PI) / 24)),
+    ),
+    wind_gusts_10m: MOCK_HOURS.map(({ hour }) =>
+      Math.round(18 + 8 * Math.sin((hour * Math.PI) / 12)),
+    ),
   };
 }
 
@@ -153,58 +158,3 @@ export const MOCK_AIR_QUALITY: AirQualityData = {
     ),
   },
 };
-
-const WEATHER_ICONS: Record<number, string> = {
-  0: 'soleil.png',
-  1: 'soleil-et-nuage.png',
-  2: 'soleil-et-nuage.png',
-  3: 'nuage.png',
-  45: 'brouillard-de-jour.png',
-  48: 'brouillard-de-jour.png',
-  51: 'pluie.png',
-  53: 'pluie.png',
-  55: 'pluie.png',
-  61: 'pluie.png',
-  63: 'pluie-torrentielle.png',
-  65: 'pluie-torrentielle.png',
-  80: 'partiellement-nuageux-avec-pluie.png',
-  95: 'risques-de-tempête.png',
-};
-
-const DAY_LABELS = [
-  $localize`:@@weather-pres.day.sun:Dim.`,
-  $localize`:@@weather-pres.day.mon:Lun.`,
-  $localize`:@@weather-pres.day.tue:Mar.`,
-  $localize`:@@weather-pres.day.wed:Mer.`,
-  $localize`:@@weather-pres.day.thu:Jeu.`,
-  $localize`:@@weather-pres.day.fri:Ven.`,
-  $localize`:@@weather-pres.day.sat:Sam.`,
-];
-
-export interface WeekDay {
-  date: string;
-  label: string;
-  icon: string;
-  tempMax: number;
-  tempMin: number;
-  precipSum: number;
-  weatherCode: number;
-  isToday: boolean;
-}
-
-export function buildWeekDays(daily: DailyForecast): WeekDay[] {
-  return daily.time.map((dateStr, i) => {
-    const d = new Date(dateStr + 'T12:00:00');
-    const dayIndex = d.getDay();
-    return {
-      date: dateStr,
-      label: i === 0 ? $localize`:@@weather-pres.day.today:Auj.` : DAY_LABELS[dayIndex],
-      icon: `assets/images/meteo/${WEATHER_ICONS[daily.weather_code[i]] ?? 'nuage.png'}`,
-      tempMax: daily.temperature_2m_max[i],
-      tempMin: daily.temperature_2m_min[i],
-      precipSum: daily.precipitation_sum[i],
-      weatherCode: daily.weather_code[i],
-      isToday: i === 0,
-    };
-  });
-}

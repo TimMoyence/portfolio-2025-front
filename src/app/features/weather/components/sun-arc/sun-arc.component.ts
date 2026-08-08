@@ -11,6 +11,33 @@ import { isPlatformBrowser } from '@angular/common';
 import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.component';
 import { clamp } from '../../../../shared/utils/math.utils';
 
+interface Point {
+  readonly x: number;
+  readonly y: number;
+}
+
+const ARC_START: Point = { x: 20, y: 90 };
+const ARC_CONTROL: Point = { x: 100, y: -10 };
+const ARC_END: Point = { x: 180, y: 90 };
+
+function quadraticBezierAt(t: number, start: number, control: number, end: number): number {
+  return (1 - t) * (1 - t) * start + 2 * (1 - t) * t * control + t * t * end;
+}
+
+function quadraticBezierPointAt(t: number, start: Point, control: Point, end: Point): Point {
+  return {
+    x: quadraticBezierAt(t, start.x, control.x, end.x),
+    y: quadraticBezierAt(t, start.y, control.y, end.y),
+  };
+}
+
+function deCasteljauSubArcControl(t: number, start: Point, control: Point): Point {
+  return {
+    x: start.x + t * (control.x - start.x),
+    y: start.y + t * (control.y - start.y),
+  };
+}
+
 @Component({
   selector: 'app-sun-arc',
   standalone: true,
@@ -147,32 +174,15 @@ export class SunArcComponent {
 
   readonly sunY = computed(() => {
     const t = clamp(this.sunProgress(), 0, 1);
-    // Courbe de Bezier quadratique : P = (1-t)²*P0 + 2*(1-t)*t*P1 + t²*P2
-    const p0y = 90;
-    const p1y = -10;
-    const p2y = 90;
-    return (1 - t) * (1 - t) * p0y + 2 * (1 - t) * t * p1y + t * t * p2y;
+    return quadraticBezierAt(t, ARC_START.y, ARC_CONTROL.y, ARC_END.y);
   });
 
   readonly litArcPath = computed(() => {
     const t = clamp(this.sunProgress(), 0, 1);
-    // Approximation : on coupe l'arc quadratique au parametre t
-    // Subdivision de De Casteljau pour le segment [0, t]
-    const p0 = { x: 20, y: 90 };
-    const p1 = { x: 100, y: -10 };
-    const p2 = { x: 180, y: 90 };
+    const control = deCasteljauSubArcControl(t, ARC_START, ARC_CONTROL);
+    const end = quadraticBezierPointAt(t, ARC_START, ARC_CONTROL, ARC_END);
 
-    const q0 = p0;
-    const q1 = {
-      x: p0.x + t * (p1.x - p0.x),
-      y: p0.y + t * (p1.y - p0.y),
-    };
-    const q2 = {
-      x: (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * p1.x + t * t * p2.x,
-      y: (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y,
-    };
-
-    return `M ${q0.x} ${q0.y} Q ${q1.x} ${q1.y} ${q2.x} ${q2.y}`;
+    return `M ${ARC_START.x} ${ARC_START.y} Q ${control.x} ${control.y} ${end.x} ${end.y}`;
   });
 
   private formatTime(iso: string): string {

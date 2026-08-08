@@ -148,6 +148,40 @@ describe('ToolkitFormComponent', () => {
     expect(errorBlock).not.toBeNull();
   });
 
+  describe("validation de l'email", () => {
+    const ACCEPTED = ['marie@example.com', 'a.b+tag@sous.domaine.fr', 'x@y.zz'];
+    const REJECTED = [
+      'marie',
+      'marie@',
+      '@example.com',
+      'marie@example',
+      'marie@@example.com',
+      'marie@example..com',
+      'marie exemple@example.com',
+      'marie@exa mple.com',
+    ];
+
+    function setValidExcept(email: string): void {
+      component.firstName.set('Marie');
+      component.termsAccepted.set(true);
+      component.email.set(email);
+    }
+
+    for (const email of ACCEPTED) {
+      it(`accepte ${email}`, () => {
+        setValidExcept(email);
+        expect(component.isValid()).toBeTrue();
+      });
+    }
+
+    for (const email of REJECTED) {
+      it(`refuse ${email}`, () => {
+        setValidExcept(email);
+        expect(component.isValid()).toBeFalse();
+      });
+    }
+  });
+
   it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {
     component.firstName.set('Marie');
     component.email.set('marie@example.com');

@@ -1,19 +1,11 @@
+@use '../../slide-section' as slide;
+
 .slide-quiz {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  max-width: 50rem;
-  margin: 0 auto;
+  @include slide.interaction;
 }
 
 .slide-quiz__question {
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  text-align: center;
-  margin: 0 0 2rem;
+  @include slide.interaction-question;
 }
 
 .slide-quiz__options {

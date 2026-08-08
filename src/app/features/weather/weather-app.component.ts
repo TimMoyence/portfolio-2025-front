@@ -377,7 +377,7 @@ export class WeatherAppComponent implements OnInit {
           this.defaultCityIndex.set(prefs.defaultCityIndex ?? null);
           this.overviewGranularity.set(prefs.overviewGranularity ?? 'day');
           const idx = prefs.defaultCityIndex;
-          if (idx !== null && idx !== undefined && prefs.favoriteCities?.[idx]) {
+          if (idx !== null && prefs.favoriteCities?.[idx]) {
             const fav = prefs.favoriteCities[idx];
             this.onCitySelected({
               id: 0,

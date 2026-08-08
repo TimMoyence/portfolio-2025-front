@@ -10,11 +10,6 @@ export interface AnimateValueOptions {
   onComplete?: () => void;
 }
 
-/**
- * `onFrame` recoit la valeur interpolee brute : l'arrondi eventuel reste a la
- * charge de l'appelant. Le court-circuit `durationMs <= 0` evite le `NaN` d'une
- * division par zero.
- */
 export function animateValue(options: AnimateValueOptions): AnimationHandle {
   const { to, durationMs, onFrame, from = 0, onComplete } = options;
 

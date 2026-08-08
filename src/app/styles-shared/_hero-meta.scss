@@ -1,0 +1,32 @@
+@mixin key-value-rows {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  border-left: 0;
+  padding-left: 0;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-left: 0;
+    padding-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .k {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .v {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+    text-align: right;
+  }
+}

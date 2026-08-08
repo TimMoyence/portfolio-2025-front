@@ -6,21 +6,21 @@
     @for (item of items(); track item.title) {
       @if (item.href) {
         <a class="slide-grid__card" [href]="item.href">
-          @if (item.icon) {
-            <div class="slide-grid__icon">{{ item.icon }}</div>
-          }
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.description }}</p>
+          <ng-container *ngTemplateOutlet="cardBody; context: { $implicit: item }" />
         </a>
       } @else {
         <div class="slide-grid__card">
-          @if (item.icon) {
-            <div class="slide-grid__icon">{{ item.icon }}</div>
-          }
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.description }}</p>
+          <ng-container *ngTemplateOutlet="cardBody; context: { $implicit: item }" />
         </div>
       }
     }
   </div>
 </div>
+
+<ng-template #cardBody let-item>
+  @if (item.icon) {
+    <div class="slide-grid__icon">{{ item.icon }}</div>
+  }
+  <h3>{{ item.title }}</h3>
+  <p>{{ item.description }}</p>
+</ng-template>

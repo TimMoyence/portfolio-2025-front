@@ -1,4 +1,5 @@
 @use '../../../styles-shared/breakpoints' as bp;
+@use '../../../styles-shared/surfaces' as surfaces;
 @use '../../../styles-shared/lists';
 
 :host {
@@ -70,17 +71,8 @@
   border-color: var(--teal-deep);
 }
 
-/* ---------- Logo (réplique locale — composant encapsulé) ---------- */
 .asili-logo {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 9px;
-  font-family: var(--font-display);
-  font-size: 27px;
-  line-height: 1;
-  color: var(--ink);
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+  @include surfaces.asili-logo;
 }
 
 .asili-logo__name {

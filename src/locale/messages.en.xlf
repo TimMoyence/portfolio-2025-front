@@ -4580,48 +4580,6 @@
     <!-- ============================================================ -->
     <!-- weather-presentation-data.ts                                  -->
     <!-- ============================================================ -->
-    <unit id="weather-pres.day.sun">
-      <segment>
-        <source>Dim.</source>
-        <target>Sun</target>
-      </segment>
-    </unit>
-    <unit id="weather-pres.day.mon">
-      <segment>
-        <source>Lun.</source>
-        <target>Mon</target>
-      </segment>
-    </unit>
-    <unit id="weather-pres.day.tue">
-      <segment>
-        <source>Mar.</source>
-        <target>Tue</target>
-      </segment>
-    </unit>
-    <unit id="weather-pres.day.wed">
-      <segment>
-        <source>Mer.</source>
-        <target>Wed</target>
-      </segment>
-    </unit>
-    <unit id="weather-pres.day.thu">
-      <segment>
-        <source>Jeu.</source>
-        <target>Thu</target>
-      </segment>
-    </unit>
-    <unit id="weather-pres.day.fri">
-      <segment>
-        <source>Ven.</source>
-        <target>Fri</target>
-      </segment>
-    </unit>
-    <unit id="weather-pres.day.sat">
-      <segment>
-        <source>Sam.</source>
-        <target>Sat</target>
-      </segment>
-    </unit>
 
     <!-- ============================================================ -->
     <!-- sebastian-presentation-data.ts                                -->
@@ -4750,90 +4708,6 @@
       <segment>
         <source>Ameliorez votre score de 20 points en un mois</source>
         <target>Improve your score by 20 points in a month</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.heatmap.day.mon">
-      <segment>
-        <source>L</source>
-        <target>M</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.heatmap.day.tue">
-      <segment>
-        <source>M</source>
-        <target>T</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.heatmap.day.wed">
-      <segment>
-        <source>M</source>
-        <target>W</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.heatmap.day.thu">
-      <segment>
-        <source>J</source>
-        <target>T</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.heatmap.day.fri">
-      <segment>
-        <source>V</source>
-        <target>F</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.heatmap.day.sat">
-      <segment>
-        <source>S</source>
-        <target>S</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.heatmap.day.sun">
-      <segment>
-        <source>D</source>
-        <target>S</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.trend.day.mon">
-      <segment>
-        <source>Lun</source>
-        <target>Mon</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.trend.day.tue">
-      <segment>
-        <source>Mar</source>
-        <target>Tue</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.trend.day.wed">
-      <segment>
-        <source>Mer</source>
-        <target>Wed</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.trend.day.thu">
-      <segment>
-        <source>Jeu</source>
-        <target>Thu</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.trend.day.fri">
-      <segment>
-        <source>Ven</source>
-        <target>Fri</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.trend.day.sat">
-      <segment>
-        <source>Sam</source>
-        <target>Sat</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.trend.day.sun">
-      <segment>
-        <source>Dim</source>
-        <target>Sun</target>
       </segment>
     </unit>
 

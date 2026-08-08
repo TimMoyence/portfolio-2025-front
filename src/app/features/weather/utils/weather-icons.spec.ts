@@ -1,4 +1,4 @@
-import { weatherCodeToIcon, weatherCodeToDescription } from './weather-icons';
+import { weatherCodeToIcon } from './weather-icons';
 
 describe('weatherCodeToIcon', () => {
   const base = '/assets/images/meteo/';
@@ -75,75 +75,5 @@ describe('weatherCodeToIcon', () => {
   it('devrait retourner nuage comme fallback pour code inconnu', () => {
     expect(weatherCodeToIcon(10)).toBe(base + 'nuage.png');
     expect(weatherCodeToIcon(44)).toBe(base + 'nuage.png');
-  });
-});
-
-describe('weatherCodeToDescription (re-export localisé)', () => {
-  it("devrait retourner 'Ciel dégagé' pour code 0", () => {
-    expect(weatherCodeToDescription(0)).toBe('Ciel dégagé');
-  });
-
-  it("devrait retourner 'Principalement dégagé' pour code 1", () => {
-    expect(weatherCodeToDescription(1)).toBe('Principalement dégagé');
-  });
-
-  it("devrait retourner 'Partiellement nuageux' pour code 2", () => {
-    expect(weatherCodeToDescription(2)).toBe('Partiellement nuageux');
-  });
-
-  it("devrait retourner 'Couvert' pour code 3", () => {
-    expect(weatherCodeToDescription(3)).toBe('Couvert');
-  });
-
-  it('devrait retourner des descriptions de brouillard pour codes 45 et 48', () => {
-    expect(weatherCodeToDescription(45)).toBe('Brouillard');
-    expect(weatherCodeToDescription(48)).toBe('Brouillard givrant');
-  });
-
-  it('devrait retourner des descriptions de bruine pour codes 51-55', () => {
-    expect(weatherCodeToDescription(51)).toBe('Bruine légère');
-    expect(weatherCodeToDescription(55)).toBe('Bruine dense');
-  });
-
-  it('devrait retourner des descriptions de bruine verglaçante pour codes 56-57', () => {
-    expect(weatherCodeToDescription(56)).toBe('Bruine verglaçante légère');
-    expect(weatherCodeToDescription(57)).toBe('Bruine verglaçante dense');
-  });
-
-  it('devrait retourner des descriptions de pluie pour codes 61-65', () => {
-    expect(weatherCodeToDescription(61)).toBe('Pluie légère');
-    expect(weatherCodeToDescription(63)).toBe('Pluie modérée');
-    expect(weatherCodeToDescription(65)).toBe('Pluie forte');
-  });
-
-  it('devrait retourner des descriptions de pluie verglaçante pour codes 66-67', () => {
-    expect(weatherCodeToDescription(66)).toBe('Pluie verglaçante légère');
-    expect(weatherCodeToDescription(67)).toBe('Pluie verglaçante forte');
-  });
-
-  it('devrait retourner des descriptions de neige pour codes 71-77', () => {
-    expect(weatherCodeToDescription(71)).toBe('Neige légère');
-    expect(weatherCodeToDescription(75)).toBe('Neige forte');
-    expect(weatherCodeToDescription(77)).toBe('Grains de neige');
-  });
-
-  it("devrait retourner des descriptions d'averses pour codes 80-82", () => {
-    expect(weatherCodeToDescription(80)).toBe('Averses légères');
-    expect(weatherCodeToDescription(82)).toBe('Averses violentes');
-  });
-
-  it("devrait retourner des descriptions d'averses de neige pour codes 85-86", () => {
-    expect(weatherCodeToDescription(85)).toBe('Averses de neige légères');
-    expect(weatherCodeToDescription(86)).toBe('Averses de neige fortes');
-  });
-
-  it("devrait retourner des descriptions d'orage pour codes 95-99", () => {
-    expect(weatherCodeToDescription(95)).toBe('Orage');
-    expect(weatherCodeToDescription(99)).toBe('Orage avec grêle forte');
-  });
-
-  it("devrait retourner 'Conditions inconnues' pour un code non couvert", () => {
-    expect(weatherCodeToDescription(10)).toBe('Conditions inconnues');
-    expect(weatherCodeToDescription(44)).toBe('Conditions inconnues');
   });
 });

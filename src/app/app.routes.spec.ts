@@ -16,7 +16,6 @@ describe('app routes', () => {
   });
 
   it('devrait contenir toutes les routes principales', () => {
-    // Arrange
     const cheminsPrincipaux = [
       '',
       'home',
@@ -42,7 +41,6 @@ describe('app routes', () => {
       '**',
     ];
 
-    // Act & Assert
     for (const chemin of cheminsPrincipaux) {
       expect(routes.find((r) => r.path === chemin))
         .withContext(`la route '${chemin}' devrait exister`)
@@ -51,30 +49,24 @@ describe('app routes', () => {
   });
 
   it('devrait rediriger /home vers /', () => {
-    // Arrange
     const homeRedirect = routes.find((r) => r.path === 'home');
 
-    // Assert
     expect(homeRedirect).toBeDefined();
     expect(homeRedirect?.redirectTo).toBe('');
     expect(homeRedirect?.pathMatch).toBe('full');
   });
 
   it("devrait rediriger /commonbudgetTM vers l'accueil", () => {
-    // Arrange
     const commonBudgetRedirect = routes.find((r) => r.path === 'commonbudgetTM');
 
-    // Assert
     expect(commonBudgetRedirect).toBeDefined();
     expect(commonBudgetRedirect?.redirectTo).toBe('');
     expect(commonBudgetRedirect?.pathMatch).toBe('full');
   });
 
-  it('devrait rediriger /client-project vers /projets', () => {
-    // Arrange — l'étude de cas dédiée a été retirée, mais l'URL était indexée
+  it('devrait rediriger /client-project vers /projets sans servir de composant', () => {
     const caseStudyRedirect = routes.find((r) => r.path === 'client-project');
 
-    // Assert
     expect(caseStudyRedirect).toBeDefined();
     expect(caseStudyRedirect?.redirectTo).toBe('projets');
     expect(caseStudyRedirect?.pathMatch).toBe('full');
@@ -82,10 +74,8 @@ describe('app routes', () => {
   });
 
   it('devrait définir un seoKey pour chaque route indexable', () => {
-    // Arrange — routes indexables : celles qui ont un loadComponent (pas de redirectTo)
     const routesIndexables = routes.filter((r) => r.loadComponent && !r.redirectTo);
 
-    // Assert
     expect(routesIndexables.length).toBeGreaterThan(0);
     for (const route of routesIndexables) {
       expect(route.data?.['seoKey'])
@@ -95,10 +85,8 @@ describe('app routes', () => {
   });
 
   it('devrait avoir un fallback ** vers not-found', () => {
-    // Arrange
     const derniereRoute = routes[routes.length - 1];
 
-    // Assert
     expect(derniereRoute.path).toBe('**');
     expect(derniereRoute.loadComponent).toBeDefined();
     expect(derniereRoute.data?.['seoKey']).toBe('not-found');

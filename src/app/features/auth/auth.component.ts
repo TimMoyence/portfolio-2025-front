@@ -25,6 +25,17 @@ import { SvgIconComponent } from '../../shared/components/svg-icon.component';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
 
+const ASCII_SPACE = 32;
+const ASCII_DELETE = 127;
+
+function hasControlCharacter(value: string): boolean {
+  for (const char of value) {
+    const code = char.charCodeAt(0);
+    if (code <= ASCII_SPACE || code === ASCII_DELETE) return true;
+  }
+  return false;
+}
+
 type AuthTab = 'sign-up' | 'log-in';
 type SignupFormKey = keyof SignupFormState;
 type LoginFormKey = keyof LoginFormState;
@@ -198,21 +209,11 @@ export class AuthComponent {
     });
   }
 
-  /**
-   * Valide une URL de retour post-login pour eviter les open redirects.
-   * Seules les URLs internes sont acceptees : doivent commencer par `/` et
-   * ne pas contenir de double slash (`//`) qui pourrait etre interprete
-   * comme une URL absolue vers un domaine externe par certains navigateurs.
-   */
   private sanitizeReturnUrl(raw: string | null | undefined): string {
     if (!raw) return '/';
     const trimmed = raw.trim();
-    if (!trimmed.startsWith('/')) return '/';
-    if (trimmed.startsWith('//')) return '/';
-    for (const ch of trimmed) {
-      const code = ch.charCodeAt(0);
-      if (code <= 32 || code === 127) return '/';
-    }
+    const isSameOriginPath = trimmed.startsWith('/') && !trimmed.startsWith('//');
+    if (!isSameOriginPath || hasControlCharacter(trimmed)) return '/';
     return trimmed;
   }
 

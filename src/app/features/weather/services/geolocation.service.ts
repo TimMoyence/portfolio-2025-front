@@ -5,12 +5,6 @@ import { map } from 'rxjs/operators';
 import type { CityResult } from '../../../core/models/weather.model';
 import { WEATHER_PORT } from '../../../core/ports/weather.port';
 
-/**
- * Service de geolocation du navigateur avec reverse geocoding.
- * La capacite `navigator.geolocation` est legitime cote feature ;
- * le reverse-geocoding est delegue au WeatherPort (adapter core).
- * SSR-safe : retourne une erreur propre cote serveur.
- */
 @Injectable({ providedIn: 'root' })
 export class GeolocationService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));

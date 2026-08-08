@@ -77,19 +77,22 @@ describe('sebastian-gauge — buildDeterministicHeatmap', () => {
   });
 
   it('devrait appliquer les seuils partages 0.78→3 et 0.55→2 (independants du seuil bas)', () => {
-    // Oracle recalcule verbatim depuis la maquette pour prouver le mapping.
     const oracle = (length: number, low: number): number[] =>
       Array.from({ length }, (_, i) => {
         const v = (Math.sin(i * 1.7) + 1) / 2;
-        return v > 0.78 ? 3 : v > 0.55 ? 2 : v > low ? 1 : 0;
+        if (v > 0.78) {
+          return 3;
+        }
+        if (v > 0.55) {
+          return 2;
+        }
+        return v > low ? 1 : 0;
       });
     expect(buildDeterministicHeatmap(28, 0.3)).toEqual(oracle(28, 0.3));
     expect(buildDeterministicHeatmap(56, 0.32)).toEqual(oracle(56, 0.32));
   });
 
   it('devrait donner un resultat identique pour 0.3 et 0.32 sur la sequence sin (aucune valeur ne tombe dans la bande ]0.3,0.32])', () => {
-    // Documente : la sensibilite au seuil bas ne se manifeste PAS sur la
-    // sequence deterministe (prouvee via buildRandomHeatmap ci-dessous).
     const noValueInBand = Array.from({ length: 56 }, (_, i) => {
       const v = (Math.sin(i * 1.7) + 1) / 2;
       return v > 0.3 && v <= 0.32;
@@ -143,9 +146,8 @@ describe('sebastian-gauge — buildRandomHeatmap', () => {
     expect(buildRandomHeatmap(1, 0.32)).toEqual([0]);
   });
 
-  it('devrait utiliser une comparaison stricte (> et non >=) sur les seuils', () => {
-    // r exactement sur un seuil retombe au niveau inferieur.
+  it('devrait utiliser une comparaison stricte (> et non >=) : r=0.78 retombe au niveau 2', () => {
     spyOn(Math, 'random').and.returnValue(0.78);
-    expect(buildRandomHeatmap(1)).toEqual([2]); // 0.78 n'est pas > 0.78
+    expect(buildRandomHeatmap(1)).toEqual([2]);
   });
 });

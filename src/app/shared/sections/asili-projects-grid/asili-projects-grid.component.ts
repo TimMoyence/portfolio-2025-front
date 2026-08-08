@@ -4,15 +4,11 @@ import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.direc
 
 export type AsiliProjectSize = 'big' | 'small';
 
-export interface AsiliProjectTag {
+interface AsiliProjectTag {
   label: string;
   prod?: boolean;
 }
 
-/**
- * `imageAlt` est requis des qu'`image` est fourni (a11y) — le type ne peut pas
- * l'exprimer. Il sert aussi de legende au placeholder quand l'image est absente.
- */
 export interface AsiliProject {
   title: string;
   desc: string;
@@ -75,11 +71,6 @@ export class AsiliProjectsGridComponent {
     return index < this.eagerImages() ? 'eager' : 'lazy';
   }
 
-  /**
-   * `fetchpriority` de la capture : `high` sur la seule premiere carte quand
-   * elle est chargee en `eager` (candidat LCP), `null` partout ailleurs pour ne
-   * pas disputer la bande passante aux ressources critiques.
-   */
   protected imageFetchPriority(index: number): 'high' | null {
     return index === 0 && this.eagerImages() > 0 ? 'high' : null;
   }

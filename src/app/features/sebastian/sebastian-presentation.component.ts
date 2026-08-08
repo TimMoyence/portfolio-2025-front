@@ -53,6 +53,12 @@ export class SebastianPresentationComponent {
 
   readonly dailyCounts = MOCK_DAILY_COUNTS;
 
+  readonly demoItems: readonly string[] = [
+    $localize`:@@sebastianLandingDemoItem1:Simulateur d'alcoolémie interactif`,
+    $localize`:@@sebastianLandingDemoItem2:Heatmap d'activité sur 26 semaines`,
+    $localize`:@@sebastianLandingDemoItem3:Bot Telegram pour journaliser en un message`,
+  ];
+
   readonly habits: readonly DemoHabit[] = [
     {
       id: 'hydration',

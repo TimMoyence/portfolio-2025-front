@@ -1,3 +1,5 @@
+@use '../../../../styles-shared/badges' as badges;
+
 :host {
   display: block;
 }
@@ -7,30 +9,17 @@
 }
 
 .quick-win-card__effort {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.625rem;
-  border-radius: var(--r-pill);
-  font-size: 0.75rem;
-  font-weight: 600;
-  align-self: flex-start;
-  border: 1px solid transparent;
+  @include badges.status-badge;
 
   &--low {
-    background-color: #dcfce7;
-    color: #15803d;
-    border-color: #bbf7d0;
+    @include badges.tone-positive;
   }
 
   &--medium {
-    background-color: #fef3c7;
-    color: #b45309;
-    border-color: #fde68a;
+    @include badges.tone-caution;
   }
 
   &--high {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    border-color: #fecaca;
+    @include badges.tone-critical;
   }
 }

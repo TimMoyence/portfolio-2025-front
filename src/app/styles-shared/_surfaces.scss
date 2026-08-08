@@ -1,0 +1,41 @@
+@mixin teal-glow-veil {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(80% 60% at 15% 0%, rgba(var(--teal-rgb), 0.22), transparent 60%),
+    radial-gradient(70% 70% at 90% 100%, rgba(91, 140, 255, 0.24), transparent 60%);
+}
+
+@mixin icon-tile($size: 46px) {
+  width: $size;
+  height: $size;
+  border-radius: var(--r);
+  background: var(--sand);
+  color: var(--teal-deep);
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+}
+
+@mixin mono-caption {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 6px;
+}
+
+@mixin asili-logo($display: inline-flex) {
+  display: $display;
+  align-items: baseline;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-size: 27px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}

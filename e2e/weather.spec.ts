@@ -13,19 +13,11 @@ test.describe('Weather — Page meteo authentifiee', () => {
     await authenticateUser(page);
 
     await page.route(`${API_BASE}/weather/preferences`, async (route) => {
-      if (route.request().method() === 'GET') {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify(MOCK_WEATHER_PREFERENCES),
-        });
-      } else {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify(MOCK_WEATHER_PREFERENCES),
-        });
-      }
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(MOCK_WEATHER_PREFERENCES),
+      });
     });
 
     await mockWeatherRecordUsage(page);

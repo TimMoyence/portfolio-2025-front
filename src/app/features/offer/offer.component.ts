@@ -5,6 +5,8 @@ import {
   AsiliCtaBandComponent,
   AsiliHeroComponent,
   AsiliMethodComponent,
+  AsiliFaqComponent,
+  type AsiliFaqItem,
   type AsiliMethodStep,
 } from '../../shared/sections';
 
@@ -23,11 +25,6 @@ interface OfferDiff {
   revealDelay: 1 | 2 | 3 | 4 | null;
 }
 
-interface OfferFaq {
-  q: string;
-  a: string;
-}
-
 @Component({
   selector: 'app-offer',
   standalone: true,
@@ -37,6 +34,7 @@ interface OfferFaq {
     AsiliHeroComponent,
     AsiliMethodComponent,
     AsiliCtaBandComponent,
+    AsiliFaqComponent,
   ],
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.scss',
@@ -157,7 +155,7 @@ export class OfferComponent {
 
   protected readonly faqTitle = $localize`:@@offerFaqTitle:Avant de se lancer.`;
 
-  protected readonly faqItems: readonly OfferFaq[] = [
+  protected readonly faqItems: readonly AsiliFaqItem[] = [
     {
       q: $localize`:@@offerFaq1Q:Pourquoi pas de grille de prix ?`,
       a: $localize`:@@offerFaq1A:Parce qu'un prix figé répond rarement à un besoin réel. Je préfère cadrer votre situation, puis proposer un périmètre et un budget justes. Transparent, mais sur-mesure.`,

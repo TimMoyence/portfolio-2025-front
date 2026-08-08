@@ -97,14 +97,18 @@ export class ContactComponent implements OnInit {
     }
   }
 
+  private appLabel(normalizedApp: string): string {
+    if (normalizedApp === 'weather') {
+      return $localize`:contact.access.app.weather@@contactAccessAppWeather:l'application Météo`;
+    }
+    if (normalizedApp === 'sebastian') {
+      return $localize`:contact.access.app.sebastian@@contactAccessAppSebastian:l'application Sebastian`;
+    }
+    return $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'atelier ${normalizedApp}:app:`;
+  }
+
   private buildAccessRequestMessage(app: string): string {
-    const normalizedApp = app.trim().toLowerCase();
-    const appLabel =
-      normalizedApp === 'weather'
-        ? $localize`:contact.access.app.weather@@contactAccessAppWeather:l'application Météo`
-        : normalizedApp === 'sebastian'
-          ? $localize`:contact.access.app.sebastian@@contactAccessAppSebastian:l'application Sebastian`
-          : $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'atelier ${normalizedApp}:app:`;
+    const appLabel = this.appLabel(app.trim().toLowerCase());
     return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
   }
 

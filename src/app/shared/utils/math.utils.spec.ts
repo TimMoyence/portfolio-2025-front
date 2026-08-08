@@ -26,7 +26,6 @@ describe('clamp', () => {
   });
 
   it('devrait faire gagner min quand min > max (bornes inversees non corrigees)', () => {
-    // Math.min(0, 5) = 0 ; Math.max(10, 0) = 10 -> identique a l'expression d'origine
     expect(clamp(5, 10, 0)).toBe(10);
   });
 
@@ -60,7 +59,6 @@ describe('clamp', () => {
   });
 
   it('devrait retourner 0 pour clamp(-0, 0, 10) (semantique Math native)', () => {
-    // On ne sur-teste pas le signe du zero : la valeur numerique est 0.
     expect(clamp(-0, 0, 10)).toBe(0);
   });
 });

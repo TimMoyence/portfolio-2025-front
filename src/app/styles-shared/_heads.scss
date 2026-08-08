@@ -1,0 +1,25 @@
+@mixin section-head($margin-bottom: var(--s-5)) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: $margin-bottom;
+}
+
+@mixin section-head-centered {
+  justify-content: center;
+  text-align: center;
+
+  .kicker {
+    justify-content: center;
+  }
+}
+
+@mixin split-head($margin-bottom: var(--s-5)) {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--s-5);
+  align-items: end;
+  margin-bottom: $margin-bottom;
+}

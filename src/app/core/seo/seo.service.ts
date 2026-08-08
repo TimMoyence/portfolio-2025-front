@@ -33,6 +33,25 @@ export class SeoService {
         content: config.keywords.join(', '),
       });
 
+    this.updateOpenGraphTags(config);
+    this.updateTwitterTags(config);
+
+    if (config.robots) {
+      this.meta.updateTag({ name: 'robots', content: config.robots });
+    }
+
+    if (config.canonicalUrl) {
+      this.updateCanonicalLink(config.canonicalUrl);
+    }
+
+    if (config.hreflangs) {
+      this.updateHreflangLinks(config.hreflangs);
+    }
+
+    this.updateJsonLd(config);
+  }
+
+  private updateOpenGraphTags(config: SeoConfig): void {
     this.meta.updateTag({
       property: 'og:title',
       content: config.ogTitle || config.title,
@@ -51,6 +70,15 @@ export class SeoService {
       content: config.ogType || 'website',
     });
 
+    this.updateOgLocaleTags();
+
+    this.meta.updateTag({
+      property: 'og:site_name',
+      content: 'Asili Design',
+    });
+  }
+
+  private updateOgLocaleTags(): void {
     const currentLocale = this.resolveLocaleKey();
     const currentOgLocale = OG_LOCALE_MAP[currentLocale] ?? OG_LOCALE_MAP['fr'];
     this.meta.updateTag({ property: 'og:locale', content: currentOgLocale });
@@ -58,6 +86,7 @@ export class SeoService {
     this.document
       .querySelectorAll('meta[property="og:locale:alternate"]')
       .forEach((node) => node.remove());
+
     for (const [localeKey, ogLocale] of Object.entries(OG_LOCALE_MAP)) {
       if (localeKey === currentLocale) continue;
       const meta = this.document.createElement('meta');
@@ -65,12 +94,9 @@ export class SeoService {
       meta.setAttribute('content', ogLocale);
       this.document.head.appendChild(meta);
     }
+  }
 
-    this.meta.updateTag({
-      property: 'og:site_name',
-      content: 'Asili Design',
-    });
-
+  private updateTwitterTags(config: SeoConfig): void {
     this.meta.updateTag({
       name: 'twitter:card',
       content: config.twitterCard || 'summary',
@@ -91,38 +117,29 @@ export class SeoService {
         name: 'twitter:image',
         content: config.twitterImage,
       });
+  }
 
-    if (config.robots) {
-      this.meta.updateTag({ name: 'robots', content: config.robots });
-    }
+  private updateCanonicalLink(canonicalUrl: string): void {
+    this.document.querySelector('link[rel="canonical"]')?.remove();
 
-    if (config.canonicalUrl) {
-      const existingCanonicalLink = this.document.querySelector('link[rel="canonical"]');
-      if (existingCanonicalLink) {
-        existingCanonicalLink.remove();
-      }
+    const link = this.document.createElement('link');
+    link.setAttribute('rel', 'canonical');
+    link.setAttribute('href', canonicalUrl);
+    this.document.head.appendChild(link);
+  }
 
+  private updateHreflangLinks(hreflangs: Record<string, string>): void {
+    this.document.querySelectorAll('link[rel="alternate"][hreflang]').forEach((node) => {
+      node.remove();
+    });
+
+    for (const [locale, href] of Object.entries(hreflangs)) {
       const link = this.document.createElement('link');
-      link.setAttribute('rel', 'canonical');
-      link.setAttribute('href', config.canonicalUrl);
+      link.setAttribute('rel', 'alternate');
+      link.setAttribute('hreflang', locale);
+      link.setAttribute('href', href);
       this.document.head.appendChild(link);
     }
-
-    if (config.hreflangs) {
-      this.document
-        .querySelectorAll('link[rel="alternate"][hreflang]')
-        .forEach((node) => node.remove());
-
-      for (const [locale, href] of Object.entries(config.hreflangs)) {
-        const link = this.document.createElement('link');
-        link.setAttribute('rel', 'alternate');
-        link.setAttribute('hreflang', locale);
-        link.setAttribute('href', href);
-        this.document.head.appendChild(link);
-      }
-    }
-
-    this.updateJsonLd(config);
   }
 
   private updateJsonLd(config: SeoConfig): void {

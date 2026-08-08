@@ -1,4 +1,5 @@
 import type express from 'express';
+import { trimTrailingSlashes } from './url-utils';
 
 /**
  * Table des redirections HTTP permanentes (301) servies par le serveur Express.
@@ -28,7 +29,7 @@ export const REDIRECT_SOURCES: string[] = Object.keys(PERMANENT_REDIRECTS);
 const normalizeForLookup = (path: string): string => {
   const lower = path.toLowerCase();
   if (lower.length > 1 && lower.endsWith('/')) {
-    return lower.replace(/\/+$/, '');
+    return trimTrailingSlashes(lower);
   }
   return lower;
 };

@@ -28,9 +28,11 @@ describe('SlideInDirective', () => {
     });
 
     it('devrait nettoyer l observer a la destruction', () => {
+      const disconnect = spyOn(IntersectionObserver.prototype, 'disconnect');
+
       fixture.destroy();
-      // Pas d'erreur = observer.disconnect() appele correctement
-      expect(true).toBeTrue();
+
+      expect(disconnect).toHaveBeenCalled();
     });
   });
 
