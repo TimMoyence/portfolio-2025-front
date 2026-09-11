@@ -25,10 +25,10 @@ export function saveIdentity(input: IdentityInput): Identity {
   const nom = input.nom.trim();
   const email = input.email.trim().toLowerCase();
   if (prenom.length === 0 || nom.length === 0) {
-    throw new Error('Le prenom et le nom sont obligatoires');
+    throw new Error('Le prénom et le nom sont obligatoires');
   }
   if (!EMAIL_MOTIF.test(email)) {
-    throw new Error('Adresse electronique invalide');
+    throw new Error('Adresse électronique invalide');
   }
   const existante = readIdentity();
   const identite: Identity = {
@@ -50,8 +50,11 @@ function creerCle(): string {
   if (crypto && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
+  if (!crypto || typeof crypto.getRandomValues !== 'function') {
+    throw new Error('Votre navigateur ne permet pas de générer un identifiant sécurisé');
+  }
   const octets = new Uint8Array(16);
-  crypto?.getRandomValues?.(octets);
+  crypto.getRandomValues(octets);
   octets[6] = (octets[6] & 0x0f) | 0x40;
   octets[8] = (octets[8] & 0x3f) | 0x80;
   const hex = [...octets].map((octet) => octet.toString(16).padStart(2, '0')).join('');

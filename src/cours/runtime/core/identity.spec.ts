@@ -51,4 +51,18 @@ describe('identity', () => {
       saveIdentity({ prenom: '  ', nom: 'Martin', email: 'theo@example.com' }),
     ).toThrow();
   });
+
+  it('refuse de generer une cle sans source d aleatoire disponible', () => {
+    const original = Object.getOwnPropertyDescriptor(globalThis, 'crypto');
+    Object.defineProperty(globalThis, 'crypto', { value: undefined, configurable: true });
+    try {
+      expect(() =>
+        saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' }),
+      ).toThrow();
+    } finally {
+      if (original) {
+        Object.defineProperty(globalThis, 'crypto', original);
+      }
+    }
+  });
 });
