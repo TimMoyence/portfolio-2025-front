@@ -1,0 +1,84 @@
+import { removeKey } from './storage';
+import { enqueue, flush, pending, type EnvoiReponse } from './queue';
+
+const CLE = 'fp.file-reponses';
+
+function buildEnvoi(overrides: Partial<EnvoiReponse> = {}): EnvoiReponse {
+  return {
+    sessionId: 'b1-09-interets-composes',
+    studentKey: 'etu-1',
+    questionId: 'Q-CAP-03',
+    valeur: 'b',
+    dureeMs: 4200,
+    horodatage: '2026-09-11T08:00:00.000Z',
+    ...overrides,
+  };
+}
+
+describe('queue', () => {
+  beforeEach(() => {
+    removeKey(CLE);
+  });
+
+  it('demarre vide', () => {
+    expect(pending()).toEqual([]);
+  });
+
+  it('ecrit une reponse mise en file dans localStorage', () => {
+    enqueue(buildEnvoi());
+    const brut = globalThis.localStorage.getItem(CLE);
+    expect(brut).not.toBeNull();
+    expect(JSON.parse(brut ?? '[]')).toEqual([buildEnvoi()]);
+  });
+
+  it('une reponse mise en file survit a une relecture depuis le stockage', () => {
+    enqueue(buildEnvoi({ questionId: 'Q-1' }));
+    const relue = JSON.parse(globalThis.localStorage.getItem(CLE) ?? '[]') as EnvoiReponse[];
+    expect(relue).toEqual([buildEnvoi({ questionId: 'Q-1' })]);
+    expect(pending()).toEqual(relue);
+  });
+
+  it('flush vide la file quand l envoi reussit', async () => {
+    enqueue(buildEnvoi());
+    await flush(() => true);
+    expect(pending()).toEqual([]);
+  });
+
+  it('un envoi en echec est conserve et retente', async () => {
+    enqueue(buildEnvoi());
+    await flush(() => false);
+    expect(pending().length).toBe(1);
+    await flush(() => true);
+    expect(pending()).toEqual([]);
+  });
+
+  it('preserve l ordre des envois qui restent apres un echec partiel', async () => {
+    enqueue(buildEnvoi({ questionId: 'Q-1' }));
+    enqueue(buildEnvoi({ questionId: 'Q-2' }));
+    enqueue(buildEnvoi({ questionId: 'Q-3' }));
+    await flush((envoi) => envoi.questionId === 'Q-2');
+    expect(pending().map((envoi) => envoi.questionId)).toEqual(['Q-1', 'Q-3']);
+  });
+
+  it('rejoue les envois dans leur ordre de soumission', async () => {
+    const ordreAppels: string[] = [];
+    enqueue(buildEnvoi({ questionId: 'Q-1' }));
+    enqueue(buildEnvoi({ questionId: 'Q-2' }));
+    enqueue(buildEnvoi({ questionId: 'Q-3' }));
+    await flush((envoi) => {
+      ordreAppels.push(envoi.questionId);
+      return true;
+    });
+    expect(ordreAppels).toEqual(['Q-1', 'Q-2', 'Q-3']);
+  });
+
+  it('borne la file a 200 entrees en oubliant les plus anciennes', () => {
+    for (let indice = 0; indice < 205; indice += 1) {
+      enqueue(buildEnvoi({ questionId: `Q-${indice}` }));
+    }
+    const file = pending();
+    expect(file.length).toBe(200);
+    expect(file[0].questionId).toBe('Q-5');
+    expect(file[199].questionId).toBe('Q-204');
+  });
+});
