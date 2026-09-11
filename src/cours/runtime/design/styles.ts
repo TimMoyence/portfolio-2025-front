@@ -14,13 +14,16 @@ export const tokens = `
   --fp-teal-ink: #1c5a50;
   --fp-gold: #e6aa46;
   --fp-gold-deep: #b8822c;
+  --fp-gold-ink: #8a5f14;
 
-  --fp-confirme: var(--fp-teal-deep);
+  --fp-confirme: var(--fp-teal-ink);
   --fp-confirme-fond: #eaf6f3;
-  --fp-a-revoir: var(--fp-gold-deep);
+  --fp-a-revoir: var(--fp-gold-ink);
   --fp-a-revoir-fond: #fdf4e3;
-  --fp-en-cours: var(--fp-ink-mute);
-  --fp-en-attente: var(--fp-line);
+  --fp-en-cours: var(--fp-ink-soft);
+  --fp-en-cours-fond: var(--fp-sand);
+  --fp-en-attente: var(--fp-ink-mute);
+  --fp-en-attente-fond: var(--fp-cream);
   --fp-erreur: #c0563c;
 
   --fp-font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
@@ -106,7 +109,6 @@ export const base = `
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: var(--fp-gouttiere);
   width: 100%;
-  min-width: 360px;
   max-width: 1920px;
   margin-inline: auto;
   padding: var(--fp-respiration) var(--fp-gouttiere);
@@ -192,13 +194,13 @@ export const components = `
 
 :where(.fp-root) [data-etat='en-cours'] {
   color: var(--fp-en-cours);
-  background: var(--fp-sand);
-  border-color: var(--fp-bordure);
+  background: var(--fp-en-cours-fond);
+  border-color: var(--fp-en-cours);
 }
 
 :where(.fp-root) [data-etat='en-attente'] {
-  color: var(--fp-ink-mute);
-  background: var(--fp-fond);
+  color: var(--fp-en-attente);
+  background: var(--fp-en-attente-fond);
   border-color: var(--fp-en-attente);
 }
 
@@ -215,10 +217,14 @@ export const stage = `
   --fp-texte: #1a1a1a;
   --fp-texte-fort: #000000;
   --fp-bordure: #4a4a4a;
-  --fp-confirme: #1c5a50;
+  --fp-confirme: #000000;
   --fp-confirme-fond: #d5ece7;
-  --fp-a-revoir: #8a5f14;
+  --fp-a-revoir: #000000;
   --fp-a-revoir-fond: #fbe8c4;
+  --fp-en-cours: #000000;
+  --fp-en-cours-fond: var(--fp-sand);
+  --fp-en-attente: #000000;
+  --fp-en-attente-fond: #f0f0f0;
   --fp-shadow-card: none;
 }
 

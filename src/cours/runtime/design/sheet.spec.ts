@@ -33,4 +33,16 @@ describe('adoptCoursStyles', () => {
     adoptCoursStyles(racine);
     expect(racine.adoptedStyleSheets.length).toBe(1);
   });
+
+  it('n adopte rien et ne leve pas quand CSSStyleSheet est indisponible (SSR)', () => {
+    const contexte = globalThis as unknown as { CSSStyleSheet?: typeof CSSStyleSheet };
+    const original = contexte.CSSStyleSheet;
+    contexte.CSSStyleSheet = undefined;
+    try {
+      expect(() => adoptCoursStyles(racine)).not.toThrow();
+      expect(racine.adoptedStyleSheets.length).toBe(0);
+    } finally {
+      contexte.CSSStyleSheet = original;
+    }
+  });
 });
