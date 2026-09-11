@@ -83,6 +83,14 @@ describe('queue', () => {
     expect(file[199].questionId).toBe('Q-199');
   });
 
+  it('signale l echec d ecriture du stockage au lieu de perdre la reponse en silence', () => {
+    const saturation = new Error('quota de stockage depasse');
+    saturation.name = 'QuotaExceededError';
+    spyOn(globalThis.localStorage, 'setItem').and.throwError(saturation);
+    expect(() => enqueue(buildEnvoi())).toThrowError(/quota de stockage depasse/);
+    expect(pending()).toEqual([]);
+  });
+
   it('une reponse ajoutee pendant un flush en cours n est pas perdue', async () => {
     enqueue(buildEnvoi({ questionId: 'Q-1' }));
     enqueue(buildEnvoi({ questionId: 'Q-2' }));

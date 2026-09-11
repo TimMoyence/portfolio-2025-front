@@ -8,6 +8,7 @@ export type IncidentType =
   | 'contextmenu'
   | 'blocked_shortcut'
   | 'devtools_key'
+  | 'page_unload'
   | 'fast_answer';
 
 export interface Incident {
@@ -112,6 +113,7 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
           ecouter(document, 'paste', bloquerEtConsigner('paste')),
           ecouter(document, 'contextmenu', bloquerEtConsigner('contextmenu')),
           ecouter(document, 'keydown', surTouche),
+          ecouter(window, 'beforeunload', bloquerEtConsigner('page_unload')),
         );
       }
     },

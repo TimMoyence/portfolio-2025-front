@@ -1,14 +1,7 @@
+import { buildVoteQuestion } from '../../../testing/factories/cours.factory';
 import { FpVote } from './FpVote';
 
-const QUESTION = {
-  id: 'Q-CAP-03',
-  enonce: 'Un capital de 1 000 € place a 4 % pendant 10 ans vaut :',
-  options: [
-    { id: 'a', libelle: '1 400 €', misconception: 'interet-simple' },
-    { id: 'b', libelle: '1 480,24 €', misconception: null },
-    { id: 'c', libelle: '1 040 €', misconception: 'oubli-de-la-duree' },
-  ],
-};
+const QUESTION = buildVoteQuestion();
 
 describe('FpVote', () => {
   let hote: FpVote;
@@ -79,14 +72,14 @@ describe('FpVote', () => {
 
   it('echappe le html injecte dans le libelle d une option', () => {
     const charge = '<img src=x onerror="alert(1)">';
-    hote.question = {
+    hote.question = buildVoteQuestion({
       id: 'Q-XSS-01',
       enonce: 'Question',
       options: [
         { id: 'a', libelle: charge, misconception: null },
         { id: 'b', libelle: 'reponse', misconception: 'distracteur' },
       ],
-    };
+    });
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     const bouton = hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-option="a"]');
     expect(bouton?.textContent?.trim()).toBe(charge);
@@ -111,11 +104,11 @@ describe('FpVote', () => {
   it('echappe l id d une option connue dans l histogramme', () => {
     hote.setAttribute('role', 'presentateur');
     hote.setAttribute('render', 'stage');
-    hote.question = {
+    hote.question = buildVoteQuestion({
       id: 'Q-QUOTE-01',
       enonce: 'Question',
       options: [{ id: 'a"b', libelle: 'Option', misconception: null }],
-    };
+    });
     hote.resultats = { total: 1, parOption: { 'a"b': 1 } };
     const barre = hote.shadowRoot?.querySelector<HTMLElement>('[data-testid="barre"]');
     expect(barre?.getAttribute('data-option')).toBe('a"b');
@@ -128,7 +121,10 @@ describe('FpVote', () => {
   it('conserve la misconception en role presentateur', () => {
     hote.setAttribute('role', 'presentateur');
     hote.question = QUESTION;
-    expect(hote.question?.options[0].misconception).toBe('interet-simple');
+    expect(hote.question?.options[0]).toEqual(QUESTION.options[0]);
+    expect(hote.question?.options[0]).toEqual(
+      jasmine.objectContaining({ misconception: 'interet-simple' }),
+    );
   });
 
   it('n affiche en mode scene que des identifiants d option connus et des pourcentages', () => {

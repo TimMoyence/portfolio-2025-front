@@ -1,4 +1,5 @@
 import type { CoursContent, EcranContent } from '../../cours/content/types';
+import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { DeckState } from '../../cours/runtime/core/state';
 
 function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
@@ -23,6 +24,19 @@ export function buildCoursContent(overrides: Partial<CoursContent> = {}): CoursC
       buildEcran({ id: 'ecran-2' }),
       buildEcran({ id: 'ecran-3', interactif: false }),
       buildEcran({ id: 'ecran-4' }),
+    ],
+    ...overrides,
+  };
+}
+
+export function buildVoteQuestion(overrides: Partial<VoteQuestion> = {}): VoteQuestion {
+  return {
+    id: 'Q-CAP-03',
+    enonce: 'Un capital de 1 000 € place a 4 % pendant 10 ans vaut :',
+    options: [
+      { id: 'a', libelle: '1 400 €', misconception: 'interet-simple' },
+      { id: 'b', libelle: '1 480,24 €', misconception: null },
+      { id: 'c', libelle: '1 040 €', misconception: 'oubli-de-la-duree' },
     ],
     ...overrides,
   };

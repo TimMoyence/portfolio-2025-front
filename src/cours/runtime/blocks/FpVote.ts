@@ -2,7 +2,7 @@ import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
 
-interface VoteOptionPublique {
+export interface VoteOptionPublique {
   id: string;
   libelle: string;
 }
@@ -11,9 +11,13 @@ export interface VoteOption extends VoteOptionPublique {
   misconception: string | null;
 }
 
-export interface VoteQuestion {
+export interface VoteQuestionPublique {
   id: string;
   enonce: string;
+  options: readonly VoteOptionPublique[];
+}
+
+export interface VoteQuestion extends VoteQuestionPublique {
   options: readonly VoteOption[];
 }
 
@@ -28,14 +32,14 @@ const SEUIL_DEFAUT = 0.7;
 const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 
 export class FpVote extends FpBlock {
-  private interne: VoteQuestion | null = null;
+  private interne: VoteQuestionPublique | null = null;
   private interneResultats: VoteResultats | null = null;
   private internePhase: VotePhase = 'vote';
   private interneSeuil = SEUIL_DEFAUT;
   private affiche = 0;
   private repondu = false;
 
-  set question(valeur: VoteQuestion | null) {
+  set question(valeur: VoteQuestionPublique | null) {
     this.interne =
       valeur === null || this.roleActuel() === 'presentateur'
         ? valeur
@@ -44,12 +48,12 @@ export class FpVote extends FpBlock {
             options: valeur.options.map((option) => ({
               id: option.id,
               libelle: option.libelle,
-            })) as unknown as readonly VoteOption[],
+            })),
           };
     this.refreshSiConnecte();
   }
 
-  get question(): VoteQuestion | null {
+  get question(): VoteQuestionPublique | null {
     return this.interne;
   }
 
@@ -156,8 +160,13 @@ export class FpVote extends FpBlock {
     this.refresh();
   }
 
+  private optionsNotees(): readonly VoteOption[] {
+    const options = this.question?.options ?? [];
+    return options.filter((option): option is VoteOption => 'misconception' in option);
+  }
+
   private idOptionCorrecte(): string | undefined {
-    return this.question?.options.find((option) => option.misconception === null)?.id;
+    return this.optionsNotees().find((option) => option.misconception === null)?.id;
   }
 
   private tauxReussite(): number {
@@ -171,15 +180,14 @@ export class FpVote extends FpBlock {
   }
 
   private erreurDominante(): string | null {
-    const question = this.question;
     const resultats = this.resultats;
-    if (!question || !resultats) {
+    if (!resultats) {
       return null;
     }
     const idCorrecte = this.idOptionCorrecte();
     let dominante: { misconception: string; total: number } | null = null;
-    for (const option of question.options) {
-      if (option.id === idCorrecte || typeof option.misconception !== 'string') {
+    for (const option of this.optionsNotees()) {
+      if (option.id === idCorrecte || option.misconception === null) {
         continue;
       }
       const total = resultats.parOption[option.id] ?? 0;

@@ -5,25 +5,17 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   signal,
 } from '@angular/core';
-import type { VoteQuestion } from '../../../cours/runtime/blocks/FpVote';
+import type { VoteQuestionPublique } from '../../../cours/runtime/blocks/FpVote';
 
 type EtatHote = 'chargement' | 'identite' | 'pret' | 'erreur';
 
-const QUESTION_DEMO: VoteQuestion = {
+const QUESTION_DEMO: VoteQuestionPublique = {
   id: 'Q-CAP-03',
   enonce: 'Un capital de 1 000 € placé à 4 % pendant 10 ans (intérêts composés) vaut environ :',
   options: [
-    {
-      id: 'a',
-      libelle: '1 400 €',
-      misconception: 'Confond intérêts composés et intérêts simples',
-    },
-    { id: 'b', libelle: '1 480,24 €', misconception: null },
-    {
-      id: 'c',
-      libelle: '10 400 €',
-      misconception: 'Multiplie le taux par la durée au lieu d’élever à la puissance',
-    },
+    { id: 'a', libelle: '1 400 €' },
+    { id: 'b', libelle: '1 480,24 €' },
+    { id: 'c', libelle: '10 400 €' },
   ],
 };
 
@@ -64,7 +56,7 @@ export class CoursHostComponent {
   readonly etat = signal<EtatHote>('chargement');
   readonly rendu = signal<'stage' | 'hand' | 'board'>('hand');
   readonly graine = signal(0);
-  readonly questionDemo: VoteQuestion = QUESTION_DEMO;
+  readonly questionDemo: VoteQuestionPublique = QUESTION_DEMO;
 
   constructor() {
     afterNextRender(() => {

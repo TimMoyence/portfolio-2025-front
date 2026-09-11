@@ -107,6 +107,25 @@ describe('createDeck', () => {
     expect(deck.current()).toBe(2);
   });
 
+  it('repart du debut quand l ecran repris depasse le nombre d ecrans du cours', () => {
+    saveDeckState(buildDeckState({ ecranCourant: 9 }));
+    const deck = createDeck(buildCoursContent(), { reprise: true });
+    expect(deck.current()).toBe(0);
+    expect(deck.next()).toBe(true);
+    expect(deck.current()).toBe(1);
+  });
+
+  it('repart du debut quand l etat repris a perdu un champ du schema', () => {
+    const ampute = {
+      ...buildDeckState({ ecranCourant: 2, modeRythme: 'libre' }),
+      intervalleLibre: undefined,
+    };
+    saveDeckState(ampute as unknown as DeckState);
+    const deck = createDeck(buildCoursContent(), { role: 'etudiant', reprise: true });
+    expect(deck.current()).toBe(0);
+    expect(() => deck.canNavigate(1)).not.toThrow();
+  });
+
   it('demarre au premier ecran sans reprise meme si un etat existe', () => {
     saveDeckState(buildDeckState({ ecranCourant: 2 }));
     const deck = createDeck(buildCoursContent());

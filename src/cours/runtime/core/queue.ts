@@ -27,7 +27,11 @@ export function enqueue(envoi: Omit<EnvoiReponse, 'id'>): void {
     );
   }
   const prochainId = file.reduce((max, existant) => Math.max(max, existant.id), 0) + 1;
-  writeJson(CLE, [...file, { ...envoi, id: prochainId }]);
+  if (!writeJson(CLE, [...file, { ...envoi, id: prochainId }])) {
+    throw new Error(
+      "Le stockage local est indisponible sur ce poste — la réponse n'a pas été mise en file",
+    );
+  }
 }
 
 function retirer(id: number): void {

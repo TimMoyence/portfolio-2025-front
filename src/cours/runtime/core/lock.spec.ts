@@ -9,6 +9,10 @@ function dispatcherEvenementsSensibles(): { copie: Event; raccourci: KeyboardEve
   return { copie, raccourci };
 }
 
+function typesEcoutes(espion: jasmine.Spy): string[] {
+  return espion.calls.allArgs().map(([type]) => String(type));
+}
+
 describe('lock', () => {
   let lock: Lock | null = null;
 
@@ -108,6 +112,36 @@ describe('lock', () => {
     expect(evenement.defaultPrevented).toBe(false);
     expect(lock.incidents().length).toBe(1);
     expect(lock.incidents()[0].type).toBe('devtools_key');
+  });
+
+  it('le regime examen avertit avant de quitter la page et journalise la tentative', () => {
+    const ecouteurs = new Map<string, EventListener>();
+    spyOn(window, 'addEventListener').and.callFake(
+      (type: string, ecouteur: EventListenerOrEventListenerObject | null) => {
+        ecouteurs.set(type, ecouteur as EventListener);
+      },
+    );
+    lock = createLock('examen');
+    lock.arm();
+    const dechargement = new Event('beforeunload', { cancelable: true });
+    ecouteurs.get('beforeunload')?.(dechargement);
+    expect(dechargement.defaultPrevented).toBe(true);
+    expect(lock.incidents().length).toBe(1);
+    expect(lock.incidents()[0].type).toBe('page_unload');
+  });
+
+  it('seul le regime examen retient la page, et disarm rend la main', () => {
+    const pose = spyOn(window, 'addEventListener').and.stub();
+    const retire = spyOn(window, 'removeEventListener').and.stub();
+    const ouvert = createLock('focus');
+    ouvert.arm();
+    expect(typesEcoutes(pose)).not.toContain('beforeunload');
+    ouvert.disarm();
+    lock = createLock('examen');
+    lock.arm();
+    expect(typesEcoutes(pose)).toContain('beforeunload');
+    lock.disarm();
+    expect(typesEcoutes(retire)).toContain('beforeunload');
   });
 
   it('disarm retire tous les ecouteurs poses en regime examen', () => {

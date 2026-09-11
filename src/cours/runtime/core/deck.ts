@@ -22,19 +22,50 @@ export interface Deck {
   subscribe(listener: DeckListener): () => void;
 }
 
+function intervalleValide(intervalle: FreeRange | null): boolean {
+  if (intervalle === null) {
+    return true;
+  }
+  return (
+    typeof intervalle === 'object' &&
+    Number.isInteger(intervalle.premier) &&
+    Number.isInteger(intervalle.dernier)
+  );
+}
+
+function repriseUtilisable(etat: DeckState | null, cours: CoursContent): etat is DeckState {
+  if (etat === null || typeof etat !== 'object') {
+    return false;
+  }
+  const reponses: unknown = etat.reponses;
+  const borne =
+    Number.isInteger(etat.ecranCourant) &&
+    etat.ecranCourant >= 0 &&
+    etat.ecranCourant < cours.ecrans.length;
+  const forme =
+    etat.coursId === cours.id &&
+    (etat.modeRythme === 'pilote' || etat.modeRythme === 'libre') &&
+    intervalleValide(etat.intervalleLibre) &&
+    typeof reponses === 'object' &&
+    reponses !== null;
+  return borne && forme;
+}
+
 export function createDeck(cours: CoursContent, options: DeckOptions = {}): Deck {
   const role: Role = options.role ?? 'presentateur';
   const repris = options.reprise === true ? loadDeckState(cours.id) : null;
   const ecoutes = new Set<DeckListener>();
 
-  let etat: DeckState = repris ?? {
-    coursId: cours.id,
-    ecranCourant: 0,
-    modeRythme: 'pilote',
-    intervalleLibre: null,
-    reponses: {},
-    majLe: new Date().toISOString(),
-  };
+  let etat: DeckState = repriseUtilisable(repris, cours)
+    ? repris
+    : {
+        coursId: cours.id,
+        ecranCourant: 0,
+        modeRythme: 'pilote',
+        intervalleLibre: null,
+        reponses: {},
+        majLe: new Date().toISOString(),
+      };
 
   const copier = (): DeckState => ({ ...etat, reponses: { ...etat.reponses } });
 
