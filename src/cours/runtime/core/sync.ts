@@ -1,6 +1,6 @@
 import type { FreeRange, PacingMode } from '../../content/types';
 import type { Identity } from './identity';
-import { enqueue, type EnvoiReponse } from './queue';
+import { enqueue } from './queue';
 
 export type StatutSession = 'attente' | 'en_cours' | 'terminee';
 
@@ -30,16 +30,32 @@ export interface Sync {
 const DELAI_INITIAL_MS = 1000;
 const DELAI_MAX_MS = 30000;
 
+const STATUTS_VALIDES: readonly StatutSession[] = ['attente', 'en_cours', 'terminee'];
+const MODES_RYTHME_VALIDES: readonly PacingMode[] = ['pilote', 'libre'];
+
+function estMembre<T extends string>(valeurs: readonly T[], valeur: unknown): valeur is T {
+  return typeof valeur === 'string' && (valeurs as readonly string[]).includes(valeur);
+}
+
+function estFreeRange(valeur: unknown): valeur is FreeRange {
+  if (typeof valeur !== 'object' || valeur === null) {
+    return false;
+  }
+  const candidat = valeur as Record<string, unknown>;
+  return typeof candidat['premier'] === 'number' && typeof candidat['dernier'] === 'number';
+}
+
 function estEtatSession(valeur: unknown): valeur is EtatSession {
   if (typeof valeur !== 'object' || valeur === null) {
     return false;
   }
   const candidat = valeur as Record<string, unknown>;
   return (
-    typeof candidat['etat'] === 'string' &&
-    typeof candidat['modeRythme'] === 'string' &&
+    estMembre(STATUTS_VALIDES, candidat['etat']) &&
+    estMembre(MODES_RYTHME_VALIDES, candidat['modeRythme']) &&
     typeof candidat['ecranCourant'] === 'number' &&
-    typeof candidat['participants'] === 'number'
+    typeof candidat['participants'] === 'number' &&
+    (candidat['intervalleLibre'] === null || estFreeRange(candidat['intervalleLibre']))
   );
 }
 
@@ -150,15 +166,14 @@ export function createSync(options: SyncOptions): Sync {
       if (!identite) {
         throw new Error("Rejoignez la session avant d'envoyer une réponse");
       }
-      const envoi: EnvoiReponse = {
+      enqueue({
         sessionId: options.sessionId,
         studentKey: identite.studentKey,
         questionId,
         valeur,
         dureeMs,
         horodatage: new Date().toISOString(),
-      };
-      enqueue(envoi);
+      });
     },
     onState(listener) {
       ecoutes.add(listener);

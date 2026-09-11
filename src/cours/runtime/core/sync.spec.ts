@@ -252,6 +252,7 @@ describe('sync', () => {
     sync.submit('Q-1', 'b', 1500);
     expect(pending()).toEqual([
       {
+        id: jasmine.any(Number),
         sessionId: 's1',
         studentKey: 'etu-1',
         questionId: 'Q-1',
@@ -269,5 +270,53 @@ describe('sync', () => {
       creerSource: creerFabrique(sources),
     });
     expect(() => sync.submit('Q-1', 'b', 1500)).toThrow();
+  });
+
+  it('submit repercute l echec quand la file d attente est pleine', () => {
+    sync = createSync({
+      baseUrl: 'https://api.test',
+      sessionId: 's1',
+      creerSource: creerFabrique(sources),
+    });
+    sync.join(IDENTITE);
+    for (let indice = 0; indice < 200; indice += 1) {
+      sync.submit(`Q-${indice}`, 'a', 100);
+    }
+    expect(() => sync.submit('Q-200', 'a', 100)).toThrow();
+  });
+
+  it('ignore un etat syntaxiquement valide mais dont la forme est incorrecte', () => {
+    sync = createSync({
+      baseUrl: 'https://api.test',
+      sessionId: 's1',
+      creerSource: creerFabrique(sources),
+    });
+    const recus: EtatSession[] = [];
+    sync.onState((etat) => recus.push(etat));
+    sync.join(IDENTITE);
+    sources[0].emettre('etat', { ...ETAT, etat: 'invalide' });
+    expect(recus).toEqual([]);
+    sources[0].emettre('etat', { ...ETAT, intervalleLibre: { premier: 'un', dernier: 2 } });
+    expect(recus).toEqual([]);
+    sources[0].emettre('etat', ETAT);
+    expect(recus).toEqual([ETAT]);
+  });
+
+  it('transmet un etat avec un intervalle libre non nul', () => {
+    sync = createSync({
+      baseUrl: 'https://api.test',
+      sessionId: 's1',
+      creerSource: creerFabrique(sources),
+    });
+    const recus: EtatSession[] = [];
+    sync.onState((etat) => recus.push(etat));
+    sync.join(IDENTITE);
+    const etatAvecIntervalle: EtatSession = {
+      ...ETAT,
+      modeRythme: 'libre',
+      intervalleLibre: { premier: 1, dernier: 3 },
+    };
+    sources[0].emettre('etat', etatAvecIntervalle);
+    expect(recus).toEqual([etatAvecIntervalle]);
   });
 });
