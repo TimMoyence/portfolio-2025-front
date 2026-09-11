@@ -1,4 +1,5 @@
 import { buildCoursContent, buildDeckState } from '../../../testing/factories/cours.factory';
+import { saturationDuStockage } from '../../../testing/sans-stockage';
 import { createDeck } from './deck';
 import { clearDeckState, saveDeckState, type DeckState } from './state';
 
@@ -130,5 +131,19 @@ describe('createDeck', () => {
     saveDeckState(buildDeckState({ ecranCourant: 2 }));
     const deck = createDeck(buildCoursContent());
     expect(deck.current()).toBe(0);
+  });
+
+  it('notifie les ecoutes avant de persister, et malgre un stockage sature', () => {
+    const ordre: string[] = [];
+    spyOn(globalThis.localStorage, 'setItem').and.callFake(() => {
+      ordre.push('persistance');
+      throw saturationDuStockage();
+    });
+    const deck = createDeck(buildCoursContent());
+    deck.subscribe((etat) => ordre.push(`ecoute:${etat.ecranCourant}`));
+    expect(deck.next()).toBe(true);
+    deck.recordAnswer('Q-CAP-03', 1338.23);
+    expect(ordre).toEqual(['ecoute:1', 'persistance', 'ecoute:1', 'persistance']);
+    expect(deck.snapshot().reponses).toEqual({ 'Q-CAP-03': 1338.23 });
   });
 });

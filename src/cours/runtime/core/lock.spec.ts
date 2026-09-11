@@ -123,9 +123,16 @@ describe('lock', () => {
     );
     lock = createLock('examen');
     lock.arm();
-    const dechargement = new Event('beforeunload', { cancelable: true });
-    ecouteurs.get('beforeunload')?.(dechargement);
-    expect(dechargement.defaultPrevented).toBe(true);
+    const dechargement = {
+      empeche: false,
+      returnValue: 'valeur-intacte',
+      preventDefault(): void {
+        dechargement.empeche = true;
+      },
+    };
+    ecouteurs.get('beforeunload')?.(dechargement as unknown as Event);
+    expect(dechargement.empeche).toBe(true);
+    expect(dechargement.returnValue).toBe('');
     expect(lock.incidents().length).toBe(1);
     expect(lock.incidents()[0].type).toBe('page_unload');
   });

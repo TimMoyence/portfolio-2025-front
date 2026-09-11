@@ -1334,7 +1334,7 @@
         <source> Chargement du cours… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
-          <context context-type="linenumber">20,23</context>
+          <context context-type="linenumber">31,34</context>
         </context-group>
         <note priority="1" from="meaning">cours.chargement</note>
       </trans-unit>
@@ -1342,7 +1342,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
-          <context context-type="linenumber">25,26</context>
+          <context context-type="linenumber">36,37</context>
         </context-group>
         <note priority="1" from="meaning">cours.prenom</note>
       </trans-unit>
@@ -1350,7 +1350,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
-          <context context-type="linenumber">27,28</context>
+          <context context-type="linenumber">38,39</context>
         </context-group>
         <note priority="1" from="meaning">cours.nom</note>
       </trans-unit>
@@ -1358,7 +1358,7 @@
         <source>Adresse e-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
-          <context context-type="linenumber">29,30</context>
+          <context context-type="linenumber">40,41</context>
         </context-group>
         <note priority="1" from="meaning">cours.email</note>
       </trans-unit>
@@ -1366,15 +1366,31 @@
         <source>Rejoindre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
-          <context context-type="linenumber">31,34</context>
+          <context context-type="linenumber">42,44</context>
         </context-group>
         <note priority="1" from="meaning">cours.rejoindre</note>
       </trans-unit>
-      <trans-unit id="coursErreur" datatype="html">
-        <source> Ce cours n&apos;a pas pu être chargé. </source>
+      <trans-unit id="coursIdentiteRefus" datatype="html">
+        <source> Vos informations n&apos;ont pas pu être prises en compte : vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
-          <context context-type="linenumber">39,44</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+        <note priority="1" from="meaning">cours.identiteRefus</note>
+      </trans-unit>
+      <trans-unit id="coursSansMemoire" datatype="html">
+        <source> Ce poste ne peut rien mémoriser : le cours continue normalement, mais si vous rechargez la page ou fermez l&apos;onglet, vous devrez vous réinscrire et repartir du début. Signalez-le à votre formateur. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
+          <context context-type="linenumber">62,66</context>
+        </context-group>
+        <note priority="1" from="meaning">cours.sansMemoire</note>
+      </trans-unit>
+      <trans-unit id="coursErreur" datatype="html">
+        <source> Ce cours n&apos;a pas pu être chargé. Rechargez la page ; si le problème persiste, prévenez votre formateur. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
+          <context context-type="linenumber">71,76</context>
         </context-group>
         <note priority="1" from="meaning">cours.erreur</note>
       </trans-unit>

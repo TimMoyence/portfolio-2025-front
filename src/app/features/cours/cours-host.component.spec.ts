@@ -2,6 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { clearIdentity, saveIdentity } from '../../../cours/runtime/core/identity';
 import { seedFromKey } from '../../../cours/runtime/core/seed';
+import { saturationDuStockage } from '../../../testing/sans-stockage';
 import { CoursHostComponent } from './cours-host.component';
 
 const IDENTITE_THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
@@ -9,16 +10,40 @@ const IDENTITE_THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com'
 const DELAI_ATTENTE_MS = 50;
 const ESSAIS_MAX = 20;
 
-async function attendreFinDuChargement(
+async function attendreQue(
   fixture: ComponentFixture<CoursHostComponent>,
+  condition: () => boolean,
 ): Promise<void> {
   for (let essai = 0; essai < ESSAIS_MAX; essai += 1) {
-    if (fixture.componentInstance.etat() !== 'chargement') {
+    if (condition()) {
       return;
     }
     await new Promise((resolve) => setTimeout(resolve, DELAI_ATTENTE_MS));
     fixture.detectChanges();
   }
+}
+
+async function attendreFinDuChargement(
+  fixture: ComponentFixture<CoursHostComponent>,
+): Promise<void> {
+  await attendreQue(fixture, () => fixture.componentInstance.etat() !== 'chargement');
+}
+
+function soumettreIdentite(
+  fixture: ComponentFixture<CoursHostComponent>,
+  valeurs: Record<string, string>,
+): void {
+  fixture.detectChanges();
+  const formulaire = fixture.nativeElement.querySelector(
+    "[data-testid='cours-identite']",
+  ) as HTMLFormElement;
+  for (const [nom, valeur] of Object.entries(valeurs)) {
+    const champ = formulaire.querySelector<HTMLInputElement>(`[name='${nom}']`);
+    if (champ) {
+      champ.value = valeur;
+    }
+  }
+  formulaire.dispatchEvent(new Event('submit'));
 }
 
 async function monterPret(): Promise<ComponentFixture<CoursHostComponent>> {
@@ -32,11 +57,16 @@ describe('CoursHostComponent', () => {
   let fixture: ComponentFixture<CoursHostComponent>;
 
   beforeEach(async () => {
+    clearIdentity();
     await TestBed.configureTestingModule({
       imports: [CoursHostComponent],
     }).compileComponents();
     fixture = TestBed.createComponent(CoursHostComponent);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    clearIdentity();
   });
 
   it('se cree sans erreur', () => {
@@ -68,13 +98,45 @@ describe('CoursHostComponent', () => {
   });
 
   it('seme le melange des options depuis la cle de l etudiant', async () => {
-    const identite = saveIdentity(IDENTITE_THEO);
+    const enregistrement = saveIdentity(IDENTITE_THEO);
     try {
       const pret = await monterPret();
-      expect(pret.componentInstance.graine()).toBe(seedFromKey(identite.studentKey));
+      expect(pret.componentInstance.graine()).toBe(seedFromKey(enregistrement.identite.studentKey));
       expect(pret.componentInstance.graine()).not.toBe(0);
     } finally {
       clearIdentity();
     }
+  });
+
+  it('demarre la seance et avertit l etudiant quand le poste ne peut rien memoriser', async () => {
+    spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
+    try {
+      await attendreFinDuChargement(fixture);
+      expect(fixture.componentInstance.etat()).toBe('identite');
+      soumettreIdentite(fixture, IDENTITE_THEO);
+      await attendreQue(fixture, () => fixture.componentInstance.etat() === 'pret');
+      expect(fixture.componentInstance.etat()).toBe('pret');
+      expect(
+        fixture.nativeElement.querySelector("[data-testid='cours-sans-memoire']"),
+      ).toBeTruthy();
+      expect(fixture.nativeElement.querySelector("[data-testid='cours-erreur']")).toBeNull();
+      expect(fixture.nativeElement.querySelector('fp-vote')).toBeTruthy();
+    } finally {
+      clearIdentity();
+    }
+  });
+
+  it('une identite refusee ramene au formulaire sans accuser le chargement du cours', async () => {
+    await attendreFinDuChargement(fixture);
+    expect(fixture.componentInstance.etat()).toBe('identite');
+    soumettreIdentite(fixture, { ...IDENTITE_THEO, email: 'pas-une-adresse' });
+    await attendreQue(fixture, () => fixture.componentInstance.identiteRefusee());
+    fixture.detectChanges();
+    expect(fixture.componentInstance.etat()).toBe('identite');
+    expect(
+      fixture.nativeElement.querySelector("[data-testid='cours-identite-refus']"),
+    ).toBeTruthy();
+    expect(fixture.nativeElement.querySelector("[data-testid='cours-erreur']")).toBeNull();
+    expect(fixture.nativeElement.querySelector("[data-testid='cours-identite']")).toBeTruthy();
   });
 });

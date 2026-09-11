@@ -233,6 +233,26 @@ describe('FpVote', () => {
     expect(largeurs.get('c')).toBe('8%');
   });
 
+  it('pose toutes les pistes sur un rail de meme longueur quels que soient les libelles', () => {
+    hote.style.display = 'block';
+    hote.style.width = '600px';
+    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    hote.question = buildVoteQuestion({
+      id: 'Q-RAIL-01',
+      options: [
+        { id: 'a', libelle: 'Non', misconception: null },
+        { id: 'b', libelle: 'Un libelle nettement plus long que le premier', misconception: 'x' },
+      ],
+    });
+    hote.resultats = { total: 100, parOption: { a: 95, b: 5 } };
+    const pistes = [...(hote.shadowRoot?.querySelectorAll<HTMLElement>('.fp-barre__piste') ?? [])];
+    const largeurs = pistes.map((piste) => piste.getBoundingClientRect().width);
+    expect(largeurs.length).toBe(2);
+    expect(largeurs[0]).toBeGreaterThan(0);
+    expect(largeurs[1]).toBeCloseTo(largeurs[0], 1);
+  });
+
   it('etiquette chaque barre avec le libelle de son option', () => {
     hote.setAttribute('role', 'presentateur');
     hote.setAttribute('render', 'stage');

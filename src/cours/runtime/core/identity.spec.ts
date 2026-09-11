@@ -1,7 +1,16 @@
+import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
 import { clearIdentity, readIdentity, saveIdentity } from './identity';
+import { clearStorageIncidents, storageIncidents } from './storage';
+
+const THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
 
 describe('identity', () => {
   beforeEach(() => {
+    clearIdentity();
+    clearStorageIncidents();
+  });
+
+  afterEach(() => {
     clearIdentity();
   });
 
@@ -15,23 +24,24 @@ describe('identity', () => {
   });
 
   it('genere une cle etudiant stable', () => {
-    const premiere = saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
-    const seconde = saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
-    expect(seconde.studentKey).toBe(premiere.studentKey);
+    const premiere = saveIdentity(THEO);
+    const seconde = saveIdentity(THEO);
+    expect(seconde.identite.studentKey).toBe(premiere.identite.studentKey);
   });
 
   it('produit une cle au format uuid v4', () => {
-    const identite = saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
-    expect(identite.studentKey).toMatch(
+    const enregistrement = saveIdentity(THEO);
+    expect(enregistrement.identite.studentKey).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
     );
+    expect(enregistrement.persistee).toBe(true);
   });
 
   it('met a jour le nom sans changer la cle', () => {
-    const premiere = saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
+    const premiere = saveIdentity(THEO);
     const seconde = saveIdentity({ prenom: 'Theo', nom: 'Durand', email: 'theo@example.com' });
-    expect(seconde.studentKey).toBe(premiere.studentKey);
-    expect(seconde.nom).toBe('Durand');
+    expect(seconde.identite.studentKey).toBe(premiere.identite.studentKey);
+    expect(seconde.identite.nom).toBe('Durand');
   });
 
   it('oublie l identite apres effacement', () => {
@@ -50,6 +60,29 @@ describe('identity', () => {
     expect(() =>
       saveIdentity({ prenom: '  ', nom: 'Martin', email: 'theo@example.com' }),
     ).toThrow();
+  });
+
+  it('sous saturation du stockage, l identite tient en memoire et l incident est journalise', () => {
+    spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
+    const enregistrement = saveIdentity(THEO);
+    expect(enregistrement.persistee).toBe(false);
+    expect(enregistrement.identite.prenom).toBe('Theo');
+    expect(readIdentity()?.studentKey).toBe(enregistrement.identite.studentKey);
+    expect(storageIncidents().map((incident) => incident.cause)).toEqual(['refus']);
+  });
+
+  it('sous stockage absent, la cle etudiant reste identique entre deux lectures', () => {
+    sansStockageLocal(() => {
+      const premiere = saveIdentity(THEO);
+      const seconde = saveIdentity(THEO);
+      expect(premiere.persistee).toBe(false);
+      expect(seconde.identite.studentKey).toBe(premiere.identite.studentKey);
+      expect(readIdentity()?.studentKey).toBe(premiere.identite.studentKey);
+      expect(storageIncidents().map((incident) => incident.cause)).toEqual([
+        'indisponible',
+        'indisponible',
+      ]);
+    });
   });
 
   it('refuse de generer une cle sans source d aleatoire disponible', () => {

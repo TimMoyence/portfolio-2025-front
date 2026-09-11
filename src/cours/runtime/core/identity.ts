@@ -1,4 +1,4 @@
-import { readJson, removeKey, writeJson } from './storage';
+import { persistJson, readJson, removeKey } from './storage';
 
 const CLE = 'fp.identite';
 const EMAIL_MOTIF = /^[^\s@]{1,64}@[^\s@]{1,253}\.[^\s@]{2,24}$/;
@@ -16,11 +16,18 @@ export interface IdentityInput {
   email: string;
 }
 
-export function readIdentity(): Identity | null {
-  return readJson<Identity>(CLE);
+export interface IdentityRegistration {
+  identite: Identity;
+  persistee: boolean;
 }
 
-export function saveIdentity(input: IdentityInput): Identity {
+let enMemoire: Identity | null = null;
+
+export function readIdentity(): Identity | null {
+  return readJson<Identity>(CLE) ?? enMemoire;
+}
+
+export function saveIdentity(input: IdentityInput): IdentityRegistration {
   const prenom = input.prenom.trim();
   const nom = input.nom.trim();
   const email = input.email.trim().toLowerCase();
@@ -37,11 +44,12 @@ export function saveIdentity(input: IdentityInput): Identity {
     nom,
     email,
   };
-  writeJson(CLE, identite);
-  return identite;
+  enMemoire = identite;
+  return { identite, persistee: persistJson(CLE, identite) };
 }
 
 export function clearIdentity(): void {
+  enMemoire = null;
   removeKey(CLE);
 }
 

@@ -1,5 +1,5 @@
 import type { FreeRange, PacingMode } from '../../content/types';
-import { readJson, removeKey, writeJson } from './storage';
+import { persistJson, readJson, removeKey } from './storage';
 
 export interface DeckState {
   coursId: string;
@@ -18,8 +18,8 @@ export function loadDeckState(coursId: string): DeckState | null {
   return readJson<DeckState>(cle(coursId));
 }
 
-export function saveDeckState(etat: DeckState): void {
-  writeJson(cle(etat.coursId), { ...etat, majLe: new Date().toISOString() });
+export function saveDeckState(etat: DeckState): boolean {
+  return persistJson(cle(etat.coursId), { ...etat, majLe: new Date().toISOString() });
 }
 
 export function clearDeckState(coursId: string): void {

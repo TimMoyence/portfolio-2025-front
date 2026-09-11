@@ -1,10 +1,13 @@
 import { buildDeckState } from '../../../testing/factories/cours.factory';
+import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
 import { clearDeckState, loadDeckState, saveDeckState } from './state';
+import { clearStorageIncidents, storageIncidents } from './storage';
 
 describe('state', () => {
   beforeEach(() => {
     clearDeckState('b1-09-interets-composes');
     clearDeckState('b1-10-fonctions');
+    clearStorageIncidents();
   });
 
   it('retourne null pour un cours jamais ouvert', () => {
@@ -32,5 +35,18 @@ describe('state', () => {
     saveDeckState(buildDeckState());
     clearDeckState('b1-09-interets-composes');
     expect(loadDeckState('b1-09-interets-composes')).toBeNull();
+  });
+
+  it('sous saturation du stockage, rend false sans lever et journalise l incident', () => {
+    spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
+    expect(saveDeckState(buildDeckState({ ecranCourant: 5 }))).toBe(false);
+    expect(storageIncidents().map((incident) => incident.cause)).toEqual(['refus']);
+  });
+
+  it('sous stockage absent, rend false sans lever et journalise l incident', () => {
+    sansStockageLocal(() => {
+      expect(saveDeckState(buildDeckState({ ecranCourant: 5 }))).toBe(false);
+      expect(storageIncidents().map((incident) => incident.cause)).toEqual(['indisponible']);
+    });
   });
 });

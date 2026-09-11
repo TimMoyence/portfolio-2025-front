@@ -40,14 +40,36 @@ const QUESTION_DEMO: VoteQuestionPublique = {
         <label for="cours-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
         <input id="cours-email" name="email" type="email" required />
         <button type="submit" i18n="cours.rejoindre|@@coursRejoindre">Rejoindre</button>
+        @if (identiteRefusee()) {
+          <p
+            data-testid="cours-identite-refus"
+            role="alert"
+            i18n="cours.identiteRefus|@@coursIdentiteRefus"
+          >
+            Vos informations n'ont pas pu être prises en compte : vérifiez votre prénom, votre nom
+            et votre adresse e-mail, puis réessayez.
+          </p>
+        }
       </form>
     }
     @if (etat() === 'pret') {
+      @if (sansMemoire()) {
+        <p
+          data-testid="cours-sans-memoire"
+          role="status"
+          i18n="cours.sansMemoire|@@coursSansMemoire"
+        >
+          Ce poste ne peut rien mémoriser : le cours continue normalement, mais si vous rechargez la
+          page ou fermez l'onglet, vous devrez vous réinscrire et repartir du début. Signalez-le à
+          votre formateur.
+        </p>
+      }
       <fp-vote [attr.render]="rendu()" [attr.seed]="graine()" [question]="questionDemo"></fp-vote>
     }
     @if (etat() === 'erreur') {
       <p data-testid="cours-erreur" i18n="cours.erreur|@@coursErreur">
-        Ce cours n'a pas pu être chargé.
+        Ce cours n'a pas pu être chargé. Rechargez la page ; si le problème persiste, prévenez votre
+        formateur.
       </p>
     }
   `,
@@ -56,6 +78,8 @@ export class CoursHostComponent {
   readonly etat = signal<EtatHote>('chargement');
   readonly rendu = signal<'stage' | 'hand' | 'board'>('hand');
   readonly graine = signal(0);
+  readonly sansMemoire = signal(false);
+  readonly identiteRefusee = signal(false);
   readonly questionDemo: VoteQuestionPublique = QUESTION_DEMO;
 
   constructor() {
@@ -90,15 +114,18 @@ export class CoursHostComponent {
   private async enregistrerIdentite(donnees: FormData): Promise<void> {
     try {
       const { saveIdentity } = await import('../../../cours/runtime/core/identity');
-      const identite = saveIdentity({
+      const enregistrement = saveIdentity({
         prenom: String(donnees.get('prenom') ?? ''),
         nom: String(donnees.get('nom') ?? ''),
         email: String(donnees.get('email') ?? ''),
       });
-      await this.semerDepuis(identite.studentKey);
+      this.identiteRefusee.set(false);
+      this.sansMemoire.set(!enregistrement.persistee);
+      await this.semerDepuis(enregistrement.identite.studentKey);
       this.etat.set('pret');
     } catch {
-      this.etat.set('erreur');
+      this.identiteRefusee.set(true);
+      this.etat.set('identite');
     }
   }
 

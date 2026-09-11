@@ -56,6 +56,12 @@ jobs:
       - name: Tests des gardes d outillage
         run: npm run test:guards
 
+      # Joue la garde AD-2 / AD-4 sur le depot reel : `test:guards` n execute que
+      # ses tests unitaires sur des fixtures temporaires, jamais la garde sur
+      # src/cours/ et la surface cours de src/app/.
+      - name: Garde runtime cours (AD-2 / AD-4)
+        run: npm run guard:cours-runtime
+
       # Cliquet non-regressif sur les commentaires narratifs : le plafond vit
       # dans `"guard-no-comments".maxOffenses` (package.json). Le gate echoue si
       # le compte depasse le plafond, et imprime la valeur a poser quand il

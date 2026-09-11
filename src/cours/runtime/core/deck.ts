@@ -70,10 +70,10 @@ export function createDeck(cours: CoursContent, options: DeckOptions = {}): Deck
   const copier = (): DeckState => ({ ...etat, reponses: { ...etat.reponses } });
 
   const notifier = (): void => {
-    saveDeckState(etat);
     for (const ecoute of ecoutes) {
       ecoute(copier());
     }
+    saveDeckState(etat);
   };
 
   const dansLesBornes = (index: number): boolean =>

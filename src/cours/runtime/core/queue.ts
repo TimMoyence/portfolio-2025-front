@@ -2,6 +2,8 @@ import { readJson, writeJson } from './storage';
 
 const CLE = 'fp.file-reponses';
 const CAPACITE_MAX = 200;
+const ECHEC_ECRITURE =
+  "Le stockage local de ce poste n'a pas accepté l'écriture — la réponse n'a pas été mise en file";
 
 export interface EnvoiReponse {
   id: number;
@@ -27,10 +29,18 @@ export function enqueue(envoi: Omit<EnvoiReponse, 'id'>): void {
     );
   }
   const prochainId = file.reduce((max, existant) => Math.max(max, existant.id), 0) + 1;
-  if (!writeJson(CLE, [...file, { ...envoi, id: prochainId }])) {
-    throw new Error(
-      "Le stockage local est indisponible sur ce poste — la réponse n'a pas été mise en file",
-    );
+  ecrireOuRefuser([...file, { ...envoi, id: prochainId }]);
+}
+
+function ecrireOuRefuser(file: readonly EnvoiReponse[]): void {
+  let ecrite: boolean;
+  try {
+    ecrite = writeJson(CLE, file);
+  } catch (cause) {
+    throw new Error(ECHEC_ECRITURE, { cause });
+  }
+  if (!ecrite) {
+    throw new Error(ECHEC_ECRITURE);
   }
 }
 

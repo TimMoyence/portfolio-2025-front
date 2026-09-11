@@ -33,6 +33,10 @@ export interface Lock {
 
 type Nettoyeur = () => void;
 
+interface DechargementHerite {
+  returnValue: string;
+}
+
 const CAPACITE_JOURNAL_MAX = 200;
 const SEUIL_REPONSE_RAPIDE_MS_DEFAUT = 1200;
 const TOUCHES_BLOQUEES: readonly string[] = ['p', 's', 'u'];
@@ -84,6 +88,12 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
       consigner(type);
     };
 
+  const surDechargement = (event: Event): void => {
+    event.preventDefault();
+    (event as unknown as DechargementHerite).returnValue = '';
+    consigner('page_unload');
+  };
+
   const surTouche = (event: Event): void => {
     const clavier = event as KeyboardEvent;
     if (clavier.key === 'F12') {
@@ -113,7 +123,7 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
           ecouter(document, 'paste', bloquerEtConsigner('paste')),
           ecouter(document, 'contextmenu', bloquerEtConsigner('contextmenu')),
           ecouter(document, 'keydown', surTouche),
-          ecouter(window, 'beforeunload', bloquerEtConsigner('page_unload')),
+          ecouter(window, 'beforeunload', surDechargement),
         );
       }
     },

@@ -237,15 +237,14 @@ export const components = `
 
 :where(.fp-root) .fp-histogramme {
   display: grid;
+  grid-template-columns: minmax(6ch, 26%) minmax(0, 1fr) auto;
+  align-items: center;
   gap: var(--fp-s-2);
   width: 100%;
 }
 
 :where(.fp-root) .fp-barre {
-  display: grid;
-  grid-template-columns: minmax(6ch, 26%) minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--fp-s-2);
+  display: contents;
 }
 
 :where(.fp-root) .fp-barre__libelle {
@@ -277,8 +276,15 @@ export const components = `
 }
 
 @media (max-width: 520px) {
+  :where(.fp-root) .fp-histogramme {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   :where(.fp-root) .fp-barre {
+    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--fp-s-2);
   }
 
   :where(.fp-root) .fp-barre__piste {
