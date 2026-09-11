@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import type { VoteQuestionPublique } from '../../../cours/runtime/blocks/FpVote';
+import type { IdentityRegistration } from '../../../cours/runtime/core/identity';
 
 type EtatHote = 'chargement' | 'identite' | 'pret' | 'erreur';
 
@@ -112,20 +113,26 @@ export class CoursHostComponent {
   }
 
   private async enregistrerIdentite(donnees: FormData): Promise<void> {
+    let enregistrement: IdentityRegistration;
     try {
       const { saveIdentity } = await import('../../../cours/runtime/core/identity');
-      const enregistrement = saveIdentity({
+      enregistrement = saveIdentity({
         prenom: String(donnees.get('prenom') ?? ''),
         nom: String(donnees.get('nom') ?? ''),
         email: String(donnees.get('email') ?? ''),
       });
-      this.identiteRefusee.set(false);
-      this.sansMemoire.set(!enregistrement.persistee);
-      await this.semerDepuis(enregistrement.identite.studentKey);
-      this.etat.set('pret');
     } catch {
       this.identiteRefusee.set(true);
       this.etat.set('identite');
+      return;
+    }
+    this.identiteRefusee.set(false);
+    this.sansMemoire.set(!enregistrement.persistee);
+    try {
+      await this.semerDepuis(enregistrement.identite.studentKey);
+      this.etat.set('pret');
+    } catch {
+      this.etat.set('erreur');
     }
   }
 

@@ -14,7 +14,20 @@ const PREFIXE_TESTS = 'src/testing/';
 const EXTENSIONS = ['.ts', '.html'];
 
 const FRAMEWORKS_INTERDITS = ['@angular', 'rxjs', 'zone.js'];
-const TERMES_CORRIGE = ['misconception', 'correcte', 'solution', 'bareme'];
+const TERMES_CORRIGE = [
+  'misconception',
+  'correcte',
+  'solution',
+  'bareme',
+  'barème',
+  'corrige',
+  'corrigé',
+  'correction',
+  'bonnereponse',
+  'bonneréponse',
+  'reponseattendue',
+  'réponseattendue',
+];
 
 const MOTIFS_SPECIFICATION = [
   /\bfrom\s*['"]([^'"]+)['"]/g,

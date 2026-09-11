@@ -129,6 +129,14 @@ const FUITES_AD4 = [
   { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'correcte' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'solution' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'bareme' },
+  { fichier: 'src/cours/content/b1-09.ts', terme: 'corrige' },
+  { fichier: 'src/cours/content/b1-09.ts', terme: 'corrigé' },
+  { fichier: 'src/cours/content/b1-09.ts', terme: 'barème' },
+  { fichier: 'src/cours/content/b1-09.ts', terme: 'correction' },
+  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'bonneReponse' },
+  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'bonneRéponse' },
+  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'reponseAttendue' },
+  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'réponseAttendue' },
 ];
 
 for (const cas of FUITES_AD4) {
