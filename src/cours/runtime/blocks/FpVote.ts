@@ -2,7 +2,7 @@ import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
 
-export interface VoteOptionPublique {
+interface VoteOptionPublique {
   id: string;
   libelle: string;
 }

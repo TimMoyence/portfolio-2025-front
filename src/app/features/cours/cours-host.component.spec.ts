@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { clearIdentity, saveIdentity } from '../../../cours/runtime/core/identity';
 import { CoursHostComponent } from './cours-host.component';
 
 const DELAI_ATTENTE_MS = 50;
@@ -41,5 +42,20 @@ describe('CoursHostComponent', () => {
     await attendreFinDuChargement(fixture);
     const formulaire = fixture.nativeElement.querySelector("[data-testid='cours-identite']");
     expect(formulaire).toBeTruthy();
+  });
+
+  it('cable une question de demonstration une fois pret', async () => {
+    saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
+    try {
+      fixture = TestBed.createComponent(CoursHostComponent);
+      fixture.detectChanges();
+      await attendreFinDuChargement(fixture);
+      const brique = fixture.nativeElement.querySelector('fp-vote') as HTMLElement & {
+        question?: { id: string } | null;
+      };
+      expect(brique.question?.id).toBe('Q-CAP-03');
+    } finally {
+      clearIdentity();
+    }
   });
 });

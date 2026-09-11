@@ -1,7 +1,7 @@
 import type { CoursContent, EcranContent } from '../../cours/content/types';
 import type { DeckState } from '../../cours/runtime/core/state';
 
-export function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
+function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
   return {
     id: 'ecran-1',
     type: 'vote',
