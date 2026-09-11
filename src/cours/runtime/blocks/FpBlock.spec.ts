@@ -19,6 +19,7 @@ class FpDemo extends FpBlock {
 
 describe('FpBlock', () => {
   let hote: FpDemo;
+  let enveloppe: HTMLDivElement | null;
 
   beforeAll(() => {
     if (!customElements.get('fp-demo')) {
@@ -29,10 +30,12 @@ describe('FpBlock', () => {
   beforeEach(() => {
     hote = document.createElement('fp-demo') as FpDemo;
     document.body.appendChild(hote);
+    enveloppe = null;
   });
 
   afterEach(() => {
     hote.remove();
+    enveloppe?.remove();
   });
 
   it('rend le mode main par defaut', () => {
@@ -73,6 +76,25 @@ describe('FpBlock', () => {
       { once: true },
     );
     hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="action"]')?.click();
+  });
+
+  it('emet un evenement composed qui traverse une racine shadow englobante', (done) => {
+    enveloppe = document.createElement('div');
+    const racineEnveloppe = enveloppe.attachShadow({ mode: 'open' });
+    const hoteImbrique = document.createElement('fp-demo') as FpDemo;
+    racineEnveloppe.appendChild(hoteImbrique);
+    document.body.appendChild(enveloppe);
+
+    document.addEventListener(
+      'fp-action',
+      (event) => {
+        expect((event as CustomEvent).detail).toEqual({ ok: true });
+        done();
+      },
+      { once: true },
+    );
+
+    hoteImbrique.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="action"]')?.click();
   });
 
   it('lit la graine depuis l attribut', () => {
