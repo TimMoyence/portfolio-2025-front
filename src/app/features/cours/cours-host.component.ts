@@ -75,7 +75,13 @@ export class CoursHostComponent {
       const { registerCoursBlocks } = await import('../../../cours/runtime/core/register');
       await registerCoursBlocks();
       const { readIdentity } = await import('../../../cours/runtime/core/identity');
-      this.etat.set(readIdentity() ? 'pret' : 'identite');
+      const identite = readIdentity();
+      if (identite === null) {
+        this.etat.set('identite');
+        return;
+      }
+      await this.semerDepuis(identite.studentKey);
+      this.etat.set('pret');
     } catch {
       this.etat.set('erreur');
     }
@@ -84,14 +90,20 @@ export class CoursHostComponent {
   private async enregistrerIdentite(donnees: FormData): Promise<void> {
     try {
       const { saveIdentity } = await import('../../../cours/runtime/core/identity');
-      saveIdentity({
+      const identite = saveIdentity({
         prenom: String(donnees.get('prenom') ?? ''),
         nom: String(donnees.get('nom') ?? ''),
         email: String(donnees.get('email') ?? ''),
       });
+      await this.semerDepuis(identite.studentKey);
       this.etat.set('pret');
     } catch {
       this.etat.set('erreur');
     }
+  }
+
+  private async semerDepuis(studentKey: string): Promise<void> {
+    const { seedFromKey } = await import('../../../cours/runtime/core/seed');
+    this.graine.set(seedFromKey(studentKey));
   }
 }

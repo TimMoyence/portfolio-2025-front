@@ -1,7 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { clearIdentity, saveIdentity } from '../../../cours/runtime/core/identity';
+import { seedFromKey } from '../../../cours/runtime/core/seed';
 import { CoursHostComponent } from './cours-host.component';
+
+const IDENTITE_THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
 
 const DELAI_ATTENTE_MS = 50;
 const ESSAIS_MAX = 20;
@@ -16,6 +19,13 @@ async function attendreFinDuChargement(
     await new Promise((resolve) => setTimeout(resolve, DELAI_ATTENTE_MS));
     fixture.detectChanges();
   }
+}
+
+async function monterPret(): Promise<ComponentFixture<CoursHostComponent>> {
+  const montee = TestBed.createComponent(CoursHostComponent);
+  montee.detectChanges();
+  await attendreFinDuChargement(montee);
+  return montee;
 }
 
 describe('CoursHostComponent', () => {
@@ -45,15 +55,24 @@ describe('CoursHostComponent', () => {
   });
 
   it('cable une question de demonstration une fois pret', async () => {
-    saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
+    saveIdentity(IDENTITE_THEO);
     try {
-      fixture = TestBed.createComponent(CoursHostComponent);
-      fixture.detectChanges();
-      await attendreFinDuChargement(fixture);
-      const brique = fixture.nativeElement.querySelector('fp-vote') as HTMLElement & {
+      const pret = await monterPret();
+      const brique = pret.nativeElement.querySelector('fp-vote') as HTMLElement & {
         question?: { id: string } | null;
       };
       expect(brique.question?.id).toBe('Q-CAP-03');
+    } finally {
+      clearIdentity();
+    }
+  });
+
+  it('seme le melange des options depuis la cle de l etudiant', async () => {
+    const identite = saveIdentity(IDENTITE_THEO);
+    try {
+      const pret = await monterPret();
+      expect(pret.componentInstance.graine()).toBe(seedFromKey(identite.studentKey));
+      expect(pret.componentInstance.graine()).not.toBe(0);
     } finally {
       clearIdentity();
     }

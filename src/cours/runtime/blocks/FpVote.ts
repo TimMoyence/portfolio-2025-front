@@ -37,6 +37,7 @@ export class FpVote extends FpBlock {
   private internePhase: VotePhase = 'vote';
   private interneSeuil = SEUIL_DEFAUT;
   private affiche = 0;
+  private questionAffichee: string | null = null;
   private repondu = false;
 
   set question(valeur: VoteQuestionPublique | null) {
@@ -136,7 +137,11 @@ export class FpVote extends FpBlock {
   }
 
   bind(racine: ShadowRoot): void {
-    this.affiche = Date.now();
+    const presentee = this.question?.id ?? null;
+    if (presentee !== this.questionAffichee) {
+      this.questionAffichee = presentee;
+      this.affiche = Date.now();
+    }
     if (this.mode() !== 'hand') {
       return;
     }
@@ -203,6 +208,17 @@ export class FpVote extends FpBlock {
     return new Set([...ids, ID_JE_NE_SAIS_PAS]);
   }
 
+  private libelleOption(id: string): string {
+    if (id === ID_JE_NE_SAIS_PAS) {
+      return this.texte('je-ne-sais-pas');
+    }
+    return this.question?.options.find((option) => option.id === id)?.libelle ?? id;
+  }
+
+  private barre(id: string, pourcentage: number): EscapedHtml {
+    return safeHtml`<div class="fp-barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-barre__libelle" data-testid="barre-libelle">${escapeHtml(this.libelleOption(id))}</span><span class="fp-barre__piste"><span class="fp-barre__valeur" data-testid="barre-valeur" style="width:${pourcentage}%"></span></span><span class="fp-barre__pourcentage">${pourcentage}%</span></div>`;
+  }
+
   private histogramme(): EscapedHtml {
     const resultats = this.resultats;
     if (!resultats || resultats.total === 0) {
@@ -211,10 +227,7 @@ export class FpVote extends FpBlock {
     const idsConnus = this.idsOptionsConnues();
     const barres = Object.entries(resultats.parOption)
       .filter(([id]) => idsConnus.has(id))
-      .map(([id, total]) => {
-        const pourcentage = Math.round((total / resultats.total) * 100);
-        return safeHtml`<div class="fp-barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-barre__valeur" style="width:${pourcentage}%"></span><span class="fp-barre__pourcentage">${pourcentage}%</span></div>`;
-      });
+      .map(([id, total]) => this.barre(id, Math.round((total / resultats.total) * 100)));
     return safeHtml`<div class="fp-histogramme" data-testid="histogramme">${barres}</div>`;
   }
 }

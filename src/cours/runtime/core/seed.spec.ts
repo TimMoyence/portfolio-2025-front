@@ -1,4 +1,7 @@
-import { createRng, pickInt, shuffleWithSeed } from './seed';
+import { createRng, pickInt, seedFromKey, shuffleWithSeed } from './seed';
+
+const CLE_THEO = '7f3a91c2-4e5b-4d6a-9c8e-1b2f3a4d5e6f';
+const CLE_LEA = '2c8d40ab-9f1e-4a37-8b5c-6d7e8f9a0b1c';
 
 describe('createRng', () => {
   it('produit la meme suite pour une meme graine', () => {
@@ -47,6 +50,31 @@ describe('shuffleWithSeed', () => {
 
   it('gere un tableau vide', () => {
     expect(shuffleWithSeed([], 1001)).toEqual([]);
+  });
+});
+
+describe('seedFromKey', () => {
+  it('rend la meme graine pour une meme cle etudiant', () => {
+    expect(seedFromKey(CLE_THEO)).toBe(seedFromKey(CLE_THEO));
+  });
+
+  it('rend des graines differentes pour deux cles etudiant differentes', () => {
+    expect(seedFromKey(CLE_THEO)).not.toBe(seedFromKey(CLE_LEA));
+  });
+
+  it('rend un entier positif utilisable comme attribut seed', () => {
+    for (const cle of [CLE_THEO, CLE_LEA, 'a', '']) {
+      const graine = seedFromKey(cle);
+      expect(Number.isInteger(graine)).toBe(true);
+      expect(graine).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it('donne des ordres d options differents a deux etudiants de la meme salle', () => {
+    const options = ['a', 'b', 'c', 'd', 'e', 'f'];
+    expect(shuffleWithSeed(options, seedFromKey(CLE_THEO))).not.toEqual(
+      shuffleWithSeed(options, seedFromKey(CLE_LEA)),
+    );
   });
 });
 

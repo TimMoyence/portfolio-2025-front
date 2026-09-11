@@ -1,7 +1,55 @@
 import { buildVoteQuestion } from '../../../testing/factories/cours.factory';
+import { base, components, stage, tokens } from '../design/styles';
+import { shuffleWithSeed } from '../core/seed';
 import { FpVote } from './FpVote';
 
 const QUESTION = buildVoteQuestion();
+
+const QUESTION_LARGE = buildVoteQuestion({
+  id: 'Q-ORDRE-01',
+  options: [
+    { id: 'a', libelle: 'un', misconception: null },
+    { id: 'b', libelle: 'deux', misconception: 'x' },
+    { id: 'c', libelle: 'trois', misconception: 'x' },
+    { id: 'd', libelle: 'quatre', misconception: 'x' },
+    { id: 'e', libelle: 'cinq', misconception: 'x' },
+    { id: 'f', libelle: 'six', misconception: 'x' },
+  ],
+});
+
+function ordreAffiche(element: FpVote): string[] {
+  return [...(element.shadowRoot?.querySelectorAll('[data-testid="option"]') ?? [])].map(
+    (option) => option.getAttribute('data-option') ?? '',
+  );
+}
+
+const DELAI_CLIC_MS = 300;
+const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
+
+function mesurerDuree(lectureMs: number, rendus: number): number | undefined {
+  jasmine.clock().install();
+  try {
+    jasmine.clock().mockDate(new Date('2026-09-11T08:00:00.000Z'));
+    const element = document.createElement('fp-vote') as FpVote;
+    element.question = QUESTION;
+    element.setAttribute('seed', '1001');
+    document.body.appendChild(element);
+    const durees: number[] = [];
+    element.addEventListener('fp-vote-submit', (evenement) => {
+      durees.push((evenement as CustomEvent).detail.dureeMs);
+    });
+    jasmine.clock().tick(lectureMs);
+    for (let index = 1; index <= rendus; index += 1) {
+      element.resultats = { total: index, parOption: { a: index } };
+    }
+    jasmine.clock().tick(DELAI_CLIC_MS);
+    element.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="option"]')?.click();
+    element.remove();
+    return durees[0];
+  } finally {
+    jasmine.clock().uninstall();
+  }
+}
 
 describe('FpVote', () => {
   let hote: FpVote;
@@ -43,6 +91,20 @@ describe('FpVote', () => {
     expect(libelles()).not.toEqual(premier);
   });
 
+  it('derive l ordre des options de la graine et non de l horloge', () => {
+    hote.question = QUESTION_LARGE;
+    const attendu = shuffleWithSeed([...QUESTION_LARGE.options], 1001).map((option) => option.id);
+    expect(ordreAffiche(hote)).toEqual(attendu);
+  });
+
+  it('restitue le meme ordre a chaque rendu pour une meme graine', () => {
+    hote.question = QUESTION_LARGE;
+    const premier = ordreAffiche(hote);
+    hote.resultats = { total: 3, parOption: { a: 3 } };
+    hote.phase = 'discussion';
+    expect(ordreAffiche(hote)).toEqual(premier);
+  });
+
   it('emet la valeur choisie', (done) => {
     hote.addEventListener('fp-vote-submit', (event) => {
       expect((event as CustomEvent).detail.questionId).toBe('Q-CAP-03');
@@ -51,13 +113,27 @@ describe('FpVote', () => {
     hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="option"]')?.click();
   });
 
-  it('mesure la duree de reponse', (done) => {
-    hote.addEventListener('fp-vote-submit', (event) => {
-      expect((event as CustomEvent).detail.dureeMs).toBeGreaterThanOrEqual(0);
-      done();
+  const CAS_DUREE: ReadonlyArray<{
+    nom: string;
+    lecture: number;
+    rendus: number;
+    attendu: number;
+  }> = [
+    { nom: 'une reponse instantanee', lecture: 0, rendus: 0, attendu: 300 },
+    { nom: 'une reponse reflechie', lecture: 40000, rendus: 0, attendu: 40300 },
+    {
+      nom: 'une reponse reflechie coupee par deux rafraichissements',
+      lecture: 40000,
+      rendus: 2,
+      attendu: 40300,
+    },
+  ];
+
+  for (const cas of CAS_DUREE) {
+    it(`mesure ${cas.nom} depuis la presentation de la question`, () => {
+      expect(mesurerDuree(cas.lecture, cas.rendus)).toBe(cas.attendu);
     });
-    hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="option"]')?.click();
-  });
+  }
 
   it('verrouille les options apres le vote', () => {
     hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="option"]')?.click();
@@ -127,7 +203,7 @@ describe('FpVote', () => {
     );
   });
 
-  it('n affiche en mode scene que des identifiants d option connus et des pourcentages', () => {
+  it('n affiche en mode scene que des identifiants d option connus', () => {
     hote.setAttribute('role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;
@@ -136,7 +212,57 @@ describe('FpVote', () => {
     expect(barres?.length).toBe(3);
     for (const barre of [...(barres ?? [])]) {
       expect(['a', 'b', 'c']).toContain(barre.getAttribute('data-option') ?? '');
-      expect(barre.textContent?.trim()).toMatch(/^\d+%$/);
+    }
+  });
+
+  it('donne a chaque barre une largeur qui reflete sa proportion', () => {
+    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    hote.question = QUESTION;
+    hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
+    const largeurs = new Map(
+      [...(hote.shadowRoot?.querySelectorAll<HTMLElement>('[data-testid="barre"]') ?? [])].map(
+        (barre) => [
+          barre.getAttribute('data-option') ?? '',
+          barre.querySelector<HTMLElement>('[data-testid="barre-valeur"]')?.style.width,
+        ],
+      ),
+    );
+    expect(largeurs.get('a')).toBe('58%');
+    expect(largeurs.get('b')).toBe('33%');
+    expect(largeurs.get('c')).toBe('8%');
+  });
+
+  it('etiquette chaque barre avec le libelle de son option', () => {
+    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    hote.question = QUESTION;
+    hote.resultats = { total: 12, parOption: { a: 7, b: 4, [ID_JE_NE_SAIS_PAS]: 1 } };
+    const libelles = [
+      ...(hote.shadowRoot?.querySelectorAll('[data-testid="barre-libelle"]') ?? []),
+    ].map((etiquette) => etiquette.textContent);
+    expect(libelles).toEqual(['1 400 €', '1 480,24 €', 'Je ne sais pas']);
+  });
+
+  it('toute classe fp emise par la brique porte une regle dans la feuille', () => {
+    const feuille = [tokens, base, components, stage].join('\n');
+    const emises = new Set<string>();
+    for (const rendu of ['hand', 'stage', 'board']) {
+      hote.setAttribute('role', 'presentateur');
+      hote.setAttribute('render', rendu);
+      hote.question = QUESTION;
+      hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
+      for (const element of hote.shadowRoot?.querySelectorAll('[class]') ?? []) {
+        for (const classe of element.classList) {
+          emises.add(classe);
+        }
+      }
+    }
+    expect(emises.size).toBeGreaterThanOrEqual(11);
+    for (const classe of emises) {
+      expect(new RegExp(`\\.${classe}(?![\\w-])`).test(feuille))
+        .withContext(`aucune regle pour .${classe}`)
+        .toBe(true);
     }
   });
 
