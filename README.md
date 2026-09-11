@@ -31,10 +31,11 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/` — Home (landing page)
 - `/presentation` — Page a propos
 - `/projets` — Realisations
+- `/articles` — Articles Morning-Brief publies par l'API
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
 - `/growth-audit` — Audit SEO automatise
-- `/atelier` — Hub L'Atelier (vitrine indexable regroupant les experiences jouables)
+- `/atelier`, `/atelier/meteo`, `/atelier/sebastian` — Redirections permanentes vers `/projets`
 
 ### Auth
 
@@ -45,19 +46,14 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/verify-email` — Verification d'email (lien magique)
 - `/profil` — Profil utilisateur (`authGuard`, rendu client)
 
-### Ateliers — landings marketing (publiques)
-
-Pages vitrines indexables, sans authentification. Le `redirectIfAuthorizedGuard(role)` renvoie un utilisateur deja autorise vers l'app correspondante.
-
-- `/atelier/meteo` — Landing meteo (`redirectIfAuthorizedGuard("weather")`)
-- `/atelier/sebastian` — Landing Sebastian (`redirectIfAuthorizedGuard("sebastian")`)
-
 ### Ateliers — apps (protegees auth + role)
 
 Apps reelles non indexables, en rendu client (`RenderMode.Client`).
 
 - `/atelier/meteo/app` — App meteo (`authGuard` + `roleGuard("weather")`)
 - `/atelier/sebastian/app` — App Sebastian (`authGuard` + `roleGuard("sebastian")`) avec sous-routes : `dashboard`, `rapports`, `badges`, `historique`, `objectifs`
+
+Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend public (`.../api/v1/portfolio25`). Sans cette variable, il reste statique et ne publie aucune URL inventee.
 
 ### Formations
 

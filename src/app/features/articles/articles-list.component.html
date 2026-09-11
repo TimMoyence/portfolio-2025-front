@@ -1,0 +1,89 @@
+<app-asili-hero
+  [kicker]="locale === 'fr' ? 'Articles · Morning-Brief' : 'Articles · Morning-Brief'"
+  [lead]="
+    locale === 'fr'
+      ? 'Une veille sourcée, transformée en décisions et en pistes concrètes pour les équipes qui veulent utiliser l’IA sans perdre le fil.'
+      : 'Sourced intelligence, turned into practical decisions for teams that want to use AI without losing the thread.'
+  "
+>
+  <ng-container title>
+    {{ locale === 'fr' ? 'Des idées qui servent' : 'Ideas that serve' }}<br />
+    <span class="accent">{{ locale === 'fr' ? 'le terrain' : 'the field' }}</span
+    >.
+  </ng-container>
+</app-asili-hero>
+
+<main class="articles-list wrap" aria-labelledby="articles-heading">
+  <div class="section-heading">
+    <span class="kicker">{{ locale === 'fr' ? 'Dernières éditions' : 'Latest editions' }}</span>
+    <h1 id="articles-heading">
+      {{ locale === 'fr' ? 'Lire, comprendre, décider.' : 'Read, understand, decide.' }}
+    </h1>
+  </div>
+
+  @if (isLoading) {
+    <p class="state" aria-live="polite">
+      {{ locale === 'fr' ? 'Chargement des articles…' : 'Loading articles…' }}
+    </p>
+  } @else if (hasError) {
+    <p class="state" role="status">
+      {{
+        locale === 'fr'
+          ? 'Les articles seront disponibles dans un instant.'
+          : 'Articles will be available shortly.'
+      }}
+    </p>
+  } @else if (articles.length === 0) {
+    <p class="state">
+      {{
+        locale === 'fr'
+          ? 'La première édition arrive bientôt.'
+          : 'The first edition is coming soon.'
+      }}
+    </p>
+  } @else {
+    <div class="article-grid">
+      @for (article of articles; track article.article_id) {
+        <article class="article-card">
+          <div class="article-card__meta">
+            <time [attr.datetime]="article.published_at">{{
+              article.published_at | date: 'longDate'
+            }}</time>
+            @for (tag of article.tags; track tag) {
+              <span>{{ tag }}</span>
+            }
+          </div>
+          <h2>
+            <a [routerLink]="['/articles', article.slug]">{{ article.title }}</a>
+          </h2>
+          <p>{{ article.excerpt }}</p>
+          <a class="link-arrow" [routerLink]="['/articles', article.slug]">
+            {{ locale === 'fr' ? 'Lire l’article' : 'Read article' }}
+            <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      }
+    </div>
+  }
+</main>
+
+<app-asili-cta-band
+  [kicker]="locale === 'fr' ? 'Une question concrète ?' : 'A concrete question?'"
+  [title]="
+    locale === 'fr'
+      ? 'On peut transformer une veille en outil utile.'
+      : 'We can turn intelligence into a useful tool.'
+  "
+  [lead]="
+    locale === 'fr'
+      ? 'Parlons de votre contexte, de vos usages et de ce qui mérite vraiment d’être automatisé.'
+      : 'Let’s talk about your context, your uses and what is genuinely worth automating.'
+  "
+>
+  <ng-container cta>
+    <a class="btn btn-teal" routerLink="/contact"
+      >{{ locale === 'fr' ? 'Démarrer la conversation' : 'Start a conversation' }}
+      <span class="arrow" aria-hidden="true">→</span></a
+    >
+  </ng-container>
+</app-asili-cta-band>

@@ -69,6 +69,8 @@ export class ContactComponent implements OnInit {
   };
 
   private readonly defaultContactFormState: ContactFormState = {
+    website: '',
+    formStartedAt: Date.now(),
     email: '',
     firstName: '',
     lastName: '',
@@ -169,7 +171,7 @@ export class ContactComponent implements OnInit {
         this.contactErrorMessage = message;
       },
       onComplete: () => {
-        this.contactForm = { ...this.defaultContactFormState };
+        this.contactForm = { ...this.defaultContactFormState, formStartedAt: Date.now() };
         form.resetForm(this.contactForm);
         this.isContactSubmitted = false;
       },

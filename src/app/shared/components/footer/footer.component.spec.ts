@@ -40,10 +40,10 @@ describe('FooterComponent', () => {
     expect(projetsLink?.href).toBe('/projets');
   });
 
-  it("should expose the « L'Atelier » hub link to /atelier in its column", () => {
-    const atelierColumn = component.navColumns.find((column) => column.heading === "L'Atelier");
-    const hubLink = atelierColumn?.links.find((link) => link.label === "L'Atelier");
-    expect(hubLink?.href).toBe('/atelier');
+  it('should expose the audit link in the work column', () => {
+    const workColumn = component.navColumns.find((column) => column.heading === 'Travailler');
+    const auditLink = workColumn?.links.find((link) => link.label === 'Audit');
+    expect(auditLink?.href).toBe('/growth-audit');
   });
 
   it('should render a social link entry for each configured link', () => {

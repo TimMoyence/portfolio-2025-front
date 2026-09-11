@@ -20,7 +20,7 @@ import {
 export class FormationsListComponent {
   protected readonly heroKicker = $localize`:@@formationsHeroKicker:Formations · gratuites`;
 
-  protected readonly heroLead = $localize`:@@formationsHeroLead:Trois formations, toutes gratuites, au format slides interactives — avec quiz et sondages. Consultables en ligne ou projetables en présentation. Des réponses actionnables, pas un cours universitaire. Sans inscription : votre email sert seulement à recevoir le toolkit PDF.`;
+  protected readonly heroLead = $localize`:@@formationsHeroLead:Trois formations, toutes gratuites, au format slides interactives — avec quiz et sondages — plus un accompagnement sur mesure pour ancrer les usages IA dans le management. Consultables en ligne ou projetables en présentation. Des réponses actionnables, pas un cours universitaire. Sans inscription : votre email sert seulement à recevoir le toolkit PDF.`;
 
   protected readonly formations: readonly FormationCard[] = FORMATIONS;
 

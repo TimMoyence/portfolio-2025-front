@@ -40,6 +40,17 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
       }
       @default {
         <form (submit)="$event.preventDefault(); onSubmit()" class="space-y-4">
+          <input
+            type="text"
+            name="website"
+            [value]="website()"
+            (input)="website.set(readInputValue($event))"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            class="absolute -left-[10000px] h-px w-px overflow-hidden"
+          />
+          <input type="hidden" name="formStartedAt" [value]="formStartedAt()" />
           <div>
             <input
               type="text"
@@ -117,6 +128,8 @@ export class ToolkitFormComponent {
 
   readonly firstName = signal('');
   readonly email = signal('');
+  readonly website = signal('');
+  readonly formStartedAt = signal(Date.now());
   readonly termsAccepted = signal(false);
   readonly state = signal<FormState>('idle');
   readonly submittedEmail = signal('');
@@ -139,6 +152,8 @@ export class ToolkitFormComponent {
     this.submittedEmail.set(this.email());
 
     const request: ToolkitRequest = {
+      website: this.website(),
+      formStartedAt: this.formStartedAt(),
       firstName: this.firstName().trim(),
       email: this.email().trim(),
       formationSlug: this.formationSlug,

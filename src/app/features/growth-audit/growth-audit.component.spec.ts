@@ -226,6 +226,22 @@ describe('GrowthAuditComponent', () => {
     expect(component.auditRecentCompletedUrls).toEqual([]);
   });
 
+  it('exposes the seven report pillars in the public offer', () => {
+    const fixture = TestBed.createComponent(GrowthAuditComponent);
+    const component = fixture.componentInstance;
+
+    expect(component.pillars).toHaveSize(7);
+    expect(component.pillars.map(({ title }) => title)).toEqual([
+      'Conversion & clarté',
+      'Vitesse & performance',
+      'SEO fondations',
+      'Crédibilité & confiance',
+      'Tech & scalabilité',
+      'Visibilité IA',
+      'Citabilité',
+    ]);
+  });
+
   describe('P0.4 — consentement RGPD obligatoire', () => {
     it('bloque la soumission si rgpdConsent est false', () => {
       const fixture = TestBed.createComponent(GrowthAuditComponent);

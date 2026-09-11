@@ -14,9 +14,8 @@ import { RenderMode, type ServerRoute } from '@angular/ssr';
  * coquille HTML minimale et le client Angular gère le routing après
  * hydratation, moment où le token localStorage est disponible.
  *
- * Les pages publiques de présentation des ateliers (/atelier/meteo,
- * /atelier/sebastian) restent prérendues — elles servent
- * de landing pages SEO pour chaque mini-app.
+ * Les routes publiques de l'ancien Atelier redirigent désormais vers
+ * /projets. Les applications privées restent côté client et protégées.
  */
 export const serverRoutes: ServerRoute[] = [
   { path: 'profil', renderMode: RenderMode.Client },
@@ -34,9 +33,10 @@ export const serverRoutes: ServerRoute[] = [
   },
 
   { path: 'projets', renderMode: RenderMode.Prerender },
-  { path: 'atelier', renderMode: RenderMode.Prerender },
+  { path: 'articles', renderMode: RenderMode.Server },
+  { path: 'articles/:slug', renderMode: RenderMode.Server },
 
-  // Routes publiques (incluant les présentations atelier) — prérendues.
+  // Routes publiques — prérendues.
   // Les formations sont enregistrees en routes STATIQUES par slug dans
   // `app.routes.ts` (composants slide-driven dedies), donc capturees ici.
   { path: '**', renderMode: RenderMode.Prerender },

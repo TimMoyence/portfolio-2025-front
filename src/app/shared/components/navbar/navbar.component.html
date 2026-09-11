@@ -107,50 +107,6 @@
   @if (!isMobile) {
     <div
       class="asili-nav__item"
-      (mouseenter)="openDropdown(atelierDropdown)"
-      (mouseleave)="closeDropdown(atelierDropdown)"
-    >
-      <span
-        class="asili-nav__trigger asili-nav__trigger--linked"
-        [class.active]="atelierDropdown.isOpen"
-      >
-        <a
-          [routerLink]="atelierDropdown.href"
-          routerLinkActive="active"
-          #rlaAtelier="routerLinkActive"
-          [attr.aria-current]="rlaAtelier.isActive ? 'page' : null"
-          class="asili-nav__link asili-nav__trigger-label"
-          >{{ atelierDropdown.label }}</a
-        >
-        <button
-          type="button"
-          (click)="toggleDropdown(atelierDropdown)"
-          [attr.aria-expanded]="atelierDropdown.isOpen"
-          aria-haspopup="true"
-          class="asili-nav__chevron-btn"
-          aria-label="Ouvrir le menu L'Atelier"
-          i18n-aria-label="navbar.atelier.toggle|Atelier dropdown toggle@@navAtelierToggle"
-        >
-          <ng-container
-            *ngTemplateOutlet="navChevron; context: { open: atelierDropdown.isOpen, size: 11 }"
-          ></ng-container>
-        </button>
-      </span>
-      <ng-container
-        *ngTemplateOutlet="dropdownMenu; context: { $implicit: atelierDropdown }"
-      ></ng-container>
-    </div>
-  }
-
-  @if (isMobile) {
-    <ng-container
-      *ngTemplateOutlet="drawerGroup; context: { $implicit: atelierDropdown }"
-    ></ng-container>
-  }
-
-  @if (!isMobile) {
-    <div
-      class="asili-nav__item"
       (mouseenter)="openDropdown(formationsDropdown)"
       (mouseleave)="closeDropdown(formationsDropdown)"
     >

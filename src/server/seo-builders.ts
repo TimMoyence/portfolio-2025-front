@@ -25,6 +25,12 @@ type SitemapContext = {
   baseUrl: string;
 };
 
+export interface DynamicArticleSitemapEntry {
+  locale: string;
+  slug: string;
+  lastmod?: string;
+}
+
 const localizedHref = (locale: string, pagePath: string, baseUrl: string): string =>
   new URL(buildLocalizedPath(locale, pagePath), baseUrl).toString();
 
@@ -61,7 +67,23 @@ const urlEntryOf = (page: SeoPageEntry, loc: string, alternatesMarkup: string): 
     .filter(Boolean)
     .join('\n');
 
-export const buildSitemapXml = (metadata: SeoMetadataFile, baseUrl: string): string => {
+const dynamicArticleEntryOf = (article: DynamicArticleSitemapEntry, baseUrl: string): string =>
+  [
+    '  <url>',
+    `    <loc>${escapeXml(localizedHref(article.locale, '/articles/' + article.slug, baseUrl))}</loc>`,
+    indentedTag('lastmod', article.lastmod),
+    '    <changefreq>daily</changefreq>',
+    '    <priority>0.6</priority>',
+    '  </url>',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+export const buildSitemapXml = (
+  metadata: SeoMetadataFile,
+  baseUrl: string,
+  dynamicArticles: readonly DynamicArticleSitemapEntry[] = [],
+): string => {
   const locales = metadata.site.locales ?? [];
   const activeLocales = locales.length > 0 ? locales : [''];
   const ctx: SitemapContext = {
@@ -80,10 +102,18 @@ export const buildSitemapXml = (metadata: SeoMetadataFile, baseUrl: string): str
       );
     });
 
+  const dynamicEntries = dynamicArticles
+    .filter(
+      (article) =>
+        activeLocales.includes(article.locale) &&
+        /^[a-z0-9]+(?:-[a-z0-9]+){2,100}$/.test(article.slug),
+    )
+    .map((article) => dynamicArticleEntryOf(article, baseUrl));
+
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`,
-    urlEntries.join('\n'),
+    [...urlEntries, ...dynamicEntries].join('\n'),
     `</urlset>`,
     '',
   ].join('\n');
@@ -126,7 +156,9 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
       p.id.startsWith('formations-'),
   );
   const aboutPages = indexablePages.filter((p) => ['presentation', 'projets'].includes(p.id));
-  const appPages = indexablePages.filter((p) => ['weather', 'sebastian'].includes(p.id));
+  const appPages = indexablePages.filter(
+    (p) => p.path.startsWith('/atelier/') || ['weather', 'sebastian'].includes(p.id),
+  );
   const contactPages = indexablePages.filter((p) => p.id === 'contact');
   const legalPages = indexablePages.filter((p) =>
     ['terms', 'privacy', 'cookie-settings'].includes(p.id),

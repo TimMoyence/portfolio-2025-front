@@ -19,7 +19,7 @@
     <a class="btn btn-teal" routerLink="/offer">
       {{ heroCtaPrimary }} <span class="arrow" aria-hidden="true">→</span>
     </a>
-    <a class="btn btn-ghost" routerLink="/atelier/meteo">
+    <a class="btn btn-ghost" routerLink="/projets">
       {{ heroCtaSecondary }}
     </a>
   </ng-container>
@@ -41,65 +41,6 @@
   </h2>
 </app-asili-pillars>
 
-<section class="atelier theme-night section-pad" id="atelier">
-  <div class="wrap">
-    <div class="atelier-head">
-      <div appReveal>
-        <span class="kicker">{{ atelierKicker }}</span>
-        <h2 class="h-xl atelier-title">
-          {{ atelierTitlePre }} <em>{{ atelierTitleAccent }}</em
-          >.
-        </h2>
-      </div>
-      <p class="lead" appReveal [appRevealDelay]="1">{{ atelierLead }}</p>
-    </div>
-
-    <div class="atelier-grid">
-      <article class="glass lab-card meteo-c" appReveal [appRevealDelay]="1">
-        <div>
-          <span class="lab-ic" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6" />
-              <path
-                d="M12 2v3M12 19v3M2 12h3M19 12h3M5.5 5.5l2 2M16.5 16.5l2 2M18.5 5.5l-2 2M7.5 16.5l-2 2"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-              />
-            </svg>
-          </span>
-          <h3>{{ atelierMeteoTitle }}</h3>
-          <p>{{ atelierMeteoDesc }}</p>
-        </div>
-        <a class="link-arrow" routerLink="/atelier/meteo">
-          {{ atelierMeteoLink }} <span aria-hidden="true">→</span>
-        </a>
-      </article>
-
-      <article class="glass lab-card seb-c" appReveal [appRevealDelay]="2">
-        <div>
-          <span class="lab-ic" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <h3>{{ atelierSebTitle }}</h3>
-          <p>{{ atelierSebDesc }}</p>
-        </div>
-        <a class="link-arrow" routerLink="/atelier/sebastian">
-          {{ atelierSebLink }} <span aria-hidden="true">→</span>
-        </a>
-      </article>
-    </div>
-  </div>
-</section>
-
 <app-asili-manifesto [lines]="manifestoLines"></app-asili-manifesto>
 
 <app-asili-projects-grid [projects]="projects" [kicker]="projectsKicker" [eagerImages]="0">
@@ -119,7 +60,7 @@
     <a class="btn btn-teal" routerLink="/contact">
       {{ ctaPrimary }} <span class="arrow" aria-hidden="true">→</span>
     </a>
-    <a class="btn btn-ghost" routerLink="/atelier/meteo">
+    <a class="btn btn-ghost" routerLink="/projets">
       {{ ctaSecondary }}
     </a>
   </ng-container>

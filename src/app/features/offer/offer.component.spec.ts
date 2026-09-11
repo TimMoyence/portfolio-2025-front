@@ -50,6 +50,10 @@ describe('OfferComponent', () => {
     expect(modes.length).toBe(4);
   });
 
+  it('should sell AI training that includes management practices', () => {
+    expect(component['modes'][3].desc.toLowerCase()).toContain('management');
+  });
+
   it('should render the three differentiators', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const diffs = compiled.querySelectorAll('[data-testid="diff-section"] .diff');

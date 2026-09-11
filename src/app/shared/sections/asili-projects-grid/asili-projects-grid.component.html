@@ -49,6 +49,33 @@
             }
             <h3>{{ project.title }}</h3>
             <p>{{ project.desc }}</p>
+            @if (project.caseStudy; as study) {
+              <details class="proj-case-study">
+                <summary>Voir le cas d’usage</summary>
+                <dl>
+                  <div>
+                    <dt>Contexte</dt>
+                    <dd>{{ study.context }}</dd>
+                  </div>
+                  <div>
+                    <dt>Problème</dt>
+                    <dd>{{ study.problem }}</dd>
+                  </div>
+                  <div>
+                    <dt>Solution</dt>
+                    <dd>{{ study.solution }}</dd>
+                  </div>
+                  <div>
+                    <dt>Rôle</dt>
+                    <dd>{{ study.role }}</dd>
+                  </div>
+                  <div>
+                    <dt>Résultat</dt>
+                    <dd>{{ study.result }}</dd>
+                  </div>
+                </dl>
+              </details>
+            }
           </div>
         </article>
       }

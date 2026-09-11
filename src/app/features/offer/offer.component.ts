@@ -93,7 +93,7 @@ export class OfferComponent {
       revealDelay: 3,
       link: '/formations',
       title: $localize`:@@offerMode4Title:Formation sur-mesure`,
-      desc: $localize`:@@offerMode4Desc:Rendre votre équipe autonome sur l'IA, l'automatisation ou le SEO. Adapté à votre contexte, pas un cours générique.`,
+      desc: $localize`:@@offerMode4Desc:Rendre votre équipe autonome sur l'IA, l'automatisation, le SEO et le management des usages. Adapté à votre contexte, pas un cours générique.`,
     },
   ];
 

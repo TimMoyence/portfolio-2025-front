@@ -158,6 +158,14 @@ export class GrowthAuditComponent implements OnDestroy {
       title: $localize`:audit.pillar.tech.title@@auditPillarTechTitle:Tech & scalabilité`,
       description: $localize`:audit.pillar.tech.desc@@auditPillarTechDesc:CMS, sécurité, erreurs, maintenabilité.`,
     },
+    {
+      title: $localize`:audit.pillar.aiVisibility.title@@auditPillarAiVisibilityTitle:Visibilité IA`,
+      description: $localize`:audit.pillar.aiVisibility.desc@@auditPillarAiVisibilityDesc:Compréhension par les assistants IA, données structurées, réponses génératives.`,
+    },
+    {
+      title: $localize`:audit.pillar.citationWorthiness.title@@auditPillarCitationWorthinessTitle:Citabilité`,
+      description: $localize`:audit.pillar.citationWorthiness.desc@@auditPillarCitationWorthinessDesc:Sources, preuves, FAQ et contenus que les moteurs peuvent citer.`,
+    },
   ];
 
   readonly formLabels = {
@@ -179,6 +187,8 @@ export class GrowthAuditComponent implements OnDestroy {
   };
 
   auditFormState: AuditRequestPayload = {
+    website: '',
+    formStartedAt: Date.now(),
     websiteName: '',
     contactMethod: 'EMAIL' as AuditContactMethod,
     contactValue: '',
@@ -255,6 +265,8 @@ export class GrowthAuditComponent implements OnDestroy {
 
     this.isSubmitting = true;
     const payload = {
+      website: this.auditFormState.website,
+      formStartedAt: this.auditFormState.formStartedAt,
       locale: this.localeUrlPrefix,
       websiteName: this.auditFormState.websiteName.trim(),
       contactMethod: this.auditFormState.contactMethod,
@@ -294,6 +306,8 @@ export class GrowthAuditComponent implements OnDestroy {
         this.isSubmitting = false;
         this.isSubmitted = false;
         this.auditFormState = {
+          website: '',
+          formStartedAt: Date.now(),
           websiteName: '',
           contactMethod: 'EMAIL',
           contactValue: '',

@@ -114,6 +114,45 @@
   color: var(--ink-mute);
 }
 
+.proj-case-study {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  font-size: 13px;
+}
+
+.proj-case-study summary {
+  cursor: pointer;
+  color: var(--teal);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.proj-case-study dl {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.proj-case-study dl > div {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 8px;
+}
+
+.proj-case-study dt {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.proj-case-study dd {
+  margin: 0;
+  color: var(--ink-mute);
+}
+
 @include bp.tablet {
   .proj-grid {
     grid-template-columns: 1fr;

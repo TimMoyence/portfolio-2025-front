@@ -36,18 +36,18 @@ import { clamp } from '../../shared/utils/math.utils';
           decoding="async"
         />
         <h1 i18n="@@notFoundTitle" data-testid="not-found-title">
-          Cette page a quitté <em>l'atelier</em>.
+          Cette page a quitté <em>le site</em>.
         </h1>
         <p i18n="@@notFoundDescription">
-          La page que vous cherchez a peut-être été déplacée, ou n'a jamais existé. Mais
-          l'expérimentation, elle, continue.
+          La page que vous cherchez a peut-être été déplacée, ou n'a jamais existé. Mais Les projets
+          utiles, eux, continuent.
         </p>
         <div class="nf-cta">
           <a class="btn btn-teal" routerLink="/" i18n="@@notFoundCta">
             Retour à l'accueil <span class="arrow">→</span>
           </a>
-          <a class="btn btn-ghost" routerLink="/atelier" i18n="@@notFoundCtaAtelier">
-            Explorer l'Atelier
+          <a class="btn btn-ghost" routerLink="/projets" i18n="@@notFoundCtaProjects">
+            Voir les projets
           </a>
         </div>
         <div class="nf-hint" i18n="@@notFoundHint">

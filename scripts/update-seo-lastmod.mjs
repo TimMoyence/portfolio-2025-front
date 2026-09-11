@@ -18,36 +18,15 @@ const pathToSources = {
   '/contact': ['src/app/features/contact'],
   '/offer': ['src/app/features/offer'],
   '/growth-audit': ['src/app/features/growth-audit'],
-  '/atelier': ['src/app/features/atelier'],
-  '/atelier/meteo': [
-    'src/app/features/weather/weather-presentation.component.ts',
-    'src/app/features/weather/weather-presentation.component.html',
-    'src/app/features/weather/weather-presentation.component.scss',
-    'src/app/features/weather/weather-presentation-data.ts',
-  ],
-  '/atelier/sebastian': [
-    'src/app/features/sebastian/sebastian-presentation.component.ts',
-    'src/app/features/sebastian/sebastian-presentation.component.html',
-    'src/app/features/sebastian/sebastian-presentation.component.scss',
-    'src/app/features/sebastian/sebastian-presentation-data.ts',
-  ],
   '/formations': ['src/app/features/formations'],
-  '/formations/ia-solopreneurs': [
-    'src/app/features/formations/ia-solopreneurs',
-  ],
-  '/formations/ia-solopreneurs/toolkit': [
-    'src/app/features/formations/ia-solopreneurs/toolkit',
-  ],
-  '/formations/automatiser-avec-ia': [
-    'src/app/features/formations/automatiser-avec-ia',
-  ],
+  '/formations/ia-solopreneurs': ['src/app/features/formations/ia-solopreneurs'],
+  '/formations/ia-solopreneurs/toolkit': ['src/app/features/formations/ia-solopreneurs/toolkit'],
+  '/formations/automatiser-avec-ia': ['src/app/features/formations/automatiser-avec-ia'],
   '/formations/automatiser-avec-ia/toolkit': [
     'src/app/features/formations/automatiser-avec-ia/toolkit',
   ],
   '/formations/audit-seo-diy': ['src/app/features/formations/audit-seo-diy'],
-  '/formations/audit-seo-diy/toolkit': [
-    'src/app/features/formations/audit-seo-diy/toolkit',
-  ],
+  '/formations/audit-seo-diy/toolkit': ['src/app/features/formations/audit-seo-diy/toolkit'],
   '/cookie-settings': ['src/app/features/cookie-settings'],
   '/terms': ['src/app/features/terms'],
   '/privacy': ['src/app/features/privacy'],

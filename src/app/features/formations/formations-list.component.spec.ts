@@ -50,6 +50,10 @@ describe('FormationsListComponent', () => {
     expect(headings[0]?.textContent).toContain('format diapo');
   });
 
+  it('devrait rendre visible la formation IA et management sur mesure', () => {
+    expect(component['heroLead'].toLowerCase()).toContain('management');
+  });
+
   it('devrait rendre une carte pour chaque formation', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const cards = compiled.querySelectorAll('.formation-grid .formation');

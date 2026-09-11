@@ -39,33 +39,14 @@ export class NavbarComponent {
       href: '/projets',
     },
     {
+      label: $localize`:navbar.link.articles|Navbar primary link@@navLinkArticles:Articles`,
+      href: '/articles',
+    },
+    {
       label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Services`,
       href: '/offer',
     },
   ];
-
-  readonly atelierDropdown: DropdownSection = {
-    label: $localize`:navbar.atelier.label|Atelier dropdown label@@navAtelierLabel:L'Atelier`,
-    subtitle: $localize`:navbar.atelier.subtitle|Atelier drawer subtitle@@navAtelierSubtitle:Météo · Sebastian`,
-    href: '/atelier',
-    isOpen: false,
-    items: [
-      {
-        title: $localize`:navbar.atelier.meteo.title|@@navAtelierMeteoTitle:Météo`,
-        description: $localize`:navbar.atelier.meteo.desc|@@navAtelierMeteoDesc:Explorez la météo en temps réel`,
-        icon: 'cloud',
-        iconAlt: 'Météo',
-        href: '/atelier/meteo',
-      },
-      {
-        title: $localize`:navbar.atelier.sebastian.title|@@navAtelierSebastianTitle:Sebastian`,
-        description: $localize`:navbar.atelier.sebastian.desc|@@navAtelierSebastianDesc:Votre majordome personnel`,
-        icon: 'sebastian',
-        iconAlt: 'Sebastian',
-        href: '/atelier/sebastian',
-      },
-    ],
-  };
 
   readonly formationsDropdown: DropdownSection = {
     label: $localize`:navbar.formations.label|Formations dropdown label@@navFormationsLabel:Formations`,
@@ -264,9 +245,7 @@ export class NavbarComponent {
       this.closeUserDropdown();
       return true;
     }
-    const openDropdown = [this.atelierDropdown, this.formationsDropdown].find(
-      (dropdown) => dropdown.isOpen,
-    );
+    const openDropdown = [this.formationsDropdown].find((dropdown) => dropdown.isOpen);
     if (openDropdown) {
       event.preventDefault();
       this.closeDropdown(openDropdown);

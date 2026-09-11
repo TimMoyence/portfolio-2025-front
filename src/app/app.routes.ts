@@ -1,6 +1,5 @@
 import type { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { redirectIfAuthorizedGuard } from './core/guards/redirect-if-authorized.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
@@ -80,6 +79,22 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'articles',
+    loadComponent: () =>
+      import('./features/articles/articles-list.component').then((m) => m.ArticlesListComponent),
+    data: {
+      seoKey: 'articles',
+    },
+  },
+  {
+    path: 'articles/:slug',
+    loadComponent: () =>
+      import('./features/articles/article-detail.component').then((m) => m.ArticleDetailComponent),
+    data: {
+      seoKey: 'article-detail',
+    },
+  },
+  {
     path: 'offer',
     loadComponent: () => import('./features/offer/offer.component').then((m) => m.OfferComponent),
     data: {
@@ -135,33 +150,17 @@ export const routes: Routes = [
   {
     path: 'atelier',
     pathMatch: 'full',
-    loadComponent: () =>
-      import('./features/atelier/atelier.component').then((m) => m.AtelierComponent),
-    data: {
-      seoKey: 'atelier',
-    },
+    redirectTo: 'projets',
   },
   {
     path: 'atelier/meteo',
-    canActivate: [redirectIfAuthorizedGuard('weather')],
-    loadComponent: () =>
-      import('./features/weather/weather-presentation.component').then(
-        (m) => m.WeatherPresentationComponent,
-      ),
-    data: {
-      seoKey: 'weather',
-    },
+    pathMatch: 'full',
+    redirectTo: 'projets',
   },
   {
     path: 'atelier/sebastian',
-    canActivate: [redirectIfAuthorizedGuard('sebastian')],
-    loadComponent: () =>
-      import('./features/sebastian/sebastian-presentation.component').then(
-        (m) => m.SebastianPresentationComponent,
-      ),
-    data: {
-      seoKey: 'sebastian',
-    },
+    pathMatch: 'full',
+    redirectTo: 'projets',
   },
 
   {

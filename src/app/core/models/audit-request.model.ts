@@ -28,6 +28,8 @@ export const PILLAR_KEYS: readonly PillarKey[] = [
 ] as const;
 
 export interface AuditRequestPayload {
+  website?: string;
+  formStartedAt?: number;
   websiteName: string;
   contactMethod: AuditContactMethod;
   contactValue: string;

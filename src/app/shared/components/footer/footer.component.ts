@@ -37,29 +37,16 @@ export class FooterComponent {
           href: '/projets',
         },
         {
+          label: $localize`:footer.nav.articles|Footer nav link@@footerNavArticles:Articles`,
+          href: '/articles',
+        },
+        {
+          label: $localize`:footer.nav.growthAudit|Footer nav link@@footerNavGrowthAudit:Audit`,
+          href: '/growth-audit',
+        },
+        {
           label: $localize`:footer.nav.contact|Footer nav link@@footerNavContact:Contact`,
           href: '/contact',
-        },
-      ],
-    },
-    {
-      heading: $localize`:footer.column.atelier|Footer column heading@@footerColumnAtelier:L'Atelier`,
-      links: [
-        {
-          label: $localize`:footer.nav.atelier|Footer nav link@@footerNavAtelier:L'Atelier`,
-          href: '/atelier',
-        },
-        {
-          label: $localize`:footer.nav.meteo|Footer nav link@@footerNavMeteo:Météo`,
-          href: '/atelier/meteo',
-        },
-        {
-          label: $localize`:footer.nav.sebastian|Footer nav link@@footerNavSebastian:Sebastian`,
-          href: '/atelier/sebastian',
-        },
-        {
-          label: $localize`:footer.nav.growthAudit|Footer nav link@@footerNavGrowthAudit:Growth Audit`,
-          href: '/growth-audit',
         },
       ],
     },

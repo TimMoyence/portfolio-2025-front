@@ -1,4 +1,6 @@
 export interface ContactFormState {
+  website?: string;
+  formStartedAt?: number;
   email: string;
   firstName: string;
   lastName: string;

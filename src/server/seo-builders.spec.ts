@@ -142,6 +142,19 @@ describe('buildSitemapXml', () => {
     expect(xml).toContain('<loc>https://asilidesign.fr/en/</loc>');
   });
 
+  it('ajoute les articles publies fournis par le catalogue dynamique', () => {
+    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
+
+    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr', [
+      { locale: 'fr', slug: 'morning-brief-2026-09-09-ia', lastmod: '2026-09-09' },
+    ]);
+
+    expect(xml).toContain(
+      '<loc>https://asilidesign.fr/fr/articles/morning-brief-2026-09-09-ia</loc>',
+    );
+    expect(xml).toContain('<lastmod>2026-09-09</lastmod>');
+  });
+
   it('filtre les pages avec index:false', () => {
     const metadata = buildMetadata([
       {

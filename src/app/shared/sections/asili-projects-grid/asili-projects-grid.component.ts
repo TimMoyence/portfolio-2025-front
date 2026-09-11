@@ -9,6 +9,14 @@ interface AsiliProjectTag {
   prod?: boolean;
 }
 
+interface AsiliProjectCaseStudy {
+  context: string;
+  problem: string;
+  solution: string;
+  role: string;
+  result: string;
+}
+
 export interface AsiliProject {
   title: string;
   desc: string;
@@ -17,6 +25,7 @@ export interface AsiliProject {
   imageAlt?: string;
   href?: string;
   size: AsiliProjectSize;
+  caseStudy?: AsiliProjectCaseStudy;
 }
 
 /**

@@ -13,6 +13,7 @@ import {
   buildLlmsTxt,
   buildRobotsTxt,
   buildSitemapXml,
+  type DynamicArticleSitemapEntry,
 } from './server/seo-builders';
 import { buildSecurityHeaders } from './server/security-headers';
 import { injectSeoHead, isKnownRoute } from './server/seo-injector';
@@ -84,6 +85,11 @@ const SEO_METADATA_CANDIDATES = [
 
 let cachedSeoMetadata: SeoMetadataFile | null = null;
 
+let cachedArticleSitemap: {
+  expiresAt: number;
+  entries: DynamicArticleSitemapEntry[];
+} = { expiresAt: 0, entries: [] };
+
 const loadSeoMetadata = (): SeoMetadataFile | null => {
   if (cachedSeoMetadata) return cachedSeoMetadata;
 
@@ -101,7 +107,49 @@ const loadSeoMetadata = (): SeoMetadataFile | null => {
   return null;
 };
 
-app.get('/sitemap.xml', (req, res) => {
+const loadArticleSitemap = async (): Promise<DynamicArticleSitemapEntry[]> => {
+  const apiBaseUrl = process.env['PORTFOLIO_ARTICLE_API_URL']?.replace(/\/$/, '');
+  if (!apiBaseUrl) return [];
+  if (cachedArticleSitemap.expiresAt > Date.now()) return cachedArticleSitemap.entries;
+
+  const entries = (
+    await Promise.all(
+      ['fr', 'en'].map(async (locale): Promise<DynamicArticleSitemapEntry[]> => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 2_000);
+        try {
+          const response = await fetch(`${apiBaseUrl}/articles?locale=${locale}&limit=100`, {
+            headers: { accept: 'application/json' },
+            signal: controller.signal,
+          });
+          if (!response.ok) return [];
+          const payload = (await response.json()) as {
+            items?: Array<{ slug?: unknown; updated_at?: unknown }>;
+          };
+          return (payload.items ?? []).flatMap((item) => {
+            if (typeof item.slug !== 'string') return [];
+            return [
+              {
+                locale,
+                slug: item.slug,
+                lastmod: typeof item.updated_at === 'string' ? item.updated_at : undefined,
+              },
+            ];
+          });
+        } catch {
+          return [];
+        } finally {
+          clearTimeout(timeout);
+        }
+      }),
+    )
+  ).flat();
+
+  cachedArticleSitemap = { expiresAt: Date.now() + 300_000, entries };
+  return entries;
+};
+
+app.get('/sitemap.xml', async (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
     res.status(404).type('text/plain').send('Sitemap not available');
@@ -109,7 +157,7 @@ app.get('/sitemap.xml', (req, res) => {
   }
 
   const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-  const xml = buildSitemapXml(metadata, baseUrl);
+  const xml = buildSitemapXml(metadata, baseUrl, await loadArticleSitemap());
   res.setHeader('Content-Type', 'application/xml');
   res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
   res.send(xml);

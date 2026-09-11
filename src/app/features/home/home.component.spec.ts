@@ -45,22 +45,10 @@ describe('HomeComponent', () => {
     expect(headings[0].textContent).toContain('Clarifier');
   });
 
-  it('devrait afficher la section Atelier immersive avec ses deux lab-cards', () => {
+  it("ne devrait plus exposer l'ancien Atelier", () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    const atelier = compiled.querySelector('section.atelier');
-    expect(atelier).not.toBeNull();
-    expect(atelier?.querySelectorAll('.lab-card').length).toBe(2);
-    expect(compiled.querySelector('.lab-card.meteo-c')).not.toBeNull();
-    expect(compiled.querySelector('.lab-card.seb-c')).not.toBeNull();
-  });
-
-  it('devrait lier les lab-cards vers les ateliers Météo et Sebastian', () => {
-    const compiled: HTMLElement = fixture.nativeElement;
-    const hrefs = Array.from(compiled.querySelectorAll<HTMLAnchorElement>('.lab-card a[href]')).map(
-      (a) => a.getAttribute('href'),
-    );
-    expect(hrefs).toContain('/atelier/meteo');
-    expect(hrefs).toContain('/atelier/sebastian');
+    expect(compiled.querySelector('section.atelier')).toBeNull();
+    expect(compiled.textContent).not.toContain("L'Atelier");
   });
 
   it('devrait afficher la bande CTA finale', () => {

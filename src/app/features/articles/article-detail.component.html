@@ -1,0 +1,70 @@
+@if (isLoading) {
+  <main class="article-state" aria-live="polite">
+    {{ locale === 'fr' ? 'Chargement de l’article…' : 'Loading article…' }}
+  </main>
+} @else if (hasError || !article) {
+  <main class="article-state" role="alert">
+    <h1>{{ locale === 'fr' ? 'Article introuvable' : 'Article not found' }}</h1>
+    <a class="link-arrow" routerLink="/articles"
+      >{{ locale === 'fr' ? 'Retour aux articles' : 'Back to articles' }}
+      <span aria-hidden="true">→</span></a
+    >
+  </main>
+} @else {
+  <main class="article-detail" aria-labelledby="article-title">
+    <header class="article-detail__header wrap">
+      <a class="link-arrow" routerLink="/articles"
+        >← {{ locale === 'fr' ? 'Tous les articles' : 'All articles' }}</a
+      >
+      <div class="article-detail__meta">
+        <time [attr.datetime]="article.published_at">{{
+          article.published_at | date: 'longDate'
+        }}</time>
+        @if (article.reading_time_minutes) {
+          <span>{{ article.reading_time_minutes }} min</span>
+        }
+        @for (tag of article.tags; track tag) {
+          <span>{{ tag }}</span>
+        }
+      </div>
+      <h1 id="article-title">{{ article.title }}</h1>
+      <p class="article-detail__excerpt">{{ article.excerpt }}</p>
+    </header>
+
+    <article class="article-detail__content wrap">
+      <div class="article-markdown" [innerHTML]="renderedContent"></div>
+
+      <section class="article-sources" aria-labelledby="article-sources-title">
+        <h2 id="article-sources-title">{{ locale === 'fr' ? 'Sources' : 'Sources' }}</h2>
+        <ul>
+          @for (source of article.sources; track source.url) {
+            <li>
+              <a [href]="source.url" rel="noopener noreferrer">{{ source.name }}</a>
+            </li>
+          }
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <app-asili-cta-band
+    [kicker]="locale === 'fr' ? 'Un sujet à clarifier ?' : 'A topic to clarify?'"
+    [title]="
+      locale === 'fr'
+        ? 'La bonne technologie commence par le bon problème.'
+        : 'The right technology starts with the right problem.'
+    "
+    [lead]="
+      locale === 'fr'
+        ? 'Parlons de ce que cette veille peut changer concrètement dans votre activité.'
+        : 'Let’s talk about what this intelligence can change in your business.'
+    "
+  >
+    <ng-container cta>
+      <a class="btn btn-teal" routerLink="/contact"
+        >{{ locale === 'fr' ? 'Démarrer la conversation' : 'Start a conversation' }}
+        <span class="arrow" aria-hidden="true">→</span></a
+      >
+    </ng-container>
+  </app-asili-cta-band>
+}

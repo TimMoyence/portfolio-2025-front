@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import {
   AsiliCtaBandComponent,
   AsiliHeroComponent,
@@ -19,7 +18,6 @@ import {
   standalone: true,
   imports: [
     RouterLink,
-    RevealOnScrollDirective,
     AsiliHeroComponent,
     AsiliMethodComponent,
     AsiliPillarsComponent,
@@ -28,7 +26,6 @@ import {
     AsiliCtaBandComponent,
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
@@ -47,11 +44,11 @@ export class HomeComponent {
   protected readonly heroStat1Num = $localize`:@@homeHeroStat1Num:2`;
   protected readonly heroStat1Label = $localize`:@@homeHeroStat1Label:piliers : services & formations`;
 
-  protected readonly heroStat2Num = $localize`:@@homeHeroStat2Num:∞`;
-  protected readonly heroStat2Label = $localize`:@@homeHeroStat2Label:l'Atelier, un labo vivant à essayer`;
+  protected readonly heroStat2Num = $localize`:@@homeHeroStat2Num:4`;
+  protected readonly heroStat2Label = $localize`:@@homeHeroStat2Label:formats d'intervention`;
 
   protected readonly heroCtaPrimary = $localize`:@@homeHeroCtaPrimary:Voir comment je travaille`;
-  protected readonly heroCtaSecondary = $localize`:@@homeHeroCtaSecondary:Essayer l'Atelier`;
+  protected readonly heroCtaSecondary = $localize`:@@homeHeroCtaSecondary:Voir les projets`;
 
   protected readonly methodKicker = $localize`:@@homeMethodKicker:La méthode`;
   protected readonly methodIntro = $localize`:@@homeMethodIntro:Le digital et l'IA sont des leviers, jamais des finalités. On commence par comprendre, on déploie ensuite — et on garde ce qui marche.`;
@@ -118,19 +115,6 @@ export class HomeComponent {
     },
   ];
 
-  protected readonly atelierKicker = $localize`:@@homeAtelierKicker:L'Atelier — le bac à sable`;
-  protected readonly atelierTitlePre = $localize`:@@homeAtelierTitlePre:Un laboratoire vivant où vous pouvez`;
-  protected readonly atelierTitleAccent = $localize`:@@homeAtelierTitleAccent:jouer`;
-  protected readonly atelierLead = $localize`:@@homeAtelierLead:Pas des produits à vendre : des preuves jouables. Je teste des idées en vrai, et vous les manipulez directement — sans inscription.`;
-
-  protected readonly atelierMeteoTitle = $localize`:@@homeAtelierMeteoTitle:Météo`;
-  protected readonly atelierMeteoDesc = $localize`:@@homeAtelierMeteoDesc:Données réalistes, parallaxe, mode immersif ciel. La preuve d'une interface vivante et précise.`;
-  protected readonly atelierMeteoLink = $localize`:@@homeAtelierMeteoLink:Essayer l'app`;
-
-  protected readonly atelierSebTitle = $localize`:@@homeAtelierSebTitle:Sebastian`;
-  protected readonly atelierSebDesc = $localize`:@@homeAtelierSebDesc:Suivi de consommation : jauge de santé, calcul d'alcoolémie, heatmap, et un bot Telegram. Le dark lounge ambré.`;
-  protected readonly atelierSebLink = $localize`:@@homeAtelierSebLink:Accéder à Sebastian`;
-
   protected readonly manifestoLines: readonly AsiliManifestoLine[] = [
     {
       step: $localize`:@@homeManifestoStep1:Le problème`,
@@ -157,22 +141,29 @@ export class HomeComponent {
 
   protected readonly projects: readonly AsiliProject[] = [
     {
-      size: 'small',
-      tags: [{ label: $localize`:@@homeProject2Tag1:Atelier` }],
-      title: $localize`:@@homeProject2Title:Météo`,
-      desc: $localize`:@@homeProject2Desc:Data-viz vivante : vent, UV, arc solaire.`,
-      href: '/atelier/meteo',
-      image: '/assets/images/projects/weather.webp',
-      imageAlt: $localize`:@@homeProject2ImageAlt:capture — app Météo`,
+      size: 'big',
+      tags: [
+        { label: $localize`:@@homeProjectMorningBriefTag1:En production`, prod: true },
+        { label: $localize`:@@homeProjectMorningBriefTag2:Raspberry Pi` },
+        { label: $localize`:@@homeProjectMorningBriefTag3:Newsletter IA` },
+      ],
+      title: $localize`:@@homeProjectMorningBriefTitle:Morning-Brief`,
+      desc: $localize`:@@homeProjectMorningBriefDesc:Une veille IA collectée, synthétisée et livrée chaque matin, bientôt publiée comme une collection d'articles utiles.`,
+      image: '/assets/images/projects/morning-brief.webp',
+      imageAlt: $localize`:@@homeProjectMorningBriefImageAlt:illustration — Morning-Brief`,
     },
     {
       size: 'small',
-      tags: [{ label: $localize`:@@homeProject3Tag1:Atelier` }],
-      title: $localize`:@@homeProject3Title:Sebastian`,
-      desc: $localize`:@@homeProject3Desc:Suivi de consommation, app + bot Telegram.`,
-      href: '/atelier/sebastian',
-      image: '/assets/images/projects/sebastian.webp',
-      imageAlt: $localize`:@@homeProject3ImageAlt:capture — Sebastian`,
+      tags: [
+        { label: $localize`:@@homeProjectAuditTag1:Audit` },
+        { label: $localize`:@@homeProjectAuditTag2:SSE` },
+        { label: $localize`:@@homeProjectAuditTag3:IA` },
+      ],
+      title: $localize`:@@homeProjectAuditTitle:Audit de visibilité web`,
+      desc: $localize`:@@homeProjectAuditDesc:Un diagnostic technique et IA qui transforme les signaux d'un site en actions priorisées.`,
+      href: '/growth-audit',
+      image: '/assets/images/projects/growth-audit.webp',
+      imageAlt: $localize`:@@homeProjectAuditImageAlt:capture — Audit de visibilité web`,
     },
     {
       size: 'small',
@@ -183,8 +174,20 @@ export class HomeComponent {
       title: $localize`:@@homeProject4Title:Un système qui travaille en silence`,
       desc: $localize`:@@homeProject4Desc:Des tâches répétitives remplacées par une automatisation lisible, mesurée, sous contrôle humain.`,
       href: '/offer',
-      image: '/assets/images/projects/Automation-validation.webp',
+      image: '/assets/images/projects/project-automation-validation-diplomas.webp',
       imageAlt: $localize`:@@homeProject4ImageAlt:capture — automatisation IA`,
+    },
+    {
+      size: 'big',
+      tags: [
+        { label: $localize`:@@homeProjectFormationsTag1:Formation` },
+        { label: $localize`:@@homeProjectFormationsTag2:IA` },
+      ],
+      title: $localize`:@@homeProjectFormationsTitle:Formations actionnables`,
+      desc: $localize`:@@homeProjectFormationsDesc:Des formats courts pour comprendre l'IA, tester un workflow et repartir avec un toolkit concret.`,
+      href: '/formations',
+      image: '/assets/images/projects/Automation-validation.webp',
+      imageAlt: $localize`:@@homeProjectFormationsImageAlt:illustration — formations IA`,
     },
   ];
 
@@ -192,5 +195,5 @@ export class HomeComponent {
   protected readonly ctaTitle = $localize`:@@homeCtaTitle:Et si on clarifiait, ensemble, avant de construire ?`;
   protected readonly ctaLead = $localize`:@@homeCtaLead:Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.`;
   protected readonly ctaPrimary = $localize`:@@homeCtaPrimary:Démarrer la conversation`;
-  protected readonly ctaSecondary = $localize`:@@homeCtaSecondary:Explorer l'Atelier`;
+  protected readonly ctaSecondary = $localize`:@@homeCtaSecondary:Voir les projets`;
 }

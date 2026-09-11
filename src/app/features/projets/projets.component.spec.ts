@@ -44,11 +44,30 @@ describe('ProjetsComponent', () => {
     expect(compiled.querySelector('app-asili-cta-band')).not.toBeNull();
   });
 
-  it('should render the fourteen realisations from the mockup', () => {
+  it('should render the ten realisations that support the commercial focus', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const cards = compiled.querySelectorAll('app-asili-projects-grid .proj-grid .proj');
-    expect(cards.length).toBe(14);
-    expect(component['projects'].length).toBe(14);
+    expect(cards.length).toBe(10);
+    expect(component['projects'].length).toBe(10);
+  });
+
+  it('should keep the named project inventory visible in the public portfolio', () => {
+    const titles = component['projects'].map((project) => project.title);
+
+    for (const expected of [
+      'Fourmizzz Suite',
+      'Morning-Brief',
+      'Slide-Shot',
+      'InnovMind',
+      'AtlanticBike',
+      'Schema-Atlas',
+      'ZenFirst Renta',
+      'Portail-EG',
+      'Gestion de chais',
+      'IFS Academy',
+    ]) {
+      expect(titles).toContain(expected);
+    }
   });
 
   it('should illustrate every realisation, leaving no striped placeholder', () => {
@@ -67,6 +86,16 @@ describe('ProjetsComponent', () => {
   it('should not link any realisation to the removed case study page', () => {
     const stale = component['projects'].filter((p) => p.href === '/client-project');
     expect(stale).toEqual([]);
+  });
+
+  it('documente le contexte, la solution, le rôle et le résultat de chaque projet', () => {
+    const projects = component['projects'];
+    expect(
+      projects.every((project) => {
+        const study = project.caseStudy;
+        return study && Object.values(study).every((value) => value.trim().length > 0);
+      }),
+    ).toBeTrue();
   });
 
   it('should render the four-step method banner (le fil rouge)', () => {

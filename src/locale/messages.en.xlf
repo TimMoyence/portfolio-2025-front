@@ -2082,6 +2082,50 @@
   </segment>
 </unit>
 
+<unit id="auditPillarAiVisibilityTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:162</note>
+    <note category="description">audit.pillar.aiVisibility.title</note>
+  </notes>
+  <segment>
+    <source>Visibilité IA</source>
+    <target>AI visibility</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarAiVisibilityDesc">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:163</note>
+    <note category="description">audit.pillar.aiVisibility.desc</note>
+  </notes>
+  <segment>
+    <source>Compréhension par les assistants IA, données structurées, réponses génératives.</source>
+    <target>Understanding by AI assistants, structured data, generative answers.</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarCitationWorthinessTitle">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:166</note>
+    <note category="description">audit.pillar.citationWorthiness.title</note>
+  </notes>
+  <segment>
+    <source>Citabilité</source>
+    <target>Citation worthiness</target>
+  </segment>
+</unit>
+
+<unit id="auditPillarCitationWorthinessDesc">
+  <notes>
+    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:167</note>
+    <note category="description">audit.pillar.citationWorthiness.desc</note>
+  </notes>
+  <segment>
+    <source>Sources, preuves, FAQ et contenus que les moteurs peuvent citer.</source>
+    <target>Sources, evidence, FAQs, and content that search engines can cite.</target>
+  </segment>
+</unit>
+
 <unit id="auditFormTitle">
   <notes>
     <note category="location">src/app/features/growth-audit/growth-audit.component.ts:102</note>
@@ -13396,6 +13440,84 @@
         <source>capture — Gestion de chais, vinification sur poste et mobile</source>
         <target>screenshot — Cellar management, winemaking on desktop and mobile</target>
       </segment>
+    </unit>
+    <unit id="homeProjectMorningBriefTag1">
+      <segment>
+        <source>En production</source>
+        <target>In production</target>
+      </segment>
+    </unit>
+    <unit id="homeProjectMorningBriefTag2">
+      <segment>
+        <source>Raspberry Pi</source>
+        <target>Raspberry Pi</target>
+      </segment>
+    </unit>
+    <unit id="homeProjectMorningBriefTag3">
+      <segment>
+        <source>Newsletter IA</source>
+        <target>AI newsletter</target>
+      </segment>
+    </unit>
+    <unit id="homeProjectMorningBriefTitle">
+      <segment>
+        <source>Morning-Brief</source>
+        <target>Morning Brief</target>
+      </segment>
+    </unit>
+    <unit id="homeProjectMorningBriefDesc">
+      <segment>
+        <source>Une veille IA collectée, synthétisée et livrée chaque matin, bientôt publiée comme une collection d&amp;apos;articles utiles.</source>
+        <target>AI intelligence gathered, synthesized, and delivered every morning, soon published as a collection of useful articles.</target>
+      </segment>
+    </unit>
+    <unit id="homeProjectMorningBriefImageAlt">
+      <segment>
+        <source>illustration — Morning-Brief</source>
+        <target>illustration — Morning Brief</target>
+      </segment>
+    </unit>
+    <unit id="homeProjectAuditTag1">
+      <segment><source>Audit</source><target>Audit</target></segment>
+    </unit>
+    <unit id="homeProjectAuditTag2">
+      <segment><source>SSE</source><target>SSE</target></segment>
+    </unit>
+    <unit id="homeProjectAuditTag3">
+      <segment><source>IA</source><target>AI</target></segment>
+    </unit>
+    <unit id="homeProjectAuditTitle">
+      <segment><source>Audit de visibilité web</source><target>Web visibility audit</target></segment>
+    </unit>
+    <unit id="homeProjectAuditDesc">
+      <segment><source>Un diagnostic technique et IA qui transforme les signaux d&amp;apos;un site en actions priorisées.</source><target>A technical and AI-powered diagnosis that turns website signals into prioritized actions.</target></segment>
+    </unit>
+    <unit id="homeProjectAuditImageAlt">
+      <segment><source>capture — Audit de visibilité web</source><target>screenshot — Web visibility audit</target></segment>
+    </unit>
+    <unit id="homeProjectFormationsTag1">
+      <segment><source>Formation</source><target>Training</target></segment>
+    </unit>
+    <unit id="homeProjectFormationsTag2">
+      <segment><source>IA</source><target>AI</target></segment>
+    </unit>
+    <unit id="homeProjectFormationsTitle">
+      <segment><source>Formations actionnables</source><target>Actionable training</target></segment>
+    </unit>
+    <unit id="homeProjectFormationsDesc">
+      <segment><source>Des formats courts pour comprendre l&amp;apos;IA, tester un workflow et repartir avec un toolkit concret.</source><target>Short formats to understand AI, test a workflow, and leave with a practical toolkit.</target></segment>
+    </unit>
+    <unit id="homeProjectFormationsImageAlt">
+      <segment><source>illustration — formations IA</source><target>illustration — AI training</target></segment>
+    </unit>
+    <unit id="notFoundCtaProjects">
+      <segment><source> Voir les projets </source><target> View projects </target></segment>
+    </unit>
+    <unit id="footerNavArticles">
+      <segment><source>Articles</source><target>Articles</target></segment>
+    </unit>
+    <unit id="navLinkArticles">
+      <segment><source>Articles</source><target>Articles</target></segment>
     </unit>
   </file>
 </xliff>

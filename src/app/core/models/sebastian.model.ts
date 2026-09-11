@@ -63,7 +63,7 @@ export interface CreateEntryPayload {
   consumedAt?: string;
 }
 
-export interface SebastianBacDataPoint {
+interface SebastianBacDataPoint {
   time: string;
   bac: number;
 }

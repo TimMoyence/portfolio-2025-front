@@ -15,12 +15,12 @@ const PROJECTS: readonly AsiliProject[] = [
     size: 'big',
   },
   {
-    title: 'Meteo',
-    desc: 'Data-viz vivante : vent, UV, arc solaire.',
-    tags: [{ label: 'Atelier' }],
-    image: '/assets/meteo.jpg',
-    imageAlt: "Capture de l'app Meteo",
-    href: '/atelier/meteo',
+    title: 'Audit de visibilité',
+    desc: 'Analyse technique et recommandations priorisées.',
+    tags: [{ label: 'Audit' }],
+    image: '/assets/audit.jpg',
+    imageAlt: "Capture de l'audit",
+    href: '/growth-audit',
     size: 'small',
   },
   {
@@ -124,8 +124,8 @@ describe('AsiliProjectsGridComponent', () => {
     const host = fixture.nativeElement as HTMLElement;
     const img = host.querySelector<HTMLImageElement>('.proj-shot img');
     expect(img).not.toBeNull();
-    expect(img?.getAttribute('src')).toBe('/assets/meteo.jpg');
-    expect(img?.getAttribute('alt')).toBe("Capture de l'app Meteo");
+    expect(img?.getAttribute('src')).toBe('/assets/audit.jpg');
+    expect(img?.getAttribute('alt')).toBe("Capture de l'audit");
   });
 
   it('rend un placeholder raye legende pour chaque carte sans image', () => {

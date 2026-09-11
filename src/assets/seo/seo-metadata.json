@@ -159,7 +159,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -221,7 +221,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -383,9 +383,9 @@
       "locales": {
         "fr": {
           "title": "Projets — Réalisations web & IA",
-          "description": "Réalisations de Tim Moyence (Asili Design) : plateformes métier, applications de l'Atelier, automatisations IA. Des preuves, pas des promesses.",
+          "description": "Réalisations de Tim Moyence (Asili Design) : plateformes métier, automatisations IA et produits web. Des preuves, pas des promesses.",
           "ogTitle": "Projets — Réalisations d'Asili Design",
-          "ogDescription": "Plateformes métier, applications de l'Atelier et automatisations IA — chaque projet part d'un besoin réel et finit par un outil qui tient dans le temps.",
+          "ogDescription": "Plateformes métier, automatisations IA et produits web — chaque projet part d'un besoin réel et finit par un outil qui tient dans le temps.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "ItemList",
@@ -396,31 +396,13 @@
                 "position": 1,
                 "item": {
                   "@type": "CreativeWork",
-                  "name": "Weather",
-                  "description": "App météo : prévisions, qualité de l'air, alertes, circuit breaker multi-provider."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Sebastian — suivi de consommation",
-                  "description": "App complète (objectifs, calcul d'alcoolémie, rapports) doublée d'un bot Telegram qui logge un verre en langage naturel."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "item": {
-                  "@type": "CreativeWork",
                   "name": "Morning-Brief",
                   "description": "Newsletter IA : 50+ sources agrégées, dédupliquées, synthétisées, livrées chaque matin par Telegram, 24/7 sur un Raspberry Pi."
                 }
               },
               {
                 "@type": "ListItem",
-                "position": 4,
+                "position": 2,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Onboarding Telegram IFS — académie de formation",
@@ -429,7 +411,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 5,
+                "position": 3,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Musaium",
@@ -438,7 +420,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 6,
+                "position": 4,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Gestion de chais de Cognac — traçabilité",
@@ -447,7 +429,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 7,
+                "position": 5,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Gestion de chais — la vinification au quotidien",
@@ -456,7 +438,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 8,
+                "position": 6,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Louison",
@@ -465,7 +447,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 9,
+                "position": 7,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Le Jeu des Fourmis",
@@ -474,7 +456,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 10,
+                "position": 8,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Growth Audit",
@@ -483,7 +465,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 11,
+                "position": 9,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Voice IA",
@@ -492,7 +474,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 12,
+                "position": 10,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "AtlanticBike — location et réparation de vélos",
@@ -502,7 +484,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 13,
+                "position": 11,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Assistant IA Geev",
@@ -511,7 +493,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 14,
+                "position": 12,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Modélisation prédictive de risques sanitaires",
@@ -523,9 +505,9 @@
         },
         "en": {
           "title": "Projects — Web & AI work",
-          "description": "Work by Tim Moyence (Asili Design): business platforms, Atelier apps, AI automations. Proof, not promises.",
+          "description": "Work by Tim Moyence (Asili Design): business platforms, AI automations and web products. Proof, not promises.",
           "ogTitle": "Projects — Asili Design's work",
-          "ogDescription": "Business platforms, Atelier apps and AI automations — every project starts from a real need and ends as a tool that lasts.",
+          "ogDescription": "Business platforms, AI automations and web products — every project starts from a real need and ends as a tool that lasts.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "ItemList",
@@ -536,31 +518,13 @@
                 "position": 1,
                 "item": {
                   "@type": "CreativeWork",
-                  "name": "Weather",
-                  "description": "Weather app: forecasts, air quality, alerts, multi-provider circuit breaker."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Sebastian — consumption tracking",
-                  "description": "Full app (goals, blood-alcohol calculation, reports) paired with a Telegram bot that logs a drink in natural language."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "item": {
-                  "@type": "CreativeWork",
                   "name": "Morning-Brief",
                   "description": "AI newsletter: 50+ sources aggregated, deduplicated, synthesised, delivered every morning via Telegram, 24/7 on a Raspberry Pi."
                 }
               },
               {
                 "@type": "ListItem",
-                "position": 4,
+                "position": 2,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "IFS Telegram Onboarding — training academy",
@@ -569,7 +533,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 5,
+                "position": 3,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Musaium",
@@ -578,7 +542,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 6,
+                "position": 4,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Cognac cellar management — traceability",
@@ -587,7 +551,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 7,
+                "position": 5,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Cellar management — winemaking day to day",
@@ -596,7 +560,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 8,
+                "position": 6,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Louison",
@@ -605,7 +569,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 9,
+                "position": 7,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "The Ant Game",
@@ -614,7 +578,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 10,
+                "position": 8,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Growth Audit",
@@ -623,7 +587,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 11,
+                "position": 9,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Voice AI",
@@ -632,7 +596,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 12,
+                "position": 10,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "AtlanticBike — bike rental and repair",
@@ -642,7 +606,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 13,
+                "position": 11,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Geev AI Assistant",
@@ -651,7 +615,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 14,
+                "position": 12,
                 "item": {
                   "@type": "CreativeWork",
                   "name": "Predictive modeling of health risks",
@@ -669,7 +633,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
@@ -852,12 +816,44 @@
       }
     },
     {
+      "id": "articles",
+      "path": "/articles",
+      "index": true,
+      "changefreq": "daily",
+      "priority": 0.8,
+      "lastmod": "2026-09-09",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Articles",
+          "path": "/articles"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Articles — Morning-Brief | Asili Design",
+          "description": "Une veille IA sourcée et actionnable : comprendre les évolutions, relier les signaux aux usages et décider quoi tester concrètement.",
+          "ogTitle": "Articles Morning-Brief",
+          "ogDescription": "Une veille sourcée transformée en décisions et en pistes concrètes."
+        },
+        "en": {
+          "title": "Articles — Morning-Brief | Asili Design",
+          "description": "Sourced and actionable AI intelligence: understand the shifts, connect signals to uses and decide what to test next.",
+          "ogTitle": "Morning-Brief Articles",
+          "ogDescription": "Sourced intelligence turned into practical decisions."
+        }
+      }
+    },
+    {
       "id": "contact",
       "path": "/contact",
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -1056,7 +1052,7 @@
     {
       "id": "atelier",
       "path": "/atelier",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.7,
       "lastmod": "2026-08-07",
@@ -1130,7 +1126,7 @@
     {
       "id": "weather",
       "path": "/atelier/meteo",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.5,
       "lastmod": "2026-08-07",
@@ -1182,7 +1178,7 @@
     {
       "id": "sebastian",
       "path": "/atelier/sebastian",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.4,
       "lastmod": "2026-08-07",
@@ -1319,7 +1315,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1332,16 +1328,16 @@
       ],
       "locales": {
         "fr": {
-          "title": "Audit gratuit SEO & croissance — 15 points",
-          "description": "Audit gratuit de votre site web en 24h — scan IA + analyse humaine. Vidéo personnalisée, scorecard 15 points et quick wins. Bordeaux.",
+          "title": "Audit gratuit SEO & croissance — 7 piliers",
+          "description": "Audit gratuit de votre site web en 24h — scan IA + analyse humaine sur 7 piliers. Vidéo personnalisée, scorecard et quick wins priorisés. Bordeaux.",
           "ogTitle": "Audit gratuit de croissance",
           "ogDescription": "Recevez un diagnostic rapide : conversion, vitesse, SEO, confiance et tech.",
           "jsonLd": [
             {
               "@context": "https://schema.org",
               "@type": "Service",
-              "name": "Audit de croissance gratuit — 15 points",
-              "description": "Audit gratuit en 24h : scan IA + audit humain, vidéo personnalisée et scorecard actionnable.",
+              "name": "Audit de croissance gratuit — 7 piliers",
+              "description": "Audit gratuit en 24h : scan IA + audit humain, vidéo personnalisée et scorecard actionnable sur 7 piliers.",
               "provider": {
                 "@type": "LocalBusiness",
                 "name": "Asili Design"
@@ -1374,7 +1370,7 @@
                   "name": "Que contient l'audit ?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "L'audit couvre 5 piliers : conversion et clarté, vitesse et performance, fondations SEO, crédibilité et confiance, tech et scalabilité. Vous recevez une vidéo, une scorecard et des quick wins priorisés."
+                    "text": "L'audit couvre 7 piliers : conversion et clarté, vitesse et performance, fondations SEO, crédibilité et confiance, tech et scalabilité, visibilité IA et citabilité. Vous recevez une vidéo, une scorecard et des quick wins priorisés."
                   }
                 }
               ]
@@ -1382,16 +1378,16 @@
           ]
         },
         "en": {
-          "title": "Free SEO & growth audit — 15 points",
-          "description": "Free audit of your website in 24h — AI scan + human analysis. Personalized video, 15-point scorecard and quick wins. Bordeaux.",
+          "title": "Free SEO & growth audit — 7 pillars",
+          "description": "Free audit of your website in 24h — AI scan + human analysis across 7 pillars. Personalized video, scorecard and prioritized quick wins. Bordeaux.",
           "ogTitle": "Free growth audit",
           "ogDescription": "Get a fast diagnosis: conversion, speed, SEO, trust, and tech.",
           "jsonLd": [
             {
               "@context": "https://schema.org",
               "@type": "Service",
-              "name": "Free growth audit — 15 points",
-              "description": "Free audit in 24h: AI scan + human audit, personalized video and actionable scorecard.",
+              "name": "Free growth audit — 7 pillars",
+              "description": "Free audit in 24h: AI scan + human audit, personalized video and actionable scorecard across 7 pillars.",
               "provider": {
                 "@type": "LocalBusiness",
                 "name": "Asili Design"
@@ -1424,7 +1420,7 @@
                   "name": "What does the audit cover?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The audit covers 5 pillars: conversion and clarity, speed and performance, SEO foundations, credibility and trust, tech and scalability. You receive a video, a scorecard and prioritized quick wins."
+                    "text": "The audit covers 7 pillars: conversion and clarity, speed and performance, SEO foundations, credibility and trust, tech and scalability, AI visibility and citation-worthiness. You receive a video, a scorecard and prioritized quick wins."
                   }
                 }
               ]
@@ -1439,13 +1435,13 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
-          "description": "Formations gratuites sur l'IA et le digital pour solopreneurs et entrepreneurs à Bordeaux. Présentations concrètes consultables en ligne.",
+          "description": "Formations gratuites sur l'IA et le digital, plus accompagnement sur mesure du management des usages, pour solopreneurs et entrepreneurs à Bordeaux. Présentations concrètes consultables en ligne.",
           "ogTitle": "Formations gratuites — Tim Moyence",
-          "ogDescription": "Ressources et présentations gratuites sur l'IA pour solopreneurs et entrepreneurs.",
+          "ogDescription": "Ressources gratuites sur l'IA et accompagnement du management des usages pour entrepreneurs.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "ItemList",
@@ -1472,9 +1468,9 @@
         },
         "en": {
           "title": "Free Courses — Tim Moyence",
-          "description": "Free training on AI and digital for solopreneurs and entrepreneurs in Bordeaux. Concrete presentations available online.",
+          "description": "Free AI and digital training, plus tailored support for managing AI adoption, for solopreneurs and entrepreneurs in Bordeaux.",
           "ogTitle": "Free Courses — Tim Moyence",
-          "ogDescription": "Free resources and presentations on AI for solopreneurs and entrepreneurs.",
+          "ogDescription": "Free AI resources and tailored support for managing AI adoption.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "ItemList",
@@ -1507,7 +1503,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1702,7 +1698,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1898,7 +1894,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-08-08",
       "breadcrumb": [
         {
           "name": "Accueil",
