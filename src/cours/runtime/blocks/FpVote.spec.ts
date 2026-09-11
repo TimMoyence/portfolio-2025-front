@@ -92,16 +92,18 @@ describe('FpVote', () => {
     expect(bouton?.textContent?.trim()).toBe(charge);
   });
 
-  it('ignore une cle html inconnue dans resultats.parOption', () => {
+  it('ignore une cle html ou un nom d etudiant inconnu dans resultats.parOption', () => {
     hote.setAttribute('role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;
     const cleMalicieuse = '<img src=x onerror="alert(1)">';
+    const cleNom = 'Jean Dupont';
     hote.resultats = {
-      total: 13,
-      parOption: { a: 7, b: 4, c: 1, [cleMalicieuse]: 1 },
+      total: 14,
+      parOption: { a: 7, b: 4, c: 1, [cleMalicieuse]: 1, [cleNom]: 1 },
     };
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
+    expect(hote.shadowRoot?.innerHTML).not.toContain(cleNom);
     const barres = hote.shadowRoot?.querySelectorAll('[data-testid="barre"]');
     expect(barres?.length).toBe(3);
   });
@@ -129,7 +131,7 @@ describe('FpVote', () => {
     expect(hote.question?.options[0].misconception).toBe('interet-simple');
   });
 
-  it('n affiche aucun nom d etudiant en mode scene', () => {
+  it('n affiche en mode scene que des identifiants d option connus et des pourcentages', () => {
     hote.setAttribute('role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;

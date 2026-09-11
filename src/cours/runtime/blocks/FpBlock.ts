@@ -1,6 +1,7 @@
 import type { RenderMode, Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
+import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 
 export abstract class FpBlock extends HTMLElement {
   static get observedAttributes(): string[] {
@@ -14,9 +15,9 @@ export abstract class FpBlock extends HTMLElement {
     this.racine = this.attachShadow({ mode: 'open' });
   }
 
-  abstract renderStage(): string;
-  abstract renderHand(): string;
-  abstract renderBoard(): string;
+  abstract renderStage(): EscapedHtml;
+  abstract renderHand(): EscapedHtml;
+  abstract renderBoard(): EscapedHtml;
   abstract bind(racine: ShadowRoot): void;
 
   connectedCallback(): void {
@@ -59,11 +60,11 @@ export abstract class FpBlock extends HTMLElement {
 
   refresh(): void {
     const mode = this.mode();
-    this.racine.innerHTML = `<div class="fp-root" data-render="${mode}">${this.corps(mode)}</div>`;
+    this.racine.innerHTML = safeHtml`<div class="fp-root" data-render="${escapeHtml(mode)}">${this.corps(mode)}</div>`;
     this.bind(this.racine);
   }
 
-  private corps(mode: RenderMode): string {
+  private corps(mode: RenderMode): EscapedHtml {
     if (mode === 'stage') {
       return this.renderStage();
     }

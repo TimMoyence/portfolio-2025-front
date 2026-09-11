@@ -1,14 +1,15 @@
+import { type EscapedHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 
 class FpDemo extends FpBlock {
-  renderStage(): string {
-    return '<p data-testid="scene">scene</p>';
+  renderStage(): EscapedHtml {
+    return safeHtml`<p data-testid="scene">scene</p>`;
   }
-  renderHand(): string {
-    return '<button data-testid="action">agir</button>';
+  renderHand(): EscapedHtml {
+    return safeHtml`<button data-testid="action">agir</button>`;
   }
-  renderBoard(): string {
-    return '<p data-testid="tableau">tableau</p>';
+  renderBoard(): EscapedHtml {
+    return safeHtml`<p data-testid="tableau">tableau</p>`;
   }
   bind(racine: ShadowRoot): void {
     racine

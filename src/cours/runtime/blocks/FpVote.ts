@@ -81,7 +81,7 @@ export class FpVote extends FpBlock {
     return this.interneSeuil;
   }
 
-  renderHand(): string {
+  renderHand(): EscapedHtml {
     const question = this.question;
     if (!question) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
@@ -104,10 +104,10 @@ export class FpVote extends FpBlock {
     `;
   }
 
-  renderStage(): string {
+  renderStage(): EscapedHtml {
     const question = this.question;
     if (!question) {
-      return '';
+      return safeHtml``;
     }
     if (!this.resultats) {
       return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p><p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p></div>`;
@@ -115,7 +115,7 @@ export class FpVote extends FpBlock {
     return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p>${this.histogramme()}</div>`;
   }
 
-  renderBoard(): string {
+  renderBoard(): EscapedHtml {
     if (!this.question || !this.resultats) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
