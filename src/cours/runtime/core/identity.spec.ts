@@ -58,10 +58,12 @@ describe('identity', () => {
     try {
       expect(() =>
         saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' }),
-      ).toThrow();
+      ).toThrowError(/identifiant sécurisé/);
     } finally {
       if (original) {
         Object.defineProperty(globalThis, 'crypto', original);
+      } else {
+        delete (globalThis as { crypto?: Crypto }).crypto;
       }
     }
   });
