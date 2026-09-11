@@ -307,6 +307,15 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cours/demo',
+    loadComponent: () =>
+      import('./features/cours/cours-host.component').then((m) => m.CoursHostComponent),
+    data: {
+      seoKey: 'cours-demo',
+      robots: 'noindex, nofollow',
+    },
+  },
+  {
     path: 'slides/library',
     loadComponent: () =>
       import('./features/slides-library/slides-library.component').then(

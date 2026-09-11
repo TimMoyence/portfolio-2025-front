@@ -2207,6 +2207,28 @@
       }
     },
     {
+      "id": "cours-demo",
+      "path": "/cours/demo",
+      "index": false,
+      "changefreq": "never",
+      "priority": 0,
+      "lastmod": "2026-09-11",
+      "locales": {
+        "fr": {
+          "title": "Banc d'essai du runtime de cours",
+          "description": "Démonstration technique du runtime de cours pédagogique, réservée aux tests internes.",
+          "ogTitle": "Banc d'essai du runtime de cours",
+          "ogDescription": "Démonstration technique du runtime de cours, réservée aux tests internes."
+        },
+        "en": {
+          "title": "Course runtime test bench",
+          "description": "Technical demonstration of the course runtime, reserved for internal testing.",
+          "ogTitle": "Course runtime test bench",
+          "ogDescription": "Technical demonstration of the course runtime, reserved for internal testing."
+        }
+      }
+    },
+    {
       "id": "not-found",
       "path": "/404",
       "index": false,
