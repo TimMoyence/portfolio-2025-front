@@ -77,6 +77,48 @@ describe('FpVote', () => {
     expect(hote.shadowRoot?.querySelector('[data-correcte]')).toBeNull();
   });
 
+  it('echappe le html injecte dans le libelle d une option', () => {
+    const charge = '<img src=x onerror="alert(1)">';
+    hote.question = {
+      id: 'Q-XSS-01',
+      enonce: 'Question',
+      options: [
+        { id: 'a', libelle: charge, misconception: null },
+        { id: 'b', libelle: 'reponse', misconception: 'distracteur' },
+      ],
+    };
+    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
+    const bouton = hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-option="a"]');
+    expect(bouton?.textContent?.trim()).toBe(charge);
+  });
+
+  it('ignore une cle html inconnue dans resultats.parOption', () => {
+    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    hote.question = QUESTION;
+    const cleMalicieuse = '<img src=x onerror="alert(1)">';
+    hote.resultats = {
+      total: 13,
+      parOption: { a: 7, b: 4, c: 1, [cleMalicieuse]: 1 },
+    };
+    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
+    const barres = hote.shadowRoot?.querySelectorAll('[data-testid="barre"]');
+    expect(barres?.length).toBe(3);
+  });
+
+  it('echappe l id d une option connue dans l histogramme', () => {
+    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    hote.question = {
+      id: 'Q-QUOTE-01',
+      enonce: 'Question',
+      options: [{ id: 'a"b', libelle: 'Option', misconception: null }],
+    };
+    hote.resultats = { total: 1, parOption: { 'a"b': 1 } };
+    const barre = hote.shadowRoot?.querySelector<HTMLElement>('[data-testid="barre"]');
+    expect(barre?.getAttribute('data-option')).toBe('a"b');
+  });
+
   it('ne conserve pas la misconception en role etudiant', () => {
     expect(hote.question?.options.every((option) => !('misconception' in option))).toBe(true);
   });
@@ -92,7 +134,12 @@ describe('FpVote', () => {
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
-    expect(hote.shadowRoot?.innerHTML).not.toContain('@');
+    const barres = hote.shadowRoot?.querySelectorAll<HTMLElement>('[data-testid="barre"]');
+    expect(barres?.length).toBe(3);
+    for (const barre of [...(barres ?? [])]) {
+      expect(['a', 'b', 'c']).toContain(barre.getAttribute('data-option') ?? '');
+      expect(barre.textContent?.trim()).toMatch(/^\d+%$/);
+    }
   });
 
   it('affiche la repartition par misconception en mode tableau', () => {
@@ -114,6 +161,16 @@ describe('FpVote', () => {
     expect(verdict?.textContent).toContain('Réexpliquer');
   });
 
+  it('rafraichit le verdict quand le seuil change apres les resultats', () => {
+    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('render', 'board');
+    hote.question = QUESTION;
+    hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
+    hote.seuil = 0.1;
+    const verdict = hote.shadowRoot?.querySelector('[data-testid="verdict"]');
+    expect(verdict?.textContent).toContain('Passer');
+  });
+
   it('recommande d avancer au dessus du seuil', () => {
     hote.setAttribute('role', 'presentateur');
     hote.setAttribute('render', 'board');
@@ -124,10 +181,21 @@ describe('FpVote', () => {
     expect(verdict?.textContent).toContain('Passer');
   });
 
-  it('propose un revote apres la phase de discussion', () => {
+  it('deverrouille les options apres passage en revote', () => {
+    hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="option"]')?.click();
+    let options = hote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-testid="option"]');
+    expect([...(options ?? [])].every((b) => b.disabled)).toBe(true);
     hote.phase = 'revote';
-    const options = hote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-testid="option"]');
-    expect([...(options ?? [])].every((bouton) => bouton.disabled)).toBe(false);
+    options = hote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-testid="option"]');
+    expect([...(options ?? [])].every((b) => b.disabled)).toBe(false);
+  });
+
+  it('emet fp-vote-phase quand la phase change', (done) => {
+    hote.addEventListener('fp-vote-phase', (event) => {
+      expect((event as CustomEvent).detail.phase).toBe('discussion');
+      done();
+    });
+    hote.phase = 'discussion';
   });
 
   it('expose un groupe de reponses accessible', () => {
@@ -138,5 +206,19 @@ describe('FpVote', () => {
   it('annonce le retour dans une region live', () => {
     const region = hote.shadowRoot?.querySelector('[aria-live]');
     expect(region).toBeTruthy();
+  });
+
+  it('alimente la region live apres le vote', () => {
+    hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="option"]')?.click();
+    const region = hote.shadowRoot?.querySelector('[data-testid="retour"]');
+    expect(region?.textContent?.trim()).toBe('Réponse enregistrée');
+  });
+
+  it('permet de repondre je ne sais pas', (done) => {
+    hote.addEventListener('fp-vote-submit', (event) => {
+      expect((event as CustomEvent).detail.valeur).toBe('__je_ne_sais_pas__');
+      done();
+    });
+    hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="je-ne-sais-pas"]')?.click();
   });
 });

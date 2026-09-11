@@ -25,6 +25,10 @@ export abstract class FpBlock extends HTMLElement {
   }
 
   attributeChangedCallback(): void {
+    this.refreshSiConnecte();
+  }
+
+  protected refreshSiConnecte(): void {
     if (this.isConnected) {
       this.refresh();
     }

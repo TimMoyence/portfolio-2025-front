@@ -1,3 +1,4 @@
+import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
 
@@ -24,13 +25,13 @@ export interface VoteResultats {
 export type VotePhase = 'vote' | 'discussion' | 'revote' | 'revele';
 
 const SEUIL_DEFAUT = 0.7;
+const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 
 export class FpVote extends FpBlock {
-  seuil = SEUIL_DEFAUT;
-  phase: VotePhase = 'vote';
-
   private interne: VoteQuestion | null = null;
   private interneResultats: VoteResultats | null = null;
+  private internePhase: VotePhase = 'vote';
+  private interneSeuil = SEUIL_DEFAUT;
   private affiche = 0;
   private repondu = false;
 
@@ -45,7 +46,7 @@ export class FpVote extends FpBlock {
               libelle: option.libelle,
             })) as unknown as readonly VoteOption[],
           };
-    this.actualiseSiConnecte();
+    this.refreshSiConnecte();
   }
 
   get question(): VoteQuestion | null {
@@ -54,34 +55,52 @@ export class FpVote extends FpBlock {
 
   set resultats(valeur: VoteResultats | null) {
     this.interneResultats = valeur;
-    this.actualiseSiConnecte();
+    this.refreshSiConnecte();
   }
 
   get resultats(): VoteResultats | null {
     return this.interneResultats;
   }
 
+  set phase(valeur: VotePhase) {
+    this.internePhase = valeur;
+    this.emit('fp-vote-phase', { phase: valeur });
+    this.refreshSiConnecte();
+  }
+
+  get phase(): VotePhase {
+    return this.internePhase;
+  }
+
+  set seuil(valeur: number) {
+    this.interneSeuil = valeur;
+    this.refreshSiConnecte();
+  }
+
+  get seuil(): number {
+    return this.interneSeuil;
+  }
+
   renderHand(): string {
     const question = this.question;
     if (!question) {
-      return `<p>${this.texte('chargement')}</p>`;
+      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
     }
     const options = shuffleWithSeed([...question.options], this.seed());
-    const boutons = options
-      .map(
-        (option) =>
-          `<button type="button" class="fp-option" data-testid="option" data-option="${option.id}">${option.libelle}</button>`,
-      )
-      .join('');
-    return `
+    const boutons = options.map(
+      (option) =>
+        safeHtml`<button type="button" class="fp-option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
+    );
+    const retour = this.repondu ? escapeHtml(this.texte('reponse-enregistree')) : escapeHtml('');
+    return safeHtml`
       <fieldset class="fp-carte">
-        <legend>${question.enonce}</legend>
+        <legend>${escapeHtml(question.enonce)}</legend>
         ${boutons}
-        <button type="button" class="fp-option fp-option--neutre" data-testid="je-ne-sais-pas" data-option="__je_ne_sais_pas__">
-          ${this.texte('je-ne-sais-pas')}
+        <button type="button" class="fp-option fp-option--neutre" data-testid="je-ne-sais-pas" data-option="${escapeHtml(ID_JE_NE_SAIS_PAS)}">
+          ${escapeHtml(this.texte('je-ne-sais-pas'))}
         </button>
       </fieldset>
-      <p aria-live="polite" data-testid="retour"></p>
+      <p aria-live="polite" data-testid="retour">${retour}</p>
     `;
   }
 
@@ -91,23 +110,23 @@ export class FpVote extends FpBlock {
       return '';
     }
     if (!this.resultats) {
-      return `<div class="fp-carte fp-scene"><p class="fp-enonce">${question.enonce}</p><p data-testid="attente">${this.texte('en-attente')}</p></div>`;
+      return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p><p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p></div>`;
     }
-    return `<div class="fp-carte fp-scene"><p class="fp-enonce">${question.enonce}</p>${this.histogramme()}</div>`;
+    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p>${this.histogramme()}</div>`;
   }
 
   renderBoard(): string {
     if (!this.question || !this.resultats) {
-      return `<p data-testid="attente">${this.texte('en-attente')}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
     const taux = this.tauxReussite();
     const dominante = this.erreurDominante();
     const verdict = taux < this.seuil ? 'Réexpliquer' : 'Passer à la suite';
-    return `
+    return safeHtml`
       <div class="fp-carte">
         ${this.histogramme()}
-        <p data-testid="erreur-dominante">Erreur dominante : ${dominante ?? 'aucune'}</p>
-        <p data-testid="verdict" class="fp-verdict">${verdict}</p>
+        <p data-testid="erreur-dominante">Erreur dominante : ${escapeHtml(dominante ?? 'aucune')}</p>
+        <p data-testid="verdict" class="fp-verdict">${escapeHtml(verdict)}</p>
       </div>
     `;
   }
@@ -135,12 +154,6 @@ export class FpVote extends FpBlock {
       dureeMs: Date.now() - this.affiche,
     });
     this.refresh();
-  }
-
-  private actualiseSiConnecte(): void {
-    if (this.isConnected) {
-      this.refresh();
-    }
   }
 
   private idOptionCorrecte(): string | undefined {
@@ -177,17 +190,23 @@ export class FpVote extends FpBlock {
     return dominante?.misconception ?? null;
   }
 
-  private histogramme(): string {
+  private idsOptionsConnues(): ReadonlySet<string> {
+    const ids = this.question?.options.map((option) => option.id) ?? [];
+    return new Set([...ids, ID_JE_NE_SAIS_PAS]);
+  }
+
+  private histogramme(): EscapedHtml {
     const resultats = this.resultats;
     if (!resultats || resultats.total === 0) {
-      return `<p data-testid="histogramme"></p>`;
+      return safeHtml`<p data-testid="histogramme"></p>`;
     }
+    const idsConnus = this.idsOptionsConnues();
     const barres = Object.entries(resultats.parOption)
+      .filter(([id]) => idsConnus.has(id))
       .map(([id, total]) => {
         const pourcentage = Math.round((total / resultats.total) * 100);
-        return `<div class="fp-barre" data-testid="barre" data-option="${id}"><span class="fp-barre__valeur" style="width:${pourcentage}%"></span><span class="fp-barre__pourcentage">${pourcentage}%</span></div>`;
-      })
-      .join('');
-    return `<div class="fp-histogramme" data-testid="histogramme">${barres}</div>`;
+        return safeHtml`<div class="fp-barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-barre__valeur" style="width:${pourcentage}%"></span><span class="fp-barre__pourcentage">${pourcentage}%</span></div>`;
+      });
+    return safeHtml`<div class="fp-histogramme" data-testid="histogramme">${barres}</div>`;
   }
 }
