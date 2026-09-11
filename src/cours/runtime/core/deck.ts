@@ -36,10 +36,12 @@ export function createDeck(cours: CoursContent, options: DeckOptions = {}): Deck
     majLe: new Date().toISOString(),
   };
 
+  const copier = (): DeckState => ({ ...etat, reponses: { ...etat.reponses } });
+
   const notifier = (): void => {
     saveDeckState(etat);
     for (const ecoute of ecoutes) {
-      ecoute(etat);
+      ecoute(copier());
     }
   };
 
@@ -95,7 +97,7 @@ export function createDeck(cours: CoursContent, options: DeckOptions = {}): Deck
       etat = { ...etat, reponses: { ...etat.reponses, [questionId]: valeur } };
       notifier();
     },
-    snapshot: () => etat,
+    snapshot: copier,
     subscribe(listener) {
       ecoutes.add(listener);
       return () => {

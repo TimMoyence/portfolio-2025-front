@@ -4,6 +4,7 @@ import { clearDeckState, loadDeckState, saveDeckState } from './state';
 describe('state', () => {
   beforeEach(() => {
     clearDeckState('b1-09-interets-composes');
+    clearDeckState('b1-10-fonctions');
   });
 
   it('retourne null pour un cours jamais ouvert', () => {

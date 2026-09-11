@@ -1,7 +1,12 @@
-import { buildCoursContent } from '../../../testing/factories/cours.factory';
+import { buildCoursContent, buildDeckState } from '../../../testing/factories/cours.factory';
 import { createDeck } from './deck';
+import { clearDeckState, saveDeckState, type DeckState } from './state';
 
 describe('createDeck', () => {
+  beforeEach(() => {
+    clearDeckState('b1-09-interets-composes');
+  });
+
   it('demarre au premier ecran', () => {
     const deck = createDeck(buildCoursContent());
     expect(deck.current()).toBe(0);
@@ -72,5 +77,39 @@ describe('createDeck', () => {
     deck.setPacing('pilote', null);
     deck.applyRemote(2);
     expect(deck.current()).toBe(2);
+  });
+
+  it('snapshot ne permet pas de corrompre l etat interne du deck', () => {
+    const deck = createDeck(buildCoursContent());
+    deck.recordAnswer('Q-CAP-03', 1338.23);
+    const instantane = deck.snapshot();
+    instantane.ecranCourant = 99;
+    instantane.reponses['triche'] = true;
+    expect(deck.current()).toBe(0);
+    expect(deck.snapshot().reponses).toEqual({ 'Q-CAP-03': 1338.23 });
+  });
+
+  it('les abonnes recoivent une copie qui ne peut pas corrompre l etat interne', () => {
+    const deck = createDeck(buildCoursContent());
+    const recus: DeckState[] = [];
+    deck.subscribe((etat) => recus.push(etat));
+    deck.next();
+    const [recu] = recus;
+    recu.ecranCourant = 99;
+    recu.reponses['triche'] = true;
+    expect(deck.current()).toBe(1);
+    expect(deck.snapshot().reponses).toEqual({});
+  });
+
+  it('reprend la progression sauvegardee quand la reprise est demandee', () => {
+    saveDeckState(buildDeckState({ ecranCourant: 2 }));
+    const deck = createDeck(buildCoursContent(), { reprise: true });
+    expect(deck.current()).toBe(2);
+  });
+
+  it('demarre au premier ecran sans reprise meme si un etat existe', () => {
+    saveDeckState(buildDeckState({ ecranCourant: 2 }));
+    const deck = createDeck(buildCoursContent());
+    expect(deck.current()).toBe(0);
   });
 });
