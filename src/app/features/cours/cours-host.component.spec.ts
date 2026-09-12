@@ -7,26 +7,28 @@ import { CoursHostComponent } from './cours-host.component';
 
 const IDENTITE_THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
 
-const DELAI_ATTENTE_MS = 50;
-const ESSAIS_MAX = 20;
-
 async function attendreQue(
   fixture: ComponentFixture<CoursHostComponent>,
   condition: () => boolean,
+  attendu: string,
 ): Promise<void> {
-  for (let essai = 0; essai < ESSAIS_MAX; essai += 1) {
-    if (condition()) {
-      return;
-    }
-    await new Promise((resolve) => setTimeout(resolve, DELAI_ATTENTE_MS));
-    fixture.detectChanges();
+  await fixture.componentInstance.quandStabilise();
+  fixture.detectChanges();
+  if (!condition()) {
+    throw new Error(
+      `Etat stabilise sans que la condition « ${attendu} » soit remplie : etat=${fixture.componentInstance.etat()}`,
+    );
   }
 }
 
 async function attendreFinDuChargement(
   fixture: ComponentFixture<CoursHostComponent>,
 ): Promise<void> {
-  await attendreQue(fixture, () => fixture.componentInstance.etat() !== 'chargement');
+  await attendreQue(
+    fixture,
+    () => fixture.componentInstance.etat() !== 'chargement',
+    'le chargement est termine',
+  );
 }
 
 function soumettreIdentite(
@@ -114,7 +116,11 @@ describe('CoursHostComponent', () => {
       await attendreFinDuChargement(fixture);
       expect(fixture.componentInstance.etat()).toBe('identite');
       soumettreIdentite(fixture, IDENTITE_THEO);
-      await attendreQue(fixture, () => fixture.componentInstance.etat() === 'pret');
+      await attendreQue(
+        fixture,
+        () => fixture.componentInstance.etat() === 'pret',
+        'le poste est pret',
+      );
       expect(fixture.componentInstance.etat()).toBe('pret');
       expect(
         fixture.nativeElement.querySelector("[data-testid='cours-sans-memoire']"),
@@ -130,7 +136,11 @@ describe('CoursHostComponent', () => {
     await attendreFinDuChargement(fixture);
     expect(fixture.componentInstance.etat()).toBe('identite');
     soumettreIdentite(fixture, { ...IDENTITE_THEO, email: 'pas-une-adresse' });
-    await attendreQue(fixture, () => fixture.componentInstance.identiteRefusee());
+    await attendreQue(
+      fixture,
+      () => fixture.componentInstance.identiteRefusee(),
+      'l identite est refusee',
+    );
     fixture.detectChanges();
     expect(fixture.componentInstance.etat()).toBe('identite');
     expect(

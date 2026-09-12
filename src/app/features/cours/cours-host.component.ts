@@ -83,16 +83,25 @@ export class CoursHostComponent {
   readonly identiteRefusee = signal(false);
   readonly questionDemo: VoteQuestionPublique = QUESTION_DEMO;
 
+  private acheve: () => void = () => undefined;
+  private chantier = new Promise<void>((resoudre) => {
+    this.acheve = resoudre;
+  });
+
   constructor() {
     afterNextRender(() => {
-      void this.demarrer();
+      void this.demarrer().then(this.acheve);
     });
   }
 
   protected enregistrer(evenement: Event): void {
     evenement.preventDefault();
     const formulaire = evenement.currentTarget as HTMLFormElement;
-    void this.enregistrerIdentite(new FormData(formulaire));
+    this.chantier = this.enregistrerIdentite(new FormData(formulaire));
+  }
+
+  quandStabilise(): Promise<void> {
+    return this.chantier;
   }
 
   private async demarrer(): Promise<void> {
