@@ -155,6 +155,21 @@ void test('AD-4 : la forme publique {id, libelle} de la question de demo passe',
   assert.equal(resultat.code, 0);
 });
 
+void test('AD-4 : un champ de type nomme comme un terme interdit passe sans litteral', () => {
+  const resultat = garder({
+    'src/cours/content/types.ts':
+      'export interface Metadonnees {\n  readonly misconceptionsCiblees: readonly string[];\n}\n',
+  });
+  assert.equal(resultat.code, 0);
+});
+
+void test('AD-4 : un type litteral qui reprend un terme interdit sort en code 1', () => {
+  const resultat = garder({
+    'src/cours/content/types.ts': "export type Bareme = 'suffisant' | 'insuffisant';\n",
+  });
+  assert.equal(resultat.code, 1);
+});
+
 void test('AD-4 : un fichier de test garde le droit de porter le corrige', () => {
   const resultat = garder({
     'src/app/features/cours/cours-host.component.spec.ts': "const q = { misconception: null };\n",

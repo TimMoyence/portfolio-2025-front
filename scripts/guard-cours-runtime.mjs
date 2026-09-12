@@ -14,6 +14,7 @@ const PREFIXE_TESTS = 'src/testing/';
 const EXTENSIONS = ['.ts', '.html'];
 
 const FRAMEWORKS_INTERDITS = ['@angular', 'rxjs', 'zone.js'];
+const MOTIF_LITTERAL = /['"`]/;
 const TERMES_CORRIGE = [
   'misconception',
   'correcte',
@@ -159,6 +160,9 @@ export function analyserCorrige({ fichier, contenu }) {
     return [];
   }
   return contenu.split('\n').flatMap((texte, index) => {
+    if (!MOTIF_LITTERAL.test(texte)) {
+      return [];
+    }
     const minuscule = texte.toLowerCase();
     return TERMES_CORRIGE.filter((terme) => minuscule.includes(terme)).map((terme) => ({
       fichier,

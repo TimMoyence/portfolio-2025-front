@@ -1,5 +1,6 @@
 import { buildVoteQuestion } from '../../../testing/factories/cours.factory';
-import { base, components, stage, tokens } from '../design/styles';
+import { feuilleDe } from '../design/blocks';
+import { base, stage, tokens } from '../design/styles';
 import { shuffleWithSeed } from '../core/seed';
 import { FpVote } from './FpVote';
 
@@ -265,7 +266,7 @@ describe('FpVote', () => {
   });
 
   it('toute classe fp emise par la brique porte une regle dans la feuille', () => {
-    const feuille = [tokens, base, components, stage].join('\n');
+    const feuille = [tokens, base, feuilleDe('vote'), stage].join('\n');
     const emises = new Set<string>();
     for (const rendu of ['hand', 'stage', 'board']) {
       hote.setAttribute('role', 'presentateur');
