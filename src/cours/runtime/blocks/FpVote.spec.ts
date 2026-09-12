@@ -247,7 +247,9 @@ describe('FpVote', () => {
       ],
     });
     hote.resultats = { total: 100, parOption: { a: 95, b: 5 } };
-    const pistes = [...(hote.shadowRoot?.querySelectorAll<HTMLElement>('.fp-barre__piste') ?? [])];
+    const pistes = [
+      ...(hote.shadowRoot?.querySelectorAll<HTMLElement>('.fp-vote__barre__piste') ?? []),
+    ];
     const largeurs = pistes.map((piste) => piste.getBoundingClientRect().width);
     expect(largeurs.length).toBe(2);
     expect(largeurs[0]).toBeGreaterThan(0);

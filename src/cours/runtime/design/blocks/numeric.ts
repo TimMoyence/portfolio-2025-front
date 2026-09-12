@@ -1,25 +1,25 @@
 export const numeric = `
-:where(.fp-root) .fp-numerique {
+:where(.fp-root) .fp-numeric__numerique {
   display: grid;
   justify-items: start;
   gap: var(--fp-s-3);
 }
 
-:where(.fp-root) .fp-numerique > legend {
+:where(.fp-root) .fp-numeric__numerique > legend {
   padding-bottom: var(--fp-s-2);
   color: var(--fp-texte-fort);
   font-size: calc(1.25rem * var(--fp-echelle));
   line-height: 1.3;
 }
 
-:where(.fp-root) .fp-saisie {
+:where(.fp-root) .fp-numeric__saisie {
   display: flex;
   align-items: baseline;
   gap: var(--fp-s-2);
   width: 100%;
 }
 
-:where(.fp-root) .fp-champ {
+:where(.fp-root) .fp-numeric__champ {
   flex: 1 1 auto;
   min-width: 0;
   padding: var(--fp-s-3) var(--fp-s-4);
@@ -33,17 +33,17 @@ export const numeric = `
   text-align: right;
 }
 
-:where(.fp-root) .fp-champ:focus-visible {
+:where(.fp-root) .fp-numeric__champ:focus-visible {
   outline: 2px solid var(--fp-teal);
   outline-offset: 2px;
 }
 
-:where(.fp-root) .fp-champ:disabled {
+:where(.fp-root) .fp-numeric__champ:disabled {
   background: var(--fp-sand);
   color: var(--fp-ink-mute);
 }
 
-:where(.fp-root) .fp-unite {
+:where(.fp-root) .fp-numeric__unite {
   flex: 0 0 auto;
   color: var(--fp-texte-fort);
   font-size: var(--fp-corps);
@@ -51,7 +51,7 @@ export const numeric = `
   white-space: nowrap;
 }
 
-:where(.fp-root) .fp-valider {
+:where(.fp-root) .fp-numeric__valider {
   justify-self: start;
   padding: var(--fp-s-2) var(--fp-s-4);
   border: 1px solid var(--fp-teal-deep);
@@ -64,27 +64,27 @@ export const numeric = `
   transition: background-color 0.2s var(--fp-ease);
 }
 
-:where(.fp-root) .fp-valider:hover {
+:where(.fp-root) .fp-numeric__valider:hover {
   background: var(--fp-teal-ink);
 }
 
-:where(.fp-root) .fp-valider:focus-visible {
+:where(.fp-root) .fp-numeric__valider:focus-visible {
   outline: 2px solid var(--fp-teal);
   outline-offset: 2px;
 }
 
-:where(.fp-root) .fp-valider:disabled {
+:where(.fp-root) .fp-numeric__valider:disabled {
   border-color: var(--fp-en-attente);
   background: var(--fp-en-attente);
   cursor: default;
 }
 
 @media (max-width: 520px) {
-  :where(.fp-root) .fp-saisie {
+  :where(.fp-root) .fp-numeric__saisie {
     flex-wrap: wrap;
   }
 
-  :where(.fp-root) .fp-valider {
+  :where(.fp-root) .fp-numeric__valider {
     justify-self: stretch;
     text-align: center;
   }

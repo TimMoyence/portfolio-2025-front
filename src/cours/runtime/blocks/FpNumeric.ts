@@ -79,17 +79,17 @@ export class FpNumeric extends FpBlock {
     const etiquette =
       unite === null
         ? escapeHtml('')
-        : safeHtml`<span class="fp-unite" id="${escapeHtml(ID_UNITE)}" data-testid="unite">${escapeHtml(unite)}</span>`;
+        : safeHtml`<span class="fp-numeric__unite" id="${escapeHtml(ID_UNITE)}" data-testid="unite">${escapeHtml(unite)}</span>`;
     const decrit =
       unite === null ? escapeHtml('') : safeHtml`aria-describedby="${escapeHtml(ID_UNITE)}"`;
     return safeHtml`
-      <fieldset class="fp-carte fp-numerique">
+      <fieldset class="fp-carte fp-numeric__numerique">
         <legend>${escapeHtml(question.enonce)}</legend>
-        <div class="fp-saisie">
-          <input class="fp-champ" data-testid="champ" type="text" inputmode="decimal" autocomplete="off" value="${escapeHtml(this.saisie)}" ${decrit}>
+        <div class="fp-numeric__saisie">
+          <input class="fp-numeric__champ" data-testid="champ" type="text" inputmode="decimal" autocomplete="off" value="${escapeHtml(this.saisie)}" ${decrit}>
           ${etiquette}
         </div>
-        <button type="button" class="fp-valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
+        <button type="button" class="fp-numeric__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
       </fieldset>
     `;
@@ -104,7 +104,7 @@ export class FpNumeric extends FpBlock {
     const rappel =
       unite === null
         ? escapeHtml('')
-        : safeHtml`<p class="fp-unite" data-testid="unite">${escapeHtml(unite)}</p>`;
+        : safeHtml`<p class="fp-numeric__unite" data-testid="unite">${escapeHtml(unite)}</p>`;
     return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p>${rappel}</div>`;
   }
 
@@ -115,7 +115,7 @@ export class FpNumeric extends FpBlock {
     }
     const metadonnees = question.metadonnees;
     return safeHtml`
-      <div class="fp-carte fp-numerique">
+      <div class="fp-carte fp-numeric__numerique">
         <p class="fp-enonce">${escapeHtml(question.enonce)}</p>
         <p class="fp-badge" data-testid="modalite">${escapeHtml(metadonnees.modalite)}</p>
         <p class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</p>

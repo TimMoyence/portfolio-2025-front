@@ -13,3 +13,7 @@ export function feuilleDe(nom: string): string {
 export function toutesLesFeuilles(): readonly string[] {
   return Object.values(FEUILLES);
 }
+
+export function nomsDesBriques(): readonly string[] {
+  return Object.keys(FEUILLES);
+}
