@@ -163,11 +163,34 @@ void test('AD-4 : un champ de type nomme comme un terme interdit passe sans litt
   assert.equal(resultat.code, 0);
 });
 
-void test('AD-4 : un type litteral qui reprend un terme interdit sort en code 1', () => {
+void test('AD-4 : un alias de type efface a la compilation passe', () => {
   const resultat = garder({
     'src/cours/content/types.ts': "export type Bareme = 'suffisant' | 'insuffisant';\n",
   });
+  assert.equal(resultat.code, 0);
+});
+
+void test('AD-4 : une affectation sans litteral sort en code 1', () => {
+  const resultat = garder({
+    'src/cours/content/b1-09.ts': 'const q = { misconception: donnees.piege };\n',
+  });
   assert.equal(resultat.code, 1);
+});
+
+void test('AD-4 : une comparaison qui designe la bonne reponse sort en code 1', () => {
+  const resultat = garder({
+    'src/app/features/cours/cours-host.component.ts': 'const etat = { correcte: index === 2 };\n',
+  });
+  assert.equal(resultat.code, 1);
+});
+
+void test('AD-4 : la ligne qui suit la fermeture de l interface reste inspectee', () => {
+  const resultat = garder({
+    'src/cours/content/types.ts':
+      'export interface Metadonnees {\n  readonly misconceptionsCiblees: readonly string[];\n}\n\nconst fuite = { misconception: piege };\n',
+  });
+  assert.equal(resultat.code, 1);
+  assert.equal(resultat.violations[0].ligne, 5);
 });
 
 void test('AD-4 : un fichier de test garde le droit de porter le corrige', () => {
