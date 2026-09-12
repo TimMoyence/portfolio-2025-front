@@ -1,5 +1,5 @@
 import { feuilleDe, nomsDesBriques } from './index';
-import { base } from '../styles';
+import { base, stage } from '../styles';
 
 const MOTIF_CLASSE = /\.fp-[\w-]+/g;
 
@@ -11,6 +11,22 @@ function classesDeclarees(feuille: string): string[] {
 
 describe('nommage css des briques', () => {
   const classesDeLaBase = new Set(classesDeclarees(base));
+
+  for (const [nom, couche] of [
+    ['base', base],
+    ['stage', stage],
+  ] as const) {
+    for (const classe of classesDeclarees(couche)) {
+      it(`styles.ts (${nom}) ne nomme aucune classe de brique : ${classe}`, () => {
+        const brique = nomsDesBriques().find((candidat) => classe.startsWith(`.fp-${candidat}__`));
+        expect(brique)
+          .withContext(
+            `styles.ts (${nom}) : \`${classe}\` appartient a la brique « ${brique} » et doit vivre dans sa feuille, sinon styles.ts redevient le point de contention que seize briques se disputeront`,
+          )
+          .toBeUndefined();
+      });
+    }
+  }
 
   for (const brique of nomsDesBriques()) {
     const feuille = feuilleDe(brique);

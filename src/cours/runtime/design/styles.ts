@@ -221,9 +221,4 @@ export const stage = `
 :where(.fp-root[data-render='stage']) .fp-carte {
   border-width: 3px;
 }
-
-:where(.fp-root[data-render='stage']) .fp-vote__barre__piste {
-  height: var(--fp-s-4);
-  border: 2px solid var(--fp-bordure);
-}
 `;
