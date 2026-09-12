@@ -1,6 +1,8 @@
+import { numeric } from './numeric';
 import { vote } from './vote';
 
 const FEUILLES: Readonly<Record<string, string>> = {
+  numeric,
   vote,
 };
 

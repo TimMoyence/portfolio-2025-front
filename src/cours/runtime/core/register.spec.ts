@@ -51,9 +51,12 @@ describe('registerCoursBlocks', () => {
 
   it('definit tous les noms de la table', async () => {
     await registerCoursBlocks();
-    expect(registre.definitions.has(NOM_BRIQUE_SOCLE))
-      .withContext(`element manquant: ${NOM_BRIQUE_SOCLE}`)
-      .toBe(true);
+    expect(BLOCS.map((bloc) => bloc.nom)).toContain(NOM_BRIQUE_SOCLE);
+    for (const bloc of BLOCS) {
+      expect(registre.definitions.has(bloc.nom))
+        .withContext(`element manquant: ${bloc.nom}`)
+        .toBe(true);
+    }
   });
 
   it('un second appel ne redefinit rien', async () => {

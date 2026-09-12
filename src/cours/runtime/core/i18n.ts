@@ -5,6 +5,7 @@ const FR: Readonly<Record<string, string>> = {
   'je-ne-sais-pas': 'Je ne sais pas',
   'en-attente': 'En attente de votre réponse',
   'reponse-enregistree': 'Réponse enregistrée',
+  'saisie-non-numerique': 'Saisissez un nombre — la virgule décimale est acceptée',
   'a-revoir': 'Pas encore — regardons pourquoi',
   confirme: 'C’est juste',
   'discussion-en-cours': 'Discutez avec votre voisin',

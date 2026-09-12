@@ -1,4 +1,9 @@
-import type { CoursContent, EcranContent } from '../../cours/content/types';
+import {
+  type CoursContent,
+  type EcranContent,
+  creerMetadonneesBrique,
+} from '../../cours/content/types';
+import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { DeckState } from '../../cours/runtime/core/state';
 
@@ -38,6 +43,24 @@ export function buildVoteQuestion(overrides: Partial<VoteQuestion> = {}): VoteQu
       { id: 'b', libelle: '1 480,24 €', misconception: null },
       { id: 'c', libelle: '1 040 €', misconception: 'oubli-de-la-duree' },
     ],
+    ...overrides,
+  };
+}
+
+export function buildNumericQuestion(overrides: Partial<NumericQuestion> = {}): NumericQuestion {
+  return {
+    id: 'Q-VA-07',
+    enonce: 'Quelle est la valeur acquise, au centime pres ?',
+    unite: '€',
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation', 'valeur-acquise'],
+      misconceptionsCiblees: ['interet-simple'],
+      dureeMinutes: 3,
+      modalite: 'solo',
+      regime: 'focus',
+    }),
+    tolerance: { type: 'absolue', valeur: 0.01 },
+    valeurAttendue: 1480.24,
     ...overrides,
   };
 }
