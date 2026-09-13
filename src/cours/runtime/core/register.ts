@@ -18,6 +18,8 @@ export const BLOCS: ReadonlyArray<{
     nom: 'fp-table-build',
     charge: async () => (await import('../blocks/FpTableBuild')).FpTableBuild,
   },
+  { nom: 'fp-sheet', charge: async () => (await import('../blocks/FpSheet')).FpSheet },
+  { nom: 'fp-cardsort', charge: async () => (await import('../blocks/FpCardsort')).FpCardsort },
 ];
 
 let enregistre = false;
