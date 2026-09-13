@@ -78,6 +78,19 @@ const FR: Readonly<Record<string, string>> = {
   'sheet-aucune-formule': 'Écrivez au moins une formule avant de valider',
   'sheet-progression': 'Formules écrites :',
   'sheet-vide': 'Aucune cellule à remplir : le plan ne porte aucune ligne',
+  'cardsort-consigne':
+    'Choisissez une carte, désignez sa catégorie, puis déplacez-la — à la souris comme au clavier',
+  'cardsort-pioche': 'Cartes à trier',
+  'cardsort-destination': 'Catégorie de destination',
+  'cardsort-deplacer': 'Déplacer la carte',
+  'cardsort-selection': 'Carte choisie :',
+  'cardsort-relachee': 'Carte relâchée : aucune carte n’est choisie',
+  'cardsort-deplacee': 'déplacée vers',
+  'cardsort-aucune-carte': 'Choisissez d’abord une carte à déplacer',
+  'cardsort-hors-cible': 'Dépôt hors d’une catégorie : la carte est revenue à sa place',
+  'cardsort-incomplet': 'Placez chaque carte dans une catégorie avant de valider',
+  'cardsort-progression': 'Cartes placées :',
+  'cardsort-vide': 'Aucune carte à trier : le plan ne porte aucune carte',
 };
 
 export function texte(cle: string): string {

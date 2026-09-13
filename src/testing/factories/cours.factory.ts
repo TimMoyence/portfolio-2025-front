@@ -3,6 +3,7 @@ import {
   type EcranContent,
   creerMetadonneesBrique,
 } from '../../cours/content/types';
+import type { CardsortPlan } from '../../cours/runtime/blocks/FpCardsort';
 import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
 import type { Concept4Definition } from '../../cours/runtime/blocks/FpConcept4';
 import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
@@ -391,6 +392,41 @@ export function buildTableBuildPlan(overrides: Partial<TableBuildPlan> = {}): Ta
       { rang: 4, cle: 'interets', valeur: 63.6 },
     ],
     tolerance: { type: 'absolue', valeur: 0.01 },
+    ...overrides,
+  };
+}
+
+export function buildCardsortPlan(overrides: Partial<CardsortPlan> = {}): CardsortPlan {
+  return {
+    id: 'K-CHARGES-01',
+    intitule: 'Classez chaque charge selon sa reaction au volume produit',
+    cartes: [
+      { id: 'loyer', libelle: 'Loyer de l atelier' },
+      { id: 'matieres', libelle: 'Achat de matieres premieres' },
+      { id: 'assurance', libelle: 'Prime d assurance annuelle' },
+      { id: 'commissions', libelle: 'Commissions versees sur les ventes' },
+      { id: 'gerant', libelle: 'Salaire fixe du gerant' },
+      { id: 'energie', libelle: 'Energie consommee par les machines' },
+    ],
+    categories: [
+      { id: 'fixe', libelle: 'Charges fixes' },
+      { id: 'variable', libelle: 'Charges variables' },
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['charges-fixes', 'charges-variables'],
+      misconceptionsCiblees: ['charge-fixe-par-unite'],
+      dureeMinutes: 8,
+      modalite: 'binome',
+      regime: 'ouvert',
+    }),
+    attendus: [
+      { carteId: 'loyer', categorieId: 'fixe' },
+      { carteId: 'matieres', categorieId: 'variable' },
+      { carteId: 'assurance', categorieId: 'fixe' },
+      { carteId: 'commissions', categorieId: 'variable' },
+      { carteId: 'gerant', categorieId: 'fixe' },
+      { carteId: 'energie', categorieId: 'variable' },
+    ],
     ...overrides,
   };
 }

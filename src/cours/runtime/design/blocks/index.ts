@@ -1,3 +1,4 @@
+import { cardsort } from './cardsort';
 import { challenge } from './challenge';
 import { concept4 } from './concept4';
 import { exit } from './exit';
@@ -12,6 +13,7 @@ import { vote } from './vote';
 import { worked } from './worked';
 
 const FEUILLES: Readonly<Record<string, string>> = {
+  cardsort,
   challenge,
   concept4,
   exit,
