@@ -13,6 +13,7 @@ export const BLOCS: ReadonlyArray<{
   { nom: 'fp-pro', charge: async () => (await import('../blocks/FpPro')).FpPro },
   { nom: 'fp-concept4', charge: async () => (await import('../blocks/FpConcept4')).FpConcept4 },
   { nom: 'fp-worked', charge: async () => (await import('../blocks/FpWorked')).FpWorked },
+  { nom: 'fp-plot', charge: async () => (await import('../blocks/FpPlot')).FpPlot },
 ];
 
 let enregistre = false;

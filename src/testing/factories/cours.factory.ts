@@ -7,6 +7,7 @@ import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
 import type { Concept4Definition } from '../../cours/runtime/blocks/FpConcept4';
 import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
+import type { PlotDefinition } from '../../cours/runtime/blocks/FpPlot';
 import type { ProCas } from '../../cours/runtime/blocks/FpPro';
 import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
 import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
@@ -281,6 +282,48 @@ export function buildWorkedExemple(overrides: Partial<WorkedExemple> = {}): Work
       dureeMinutes: 8,
       modalite: 'solo',
       regime: 'focus',
+    }),
+    ...overrides,
+  };
+}
+
+function capitalDe(valeurs: Readonly<Record<string, number>>): number {
+  return valeurs['C'] ?? 0;
+}
+
+function tauxDe(valeurs: Readonly<Record<string, number>>): number {
+  return (valeurs['i'] ?? 0) / 100;
+}
+
+export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): PlotDefinition {
+  return {
+    id: 'K-COURBE-01',
+    abscisse: { libelle: 'Duree en annees', min: 0, max: 20 },
+    ordonnee: 'Capital acquis en euros',
+    parametres: [
+      { cle: 'C', libelle: 'Capital place en euros', min: 100, max: 5000, pas: 100, defaut: 1000 },
+      { cle: 'i', libelle: 'Taux annuel en pourcent', min: 1, max: 10, pas: 0.5, defaut: 4 },
+    ],
+    series: [
+      {
+        id: 'compose',
+        libelle: 'Interets composes',
+        trait: 'plein',
+        calcul: (annees, valeurs) => capitalDe(valeurs) * (1 + tauxDe(valeurs)) ** annees,
+      },
+      {
+        id: 'simple',
+        libelle: 'Interets simples',
+        trait: 'tirets',
+        calcul: (annees, valeurs) => capitalDe(valeurs) * (1 + tauxDe(valeurs) * annees),
+      },
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation', 'interet-simple'],
+      misconceptionsCiblees: ['croissance-lineaire'],
+      dureeMinutes: 7,
+      modalite: 'binome',
+      regime: 'ouvert',
     }),
     ...overrides,
   };

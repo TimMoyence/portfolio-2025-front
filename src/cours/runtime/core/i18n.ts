@@ -46,6 +46,17 @@ const FR: Readonly<Record<string, string>> = {
   'worked-pourquoi': 'Pourquoi cette étape ?',
   'worked-etape-vide': 'Rédigez chaque étape laissée de côté avant de valider',
   'worked-niveau': 'Étapes montrées :',
+  'plot-reglages': 'Faites varier les paramètres et observez la forme des courbes',
+  'plot-selon': 'en fonction de',
+  'plot-legende': 'Légende des courbes',
+  'plot-trait-plein': 'trait plein',
+  'plot-trait-tirets': 'trait en pointillés',
+  'plot-tableau': 'Valeurs aux deux extrémités',
+  'plot-serie': 'Courbe',
+  'plot-ecart': 'Écart entre les deux courbes :',
+  'plot-aucune-serie': 'Aucune courbe à tracer : la définition ne porte aucune série',
+  'plot-plage': 'de',
+  'plot-plage-fin': 'à',
 };
 
 export function texte(cle: string): string {
