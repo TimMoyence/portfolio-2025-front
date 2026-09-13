@@ -41,6 +41,25 @@ module.exports = tseslint.config(
     },
   },
   {
+    files: ['src/cours/**/*.ts', 'src/app/**/cours*/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'TSAsExpression > TSTypeReference > Identifier[name="EscapedHtml"]',
+          message:
+            "Interdit : un cast vers EscapedHtml contourne le typage qui impose l'echappement. Passez par escapeHtml, safeHtml ou escapeUrl. Une XSS est deja passee par ce chemin dans FpExit.",
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/cours/runtime/core/html.ts'],
+    rules: {
+      'no-restricted-syntax': 'off',
+    },
+  },
+  {
     files: ['src/**/*.html'],
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
   },
