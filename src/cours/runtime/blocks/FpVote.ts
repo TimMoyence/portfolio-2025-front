@@ -36,8 +36,6 @@ export class FpVote extends FpBlock {
   private interneResultats: VoteResultats | null = null;
   private internePhase: VotePhase = 'vote';
   private interneSeuil = SEUIL_DEFAUT;
-  private affiche = 0;
-  private questionAffichee: string | null = null;
   private repondu = false;
 
   set question(valeur: VoteQuestionPublique | null) {
@@ -137,11 +135,7 @@ export class FpVote extends FpBlock {
   }
 
   bind(racine: ShadowRoot): void {
-    const presentee = this.question?.id ?? null;
-    if (presentee !== this.questionAffichee) {
-      this.questionAffichee = presentee;
-      this.affiche = Date.now();
-    }
+    this.suivreAffichage(this.question?.id ?? null);
     if (this.mode() !== 'hand') {
       return;
     }
@@ -160,7 +154,7 @@ export class FpVote extends FpBlock {
     this.emit('fp-vote-submit', {
       questionId: this.question?.id,
       valeur,
-      dureeMs: Date.now() - this.affiche,
+      dureeMs: this.depuisAffichage(),
     });
     this.refresh();
   }

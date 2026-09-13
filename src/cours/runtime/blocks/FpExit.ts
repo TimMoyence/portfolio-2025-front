@@ -27,8 +27,6 @@ export class FpExit extends FpBlock {
   private texteLibre = '';
   private choix: string | null = null;
   private message = '';
-  private affiche = 0;
-  private billetAffiche: string | null = null;
   private repondu = false;
 
   set billet(valeur: ExitBilletPublic | null) {
@@ -90,11 +88,7 @@ export class FpExit extends FpBlock {
   }
 
   bind(racine: ShadowRoot): void {
-    const presente = this.billet?.id ?? null;
-    if (presente !== this.billetAffiche) {
-      this.billetAffiche = presente;
-      this.affiche = Date.now();
-    }
+    this.suivreAffichage(this.billet?.id ?? null);
     if (this.mode() !== 'hand') {
       return;
     }
@@ -178,7 +172,7 @@ export class FpExit extends FpBlock {
       billetId: this.billet?.id,
       valeur: this.choix,
       texteLibre: brut,
-      dureeMs: Date.now() - this.affiche,
+      dureeMs: this.depuisAffichage(),
     });
     this.refresh();
   }

@@ -10,6 +10,9 @@ export abstract class FpBlock extends HTMLElement {
 
   protected readonly racine: ShadowRoot;
 
+  private idAffiche: string | null = null;
+  private affiche = 0;
+
   constructor() {
     super();
     this.racine = this.attachShadow({ mode: 'open' });
@@ -56,6 +59,17 @@ export abstract class FpBlock extends HTMLElement {
 
   emit(nom: string, detail: unknown): void {
     this.dispatchEvent(new CustomEvent(nom, { detail, bubbles: true, composed: true }));
+  }
+
+  suivreAffichage(id: string | null): void {
+    if (id !== this.idAffiche) {
+      this.idAffiche = id;
+      this.affiche = Date.now();
+    }
+  }
+
+  depuisAffichage(): number {
+    return Date.now() - this.affiche;
   }
 
   refresh(): void {

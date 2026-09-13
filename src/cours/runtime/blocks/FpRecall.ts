@@ -27,8 +27,6 @@ export class FpRecall extends FpBlock {
   private interneDelaiMs = DELAI_RAPPEL_MS;
   private rappel = '';
   private message = '';
-  private debut = 0;
-  private questionAffichee: string | null = null;
   private repondu = false;
   private minuteur: ReturnType<typeof setInterval> | null = null;
 
@@ -134,15 +132,11 @@ export class FpRecall extends FpBlock {
   }
 
   private ouvrirLeRappel(): void {
-    const presentee = this.question?.id ?? null;
-    if (presentee !== this.questionAffichee) {
-      this.questionAffichee = presentee;
-      this.debut = Date.now();
-    }
+    this.suivreAffichage(this.question?.id ?? null);
   }
 
   private restantMs(): number {
-    return Math.max(0, this.delaiMs - (Date.now() - this.debut));
+    return Math.max(0, this.delaiMs - this.depuisAffichage());
   }
 
   private annonce(): string {
@@ -205,7 +199,7 @@ export class FpRecall extends FpBlock {
       questionId: this.question?.id,
       valeur,
       rappel: this.rappel,
-      dureeMs: Date.now() - this.debut,
+      dureeMs: this.depuisAffichage(),
     });
     this.refresh();
   }

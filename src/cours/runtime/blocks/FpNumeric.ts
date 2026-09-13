@@ -42,8 +42,6 @@ export class FpNumeric extends FpBlock {
   private interne: NumericQuestionPublique | null = null;
   private saisie = '';
   private message = '';
-  private affiche = 0;
-  private questionAffichee: string | null = null;
   private repondu = false;
 
   set question(valeur: NumericQuestionPublique | null) {
@@ -115,11 +113,7 @@ export class FpNumeric extends FpBlock {
   }
 
   bind(racine: ShadowRoot): void {
-    const presentee = this.question?.id ?? null;
-    if (presentee !== this.questionAffichee) {
-      this.questionAffichee = presentee;
-      this.affiche = Date.now();
-    }
+    this.suivreAffichage(this.question?.id ?? null);
     if (this.mode() !== 'hand') {
       return;
     }
@@ -152,7 +146,7 @@ export class FpNumeric extends FpBlock {
     this.emit('fp-numeric-submit', {
       questionId: this.question?.id,
       valeur,
-      dureeMs: Date.now() - this.affiche,
+      dureeMs: this.depuisAffichage(),
     });
     this.refresh();
   }
