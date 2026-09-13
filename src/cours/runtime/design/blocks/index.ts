@@ -6,6 +6,7 @@ import { numeric } from './numeric';
 import { plot } from './plot';
 import { pulse } from './pulse';
 import { recall } from './recall';
+import { tableBuild } from './table-build';
 import { vote } from './vote';
 import { worked } from './worked';
 
@@ -20,6 +21,7 @@ const FEUILLES: Readonly<Record<string, string>> = {
   quote,
   recall,
   story,
+  'table-build': tableBuild,
   vote,
   worked,
 };

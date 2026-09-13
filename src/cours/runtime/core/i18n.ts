@@ -57,6 +57,16 @@ const FR: Readonly<Record<string, string>> = {
   'plot-aucune-serie': 'Aucune courbe à tracer : la définition ne porte aucune série',
   'plot-plage': 'de',
   'plot-plage-fin': 'à',
+  'table-build-consigne':
+    'Bâtissez le tableau ligne à ligne : chaque cellule déduite se recalcule dès que vous saisissez',
+  'table-build-echeance': 'Échéance',
+  'table-build-a-saisir': 'à saisir',
+  'table-build-deduite': 'déduite',
+  'table-build-totaux': 'Totaux',
+  'table-build-solde': 'Capital restant dû après la dernière échéance :',
+  'table-build-cellule-vide': 'Complétez chaque cellule à saisir avant de valider',
+  'table-build-progression': 'Cellules saisies :',
+  'table-build-vide': 'Aucune ligne à bâtir : le plan ne porte aucune échéance',
 };
 
 export function texte(cle: string): string {

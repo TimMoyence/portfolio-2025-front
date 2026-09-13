@@ -13,6 +13,7 @@ import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
 import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
 import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
 import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
+import type { TableBuildPlan, TableColonne } from '../../cours/runtime/blocks/FpTableBuild';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
 import type { DeckState } from '../../cours/runtime/core/state';
@@ -325,6 +326,70 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
       modalite: 'binome',
       regime: 'ouvert',
     }),
+    ...overrides,
+  };
+}
+
+const COLONNES_AMORTISSEMENT: readonly TableColonne[] = [
+  {
+    cle: 'crd',
+    intitule: 'Capital restant du',
+    role: 'deduite',
+    calcul: (contexte) =>
+      contexte.precedente === null
+        ? contexte.parametres['montant']
+        : contexte.precedente['crd'] - contexte.precedente['amortissement'],
+    soldeDe: null,
+    totalise: false,
+  },
+  {
+    cle: 'interets',
+    intitule: 'Interets',
+    role: 'saisie',
+    calcul: null,
+    soldeDe: null,
+    totalise: true,
+  },
+  {
+    cle: 'amortissement',
+    intitule: 'Amortissement',
+    role: 'deduite',
+    calcul: (contexte) => contexte.parametres['annuite'] - contexte.ligne['interets'],
+    soldeDe: 'crd',
+    totalise: true,
+  },
+  {
+    cle: 'annuite',
+    intitule: 'Annuite',
+    role: 'deduite',
+    calcul: (contexte) => contexte.ligne['interets'] + contexte.ligne['amortissement'],
+    soldeDe: null,
+    totalise: true,
+  },
+];
+
+export function buildTableBuildPlan(overrides: Partial<TableBuildPlan> = {}): TableBuildPlan {
+  return {
+    id: 'K-AMORTISSEMENT-01',
+    intitule: 'Emprunt de 10 000 € a 3 % sur 5 ans, annuites constantes',
+    echeances: 5,
+    parametres: { montant: 10000, taux: 0.03, annuite: 2183.55 },
+    colonnes: COLONNES_AMORTISSEMENT,
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['emprunt-indivis', 'amortissement'],
+      misconceptionsCiblees: ['amortissement-constant'],
+      dureeMinutes: 12,
+      modalite: 'solo',
+      regime: 'focus',
+    }),
+    attendus: [
+      { rang: 0, cle: 'interets', valeur: 300 },
+      { rang: 1, cle: 'interets', valeur: 243.49 },
+      { rang: 2, cle: 'interets', valeur: 185.29 },
+      { rang: 3, cle: 'interets', valeur: 125.34 },
+      { rang: 4, cle: 'interets', valeur: 63.6 },
+    ],
+    tolerance: { type: 'absolue', valeur: 0.01 },
     ...overrides,
   };
 }
