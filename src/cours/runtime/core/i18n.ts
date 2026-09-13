@@ -19,6 +19,17 @@ const FR: Readonly<Record<string, string>> = {
   'caracteres-maximum': 'caractères maximum',
   chargement: 'Chargement…',
   'hors-ligne': 'Hors ligne — vos réponses seront envoyées à la reconnexion',
+  'pulse-perdu': 'Perdu',
+  'pulse-ca-va': 'Ça va',
+  'pulse-clair': 'C’est clair',
+  'pulse-anonymat': 'Réponses anonymes : personne ne voit qui a répondu quoi',
+  'pulse-votre-etat': 'Votre état actuel :',
+  'pulse-total': 'Réponses reçues :',
+  'challenge-consigne': 'Cherchez par vous-même : aucune méthode ne vous a encore été donnée',
+  'challenge-tentative-vide': 'Écrivez votre tentative, même imparfaite : c’est elle qui compte',
+  'challenge-reveler': 'Voir les stratégies',
+  'challenge-strategies': 'Stratégies typiques',
+  'challenge-fausse': 'Piste fausse',
 };
 
 export function texte(cle: string): string {

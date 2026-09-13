@@ -6,6 +6,8 @@ export const BLOCS: ReadonlyArray<{
   { nom: 'fp-numeric', charge: async () => (await import('../blocks/FpNumeric')).FpNumeric },
   { nom: 'fp-recall', charge: async () => (await import('../blocks/FpRecall')).FpRecall },
   { nom: 'fp-exit', charge: async () => (await import('../blocks/FpExit')).FpExit },
+  { nom: 'fp-pulse', charge: async () => (await import('../blocks/FpPulse')).FpPulse },
+  { nom: 'fp-challenge', charge: async () => (await import('../blocks/FpChallenge')).FpChallenge },
 ];
 
 let enregistre = false;
@@ -17,7 +19,9 @@ export async function registerCoursBlocks(): Promise<void> {
   const aDefinir = BLOCS.filter((bloc) => !customElements.get(bloc.nom));
   const constructeurs = await Promise.all(aDefinir.map((bloc) => bloc.charge()));
   aDefinir.forEach((bloc, rang) => {
-    customElements.define(bloc.nom, constructeurs[rang]);
+    if (!customElements.get(bloc.nom)) {
+      customElements.define(bloc.nom, constructeurs[rang]);
+    }
   });
   enregistre = true;
 }

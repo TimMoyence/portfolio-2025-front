@@ -66,6 +66,14 @@ describe('registerCoursBlocks', () => {
     expect(registre.definitions.get(NOM_BRIQUE_SOCLE)).toBe(premiere);
   });
 
+  it('un nom pris pendant le chargement des briques n est pas redefini', async () => {
+    const tardive = class extends HTMLElement {};
+    const chargement = registerCoursBlocks();
+    registre.definitions.set(NOM_BRIQUE_SOCLE, tardive);
+    await chargement;
+    expect(registre.definitions.get(NOM_BRIQUE_SOCLE)).toBe(tardive);
+  });
+
   it('un nom deja pris dans customElements n est pas redefini', async () => {
     const preexistante = class extends HTMLElement {};
     registre.restaurer();

@@ -3,8 +3,10 @@ import {
   type EcranContent,
   creerMetadonneesBrique,
 } from '../../cours/content/types';
+import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
 import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
+import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
 import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { DeckState } from '../../cours/runtime/core/state';
@@ -102,6 +104,49 @@ export function buildExitBillet(overrides: Partial<ExitBillet> = {}): ExitBillet
       misconceptionsCiblees: ['proportionnalite'],
       dureeMinutes: 5,
       modalite: 'solo',
+      regime: 'ouvert',
+    }),
+    ...overrides,
+  };
+}
+
+export function buildPulseSondage(overrides: Partial<PulseSondage> = {}): PulseSondage {
+  return {
+    id: 'P-PULSE-02',
+    invite: 'Ou en etes-vous sur le passage du taux annuel au taux mensuel ?',
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['taux-equivalent'],
+      misconceptionsCiblees: ['proportionnalite'],
+      dureeMinutes: 1,
+      modalite: 'classe',
+      regime: 'ouvert',
+    }),
+    ...overrides,
+  };
+}
+
+export function buildChallengeProbleme(
+  overrides: Partial<ChallengeProbleme> = {},
+): ChallengeProbleme {
+  return {
+    id: 'D-DEFI-05',
+    enonce:
+      'Un capital double en combien d annees a 7 % par an ? Cherchez sans formule, estimez et expliquez.',
+    invite: 'Ecrivez votre tentative et la maniere dont vous avez raisonne',
+    strategies: [
+      { id: 'a', libelle: 'Diviser 100 par 7 et arrondir', fausse: true },
+      {
+        id: 'b',
+        libelle: 'Ajouter 7 % au capital annee apres annee jusqu a depasser le double',
+        fausse: false,
+      },
+      { id: 'c', libelle: 'Multiplier 7 % par 2 pour obtenir la duree', fausse: true },
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation'],
+      misconceptionsCiblees: ['interet-simple'],
+      dureeMinutes: 7,
+      modalite: 'binome',
       regime: 'ouvert',
     }),
     ...overrides,
