@@ -195,6 +195,13 @@ export const base = `
 :where(.fp-root) .fp-montant {
   font-variant-numeric: tabular-nums;
 }
+
+:where(.fp-root) .fp-prose {
+  max-width: 62ch;
+  color: var(--fp-texte);
+  font-size: var(--fp-corps);
+  line-height: 1.65;
+}
 `;
 
 export const stage = `

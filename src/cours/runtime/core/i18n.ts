@@ -30,6 +30,8 @@ const FR: Readonly<Record<string, string>> = {
   'challenge-reveler': 'Voir les stratégies',
   'challenge-strategies': 'Stratégies typiques',
   'challenge-fausse': 'Piste fausse',
+  'pro-geste': 'Le geste professionnel',
+  'pro-consequence': 'Sur le terrain :',
 };
 
 export function texte(cle: string): string {

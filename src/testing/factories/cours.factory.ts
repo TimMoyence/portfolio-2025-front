@@ -6,8 +6,11 @@ import {
 import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
 import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
+import type { ProCas } from '../../cours/runtime/blocks/FpPro';
 import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
+import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
 import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
+import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { DeckState } from '../../cours/runtime/core/state';
 
@@ -146,6 +149,64 @@ export function buildChallengeProbleme(
       concepts: ['capitalisation'],
       misconceptionsCiblees: ['interet-simple'],
       dureeMinutes: 7,
+      modalite: 'binome',
+      regime: 'ouvert',
+    }),
+    ...overrides,
+  };
+}
+
+export function buildQuoteCitation(overrides: Partial<QuoteCitation> = {}): QuoteCitation {
+  return {
+    id: 'C-CITATION-01',
+    texte: 'L interet compose est la huitieme merveille du monde : qui le comprend le percoit.',
+    auteur: 'Mayer Amschel Rothschild',
+    source: 'attribue',
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation'],
+      misconceptionsCiblees: ['interet-simple'],
+      dureeMinutes: 1,
+      modalite: 'classe',
+      regime: 'ouvert',
+    }),
+    ...overrides,
+  };
+}
+
+export function buildStoryRecit(overrides: Partial<StoryRecit> = {}): StoryRecit {
+  return {
+    id: 'R-RECIT-03',
+    titre: 'Le livret ouvert a la naissance',
+    paragraphes: [
+      'En 2008, les parents de Sofia deposent 500 € sur un livret ouvert le jour de sa naissance.',
+      'Personne n y touche pendant dix-huit ans : chaque annee, les interets rejoignent le capital.',
+      'Le jour de ses dix-huit ans, Sofia ne retrouve pas 500 € augmentes d un peu : elle retrouve un capital qui a travaille pour elle.',
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation', 'valeur-acquise'],
+      misconceptionsCiblees: ['interet-simple'],
+      dureeMinutes: 3,
+      modalite: 'classe',
+      regime: 'ouvert',
+    }),
+    ...overrides,
+  };
+}
+
+export function buildProCas(overrides: Partial<ProCas> = {}): ProCas {
+  return {
+    id: 'M-METIER-06',
+    metier: 'Gestionnaire de credit en agence',
+    situation:
+      'Un client compare deux offres de pret : 4,2 % sur douze mois et 0,35 % par mois sur la meme duree.',
+    geste:
+      'Ramener les deux taux a la meme periode avant de comparer : on eleve (1 + i) a la puissance 12, on ne multiplie pas par 12.',
+    consequence:
+      'Annoncer le mauvais taux equivalent engage l agence sur un cout que le client decouvrira a la premiere echeance.',
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['taux-equivalent'],
+      misconceptionsCiblees: ['proportionnalite'],
+      dureeMinutes: 4,
       modalite: 'binome',
       regime: 'ouvert',
     }),
