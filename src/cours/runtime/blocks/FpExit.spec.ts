@@ -1,6 +1,5 @@
+import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { buildExitBillet } from '../../../testing/factories/cours.factory';
-import { feuilleDe } from '../design/blocks';
-import { base, stage, tokens } from '../design/styles';
 import { FpExit } from './FpExit';
 
 interface DetailExit {
@@ -14,7 +13,6 @@ const BILLET = buildExitBillet();
 const LIMITE = 500;
 const TEXTE_COURT = 'Le passage du taux annuel au taux mensuel reste flou';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const RENDUS = ['hand', 'stage', 'board'];
 
 function champLibre(element: FpExit): HTMLTextAreaElement {
   const champ = element.shadowRoot?.querySelector<HTMLTextAreaElement>(
@@ -221,20 +219,10 @@ describe('FpExit', () => {
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    const feuille = [tokens, base, feuilleDe('exit'), stage].join('\n');
     choisir(hote, 'a');
     envoyer(hote);
-    const emises = new Set<string>();
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      for (const noeud of hote.shadowRoot?.querySelectorAll('[class]') ?? []) {
-        noeud.classList.forEach((classe) => emises.add(classe));
-      }
-    }
-    expect(emises.size).toBeGreaterThanOrEqual(10);
-    const orphelines = [...emises].filter(
-      (classe) => !new RegExp(`\\.${classe}(?![\\w-])`).test(feuille),
-    );
-    expect(orphelines).toEqual([]);
+
+    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(10);
+    expect(classesOrphelines(hote, 'exit')).toEqual([]);
   });
 });

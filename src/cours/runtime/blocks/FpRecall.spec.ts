@@ -1,6 +1,5 @@
+import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { buildRecallQuestion } from '../../../testing/factories/cours.factory';
-import { feuilleDe } from '../design/blocks';
-import { base, stage, tokens } from '../design/styles';
 import { shuffleWithSeed } from '../core/seed';
 import { FpRecall } from './FpRecall';
 
@@ -251,19 +250,9 @@ describe('FpRecall', () => {
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    const feuille = [tokens, base, feuilleDe('recall'), stage].join('\n');
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    const emises = new Set<string>();
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      for (const noeud of hote.shadowRoot?.querySelectorAll('[class]') ?? []) {
-        noeud.classList.forEach((classe) => emises.add(classe));
-      }
-    }
-    expect(emises.size).toBeGreaterThanOrEqual(10);
-    const orphelines = [...emises].filter(
-      (classe) => !new RegExp(`\\.${classe}(?![\\w-])`).test(feuille),
-    );
-    expect(orphelines).toEqual([]);
+
+    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(10);
+    expect(classesOrphelines(hote, 'recall')).toEqual([]);
   });
 });
