@@ -3,7 +3,9 @@ import {
   type EcranContent,
   creerMetadonneesBrique,
 } from '../../cours/content/types';
+import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
+import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { DeckState } from '../../cours/runtime/core/state';
 
@@ -61,6 +63,47 @@ export function buildNumericQuestion(overrides: Partial<NumericQuestion> = {}): 
     }),
     tolerance: { type: 'absolue', valeur: 0.01 },
     valeurAttendue: 1480.24,
+    ...overrides,
+  };
+}
+
+export function buildRecallQuestion(overrides: Partial<RecallQuestion> = {}): RecallQuestion {
+  return {
+    id: 'Q-RAPPEL-04',
+    enonce: 'Sans vos notes : comment passe-t-on d une valeur actuelle a une valeur acquise ?',
+    options: [
+      { id: 'a', libelle: 'On multiplie par (1 + i) puissance n', misconception: null },
+      { id: 'b', libelle: 'On multiplie par 1 + i fois n', misconception: 'interet-simple' },
+      { id: 'c', libelle: 'On divise par (1 + i) puissance n', misconception: 'sens-inverse' },
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation'],
+      misconceptionsCiblees: ['interet-simple', 'sens-inverse'],
+      dureeMinutes: 4,
+      modalite: 'solo',
+      regime: 'examen',
+    }),
+    ...overrides,
+  };
+}
+
+export function buildExitBillet(overrides: Partial<ExitBillet> = {}): ExitBillet {
+  return {
+    id: 'B-SORTIE-09',
+    question: 'Le taux equivalent mensuel d un taux annuel de 12 % vaut :',
+    invite: 'Qu est-ce qui reste flou ?',
+    options: [
+      { id: 'a', libelle: 'Un peu moins de 1 %', misconception: null },
+      { id: 'b', libelle: 'Exactement 1 %', misconception: 'proportionnalite' },
+      { id: 'c', libelle: 'Un peu plus de 1 %', misconception: 'sens-inverse' },
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['taux-equivalent'],
+      misconceptionsCiblees: ['proportionnalite'],
+      dureeMinutes: 5,
+      modalite: 'solo',
+      regime: 'ouvert',
+    }),
     ...overrides,
   };
 }

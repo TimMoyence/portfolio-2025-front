@@ -1,6 +1,7 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
+import { projeterMetadonnees } from './projection';
 
 export type Tolerance =
   | { readonly type: 'absolue'; readonly valeur: number }
@@ -26,16 +27,6 @@ const DECIMAL = /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/;
 function normaliserSaisie(brut: string): number | null {
   const compacte = brut.replace(ESPACES, '').replaceAll(',', '.');
   return DECIMAL.test(compacte) ? Number(compacte) : null;
-}
-
-function projeterMetadonnees(source: MetadonneesBrique): MetadonneesBrique {
-  return {
-    concepts: [...source.concepts],
-    misconceptionsCiblees: [...source.misconceptionsCiblees],
-    dureeMinutes: source.dureeMinutes,
-    modalite: source.modalite,
-    regime: source.regime,
-  };
 }
 
 function projeterQuestion(source: NumericQuestionPublique): NumericQuestionPublique {

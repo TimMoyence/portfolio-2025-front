@@ -10,6 +10,13 @@ const FR: Readonly<Record<string, string>> = {
   confirme: 'C’est juste',
   'discussion-en-cours': 'Discutez avec votre voisin',
   revoter: 'Voter à nouveau',
+  envoyer: 'Envoyer',
+  'rappel-consigne': 'Écrivez tout ce dont vous vous souvenez, sans regarder vos notes',
+  'rappel-restant': 'Options disponibles dans',
+  'rappel-termine': 'Options disponibles',
+  'choix-obligatoire': 'Choisissez une réponse avant d’envoyer',
+  'texte-libre-trop-long': 'Réduisez votre réponse à',
+  'caracteres-maximum': 'caractères maximum',
   chargement: 'Chargement…',
   'hors-ligne': 'Hors ligne — vos réponses seront envoyées à la reconnexion',
 };

@@ -1,8 +1,12 @@
+import { exit } from './exit';
 import { numeric } from './numeric';
+import { recall } from './recall';
 import { vote } from './vote';
 
 const FEUILLES: Readonly<Record<string, string>> = {
+  exit,
   numeric,
+  recall,
   vote,
 };
 

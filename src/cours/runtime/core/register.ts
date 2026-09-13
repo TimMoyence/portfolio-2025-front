@@ -4,6 +4,8 @@ export const BLOCS: ReadonlyArray<{
 }> = [
   { nom: 'fp-vote', charge: async () => (await import('../blocks/FpVote')).FpVote },
   { nom: 'fp-numeric', charge: async () => (await import('../blocks/FpNumeric')).FpNumeric },
+  { nom: 'fp-recall', charge: async () => (await import('../blocks/FpRecall')).FpRecall },
+  { nom: 'fp-exit', charge: async () => (await import('../blocks/FpExit')).FpExit },
 ];
 
 let enregistre = false;
