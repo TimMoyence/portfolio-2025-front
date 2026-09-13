@@ -41,6 +41,11 @@ const FR: Readonly<Record<string, string>> = {
   'concept4-resultat': 'Résultat',
   'concept4-plage': 'de',
   'concept4-plage-fin': 'à',
+  'worked-consigne': 'Suivez le raisonnement, puis reprenez les étapes laissées de côté',
+  'worked-a-vous': 'À vous de rédiger cette étape',
+  'worked-pourquoi': 'Pourquoi cette étape ?',
+  'worked-etape-vide': 'Rédigez chaque étape laissée de côté avant de valider',
+  'worked-niveau': 'Étapes montrées :',
 };
 
 export function texte(cle: string): string {

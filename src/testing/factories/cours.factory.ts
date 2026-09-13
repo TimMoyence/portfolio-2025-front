@@ -13,6 +13,7 @@ import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
 import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
 import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
+import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
 import type { DeckState } from '../../cours/runtime/core/state';
 
 function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
@@ -239,6 +240,47 @@ export function buildConcept4Definition(
       dureeMinutes: 6,
       modalite: 'binome',
       regime: 'ouvert',
+    }),
+    ...overrides,
+  };
+}
+
+export function buildWorkedExemple(overrides: Partial<WorkedExemple> = {}): WorkedExemple {
+  return {
+    id: 'K-RESOLU-01',
+    enonce: 'Un capital de 1 000 € est place a 4 % pendant 3 ans : calculez la valeur acquise.',
+    etapes: [
+      {
+        id: 'e1',
+        intitule: 'Relever les donnees',
+        raisonnement: 'C = 1 000 €, i = 4 % soit 0,04, n = 3 ans.',
+        invite: 'Pourquoi ecrire le taux en decimal avant de calculer ?',
+      },
+      {
+        id: 'e2',
+        intitule: 'Choisir la formule',
+        raisonnement: 'La valeur acquise vaut C × (1 + i)^n car les interets se capitalisent.',
+        invite: 'Pourquoi une puissance plutot qu une multiplication par 3 ?',
+      },
+      {
+        id: 'e3',
+        intitule: 'Remplacer les valeurs',
+        raisonnement: '1 000 × (1 + 0,04)^3 = 1 000 × 1,124864.',
+        invite: 'Pourquoi eleve-t-on 1,04 et non 0,04 a la puissance 3 ?',
+      },
+      {
+        id: 'e4',
+        intitule: 'Conclure',
+        raisonnement: 'La valeur acquise est de 1 124,86 € au bout de trois ans.',
+        invite: 'Pourquoi arrondir seulement a la fin du calcul ?',
+      },
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation', 'valeur-acquise'],
+      misconceptionsCiblees: ['interet-simple'],
+      dureeMinutes: 8,
+      modalite: 'solo',
+      regime: 'focus',
     }),
     ...overrides,
   };

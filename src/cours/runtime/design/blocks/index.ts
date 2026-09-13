@@ -6,6 +6,7 @@ import { numeric } from './numeric';
 import { pulse } from './pulse';
 import { recall } from './recall';
 import { vote } from './vote';
+import { worked } from './worked';
 
 const FEUILLES: Readonly<Record<string, string>> = {
   challenge,
@@ -18,6 +19,7 @@ const FEUILLES: Readonly<Record<string, string>> = {
   recall,
   story,
   vote,
+  worked,
 };
 
 export function feuilleDe(nom: string): string {
