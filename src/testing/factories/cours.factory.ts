@@ -4,6 +4,7 @@ import {
   creerMetadonneesBrique,
 } from '../../cours/content/types';
 import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
+import type { Concept4Definition } from '../../cours/runtime/blocks/FpConcept4';
 import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
 import type { ProCas } from '../../cours/runtime/blocks/FpPro';
@@ -207,6 +208,35 @@ export function buildProCas(overrides: Partial<ProCas> = {}): ProCas {
       concepts: ['taux-equivalent'],
       misconceptionsCiblees: ['proportionnalite'],
       dureeMinutes: 4,
+      modalite: 'binome',
+      regime: 'ouvert',
+    }),
+    ...overrides,
+  };
+}
+
+function valeurAcquise(valeurs: Readonly<Record<string, number>>): number {
+  return valeurs['C'] * (1 + valeurs['i'] / 100) ** valeurs['n'];
+}
+
+export function buildConcept4Definition(
+  overrides: Partial<Concept4Definition> = {},
+): Concept4Definition {
+  return {
+    id: 'K-QUATRE-FACES-01',
+    parametres: [
+      { cle: 'C', libelle: 'Capital place en euros', min: 100, max: 5000, pas: 100, defaut: 1000 },
+      { cle: 'i', libelle: 'Taux annuel en pourcent', min: 1, max: 10, pas: 0.5, defaut: 4 },
+      { cle: 'n', libelle: 'Duree en annees', min: 1, max: 30, pas: 1, defaut: 10 },
+    ],
+    formuleLatexSimplifie: 'C × (1 + i)^n',
+    calcul: valeurAcquise,
+    phrase: (valeurs) =>
+      `Un capital de ${valeurs['C']} € placé à ${valeurs['i']} % pendant ${valeurs['n']} ans devient ${valeurAcquise(valeurs).toFixed(2)} €.`,
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation', 'valeur-acquise'],
+      misconceptionsCiblees: ['interet-simple'],
+      dureeMinutes: 6,
       modalite: 'binome',
       regime: 'ouvert',
     }),

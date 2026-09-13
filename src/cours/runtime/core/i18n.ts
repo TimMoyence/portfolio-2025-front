@@ -32,6 +32,15 @@ const FR: Readonly<Record<string, string>> = {
   'challenge-fausse': 'Piste fausse',
   'pro-geste': 'Le geste professionnel',
   'pro-consequence': 'Sur le terrain :',
+  'concept4-reglages': 'Faites varier les paramètres et observez les quatre faces',
+  'concept4-formule': 'Formule',
+  'concept4-graphique': 'Graphique',
+  'concept4-courbe': 'Courbe du résultat en fonction du paramètre',
+  'concept4-tableau': 'Tableau de valeurs',
+  'concept4-phrase': 'En mots',
+  'concept4-resultat': 'Résultat',
+  'concept4-plage': 'de',
+  'concept4-plage-fin': 'à',
 };
 
 export function texte(cle: string): string {

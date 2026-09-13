@@ -1,4 +1,5 @@
 import { challenge } from './challenge';
+import { concept4 } from './concept4';
 import { exit } from './exit';
 import { pro, quote, story } from './narration';
 import { numeric } from './numeric';
@@ -8,6 +9,7 @@ import { vote } from './vote';
 
 const FEUILLES: Readonly<Record<string, string>> = {
   challenge,
+  concept4,
   exit,
   numeric,
   pro,
