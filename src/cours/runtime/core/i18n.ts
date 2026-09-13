@@ -67,6 +67,17 @@ const FR: Readonly<Record<string, string>> = {
   'table-build-cellule-vide': 'Complétez chaque cellule à saisir avant de valider',
   'table-build-progression': 'Cellules saisies :',
   'table-build-vide': 'Aucune ligne à bâtir : le plan ne porte aucune échéance',
+  'sheet-consigne':
+    'Écrivez vos formules : commencez par « = », citez les cellules par leur nom, séparez les arguments par un point-virgule',
+  'sheet-coin': 'Cellule',
+  'sheet-cellule': 'Cellule',
+  'sheet-recopier': 'Recopier vers le bas',
+  'sheet-recopie-impossible': 'Aucune cellule sous celle-ci : la recopie n’a rien où aller',
+  'sheet-cellule-fautive': 'Formule refusée par le tableur',
+  'sheet-erreurs': 'Formules à revoir :',
+  'sheet-aucune-formule': 'Écrivez au moins une formule avant de valider',
+  'sheet-progression': 'Formules écrites :',
+  'sheet-vide': 'Aucune cellule à remplir : le plan ne porte aucune ligne',
 };
 
 export function texte(cle: string): string {

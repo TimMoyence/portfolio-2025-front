@@ -12,6 +12,7 @@ import type { ProCas } from '../../cours/runtime/blocks/FpPro';
 import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
 import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
 import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
+import type { SheetPlan } from '../../cours/runtime/blocks/FpSheet';
 import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
 import type { TableBuildPlan, TableColonne } from '../../cours/runtime/blocks/FpTableBuild';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
@@ -390,6 +391,42 @@ export function buildTableBuildPlan(overrides: Partial<TableBuildPlan> = {}): Ta
       { rang: 4, cle: 'interets', valeur: 63.6 },
     ],
     tolerance: { type: 'absolue', valeur: 0.01 },
+    ...overrides,
+  };
+}
+
+export function buildSheetPlan(overrides: Partial<SheetPlan> = {}): SheetPlan {
+  return {
+    id: 'K-TABLEUR-01',
+    intitule: 'Facture : quantites, prix unitaires et total TTC',
+    lignes: 6,
+    colonnes: 4,
+    cellules: {
+      A1: 'Taux de TVA',
+      B1: '0,2',
+      A2: 'Quantite',
+      B2: 'Prix unitaire',
+      C2: 'Montant HT',
+      D2: 'Montant TTC',
+      A3: '12',
+      B3: '4,5',
+      A4: '3',
+      B4: '120',
+      A5: '7',
+      B5: '18,9',
+    },
+    verrouillees: ['A1', 'B1', 'A2', 'B2', 'C2', 'D2', 'A3', 'B3', 'A4', 'B4', 'A5', 'B5'],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['tableur', 'pourcentage'],
+      misconceptionsCiblees: ['reference-relative-figee'],
+      dureeMinutes: 15,
+      modalite: 'binome',
+      regime: 'focus',
+    }),
+    attendus: [
+      { reference: 'C3', valeur: 54 },
+      { reference: 'D3', valeur: 64.8 },
+    ],
     ...overrides,
   };
 }
