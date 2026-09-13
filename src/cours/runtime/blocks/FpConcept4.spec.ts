@@ -48,6 +48,15 @@ function bouger(hote: FpConcept4, cle: string, valeur: number): void {
   curseur.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
+function bougerSansBornageDuNavigateur(hote: FpConcept4, cle: string, valeur: number): void {
+  const curseur = curseurDe(hote, cle);
+  curseur.min = String(Math.min(valeur, 0));
+  curseur.max = String(Math.max(valeur, 0));
+  curseur.step = 'any';
+  curseur.value = String(valeur);
+  curseur.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 function frapper(hote: FpConcept4, cle: string, touche: string): void {
   curseurDe(hote, cle).dispatchEvent(
     new KeyboardEvent('keydown', { key: touche, bubbles: true, cancelable: true }),
@@ -151,6 +160,16 @@ describe('FpConcept4', () => {
     frapper(hote, 'n', 'ArrowRight');
     expect(hote.valeurs['n']).toBe(30);
     expect(curseurDe(hote, 'n').value).toBe('30');
+  });
+
+  it('borne lui meme une valeur saisie que le navigateur laisserait passer', () => {
+    bougerSansBornageDuNavigateur(hote, 'n', 9999);
+    expect(hote.valeurs['n']).toBe(30);
+    expect(lu(hote, 'phrase-texte')).toContain('30 ans');
+
+    bougerSansBornageDuNavigateur(hote, 'n', -400);
+    expect(hote.valeurs['n']).toBe(1);
+    expect(lu(hote, 'phrase-texte')).toContain('1 an');
   });
 
   it('deplace les curseurs au clavier avec les fleches et par pas entiers', () => {
