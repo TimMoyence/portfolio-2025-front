@@ -1,4 +1,5 @@
 import type { MetadonneesBrique } from '../../content/types';
+import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
@@ -24,7 +25,7 @@ export interface PlotSerie {
   readonly id: string;
   readonly libelle: string;
   readonly trait: TraitSerie;
-  readonly calcul: (abscisse: number, valeurs: Readonly<Record<string, number>>) => number;
+  readonly calcul: string;
 }
 
 export interface PlotDefinition {
@@ -256,7 +257,11 @@ export class FpPlot extends FpBlock {
     return definition.series.map((serie) => ({
       serie,
       echantillons: abscisses
-        .map((abscisse) => ({ abscisse, ordonnee: serie.calcul(abscisse, valeurs) }))
+        .map((abscisse) => ({
+          abscisse,
+          ordonnee:
+            evaluerExpression(serie.calcul, { ...valeurs, x: abscisse }).valeur ?? Number.NaN,
+        }))
         .filter((point) => Number.isFinite(point.ordonnee)),
     }));
   }
