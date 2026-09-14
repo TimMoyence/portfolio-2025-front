@@ -34,9 +34,19 @@ const ENTETE: readonly string[] = [
 ];
 
 const CARACTERES_A_PROTEGER = /[;"\n\r]/;
+const CARACTERES_FORMULE = /^[=+@\t\r]/;
+const NOMBRE_NEGATIF_VALIDE = /^-\d+([.,]\d+)?$/;
+
+function neutraliser(champ: string): string {
+  if (CARACTERES_FORMULE.test(champ)) {
+    return `'${champ}`;
+  }
+  return champ.startsWith('-') && !NOMBRE_NEGATIF_VALIDE.test(champ) ? `'${champ}` : champ;
+}
 
 function echapper(champ: string): string {
-  return CARACTERES_A_PROTEGER.test(champ) ? `"${champ.replaceAll('"', '""')}"` : champ;
+  const sain = neutraliser(champ);
+  return CARACTERES_A_PROTEGER.test(sain) ? `"${sain.replaceAll('"', '""')}"` : sain;
 }
 
 function ligneCsv(champs: readonly string[]): string {

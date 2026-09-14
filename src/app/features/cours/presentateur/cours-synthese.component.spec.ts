@@ -142,6 +142,36 @@ describe('CoursSyntheseComponent', () => {
     );
   });
 
+  it('neutralise un champ qu Excel interpreterait comme une formule', async () => {
+    const porteur = {
+      ...etudiant('Ana', 9, true, [reponse('actualisation', '+1+1')]),
+      nom: '=HYPERLINK("http://evil.example","Cliquez ici")',
+    };
+    const fixture = await monter(rapportDe([porteur]));
+
+    const csv = fixture.componentInstance.exporterCsv();
+
+    expect(csv).toContain("'=HYPERLINK");
+    expect(csv).toContain("'+1+1");
+  });
+
+  it('laisse un montant negatif intact et sommable', async () => {
+    const porteur = etudiant('Ana', 9, true, [reponse('actualisation', '-1500')]);
+    const fixture = await monter(rapportDe([porteur]));
+
+    const csv = fixture.componentInstance.exporterCsv();
+
+    expect(csv).toContain('-1500');
+    expect(csv).not.toContain("'-1500");
+  });
+
+  it('neutralise un moins qui n est pas un nombre valide', async () => {
+    const porteur = etudiant('Ana', 9, true, [reponse('actualisation', '-=1+1')]);
+    const fixture = await monter(rapportDe([porteur]));
+
+    expect(fixture.componentInstance.exporterCsv()).toContain("'-=1+1");
+  });
+
   it('une seance sans participant affiche un message plutot qu un tableau vide', async () => {
     const fixture = await monter(rapportDe([]));
 
