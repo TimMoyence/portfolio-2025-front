@@ -2229,6 +2229,50 @@
       }
     },
     {
+      "id": "cours-rejoindre",
+      "path": "/cours/rejoindre",
+      "index": false,
+      "changefreq": "never",
+      "priority": 0,
+      "lastmod": "2026-09-14",
+      "locales": {
+        "fr": {
+          "title": "Rejoindre une séance",
+          "description": "Saisissez le code à quatre chiffres donné par votre formateur pour suivre la séance.",
+          "ogTitle": "Rejoindre une séance",
+          "ogDescription": "Saisissez le code donné par votre formateur pour suivre la séance."
+        },
+        "en": {
+          "title": "Join a session",
+          "description": "Enter the four-digit code given by your trainer to follow the session.",
+          "ogTitle": "Join a session",
+          "ogDescription": "Enter the code given by your trainer to follow the session."
+        }
+      }
+    },
+    {
+      "id": "cours-synthese",
+      "path": "/cours/seance/:sessionId/synthese",
+      "index": false,
+      "changefreq": "never",
+      "priority": 0,
+      "lastmod": "2026-09-14",
+      "locales": {
+        "fr": {
+          "title": "Synthèse de séance",
+          "description": "Résultats de la séance : scores, confusions fréquentes et export des réponses.",
+          "ogTitle": "Synthèse de séance",
+          "ogDescription": "Résultats de la séance et export des réponses."
+        },
+        "en": {
+          "title": "Session summary",
+          "description": "Session results: scores, frequent misunderstandings and answer export.",
+          "ogTitle": "Session summary",
+          "ogDescription": "Session results and answer export."
+        }
+      }
+    },
+    {
       "id": "not-found",
       "path": "/404",
       "index": false,

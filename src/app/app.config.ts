@@ -16,6 +16,7 @@ import { LeadMagnetHttpAdapter } from './core/adapters/lead-magnet-http.adapter'
 import { PresentationHttpAdapter } from './core/adapters/presentation-http.adapter';
 import { RadarHttpAdapter } from './core/adapters/radar-http.adapter';
 import { CookieConsentHttpAdapter } from './core/adapters/cookie-consent-http.adapter';
+import { FormationsHttpAdapter } from './core/adapters/formations-http.adapter';
 import { SebastianHttpAdapter } from './core/adapters/sebastian-http.adapter';
 import { WeatherHttpAdapter } from './core/adapters/weather-http.adapter';
 import { APP_CONFIG } from './core/config/app-config.token';
@@ -24,6 +25,7 @@ import { requestIdInterceptor } from './core/http/interceptors/request-id.interc
 import { AUTH_PORT } from './core/ports/auth.port';
 import { AUDIT_REQUEST_PORT } from './core/ports/audit-request.port';
 import { CONTACT_PORT } from './core/ports/contact.port';
+import { FORMATIONS_PORT } from './core/ports/formations.port';
 import { LEAD_MAGNET_PORT } from './core/ports/lead-magnet.port';
 import { PRESENTATION_PORT } from './core/ports/presentation.port';
 import { RADAR_PORT } from './core/ports/radar.port';
@@ -90,6 +92,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: RADAR_PORT,
       useClass: RadarHttpAdapter,
+    },
+    {
+      provide: FORMATIONS_PORT,
+      useClass: FormationsHttpAdapter,
     },
   ],
 };

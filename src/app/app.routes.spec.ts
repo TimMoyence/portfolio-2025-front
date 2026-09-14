@@ -91,4 +91,35 @@ describe('app routes', () => {
     expect(derniereRoute.loadComponent).toBeDefined();
     expect(derniereRoute.data?.['seoKey']).toBe('not-found');
   });
+
+  describe('parcours de cours', () => {
+    const routeDe = (chemin: string) => routes.find((route) => route.path === chemin);
+
+    it('ouvre la vue etudiant sans authentification, les etudiants n ayant pas de compte', async () => {
+      const route = routeDe('cours/rejoindre');
+
+      expect(route?.canActivate ?? []).toEqual([]);
+      const composant = await route?.loadComponent?.();
+      expect((composant as { name: string }).name).toBe('CoursEtudiantComponent');
+    });
+
+    it('reserve la synthese de seance a un formateur authentifie', async () => {
+      const route = routeDe('cours/seance/:sessionId/synthese');
+
+      expect(route?.canActivate?.includes(authGuard)).toBeTrue();
+      const composant = await route?.loadComponent?.();
+      expect((composant as { name: string }).name).toBe('CoursSyntheseComponent');
+    });
+
+    it('n indexe aucune page de cours', () => {
+      const pages = routes.filter((route) => route.path?.startsWith('cours/'));
+
+      expect(pages.length).toBeGreaterThanOrEqual(3);
+      for (const page of pages) {
+        expect(page.data?.['robots'])
+          .withContext(`la route '${page.path}' ne doit pas etre indexee`)
+          .toBe('noindex, nofollow');
+      }
+    });
+  });
 });
