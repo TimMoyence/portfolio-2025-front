@@ -256,6 +256,12 @@ describe('core/formula', () => {
     });
   });
 
+  describe('precision numerique', () => {
+    it('garde evaluerCellule en pleine precision flottante, sans arrondi a 6 decimales', () => {
+      expect(valeurDe({ A1: '=1/3' })).toBeCloseTo(1 / 3, 15);
+    });
+  });
+
   describe('presentation', () => {
     it('nomme les colonnes au-dela de la vingt-sixieme', () => {
       expect(lettreColonne(0)).toBe('A');

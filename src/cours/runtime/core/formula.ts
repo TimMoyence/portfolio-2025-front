@@ -497,10 +497,13 @@ function echec(cause: unknown): ResultatFormule {
 }
 
 function fini(valeur: number): ResultatFormule {
-  if (!Number.isFinite(valeur)) {
-    return { valeur: null, erreur: '#VALEUR!' };
-  }
-  return { valeur: Number(valeur.toFixed(6)), erreur: null };
+  return Number.isFinite(valeur) ? { valeur, erreur: null } : { valeur: null, erreur: '#VALEUR!' };
+}
+
+function arrondirResultat(resultat: ResultatFormule): ResultatFormule {
+  return resultat.valeur === null
+    ? resultat
+    : { valeur: Number(resultat.valeur.toFixed(6)), erreur: null };
 }
 
 export function evaluerCellule(feuille: Feuille, nom: string): ResultatFormule {
@@ -518,7 +521,7 @@ export function evaluerExpression(
   try {
     const debut = source.trimStart();
     const expression = debut.startsWith(MARQUE) ? debut.slice(1) : debut;
-    return fini(calculer(analyser(expression), { feuille: null, variables }, []));
+    return arrondirResultat(fini(calculer(analyser(expression), { feuille: null, variables }, [])));
   } catch (cause) {
     return echec(cause);
   }
