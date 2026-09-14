@@ -1,46 +1,51 @@
+import type { DebugElement } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import type { Observable } from 'rxjs';
-import { NEVER, of, throwError } from 'rxjs';
-import type { CoursContent, DerouleCours } from '../../../../cours/content/types';
+import { NEVER, of, Subject, throwError } from 'rxjs';
+import type { CoursContent } from '../../../../cours/content/types';
 import { clearIdentity } from '../../../../cours/runtime/core/identity';
 import { pending } from '../../../../cours/runtime/core/queue';
-import type { EtatSession, Sync, SyncOptions } from '../../../../cours/runtime/core/sync';
+import type { EtatSession, Sync, SyncListener } from '../../../../cours/runtime/core/sync';
+import {
+  buildCoursContent,
+  buildRattachement,
+  createFormationsPortStub,
+} from '../../../../testing/factories/formations.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import type {
-  FormationsPort,
-  IncidentEtudiant,
-  QuestionsDues,
-  RapportSeance,
-  Rattachement,
-  ReponseEtudiant,
-  SeanceOuverte,
-  VerdictReponse,
+import type { FormationsPort, VerdictReponse } from '../../../core/ports/formations.port';
+import {
+  FORMATIONS_PORT,
+  RattachementRefuse,
+  SujetRefuse,
 } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT, RattachementRefuse } from '../../../core/ports/formations.port';
+import type { ReponseBrique } from '../ecran/cours-ecran.component';
+import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import type { CreateurFlux } from './cours-etudiant.component';
 import { CoursEtudiantComponent, CREATEUR_FLUX } from './cours-etudiant.component';
+
+type Fixture = ComponentFixture<CoursEtudiantComponent>;
 
 const JETON = 'jeton-participant-7f3a91';
 const SESSION = 'sess-42';
-const GRAINE_A = 424242;
-const GRAINE_B = 987654;
 const CODE_SAISI = '12 34';
 const CODE_NORMALISE = '1234';
 const ETIQUETTE_BRUTE = 'interets-simples';
 const VALEUR_ATTENDUE = '1480.24';
-const REPONSE_FAUSSE = '1400';
+const ETIQUETTE_LIBELLE = 'Les intérêts ont été additionnés au lieu d’être composés.';
+
+const REPONSE_NUMERIQUE: ReponseBrique = { questionId: 'Q-VA-07', valeur: 1400, dureeMs: 900 };
+const REPONSE_VOTE: ReponseBrique = { questionId: 'Q-CAP-03', valeur: 'b', dureeMs: 400 };
+
+const REUSSITE: VerdictReponse = { reussite: true, libelleConfusion: null };
+const CONFUSION: VerdictReponse = { reussite: false, libelleConfusion: ETIQUETTE_LIBELLE };
 
 const IDENTITE: readonly (readonly [string, string])[] = [
   ['prenom', 'Lea'],
   ['nom', 'Dubois'],
   ['email', 'lea.dubois@example.com'],
 ];
-
-const HORS_PARCOURS = 'Methode hors du parcours etudiant';
-
-const ETIQUETTE_LIBELLE = 'Les intérêts ont été additionnés au lieu d’être composés.';
-
-const VERDICT_JUSTE: VerdictReponse = { reussite: true, libelleConfusion: null };
 
 function verdictAvecFuite(): VerdictReponse {
   const recu: Record<string, unknown> = {
@@ -53,139 +58,81 @@ function verdictAvecFuite(): VerdictReponse {
   return recu as unknown as VerdictReponse;
 }
 
-interface LotIncidents {
-  readonly jeton: string;
-  readonly incidents: readonly IncidentEtudiant[];
+interface FluxDouble {
+  readonly fabrique: jasmine.Spy<CreateurFlux>;
+  readonly flux: jasmine.SpyObj<Sync>;
+  diffuser(etat: Partial<EtatSession>): void;
 }
 
-class FormationsDouble implements FormationsPort {
-  seed = GRAINE_A;
-  refus: RattachementRefuse | null = null;
-  verdict: VerdictReponse = VERDICT_JUSTE;
-  incidentsSansReponse = false;
-  readonly codes: string[] = [];
-  readonly reponses: ReponseEtudiant[] = [];
-  readonly jetons: string[] = [];
-  readonly lots: LotIncidents[] = [];
-
-  rejoindre(code: string): Observable<Rattachement> {
-    this.codes.push(code);
-    const refus = this.refus;
-    if (refus !== null) {
-      return throwError(() => refus);
-    }
-    const rattachement: Rattachement = {
-      participantId: 'p-1',
-      sessionId: SESSION,
-      seed: this.seed,
+function creerFluxDouble(): FluxDouble {
+  const ecoutes: SyncListener[] = [];
+  const flux = jasmine.createSpyObj<Sync>('Sync', [
+    'join',
+    'ouvrir',
+    'submit',
+    'onState',
+    'onResultats',
+    'close',
+  ]);
+  flux.onState.and.callFake((ecoute) => {
+    ecoutes.push(ecoute);
+    return () => undefined;
+  });
+  const diffuser = (etat: Partial<EtatSession>): void => {
+    const complet: EtatSession = {
+      etat: 'en_cours',
+      modeRythme: 'pilote',
       ecranCourant: 0,
-      modeRythme: 'libre',
-      jeton: JETON,
+      intervalleLibre: null,
+      participants: 3,
+      ...etat,
     };
-    return of(rattachement);
-  }
-
-  repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse> {
-    this.jetons.push(jeton);
-    this.reponses.push(reponse);
-    return of(this.verdict);
-  }
-
-  signalerIncidents(
-    sessionId: string,
-    jeton: string,
-    incidents: readonly IncidentEtudiant[],
-  ): Observable<void> {
-    this.lots.push({ jeton, incidents });
-    return this.incidentsSansReponse ? NEVER : of(undefined);
-  }
-
-  ouvrirSeance(): Observable<SeanceOuverte> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  lireDeroule(): Observable<DerouleCours> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  lireSujet(): Observable<CoursContent> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  demarrer(): Observable<void> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  piloter(): Observable<void> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  cloturer(): Observable<void> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  lireResultats(): Observable<RapportSeance> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  lireQuestionsDues(): Observable<QuestionsDues> {
-    throw new Error(HORS_PARCOURS);
-  }
-}
-
-interface TraceFlux {
-  options: SyncOptions | null;
-  joints: number;
-  fermetures: number;
-  readonly ecoutes: ((etat: EtatSession) => void)[];
-}
-
-function creerFluxDouble(): { trace: TraceFlux; fabrique: (options: SyncOptions) => Sync } {
-  const trace: TraceFlux = { options: null, joints: 0, fermetures: 0, ecoutes: [] };
-  const fabrique = (options: SyncOptions): Sync => {
-    trace.options = options;
-    return {
-      join: () => {
-        trace.joints += 1;
-      },
-      ouvrir: () => undefined,
-      submit: () => undefined,
-      onState: (ecoute) => {
-        trace.ecoutes.push(ecoute);
-        return () => undefined;
-      },
-      onResultats: () => () => undefined,
-      close: () => {
-        trace.fermetures += 1;
-      },
-    };
+    for (const ecoute of ecoutes) {
+      ecoute(complet);
+    }
   };
-  return { trace, fabrique };
-}
-
-function etatTermine(): EtatSession {
   return {
-    etat: 'terminee',
-    modeRythme: 'libre',
-    ecranCourant: 0,
-    intervalleLibre: null,
-    participants: 3,
+    fabrique: jasmine.createSpy<CreateurFlux>('creerFlux').and.returnValue(flux),
+    flux,
+    diffuser,
   };
 }
 
 describe('CoursEtudiantComponent', () => {
-  let port: FormationsDouble;
-  let flux: { trace: TraceFlux; fabrique: (options: SyncOptions) => Sync };
-  const montees: ComponentFixture<CoursEtudiantComponent>[] = [];
+  let port: jasmine.SpyObj<FormationsPort>;
+  let double: FluxDouble;
+  let sujet: CoursContent;
+  const montees: Fixture[] = [];
 
-  function lire(fixture: ComponentFixture<CoursEtudiantComponent>, marque: string): Element | null {
-    return (fixture.nativeElement as HTMLElement).querySelector(`[data-testid='${marque}']`);
+  function lire(fixture: Fixture, marque: string): HTMLElement | null {
+    return (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+      `[data-testid='${marque}']`,
+    );
   }
 
-  function renseigner(
-    formulaire: HTMLFormElement | null,
-    valeurs: readonly (readonly [string, string])[],
-  ): void {
+  function verdictsAffiches(fixture: Fixture): HTMLElement[] {
+    return [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
+        "[data-testid='etudiant-verdict']",
+      ),
+    ];
+  }
+
+  function ecranDe(fixture: Fixture): DebugElement {
+    const ecran = fixture.debugElement.queryAll(By.directive(CoursEcranComponent)).at(0);
+    if (ecran === undefined) {
+      throw new Error('Aucun ecran de cours monte dans la vue etudiant');
+    }
+    return ecran;
+  }
+
+  function ecranAffiche(fixture: Fixture): unknown {
+    return (ecranDe(fixture).componentInstance as CoursEcranComponent).ecran();
+  }
+
+  function soumettre(fixture: Fixture, code: string): void {
+    const formulaire = lire(fixture, 'etudiant-entree');
+    const valeurs: readonly (readonly [string, string])[] = [['code', code], ...IDENTITE];
     for (const [nom, valeur] of valeurs) {
       const champ = formulaire?.querySelector<HTMLInputElement>(`[name="${nom}"]`);
       if (champ) {
@@ -195,46 +142,53 @@ describe('CoursEtudiantComponent', () => {
     formulaire?.dispatchEvent(new Event('submit'));
   }
 
-  async function rattacher(code = CODE_SAISI): Promise<ComponentFixture<CoursEtudiantComponent>> {
+  function monter(): Fixture {
     const fixture = TestBed.createComponent(CoursEtudiantComponent);
     montees.push(fixture);
-    fixture.detectChanges();
-    renseigner(lire(fixture, 'etudiant-entree') as HTMLFormElement | null, [
-      ['code', code],
-      ...IDENTITE,
-    ]);
-    await fixture.componentInstance.quandStabilise();
     fixture.detectChanges();
     return fixture;
   }
 
-  async function repondre(
-    fixture: ComponentFixture<CoursEtudiantComponent>,
-    valeur: string,
-  ): Promise<void> {
-    renseigner(lire(fixture, 'etudiant-reponse') as HTMLFormElement | null, [['valeur', valeur]]);
+  async function stabiliser(fixture: Fixture): Promise<void> {
     await fixture.componentInstance.quandStabilise();
     fixture.detectChanges();
   }
 
-  async function laisserPasserLeReseau(
-    fixture: ComponentFixture<CoursEtudiantComponent>,
-  ): Promise<void> {
-    window.dispatchEvent(new Event('online'));
-    await fixture.componentInstance.quandStabilise();
+  async function rattacher(code = CODE_SAISI): Promise<Fixture> {
+    const fixture = monter();
+    soumettre(fixture, code);
+    await stabiliser(fixture);
+    return fixture;
+  }
+
+  async function repondre(fixture: Fixture, reponse: ReponseBrique): Promise<void> {
+    ecranDe(fixture).triggerEventHandler('reponse', reponse);
+    await stabiliser(fixture);
+  }
+
+  function diffuser(fixture: Fixture, etat: Partial<EtatSession>): void {
+    double.diffuser(etat);
     fixture.detectChanges();
+  }
+
+  async function laisserPasserLeReseau(fixture: Fixture): Promise<void> {
+    window.dispatchEvent(new Event('online'));
+    await stabiliser(fixture);
   }
 
   beforeEach(async () => {
     localStorage.clear();
     clearIdentity();
-    port = new FormationsDouble();
-    flux = creerFluxDouble();
+    sujet = buildCoursContent();
+    port = createFormationsPortStub();
+    port.rejoindre.and.returnValue(of(buildRattachement({ sessionId: SESSION, jeton: JETON })));
+    port.lireSujet.and.returnValue(of(sujet));
+    double = creerFluxDouble();
     await setupTestBed({
       imports: [CoursEtudiantComponent],
       providers: [
         { provide: FORMATIONS_PORT, useValue: port },
-        { provide: CREATEUR_FLUX, useValue: flux.fabrique },
+        { provide: CREATEUR_FLUX, useValue: double.fabrique },
       ],
     }).compileComponents();
   });
@@ -250,31 +204,82 @@ describe('CoursEtudiantComponent', () => {
 
   it('refuse un code qui n a pas quatre chiffres avant tout appel reseau', async () => {
     const fixture = await rattacher('12a4');
-    expect(port.codes).toEqual([]);
+
+    expect(port.rejoindre).not.toHaveBeenCalled();
     expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('code-invalide');
     expect(fixture.componentInstance.etat()).toBe('code');
   });
 
   it('retire les espaces du code avant de le transmettre au serveur', async () => {
     const fixture = await rattacher();
-    expect(port.codes).toEqual([CODE_NORMALISE]);
+
+    expect(port.rejoindre).toHaveBeenCalledOnceWith(CODE_NORMALISE, jasmine.any(Object));
     expect(fixture.componentInstance.etat()).toBe('seance');
   });
 
-  it('ordonne les questions avec la graine recue du serveur', async () => {
-    port.seed = GRAINE_A;
-    const premiere = await rattacher();
-    const ordreA = premiere.componentInstance.ordreDesQuestions().map((question) => question.id);
-    premiere.destroy();
-    port.seed = GRAINE_B;
-    const seconde = await rattacher();
-    const ordreB = seconde.componentInstance.ordreDesQuestions().map((question) => question.id);
+  it('lit le sujet avec le jeton du rattachement et n ouvre la seance qu a son arrivee', async () => {
+    const arrivee = new Subject<CoursContent>();
+    let signalerLecture: () => void = () => undefined;
+    const lectureDemandee = new Promise<void>((resoudre) => {
+      signalerLecture = resoudre;
+    });
+    port.lireSujet.and.callFake((): Observable<CoursContent> => {
+      signalerLecture();
+      return arrivee;
+    });
+    const fixture = monter();
+    soumettre(fixture, CODE_SAISI);
+    await lectureDemandee;
+    fixture.detectChanges();
 
-    expect(premiere.componentInstance.graine()).toBe(GRAINE_A);
-    expect(seconde.componentInstance.graine()).toBe(GRAINE_B);
-    expect(ordreA.length).toBeGreaterThan(1);
-    expect(ordreB).not.toEqual(ordreA);
+    expect(port.lireSujet).toHaveBeenCalledOnceWith(SESSION, JETON);
+    expect(lire(fixture, 'etudiant-chargement')?.getAttribute('role')).toBe('status');
+    expect(lire(fixture, 'etudiant-seance')).toBeNull();
+    expect(double.fabrique).not.toHaveBeenCalled();
+
+    arrivee.next(sujet);
+    arrivee.complete();
+    await stabiliser(fixture);
+
+    expect(lire(fixture, 'etudiant-chargement')).toBeNull();
+    expect(lire(fixture, 'etudiant-seance')).toBeTruthy();
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
   });
+
+  const lecturesRefusees: readonly {
+    readonly cas: string;
+    readonly erreur: Error;
+    readonly motif: string;
+    readonly message: string;
+  }[] = [
+    {
+      cas: 'le cours a change depuis l ouverture',
+      erreur: new SujetRefuse('cours-modifie', 409),
+      motif: 'cours-modifie',
+      message: 'Le cours a changé',
+    },
+    {
+      cas: 'la lecture echoue sans motif connu',
+      erreur: new Error('reseau coupe'),
+      motif: 'sujet-indisponible',
+      message: 'n’a pas pu être chargé',
+    },
+  ];
+
+  for (const { cas, erreur, motif, message } of lecturesRefusees) {
+    it(`alerte sans ouvrir de seance quand ${cas}`, async () => {
+      port.lireSujet.and.returnValue(throwError(() => erreur));
+      const fixture = await rattacher();
+      const alerte = lire(fixture, 'etudiant-sujet-refuse');
+
+      expect(alerte?.getAttribute('role')).toBe('alert');
+      expect(alerte?.getAttribute('data-motif')).toBe(motif);
+      expect(alerte?.textContent).toContain(message);
+      expect(lire(fixture, 'etudiant-seance')).toBeNull();
+      expect(lire(fixture, 'etudiant-entree')).toBeNull();
+      expect(double.fabrique).not.toHaveBeenCalled();
+    });
+  }
 
   it('porte le jeton au flux sans jamais l ecrire dans le stockage local', async () => {
     await rattacher();
@@ -282,75 +287,185 @@ describe('CoursEtudiantComponent', () => {
       .map((cle) => localStorage.getItem(cle) ?? '')
       .join('|');
 
-    expect(flux.trace.options?.jeton).toBe(JETON);
-    expect(flux.trace.joints).toBe(1);
+    expect(double.fabrique.calls.mostRecent().args[0].jeton).toBe(JETON);
+    expect(double.flux.join).toHaveBeenCalledTimes(1);
     expect(ecrit.length).toBeGreaterThan(0);
     expect(ecrit).not.toContain(JETON);
   });
 
-  it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
+  it('monte en rendu main l ecran que designe le flux sans remonter l ecran repete', async () => {
+    port.rejoindre.and.returnValue(
+      of(buildRattachement({ sessionId: SESSION, jeton: JETON, ecranCourant: 1 })),
+    );
     const fixture = await rattacher();
-    window.dispatchEvent(new Event('offline'));
-    await repondre(fixture, REPONSE_FAUSSE);
+    const avant = ecranDe(fixture).componentInstance as CoursEcranComponent;
 
-    expect(port.reponses).toEqual([]);
-    expect(pending().length).toBe(1);
-    expect(lire(fixture, 'etudiant-hors-ligne')).toBeTruthy();
+    expect(avant.ecran()).toBe(sujet.ecrans[1]);
+    expect(avant.rendu()).toBe('hand');
+    expect(avant.role()).toBe('etudiant');
+    expect((ecranDe(fixture).nativeElement as HTMLElement).hasAttribute('role'))
+      .withContext('etudiant est un role du runtime, pas un role ARIA')
+      .toBeFalse();
 
-    await laisserPasserLeReseau(fixture);
-    expect(port.reponses.length).toBe(1);
-    expect(port.reponses[0].valeur).toBe(REPONSE_FAUSSE);
-    expect(pending().length).toBe(0);
+    diffuser(fixture, { ecranCourant: 1, participants: 12 });
 
-    await laisserPasserLeReseau(fixture);
-    expect(port.reponses.length).toBe(1);
+    expect(ecranDe(fixture).componentInstance).toBe(avant);
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    diffuser(fixture, { ecranCourant: 2 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+    expect(lire(fixture, 'etudiant-progression')?.textContent?.trim()).toBe('3 / 4');
+  });
+
+  it('envoie au serveur la reponse d une brique avec son identifiant de question', async () => {
+    const fixture = await rattacher();
+
+    await repondre(fixture, REPONSE_VOTE);
+
+    expect(port.repondre).toHaveBeenCalledOnceWith(SESSION, JETON, {
+      questionId: 'Q-CAP-03',
+      valeur: 'b',
+      dureeMs: 400,
+    });
   });
 
   it('n affiche que le resultat et l etiquette de confusion', async () => {
-    port.verdict = verdictAvecFuite();
+    port.repondre.and.returnValue(of(verdictAvecFuite()));
     const fixture = await rattacher();
-    await repondre(fixture, REPONSE_FAUSSE);
+    await repondre(fixture, REPONSE_NUMERIQUE);
     const rendu = (fixture.nativeElement as HTMLElement).innerHTML;
+    const [verdict] = verdictsAffiches(fixture);
 
-    expect(lire(fixture, 'etudiant-verdict')?.getAttribute('data-reussite')).toBe('false');
+    expect(verdict.getAttribute('data-reussite')).toBe('false');
+    expect(verdict.getAttribute('data-question')).toBe('Q-VA-07');
     expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
     expect(rendu).not.toContain(VALEUR_ATTENDUE);
     expect(rendu).not.toContain(ETIQUETTE_BRUTE);
   });
 
+  it('garde un verdict par question de l ecran et les efface au changement d ecran', async () => {
+    port.repondre.and.returnValues(of(REUSSITE), of(CONFUSION), of(CONFUSION));
+    const fixture = await rattacher();
+
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    await repondre(fixture, REPONSE_VOTE);
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(
+      verdictsAffiches(fixture).map((verdict) => [
+        verdict.getAttribute('data-question'),
+        verdict.getAttribute('data-reussite'),
+      ]),
+    ).toEqual([
+      ['Q-VA-07', 'false'],
+      ['Q-CAP-03', 'false'],
+    ]);
+
+    diffuser(fixture, { ecranCourant: 1 });
+
+    expect(verdictsAffiches(fixture)).toEqual([]);
+  });
+
+  it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
+    const fixture = await rattacher();
+    window.dispatchEvent(new Event('offline'));
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(port.repondre).not.toHaveBeenCalled();
+    expect(pending().length).toBe(1);
+    expect(lire(fixture, 'etudiant-hors-ligne')).toBeTruthy();
+
+    await laisserPasserLeReseau(fixture);
+
+    expect(port.repondre).toHaveBeenCalledOnceWith(SESSION, JETON, REPONSE_NUMERIQUE);
+    expect(pending().length).toBe(0);
+    expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+    expect(verdictsAffiches(fixture).length).toBe(1);
+
+    await laisserPasserLeReseau(fixture);
+
+    expect(port.repondre).toHaveBeenCalledTimes(1);
+  });
+
+  it('n affiche pas sur un nouvel ecran le verdict d une reponse renvoyee depuis le precedent', async () => {
+    const fixture = await rattacher();
+    window.dispatchEvent(new Event('offline'));
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    diffuser(fixture, { ecranCourant: 1 });
+
+    await laisserPasserLeReseau(fixture);
+
+    expect(port.repondre).toHaveBeenCalledTimes(1);
+    expect(verdictsAffiches(fixture)).toEqual([]);
+  });
+
   it('remonte les incidents de verrou groupes sans bloquer la reponse en cours', async () => {
-    port.incidentsSansReponse = true;
+    port.signalerIncidents.and.returnValue(NEVER);
     const fixture = await rattacher();
     window.dispatchEvent(new Event('blur'));
     window.dispatchEvent(new Event('blur'));
-    await repondre(fixture, REPONSE_FAUSSE);
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    const [sessionId, jeton, lot] = port.signalerIncidents.calls.mostRecent().args;
 
-    expect(port.lots.length).toBe(1);
-    expect(port.lots[0].incidents.length).toBe(2);
-    expect(port.lots[0].jeton).toBe(JETON);
-    expect(port.reponses.length).toBe(1);
-    expect(lire(fixture, 'etudiant-verdict')).toBeTruthy();
+    expect(port.signalerIncidents).toHaveBeenCalledTimes(1);
+    expect(sessionId).toBe(SESSION);
+    expect(jeton).toBe(JETON);
+    expect(lot.length).toBe(2);
+    expect(port.repondre).toHaveBeenCalledTimes(1);
+    expect(verdictsAffiches(fixture).length).toBe(1);
+  });
+
+  it('ne propose l ecran suivant que si le rythme du flux le permet', async () => {
+    const fixture = await rattacher();
+
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: { premier: 0, dernier: 1 } });
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+  });
+
+  it('reste en rythme libre sur l ecran choisi tant que le formateur ne change pas d ecran', async () => {
+    const fixture = await rattacher();
+    const libre: Partial<EtatSession> = { modeRythme: 'libre', intervalleLibre: null };
+    diffuser(fixture, libre);
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+
+    diffuser(fixture, { ...libre, participants: 13 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    diffuser(fixture, { ...libre, ecranCourant: 3 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[3]);
   });
 
   it('ferme le flux a la destruction du composant', async () => {
     const fixture = await rattacher();
-    expect(flux.trace.fermetures).toBe(0);
+
+    expect(double.flux.close).not.toHaveBeenCalled();
     fixture.destroy();
-    expect(flux.trace.fermetures).toBe(1);
+    expect(double.flux.close).toHaveBeenCalledTimes(1);
   });
 
   it('dit a l etudiant que le code de seance est inconnu', async () => {
-    port.refus = new RattachementRefuse('code-inconnu', 404);
+    port.rejoindre.and.returnValue(throwError(() => new RattachementRefuse('code-inconnu', 404)));
     const fixture = await rattacher();
     const alerte = lire(fixture, 'etudiant-echec');
 
     expect(alerte?.getAttribute('data-motif')).toBe('code-inconnu');
     expect(alerte?.textContent).toContain("n'existe pas");
     expect(fixture.componentInstance.etat()).toBe('code');
+    expect(port.lireSujet).not.toHaveBeenCalled();
   });
 
   it('distingue une inscription deja enregistree d un code inconnu', async () => {
-    port.refus = new RattachementRefuse('deja-inscrit', 409);
+    port.rejoindre.and.returnValue(throwError(() => new RattachementRefuse('deja-inscrit', 409)));
     const fixture = await rattacher();
 
     expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('deja-inscrit');
@@ -358,13 +473,15 @@ describe('CoursEtudiantComponent', () => {
   });
 
   it('clot la seance quand le flux annonce sa fin', async () => {
+    port.rejoindre.and.returnValue(
+      of(buildRattachement({ sessionId: SESSION, jeton: JETON, modeRythme: 'libre' })),
+    );
     const fixture = await rattacher();
-    for (const ecoute of flux.trace.ecoutes) {
-      ecoute(etatTermine());
-    }
-    fixture.detectChanges();
+
+    diffuser(fixture, { etat: 'terminee', modeRythme: 'libre' });
 
     expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
-    expect(lire(fixture, 'etudiant-reponse')).toBeNull();
+    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
   });
 });

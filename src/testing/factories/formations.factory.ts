@@ -80,7 +80,7 @@ export function buildDerouleCours(overrides: Partial<DerouleCours> = {}): Deroul
   };
 }
 
-function buildRattachement(overrides: Partial<Rattachement> = {}): Rattachement {
+export function buildRattachement(overrides: Partial<Rattachement> = {}): Rattachement {
   return {
     participantId: 'participant-1',
     sessionId: 'seance-1',
