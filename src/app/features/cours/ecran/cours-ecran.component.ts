@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
   effect,
   type ElementRef,
   inject,
@@ -105,7 +106,6 @@ function lireReponse(detail: unknown): ReponseBrique | null {
 @Component({
   selector: 'app-cours-ecran',
   standalone: true,
-  imports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -149,9 +149,14 @@ export class CoursEcranComponent {
   private readonly enregistrer = inject(ENREGISTREUR_DES_BRIQUES);
   private readonly enregistrement = this.enregistrerApresLeRendu();
   private montage: Promise<void> = this.enregistrement.then(() => undefined);
+  private detruit = false;
 
   constructor() {
-    effect(() => this.planifierLeMontage(this.ecran(), this.rendu(), this.role()));
+    inject(DestroyRef).onDestroy(() => {
+      this.detruit = true;
+    });
+    effect(() => this.planifierLeMontage(this.ecran(), this.role()));
+    effect(() => this.planifierLeRendu(this.rendu()));
   }
 
   quandMonte(): Promise<void> {
@@ -176,28 +181,61 @@ export class CoursEcranComponent {
       );
   }
 
-  private planifierLeMontage(ecran: EcranContent, rendu: RenderMode, role: Role): void {
-    this.pret.set(false);
+  private planifier(operation: (enregistre: boolean) => void): void {
     this.montage = this.enregistrement.then((enregistre) => {
+      if (!this.detruit) {
+        operation(enregistre);
+      }
+    });
+  }
+
+  private planifierLeMontage(ecran: EcranContent, role: Role): void {
+    this.pret.set(false);
+    this.planifier((enregistre) => {
       if (enregistre) {
-        this.monter(ecran, rendu, role);
+        this.monter(ecran, role);
       } else {
         this.echec.set(true);
       }
     });
   }
 
-  private monter(ecran: EcranContent, rendu: RenderMode, role: Role): void {
+  private planifierLeRendu(rendu: RenderMode): void {
+    this.planifier(() => {
+      for (const brique of Array.from(this.hote().nativeElement.children)) {
+        if (brique.getAttribute('render') !== rendu) {
+          this.renderer.setAttribute(brique, 'render', rendu);
+        }
+      }
+    });
+  }
+
+  private monter(ecran: EcranContent, role: Role): void {
     const hote = this.hote().nativeElement;
     for (const enfant of Array.from(hote.childNodes)) {
       this.renderer.removeChild(hote, enfant);
     }
-    const plan = planDeMontage(ecran);
-    this.inconnu.set(plan === null);
-    for (const montage of plan ?? []) {
-      this.renderer.appendChild(hote, this.creerBrique(montage, rendu, role));
+    const briques = this.construire(planDeMontage(ecran), this.rendu(), role);
+    this.inconnu.set(briques === null);
+    for (const brique of briques ?? []) {
+      this.renderer.appendChild(hote, brique);
     }
     this.pret.set(true);
+  }
+
+  private construire(
+    plan: readonly Montage[] | null,
+    rendu: RenderMode,
+    role: Role,
+  ): readonly HTMLElement[] | null {
+    if (plan === null) {
+      return null;
+    }
+    try {
+      return plan.map((montage) => this.creerBrique(montage, rendu, role));
+    } catch {
+      return null;
+    }
   }
 
   private creerBrique({ brique, donnees }: Montage, rendu: RenderMode, role: Role): HTMLElement {

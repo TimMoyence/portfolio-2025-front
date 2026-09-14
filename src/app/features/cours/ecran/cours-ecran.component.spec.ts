@@ -304,6 +304,76 @@ describe('CoursEcranComponent', () => {
     expect(briquesDe(hote).map((brique) => brique.localName)).toEqual(['fp-numeric']);
   });
 
+  it('signale une brique dont le setter refuse ses donnees sans rien laisser dans l hote', async () => {
+    const { fixture, hote } = await monter(
+      buildEcran({ type: 'fp-vote', donnees: { question: {} } }),
+      { rendu: 'hand' },
+    );
+
+    expect(cible(fixture, 'cours-ecran-inconnu').getAttribute('role')).toBe('alert');
+    expect(hote.childElementCount).toBe(0);
+    expect(fixture.componentInstance.pret()).toBeTrue();
+  });
+
+  it('ne monte aucune brique d un questionnaire dont la deuxieme question est mal formee', async () => {
+    const creations = spyOn(document, 'createElement').and.callThrough();
+    const { fixture, hote } = await monter(
+      buildEcranQuestionnaire({
+        donnees: {
+          regime: 'focus',
+          questions: [
+            { brique: 'fp-numeric', donnees: { question: buildNumericQuestion() } },
+            { brique: 'fp-vote', donnees: { question: {} } },
+          ],
+        },
+      }),
+    );
+
+    expect(nomsCrees(creations)).toContain('fp-vote');
+    expect(cible(fixture, 'cours-ecran-inconnu')).toBeTruthy();
+    expect(hote.childElementCount).toBe(0);
+  });
+
+  it('garde la meme brique et met a jour son attribut quand le rendu change', async () => {
+    const { fixture, hote } = await monter(ecranNumerique());
+    const [avant] = briquesDe(hote);
+
+    fixture.componentRef.setInput('rendu', 'stage');
+    await stabiliser(fixture);
+
+    const [apres] = briquesDe(hote);
+    expect(apres).toBe(avant);
+    expect(apres.getAttribute('render')).toBe('stage');
+  });
+
+  it('remonte la brique quand le role change', async () => {
+    const { fixture, hote } = await monter(ecranNumerique());
+    const [avant] = briquesDe(hote);
+
+    fixture.componentRef.setInput('role', 'presentateur');
+    await stabiliser(fixture);
+
+    const briques = briquesDe(hote);
+    expect(briques.length).toBe(1);
+    expect(briques[0]).not.toBe(avant);
+    expect(briques[0].getAttribute('role')).toBe('presentateur');
+  });
+
+  it('ne monte rien quand le composant est detruit pendant le chargement des briques', async () => {
+    setupTestBed({ imports: [CoursEcranComponent], http: false });
+    await TestBed.compileComponents();
+    const fixture = TestBed.createComponent(CoursEcranComponent);
+    fixture.componentRef.setInput('ecran', ecranNumerique());
+    fixture.detectChanges();
+    const hote = cible(fixture, 'cours-ecran-hote');
+
+    fixture.destroy();
+    await fixture.componentInstance.quandMonte();
+
+    expect(hote.childElementCount).toBe(0);
+    expect(fixture.componentInstance.pret()).toBeFalse();
+  });
+
   it('signale l echec du chargement des briques sans rien monter', async () => {
     const { fixture, hote } = await monter(ecranNumerique(), {
       providers: [
