@@ -1,4 +1,7 @@
-export const PORTE = 'lints-cours';
+import { PORTE } from './porte.mjs';
+import { REGLES_INTEGRITE } from './regles/integrite.mjs';
+
+export { PORTE };
 
 const DEROGATION_SANS_JUSTIFICATION = 'derogation-sans-justification';
 const DEROGATION_REGLE_INCONNUE = 'derogation-regle-inconnue';
@@ -150,6 +153,7 @@ export const REGLES = [
   { id: 'duree-ecran', controler: controlerDureeEcran },
   { id: 'duree-cours', controler: controlerDureeCours },
   { id: 'classement-public', controler: controlerClassementPublic },
+  ...REGLES_INTEGRITE,
 ];
 
 /**
