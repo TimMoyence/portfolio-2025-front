@@ -1,4 +1,5 @@
 import { PORTE } from './porte.mjs';
+import { REGLES_BRIQUES } from './regles/briques.mjs';
 import { REGLES_INTEGRITE } from './regles/integrite.mjs';
 import { REGLES_RYTHME } from './regles/rythme.mjs';
 
@@ -86,6 +87,7 @@ export const REGLES = [
   ...REGLES_RYTHME,
   { id: 'classement-public', controler: controlerClassementPublic },
   ...REGLES_INTEGRITE,
+  ...REGLES_BRIQUES,
 ];
 
 /**

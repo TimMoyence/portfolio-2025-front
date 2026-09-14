@@ -46,9 +46,9 @@ void test('PLANCHER ANTI-VACUITE : analyser sur une table de regles vide leve un
   assert.throws(() => analyser(coursConforme(), []), new RegExp(PORTE));
 });
 
-void test('PLANCHER ANTI-VACUITE : la table REGLES livree declare au moins quatre regles', () => {
+void test('PLANCHER ANTI-VACUITE : la table REGLES livree declare au moins neuf regles', () => {
   assert.ok(
-    REGLES.length >= 4,
+    REGLES.length >= 9,
     `${PORTE} : la table est tombée à ${REGLES.length} règle(s) — une porte sans règle ne garde rien.`,
   );
 });
@@ -134,6 +134,16 @@ void test('analyser : un ecran de classement est une violation qui nomme cet ecr
   const classement = violations.find((violation) => violation.regle === 'classement-public');
   assert.ok(classement, `aucune violation de classement-public dans ${JSON.stringify(violations)}`);
   assert.equal(classement.ecran, 'e3');
+});
+
+void test('analyser : un ecran d histogramme anonyme n est pas signale comme classement', () => {
+  const cours = coursConforme();
+  cours.ecrans[2] = { ...cours.ecrans[2], type: 'histogramme' };
+  const violations = analyser(cours, REGLES);
+  assert.deepEqual(
+    violations.filter((violation) => violation.regle === 'classement-public'),
+    [],
+  );
 });
 
 void test('analyser : les violations de plusieurs regles sont toutes rendues', () => {
