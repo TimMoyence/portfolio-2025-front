@@ -1,12 +1,12 @@
 import { PORTE } from './porte.mjs';
 import { REGLES_INTEGRITE } from './regles/integrite.mjs';
+import { REGLES_RYTHME } from './regles/rythme.mjs';
 
 export { PORTE };
 
 const DEROGATION_SANS_JUSTIFICATION = 'derogation-sans-justification';
 const DEROGATION_REGLE_INCONNUE = 'derogation-regle-inconnue';
 
-const PART_INTERACTIVE_MINIMALE = 1 / 3;
 const TYPE_CLASSEMENT = 'classement';
 
 /**
@@ -66,72 +66,6 @@ function ecransDe(cours) {
  * @param {Cours} cours
  * @returns {Manquement[]}
  */
-function controlerRatioInteraction(cours) {
-  const ecrans = ecransDe(cours);
-  if (ecrans.length === 0) {
-    return [
-      {
-        ecran: null,
-        raison: "le cours ne déclare aucun écran : le ratio d'interaction n'a rien à mesurer.",
-      },
-    ];
-  }
-  const interactifs = ecrans.filter((ecran) => ecran?.interactif === true).length;
-  if (interactifs >= ecrans.length * PART_INTERACTIVE_MINIMALE) {
-    return [];
-  }
-  return [
-    {
-      ecran: null,
-      raison: `${interactifs} écran(s) interactif(s) sur ${ecrans.length} : le cours passe sous le seuil d'un tiers d'écrans interactifs.`,
-    },
-  ];
-}
-
-/**
- * @param {Cours} cours
- * @returns {Manquement[]}
- */
-function controlerDureeEcran(cours) {
-  return ecransDe(cours).flatMap((ecran, index) => {
-    const identifiant = typeof ecran?.id === 'string' && ecran.id !== '' ? ecran.id : `#${index}`;
-    if (Number.isFinite(ecran?.duree) && ecran.duree > 0) {
-      return [];
-    }
-    return [
-      {
-        ecran: identifiant,
-        raison: `l'écran « ${identifiant} » annonce une durée de « ${ecran?.duree} » : une durée doit être un nombre strictement positif.`,
-      },
-    ];
-  });
-}
-
-/**
- * @param {Cours} cours
- * @returns {Manquement[]}
- */
-function controlerDureeCours(cours) {
-  const ecrans = ecransDe(cours);
-  const somme = ecrans.reduce(
-    (total, ecran) => total + (Number.isFinite(ecran?.duree) ? ecran.duree : 0),
-    0,
-  );
-  if (somme === cours?.duree) {
-    return [];
-  }
-  return [
-    {
-      ecran: null,
-      raison: `le cours annonce ${cours?.duree} minute(s) alors que ses écrans en totalisent ${somme}.`,
-    },
-  ];
-}
-
-/**
- * @param {Cours} cours
- * @returns {Manquement[]}
- */
 function controlerClassementPublic(cours) {
   return ecransDe(cours).flatMap((ecran, index) => {
     const identifiant = typeof ecran?.id === 'string' && ecran.id !== '' ? ecran.id : `#${index}`;
@@ -149,9 +83,7 @@ function controlerClassementPublic(cours) {
 
 /** @type {readonly Regle[]} */
 export const REGLES = [
-  { id: 'ratio-interaction', controler: controlerRatioInteraction },
-  { id: 'duree-ecran', controler: controlerDureeEcran },
-  { id: 'duree-cours', controler: controlerDureeCours },
+  ...REGLES_RYTHME,
   { id: 'classement-public', controler: controlerClassementPublic },
   ...REGLES_INTEGRITE,
 ];

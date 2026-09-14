@@ -13,9 +13,11 @@ const coursConforme = () => ({
   duree: 30,
   concepts: ['charge', 'produit'],
   ecrans: [
-    { id: 'e1', type: 'fp-sheet', duree: 10, interactif: true },
-    { id: 'e2', type: 'fp-vote', duree: 10, interactif: true },
-    { id: 'e3', type: 'fp-text', duree: 10, interactif: false },
+    { id: 'e1', type: 'fp-recall', duree: 5, interactif: true },
+    { id: 'e2', type: 'fp-text', duree: 6, interactif: false },
+    { id: 'e3', type: 'fp-sheet', duree: 5, interactif: true },
+    { id: 'e4', type: 'fp-text', duree: 6, interactif: false },
+    { id: 'e5', type: 'fp-exit', duree: 8, interactif: true },
   ],
 });
 
