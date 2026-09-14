@@ -116,6 +116,16 @@ const FR: Readonly<Record<string, string>> = {
   'escape-debloquee': 'Énigme suivante déverrouillée :',
   'escape-termine': 'Toutes les énigmes sont résolues, le code est reconstitué :',
   'escape-code': 'Code final :',
+  'spaced-consigne':
+    'Quelques questions des séances déjà passées : répondez de mémoire, sans relire vos notes',
+  'spaced-progression': 'Question',
+  'spaced-origine': 'Vu en',
+  'spaced-boite': 'Boîte',
+  'spaced-vide': 'Rien à réviser aujourd’hui : revenez après la prochaine séance',
+  'spaced-erreur':
+    'Les questions à revoir ne sont pas arrivées : réessayez dans un instant, rien n’est perdu',
+  'spaced-termine': 'Révision terminée : vos réponses sont parties',
+  'spaced-diagnostics': 'Confusions visées :',
 };
 
 export function texte(cle: string): string {

@@ -15,6 +15,7 @@ import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
 import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
 import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
 import type { SheetPlan } from '../../cours/runtime/blocks/FpSheet';
+import type { SpacedQuestion } from '../../cours/runtime/blocks/FpSpaced';
 import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
 import type { TableBuildPlan, TableColonne } from '../../cours/runtime/blocks/FpTableBuild';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
@@ -509,6 +510,63 @@ export function buildEscapeParcours(overrides: Partial<EscapeParcours> = {}): Es
     }),
     ...overrides,
   };
+}
+
+export function buildSpacedQuestion(overrides: Partial<SpacedQuestion> = {}): SpacedQuestion {
+  return {
+    questionId: 'Q-ACT-01',
+    concept: 'actualisation',
+    boite: 1,
+    cours: 'Seance 3 — Actualisation',
+    enonce: 'Que vaut aujourd hui un encaissement de 1 000 EUR dans un an, au taux de 5 % ?',
+    options: [
+      { id: 'act-a', libelle: '952,38 EUR', misconception: null },
+      {
+        id: 'act-b',
+        libelle: '1 050,00 EUR',
+        misconception: 'actualisation-confondue-avec-capitalisation',
+      },
+      { id: 'act-c', libelle: '1 000,00 EUR', misconception: 'valeur-temps-de-l-argent-ignoree' },
+      { id: 'act-d', libelle: '950,00 EUR', misconception: 'taux-applique-en-interet-simple' },
+    ],
+    ...overrides,
+  };
+}
+
+export function buildSpacedQuestions(): SpacedQuestion[] {
+  return [
+    buildSpacedQuestion(),
+    buildSpacedQuestion({
+      questionId: 'Q-VAN-02',
+      concept: 'valeur-actuelle-nette',
+      boite: 2,
+      cours: 'Seance 5 — Choix d investissement',
+      enonce: 'Un projet dont la VAN est negative au taux exige doit-il etre retenu ?',
+      options: [
+        { id: 'van-a', libelle: 'Non, il detruit de la valeur', misconception: null },
+        {
+          id: 'van-b',
+          libelle: 'Oui, si le TRI est positif',
+          misconception: 'tri-positif-confondu-avec-projet-rentable',
+        },
+      ],
+    }),
+    buildSpacedQuestion({
+      questionId: 'Q-AMO-03',
+      concept: 'amortissement',
+      boite: 3,
+      cours: 'Seance 2 — Amortissements',
+      enonce: 'L amortissement lineaire fait-il sortir de la tresorerie chaque annee ?',
+      options: [
+        { id: 'amo-a', libelle: 'Non, c est une charge calculee', misconception: null },
+        {
+          id: 'amo-b',
+          libelle: 'Oui, du montant de l annuite',
+          misconception: 'charge-calculee-confondue-avec-decaissement',
+        },
+      ],
+    }),
+  ];
 }
 
 export function buildDeckState(overrides: Partial<DeckState> = {}): DeckState {
