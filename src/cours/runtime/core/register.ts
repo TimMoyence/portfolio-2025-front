@@ -20,6 +20,7 @@ export const BLOCS: ReadonlyArray<{
   },
   { nom: 'fp-sheet', charge: async () => (await import('../blocks/FpSheet')).FpSheet },
   { nom: 'fp-cardsort', charge: async () => (await import('../blocks/FpCardsort')).FpCardsort },
+  { nom: 'fp-escape', charge: async () => (await import('../blocks/FpEscape')).FpEscape },
 ];
 
 let enregistre = false;

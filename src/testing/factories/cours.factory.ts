@@ -6,6 +6,7 @@ import {
 import type { CardsortPlan } from '../../cours/runtime/blocks/FpCardsort';
 import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
 import type { Concept4Definition } from '../../cours/runtime/blocks/FpConcept4';
+import type { EscapeParcours } from '../../cours/runtime/blocks/FpEscape';
 import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
 import type { PlotDefinition } from '../../cours/runtime/blocks/FpPlot';
@@ -463,6 +464,49 @@ export function buildSheetPlan(overrides: Partial<SheetPlan> = {}): SheetPlan {
       { reference: 'C3', valeur: 54 },
       { reference: 'D3', valeur: 64.8 },
     ],
+    ...overrides,
+  };
+}
+
+export function buildEscapeParcours(overrides: Partial<EscapeParcours> = {}): EscapeParcours {
+  return {
+    id: 'K-EVASION-01',
+    intitule: 'Ouvrez le coffre du service comptable',
+    delaiIndiceMs: 120000,
+    budgetEnigmeMs: 360000,
+    enigmes: [
+      {
+        id: 'seuil',
+        intitule: 'Le seuil de rentabilite',
+        enonce: 'Charges fixes 12 000 EUR, taux de marge sur cout variable 40 %. Quel seuil ?',
+        indice: 'Divisez les charges fixes par le taux de marge sur cout variable',
+        solution: '30000',
+        fragment: 'TR',
+      },
+      {
+        id: 'marge',
+        intitule: 'La marge commerciale',
+        enonce: 'Ventes 80 000 EUR, achats revendus 50 000 EUR. Quelle marge commerciale ?',
+        indice: 'La marge commerciale est la difference entre les ventes et les achats revendus',
+        solution: '30000',
+        fragment: 'ES',
+      },
+      {
+        id: 'tva',
+        intitule: 'La TVA a decaisser',
+        enonce: 'TVA collectee 4 200 EUR, TVA deductible 1 700 EUR. Combien decaisser ?',
+        indice: 'Retranchez la TVA deductible de la TVA collectee',
+        solution: '2500',
+        fragment: 'OR',
+      },
+    ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['seuil-de-rentabilite', 'marge-commerciale', 'tva'],
+      misconceptionsCiblees: ['tva-collectee-confondue-avec-tva-a-decaisser'],
+      dureeMinutes: 25,
+      modalite: 'groupe',
+      regime: 'ouvert',
+    }),
     ...overrides,
   };
 }
