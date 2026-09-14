@@ -1,3 +1,4 @@
+import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
@@ -19,6 +20,7 @@ export interface VoteQuestionPublique {
 
 export interface VoteQuestion extends VoteQuestionPublique {
   options: readonly VoteOption[];
+  readonly metadonnees: MetadonneesBrique;
 }
 
 export interface VoteResultats {
@@ -43,7 +45,8 @@ export class FpVote extends FpBlock {
       valeur === null || this.roleActuel() === 'presentateur'
         ? valeur
         : {
-            ...valeur,
+            id: valeur.id,
+            enonce: valeur.enonce,
             options: valeur.options.map((option) => ({
               id: option.id,
               libelle: option.libelle,

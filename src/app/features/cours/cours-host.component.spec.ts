@@ -1,11 +1,28 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { clearIdentity, saveIdentity } from '../../../cours/runtime/core/identity';
+import { BLOCS } from '../../../cours/runtime/core/register';
 import { seedFromKey } from '../../../cours/runtime/core/seed';
 import { saturationDuStockage } from '../../../testing/sans-stockage';
 import { CoursHostComponent } from './cours-host.component';
 
 const IDENTITE_THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
+
+const MOTS_DE_CORRECTION = [
+  'misconception',
+  'bareme',
+  'barème',
+  'corrige',
+  'bonneReponse',
+  'reponseAttendue',
+];
+
+function renduComplet(hote: HTMLElement): string {
+  const ombres = [...hote.querySelectorAll('*')]
+    .map((element) => element.shadowRoot?.innerHTML ?? '')
+    .join('\n');
+  return `${hote.innerHTML}\n${ombres}`;
+}
 
 async function attendreQue(
   fixture: ComponentFixture<CoursHostComponent>,
@@ -94,6 +111,45 @@ describe('CoursHostComponent', () => {
         question?: { id: string } | null;
       };
       expect(brique.question?.id).toBe('Q-CAP-03');
+    } finally {
+      clearIdentity();
+    }
+  });
+
+  it('monte chaque brique de la table en role etudiant sans qu aucune ne leve', async () => {
+    saveIdentity(IDENTITE_THEO);
+    try {
+      const pret = await monterPret();
+      const hote = pret.nativeElement as HTMLElement;
+      expect(BLOCS.length).toBeGreaterThan(0);
+      for (const bloc of BLOCS) {
+        const brique = hote.querySelector(bloc.nom);
+        expect(brique)
+          .withContext(`${bloc.nom} n est pas monte sur la page de demonstration`)
+          .toBeTruthy();
+        expect(brique?.shadowRoot?.childElementCount ?? 0)
+          .withContext(`${bloc.nom} n a rien rendu : son renderHand a leve`)
+          .toBeGreaterThan(0);
+        expect((brique as HTMLElement).getAttribute('role'))
+          .withContext(`${bloc.nom} n est pas monte en role etudiant`)
+          .toBeNull();
+      }
+    } finally {
+      clearIdentity();
+    }
+  });
+
+  it('ne sert aucune donnee de correction dans le HTML de la page de demonstration', async () => {
+    saveIdentity(IDENTITE_THEO);
+    try {
+      const pret = await monterPret();
+      const rendu = renduComplet(pret.nativeElement as HTMLElement);
+      expect(MOTS_DE_CORRECTION.length).toBeGreaterThan(0);
+      for (const mot of MOTS_DE_CORRECTION) {
+        expect(rendu)
+          .withContext(`« ${mot} » apparait dans le HTML servi a l etudiant`)
+          .not.toContain(mot);
+      }
     } finally {
       clearIdentity();
     }

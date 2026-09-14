@@ -3,12 +3,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  effect,
+  type ElementRef,
   signal,
+  viewChild,
 } from '@angular/core';
 import type { VoteQuestionPublique } from '../../../cours/runtime/blocks/FpVote';
 import type { IdentityRegistration } from '../../../cours/runtime/core/identity';
 
 type EtatHote = 'chargement' | 'identite' | 'pret' | 'erreur';
+
+const BRIQUE_DEMO = 'fp-vote';
 
 const QUESTION_DEMO: VoteQuestionPublique = {
   id: 'Q-CAP-03',
@@ -66,6 +71,10 @@ const QUESTION_DEMO: VoteQuestionPublique = {
         </p>
       }
       <fp-vote [attr.render]="rendu()" [attr.seed]="graine()" [question]="questionDemo"></fp-vote>
+      <section>
+        <h2 i18n="cours.galerie|@@coursGalerie">Les briques du catalogue</h2>
+        <div data-testid="cours-galerie" #galerie></div>
+      </section>
     }
     @if (etat() === 'erreur') {
       <p data-testid="cours-erreur" i18n="cours.erreur|@@coursErreur">
@@ -81,7 +90,10 @@ export class CoursHostComponent {
   readonly graine = signal(0);
   readonly sansMemoire = signal(false);
   readonly identiteRefusee = signal(false);
+  readonly briques = signal<readonly string[]>([]);
   readonly questionDemo: VoteQuestionPublique = QUESTION_DEMO;
+
+  private readonly galerie = viewChild<ElementRef<HTMLElement>>('galerie');
 
   private acheve: () => void = () => undefined;
   private chantier = new Promise<void>((resoudre) => {
@@ -92,6 +104,26 @@ export class CoursHostComponent {
     afterNextRender(() => {
       void this.demarrer().then(this.acheve);
     });
+    effect(() => {
+      this.peuplerLaGalerie(this.galerie()?.nativeElement, this.briques(), this.graine());
+    });
+  }
+
+  private peuplerLaGalerie(
+    hote: HTMLElement | undefined,
+    noms: readonly string[],
+    graine: number,
+  ): void {
+    if (hote === undefined) {
+      return;
+    }
+    hote.replaceChildren();
+    for (const nom of noms) {
+      const brique = document.createElement(nom);
+      brique.setAttribute('render', 'hand');
+      brique.setAttribute('seed', String(graine));
+      hote.append(brique);
+    }
   }
 
   protected enregistrer(evenement: Event): void {
@@ -106,8 +138,9 @@ export class CoursHostComponent {
 
   private async demarrer(): Promise<void> {
     try {
-      const { registerCoursBlocks } = await import('../../../cours/runtime/core/register');
+      const { BLOCS, registerCoursBlocks } = await import('../../../cours/runtime/core/register');
       await registerCoursBlocks();
+      this.briques.set(BLOCS.map((bloc) => bloc.nom).filter((nom) => nom !== BRIQUE_DEMO));
       const { readIdentity } = await import('../../../cours/runtime/core/identity');
       const identite = readIdentity();
       if (identite === null) {

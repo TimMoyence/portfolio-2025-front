@@ -1,3 +1,4 @@
+import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
@@ -18,6 +19,7 @@ export interface SpacedQuestionPublique {
 
 export interface SpacedQuestion extends SpacedQuestionPublique {
   readonly options: readonly SpacedOption[];
+  readonly metadonnees: MetadonneesBrique;
 }
 
 const VIDE = escapeHtml('');
@@ -98,14 +100,16 @@ export class FpSpaced extends FpBlock {
   }
 
   private projeter(source: SpacedQuestion): SpacedQuestionPublique {
+    if (this.roleActuel() === 'presentateur') {
+      return source;
+    }
     return {
       questionId: source.questionId,
       concept: source.concept,
       boite: source.boite,
       cours: source.cours,
       enonce: source.enonce,
-      options:
-        this.roleActuel() === 'presentateur' ? source.options : projeterOptions(source.options),
+      options: projeterOptions(source.options),
     };
   }
 

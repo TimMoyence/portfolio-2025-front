@@ -58,6 +58,13 @@ export function buildVoteQuestion(overrides: Partial<VoteQuestion> = {}): VoteQu
       { id: 'b', libelle: '1 480,24 €', misconception: null },
       { id: 'c', libelle: '1 040 €', misconception: 'oubli-de-la-duree' },
     ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['capitalisation', 'valeur-acquise'],
+      misconceptionsCiblees: ['interet-simple', 'oubli-de-la-duree'],
+      dureeMinutes: 3,
+      modalite: 'classe',
+      regime: 'ouvert',
+    }),
     ...overrides,
   };
 }
@@ -529,6 +536,13 @@ export function buildSpacedQuestion(overrides: Partial<SpacedQuestion> = {}): Sp
       { id: 'act-c', libelle: '1 000,00 EUR', misconception: 'valeur-temps-de-l-argent-ignoree' },
       { id: 'act-d', libelle: '950,00 EUR', misconception: 'taux-applique-en-interet-simple' },
     ],
+    metadonnees: creerMetadonneesBrique({
+      concepts: ['actualisation'],
+      misconceptionsCiblees: ['actualisation-confondue-avec-capitalisation'],
+      dureeMinutes: 2,
+      modalite: 'solo',
+      regime: 'examen',
+    }),
     ...overrides,
   };
 }
