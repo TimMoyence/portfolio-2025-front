@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { computed, signal } from '@angular/core';
+import { finalize } from 'rxjs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 
@@ -19,12 +20,16 @@ export class AuthStateService {
   private readonly _token = signal<string | null>(null);
   private readonly _user = signal<AuthUser | null>(null);
   private readonly _isInitialized = signal(false);
+  private readonly _isUserLoading = signal(false);
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly token = this._token.asReadonly();
   readonly user = this._user.asReadonly();
   readonly isLoggedIn = computed(() => !!this._token());
   readonly isInitialized = this._isInitialized.asReadonly();
+  readonly isSessionResolved = computed(
+    () => this._user() !== null || (this._isInitialized() && !this._isUserLoading()),
+  );
 
   constructor() {
     this.destroyRef.onDestroy(() => this.clearRefreshTimer());
@@ -75,10 +80,14 @@ export class AuthStateService {
     const token = this._token();
     if (!token || !this.authPort) return;
 
-    this.authPort.me().subscribe({
-      next: (user) => this._user.set(user),
-      error: () => this.clearSession(),
-    });
+    this._isUserLoading.set(true);
+    this.authPort
+      .me()
+      .pipe(finalize(() => this._isUserLoading.set(false)))
+      .subscribe({
+        next: (user) => this._user.set(user),
+        error: () => this.clearSession(),
+      });
   }
 
   private scheduleRefresh(expiresInSeconds: number): void {
