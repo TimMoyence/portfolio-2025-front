@@ -7,6 +7,7 @@ import {
   buildEcranQuestionnaire,
   buildExitBillet,
   buildNumericQuestion,
+  buildQuoteCitation,
   buildVoteQuestion,
 } from '../../../../testing/factories/cours.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
@@ -14,6 +15,7 @@ import type { ReponseBrique } from './cours-ecran.component';
 import {
   CoursEcranComponent,
   ENREGISTREUR_DES_BRIQUES,
+  identifiantsDesQuestions,
   PROPRIETES_PAR_BRIQUE,
 } from './cours-ecran.component';
 
@@ -243,6 +245,18 @@ describe('CoursEcranComponent', () => {
       { questionId: 'Q-CAP-03', valeur: 'b', dureeMs: 400 },
       { questionId: 'Q-RAPPEL-04', valeur: 'a', dureeMs: 3000 },
     ]);
+  });
+
+  it('liste dans l ordre les identifiants auxquels l ecran fait repondre', () => {
+    const citation = buildEcran({ type: 'fp-quote', donnees: { citation: buildQuoteCitation() } });
+
+    expect(identifiantsDesQuestions(buildEcranQuestionnaire())).toEqual([
+      buildNumericQuestion().id,
+      buildVoteQuestion().id,
+    ]);
+    expect(identifiantsDesQuestions(ecranDeSortie())).toEqual([buildExitBillet().id]);
+    expect(identifiantsDesQuestions(citation)).toEqual([]);
+    expect(identifiantsDesQuestions(buildEcran({ type: 'iframe' }))).toEqual([]);
   });
 
   it('ignore une soumission sans identifiant ou dont la valeur est invalide', async () => {

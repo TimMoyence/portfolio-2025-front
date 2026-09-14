@@ -8,6 +8,7 @@ import type { CoursContent } from '../../../../cours/content/types';
 import { clearIdentity } from '../../../../cours/runtime/core/identity';
 import { pending } from '../../../../cours/runtime/core/queue';
 import type { EtatSession, Sync, SyncListener } from '../../../../cours/runtime/core/sync';
+import { buildEcranQuestionnaire } from '../../../../testing/factories/cours.factory';
 import {
   buildCoursContent,
   buildRattachement,
@@ -46,6 +47,19 @@ const IDENTITE: readonly (readonly [string, string])[] = [
   ['nom', 'Dubois'],
   ['email', 'lea.dubois@example.com'],
 ];
+
+function sujetDeSeance(): CoursContent {
+  const cours = buildCoursContent();
+  return {
+    ...cours,
+    ecrans: [buildEcranQuestionnaire({ id: 'ecran-1' }), ...cours.ecrans.slice(1)],
+  };
+}
+
+function livrer(arrivee: Subject<CoursContent>, sujet: CoursContent): void {
+  arrivee.next(sujet);
+  arrivee.complete();
+}
 
 function verdictAvecFuite(): VerdictReponse {
   const recu: Record<string, unknown> = {
@@ -118,6 +132,27 @@ describe('CoursEtudiantComponent', () => {
     ];
   }
 
+  function libellesDesVerdicts(fixture: Fixture): (string | null)[][] {
+    return verdictsAffiches(fixture).map((verdict) => [
+      verdict.getAttribute('data-question'),
+      verdict
+        .querySelector("[data-testid='etudiant-verdict-libelle']")
+        ?.textContent?.replace(/\s+/g, ' ')
+        .trim() ?? null,
+    ]);
+  }
+
+  function sujetEnAttente(): { arrivee: Subject<CoursContent>; lectureDemandee: Promise<void> } {
+    const arrivee = new Subject<CoursContent>();
+    const lectureDemandee = new Promise<void>((resoudre) => {
+      port.lireSujet.and.callFake((): Observable<CoursContent> => {
+        resoudre();
+        return arrivee;
+      });
+    });
+    return { arrivee, lectureDemandee };
+  }
+
   function ecranDe(fixture: Fixture): DebugElement {
     const ecran = fixture.debugElement.queryAll(By.directive(CoursEcranComponent)).at(0);
     if (ecran === undefined) {
@@ -179,7 +214,7 @@ describe('CoursEtudiantComponent', () => {
   beforeEach(async () => {
     localStorage.clear();
     clearIdentity();
-    sujet = buildCoursContent();
+    sujet = sujetDeSeance();
     port = createFormationsPortStub();
     port.rejoindre.and.returnValue(of(buildRattachement({ sessionId: SESSION, jeton: JETON })));
     port.lireSujet.and.returnValue(of(sujet));
@@ -218,15 +253,7 @@ describe('CoursEtudiantComponent', () => {
   });
 
   it('lit le sujet avec le jeton du rattachement et n ouvre la seance qu a son arrivee', async () => {
-    const arrivee = new Subject<CoursContent>();
-    let signalerLecture: () => void = () => undefined;
-    const lectureDemandee = new Promise<void>((resoudre) => {
-      signalerLecture = resoudre;
-    });
-    port.lireSujet.and.callFake((): Observable<CoursContent> => {
-      signalerLecture();
-      return arrivee;
-    });
+    const { arrivee, lectureDemandee } = sujetEnAttente();
     const fixture = monter();
     soumettre(fixture, CODE_SAISI);
     await lectureDemandee;
@@ -237,8 +264,7 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-seance')).toBeNull();
     expect(double.fabrique).not.toHaveBeenCalled();
 
-    arrivee.next(sujet);
-    arrivee.complete();
+    livrer(arrivee, sujet);
     await stabiliser(fixture);
 
     expect(lire(fixture, 'etudiant-chargement')).toBeNull();
@@ -246,27 +272,45 @@ describe('CoursEtudiantComponent', () => {
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
   });
 
+  it('n ouvre ni flux ni verrou quand la vue est detruite pendant la lecture du sujet', async () => {
+    const { arrivee, lectureDemandee } = sujetEnAttente();
+    const fixture = monter();
+    soumettre(fixture, CODE_SAISI);
+    await lectureDemandee;
+    fixture.destroy();
+    const ecoutes = spyOn(window, 'addEventListener').and.callThrough();
+
+    livrer(arrivee, sujet);
+    await fixture.componentInstance.quandStabilise();
+
+    expect(double.fabrique).not.toHaveBeenCalled();
+    expect(ecoutes.calls.allArgs().map(([type]) => type)).not.toContain('blur');
+  });
+
   const lecturesRefusees: readonly {
     readonly cas: string;
     readonly erreur: Error;
     readonly motif: string;
     readonly message: string;
+    readonly reessayable: boolean;
   }[] = [
     {
       cas: 'le cours a change depuis l ouverture',
       erreur: new SujetRefuse('cours-modifie', 409),
       motif: 'cours-modifie',
       message: 'Le cours a changé',
+      reessayable: false,
     },
     {
       cas: 'la lecture echoue sans motif connu',
       erreur: new Error('reseau coupe'),
       motif: 'sujet-indisponible',
       message: 'n’a pas pu être chargé',
+      reessayable: true,
     },
   ];
 
-  for (const { cas, erreur, motif, message } of lecturesRefusees) {
+  for (const { cas, erreur, motif, message, reessayable } of lecturesRefusees) {
     it(`alerte sans ouvrir de seance quand ${cas}`, async () => {
       port.lireSujet.and.returnValue(throwError(() => erreur));
       const fixture = await rattacher();
@@ -275,11 +319,40 @@ describe('CoursEtudiantComponent', () => {
       expect(alerte?.getAttribute('role')).toBe('alert');
       expect(alerte?.getAttribute('data-motif')).toBe(motif);
       expect(alerte?.textContent).toContain(message);
+      expect(lire(fixture, 'etudiant-sujet-reessayer') !== null)
+        .withContext('seul un sujet indisponible se relit, un cours modifie reste un refus')
+        .toBe(reessayable);
       expect(lire(fixture, 'etudiant-seance')).toBeNull();
       expect(lire(fixture, 'etudiant-entree')).toBeNull();
       expect(double.fabrique).not.toHaveBeenCalled();
     });
   }
+
+  it('relit un sujet indisponible a la demande en repassant par le chargement', async () => {
+    const arrivee = new Subject<CoursContent>();
+    port.lireSujet.and.returnValues(
+      throwError(() => new SujetRefuse('sujet-indisponible', 503)),
+      arrivee,
+    );
+    const fixture = await rattacher();
+
+    lire(fixture, 'etudiant-sujet-reessayer')?.click();
+    fixture.detectChanges();
+
+    expect(lire(fixture, 'etudiant-chargement')).toBeTruthy();
+    expect(lire(fixture, 'etudiant-sujet-refuse')).toBeNull();
+
+    livrer(arrivee, sujet);
+    await stabiliser(fixture);
+
+    expect(port.rejoindre).toHaveBeenCalledTimes(1);
+    expect(port.lireSujet.calls.allArgs()).toEqual([
+      [SESSION, JETON],
+      [SESSION, JETON],
+    ]);
+    expect(lire(fixture, 'etudiant-seance')).toBeTruthy();
+    expect(double.fabrique).toHaveBeenCalledTimes(1);
+  });
 
   it('porte le jeton au flux sans jamais l ecrire dans le stockage local', async () => {
     await rattacher();
@@ -367,6 +440,19 @@ describe('CoursEtudiantComponent', () => {
     expect(verdictsAffiches(fixture)).toEqual([]);
   });
 
+  it('range les verdicts dans l ordre des questions de l ecran et les numerote', async () => {
+    port.repondre.and.returnValues(of(CONFUSION), of(REUSSITE));
+    const fixture = await rattacher();
+
+    await repondre(fixture, REPONSE_VOTE);
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(libellesDesVerdicts(fixture)).toEqual([
+      ['Q-VA-07', 'Question 1 : Réussi'],
+      ['Q-CAP-03', 'Question 2 : Manqué'],
+    ]);
+  });
+
   it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
     const fixture = await rattacher();
     window.dispatchEvent(new Event('offline'));
@@ -429,20 +515,60 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-suivant')).toBeNull();
   });
 
-  it('reste en rythme libre sur l ecran choisi tant que le formateur ne change pas d ecran', async () => {
+  it('rejoint l ecran du formateur a la bascule en libre sans intervalle puis reste sur l ecran choisi', async () => {
     const fixture = await rattacher();
-    const libre: Partial<EtatSession> = { modeRythme: 'libre', intervalleLibre: null };
+    const libre: Partial<EtatSession> = {
+      modeRythme: 'libre',
+      intervalleLibre: null,
+      ecranCourant: 1,
+    };
     diffuser(fixture, libre);
-    lire(fixture, 'etudiant-suivant')?.click();
-    fixture.detectChanges();
-
-    diffuser(fixture, { ...libre, participants: 13 });
 
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
 
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+    diffuser(fixture, { ...libre, participants: 13 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+
     diffuser(fixture, { ...libre, ecranCourant: 3 });
 
-    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[3]);
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+  });
+
+  it('reste dans l intervalle libre quand le formateur change d ecran et y ramene qui en sort', async () => {
+    const fixture = await rattacher();
+    const intervalle = { premier: 0, dernier: 3 };
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: intervalle });
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: intervalle, ecranCourant: 2 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    diffuser(fixture, {
+      modeRythme: 'libre',
+      intervalleLibre: { premier: 2, dernier: 3 },
+      ecranCourant: 2,
+    });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+  });
+
+  it('ramene l etudiant sur l ecran du formateur quand il repasse en rythme pilote', async () => {
+    const fixture = await rattacher();
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: null });
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    diffuser(fixture, { modeRythme: 'pilote', ecranCourant: 0 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
   });
 
   it('ferme le flux a la destruction du composant', async () => {

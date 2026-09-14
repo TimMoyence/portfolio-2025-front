@@ -83,6 +83,23 @@ function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
   return montages.every((montage): montage is Montage => montage !== null) ? montages : null;
 }
 
+const PROPRIETE_DE_REPONSE: Readonly<Record<string, string>> = {
+  'fp-numeric': 'question',
+  'fp-vote': 'question',
+  'fp-recall': 'question',
+  'fp-exit': 'billet',
+};
+
+function identifiantDeReponse({ brique, donnees }: Montage): readonly string[] {
+  const cle = Object.hasOwn(PROPRIETE_DE_REPONSE, brique) ? PROPRIETE_DE_REPONSE[brique] : null;
+  const porteur = cle === null ? null : donnees[cle];
+  return estObjet(porteur) && typeof porteur['id'] === 'string' ? [porteur['id']] : [];
+}
+
+export function identifiantsDesQuestions(ecran: EcranContent): readonly string[] {
+  return (planDeMontage(ecran) ?? []).flatMap(identifiantDeReponse);
+}
+
 function estValeur(valeur: unknown): valeur is number | string {
   return typeof valeur === 'string' || (typeof valeur === 'number' && Number.isFinite(valeur));
 }

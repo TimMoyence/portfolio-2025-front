@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { CoursContent, EcranContent } from '../../../../cours/content/types';
+import type { CoursContent, EcranContent, PacingMode } from '../../../../cours/content/types';
 import type { Deck } from '../../../../cours/runtime/core/deck';
 import { createDeck } from '../../../../cours/runtime/core/deck';
 import type { Identity } from '../../../../cours/runtime/core/identity';
@@ -35,7 +35,7 @@ import {
   SujetRefuse,
 } from '../../../core/ports/formations.port';
 import type { ReponseBrique } from '../ecran/cours-ecran.component';
-import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import { CoursEcranComponent, identifiantsDesQuestions } from '../ecran/cours-ecran.component';
 
 export type CreateurFlux = (options: SyncOptions) => Sync;
 
@@ -53,10 +53,14 @@ interface RefusAffiche {
   readonly message: string;
 }
 
-interface VerdictAffiche {
-  readonly questionId: string;
+interface VerdictRecu {
   readonly reussite: boolean;
   readonly etiquette: string | null;
+}
+
+interface VerdictAffiche extends VerdictRecu {
+  readonly questionId: string;
+  readonly rang: number;
 }
 
 const REGIME_VERROU = 'focus';
@@ -77,6 +81,17 @@ function normaliserCode(saisi: string): string | null {
 function lireRefus(erreur: unknown): RefusAffiche {
   const refus = erreur instanceof SujetRefuse ? erreur : new SujetRefuse('sujet-indisponible', 0);
   return { motif: refus.motif, message: refus.message };
+}
+
+function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolean): boolean {
+  if (etat.modeRythme === 'pilote') {
+    return true;
+  }
+  const intervalle = etat.intervalleLibre;
+  if (intervalle === null) {
+    return bascule;
+  }
+  return index < intervalle.premier || index > intervalle.dernier;
 }
 
 @Component({
@@ -100,6 +115,16 @@ function lireRefus(erreur: unknown): RefusAffiche {
           <p data-testid="etudiant-sujet-refuse" role="alert" [attr.data-motif]="refus.motif">
             {{ refus.message }}
           </p>
+          @if (refus.motif === 'sujet-indisponible') {
+            <button
+              type="button"
+              data-testid="etudiant-sujet-reessayer"
+              (click)="reessayer()"
+              i18n="cours.reessayerSujet|@@coursReessayerSujet"
+            >
+              Réessayer
+            </button>
+          }
         }
       }
       @case ('seance') {
@@ -135,16 +160,26 @@ function lireRefus(erreur: unknown): RefusAffiche {
             }
           }
           <ul data-testid="etudiant-verdicts" aria-live="polite">
-            @for (verdict of verdicts(); track verdict.questionId) {
+            @for (verdict of verdictsAffiches(); track verdict.questionId) {
               <li
                 data-testid="etudiant-verdict"
                 [attr.data-question]="verdict.questionId"
                 [attr.data-reussite]="verdict.reussite"
               >
                 @if (verdict.reussite) {
-                  <span i18n="cours.reussi|@@coursReussi">Réussi</span>
+                  <span
+                    data-testid="etudiant-verdict-libelle"
+                    i18n="cours.questionReussie|@@coursQuestionReussie"
+                  >
+                    Question {{ verdict.rang }} : Réussi
+                  </span>
                 } @else {
-                  <span i18n="cours.manque|@@coursManque">Manqué</span>
+                  <span
+                    data-testid="etudiant-verdict-libelle"
+                    i18n="cours.questionManquee|@@coursQuestionManquee"
+                  >
+                    Question {{ verdict.rang }} : Manqué
+                  </span>
                 }
                 @if (verdict.etiquette; as etiquette) {
                   <span data-testid="etudiant-confusion">{{ etiquette }}</span>
@@ -207,7 +242,6 @@ export class CoursEtudiantComponent {
   readonly refusSujet = signal<RefusAffiche | null>(null);
   readonly sujet = signal<CoursContent | null>(null);
   readonly indexEcran = signal(0);
-  readonly verdicts = signal<readonly VerdictAffiche[]>([]);
   readonly enAttente = signal(false);
   readonly fileRefusee = signal(false);
   readonly terminee = signal(false);
@@ -217,21 +251,37 @@ export class CoursEtudiantComponent {
     () => this.sujet()?.ecrans[this.indexEcran()] ?? null,
   );
 
+  private readonly verdicts = signal<ReadonlyMap<string, VerdictRecu>>(new Map());
+
+  private readonly questionsDeLEcran = computed<readonly string[]>(() => {
+    const ecran = this.ecranCourant();
+    return ecran === null ? [] : identifiantsDesQuestions(ecran);
+  });
+
+  readonly verdictsAffiches = computed<readonly VerdictAffiche[]>(() => {
+    const recus = this.verdicts();
+    return this.questionsDeLEcran().flatMap((questionId, index) => {
+      const recu = recus.get(questionId);
+      return recu === undefined ? [] : [{ questionId, rang: index + 1, ...recu }];
+    });
+  });
+
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFlux = inject(CREATEUR_FLUX);
   private readonly baseUrl = `${getApiBaseUrl()}/formations`;
   private readonly enLigne = signal(typeof navigator === 'undefined' || navigator.onLine);
   private readonly incidents: IncidentEtudiant[] = [];
-  private readonly questionsDeLEcran = new Set<string>();
   private readonly debutFormulaire = Date.now();
 
   private identite: Identity | null = null;
+  private rattachement: Rattachement | null = null;
   private sessionId: string | null = null;
   private jeton = '';
   private flux: Sync | null = null;
   private verrou: Lock | null = null;
   private deck: Deck | null = null;
-  private ecranDistant = 0;
+  private rythmeDistant: PacingMode = 'pilote';
+  private detruit = false;
   private videEnCours = false;
   private chantier: Promise<void> = Promise.resolve();
 
@@ -252,6 +302,7 @@ export class CoursEtudiantComponent {
       });
     }
     aLaDestruction.onDestroy(() => {
+      this.detruit = true;
       this.flux?.close();
       this.verrou?.disarm();
     });
@@ -268,7 +319,6 @@ export class CoursEtudiantComponent {
   }
 
   protected envoyer(reponse: ReponseBrique): void {
-    this.questionsDeLEcran.add(reponse.questionId);
     this.chantier = this.traiter({
       questionId: reponse.questionId,
       valeur: reponse.valeur,
@@ -278,6 +328,12 @@ export class CoursEtudiantComponent {
 
   protected avancer(): void {
     this.deck?.next();
+  }
+
+  protected reessayer(): void {
+    if (this.identite !== null && this.rattachement !== null) {
+      this.chantier = this.chargerLaSeance(this.identite, this.rattachement);
+    }
   }
 
   private async rattacher(donnees: FormData): Promise<void> {
@@ -292,11 +348,17 @@ export class CoursEtudiantComponent {
       return;
     }
     const rattachement = await this.demanderRattachement(code, identite, donnees);
-    if (rattachement === null) {
+    if (rattachement === null || this.detruit) {
       return;
     }
+    this.identite = identite;
+    this.rattachement = rattachement;
+    await this.chargerLaSeance(identite, rattachement);
+  }
+
+  private async chargerLaSeance(identite: Identity, rattachement: Rattachement): Promise<void> {
     const sujet = await this.lireLeSujet(rattachement);
-    if (sujet !== null) {
+    if (sujet !== null && !this.detruit) {
       this.ouvrirLaSeance(identite, rattachement, sujet);
     }
   }
@@ -361,7 +423,6 @@ export class CoursEtudiantComponent {
     rattachement: Rattachement,
     sujet: CoursContent,
   ): void {
-    this.identite = identite;
     this.sessionId = rattachement.sessionId;
     this.jeton = rattachement.jeton;
     this.sujet.set(sujet);
@@ -388,7 +449,7 @@ export class CoursEtudiantComponent {
     deck.subscribe(() => this.suivreLeDeck(deck));
     deck.setPacing(rattachement.modeRythme, null);
     deck.applyRemote(rattachement.ecranCourant);
-    this.ecranDistant = rattachement.ecranCourant;
+    this.rythmeDistant = rattachement.modeRythme;
     this.deck = deck;
     return deck;
   }
@@ -397,19 +458,19 @@ export class CoursEtudiantComponent {
     const index = deck.current();
     if (index !== this.indexEcran()) {
       this.indexEcran.set(index);
-      this.questionsDeLEcran.clear();
-      this.verdicts.set([]);
+      this.verdicts.set(new Map());
     }
     this.peutAvancer.set(deck.canNavigate(index + 1));
   }
 
   private suivreLeFlux(deck: Deck, etat: EtatSession): void {
     this.terminee.set(etat.etat === 'terminee');
+    const bascule = etat.modeRythme !== this.rythmeDistant;
+    this.rythmeDistant = etat.modeRythme;
     deck.setPacing(etat.modeRythme, etat.intervalleLibre);
-    if (etat.modeRythme === 'pilote' || etat.ecranCourant !== this.ecranDistant) {
+    if (doitSuivreLeFormateur(deck.current(), etat, bascule)) {
       deck.applyRemote(etat.ecranCourant);
     }
-    this.ecranDistant = etat.ecranCourant;
   }
 
   private async traiter(reponse: ReponseEtudiant): Promise<void> {
@@ -430,19 +491,9 @@ export class CoursEtudiantComponent {
   }
 
   private afficherVerdict(questionId: string, recu: VerdictReponse): void {
-    if (!this.questionsDeLEcran.has(questionId)) {
-      return;
-    }
-    const verdict: VerdictAffiche = {
-      questionId,
-      reussite: recu.reussite,
-      etiquette: recu.libelleConfusion,
-    };
-    this.verdicts.update((affiches) =>
-      affiches.some((affiche) => affiche.questionId === questionId)
-        ? affiches.map((affiche) => (affiche.questionId === questionId ? verdict : affiche))
-        : [...affiches, verdict],
-    );
+    const verdicts = new Map(this.verdicts());
+    verdicts.set(questionId, { reussite: recu.reussite, etiquette: recu.libelleConfusion });
+    this.verdicts.set(verdicts);
   }
 
   private mettreEnFile(reponse: ReponseEtudiant): void {
