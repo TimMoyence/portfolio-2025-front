@@ -22,7 +22,7 @@ import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
 import type { DeckState } from '../../cours/runtime/core/state';
 
-function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
+export function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
   return {
     id: 'ecran-1',
     type: 'vote',
@@ -30,6 +30,22 @@ function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
     interactif: true,
     ...overrides,
   };
+}
+
+export function buildEcranQuestionnaire(overrides: Partial<EcranContent> = {}): EcranContent {
+  return buildEcran({
+    id: 'ecran-questionnaire',
+    type: 'questionnaire',
+    duree: 600,
+    donnees: {
+      regime: 'focus',
+      questions: [
+        { brique: 'fp-numeric', donnees: { question: buildNumericQuestion() } },
+        { brique: 'fp-vote', donnees: { question: buildVoteQuestion() } },
+      ],
+    },
+    ...overrides,
+  });
 }
 
 export function buildCoursContent(overrides: Partial<CoursContent> = {}): CoursContent {
