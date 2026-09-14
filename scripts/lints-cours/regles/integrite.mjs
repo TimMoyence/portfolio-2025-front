@@ -246,10 +246,10 @@ export function creerRegleConcepts(banque) {
 }
 
 /** @type {import('../moteur.mjs').Regle} */
-export const REGLE_REFERENCES = { id: 'reference-inconnue', controler: controlerReferences };
+const REGLE_REFERENCES = { id: 'reference-inconnue', controler: controlerReferences };
 
 /** @type {import('../moteur.mjs').Regle} */
-export const REGLE_CYCLES = { id: 'reference-circulaire', controler: controlerCycles };
+const REGLE_CYCLES = { id: 'reference-circulaire', controler: controlerCycles };
 
 /** @type {readonly import('../moteur.mjs').Regle[]} */
 export const REGLES_INTEGRITE = [REGLE_REFERENCES, REGLE_CYCLES];

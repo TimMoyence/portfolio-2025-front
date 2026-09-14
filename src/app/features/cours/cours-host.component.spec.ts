@@ -121,6 +121,9 @@ describe('CoursHostComponent', () => {
     try {
       const pret = await monterPret();
       const hote = pret.nativeElement as HTMLElement;
+      await Promise.all(BLOCS.map((bloc) => customElements.whenDefined(bloc.nom)));
+      pret.detectChanges();
+
       expect(BLOCS.length).toBeGreaterThan(0);
       for (const bloc of BLOCS) {
         const brique = hote.querySelector(bloc.nom);

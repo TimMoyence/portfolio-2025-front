@@ -8,7 +8,7 @@ export interface OptionPublique {
 export function projeterMetadonnees(source: MetadonneesBrique): MetadonneesBrique {
   return {
     concepts: [...source.concepts],
-    misconceptionsCiblees: [...source.misconceptionsCiblees],
+    misconceptionsCiblees: [],
     dureeMinutes: source.dureeMinutes,
     modalite: source.modalite,
     regime: source.regime,
