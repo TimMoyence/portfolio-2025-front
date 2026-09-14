@@ -46,7 +46,7 @@ export interface ReponseEtudiant {
 }
 
 export interface VerdictReponse {
-  correcte: boolean;
+  reussite: boolean;
   libelleConfusion: string | null;
 }
 

@@ -40,13 +40,14 @@ const HORS_PARCOURS = 'Methode hors du parcours etudiant';
 
 const ETIQUETTE_LIBELLE = 'Les intérêts ont été additionnés au lieu d’être composés.';
 
-const VERDICT_JUSTE: VerdictReponse = { correcte: true, libelleConfusion: null };
+const VERDICT_JUSTE: VerdictReponse = { reussite: true, libelleConfusion: null };
 
 function verdictAvecFuite(): VerdictReponse {
   const recu: Record<string, unknown> = {
     reponseAttendue: VALEUR_ATTENDUE,
     correcte: false,
     misconception: ETIQUETTE_BRUTE,
+    reussite: false,
     libelleConfusion: ETIQUETTE_LIBELLE,
   };
   return recu as unknown as VerdictReponse;

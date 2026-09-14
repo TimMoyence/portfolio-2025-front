@@ -100,7 +100,7 @@ function normaliserCode(saisi: string): string | null {
 
 function lireVerdict(recu: VerdictReponse): VerdictAffiche {
   return {
-    reussite: recu.correcte,
+    reussite: recu.reussite,
     etiquette: recu.libelleConfusion,
   };
 }

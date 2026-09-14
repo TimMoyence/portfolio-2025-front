@@ -114,7 +114,7 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.cloturer.and.returnValue(of(undefined));
   port.lireResultats.and.returnValue(of(buildRapportSeance()));
   port.rejoindre.and.returnValue(of(buildRattachement()));
-  port.repondre.and.returnValue(of({ correcte: true, libelleConfusion: null }));
+  port.repondre.and.returnValue(of({ reussite: true, libelleConfusion: null }));
   port.signalerIncidents.and.returnValue(of(undefined));
   port.lireQuestionsDues.and.returnValue(of({ questions: [] }));
   return port;

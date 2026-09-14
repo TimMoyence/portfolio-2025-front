@@ -257,7 +257,7 @@ describe('FormationsHttpAdapter', () => {
     req.flush({ correcte: true, misconception: null, libelleConfusion: null });
   });
 
-  it('repondre ne rend que le verdict et le libelle de confusion, meme si le serveur ajoute misconception', () => {
+  it('repondre traduit le correcte du serveur en reussite et ne rend que ca avec le libelle de confusion, meme si le serveur ajoute misconception', () => {
     const recus: VerdictReponse[] = [];
 
     adapter
@@ -274,9 +274,9 @@ describe('FormationsHttpAdapter', () => {
 
     expect(recus.length).toBe(1);
     const cles = Object.keys(recus[0]).sort((a, b) => a.localeCompare(b));
-    expect(cles).toEqual(['correcte', 'libelleConfusion']);
+    expect(cles).toEqual(['libelleConfusion', 'reussite']);
     expect(recus[0]).toEqual({
-      correcte: false,
+      reussite: false,
       libelleConfusion: 'Intérêts simples au lieu de composés',
     });
   });
@@ -290,7 +290,7 @@ describe('FormationsHttpAdapter', () => {
 
     attendre(`${URL_SEANCE}/answers`, 'POST').flush({ correcte: true, misconception: null });
 
-    expect(recus).toEqual([{ correcte: true, libelleConfusion: null }]);
+    expect(recus).toEqual([{ reussite: true, libelleConfusion: null }]);
   });
 
   it('signalerIncidents POSTe le journal sur incidents avec l en-tete de participant', () => {

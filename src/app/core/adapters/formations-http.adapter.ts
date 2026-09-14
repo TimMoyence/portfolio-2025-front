@@ -93,7 +93,7 @@ export class FormationsHttpAdapter implements FormationsPort {
       })
       .pipe(
         map(({ correcte, libelleConfusion }) => ({
-          correcte,
+          reussite: correcte,
           libelleConfusion: libelleConfusion ?? null,
         })),
       );
