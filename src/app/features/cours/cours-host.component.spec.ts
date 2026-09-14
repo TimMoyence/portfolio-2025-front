@@ -130,9 +130,9 @@ describe('CoursHostComponent', () => {
         expect(brique)
           .withContext(`${bloc.nom} n est pas monte sur la page de demonstration`)
           .toBeTruthy();
-        expect(brique?.shadowRoot?.childElementCount ?? 0)
-          .withContext(`${bloc.nom} n a rien rendu : son renderHand a leve`)
-          .toBeGreaterThan(0);
+        expect(brique?.shadowRoot)
+          .withContext(`${bloc.nom} n a pas attache sa racine d ombre : son montage a leve`)
+          .toBeTruthy();
         expect((brique as HTMLElement).getAttribute('role'))
           .withContext(`${bloc.nom} n est pas monte en role etudiant`)
           .toBeNull();

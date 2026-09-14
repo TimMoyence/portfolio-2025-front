@@ -14,10 +14,13 @@ export interface EtatSession {
 
 export type SyncListener = (etat: EtatSession) => void;
 
+export type OuvertureFlux = (url: string, entetes: Record<string, string>) => Promise<Response>;
+
 export interface SyncOptions {
   baseUrl: string;
   sessionId: string;
-  creerSource?: (url: string) => EventSource;
+  jeton?: string;
+  ouvrirFlux?: OuvertureFlux;
 }
 
 export interface Sync {
@@ -29,6 +32,11 @@ export interface Sync {
 
 const DELAI_INITIAL_MS = 1000;
 const DELAI_MAX_MS = 30000;
+
+const ENTETE_JETON = 'x-participant-token';
+const TYPE_FLUX = 'text/event-stream';
+const EVENEMENT_FIN = 'fin';
+const FLUX_REFUSE = "Le serveur a refusé l'ouverture du flux de séance";
 
 const STATUTS_VALIDES: readonly StatutSession[] = ['attente', 'en_cours', 'terminee'];
 const MODES_RYTHME_VALIDES: readonly PacingMode[] = ['pilote', 'libre'];
@@ -59,37 +67,99 @@ function estEtatSession(valeur: unknown): valeur is EtatSession {
   );
 }
 
-function parseCharge(brut: Event): unknown {
+function analyser(brut: string): unknown {
   try {
-    return JSON.parse((brut as MessageEvent).data);
+    return JSON.parse(brut);
   } catch {
     return null;
   }
 }
 
-function fabriqueParDefaut(): ((url: string) => EventSource) | null {
-  if (typeof EventSource === 'undefined') {
+export interface EvenementFlux {
+  nom: string;
+  donnees: string;
+}
+
+type Distributeur = (evenement: EvenementFlux) => void;
+
+export function creerAnalyseurFlux(distribuer: Distributeur): (morceau: string) => void {
+  let tampon = '';
+  let nom = '';
+  let donnees = '';
+
+  const cloturer = (): void => {
+    const evenement: EvenementFlux = { nom, donnees };
+    nom = '';
+    donnees = '';
+    if (evenement.nom !== '' || evenement.donnees !== '') {
+      distribuer(evenement);
+    }
+  };
+
+  const champ = (ligne: string): void => {
+    const separateur = ligne.indexOf(':');
+    const cle = separateur === -1 ? ligne : ligne.slice(0, separateur);
+    const brut = separateur === -1 ? '' : ligne.slice(separateur + 1);
+    const valeur = brut.startsWith(' ') ? brut.slice(1) : brut;
+    if (cle === 'event') {
+      nom = valeur;
+    } else if (cle === 'data') {
+      donnees = donnees === '' ? valeur : `${donnees}\n${valeur}`;
+    }
+  };
+
+  const traiter = (brute: string): void => {
+    const ligne = brute.endsWith('\r') ? brute.slice(0, -1) : brute;
+    if (ligne === '') {
+      cloturer();
+      return;
+    }
+    champ(ligne);
+  };
+
+  return (morceau: string): void => {
+    tampon += morceau;
+    const lignes = tampon.split('\n');
+    tampon = lignes.pop() ?? '';
+    for (const ligne of lignes) {
+      traiter(ligne);
+    }
+  };
+}
+
+function ouvertureNative(courant: () => AbortController | null): OuvertureFlux | null {
+  if (typeof fetch === 'undefined') {
     return null;
   }
-  return (url: string) => new EventSource(url);
+  return (url, entetes) => fetch(url, { headers: entetes, signal: courant()?.signal ?? null });
 }
 
 export function createSync(options: SyncOptions): Sync {
-  const fabrique = options.creerSource ?? fabriqueParDefaut();
   const ecoutes = new Set<SyncListener>();
 
-  let source: EventSource | null = null;
+  let controleur: AbortController | null = null;
   let identite: Identity | null = null;
+  let etatCourant: EtatSession | null = null;
   let ferme = false;
   let delai = DELAI_INITIAL_MS;
   let relanceId: ReturnType<typeof setTimeout> | null = null;
 
+  const ouvrirFlux = options.ouvrirFlux ?? ouvertureNative(() => controleur);
+
   const urlFlux = (): string =>
     `${options.baseUrl}/sessions/${encodeURIComponent(options.sessionId)}/stream`;
 
-  const detruireSource = (): void => {
-    source?.close();
-    source = null;
+  const entetes = (): Record<string, string> => {
+    const valeurs: Record<string, string> = { accept: TYPE_FLUX };
+    if (options.jeton !== undefined && options.jeton !== '') {
+      valeurs[ENTETE_JETON] = options.jeton;
+    }
+    return valeurs;
+  };
+
+  const interrompre = (): void => {
+    controleur?.abort();
+    controleur = null;
   };
 
   const annulerRelance = (): void => {
@@ -112,52 +182,86 @@ export function createSync(options: SyncOptions): Sync {
     }, delaiCourant);
   };
 
-  const onEtat = (event: Event): void => {
-    const charge = parseCharge(event);
+  const notifier = (etat: EtatSession): void => {
+    for (const ecoute of ecoutes) {
+      ecoute(etat);
+    }
+  };
+
+  const terminer = (): void => {
+    ferme = true;
+    annulerRelance();
+    interrompre();
+  };
+
+  const distribuer = (evenement: EvenementFlux): void => {
+    if (evenement.nom === EVENEMENT_FIN) {
+      terminer();
+      return;
+    }
+    const charge = analyser(evenement.donnees);
     if (!estEtatSession(charge)) {
       return;
     }
-    for (const ecoute of ecoutes) {
-      ecoute(charge);
+    etatCourant = charge;
+    notifier(charge);
+  };
+
+  const consommer = async (reponse: Response): Promise<void> => {
+    const corps = reponse.body;
+    if (!corps) {
+      return;
+    }
+    const lecteur = corps.getReader();
+    const decodeur = new TextDecoder();
+    const analyseur = creerAnalyseurFlux(distribuer);
+    let acheve = false;
+    while (!acheve) {
+      const morceau = await lecteur.read();
+      acheve = morceau.done;
+      if (morceau.value) {
+        analyseur(decodeur.decode(morceau.value, { stream: true }));
+      }
     }
   };
 
-  const onHeartbeat = (): void => {
+  const lireFlux = async (propre: AbortController, promesse: Promise<Response>): Promise<void> => {
+    const reponse = await promesse;
+    if (controleur !== propre) {
+      return;
+    }
+    if (!reponse.ok) {
+      throw new Error(FLUX_REFUSE);
+    }
     delai = DELAI_INITIAL_MS;
+    if (etatCourant) {
+      notifier(etatCourant);
+    }
+    await consommer(reponse);
   };
 
-  const onFin = (): void => {
-    ferme = true;
-    annulerRelance();
-    detruireSource();
+  const suivre = async (propre: AbortController, promesse: Promise<Response>): Promise<void> => {
+    await lireFlux(propre, promesse).catch(() => undefined);
+    if (controleur === propre) {
+      controleur = null;
+      planifierRelance();
+    }
   };
 
   function ouvrir(): void {
-    if (ferme || !fabrique) {
+    if (ferme || !ouvrirFlux) {
       return;
     }
-    const nouvelleSource = fabrique(urlFlux());
-    source = nouvelleSource;
-    nouvelleSource.addEventListener('etat', onEtat);
-    nouvelleSource.addEventListener('heartbeat', onHeartbeat);
-    nouvelleSource.addEventListener('fin', onFin);
-    nouvelleSource.onopen = () => {
-      delai = DELAI_INITIAL_MS;
-    };
-    nouvelleSource.onerror = () => {
-      nouvelleSource.close();
-      if (source === nouvelleSource) {
-        source = null;
-      }
-      planifierRelance();
-    };
+    const propre = new AbortController();
+    controleur = propre;
+    void suivre(propre, ouvrirFlux(urlFlux(), entetes()));
   }
 
   return {
     join(nouvelleIdentite) {
       identite = nouvelleIdentite;
       annulerRelance();
-      detruireSource();
+      interrompre();
       delai = DELAI_INITIAL_MS;
       ferme = false;
       ouvrir();
@@ -182,9 +286,7 @@ export function createSync(options: SyncOptions): Sync {
       };
     },
     close() {
-      ferme = true;
-      annulerRelance();
-      detruireSource();
+      terminer();
     },
   };
 }
