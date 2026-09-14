@@ -1,3 +1,4 @@
+import type { ResultatsSeance } from '../../content/types';
 import type { Identity } from './identity';
 import { pending } from './queue';
 import { removeKey } from './storage';
@@ -91,6 +92,21 @@ const ETAT: EtatSession = {
   participants: 24,
 };
 
+const JETON_PRESENTATEUR = 'jwt-presentateur';
+
+const RESULTATS: ResultatsSeance = {
+  participants: 12,
+  questions: [
+    {
+      questionId: 'Q-1',
+      total: 10,
+      correctes: 6,
+      neSaitPas: 1,
+      confusions: [{ id: 'c1', libelle: 'Confusion frequente', nombre: 3 }],
+    },
+  ],
+};
+
 describe('sync', () => {
   let sync: Sync;
   let flux: FluxFactice[];
@@ -105,6 +121,13 @@ describe('sync', () => {
     return sync;
   }
 
+  async function attendreJusqua(condition: () => boolean): Promise<void> {
+    for (let tour = 0; tour < 40 && !condition(); tour += 1) {
+      await new Promise((resoudre) => setTimeout(resoudre, 0));
+    }
+    await vider();
+  }
+
   async function collecter(morceaux: readonly string[], attendus = 1): Promise<EtatSession[]> {
     monter();
     const recus: EtatSession[] = [];
@@ -117,10 +140,7 @@ describe('sync', () => {
     for (const morceau of morceaux) {
       await flux[0].envoyer(morceau);
     }
-    for (let tour = 0; tour < 40 && recus.length < attendus; tour += 1) {
-      await new Promise((resoudre) => setTimeout(resoudre, 0));
-    }
-    await vider();
+    await attendreJusqua(() => recus.length >= attendus);
     return recus;
   }
 
@@ -147,6 +167,53 @@ describe('sync', () => {
     sync.join(IDENTITE);
     await vider();
     expect(flux[0].entetes[ENTETE_JETON]).toBeUndefined();
+  });
+
+  it('ouvre le flux du presentateur sur le chemin dedie avec l en tete authorization', async () => {
+    sync = createSync({
+      baseUrl: BASE,
+      sessionId: SESSION,
+      chemin: 'presenter-stream',
+      entetes: () => ({ authorization: `Bearer ${JETON_PRESENTATEUR}` }),
+      ouvrirFlux: creerOuverture(flux),
+    });
+    sync.ouvrir();
+    await vider();
+    expect(flux.length).toBe(1);
+    expect(flux[0].url).toBe('https://api.test/sessions/s1/presenter-stream');
+    expect(flux[0].entetes['authorization']).toBe(`Bearer ${JETON_PRESENTATEUR}`);
+  });
+
+  it('relit les en tetes personnalisees a chaque ouverture', async () => {
+    let compteur = 0;
+    sync = createSync({
+      baseUrl: BASE,
+      sessionId: SESSION,
+      ouvrirFlux: creerOuverture(flux),
+      entetes: () => {
+        compteur += 1;
+        return { 'x-compteur': String(compteur) };
+      },
+    });
+    sync.ouvrir();
+    await vider();
+    sync.ouvrir();
+    await vider();
+    expect(flux.length).toBe(2);
+    expect(flux[0].entetes['x-compteur']).toBe('1');
+    expect(flux[1].entetes['x-compteur']).toBe('2');
+  });
+
+  it('ouvrir sans identite ouvre le flux sur le chemin par defaut', async () => {
+    sync = createSync({
+      baseUrl: BASE,
+      sessionId: SESSION,
+      ouvrirFlux: creerOuverture(flux),
+    });
+    sync.ouvrir();
+    await vider();
+    expect(flux.length).toBe(1);
+    expect(flux[0].url).toBe('https://api.test/sessions/s1/stream');
   });
 
   it('ignore un battement de coeur sans notifier les abonnes', async () => {
@@ -281,6 +348,48 @@ describe('sync', () => {
   it('refuse d envoyer une reponse avant d avoir rejoint la session', () => {
     monter();
     expect(() => sync.submit('Q-1', 'b', 1500)).toThrow();
+  });
+
+  it('refuse toujours d envoyer une reponse apres un ouvrir sans identite', () => {
+    monter();
+    sync.ouvrir();
+    expect(() => sync.submit('Q-1', 'b', 1500)).toThrow();
+  });
+
+  it('notifie les ecouteurs de resultats sur un evenement resultats valide', async () => {
+    monter();
+    const recus: ResultatsSeance[] = [];
+    sync.onResultats((resultats) => recus.push(resultats));
+    sync.join(IDENTITE);
+    await vider();
+    await flux[0].envoyer(bloc('resultats', RESULTATS));
+    await attendreJusqua(() => recus.length > 0);
+    expect(recus).toEqual([RESULTATS]);
+  });
+
+  it('ignore un evenement resultats malforme', async () => {
+    monter();
+    const recus: ResultatsSeance[] = [];
+    sync.onResultats((resultats) => recus.push(resultats));
+    sync.join(IDENTITE);
+    await vider();
+    await flux[0].envoyer(bloc('resultats', { participants: 'douze' }));
+    await flux[0].envoyer(bloc('resultats', RESULTATS));
+    await attendreJusqua(() => recus.length > 0);
+    expect(recus).toEqual([RESULTATS]);
+  });
+
+  it('un evenement resultats n atteint pas onState', async () => {
+    monter();
+    const etats: EtatSession[] = [];
+    const resultats: ResultatsSeance[] = [];
+    sync.onState((etat) => etats.push(etat));
+    sync.onResultats((recu) => resultats.push(recu));
+    sync.join(IDENTITE);
+    await vider();
+    await flux[0].envoyer(bloc('resultats', RESULTATS));
+    await attendreJusqua(() => resultats.length > 0);
+    expect(etats).toEqual([]);
   });
 
   it('submit repercute l echec quand la file d attente est pleine', () => {

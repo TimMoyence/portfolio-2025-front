@@ -147,11 +147,13 @@ function creerFluxDouble(): { trace: TraceFlux; fabrique: (options: SyncOptions)
       join: () => {
         trace.joints += 1;
       },
+      ouvrir: () => undefined,
       submit: () => undefined,
       onState: (ecoute) => {
         trace.ecoutes.push(ecoute);
         return () => undefined;
       },
+      onResultats: () => () => undefined,
       close: () => {
         trace.fermetures += 1;
       },
