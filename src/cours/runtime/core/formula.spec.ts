@@ -2,9 +2,11 @@ import {
   type Feuille,
   decalerFormule,
   evaluerCellule,
+  evaluerExpression,
   formaterResultat,
   lettreColonne,
   nomCellule,
+  remplirGabarit,
 } from './formula';
 
 const GRILLE = { lignes: 12, colonnes: 6 };
@@ -266,6 +268,52 @@ describe('core/formula', () => {
       expect(formaterResultat({ valeur: 1234.5, erreur: null })).toBe('1234,5');
       expect(formaterResultat({ valeur: 12, erreur: null })).toBe('12');
       expect(formaterResultat({ valeur: null, erreur: '#DIV/0!' })).toBe('#DIV/0!');
+    });
+  });
+
+  describe('evaluerExpression', () => {
+    it('calcule avec des variables nommees', () => {
+      expect(evaluerExpression('prix*(1+taux/100)', { prix: 200, taux: 15 })).toEqual({
+        valeur: 230,
+        erreur: null,
+      });
+    });
+
+    it('accepte le signe egal initial et les fonctions du tableur', () => {
+      expect(
+        evaluerExpression('=ARRONDI(capital*PUISSANCE(1+taux/100;x);2)', {
+          capital: 1000,
+          taux: 4,
+          x: 3,
+        }),
+      ).toEqual({ valeur: 1124.86, erreur: null });
+    });
+
+    it('rend #NOM? pour une variable non fournie et #REF! pour une cellule', () => {
+      expect(evaluerExpression('prix*2', {}).erreur).toBe('#NOM?');
+      expect(evaluerExpression('A1*2', { A: 1 }).erreur).toBe('#REF!');
+    });
+
+    it('ne resout pas une variable heritee du prototype', () => {
+      expect(evaluerExpression('constructor+1', {}).erreur).toBe('#NOM?');
+    });
+
+    it('laisse le tableur refuser un nom nu', () => {
+      expect(
+        evaluerCellule({ lignes: 1, colonnes: 1, cellules: { A1: '=prix' } }, 'A1').erreur,
+      ).toBe('#NOM?');
+    });
+  });
+
+  describe('remplirGabarit', () => {
+    it('remplace chaque cle connue et garde les autres', () => {
+      expect(
+        remplirGabarit(
+          '{prix} € puis {resultat} € ({absent})',
+          { prix: 200, resultat: 230 },
+          (valeur) => String(valeur),
+        ),
+      ).toBe('200 € puis 230 € ({absent})');
     });
   });
 });
