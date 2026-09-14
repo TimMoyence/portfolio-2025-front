@@ -15,7 +15,7 @@ import type { Identity } from '../../../../cours/runtime/core/identity';
 import type { Sync } from '../../../../cours/runtime/core/sync';
 import { createSync } from '../../../../cours/runtime/core/sync';
 import { getApiBaseUrl } from '../../../core/http/api-config';
-import type { CommandePilotage, OuvertureSeance } from '../../../core/ports/formations.port';
+import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
@@ -175,7 +175,7 @@ const PUPITRE: Identity = {
   `,
 })
 export class CoursPresentateurComponent {
-  readonly ouverture = input.required<OuvertureSeance>();
+  readonly courseSlug = input.required<string>();
   readonly question = input<VoteQuestionPublique | null>(null);
 
   readonly statut = signal<EtatSeance>('fermee');
@@ -227,7 +227,7 @@ export class CoursPresentateurComponent {
       return;
     }
     this.suivre(
-      this.port.ouvrirSeance(this.ouverture()),
+      this.port.ouvrirSeance(this.courseSlug()),
       (seance) => {
         this.sessionId.set(seance.sessionId);
         this.code.set(seance.code);

@@ -2,6 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
 import { NEVER, of, throwError } from 'rxjs';
+import type { CoursContent, DerouleCours } from '../../../../cours/content/types';
 import { clearIdentity } from '../../../../cours/runtime/core/identity';
 import { pending } from '../../../../cours/runtime/core/queue';
 import type { EtatSession, Sync, SyncOptions } from '../../../../cours/runtime/core/sync';
@@ -37,13 +38,16 @@ const IDENTITE: readonly (readonly [string, string])[] = [
 
 const HORS_PARCOURS = 'Methode hors du parcours etudiant';
 
-const VERDICT_JUSTE: VerdictReponse = { correcte: true, misconception: null };
+const ETIQUETTE_LIBELLE = 'Les intérêts ont été additionnés au lieu d’être composés.';
+
+const VERDICT_JUSTE: VerdictReponse = { correcte: true, libelleConfusion: null };
 
 function verdictAvecFuite(): VerdictReponse {
   const recu: Record<string, unknown> = {
     reponseAttendue: VALEUR_ATTENDUE,
     correcte: false,
     misconception: ETIQUETTE_BRUTE,
+    libelleConfusion: ETIQUETTE_LIBELLE,
   };
   return recu as unknown as VerdictReponse;
 }
@@ -96,6 +100,14 @@ class FormationsDouble implements FormationsPort {
   }
 
   ouvrirSeance(): Observable<SeanceOuverte> {
+    throw new Error(HORS_PARCOURS);
+  }
+
+  lireDeroule(): Observable<DerouleCours> {
+    throw new Error(HORS_PARCOURS);
+  }
+
+  lireSujet(): Observable<CoursContent> {
     throw new Error(HORS_PARCOURS);
   }
 

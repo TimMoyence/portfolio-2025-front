@@ -2,9 +2,14 @@ import type { TestRequest } from '@angular/common/http/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import {
+  buildCoursContent,
+  buildDerouleCours,
+  buildRapportSeance,
+} from '../../../testing/factories/formations.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
+import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
-  Bareme,
   InscriptionParticipant,
   MotifRefusRattachement,
   QuestionsDues,
@@ -13,7 +18,7 @@ import type {
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
-import { FORMATIONS_PORT, RattachementRefuse } from '../ports/formations.port';
+import { FORMATIONS_PORT, RattachementRefuse, SujetRefuse } from '../ports/formations.port';
 import { FormationsHttpAdapter } from './formations-http.adapter';
 
 const SESSION_ID = '4d0f2a9e-0d7f-4d2f-9a3c-1f6b2a7c8d90';
@@ -22,12 +27,6 @@ const JETON = 'jeton-participant';
 const ENTETE_JETON = 'x-participant-token';
 const RACINE = `${environment.apiBaseUrl}/formations/sessions`;
 const URL_SEANCE = `${RACINE}/${SESSION_ID}`;
-
-const BAREME: Bareme = {
-  version: 1,
-  questions: [{ id: 'Q-CAP-03', type: 'numeric', concept: 'capitalisation', noteCompte: true }],
-  tirages: [{ seed: 7, solutions: { 'Q-CAP-03': { valeur: 1338.23, pieges: [] } } }],
-};
 
 const INSCRIPTION: InscriptionParticipant = {
   studentKey: '11111111-1111-4111-8111-111111111111',
@@ -75,19 +74,76 @@ describe('FormationsHttpAdapter', () => {
     expect(TestBed.inject(FORMATIONS_PORT)).toBe(adapter);
   });
 
-  it('ouvrirSeance POSTe le bareme sur sessions et rend sessionId et code', () => {
+  it('ouvrirSeance POSTe le slug du cours sur sessions et rend sessionId et code', () => {
     const ouverte = { sessionId: SESSION_ID, code: CODE };
     const recus: SeanceOuverte[] = [];
 
-    adapter
-      .ouvrirSeance({ courseSlug: 'maths-bts-suites', bareme: BAREME })
-      .subscribe((valeur) => recus.push(valeur));
+    adapter.ouvrirSeance('b1-01-proportions').subscribe((valeur) => recus.push(valeur));
 
     const req = attendre(RACINE, 'POST');
-    expect(req.request.body).toEqual({ courseSlug: 'maths-bts-suites', bareme: BAREME });
+    expect(req.request.body).toEqual({ courseSlug: 'b1-01-proportions' });
     req.flush(ouverte);
 
     expect(recus).toEqual([ouverte]);
+  });
+
+  it('lireDeroule GETe le deroule du presentateur sur deroule', () => {
+    const deroule = buildDerouleCours();
+    const recus: DerouleCours[] = [];
+
+    adapter.lireDeroule(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+
+    attendre(`${URL_SEANCE}/deroule`, 'GET').flush(deroule);
+
+    expect(recus).toEqual([deroule]);
+  });
+
+  it('lireSujet GETe le sujet de l etudiant avec l en-tete de participant', () => {
+    const sujet = buildCoursContent();
+    const recus: CoursContent[] = [];
+
+    adapter.lireSujet(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
+
+    const req = attendre(`${URL_SEANCE}/sujet`, 'GET');
+    expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
+    req.flush(sujet);
+
+    expect(recus).toEqual([sujet]);
+  });
+
+  it('lireSujet transforme un 409 en refus motive par le changement du cours', () => {
+    const erreurs: unknown[] = [];
+
+    adapter.lireSujet(SESSION_ID, JETON).subscribe({
+      error: (recue: unknown) => erreurs.push(recue),
+    });
+
+    httpMock.expectOne(`${URL_SEANCE}/sujet`).flush('', { status: 409, statusText: 'Conflict' });
+
+    expect(erreurs.length).toBe(1);
+    expect(erreurs[0]).toBeInstanceOf(SujetRefuse);
+    const refus = erreurs[0] as SujetRefuse;
+    expect(refus.motif).toBe('cours-modifie');
+    expect(refus.statut).toBe(409);
+    expect(refus.message).not.toBe('');
+  });
+
+  it('lireSujet transforme les autres erreurs en sujet indisponible', () => {
+    const erreurs: unknown[] = [];
+
+    adapter.lireSujet(SESSION_ID, JETON).subscribe({
+      error: (recue: unknown) => erreurs.push(recue),
+    });
+
+    httpMock
+      .expectOne(`${URL_SEANCE}/sujet`)
+      .flush('', { status: 500, statusText: 'Server Error' });
+
+    expect(erreurs.length).toBe(1);
+    expect(erreurs[0]).toBeInstanceOf(SujetRefuse);
+    const refus = erreurs[0] as SujetRefuse;
+    expect(refus.motif).toBe('sujet-indisponible');
+    expect(refus.statut).toBe(500);
   });
 
   it('demarrer POSTe sur start', () => {
@@ -116,15 +172,8 @@ describe('FormationsHttpAdapter', () => {
     req.flush(null);
   });
 
-  it('lireResultats GETe le rapport sur results', () => {
-    const rapport = {
-      courseSlug: 'maths-bts-suites',
-      code: CODE,
-      ouverteLe: '2026-09-11T08:00:00.000Z',
-      fermeeLe: '2026-09-11T10:00:00.000Z',
-      participants: [],
-      conceptsFragiles: ['capitalisation'],
-    };
+  it('lireResultats GETe le rapport, y compris les resultats agreges, sur results', () => {
+    const rapport = buildRapportSeance();
     const recus: RapportSeance[] = [];
 
     adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
@@ -205,10 +254,10 @@ describe('FormationsHttpAdapter', () => {
     const req = attendre(`${URL_SEANCE}/answers`, 'POST');
     expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
     expect(req.request.body).toEqual(reponse);
-    req.flush({ correcte: true, misconception: null });
+    req.flush({ correcte: true, misconception: null, libelleConfusion: null });
   });
 
-  it('repondre ne rend que le verdict et l etiquette de confusion', () => {
+  it('repondre ne rend que le verdict et le libelle de confusion, meme si le serveur ajoute misconception', () => {
     const recus: VerdictReponse[] = [];
 
     adapter
@@ -218,15 +267,30 @@ describe('FormationsHttpAdapter', () => {
     attendre(`${URL_SEANCE}/answers`, 'POST').flush({
       correcte: false,
       misconception: 'interet-simple',
+      libelleConfusion: 'Intérêts simples au lieu de composés',
       solution: 1338.23,
       note: 12,
-      pieges: [{ valeur: 1400, misconception: 'interet-simple' }],
     });
 
     expect(recus.length).toBe(1);
     const cles = Object.keys(recus[0]).sort((a, b) => a.localeCompare(b));
-    expect(cles).toEqual(['correcte', 'misconception']);
-    expect(recus[0]).toEqual({ correcte: false, misconception: 'interet-simple' });
+    expect(cles).toEqual(['correcte', 'libelleConfusion']);
+    expect(recus[0]).toEqual({
+      correcte: false,
+      libelleConfusion: 'Intérêts simples au lieu de composés',
+    });
+  });
+
+  it('repondre rend un libelle de confusion nul quand le serveur ne le transmet pas', () => {
+    const recus: VerdictReponse[] = [];
+
+    adapter
+      .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1480.24, dureeMs: 1000 })
+      .subscribe((valeur) => recus.push(valeur));
+
+    attendre(`${URL_SEANCE}/answers`, 'POST').flush({ correcte: true, misconception: null });
+
+    expect(recus).toEqual([{ correcte: true, libelleConfusion: null }]);
   });
 
   it('signalerIncidents POSTe le journal sur incidents avec l en-tete de participant', () => {

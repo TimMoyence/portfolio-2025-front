@@ -93,26 +93,15 @@ const QUESTIONS: readonly QuestionPublique[] = [
   },
 ];
 
-const CONFUSIONS: Readonly<Record<string, string>> = {
-  'interets-simples': 'Les intérêts ont été additionnés au lieu d’être composés.',
-  'taux-non-converti': 'Le taux annuel n’a pas été ramené à la période.',
-  'duree-en-mois': 'La durée a été comptée en mois là où la formule attend des années.',
-  'actualisation-inversee': 'Le sens du temps a été inversé : ici on remonte vers aujourd’hui.',
-};
-
 function normaliserCode(saisi: string): string | null {
   const compact = saisi.replace(ESPACES, '');
   return MOTIF_CODE.test(compact) ? compact : null;
 }
 
 function lireVerdict(recu: VerdictReponse): VerdictAffiche {
-  const valeurs: readonly unknown[] = Object.values(recu);
-  const code = valeurs.find(
-    (valeur): valeur is string => typeof valeur === 'string' && valeur in CONFUSIONS,
-  );
   return {
-    reussite: valeurs.includes(true),
-    etiquette: code === undefined ? null : CONFUSIONS[code],
+    reussite: recu.correcte,
+    etiquette: recu.libelleConfusion,
   };
 }
 

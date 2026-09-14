@@ -2,8 +2,9 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
 import type { VoteOption, VoteQuestionPublique } from '../../../../cours/runtime/blocks/FpVote';
-import type { FormationsPort, OuvertureSeance } from '../../../core/ports/formations.port';
+import type { FormationsPort } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import { createFormationsPortStub } from '../../../../testing/factories/formations.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
@@ -11,10 +12,7 @@ type Fixture = ComponentFixture<CoursPresentateurComponent>;
 
 type BriqueVote = HTMLElement & { question: VoteQuestionPublique | null };
 
-const OUVERTURE: OuvertureSeance = {
-  courseSlug: 'maths-financieres',
-  bareme: { version: 1, questions: [], tirages: [] },
-};
+const COURSE_SLUG = 'maths-financieres';
 
 const QUESTION = {
   id: 'Q-CAP-03',
@@ -25,24 +23,9 @@ const QUESTION = {
   ],
 };
 
-const METHODES: readonly (keyof FormationsPort)[] = [
-  'ouvrirSeance',
-  'demarrer',
-  'piloter',
-  'cloturer',
-  'lireResultats',
-  'rejoindre',
-  'repondre',
-  'signalerIncidents',
-  'lireQuestionsDues',
-];
-
 function doubleDuPort(): jasmine.SpyObj<FormationsPort> {
-  const port = jasmine.createSpyObj<FormationsPort>('FormationsPort', [...METHODES]);
+  const port = createFormationsPortStub();
   port.ouvrirSeance.and.returnValue(of({ sessionId: 'S-1', code: '4821' }));
-  port.demarrer.and.returnValue(of(undefined));
-  port.piloter.and.returnValue(of(undefined));
-  port.cloturer.and.returnValue(of(undefined));
   return port;
 }
 
@@ -71,7 +54,7 @@ async function monter(
   });
   await TestBed.compileComponents();
   const fixture = TestBed.createComponent(CoursPresentateurComponent);
-  fixture.componentRef.setInput('ouverture', OUVERTURE);
+  fixture.componentRef.setInput('courseSlug', COURSE_SLUG);
   fixture.componentRef.setInput('question', question);
   fixture.detectChanges();
   await fixture.componentInstance.quandStabilise();

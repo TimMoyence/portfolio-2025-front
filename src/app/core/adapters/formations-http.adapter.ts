@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
   CommandePilotage,
   FormationsPort,
   IncidentEtudiant,
   InscriptionParticipant,
   MotifRefusRattachement,
-  OuvertureSeance,
   QuestionsDues,
   RapportSeance,
   Rattachement,
@@ -17,7 +17,7 @@ import type {
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
-import { RattachementRefuse } from '../ports/formations.port';
+import { RattachementRefuse, SujetRefuse } from '../ports/formations.port';
 import { getApiBaseUrl } from '../http/api-config';
 
 const ENTETE_JETON = 'x-participant-token';
@@ -27,9 +27,20 @@ const MOTIFS_PAR_STATUT: Readonly<Record<number, MotifRefusRattachement>> = {
   409: 'deja-inscrit',
 };
 
+interface VerdictBrut {
+  correcte: boolean;
+  misconception?: string | null;
+  libelleConfusion?: string | null;
+}
+
 function refuserRattachement(erreur: unknown): RattachementRefuse {
   const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
   return new RattachementRefuse(MOTIFS_PAR_STATUT[statut] ?? 'rattachement-impossible', statut);
+}
+
+function refuserSujet(erreur: unknown): SujetRefuse {
+  const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
+  return new SujetRefuse(statut === 409 ? 'cours-modifie' : 'sujet-indisponible', statut);
 }
 
 @Injectable()
@@ -38,8 +49,18 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  ouvrirSeance(demande: OuvertureSeance): Observable<SeanceOuverte> {
-    return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, demande);
+  ouvrirSeance(courseSlug: string): Observable<SeanceOuverte> {
+    return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, { courseSlug });
+  }
+
+  lireDeroule(sessionId: string): Observable<DerouleCours> {
+    return this.http.get<DerouleCours>(`${this.urlSeance(sessionId)}/deroule`);
+  }
+
+  lireSujet(sessionId: string, jeton: string): Observable<CoursContent> {
+    return this.http
+      .get<CoursContent>(`${this.urlSeance(sessionId)}/sujet`, { headers: entetes(jeton) })
+      .pipe(catchError((erreur: unknown) => throwError(() => refuserSujet(erreur))));
   }
 
   demarrer(sessionId: string): Observable<void> {
@@ -67,10 +88,15 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse> {
     return this.http
-      .post<VerdictReponse>(`${this.urlSeance(sessionId)}/answers`, reponse, {
+      .post<VerdictBrut>(`${this.urlSeance(sessionId)}/answers`, reponse, {
         headers: entetes(jeton),
       })
-      .pipe(map(({ correcte, misconception }) => ({ correcte, misconception })));
+      .pipe(
+        map(({ correcte, libelleConfusion }) => ({
+          correcte,
+          libelleConfusion: libelleConfusion ?? null,
+        })),
+      );
   }
 
   signalerIncidents(

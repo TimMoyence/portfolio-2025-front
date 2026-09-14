@@ -8,6 +8,7 @@ import type {
   ReponseRapportee,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import { buildResultatsSeance } from '../../../../testing/factories/formations.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursSyntheseComponent } from './cours-synthese.component';
 
@@ -58,6 +59,7 @@ function rapportDe(participants: readonly ParticipantRapporte[]): RapportSeance 
     fermeeLe: '2026-09-12T09:30:00.000Z',
     participants,
     conceptsFragiles: ['interets-composes', 'actualisation'],
+    resultats: buildResultatsSeance({ participants: participants.length }),
   };
 }
 

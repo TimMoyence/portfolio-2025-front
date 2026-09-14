@@ -1,51 +1,14 @@
 import { InjectionToken } from '@angular/core';
 import type { Observable } from 'rxjs';
-import type { FreeRange, PacingMode } from '../../../cours/content/types';
+import type {
+  CoursContent,
+  DerouleCours,
+  FreeRange,
+  PacingMode,
+  ResultatsSeance,
+} from '../../../cours/content/types';
 
 export type ValeurReponse = number | string;
-
-export type TypeQuestionBareme = 'numeric' | 'vote' | 'asn' | 'order';
-
-export type TypeTolerance = 'relative' | 'absolue' | 'decimales';
-
-export interface ToleranceBareme {
-  type: TypeTolerance;
-  valeur: number;
-}
-
-export interface QuestionBareme {
-  id: string;
-  type: TypeQuestionBareme;
-  concept: string;
-  tolerance?: ToleranceBareme;
-  noteCompte: boolean;
-}
-
-export interface PiegeBareme {
-  valeur: ValeurReponse;
-  misconception: string;
-}
-
-export interface SolutionBareme {
-  valeur: ValeurReponse;
-  pieges: readonly PiegeBareme[];
-}
-
-export interface TirageBareme {
-  seed: number;
-  solutions: Readonly<Record<string, SolutionBareme>>;
-}
-
-export interface Bareme {
-  version: 1;
-  questions: readonly QuestionBareme[];
-  tirages: readonly TirageBareme[];
-}
-
-export interface OuvertureSeance {
-  courseSlug: string;
-  bareme: Bareme;
-}
 
 export interface SeanceOuverte {
   sessionId: string;
@@ -84,7 +47,7 @@ export interface ReponseEtudiant {
 
 export interface VerdictReponse {
   correcte: boolean;
-  misconception: string | null;
+  libelleConfusion: string | null;
 }
 
 export interface IncidentEtudiant {
@@ -132,6 +95,7 @@ export interface RapportSeance {
   fermeeLe: string;
   participants: readonly ParticipantRapporte[];
   conceptsFragiles: readonly string[];
+  resultats: ResultatsSeance;
 }
 
 export type MotifRefusRattachement = 'code-inconnu' | 'deja-inscrit' | 'rattachement-impossible';
@@ -152,8 +116,27 @@ export class RattachementRefuse extends Error {
   }
 }
 
+export type MotifRefusSujet = 'cours-modifie' | 'sujet-indisponible';
+
+const MESSAGES_REFUS_SUJET: Readonly<Record<MotifRefusSujet, string>> = {
+  'cours-modifie': 'Le cours a changé depuis l’ouverture de la séance : prévenez votre formateur.',
+  'sujet-indisponible': 'Le sujet de la séance n’a pas pu être chargé.',
+};
+
+export class SujetRefuse extends Error {
+  constructor(
+    readonly motif: MotifRefusSujet,
+    readonly statut: number,
+  ) {
+    super(MESSAGES_REFUS_SUJET[motif]);
+    this.name = 'SujetRefuse';
+  }
+}
+
 export interface FormationsPort {
-  ouvrirSeance(demande: OuvertureSeance): Observable<SeanceOuverte>;
+  ouvrirSeance(courseSlug: string): Observable<SeanceOuverte>;
+  lireDeroule(sessionId: string): Observable<DerouleCours>;
+  lireSujet(sessionId: string, jeton: string): Observable<CoursContent>;
   demarrer(sessionId: string): Observable<void>;
   piloter(sessionId: string, commande: CommandePilotage): Observable<void>;
   cloturer(sessionId: string): Observable<void>;

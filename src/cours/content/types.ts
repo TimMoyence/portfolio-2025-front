@@ -26,6 +26,42 @@ export interface CoursContent {
   ecrans: readonly EcranContent[];
 }
 
+export interface ConfusionComptee {
+  readonly id: string;
+  readonly libelle: string;
+  readonly nombre: number;
+}
+
+export interface ResultatQuestion {
+  readonly questionId: string;
+  readonly total: number;
+  readonly correctes: number;
+  readonly neSaitPas: number;
+  readonly confusions: readonly ConfusionComptee[];
+}
+
+export interface ResultatsSeance {
+  readonly participants: number;
+  readonly questions: readonly ResultatQuestion[];
+}
+
+export interface CorrigePresentateur {
+  readonly questionId: string;
+  readonly bonneReponse: string;
+  readonly confusions: readonly { readonly id: string; readonly libelle: string }[];
+}
+
+export interface EcranDeroule extends EcranContent {
+  readonly notes: string;
+  readonly seuil: number | null;
+  readonly corriges: readonly CorrigePresentateur[];
+}
+
+export interface DerouleCours extends Omit<CoursContent, 'ecrans'> {
+  readonly ecrans: readonly EcranDeroule[];
+  readonly remediations: Readonly<Record<string, string>>;
+}
+
 export type Modalite = 'solo' | 'binome' | 'groupe' | 'classe';
 
 export type RegimeVerrou = 'ouvert' | 'focus' | 'examen';
