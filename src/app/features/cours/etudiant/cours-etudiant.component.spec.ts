@@ -7,13 +7,15 @@ import { NEVER, of, Subject, throwError } from 'rxjs';
 import type { CoursContent } from '../../../../cours/content/types';
 import { clearIdentity } from '../../../../cours/runtime/core/identity';
 import { pending } from '../../../../cours/runtime/core/queue';
-import type { EtatSession, Sync, SyncListener } from '../../../../cours/runtime/core/sync';
+import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import { buildEcranQuestionnaire } from '../../../../testing/factories/cours.factory';
 import {
   buildCoursContent,
   buildRattachement,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
+import type { FluxDouble } from '../../../../testing/factories/sync.factory';
+import { createFluxDouble } from '../../../../testing/factories/sync.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort, VerdictReponse } from '../../../core/ports/formations.port';
 import {
@@ -22,9 +24,9 @@ import {
   SujetRefuse,
 } from '../../../core/ports/formations.port';
 import type { ReponseBrique } from '../ecran/cours-ecran.component';
+import { CREATEUR_FLUX } from '../cours-flux.token';
 import { CoursEcranComponent } from '../ecran/cours-ecran.component';
-import type { CreateurFlux } from './cours-etudiant.component';
-import { CoursEtudiantComponent, CREATEUR_FLUX } from './cours-etudiant.component';
+import { CoursEtudiantComponent } from './cours-etudiant.component';
 
 type Fixture = ComponentFixture<CoursEtudiantComponent>;
 
@@ -70,46 +72,6 @@ function verdictAvecFuite(): VerdictReponse {
     libelleConfusion: ETIQUETTE_LIBELLE,
   };
   return recu as unknown as VerdictReponse;
-}
-
-interface FluxDouble {
-  readonly fabrique: jasmine.Spy<CreateurFlux>;
-  readonly flux: jasmine.SpyObj<Sync>;
-  diffuser(etat: Partial<EtatSession>): void;
-}
-
-function creerFluxDouble(): FluxDouble {
-  const ecoutes: SyncListener[] = [];
-  const flux = jasmine.createSpyObj<Sync>('Sync', [
-    'join',
-    'ouvrir',
-    'submit',
-    'onState',
-    'onResultats',
-    'close',
-  ]);
-  flux.onState.and.callFake((ecoute) => {
-    ecoutes.push(ecoute);
-    return () => undefined;
-  });
-  const diffuser = (etat: Partial<EtatSession>): void => {
-    const complet: EtatSession = {
-      etat: 'en_cours',
-      modeRythme: 'pilote',
-      ecranCourant: 0,
-      intervalleLibre: null,
-      participants: 3,
-      ...etat,
-    };
-    for (const ecoute of ecoutes) {
-      ecoute(complet);
-    }
-  };
-  return {
-    fabrique: jasmine.createSpy<CreateurFlux>('creerFlux').and.returnValue(flux),
-    flux,
-    diffuser,
-  };
 }
 
 describe('CoursEtudiantComponent', () => {
@@ -218,7 +180,7 @@ describe('CoursEtudiantComponent', () => {
     port = createFormationsPortStub();
     port.rejoindre.and.returnValue(of(buildRattachement({ sessionId: SESSION, jeton: JETON })));
     port.lireSujet.and.returnValue(of(sujet));
-    double = creerFluxDouble();
+    double = createFluxDouble();
     await setupTestBed({
       imports: [CoursEtudiantComponent],
       providers: [

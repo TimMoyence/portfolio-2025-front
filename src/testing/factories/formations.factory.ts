@@ -14,7 +14,7 @@ import { buildCoursContent } from './cours.factory';
 
 export { buildCoursContent };
 
-function buildResultatQuestion(overrides: Partial<ResultatQuestion> = {}): ResultatQuestion {
+export function buildResultatQuestion(overrides: Partial<ResultatQuestion> = {}): ResultatQuestion {
   return {
     questionId: 'Q-CAP-03',
     total: 24,
@@ -48,7 +48,7 @@ export function buildRapportSeance(overrides: Partial<RapportSeance> = {}): Rapp
   };
 }
 
-function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranDeroule {
+export function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranDeroule {
   return {
     id: 'ecran-1',
     type: 'vote',

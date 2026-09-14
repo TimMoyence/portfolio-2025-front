@@ -4,7 +4,6 @@ import {
   computed,
   DestroyRef,
   inject,
-  InjectionToken,
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
@@ -17,8 +16,7 @@ import type { Lock } from '../../../../cours/runtime/core/lock';
 import { createLock } from '../../../../cours/runtime/core/lock';
 import type { EnvoiReponse } from '../../../../cours/runtime/core/queue';
 import { enqueue, flush, pending } from '../../../../cours/runtime/core/queue';
-import type { EtatSession, Sync, SyncOptions } from '../../../../cours/runtime/core/sync';
-import { createSync } from '../../../../cours/runtime/core/sync';
+import type { EtatSession, Sync } from '../../../../cours/runtime/core/sync';
 import { getApiBaseUrl } from '../../../core/http/api-config';
 import type {
   IncidentEtudiant,
@@ -35,14 +33,8 @@ import {
   SujetRefuse,
 } from '../../../core/ports/formations.port';
 import type { ReponseBrique } from '../ecran/cours-ecran.component';
+import { CREATEUR_FLUX } from '../cours-flux.token';
 import { CoursEcranComponent, identifiantsDesQuestions } from '../ecran/cours-ecran.component';
-
-export type CreateurFlux = (options: SyncOptions) => Sync;
-
-export const CREATEUR_FLUX = new InjectionToken<CreateurFlux>('CREATEUR_FLUX', {
-  providedIn: 'root',
-  factory: () => createSync,
-});
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
 
