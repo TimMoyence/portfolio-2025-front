@@ -23,11 +23,9 @@ import type {
   ResultatsSeance,
 } from '../../../../cours/content/types';
 import type { EtatSession, StatutSession, Sync } from '../../../../cours/runtime/core/sync';
-import { getApiBaseUrl } from '../../../core/http/api-config';
 import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import { AuthStateService } from '../../../core/services/auth-state.service';
-import { CREATEUR_FLUX } from '../cours-flux.token';
+import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import { CoursEcranComponent } from '../ecran/cours-ecran.component';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
@@ -448,12 +446,10 @@ export class CoursPresentateurComponent {
   });
 
   private readonly port = inject(FORMATIONS_PORT);
-  private readonly creerFlux = inject(CREATEUR_FLUX);
-  private readonly authState = inject(AuthStateService);
+  private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
   private readonly router = inject(Router);
   private readonly location = inject(Location);
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
-  private readonly baseUrl = `${getApiBaseUrl()}/formations`;
 
   private flux: Sync | null = null;
   private detruit = false;
@@ -607,21 +603,11 @@ export class CoursPresentateurComponent {
   }
 
   private ecouterLeFlux(sessionId: string): void {
-    const flux = this.creerFlux({
-      baseUrl: this.baseUrl,
-      sessionId,
-      chemin: 'presenter-stream',
-      entetes: () => this.entetesDuFlux(),
-    });
+    const flux = this.creerFluxFormateur(sessionId);
     flux.onState((etat) => this.suivreLeFlux(etat));
     flux.onResultats((resultats) => this.resultats.set(resultats));
     this.flux = flux;
     flux.ouvrir();
-  }
-
-  private entetesDuFlux(): Readonly<Record<string, string>> {
-    const jeton = this.authState.token();
-    return jeton ? { authorization: `Bearer ${jeton}` } : {};
   }
 
   private suivreLeFlux(etat: EtatSession): void {

@@ -11,10 +11,8 @@ import {
 import { firstValueFrom } from 'rxjs';
 import type { DerouleCours, EcranDeroule } from '../../../../cours/content/types';
 import type { EtatSession, Sync } from '../../../../cours/runtime/core/sync';
-import { getApiBaseUrl } from '../../../core/http/api-config';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import { AuthStateService } from '../../../core/services/auth-state.service';
-import { CREATEUR_FLUX } from '../cours-flux.token';
+import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import { CoursEcranComponent } from '../ecran/cours-ecran.component';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
@@ -105,9 +103,7 @@ export class CoursSceneComponent {
   );
 
   private readonly port = inject(FORMATIONS_PORT);
-  private readonly creerFlux = inject(CREATEUR_FLUX);
-  private readonly authState = inject(AuthStateService);
-  private readonly baseUrl = `${getApiBaseUrl()}/formations`;
+  private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
 
   private flux: Sync | null = null;
   private detruit = false;
@@ -147,20 +143,10 @@ export class CoursSceneComponent {
   }
 
   private ecouterLeFlux(): void {
-    const flux = this.creerFlux({
-      baseUrl: this.baseUrl,
-      sessionId: this.sessionId(),
-      chemin: 'presenter-stream',
-      entetes: () => this.entetesDuFlux(),
-    });
+    const flux = this.creerFluxFormateur(this.sessionId());
     flux.onState((etat) => this.suivreLeFlux(etat));
     this.flux = flux;
     flux.ouvrir();
-  }
-
-  private entetesDuFlux(): Readonly<Record<string, string>> {
-    const jeton = this.authState.token();
-    return jeton ? { authorization: `Bearer ${jeton}` } : {};
   }
 
   private suivreLeFlux(etat: EtatSession): void {
