@@ -5,6 +5,13 @@ import { tap } from 'rxjs/operators';
 import { APP_CONFIG } from '../../config/app-config.token';
 import { AuthStateService } from '../../services/auth-state.service';
 
+function returnUrlOf(router: Router): string {
+  const navigation = router.getCurrentNavigation();
+  return navigation === null
+    ? router.url
+    : router.serializeUrl(navigation.finalUrl ?? navigation.extractedUrl);
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authState = inject(AuthStateService);
   const router = inject(Router);
@@ -21,7 +28,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.status === 401) {
           authState.clearSession();
           void router.navigate(['/login'], {
-            queryParams: { returnUrl: router.url },
+            queryParams: { returnUrl: returnUrlOf(router) },
           });
         }
       },

@@ -1,7 +1,8 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { environment } from '../../../../environments/environment';
@@ -107,6 +108,24 @@ describe('authInterceptor', () => {
     const req = httpMock.expectOne('/api/protected');
     req.flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
   });
+
+  it('renvoie vers la cible de la navigation en cours quand le 401 survient avant qu elle aboutisse', fakeAsync(() => {
+    const cible = '/cours/presenter/b1-01-proportions?seance=seance-1';
+    router.resetConfig([
+      { path: 'cours/presenter/:slug', canActivate: [() => new Subject<boolean>()], children: [] },
+    ]);
+    authState.login(buildAuthSession());
+    const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    void router.navigateByUrl(cible);
+    flushMicrotasks();
+
+    const url = `${environment.apiBaseUrl}/auth/me`;
+    http.get(url).subscribe({ error: () => undefined });
+    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+
+    expect(router.url).withContext('navigation initiale non validee').toBe('/');
+    expect(navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: cible } });
+  }));
 
   it('devrait propager les erreurs non-401 sans clearSession', () => {
     authState.login(buildAuthSession());
