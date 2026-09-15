@@ -173,6 +173,20 @@ describe('CoursSceneComponent', () => {
     expect(double.flux.close).toHaveBeenCalled();
   });
 
+  it('occupe la hauteur de la fenetre sans deborder et fait defiler un contenu plus grand', async () => {
+    const fixture = await monterEtStabiliser();
+    const hote = fixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(hote);
+
+    expect(style.overflowX).toBe('auto');
+    expect(style.overflowY).toBe('auto');
+    expect(style.boxSizing).toBe('border-box');
+    expect(hote.getBoundingClientRect().height).toBe(window.innerHeight);
+    expect(hote.getBoundingClientRect().width).toBeLessThanOrEqual(
+      document.documentElement.clientWidth,
+    );
+  });
+
   it('ferme le flux a la destruction de la scene', async () => {
     const fixture = await monterEtStabiliser();
 

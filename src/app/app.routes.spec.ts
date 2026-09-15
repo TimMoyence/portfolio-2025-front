@@ -151,6 +151,14 @@ describe('app routes', () => {
       );
     });
 
+    it('projette la scene hors de la coquille du site, et elle seule', () => {
+      const sansCoquille = routes.filter((route) => route.data?.['coquille'] === false);
+
+      expect(sansCoquille.map((route) => route.path)).toEqual([
+        'cours/presenter/:slug/scene/:sessionId',
+      ]);
+    });
+
     it('n indexe aucune page de cours', () => {
       const pages = routes.filter((route) => route.path?.startsWith('cours/'));
 

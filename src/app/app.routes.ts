@@ -348,6 +348,7 @@ export const routes: Routes = [
     data: {
       seoKey: 'cours-scene',
       robots: 'noindex, nofollow',
+      coquille: false,
     },
   },
   {

@@ -25,11 +25,12 @@ type Chargement = 'chargement' | 'succes' | 'echec';
   styles: `
     :host {
       display: block;
-      inline-size: 100vw;
+      box-sizing: border-box;
+      inline-size: 100%;
       block-size: 100vh;
       background-color: #000;
       color: #fff;
-      overflow: hidden;
+      overflow: auto;
     }
 
     .scene-message {
@@ -48,7 +49,7 @@ type Chargement = 'chargement' | 'succes' | 'echec';
     app-cours-ecran {
       display: block;
       inline-size: 100%;
-      block-size: 100%;
+      min-block-size: 100%;
     }
   `,
   template: `
