@@ -28,6 +28,7 @@ function installerRegistreFactice(
       if (descripteurOriginal) {
         Object.defineProperty(globalThis, 'customElements', descripteurOriginal);
       }
+      resetCoursBlocksRegistration();
     },
   };
 }
@@ -72,6 +73,14 @@ describe('registerCoursBlocks', () => {
     registre.definitions.set(NOM_BRIQUE_SOCLE, tardive);
     await chargement;
     expect(registre.definitions.get(NOM_BRIQUE_SOCLE)).toBe(tardive);
+  });
+
+  it('restaurer le registre ne laisse pas aux specs suivantes l inscription faite dans le factice', async () => {
+    await registerCoursBlocks();
+    registre.restaurer();
+    registre = installerRegistreFactice();
+    await registerCoursBlocks();
+    expect(registre.definitions.size).toBe(BLOCS.length);
   });
 
   it('un nom deja pris dans customElements n est pas redefini', async () => {
