@@ -142,7 +142,7 @@ function lirePanneau(
           <button
             type="button"
             data-testid="presentateur-remediation"
-            [disabled]="commandeEnVol()"
+            [disabled]="pilotageBloque()"
             (click)="allerALaRemediation()"
             i18n="presentateur.remediation|@@presentateurRemediation"
           >
@@ -159,7 +159,7 @@ export class CoursPanneauQuestionComponent {
   readonly seuil = input.required<number | null>();
   readonly resultats = input.required<readonly ResultatQuestion[]>();
   readonly participants = input.required<number>();
-  readonly commandeEnVol = input.required<boolean>();
+  readonly pilotageBloque = input.required<boolean>();
   readonly remediation = output<number>();
 
   protected readonly panneau = computed(() =>

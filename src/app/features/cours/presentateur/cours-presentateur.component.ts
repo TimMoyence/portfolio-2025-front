@@ -266,7 +266,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           <button
             type="button"
             data-testid="presentateur-demarrer"
-            [disabled]="commandeEnVol()"
+            [disabled]="pilotageBloque()"
             (click)="demarrer()"
             i18n="presentateur.demarrer|@@presentateurDemarrer"
           >
@@ -277,7 +277,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           <button
             type="button"
             data-testid="presentateur-precedent"
-            [disabled]="commandeEnVol() || ecran() <= 0"
+            [disabled]="pilotageBloque() || ecran() <= 0"
             (click)="precedent()"
             i18n="presentateur.precedent|@@presentateurPrecedent"
           >
@@ -289,7 +289,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           <button
             type="button"
             data-testid="presentateur-suivant"
-            [disabled]="commandeEnVol() || ecran() >= dernierEcran()"
+            [disabled]="pilotageBloque() || ecran() >= dernierEcran()"
             (click)="suivant()"
             i18n="presentateur.suivant|@@presentateurSuivant"
           >
@@ -298,7 +298,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           <button
             type="button"
             data-testid="presentateur-rythme"
-            [disabled]="commandeEnVol()"
+            [disabled]="pilotageBloque()"
             (click)="basculerLeRythme()"
           >
             @if (mode() === 'pilote') {
@@ -344,7 +344,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   [seuil]="ecranAffiche.seuil"
                   [resultats]="resultatsDesQuestions()"
                   [participants]="participants()"
-                  [commandeEnVol]="commandeEnVol()"
+                  [pilotageBloque]="pilotageBloque()"
                   (remediation)="allerA($event)"
                 />
               </li>
@@ -442,6 +442,9 @@ export class CoursPresentateurComponent {
   readonly clotureEnVol = signal(false);
   readonly echec = signal(false);
   readonly suiviDuFlux = signal<StatutFlux | null>(null);
+  readonly etatDeLaRepriseAttendu = signal(false);
+
+  readonly pilotageBloque = computed(() => this.commandeEnVol() || this.etatDeLaRepriseAttendu());
 
   readonly etatDuFlux = computed(() => this.suiviDuFlux()?.etat ?? 'connexion');
 
@@ -648,6 +651,7 @@ export class CoursPresentateurComponent {
     if (rapport === null) {
       return;
     }
+    this.etatDeLaRepriseAttendu.set(true);
     this.sessionId.set(sessionId);
     this.code.set(rapport.code);
     this.resultats.set(rapport.resultats);
@@ -688,6 +692,7 @@ export class CoursPresentateurComponent {
   }
 
   private suivreLeFlux(etat: EtatSession): void {
+    this.etatDeLaRepriseAttendu.set(false);
     this.avancerLeStatut(ETAT_ANNONCE[etat.etat]);
     if (etat.etat === 'terminee') {
       this.flux?.close();
@@ -703,7 +708,7 @@ export class CoursPresentateurComponent {
   }
 
   private armee(): boolean {
-    return this.sessionId() !== null && !this.commandeEnVol() && this.statut() !== 'terminee';
+    return this.sessionId() !== null && !this.pilotageBloque() && this.statut() !== 'terminee';
   }
 
   private avancerLeStatut(vise: EtatSeance): void {

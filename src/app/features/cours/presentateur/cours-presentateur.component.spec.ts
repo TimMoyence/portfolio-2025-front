@@ -332,6 +332,44 @@ describe('CoursPresentateurComponent', () => {
       expect(lire(fixture, 'presentateur-demarrer')).toBeNull();
     });
 
+    it('bloque le pilotage tant que le flux n a pas annonce l etat de la seance reprise', async () => {
+      const fixture = await reprendre();
+      const pupitre = fixture.componentInstance as unknown as {
+        allerA(cible: number): void;
+        demarrer(): void;
+        basculerLeRythme(): void;
+      };
+
+      for (const marque of [
+        'presentateur-demarrer',
+        'presentateur-suivant',
+        'presentateur-rythme',
+      ]) {
+        expect(bouton(fixture, marque).disabled).withContext(marque).toBeTrue();
+      }
+      pupitre.allerA(1);
+      pupitre.demarrer();
+      pupitre.basculerLeRythme();
+      await stabiliser(fixture);
+      expect(port.piloter).not.toHaveBeenCalled();
+      expect(port.demarrer).not.toHaveBeenCalled();
+      expect(bouton(fixture, 'presentateur-cloturer').disabled)
+        .withContext('la cloture ne depend ni de l ecran ni du rythme')
+        .toBeFalse();
+
+      diffuser(fixture, { etat: 'en_cours', ecranCourant: 2, modeRythme: 'pilote' });
+
+      for (const marque of [
+        'presentateur-precedent',
+        'presentateur-suivant',
+        'presentateur-rythme',
+      ]) {
+        expect(bouton(fixture, marque).disabled).withContext(marque).toBeFalse();
+      }
+      await cliquer(fixture, 'presentateur-suivant');
+      expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, { ecran: 3 });
+    });
+
     it('n ouvre pas de seconde seance meme si l ouverture est redemandee', async () => {
       const fixture = await reprendre();
 
