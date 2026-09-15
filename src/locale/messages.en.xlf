@@ -14443,17 +14443,17 @@
     </unit>
     <unit id="presentateurFluxRefusSession">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:197,198</note>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:197,199</note>
         <note category="meaning">presentateur.fluxRefusSession</note>
       </notes>
       <segment>
-        <source>Le serveur refuse le suivi de la séance (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>) : reconnectez-vous, puis rechargez le pupitre, qui reprendra la séance.</source>
-        <target>The server refuses session tracking (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>): sign in again, then reload the console, which will resume the session.</target>
+        <source>Le serveur refuse le suivi de la séance (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>) : rechargez le pupitre, reconnectez-vous si la connexion est demandée ; la séance reprendra.</source>
+        <target>The server refuses session tracking (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>): reload the console and sign in again if asked; the session will resume.</target>
       </segment>
     </unit>
     <unit id="presentateurFluxRefusSaturation">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:203,204</note>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:204,205</note>
         <note category="meaning">presentateur.fluxRefusSaturation</note>
       </notes>
       <segment>
@@ -14463,7 +14463,7 @@
     </unit>
     <unit id="presentateurFluxRefus">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:209,210</note>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:210,211</note>
         <note category="meaning">presentateur.fluxRefus</note>
       </notes>
       <segment>
@@ -14473,7 +14473,7 @@
     </unit>
     <unit id="presentateurFluxConnexion">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:218,224</note>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:219,225</note>
         <note category="meaning">presentateur.fluxConnexion</note>
       </notes>
       <segment>

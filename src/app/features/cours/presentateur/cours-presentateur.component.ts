@@ -194,8 +194,9 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
               @switch (refus.motif) {
                 @case ('session') {
                   <span i18n="presentateur.fluxRefusSession|@@presentateurFluxRefusSession"
-                    >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) :
-                    reconnectez-vous, puis rechargez le pupitre, qui reprendra la séance.</span
+                    >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) : rechargez
+                    le pupitre, reconnectez-vous si la connexion est demandée ; la séance
+                    reprendra.</span
                   >
                 }
                 @case ('saturation') {

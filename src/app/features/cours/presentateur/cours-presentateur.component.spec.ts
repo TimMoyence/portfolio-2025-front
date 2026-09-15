@@ -545,8 +545,8 @@ describe('CoursPresentateurComponent', () => {
     });
 
     for (const [statut, consigne] of [
-      [401, 'reconnectez-vous'],
-      [403, 'reconnectez-vous'],
+      [401, 'rechargez le pupitre, reconnectez-vous si la connexion est demandée'],
+      [403, 'rechargez le pupitre, reconnectez-vous si la connexion est demandée'],
       [429, 'Trop de connexions'],
       [404, 'nouvel essai automatique'],
     ] as const) {
