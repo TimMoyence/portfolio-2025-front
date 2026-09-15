@@ -162,7 +162,7 @@ export class AuthStateService {
   }
 
   private async refreshUnderLock(): Promise<void> {
-    if (this._token() === null || this.authPort === null || this.adoptStoredToken()) {
+    if (this._token() === null || this.authPort === null || this.followFreshStoredToken()) {
       return;
     }
     try {
@@ -189,18 +189,13 @@ export class AuthStateService {
     this.planRefresh(delayMs);
   }
 
-  private adoptStoredToken(): boolean {
+  private followFreshStoredToken(): boolean {
     if (!this.isBrowser) {
       return false;
     }
     const stored = localStorage.getItem(TOKEN_KEY);
     const expiresAt = this.readStoredExpiry();
-    if (
-      stored === null ||
-      stored === this._token() ||
-      expiresAt === null ||
-      expiresAt - Date.now() <= REFRESH_MARGIN_MS
-    ) {
+    if (stored === null || expiresAt === null || expiresAt - Date.now() <= REFRESH_MARGIN_MS) {
       return false;
     }
     this.adoptToken(stored, expiresAt);

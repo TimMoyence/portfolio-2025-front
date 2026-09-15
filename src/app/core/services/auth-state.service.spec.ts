@@ -14,9 +14,13 @@ import {
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import { createVerrouEnMemoire } from '../../../testing/factories/verrou.factory';
+import {
+  createVerrouAAccordManuel,
+  createVerrouEnMemoire,
+} from '../../../testing/factories/verrou.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthStateService } from './auth-state.service';
+import type { VerrouInterOnglets } from './verrou-inter-onglets';
 import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
 
 const CLE_DU_JETON = 'portfolio_jwt';
@@ -32,19 +36,25 @@ describe('AuthStateService', () => {
     let portStub: Record<keyof AuthPort, jasmine.Spy>;
     const autresFenetres: InjecteurEnvironnement[] = [];
 
-    function ouvrirUneAutreFenetre(): AuthStateService {
+    function ouvrirUneAutreFenetre(verrou?: VerrouInterOnglets): AuthStateService {
       const injecteur = createEnvironmentInjector(
-        [AuthStateService],
+        verrou === undefined
+          ? [AuthStateService]
+          : [AuthStateService, { provide: VERROU_INTER_ONGLETS, useValue: verrou }],
         TestBed.inject(EnvironmentInjector),
       );
       autresFenetres.push(injecteur);
       return injecteur.get(AuthStateService);
     }
 
+    function livrerLEvenementStorage(jeton: string): void {
+      window.dispatchEvent(new StorageEvent('storage', { key: CLE_DU_JETON, newValue: jeton }));
+    }
+
     function jetonEcritParUneAutreFenetre(jeton: string, expireDansMs: number): void {
       localStorage.setItem(CLE_D_EXPIRATION, String(Date.now() + expireDansMs));
       localStorage.setItem(CLE_DU_JETON, jeton);
-      window.dispatchEvent(new StorageEvent('storage', { key: CLE_DU_JETON, newValue: jeton }));
+      livrerLEvenementStorage(jeton);
     }
 
     beforeEach(() => {
@@ -145,7 +155,41 @@ describe('AuthStateService', () => {
       expect(portStub.refresh).toHaveBeenCalledTimes(1);
     }));
 
-    it('deux fenetres qui arrivent a echeance ensemble ne renouvellent qu une fois', fakeAsync(() => {
+    it('deux fenetres qui arrivent a echeance ensemble ne renouvellent qu une fois quand l evenement storage precede l accord du verrou', fakeAsync(() => {
+      portStub.refresh.and.returnValue(
+        of(buildAuthSession({ accessToken: 'jwt-renouvele', expiresIn: 900 })),
+      );
+      const verrou = createVerrouAAccordManuel();
+      const pupitre = ouvrirUneAutreFenetre(verrou.verrou);
+      const scene = ouvrirUneAutreFenetre(verrou.verrou);
+      const session = buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 });
+      pupitre.login(session);
+      scene.login(session);
+
+      tick(30_000);
+      expect(verrou.demandesEnAttente()).toBe(2);
+
+      verrou.accorderLeSuivant();
+      flushMicrotasks();
+      expect(pupitre.token()).toBe('jwt-renouvele');
+
+      livrerLEvenementStorage('jwt-renouvele');
+      expect(scene.token()).withContext('adopte avant l accord du verrou').toBe('jwt-renouvele');
+
+      verrou.accorderLeSuivant();
+      flushMicrotasks();
+
+      expect(portStub.refresh).toHaveBeenCalledTimes(1);
+      expect(scene.token()).toBe('jwt-renouvele');
+
+      tick(869_999);
+      flushMicrotasks();
+      expect(verrou.demandesEnAttente()).withContext('aucune echeance avant la rotation').toBe(0);
+      tick(1);
+      expect(verrou.demandesEnAttente()).withContext('les deux fenetres rearmees').toBe(2);
+    }));
+
+    it('une fenetre qui n a pas recu l evenement storage adopte sous le verrou le jeton renouvele par l autre', fakeAsync(() => {
       portStub.refresh.and.returnValue(
         of(buildAuthSession({ accessToken: 'jwt-renouvele', expiresIn: 900 })),
       );
