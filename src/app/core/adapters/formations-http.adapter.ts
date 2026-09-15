@@ -23,8 +23,10 @@ import { getApiBaseUrl } from '../http/api-config';
 
 const ENTETE_JETON = 'x-participant-token';
 
-const DETAIL_REPONSE_DEJA_ENREGISTREE = 'déjà enregistrée';
-const DETAIL_SEANCE_NON_DEMARREE = 'pas encore commencé';
+const MOTIFS_DE_CONFLIT_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
+  REPONSE_DEJA_ENREGISTREE: 'deja-repondue',
+  SEANCE_NON_DEMARREE: 'seance-non-demarree',
+};
 
 const MOTIFS_PAR_STATUT: Readonly<Record<number, MotifRefusRattachement>> = {
   404: 'code-inconnu',
@@ -47,24 +49,21 @@ function refuserSujet(erreur: unknown): SujetRefuse {
   return new SujetRefuse(statut === 409 ? 'cours-modifie' : 'sujet-indisponible', statut);
 }
 
-function detailDuProbleme(erreur: HttpErrorResponse): string {
+function codeDuProbleme(erreur: HttpErrorResponse): string | null {
   const corps: unknown = erreur.error;
   if (typeof corps !== 'object' || corps === null) {
-    return '';
+    return null;
   }
-  const detail = (corps as Record<string, unknown>)['detail'];
-  return typeof detail === 'string' ? detail : '';
+  const code = (corps as Record<string, unknown>)['code'];
+  return typeof code === 'string' ? code : null;
 }
 
-function motifDeRefusDeReponse(statut: number, detail: string): MotifRefusReponse {
+function motifDeRefusDeReponse(statut: number, code: string | null): MotifRefusReponse {
   if (statut === 0 || statut >= 500) {
     return 'reseau';
   }
-  if (statut === 409 && detail.includes(DETAIL_REPONSE_DEJA_ENREGISTREE)) {
-    return 'deja-repondue';
-  }
-  if (statut === 409 && detail.includes(DETAIL_SEANCE_NON_DEMARREE)) {
-    return 'seance-non-demarree';
+  if (statut === 409 && code !== null && Object.hasOwn(MOTIFS_DE_CONFLIT_PAR_CODE, code)) {
+    return MOTIFS_DE_CONFLIT_PAR_CODE[code];
   }
   return 'refusee';
 }
@@ -74,7 +73,7 @@ function refuserReponse(erreur: unknown): ReponseRefusee {
     return new ReponseRefusee('reseau', 0);
   }
   return new ReponseRefusee(
-    motifDeRefusDeReponse(erreur.status, detailDuProbleme(erreur)),
+    motifDeRefusDeReponse(erreur.status, codeDuProbleme(erreur)),
     erreur.status,
   );
 }

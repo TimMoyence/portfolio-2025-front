@@ -7,6 +7,8 @@ import {
   buildDerouleCours,
   buildRapportSeance,
 } from '../../../testing/factories/formations.factory';
+import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
+import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
@@ -324,7 +326,7 @@ describe('FormationsHttpAdapter', () => {
 
     const refusPour = (
       statut: number,
-      corps: Record<string, unknown> | null,
+      corps: ProblemeHttp | null,
       statusText = 'Erreur',
     ): ReponseRefusee => {
       const erreurs: unknown[] = [];
@@ -340,25 +342,50 @@ describe('FormationsHttpAdapter', () => {
       return erreurs[0] as ReponseRefusee;
     };
 
-    const probleme = (status: number, detail: string): Record<string, unknown> => ({
-      type: `https://httpstatuses.com/${status}`,
-      title: 'Conflict',
-      status,
-      detail,
-    });
-
-    const cas: readonly (readonly [
-      string,
-      number,
-      Record<string, unknown> | null,
-      MotifRefusReponse,
-    ])[] = [
+    const cas: readonly (readonly [string, number, ProblemeHttp | null, MotifRefusReponse])[] = [
       ['une panne serveur 503', 503, null, 'reseau'],
-      ['une erreur serveur 500', 500, probleme(500, 'Internal Server Error'), 'reseau'],
-      ['une reponse deja enregistree 409', 409, probleme(409, DEJA_REPONDUE), 'deja-repondue'],
-      ['une seance non demarree 409', 409, probleme(409, NON_DEMARREE), 'seance-non-demarree'],
-      ['une seance terminee 409', 409, probleme(409, TERMINEE), 'refusee'],
-      ['une requete invalide 400', 400, probleme(400, 'valeur invalide'), 'refusee'],
+      [
+        'une erreur serveur 500',
+        500,
+        buildProblemeHttp({ status: 500, title: 'Internal Server Error' }),
+        'reseau',
+      ],
+      [
+        'un 409 au code REPONSE_DEJA_ENREGISTREE',
+        409,
+        buildProblemeHttp({ code: 'REPONSE_DEJA_ENREGISTREE' }),
+        'deja-repondue',
+      ],
+      [
+        'un 409 au code SEANCE_NON_DEMARREE',
+        409,
+        buildProblemeHttp({ code: 'SEANCE_NON_DEMARREE' }),
+        'seance-non-demarree',
+      ],
+      [
+        'un 409 au texte de reponse deja enregistree mais sans code',
+        409,
+        buildProblemeHttp({ detail: DEJA_REPONDUE }),
+        'refusee',
+      ],
+      [
+        'un 409 au texte de seance non demarree mais sans code',
+        409,
+        buildProblemeHttp({ detail: NON_DEMARREE }),
+        'refusee',
+      ],
+      [
+        'un 409 au code inconnu',
+        409,
+        buildProblemeHttp({ detail: TERMINEE, code: 'SEANCE_TERMINEE' }),
+        'refusee',
+      ],
+      [
+        'un 400 portant un code de 409',
+        400,
+        buildProblemeHttp({ status: 400, title: 'Bad Request', code: 'SEANCE_NON_DEMARREE' }),
+        'refusee',
+      ],
       ['un jeton refuse 401', 401, null, 'refusee'],
     ];
 
