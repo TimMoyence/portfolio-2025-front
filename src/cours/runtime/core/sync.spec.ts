@@ -2,7 +2,13 @@ import type { ResultatsSeance } from '../../content/types';
 import type { Identity } from './identity';
 import { pending } from './queue';
 import { removeKey } from './storage';
-import { createSync, type EtatSession, type OuvertureFlux, type Sync } from './sync';
+import {
+  createSync,
+  type EtatSession,
+  type OuvertureFlux,
+  type StatutFlux,
+  type Sync,
+} from './sync';
 
 const CLE_FILE = 'fp.file-reponses';
 const BASE = 'https://api.test';
@@ -22,6 +28,17 @@ interface FluxFactice {
 async function vider(): Promise<void> {
   for (let tour = 0; tour < 200; tour += 1) {
     await Promise.resolve();
+  }
+}
+
+async function laisserPasserLeFlux(): Promise<void> {
+  for (let tour = 0; tour < 5; tour += 1) {
+    await new Promise<void>((resoudre) => {
+      const canal = new MessageChannel();
+      canal.port1.onmessage = () => resoudre();
+      canal.port2.postMessage(null);
+    });
+    await vider();
   }
 }
 
@@ -390,6 +407,172 @@ describe('sync', () => {
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => resultats.length > 0);
     expect(etats).toEqual([]);
+  });
+
+  describe('sante du flux', () => {
+    const SILENCE_MAX_MS = 45_000;
+    let statuts: StatutFlux[];
+
+    function suivreLesStatuts(): void {
+      statuts = [];
+      sync.onStatut((statut) => statuts.push(statut));
+    }
+
+    beforeEach(() => {
+      jasmine.clock().install();
+    });
+
+    afterEach(() => {
+      jasmine.clock().uninstall();
+    });
+
+    it('annonce le flux connecte des que le serveur l accepte', async () => {
+      monter();
+      suivreLesStatuts();
+
+      sync.join(IDENTITE);
+      await vider();
+
+      expect(statuts).toEqual([{ etat: 'connecte' }]);
+    });
+
+    it('annonce la reconnexion quand le flux se coupe, puis la connexion retrouvee', async () => {
+      monter();
+      suivreLesStatuts();
+      sync.join(IDENTITE);
+      await vider();
+
+      await flux[0].couper();
+      await laisserPasserLeFlux();
+
+      expect(statuts).toEqual([{ etat: 'connecte' }, { etat: 'reconnexion' }]);
+
+      jasmine.clock().tick(1000);
+      await laisserPasserLeFlux();
+
+      expect(flux.length).toBe(2);
+      expect(statuts.at(-1)).toEqual({ etat: 'connecte' });
+    });
+
+    for (const statut of [401, 403, 429]) {
+      it(`annonce un refus ${statut} a chaque essai sans le masquer par une reconnexion`, async () => {
+        const tentatives = { nombre: 0 };
+        sync = createSync({
+          baseUrl: BASE,
+          sessionId: SESSION,
+          chemin: 'presenter-stream',
+          ouvrirFlux: () => {
+            tentatives.nombre += 1;
+            return Promise.resolve(new Response(null, { status: statut }));
+          },
+        });
+        suivreLesStatuts();
+
+        sync.ouvrir();
+        await vider();
+        jasmine.clock().tick(1000);
+        await vider();
+
+        expect(tentatives.nombre).toBe(2);
+        expect(statuts).toEqual([
+          { etat: 'refuse', statut },
+          { etat: 'refuse', statut },
+        ]);
+      });
+    }
+
+    it('coupe et relance un flux reste muet trois battements de suite', async () => {
+      monter();
+      const etats: EtatSession[] = [];
+      sync.onState((etat) => etats.push(etat));
+      suivreLesStatuts();
+      sync.join(IDENTITE);
+      await flux[0].envoyer(bloc('etat', ETAT));
+      await laisserPasserLeFlux();
+
+      expect(etats).toEqual([ETAT]);
+
+      jasmine.clock().tick(SILENCE_MAX_MS - 1);
+      await laisserPasserLeFlux();
+
+      expect(statuts).toEqual([{ etat: 'connecte' }]);
+
+      jasmine.clock().tick(1);
+      await laisserPasserLeFlux();
+
+      expect(statuts).toEqual([{ etat: 'connecte' }, { etat: 'reconnexion' }]);
+
+      jasmine.clock().tick(1000);
+      await laisserPasserLeFlux();
+
+      expect(flux.length).toBe(2);
+      expect(etats.at(-1)).withContext('l etat connu est redonne a la reconnexion').toEqual(ETAT);
+    });
+
+    it('garde ouvert un flux dont les battements arrivent, puis le relance quand ils cessent', async () => {
+      monter();
+      suivreLesStatuts();
+      sync.join(IDENTITE);
+      await laisserPasserLeFlux();
+
+      for (let battement = 0; battement < 6; battement += 1) {
+        jasmine.clock().tick(15_000);
+        await flux[0].envoyer(bloc('heartbeat', { ts: '2026-09-21T08:00:00.000Z' }));
+        await laisserPasserLeFlux();
+      }
+      jasmine.clock().tick(SILENCE_MAX_MS - 1);
+      await laisserPasserLeFlux();
+
+      expect(flux.length).toBe(1);
+      expect(statuts).toEqual([{ etat: 'connecte' }]);
+
+      jasmine.clock().tick(1);
+      await laisserPasserLeFlux();
+
+      expect(statuts).toEqual([{ etat: 'connecte' }, { etat: 'reconnexion' }]);
+    });
+
+    it('relance une ouverture restee sans reponse', async () => {
+      const ouvertures: RequestInit[] = [];
+      const original = globalThis.fetch;
+      globalThis.fetch = ((_url: RequestInfo | URL, init?: RequestInit) => {
+        ouvertures.push(init ?? {});
+        return new Promise<Response>((_resoudre, rejeter) => {
+          init?.signal?.addEventListener('abort', () => rejeter(new DOMException('abort')));
+        });
+      }) as typeof fetch;
+      try {
+        sync = createSync({ baseUrl: BASE, sessionId: SESSION, jeton: JETON });
+        suivreLesStatuts();
+        sync.join(IDENTITE);
+
+        jasmine.clock().tick(SILENCE_MAX_MS);
+        await vider();
+        jasmine.clock().tick(1000);
+        await vider();
+
+        expect(ouvertures.length).toBe(2);
+        expect(ouvertures[0].signal?.aborted).toBeTrue();
+        expect(statuts).toEqual([{ etat: 'reconnexion' }]);
+      } finally {
+        sync.close();
+        globalThis.fetch = original;
+      }
+    });
+
+    it('n annonce rien et ne relance pas apres une fermeture volontaire', async () => {
+      monter();
+      suivreLesStatuts();
+      sync.join(IDENTITE);
+      await vider();
+
+      sync.close();
+      jasmine.clock().tick(SILENCE_MAX_MS * 2);
+      await vider();
+
+      expect(statuts).toEqual([{ etat: 'connecte' }]);
+      expect(flux.length).toBe(1);
+    });
   });
 
   it('submit repercute l echec quand la file d attente est pleine', () => {

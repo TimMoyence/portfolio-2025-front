@@ -9,7 +9,7 @@ import type {
   DerouleCours,
   ResultatsSeance,
 } from '../../../../cours/content/types';
-import type { EtatSession } from '../../../../cours/runtime/core/sync';
+import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
 import { buildAuthSession } from '../../../../testing/factories/auth.factory';
 import {
   buildDerouleCours,
@@ -365,6 +365,55 @@ describe('CoursPresentateurComponent', () => {
         `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/scene/${SESSION}`,
         'cours-scene',
       );
+    });
+  });
+
+  describe('sante du suivi de la seance', () => {
+    function annoncer(fixture: Fixture, statut: StatutFlux): HTMLElement {
+      double.diffuserStatut(statut);
+      fixture.detectChanges();
+      return cible(fixture, 'presentateur-flux');
+    }
+
+    it('annonce dans une zone de statut la connexion, le direct puis la reconnexion', async () => {
+      const fixture = await ouvrirLaSeance();
+      const bandeau = cible(fixture, 'presentateur-flux');
+
+      expect(bandeau.getAttribute('role')).toBe('status');
+      expect(bandeau.getAttribute('data-etat')).toBe('connexion');
+
+      expect(annoncer(fixture, { etat: 'connecte' }).getAttribute('data-etat')).toBe('connecte');
+
+      const coupe = annoncer(fixture, { etat: 'reconnexion' });
+
+      expect(coupe.getAttribute('data-etat')).toBe('reconnexion');
+      expect(coupe.textContent).toContain('reconnexion en cours');
+    });
+
+    for (const [statut, consigne] of [
+      [401, 'reconnectez-vous'],
+      [403, 'reconnectez-vous'],
+      [429, 'Trop de connexions'],
+      [404, 'nouvel essai automatique'],
+    ] as const) {
+      it(`affiche explicitement un refus ${statut} du flux jusqu a la connexion suivante`, async () => {
+        const fixture = await ouvrirLaSeance();
+
+        const refus = annoncer(fixture, { etat: 'refuse', statut });
+
+        expect(refus.getAttribute('data-etat')).toBe('refuse');
+        expect(refus.getAttribute('data-statut')).toBe(String(statut));
+        expect(refus.textContent).toContain(consigne);
+        expect(refus.textContent).toContain(String(statut));
+
+        expect(annoncer(fixture, { etat: 'connecte' }).hasAttribute('data-statut')).toBeFalse();
+      });
+    }
+
+    it('n annonce aucun suivi tant qu aucune seance n est ouverte', () => {
+      const fixture = monter();
+
+      expect(lire(fixture, 'presentateur-flux')).toBeNull();
     });
   });
 

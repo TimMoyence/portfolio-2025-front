@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import type { DerouleCours, EcranDeroule } from '../../../../cours/content/types';
-import type { EtatSession, Sync } from '../../../../cours/runtime/core/sync';
+import type { EtatSession, StatutFlux, Sync } from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import { CoursEcranComponent } from '../ecran/cours-ecran.component';
@@ -51,6 +51,33 @@ type Chargement = 'chargement' | 'succes' | 'echec';
       inline-size: 100%;
       min-block-size: 100%;
     }
+
+    .scene-flux {
+      position: fixed;
+      inset-block-start: 0.75rem;
+      inset-inline-end: 0.75rem;
+      z-index: 1;
+      inline-size: 0.75rem;
+      block-size: 0.75rem;
+      margin: 0;
+      border-radius: 50%;
+      background-color: #6b7280;
+      opacity: 0.6;
+    }
+
+    .scene-flux[data-etat='connecte'] {
+      background-color: var(--success, #6cae3e);
+    }
+
+    .scene-flux[data-etat='reconnexion'] {
+      background-color: var(--warning, #e6884f);
+      opacity: 1;
+    }
+
+    .scene-flux[data-etat='refuse'] {
+      background-color: var(--danger, #c0563c);
+      opacity: 1;
+    }
   `,
   template: `
     @switch (lectureDeroule()) {
@@ -88,6 +115,35 @@ type Chargement = 'chargement' | 'succes' | 'echec';
       @if (ecranCourant(); as ecran) {
         <app-cours-ecran [ecran]="ecran" rendu="stage" [role]="'presentateur'" />
       }
+      @if (lectureDeroule() === 'succes') {
+        <p
+          class="scene-flux"
+          data-testid="scene-flux"
+          role="status"
+          [attr.data-etat]="suiviDuFlux()?.etat ?? 'connexion'"
+        >
+          <span class="sr-only">
+            @switch (suiviDuFlux()?.etat) {
+              @case ('connecte') {
+                <span i18n="scene.fluxConnecte|@@sceneFluxConnecte">Suivi en direct</span>
+              }
+              @case ('reconnexion') {
+                <span i18n="scene.fluxReconnexion|@@sceneFluxReconnexion"
+                  >Suivi interrompu, reconnexion en cours</span
+                >
+              }
+              @case ('refuse') {
+                <span i18n="scene.fluxRefuse|@@sceneFluxRefuse"
+                  >Suivi refusé par le serveur (statut {{ statutDuRefus() }})</span
+                >
+              }
+              @default {
+                <span i18n="scene.fluxConnexion|@@sceneFluxConnexion">Connexion au suivi</span>
+              }
+            }
+          </span>
+        </p>
+      }
     }
   `,
 })
@@ -98,6 +154,12 @@ export class CoursSceneComponent {
   readonly deroule = signal<DerouleCours | null>(null);
   readonly ecran = signal(0);
   readonly termine = signal(false);
+  readonly suiviDuFlux = signal<StatutFlux | null>(null);
+
+  readonly statutDuRefus = computed(() => {
+    const suivi = this.suiviDuFlux();
+    return suivi?.etat === 'refuse' ? suivi.statut : null;
+  });
 
   readonly ecranCourant = computed<EcranDeroule | null>(
     () => this.deroule()?.ecrans[this.ecran()] ?? null,
@@ -146,6 +208,7 @@ export class CoursSceneComponent {
   private ecouterLeFlux(): void {
     const flux = this.creerFluxFormateur(this.sessionId());
     flux.onState((etat) => this.suivreLeFlux(etat));
+    flux.onStatut((statut) => this.suiviDuFlux.set(statut));
     this.flux = flux;
     flux.ouvrir();
   }

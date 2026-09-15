@@ -173,6 +173,27 @@ describe('CoursSceneComponent', () => {
     expect(double.flux.close).toHaveBeenCalled();
   });
 
+  it('signale discretement dans un coin la sante du flux qu elle suit', async () => {
+    const fixture = await monterEtStabiliser();
+    const pastille = cible(fixture, 'scene-flux');
+
+    expect(pastille.getAttribute('role')).toBe('status');
+    expect(pastille.getAttribute('data-etat')).toBe('connexion');
+    expect(getComputedStyle(pastille).position).toBe('fixed');
+
+    for (const [statut, etat] of [
+      [{ etat: 'connecte' }, 'connecte'],
+      [{ etat: 'reconnexion' }, 'reconnexion'],
+      [{ etat: 'refuse', statut: 429 }, 'refuse'],
+    ] as const) {
+      double.diffuserStatut(statut);
+      fixture.detectChanges();
+
+      expect(pastille.getAttribute('data-etat')).toBe(etat);
+    }
+    expect(pastille.textContent).toContain('429');
+  });
+
   it('occupe la hauteur de la fenetre sans deborder et fait defiler un contenu plus grand', async () => {
     const fixture = await monterEtStabiliser();
     const hote = fixture.nativeElement as HTMLElement;

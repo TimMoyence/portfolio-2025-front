@@ -3,6 +3,8 @@ import type { ResultatsSeance } from '../../cours/content/types';
 import type {
   EtatSession,
   ResultatsListener,
+  StatutFlux,
+  StatutListener,
   Sync,
   SyncListener,
 } from '../../cours/runtime/core/sync';
@@ -12,6 +14,7 @@ export interface FluxDouble {
   readonly flux: jasmine.SpyObj<Sync>;
   diffuser(etat: Partial<EtatSession>): void;
   diffuserResultats(resultats: ResultatsSeance): void;
+  diffuserStatut(statut: StatutFlux): void;
 }
 
 function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
@@ -25,25 +28,29 @@ function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
   };
 }
 
+function ecouter<T>(ecoutes: T[]): (ecoute: T) => () => void {
+  return (ecoute) => {
+    ecoutes.push(ecoute);
+    return () => undefined;
+  };
+}
+
 export function createFluxDouble(): FluxDouble {
   const ecoutes: SyncListener[] = [];
   const ecoutesResultats: ResultatsListener[] = [];
+  const ecoutesStatut: StatutListener[] = [];
   const flux = jasmine.createSpyObj<Sync>('Sync', [
     'join',
     'ouvrir',
     'submit',
     'onState',
     'onResultats',
+    'onStatut',
     'close',
   ]);
-  flux.onState.and.callFake((ecoute) => {
-    ecoutes.push(ecoute);
-    return () => undefined;
-  });
-  flux.onResultats.and.callFake((ecoute) => {
-    ecoutesResultats.push(ecoute);
-    return () => undefined;
-  });
+  flux.onState.and.callFake(ecouter(ecoutes));
+  flux.onResultats.and.callFake(ecouter(ecoutesResultats));
+  flux.onStatut.and.callFake(ecouter(ecoutesStatut));
   return {
     fabrique: jasmine.createSpy<CreateurFlux>('creerFlux').and.returnValue(flux),
     flux,
@@ -56,6 +63,11 @@ export function createFluxDouble(): FluxDouble {
     diffuserResultats: (resultats) => {
       for (const ecoute of ecoutesResultats) {
         ecoute(resultats);
+      }
+    },
+    diffuserStatut: (statut) => {
+      for (const ecoute of ecoutesStatut) {
+        ecoute(statut);
       }
     },
   };

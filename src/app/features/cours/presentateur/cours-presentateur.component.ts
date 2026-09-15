@@ -23,7 +23,12 @@ import type {
   ResultatQuestion,
   ResultatsSeance,
 } from '../../../../cours/content/types';
-import type { EtatSession, StatutSession, Sync } from '../../../../cours/runtime/core/sync';
+import type {
+  EtatSession,
+  StatutFlux,
+  StatutSession,
+  Sync,
+} from '../../../../cours/runtime/core/sync';
 import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
@@ -42,6 +47,20 @@ interface PanneauQuestion {
   readonly sousLeSeuil: boolean;
   readonly confusions: readonly ConfusionComptee[];
   readonly remediation: number | null;
+}
+
+type MotifDuRefus = 'session' | 'saturation' | 'autre';
+
+interface RefusDuFlux {
+  readonly statut: number;
+  readonly motif: MotifDuRefus;
+}
+
+function motifDuRefus(statut: number): MotifDuRefus {
+  if (statut === 401 || statut === 403) {
+    return 'session';
+  }
+  return statut === 429 ? 'saturation' : 'autre';
 }
 
 const RANG_DE_L_ETAT: Readonly<Record<EtatSeance, number>> = {
@@ -134,6 +153,13 @@ function lirePanneau(
       border-inline-start: 0.375rem solid currentColor;
       padding-inline-start: 0.75rem;
     }
+
+    .suivi-du-flux[data-etat='reconnexion'],
+    .suivi-du-flux[data-etat='refuse'] {
+      border-inline-start: 0.375rem solid var(--danger);
+      padding-inline-start: 0.75rem;
+      font-weight: 700;
+    }
   `,
   template: `
     @if (statut() === 'fermee' && seance() === undefined) {
@@ -194,6 +220,58 @@ function lirePanneau(
           Réessayer la reprise
         </button>
       }
+    }
+    @if (sessionId() !== null) {
+      <p
+        class="suivi-du-flux"
+        data-testid="presentateur-flux"
+        role="status"
+        [attr.data-etat]="etatDuFlux()"
+        [attr.data-statut]="refusDuFlux()?.statut ?? null"
+      >
+        @switch (etatDuFlux()) {
+          @case ('connecte') {
+            <span i18n="presentateur.fluxConnecte|@@presentateurFluxConnecte"
+              >Suivi de la séance en direct.</span
+            >
+          }
+          @case ('reconnexion') {
+            <span i18n="presentateur.fluxReconnexion|@@presentateurFluxReconnexion"
+              >Suivi de la séance interrompu : reconnexion en cours. Les résultats et la scène
+              peuvent être en retard.</span
+            >
+          }
+          @case ('refuse') {
+            @if (refusDuFlux(); as refus) {
+              @switch (refus.motif) {
+                @case ('session') {
+                  <span i18n="presentateur.fluxRefusSession|@@presentateurFluxRefusSession"
+                    >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) :
+                    reconnectez-vous, puis rechargez le pupitre, qui reprendra la séance.</span
+                  >
+                }
+                @case ('saturation') {
+                  <span i18n="presentateur.fluxRefusSaturation|@@presentateurFluxRefusSaturation"
+                    >Trop de connexions au suivi de cette séance (statut {{ refus.statut }}) :
+                    fermez les onglets en trop ; nouvel essai automatique.</span
+                  >
+                }
+                @default {
+                  <span i18n="presentateur.fluxRefus|@@presentateurFluxRefus"
+                    >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) : nouvel
+                    essai automatique.</span
+                  >
+                }
+              }
+            }
+          }
+          @default {
+            <span i18n="presentateur.fluxConnexion|@@presentateurFluxConnexion"
+              >Connexion au suivi de la séance…</span
+            >
+          }
+        }
+      </p>
     }
     @if (code() !== null) {
       <section>
@@ -457,6 +535,16 @@ export class CoursPresentateurComponent {
   readonly clotureDemandee = signal(false);
   readonly clotureEnVol = signal(false);
   readonly echec = signal(false);
+  readonly suiviDuFlux = signal<StatutFlux | null>(null);
+
+  readonly etatDuFlux = computed(() => this.suiviDuFlux()?.etat ?? 'connexion');
+
+  readonly refusDuFlux = computed<RefusDuFlux | null>(() => {
+    const suivi = this.suiviDuFlux();
+    return suivi?.etat === 'refuse'
+      ? { statut: suivi.statut, motif: motifDuRefus(suivi.statut) }
+      : null;
+  });
 
   readonly participants = computed(() => this.resultats()?.participants ?? 0);
 
@@ -684,6 +772,7 @@ export class CoursPresentateurComponent {
     const flux = this.creerFluxFormateur(sessionId);
     flux.onState((etat) => this.suivreLeFlux(etat));
     flux.onResultats((resultats) => this.resultats.set(resultats));
+    flux.onStatut((statut) => this.suiviDuFlux.set(statut));
     this.flux = flux;
     flux.ouvrir();
   }
