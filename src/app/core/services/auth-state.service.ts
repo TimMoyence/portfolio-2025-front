@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { computed, signal } from '@angular/core';
-import { finalize, firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, timeout } from 'rxjs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
@@ -14,6 +14,7 @@ const REFRESH_MIN_DELAY_MS = 5_000;
 const RETRY_INITIAL_DELAY_MS = 2_000;
 const RETRY_MAX_DELAY_MS = 30_000;
 const RETRY_MAX_ATTEMPTS = 5;
+const ME_TIMEOUT_MS = 10_000;
 
 function httpStatusOf(error: unknown): number | null {
   if (typeof error !== 'object' || error === null) {
@@ -41,6 +42,7 @@ export class AuthStateService {
   private readonly _user = signal<AuthUser | null>(null);
   private readonly _isInitialized = signal(false);
   private readonly _isUserLoading = signal(false);
+  private readonly _isRestoreFailed = signal(false);
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
   private refreshAttempts = 0;
 
@@ -48,8 +50,11 @@ export class AuthStateService {
   readonly user = this._user.asReadonly();
   readonly isLoggedIn = computed(() => !!this._token());
   readonly isInitialized = this._isInitialized.asReadonly();
+  readonly isRestoreFailed = this._isRestoreFailed.asReadonly();
   readonly isSessionResolved = computed(
-    () => this._user() !== null || (this._isInitialized() && !this._isUserLoading()),
+    () =>
+      this._user() !== null ||
+      (this._isInitialized() && !this._isUserLoading() && !this._isRestoreFailed()),
   );
 
   constructor() {
@@ -104,17 +109,30 @@ export class AuthStateService {
     const token = this._token();
     if (!token || !this.authPort) return;
 
+    this._isRestoreFailed.set(false);
     this._isUserLoading.set(true);
     this.authPort
       .me()
-      .pipe(finalize(() => this._isUserLoading.set(false)))
+      .pipe(
+        timeout(ME_TIMEOUT_MS),
+        finalize(() => this._isUserLoading.set(false)),
+      )
       .subscribe({
         next: (user) => {
           this._user.set(user);
           this.armRefresh();
         },
-        error: () => this.clearSession(),
+        error: (error: unknown) => this.onRestoreError(error),
       });
+  }
+
+  private onRestoreError(error: unknown): void {
+    const status = httpStatusOf(error);
+    if (status === 401 || status === 403) {
+      this.clearSession();
+      return;
+    }
+    this._isRestoreFailed.set(true);
   }
 
   private armRefresh(): void {
@@ -230,6 +248,7 @@ export class AuthStateService {
   private clearState(): void {
     this.clearRefreshTimer();
     this.refreshAttempts = 0;
+    this._isRestoreFailed.set(false);
     this._token.set(null);
     this._user.set(null);
     if (this.isBrowser) {

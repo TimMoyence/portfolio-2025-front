@@ -7,9 +7,13 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
-import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
+import {
+  buildAuthSession,
+  buildAuthUser,
+  createAuthPortStub,
+} from '../../../testing/factories/auth.factory';
 import { createVerrouEnMemoire } from '../../../testing/factories/verrou.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthStateService } from './auth-state.service';
@@ -172,6 +176,70 @@ describe('AuthStateService', () => {
       flushMicrotasks();
       expect(portStub.refresh).toHaveBeenCalledTimes(1);
     }));
+
+    describe('verification d une session restauree', () => {
+      function restaurer(jeton = 'jwt-restaure'): void {
+        localStorage.setItem(CLE_DU_JETON, jeton);
+        TestBed.inject(ApplicationRef).tick();
+      }
+
+      for (const status of [0, 503]) {
+        it(`garde le jeton et propose un nouvel essai quand la verification echoue en ${status}`, () => {
+          portStub.me.and.returnValue(throwError(refusHttp(status)));
+
+          restaurer();
+
+          expect(service.token()).toBe('jwt-restaure');
+          expect(localStorage.getItem(CLE_DU_JETON)).toBe('jwt-restaure');
+          expect(service.user()).toBeNull();
+          expect(service.isRestoreFailed()).toBeTrue();
+          expect(service.isSessionResolved())
+            .withContext('aucun garde ne doit juger le role sur une verification en echec')
+            .toBeFalse();
+        });
+      }
+
+      for (const status of [401, 403]) {
+        it(`efface la session quand la verification est refusee en ${status}`, () => {
+          portStub.me.and.returnValue(throwError(refusHttp(status)));
+
+          restaurer();
+
+          expect(service.token()).toBeNull();
+          expect(localStorage.getItem(CLE_DU_JETON)).toBeNull();
+          expect(service.isRestoreFailed()).toBeFalse();
+          expect(service.isSessionResolved()).toBeTrue();
+        });
+      }
+
+      it('abandonne une verification sans reponse apres dix secondes en gardant le jeton', fakeAsync(() => {
+        portStub.me.and.returnValue(NEVER);
+
+        restaurer();
+        tick(9_999);
+
+        expect(service.isRestoreFailed()).toBeFalse();
+
+        tick(1);
+
+        expect(service.isRestoreFailed()).toBeTrue();
+        expect(service.token()).toBe('jwt-restaure');
+      }));
+
+      it('resout la session quand le nouvel essai aboutit', () => {
+        portStub.me.and.returnValues(
+          throwError(refusHttp(503)),
+          of(buildAuthUser({ roles: ['teacher'] })),
+        );
+        restaurer();
+
+        service.restoreSession();
+
+        expect(service.isRestoreFailed()).toBeFalse();
+        expect(service.hasRole('teacher')).toBeTrue();
+        expect(service.isSessionResolved()).toBeTrue();
+      });
+    });
 
     it('n adopte pas le jeton d une autre fenetre quand aucune session n est ouverte ici', () => {
       jetonEcritParUneAutreFenetre('jwt-autre-fenetre', 900_000);

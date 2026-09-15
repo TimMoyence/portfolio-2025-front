@@ -6,6 +6,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { SeoManagerComponent } from './shared/components/seo-manager.component';
+import { SessionRetryComponent } from './shared/components/session-retry/session-retry.component';
 import { SkipLinkComponent } from './shared/components/skip-link.component';
 
 @Component({
@@ -20,6 +21,7 @@ import { SkipLinkComponent } from './shared/components/skip-link.component';
     FooterComponent,
     SkipLinkComponent,
     CookieBannerComponent,
+    SessionRetryComponent,
   ],
   template: `
     <app-asili-background />
@@ -31,6 +33,7 @@ import { SkipLinkComponent } from './shared/components/skip-link.component';
         <!-- Cale sous la navbar fixe : purement dimensionnelle, sans fond
              opaque qui masquerait le champ de particules global. -->
         <div class="pt-24 lg:pt-28"></div>
+        <app-session-retry />
         <router-outlet></router-outlet>
       </main>
       <!--

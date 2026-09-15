@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, GuardResult, RouterStateSnapshot } from '@angular/router';
@@ -20,6 +21,7 @@ const REDIRECTION_WEATHER = '/contact?reason=access&app=weather';
 describe('roleGuard', () => {
   let authState: AuthStateService;
   let utilisateurRestaure: Subject<AuthUser>;
+  let port: ReturnType<typeof createAuthPortStub>;
 
   function decisionsDe(requis: string): GuardResult[] {
     const recues: GuardResult[] = [];
@@ -41,7 +43,7 @@ describe('roleGuard', () => {
   beforeEach(() => {
     localStorage.removeItem(CLE_DU_JETON);
     utilisateurRestaure = new Subject<AuthUser>();
-    const port = createAuthPortStub();
+    port = createAuthPortStub();
     port.me.and.returnValue(utilisateurRestaure);
     setupTestBed({
       router: true,
@@ -101,6 +103,26 @@ describe('roleGuard', () => {
 
       utilisateurRestaure.next(buildAuthUser({ roles: ['teacher'] }));
       utilisateurRestaure.complete();
+      rendreLaPage();
+
+      expect(decisions).toEqual([true]);
+    });
+
+    it('ne renvoie pas vers /contact quand la verification echoue hors refus, puis decide au nouvel essai', () => {
+      const decisions = decisionsDe('teacher');
+
+      rendreLaPage();
+      utilisateurRestaure.error(new HttpErrorResponse({ status: 503 }));
+      rendreLaPage();
+
+      expect(decisions).withContext('une panne du serveur ne dit rien du role').toEqual([]);
+      expect(authState.token()).toBe('jwt-restaure');
+
+      const nouvelEssai = new Subject<AuthUser>();
+      port.me.and.returnValue(nouvelEssai);
+      authState.restoreSession();
+      nouvelEssai.next(buildAuthUser({ roles: ['teacher'] }));
+      nouvelEssai.complete();
       rendreLaPage();
 
       expect(decisions).toEqual([true]);

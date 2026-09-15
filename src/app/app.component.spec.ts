@@ -55,6 +55,13 @@ describe('AppComponent', () => {
     expect(main?.id).toBe('main-content');
   });
 
+  it('place l ecran de nouvel essai de session juste avant la page routee', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('main app-session-retry + router-outlet')).not.toBeNull();
+  });
+
   it('devrait contenir le gestionnaire SEO', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
