@@ -8,6 +8,7 @@ import {
   buildExitBillet,
   buildNumericQuestion,
   buildQuoteCitation,
+  buildRecallQuestion,
   buildVoteQuestion,
 } from '../../../../testing/factories/cours.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
@@ -18,6 +19,7 @@ import {
   ENREGISTREUR_DES_BRIQUES,
   identifiantsDesQuestions,
   PROPRIETES_PAR_BRIQUE,
+  questionsDeLEcran,
 } from './cours-ecran.component';
 
 type Fixture = ComponentFixture<CoursEcranComponent>;
@@ -252,6 +254,28 @@ describe('CoursEcranComponent', () => {
     expect(identifiantsDesQuestions(ecranDeSortie())).toEqual([buildExitBillet().id]);
     expect(identifiantsDesQuestions(citation)).toEqual([]);
     expect(identifiantsDesQuestions(buildEcran({ type: 'iframe' }))).toEqual([]);
+  });
+
+  it('donne l enonce de chaque question dans l ordre ou l ecran la montre', () => {
+    const inverse = buildEcranQuestionnaire({
+      donnees: {
+        questions: [
+          { brique: 'fp-vote', donnees: { question: buildVoteQuestion() } },
+          { brique: 'fp-recall', donnees: { question: buildRecallQuestion() } },
+          { brique: 'fp-numeric', donnees: { question: buildNumericQuestion() } },
+        ],
+      },
+    });
+
+    expect(questionsDeLEcran(inverse)).toEqual([
+      { id: buildVoteQuestion().id, enonce: buildVoteQuestion().enonce },
+      { id: buildRecallQuestion().id, enonce: buildRecallQuestion().enonce },
+      { id: buildNumericQuestion().id, enonce: buildNumericQuestion().enonce },
+    ]);
+    expect(questionsDeLEcran(ecranDeSortie())).toEqual([
+      { id: buildExitBillet().id, enonce: buildExitBillet().question },
+    ]);
+    expect(questionsDeLEcran(buildEcran({ type: 'iframe' }))).toEqual([]);
   });
 
   it('ignore une soumission sans identifiant ou dont la valeur est invalide', async () => {

@@ -1,4 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common';
+import { ApplicationRef } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -11,6 +12,10 @@ import type {
 } from '../../../../cours/content/types';
 import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
 import { buildAuthSession } from '../../../../testing/factories/auth.factory';
+import {
+  buildNumericQuestion,
+  buildVoteQuestion,
+} from '../../../../testing/factories/cours.factory';
 import {
   buildDerouleCours,
   buildEcranDeroule,
@@ -366,6 +371,117 @@ describe('CoursPresentateurComponent', () => {
         'cours-scene',
       );
     });
+  });
+
+  it('porte un titre de page de niveau 1', () => {
+    const fixture = monter();
+    const titres = (fixture.nativeElement as HTMLElement).querySelectorAll('h1');
+
+    expect(titres.length).toBe(1);
+    expect(titres[0].textContent?.trim()).not.toBe('');
+  });
+
+  it('numerote les panneaux et montre l enonce de chaque question dans l ordre de l apercu', async () => {
+    const vote = buildVoteQuestion({
+      id: 'Q-CAP-03',
+      enonce: 'Que vaut le capital apres 10 ans ?',
+    });
+    const numerique = buildNumericQuestion({ id: 'Q-VA-07', enonce: 'Quelle valeur acquise ?' });
+    port.lireDeroule.and.returnValue(
+      of(
+        buildDerouleCours({
+          ecrans: [
+            buildEcranDeroule({
+              type: 'questionnaire',
+              donnees: {
+                questions: [
+                  { brique: 'fp-vote', donnees: { question: vote } },
+                  { brique: 'fp-numeric', donnees: { question: numerique } },
+                ],
+              },
+              corriges: [
+                { questionId: 'Q-VA-07', bonneReponse: '1480.24', confusions: [] },
+                { questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] },
+              ],
+            }),
+          ],
+        }),
+      ),
+    );
+    const fixture = await ouvrirLaSeance();
+    const panneaux = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
+        "[data-testid='presentateur-question']",
+      ),
+    ];
+
+    expect(panneaux.map((panneau) => panneau.getAttribute('data-question'))).toEqual([
+      'Q-CAP-03',
+      'Q-VA-07',
+    ]);
+    expect(
+      panneaux.map((panneau) =>
+        panneau
+          .querySelector("[data-testid='presentateur-question-titre']")
+          ?.textContent?.replace(/\s+/g, ' ')
+          .trim(),
+      ),
+    ).toEqual(['Question 1', 'Question 2']);
+    expect(
+      panneaux.map((panneau) =>
+        panneau.querySelector("[data-testid='presentateur-question-enonce']")?.textContent?.trim(),
+      ),
+    ).toEqual([vote.enonce, numerique.enonce]);
+  });
+
+  describe('dialogue de cloture', () => {
+    it('porte le focus sur le choix le moins destructif, puis le rend au bouton de cloture', async () => {
+      const fixture = await ouvrirLaSeance();
+      const application = TestBed.inject(ApplicationRef);
+
+      await cliquer(fixture, 'presentateur-cloturer');
+      application.tick();
+
+      expect(document.activeElement).toBe(cible(fixture, 'presentateur-cloture-annuler'));
+
+      await cliquer(fixture, 'presentateur-cloture-annuler');
+      application.tick();
+
+      expect(lire(fixture, 'presentateur-cloture-confirmation')).toBeNull();
+      expect(document.activeElement).toBe(cible(fixture, 'presentateur-cloturer'));
+    });
+
+    it('garde la seance et le dialogue ouverts quand la cloture echoue', async () => {
+      const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+      port.cloturer.and.returnValue(throwError(() => new Error('refus')));
+      const fixture = await ouvrirLaSeance();
+
+      await cliquer(fixture, 'presentateur-cloturer');
+      await cliquer(fixture, 'presentateur-cloture-confirmer');
+
+      expect(cible(fixture, 'presentateur-echec').getAttribute('role')).toBe('alert');
+      expect(lire(fixture, 'presentateur-cloture-confirmation')).toBeTruthy();
+      expect(lire(fixture, 'presentateur-terminee')).toBeNull();
+      expect(double.flux.close).not.toHaveBeenCalled();
+      expect(allersALaSynthese(navigation)).toBe(0);
+      expect(bouton(fixture, 'presentateur-cloture-confirmer').disabled).toBeFalse();
+    });
+  });
+
+  it('alerte et laisse redemarrer quand le demarrage echoue', async () => {
+    port.demarrer.and.returnValue(throwError(() => new Error('refus')));
+    const fixture = await ouvrirLaSeance();
+
+    await cliquer(fixture, 'presentateur-demarrer');
+
+    expect(cible(fixture, 'presentateur-echec').getAttribute('role')).toBe('alert');
+    expect(bouton(fixture, 'presentateur-demarrer').disabled).toBeFalse();
+
+    port.demarrer.and.returnValue(of(undefined));
+    await cliquer(fixture, 'presentateur-demarrer');
+
+    expect(lire(fixture, 'presentateur-echec')).toBeNull();
+    expect(lire(fixture, 'presentateur-demarrer')).toBeNull();
   });
 
   describe('sante du suivi de la seance', () => {

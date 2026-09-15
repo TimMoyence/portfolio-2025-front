@@ -10,7 +10,8 @@ import {
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import type { ResultatQuestion } from '../../../../cours/content/types';
+import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
+import { questionsDeLEcran } from '../ecran/cours-ecran.component';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
@@ -60,6 +61,15 @@ function echapper(champ: string): string {
 
 function ligneCsv(champs: readonly string[]): string {
   return champs.map(echapper).join(SEPARATEUR);
+}
+
+function enoncesDuDeroule(deroule: DerouleCours): ReadonlyMap<string, string> {
+  return new Map(
+    deroule.ecrans
+      .flatMap((ecran) => questionsDeLEcran(ecran))
+      .filter((question) => question.enonce !== '')
+      .map((question) => [question.id, question.enonce]),
+  );
 }
 
 function confusionsFrequentesDe(
@@ -125,6 +135,9 @@ function confusionsFrequentesDe(
       <section>
         <h3 i18n="synthese.questionsTitre|@@syntheseQuestionsTitre">Résultats par question</h3>
         <table data-testid="synthese-questions">
+          <caption i18n="synthese.questionsLegende|@@syntheseQuestionsLegende">
+            Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance
+          </caption>
           <thead>
             <tr>
               <th scope="col" i18n="synthese.questionColonne|@@syntheseQuestionColonne">
@@ -142,7 +155,12 @@ function confusionsFrequentesDe(
           <tbody>
             @for (question of questions(); track question.questionId) {
               <tr data-testid="synthese-question-ligne">
-                <td data-testid="synthese-question-id">{{ question.questionId }}</td>
+                <th scope="row">
+                  @if (enonces().get(question.questionId); as enonce) {
+                    <span data-testid="synthese-question-libelle">{{ enonce }}</span>
+                  }
+                  <small data-testid="synthese-question-id">{{ question.questionId }}</small>
+                </th>
                 <td data-testid="synthese-question-correctes">{{ question.correctes }}</td>
                 <td data-testid="synthese-question-total">{{ question.total }}</td>
                 <td data-testid="synthese-question-ne-sait-pas">{{ question.neSaitPas }}</td>
@@ -197,6 +215,7 @@ export class CoursSyntheseComponent {
 
   readonly rapport = signal<RapportSeance | null>(null);
   readonly echec = signal(false);
+  readonly enonces = signal<ReadonlyMap<string, string>>(new Map());
 
   readonly vide = computed(() => this.rapport()?.participants.length === 0);
 
@@ -285,10 +304,23 @@ export class CoursSyntheseComponent {
   }
 
   private async lire(): Promise<void> {
+    await Promise.all([this.lireLeRapport(), this.lireLesEnonces()]);
+  }
+
+  private async lireLeRapport(): Promise<void> {
     try {
       this.rapport.set(await firstValueFrom(this.port.lireResultats(this.sessionId())));
     } catch {
       this.echec.set(true);
+    }
+  }
+
+  private async lireLesEnonces(): Promise<void> {
+    try {
+      const deroule = await firstValueFrom(this.port.lireDeroule(this.sessionId()));
+      this.enonces.set(enoncesDuDeroule(deroule));
+    } catch {
+      this.enonces.set(new Map());
     }
   }
 }

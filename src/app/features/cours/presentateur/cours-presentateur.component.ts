@@ -1,5 +1,5 @@
-import { isPlatformBrowser, Location, PercentPipe } from '@angular/common';
-import type { WritableSignal } from '@angular/core';
+import { isPlatformBrowser, Location } from '@angular/common';
+import type { ElementRef, WritableSignal } from '@angular/core';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -7,16 +7,16 @@ import {
   computed,
   DestroyRef,
   inject,
+  Injector,
   input,
   PLATFORM_ID,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import type {
-  ConfusionComptee,
-  CorrigePresentateur,
   DerouleCours,
   EcranDeroule,
   PacingMode,
@@ -32,22 +32,13 @@ import type {
 import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
-import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import { CoursEcranComponent, questionsDeLEcran } from '../ecran/cours-ecran.component';
+import type { QuestionDuPanneau } from './cours-panneau-question.component';
+import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 
 type Chargement = 'repos' | 'chargement' | 'succes' | 'echec';
-
-interface PanneauQuestion {
-  readonly questionId: string;
-  readonly bonneReponse: string;
-  readonly total: number;
-  readonly part: number;
-  readonly neSaitPas: number;
-  readonly sousLeSeuil: boolean;
-  readonly confusions: readonly ConfusionComptee[];
-  readonly remediation: number | null;
-}
 
 type MotifDuRefus = 'session' | 'saturation' | 'autre';
 
@@ -78,63 +69,24 @@ const ETAT_ANNONCE: Readonly<Record<StatutSession, EtatSeance>> = {
 
 const FENETRE_SCENE = 'cours-scene';
 
-const SANS_REPONSE: Omit<ResultatQuestion, 'questionId'> = {
-  total: 0,
-  correctes: 0,
-  neSaitPas: 0,
-  confusions: [],
-};
-
-function confusionDominante(confusions: readonly ConfusionComptee[]): ConfusionComptee | null {
-  return confusions.reduce<ConfusionComptee | null>(
-    (dominante, confusion) => (confusion.nombre > (dominante?.nombre ?? 0) ? confusion : dominante),
-    null,
-  );
-}
-
-function ecranDeRemediation(
-  deroule: DerouleCours,
-  confusion: ConfusionComptee | null,
-): number | null {
-  if (confusion === null || !Object.hasOwn(deroule.remediations, confusion.id)) {
-    return null;
-  }
-  const cible = deroule.remediations[confusion.id];
-  const index = deroule.ecrans.findIndex((ecran) => ecran.id === cible);
-  return index === -1 ? null : index;
-}
-
-function lirePanneau(
-  deroule: DerouleCours,
-  seuil: number | null,
-  corrige: CorrigePresentateur,
-  resultats: readonly ResultatQuestion[],
-): PanneauQuestion {
-  const resultat =
-    resultats.find((question) => question.questionId === corrige.questionId) ?? SANS_REPONSE;
-  const part = resultat.total > 0 ? resultat.correctes / resultat.total : 0;
-  const sousLeSeuil = seuil !== null && resultat.total > 0 && part < seuil;
-  return {
-    questionId: corrige.questionId,
-    bonneReponse: corrige.bonneReponse,
-    total: resultat.total,
-    part,
-    neSaitPas: resultat.neSaitPas,
-    sousLeSeuil,
-    confusions: corrige.confusions.map((confusion) => ({
-      ...confusion,
-      nombre: resultat.confusions.find((comptee) => comptee.id === confusion.id)?.nombre ?? 0,
-    })),
-    remediation: sousLeSeuil
-      ? ecranDeRemediation(deroule, confusionDominante(resultat.confusions))
-      : null,
-  };
+function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
+  const apercu = questionsDeLEcran(ecran);
+  let horsApercu = apercu.length;
+  const questions = ecran.corriges.map((corrige) => {
+    const position = apercu.findIndex((question) => question.id === corrige.questionId);
+    if (position !== -1) {
+      return { numero: position + 1, enonce: apercu[position].enonce, corrige };
+    }
+    horsApercu += 1;
+    return { numero: horsApercu, enonce: '', corrige };
+  });
+  return questions.sort((gauche, droite) => gauche.numero - droite.numero);
 }
 
 @Component({
   selector: 'app-cours-presentateur',
   standalone: true,
-  imports: [CoursEcranComponent, PercentPipe],
+  imports: [CoursEcranComponent, CoursPanneauQuestionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .code-seance {
@@ -149,11 +101,6 @@ function lirePanneau(
       white-space: pre-line;
     }
 
-    [data-etat='sous-le-seuil'] {
-      border-inline-start: 0.375rem solid currentColor;
-      padding-inline-start: 0.75rem;
-    }
-
     .suivi-du-flux[data-etat='reconnexion'],
     .suivi-du-flux[data-etat='refuse'] {
       border-inline-start: 0.375rem solid var(--danger);
@@ -162,6 +109,7 @@ function lirePanneau(
     }
   `,
   template: `
+    <h1 i18n="presentateur.titrePage|@@presentateurTitrePage">Pupitre de la séance</h1>
     @if (statut() === 'fermee' && seance() === undefined) {
       <button
         type="button"
@@ -388,61 +336,17 @@ function lirePanneau(
             </section>
           }
           <ul data-testid="presentateur-questions">
-            @for (panneau of panneaux(); track panneau.questionId) {
-              <li
-                data-testid="presentateur-question"
-                [attr.data-question]="panneau.questionId"
-                [attr.data-etat]="panneau.sousLeSeuil ? 'sous-le-seuil' : null"
-              >
-                <dl>
-                  <dt i18n="presentateur.reponses|@@presentateurReponses">Réponses reçues</dt>
-                  <dd data-testid="presentateur-question-total">
-                    {{ panneau.total }} / {{ participants() }}
-                  </dd>
-                  <dt i18n="presentateur.part|@@presentateurPart">Bonnes réponses</dt>
-                  <dd data-testid="presentateur-question-part">{{ panneau.part | percent }}</dd>
-                  <dt i18n="presentateur.neSaitPas|@@presentateurNeSaitPas">Je ne sais pas</dt>
-                  <dd data-testid="presentateur-question-ne-sait-pas">{{ panneau.neSaitPas }}</dd>
-                  @if (ecranAffiche.seuil !== null) {
-                    <dt i18n="presentateur.seuil|@@presentateurSeuil">Seuil</dt>
-                    <dd data-testid="presentateur-question-seuil">
-                      {{ ecranAffiche.seuil | percent }}
-                    </dd>
-                  }
-                  <dt i18n="presentateur.bonneReponse|@@presentateurBonneReponse">Bonne réponse</dt>
-                  <dd data-testid="presentateur-question-bonne-reponse">
-                    {{ panneau.bonneReponse }}
-                  </dd>
-                </dl>
-                @if (panneau.sousLeSeuil) {
-                  <p
-                    data-testid="presentateur-question-alerte"
-                    i18n="presentateur.sousLeSeuil|@@presentateurSousLeSeuil"
-                  >
-                    Sous le seuil : la classe n'a pas encore compris.
-                  </p>
-                }
-                <ul>
-                  @for (confusion of panneau.confusions; track confusion.id) {
-                    <li data-testid="presentateur-confusion" [attr.data-confusion]="confusion.id">
-                      <span>{{ confusion.libelle }}</span>
-                      <span data-testid="presentateur-confusion-nombre">{{
-                        confusion.nombre
-                      }}</span>
-                    </li>
-                  }
-                </ul>
-                @if (panneau.remediation !== null) {
-                  <button
-                    type="button"
-                    data-testid="presentateur-remediation"
-                    [disabled]="commandeEnVol()"
-                    (click)="allerA(panneau.remediation)"
-                    i18n="presentateur.remediation|@@presentateurRemediation"
-                  >
-                    Aller à la remédiation
-                  </button>
-                }
+            @for (question of questions(); track question.corrige.questionId) {
+              <li>
+                <app-cours-panneau-question
+                  [question]="question"
+                  [deroule]="cours"
+                  [seuil]="ecranAffiche.seuil"
+                  [resultats]="resultatsDesQuestions()"
+                  [participants]="participants()"
+                  [commandeEnVol]="commandeEnVol()"
+                  (remediation)="allerA($event)"
+                />
               </li>
             }
           </ul>
@@ -451,6 +355,7 @@ function lirePanneau(
     }
     @if (statut() === 'ouverte' || statut() === 'en_cours') {
       <button
+        #boutonDeCloture
         type="button"
         data-testid="presentateur-cloturer"
         (click)="demanderLaCloture()"
@@ -480,6 +385,7 @@ function lirePanneau(
           Confirmer la clôture
         </button>
         <button
+          #retourALaSeance
           type="button"
           data-testid="presentateur-cloture-annuler"
           (click)="annulerLaCloture()"
@@ -554,22 +460,24 @@ export class CoursPresentateurComponent {
     () => this.deroule()?.ecrans[this.ecran()] ?? null,
   );
 
-  readonly panneaux = computed<readonly PanneauQuestion[]>(() => {
-    const deroule = this.deroule();
+  readonly questions = computed<readonly QuestionDuPanneau[]>(() => {
     const ecran = this.ecranCourant();
-    if (deroule === null || ecran === null) {
-      return [];
-    }
-    const resultats = this.resultats()?.questions ?? [];
-    return ecran.corriges.map((corrige) => lirePanneau(deroule, ecran.seuil, corrige, resultats));
+    return ecran === null ? [] : questionsDuPanneau(ecran);
   });
+
+  readonly resultatsDesQuestions = computed<readonly ResultatQuestion[]>(
+    () => this.resultats()?.questions ?? [],
+  );
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
+  private readonly injecteur = inject(Injector);
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly boutonDeCloture = viewChild<ElementRef<HTMLButtonElement>>('boutonDeCloture');
+  private readonly retourALaSeance = viewChild<ElementRef<HTMLButtonElement>>('retourALaSeance');
 
   private flux: Sync | null = null;
   private detruit = false;
@@ -685,10 +593,12 @@ export class CoursPresentateurComponent {
 
   protected demanderLaCloture(): void {
     this.clotureDemandee.set(true);
+    this.focaliserApresLeRendu(this.retourALaSeance);
   }
 
   protected annulerLaCloture(): void {
     this.clotureDemandee.set(false);
+    this.focaliserApresLeRendu(this.boutonDeCloture);
   }
 
   protected confirmerLaCloture(): void {
@@ -786,6 +696,10 @@ export class CoursPresentateurComponent {
       this.ecran.set(etat.ecranCourant);
       this.mode.set(etat.modeRythme);
     }
+  }
+
+  private focaliserApresLeRendu(cible: () => ElementRef<HTMLButtonElement> | undefined): void {
+    afterNextRender(() => cible()?.nativeElement.focus(), { injector: this.injecteur });
   }
 
   private armee(): boolean {

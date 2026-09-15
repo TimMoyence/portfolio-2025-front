@@ -83,21 +83,42 @@ function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
   return montages.every((montage): montage is Montage => montage !== null) ? montages : null;
 }
 
-const PROPRIETE_DE_REPONSE: Readonly<Record<string, string>> = {
-  'fp-numeric': 'question',
-  'fp-vote': 'question',
-  'fp-recall': 'question',
-  'fp-exit': 'billet',
+interface PorteurDeReponse {
+  readonly propriete: string;
+  readonly enonce: string;
+}
+
+const PORTEUR_DE_REPONSE: Readonly<Record<string, PorteurDeReponse>> = {
+  'fp-numeric': { propriete: 'question', enonce: 'enonce' },
+  'fp-vote': { propriete: 'question', enonce: 'enonce' },
+  'fp-recall': { propriete: 'question', enonce: 'enonce' },
+  'fp-exit': { propriete: 'billet', enonce: 'question' },
 };
 
-function identifiantDeReponse({ brique, donnees }: Montage): readonly string[] {
-  const cle = Object.hasOwn(PROPRIETE_DE_REPONSE, brique) ? PROPRIETE_DE_REPONSE[brique] : null;
-  const porteur = cle === null ? null : donnees[cle];
-  return estObjet(porteur) && typeof porteur['id'] === 'string' ? [porteur['id']] : [];
+export interface QuestionDeLEcran {
+  readonly id: string;
+  readonly enonce: string;
+}
+
+function questionDuMontage({ brique, donnees }: Montage): readonly QuestionDeLEcran[] {
+  if (!Object.hasOwn(PORTEUR_DE_REPONSE, brique)) {
+    return [];
+  }
+  const { propriete, enonce } = PORTEUR_DE_REPONSE[brique];
+  const porteur = donnees[propriete];
+  if (!estObjet(porteur) || typeof porteur['id'] !== 'string') {
+    return [];
+  }
+  const texte = porteur[enonce];
+  return [{ id: porteur['id'], enonce: typeof texte === 'string' ? texte : '' }];
+}
+
+export function questionsDeLEcran(ecran: EcranContent): readonly QuestionDeLEcran[] {
+  return (planDeMontage(ecran) ?? []).flatMap(questionDuMontage);
 }
 
 export function identifiantsDesQuestions(ecran: EcranContent): readonly string[] {
-  return (planDeMontage(ecran) ?? []).flatMap(identifiantDeReponse);
+  return questionsDeLEcran(ecran).map((question) => question.id);
 }
 
 function estValeur(valeur: unknown): valeur is number | string {

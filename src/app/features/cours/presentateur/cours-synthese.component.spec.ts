@@ -1,14 +1,25 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import type {
   ParticipantRapporte,
   RapportSeance,
   ReponseRapportee,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import type { ConfusionComptee, ResultatsSeance } from '../../../../cours/content/types';
+import type {
+  ConfusionComptee,
+  DerouleCours,
+  ResultatsSeance,
+} from '../../../../cours/content/types';
 import {
+  buildNumericQuestion,
+  buildVoteQuestion,
+} from '../../../../testing/factories/cours.factory';
+import {
+  buildDerouleCours,
+  buildEcranDeroule,
   buildResultatQuestion,
   buildResultatsSeance,
   createFormationsPortStub,
@@ -81,9 +92,13 @@ function textes(fixture: Fixture, nom: string): readonly string[] {
   );
 }
 
-async function monter(rapport: RapportSeance): Promise<Fixture> {
+async function monter(
+  rapport: RapportSeance,
+  deroule: Observable<DerouleCours> = of(buildDerouleCours()),
+): Promise<Fixture> {
   const port = createFormationsPortStub();
   port.lireResultats.and.returnValue(of(rapport));
+  port.lireDeroule.and.returnValue(deroule);
   setupTestBed({
     imports: [CoursSyntheseComponent],
     providers: [{ provide: FORMATIONS_PORT, useValue: port }],
@@ -207,6 +222,64 @@ describe('CoursSyntheseComponent', () => {
     expect(textes(fixture, 'synthese-question-correctes')).toEqual(['16', '0']);
     expect(textes(fixture, 'synthese-question-total')).toEqual(['24', '0']);
     expect(textes(fixture, 'synthese-question-ne-sait-pas')).toEqual(['2', '0']);
+  });
+
+  describe('tableau des resultats par question', () => {
+    const VOTE = buildVoteQuestion({ id: 'Q-1', enonce: 'Que vaut le capital apres dix ans ?' });
+    const NUMERIQUE = buildNumericQuestion({ id: 'Q-2', enonce: 'Quelle valeur acquise ?' });
+
+    function resultatsDeDeuxQuestions(): ResultatsSeance {
+      return buildResultatsSeance({
+        participants: 3,
+        questions: [
+          buildResultatQuestion({ questionId: 'Q-1' }),
+          buildResultatQuestion({ questionId: 'Q-2' }),
+        ],
+      });
+    }
+
+    function derouleDesDeuxQuestions(): DerouleCours {
+      return buildDerouleCours({
+        ecrans: [
+          buildEcranDeroule({ type: 'fp-vote', donnees: { question: VOTE } }),
+          buildEcranDeroule({
+            type: 'questionnaire',
+            donnees: { questions: [{ brique: 'fp-numeric', donnees: { question: NUMERIQUE } }] },
+          }),
+        ],
+      });
+    }
+
+    it('porte une legende', async () => {
+      const fixture = await monter(rapportDe([MALIK], resultatsDeDeuxQuestions()));
+      const legende = (fixture.nativeElement as HTMLElement).querySelector(
+        "[data-testid='synthese-questions'] caption",
+      );
+
+      expect(legende).not.toBeNull();
+      expect(legende?.textContent?.trim()).toContain('question');
+    });
+
+    it('nomme chaque question par son enonce au deroule, en gardant son identifiant', async () => {
+      const fixture = await monter(
+        rapportDe([MALIK], resultatsDeDeuxQuestions()),
+        of(derouleDesDeuxQuestions()),
+      );
+
+      expect(textes(fixture, 'synthese-question-libelle')).toEqual([VOTE.enonce, NUMERIQUE.enonce]);
+      expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
+    });
+
+    it('nomme la question par son identifiant quand le deroule ne peut pas etre lu', async () => {
+      const fixture = await monter(
+        rapportDe([MALIK], resultatsDeDeuxQuestions()),
+        throwError(() => new Error('reseau coupe')),
+      );
+
+      expect(textes(fixture, 'synthese-question-libelle')).toEqual([]);
+      expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
+      expect(textes(fixture, 'synthese-echec')).toEqual([]);
+    });
   });
 
   it('marque l etudiant sans aucune reponse au lieu de lui donner un score de zero', async () => {
