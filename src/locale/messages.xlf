@@ -1374,17 +1374,13 @@
         </context-group>
         <note priority="1" from="meaning">cours.email</note>
       </trans-unit>
-      <trans-unit id="coursRejoindre" datatype="html">
+      <trans-unit id="coursDemoRejoindre" datatype="html">
         <source>Rejoindre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/cours-host.component.ts</context>
           <context context-type="linenumber">48,50</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">218,220</context>
-        </context-group>
-        <note priority="1" from="meaning">cours.rejoindre</note>
+        <note priority="1" from="meaning">cours.demoRejoindre</note>
       </trans-unit>
       <trans-unit id="coursIdentiteRefus" datatype="html">
         <source> Vos informations n&apos;ont pas pu être prises en compte : vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez. </source>
@@ -1505,6 +1501,14 @@
           <context context-type="linenumber">204,205</context>
         </context-group>
         <note priority="1" from="meaning">cours.code</note>
+      </trans-unit>
+      <trans-unit id="coursRejoindre" datatype="html">
+        <source> Rejoindre </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
+          <context context-type="linenumber">218,220</context>
+        </context-group>
+        <note priority="1" from="meaning">cours.rejoindre</note>
       </trans-unit>
       <trans-unit id="presentateurOuvrir" datatype="html">
         <source> Ouvrir la séance </source>

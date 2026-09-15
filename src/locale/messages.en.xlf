@@ -13562,11 +13562,10 @@
         <target>Email address</target>
       </segment>
     </unit>
-    <unit id="coursRejoindre">
+    <unit id="coursDemoRejoindre">
       <notes>
         <note category="location">src/app/features/cours/cours-host.component.ts:48,50</note>
-        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:218,220</note>
-        <note category="meaning">cours.rejoindre</note>
+        <note category="meaning">cours.demoRejoindre</note>
       </notes>
       <segment>
         <source>Rejoindre</source>
@@ -13721,6 +13720,16 @@
       <segment>
         <source>Code de la séance</source>
         <target>Session code</target>
+      </segment>
+    </unit>
+    <unit id="coursRejoindre">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:218,220</note>
+        <note category="meaning">cours.rejoindre</note>
+      </notes>
+      <segment>
+        <source> Rejoindre </source>
+        <target> Join </target>
       </segment>
     </unit>
     <unit id="presentateurOuvrir">
