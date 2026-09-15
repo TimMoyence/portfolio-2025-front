@@ -327,6 +327,31 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cours/presenter/:slug',
+    canActivate: [authGuard, roleGuard('teacher')],
+    loadComponent: () =>
+      import('./features/cours/presentateur/cours-presentateur.component').then(
+        (m) => m.CoursPresentateurComponent,
+      ),
+    data: {
+      seoKey: 'cours-presenter',
+      robots: 'noindex, nofollow',
+    },
+  },
+  {
+    path: 'cours/presenter/:slug/scene/:sessionId',
+    canActivate: [authGuard, roleGuard('teacher')],
+    loadComponent: () =>
+      import('./features/cours/presentateur/cours-scene.component').then(
+        (m) => m.CoursSceneComponent,
+      ),
+    data: {
+      seoKey: 'cours-scene',
+      robots: 'noindex, nofollow',
+      coquille: false,
+    },
+  },
+  {
     path: 'cours/seance/:sessionId/synthese',
     canActivate: [authGuard],
     loadComponent: () =>

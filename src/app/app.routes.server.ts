@@ -27,6 +27,8 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'atelier/sebastian/app/historique', renderMode: RenderMode.Client },
   { path: 'atelier/sebastian/app/objectifs', renderMode: RenderMode.Client },
   { path: 'cours/rejoindre', renderMode: RenderMode.Client },
+  { path: 'cours/presenter/:slug', renderMode: RenderMode.Client },
+  { path: 'cours/presenter/:slug/scene/:sessionId', renderMode: RenderMode.Client },
   { path: 'cours/seance/:sessionId/synthese', renderMode: RenderMode.Client },
 
   {

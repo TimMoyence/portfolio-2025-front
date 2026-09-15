@@ -1,33 +1,51 @@
+import type { DebugElement } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import type { Observable } from 'rxjs';
-import { NEVER, of, throwError } from 'rxjs';
+import { NEVER, of, Subject, throwError } from 'rxjs';
+import type { CoursContent } from '../../../../cours/content/types';
 import { clearIdentity } from '../../../../cours/runtime/core/identity';
-import { pending } from '../../../../cours/runtime/core/queue';
-import type { EtatSession, Sync, SyncOptions } from '../../../../cours/runtime/core/sync';
+import { enqueue, pending } from '../../../../cours/runtime/core/queue';
+import type { EtatSession } from '../../../../cours/runtime/core/sync';
+import { buildEcranQuestionnaire } from '../../../../testing/factories/cours.factory';
+import {
+  buildCoursContent,
+  buildRattachement,
+  createFormationsPortStub,
+} from '../../../../testing/factories/formations.factory';
+import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
+import type { FluxDouble } from '../../../../testing/factories/sync.factory';
+import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import type {
-  FormationsPort,
-  IncidentEtudiant,
-  QuestionsDues,
-  RapportSeance,
-  Rattachement,
-  ReponseEtudiant,
-  SeanceOuverte,
-  VerdictReponse,
+import type { FormationsPort, VerdictReponse } from '../../../core/ports/formations.port';
+import {
+  FORMATIONS_PORT,
+  RattachementRefuse,
+  ReponseRefusee,
+  SujetRefuse,
 } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT, RattachementRefuse } from '../../../core/ports/formations.port';
-import { CoursEtudiantComponent, CREATEUR_FLUX } from './cours-etudiant.component';
+import type { ReponseBrique } from '../ecran/cours-ecran.component';
+import { CREATEUR_FLUX } from '../cours-flux.token';
+import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import { CoursEtudiantComponent } from './cours-etudiant.component';
+
+type Fixture = ComponentFixture<CoursEtudiantComponent>;
 
 const JETON = 'jeton-participant-7f3a91';
 const SESSION = 'sess-42';
-const GRAINE_A = 424242;
-const GRAINE_B = 987654;
 const CODE_SAISI = '12 34';
 const CODE_NORMALISE = '1234';
 const ETIQUETTE_BRUTE = 'interets-simples';
 const VALEUR_ATTENDUE = '1480.24';
-const REPONSE_FAUSSE = '1400';
+const ETIQUETTE_LIBELLE = 'Les intérêts ont été additionnés au lieu d’être composés.';
+
+const REPONSE_NUMERIQUE: ReponseBrique = { questionId: 'Q-VA-07', valeur: 1400, dureeMs: 900 };
+const REPONSE_VOTE: ReponseBrique = { questionId: 'Q-CAP-03', valeur: 'b', dureeMs: 400 };
+
+const REUSSITE: VerdictReponse = { reussite: true, libelleConfusion: null };
+const CONFUSION: VerdictReponse = { reussite: false, libelleConfusion: ETIQUETTE_LIBELLE };
 
 const IDENTITE: readonly (readonly [string, string])[] = [
   ['prenom', 'Lea'],
@@ -35,142 +53,80 @@ const IDENTITE: readonly (readonly [string, string])[] = [
   ['email', 'lea.dubois@example.com'],
 ];
 
-const HORS_PARCOURS = 'Methode hors du parcours etudiant';
+function sujetDeSeance(): CoursContent {
+  const cours = buildCoursContent();
+  return {
+    ...cours,
+    ecrans: [buildEcranQuestionnaire({ id: 'ecran-1' }), ...cours.ecrans.slice(1)],
+  };
+}
 
-const VERDICT_JUSTE: VerdictReponse = { correcte: true, misconception: null };
+function livrer(arrivee: Subject<CoursContent>, sujet: CoursContent): void {
+  arrivee.next(sujet);
+  arrivee.complete();
+}
 
 function verdictAvecFuite(): VerdictReponse {
   const recu: Record<string, unknown> = {
     reponseAttendue: VALEUR_ATTENDUE,
     correcte: false,
     misconception: ETIQUETTE_BRUTE,
+    reussite: false,
+    libelleConfusion: ETIQUETTE_LIBELLE,
   };
   return recu as unknown as VerdictReponse;
 }
 
-interface LotIncidents {
-  readonly jeton: string;
-  readonly incidents: readonly IncidentEtudiant[];
-}
-
-class FormationsDouble implements FormationsPort {
-  seed = GRAINE_A;
-  refus: RattachementRefuse | null = null;
-  verdict: VerdictReponse = VERDICT_JUSTE;
-  incidentsSansReponse = false;
-  readonly codes: string[] = [];
-  readonly reponses: ReponseEtudiant[] = [];
-  readonly jetons: string[] = [];
-  readonly lots: LotIncidents[] = [];
-
-  rejoindre(code: string): Observable<Rattachement> {
-    this.codes.push(code);
-    const refus = this.refus;
-    if (refus !== null) {
-      return throwError(() => refus);
-    }
-    const rattachement: Rattachement = {
-      participantId: 'p-1',
-      sessionId: SESSION,
-      seed: this.seed,
-      ecranCourant: 0,
-      modeRythme: 'libre',
-      jeton: JETON,
-    };
-    return of(rattachement);
-  }
-
-  repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse> {
-    this.jetons.push(jeton);
-    this.reponses.push(reponse);
-    return of(this.verdict);
-  }
-
-  signalerIncidents(
-    sessionId: string,
-    jeton: string,
-    incidents: readonly IncidentEtudiant[],
-  ): Observable<void> {
-    this.lots.push({ jeton, incidents });
-    return this.incidentsSansReponse ? NEVER : of(undefined);
-  }
-
-  ouvrirSeance(): Observable<SeanceOuverte> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  demarrer(): Observable<void> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  piloter(): Observable<void> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  cloturer(): Observable<void> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  lireResultats(): Observable<RapportSeance> {
-    throw new Error(HORS_PARCOURS);
-  }
-
-  lireQuestionsDues(): Observable<QuestionsDues> {
-    throw new Error(HORS_PARCOURS);
-  }
-}
-
-interface TraceFlux {
-  options: SyncOptions | null;
-  joints: number;
-  fermetures: number;
-  readonly ecoutes: ((etat: EtatSession) => void)[];
-}
-
-function creerFluxDouble(): { trace: TraceFlux; fabrique: (options: SyncOptions) => Sync } {
-  const trace: TraceFlux = { options: null, joints: 0, fermetures: 0, ecoutes: [] };
-  const fabrique = (options: SyncOptions): Sync => {
-    trace.options = options;
-    return {
-      join: () => {
-        trace.joints += 1;
-      },
-      submit: () => undefined,
-      onState: (ecoute) => {
-        trace.ecoutes.push(ecoute);
-        return () => undefined;
-      },
-      close: () => {
-        trace.fermetures += 1;
-      },
-    };
-  };
-  return { trace, fabrique };
-}
-
-function etatTermine(): EtatSession {
-  return {
-    etat: 'terminee',
-    modeRythme: 'libre',
-    ecranCourant: 0,
-    intervalleLibre: null,
-    participants: 3,
-  };
-}
-
 describe('CoursEtudiantComponent', () => {
-  let port: FormationsDouble;
-  let flux: { trace: TraceFlux; fabrique: (options: SyncOptions) => Sync };
-  const montees: ComponentFixture<CoursEtudiantComponent>[] = [];
+  let port: jasmine.SpyObj<FormationsPort>;
+  let double: FluxDouble;
+  let sujet: CoursContent;
+  const montees: Fixture[] = [];
 
-  function lire(fixture: ComponentFixture<CoursEtudiantComponent>, marque: string): Element | null {
-    return (fixture.nativeElement as HTMLElement).querySelector(`[data-testid='${marque}']`);
+  function verdictsAffiches(fixture: Fixture): HTMLElement[] {
+    return [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
+        "[data-testid='etudiant-verdict']",
+      ),
+    ];
   }
 
-  function renseigner(
-    formulaire: HTMLFormElement | null,
-    valeurs: readonly (readonly [string, string])[],
-  ): void {
+  function libellesDesVerdicts(fixture: Fixture): (string | null)[][] {
+    return verdictsAffiches(fixture).map((verdict) => [
+      verdict.getAttribute('data-question'),
+      verdict
+        .querySelector("[data-testid='etudiant-verdict-libelle']")
+        ?.textContent?.replace(/\s+/g, ' ')
+        .trim() ?? null,
+    ]);
+  }
+
+  function sujetEnAttente(): { arrivee: Subject<CoursContent>; lectureDemandee: Promise<void> } {
+    const arrivee = new Subject<CoursContent>();
+    const lectureDemandee = new Promise<void>((resoudre) => {
+      port.lireSujet.and.callFake((): Observable<CoursContent> => {
+        resoudre();
+        return arrivee;
+      });
+    });
+    return { arrivee, lectureDemandee };
+  }
+
+  function ecranDe(fixture: Fixture): DebugElement {
+    const ecran = fixture.debugElement.queryAll(By.directive(CoursEcranComponent)).at(0);
+    if (ecran === undefined) {
+      throw new Error('Aucun ecran de cours monte dans la vue etudiant');
+    }
+    return ecran;
+  }
+
+  function ecranAffiche(fixture: Fixture): unknown {
+    return (ecranDe(fixture).componentInstance as CoursEcranComponent).ecran();
+  }
+
+  function soumettre(fixture: Fixture, code: string): void {
+    const formulaire = lire(fixture, 'etudiant-entree');
+    const valeurs: readonly (readonly [string, string])[] = [['code', code], ...IDENTITE];
     for (const [nom, valeur] of valeurs) {
       const champ = formulaire?.querySelector<HTMLInputElement>(`[name="${nom}"]`);
       if (champ) {
@@ -180,46 +136,60 @@ describe('CoursEtudiantComponent', () => {
     formulaire?.dispatchEvent(new Event('submit'));
   }
 
-  async function rattacher(code = CODE_SAISI): Promise<ComponentFixture<CoursEtudiantComponent>> {
+  function monter(): Fixture {
     const fixture = TestBed.createComponent(CoursEtudiantComponent);
     montees.push(fixture);
-    fixture.detectChanges();
-    renseigner(lire(fixture, 'etudiant-entree') as HTMLFormElement | null, [
-      ['code', code],
-      ...IDENTITE,
-    ]);
-    await fixture.componentInstance.quandStabilise();
     fixture.detectChanges();
     return fixture;
   }
 
-  async function repondre(
-    fixture: ComponentFixture<CoursEtudiantComponent>,
-    valeur: string,
-  ): Promise<void> {
-    renseigner(lire(fixture, 'etudiant-reponse') as HTMLFormElement | null, [['valeur', valeur]]);
+  async function stabiliser(fixture: Fixture): Promise<void> {
     await fixture.componentInstance.quandStabilise();
     fixture.detectChanges();
   }
 
-  async function laisserPasserLeReseau(
-    fixture: ComponentFixture<CoursEtudiantComponent>,
-  ): Promise<void> {
-    window.dispatchEvent(new Event('online'));
-    await fixture.componentInstance.quandStabilise();
+  async function rattacher(code = CODE_SAISI): Promise<Fixture> {
+    const fixture = monter();
+    soumettre(fixture, code);
+    await stabiliser(fixture);
+    return fixture;
+  }
+
+  async function repondre(fixture: Fixture, reponse: ReponseBrique): Promise<void> {
+    ecranDe(fixture).triggerEventHandler('reponse', reponse);
+    await stabiliser(fixture);
+  }
+
+  function diffuser(fixture: Fixture, etat: Partial<EtatSession>): void {
+    double.diffuser(etat);
     fixture.detectChanges();
+  }
+
+  async function rattacherALaSeanceEnCours(): Promise<Fixture> {
+    const fixture = await rattacher();
+    diffuser(fixture, { etat: 'en_cours' });
+    await stabiliser(fixture);
+    return fixture;
+  }
+
+  async function laisserPasserLeReseau(fixture: Fixture): Promise<void> {
+    window.dispatchEvent(new Event('online'));
+    await stabiliser(fixture);
   }
 
   beforeEach(async () => {
     localStorage.clear();
     clearIdentity();
-    port = new FormationsDouble();
-    flux = creerFluxDouble();
+    sujet = sujetDeSeance();
+    port = createFormationsPortStub();
+    port.rejoindre.and.returnValue(of(buildRattachement({ sessionId: SESSION, jeton: JETON })));
+    port.lireSujet.and.returnValue(of(sujet));
+    double = createFluxDouble();
     await setupTestBed({
       imports: [CoursEtudiantComponent],
       providers: [
         { provide: FORMATIONS_PORT, useValue: port },
-        { provide: CREATEUR_FLUX, useValue: flux.fabrique },
+        { provide: CREATEUR_FLUX, useValue: double.fabrique },
       ],
     }).compileComponents();
   });
@@ -235,30 +205,122 @@ describe('CoursEtudiantComponent', () => {
 
   it('refuse un code qui n a pas quatre chiffres avant tout appel reseau', async () => {
     const fixture = await rattacher('12a4');
-    expect(port.codes).toEqual([]);
+
+    expect(port.rejoindre).not.toHaveBeenCalled();
     expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('code-invalide');
     expect(fixture.componentInstance.etat()).toBe('code');
   });
 
   it('retire les espaces du code avant de le transmettre au serveur', async () => {
     const fixture = await rattacher();
-    expect(port.codes).toEqual([CODE_NORMALISE]);
+
+    expect(port.rejoindre).toHaveBeenCalledOnceWith(CODE_NORMALISE, jasmine.any(Object));
     expect(fixture.componentInstance.etat()).toBe('seance');
   });
 
-  it('ordonne les questions avec la graine recue du serveur', async () => {
-    port.seed = GRAINE_A;
-    const premiere = await rattacher();
-    const ordreA = premiere.componentInstance.ordreDesQuestions().map((question) => question.id);
-    premiere.destroy();
-    port.seed = GRAINE_B;
-    const seconde = await rattacher();
-    const ordreB = seconde.componentInstance.ordreDesQuestions().map((question) => question.id);
+  it('lit le sujet avec le jeton du rattachement et n ouvre la seance qu a son arrivee', async () => {
+    const { arrivee, lectureDemandee } = sujetEnAttente();
+    const fixture = monter();
+    soumettre(fixture, CODE_SAISI);
+    await lectureDemandee;
+    fixture.detectChanges();
 
-    expect(premiere.componentInstance.graine()).toBe(GRAINE_A);
-    expect(seconde.componentInstance.graine()).toBe(GRAINE_B);
-    expect(ordreA.length).toBeGreaterThan(1);
-    expect(ordreB).not.toEqual(ordreA);
+    expect(port.lireSujet).toHaveBeenCalledOnceWith(SESSION, JETON);
+    expect(lire(fixture, 'etudiant-chargement')?.getAttribute('role')).toBe('status');
+    expect(lire(fixture, 'etudiant-seance')).toBeNull();
+    expect(double.fabrique).not.toHaveBeenCalled();
+
+    livrer(arrivee, sujet);
+    await stabiliser(fixture);
+
+    expect(lire(fixture, 'etudiant-chargement')).toBeNull();
+    expect(lire(fixture, 'etudiant-seance')).toBeTruthy();
+
+    diffuser(fixture, { etat: 'en_cours' });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+  });
+
+  it('n ouvre ni flux ni verrou quand la vue est detruite pendant la lecture du sujet', async () => {
+    const { arrivee, lectureDemandee } = sujetEnAttente();
+    const fixture = monter();
+    soumettre(fixture, CODE_SAISI);
+    await lectureDemandee;
+    fixture.destroy();
+    const ecoutes = spyOn(window, 'addEventListener').and.callThrough();
+
+    livrer(arrivee, sujet);
+    await fixture.componentInstance.quandStabilise();
+
+    expect(double.fabrique).not.toHaveBeenCalled();
+    expect(ecoutes.calls.allArgs().map(([type]) => type)).not.toContain('blur');
+  });
+
+  const lecturesRefusees: readonly {
+    readonly cas: string;
+    readonly erreur: Error;
+    readonly motif: string;
+    readonly message: string;
+    readonly reessayable: boolean;
+  }[] = [
+    {
+      cas: 'le cours a change depuis l ouverture',
+      erreur: new SujetRefuse('cours-modifie', 409),
+      motif: 'cours-modifie',
+      message: 'Le cours a changé',
+      reessayable: false,
+    },
+    {
+      cas: 'la lecture echoue sans motif connu',
+      erreur: new Error('reseau coupe'),
+      motif: 'sujet-indisponible',
+      message: 'n’a pas pu être chargé',
+      reessayable: true,
+    },
+  ];
+
+  for (const { cas, erreur, motif, message, reessayable } of lecturesRefusees) {
+    it(`alerte sans ouvrir de seance quand ${cas}`, async () => {
+      port.lireSujet.and.returnValue(throwError(() => erreur));
+      const fixture = await rattacher();
+      const alerte = lire(fixture, 'etudiant-sujet-refuse');
+
+      expect(alerte?.getAttribute('role')).toBe('alert');
+      expect(alerte?.getAttribute('data-motif')).toBe(motif);
+      expect(alerte?.textContent).toContain(message);
+      expect(lire(fixture, 'etudiant-sujet-reessayer') !== null)
+        .withContext('seul un sujet indisponible se relit, un cours modifie reste un refus')
+        .toBe(reessayable);
+      expect(lire(fixture, 'etudiant-seance')).toBeNull();
+      expect(lire(fixture, 'etudiant-entree')).toBeNull();
+      expect(double.fabrique).not.toHaveBeenCalled();
+    });
+  }
+
+  it('relit un sujet indisponible a la demande en repassant par le chargement', async () => {
+    const arrivee = new Subject<CoursContent>();
+    port.lireSujet.and.returnValues(
+      throwError(() => new SujetRefuse('sujet-indisponible', 503)),
+      arrivee,
+    );
+    const fixture = await rattacher();
+
+    lire(fixture, 'etudiant-sujet-reessayer')?.click();
+    fixture.detectChanges();
+
+    expect(lire(fixture, 'etudiant-chargement')).toBeTruthy();
+    expect(lire(fixture, 'etudiant-sujet-refuse')).toBeNull();
+
+    livrer(arrivee, sujet);
+    await stabiliser(fixture);
+
+    expect(port.rejoindre).toHaveBeenCalledTimes(1);
+    expect(port.lireSujet.calls.allArgs()).toEqual([
+      [SESSION, JETON],
+      [SESSION, JETON],
+    ]);
+    expect(lire(fixture, 'etudiant-seance')).toBeTruthy();
+    expect(double.fabrique).toHaveBeenCalledTimes(1);
   });
 
   it('porte le jeton au flux sans jamais l ecrire dans le stockage local', async () => {
@@ -267,75 +329,487 @@ describe('CoursEtudiantComponent', () => {
       .map((cle) => localStorage.getItem(cle) ?? '')
       .join('|');
 
-    expect(flux.trace.options?.jeton).toBe(JETON);
-    expect(flux.trace.joints).toBe(1);
+    expect(double.fabrique.calls.mostRecent().args[0].jeton).toBe(JETON);
+    expect(double.flux.join).toHaveBeenCalledTimes(1);
     expect(ecrit.length).toBeGreaterThan(0);
     expect(ecrit).not.toContain(JETON);
   });
 
-  it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
+  it('monte en rendu main l ecran que designe le flux sans remonter l ecran repete', async () => {
+    port.rejoindre.and.returnValue(
+      of(buildRattachement({ sessionId: SESSION, jeton: JETON, ecranCourant: 1 })),
+    );
     const fixture = await rattacher();
-    window.dispatchEvent(new Event('offline'));
-    await repondre(fixture, REPONSE_FAUSSE);
+    diffuser(fixture, { ecranCourant: 1, participants: 11 });
+    const avant = ecranDe(fixture).componentInstance as CoursEcranComponent;
 
-    expect(port.reponses).toEqual([]);
-    expect(pending().length).toBe(1);
-    expect(lire(fixture, 'etudiant-hors-ligne')).toBeTruthy();
+    expect(avant.ecran()).toBe(sujet.ecrans[1]);
+    expect(avant.rendu()).toBe('hand');
+    expect(avant.role()).toBe('etudiant');
+    expect((ecranDe(fixture).nativeElement as HTMLElement).hasAttribute('role'))
+      .withContext('etudiant est un role du runtime, pas un role ARIA')
+      .toBeFalse();
 
-    await laisserPasserLeReseau(fixture);
-    expect(port.reponses.length).toBe(1);
-    expect(port.reponses[0].valeur).toBe(REPONSE_FAUSSE);
-    expect(pending().length).toBe(0);
+    diffuser(fixture, { ecranCourant: 1, participants: 12 });
 
-    await laisserPasserLeReseau(fixture);
-    expect(port.reponses.length).toBe(1);
+    expect(ecranDe(fixture).componentInstance).toBe(avant);
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    diffuser(fixture, { ecranCourant: 2 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+    expect(lire(fixture, 'etudiant-progression')?.textContent?.trim()).toBe('3 / 4');
+  });
+
+  it('distingue un flux refuse de l attente avant le demarrage', async () => {
+    const fixture = await rattacher();
+
+    double.diffuserStatut({ etat: 'refuse', statut: 429 });
+    fixture.detectChanges();
+
+    expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('role')).toBe('alert');
+    expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('data-statut')).toBe('429');
+    expect(lire(fixture, 'etudiant-attente')).toBeNull();
+    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+  });
+
+  it('applique le regime de verrou propre a chaque ecran', async () => {
+    sujet = {
+      ...sujet,
+      ecrans: [
+        buildEcranQuestionnaire({
+          id: 'ecran-focus',
+          donnees: { ...buildEcranQuestionnaire().donnees, regime: 'focus' },
+        }),
+        buildEcranQuestionnaire({
+          id: 'ecran-examen',
+          donnees: { ...buildEcranQuestionnaire().donnees, regime: 'examen' },
+        }),
+        ...sujet.ecrans.slice(2),
+      ],
+    };
+    port.lireSujet.and.returnValue(of(sujet));
+    const fixture = await rattacherALaSeanceEnCours();
+
+    window.dispatchEvent(new Event('blur'));
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('blur');
+
+    diffuser(fixture, { ecranCourant: 1 });
+    const copie = new Event('copy', { cancelable: true });
+    document.dispatchEvent(copie);
+
+    expect(copie.defaultPrevented).toBeTrue();
+  });
+
+  it('relit un ecran verrouille quand le formateur le revele', async () => {
+    const ecranVerrouille = {
+      ...sujet.ecrans[1],
+      type: 'ecran-verrouille',
+      interactif: false,
+      donnees: {},
+    };
+    const sujetInitial = {
+      ...sujet,
+      ecrans: [sujet.ecrans[0], ecranVerrouille, ...sujet.ecrans.slice(2)],
+    };
+    port.lireSujet.and.returnValues(of(sujetInitial), of(sujet));
+    const fixture = await rattacherALaSeanceEnCours();
+
+    diffuser(fixture, { ecranCourant: 1 });
+    await stabiliser(fixture);
+
+    expect(port.lireSujet).toHaveBeenCalledTimes(2);
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+    expect(lire(fixture, 'etudiant-ecran-chargement')).toBeNull();
+  });
+
+  it('signale l echec d une relecture d ecran sans afficher un ecran vide', async () => {
+    const ecranVerrouille = {
+      ...sujet.ecrans[1],
+      type: 'ecran-verrouille',
+      interactif: false,
+      donnees: {},
+    };
+    const sujetInitial = {
+      ...sujet,
+      ecrans: [sujet.ecrans[0], ecranVerrouille, ...sujet.ecrans.slice(2)],
+    };
+    port.lireSujet.and.returnValues(
+      of(sujetInitial),
+      throwError(() => new SujetRefuse('sujet-indisponible', 503)),
+    );
+    const fixture = await rattacherALaSeanceEnCours();
+
+    diffuser(fixture, { ecranCourant: 1 });
+    await stabiliser(fixture);
+
+    expect(lire(fixture, 'etudiant-ecran-echec')?.getAttribute('role')).toBe('alert');
+    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+  });
+
+  it('envoie au serveur la reponse d une brique avec son identifiant de question', async () => {
+    const fixture = await rattacherALaSeanceEnCours();
+
+    await repondre(fixture, REPONSE_VOTE);
+
+    expect(port.repondre).toHaveBeenCalledOnceWith(SESSION, JETON, {
+      questionId: 'Q-CAP-03',
+      valeur: 'b',
+      dureeMs: 400,
+    });
   });
 
   it('n affiche que le resultat et l etiquette de confusion', async () => {
-    port.verdict = verdictAvecFuite();
-    const fixture = await rattacher();
-    await repondre(fixture, REPONSE_FAUSSE);
+    port.repondre.and.returnValue(of(verdictAvecFuite()));
+    const fixture = await rattacherALaSeanceEnCours();
+    await repondre(fixture, REPONSE_NUMERIQUE);
     const rendu = (fixture.nativeElement as HTMLElement).innerHTML;
+    const [verdict] = verdictsAffiches(fixture);
 
-    expect(lire(fixture, 'etudiant-verdict')?.getAttribute('data-reussite')).toBe('false');
+    expect(verdict.getAttribute('data-reussite')).toBe('false');
+    expect(verdict.getAttribute('data-question')).toBe('Q-VA-07');
     expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
     expect(rendu).not.toContain(VALEUR_ATTENDUE);
     expect(rendu).not.toContain(ETIQUETTE_BRUTE);
   });
 
-  it('remonte les incidents de verrou groupes sans bloquer la reponse en cours', async () => {
-    port.incidentsSansReponse = true;
-    const fixture = await rattacher();
-    window.dispatchEvent(new Event('blur'));
-    window.dispatchEvent(new Event('blur'));
-    await repondre(fixture, REPONSE_FAUSSE);
+  it('garde un verdict par question de l ecran et les efface au changement d ecran', async () => {
+    port.repondre.and.returnValues(of(REUSSITE), of(CONFUSION), of(CONFUSION));
+    const fixture = await rattacherALaSeanceEnCours();
 
-    expect(port.lots.length).toBe(1);
-    expect(port.lots[0].incidents.length).toBe(2);
-    expect(port.lots[0].jeton).toBe(JETON);
-    expect(port.reponses.length).toBe(1);
-    expect(lire(fixture, 'etudiant-verdict')).toBeTruthy();
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    await repondre(fixture, REPONSE_VOTE);
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(
+      verdictsAffiches(fixture).map((verdict) => [
+        verdict.getAttribute('data-question'),
+        verdict.getAttribute('data-reussite'),
+      ]),
+    ).toEqual([
+      ['Q-VA-07', 'false'],
+      ['Q-CAP-03', 'false'],
+    ]);
+
+    diffuser(fixture, { ecranCourant: 1 });
+
+    expect(verdictsAffiches(fixture)).toEqual([]);
+  });
+
+  it('range les verdicts dans l ordre des questions de l ecran et les numerote', async () => {
+    port.repondre.and.returnValues(of(CONFUSION), of(REUSSITE));
+    const fixture = await rattacherALaSeanceEnCours();
+
+    await repondre(fixture, REPONSE_VOTE);
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(libellesDesVerdicts(fixture)).toEqual([
+      ['Q-VA-07', 'Question 1 : Réussi'],
+      ['Q-CAP-03', 'Question 2 : Manqué'],
+    ]);
+  });
+
+  it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
+    const fixture = await rattacherALaSeanceEnCours();
+    window.dispatchEvent(new Event('offline'));
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(port.repondre).not.toHaveBeenCalled();
+    expect(pending().length).toBe(1);
+    expect(lire(fixture, 'etudiant-hors-ligne')).toBeTruthy();
+
+    await laisserPasserLeReseau(fixture);
+
+    expect(port.repondre).toHaveBeenCalledOnceWith(SESSION, JETON, REPONSE_NUMERIQUE);
+    expect(pending().length).toBe(0);
+    expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+    expect(verdictsAffiches(fixture).length).toBe(1);
+
+    await laisserPasserLeReseau(fixture);
+
+    expect(port.repondre).toHaveBeenCalledTimes(1);
+  });
+
+  it('n affiche pas sur un nouvel ecran le verdict d une reponse renvoyee depuis le precedent', async () => {
+    const fixture = await rattacherALaSeanceEnCours();
+    window.dispatchEvent(new Event('offline'));
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    diffuser(fixture, { ecranCourant: 1 });
+
+    await laisserPasserLeReseau(fixture);
+
+    expect(port.repondre).toHaveBeenCalledTimes(1);
+    expect(verdictsAffiches(fixture)).toEqual([]);
+  });
+
+  describe('avant le demarrage de la seance', () => {
+    it('affiche un message d attente au lieu de l ecran, puis l ecran au demarrage', async () => {
+      const fixture = await rattacher();
+
+      diffuser(fixture, { etat: 'attente' });
+
+      expect(lire(fixture, 'etudiant-attente')?.getAttribute('role')).toBe('status');
+      expect(fixture.debugElement.query(By.directive(CoursEcranComponent)))
+        .withContext('aucune brique ne doit pouvoir etre repondue avant le demarrage')
+        .toBeNull();
+
+      diffuser(fixture, { etat: 'en_cours' });
+
+      expect(lire(fixture, 'etudiant-attente')).toBeNull();
+      expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    });
+
+    it('n expose aucune brique tant que le flux n a annonce aucun etat de la seance', async () => {
+      const fixture = await rattacher();
+
+      expect(lire(fixture, 'etudiant-attente')?.getAttribute('role')).toBe('status');
+      expect(fixture.debugElement.query(By.directive(CoursEcranComponent)))
+        .withContext('un flux refuse ou injoignable ne doit pas ouvrir les reponses')
+        .toBeNull();
+
+      diffuser(fixture, { etat: 'en_cours' });
+
+      expect(lire(fixture, 'etudiant-attente')).toBeNull();
+      expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    });
+
+    it('efface le refus de seance non demarree et monte la brique quand la seance passe en cours', async () => {
+      enqueue(buildEnvoiReponse({ sessionId: SESSION, questionId: REPONSE_VOTE.questionId }));
+      port.repondre.and.returnValue(
+        throwError(() => new ReponseRefusee('seance-non-demarree', 409)),
+      );
+      const fixture = await rattacher();
+      diffuser(fixture, { etat: 'attente' });
+      await stabiliser(fixture);
+
+      expect(lire(fixture, 'etudiant-reponse-refusee')?.getAttribute('data-motif')).toBe(
+        'seance-non-demarree',
+      );
+
+      diffuser(fixture, { etat: 'en_cours' });
+
+      expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
+      expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    });
+
+    it('ne propose pas l ecran suivant pendant l attente', async () => {
+      const fixture = await rattacher();
+
+      diffuser(fixture, {
+        etat: 'attente',
+        modeRythme: 'libre',
+        intervalleLibre: { premier: 0, dernier: 3 },
+      });
+
+      expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+    });
+  });
+
+  describe('refus d une reponse par le serveur', () => {
+    function refuser(motif: ReponseRefusee['motif'], statut: number): void {
+      port.repondre.and.returnValue(throwError(() => new ReponseRefusee(motif, statut)));
+    }
+
+    it('tient pour acceptee, sans verdict ni file, une reponse deja enregistree (409)', async () => {
+      refuser('deja-repondue', 409);
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await repondre(fixture, REPONSE_VOTE);
+
+      expect(pending().length).toBe(0);
+      expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+      expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
+      expect(verdictsAffiches(fixture)).toEqual([]);
+    });
+
+    for (const [cas, motif, statut] of [
+      ['la seance n a pas demarre (409)', 'seance-non-demarree', 409],
+      ['la requete est invalide (400)', 'refusee', 400],
+    ] as const) {
+      it(`explique sans mettre en file un refus quand ${cas}`, async () => {
+        refuser(motif, statut);
+        const fixture = await rattacherALaSeanceEnCours();
+
+        await repondre(fixture, REPONSE_VOTE);
+        const alerte = lire(fixture, 'etudiant-reponse-refusee');
+
+        expect(alerte?.getAttribute('role')).toBe('alert');
+        expect(alerte?.getAttribute('data-motif')).toBe(motif);
+        expect(alerte?.textContent?.trim()).toBe(new ReponseRefusee(motif, statut).message);
+        expect(pending().length).toBe(0);
+        expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+      });
+    }
+
+    it('met en file une reponse refusee par une panne du serveur (5xx)', async () => {
+      refuser('reseau', 503);
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      expect(pending().length).toBe(1);
+      expect(lire(fixture, 'etudiant-hors-ligne')).toBeTruthy();
+      expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
+    });
+
+    it('vide la file apres un envoi reussi, sans attendre le retour du reseau', async () => {
+      port.repondre.and.returnValues(
+        throwError(() => new ReponseRefusee('reseau', 502)),
+        of(REUSSITE),
+        of(CONFUSION),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      await repondre(fixture, REPONSE_VOTE);
+
+      expect(port.repondre.calls.allArgs().map(([, , reponse]) => reponse.questionId)).toEqual([
+        'Q-VA-07',
+        'Q-CAP-03',
+        'Q-VA-07',
+      ]);
+      expect(pending().length).toBe(0);
+      expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+    });
+
+    it('vide la file a chaque evenement d etat du flux', async () => {
+      port.repondre.and.returnValues(
+        throwError(() => new ReponseRefusee('reseau', 0)),
+        of(REUSSITE),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      diffuser(fixture, { participants: 14 });
+      await stabiliser(fixture);
+
+      expect(port.repondre).toHaveBeenCalledTimes(2);
+      expect(pending().length).toBe(0);
+      expect(verdictsAffiches(fixture).length).toBe(1);
+    });
+
+    it('retire de la file une reponse que le serveur refuse au renvoi, en l expliquant', async () => {
+      port.repondre.and.returnValues(
+        throwError(() => new ReponseRefusee('reseau', 503)),
+        throwError(() => new ReponseRefusee('refusee', 409)),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      await laisserPasserLeReseau(fixture);
+
+      expect(pending().length).toBe(0);
+      expect(lire(fixture, 'etudiant-reponse-refusee')?.getAttribute('data-motif')).toBe('refusee');
+    });
+  });
+
+  it('remonte les incidents de verrou groupes sans bloquer la reponse en cours', async () => {
+    port.signalerIncidents.and.returnValue(NEVER);
+    const fixture = await rattacherALaSeanceEnCours();
+    window.dispatchEvent(new Event('blur'));
+    window.dispatchEvent(new Event('blur'));
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    const [sessionId, jeton, lot] = port.signalerIncidents.calls.mostRecent().args;
+
+    expect(port.signalerIncidents).toHaveBeenCalledTimes(1);
+    expect(sessionId).toBe(SESSION);
+    expect(jeton).toBe(JETON);
+    expect(lot.length).toBe(2);
+    expect(port.repondre).toHaveBeenCalledTimes(1);
+    expect(verdictsAffiches(fixture).length).toBe(1);
+  });
+
+  it('ne propose l ecran suivant que si le rythme du flux le permet', async () => {
+    const fixture = await rattacher();
+
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: { premier: 0, dernier: 1 } });
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+  });
+
+  it('rejoint l ecran du formateur a la bascule en libre sans intervalle puis reste sur l ecran choisi', async () => {
+    const fixture = await rattacher();
+    const libre: Partial<EtatSession> = {
+      modeRythme: 'libre',
+      intervalleLibre: null,
+      ecranCourant: 1,
+    };
+    diffuser(fixture, libre);
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+    diffuser(fixture, { ...libre, participants: 13 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+
+    diffuser(fixture, { ...libre, ecranCourant: 3 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+  });
+
+  it('reste dans l intervalle libre quand le formateur change d ecran et y ramene qui en sort', async () => {
+    const fixture = await rattacher();
+    const intervalle = { premier: 0, dernier: 3 };
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: intervalle });
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: intervalle, ecranCourant: 2 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    diffuser(fixture, {
+      modeRythme: 'libre',
+      intervalleLibre: { premier: 2, dernier: 3 },
+      ecranCourant: 2,
+    });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
+  });
+
+  it('ramene l etudiant sur l ecran du formateur quand il repasse en rythme pilote', async () => {
+    const fixture = await rattacher();
+    diffuser(fixture, { modeRythme: 'libre', intervalleLibre: null });
+    lire(fixture, 'etudiant-suivant')?.click();
+    fixture.detectChanges();
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+
+    diffuser(fixture, { modeRythme: 'pilote', ecranCourant: 0 });
+
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
   });
 
   it('ferme le flux a la destruction du composant', async () => {
     const fixture = await rattacher();
-    expect(flux.trace.fermetures).toBe(0);
+
+    expect(double.flux.close).not.toHaveBeenCalled();
     fixture.destroy();
-    expect(flux.trace.fermetures).toBe(1);
+    expect(double.flux.close).toHaveBeenCalledTimes(1);
   });
 
   it('dit a l etudiant que le code de seance est inconnu', async () => {
-    port.refus = new RattachementRefuse('code-inconnu', 404);
+    port.rejoindre.and.returnValue(throwError(() => new RattachementRefuse('code-inconnu', 404)));
     const fixture = await rattacher();
     const alerte = lire(fixture, 'etudiant-echec');
 
     expect(alerte?.getAttribute('data-motif')).toBe('code-inconnu');
     expect(alerte?.textContent).toContain("n'existe pas");
     expect(fixture.componentInstance.etat()).toBe('code');
+    expect(port.lireSujet).not.toHaveBeenCalled();
   });
 
   it('distingue une inscription deja enregistree d un code inconnu', async () => {
-    port.refus = new RattachementRefuse('deja-inscrit', 409);
+    port.rejoindre.and.returnValue(throwError(() => new RattachementRefuse('deja-inscrit', 409)));
     const fixture = await rattacher();
 
     expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('deja-inscrit');
@@ -343,13 +817,15 @@ describe('CoursEtudiantComponent', () => {
   });
 
   it('clot la seance quand le flux annonce sa fin', async () => {
+    port.rejoindre.and.returnValue(
+      of(buildRattachement({ sessionId: SESSION, jeton: JETON, modeRythme: 'libre' })),
+    );
     const fixture = await rattacher();
-    for (const ecoute of flux.trace.ecoutes) {
-      ecoute(etatTermine());
-    }
-    fixture.detectChanges();
+
+    diffuser(fixture, { etat: 'terminee', modeRythme: 'libre' });
 
     expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
-    expect(lire(fixture, 'etudiant-reponse')).toBeNull();
+    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+    expect(lire(fixture, 'etudiant-suivant')).toBeNull();
   });
 });

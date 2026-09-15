@@ -1,6 +1,7 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildConcept4Definition } from '../../../testing/factories/cours.factory';
+import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type Concept4Definition, FpConcept4 } from './FpConcept4';
 
 const DEFINITION = buildConcept4Definition();
@@ -67,6 +68,14 @@ function resultatsDuTableau(hote: FpConcept4): string[] {
   return tous(hote, '[data-testid="resultat-ligne"]').map((cellule) => cellule.textContent ?? '');
 }
 
+function formaterEsperee(valeur: number): string {
+  return Number.isFinite(valeur) ? String(Math.round(valeur * 100) / 100).replace('.', ',') : '—';
+}
+
+function resultatAttendu(valeurs: Readonly<Record<string, number>>): number {
+  return evaluerExpression(DEFINITION.calcul, valeurs).valeur ?? Number.NaN;
+}
+
 function avecDefaut(cle: string, defaut: number): Concept4Definition {
   return buildConcept4Definition({
     id: 'K-QUATRE-FACES-02',
@@ -100,7 +109,7 @@ describe('FpConcept4', () => {
 
   it('reflete la meme valeur dans les quatre faces apres un mouvement de curseur', () => {
     bouger(hote, 'n', 20);
-    const attendue = String(DEFINITION.calcul(hote.valeurs));
+    const attendue = String(resultatAttendu(hote.valeurs));
     expect(hote.valeurs).toEqual({ C: 1000, i: 4, n: 20 });
     expect(quatreFaces(hote)).toEqual({
       formule: attendue,
@@ -132,9 +141,13 @@ describe('FpConcept4', () => {
   it('regenere la phrase en langage courant a chaque mouvement', () => {
     const avant = lu(hote, 'phrase-texte');
     bouger(hote, 'n', 25);
+    const valeurs = hote.valeurs;
+    const resultat = resultatAttendu(valeurs);
     expect(lu(hote, 'phrase-texte')).not.toBe(avant);
-    expect(lu(hote, 'phrase-texte')).toBe(DEFINITION.phrase(hote.valeurs));
-    expect(lu(hote, 'phrase-texte')).toContain('25 ans');
+    expect(lu(hote, 'phrase-texte')).toBe(
+      remplirGabarit(DEFINITION.phrase, { ...valeurs, resultat }, formaterEsperee),
+    );
+    expect(lu(hote, 'phrase-texte')).toContain('25 an(s)');
   });
 
   it('dessine le graphique en svg produit par la brique sans bibliotheque', () => {
@@ -151,8 +164,8 @@ describe('FpConcept4', () => {
     hote.definition = avecDefaut('n', 99);
     expect(hote.valeurs['n']).toBe(30);
     expect(curseurDe(hote, 'n').value).toBe('30');
-    expect(lu(hote, 'phrase-texte')).toContain('30 ans');
-    expect(valeurDe(hote, 'formule')).toBe(String(DEFINITION.calcul({ C: 1000, i: 4, n: 30 })));
+    expect(lu(hote, 'phrase-texte')).toContain('30 an(s)');
+    expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 4, n: 30 })));
   });
 
   it('ramene dans les bornes une fleche qui depasse le maximum', () => {
@@ -165,11 +178,11 @@ describe('FpConcept4', () => {
   it('borne lui meme une valeur saisie que le navigateur laisserait passer', () => {
     bougerSansBornageDuNavigateur(hote, 'n', 9999);
     expect(hote.valeurs['n']).toBe(30);
-    expect(lu(hote, 'phrase-texte')).toContain('30 ans');
+    expect(lu(hote, 'phrase-texte')).toContain('30 an(s)');
 
     bougerSansBornageDuNavigateur(hote, 'n', -400);
     expect(hote.valeurs['n']).toBe(1);
-    expect(lu(hote, 'phrase-texte')).toContain('1 an');
+    expect(lu(hote, 'phrase-texte')).toContain('1 an(s)');
   });
 
   it('deplace les curseurs au clavier avec les fleches et par pas entiers', () => {
@@ -202,7 +215,7 @@ describe('FpConcept4', () => {
     hote.definition = buildConcept4Definition({
       id: 'K-QUATRE-FACES-03',
       formuleLatexSimplifie: CHARGE_XSS,
-      phrase: () => CHARGE_XSS,
+      phrase: CHARGE_XSS,
       parametres: DEFINITION.parametres.map((parametre) => ({ ...parametre, libelle: CHARGE_XSS })),
     });
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
@@ -210,6 +223,14 @@ describe('FpConcept4', () => {
     expect(lu(hote, 'formule')).toContain(CHARGE_XSS);
     expect(curseurDe(hote, 'n').getAttribute('aria-valuetext')).toContain(CHARGE_XSS);
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
+  });
+
+  it('affiche un tiret quand la formule de calcul est invalide sans casser la brique', () => {
+    hote.definition = buildConcept4Definition({ id: 'K-QUATRE-FACES-05', calcul: 'C+' });
+    expect(lu(hote, 'resultat-formule')).toBe('—');
+    expect(resultatsDuTableau(hote).every((resultat) => resultat === '—')).toBe(true);
+    expect(lu(hote, 'phrase-texte')).toContain('— €.');
+    expect(un(hote, 'courbe')).toBeInstanceOf(SVGSVGElement);
   });
 
   it('passe la phrase a la grande typographie de projection en rendu stage seulement', () => {

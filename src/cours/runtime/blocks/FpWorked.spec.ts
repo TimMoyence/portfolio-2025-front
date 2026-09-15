@@ -216,7 +216,7 @@ describe('FpWorked', () => {
     const cache = EXEMPLE.etapes[PLEIN - 1].raisonnement;
     expect(JSON.stringify(hote.exemple)).not.toContain(cache);
     expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(cache);
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     expect(JSON.stringify(hote.exemple)).toContain(cache);
   });
 

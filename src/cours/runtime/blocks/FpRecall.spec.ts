@@ -200,13 +200,20 @@ describe('FpRecall', () => {
     expect(ordreAffiche(hote)).not.toEqual(QUESTION.options.map((option) => option.id));
   });
 
+  it('garde l ordre du serveur, deja melange, quand aucune graine n est fournie', () => {
+    hote.removeAttribute('seed');
+    jasmine.clock().tick(DELAI_DEFAUT_MS);
+
+    expect(ordreAffiche(hote)).toEqual(QUESTION.options.map((option) => option.id));
+  });
+
   it('efface la misconception pour le poste etudiant', () => {
     expect(hote.question?.options.every((option) => !('misconception' in option))).toBe(true);
     expect(JSON.stringify(hote.question?.options)).not.toContain('interet-simple');
   });
 
   it('conserve la misconception pour le poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.question = buildRecallQuestion({ id: 'Q-RAPPEL-05' });
     expect(hote.question?.options[1]).toEqual(
       jasmine.objectContaining({ misconception: 'interet-simple' }),

@@ -22,7 +22,7 @@ import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
 import type { DeckState } from '../../cours/runtime/core/state';
 
-function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
+export function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
   return {
     id: 'ecran-1',
     type: 'vote',
@@ -30,6 +30,22 @@ function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
     interactif: true,
     ...overrides,
   };
+}
+
+export function buildEcranQuestionnaire(overrides: Partial<EcranContent> = {}): EcranContent {
+  return buildEcran({
+    id: 'ecran-questionnaire',
+    type: 'questionnaire',
+    duree: 600,
+    donnees: {
+      regime: 'focus',
+      questions: [
+        { brique: 'fp-numeric', donnees: { question: buildNumericQuestion() } },
+        { brique: 'fp-vote', donnees: { question: buildVoteQuestion() } },
+      ],
+    },
+    ...overrides,
+  });
 }
 
 export function buildCoursContent(overrides: Partial<CoursContent> = {}): CoursContent {
@@ -229,10 +245,6 @@ export function buildProCas(overrides: Partial<ProCas> = {}): ProCas {
   };
 }
 
-function valeurAcquise(valeurs: Readonly<Record<string, number>>): number {
-  return valeurs['C'] * (1 + valeurs['i'] / 100) ** valeurs['n'];
-}
-
 export function buildConcept4Definition(
   overrides: Partial<Concept4Definition> = {},
 ): Concept4Definition {
@@ -244,9 +256,8 @@ export function buildConcept4Definition(
       { cle: 'n', libelle: 'Duree en annees', min: 1, max: 30, pas: 1, defaut: 10 },
     ],
     formuleLatexSimplifie: 'C × (1 + i)^n',
-    calcul: valeurAcquise,
-    phrase: (valeurs) =>
-      `Un capital de ${valeurs['C']} € placé à ${valeurs['i']} % pendant ${valeurs['n']} ans devient ${valeurAcquise(valeurs).toFixed(2)} €.`,
+    calcul: 'C*(1+i/100)^n',
+    phrase: 'Un capital de {C} € placé à {i} % pendant {n} an(s) devient {resultat} €.',
     metadonnees: creerMetadonneesBrique({
       concepts: ['capitalisation', 'valeur-acquise'],
       misconceptionsCiblees: ['interet-simple'],
@@ -299,14 +310,6 @@ export function buildWorkedExemple(overrides: Partial<WorkedExemple> = {}): Work
   };
 }
 
-function capitalDe(valeurs: Readonly<Record<string, number>>): number {
-  return valeurs['C'] ?? 0;
-}
-
-function tauxDe(valeurs: Readonly<Record<string, number>>): number {
-  return (valeurs['i'] ?? 0) / 100;
-}
-
 export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): PlotDefinition {
   return {
     id: 'K-COURBE-01',
@@ -321,13 +324,13 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
         id: 'compose',
         libelle: 'Interets composes',
         trait: 'plein',
-        calcul: (annees, valeurs) => capitalDe(valeurs) * (1 + tauxDe(valeurs)) ** annees,
+        calcul: 'C*(1+i/100)^x',
       },
       {
         id: 'simple',
         libelle: 'Interets simples',
         trait: 'tirets',
-        calcul: (annees, valeurs) => capitalDe(valeurs) * (1 + tauxDe(valeurs) * annees),
+        calcul: 'C*(1+i/100*x)',
       },
     ],
     metadonnees: creerMetadonneesBrique({

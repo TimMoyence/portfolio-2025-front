@@ -1,6 +1,5 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
 
 export interface VoteOptionPublique {
@@ -92,7 +91,7 @@ export class FpVote extends FpBlock {
     if (!question) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    const options = shuffleWithSeed([...question.options], this.seed());
+    const options = this.ordonnerSelonLaGraine(question.options);
     const boutons = options.map(
       (option) =>
         safeHtml`<button type="button" class="fp-vote__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,

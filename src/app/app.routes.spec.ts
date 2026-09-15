@@ -1,4 +1,9 @@
+import { TestBed } from '@angular/core/testing';
+import type { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
+import { buildAuthSession, buildAuthUser } from '../testing/factories/auth.factory';
+import { setupTestBed } from '../testing/setup-test-bed';
 import { authGuard } from './core/guards/auth.guard';
+import { AuthStateService } from './core/services/auth-state.service';
 import { routes } from './app.routes';
 
 describe('app routes', () => {
@@ -95,6 +100,30 @@ describe('app routes', () => {
   describe('parcours de cours', () => {
     const routeDe = (chemin: string) => routes.find((route) => route.path === chemin);
 
+    async function verifieReserveAUnFormateur(chemin: string, nomComposant: string): Promise<void> {
+      const route = routeDe(chemin);
+      setupTestBed({ router: true });
+      const authState = TestBed.inject(AuthStateService);
+      const [authentification, role, ...autres] = route?.canActivate ?? [];
+      const decider = (): unknown =>
+        TestBed.runInInjectionContext(() =>
+          (role as CanActivateFn)({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot),
+        );
+
+      expect(authentification).toBe(authGuard);
+      expect(autres).toEqual([]);
+
+      authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['weather'] }) }));
+      expect(String(decider())).toBe('/contact?reason=access&app=teacher');
+
+      authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));
+      expect(decider()).toBeTrue();
+
+      authState.clearSession();
+      const composant = await route?.loadComponent?.();
+      expect((composant as { name: string }).name).toBe(nomComposant);
+    }
+
     it('ouvre la vue etudiant sans authentification, les etudiants n ayant pas de compte', async () => {
       const route = routeDe('cours/rejoindre');
 
@@ -111,10 +140,29 @@ describe('app routes', () => {
       expect((composant as { name: string }).name).toBe('CoursSyntheseComponent');
     });
 
+    it('reserve le pupitre de seance a un formateur authentifie', async () => {
+      await verifieReserveAUnFormateur('cours/presenter/:slug', 'CoursPresentateurComponent');
+    });
+
+    it('reserve la scene de seance a un formateur authentifie', async () => {
+      await verifieReserveAUnFormateur(
+        'cours/presenter/:slug/scene/:sessionId',
+        'CoursSceneComponent',
+      );
+    });
+
+    it('projette la scene hors de la coquille du site, et elle seule', () => {
+      const sansCoquille = routes.filter((route) => route.data?.['coquille'] === false);
+
+      expect(sansCoquille.map((route) => route.path)).toEqual([
+        'cours/presenter/:slug/scene/:sessionId',
+      ]);
+    });
+
     it('n indexe aucune page de cours', () => {
       const pages = routes.filter((route) => route.path?.startsWith('cours/'));
 
-      expect(pages.length).toBeGreaterThanOrEqual(3);
+      expect(pages.length).toBeGreaterThanOrEqual(4);
       for (const page of pages) {
         expect(page.data?.['robots'])
           .withContext(`la route '${page.path}' ne doit pas etre indexee`)

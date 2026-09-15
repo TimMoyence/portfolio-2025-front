@@ -98,6 +98,13 @@ describe('FpVote', () => {
     expect(ordreAffiche(hote)).toEqual(attendu);
   });
 
+  it('garde l ordre du serveur, deja melange, quand aucune graine n est fournie', () => {
+    hote.removeAttribute('seed');
+    hote.question = QUESTION_LARGE;
+
+    expect(ordreAffiche(hote)).toEqual(QUESTION_LARGE.options.map((option) => option.id));
+  });
+
   it('restitue le meme ordre a chaque rendu pour une meme graine', () => {
     hote.question = QUESTION_LARGE;
     const premier = ordreAffiche(hote);
@@ -163,7 +170,7 @@ describe('FpVote', () => {
   });
 
   it('ignore une cle html ou un nom d etudiant inconnu dans resultats.parOption', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;
     const cleMalicieuse = '<img src=x onerror="alert(1)">';
@@ -179,7 +186,7 @@ describe('FpVote', () => {
   });
 
   it('echappe l id d une option connue dans l histogramme', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = buildVoteQuestion({
       id: 'Q-QUOTE-01',
@@ -196,7 +203,7 @@ describe('FpVote', () => {
   });
 
   it('conserve la misconception en role presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.question = QUESTION;
     expect(hote.question?.options[0]).toEqual(QUESTION.options[0]);
     expect(hote.question?.options[0]).toEqual(
@@ -205,7 +212,7 @@ describe('FpVote', () => {
   });
 
   it('n affiche en mode scene que des identifiants d option connus', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
@@ -217,7 +224,7 @@ describe('FpVote', () => {
   });
 
   it('donne a chaque barre une largeur qui reflete sa proportion', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
@@ -237,7 +244,7 @@ describe('FpVote', () => {
   it('pose toutes les pistes sur un rail de meme longueur quels que soient les libelles', () => {
     hote.style.display = 'block';
     hote.style.width = '600px';
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = buildVoteQuestion({
       id: 'Q-RAIL-01',
@@ -257,7 +264,7 @@ describe('FpVote', () => {
   });
 
   it('etiquette chaque barre avec le libelle de son option', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'stage');
     hote.question = QUESTION;
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, [ID_JE_NE_SAIS_PAS]: 1 } };
@@ -271,7 +278,7 @@ describe('FpVote', () => {
     const feuille = [tokens, base, feuilleDe('vote'), stage].join('\n');
     const emises = new Set<string>();
     for (const rendu of ['hand', 'stage', 'board']) {
-      hote.setAttribute('role', 'presentateur');
+      hote.setAttribute('data-cours-role', 'presentateur');
       hote.setAttribute('render', rendu);
       hote.question = QUESTION;
       hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
@@ -290,7 +297,7 @@ describe('FpVote', () => {
   });
 
   it('affiche la repartition par misconception en mode tableau', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'board');
     hote.question = QUESTION;
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
@@ -299,7 +306,7 @@ describe('FpVote', () => {
   });
 
   it('recommande de reexpliquer sous le seuil', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'board');
     hote.question = QUESTION;
     hote.seuil = 0.7;
@@ -309,7 +316,7 @@ describe('FpVote', () => {
   });
 
   it('rafraichit le verdict quand le seuil change apres les resultats', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'board');
     hote.question = QUESTION;
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
@@ -319,7 +326,7 @@ describe('FpVote', () => {
   });
 
   it('recommande d avancer au dessus du seuil', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'board');
     hote.question = QUESTION;
     hote.seuil = 0.7;

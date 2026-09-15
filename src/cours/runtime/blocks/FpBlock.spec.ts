@@ -21,6 +21,24 @@ class FpDemo extends FpBlock {
   }
 }
 
+class FpBroken extends FpBlock {
+  renderStage(): EscapedHtml {
+    throw new Error('rendu impossible');
+  }
+
+  renderHand(): EscapedHtml {
+    throw new Error('rendu impossible');
+  }
+
+  renderBoard(): EscapedHtml {
+    throw new Error('rendu impossible');
+  }
+
+  bind(): void {
+    return undefined;
+  }
+}
+
 describe('FpBlock', () => {
   let hote: FpDemo;
   let enveloppe: HTMLDivElement | null;
@@ -29,6 +47,9 @@ describe('FpBlock', () => {
   beforeAll(() => {
     if (!customElements.get('fp-demo')) {
       customElements.define('fp-demo', FpDemo);
+    }
+    if (!customElements.get('fp-broken')) {
+      customElements.define('fp-broken', FpBroken);
     }
   });
 
@@ -117,6 +138,20 @@ describe('FpBlock', () => {
 
   it('retourne une graine nulle quand l attribut manque', () => {
     expect(hote.seed()).toBe(0);
+  });
+
+  it('signale une erreur de rendu par un evenement compose', (done) => {
+    const broken = document.createElement('fp-broken');
+    broken.addEventListener(
+      'fp-block-error',
+      (event) => {
+        expect((event as CustomEvent).detail).toEqual(new Error('rendu impossible'));
+        broken.remove();
+        done();
+      },
+      { once: true },
+    );
+    document.body.appendChild(broken);
   });
 
   it('traduit une cle d interface connue', () => {

@@ -1,12 +1,15 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { environment } from '../../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { ENTETE_JETON_PARTICIPANT } from '../jeton-participant';
 import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor', () => {
@@ -106,6 +109,67 @@ describe('authInterceptor', () => {
 
     const req = httpMock.expectOne('/api/protected');
     req.flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+  });
+
+  it('renvoie vers la cible de la navigation en cours quand le 401 survient avant qu elle aboutisse', fakeAsync(() => {
+    const cible = '/cours/presenter/b2-01-traitement-information-chiffree?seance=seance-1';
+    router.resetConfig([
+      { path: 'cours/presenter/:slug', canActivate: [() => new Subject<boolean>()], children: [] },
+    ]);
+    authState.login(buildAuthSession());
+    const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    void router.navigateByUrl(cible);
+    flushMicrotasks();
+
+    const url = `${environment.apiBaseUrl}/auth/me`;
+    http.get(url).subscribe({ error: () => undefined });
+    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+
+    expect(router.url).withContext('navigation initiale non validee').toBe('/');
+    expect(navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: cible } });
+  }));
+
+  it('garde la page d origine quand un second 401 arrive pendant la redirection vers /login', fakeAsync(() => {
+    router.resetConfig([
+      { path: 'cours/seance/:sessionId/synthese', children: [] },
+      { path: 'login', children: [] },
+    ]);
+    void router.navigateByUrl('/cours/seance/seance-1/synthese');
+    flushMicrotasks();
+    authState.login(buildAuthSession());
+    const lectures = ['results', 'deroule'].map(
+      (fin) => `${environment.apiBaseUrl}/formations/sessions/seance-1/${fin}`,
+    );
+
+    for (const url of lectures) {
+      http.get(url).subscribe({ error: () => undefined });
+    }
+    for (const url of lectures) {
+      httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+    }
+    flushMicrotasks();
+
+    expect(router.url).toBe(
+      `/login?returnUrl=${encodeURIComponent('/cours/seance/seance-1/synthese')}`,
+    );
+  }));
+
+  it('laisse remonter un 401 sur une requete au jeton participant sans toucher a la session formateur', () => {
+    authState.login(buildAuthSession({ accessToken: 'jwt-formateur' }));
+    spyOn(authState, 'clearSession').and.callThrough();
+    const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    const url = `${environment.apiBaseUrl}/formations/sessions/seance-1/answers`;
+    const statutsRecus: number[] = [];
+
+    http
+      .post(url, {}, { headers: { [ENTETE_JETON_PARTICIPANT]: 'jeton-participant' } })
+      .subscribe({ error: (erreur: HttpErrorResponse) => statutsRecus.push(erreur.status) });
+    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+
+    expect(statutsRecus).withContext('le 401 remonte a l appelant').toEqual([401]);
+    expect(authState.clearSession).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(authState.token()).toBe('jwt-formateur');
   });
 
   it('devrait propager les erreurs non-401 sans clearSession', () => {

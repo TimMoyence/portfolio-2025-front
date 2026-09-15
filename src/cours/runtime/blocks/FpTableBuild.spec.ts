@@ -240,7 +240,7 @@ describe('FpTableBuild', () => {
   });
 
   it('efface les valeurs attendues meme pour le poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.plan = buildTableBuildPlan({ id: 'K-AMORTISSEMENT-PRES' });
     const recu = JSON.stringify(hote.plan);
     expect(recu).not.toContain('attendus');

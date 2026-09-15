@@ -7,6 +7,8 @@ import { test } from 'node:test';
 import {
   analyserCorrige,
   analyserFrontiere,
+  analyserImportsDuPupitre,
+  estPupitreFormateur,
   estSurfaceCours,
   formatViolations,
   GATE,
@@ -44,6 +46,8 @@ void test('contrat : le gate expose ses fonctions pures', () => {
   for (const fn of [
     analyserCorrige,
     analyserFrontiere,
+    analyserImportsDuPupitre,
+    estPupitreFormateur,
     estSurfaceCours,
     formatViolations,
     runGuard,
@@ -200,11 +204,49 @@ void test('AD-4 : un fichier de test garde le droit de porter le corrige', () =>
   assert.equal(resultat.code, 0);
 });
 
+const LIGNE_DU_PUPITRE = 'export const bonne = corrige.bonneReponse;\n';
+
+void test('AD-4 : le pupitre formateur lit le corrige servi au runtime par le deroule authentifie', () => {
+  const fichier = 'src/app/features/cours/presentateur/cours-presentateur.component.ts';
+  const resultat = garder({ [fichier]: LIGNE_DU_PUPITRE });
+  assert.equal(resultat.code, 0);
+  assert.equal(resultat.inspectes, 2);
+});
+
+const HORS_PUPITRE = [
+  'src/app/features/cours/etudiant/cours-etudiant.component.ts',
+  'src/app/features/cours/ecran/cours-ecran.component.ts',
+  'src/cours/content/b1-09.ts',
+  'src/app/features/cours/presentateur-bis/fuite.ts',
+  'src/app/features/cours/etudiant/presentateur/fuite.ts',
+];
+
+for (const fichier of HORS_PUPITRE) {
+  void test(`AD-4 : la lecture du corrige reste refusee dans ${fichier}`, () => {
+    const resultat = garder({ [fichier]: LIGNE_DU_PUPITRE });
+    assert.equal(resultat.code, 1);
+    assert.deepEqual([...new Set(reperes(resultat))], [`${fichier}:1:AD-4`]);
+  });
+}
+
 void test('AD-4 : le reste de src/app n est pas dans le perimetre de la surface cours', () => {
   assert.equal(estSurfaceCours('src/app/features/projets/projets.component.ts'), false);
   assert.equal(estSurfaceCours('src/app/features/cours/cours-host.component.ts'), true);
   assert.equal(estSurfaceCours('src/cours/content/b1-09.ts'), true);
   assert.equal(estSurfaceCours('src/cours/runtime/blocks/FpVote.ts'), false);
+});
+
+void test('AD-4 : seul le dossier du pupitre formateur est reconnu comme pupitre', () => {
+  assert.equal(
+    estPupitreFormateur('src/app/features/cours/presentateur/cours-scene.component.ts'),
+    true,
+  );
+  assert.equal(estPupitreFormateur('src/app/features/cours/presentateur-bis/fuite.ts'), false);
+  assert.equal(
+    estPupitreFormateur('src/app/features/cours/etudiant/cours-etudiant.component.ts'),
+    false,
+  );
+  assert.equal(estPupitreFormateur('src/cours/content/presentateur/fuite.ts'), false);
 });
 
 void test('le verdict nomme le fichier, la ligne et la raison de l interdiction', () => {
@@ -222,6 +264,85 @@ void test('un arbre conforme atteste un nombre de fichiers non nul et sort en co
   assert.deepEqual(resultat.violations, []);
   assert.equal(resultat.inspectes, 1);
   assert.equal(formatViolations(resultat), `${GATE}: 1 fichier(s) inspecte(s), 0 violation(s).`);
+});
+
+const IMPORTS_DU_PUPITRE = [
+  {
+    nom: 'import statique depuis la vue etudiant',
+    fichier: 'src/app/features/cours/etudiant/cours-etudiant.component.ts',
+    texte: "import { CoursPanneauQuestionComponent } from '../presentateur/cours-panneau-question.component';\n",
+  },
+  {
+    nom: 'import dynamique depuis le composant d ecran',
+    fichier: 'src/app/features/cours/ecran/cours-ecran.component.ts',
+    texte: "const pupitre = await import('../presentateur/cours-presentateur.component');\n",
+  },
+  {
+    nom: 'reexport du dossier du pupitre',
+    fichier: 'src/app/features/cours/cours-flux.token.ts',
+    texte: "export * from './presentateur';\n",
+  },
+  {
+    nom: 'import a effet de bord depuis un sous-dossier',
+    fichier: 'src/app/features/cours/etudiant/vue/fuite.ts',
+    texte: "import '../../presentateur/cours-scene.component';\n",
+  },
+];
+
+for (const cas of IMPORTS_DU_PUPITRE) {
+  void test(`AD-4 : ${cas.nom} vers le pupitre formateur sort en code 1`, () => {
+    const resultat = garder({ [cas.fichier]: cas.texte });
+    assert.equal(resultat.code, 1);
+    assert.deepEqual(reperes(resultat), [`${cas.fichier}:1:AD-4`]);
+    assert.match(resultat.violations[0].raison, /import du pupitre formateur/);
+  });
+}
+
+void test('AD-4 : un contenu de cours qui remonte vers le pupitre est refuse par les deux regles', () => {
+  const fichier = 'src/cours/content/b1-09.ts';
+  const resultat = garder({
+    [fichier]: "import { corrige } from '../../app/features/cours/presentateur/cours-presentateur.component';\n",
+  });
+  assert.deepEqual([...new Set(reperes(resultat))].sort(), [`${fichier}:1:AD-2`, `${fichier}:1:AD-4`]);
+  assert.ok(resultat.violations.some((violation) => /import du pupitre formateur/.test(violation.raison)));
+});
+
+const IMPORTS_ADMIS = [
+  {
+    nom: 'le pupitre qui importe son propre dossier',
+    fichier: 'src/app/features/cours/presentateur/cours-presentateur.component.ts',
+    texte: "import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';\n",
+  },
+  {
+    nom: 'un spec hors du pupitre',
+    fichier: 'src/app/features/cours/repetition-b2-01.spec.ts',
+    texte: "import { CoursSceneComponent } from './presentateur/cours-scene.component';\n",
+  },
+  {
+    nom: 'un dossier voisin au nom proche',
+    fichier: 'src/app/features/cours/etudiant/cours-etudiant.component.ts',
+    texte: "import { x } from '../presentateur-bis/x';\n",
+  },
+  {
+    nom: 'le pupitre vers le composant d ecran partage',
+    fichier: 'src/app/features/cours/presentateur/cours-scene.component.ts',
+    texte: "import { CoursEcranComponent } from '../ecran/cours-ecran.component';\n",
+  },
+];
+
+for (const cas of IMPORTS_ADMIS) {
+  void test(`AD-4 : ${cas.nom} passe`, () => {
+    assert.equal(garder({ [cas.fichier]: cas.texte }).code, 0);
+  });
+}
+
+void test('AD-4 : les routes, hors surface cours, gardent le chargement paresseux du pupitre', () => {
+  const resultat = garder({
+    'src/app/features/cours/cours-host.component.ts': 'export const a = 1;\n',
+    'src/app/app.routes.ts':
+      "export const r = () => import('./features/cours/presentateur/cours-presentateur.component');\n",
+  });
+  assert.equal(resultat.code, 0);
 });
 
 void test('PLANCHER ANTI-VACUITE : un perimetre vide leve une erreur citant le gate', () => {

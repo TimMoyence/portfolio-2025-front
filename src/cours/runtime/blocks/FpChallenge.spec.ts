@@ -159,7 +159,7 @@ describe('FpChallenge', () => {
   });
 
   it('marque les strategies fausses sur le poste presentateur apres revelation', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.probleme = buildChallengeProbleme({ id: 'D-DEFI-06' });
     tenter(hote, TENTATIVE);
     hote.revelee = true;
@@ -170,7 +170,7 @@ describe('FpChallenge', () => {
   });
 
   it('ne marque rien sur le poste presentateur avant la revelation', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.probleme = buildChallengeProbleme({ id: 'D-DEFI-07' });
     tenter(hote, TENTATIVE);
     expect(marquesDe(hote)).toEqual([]);
@@ -212,7 +212,7 @@ describe('FpChallenge', () => {
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     const feuille = [tokens, base, feuilleDe('challenge'), stage].join('\n');
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.probleme = buildChallengeProbleme({ id: 'D-DEFI-10' });
     tenter(hote, TENTATIVE);
     hote.revelee = true;

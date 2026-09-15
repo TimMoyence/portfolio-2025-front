@@ -1,0 +1,388 @@
+{
+  "id": "b2-01-traitement-information-chiffree",
+  "titre": "Lire et contrôler l'information chiffrée",
+  "niveau": "B2",
+  "duree": 90,
+  "concepts": ["proportion", "pourcentage", "taux-evolution"],
+  "ecrans": [
+    {
+      "id": "B2-01-OUVERTURE",
+      "type": "fp-recall",
+      "duree": 5,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-RAPPEL-PART-TOTAL",
+          "enonce": "18 dossiers sur 60 sont complets. Quelle écriture représente la proportion de dossiers complets ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "18 ÷ 60 × 100 = 30"
+            },
+            {
+              "id": "o2",
+              "libelle": "18 ÷ 60 = 0,3"
+            },
+            {
+              "id": "o3",
+              "libelle": "60 − 18 = 42"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-SITUATION",
+      "type": "fp-pro",
+      "duree": 6,
+      "interactif": false,
+      "donnees": {
+        "cas": {
+          "id": "B2-01-SITUATION",
+          "metier": "Assistant de gestion",
+          "situation": "Le tableau comporte 72 dossiers complets sur 240 dans une antenne et 30 sur 100 dans une autre.",
+          "geste": "Pour chaque antenne, diviser la partie par le total, multiplier par 100, conserver le total comme base et contrôler l’ordre de grandeur.",
+          "consequence": "Un même nombre de dossiers ne suffit pas à comparer deux antennes : sans base commune, le pourcentage annoncé peut tromper la décision.",
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 6,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-REFERENCE",
+      "type": "fp-vote",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-CHOIX-REFERENCE",
+          "enonce": "Pour calculer la part de 72 dossiers dans une population de 240, quelle valeur doit rester au dénominateur ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "240, car c’est le total de référence."
+            },
+            {
+              "id": "o2",
+              "libelle": "72, car c’est la valeur observée."
+            },
+            {
+              "id": "o3",
+              "libelle": "72 + 240, car il faut utiliser tous les nombres."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B2-01-CONCEPT",
+      "type": "fp-concept4",
+      "duree": 6,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "B2-01-CONCEPT",
+          "parametres": [
+            {
+              "cle": "partie",
+              "libelle": "partie",
+              "min": 10,
+              "max": 90,
+              "pas": 10,
+              "defaut": 30
+            },
+            {
+              "cle": "total",
+              "libelle": "total",
+              "min": 100,
+              "max": 900,
+              "pas": 100,
+              "defaut": 100
+            }
+          ],
+          "formuleLatexSimplifie": "\\dfrac{partie}{total} \\times 100",
+          "calcul": "(partie/total)*100",
+          "phrase": "{partie} représente {resultat} % de {total}.",
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 6,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-CALCUL-MONTANT",
+      "type": "fp-numeric",
+      "duree": 7,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-MONTANT-POURCENTAGE",
+          "enonce": "Une charge représente 25 % d’un total de 3 000 €. Quel est son montant ?",
+          "unite": "€",
+          "metadonnees": {
+            "concepts": ["pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 7,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-ATELIER",
+      "type": "questionnaire",
+      "duree": 20,
+      "interactif": true,
+      "donnees": {
+        "regime": "examen",
+        "questions": [
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B2-01-FORMULE-TABLEUR",
+                "enonce": "La cellule B2 contient le total. Quelle formule calcule 25 % de B2 ?",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "=B2*25"
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "=B2*0.25"
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "=B2*(1+0.25)"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-TAUX-EVOLUTION",
+                "enonce": "Une recette passe de 3 500 € à 4 550 €. Quel est son taux d’évolution ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": ["pourcentage", "taux-evolution"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 20,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-TOTAL-DEPUIS-PART",
+                "enonce": "950 € représentent 25 % d’un budget. Quel est le budget total ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["pourcentage", "taux-evolution"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 20,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "B2-01-GRAPHIQUE",
+      "type": "fp-plot",
+      "duree": 6,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "B2-01-GRAPHIQUE",
+          "abscisse": {
+            "libelle": "nombre de dossiers",
+            "min": 0,
+            "max": 300
+          },
+          "ordonnee": "proportion en %",
+          "parametres": [],
+          "series": [
+            {
+              "id": "antenne-a",
+              "libelle": "Antenne A",
+              "trait": "plein",
+              "calcul": "30"
+            },
+            {
+              "id": "antenne-b",
+              "libelle": "Antenne B",
+              "trait": "tirets",
+              "calcul": "x/10"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 6,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-CONTROLE-GRAPHIQUE",
+      "type": "fp-vote",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-CONTROLE-COHERENCE",
+          "enonce": "Un tableau annonce 72 dossiers complets sur 240. Quelle vérification est la plus utile avant de communiquer le pourcentage ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "Ajouter 72 et 240 puis annoncer le résultat."
+            },
+            {
+              "id": "o2",
+              "libelle": "Diviser par le nombre de dossiers incomplets."
+            },
+            {
+              "id": "o3",
+              "libelle": "Calculer 72 ÷ 240 × 100 = 30 % et vérifier que la base est bien 240."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B2-01-REMEDIATION",
+      "type": "fp-worked",
+      "duree": 6,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "B2-01-REMEDIATION",
+          "enonce": "Une antenne compte 72 dossiers complets sur 240. Une recette passe de 400 € à 460 €. Produisez les deux indicateurs demandés par la direction.",
+          "etapes": [
+            {
+              "id": "base",
+              "intitule": "Identifier la référence",
+              "raisonnement": "La base d’une proportion est le total 240 ; la base d’une évolution est la valeur de départ 400 €.",
+              "invite": "Quelle valeur est au dénominateur ?"
+            },
+            {
+              "id": "proportion",
+              "intitule": "Calculer la proportion",
+              "raisonnement": "72 ÷ 240 = 0,30, soit 30 %.",
+              "invite": "Le résultat est-il dans l’ordre de grandeur attendu ?"
+            },
+            {
+              "id": "evolution",
+              "intitule": "Calculer le taux",
+              "raisonnement": "L’écart vaut 60 €. Le taux vaut 60 ÷ 400 × 100 = 15 %.",
+              "invite": "Pourquoi 60 € et 15 % ne sont-ils pas la même information ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 6,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-TRANSFERT",
+      "type": "fp-recall",
+      "duree": 8,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-TRANSFERT-METHODE",
+          "enonce": "Une recette passe de 400 € à 460 €. Quelle information faut-il donner en premier pour contrôler le calcul ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "La base de départ, l’écart de 60 €, puis le taux de 15 %."
+            },
+            {
+              "id": "o2",
+              "libelle": "La valeur d’arrivée seule, car elle contient le résultat final."
+            },
+            {
+              "id": "o3",
+              "libelle": "L’écart de 60 € seulement, sans rapport à la base."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 8,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-SORTIE",
+      "type": "fp-exit",
+      "duree": 18,
+      "interactif": true,
+      "donnees": {
+        "billet": {
+          "id": "B2-01-SORTIE-METHODE",
+          "question": "Pour expliquer le passage de 400 à 460, quelle conclusion est correcte ?",
+          "invite": "Écrivez la méthode que vous réutiliserez dans un tableau de gestion.",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "Le taux est 60 ÷ 460 × 100, car la valeur finale est la référence."
+            },
+            {
+              "id": "o2",
+              "libelle": "Le taux est 60 €, car c’est l’écart observé."
+            },
+            {
+              "id": "o3",
+              "libelle": "L’écart est 60 et le taux est 60 ÷ 400 × 100 = 15 %."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 18,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    }
+  ]
+}

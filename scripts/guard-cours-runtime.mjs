@@ -11,6 +11,7 @@ const RACINE_APP = 'src/app';
 const PREFIXE_COURS = `${RACINE_COURS}/`;
 const PREFIXE_CONTENU = `${RACINE_COURS}/content/`;
 const PREFIXE_TESTS = 'src/testing/';
+const PREFIXE_PUPITRE = `${RACINE_APP}/features/cours/presentateur/`;
 const EXTENSIONS = ['.ts', '.html'];
 
 const FRAMEWORKS_INTERDITS = ['@angular', 'rxjs', 'zone.js'];
@@ -42,7 +43,7 @@ const POURQUOI = {
   [AD2]:
     "AD-2 : src/cours/ doit pouvoir etre exporte tel quel en fichier HTML autoporte, ouvrable hors ligne sans Angular ni bundler. Un import de framework, meme dynamique ou a effet de bord, et toute remontee relative hors de src/cours/ rendent cet export impossible.",
   [AD4]:
-    "AD-4 : la surface cours (src/cours/content/ et les fichiers cours de src/app/) est compilee dans le fichier JavaScript que le navigateur de l etudiant telecharge. Tout ce qu elle contient est public : il suffit d ouvrir les sources et d y chercher le mot. La bonne reponse, les misconceptions et le bareme ne franchissent jamais cette frontiere, sous aucun nom.",
+    "AD-4 : la surface cours (src/cours/content/ et les fichiers cours de src/app/) est compilee dans le fichier JavaScript que le navigateur de l etudiant telecharge. Tout ce qu elle contient est public : il suffit d ouvrir les sources et d y chercher le mot. La bonne reponse, les misconceptions et le bareme ne franchissent jamais cette frontiere, sous aucun nom. Seul le pupitre formateur (src/app/features/cours/presentateur/) nomme le corrige, qu il recoit au runtime du deroule authentifie ; aucun autre fichier de la surface cours ne l importe, sans quoi son exemption ferait entrer le corrige dans le code de l etudiant.",
 };
 
 /**
@@ -80,6 +81,14 @@ export function estSurfaceCours(fichier) {
     return true;
   }
   return fichier.startsWith(`${RACINE_APP}/`) && fichier.includes('cours');
+}
+
+/**
+ * @param {string} fichier
+ * @returns {boolean}
+ */
+export function estPupitreFormateur(fichier) {
+  return fichier.startsWith(PREFIXE_PUPITRE);
 }
 
 /**
@@ -139,6 +148,39 @@ function motifDeRefus(fichier, specification) {
 }
 
 /**
+ * @param {string} fichier
+ * @param {string} specification
+ * @returns {boolean}
+ */
+function viseLePupitre(fichier, specification) {
+  if (!specification.startsWith('.')) {
+    return false;
+  }
+  const cible = posix.normalize(posix.join(posix.dirname(fichier), specification));
+  return `${cible}/`.startsWith(PREFIXE_PUPITRE);
+}
+
+/**
+ * @param {{ fichier: string, contenu: string }} entree
+ * @returns {{ fichier: string, ligne: number, regle: string, raison: string, extrait: string }[]}
+ */
+export function analyserImportsDuPupitre({ fichier, contenu }) {
+  if (!estSurfaceCours(fichier) || estFichierDeTest(fichier) || estPupitreFormateur(fichier)) {
+    return [];
+  }
+  const lignes = contenu.split('\n');
+  return specifications(contenu)
+    .filter(({ specification }) => viseLePupitre(fichier, specification))
+    .map(({ specification, ligne }) => ({
+      fichier,
+      ligne,
+      regle: AD4,
+      raison: `import du pupitre formateur « ${specification} »`,
+      extrait: lignes[ligne - 1].trim(),
+    }));
+}
+
+/**
  * @param {{ fichier: string, contenu: string }} entree
  * @returns {{ fichier: string, ligne: number, regle: string, raison: string, extrait: string }[]}
  */
@@ -185,7 +227,7 @@ function compter(texte, caractere) {
  * @returns {{ fichier: string, ligne: number, regle: string, raison: string, extrait: string }[]}
  */
 export function analyserCorrige({ fichier, contenu }) {
-  if (!estSurfaceCours(fichier) || estFichierDeTest(fichier)) {
+  if (!estSurfaceCours(fichier) || estFichierDeTest(fichier) || estPupitreFormateur(fichier)) {
     return [];
   }
   const effacees = lignesEffacees(contenu);
@@ -219,7 +261,7 @@ export function runGuard({ root = '.' } = {}) {
   const violations = fichiers.flatMap((fichier) => {
     const entree = { fichier, contenu: readFileSync(join(root, fichier), 'utf8') };
     const frontiere = fichier.startsWith(PREFIXE_COURS) ? analyserFrontiere(entree) : [];
-    return [...frontiere, ...analyserCorrige(entree)];
+    return [...frontiere, ...analyserCorrige(entree), ...analyserImportsDuPupitre(entree)];
   });
   return { violations, inspectes: fichiers.length, code: violations.length > 0 ? 1 : 0 };
 }

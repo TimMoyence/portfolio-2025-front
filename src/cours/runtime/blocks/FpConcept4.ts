@@ -1,4 +1,5 @@
 import type { MetadonneesBrique } from '../../content/types';
+import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
@@ -16,8 +17,8 @@ export interface Concept4Definition {
   readonly id: string;
   readonly parametres: readonly Concept4Parametre[];
   readonly formuleLatexSimplifie: string;
-  readonly calcul: (valeurs: Readonly<Record<string, number>>) => number;
-  readonly phrase: (valeurs: Readonly<Record<string, number>>) => string;
+  readonly calcul: string;
+  readonly phrase: string;
   readonly metadonnees: MetadonneesBrique;
 }
 
@@ -197,7 +198,9 @@ export class FpConcept4 extends FpBlock {
 
   private resultat(valeurs: Valeurs): number {
     const definition = this.definition;
-    return definition === null ? Number.NaN : definition.calcul(valeurs);
+    return definition === null
+      ? Number.NaN
+      : (evaluerExpression(definition.calcul, valeurs).valeur ?? Number.NaN);
   }
 
   private parametre(cle: string): Concept4Parametre | null {
@@ -341,10 +344,12 @@ export class FpConcept4 extends FpBlock {
     if (definition === null) {
       return safeHtml``;
     }
+    const resultat = this.resultat(valeurs);
+    const phrase = remplirGabarit(definition.phrase, { ...valeurs, resultat }, formater);
     return safeHtml`
-      <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(this.resultat(valeurs)))}">
+      <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-phrase'))}</h3>
-        <p class="${escapeHtml(stylePhrase)} fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(definition.phrase(valeurs))}</p>
+        <p class="${escapeHtml(stylePhrase)} fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
       </div>
     `;
   }

@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
   CommandePilotage,
   FormationsPort,
   IncidentEtudiant,
   InscriptionParticipant,
   MotifRefusRattachement,
-  OuvertureSeance,
+  MotifRefusReponse,
   QuestionsDues,
   RapportSeance,
   Rattachement,
@@ -17,19 +18,63 @@ import type {
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
-import { RattachementRefuse } from '../ports/formations.port';
+import { RattachementRefuse, ReponseRefusee, SujetRefuse } from '../ports/formations.port';
 import { getApiBaseUrl } from '../http/api-config';
+import { ENTETE_JETON_PARTICIPANT } from '../http/jeton-participant';
 
-const ENTETE_JETON = 'x-participant-token';
+const MOTIFS_DE_CONFLIT_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
+  REPONSE_DEJA_ENREGISTREE: 'deja-repondue',
+  SEANCE_NON_DEMARREE: 'seance-non-demarree',
+};
 
 const MOTIFS_PAR_STATUT: Readonly<Record<number, MotifRefusRattachement>> = {
   404: 'code-inconnu',
   409: 'deja-inscrit',
 };
 
+interface VerdictBrut {
+  correcte: boolean;
+  misconception?: string | null;
+  libelleConfusion?: string | null;
+}
+
 function refuserRattachement(erreur: unknown): RattachementRefuse {
   const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
   return new RattachementRefuse(MOTIFS_PAR_STATUT[statut] ?? 'rattachement-impossible', statut);
+}
+
+function refuserSujet(erreur: unknown): SujetRefuse {
+  const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
+  return new SujetRefuse(statut === 409 ? 'cours-modifie' : 'sujet-indisponible', statut);
+}
+
+function codeDuProbleme(erreur: HttpErrorResponse): string | null {
+  const corps: unknown = erreur.error;
+  if (typeof corps !== 'object' || corps === null) {
+    return null;
+  }
+  const code = (corps as Record<string, unknown>)['code'];
+  return typeof code === 'string' ? code : null;
+}
+
+function motifDeRefusDeReponse(statut: number, code: string | null): MotifRefusReponse {
+  if (statut === 0 || statut === 429 || statut >= 500) {
+    return 'reseau';
+  }
+  if (statut === 409 && code !== null && Object.hasOwn(MOTIFS_DE_CONFLIT_PAR_CODE, code)) {
+    return MOTIFS_DE_CONFLIT_PAR_CODE[code];
+  }
+  return 'refusee';
+}
+
+function refuserReponse(erreur: unknown): ReponseRefusee {
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new ReponseRefusee('reseau', 0);
+  }
+  return new ReponseRefusee(
+    motifDeRefusDeReponse(erreur.status, codeDuProbleme(erreur)),
+    erreur.status,
+  );
 }
 
 @Injectable()
@@ -38,8 +83,18 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  ouvrirSeance(demande: OuvertureSeance): Observable<SeanceOuverte> {
-    return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, demande);
+  ouvrirSeance(courseSlug: string): Observable<SeanceOuverte> {
+    return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, { courseSlug });
+  }
+
+  lireDeroule(sessionId: string): Observable<DerouleCours> {
+    return this.http.get<DerouleCours>(`${this.urlSeance(sessionId)}/deroule`);
+  }
+
+  lireSujet(sessionId: string, jeton: string): Observable<CoursContent> {
+    return this.http
+      .get<CoursContent>(`${this.urlSeance(sessionId)}/sujet`, { headers: entetes(jeton) })
+      .pipe(catchError((erreur: unknown) => throwError(() => refuserSujet(erreur))));
   }
 
   demarrer(sessionId: string): Observable<void> {
@@ -60,17 +115,30 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement> {
     const url = `${this.baseUrl}/sessions/${encodeURIComponent(code)}/join`;
-    return this.http
-      .post<Rattachement>(url, inscription)
-      .pipe(catchError((erreur: unknown) => throwError(() => refuserRattachement(erreur))));
+    return this.http.post<Rattachement>(url, inscription).pipe(
+      map(({ participantId, sessionId, ecranCourant, modeRythme, jeton }) => ({
+        participantId,
+        sessionId,
+        ecranCourant,
+        modeRythme,
+        jeton,
+      })),
+      catchError((erreur: unknown) => throwError(() => refuserRattachement(erreur))),
+    );
   }
 
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse> {
     return this.http
-      .post<VerdictReponse>(`${this.urlSeance(sessionId)}/answers`, reponse, {
+      .post<VerdictBrut>(`${this.urlSeance(sessionId)}/answers`, reponse, {
         headers: entetes(jeton),
       })
-      .pipe(map(({ correcte, misconception }) => ({ correcte, misconception })));
+      .pipe(
+        map(({ correcte, libelleConfusion }) => ({
+          reussite: correcte,
+          libelleConfusion: libelleConfusion ?? null,
+        })),
+        catchError((erreur: unknown) => throwError(() => refuserReponse(erreur))),
+      );
   }
 
   signalerIncidents(
@@ -97,5 +165,5 @@ export class FormationsHttpAdapter implements FormationsPort {
 }
 
 function entetes(jeton: string): HttpHeaders {
-  return new HttpHeaders({ [ENTETE_JETON]: jeton });
+  return new HttpHeaders({ [ENTETE_JETON_PARTICIPANT]: jeton });
 }

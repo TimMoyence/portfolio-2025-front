@@ -283,7 +283,7 @@ describe('FpCardsort', () => {
   });
 
   it('efface le regroupement attendu meme pour le poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.plan = buildCardsortPlan({ id: 'K-CHARGES-PRES' });
     expect(JSON.stringify(hote.plan)).not.toContain('carteId');
   });

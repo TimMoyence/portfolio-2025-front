@@ -2251,6 +2251,50 @@
       }
     },
     {
+      "id": "cours-presenter",
+      "path": "/cours/presenter/:slug",
+      "index": false,
+      "changefreq": "never",
+      "priority": 0,
+      "lastmod": "2026-09-15",
+      "locales": {
+        "fr": {
+          "title": "Pupitre de séance",
+          "description": "Pupitre du formateur : déroulé annoté, pilotage des écrans et résultats de la classe en direct.",
+          "ogTitle": "Pupitre de séance",
+          "ogDescription": "Pilotage de la séance et résultats de la classe en direct."
+        },
+        "en": {
+          "title": "Session console",
+          "description": "Trainer console: annotated outline, screen control and live class results.",
+          "ogTitle": "Session console",
+          "ogDescription": "Session control and live class results."
+        }
+      }
+    },
+    {
+      "id": "cours-scene",
+      "path": "/cours/presenter/:slug/scene/:sessionId",
+      "index": false,
+      "changefreq": "never",
+      "priority": 0,
+      "lastmod": "2026-09-15",
+      "locales": {
+        "fr": {
+          "title": "Scène de séance",
+          "description": "Projection plein écran de l'écran courant de la séance, à destination de la classe.",
+          "ogTitle": "Scène de séance",
+          "ogDescription": "Projection plein écran de l'écran courant de la séance."
+        },
+        "en": {
+          "title": "Session stage",
+          "description": "Full-screen projection of the session's current screen, for the classroom.",
+          "ogTitle": "Session stage",
+          "ogDescription": "Full-screen projection of the session's current screen."
+        }
+      }
+    },
+    {
       "id": "cours-synthese",
       "path": "/cours/seance/:sessionId/synthese",
       "index": false,

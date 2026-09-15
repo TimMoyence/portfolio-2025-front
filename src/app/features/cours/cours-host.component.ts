@@ -45,7 +45,7 @@ const QUESTION_DEMO: VoteQuestionPublique = {
         <input id="cours-nom" name="nom" required />
         <label for="cours-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
         <input id="cours-email" name="email" type="email" required />
-        <button type="submit" i18n="cours.rejoindre|@@coursRejoindre">Rejoindre</button>
+        <button type="submit" i18n="cours.demoRejoindre|@@coursDemoRejoindre">Rejoindre</button>
         @if (identiteRefusee()) {
           <p
             data-testid="cours-identite-refus"

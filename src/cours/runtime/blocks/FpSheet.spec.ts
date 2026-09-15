@@ -238,7 +238,7 @@ describe('FpSheet', () => {
   it('efface les valeurs attendues pour le poste etudiant comme pour le presentateur', () => {
     expect(JSON.stringify(hote.plan)).not.toContain('attendus');
     expect(JSON.stringify(hote.plan)).not.toContain(ATTENDU_CACHE_MACHINE);
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.plan = buildSheetPlan({ id: 'K-TABLEUR-PRES' });
     expect(JSON.stringify(hote.plan)).not.toContain('attendus');
     expect(JSON.stringify(hote.plan)).not.toContain(ATTENDU_CACHE_MACHINE);

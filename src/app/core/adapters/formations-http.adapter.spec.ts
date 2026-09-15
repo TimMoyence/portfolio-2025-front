@@ -2,18 +2,31 @@ import type { TestRequest } from '@angular/common/http/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import {
+  buildCoursContent,
+  buildDerouleCours,
+  buildRapportSeance,
+} from '../../../testing/factories/formations.factory';
+import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
+import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
+import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
-  Bareme,
   InscriptionParticipant,
   MotifRefusRattachement,
+  MotifRefusReponse,
   QuestionsDues,
   RapportSeance,
   Rattachement,
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
-import { FORMATIONS_PORT, RattachementRefuse } from '../ports/formations.port';
+import {
+  FORMATIONS_PORT,
+  RattachementRefuse,
+  ReponseRefusee,
+  SujetRefuse,
+} from '../ports/formations.port';
 import { FormationsHttpAdapter } from './formations-http.adapter';
 
 const SESSION_ID = '4d0f2a9e-0d7f-4d2f-9a3c-1f6b2a7c8d90';
@@ -22,12 +35,6 @@ const JETON = 'jeton-participant';
 const ENTETE_JETON = 'x-participant-token';
 const RACINE = `${environment.apiBaseUrl}/formations/sessions`;
 const URL_SEANCE = `${RACINE}/${SESSION_ID}`;
-
-const BAREME: Bareme = {
-  version: 1,
-  questions: [{ id: 'Q-CAP-03', type: 'numeric', concept: 'capitalisation', noteCompte: true }],
-  tirages: [{ seed: 7, solutions: { 'Q-CAP-03': { valeur: 1338.23, pieges: [] } } }],
-};
 
 const INSCRIPTION: InscriptionParticipant = {
   studentKey: '11111111-1111-4111-8111-111111111111',
@@ -39,7 +46,6 @@ const INSCRIPTION: InscriptionParticipant = {
 const RATTACHEMENT: Rattachement = {
   participantId: '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c',
   sessionId: SESSION_ID,
-  seed: 7,
   ecranCourant: 0,
   modeRythme: 'pilote',
   jeton: JETON,
@@ -75,19 +81,80 @@ describe('FormationsHttpAdapter', () => {
     expect(TestBed.inject(FORMATIONS_PORT)).toBe(adapter);
   });
 
-  it('ouvrirSeance POSTe le bareme sur sessions et rend sessionId et code', () => {
+  it('ouvrirSeance POSTe le slug du cours sur sessions et rend sessionId et code', () => {
     const ouverte = { sessionId: SESSION_ID, code: CODE };
     const recus: SeanceOuverte[] = [];
 
     adapter
-      .ouvrirSeance({ courseSlug: 'maths-bts-suites', bareme: BAREME })
+      .ouvrirSeance('b2-01-traitement-information-chiffree')
       .subscribe((valeur) => recus.push(valeur));
 
     const req = attendre(RACINE, 'POST');
-    expect(req.request.body).toEqual({ courseSlug: 'maths-bts-suites', bareme: BAREME });
+    expect(req.request.body).toEqual({
+      courseSlug: 'b2-01-traitement-information-chiffree',
+    });
     req.flush(ouverte);
 
     expect(recus).toEqual([ouverte]);
+  });
+
+  it('lireDeroule GETe le deroule du presentateur sur deroule', () => {
+    const deroule = buildDerouleCours();
+    const recus: DerouleCours[] = [];
+
+    adapter.lireDeroule(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+
+    attendre(`${URL_SEANCE}/deroule`, 'GET').flush(deroule);
+
+    expect(recus).toEqual([deroule]);
+  });
+
+  it('lireSujet GETe le sujet de l etudiant avec l en-tete de participant', () => {
+    const sujet = buildCoursContent();
+    const recus: CoursContent[] = [];
+
+    adapter.lireSujet(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
+
+    const req = attendre(`${URL_SEANCE}/sujet`, 'GET');
+    expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
+    req.flush(sujet);
+
+    expect(recus).toEqual([sujet]);
+  });
+
+  it('lireSujet transforme un 409 en refus motive par le changement du cours', () => {
+    const erreurs: unknown[] = [];
+
+    adapter.lireSujet(SESSION_ID, JETON).subscribe({
+      error: (recue: unknown) => erreurs.push(recue),
+    });
+
+    httpMock.expectOne(`${URL_SEANCE}/sujet`).flush('', { status: 409, statusText: 'Conflict' });
+
+    expect(erreurs.length).toBe(1);
+    expect(erreurs[0]).toBeInstanceOf(SujetRefuse);
+    const refus = erreurs[0] as SujetRefuse;
+    expect(refus.motif).toBe('cours-modifie');
+    expect(refus.statut).toBe(409);
+    expect(refus.message).not.toBe('');
+  });
+
+  it('lireSujet transforme les autres erreurs en sujet indisponible', () => {
+    const erreurs: unknown[] = [];
+
+    adapter.lireSujet(SESSION_ID, JETON).subscribe({
+      error: (recue: unknown) => erreurs.push(recue),
+    });
+
+    httpMock
+      .expectOne(`${URL_SEANCE}/sujet`)
+      .flush('', { status: 500, statusText: 'Server Error' });
+
+    expect(erreurs.length).toBe(1);
+    expect(erreurs[0]).toBeInstanceOf(SujetRefuse);
+    const refus = erreurs[0] as SujetRefuse;
+    expect(refus.motif).toBe('sujet-indisponible');
+    expect(refus.statut).toBe(500);
   });
 
   it('demarrer POSTe sur start', () => {
@@ -116,15 +183,8 @@ describe('FormationsHttpAdapter', () => {
     req.flush(null);
   });
 
-  it('lireResultats GETe le rapport sur results', () => {
-    const rapport = {
-      courseSlug: 'maths-bts-suites',
-      code: CODE,
-      ouverteLe: '2026-09-11T08:00:00.000Z',
-      fermeeLe: '2026-09-11T10:00:00.000Z',
-      participants: [],
-      conceptsFragiles: ['capitalisation'],
-    };
+  it('lireResultats GETe le rapport, y compris les resultats agreges, sur results', () => {
+    const rapport = buildRapportSeance();
     const recus: RapportSeance[] = [];
 
     adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
@@ -144,6 +204,22 @@ describe('FormationsHttpAdapter', () => {
     req.flush(RATTACHEMENT);
 
     expect(recus).toEqual([RATTACHEMENT]);
+  });
+
+  it('rejoindre ne garde du rattachement aucune graine, meme si le serveur en envoie encore une', () => {
+    const recus: Rattachement[] = [];
+
+    adapter.rejoindre(CODE, INSCRIPTION).subscribe((valeur) => recus.push(valeur));
+    attendre(`${RACINE}/${CODE}/join`, 'POST').flush({ ...RATTACHEMENT, seed: 1_234_567 });
+
+    expect(recus).toEqual([RATTACHEMENT]);
+    expect(Object.keys(recus[0]).sort((a, b) => a.localeCompare(b))).toEqual([
+      'ecranCourant',
+      'jeton',
+      'modeRythme',
+      'participantId',
+      'sessionId',
+    ]);
   });
 
   it('rejoindre ne pose pas l en-tete de participant, que l etudiant n a pas encore', () => {
@@ -205,10 +281,10 @@ describe('FormationsHttpAdapter', () => {
     const req = attendre(`${URL_SEANCE}/answers`, 'POST');
     expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
     expect(req.request.body).toEqual(reponse);
-    req.flush({ correcte: true, misconception: null });
+    req.flush({ correcte: true, misconception: null, libelleConfusion: null });
   });
 
-  it('repondre ne rend que le verdict et l etiquette de confusion', () => {
+  it('repondre traduit le correcte du serveur en reussite et ne rend que ca avec le libelle de confusion, meme si le serveur ajoute misconception', () => {
     const recus: VerdictReponse[] = [];
 
     adapter
@@ -218,15 +294,132 @@ describe('FormationsHttpAdapter', () => {
     attendre(`${URL_SEANCE}/answers`, 'POST').flush({
       correcte: false,
       misconception: 'interet-simple',
+      libelleConfusion: 'Intérêts simples au lieu de composés',
       solution: 1338.23,
       note: 12,
-      pieges: [{ valeur: 1400, misconception: 'interet-simple' }],
     });
 
     expect(recus.length).toBe(1);
     const cles = Object.keys(recus[0]).sort((a, b) => a.localeCompare(b));
-    expect(cles).toEqual(['correcte', 'misconception']);
-    expect(recus[0]).toEqual({ correcte: false, misconception: 'interet-simple' });
+    expect(cles).toEqual(['libelleConfusion', 'reussite']);
+    expect(recus[0]).toEqual({
+      reussite: false,
+      libelleConfusion: 'Intérêts simples au lieu de composés',
+    });
+  });
+
+  it('repondre rend un libelle de confusion nul quand le serveur ne le transmet pas', () => {
+    const recus: VerdictReponse[] = [];
+
+    adapter
+      .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1480.24, dureeMs: 1000 })
+      .subscribe((valeur) => recus.push(valeur));
+
+    attendre(`${URL_SEANCE}/answers`, 'POST').flush({ correcte: true, misconception: null });
+
+    expect(recus).toEqual([{ reussite: true, libelleConfusion: null }]);
+  });
+
+  describe('refus d une reponse', () => {
+    const DEJA_REPONDUE =
+      'Votre réponse à la question Q-CAP-03 est déjà enregistrée : passez à la suivante.';
+    const NON_DEMARREE =
+      "La séance n'a pas encore commencé : attendez que le formateur la démarre pour envoyer vos réponses.";
+    const TERMINEE =
+      'La séance est terminée : les réponses ne sont plus acceptées, les résultats restent consultables.';
+
+    const refusPour = (
+      statut: number,
+      corps: ProblemeHttp | null,
+      statusText = 'Erreur',
+    ): ReponseRefusee => {
+      const erreurs: unknown[] = [];
+
+      adapter
+        .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1300, dureeMs: 1000 })
+        .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+
+      httpMock.expectOne(`${URL_SEANCE}/answers`).flush(corps, { status: statut, statusText });
+
+      expect(erreurs.length).toBe(1);
+      expect(erreurs[0]).toBeInstanceOf(ReponseRefusee);
+      return erreurs[0] as ReponseRefusee;
+    };
+
+    const cas: readonly (readonly [string, number, ProblemeHttp | null, MotifRefusReponse])[] = [
+      ['une panne serveur 503', 503, null, 'reseau'],
+      [
+        'une limite de cadence 429',
+        429,
+        buildProblemeHttp({ status: 429, title: 'Too Many Requests' }),
+        'reseau',
+      ],
+      [
+        'une erreur serveur 500',
+        500,
+        buildProblemeHttp({ status: 500, title: 'Internal Server Error' }),
+        'reseau',
+      ],
+      [
+        'un 409 au code REPONSE_DEJA_ENREGISTREE',
+        409,
+        buildProblemeHttp({ code: 'REPONSE_DEJA_ENREGISTREE' }),
+        'deja-repondue',
+      ],
+      [
+        'un 409 au code SEANCE_NON_DEMARREE',
+        409,
+        buildProblemeHttp({ code: 'SEANCE_NON_DEMARREE' }),
+        'seance-non-demarree',
+      ],
+      [
+        'un 409 au texte de reponse deja enregistree mais sans code',
+        409,
+        buildProblemeHttp({ detail: DEJA_REPONDUE }),
+        'refusee',
+      ],
+      [
+        'un 409 au texte de seance non demarree mais sans code',
+        409,
+        buildProblemeHttp({ detail: NON_DEMARREE }),
+        'refusee',
+      ],
+      [
+        'un 409 au code inconnu',
+        409,
+        buildProblemeHttp({ detail: TERMINEE, code: 'SEANCE_TERMINEE' }),
+        'refusee',
+      ],
+      [
+        'un 400 portant un code de 409',
+        400,
+        buildProblemeHttp({ status: 400, title: 'Bad Request', code: 'SEANCE_NON_DEMARREE' }),
+        'refusee',
+      ],
+      ['un jeton refuse 401', 401, null, 'refusee'],
+    ];
+
+    for (const [nom, statut, corps, motif] of cas) {
+      it(`classe ${nom} en ${motif}`, () => {
+        const refus = refusPour(statut, corps);
+
+        expect(refus.motif).toBe(motif);
+        expect(refus.statut).toBe(statut);
+        expect(refus.message).not.toBe('');
+      });
+    }
+
+    it('classe une coupure reseau, sans statut, en panne reseau', () => {
+      const erreurs: unknown[] = [];
+
+      adapter
+        .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1300, dureeMs: 1000 })
+        .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+      httpMock.expectOne(`${URL_SEANCE}/answers`).error(new ProgressEvent('error'));
+
+      expect((erreurs[0] as ReponseRefusee).motif).toBe('reseau');
+      expect((erreurs[0] as ReponseRefusee).statut).toBe(0);
+    });
   });
 
   it('signalerIncidents POSTe le journal sur incidents avec l en-tete de participant', () => {

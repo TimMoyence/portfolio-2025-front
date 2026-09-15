@@ -2,10 +2,11 @@ import type { RenderMode, Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { shuffleWithSeed } from '../core/seed';
 
 export abstract class FpBlock extends HTMLElement {
   static get observedAttributes(): string[] {
-    return ['render', 'role', 'seed', 'etat'];
+    return ['render', 'data-cours-role', 'seed', 'etat'];
   }
 
   protected readonly racine: ShadowRoot;
@@ -24,17 +25,29 @@ export abstract class FpBlock extends HTMLElement {
   abstract bind(racine: ShadowRoot): void;
 
   connectedCallback(): void {
-    adoptCoursStyles(this.racine);
-    this.refresh();
+    try {
+      adoptCoursStyles(this.racine);
+      this.refresh();
+    } catch (erreur) {
+      this.signalerErreur(erreur);
+    }
   }
 
   attributeChangedCallback(): void {
-    this.refreshSiConnecte();
+    try {
+      this.refreshSiConnecte();
+    } catch (erreur) {
+      this.signalerErreur(erreur);
+    }
   }
 
   protected refreshSiConnecte(): void {
     if (this.isConnected) {
-      this.refresh();
+      try {
+        this.refresh();
+      } catch (erreur) {
+        this.signalerErreur(erreur);
+      }
     }
   }
 
@@ -44,7 +57,7 @@ export abstract class FpBlock extends HTMLElement {
   }
 
   roleActuel(): Role {
-    const brut = this.getAttribute('role');
+    const brut = this.getAttribute('data-cours-role');
     return brut === 'presentateur' || brut === 'revision' ? brut : 'etudiant';
   }
 
@@ -53,12 +66,26 @@ export abstract class FpBlock extends HTMLElement {
     return Number.isFinite(brut) ? brut : 0;
   }
 
+  protected ordonnerSelonLaGraine<T>(elements: readonly T[]): T[] {
+    return this.hasAttribute('seed') ? shuffleWithSeed(elements, this.seed()) : [...elements];
+  }
+
   texte(cle: string): string {
     return traduire(cle);
   }
 
   emit(nom: string, detail: unknown): void {
     this.dispatchEvent(new CustomEvent(nom, { detail, bubbles: true, composed: true }));
+  }
+
+  private signalerErreur(erreur: unknown): void {
+    this.dispatchEvent(
+      new CustomEvent('fp-block-error', {
+        detail: erreur,
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 
   suivreAffichage(id: string | null): void {

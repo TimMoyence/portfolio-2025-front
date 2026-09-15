@@ -18,6 +18,11 @@ interface Reference {
   readonly colonneFixe: boolean;
 }
 
+interface Contexte {
+  readonly feuille: Feuille | null;
+  readonly variables: Readonly<Record<string, number>>;
+}
+
 type GenreJeton =
   | 'nombre'
   | 'reference'
@@ -38,6 +43,7 @@ type Noeud =
   | { readonly genre: 'litteral'; readonly valeur: number }
   | { readonly genre: 'cellule'; readonly reference: Reference }
   | { readonly genre: 'plage'; readonly debut: Reference; readonly fin: Reference }
+  | { readonly genre: 'variable'; readonly nom: string }
   | { readonly genre: 'unaire'; readonly signe: number; readonly operande: Noeud }
   | {
       readonly genre: 'binaire';
@@ -271,7 +277,9 @@ class Analyseur {
       return this.celluleOuPlage(jeton);
     }
     if (jeton.genre === 'nom') {
-      return this.appel(jeton.texte);
+      return this.courant()?.genre === 'ouvrante'
+        ? this.appel(jeton.texte)
+        : { genre: 'variable', nom: jeton.texte };
     }
     return refuser('#VALEUR!');
   }
@@ -290,9 +298,6 @@ class Analyseur {
   }
 
   private appel(nom: string): Noeud {
-    if (this.courant()?.genre !== 'ouvrante') {
-      refuser('#NOM?');
-    }
     this.position += 1;
     const parametres: Noeud[] = [];
     if (this.courant()?.genre === 'fermante') {
@@ -322,7 +327,15 @@ function horsGrille(feuille: Feuille, reference: Reference): boolean {
   );
 }
 
-function valeurCellule(feuille: Feuille, reference: Reference, chemin: readonly string[]): number {
+function valeurCellule(
+  contexte: Contexte,
+  reference: Reference,
+  chemin: readonly string[],
+): number {
+  const feuille = contexte.feuille;
+  if (feuille === null) {
+    refuser('#REF!');
+  }
   if (horsGrille(feuille, reference)) {
     refuser('#REF!');
   }
@@ -335,15 +348,15 @@ function valeurCellule(feuille: Feuille, reference: Reference, chemin: readonly 
     return 0;
   }
   if (brut.trimStart().startsWith(MARQUE)) {
-    return calculer(analyser(brut.trimStart().slice(1)), feuille, [...chemin, nom]);
+    return calculer(analyser(brut.trimStart().slice(1)), contexte, [...chemin, nom]);
   }
   const nombre = lireNombre(brut);
   return Number.isNaN(nombre) ? refuser('#VALEUR!') : nombre;
 }
 
-function etendre(feuille: Feuille, noeud: Noeud, chemin: readonly string[]): number[] {
+function etendre(contexte: Contexte, noeud: Noeud, chemin: readonly string[]): number[] {
   if (noeud.genre !== 'plage') {
-    return [calculer(noeud, feuille, chemin)];
+    return [calculer(noeud, contexte, chemin)];
   }
   const valeurs: number[] = [];
   for (
@@ -357,7 +370,7 @@ function etendre(feuille: Feuille, noeud: Noeud, chemin: readonly string[]): num
       colonne += 1
     ) {
       valeurs.push(
-        valeurCellule(feuille, { ligne, colonne, ligneFixe: false, colonneFixe: false }, chemin),
+        valeurCellule(contexte, { ligne, colonne, ligneFixe: false, colonneFixe: false }, chemin),
       );
     }
   }
@@ -400,15 +413,15 @@ function arrondir(valeur: number, decimales: number): number {
 }
 
 function condition(
-  feuille: Feuille,
+  contexte: Contexte,
   parametres: readonly Noeud[],
   chemin: readonly string[],
 ): number {
   if (parametres.length !== 3) {
     refuser('#VALEUR!');
   }
-  const testee = calculer(parametres[0], feuille, chemin);
-  return calculer(testee === 0 ? parametres[2] : parametres[1], feuille, chemin);
+  const testee = calculer(parametres[0], contexte, chemin);
+  return calculer(testee === 0 ? parametres[2] : parametres[1], contexte, chemin);
 }
 
 function agreger(nom: string, valeurs: readonly number[]): number {
@@ -429,47 +442,52 @@ function binaireNommee(nom: string, parametres: readonly number[]): number {
 }
 
 function appeler(
-  feuille: Feuille,
+  contexte: Contexte,
   noeud: Extract<Noeud, { genre: 'appel' }>,
   chemin: readonly string[],
 ): number {
   if (noeud.nom === NOM_CONDITION) {
-    return condition(feuille, noeud.arguments, chemin);
+    return condition(contexte, noeud.arguments, chemin);
   }
   if (FONCTIONS_MULTIPLES.has(noeud.nom)) {
     return agreger(
       noeud.nom,
-      noeud.arguments.flatMap((argument) => etendre(feuille, argument, chemin)),
+      noeud.arguments.flatMap((argument) => etendre(contexte, argument, chemin)),
     );
   }
   if (FONCTIONS_BINAIRES.has(noeud.nom)) {
     return binaireNommee(
       noeud.nom,
-      noeud.arguments.map((argument) => calculer(argument, feuille, chemin)),
+      noeud.arguments.map((argument) => calculer(argument, contexte, chemin)),
     );
   }
   return refuser('#NOM?');
 }
 
-function calculer(noeud: Noeud, feuille: Feuille, chemin: readonly string[]): number {
+function calculer(noeud: Noeud, contexte: Contexte, chemin: readonly string[]): number {
   if (noeud.genre === 'litteral') {
     return noeud.valeur;
   }
+  if (noeud.genre === 'variable') {
+    return Object.hasOwn(contexte.variables, noeud.nom)
+      ? contexte.variables[noeud.nom]
+      : refuser('#NOM?');
+  }
   if (noeud.genre === 'cellule') {
-    return valeurCellule(feuille, noeud.reference, chemin);
+    return valeurCellule(contexte, noeud.reference, chemin);
   }
   if (noeud.genre === 'unaire') {
-    return noeud.signe * calculer(noeud.operande, feuille, chemin);
+    return noeud.signe * calculer(noeud.operande, contexte, chemin);
   }
   if (noeud.genre === 'binaire') {
     return appliquer(
       noeud.operateur,
-      calculer(noeud.gauche, feuille, chemin),
-      calculer(noeud.droite, feuille, chemin),
+      calculer(noeud.gauche, contexte, chemin),
+      calculer(noeud.droite, contexte, chemin),
     );
   }
   if (noeud.genre === 'appel') {
-    return appeler(feuille, noeud, chemin);
+    return appeler(contexte, noeud, chemin);
   }
   return refuser('#VALEUR!');
 }
@@ -482,9 +500,28 @@ function fini(valeur: number): ResultatFormule {
   return Number.isFinite(valeur) ? { valeur, erreur: null } : { valeur: null, erreur: '#VALEUR!' };
 }
 
+function arrondirResultat(resultat: ResultatFormule): ResultatFormule {
+  return resultat.valeur === null
+    ? resultat
+    : { valeur: Number(resultat.valeur.toFixed(6)), erreur: null };
+}
+
 export function evaluerCellule(feuille: Feuille, nom: string): ResultatFormule {
   try {
-    return fini(valeurCellule(feuille, lireReference(nom), []));
+    return fini(valeurCellule({ feuille, variables: {} }, lireReference(nom), []));
+  } catch (cause) {
+    return echec(cause);
+  }
+}
+
+export function evaluerExpression(
+  source: string,
+  variables: Readonly<Record<string, number>>,
+): ResultatFormule {
+  try {
+    const debut = source.trimStart();
+    const expression = debut.startsWith(MARQUE) ? debut.slice(1) : debut;
+    return arrondirResultat(fini(calculer(analyser(expression), { feuille: null, variables }, [])));
   } catch (cause) {
     return echec(cause);
   }
@@ -526,4 +563,16 @@ export function formaterResultat(resultat: ResultatFormule): string {
     return resultat.erreur ?? '#VALEUR!';
   }
   return String(Number(resultat.valeur.toFixed(6))).replace('.', ',');
+}
+
+const MOTIF_CLE_GABARIT = /\{([^{}]+)\}/g;
+
+export function remplirGabarit(
+  gabarit: string,
+  valeurs: Readonly<Record<string, number>>,
+  formater: (valeur: number) => string,
+): string {
+  return gabarit.replace(MOTIF_CLE_GABARIT, (correspondance, cle: string) =>
+    Object.hasOwn(valeurs, cle) ? formater(valeurs[cle]) : correspondance,
+  );
 }

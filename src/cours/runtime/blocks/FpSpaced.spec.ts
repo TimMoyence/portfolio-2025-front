@@ -193,11 +193,11 @@ describe('FpSpaced', () => {
   });
 
   it('garde les confusions visees pour le seul poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.questions = buildSpacedQuestions();
     hote.setAttribute('render', 'board');
     expect(libelleDe(hote, 'diagnostics')).toContain(MISCONCEPTION);
-    hote.setAttribute('role', 'etudiant');
+    hote.setAttribute('data-cours-role', 'etudiant');
     hote.questions = buildSpacedQuestions();
     expect(JSON.stringify(hote.questions)).not.toContain(MISCONCEPTION);
     expect(noeud(hote, 'diagnostics')).toBeNull();

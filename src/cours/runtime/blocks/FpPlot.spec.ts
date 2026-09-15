@@ -24,7 +24,7 @@ function lineaire(): PlotDefinition {
     id: 'K-COURBE-LINEAIRE',
     abscisse: { libelle: 'Rang', min: 0, max: 10 },
     parametres: [],
-    series: [{ id: 'rampe', libelle: 'Rampe', trait: 'plein', calcul: (rang) => rang }],
+    series: [{ id: 'rampe', libelle: 'Rampe', trait: 'plein', calcul: 'x' }],
   });
 }
 
@@ -173,9 +173,7 @@ describe('FpPlot', () => {
   it('rend une serie sans point calculable sans casser la figure', () => {
     hote.definition = buildPlotDefinition({
       id: 'K-COURBE-NAN',
-      series: [
-        { id: 'nulle', libelle: 'Serie sans point', trait: 'plein', calcul: () => Number.NaN },
-      ],
+      series: [{ id: 'nulle', libelle: 'Serie sans point', trait: 'plein', calcul: 'z' }],
     });
     expect(reperes(hote, 'trace')).toEqual([]);
     expect(reperes(hote, 'ligne').length).toBe(1);

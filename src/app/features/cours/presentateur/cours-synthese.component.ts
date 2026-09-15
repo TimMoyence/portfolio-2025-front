@@ -10,6 +10,8 @@ import {
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
+import { questionsDeLEcran } from '../ecran/cours-ecran.component';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
@@ -20,6 +22,14 @@ interface ConceptCompte {
   concept: string;
   effectif: number;
 }
+
+interface ConfusionFrequente {
+  readonly id: string;
+  readonly libelle: string;
+  readonly nombre: number;
+}
+
+const NOMBRE_CONFUSIONS_FREQUENTES = 5;
 
 const SEPARATEUR = ';';
 
@@ -51,6 +61,34 @@ function echapper(champ: string): string {
 
 function ligneCsv(champs: readonly string[]): string {
   return champs.map(echapper).join(SEPARATEUR);
+}
+
+function enoncesDuDeroule(deroule: DerouleCours): ReadonlyMap<string, string> {
+  return new Map(
+    deroule.ecrans
+      .flatMap((ecran) => questionsDeLEcran(ecran))
+      .filter((question) => question.enonce !== '')
+      .map((question) => [question.id, question.enonce]),
+  );
+}
+
+function confusionsFrequentesDe(
+  questions: readonly ResultatQuestion[],
+): readonly ConfusionFrequente[] {
+  const totaux = new Map<string, ConfusionFrequente>();
+  for (const question of questions) {
+    for (const confusion of question.confusions) {
+      const existante = totaux.get(confusion.id);
+      totaux.set(confusion.id, {
+        id: confusion.id,
+        libelle: existante?.libelle ?? confusion.libelle,
+        nombre: (existante?.nombre ?? 0) + confusion.nombre,
+      });
+    }
+  }
+  return [...totaux.values()]
+    .sort((gauche, droite) => droite.nombre - gauche.nombre || (gauche.id < droite.id ? -1 : 1))
+    .slice(0, NOMBRE_CONFUSIONS_FREQUENTES);
 }
 
 @Component({
@@ -95,6 +133,56 @@ function ligneCsv(champs: readonly string[]): string {
         </tbody>
       </table>
       <section>
+        <h3 i18n="synthese.questionsTitre|@@syntheseQuestionsTitre">Résultats par question</h3>
+        <table data-testid="synthese-questions">
+          <caption i18n="synthese.questionsLegende|@@syntheseQuestionsLegende">
+            Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" i18n="synthese.questionColonne|@@syntheseQuestionColonne">
+                Question
+              </th>
+              <th scope="col" i18n="synthese.correctesColonne|@@syntheseCorrectesColonne">
+                Bonnes réponses
+              </th>
+              <th scope="col" i18n="synthese.totalColonne|@@syntheseTotalColonne">Total</th>
+              <th scope="col" i18n="synthese.neSaitPasColonne|@@syntheseNeSaitPasColonne">
+                Je ne sais pas
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (question of questions(); track question.questionId) {
+              <tr data-testid="synthese-question-ligne">
+                <th scope="row">
+                  @if (enonces().get(question.questionId); as enonce) {
+                    <span data-testid="synthese-question-libelle">{{ enonce }}</span>
+                  }
+                  <small data-testid="synthese-question-id">{{ question.questionId }}</small>
+                </th>
+                <td data-testid="synthese-question-correctes">{{ question.correctes }}</td>
+                <td data-testid="synthese-question-total">{{ question.total }}</td>
+                <td data-testid="synthese-question-ne-sait-pas">{{ question.neSaitPas }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h3 i18n="synthese.confusionsTitre|@@syntheseConfusionsTitre">
+          Confusions fréquentes de la classe
+        </h3>
+        <ol data-testid="synthese-confusions">
+          @for (confusion of confusionsFrequentes(); track confusion.id) {
+            <li data-testid="synthese-confusion">
+              <span data-testid="synthese-confusion-libelle">{{ confusion.libelle }}</span>
+              <span data-testid="synthese-confusion-nombre">{{ confusion.nombre }}</span>
+            </li>
+          }
+        </ol>
+      </section>
+      <section>
         <h3 i18n="synthese.fragiles|@@syntheseFragiles">Ce qui a le plus accroché</h3>
         <ul data-testid="synthese-fragiles">
           @for (fragile of fragiles(); track fragile.concept) {
@@ -127,6 +215,7 @@ export class CoursSyntheseComponent {
 
   readonly rapport = signal<RapportSeance | null>(null);
   readonly echec = signal(false);
+  readonly enonces = signal<ReadonlyMap<string, string>>(new Map());
 
   readonly vide = computed(() => this.rapport()?.participants.length === 0);
 
@@ -153,6 +242,14 @@ export class CoursSyntheseComponent {
       .map((concept) => ({ concept, effectif: this.compterLesFreins(rapport, concept) }))
       .sort((gauche, droite) => droite.effectif - gauche.effectif);
   });
+
+  readonly questions = computed<readonly ResultatQuestion[]>(
+    () => this.rapport()?.resultats.questions ?? [],
+  );
+
+  readonly confusionsFrequentes = computed<readonly ConfusionFrequente[]>(() =>
+    confusionsFrequentesDe(this.questions()),
+  );
 
   private readonly port = inject(FORMATIONS_PORT);
 
@@ -207,10 +304,23 @@ export class CoursSyntheseComponent {
   }
 
   private async lire(): Promise<void> {
+    await Promise.all([this.lireLeRapport(), this.lireLesEnonces()]);
+  }
+
+  private async lireLeRapport(): Promise<void> {
     try {
       this.rapport.set(await firstValueFrom(this.port.lireResultats(this.sessionId())));
     } catch {
       this.echec.set(true);
+    }
+  }
+
+  private async lireLesEnonces(): Promise<void> {
+    try {
+      const deroule = await firstValueFrom(this.port.lireDeroule(this.sessionId()));
+      this.enonces.set(enoncesDuDeroule(deroule));
+    } catch {
+      this.enonces.set(new Map());
     }
   }
 }
