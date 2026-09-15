@@ -1,0 +1,1349 @@
+{
+  "id": "b1-01-proportions",
+  "titre": "Proportions, taux et évolutions",
+  "niveau": "BTS CG 2",
+  "duree": 195,
+  "concepts": [
+    "proportion",
+    "pourcentage",
+    "taux-evolution",
+    "coefficient-multiplicateur",
+    "evolutions-successives",
+    "evolution-reciproque",
+    "taux-moyen"
+  ],
+  "ecrans": [
+    {
+      "id": "E-OUV-RAPPEL",
+      "type": "fp-recall",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-OUV-RAPPEL-HAUSSE-BAISSE",
+          "enonce": "Le chiffre d’affaires mensuel d’un client est de 4 500 €. Il augmente de 20 % en mars, puis baisse de 20 % en avril. Quel est son chiffre d’affaires d’avril ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "4 498,20 €"
+            },
+            {
+              "id": "o2",
+              "libelle": "4 320 €"
+            },
+            {
+              "id": "o3",
+              "libelle": "4 500 €"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["evolutions-successives"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-OUV-CABINET",
+      "type": "fp-pro",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "cas": {
+          "id": "E-OUV-CABINET",
+          "metier": "Collaborateur comptable en cabinet d’expertise comptable",
+          "situation": "Le chef de mission vous transmet le dossier d’une fromagerie cliente : son chiffre d’affaires est passé de 412 000 € en N-1 à 453 200 € en N. La gérante vient cet après-midi et demande « de combien elle a progressé ».",
+          "geste": "Vous calculez l’écart, 41 200 €, puis le taux d’évolution rapporté au chiffre d’affaires de départ : 41 200 ÷ 412 000 = 0,10, soit une hausse de 10 %. Vous notez aussi le coefficient multiplicateur 1,10, qui servira au prévisionnel de N+1.",
+          "consequence": "Diviser par le chiffre d’affaires d’arrivée donnerait 9,1 % : 0,9 point d’écart dans la note remise à la cliente et un prévisionnel faussé. Aujourd’hui, on vérifie qu’aucun de ces réflexes ne vous trahit.",
+          "metadonnees": {
+            "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-OUV-SAS",
+      "type": "questionnaire",
+      "duree": 8,
+      "interactif": true,
+      "donnees": {
+        "regime": "examen",
+        "questions": [
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-SAS-COEFFICIENT",
+                "enonce": "Par quel coefficient multiplicateur faut-il multiplier un prix pour lui appliquer une hausse de 23 % ?",
+                "unite": null,
+                "metadonnees": {
+                  "concepts": [
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 8,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-SAS-SUCCESSIVES",
+                "enonce": "Le chiffre d’affaires d’un client augmente de 8 % en N-1, puis baisse de 7 % en N. Quel est le taux d’évolution global sur les deux années, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 8,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-SAS-POURCENTAGE",
+                "enonce": "Une facture d’achat de 9 100 € HT bénéficie d’une remise de 8 %. Quel est le montant de la remise, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": [
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 8,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-SAS-TAUX",
+                "enonce": "Le chiffre d’affaires annuel d’un client passe de 115 000 € en N-1 à 148 350 € en N. Quel est le taux d’évolution, en % (arrondi à 0,1 %) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 8,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "E-M1-ACCROCHE",
+      "type": "fp-story",
+      "duree": 2,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "E-M1-ACCROCHE",
+          "titre": "Du « per cento » au signe %",
+          "paragraphes": [
+            "Dans les livres de comptes des marchands italiens du XVe siècle, les intérêts et les remises s’écrivent « per cento » : pour cent, c’est-à-dire pour chaque centaine.",
+            "Recopiée à la main des milliers de fois, l’expression s’abrège, puis se réduit à un petit signe : le % que nous tapons aujourd’hui sans y penser.",
+            "Le signe garde la trace de son origine : « 35 % » se lit « 35 pour 100 » et désigne le nombre 35 ÷ 100 = 0,35. Ce n’est pas une unité, c’est une division par 100."
+          ],
+          "metadonnees": {
+            "concepts": ["pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 2,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M1-PART",
+      "type": "fp-worked",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "E-M1-PART",
+          "enonce": "La boulangerie Lemoine réalise un chiffre d’affaires annuel de 480 000 €, dont 132 000 € en service traiteur. Quelle part du chiffre d’affaires le traiteur représente-t-il ?",
+          "etapes": [
+            {
+              "id": "tout-et-partie",
+              "intitule": "Repérer le tout et la partie",
+              "raisonnement": "Le tout est le chiffre d’affaires total, 480 000 €. La partie est ce qu’on compare à ce tout : les 132 000 € du traiteur.",
+              "invite": "Si l’on cherchait la part du traiteur dans les seules ventes du samedi, quel serait le tout ?"
+            },
+            {
+              "id": "division",
+              "intitule": "Diviser la partie par le tout",
+              "raisonnement": "132 000 ÷ 480 000 = 0,275. Une part est toujours comprise entre 0 et 1, puisque la partie est contenue dans le tout.",
+              "invite": "Pourquoi le résultat ne peut-il pas dépasser 1 ?"
+            },
+            {
+              "id": "pourcentage",
+              "intitule": "Écrire la part en pourcentage",
+              "raisonnement": "0,275 = 27,5 ÷ 100 = 27,5 %. « 0,275 » et « 27,5 % » sont le même nombre ; « 27,5 » écrit seul est cent fois trop grand.",
+              "invite": "Comment s’écrit 8 % sous forme décimale ?"
+            },
+            {
+              "id": "part-conservee",
+              "intitule": "Conserver la part quand le total change",
+              "raisonnement": "L’an prochain, le chiffre d’affaires prévu est de 560 000 €, avec la même part de traiteur : 560 000 × 0,275 = 154 000 €. Ajouter au traiteur les 80 000 € de hausse du total (212 000 €) serait un raisonnement additif : on conserve le rapport, pas l’écart.",
+              "invite": "Si le chiffre d’affaires total doublait, que deviendrait le chiffre d’affaires du traiteur ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M1-A-TOI",
+      "type": "fp-numeric",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-M1-PART-A-TOI",
+          "enonce": "Le chiffre d’affaires annuel d’un client s’élève à 570 000 €, dont 159 600 € réalisés en vente à emporter. Quelle part du chiffre d’affaires la vente à emporter représente-t-elle, en % (arrondi à 0,1 %) ?",
+          "unite": "%",
+          "metadonnees": {
+            "concepts": ["proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M1-POURCENTAGE",
+      "type": "fp-concept4",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "E-M1-POURCENTAGE",
+          "parametres": [
+            {
+              "cle": "montant",
+              "libelle": "Montant de référence (€)",
+              "min": 100,
+              "max": 10000,
+              "pas": 100,
+              "defaut": 2400
+            },
+            {
+              "cle": "taux",
+              "libelle": "Pourcentage (%)",
+              "min": 0,
+              "max": 100,
+              "pas": 0.5,
+              "defaut": 10
+            }
+          ],
+          "formuleLatexSimplifie": "montant × taux ÷ 100",
+          "calcul": "montant*taux/100",
+          "phrase": "{taux} % de {montant} €, c’est {montant} × {taux} ÷ 100, soit {resultat} €.",
+          "metadonnees": {
+            "concepts": ["pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M1-PIVOT",
+      "type": "fp-vote",
+      "duree": 5,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-M1-PIVOT-TAUX-VALEUR",
+          "enonce": "Dans le tableur du cabinet, la cellule B2 contient le chiffre d’affaires d’un client. Sa marge représente 60 % de ce chiffre d’affaires. Quelle formule calcule le montant de la marge ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "=B2*1,6"
+            },
+            {
+              "id": "o2",
+              "libelle": "=B2*0,6"
+            },
+            {
+              "id": "o3",
+              "libelle": "=B2*60"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "E-M1-PRATIQUE",
+      "type": "questionnaire",
+      "duree": 21,
+      "interactif": true,
+      "donnees": {
+        "regime": "ouvert",
+        "questions": [
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M1-PRATIQUE-PART",
+                "enonce": "Les charges d’exploitation d’un client s’élèvent à 730 000 €, dont 186 150 € d’achats de matières premières. Quelle part des charges les achats de matières premières représentent-ils, en % (arrondi à 0,1 %) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": ["proportion", "pourcentage"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 21,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M1-PRATIQUE-PROPORTION",
+                "enonce": "Chez un fournisseur, le prix d’achat d’un article passe de 180 € à 252 €. Un second article, acheté 250 €, augmente dans la même proportion. Quel est son nouveau prix d’achat, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["proportion", "pourcentage"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 21,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M1-PRATIQUE-POURCENTAGE",
+                "enonce": "Les charges de personnel d’un client représentent 41,5 % de son chiffre d’affaires, qui s’élève à 500 000 €. Quel est le montant des charges de personnel, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["proportion", "pourcentage"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 21,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M1-PRATIQUE-TOTAL",
+                "enonce": "Les frais de transport d’un client s’élèvent à 615 €, soit 15 % du montant total de ses achats. Quel est le montant total des achats, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["proportion", "pourcentage"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 21,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M1-PRATIQUE-DEUX-CLIENTS",
+                "enonce": "Cette année, deux clients du cabinet gagnent chacun 10 000 € de chiffre d’affaires : le premier partait de 100 000 €, le second de 300 000 €. De quel pourcentage chacun progresse-t-il ?",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "Le premier : +9,09 % ; le second : +3,23 %"
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "Le premier : +10 000 € ; le second : +10 000 €"
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "Le premier : 110 % ; le second : 103,33 %"
+                  },
+                  {
+                    "id": "o4",
+                    "libelle": "Le premier : +10 % ; le second : +3,33 %"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "E-M1-ANCRAGE",
+      "type": "fp-recall",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-M1-ANCRAGE-PART-CONSERVEE",
+          "enonce": "Le chiffre d’affaires total d’un client passe de 590 000 € à 767 000 €. Si la part réalisée en ligne reste la même, le chiffre d’affaires en ligne :",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "augmente de 177 000 €"
+            },
+            {
+              "id": "o2",
+              "libelle": "augmente de 30 %"
+            },
+            {
+              "id": "o3",
+              "libelle": "augmente de 130 %"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M2-ACCROCHE",
+      "type": "fp-story",
+      "duree": 2,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "E-M2-ACCROCHE",
+          "titre": "Le Nasdaq, ou pourquoi −78 % ne se rattrape pas avec +78 %",
+          "paragraphes": [
+            "Le 10 mars 2000, le Nasdaq Composite, indice boursier américain à forte dominante technologique, clôture à environ 5 050 points. Le 9 octobre 2002, après l’éclatement de la bulle internet, il clôture à environ 1 114 points : une chute de près de 78 %.",
+            "Une remontée de 78 % n’aurait ramené l’indice qu’à environ 1 980 points. Pour retrouver 5 050 points, il fallait multiplier 1 114 par plus de 4,5, soit une hausse de plus de 350 %. L’indice n’a retrouvé son niveau de mars 2000 qu’en avril 2015.",
+            "Les mêmes 3 900 points environ valent −78 % à la descente et +350 % à la remontée : un taux d’évolution dépend de la valeur de départ à laquelle on rapporte l’écart."
+          ],
+          "metadonnees": {
+            "concepts": ["taux-evolution", "evolution-reciproque"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 2,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M2-TAUX",
+      "type": "fp-worked",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "E-M2-TAUX",
+          "enonce": "Le chiffre d’affaires d’un client du cabinet passe de 240 000 € en N-1 à 270 000 € en N. Quel est son taux d’évolution ?",
+          "etapes": [
+            {
+              "id": "depart-arrivee",
+              "intitule": "Repérer le départ et l’arrivée",
+              "raisonnement": "L’évolution se lit dans le temps : N-1 est la valeur de départ (240 000 €), N la valeur d’arrivée (270 000 €).",
+              "invite": "Pour l’évolution entre N et N+1, quelle serait la valeur de départ ?"
+            },
+            {
+              "id": "ecart",
+              "intitule": "Calculer l’écart en valeur",
+              "raisonnement": "Arrivée − départ = 270 000 − 240 000 = 30 000 €. C’est une variation en euros : elle ne dit pas encore si la hausse est forte ou faible.",
+              "invite": "Une hausse de 30 000 € est-elle forte pour un client qui réalise 5 millions d’euros de chiffre d’affaires ?"
+            },
+            {
+              "id": "rapport",
+              "intitule": "Rapporter l’écart à la valeur de départ",
+              "raisonnement": "30 000 ÷ 240 000 = 0,125. On divise toujours par la valeur de départ, celle à laquelle on se compare.",
+              "invite": "Pourquoi ne divise-t-on pas par 270 000 € ?"
+            },
+            {
+              "id": "pourcentage",
+              "intitule": "Exprimer le taux en pourcentage",
+              "raisonnement": "0,125 × 100 = 12,5 : le taux d’évolution est de +12,5 %. Diviser par l’arrivée donnerait 30 000 ÷ 270 000 ≈ 11,1 %, un taux faux.",
+              "invite": "Quel serait le taux si le chiffre d’affaires était passé de 270 000 € à 240 000 € ?"
+            },
+            {
+              "id": "verification",
+              "intitule": "Vérifier avec le coefficient multiplicateur",
+              "raisonnement": "Une hausse de 12,5 % correspond au coefficient 1 + 12,5 ÷ 100 = 1,125, et 240 000 × 1,125 = 270 000 € : le calcul est juste.",
+              "invite": "Quel coefficient correspond à une baisse de 12,5 % ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M2-PIVOT",
+      "type": "fp-numeric",
+      "duree": 5,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-M2-PIVOT-TAUX",
+          "enonce": "Le chiffre d’affaires d’un client passe de 450 000 € en N-1 à 416 250 € en N. Quel est le taux d’évolution, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+          "unite": "%",
+          "metadonnees": {
+            "concepts": ["taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M2-COEFFICIENT",
+      "type": "fp-concept4",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "E-M2-COEFFICIENT",
+          "parametres": [
+            {
+              "cle": "taux",
+              "libelle": "Taux d’évolution (%)",
+              "min": -100,
+              "max": 100,
+              "pas": 1,
+              "defaut": 15
+            }
+          ],
+          "formuleLatexSimplifie": "1 + taux ÷ 100",
+          "calcul": "1+taux/100",
+          "phrase": "Une évolution de {taux} % revient à multiplier par le coefficient {resultat}.",
+          "metadonnees": {
+            "concepts": ["coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M2-PRATIQUE",
+      "type": "questionnaire",
+      "duree": 25,
+      "interactif": true,
+      "donnees": {
+        "regime": "ouvert",
+        "questions": [
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M2-PRATIQUE-TAUX-DU-GAIN",
+                "enonce": "Le chiffre d’affaires d’un client a augmenté de 13 750 € pour atteindre 288 750 €. Quel est le taux d’évolution, en % (arrondi à 0,1 %) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 25,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M2-PRATIQUE-TAUX-DU-COEFFICIENT",
+                "enonce": "Pour mettre à jour ses tarifs, un client multiplie tous ses prix par 0,97. Quel est le taux d’évolution appliqué, en % (négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 25,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M2-PRATIQUE-VALEUR-DEPART",
+                "enonce": "Après une hausse de 24 %, le chiffre d’affaires d’un client atteint 45 880 €. Quel était son chiffre d’affaires avant la hausse, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 25,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M2-PRATIQUE-COEFFICIENT-ENTRE",
+                "enonce": "Le chiffre d’affaires d’un client passe de 380 000 € à 450 300 €. Par quel coefficient multiplicateur a-t-il été multiplié (arrondi au millième) ?",
+                "unite": null,
+                "metadonnees": {
+                  "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 25,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M2-PRATIQUE-VALEUR-ARRIVEE",
+                "enonce": "Un fournisseur augmente de 17 % le prix d’un article vendu 792 € HT. Quel est le nouveau prix HT, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 25,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M2-PRATIQUE-LECTURE-COEFFICIENT",
+                "enonce": "Le prix d’un article est multiplié par 1,23. Cela correspond à :",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "une hausse de 123 %"
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "une hausse de 23 %"
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "une hausse de 0,23 %"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "E-M2-ANCRAGE",
+      "type": "fp-recall",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-M2-ANCRAGE-FORMULE-TAUX",
+          "enonce": "Le chiffre d’affaires d’un client passe de 180 000 € à 138 600 €. Quel calcul donne son taux d’évolution en % ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "138 600 ÷ 180 000 × 100"
+            },
+            {
+              "id": "o2",
+              "libelle": "(138 600 − 180 000) ÷ 180 000 × 100"
+            },
+            {
+              "id": "o3",
+              "libelle": "(138 600 − 180 000) ÷ 138 600 × 100"
+            },
+            {
+              "id": "o4",
+              "libelle": "138 600 − 180 000"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M3-GRAPHIQUE",
+      "type": "fp-plot",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "E-M3-GRAPHIQUE",
+          "abscisse": {
+            "libelle": "Nombre d’années",
+            "min": 0,
+            "max": 10
+          },
+          "ordonnee": "Chiffre d’affaires (€)",
+          "parametres": [
+            {
+              "cle": "ca",
+              "libelle": "Chiffre d’affaires de départ (€)",
+              "min": 50000,
+              "max": 500000,
+              "pas": 10000,
+              "defaut": 200000
+            },
+            {
+              "cle": "taux",
+              "libelle": "Taux d’évolution annuel (%)",
+              "min": -10,
+              "max": 30,
+              "pas": 1,
+              "defaut": 10
+            }
+          ],
+          "series": [
+            {
+              "id": "coefficients-multiplies",
+              "libelle": "Coefficients multipliés : ca × (1 + taux ÷ 100) ^ x",
+              "trait": "plein",
+              "calcul": "ca*(1+taux/100)^x"
+            },
+            {
+              "id": "taux-additionnes",
+              "libelle": "Taux additionnés : ca × (1 + x × taux ÷ 100)",
+              "trait": "tirets",
+              "calcul": "ca*(1+x*taux/100)"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["evolutions-successives"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M3-PIVOT-SUCCESSIVES",
+      "type": "fp-vote",
+      "duree": 5,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-M3-PIVOT-SUCCESSIVES",
+          "enonce": "Le chiffre d’affaires d’un client augmente de 18 % en N-1, puis augmente de 9 % en N. Sur les deux années, il a augmenté de :",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "27 %"
+            },
+            {
+              "id": "o2",
+              "libelle": "28,62 %"
+            },
+            {
+              "id": "o3",
+              "libelle": "128,62 %"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "E-M3-PIVOT-RECIPROQUE",
+      "type": "fp-numeric",
+      "duree": 5,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B1-01-M3-PIVOT-RECIPROQUE",
+          "enonce": "Le prix d’un produit vient d’augmenter de 54 %. Quel taux d’évolution faut-il appliquer au nouveau prix pour revenir exactement au prix initial, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+          "unite": "%",
+          "metadonnees": {
+            "concepts": ["evolution-reciproque"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M3-PRATIQUE",
+      "type": "questionnaire",
+      "duree": 30,
+      "interactif": true,
+      "donnees": {
+        "regime": "ouvert",
+        "questions": [
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-VOTE-HAUSSE-BAISSE",
+                "enonce": "Un fournisseur augmente tous ses prix de 30 % au 1er janvier, puis les baisse de 30 % au 1er juillet. Au 1er juillet, par rapport à leur niveau de départ, ses prix sont :",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "9 % plus bas"
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "91 % plus bas"
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "revenus à leur niveau de départ"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-PROPORTION",
+                "enonce": "L’abonnement mensuel d’un logiciel de gestion passe de 60 € à 69 €. Un second abonnement, facturé 340 € par mois, est revalorisé dans la même proportion. Quel est son nouveau tarif mensuel, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": [
+                    "proportion",
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 30,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-RECIPROQUE",
+                "enonce": "Le chiffre d’affaires d’un client a baissé de 20 % en N. De quel pourcentage doit-il augmenter en N+1 pour retrouver son niveau de N-1, en % (arrondi à 0,1 %) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "proportion",
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 30,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-POURCENTAGE",
+                "enonce": "Le coût d’achat des marchandises vendues d’un client représente 19,5 % de son chiffre d’affaires, qui s’élève à 610 000 €. Quel est ce coût d’achat, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": [
+                    "proportion",
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 30,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-HAUSSE-BAISSE",
+                "enonce": "Un fournisseur augmente de 40 % le prix d’une machine vendue 7 500 €, puis accorde une remise de 40 % sur ce nouveau prix. Quel est le prix final, en euros ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": [
+                    "proportion",
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 30,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-TVA",
+                "enonce": "Une facture s’élève à 4 088,40 € TTC, avec une TVA à 20 %. Quel calcul donne le montant HT ?",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "4 088,40 € ÷ 1,2"
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "4 088,40 € ÷ 120"
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "4 088,40 € × 0,8"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-TAUX-GLOBAL",
+                "enonce": "Le chiffre d’affaires d’un client baisse de 18 % en N-1, puis augmente de 12 % en N. Quel est le taux d’évolution global sur les deux années, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "proportion",
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 30,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-COEFFICIENT-GLOBAL",
+                "enonce": "Le chiffre d’affaires d’un client augmente de 18 % en N-1, puis baisse de 10 % en N. Par quel coefficient multiplicateur global a-t-il été multiplié entre N-2 et N (arrondi au millième) ?",
+                "unite": null,
+                "metadonnees": {
+                  "concepts": [
+                    "proportion",
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 30,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M3-MELANGE-TAUX",
+                "enonce": "Les achats de marchandises d’un client passent de 450 000 € en N-1 à 546 750 € en N. Quel est leur taux d’évolution, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "proportion",
+                    "pourcentage",
+                    "taux-evolution",
+                    "coefficient-multiplicateur",
+                    "evolutions-successives",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 30,
+                  "modalite": "solo",
+                  "regime": "ouvert"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "E-M4-CABINET",
+      "type": "fp-pro",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "cas": {
+          "id": "E-M4-CABINET",
+          "metier": "Collaborateur comptable, revue annuelle des dossiers",
+          "situation": "Avant les rendez-vous de bilan, le chef de mission vous confie plusieurs dossiers clients. Pour chacun, vous disposez du chiffre d’affaires des trois derniers exercices : N-2, N-1 et N.",
+          "geste": "Pour chaque dossier, vous posez les coefficients multiplicateurs annuels, puis vous calculez le taux d’évolution de la dernière année, le coefficient et le taux globaux de N-2 à N, le taux moyen annuel ((CA N ÷ CA N-2) ^ (1/2) − 1) × 100, et le taux qui ramènerait le chiffre d’affaires de N à son niveau de N-1.",
+          "consequence": "Ces indicateurs ouvrent la note de synthèse remise au client et le prévisionnel présenté à sa banque. Un taux moyen calculé comme la moyenne des deux taux annuels donne une image trop favorable dès que ces taux diffèrent.",
+          "metadonnees": {
+            "concepts": ["evolutions-successives", "taux-moyen"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-M4-DOSSIERS",
+      "type": "questionnaire",
+      "duree": 26,
+      "interactif": true,
+      "donnees": {
+        "regime": "focus",
+        "questions": [
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M4-DOSSIER-TAUX-GLOBAL",
+                "enonce": "Dossier Salon Nguyen : chiffre d’affaires de 230 000 € en N-2, 207 000 € en N-1 et 246 330 € en N. Quel est le taux d’évolution global entre N-2 et N, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "taux-evolution",
+                    "evolutions-successives",
+                    "taux-moyen",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 26,
+                  "modalite": "solo",
+                  "regime": "focus"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M4-DOSSIER-TAUX-MOYEN",
+                "enonce": "Dossier Garage Perrin : chiffre d’affaires de 290 000 € en N-2, 353 800 € en N-1 et 367 952 € en N. Quel est le taux d’évolution moyen annuel entre N-2 et N, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "taux-evolution",
+                    "evolutions-successives",
+                    "taux-moyen",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 26,
+                  "modalite": "solo",
+                  "regime": "focus"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M4-DOSSIER-AFFIRMATION",
+                "enonce": "Dossier Fleuriste Lambert : chiffre d’affaires de 440 000 € en N-2, 550 000 € en N-1 et 594 000 € en N. Le gérant affirme que son chiffre d’affaires a évolué de +33 % en deux ans, puisqu’il a évolué de +25 % puis de +8 %. Qu’en pensez-vous ?",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "Il a raison : les taux s’additionnent"
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "Il se trompe : 135 %"
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "Il se trompe : +35 %"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M4-DOSSIER-COEFFICIENT-GLOBAL",
+                "enonce": "Dossier Fleuriste Lambert : chiffre d’affaires de 540 000 € en N-2, 486 000 € en N-1 et 558 900 € en N. Quel est le coefficient multiplicateur global entre N-2 et N (arrondi au millième) ?",
+                "unite": null,
+                "metadonnees": {
+                  "concepts": [
+                    "taux-evolution",
+                    "evolutions-successives",
+                    "taux-moyen",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 26,
+                  "modalite": "solo",
+                  "regime": "focus"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M4-DOSSIER-TAUX-ANNUEL",
+                "enonce": "Dossier Menuiserie Roux : chiffre d’affaires de 270 000 € en N-2, 326 700 € en N-1 et 352 836 € en N. Quel est le taux d’évolution du chiffre d’affaires entre N-1 et N, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "taux-evolution",
+                    "evolutions-successives",
+                    "taux-moyen",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 26,
+                  "modalite": "solo",
+                  "regime": "focus"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B1-01-M4-DOSSIER-RECIPROQUE",
+                "enonce": "Dossier Traiteur Benali : chiffre d’affaires de 430 000 € en N-2, 507 400 € en N-1 et 527 696 € en N. Quel taux d’évolution, appliqué au chiffre d’affaires de N, le ramènerait exactement à son niveau de N-1, en % (arrondi à 0,1 %, négatif en cas de baisse) ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": [
+                    "taux-evolution",
+                    "evolutions-successives",
+                    "taux-moyen",
+                    "evolution-reciproque"
+                  ],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 26,
+                  "modalite": "solo",
+                  "regime": "focus"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "E-CLO-SUCCESSIVES",
+      "type": "fp-worked",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "E-CLO-SUCCESSIVES",
+          "enonce": "Le chiffre d’affaires d’un client augmente de 20 % en N-1, puis baisse de 20 % en N. A-t-il retrouvé son niveau de N-2 ?",
+          "etapes": [
+            {
+              "id": "coefficients",
+              "intitule": "Traduire chaque évolution en coefficient",
+              "raisonnement": "Une hausse de 20 % correspond au coefficient 1,2 ; une baisse de 20 % au coefficient 0,8.",
+              "invite": "Quel coefficient traduit une baisse de 35 % ?"
+            },
+            {
+              "id": "produit",
+              "intitule": "Multiplier les coefficients",
+              "raisonnement": "Le coefficient global vaut 1,2 × 0,8 = 0,96, et non 1 + 0,20 − 0,20 = 1. La baisse s’applique à un chiffre d’affaires déjà augmenté : elle retire plus d’euros que la hausse n’en a ajouté.",
+              "invite": "Pour 100 000 € au départ, combien d’euros la hausse ajoute-t-elle, et combien la baisse en retire-t-elle ?"
+            },
+            {
+              "id": "taux-global",
+              "intitule": "Revenir au taux global",
+              "raisonnement": "0,96 − 1 = −0,04 : le chiffre d’affaires a baissé de 4 % sur les deux ans. Additionner les taux (+20 − 20 = 0 %) conclut à tort à un retour au départ.",
+              "invite": "Une baisse de 20 % suivie d’une hausse de 20 % donne-t-elle un autre résultat ?"
+            },
+            {
+              "id": "taux-moyen",
+              "intitule": "Appliquer la même idée au taux moyen",
+              "raisonnement": "Avec +2 % puis +10 %, le coefficient global est 1,02 × 1,10 = 1,122. Le taux moyen annuel est le taux qui, appliqué deux fois, donne ce coefficient : 1,122 ^ (1/2) ≈ 1,0592, soit +5,92 % par an. La moyenne des taux, (2 + 10) ÷ 2 = 6 %, est trop forte : elle additionne les taux au lieu de multiplier les coefficients.",
+              "invite": "Vérifiez : 1,0592 × 1,0592 redonne-t-il bien 1,122 ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["evolutions-successives", "taux-moyen"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-CLO-RECIPROQUE",
+      "type": "fp-concept4",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "E-CLO-RECIPROQUE",
+          "parametres": [
+            {
+              "cle": "taux",
+              "libelle": "Évolution subie (%)",
+              "min": -60,
+              "max": 150,
+              "pas": 1,
+              "defaut": 0
+            }
+          ],
+          "formuleLatexSimplifie": "(1 ÷ (1 + taux ÷ 100) − 1) × 100",
+          "calcul": "(1/(1+taux/100)-1)*100",
+          "phrase": "Après une évolution de {taux} %, il faut une évolution de {resultat} % pour revenir à la valeur de départ.",
+          "metadonnees": {
+            "concepts": ["evolution-reciproque"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "E-CLO-EXIT",
+      "type": "fp-exit",
+      "duree": 9,
+      "interactif": true,
+      "donnees": {
+        "billet": {
+          "id": "B1-01-EXIT-SUCCESSIVES",
+          "question": "Le chiffre d’affaires d’un client augmente de 14 % en N-1, puis baisse de 14 % en N. Sur les deux années, il a évolué de :",
+          "invite": "Qu’est-ce qui reste flou pour vous sur les pourcentages, les taux ou les coefficients multiplicateurs ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "98,04 %"
+            },
+            {
+              "id": "o2",
+              "libelle": "0 %"
+            },
+            {
+              "id": "o3",
+              "libelle": "−1,96 %"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["evolutions-successives"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 9,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    }
+  ]
+}
