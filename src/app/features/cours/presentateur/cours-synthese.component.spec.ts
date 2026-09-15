@@ -2,13 +2,17 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import type {
-  FormationsPort,
   ParticipantRapporte,
   RapportSeance,
   ReponseRapportee,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import { buildResultatsSeance } from '../../../../testing/factories/formations.factory';
+import type { ConfusionComptee, ResultatsSeance } from '../../../../cours/content/types';
+import {
+  buildResultatQuestion,
+  buildResultatsSeance,
+  createFormationsPortStub,
+} from '../../../../testing/factories/formations.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursSyntheseComponent } from './cours-synthese.component';
 
@@ -23,6 +27,10 @@ function reponse(concept: string, valeur: string, dureeMs = 4200): ReponseRappor
     misconception: 'taux-simple',
     dureeMs,
   };
+}
+
+function confusion(id: string, nombre: number): ConfusionComptee {
+  return { id, libelle: `Libelle ${id}`, nombre };
 }
 
 function etudiant(
@@ -51,7 +59,10 @@ const NORA = etudiant('Nora', 6, true, [reponse('interets-composes', '1450')]);
 const CHLOE = etudiant('Chloe', 12, false, [reponse('actualisation', '905', 3100)]);
 const THEO = etudiant('Theo', 0, false, []);
 
-function rapportDe(participants: readonly ParticipantRapporte[]): RapportSeance {
+function rapportDe(
+  participants: readonly ParticipantRapporte[],
+  resultats: ResultatsSeance = buildResultatsSeance({ participants: participants.length }),
+): RapportSeance {
   return {
     courseSlug: 'maths-financieres',
     code: '4821',
@@ -59,7 +70,7 @@ function rapportDe(participants: readonly ParticipantRapporte[]): RapportSeance 
     fermeeLe: '2026-09-12T09:30:00.000Z',
     participants,
     conceptsFragiles: ['interets-composes', 'actualisation'],
-    resultats: buildResultatsSeance({ participants: participants.length }),
+    resultats,
   };
 }
 
@@ -71,7 +82,8 @@ function textes(fixture: Fixture, nom: string): readonly string[] {
 }
 
 async function monter(rapport: RapportSeance): Promise<Fixture> {
-  const port = { lireResultats: () => of(rapport) } as unknown as FormationsPort;
+  const port = createFormationsPortStub();
+  port.lireResultats.and.returnValue(of(rapport));
   setupTestBed({
     imports: [CoursSyntheseComponent],
     providers: [{ provide: FORMATIONS_PORT, useValue: port }],
@@ -104,6 +116,97 @@ describe('CoursSyntheseComponent', () => {
       'actualisation',
     ]);
     expect(textes(fixture, 'synthese-fragile-effectif')).toEqual(['2', '1']);
+  });
+
+  it('additionne les confusions au travers des questions et les trie par nombre decroissant', async () => {
+    const resultats = buildResultatsSeance({
+      participants: 3,
+      questions: [
+        buildResultatQuestion({
+          questionId: 'Q-1',
+          confusions: [confusion('interet-simple', 3), confusion('base-arrivee', 1)],
+        }),
+        buildResultatQuestion({
+          questionId: 'Q-2',
+          confusions: [confusion('interet-simple', 2), confusion('base-arrivee', 5)],
+        }),
+      ],
+    });
+    const fixture = await monter(rapportDe([MALIK], resultats));
+
+    expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
+      'Libelle base-arrivee',
+      'Libelle interet-simple',
+    ]);
+    expect(textes(fixture, 'synthese-confusion-nombre')).toEqual(['6', '5']);
+  });
+
+  it('classe les confusions a egalite de nombre par id croissant', async () => {
+    const resultats = buildResultatsSeance({
+      participants: 3,
+      questions: [
+        buildResultatQuestion({
+          questionId: 'Q-1',
+          confusions: [confusion('zeta', 4), confusion('alpha', 4)],
+        }),
+      ],
+    });
+    const fixture = await monter(rapportDe([MALIK], resultats));
+
+    expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
+      'Libelle alpha',
+      'Libelle zeta',
+    ]);
+  });
+
+  it('garde cinq confusions au plus meme si la classe en genere davantage', async () => {
+    const resultats = buildResultatsSeance({
+      participants: 6,
+      questions: [
+        buildResultatQuestion({
+          questionId: 'Q-1',
+          confusions: [
+            confusion('c1', 9),
+            confusion('c2', 8),
+            confusion('c3', 7),
+            confusion('c4', 6),
+            confusion('c5', 5),
+            confusion('c6', 4),
+          ],
+        }),
+      ],
+    });
+    const fixture = await monter(rapportDe([MALIK], resultats));
+
+    expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
+      'Libelle c1',
+      'Libelle c2',
+      'Libelle c3',
+      'Libelle c4',
+      'Libelle c5',
+    ]);
+  });
+
+  it('affiche a zero une question a laquelle personne n a repondu', async () => {
+    const resultats = buildResultatsSeance({
+      participants: 3,
+      questions: [
+        buildResultatQuestion({ questionId: 'Q-1' }),
+        buildResultatQuestion({
+          questionId: 'Q-2',
+          total: 0,
+          correctes: 0,
+          neSaitPas: 0,
+          confusions: [],
+        }),
+      ],
+    });
+    const fixture = await monter(rapportDe([MALIK], resultats));
+
+    expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
+    expect(textes(fixture, 'synthese-question-correctes')).toEqual(['16', '0']);
+    expect(textes(fixture, 'synthese-question-total')).toEqual(['24', '0']);
+    expect(textes(fixture, 'synthese-question-ne-sait-pas')).toEqual(['2', '0']);
   });
 
   it('marque l etudiant sans aucune reponse au lieu de lui donner un score de zero', async () => {

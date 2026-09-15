@@ -10,6 +10,7 @@ import {
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import type { ResultatQuestion } from '../../../../cours/content/types';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
@@ -20,6 +21,14 @@ interface ConceptCompte {
   concept: string;
   effectif: number;
 }
+
+interface ConfusionFrequente {
+  readonly id: string;
+  readonly libelle: string;
+  readonly nombre: number;
+}
+
+const NOMBRE_CONFUSIONS_FREQUENTES = 5;
 
 const SEPARATEUR = ';';
 
@@ -51,6 +60,25 @@ function echapper(champ: string): string {
 
 function ligneCsv(champs: readonly string[]): string {
   return champs.map(echapper).join(SEPARATEUR);
+}
+
+function confusionsFrequentesDe(
+  questions: readonly ResultatQuestion[],
+): readonly ConfusionFrequente[] {
+  const totaux = new Map<string, ConfusionFrequente>();
+  for (const question of questions) {
+    for (const confusion of question.confusions) {
+      const existante = totaux.get(confusion.id);
+      totaux.set(confusion.id, {
+        id: confusion.id,
+        libelle: existante?.libelle ?? confusion.libelle,
+        nombre: (existante?.nombre ?? 0) + confusion.nombre,
+      });
+    }
+  }
+  return [...totaux.values()]
+    .sort((gauche, droite) => droite.nombre - gauche.nombre || (gauche.id < droite.id ? -1 : 1))
+    .slice(0, NOMBRE_CONFUSIONS_FREQUENTES);
 }
 
 @Component({
@@ -94,6 +122,48 @@ function ligneCsv(champs: readonly string[]): string {
           }
         </tbody>
       </table>
+      <section>
+        <h3 i18n="synthese.questionsTitre|@@syntheseQuestionsTitre">Résultats par question</h3>
+        <table data-testid="synthese-questions">
+          <thead>
+            <tr>
+              <th scope="col" i18n="synthese.questionColonne|@@syntheseQuestionColonne">
+                Question
+              </th>
+              <th scope="col" i18n="synthese.correctesColonne|@@syntheseCorrectesColonne">
+                Bonnes réponses
+              </th>
+              <th scope="col" i18n="synthese.totalColonne|@@syntheseTotalColonne">Total</th>
+              <th scope="col" i18n="synthese.neSaitPasColonne|@@syntheseNeSaitPasColonne">
+                Je ne sais pas
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (question of questions(); track question.questionId) {
+              <tr data-testid="synthese-question-ligne">
+                <td data-testid="synthese-question-id">{{ question.questionId }}</td>
+                <td data-testid="synthese-question-correctes">{{ question.correctes }}</td>
+                <td data-testid="synthese-question-total">{{ question.total }}</td>
+                <td data-testid="synthese-question-ne-sait-pas">{{ question.neSaitPas }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h3 i18n="synthese.confusionsTitre|@@syntheseConfusionsTitre">
+          Confusions fréquentes de la classe
+        </h3>
+        <ol data-testid="synthese-confusions">
+          @for (confusion of confusionsFrequentes(); track confusion.id) {
+            <li data-testid="synthese-confusion">
+              <span data-testid="synthese-confusion-libelle">{{ confusion.libelle }}</span>
+              <span data-testid="synthese-confusion-nombre">{{ confusion.nombre }}</span>
+            </li>
+          }
+        </ol>
+      </section>
       <section>
         <h3 i18n="synthese.fragiles|@@syntheseFragiles">Ce qui a le plus accroché</h3>
         <ul data-testid="synthese-fragiles">
@@ -153,6 +223,14 @@ export class CoursSyntheseComponent {
       .map((concept) => ({ concept, effectif: this.compterLesFreins(rapport, concept) }))
       .sort((gauche, droite) => droite.effectif - gauche.effectif);
   });
+
+  readonly questions = computed<readonly ResultatQuestion[]>(
+    () => this.rapport()?.resultats.questions ?? [],
+  );
+
+  readonly confusionsFrequentes = computed<readonly ConfusionFrequente[]>(() =>
+    confusionsFrequentesDe(this.questions()),
+  );
 
   private readonly port = inject(FORMATIONS_PORT);
 
