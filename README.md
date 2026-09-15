@@ -66,6 +66,17 @@ Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL`
 - `/formations/audit-seo-diy` — Formation Audit SEO DIY (slides)
 - `/formations/audit-seo-diy/toolkit` — Toolkit Audit SEO DIY
 
+### Cours en séance
+
+Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`). Le cours est servi par le back (`/formations/sessions/...`) : le front ne porte ni corrigé ni barème.
+
+- `/cours/rejoindre` — Vue étudiant, sans compte : code de séance, identité, puis écrans du sujet tiré pour l'étudiant (rendu main).
+- `/cours/presenter/:slug` — Pupitre du formateur (`authGuard` + `roleGuard("teacher")`) : ouverture de la séance du cours `:slug`, code à dicter, commandes, notes, résultats par question face au seuil, clôture.
+- `/cours/presenter/:slug?seance=:sessionId` — Reprise du pupitre d'une séance déjà ouverte : aucune nouvelle ouverture ; le code, les résultats, le déroulé et l'écran courant sont relus. Le pupitre inscrit lui-même `?seance=` dans l'URL dès l'ouverture.
+- `/cours/presenter/:slug/scene/:sessionId` — Scène pour le vidéoprojecteur (`authGuard` + `roleGuard("teacher")`) : écran courant en rendu `stage`, sans notes ni résultats, hors de la coquille du site (`data.coquille = false` : ni barre de navigation, ni pied de page, ni bandeau cookies).
+- `/cours/seance/:sessionId/synthese` — Synthèse de la séance close (`authGuard`).
+- `/cours/demo` — Galerie de démonstration des briques, sans séance.
+
 ### Utilitaires
 
 - `/cookie-settings` — Parametres cookies
@@ -93,6 +104,27 @@ npm run test:cov
 npm run build
 npm run ci:check
 ```
+
+## Conduire une séance de cours
+
+Matériel : un portable pour le pupitre, un écran étendu (vidéoprojecteur) pour la scène, les téléphones des étudiants. Un seul navigateur sur le portable pour le pupitre et la scène.
+
+1. **Connexion** : se connecter sur `/login` avec le compte formateur (rôle `teacher`), puis ouvrir `/cours/presenter/<slug>` (par exemple `b1-01-proportions`). Le jeton d'accès (15 min) se renouvelle seul pendant toute la séance ; les deux fenêtres du navigateur partagent un seul renouvellement (verrou inter-onglets) et adoptent le jeton que l'autre a obtenu.
+2. **Ouverture** : « Ouvrir la séance ». Le code à quatre chiffres s'affiche en grand et l'URL prend `?seance=<id>`. Ne plus cliquer sur « Ouvrir » pour cette classe : une seconde ouverture créerait une autre séance avec un autre code.
+3. **Scène** : « Ouvrir la scène », glisser la fenêtre sur l'écran étendu et la passer en plein écran (F11). Une pastille discrète dans un coin indique l'état du suivi (vert : en direct ; orange : reconnexion ; rouge : refus).
+4. **Inscription de la classe** : dicter le code ; les étudiants ouvrent `/cours/rejoindre` et saisissent code, prénom, nom et adresse e-mail. Tant que la séance n'est pas démarrée, leur téléphone affiche un message d'attente et aucune question n'est répondable.
+5. **Contrôle de l'effectif** : comparer le compteur « Participants » du pupitre à l'effectif présent. Un écart signale une inscription en trop : clôturer et rouvrir une séance avant de démarrer.
+6. **« Démarrer la séance »** : obligatoire avant la première question, rappel d'ouverture compris ; avant ce clic, le serveur refuse toute réponse.
+7. **Pilotage** : « Écran suivant » / « Écran précédent », rythme libre ou piloté, lecture des résultats par question (réponses reçues, bonnes réponses, « je ne sais pas », seuil, confusions) et « Aller à la remédiation » sous le seuil. Le bandeau de statut du pupitre dit si le suivi est en direct, en reconnexion ou refusé (401/403 : se reconnecter puis recharger le pupitre ; 429 : fermer les onglets en trop).
+8. **Clôture** : « Clôturer la séance », puis confirmer. Les réponses ne sont plus acceptées.
+9. **Synthèse** : le pupitre ouvre `/cours/seance/<id>/synthese` (classement, résultats par question, confusions fréquentes, export CSV).
+
+Incidents :
+
+- **La scène se fige** (pastille orange ou rouge durable, écran en retard sur le pupitre) : recharger la fenêtre de la scène (F5). Elle relit le déroulé et reprend l'écran courant. Un flux resté muet 45 s est de toute façon relancé automatiquement.
+- **Le pupitre est rechargé, fermé ou renvoyé vers la connexion** : rouvrir `/cours/presenter/<slug>?seance=<id>` (l'URL du pupitre, ou celle rendue par `returnUrl` après connexion). Le pupitre reprend la séance, son code, ses résultats et l'écran courant, sans rien rouvrir. Tant que la séance est ouverte, le navigateur demande confirmation avant de quitter la page.
+- **« La vérification de votre session n'a pas abouti »** : le jeton est conservé ; vérifier le réseau, puis « Réessayer ».
+- **Réponse étudiante non partie** : une panne réseau ou serveur la garde sur le téléphone et la renvoie après l'envoi suivant, à chaque changement d'état de la séance ou au retour du réseau ; un refus explicite (séance non démarrée, requête refusée) s'affiche et n'est pas mis en file.
 
 ## Hooks Git et verrous locaux
 
