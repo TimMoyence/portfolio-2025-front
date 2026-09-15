@@ -12,6 +12,7 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { cibleMarque } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
@@ -54,18 +55,8 @@ describe('CoursSceneComponent', () => {
   let deroule: DerouleCours;
   const montees: Fixture[] = [];
 
-  function lire(fixture: Fixture, marque: string): HTMLElement | null {
-    return (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
-      `[data-testid='${marque}']`,
-    );
-  }
-
   function cible(fixture: Fixture, marque: string): HTMLElement {
-    const element = lire(fixture, marque);
-    if (element === null) {
-      throw new Error(`Aucun element « ${marque} » dans la scene`);
-    }
-    return element;
+    return cibleMarque(fixture, marque, 'la scene');
   }
 
   function apercu(fixture: Fixture): CoursEcranComponent | null {

@@ -20,6 +20,7 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
@@ -84,18 +85,8 @@ describe('CoursPresentateurComponent', () => {
   let deroule: DerouleCours;
   const montees: Fixture[] = [];
 
-  function lire(fixture: Fixture, marque: string): HTMLElement | null {
-    return (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
-      `[data-testid='${marque}']`,
-    );
-  }
-
   function cible(fixture: Fixture, marque: string): HTMLElement {
-    const element = lire(fixture, marque);
-    if (element === null) {
-      throw new Error(`Aucun element « ${marque} » dans le pupitre`);
-    }
-    return element;
+    return cibleMarque(fixture, marque, 'le pupitre');
   }
 
   function texte(fixture: Fixture, marque: string): string {
