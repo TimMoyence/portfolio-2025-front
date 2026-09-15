@@ -1,3 +1,4 @@
+import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
@@ -19,6 +20,7 @@ export interface VoteQuestionPublique {
 
 export interface VoteQuestion extends VoteQuestionPublique {
   options: readonly VoteOption[];
+  readonly metadonnees: MetadonneesBrique;
 }
 
 export interface VoteResultats {
@@ -36,8 +38,6 @@ export class FpVote extends FpBlock {
   private interneResultats: VoteResultats | null = null;
   private internePhase: VotePhase = 'vote';
   private interneSeuil = SEUIL_DEFAUT;
-  private affiche = 0;
-  private questionAffichee: string | null = null;
   private repondu = false;
 
   set question(valeur: VoteQuestionPublique | null) {
@@ -45,7 +45,8 @@ export class FpVote extends FpBlock {
       valeur === null || this.roleActuel() === 'presentateur'
         ? valeur
         : {
-            ...valeur,
+            id: valeur.id,
+            enonce: valeur.enonce,
             options: valeur.options.map((option) => ({
               id: option.id,
               libelle: option.libelle,
@@ -94,14 +95,14 @@ export class FpVote extends FpBlock {
     const options = shuffleWithSeed([...question.options], this.seed());
     const boutons = options.map(
       (option) =>
-        safeHtml`<button type="button" class="fp-option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
+        safeHtml`<button type="button" class="fp-vote__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );
     const retour = this.repondu ? escapeHtml(this.texte('reponse-enregistree')) : escapeHtml('');
     return safeHtml`
       <fieldset class="fp-carte">
         <legend>${escapeHtml(question.enonce)}</legend>
         ${boutons}
-        <button type="button" class="fp-option fp-option--neutre" data-testid="je-ne-sais-pas" data-option="${escapeHtml(ID_JE_NE_SAIS_PAS)}">
+        <button type="button" class="fp-vote__option fp-vote__option--neutre" data-testid="je-ne-sais-pas" data-option="${escapeHtml(ID_JE_NE_SAIS_PAS)}">
           ${escapeHtml(this.texte('je-ne-sais-pas'))}
         </button>
       </fieldset>
@@ -131,17 +132,13 @@ export class FpVote extends FpBlock {
       <div class="fp-carte">
         ${this.histogramme()}
         <p data-testid="erreur-dominante">Erreur dominante : ${escapeHtml(dominante ?? 'aucune')}</p>
-        <p data-testid="verdict" class="fp-verdict">${escapeHtml(verdict)}</p>
+        <p data-testid="verdict" class="fp-vote__verdict">${escapeHtml(verdict)}</p>
       </div>
     `;
   }
 
   bind(racine: ShadowRoot): void {
-    const presentee = this.question?.id ?? null;
-    if (presentee !== this.questionAffichee) {
-      this.questionAffichee = presentee;
-      this.affiche = Date.now();
-    }
+    this.suivreAffichage(this.question?.id ?? null);
     if (this.mode() !== 'hand') {
       return;
     }
@@ -160,7 +157,7 @@ export class FpVote extends FpBlock {
     this.emit('fp-vote-submit', {
       questionId: this.question?.id,
       valeur,
-      dureeMs: Date.now() - this.affiche,
+      dureeMs: this.depuisAffichage(),
     });
     this.refresh();
   }
@@ -216,7 +213,7 @@ export class FpVote extends FpBlock {
   }
 
   private barre(id: string, pourcentage: number): EscapedHtml {
-    return safeHtml`<div class="fp-barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-barre__libelle" data-testid="barre-libelle">${escapeHtml(this.libelleOption(id))}</span><span class="fp-barre__piste"><span class="fp-barre__valeur" data-testid="barre-valeur" style="width:${pourcentage}%"></span></span><span class="fp-barre__pourcentage">${pourcentage}%</span></div>`;
+    return safeHtml`<div class="fp-vote__barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-vote__barre__libelle" data-testid="barre-libelle">${escapeHtml(this.libelleOption(id))}</span><span class="fp-vote__barre__piste"><span class="fp-vote__barre__valeur" data-testid="barre-valeur" style="width:${pourcentage}%"></span></span><span class="fp-vote__barre__pourcentage">${pourcentage}%</span></div>`;
   }
 
   private histogramme(): EscapedHtml {
@@ -228,6 +225,6 @@ export class FpVote extends FpBlock {
     const barres = Object.entries(resultats.parOption)
       .filter(([id]) => idsConnus.has(id))
       .map(([id, total]) => this.barre(id, Math.round((total / resultats.total) * 100)));
-    return safeHtml`<div class="fp-histogramme" data-testid="histogramme">${barres}</div>`;
+    return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme">${barres}</div>`;
   }
 }

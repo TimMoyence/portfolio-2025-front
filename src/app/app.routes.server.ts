@@ -26,6 +26,8 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'atelier/sebastian/app/badges', renderMode: RenderMode.Client },
   { path: 'atelier/sebastian/app/historique', renderMode: RenderMode.Client },
   { path: 'atelier/sebastian/app/objectifs', renderMode: RenderMode.Client },
+  { path: 'cours/rejoindre', renderMode: RenderMode.Client },
+  { path: 'cours/seance/:sessionId/synthese', renderMode: RenderMode.Client },
 
   {
     path: 'formations/ia-solopreneurs/toolkit/:token',

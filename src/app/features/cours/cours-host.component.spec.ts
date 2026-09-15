@@ -1,32 +1,51 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { clearIdentity, saveIdentity } from '../../../cours/runtime/core/identity';
+import { BLOCS } from '../../../cours/runtime/core/register';
 import { seedFromKey } from '../../../cours/runtime/core/seed';
 import { saturationDuStockage } from '../../../testing/sans-stockage';
 import { CoursHostComponent } from './cours-host.component';
 
 const IDENTITE_THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
 
-const DELAI_ATTENTE_MS = 50;
-const ESSAIS_MAX = 20;
+const MOTS_DE_CORRECTION = [
+  'misconception',
+  'bareme',
+  'barème',
+  'corrige',
+  'bonneReponse',
+  'reponseAttendue',
+];
+
+function renduComplet(hote: HTMLElement): string {
+  const ombres = [...hote.querySelectorAll('*')]
+    .map((element) => element.shadowRoot?.innerHTML ?? '')
+    .join('\n');
+  return `${hote.innerHTML}\n${ombres}`;
+}
 
 async function attendreQue(
   fixture: ComponentFixture<CoursHostComponent>,
   condition: () => boolean,
+  attendu: string,
 ): Promise<void> {
-  for (let essai = 0; essai < ESSAIS_MAX; essai += 1) {
-    if (condition()) {
-      return;
-    }
-    await new Promise((resolve) => setTimeout(resolve, DELAI_ATTENTE_MS));
-    fixture.detectChanges();
+  await fixture.componentInstance.quandStabilise();
+  fixture.detectChanges();
+  if (!condition()) {
+    throw new Error(
+      `Etat stabilise sans que la condition « ${attendu} » soit remplie : etat=${fixture.componentInstance.etat()}`,
+    );
   }
 }
 
 async function attendreFinDuChargement(
   fixture: ComponentFixture<CoursHostComponent>,
 ): Promise<void> {
-  await attendreQue(fixture, () => fixture.componentInstance.etat() !== 'chargement');
+  await attendreQue(
+    fixture,
+    () => fixture.componentInstance.etat() !== 'chargement',
+    'le chargement est termine',
+  );
 }
 
 function soumettreIdentite(
@@ -97,6 +116,48 @@ describe('CoursHostComponent', () => {
     }
   });
 
+  it('monte chaque brique de la table en role etudiant sans qu aucune ne leve', async () => {
+    saveIdentity(IDENTITE_THEO);
+    try {
+      const pret = await monterPret();
+      const hote = pret.nativeElement as HTMLElement;
+      await Promise.all(BLOCS.map((bloc) => customElements.whenDefined(bloc.nom)));
+      pret.detectChanges();
+
+      expect(BLOCS.length).toBeGreaterThan(0);
+      for (const bloc of BLOCS) {
+        const brique = hote.querySelector(bloc.nom);
+        expect(brique)
+          .withContext(`${bloc.nom} n est pas monte sur la page de demonstration`)
+          .toBeTruthy();
+        expect(brique?.shadowRoot)
+          .withContext(`${bloc.nom} n a pas attache sa racine d ombre : son montage a leve`)
+          .toBeTruthy();
+        expect((brique as HTMLElement).getAttribute('role'))
+          .withContext(`${bloc.nom} n est pas monte en role etudiant`)
+          .toBeNull();
+      }
+    } finally {
+      clearIdentity();
+    }
+  });
+
+  it('ne sert aucune donnee de correction dans le HTML de la page de demonstration', async () => {
+    saveIdentity(IDENTITE_THEO);
+    try {
+      const pret = await monterPret();
+      const rendu = renduComplet(pret.nativeElement as HTMLElement);
+      expect(MOTS_DE_CORRECTION.length).toBeGreaterThan(0);
+      for (const mot of MOTS_DE_CORRECTION) {
+        expect(rendu)
+          .withContext(`« ${mot} » apparait dans le HTML servi a l etudiant`)
+          .not.toContain(mot);
+      }
+    } finally {
+      clearIdentity();
+    }
+  });
+
   it('seme le melange des options depuis la cle de l etudiant', async () => {
     const enregistrement = saveIdentity(IDENTITE_THEO);
     try {
@@ -114,7 +175,11 @@ describe('CoursHostComponent', () => {
       await attendreFinDuChargement(fixture);
       expect(fixture.componentInstance.etat()).toBe('identite');
       soumettreIdentite(fixture, IDENTITE_THEO);
-      await attendreQue(fixture, () => fixture.componentInstance.etat() === 'pret');
+      await attendreQue(
+        fixture,
+        () => fixture.componentInstance.etat() === 'pret',
+        'le poste est pret',
+      );
       expect(fixture.componentInstance.etat()).toBe('pret');
       expect(
         fixture.nativeElement.querySelector("[data-testid='cours-sans-memoire']"),
@@ -130,7 +195,11 @@ describe('CoursHostComponent', () => {
     await attendreFinDuChargement(fixture);
     expect(fixture.componentInstance.etat()).toBe('identite');
     soumettreIdentite(fixture, { ...IDENTITE_THEO, email: 'pas-une-adresse' });
-    await attendreQue(fixture, () => fixture.componentInstance.identiteRefusee());
+    await attendreQue(
+      fixture,
+      () => fixture.componentInstance.identiteRefusee(),
+      'l identite est refusee',
+    );
     fixture.detectChanges();
     expect(fixture.componentInstance.etat()).toBe('identite');
     expect(

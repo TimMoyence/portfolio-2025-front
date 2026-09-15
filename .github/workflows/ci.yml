@@ -75,6 +75,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Joue la regle d inspection du bundle du chantier des lints (feat/lints-cours) :
+      # verifie sur l artefact `dist` reellement construit ci-dessus que le corrige et
+      # les autres cles presentateur ne voyagent pas jusqu au navigateur de l etudiant.
+      - name: Garde bundle cours
+        run: npm run guard:cours-bundle
+
   security:
     name: security
     runs-on: ubuntu-latest

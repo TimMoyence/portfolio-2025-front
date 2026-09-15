@@ -14,6 +14,8 @@ const PREFIXE_TESTS = 'src/testing/';
 const EXTENSIONS = ['.ts', '.html'];
 
 const FRAMEWORKS_INTERDITS = ['@angular', 'rxjs', 'zone.js'];
+const OUVERTURE_TYPE = /^\s*(?:export\s+)?(?:declare\s+)?(?:interface\s+\w|type\s+\w[^=]*=)/;
+const DECLARATION_TYPE = /^\s*(?:export|import)\s+type\s/;
 const TERMES_CORRIGE = [
   'misconception',
   'correcte',
@@ -151,6 +153,34 @@ export function analyserFrontiere({ fichier, contenu }) {
 }
 
 /**
+ * @param {string} contenu
+ * @returns {Set<number>}
+ */
+function lignesEffacees(contenu) {
+  const effacees = new Set();
+  let profondeur = 0;
+  contenu.split('\n').forEach((texte, index) => {
+    const entre = profondeur === 0 && OUVERTURE_TYPE.test(texte);
+    if (profondeur > 0 || entre || DECLARATION_TYPE.test(texte)) {
+      effacees.add(index);
+    }
+    if (profondeur > 0 || entre) {
+      profondeur += compter(texte, '{') - compter(texte, '}');
+    }
+  });
+  return effacees;
+}
+
+/**
+ * @param {string} texte
+ * @param {string} caractere
+ * @returns {number}
+ */
+function compter(texte, caractere) {
+  return texte.split(caractere).length - 1;
+}
+
+/**
  * @param {{ fichier: string, contenu: string }} entree
  * @returns {{ fichier: string, ligne: number, regle: string, raison: string, extrait: string }[]}
  */
@@ -158,7 +188,11 @@ export function analyserCorrige({ fichier, contenu }) {
   if (!estSurfaceCours(fichier) || estFichierDeTest(fichier)) {
     return [];
   }
+  const effacees = lignesEffacees(contenu);
   return contenu.split('\n').flatMap((texte, index) => {
+    if (effacees.has(index)) {
+      return [];
+    }
     const minuscule = texte.toLowerCase();
     return TERMES_CORRIGE.filter((terme) => minuscule.includes(terme)).map((terme) => ({
       fichier,

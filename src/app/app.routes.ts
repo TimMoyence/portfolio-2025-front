@@ -316,6 +316,29 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cours/rejoindre',
+    loadComponent: () =>
+      import('./features/cours/etudiant/cours-etudiant.component').then(
+        (m) => m.CoursEtudiantComponent,
+      ),
+    data: {
+      seoKey: 'cours-rejoindre',
+      robots: 'noindex, nofollow',
+    },
+  },
+  {
+    path: 'cours/seance/:sessionId/synthese',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/cours/presentateur/cours-synthese.component').then(
+        (m) => m.CoursSyntheseComponent,
+      ),
+    data: {
+      seoKey: 'cours-synthese',
+      robots: 'noindex, nofollow',
+    },
+  },
+  {
     path: 'slides/library',
     loadComponent: () =>
       import('./features/slides-library/slides-library.component').then(

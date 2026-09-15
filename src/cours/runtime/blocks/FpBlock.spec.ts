@@ -11,7 +11,10 @@ class FpDemo extends FpBlock {
   renderBoard(): EscapedHtml {
     return safeHtml`<p data-testid="tableau">tableau</p>`;
   }
+  question: string | null = 'Q-1';
+
   bind(racine: ShadowRoot): void {
+    this.suivreAffichage(this.question);
     racine
       .querySelector('[data-testid="action"]')
       ?.addEventListener('click', () => this.emit('fp-action', { ok: true }));
@@ -21,6 +24,7 @@ class FpDemo extends FpBlock {
 describe('FpBlock', () => {
   let hote: FpDemo;
   let enveloppe: HTMLDivElement | null;
+  let horlogeSimulee: jasmine.Clock | null = null;
 
   beforeAll(() => {
     if (!customElements.get('fp-demo')) {
@@ -35,9 +39,17 @@ describe('FpBlock', () => {
   });
 
   afterEach(() => {
+    horlogeSimulee?.uninstall();
+    horlogeSimulee = null;
     hote.remove();
     enveloppe?.remove();
   });
+
+  function figerLHorloge(): void {
+    horlogeSimulee = jasmine.clock();
+    horlogeSimulee.install();
+    horlogeSimulee.mockDate(new Date(0));
+  }
 
   it('rend le mode main par defaut', () => {
     expect(hote.shadowRoot?.querySelector('[data-testid="action"]')).toBeTruthy();
@@ -113,5 +125,30 @@ describe('FpBlock', () => {
 
   it('retourne la cle pour un libelle inconnu', () => {
     expect(hote.texte('cle-absente')).toBe('cle-absente');
+  });
+
+  it('ne rearme pas le chronometre quand la meme question est rendue a nouveau', () => {
+    figerLHorloge();
+    hote.question = 'Q-CHRONO';
+    hote.refresh();
+
+    jasmine.clock().tick(8000);
+    hote.refresh();
+    hote.refresh();
+
+    expect(hote.depuisAffichage()).toBe(8000);
+  });
+
+  it('rearme le chronometre quand la question change', () => {
+    figerLHorloge();
+    hote.question = 'Q-CHRONO';
+    hote.refresh();
+
+    jasmine.clock().tick(8000);
+    hote.question = 'Q-SUIVANTE';
+    hote.refresh();
+    jasmine.clock().tick(300);
+
+    expect(hote.depuisAffichage()).toBe(300);
   });
 });
