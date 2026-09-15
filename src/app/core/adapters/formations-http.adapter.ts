@@ -58,7 +58,7 @@ function codeDuProbleme(erreur: HttpErrorResponse): string | null {
 }
 
 function motifDeRefusDeReponse(statut: number, code: string | null): MotifRefusReponse {
-  if (statut === 0 || statut >= 500) {
+  if (statut === 0 || statut === 429 || statut >= 500) {
     return 'reseau';
   }
   if (statut === 409 && code !== null && Object.hasOwn(MOTIFS_DE_CONFLIT_PAR_CODE, code)) {

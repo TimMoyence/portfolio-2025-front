@@ -345,6 +345,12 @@ describe('FormationsHttpAdapter', () => {
     const cas: readonly (readonly [string, number, ProblemeHttp | null, MotifRefusReponse])[] = [
       ['une panne serveur 503', 503, null, 'reseau'],
       [
+        'une limite de cadence 429',
+        429,
+        buildProblemeHttp({ status: 429, title: 'Too Many Requests' }),
+        'reseau',
+      ],
+      [
         'une erreur serveur 500',
         500,
         buildProblemeHttp({ status: 500, title: 'Internal Server Error' }),
