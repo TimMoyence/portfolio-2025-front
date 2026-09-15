@@ -139,7 +139,7 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
             <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
               La séance est terminée. Merci de votre participation.
             </p>
-          } @else if (statutSeance() === 'attente') {
+          } @else if (statutSeance() !== 'en_cours') {
             <p
               data-testid="etudiant-attente"
               role="status"
@@ -482,6 +482,9 @@ export class CoursEtudiantComponent {
   private suivreLeFlux(deck: Deck, etat: EtatSession): void {
     this.statutSeance.set(etat.etat);
     this.terminee.set(etat.etat === 'terminee');
+    if (etat.etat === 'en_cours' && this.refusReponse()?.motif === 'seance-non-demarree') {
+      this.refusReponse.set(null);
+    }
     const bascule = etat.modeRythme !== this.rythmeDistant;
     this.rythmeDistant = etat.modeRythme;
     deck.setPacing(etat.modeRythme, etat.intervalleLibre);

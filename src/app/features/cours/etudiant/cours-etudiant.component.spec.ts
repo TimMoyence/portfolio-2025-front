@@ -6,7 +6,7 @@ import type { Observable } from 'rxjs';
 import { NEVER, of, Subject, throwError } from 'rxjs';
 import type { CoursContent } from '../../../../cours/content/types';
 import { clearIdentity } from '../../../../cours/runtime/core/identity';
-import { pending } from '../../../../cours/runtime/core/queue';
+import { enqueue, pending } from '../../../../cours/runtime/core/queue';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import { buildEcranQuestionnaire } from '../../../../testing/factories/cours.factory';
 import {
@@ -14,6 +14,7 @@ import {
   buildRattachement,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
+import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
 import { lireMarque as lire } from '../../../../testing/marqueurs-dom';
@@ -164,6 +165,13 @@ describe('CoursEtudiantComponent', () => {
     fixture.detectChanges();
   }
 
+  async function rattacherALaSeanceEnCours(): Promise<Fixture> {
+    const fixture = await rattacher();
+    diffuser(fixture, { etat: 'en_cours' });
+    await stabiliser(fixture);
+    return fixture;
+  }
+
   async function laisserPasserLeReseau(fixture: Fixture): Promise<void> {
     window.dispatchEvent(new Event('online'));
     await stabiliser(fixture);
@@ -227,6 +235,9 @@ describe('CoursEtudiantComponent', () => {
 
     expect(lire(fixture, 'etudiant-chargement')).toBeNull();
     expect(lire(fixture, 'etudiant-seance')).toBeTruthy();
+
+    diffuser(fixture, { etat: 'en_cours' });
+
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
   });
 
@@ -329,6 +340,7 @@ describe('CoursEtudiantComponent', () => {
       of(buildRattachement({ sessionId: SESSION, jeton: JETON, ecranCourant: 1 })),
     );
     const fixture = await rattacher();
+    diffuser(fixture, { ecranCourant: 1, participants: 11 });
     const avant = ecranDe(fixture).componentInstance as CoursEcranComponent;
 
     expect(avant.ecran()).toBe(sujet.ecrans[1]);
@@ -350,7 +362,7 @@ describe('CoursEtudiantComponent', () => {
   });
 
   it('envoie au serveur la reponse d une brique avec son identifiant de question', async () => {
-    const fixture = await rattacher();
+    const fixture = await rattacherALaSeanceEnCours();
 
     await repondre(fixture, REPONSE_VOTE);
 
@@ -363,7 +375,7 @@ describe('CoursEtudiantComponent', () => {
 
   it('n affiche que le resultat et l etiquette de confusion', async () => {
     port.repondre.and.returnValue(of(verdictAvecFuite()));
-    const fixture = await rattacher();
+    const fixture = await rattacherALaSeanceEnCours();
     await repondre(fixture, REPONSE_NUMERIQUE);
     const rendu = (fixture.nativeElement as HTMLElement).innerHTML;
     const [verdict] = verdictsAffiches(fixture);
@@ -377,7 +389,7 @@ describe('CoursEtudiantComponent', () => {
 
   it('garde un verdict par question de l ecran et les efface au changement d ecran', async () => {
     port.repondre.and.returnValues(of(REUSSITE), of(CONFUSION), of(CONFUSION));
-    const fixture = await rattacher();
+    const fixture = await rattacherALaSeanceEnCours();
 
     await repondre(fixture, REPONSE_NUMERIQUE);
     await repondre(fixture, REPONSE_VOTE);
@@ -400,7 +412,7 @@ describe('CoursEtudiantComponent', () => {
 
   it('range les verdicts dans l ordre des questions de l ecran et les numerote', async () => {
     port.repondre.and.returnValues(of(CONFUSION), of(REUSSITE));
-    const fixture = await rattacher();
+    const fixture = await rattacherALaSeanceEnCours();
 
     await repondre(fixture, REPONSE_VOTE);
     await repondre(fixture, REPONSE_NUMERIQUE);
@@ -412,7 +424,7 @@ describe('CoursEtudiantComponent', () => {
   });
 
   it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
-    const fixture = await rattacher();
+    const fixture = await rattacherALaSeanceEnCours();
     window.dispatchEvent(new Event('offline'));
     await repondre(fixture, REPONSE_NUMERIQUE);
 
@@ -433,7 +445,7 @@ describe('CoursEtudiantComponent', () => {
   });
 
   it('n affiche pas sur un nouvel ecran le verdict d une reponse renvoyee depuis le precedent', async () => {
-    const fixture = await rattacher();
+    const fixture = await rattacherALaSeanceEnCours();
     window.dispatchEvent(new Event('offline'));
     await repondre(fixture, REPONSE_NUMERIQUE);
     diffuser(fixture, { ecranCourant: 1 });
@@ -461,6 +473,39 @@ describe('CoursEtudiantComponent', () => {
       expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
     });
 
+    it('n expose aucune brique tant que le flux n a annonce aucun etat de la seance', async () => {
+      const fixture = await rattacher();
+
+      expect(lire(fixture, 'etudiant-attente')?.getAttribute('role')).toBe('status');
+      expect(fixture.debugElement.query(By.directive(CoursEcranComponent)))
+        .withContext('un flux refuse ou injoignable ne doit pas ouvrir les reponses')
+        .toBeNull();
+
+      diffuser(fixture, { etat: 'en_cours' });
+
+      expect(lire(fixture, 'etudiant-attente')).toBeNull();
+      expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    });
+
+    it('efface le refus de seance non demarree et monte la brique quand la seance passe en cours', async () => {
+      enqueue(buildEnvoiReponse({ sessionId: SESSION, questionId: REPONSE_VOTE.questionId }));
+      port.repondre.and.returnValue(
+        throwError(() => new ReponseRefusee('seance-non-demarree', 409)),
+      );
+      const fixture = await rattacher();
+      diffuser(fixture, { etat: 'attente' });
+      await stabiliser(fixture);
+
+      expect(lire(fixture, 'etudiant-reponse-refusee')?.getAttribute('data-motif')).toBe(
+        'seance-non-demarree',
+      );
+
+      diffuser(fixture, { etat: 'en_cours' });
+
+      expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
+      expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    });
+
     it('ne propose pas l ecran suivant pendant l attente', async () => {
       const fixture = await rattacher();
 
@@ -481,7 +526,7 @@ describe('CoursEtudiantComponent', () => {
 
     it('tient pour acceptee, sans verdict ni file, une reponse deja enregistree (409)', async () => {
       refuser('deja-repondue', 409);
-      const fixture = await rattacher();
+      const fixture = await rattacherALaSeanceEnCours();
 
       await repondre(fixture, REPONSE_VOTE);
 
@@ -497,7 +542,7 @@ describe('CoursEtudiantComponent', () => {
     ] as const) {
       it(`explique sans mettre en file un refus quand ${cas}`, async () => {
         refuser(motif, statut);
-        const fixture = await rattacher();
+        const fixture = await rattacherALaSeanceEnCours();
 
         await repondre(fixture, REPONSE_VOTE);
         const alerte = lire(fixture, 'etudiant-reponse-refusee');
@@ -512,7 +557,7 @@ describe('CoursEtudiantComponent', () => {
 
     it('met en file une reponse refusee par une panne du serveur (5xx)', async () => {
       refuser('reseau', 503);
-      const fixture = await rattacher();
+      const fixture = await rattacherALaSeanceEnCours();
 
       await repondre(fixture, REPONSE_NUMERIQUE);
 
@@ -527,7 +572,7 @@ describe('CoursEtudiantComponent', () => {
         of(REUSSITE),
         of(CONFUSION),
       );
-      const fixture = await rattacher();
+      const fixture = await rattacherALaSeanceEnCours();
       await repondre(fixture, REPONSE_NUMERIQUE);
 
       await repondre(fixture, REPONSE_VOTE);
@@ -546,7 +591,7 @@ describe('CoursEtudiantComponent', () => {
         throwError(() => new ReponseRefusee('reseau', 0)),
         of(REUSSITE),
       );
-      const fixture = await rattacher();
+      const fixture = await rattacherALaSeanceEnCours();
       await repondre(fixture, REPONSE_NUMERIQUE);
 
       diffuser(fixture, { participants: 14 });
@@ -562,7 +607,7 @@ describe('CoursEtudiantComponent', () => {
         throwError(() => new ReponseRefusee('reseau', 503)),
         throwError(() => new ReponseRefusee('refusee', 409)),
       );
-      const fixture = await rattacher();
+      const fixture = await rattacherALaSeanceEnCours();
       await repondre(fixture, REPONSE_NUMERIQUE);
 
       await laisserPasserLeReseau(fixture);
@@ -574,7 +619,7 @@ describe('CoursEtudiantComponent', () => {
 
   it('remonte les incidents de verrou groupes sans bloquer la reponse en cours', async () => {
     port.signalerIncidents.and.returnValue(NEVER);
-    const fixture = await rattacher();
+    const fixture = await rattacherALaSeanceEnCours();
     window.dispatchEvent(new Event('blur'));
     window.dispatchEvent(new Event('blur'));
     await repondre(fixture, REPONSE_NUMERIQUE);
