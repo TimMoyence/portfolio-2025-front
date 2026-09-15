@@ -251,6 +251,29 @@ describe('CoursPresentateurComponent', () => {
     expect(double.fabrique).toHaveBeenCalledTimes(1);
   });
 
+  it('laisse relire le deroule et clore la seance quand le deroule reste en echec', async () => {
+    const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+    port.lireDeroule.and.returnValue(throwError(() => new Error('reseau coupe')));
+    const fixture = await ouvrirLaSeance();
+
+    expect(lire(fixture, 'presentateur-deroule-reessayer')).toBeTruthy();
+
+    await cliquer(fixture, 'presentateur-cloturer');
+    await cliquer(fixture, 'presentateur-cloture-confirmer');
+
+    expect(port.cloturer).toHaveBeenCalledOnceWith(SESSION);
+    expect(navigation).toHaveBeenCalledOnceWith(['/cours/seance', SESSION, 'synthese']);
+  });
+
+  it('n envoie aucun en-tete authorization au flux sans session', async () => {
+    await ouvrirLaSeance();
+    const options = double.fabrique.calls.mostRecent().args[0];
+
+    TestBed.inject(AuthStateService).clearSession();
+
+    expect(options.entetes?.()).toEqual({});
+  });
+
   it('ouvre le flux formateur avec le jeton du compte, sans rejoindre comme un etudiant', async () => {
     await ouvrirLaSeance();
     const options = double.fabrique.calls.mostRecent().args[0];
@@ -499,6 +522,22 @@ describe('CoursPresentateurComponent', () => {
 
     expect(navigation).toHaveBeenCalledOnceWith(['/cours/seance', SESSION, 'synthese']);
     expect(double.flux.close).toHaveBeenCalled();
+  });
+
+  it('ne ramene pas a la synthese un formateur parti avant la fin de la cloture', async () => {
+    const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+    const fermeture = new Subject<void>();
+    port.cloturer.and.returnValue(fermeture);
+    const fixture = await ouvrirLaSeance();
+    await cliquer(fixture, 'presentateur-cloturer');
+    bouton(fixture, 'presentateur-cloture-confirmer').click();
+
+    fixture.destroy();
+    fermeture.complete();
+    await fixture.componentInstance.quandStabilise();
+
+    expect(port.cloturer).toHaveBeenCalledTimes(1);
+    expect(navigation).not.toHaveBeenCalled();
   });
 
   it('ouvre la scene du videoprojecteur dans une fenetre nommee sous la base de l application', async () => {

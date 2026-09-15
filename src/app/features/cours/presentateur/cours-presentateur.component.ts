@@ -342,15 +342,17 @@ function lirePanneau(
             }
           </ul>
         }
-        <button
-          type="button"
-          data-testid="presentateur-cloturer"
-          (click)="demanderLaCloture()"
-          i18n="presentateur.cloturer|@@presentateurCloturer"
-        >
-          Clôturer la séance
-        </button>
       }
+    }
+    @if (statut() === 'ouverte' || statut() === 'en_cours') {
+      <button
+        type="button"
+        data-testid="presentateur-cloturer"
+        (click)="demanderLaCloture()"
+        i18n="presentateur.cloturer|@@presentateurCloturer"
+      >
+        Clôturer la séance
+      </button>
     }
     @if (clotureDemandee() && statut() !== 'terminee') {
       <div
@@ -498,7 +500,7 @@ export class CoursPresentateurComponent {
       return;
     }
     this.commandeEnVol.set(true);
-    this.chantier = this.executer(this.port.demarrer(session)).then((abouti) => {
+    this.suivreLaCommande(this.port.demarrer(session), (abouti) => {
       this.commandeEnVol.set(false);
       if (abouti) {
         this.avancerLeStatut('en_cours');
@@ -551,7 +553,7 @@ export class CoursPresentateurComponent {
       return;
     }
     this.clotureEnVol.set(true);
-    this.chantier = this.executer(this.port.cloturer(session)).then((abouti) => {
+    this.suivreLaCommande(this.port.cloturer(session), (abouti) => {
       this.clotureEnVol.set(false);
       if (!abouti) {
         return;
@@ -609,12 +611,17 @@ export class CoursPresentateurComponent {
       baseUrl: this.baseUrl,
       sessionId,
       chemin: 'presenter-stream',
-      entetes: () => ({ authorization: `Bearer ${this.authState.token() ?? ''}` }),
+      entetes: () => this.entetesDuFlux(),
     });
     flux.onState((etat) => this.suivreLeFlux(etat));
     flux.onResultats((resultats) => this.resultats.set(resultats));
     this.flux = flux;
     flux.ouvrir();
+  }
+
+  private entetesDuFlux(): Readonly<Record<string, string>> {
+    const jeton = this.authState.token();
+    return jeton ? { authorization: `Bearer ${jeton}` } : {};
   }
 
   private suivreLeFlux(etat: EtatSession): void {
@@ -644,10 +651,18 @@ export class CoursPresentateurComponent {
       return;
     }
     this.commandeEnVol.set(true);
-    this.chantier = this.executer(this.port.piloter(session, commande)).then((abouti) => {
+    this.suivreLaCommande(this.port.piloter(session, commande), (abouti) => {
       this.commandeEnVol.set(false);
       if (!abouti) {
         annuler();
+      }
+    });
+  }
+
+  private suivreLaCommande(source: Observable<void>, conclure: (abouti: boolean) => void): void {
+    this.chantier = this.executer(source).then((abouti) => {
+      if (!this.detruit) {
+        conclure(abouti);
       }
     });
   }
