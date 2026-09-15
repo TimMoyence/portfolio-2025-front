@@ -1,4 +1,5 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -8,6 +9,7 @@ import { AuthStateService } from '../../../core/services/auth-state.service';
 import { environment } from '../../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { ENTETE_JETON_PARTICIPANT } from '../jeton-participant';
 import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor', () => {
@@ -126,6 +128,24 @@ describe('authInterceptor', () => {
     expect(router.url).withContext('navigation initiale non validee').toBe('/');
     expect(navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: cible } });
   }));
+
+  it('laisse remonter un 401 sur une requete au jeton participant sans toucher a la session formateur', () => {
+    authState.login(buildAuthSession({ accessToken: 'jwt-formateur' }));
+    spyOn(authState, 'clearSession').and.callThrough();
+    const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    const url = `${environment.apiBaseUrl}/formations/sessions/seance-1/answers`;
+    const statutsRecus: number[] = [];
+
+    http
+      .post(url, {}, { headers: { [ENTETE_JETON_PARTICIPANT]: 'jeton-participant' } })
+      .subscribe({ error: (erreur: HttpErrorResponse) => statutsRecus.push(erreur.status) });
+    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+
+    expect(statutsRecus).withContext('le 401 remonte a l appelant').toEqual([401]);
+    expect(authState.clearSession).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(authState.token()).toBe('jwt-formateur');
+  });
 
   it('devrait propager les erreurs non-401 sans clearSession', () => {
     authState.login(buildAuthSession());

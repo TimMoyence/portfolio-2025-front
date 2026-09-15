@@ -20,8 +20,7 @@ import type {
 } from '../ports/formations.port';
 import { RattachementRefuse, ReponseRefusee, SujetRefuse } from '../ports/formations.port';
 import { getApiBaseUrl } from '../http/api-config';
-
-const ENTETE_JETON = 'x-participant-token';
+import { ENTETE_JETON_PARTICIPANT } from '../http/jeton-participant';
 
 const MOTIFS_DE_CONFLIT_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
   REPONSE_DEJA_ENREGISTREE: 'deja-repondue',
@@ -166,5 +165,5 @@ export class FormationsHttpAdapter implements FormationsPort {
 }
 
 function entetes(jeton: string): HttpHeaders {
-  return new HttpHeaders({ [ENTETE_JETON]: jeton });
+  return new HttpHeaders({ [ENTETE_JETON_PARTICIPANT]: jeton });
 }
