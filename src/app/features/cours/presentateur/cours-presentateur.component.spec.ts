@@ -2,7 +2,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import type {
   ConfusionComptee,
@@ -14,6 +14,7 @@ import { buildAuthSession } from '../../../../testing/factories/auth.factory';
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildRapportSeance,
   buildResultatQuestion,
   buildResultatsSeance,
   createFormationsPortStub,
@@ -64,6 +65,26 @@ function derouleDeSeance(): DerouleCours {
   });
 }
 
+const VERS_LA_SYNTHESE = ['/cours/seance', SESSION, 'synthese'];
+
+function allersALaSynthese(navigation: jasmine.Spy): number {
+  return navigation.calls
+    .allArgs()
+    .filter(([commandes]) => JSON.stringify(commandes) === JSON.stringify(VERS_LA_SYNTHESE)).length;
+}
+
+function quitterLaPage(): boolean {
+  const gardeDuLanceurDeTests = window.onbeforeunload;
+  window.onbeforeunload = null;
+  try {
+    const evenement = new Event('beforeunload', { cancelable: true });
+    window.dispatchEvent(evenement);
+    return evenement.defaultPrevented;
+  } finally {
+    window.onbeforeunload = gardeDuLanceurDeTests;
+  }
+}
+
 function resultatsDeLaQuestion(total: number, correctes: number): ResultatsSeance {
   return buildResultatsSeance({
     participants: 20,
@@ -105,10 +126,13 @@ describe('CoursPresentateurComponent', () => {
     return ecran.componentInstance as CoursEcranComponent;
   }
 
-  function monter(): Fixture {
+  function monter(seance?: string): Fixture {
     const fixture = TestBed.createComponent(CoursPresentateurComponent);
     montees.push(fixture);
     fixture.componentRef.setInput('slug', SLUG);
+    if (seance !== undefined) {
+      fixture.componentRef.setInput('seance', seance);
+    }
     fixture.detectChanges();
     return fixture;
   }
@@ -253,7 +277,122 @@ describe('CoursPresentateurComponent', () => {
     await cliquer(fixture, 'presentateur-cloture-confirmer');
 
     expect(port.cloturer).toHaveBeenCalledOnceWith(SESSION);
-    expect(navigation).toHaveBeenCalledOnceWith(['/cours/seance', SESSION, 'synthese']);
+    expect(allersALaSynthese(navigation)).toBe(1);
+  });
+
+  it('inscrit la seance ouverte dans l url sans ajouter d entree a l historique', async () => {
+    const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+
+    await ouvrirLaSeance();
+
+    expect(navigation).toHaveBeenCalledOnceWith([], {
+      relativeTo: TestBed.inject(ActivatedRoute),
+      queryParams: { seance: SESSION },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  });
+
+  describe('reprise depuis l url', () => {
+    beforeEach(() => {
+      port.lireResultats.and.returnValue(
+        of(
+          buildRapportSeance({ code: CODE, resultats: buildResultatsSeance({ participants: 17 }) }),
+        ),
+      );
+    });
+
+    async function reprendre(): Promise<Fixture> {
+      const fixture = monter(SESSION);
+      await stabiliser(fixture);
+      return fixture;
+    }
+
+    it('reprend la seance, son code, ses resultats et son flux sans en ouvrir une seconde', async () => {
+      const fixture = await reprendre();
+
+      expect(port.ouvrirSeance).not.toHaveBeenCalled();
+      expect(lire(fixture, 'presentateur-ouvrir')).toBeNull();
+      expect(port.lireResultats).toHaveBeenCalledOnceWith(SESSION);
+      expect(port.lireDeroule).toHaveBeenCalledOnceWith(SESSION);
+      expect(texte(fixture, 'presentateur-code')).toBe(CODE);
+      expect(texte(fixture, 'presentateur-participants-nombre')).toBe('17');
+      expect(double.fabrique.calls.mostRecent().args[0].sessionId).toBe(SESSION);
+      expect(double.flux.ouvrir).toHaveBeenCalledTimes(1);
+
+      diffuser(fixture, { etat: 'en_cours', ecranCourant: 2 });
+
+      expect(texte(fixture, 'presentateur-ecran')).toBe('3 / 4');
+      expect(apercu(fixture).ecran()).toBe(deroule.ecrans[2]);
+      expect(lire(fixture, 'presentateur-demarrer')).toBeNull();
+    });
+
+    it('n ouvre pas de seconde seance meme si l ouverture est redemandee', async () => {
+      const fixture = await reprendre();
+
+      (fixture.componentInstance as unknown as { ouvrir(): void }).ouvrir();
+      await stabiliser(fixture);
+
+      expect(port.ouvrirSeance).not.toHaveBeenCalled();
+    });
+
+    it('alerte quand la reprise echoue et la relance a la demande, sans proposer d ouvrir', async () => {
+      port.lireResultats.and.returnValues(
+        throwError(() => new Error('reseau coupe')),
+        of(buildRapportSeance({ code: CODE })),
+      );
+      const fixture = await reprendre();
+
+      expect(cible(fixture, 'presentateur-reprise-echec').getAttribute('role')).toBe('alert');
+      expect(lire(fixture, 'presentateur-ouvrir')).toBeNull();
+      expect(port.lireDeroule).not.toHaveBeenCalled();
+
+      await cliquer(fixture, 'presentateur-reprise-reessayer');
+
+      expect(lire(fixture, 'presentateur-reprise-echec')).toBeNull();
+      expect(texte(fixture, 'presentateur-code')).toBe(CODE);
+      expect(port.lireDeroule).toHaveBeenCalledOnceWith(SESSION);
+      expect(port.ouvrirSeance).not.toHaveBeenCalled();
+    });
+
+    it('ouvre la scene de la seance reprise', async () => {
+      const fenetre = spyOn(window, 'open').and.returnValue(null);
+      const fixture = await reprendre();
+
+      bouton(fixture, 'presentateur-scene').click();
+
+      expect(fenetre).toHaveBeenCalledOnceWith(
+        `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/scene/${SESSION}`,
+        'cours-scene',
+      );
+    });
+  });
+
+  it('demande confirmation avant de quitter la page tant que la seance est ouverte', async () => {
+    spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+    const fixture = monter();
+
+    expect(quitterLaPage()).withContext('aucune seance ouverte').toBeFalse();
+
+    await cliquer(fixture, 'presentateur-ouvrir');
+
+    expect(quitterLaPage()).withContext('seance ouverte').toBeTrue();
+
+    diffuser(fixture, { etat: 'en_cours' });
+
+    expect(quitterLaPage()).withContext('seance en cours').toBeTrue();
+
+    diffuser(fixture, { etat: 'terminee' });
+
+    expect(quitterLaPage()).withContext('seance close').toBeFalse();
+  });
+
+  it('ne retient plus la page une fois le pupitre detruit', async () => {
+    const fixture = await ouvrirLaSeance();
+
+    fixture.destroy();
+
+    expect(quitterLaPage()).toBeFalse();
   });
 
   it('n envoie aucun en-tete authorization au flux sans session', async () => {
@@ -327,7 +466,8 @@ describe('CoursPresentateurComponent', () => {
 
     bouton(fixture, 'presentateur-synthese').click();
 
-    expect(navigation).toHaveBeenCalledOnceWith(['/cours/seance', SESSION, 'synthese']);
+    expect(navigation).toHaveBeenCalledWith(VERS_LA_SYNTHESE);
+    expect(allersALaSynthese(navigation)).toBe(1);
   });
 
   it('montre en scene l ecran courant du deroule avec ses notes, sans le remonter a chaque etat', async () => {
@@ -506,12 +646,13 @@ describe('CoursPresentateurComponent', () => {
     fixture.detectChanges();
 
     expect(port.cloturer).toHaveBeenCalledOnceWith(SESSION);
-    expect(navigation).not.toHaveBeenCalled();
+    expect(allersALaSynthese(navigation)).toBe(0);
 
     fermeture.complete();
     await stabiliser(fixture);
 
-    expect(navigation).toHaveBeenCalledOnceWith(['/cours/seance', SESSION, 'synthese']);
+    expect(navigation).toHaveBeenCalledWith(VERS_LA_SYNTHESE);
+    expect(allersALaSynthese(navigation)).toBe(1);
     expect(double.flux.close).toHaveBeenCalled();
   });
 
@@ -528,7 +669,7 @@ describe('CoursPresentateurComponent', () => {
     await fixture.componentInstance.quandStabilise();
 
     expect(port.cloturer).toHaveBeenCalledTimes(1);
-    expect(navigation).not.toHaveBeenCalled();
+    expect(allersALaSynthese(navigation)).toBe(0);
   });
 
   it('ouvre la scene du videoprojecteur dans une fenetre nommee sous la base de l application', async () => {

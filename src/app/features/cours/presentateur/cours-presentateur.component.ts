@@ -1,6 +1,7 @@
 import { isPlatformBrowser, Location, PercentPipe } from '@angular/common';
 import type { WritableSignal } from '@angular/core';
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -10,7 +11,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import type {
@@ -135,7 +136,7 @@ function lirePanneau(
     }
   `,
   template: `
-    @if (statut() === 'fermee') {
+    @if (statut() === 'fermee' && seance() === undefined) {
       <button
         type="button"
         data-testid="presentateur-ouvrir"
@@ -164,6 +165,34 @@ function lirePanneau(
         >
           La séance n'a pas pu être ouverte. Vérifiez la connexion, puis réessayez.
         </p>
+      }
+    }
+    @switch (reprise()) {
+      @case ('chargement') {
+        <p
+          data-testid="presentateur-reprise-chargement"
+          role="status"
+          i18n="presentateur.repriseChargement|@@presentateurRepriseChargement"
+        >
+          Reprise de la séance…
+        </p>
+      }
+      @case ('echec') {
+        <p
+          data-testid="presentateur-reprise-echec"
+          role="alert"
+          i18n="presentateur.repriseEchec|@@presentateurRepriseEchec"
+        >
+          La séance n'a pas pu être reprise. Vérifiez la connexion, puis réessayez.
+        </p>
+        <button
+          type="button"
+          data-testid="presentateur-reprise-reessayer"
+          (click)="reessayerLaReprise()"
+          i18n="presentateur.repriseReessayer|@@presentateurRepriseReessayer"
+        >
+          Réessayer la reprise
+        </button>
       }
     }
     @if (code() !== null) {
@@ -412,9 +441,11 @@ function lirePanneau(
 })
 export class CoursPresentateurComponent {
   readonly slug = input.required<string>();
+  readonly seance = input<string>();
 
   readonly statut = signal<EtatSeance>('fermee');
   readonly ouverture = signal<Chargement>('repos');
+  readonly reprise = signal<Chargement>('repos');
   readonly lectureDeroule = signal<Chargement>('repos');
   readonly code = signal<string | null>(null);
   readonly sessionId = signal<string | null>(null);
@@ -448,6 +479,7 @@ export class CoursPresentateurComponent {
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -456,9 +488,25 @@ export class CoursPresentateurComponent {
   private chantier: Promise<void> = Promise.resolve();
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => {
+    const aLaDestruction = inject(DestroyRef);
+    aLaDestruction.onDestroy(() => {
       this.detruit = true;
       this.flux?.close();
+    });
+    if (this.navigateur) {
+      const avantDeQuitter = (evenement: BeforeUnloadEvent): void => {
+        if (this.statut() === 'ouverte' || this.statut() === 'en_cours') {
+          evenement.preventDefault();
+        }
+      };
+      window.addEventListener('beforeunload', avantDeQuitter);
+      aLaDestruction.onDestroy(() => window.removeEventListener('beforeunload', avantDeQuitter));
+    }
+    afterNextRender(() => {
+      const seance = this.seance();
+      if (seance !== undefined) {
+        this.chantier = this.reprendreLaSeance(seance);
+      }
     });
   }
 
@@ -476,10 +524,22 @@ export class CoursPresentateurComponent {
   }
 
   protected ouvrir(): void {
-    if (this.sessionId() !== null || this.ouverture() === 'chargement') {
+    if (
+      this.sessionId() !== null ||
+      this.seance() !== undefined ||
+      this.ouverture() === 'chargement'
+    ) {
       return;
     }
     this.chantier = this.ouvrirLaSeance();
+  }
+
+  protected reessayerLaReprise(): void {
+    const seance = this.seance();
+    if (seance === undefined || this.reprise() === 'chargement') {
+      return;
+    }
+    this.chantier = this.reprendreLaSeance(seance);
   }
 
   protected relireLeDeroule(): void {
@@ -576,7 +636,25 @@ export class CoursPresentateurComponent {
     this.sessionId.set(seance.sessionId);
     this.code.set(seance.code);
     this.avancerLeStatut('ouverte');
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { seance: seance.sessionId },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
     await this.lireLeDeroule(seance.sessionId);
+  }
+
+  private async reprendreLaSeance(sessionId: string): Promise<void> {
+    const rapport = await this.charger(this.reprise, this.port.lireResultats(sessionId));
+    if (rapport === null) {
+      return;
+    }
+    this.sessionId.set(sessionId);
+    this.code.set(rapport.code);
+    this.resultats.set(rapport.resultats);
+    this.avancerLeStatut('ouverte');
+    await this.lireLeDeroule(sessionId);
   }
 
   private async lireLeDeroule(sessionId: string): Promise<void> {
