@@ -44,7 +44,6 @@ const INSCRIPTION: InscriptionParticipant = {
 const RATTACHEMENT: Rattachement = {
   participantId: '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c',
   sessionId: SESSION_ID,
-  seed: 7,
   ecranCourant: 0,
   modeRythme: 'pilote',
   jeton: JETON,
@@ -199,6 +198,22 @@ describe('FormationsHttpAdapter', () => {
     req.flush(RATTACHEMENT);
 
     expect(recus).toEqual([RATTACHEMENT]);
+  });
+
+  it('rejoindre ne garde du rattachement aucune graine, meme si le serveur en envoie encore une', () => {
+    const recus: Rattachement[] = [];
+
+    adapter.rejoindre(CODE, INSCRIPTION).subscribe((valeur) => recus.push(valeur));
+    attendre(`${RACINE}/${CODE}/join`, 'POST').flush({ ...RATTACHEMENT, seed: 1_234_567 });
+
+    expect(recus).toEqual([RATTACHEMENT]);
+    expect(Object.keys(recus[0]).sort((a, b) => a.localeCompare(b))).toEqual([
+      'ecranCourant',
+      'jeton',
+      'modeRythme',
+      'participantId',
+      'sessionId',
+    ]);
   });
 
   it('rejoindre ne pose pas l en-tete de participant, que l etudiant n a pas encore', () => {

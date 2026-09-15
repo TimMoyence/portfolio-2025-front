@@ -117,9 +117,16 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement> {
     const url = `${this.baseUrl}/sessions/${encodeURIComponent(code)}/join`;
-    return this.http
-      .post<Rattachement>(url, inscription)
-      .pipe(catchError((erreur: unknown) => throwError(() => refuserRattachement(erreur))));
+    return this.http.post<Rattachement>(url, inscription).pipe(
+      map(({ participantId, sessionId, ecranCourant, modeRythme, jeton }) => ({
+        participantId,
+        sessionId,
+        ecranCourant,
+        modeRythme,
+        jeton,
+      })),
+      catchError((erreur: unknown) => throwError(() => refuserRattachement(erreur))),
+    );
   }
 
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse> {

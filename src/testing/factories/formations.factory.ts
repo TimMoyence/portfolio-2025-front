@@ -84,7 +84,6 @@ export function buildRattachement(overrides: Partial<Rattachement> = {}): Rattac
   return {
     participantId: 'participant-1',
     sessionId: 'seance-1',
-    seed: 7,
     ecranCourant: 0,
     modeRythme: 'pilote',
     jeton: 'jeton-1',

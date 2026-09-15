@@ -33,7 +33,6 @@ export interface InscriptionParticipant {
 export interface Rattachement {
   participantId: string;
   sessionId: string;
-  seed: number;
   ecranCourant: number;
   modeRythme: PacingMode;
   jeton: string;
