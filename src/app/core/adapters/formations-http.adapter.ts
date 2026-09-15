@@ -10,6 +10,7 @@ import type {
   IncidentEtudiant,
   InscriptionParticipant,
   MotifRefusRattachement,
+  MotifRefusReponse,
   QuestionsDues,
   RapportSeance,
   Rattachement,
@@ -17,10 +18,13 @@ import type {
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
-import { RattachementRefuse, SujetRefuse } from '../ports/formations.port';
+import { RattachementRefuse, ReponseRefusee, SujetRefuse } from '../ports/formations.port';
 import { getApiBaseUrl } from '../http/api-config';
 
 const ENTETE_JETON = 'x-participant-token';
+
+const DETAIL_REPONSE_DEJA_ENREGISTREE = 'déjà enregistrée';
+const DETAIL_SEANCE_NON_DEMARREE = 'pas encore commencé';
 
 const MOTIFS_PAR_STATUT: Readonly<Record<number, MotifRefusRattachement>> = {
   404: 'code-inconnu',
@@ -41,6 +45,38 @@ function refuserRattachement(erreur: unknown): RattachementRefuse {
 function refuserSujet(erreur: unknown): SujetRefuse {
   const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
   return new SujetRefuse(statut === 409 ? 'cours-modifie' : 'sujet-indisponible', statut);
+}
+
+function detailDuProbleme(erreur: HttpErrorResponse): string {
+  const corps: unknown = erreur.error;
+  if (typeof corps !== 'object' || corps === null) {
+    return '';
+  }
+  const detail = (corps as Record<string, unknown>)['detail'];
+  return typeof detail === 'string' ? detail : '';
+}
+
+function motifDeRefusDeReponse(statut: number, detail: string): MotifRefusReponse {
+  if (statut === 0 || statut >= 500) {
+    return 'reseau';
+  }
+  if (statut === 409 && detail.includes(DETAIL_REPONSE_DEJA_ENREGISTREE)) {
+    return 'deja-repondue';
+  }
+  if (statut === 409 && detail.includes(DETAIL_SEANCE_NON_DEMARREE)) {
+    return 'seance-non-demarree';
+  }
+  return 'refusee';
+}
+
+function refuserReponse(erreur: unknown): ReponseRefusee {
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new ReponseRefusee('reseau', 0);
+  }
+  return new ReponseRefusee(
+    motifDeRefusDeReponse(erreur.status, detailDuProbleme(erreur)),
+    erreur.status,
+  );
 }
 
 @Injectable()
@@ -96,6 +132,7 @@ export class FormationsHttpAdapter implements FormationsPort {
           reussite: correcte,
           libelleConfusion: libelleConfusion ?? null,
         })),
+        catchError((erreur: unknown) => throwError(() => refuserReponse(erreur))),
       );
   }
 

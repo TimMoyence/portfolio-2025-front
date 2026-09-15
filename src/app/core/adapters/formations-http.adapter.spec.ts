@@ -12,13 +12,19 @@ import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
   InscriptionParticipant,
   MotifRefusRattachement,
+  MotifRefusReponse,
   QuestionsDues,
   RapportSeance,
   Rattachement,
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
-import { FORMATIONS_PORT, RattachementRefuse, SujetRefuse } from '../ports/formations.port';
+import {
+  FORMATIONS_PORT,
+  RattachementRefuse,
+  ReponseRefusee,
+  SujetRefuse,
+} from '../ports/formations.port';
 import { FormationsHttpAdapter } from './formations-http.adapter';
 
 const SESSION_ID = '4d0f2a9e-0d7f-4d2f-9a3c-1f6b2a7c8d90';
@@ -291,6 +297,77 @@ describe('FormationsHttpAdapter', () => {
     attendre(`${URL_SEANCE}/answers`, 'POST').flush({ correcte: true, misconception: null });
 
     expect(recus).toEqual([{ reussite: true, libelleConfusion: null }]);
+  });
+
+  describe('refus d une reponse', () => {
+    const DEJA_REPONDUE =
+      'Votre réponse à la question Q-CAP-03 est déjà enregistrée : passez à la suivante.';
+    const NON_DEMARREE =
+      "La séance n'a pas encore commencé : attendez que le formateur la démarre pour envoyer vos réponses.";
+    const TERMINEE =
+      'La séance est terminée : les réponses ne sont plus acceptées, les résultats restent consultables.';
+
+    const refusPour = (
+      statut: number,
+      corps: Record<string, unknown> | null,
+      statusText = 'Erreur',
+    ): ReponseRefusee => {
+      const erreurs: unknown[] = [];
+
+      adapter
+        .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1300, dureeMs: 1000 })
+        .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+
+      httpMock.expectOne(`${URL_SEANCE}/answers`).flush(corps, { status: statut, statusText });
+
+      expect(erreurs.length).toBe(1);
+      expect(erreurs[0]).toBeInstanceOf(ReponseRefusee);
+      return erreurs[0] as ReponseRefusee;
+    };
+
+    const probleme = (status: number, detail: string): Record<string, unknown> => ({
+      type: `https://httpstatuses.com/${status}`,
+      title: 'Conflict',
+      status,
+      detail,
+    });
+
+    const cas: readonly (readonly [
+      string,
+      number,
+      Record<string, unknown> | null,
+      MotifRefusReponse,
+    ])[] = [
+      ['une panne serveur 503', 503, null, 'reseau'],
+      ['une erreur serveur 500', 500, probleme(500, 'Internal Server Error'), 'reseau'],
+      ['une reponse deja enregistree 409', 409, probleme(409, DEJA_REPONDUE), 'deja-repondue'],
+      ['une seance non demarree 409', 409, probleme(409, NON_DEMARREE), 'seance-non-demarree'],
+      ['une seance terminee 409', 409, probleme(409, TERMINEE), 'refusee'],
+      ['une requete invalide 400', 400, probleme(400, 'valeur invalide'), 'refusee'],
+      ['un jeton refuse 401', 401, null, 'refusee'],
+    ];
+
+    for (const [nom, statut, corps, motif] of cas) {
+      it(`classe ${nom} en ${motif}`, () => {
+        const refus = refusPour(statut, corps);
+
+        expect(refus.motif).toBe(motif);
+        expect(refus.statut).toBe(statut);
+        expect(refus.message).not.toBe('');
+      });
+    }
+
+    it('classe une coupure reseau, sans statut, en panne reseau', () => {
+      const erreurs: unknown[] = [];
+
+      adapter
+        .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1300, dureeMs: 1000 })
+        .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+      httpMock.expectOne(`${URL_SEANCE}/answers`).error(new ProgressEvent('error'));
+
+      expect((erreurs[0] as ReponseRefusee).motif).toBe('reseau');
+      expect((erreurs[0] as ReponseRefusee).statut).toBe(0);
+    });
   });
 
   it('signalerIncidents POSTe le journal sur incidents avec l en-tete de participant', () => {

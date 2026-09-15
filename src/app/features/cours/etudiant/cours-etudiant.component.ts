@@ -16,11 +16,12 @@ import type { Lock } from '../../../../cours/runtime/core/lock';
 import { createLock } from '../../../../cours/runtime/core/lock';
 import type { EnvoiReponse } from '../../../../cours/runtime/core/queue';
 import { enqueue, flush, pending } from '../../../../cours/runtime/core/queue';
-import type { EtatSession, Sync } from '../../../../cours/runtime/core/sync';
+import type { EtatSession, StatutSession, Sync } from '../../../../cours/runtime/core/sync';
 import { getApiBaseUrl } from '../../../core/http/api-config';
 import type {
   IncidentEtudiant,
   MotifRefusRattachement,
+  MotifRefusReponse,
   MotifRefusSujet,
   Rattachement,
   ReponseEtudiant,
@@ -30,6 +31,7 @@ import type {
 import {
   FORMATIONS_PORT,
   RattachementRefuse,
+  ReponseRefusee,
   SujetRefuse,
 } from '../../../core/ports/formations.port';
 import type { ReponseBrique } from '../ecran/cours-ecran.component';
@@ -44,6 +46,13 @@ interface RefusAffiche {
   readonly motif: MotifRefusSujet;
   readonly message: string;
 }
+
+interface RefusDeReponse {
+  readonly motif: MotifRefusReponse;
+  readonly message: string;
+}
+
+type IssueDeLEnvoi = 'transmise' | 'en-panne';
 
 interface VerdictRecu {
   readonly reussite: boolean;
@@ -131,6 +140,15 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
             <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
               La séance est terminée. Merci de votre participation.
             </p>
+          } @else if (statutSeance() === 'attente') {
+            <p
+              data-testid="etudiant-attente"
+              role="status"
+              i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
+            >
+              La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
+              formateur la lancera.
+            </p>
           } @else {
             @if (ecranCourant(); as ecran) {
               <app-cours-ecran
@@ -188,6 +206,11 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
               Votre réponse est enregistrée sur ce poste et partira au retour du réseau.
             </p>
           }
+          @if (refusReponse(); as refus) {
+            <p data-testid="etudiant-reponse-refusee" role="alert" [attr.data-motif]="refus.motif">
+              {{ refus.message }}
+            </p>
+          }
           @if (fileRefusee()) {
             <p
               data-testid="etudiant-file-refusee"
@@ -238,6 +261,8 @@ export class CoursEtudiantComponent {
   readonly fileRefusee = signal(false);
   readonly terminee = signal(false);
   readonly peutAvancer = signal(false);
+  readonly statutSeance = signal<StatutSession | null>(null);
+  readonly refusReponse = signal<RefusDeReponse | null>(null);
 
   readonly ecranCourant = computed<EcranContent | null>(
     () => this.sujet()?.ecrans[this.indexEcran()] ?? null,
@@ -456,6 +481,7 @@ export class CoursEtudiantComponent {
   }
 
   private suivreLeFlux(deck: Deck, etat: EtatSession): void {
+    this.statutSeance.set(etat.etat);
     this.terminee.set(etat.etat === 'terminee');
     const bascule = etat.modeRythme !== this.rythmeDistant;
     this.rythmeDistant = etat.modeRythme;
@@ -463,6 +489,7 @@ export class CoursEtudiantComponent {
     if (doitSuivreLeFormateur(deck.current(), etat, bascule)) {
       deck.applyRemote(etat.ecranCourant);
     }
+    this.chantier = this.viderLaFile();
   }
 
   private async traiter(reponse: ReponseEtudiant): Promise<void> {
@@ -470,15 +497,28 @@ export class CoursEtudiantComponent {
       return;
     }
     this.remonterLesIncidents();
-    if (!this.enLigne()) {
+    if (!this.enLigne() || (await this.transmettre(this.sessionId, reponse)) === 'en-panne') {
       this.mettreEnFile(reponse);
       return;
     }
+    await this.viderLaFile();
+  }
+
+  private async transmettre(sessionId: string, reponse: ReponseEtudiant): Promise<IssueDeLEnvoi> {
     try {
-      const recu = await firstValueFrom(this.port.repondre(this.sessionId, this.jeton, reponse));
+      const recu = await firstValueFrom(this.port.repondre(sessionId, this.jeton, reponse));
+      this.refusReponse.set(null);
       this.afficherVerdict(reponse.questionId, recu);
-    } catch {
-      this.mettreEnFile(reponse);
+      return 'transmise';
+    } catch (erreur) {
+      const refus = erreur instanceof ReponseRefusee ? erreur : new ReponseRefusee('reseau', 0);
+      if (refus.motif === 'reseau') {
+        return 'en-panne';
+      }
+      if (refus.motif !== 'deja-repondue') {
+        this.refusReponse.set({ motif: refus.motif, message: refus.message });
+      }
+      return 'transmise';
     }
   }
 
@@ -509,7 +549,7 @@ export class CoursEtudiantComponent {
   }
 
   private async viderLaFile(): Promise<void> {
-    if (this.sessionId === null || this.videEnCours) {
+    if (this.sessionId === null || this.videEnCours || !this.fileDeLaSeance()) {
       return;
     }
     this.videEnCours = true;
@@ -517,27 +557,24 @@ export class CoursEtudiantComponent {
       await flush((envoi) => this.renvoyer(envoi));
     } finally {
       this.videEnCours = false;
-      this.enAttente.set(pending().length > 0);
+      this.enAttente.set(this.fileDeLaSeance());
     }
+  }
+
+  private fileDeLaSeance(): boolean {
+    return pending().some((envoi) => envoi.sessionId === this.sessionId);
   }
 
   private async renvoyer(envoi: EnvoiReponse): Promise<boolean> {
     if (this.sessionId === null || envoi.sessionId !== this.sessionId) {
       return false;
     }
-    try {
-      const recu = await firstValueFrom(
-        this.port.repondre(this.sessionId, this.jeton, {
-          questionId: envoi.questionId,
-          valeur: envoi.valeur as ValeurReponse,
-          dureeMs: envoi.dureeMs,
-        }),
-      );
-      this.afficherVerdict(envoi.questionId, recu);
-      return true;
-    } catch {
-      return false;
-    }
+    const issue = await this.transmettre(this.sessionId, {
+      questionId: envoi.questionId,
+      valeur: envoi.valeur as ValeurReponse,
+      dureeMs: envoi.dureeMs,
+    });
+    return issue === 'transmise';
   }
 
   private remonterLesIncidents(): void {

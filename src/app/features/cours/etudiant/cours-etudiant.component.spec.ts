@@ -22,6 +22,7 @@ import type { FormationsPort, VerdictReponse } from '../../../core/ports/formati
 import {
   FORMATIONS_PORT,
   RattachementRefuse,
+  ReponseRefusee,
   SujetRefuse,
 } from '../../../core/ports/formations.port';
 import type { ReponseBrique } from '../ecran/cours-ecran.component';
@@ -441,6 +442,134 @@ describe('CoursEtudiantComponent', () => {
 
     expect(port.repondre).toHaveBeenCalledTimes(1);
     expect(verdictsAffiches(fixture)).toEqual([]);
+  });
+
+  describe('avant le demarrage de la seance', () => {
+    it('affiche un message d attente au lieu de l ecran, puis l ecran au demarrage', async () => {
+      const fixture = await rattacher();
+
+      diffuser(fixture, { etat: 'attente' });
+
+      expect(lire(fixture, 'etudiant-attente')?.getAttribute('role')).toBe('status');
+      expect(fixture.debugElement.query(By.directive(CoursEcranComponent)))
+        .withContext('aucune brique ne doit pouvoir etre repondue avant le demarrage')
+        .toBeNull();
+
+      diffuser(fixture, { etat: 'en_cours' });
+
+      expect(lire(fixture, 'etudiant-attente')).toBeNull();
+      expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    });
+
+    it('ne propose pas l ecran suivant pendant l attente', async () => {
+      const fixture = await rattacher();
+
+      diffuser(fixture, {
+        etat: 'attente',
+        modeRythme: 'libre',
+        intervalleLibre: { premier: 0, dernier: 3 },
+      });
+
+      expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+    });
+  });
+
+  describe('refus d une reponse par le serveur', () => {
+    function refuser(motif: ReponseRefusee['motif'], statut: number): void {
+      port.repondre.and.returnValue(throwError(() => new ReponseRefusee(motif, statut)));
+    }
+
+    it('tient pour acceptee, sans verdict ni file, une reponse deja enregistree (409)', async () => {
+      refuser('deja-repondue', 409);
+      const fixture = await rattacher();
+
+      await repondre(fixture, REPONSE_VOTE);
+
+      expect(pending().length).toBe(0);
+      expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+      expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
+      expect(verdictsAffiches(fixture)).toEqual([]);
+    });
+
+    for (const [cas, motif, statut] of [
+      ['la seance n a pas demarre (409)', 'seance-non-demarree', 409],
+      ['la requete est invalide (400)', 'refusee', 400],
+    ] as const) {
+      it(`explique sans mettre en file un refus quand ${cas}`, async () => {
+        refuser(motif, statut);
+        const fixture = await rattacher();
+
+        await repondre(fixture, REPONSE_VOTE);
+        const alerte = lire(fixture, 'etudiant-reponse-refusee');
+
+        expect(alerte?.getAttribute('role')).toBe('alert');
+        expect(alerte?.getAttribute('data-motif')).toBe(motif);
+        expect(alerte?.textContent?.trim()).toBe(new ReponseRefusee(motif, statut).message);
+        expect(pending().length).toBe(0);
+        expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+      });
+    }
+
+    it('met en file une reponse refusee par une panne du serveur (5xx)', async () => {
+      refuser('reseau', 503);
+      const fixture = await rattacher();
+
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      expect(pending().length).toBe(1);
+      expect(lire(fixture, 'etudiant-hors-ligne')).toBeTruthy();
+      expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
+    });
+
+    it('vide la file apres un envoi reussi, sans attendre le retour du reseau', async () => {
+      port.repondre.and.returnValues(
+        throwError(() => new ReponseRefusee('reseau', 502)),
+        of(REUSSITE),
+        of(CONFUSION),
+      );
+      const fixture = await rattacher();
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      await repondre(fixture, REPONSE_VOTE);
+
+      expect(port.repondre.calls.allArgs().map(([, , reponse]) => reponse.questionId)).toEqual([
+        'Q-VA-07',
+        'Q-CAP-03',
+        'Q-VA-07',
+      ]);
+      expect(pending().length).toBe(0);
+      expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+    });
+
+    it('vide la file a chaque evenement d etat du flux', async () => {
+      port.repondre.and.returnValues(
+        throwError(() => new ReponseRefusee('reseau', 0)),
+        of(REUSSITE),
+      );
+      const fixture = await rattacher();
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      diffuser(fixture, { participants: 14 });
+      await stabiliser(fixture);
+
+      expect(port.repondre).toHaveBeenCalledTimes(2);
+      expect(pending().length).toBe(0);
+      expect(verdictsAffiches(fixture).length).toBe(1);
+    });
+
+    it('retire de la file une reponse que le serveur refuse au renvoi, en l expliquant', async () => {
+      port.repondre.and.returnValues(
+        throwError(() => new ReponseRefusee('reseau', 503)),
+        throwError(() => new ReponseRefusee('refusee', 409)),
+      );
+      const fixture = await rattacher();
+      await repondre(fixture, REPONSE_NUMERIQUE);
+
+      await laisserPasserLeReseau(fixture);
+
+      expect(pending().length).toBe(0);
+      expect(lire(fixture, 'etudiant-reponse-refusee')?.getAttribute('data-motif')).toBe('refusee');
+    });
   });
 
   it('remonte les incidents de verrou groupes sans bloquer la reponse en cours', async () => {

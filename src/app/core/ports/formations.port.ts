@@ -133,6 +133,25 @@ export class SujetRefuse extends Error {
   }
 }
 
+export type MotifRefusReponse = 'reseau' | 'deja-repondue' | 'seance-non-demarree' | 'refusee';
+
+const MESSAGES_REFUS_REPONSE: Readonly<Record<MotifRefusReponse, string>> = {
+  reseau: $localize`:cours.reponseReseau|@@coursReponseReseau:Votre réponse n’a pas pu partir : ce poste la renverra dès que le serveur répondra.`,
+  'deja-repondue': $localize`:cours.reponseDejaRepondue|@@coursReponseDejaRepondue:Votre réponse à cette question était déjà enregistrée.`,
+  'seance-non-demarree': $localize`:cours.reponseSeanceNonDemarree|@@coursReponseSeanceNonDemarree:La séance n’a pas encore démarré : votre réponse n’a pas été enregistrée. Attendez le signal de votre formateur.`,
+  refusee: $localize`:cours.reponseRefusee|@@coursReponseRefusee:Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.`,
+};
+
+export class ReponseRefusee extends Error {
+  constructor(
+    readonly motif: MotifRefusReponse,
+    readonly statut: number,
+  ) {
+    super(MESSAGES_REFUS_REPONSE[motif]);
+    this.name = 'ReponseRefusee';
+  }
+}
+
 export interface FormationsPort {
   ouvrirSeance(courseSlug: string): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;
