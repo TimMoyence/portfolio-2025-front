@@ -129,6 +129,31 @@ describe('authInterceptor', () => {
     expect(navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: cible } });
   }));
 
+  it('garde la page d origine quand un second 401 arrive pendant la redirection vers /login', fakeAsync(() => {
+    router.resetConfig([
+      { path: 'cours/seance/:sessionId/synthese', children: [] },
+      { path: 'login', children: [] },
+    ]);
+    void router.navigateByUrl('/cours/seance/seance-1/synthese');
+    flushMicrotasks();
+    authState.login(buildAuthSession());
+    const lectures = ['results', 'deroule'].map(
+      (fin) => `${environment.apiBaseUrl}/formations/sessions/seance-1/${fin}`,
+    );
+
+    for (const url of lectures) {
+      http.get(url).subscribe({ error: () => undefined });
+    }
+    for (const url of lectures) {
+      httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+    }
+    flushMicrotasks();
+
+    expect(router.url).toBe(
+      `/login?returnUrl=${encodeURIComponent('/cours/seance/seance-1/synthese')}`,
+    );
+  }));
+
   it('laisse remonter un 401 sur une requete au jeton participant sans toucher a la session formateur', () => {
     authState.login(buildAuthSession({ accessToken: 'jwt-formateur' }));
     spyOn(authState, 'clearSession').and.callThrough();

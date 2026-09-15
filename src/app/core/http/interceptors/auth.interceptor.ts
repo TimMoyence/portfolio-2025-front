@@ -6,11 +6,27 @@ import { APP_CONFIG } from '../../config/app-config.token';
 import { AuthStateService } from '../../services/auth-state.service';
 import { ENTETE_JETON_PARTICIPANT } from '../jeton-participant';
 
-function returnUrlOf(router: Router): string {
+const LOGIN_URL = '/login';
+
+function pendingNavigationUrl(router: Router): string | null {
   const navigation = router.getCurrentNavigation();
   return navigation === null
-    ? router.url
+    ? null
     : router.serializeUrl(navigation.finalUrl ?? navigation.extractedUrl);
+}
+
+function isLoginUrl(url: string): boolean {
+  return url === LOGIN_URL || url.startsWith(`${LOGIN_URL}?`);
+}
+
+function redirectToLogin(router: Router): void {
+  const pendingUrl = pendingNavigationUrl(router);
+  if (pendingUrl !== null && isLoginUrl(pendingUrl)) {
+    return;
+  }
+  void router.navigate([LOGIN_URL], {
+    queryParams: { returnUrl: pendingUrl ?? router.url },
+  });
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -29,9 +45,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       error: (error: { status?: number }) => {
         if (error.status === 401 && concernsTeacherSession) {
           authState.clearSession();
-          void router.navigate(['/login'], {
-            queryParams: { returnUrl: returnUrlOf(router) },
-          });
+          redirectToLogin(router);
         }
       },
     }),
