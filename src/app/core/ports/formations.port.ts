@@ -100,9 +100,9 @@ export interface RapportSeance {
 export type MotifRefusRattachement = 'code-inconnu' | 'deja-inscrit' | 'rattachement-impossible';
 
 const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, string>> = {
-  'code-inconnu': "Ce code de séance n'existe pas : vérifiez les caractères dictés.",
-  'deja-inscrit': "Cette inscription est déjà enregistrée, ou la séance n'en accepte plus.",
-  'rattachement-impossible': 'Le rattachement à la séance a échoué.',
+  'code-inconnu': $localize`:cours.refusCodeInconnu|@@coursRefusCodeInconnu:Ce code de séance n'existe pas : vérifiez les caractères dictés.`,
+  'deja-inscrit': $localize`:cours.refusDejaInscrit|@@coursRefusDejaInscrit:Cette inscription est déjà enregistrée, ou la séance n'en accepte plus.`,
+  'rattachement-impossible': $localize`:cours.refusRattachementImpossible|@@coursRefusRattachementImpossible:Le rattachement à la séance a échoué.`,
 };
 
 export class RattachementRefuse extends Error {
@@ -118,8 +118,8 @@ export class RattachementRefuse extends Error {
 export type MotifRefusSujet = 'cours-modifie' | 'sujet-indisponible';
 
 const MESSAGES_REFUS_SUJET: Readonly<Record<MotifRefusSujet, string>> = {
-  'cours-modifie': 'Le cours a changé depuis l’ouverture de la séance : prévenez votre formateur.',
-  'sujet-indisponible': 'Le sujet de la séance n’a pas pu être chargé.',
+  'cours-modifie': $localize`:cours.refusCoursModifie|@@coursRefusCoursModifie:Le cours a changé depuis l’ouverture de la séance : prévenez votre formateur.`,
+  'sujet-indisponible': $localize`:cours.refusSujetIndisponible|@@coursRefusSujetIndisponible:Le sujet de la séance n’a pas pu être chargé.`,
 };
 
 export class SujetRefuse extends Error {

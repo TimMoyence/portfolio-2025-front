@@ -13913,7 +13913,7 @@
     </unit>
     <unit id="presentateurReponses">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:293,294</note>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:110,111</note>
         <note category="meaning">presentateur.reponses</note>
       </notes>
       <segment>
@@ -13923,7 +13923,7 @@
     </unit>
     <unit id="presentateurPart">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:297,298</note>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:114,115</note>
         <note category="meaning">presentateur.part</note>
       </notes>
       <segment>
@@ -13933,7 +13933,7 @@
     </unit>
     <unit id="presentateurNeSaitPas">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:299,300</note>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:116,117</note>
         <note category="meaning">presentateur.neSaitPas</note>
       </notes>
       <segment>
@@ -13943,7 +13943,7 @@
     </unit>
     <unit id="presentateurSeuil">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:302,303</note>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:119,120</note>
         <note category="meaning">presentateur.seuil</note>
       </notes>
       <segment>
@@ -13953,7 +13953,7 @@
     </unit>
     <unit id="presentateurBonneReponse">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:307,308</note>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:122,123</note>
         <note category="meaning">presentateur.bonneReponse</note>
       </notes>
       <segment>
@@ -13963,7 +13963,7 @@
     </unit>
     <unit id="presentateurSousLeSeuil">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:317,320</note>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:130,134</note>
         <note category="meaning">presentateur.sousLeSeuil</note>
       </notes>
       <segment>
@@ -13973,7 +13973,7 @@
     </unit>
     <unit id="presentateurRemediation">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:338,340</note>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:149,153</note>
         <note category="meaning">presentateur.remediation</note>
       </notes>
       <segment>
@@ -14239,6 +14239,316 @@
       <segment>
         <source> La synthèse n&apos;a pas pu être lue. Rechargez la page, puis réessayez. </source>
         <target> The summary could not be read. Reload the page, then try again. </target>
+      </segment>
+    </unit>
+    <unit id="coursRefusCodeInconnu">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:103</note>
+        <note category="meaning">cours.refusCodeInconnu</note>
+      </notes>
+      <segment>
+        <source>Ce code de séance n&apos;existe pas : vérifiez les caractères dictés.</source>
+        <target>This session code does not exist: check the characters you were given.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusDejaInscrit">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:104</note>
+        <note category="meaning">cours.refusDejaInscrit</note>
+      </notes>
+      <segment>
+        <source>Cette inscription est déjà enregistrée, ou la séance n&apos;en accepte plus.</source>
+        <target>This registration is already recorded, or the session no longer accepts new ones.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusRattachementImpossible">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:105</note>
+        <note category="meaning">cours.refusRattachementImpossible</note>
+      </notes>
+      <segment>
+        <source>Le rattachement à la séance a échoué.</source>
+        <target>Joining the session failed.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusCoursModifie">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:121</note>
+        <note category="meaning">cours.refusCoursModifie</note>
+      </notes>
+      <segment>
+        <source>Le cours a changé depuis l’ouverture de la séance : prévenez votre formateur.</source>
+        <target>The course has changed since the session was opened: tell your trainer.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusSujetIndisponible">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:122</note>
+        <note category="meaning">cours.refusSujetIndisponible</note>
+      </notes>
+      <segment>
+        <source>Le sujet de la séance n’a pas pu être chargé.</source>
+        <target>The session questions could not be loaded.</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseReseau">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:138</note>
+        <note category="meaning">cours.reponseReseau</note>
+      </notes>
+      <segment>
+        <source>Votre réponse n’a pas pu partir : ce poste la renverra dès que le serveur répondra.</source>
+        <target>Your answer could not be sent: this device will resend it as soon as the server responds.</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseDejaRepondue">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:139</note>
+        <note category="meaning">cours.reponseDejaRepondue</note>
+      </notes>
+      <segment>
+        <source>Votre réponse à cette question était déjà enregistrée.</source>
+        <target>Your answer to this question was already recorded.</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseSeanceNonDemarree">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:140</note>
+        <note category="meaning">cours.reponseSeanceNonDemarree</note>
+      </notes>
+      <segment>
+        <source>La séance n’a pas encore démarré : votre réponse n’a pas été enregistrée. Attendez le signal de votre formateur.</source>
+        <target>The session has not started yet: your answer was not recorded. Wait for your trainer's signal.</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseRefusee">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:141</note>
+        <note category="meaning">cours.reponseRefusee</note>
+      </notes>
+      <segment>
+        <source>Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.</source>
+        <target>Your answer was not accepted by the server: tell your trainer.</target>
+      </segment>
+    </unit>
+    <unit id="coursCodeInvalide">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:69</note>
+        <note category="meaning">cours.codeInvalide</note>
+      </notes>
+      <segment>
+        <source>Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.</source>
+        <target>The session code has four digits: type it without any other character.</target>
+      </segment>
+    </unit>
+    <unit id="coursIdentiteRefusee">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:70</note>
+        <note category="meaning">cours.identiteRefusee</note>
+      </notes>
+      <segment>
+        <source>Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.</source>
+        <target>Check your first name, last name and email address, then try again.</target>
+      </segment>
+    </unit>
+    <unit id="coursRattachementEchec">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:71</note>
+        <note category="meaning">cours.rattachementEchec</note>
+      </notes>
+      <segment>
+        <source>Le rattachement à la séance a échoué. Prévenez votre formateur.</source>
+        <target>Joining the session failed. Tell your trainer.</target>
+      </segment>
+    </unit>
+    <unit id="coursAttenteDemarrage">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:148,151</note>
+        <note category="meaning">cours.attenteDemarrage</note>
+      </notes>
+      <segment>
+        <source> La séance n’a pas encore démarré : le premier écran s’affichera dès que votre formateur la lancera. </source>
+        <target> The session has not started yet: the first screen will appear as soon as your trainer starts it. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurQuestionTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:106,108</note>
+        <note category="meaning">presentateur.questionTitre</note>
+      </notes>
+      <segment>
+        <source> Question <ph id="0" equiv="INTERPOLATION" disp="{{ question().numero }}"/> </source>
+        <target> Question <ph id="0" equiv="INTERPOLATION" disp="{{ question().numero }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="presentateurTitrePage">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:112,113</note>
+        <note category="meaning">presentateur.titrePage</note>
+      </notes>
+      <segment>
+        <source>Pupitre de la séance</source>
+        <target>Session console</target>
+      </segment>
+    </unit>
+    <unit id="presentateurRepriseChargement">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:151,156</note>
+        <note category="meaning">presentateur.repriseChargement</note>
+      </notes>
+      <segment>
+        <source> Reprise de la séance… </source>
+        <target> Resuming the session… </target>
+      </segment>
+    </unit>
+    <unit id="presentateurRepriseEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:160,164</note>
+        <note category="meaning">presentateur.repriseEchec</note>
+      </notes>
+      <segment>
+        <source> La séance n&apos;a pas pu être reprise. Vérifiez la connexion, puis réessayez. </source>
+        <target> The session could not be resumed. Check the connection, then try again. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurRepriseReessayer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:168,172</note>
+        <note category="meaning">presentateur.repriseReessayer</note>
+      </notes>
+      <segment>
+        <source> Réessayer la reprise </source>
+        <target> Retry resuming </target>
+      </segment>
+    </unit>
+    <unit id="presentateurFluxConnecte">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:183,186</note>
+        <note category="meaning">presentateur.fluxConnecte</note>
+      </notes>
+      <segment>
+        <source>Suivi de la séance en direct.</source>
+        <target>Live session tracking.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurFluxReconnexion">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:188,192</note>
+        <note category="meaning">presentateur.fluxReconnexion</note>
+      </notes>
+      <segment>
+        <source>Suivi de la séance interrompu : reconnexion en cours. Les résultats et la scène peuvent être en retard.</source>
+        <target>Session tracking interrupted: reconnecting. Results and the stage view may lag behind.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurFluxRefusSession">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:197,198</note>
+        <note category="meaning">presentateur.fluxRefusSession</note>
+      </notes>
+      <segment>
+        <source>Le serveur refuse le suivi de la séance (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>) : reconnectez-vous, puis rechargez le pupitre, qui reprendra la séance.</source>
+        <target>The server refuses session tracking (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>): sign in again, then reload the console, which will resume the session.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurFluxRefusSaturation">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:203,204</note>
+        <note category="meaning">presentateur.fluxRefusSaturation</note>
+      </notes>
+      <segment>
+        <source>Trop de connexions au suivi de cette séance (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>) : fermez les onglets en trop ; nouvel essai automatique.</source>
+        <target>Too many connections to this session's tracking (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>): close extra tabs; retrying automatically.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurFluxRefus">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:209,210</note>
+        <note category="meaning">presentateur.fluxRefus</note>
+      </notes>
+      <segment>
+        <source>Le serveur refuse le suivi de la séance (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>) : nouvel essai automatique.</source>
+        <target>The server refuses session tracking (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>): retrying automatically.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurFluxConnexion">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:218,224</note>
+        <note category="meaning">presentateur.fluxConnexion</note>
+      </notes>
+      <segment>
+        <source>Connexion au suivi de la séance…</source>
+        <target>Connecting to session tracking…</target>
+      </segment>
+    </unit>
+    <unit id="sceneFluxConnecte">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:128,130</note>
+        <note category="meaning">scene.fluxConnecte</note>
+      </notes>
+      <segment>
+        <source>Suivi en direct</source>
+        <target>Live tracking</target>
+      </segment>
+    </unit>
+    <unit id="sceneFluxReconnexion">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:132,135</note>
+        <note category="meaning">scene.fluxReconnexion</note>
+      </notes>
+      <segment>
+        <source>Suivi interrompu, reconnexion en cours</source>
+        <target>Tracking interrupted, reconnecting</target>
+      </segment>
+    </unit>
+    <unit id="sceneFluxRefuse">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:137,138</note>
+        <note category="meaning">scene.fluxRefuse</note>
+      </notes>
+      <segment>
+        <source>Suivi refusé par le serveur (statut <ph id="0" equiv="INTERPOLATION" disp="{{ statutDuRefus() }}"/>)</source>
+        <target>Tracking refused by the server (status <ph id="0" equiv="INTERPOLATION" disp="{{ statutDuRefus() }}"/>)</target>
+      </segment>
+    </unit>
+    <unit id="sceneFluxConnexion">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:141,144</note>
+        <note category="meaning">scene.fluxConnexion</note>
+      </notes>
+      <segment>
+        <source>Connexion au suivi</source>
+        <target>Connecting to tracking</target>
+      </segment>
+    </unit>
+    <unit id="syntheseQuestionsLegende">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:139,142</note>
+        <note category="meaning">synthese.questionsLegende</note>
+      </notes>
+      <segment>
+        <source> Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance </source>
+        <target> Correct answers, total and &quot;I don't know&quot; for each question of the session </target>
+      </segment>
+    </unit>
+    <unit id="sessionRetryMessage">
+      <notes>
+        <note category="location">src/app/shared/components/session-retry/session-retry.component.ts:16,20</note>
+        <note category="meaning">sessionRetry.message</note>
+      </notes>
+      <segment>
+        <source> La vérification de votre session n&apos;a pas abouti. Votre connexion est conservée : vérifiez le réseau, puis réessayez. </source>
+        <target> Your session could not be verified. You are still signed in: check the network, then try again. </target>
+      </segment>
+    </unit>
+    <unit id="sessionRetryButton">
+      <notes>
+        <note category="location">src/app/shared/components/session-retry/session-retry.component.ts:26,30</note>
+        <note category="meaning">sessionRetry.button</note>
+      </notes>
+      <segment>
+        <source> Réessayer </source>
+        <target> Try again </target>
       </segment>
     </unit>
   </file>

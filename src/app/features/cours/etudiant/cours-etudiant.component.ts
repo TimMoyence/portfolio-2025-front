@@ -66,10 +66,9 @@ interface VerdictAffiche extends VerdictRecu {
 
 const REGIME_VERROU = 'focus';
 
-const MESSAGE_CODE = 'Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.';
-const MESSAGE_IDENTITE =
-  'Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.';
-const MESSAGE_ECHEC = 'Le rattachement à la séance a échoué. Prévenez votre formateur.';
+const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
+const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
+const MESSAGE_ECHEC = $localize`:cours.rattachementEchec|@@coursRattachementEchec:Le rattachement à la séance a échoué. Prévenez votre formateur.`;
 
 const MOTIF_CODE = /^\d{4}$/;
 const ESPACES = /\s+/g;
