@@ -16,6 +16,7 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort, VerdictReponse } from '../../../core/ports/formations.port';
 import {
@@ -79,12 +80,6 @@ describe('CoursEtudiantComponent', () => {
   let double: FluxDouble;
   let sujet: CoursContent;
   const montees: Fixture[] = [];
-
-  function lire(fixture: Fixture, marque: string): HTMLElement | null {
-    return (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
-      `[data-testid='${marque}']`,
-    );
-  }
 
   function verdictsAffiches(fixture: Fixture): HTMLElement[] {
     return [

@@ -1,13 +1,13 @@
 import type { ComponentFixture } from '@angular/core/testing';
 
-export function lireMarque<T>(fixture: ComponentFixture<T>, marque: string): HTMLElement | null {
+export function lireMarque(fixture: ComponentFixture<unknown>, marque: string): HTMLElement | null {
   return (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
     `[data-testid='${marque}']`,
   );
 }
 
-export function cibleMarque<T>(
-  fixture: ComponentFixture<T>,
+export function cibleMarque(
+  fixture: ComponentFixture<unknown>,
   marque: string,
   lieu: string,
 ): HTMLElement {

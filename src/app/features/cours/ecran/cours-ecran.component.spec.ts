@@ -10,6 +10,7 @@ import {
   buildQuoteCitation,
   buildVoteQuestion,
 } from '../../../../testing/factories/cours.factory';
+import { cibleMarque } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { ReponseBrique } from './cours-ecran.component';
 import {
@@ -39,13 +40,7 @@ interface EcranMonte {
 }
 
 function cible(fixture: Fixture, nom: string): HTMLElement {
-  const element = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
-    `[data-testid='${nom}']`,
-  );
-  if (element === null) {
-    throw new Error(`Aucun element « ${nom} » dans l ecran monte`);
-  }
-  return element;
+  return cibleMarque(fixture, nom, 'l ecran monte');
 }
 
 function briquesDe(hote: HTMLElement): BriqueMontee[] {
