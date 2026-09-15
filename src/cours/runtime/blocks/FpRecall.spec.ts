@@ -213,7 +213,7 @@ describe('FpRecall', () => {
   });
 
   it('conserve la misconception pour le poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.question = buildRecallQuestion({ id: 'Q-RAPPEL-05' });
     expect(hote.question?.options[1]).toEqual(
       jasmine.objectContaining({ misconception: 'interet-simple' }),

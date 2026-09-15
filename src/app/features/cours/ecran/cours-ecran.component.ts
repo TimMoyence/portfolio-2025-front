@@ -154,6 +154,7 @@ function lireReponse(detail: unknown): ReponseBrique | null {
       (fp-vote-submit)="relayer($event)"
       (fp-recall-submit)="relayer($event)"
       (fp-exit-submit)="relayer($event)"
+      (fp-block-error)="signalerEchec()"
     ></div>
     @if (inconnu()) {
       <p
@@ -208,6 +209,16 @@ export class CoursEcranComponent {
     }
   }
 
+  protected signalerEchec(): void {
+    const hote = this.hote().nativeElement;
+    for (const enfant of Array.from(hote.childNodes)) {
+      this.renderer.removeChild(hote, enfant);
+    }
+    this.inconnu.set(false);
+    this.echec.set(true);
+    this.pret.set(true);
+  }
+
   private enregistrerApresLeRendu(): Promise<boolean> {
     return new Promise<void>((resoudre) => {
       afterNextRender(() => resoudre());
@@ -253,10 +264,29 @@ export class CoursEcranComponent {
     for (const enfant of Array.from(hote.childNodes)) {
       this.renderer.removeChild(hote, enfant);
     }
-    const briques = this.construire(planDeMontage(ecran), this.rendu(), role);
-    this.inconnu.set(briques === null);
-    for (const brique of briques ?? []) {
-      this.renderer.appendChild(hote, brique);
+    const plan = planDeMontage(ecran);
+    const briques = this.construire(plan, this.rendu(), role);
+    if (plan === null) {
+      this.inconnu.set(true);
+      this.echec.set(false);
+      this.pret.set(true);
+      return;
+    }
+    if (briques === null) {
+      this.inconnu.set(false);
+      this.echec.set(true);
+      this.pret.set(true);
+      return;
+    }
+    this.inconnu.set(false);
+    this.echec.set(false);
+    try {
+      for (const brique of briques) {
+        this.renderer.appendChild(hote, brique);
+      }
+    } catch {
+      this.signalerEchec();
+      return;
     }
     this.pret.set(true);
   }
@@ -279,7 +309,7 @@ export class CoursEcranComponent {
   private creerBrique({ brique, donnees }: Montage, rendu: RenderMode, role: Role): HTMLElement {
     const element: HTMLElement = this.renderer.createElement(brique);
     this.renderer.setAttribute(element, 'render', rendu);
-    this.renderer.setAttribute(element, 'role', role);
+    this.renderer.setAttribute(element, 'data-cours-role', role);
     for (const cle of PROPRIETES_PAR_BRIQUE[brique]) {
       if (Object.hasOwn(donnees, cle)) {
         this.renderer.setProperty(element, cle, donnees[cle]);

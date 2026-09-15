@@ -7,7 +7,12 @@ import {
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { CoursContent, EcranContent, PacingMode } from '../../../../cours/content/types';
+import type {
+  CoursContent,
+  EcranContent,
+  PacingMode,
+  RegimeVerrou,
+} from '../../../../cours/content/types';
 import type { Deck } from '../../../../cours/runtime/core/deck';
 import { createDeck } from '../../../../cours/runtime/core/deck';
 import type { Identity } from '../../../../cours/runtime/core/identity';
@@ -52,6 +57,10 @@ interface RefusDeReponse {
   readonly message: string;
 }
 
+interface RefusDuFlux {
+  readonly statut: number;
+}
+
 type IssueDeLEnvoi = 'transmise' | 'en-panne';
 
 interface VerdictRecu {
@@ -64,7 +73,7 @@ interface VerdictAffiche extends VerdictRecu {
   readonly rang: number;
 }
 
-const REGIME_VERROU = 'focus';
+const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
 
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
 const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
@@ -92,6 +101,40 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
     return bascule;
   }
   return index < intervalle.premier || index > intervalle.dernier;
+}
+
+function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
+  if (typeof contenu !== 'object' || contenu === null) {
+    return null;
+  }
+  const regime = (contenu as Record<string, unknown>)['regime'];
+  return typeof regime === 'string' && REGIMES_VERROU.includes(regime as RegimeVerrou)
+    ? (regime as RegimeVerrou)
+    : null;
+}
+
+function regimeDeLEcran(ecran: EcranContent): RegimeVerrou {
+  const direct = regimeDuContenu(ecran.donnees);
+  if (direct !== null) {
+    return direct;
+  }
+  for (const donnees of Object.values(ecran.donnees ?? {})) {
+    const indirect = regimeDuContenu(donnees);
+    if (indirect !== null) {
+      return indirect;
+    }
+    if (typeof donnees === 'object' && donnees !== null) {
+      const metadonnees = regimeDuContenu((donnees as Record<string, unknown>)['metadonnees']);
+      if (metadonnees !== null) {
+        return metadonnees;
+      }
+    }
+  }
+  return 'ouvert';
+}
+
+function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
+  return ecran?.type === 'ecran-verrouille';
 }
 
 @Component({
@@ -139,33 +182,53 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
             <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
               La séance est terminée. Merci de votre participation.
             </p>
-          } @else if (statutSeance() !== 'en_cours') {
-            <p
-              data-testid="etudiant-attente"
-              role="status"
-              i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
-            >
-              La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
-              formateur la lancera.
-            </p>
           } @else {
-            @if (ecranCourant(); as ecran) {
-              <app-cours-ecran
-                [ecran]="ecran"
-                rendu="hand"
-                [role]="'etudiant'"
-                (reponse)="envoyer($event)"
-              />
-            }
-            @if (peutAvancer()) {
-              <button
-                type="button"
-                data-testid="etudiant-suivant"
-                (click)="avancer()"
-                i18n="cours.ecranSuivant|@@coursEcranSuivant"
-              >
-                Écran suivant
-              </button>
+            @if (echecEcran(); as echec) {
+              <p data-testid="etudiant-ecran-echec" role="alert">
+                {{ echec.message }}
+              </p>
+            } @else {
+              @if (refusDuFlux(); as refus) {
+                <p
+                  data-testid="etudiant-flux-refuse"
+                  role="alert"
+                  [attr.data-statut]="refus.statut"
+                  i18n="cours.fluxRefuse|@@coursFluxRefuse"
+                >
+                  Le suivi en direct a été refusé par le serveur (statut {{ refus.statut }}). Les
+                  activités réapparaîtront dès que la connexion sera rétablie.
+                </p>
+              } @else if (statutSeance() !== 'en_cours') {
+                <p
+                  data-testid="etudiant-attente"
+                  role="status"
+                  i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
+                >
+                  La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
+                  formateur la lancera.
+                </p>
+              } @else if (chargementEcran()) {
+                <p data-testid="etudiant-ecran-chargement" role="status">Chargement de l’écran…</p>
+              } @else {
+                @if (ecranCourant(); as ecran) {
+                  <app-cours-ecran
+                    [ecran]="ecran"
+                    rendu="hand"
+                    [role]="'etudiant'"
+                    (reponse)="envoyer($event)"
+                  />
+                }
+                @if (peutAvancer()) {
+                  <button
+                    type="button"
+                    data-testid="etudiant-suivant"
+                    (click)="avancer()"
+                    i18n="cours.ecranSuivant|@@coursEcranSuivant"
+                  >
+                    Écran suivant
+                  </button>
+                }
+              }
             }
           }
           <ul data-testid="etudiant-verdicts" aria-live="polite">
@@ -262,10 +325,14 @@ export class CoursEtudiantComponent {
   readonly peutAvancer = signal(false);
   readonly statutSeance = signal<StatutSession | null>(null);
   readonly refusReponse = signal<RefusDeReponse | null>(null);
+  readonly refusDuFlux = signal<RefusDuFlux | null>(null);
+  readonly echecEcran = signal<RefusAffiche | null>(null);
+  readonly chargementEcran = signal(false);
 
-  readonly ecranCourant = computed<EcranContent | null>(
-    () => this.sujet()?.ecrans[this.indexEcran()] ?? null,
-  );
+  readonly ecranCourant = computed<EcranContent | null>(() => {
+    const ecran = this.sujet()?.ecrans[this.indexEcran()];
+    return estEcranVerrouille(ecran) ? null : (ecran ?? null);
+  });
 
   private readonly verdicts = signal<ReadonlyMap<string, VerdictRecu>>(new Map());
 
@@ -449,14 +516,12 @@ export class CoursEtudiantComponent {
       jeton: rattachement.jeton,
     });
     flux.onState((etat) => this.suivreLeFlux(deck, etat));
+    flux.onStatut((statut) => {
+      this.refusDuFlux.set(statut.etat === 'refuse' ? { statut: statut.statut } : null);
+    });
     flux.join(identite);
     this.flux = flux;
-    const verrou = createLock(REGIME_VERROU);
-    verrou.onIncident((incident) => {
-      this.incidents.push({ type: incident.type, horodatage: incident.horodatage });
-    });
-    verrou.arm();
-    this.verrou = verrou;
+    this.configurerLeVerrou(sujet.ecrans[deck.current()]);
     this.etat.set('seance');
   }
 
@@ -475,8 +540,63 @@ export class CoursEtudiantComponent {
     if (index !== this.indexEcran()) {
       this.indexEcran.set(index);
       this.verdicts.set(new Map());
+      this.configurerLeVerrou(this.sujet()?.ecrans[index]);
+      this.chantier = this.chargerLecranSiNecessaire(index);
     }
-    this.peutAvancer.set(deck.canNavigate(index + 1));
+    this.peutAvancer.set(
+      !estEcranVerrouille(this.sujet()?.ecrans[index]) && deck.canNavigate(index + 1),
+    );
+  }
+
+  private configurerLeVerrou(ecran: EcranContent | undefined): void {
+    if (ecran === undefined) {
+      return;
+    }
+    this.verrou?.disarm();
+    const verrou = createLock(regimeDeLEcran(ecran));
+    verrou.onIncident((incident) => {
+      this.incidents.push({ type: incident.type, horodatage: incident.horodatage });
+    });
+    verrou.arm();
+    this.verrou = verrou;
+  }
+
+  private async chargerLecranSiNecessaire(index: number): Promise<void> {
+    if (
+      this.sessionId === null ||
+      this.jeton === '' ||
+      !estEcranVerrouille(this.sujet()?.ecrans[index])
+    ) {
+      return;
+    }
+    this.chargementEcran.set(true);
+    this.echecEcran.set(null);
+    try {
+      const sujet = await firstValueFrom(this.port.lireSujet(this.sessionId, this.jeton));
+      if (!this.detruit) {
+        this.sujet.set(sujet);
+        const ecran = sujet.ecrans[index];
+        this.configurerLeVerrou(ecran);
+        if (this.deck !== null) {
+          this.peutAvancer.set(!estEcranVerrouille(ecran) && this.deck.canNavigate(index + 1));
+        }
+        if (estEcranVerrouille(ecran)) {
+          this.echecEcran.set({
+            motif: 'sujet-indisponible',
+            message: 'L’écran n’est pas encore disponible pour cette séance.',
+          });
+        }
+      }
+    } catch {
+      this.echecEcran.set({
+        motif: 'sujet-indisponible',
+        message: 'L’écran n’a pas pu être chargé.',
+      });
+    } finally {
+      if (!this.detruit) {
+        this.chargementEcran.set(false);
+      }
+    }
   }
 
   private suivreLeFlux(deck: Deck, etat: EtatSession): void {

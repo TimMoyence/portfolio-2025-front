@@ -262,11 +262,11 @@ describe('FpEscape', () => {
   });
 
   it('garde les solutions pour le seul poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.parcours = buildEscapeParcours();
     hote.setAttribute('render', 'board');
     expect(libelleDe(hote, 'solutions')).toContain(MARGE);
-    hote.setAttribute('role', 'etudiant');
+    hote.setAttribute('data-cours-role', 'etudiant');
     hote.parcours = buildEscapeParcours();
     expect(JSON.stringify(hote.parcours)).not.toContain(MARGE);
   });

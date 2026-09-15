@@ -118,13 +118,26 @@ describe('CoursSceneComponent', () => {
     expect(options.entetes?.()).toEqual({ authorization: `Bearer ${JETON}` });
     expect(double.flux.ouvrir).toHaveBeenCalledTimes(1);
 
-    expect(apercu(fixture)?.ecran()).toBe(deroule.ecrans[0]);
+    expect(apercu(fixture)?.ecran()).toEqual({
+      id: deroule.ecrans[0].id,
+      type: deroule.ecrans[0].type,
+      duree: deroule.ecrans[0].duree,
+      interactif: deroule.ecrans[0].interactif,
+      donnees: deroule.ecrans[0].donnees,
+    });
+    expect(Object.hasOwn(apercu(fixture)?.ecran() ?? {}, 'corriges')).toBeFalse();
     expect(apercu(fixture)?.rendu()).toBe('stage');
     expect(apercu(fixture)?.role()).toBe('presentateur');
 
     diffuser(fixture, { ecranCourant: 1 });
 
-    expect(apercu(fixture)?.ecran()).toBe(deroule.ecrans[1]);
+    expect(apercu(fixture)?.ecran()).toEqual({
+      id: deroule.ecrans[1].id,
+      type: deroule.ecrans[1].type,
+      duree: deroule.ecrans[1].duree,
+      interactif: deroule.ecrans[1].interactif,
+      donnees: deroule.ecrans[1].donnees,
+    });
   });
 
   it('n envoie aucun en-tete authorization sans session ouverte', async () => {

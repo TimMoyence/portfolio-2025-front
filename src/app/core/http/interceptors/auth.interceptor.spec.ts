@@ -112,7 +112,7 @@ describe('authInterceptor', () => {
   });
 
   it('renvoie vers la cible de la navigation en cours quand le 401 survient avant qu elle aboutisse', fakeAsync(() => {
-    const cible = '/cours/presenter/b1-01-proportions?seance=seance-1';
+    const cible = '/cours/presenter/b2-01-traitement-information-chiffree?seance=seance-1';
     router.resetConfig([
       { path: 'cours/presenter/:slug', canActivate: [() => new Subject<boolean>()], children: [] },
     ]);

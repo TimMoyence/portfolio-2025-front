@@ -1502,6 +1502,14 @@
         </context-group>
         <note priority="1" from="meaning">cours.ecranEchec</note>
       </trans-unit>
+      <trans-unit id="coursFluxRefuse" datatype="html">
+        <source>Le suivi en direct a été refusé par le serveur (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>). Les activités réapparaîtront dès que la connexion sera rétablie.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
+          <context context-type="linenumber">196,200</context>
+        </context-group>
+        <note priority="1" from="meaning">cours.fluxRefuse</note>
+      </trans-unit>
       <trans-unit id="coursCodeInvalide" datatype="html">
         <source>Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.</source>
         <context-group purpose="location">

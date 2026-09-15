@@ -198,7 +198,7 @@ describe('FpExit', () => {
   });
 
   it('conserve la misconception pour le poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.billet = buildExitBillet({ id: 'B-SORTIE-11' });
     expect(hote.billet?.options[1]).toEqual(
       jasmine.objectContaining({ misconception: 'proportionnalite' }),

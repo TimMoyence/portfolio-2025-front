@@ -2,7 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { CoursContent, EcranContent, RenderMode, Role } from '../../../cours/content/types';
 import { texte } from '../../../cours/runtime/core/i18n';
-import sujet from '../../../testing/fixtures/cours/b1-01-proportions.sujet.json';
+import sujet from '../../../testing/fixtures/cours/b2-01-traitement-information-chiffree.sujet.json';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { CoursEcranComponent } from './ecran/cours-ecran.component';
 
@@ -12,7 +12,7 @@ interface Projection {
 }
 
 const COURS: CoursContent = sujet;
-const SLUG = 'b1-01-proportions';
+const SLUG = 'b2-01-traitement-information-chiffree';
 const QUESTIONNAIRE = 'questionnaire';
 const CLES_DU_CORRIGE: readonly string[] = [
   'solutions',
@@ -97,7 +97,7 @@ async function monter(
   return fixture;
 }
 
-describe('Repetition de B1-01 : chaque ecran reel du sujet', () => {
+describe('Repetition de B2-01 : chaque ecran reel du sujet', () => {
   it('ne publie que le sujet public du cours, sans aucune cle du corrige', () => {
     expect(COURS.id).toBe(SLUG);
     expect(COURS.ecrans.length).toBeGreaterThan(0);

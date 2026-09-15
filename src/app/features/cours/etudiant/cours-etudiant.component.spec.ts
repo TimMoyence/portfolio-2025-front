@@ -361,6 +361,93 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-progression')?.textContent?.trim()).toBe('3 / 4');
   });
 
+  it('distingue un flux refuse de l attente avant le demarrage', async () => {
+    const fixture = await rattacher();
+
+    double.diffuserStatut({ etat: 'refuse', statut: 429 });
+    fixture.detectChanges();
+
+    expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('role')).toBe('alert');
+    expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('data-statut')).toBe('429');
+    expect(lire(fixture, 'etudiant-attente')).toBeNull();
+    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+  });
+
+  it('applique le regime de verrou propre a chaque ecran', async () => {
+    sujet = {
+      ...sujet,
+      ecrans: [
+        buildEcranQuestionnaire({
+          id: 'ecran-focus',
+          donnees: { ...buildEcranQuestionnaire().donnees, regime: 'focus' },
+        }),
+        buildEcranQuestionnaire({
+          id: 'ecran-examen',
+          donnees: { ...buildEcranQuestionnaire().donnees, regime: 'examen' },
+        }),
+        ...sujet.ecrans.slice(2),
+      ],
+    };
+    port.lireSujet.and.returnValue(of(sujet));
+    const fixture = await rattacherALaSeanceEnCours();
+
+    window.dispatchEvent(new Event('blur'));
+    await repondre(fixture, REPONSE_NUMERIQUE);
+    expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('blur');
+
+    diffuser(fixture, { ecranCourant: 1 });
+    const copie = new Event('copy', { cancelable: true });
+    document.dispatchEvent(copie);
+
+    expect(copie.defaultPrevented).toBeTrue();
+  });
+
+  it('relit un ecran verrouille quand le formateur le revele', async () => {
+    const ecranVerrouille = {
+      ...sujet.ecrans[1],
+      type: 'ecran-verrouille',
+      interactif: false,
+      donnees: {},
+    };
+    const sujetInitial = {
+      ...sujet,
+      ecrans: [sujet.ecrans[0], ecranVerrouille, ...sujet.ecrans.slice(2)],
+    };
+    port.lireSujet.and.returnValues(of(sujetInitial), of(sujet));
+    const fixture = await rattacherALaSeanceEnCours();
+
+    diffuser(fixture, { ecranCourant: 1 });
+    await stabiliser(fixture);
+
+    expect(port.lireSujet).toHaveBeenCalledTimes(2);
+    expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
+    expect(lire(fixture, 'etudiant-ecran-chargement')).toBeNull();
+  });
+
+  it('signale l echec d une relecture d ecran sans afficher un ecran vide', async () => {
+    const ecranVerrouille = {
+      ...sujet.ecrans[1],
+      type: 'ecran-verrouille',
+      interactif: false,
+      donnees: {},
+    };
+    const sujetInitial = {
+      ...sujet,
+      ecrans: [sujet.ecrans[0], ecranVerrouille, ...sujet.ecrans.slice(2)],
+    };
+    port.lireSujet.and.returnValues(
+      of(sujetInitial),
+      throwError(() => new SujetRefuse('sujet-indisponible', 503)),
+    );
+    const fixture = await rattacherALaSeanceEnCours();
+
+    diffuser(fixture, { ecranCourant: 1 });
+    await stabiliser(fixture);
+
+    expect(lire(fixture, 'etudiant-ecran-echec')?.getAttribute('role')).toBe('alert');
+    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+  });
+
   it('envoie au serveur la reponse d une brique avec son identifiant de question', async () => {
     const fixture = await rattacherALaSeanceEnCours();
 

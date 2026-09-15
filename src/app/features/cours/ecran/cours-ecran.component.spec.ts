@@ -107,7 +107,8 @@ describe('CoursEcranComponent', () => {
       .withContext('la question doit passer par le setter de la brique enregistree')
       .toContain(question.enonce);
     expect(briques[0].getAttribute('render')).toBe('stage');
-    expect(briques[0].getAttribute('role')).toBe('presentateur');
+    expect(briques[0].getAttribute('data-cours-role')).toBe('presentateur');
+    expect(briques[0].getAttribute('role')).toBeNull();
     expect(fixture.componentInstance.pret()).toBeTrue();
   });
 
@@ -160,7 +161,8 @@ describe('CoursEcranComponent', () => {
     ]);
     for (const brique of briques) {
       expect(brique.getAttribute('render')).toBe('hand');
-      expect(brique.getAttribute('role')).toBe('etudiant');
+      expect(brique.getAttribute('data-cours-role')).toBe('etudiant');
+      expect(brique.getAttribute('role')).toBeNull();
     }
   });
 
@@ -343,7 +345,7 @@ describe('CoursEcranComponent', () => {
       { rendu: 'hand' },
     );
 
-    expect(cible(fixture, 'cours-ecran-inconnu').getAttribute('role')).toBe('alert');
+    expect(cible(fixture, 'cours-ecran-echec').getAttribute('role')).toBe('alert');
     expect(hote.childElementCount).toBe(0);
     expect(fixture.componentInstance.pret()).toBeTrue();
   });
@@ -363,7 +365,7 @@ describe('CoursEcranComponent', () => {
     );
 
     expect(nomsCrees(creations)).toContain('fp-vote');
-    expect(cible(fixture, 'cours-ecran-inconnu')).toBeTruthy();
+    expect(cible(fixture, 'cours-ecran-echec')).toBeTruthy();
     expect(hote.childElementCount).toBe(0);
   });
 
@@ -389,7 +391,7 @@ describe('CoursEcranComponent', () => {
     const briques = briquesDe(hote);
     expect(briques.length).toBe(1);
     expect(briques[0]).not.toBe(avant);
-    expect(briques[0].getAttribute('role')).toBe('presentateur');
+    expect(briques[0].getAttribute('data-cours-role')).toBe('presentateur');
   });
 
   it('ne monte rien quand le composant est detruit pendant le chargement des briques', async () => {

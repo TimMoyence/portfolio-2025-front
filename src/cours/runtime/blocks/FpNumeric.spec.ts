@@ -222,7 +222,7 @@ describe('FpNumeric', () => {
   });
 
   it('efface la tolerance et la valeur attendue meme pour le poste presentateur', () => {
-    hote.setAttribute('role', 'presentateur');
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.question = buildNumericQuestion({ id: 'Q-PRES-01' });
     expect(clesDe(hote)).toEqual(CLES_PUBLIQUES);
     expect(JSON.stringify(hote.question)).not.toContain(VALEUR_ATTENDUE);

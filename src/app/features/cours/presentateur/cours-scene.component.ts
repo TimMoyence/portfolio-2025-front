@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { DerouleCours, EcranDeroule } from '../../../../cours/content/types';
+import type { DerouleCours, EcranContent } from '../../../../cours/content/types';
 import type { EtatSession, StatutFlux, Sync } from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
@@ -161,9 +161,19 @@ export class CoursSceneComponent {
     return suivi?.etat === 'refuse' ? suivi.statut : null;
   });
 
-  readonly ecranCourant = computed<EcranDeroule | null>(
-    () => this.deroule()?.ecrans[this.ecran()] ?? null,
-  );
+  readonly ecranCourant = computed<EcranContent | null>(() => {
+    const ecran = this.deroule()?.ecrans[this.ecran()];
+    if (ecran === undefined) {
+      return null;
+    }
+    return {
+      id: ecran.id,
+      type: ecran.type,
+      duree: ecran.duree,
+      interactif: ecran.interactif,
+      donnees: ecran.donnees,
+    };
+  });
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);

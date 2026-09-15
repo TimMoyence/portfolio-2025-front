@@ -13632,6 +13632,16 @@
         <target> The activities on this screen could not be loaded. Reload the page; if the problem persists, tell your teacher. </target>
       </segment>
     </unit>
+    <unit id="coursFluxRefuse">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:196,200</note>
+        <note category="meaning">cours.fluxRefuse</note>
+      </notes>
+      <segment>
+        <source>Le suivi en direct a été refusé par le serveur (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>). Les activités réapparaîtront dès que la connexion sera rétablie.</source>
+        <target>Live tracking was refused by the server (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>). Activities will reappear when the connection is restored.</target>
+      </segment>
+    </unit>
     <unit id="coursChargementSujet">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:102,105</note>

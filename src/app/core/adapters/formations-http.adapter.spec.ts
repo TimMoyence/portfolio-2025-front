@@ -85,10 +85,14 @@ describe('FormationsHttpAdapter', () => {
     const ouverte = { sessionId: SESSION_ID, code: CODE };
     const recus: SeanceOuverte[] = [];
 
-    adapter.ouvrirSeance('b1-01-proportions').subscribe((valeur) => recus.push(valeur));
+    adapter
+      .ouvrirSeance('b2-01-traitement-information-chiffree')
+      .subscribe((valeur) => recus.push(valeur));
 
     const req = attendre(RACINE, 'POST');
-    expect(req.request.body).toEqual({ courseSlug: 'b1-01-proportions' });
+    expect(req.request.body).toEqual({
+      courseSlug: 'b2-01-traitement-information-chiffree',
+    });
     req.flush(ouverte);
 
     expect(recus).toEqual([ouverte]);

@@ -315,7 +315,7 @@ const IMPORTS_ADMIS = [
   },
   {
     nom: 'un spec hors du pupitre',
-    fichier: 'src/app/features/cours/repetition-b1-01.spec.ts',
+    fichier: 'src/app/features/cours/repetition-b2-01.spec.ts',
     texte: "import { CoursSceneComponent } from './presentateur/cours-scene.component';\n",
   },
   {
