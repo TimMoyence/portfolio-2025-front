@@ -339,6 +339,18 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cours/presenter/:slug/scene/:sessionId',
+    canActivate: [authGuard, roleGuard('teacher')],
+    loadComponent: () =>
+      import('./features/cours/presentateur/cours-scene.component').then(
+        (m) => m.CoursSceneComponent,
+      ),
+    data: {
+      seoKey: 'cours-scene',
+      robots: 'noindex, nofollow',
+    },
+  },
+  {
     path: 'cours/seance/:sessionId/synthese',
     canActivate: [authGuard],
     loadComponent: () =>

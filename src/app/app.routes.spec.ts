@@ -100,24 +100,8 @@ describe('app routes', () => {
   describe('parcours de cours', () => {
     const routeDe = (chemin: string) => routes.find((route) => route.path === chemin);
 
-    it('ouvre la vue etudiant sans authentification, les etudiants n ayant pas de compte', async () => {
-      const route = routeDe('cours/rejoindre');
-
-      expect(route?.canActivate ?? []).toEqual([]);
-      const composant = await route?.loadComponent?.();
-      expect((composant as { name: string }).name).toBe('CoursEtudiantComponent');
-    });
-
-    it('reserve la synthese de seance a un formateur authentifie', async () => {
-      const route = routeDe('cours/seance/:sessionId/synthese');
-
-      expect(route?.canActivate?.includes(authGuard)).toBeTrue();
-      const composant = await route?.loadComponent?.();
-      expect((composant as { name: string }).name).toBe('CoursSyntheseComponent');
-    });
-
-    it('reserve le pupitre de seance a un formateur authentifie', async () => {
-      const route = routeDe('cours/presenter/:slug');
+    async function verifieReserveAUnFormateur(chemin: string, nomComposant: string): Promise<void> {
+      const route = routeDe(chemin);
       setupTestBed({ router: true });
       const authState = TestBed.inject(AuthStateService);
       const [authentification, role, ...autres] = route?.canActivate ?? [];
@@ -137,7 +121,34 @@ describe('app routes', () => {
 
       authState.clearSession();
       const composant = await route?.loadComponent?.();
-      expect((composant as { name: string }).name).toBe('CoursPresentateurComponent');
+      expect((composant as { name: string }).name).toBe(nomComposant);
+    }
+
+    it('ouvre la vue etudiant sans authentification, les etudiants n ayant pas de compte', async () => {
+      const route = routeDe('cours/rejoindre');
+
+      expect(route?.canActivate ?? []).toEqual([]);
+      const composant = await route?.loadComponent?.();
+      expect((composant as { name: string }).name).toBe('CoursEtudiantComponent');
+    });
+
+    it('reserve la synthese de seance a un formateur authentifie', async () => {
+      const route = routeDe('cours/seance/:sessionId/synthese');
+
+      expect(route?.canActivate?.includes(authGuard)).toBeTrue();
+      const composant = await route?.loadComponent?.();
+      expect((composant as { name: string }).name).toBe('CoursSyntheseComponent');
+    });
+
+    it('reserve le pupitre de seance a un formateur authentifie', async () => {
+      await verifieReserveAUnFormateur('cours/presenter/:slug', 'CoursPresentateurComponent');
+    });
+
+    it('reserve la scene de seance a un formateur authentifie', async () => {
+      await verifieReserveAUnFormateur(
+        'cours/presenter/:slug/scene/:sessionId',
+        'CoursSceneComponent',
+      );
     });
 
     it('n indexe aucune page de cours', () => {
