@@ -13519,5 +13519,718 @@
     <unit id="navLinkArticles">
       <segment><source>Articles</source><target>Articles</target></segment>
     </unit>
+    <unit id="coursChargement">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:37,40</note>
+        <note category="meaning">cours.chargement</note>
+      </notes>
+      <segment>
+        <source> Chargement du cours… </source>
+        <target> Loading the course… </target>
+      </segment>
+    </unit>
+    <unit id="coursPrenom">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:42,43</note>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:206,207</note>
+        <note category="meaning">cours.prenom</note>
+      </notes>
+      <segment>
+        <source>Prénom</source>
+        <target>First name</target>
+      </segment>
+    </unit>
+    <unit id="coursNom">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:44,45</note>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:208,209</note>
+        <note category="meaning">cours.nom</note>
+      </notes>
+      <segment>
+        <source>Nom</source>
+        <target>Last name</target>
+      </segment>
+    </unit>
+    <unit id="coursEmail">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:46,47</note>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:210,211</note>
+        <note category="meaning">cours.email</note>
+      </notes>
+      <segment>
+        <source>Adresse e-mail</source>
+        <target>Email address</target>
+      </segment>
+    </unit>
+    <unit id="coursRejoindre">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:48,50</note>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:218,220</note>
+        <note category="meaning">cours.rejoindre</note>
+      </notes>
+      <segment>
+        <source>Rejoindre</source>
+        <target>Join</target>
+      </segment>
+    </unit>
+    <unit id="coursIdentiteRefus">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:55,59</note>
+        <note category="meaning">cours.identiteRefus</note>
+      </notes>
+      <segment>
+        <source> Vos informations n&apos;ont pas pu être prises en compte : vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez. </source>
+        <target> Your information could not be accepted: check your first name, last name and email address, then try again. </target>
+      </segment>
+    </unit>
+    <unit id="coursSansMemoire">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:68,72</note>
+        <note category="meaning">cours.sansMemoire</note>
+      </notes>
+      <segment>
+        <source> Ce poste ne peut rien mémoriser : le cours continue normalement, mais si vous rechargez la page ou fermez l&apos;onglet, vous devrez vous réinscrire et repartir du début. Signalez-le à votre formateur. </source>
+        <target> This device cannot remember anything: the course continues normally, but if you reload the page or close the tab, you will have to register again and start over. Tell your teacher. </target>
+      </segment>
+    </unit>
+    <unit id="coursGalerie">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:75,76</note>
+        <note category="meaning">cours.galerie</note>
+      </notes>
+      <segment>
+        <source>Les briques du catalogue</source>
+        <target>Catalog building blocks</target>
+      </segment>
+    </unit>
+    <unit id="coursErreur">
+      <notes>
+        <note category="location">src/app/features/cours/cours-host.component.ts:81,86</note>
+        <note category="meaning">cours.erreur</note>
+      </notes>
+      <segment>
+        <source> Ce cours n&apos;a pas pu être chargé. Rechargez la page ; si le problème persiste, prévenez votre formateur. </source>
+        <target> This course could not be loaded. Reload the page; if the problem persists, tell your teacher. </target>
+      </segment>
+    </unit>
+    <unit id="coursEcranInconnu">
+      <notes>
+        <note category="location">src/app/features/cours/ecran/cours-ecran.component.ts:143,147</note>
+        <note category="meaning">cours.ecranInconnu</note>
+      </notes>
+      <segment>
+        <source> Cet écran ne peut pas être affiché : son contenu n’est pas reconnu. </source>
+        <target> This screen cannot be displayed: its content is not recognized. </target>
+      </segment>
+    </unit>
+    <unit id="coursEcranEchec">
+      <notes>
+        <note category="location">src/app/features/cours/ecran/cours-ecran.component.ts:148,154</note>
+        <note category="meaning">cours.ecranEchec</note>
+      </notes>
+      <segment>
+        <source> Les activités de cet écran n’ont pas pu être chargées. Rechargez la page ; si le problème persiste, prévenez votre formateur. </source>
+        <target> The activities on this screen could not be loaded. Reload the page; if the problem persists, tell your teacher. </target>
+      </segment>
+    </unit>
+    <unit id="coursChargementSujet">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:102,105</note>
+        <note category="meaning">cours.chargementSujet</note>
+      </notes>
+      <segment>
+        <source> Chargement de votre sujet… </source>
+        <target> Loading your course… </target>
+      </segment>
+    </unit>
+    <unit id="coursReessayerSujet">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:117,120</note>
+        <note category="meaning">cours.reessayerSujet</note>
+      </notes>
+      <segment>
+        <source> Réessayer </source>
+        <target> Try again </target>
+      </segment>
+    </unit>
+    <unit id="coursFin">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:132,134</note>
+        <note category="meaning">cours.fin</note>
+      </notes>
+      <segment>
+        <source> La séance est terminée. Merci de votre participation. </source>
+        <target> The session has ended. Thank you for taking part. </target>
+      </segment>
+    </unit>
+    <unit id="coursEcranSuivant">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:150,152</note>
+        <note category="meaning">cours.ecranSuivant</note>
+      </notes>
+      <segment>
+        <source> Écran suivant </source>
+        <target> Next screen </target>
+      </segment>
+    </unit>
+    <unit id="coursQuestionReussie">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:166,167</note>
+        <note category="meaning">cours.questionReussie</note>
+      </notes>
+      <segment>
+        <source> Question <ph id="0" equiv="INTERPOLATION" disp="{{ verdict.rang }}"/> : Réussi </source>
+        <target> Question <ph id="0" equiv="INTERPOLATION" disp="{{ verdict.rang }}"/>: Passed </target>
+      </segment>
+    </unit>
+    <unit id="coursQuestionManquee">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:173,174</note>
+        <note category="meaning">cours.questionManquee</note>
+      </notes>
+      <segment>
+        <source> Question <ph id="0" equiv="INTERPOLATION" disp="{{ verdict.rang }}"/> : Manqué </source>
+        <target> Question <ph id="0" equiv="INTERPOLATION" disp="{{ verdict.rang }}"/>: Missed </target>
+      </segment>
+    </unit>
+    <unit id="coursHorsLigne">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:188,191</note>
+        <note category="meaning">cours.horsLigne</note>
+      </notes>
+      <segment>
+        <source> Votre réponse est enregistrée sur ce poste et partira au retour du réseau. </source>
+        <target> Your answer is saved on this device and will be sent once the network is back. </target>
+      </segment>
+    </unit>
+    <unit id="coursFileRefusee">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:197,200</note>
+        <note category="meaning">cours.fileRefusee</note>
+      </notes>
+      <segment>
+        <source> Ce poste n’a pas pu mettre votre réponse de côté : prévenez votre formateur. </source>
+        <target> This device could not set your answer aside: tell your teacher. </target>
+      </segment>
+    </unit>
+    <unit id="coursCode">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:204,205</note>
+        <note category="meaning">cours.code</note>
+      </notes>
+      <segment>
+        <source>Code de la séance</source>
+        <target>Session code</target>
+      </segment>
+    </unit>
+    <unit id="presentateurOuvrir">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:148,151</note>
+        <note category="meaning">presentateur.ouvrir</note>
+      </notes>
+      <segment>
+        <source> Ouvrir la séance </source>
+        <target> Open the session </target>
+      </segment>
+    </unit>
+    <unit id="presentateurOuvertureChargement">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:158,163</note>
+        <note category="meaning">presentateur.ouvertureChargement</note>
+      </notes>
+      <segment>
+        <source> Ouverture de la séance… </source>
+        <target> Opening the session… </target>
+      </segment>
+    </unit>
+    <unit id="presentateurOuvertureEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:167,172</note>
+        <note category="meaning">presentateur.ouvertureEchec</note>
+      </notes>
+      <segment>
+        <source> La séance n&apos;a pas pu être ouverte. Vérifiez la connexion, puis réessayez. </source>
+        <target> The session could not be opened. Check the connection, then try again. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurCodeTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:173,174</note>
+        <note category="meaning">presentateur.codeTitre</note>
+      </notes>
+      <segment>
+        <source>Code à dicter à la classe</source>
+        <target>Code to read out to the class</target>
+      </segment>
+    </unit>
+    <unit id="presentateurParticipants">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:176,177</note>
+        <note category="meaning">presentateur.participants</note>
+      </notes>
+      <segment>
+        <source>Participants</source>
+        <target>Participants</target>
+      </segment>
+    </unit>
+    <unit id="presentateurDerouleChargement">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:188,193</note>
+        <note category="meaning">presentateur.derouleChargement</note>
+      </notes>
+      <segment>
+        <source> Chargement du déroulé… </source>
+        <target> Loading the course… </target>
+      </segment>
+    </unit>
+    <unit id="presentateurDerouleEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:197,201</note>
+        <note category="meaning">presentateur.derouleEchec</note>
+      </notes>
+      <segment>
+        <source> Le déroulé de la séance n&apos;a pas pu être chargé. </source>
+        <target> The course could not be loaded. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurDerouleReessayer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:205,209</note>
+        <note category="meaning">presentateur.derouleReessayer</note>
+      </notes>
+      <segment>
+        <source> Réessayer </source>
+        <target> Try again </target>
+      </segment>
+    </unit>
+    <unit id="presentateurDemarrer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:220,223</note>
+        <note category="meaning">presentateur.demarrer</note>
+      </notes>
+      <segment>
+        <source> Démarrer la séance </source>
+        <target> Start the session </target>
+      </segment>
+    </unit>
+    <unit id="presentateurPilotage">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:223</note>
+      </notes>
+      <segment>
+        <source>Pilotage des écrans</source>
+        <target>Screen controls</target>
+      </segment>
+    </unit>
+    <unit id="presentateurPrecedent">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:231,233</note>
+        <note category="meaning">presentateur.precedent</note>
+      </notes>
+      <segment>
+        <source> Écran précédent </source>
+        <target> Previous screen </target>
+      </segment>
+    </unit>
+    <unit id="presentateurSuivant">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:243,246</note>
+        <note category="meaning">presentateur.suivant</note>
+      </notes>
+      <segment>
+        <source> Écran suivant </source>
+        <target> Next screen </target>
+      </segment>
+    </unit>
+    <unit id="presentateurRythmeLibre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:253,256</note>
+        <note category="meaning">presentateur.rythmeLibre</note>
+      </notes>
+      <segment>
+        <source>Passer en rythme libre</source>
+        <target>Switch to free pace</target>
+      </segment>
+    </unit>
+    <unit id="presentateurRythmePilote">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:257,261</note>
+        <note category="meaning">presentateur.rythmePilote</note>
+      </notes>
+      <segment>
+        <source>Reprendre la main</source>
+        <target>Take back control</target>
+      </segment>
+    </unit>
+    <unit id="presentateurModePilote">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:263,265</note>
+        <note category="meaning">presentateur.modePilote</note>
+      </notes>
+      <segment>
+        <source>Rythme piloté</source>
+        <target>Guided pace</target>
+      </segment>
+    </unit>
+    <unit id="presentateurModeLibre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:265,269</note>
+        <note category="meaning">presentateur.modeLibre</note>
+      </notes>
+      <segment>
+        <source>Rythme libre</source>
+        <target>Free pace</target>
+      </segment>
+    </unit>
+    <unit id="presentateurScene">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:274,277</note>
+        <note category="meaning">presentateur.scene</note>
+      </notes>
+      <segment>
+        <source> Ouvrir la scène </source>
+        <target> Open the scene </target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotes">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:281,282</note>
+        <note category="meaning">presentateur.notes</note>
+      </notes>
+      <segment>
+        <source>Notes du formateur</source>
+        <target>Teacher&apos;s notes</target>
+      </segment>
+    </unit>
+    <unit id="presentateurReponses">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:293,294</note>
+        <note category="meaning">presentateur.reponses</note>
+      </notes>
+      <segment>
+        <source>Réponses reçues</source>
+        <target>Answers received</target>
+      </segment>
+    </unit>
+    <unit id="presentateurPart">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:297,298</note>
+        <note category="meaning">presentateur.part</note>
+      </notes>
+      <segment>
+        <source>Bonnes réponses</source>
+        <target>Correct answers</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNeSaitPas">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:299,300</note>
+        <note category="meaning">presentateur.neSaitPas</note>
+      </notes>
+      <segment>
+        <source>Je ne sais pas</source>
+        <target>Don&apos;t know</target>
+      </segment>
+    </unit>
+    <unit id="presentateurSeuil">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:302,303</note>
+        <note category="meaning">presentateur.seuil</note>
+      </notes>
+      <segment>
+        <source>Seuil</source>
+        <target>Threshold</target>
+      </segment>
+    </unit>
+    <unit id="presentateurBonneReponse">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:307,308</note>
+        <note category="meaning">presentateur.bonneReponse</note>
+      </notes>
+      <segment>
+        <source>Bonne réponse</source>
+        <target>Correct answer</target>
+      </segment>
+    </unit>
+    <unit id="presentateurSousLeSeuil">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:317,320</note>
+        <note category="meaning">presentateur.sousLeSeuil</note>
+      </notes>
+      <segment>
+        <source> Sous le seuil : la classe n&apos;a pas encore compris. </source>
+        <target> Below threshold: the class has not understood yet. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurRemediation">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:338,340</note>
+        <note category="meaning">presentateur.remediation</note>
+      </notes>
+      <segment>
+        <source> Aller à la remédiation </source>
+        <target> Go to remediation </target>
+      </segment>
+    </unit>
+    <unit id="presentateurCloturer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:354,357</note>
+        <note category="meaning">presentateur.cloturer</note>
+      </notes>
+      <segment>
+        <source> Clôturer la séance </source>
+        <target> Close the session </target>
+      </segment>
+    </unit>
+    <unit id="presentateurClotureQuestion">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:367,371</note>
+        <note category="meaning">presentateur.clotureQuestion</note>
+      </notes>
+      <segment>
+        <source> Clôturer la séance maintenant ? Les participants ne pourront plus répondre. </source>
+        <target> Close the session now? Participants will no longer be able to answer. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurClotureConfirmer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:375,379</note>
+        <note category="meaning">presentateur.clotureConfirmer</note>
+      </notes>
+      <segment>
+        <source> Confirmer la clôture </source>
+        <target> Confirm closing </target>
+      </segment>
+    </unit>
+    <unit id="presentateurClotureAnnuler">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:383,387</note>
+        <note category="meaning">presentateur.clotureAnnuler</note>
+      </notes>
+      <segment>
+        <source> Revenir à la séance </source>
+        <target> Back to the session </target>
+      </segment>
+    </unit>
+    <unit id="presentateurTerminee">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:393,397</note>
+        <note category="meaning">presentateur.terminee</note>
+      </notes>
+      <segment>
+        <source> La séance est close : la synthèse est disponible. </source>
+        <target> The session is closed: the summary is available. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurSynthese">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:401,405</note>
+        <note category="meaning">presentateur.synthese</note>
+      </notes>
+      <segment>
+        <source> Voir la synthèse </source>
+        <target> View the summary </target>
+      </segment>
+    </unit>
+    <unit id="presentateurEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:410,415</note>
+        <note category="meaning">presentateur.echec</note>
+      </notes>
+      <segment>
+        <source> La dernière commande n&apos;est pas passée. Vérifiez la connexion, puis réessayez. </source>
+        <target> The last action did not go through. Check the connection, then try again. </target>
+      </segment>
+    </unit>
+    <unit id="sceneChargement">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:65,68</note>
+        <note category="meaning">scene.chargement</note>
+      </notes>
+      <segment>
+        <source> Préparation de la scène… </source>
+        <target> Preparing the scene… </target>
+      </segment>
+    </unit>
+    <unit id="sceneEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:75,79</note>
+        <note category="meaning">scene.echec</note>
+      </notes>
+      <segment>
+        <source> La scène n&apos;a pas pu être affichée. </source>
+        <target> The scene could not be displayed. </target>
+      </segment>
+    </unit>
+    <unit id="sceneTerminee">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:86,89</note>
+        <note category="meaning">scene.terminee</note>
+      </notes>
+      <segment>
+        <source> La séance est terminée. </source>
+        <target> The session has ended. </target>
+      </segment>
+    </unit>
+    <unit id="syntheseTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:90,92</note>
+        <note category="meaning">synthese.titre</note>
+      </notes>
+      <segment>
+        <source>Synthèse de la séance</source>
+        <target>Session summary</target>
+      </segment>
+    </unit>
+    <unit id="syntheseVide">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:93,96</note>
+        <note category="meaning">synthese.vide</note>
+      </notes>
+      <segment>
+        <source> Aucun participant n&apos;a rejoint cette séance : il n&apos;y a rien à analyser. </source>
+        <target> No participant joined this session: there is nothing to analyze. </target>
+      </segment>
+    </unit>
+    <unit id="syntheseEtudiant">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:99,100</note>
+        <note category="meaning">synthese.etudiant</note>
+      </notes>
+      <segment>
+        <source>Étudiant</source>
+        <target>Student</target>
+      </segment>
+    </unit>
+    <unit id="syntheseScore">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:100,101</note>
+        <note category="meaning">synthese.score</note>
+      </notes>
+      <segment>
+        <source>Score</source>
+        <target>Score</target>
+      </segment>
+    </unit>
+    <unit id="syntheseAvancement">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:101,104</note>
+        <note category="meaning">synthese.avancement</note>
+      </notes>
+      <segment>
+        <source>Avancement</source>
+        <target>Progress</target>
+      </segment>
+    </unit>
+    <unit id="syntheseSansReponse">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:115,117</note>
+        <note category="meaning">synthese.sansReponse</note>
+      </notes>
+      <segment>
+        <source> N&apos;a répondu à aucune question </source>
+        <target> Did not answer any question </target>
+      </segment>
+    </unit>
+    <unit id="syntheseQuestionsTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:126,128</note>
+        <note category="meaning">synthese.questionsTitre</note>
+      </notes>
+      <segment>
+        <source>Résultats par question</source>
+        <target>Results by question</target>
+      </segment>
+    </unit>
+    <unit id="syntheseQuestionColonne">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:131,133</note>
+        <note category="meaning">synthese.questionColonne</note>
+      </notes>
+      <segment>
+        <source> Question </source>
+        <target> Question </target>
+      </segment>
+    </unit>
+    <unit id="syntheseCorrectesColonne">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:134,136</note>
+        <note category="meaning">synthese.correctesColonne</note>
+      </notes>
+      <segment>
+        <source> Bonnes réponses </source>
+        <target> Correct answers </target>
+      </segment>
+    </unit>
+    <unit id="syntheseTotalColonne">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:136,137</note>
+        <note category="meaning">synthese.totalColonne</note>
+      </notes>
+      <segment>
+        <source>Total</source>
+        <target>Total</target>
+      </segment>
+    </unit>
+    <unit id="syntheseNeSaitPasColonne">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:138,141</note>
+        <note category="meaning">synthese.neSaitPasColonne</note>
+      </notes>
+      <segment>
+        <source> Je ne sais pas </source>
+        <target> Don&apos;t know </target>
+      </segment>
+    </unit>
+    <unit id="syntheseConfusionsTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:156,158</note>
+        <note category="meaning">synthese.confusionsTitre</note>
+      </notes>
+      <segment>
+        <source> Confusions fréquentes de la classe </source>
+        <target> Common misconceptions in the class </target>
+      </segment>
+    </unit>
+    <unit id="syntheseFragiles">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:168,169</note>
+        <note category="meaning">synthese.fragiles</note>
+      </notes>
+      <segment>
+        <source>Ce qui a le plus accroché</source>
+        <target>What tripped up the class the most</target>
+      </segment>
+    </unit>
+    <unit id="syntheseSousSeuil">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:174,177</note>
+        <note category="meaning">synthese.sousSeuil</note>
+      </notes>
+      <segment>
+        <source>étudiants sous le seuil</source>
+        <target>students below threshold</target>
+      </segment>
+    </unit>
+    <unit id="syntheseExport">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:185,188</note>
+        <note category="meaning">synthese.export</note>
+      </notes>
+      <segment>
+        <source> Exporter les réponses en CSV </source>
+        <target> Export answers as CSV </target>
+      </segment>
+    </unit>
+    <unit id="syntheseEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:190,195</note>
+        <note category="meaning">synthese.echec</note>
+      </notes>
+      <segment>
+        <source> La synthèse n&apos;a pas pu être lue. Rechargez la page, puis réessayez. </source>
+        <target> The summary could not be read. Reload the page, then try again. </target>
+      </segment>
+    </unit>
   </file>
 </xliff>
