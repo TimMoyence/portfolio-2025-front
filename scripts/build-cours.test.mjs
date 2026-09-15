@@ -231,14 +231,13 @@ describe('build-cours : le lint tourne avant l ecriture', () => {
    */
   function coursFautif() {
     const cours = coursConforme();
-    cours.ecrans[1].duree = 9;
-    cours.duree = 24;
+    cours.derogations = [{ regle: 'contraste-insuffisant', ecran: 'expose' }];
     return cours;
   }
 
   it('nomme la regle, l ecran et la raison au lieu d ecrire un export', () => {
     assert.throws(() => construireExport(coursFautif(), ROLE_ETUDIANT, racine), {
-      message: /exposition-continue/,
+      message: /derogation-sans-justification/,
     });
   });
 
@@ -254,7 +253,7 @@ describe('build-cours : le lint tourne avant l ecriture', () => {
     writeFileSync(source, JSON.stringify(coursFautif()), 'utf8');
     const lignes = [];
     assert.equal(executerCli([source, '--sortie', dossier], (ligne) => lignes.push(ligne)), 1);
-    assert.match(lignes.join('\n'), /exposition-continue/);
+    assert.match(lignes.join('\n'), /derogation-sans-justification/);
     assert.equal(existsSync(dossier), false);
   });
 

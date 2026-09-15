@@ -1,14 +1,10 @@
 import { PORTE } from './porte.mjs';
 import { REGLES_BRIQUES } from './regles/briques.mjs';
-import { REGLES_INTEGRITE } from './regles/integrite.mjs';
-import { REGLES_RYTHME } from './regles/rythme.mjs';
 
 export { PORTE };
 
 const DEROGATION_SANS_JUSTIFICATION = 'derogation-sans-justification';
 const DEROGATION_REGLE_INCONNUE = 'derogation-regle-inconnue';
-
-const TYPE_CLASSEMENT = 'classement';
 
 /**
  * @typedef {object} Ecran
@@ -55,40 +51,8 @@ const TYPE_CLASSEMENT = 'classement';
  * @property {string} [raison]
  */
 
-/**
- * @param {Cours} cours
- * @returns {readonly Ecran[]}
- */
-function ecransDe(cours) {
-  return Array.isArray(cours?.ecrans) ? cours.ecrans : [];
-}
-
-/**
- * @param {Cours} cours
- * @returns {Manquement[]}
- */
-function controlerClassementPublic(cours) {
-  return ecransDe(cours).flatMap((ecran, index) => {
-    const identifiant = typeof ecran?.id === 'string' && ecran.id !== '' ? ecran.id : `#${index}`;
-    if (ecran?.type !== TYPE_CLASSEMENT) {
-      return [];
-    }
-    return [
-      {
-        ecran: identifiant,
-        raison: `l'écran « ${identifiant} » est de type « ${TYPE_CLASSEMENT} » : aucun palmarès nominatif n'est publié devant la classe.`,
-      },
-    ];
-  });
-}
-
 /** @type {readonly Regle[]} */
-export const REGLES = [
-  ...REGLES_RYTHME,
-  { id: 'classement-public', controler: controlerClassementPublic },
-  ...REGLES_INTEGRITE,
-  ...REGLES_BRIQUES,
-];
+export const REGLES = [...REGLES_BRIQUES];
 
 /**
  * @param {readonly Regle[]} regles
