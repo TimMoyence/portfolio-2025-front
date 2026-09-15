@@ -1,6 +1,5 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
 
@@ -156,7 +155,7 @@ export class FpRecall extends FpBlock {
     if (question === null || this.restantMs() > 0) {
       return escapeHtml('');
     }
-    const boutons = shuffleWithSeed([...question.options], this.seed()).map(
+    const boutons = this.ordonnerSelonLaGraine(question.options).map(
       (option) =>
         safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );

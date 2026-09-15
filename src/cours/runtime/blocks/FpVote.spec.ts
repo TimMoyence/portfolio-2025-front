@@ -98,6 +98,13 @@ describe('FpVote', () => {
     expect(ordreAffiche(hote)).toEqual(attendu);
   });
 
+  it('garde l ordre du serveur, deja melange, quand aucune graine n est fournie', () => {
+    hote.removeAttribute('seed');
+    hote.question = QUESTION_LARGE;
+
+    expect(ordreAffiche(hote)).toEqual(QUESTION_LARGE.options.map((option) => option.id));
+  });
+
   it('restitue le meme ordre a chaque rendu pour une meme graine', () => {
     hote.question = QUESTION_LARGE;
     const premier = ordreAffiche(hote);

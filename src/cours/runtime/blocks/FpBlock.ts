@@ -2,6 +2,7 @@ import type { RenderMode, Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { shuffleWithSeed } from '../core/seed';
 
 export abstract class FpBlock extends HTMLElement {
   static get observedAttributes(): string[] {
@@ -51,6 +52,10 @@ export abstract class FpBlock extends HTMLElement {
   seed(): number {
     const brut = Number.parseInt(this.getAttribute('seed') ?? '', 10);
     return Number.isFinite(brut) ? brut : 0;
+  }
+
+  protected ordonnerSelonLaGraine<T>(elements: readonly T[]): T[] {
+    return this.hasAttribute('seed') ? shuffleWithSeed(elements, this.seed()) : [...elements];
   }
 
   texte(cle: string): string {
