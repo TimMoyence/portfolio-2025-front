@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import type { EnvironmentInjector as InjecteurEnvironnement } from '@angular/core';
 import {
   ApplicationRef,
@@ -29,6 +29,14 @@ const CLE_D_EXPIRATION = 'portfolio_jwt_expire_le';
 function refusHttp(status: number): () => HttpErrorResponse {
   return () => new HttpErrorResponse({ status });
 }
+
+function limiteAtteinte(retryAfter?: string): () => HttpErrorResponse {
+  const headers =
+    retryAfter === undefined ? new HttpHeaders() : new HttpHeaders({ 'Retry-After': retryAfter });
+  return () => new HttpErrorResponse({ status: 429, headers });
+}
+
+const CADENCE_D_UNE_ROTATION_MS = 15 * 60_000;
 
 describe('AuthStateService', () => {
   describe('en contexte navigateur', () => {
@@ -140,6 +148,67 @@ describe('AuthStateService', () => {
       expect(portStub.refresh).toHaveBeenCalledTimes(2);
       expect(service.token()).toBe('jwt-apres-panne');
     }));
+
+    describe('renouvellement refuse par la limite de cadence (429)', () => {
+      it('retente apres le delai Retry-After en gardant la session', fakeAsync(() => {
+        portStub.refresh.and.returnValues(
+          throwError(limiteAtteinte('1800')),
+          of(buildAuthSession({ accessToken: 'jwt-apres-limite', expiresIn: 900 })),
+        );
+        service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
+
+        tick(30_000);
+        flushMicrotasks();
+        expect(portStub.refresh).toHaveBeenCalledTimes(1);
+        expect(service.isLoggedIn()).toBeTrue();
+
+        tick(1_799_999);
+        flushMicrotasks();
+        expect(portStub.refresh).toHaveBeenCalledTimes(1);
+
+        tick(1);
+        flushMicrotasks();
+        expect(portStub.refresh).toHaveBeenCalledTimes(2);
+        expect(service.token()).toBe('jwt-apres-limite');
+      }));
+
+      it('sans Retry-After, retente a la cadence d une rotation sans jamais s arreter', fakeAsync(() => {
+        portStub.refresh.and.returnValue(throwError(limiteAtteinte()));
+        service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
+
+        tick(30_000);
+        flushMicrotasks();
+
+        for (let essai = 2; essai <= 8; essai += 1) {
+          tick(CADENCE_D_UNE_ROTATION_MS - 1);
+          flushMicrotasks();
+          expect(portStub.refresh)
+            .withContext(`pas d essai ${essai} avant une rotation`)
+            .toHaveBeenCalledTimes(essai - 1);
+          tick(1);
+          flushMicrotasks();
+          expect(portStub.refresh).withContext(`essai ${essai}`).toHaveBeenCalledTimes(essai);
+        }
+        expect(service.isLoggedIn()).toBeTrue();
+        service.clearSession();
+      }));
+
+      it('un Retry-After plus court qu une rotation ne rapproche pas le nouvel essai', fakeAsync(() => {
+        portStub.refresh.and.returnValue(throwError(limiteAtteinte('5')));
+        service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
+
+        tick(30_000);
+        flushMicrotasks();
+        tick(CADENCE_D_UNE_ROTATION_MS - 1);
+        flushMicrotasks();
+
+        expect(portStub.refresh).toHaveBeenCalledTimes(1);
+        tick(1);
+        flushMicrotasks();
+        expect(portStub.refresh).toHaveBeenCalledTimes(2);
+        service.clearSession();
+      }));
+    });
 
     it('efface la session quand le renouvellement est refuse en 401', fakeAsync(() => {
       portStub.refresh.and.returnValue(throwError(refusHttp(401)));

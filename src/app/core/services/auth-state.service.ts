@@ -1,4 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { computed, signal } from '@angular/core';
 import { finalize, firstValueFrom, timeout } from 'rxjs';
@@ -14,6 +15,8 @@ const REFRESH_MIN_DELAY_MS = 5_000;
 const RETRY_INITIAL_DELAY_MS = 2_000;
 const RETRY_MAX_DELAY_MS = 30_000;
 const RETRY_MAX_ATTEMPTS = 5;
+const THROTTLED_RETRY_MIN_MS = 15 * 60_000;
+const THROTTLED_RETRY_MAX_MS = 60 * 60_000;
 const ME_TIMEOUT_MS = 10_000;
 
 function httpStatusOf(error: unknown): number | null {
@@ -22,6 +25,13 @@ function httpStatusOf(error: unknown): number | null {
   }
   const status = (error as { status?: unknown }).status;
   return typeof status === 'number' ? status : null;
+}
+
+function throttledRetryDelayMs(error: unknown): number {
+  const retryAfterS =
+    error instanceof HttpErrorResponse ? Number(error.headers.get('Retry-After')) : 0;
+  const requestedMs = Number.isFinite(retryAfterS) ? retryAfterS * 1000 : 0;
+  return Math.min(Math.max(requestedMs, THROTTLED_RETRY_MIN_MS), THROTTLED_RETRY_MAX_MS);
 }
 
 function isTransientFailure(status: number | null): boolean {
@@ -176,6 +186,10 @@ export class AuthStateService {
     const status = httpStatusOf(error);
     if (status === 401) {
       this.clearSession();
+      return;
+    }
+    if (status === 429) {
+      this.planRefresh(throttledRetryDelayMs(error));
       return;
     }
     if (!isTransientFailure(status) || this.refreshAttempts >= RETRY_MAX_ATTEMPTS) {
