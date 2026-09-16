@@ -208,18 +208,18 @@ export const stage = `
 :where(.fp-root[data-render='stage']) {
   --fp-echelle: clamp(1.15, 0.8rem + 0.8vw, 1.7);
   --fp-fond: var(--fp-cream);
-  --fp-surface: var(--fp-ivory);
+  --fp-surface: #fbf3e6;
   --fp-texte: var(--fp-ink-soft);
   --fp-texte-fort: var(--fp-ink);
   --fp-bordure: var(--fp-line);
-  --fp-confirme: var(--fp-teal-ink);
+  --fp-confirme: #0c0902;
   --fp-confirme-fond: #eaf6f3;
-  --fp-a-revoir: var(--fp-gold-ink);
+  --fp-a-revoir: #0c0902;
   --fp-a-revoir-fond: #fdf4e3;
-  --fp-en-cours: var(--fp-ink-soft);
+  --fp-en-cours: #0c0902;
   --fp-en-cours-fond: var(--fp-sand);
-  --fp-en-attente: var(--fp-ink-mute);
-  --fp-en-attente-fond: var(--fp-cream);
+  --fp-en-attente: #0c0902;
+  --fp-en-attente-fond: #fffaf2;
   --fp-shadow-card: 0 4px 14px rgba(28, 22, 10, 0.06), 0 22px 50px rgba(28, 22, 10, 0.09);
   --fp-piste: var(--fp-sand);
   --fp-remplissage: var(--fp-teal-ink);

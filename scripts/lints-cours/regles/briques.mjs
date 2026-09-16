@@ -15,12 +15,12 @@ export const COUPLES_FEUILLE = [
   { usage: 'etat en-cours', texte: '#3c3529', fond: '#f1e7d6', theme: 'normal' },
   { usage: 'etat en-attente', texte: '#756c5d', fond: '#fffaf2', theme: 'normal' },
   { usage: 'badge', texte: '#0c0902', fond: '#f1e7d6', theme: 'normal' },
-  { usage: 'texte courant sur le fond', texte: '#1a1a1a', fond: '#ffffff', theme: THEME_STAGE },
-  { usage: 'titre sur la surface', texte: '#000000', fond: '#ffffff', theme: THEME_STAGE },
-  { usage: 'etat confirme', texte: '#000000', fond: '#d5ece7', theme: THEME_STAGE },
-  { usage: 'etat a-revoir', texte: '#000000', fond: '#fbe8c4', theme: THEME_STAGE },
-  { usage: 'etat en-cours', texte: '#000000', fond: '#f1e7d6', theme: THEME_STAGE },
-  { usage: 'etat en-attente', texte: '#000000', fond: '#f0f0f0', theme: THEME_STAGE },
+  { usage: 'texte courant sur le fond', texte: '#3c3529', fond: '#fffaf2', theme: THEME_STAGE },
+  { usage: 'titre sur la surface', texte: '#0c0902', fond: '#fbf3e6', theme: THEME_STAGE },
+  { usage: 'etat confirme', texte: '#0c0902', fond: '#eaf6f3', theme: THEME_STAGE },
+  { usage: 'etat a-revoir', texte: '#0c0902', fond: '#fdf4e3', theme: THEME_STAGE },
+  { usage: 'etat en-cours', texte: '#0c0902', fond: '#f1e7d6', theme: THEME_STAGE },
+  { usage: 'etat en-attente', texte: '#0c0902', fond: '#fffaf2', theme: THEME_STAGE },
 ];
 
 /**
