@@ -87,6 +87,24 @@ export const concept4 = `
   font-weight: 700;
 }
 
+:where(.fp-root) .fp-concept4__fraction {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  margin-inline: 0.2em;
+  line-height: 1.05;
+  text-align: center;
+  vertical-align: middle;
+}
+
+:where(.fp-root) .fp-concept4__fraction-numerateur {
+  padding-inline: 0.2em;
+  border-bottom: 1px solid currentColor;
+}
+
+:where(.fp-root) .fp-concept4__fraction-denominateur {
+  padding-inline: 0.2em;
+}
+
 :where(.fp-root) .fp-concept4__resultat {
   color: var(--fp-teal-ink);
   font-weight: 700;
