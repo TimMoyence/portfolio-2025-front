@@ -49,6 +49,31 @@ export const story = `
   gap: var(--fp-s-2);
 }
 
+:where(.fp-root) .fp-story__visuel {
+  display: grid;
+  gap: var(--fp-s-1);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--fp-line);
+  border-radius: var(--fp-radius);
+  background: linear-gradient(135deg, var(--fp-teal-deep), var(--fp-ink));
+}
+
+:where(.fp-root) .fp-story__visuel img {
+  display: block;
+  width: min(8rem, 42%);
+  max-height: min(28vh, 11rem);
+  margin: var(--fp-s-3) auto 0;
+  object-fit: contain;
+}
+
+:where(.fp-root) .fp-story__visuel figcaption {
+  padding: 0 var(--fp-s-2) var(--fp-s-2);
+  color: var(--fp-cream);
+  font-family: var(--fp-font-mono);
+  font-size: calc(0.68rem * var(--fp-echelle));
+}
+
 :where(.fp-root) .fp-story__paragraphe {
   overflow-wrap: anywhere;
 }

@@ -42,6 +42,7 @@ import {
 import type { ReponseBrique } from '../ecran/cours-ecran.component';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import { CoursEcranComponent, identifiantsDesQuestions } from '../ecran/cours-ecran.component';
+import { CoursSlideFrameComponent } from '../design/cours-slide-frame.component';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
 
@@ -141,7 +142,7 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
 @Component({
   selector: 'app-cours-etudiant',
   standalone: true,
-  imports: [CoursEcranComponent],
+  imports: [CoursEcranComponent, CoursSlideFrameComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-etudiant">
@@ -236,12 +237,21 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                   </p>
                 } @else {
                   @if (ecranCourant(); as ecran) {
-                    <app-cours-ecran
-                      [ecran]="ecran"
-                      rendu="hand"
-                      [role]="'etudiant'"
-                      (reponse)="envoyer($event)"
-                    />
+                    <app-cours-slide-frame
+                      variant="student"
+                      eyebrow="Votre parcours"
+                      [title]="sujet()?.titre ?? ''"
+                      [index]="indexEcran() + 1"
+                      [total]="sujet()?.ecrans?.length ?? 0"
+                      [duration]="ecran.duree"
+                    >
+                      <app-cours-ecran
+                        [ecran]="ecran"
+                        rendu="hand"
+                        [role]="'etudiant'"
+                        (reponse)="envoyer($event)"
+                      />
+                    </app-cours-slide-frame>
                   }
                   @if (peutAvancer()) {
                     <button

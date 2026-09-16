@@ -112,6 +112,64 @@ describe('CoursEcranComponent', () => {
     expect(fixture.componentInstance.pret()).toBeTrue();
   });
 
+  it('monte le mini-jeu de strategie servi par le cours', async () => {
+    const { fixture, hote } = await monter(
+      buildEcran({
+        id: 'jeu-defi',
+        type: 'fp-challenge',
+        donnees: {
+          probleme: {
+            id: 'jeu-defi',
+            enonce: 'Choisissez la bonne base.',
+            invite: 'Expliquez votre règle.',
+            strategies: [{ id: 'base', libelle: 'Partie sur total.' }],
+            metadonnees: {
+              concepts: ['proportion'],
+              misconceptionsCiblees: [],
+              dureeMinutes: 6,
+              modalite: 'binome',
+              regime: 'ouvert',
+            },
+          },
+        },
+      }),
+    );
+
+    expect(fixture.componentInstance.pret()).toBeTrue();
+    expect(fixture.nativeElement.querySelector("[data-testid='cours-ecran-inconnu']")).toBeNull();
+    expect(hote.firstElementChild?.localName).toBe('fp-challenge');
+    expect(hote.firstElementChild?.shadowRoot?.textContent).toContain('Choisissez la bonne base.');
+  });
+
+  it('monte le mini-jeu de classement servi par le cours', async () => {
+    const { fixture, hote } = await monter(
+      buildEcran({
+        id: 'jeu-classement',
+        type: 'fp-cardsort',
+        donnees: {
+          plan: {
+            id: 'jeu-classement',
+            intitule: 'Classez la méthode.',
+            cartes: [{ id: 'c1', libelle: 'Identifier le total.' }],
+            categories: [{ id: 'etape', libelle: 'Méthode.' }],
+            metadonnees: {
+              concepts: ['proportion'],
+              misconceptionsCiblees: [],
+              dureeMinutes: 6,
+              modalite: 'binome',
+              regime: 'ouvert',
+            },
+          },
+        },
+      }),
+    );
+
+    expect(fixture.componentInstance.pret()).toBeTrue();
+    expect(fixture.nativeElement.querySelector("[data-testid='cours-ecran-inconnu']")).toBeNull();
+    expect(hote.firstElementChild?.localName).toBe('fp-cardsort');
+    expect(hote.firstElementChild?.shadowRoot?.textContent).toContain('Classez la méthode.');
+  });
+
   it('ne liste que des proprietes dont chaque brique enregistree expose le setter', async () => {
     await monter(ecranNumerique());
 

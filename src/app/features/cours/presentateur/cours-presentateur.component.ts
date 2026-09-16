@@ -33,6 +33,7 @@ import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import { CoursEcranComponent, questionsDeLEcran } from '../ecran/cours-ecran.component';
+import { CoursSlideFrameComponent } from '../design/cours-slide-frame.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 
@@ -86,7 +87,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
 @Component({
   selector: 'app-cours-presentateur',
   standalone: true,
-  imports: [CoursEcranComponent, CoursPanneauQuestionComponent],
+  imports: [CoursEcranComponent, CoursPanneauQuestionComponent, CoursSlideFrameComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
   template: `
@@ -372,7 +373,17 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 (click)="ouvrirLaScene()"
                 i18n="presentateur.scene|@@presentateurScene"
               >
-                Ouvrir la scène
+                Ouvrir la projection
+              </button>
+              <button
+                type="button"
+                class="control-btn control-btn--accent"
+                data-testid="presentateur-plein-ecran"
+                (click)="ouvrirLaScene()"
+                aria-label="Ouvrir la projection en plein écran"
+                i18n="presentateur.pleinEcran|@@presentateurPleinEcran"
+              >
+                Projection plein écran
               </button>
             </nav>
             <div class="screen-progress">
@@ -386,6 +397,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 min="0"
                 [max]="dernierEcran()"
                 [value]="ecran()"
+                [style.--progress]="(ecran() / (dernierEcran() || 1)) * 100 + '%'"
                 [disabled]="pilotageBloque()"
                 (input)="changerLEcranDepuisLeCurseur($event)"
               />
@@ -409,7 +421,16 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   >
                 </div>
                 <div class="presentateur-stage__body">
-                  <app-cours-ecran [ecran]="ecranAffiche" rendu="stage" [role]="'presentateur'" />
+                  <app-cours-slide-frame
+                    variant="presenter"
+                    eyebrow="Projection"
+                    [title]="cours.titre"
+                    [index]="ecran() + 1"
+                    [total]="cours.ecrans.length"
+                    [duration]="ecranAffiche.duree"
+                  >
+                    <app-cours-ecran [ecran]="ecranAffiche" rendu="stage" [role]="'presentateur'" />
+                  </app-cours-slide-frame>
                 </div>
               </main>
               <aside

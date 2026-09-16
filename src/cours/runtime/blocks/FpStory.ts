@@ -1,5 +1,5 @@
 import type { MetadonneesBrique } from '../../content/types';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
 
@@ -7,6 +7,11 @@ export interface StoryRecit {
   readonly id: string;
   readonly titre: string;
   readonly paragraphes: readonly string[];
+  readonly visuel?: {
+    readonly src: string;
+    readonly alt: string;
+    readonly legende?: string;
+  };
   readonly metadonnees: MetadonneesBrique;
 }
 
@@ -21,6 +26,7 @@ export class FpStory extends FpBlock {
             id: valeur.id,
             titre: valeur.titre,
             paragraphes: [...valeur.paragraphes],
+            visuel: valeur.visuel === undefined ? undefined : { ...valeur.visuel },
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     this.refreshSiConnecte();
@@ -71,6 +77,7 @@ export class FpStory extends FpBlock {
     return safeHtml`
       <aside class="${escapeHtml(cadre)} fp-story__recit">
         <h2 class="${escapeHtml(styleTitre)}" data-testid="titre">${escapeHtml(recit.titre)}</h2>
+        ${this.visuel(recit)}
         <div class="fp-prose fp-story__corps">${recit.paragraphes.map((texte) => this.paragraphe(texte))}</div>
         ${reperes}
       </aside>
@@ -79,5 +86,17 @@ export class FpStory extends FpBlock {
 
   private paragraphe(texte: string): EscapedHtml {
     return safeHtml`<p class="fp-story__paragraphe" data-testid="paragraphe">${escapeHtml(texte)}</p>`;
+  }
+
+  private visuel(recit: StoryRecit): EscapedHtml {
+    if (recit.visuel === undefined) {
+      return safeHtml``;
+    }
+    return safeHtml`
+      <figure class="fp-story__visuel" data-testid="visuel">
+        <img src="${escapeUrl(recit.visuel.src)}" alt="${escapeHtml(recit.visuel.alt)}" loading="eager" />
+        ${recit.visuel.legende === undefined ? safeHtml`` : safeHtml`<figcaption>${escapeHtml(recit.visuel.legende)}</figcaption>`}
+      </figure>
+    `;
   }
 }

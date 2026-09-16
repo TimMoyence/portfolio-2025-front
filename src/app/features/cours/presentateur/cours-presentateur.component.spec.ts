@@ -195,6 +195,16 @@ describe('CoursPresentateurComponent', () => {
     TestBed.inject(AuthStateService).clearSession();
   });
 
+  it('nomme la sortie une projection et propose le plein écran', async () => {
+    const fixture = await ouvrirLaSeance();
+
+    expect(texte(fixture, 'presentateur-scene')).toContain('projection');
+    expect(texte(fixture, 'presentateur-scene')).not.toContain('scène');
+    expect(cible(fixture, 'presentateur-plein-ecran').getAttribute('aria-label')).toContain(
+      'plein écran',
+    );
+  });
+
   it('ouvre la seance par son slug et ne lit le deroule qu une fois la seance ouverte', async () => {
     const ouverture = new Subject<SeanceOuverte>();
     const lecture = new Subject<DerouleCours>();

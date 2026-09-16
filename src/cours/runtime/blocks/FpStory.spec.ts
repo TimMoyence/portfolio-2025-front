@@ -69,6 +69,23 @@ describe('FpStory', () => {
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
+  it('rend le visuel autorise avec son texte alternatif et sa legende', () => {
+    hote.recit = {
+      ...RECIT,
+      visuel: {
+        src: '#',
+        alt: 'Tableau de données',
+        legende: 'Lire la donnée avant de la calculer.',
+      },
+    };
+    const visuel = marque(hote, 'visuel');
+    expect(visuel?.querySelector('img')?.getAttribute('src')).toBe('#');
+    expect(visuel?.querySelector('img')?.getAttribute('alt')).toBe('Tableau de données');
+    expect(visuel?.querySelector('figcaption')?.textContent).toBe(
+      'Lire la donnée avant de la calculer.',
+    );
+  });
+
   it('passe le titre a la grande typographie de projection en rendu stage seulement', () => {
     expect(marque(hote, 'titre')?.classList.contains('fp-enonce')).toBe(false);
     hote.setAttribute('render', 'stage');

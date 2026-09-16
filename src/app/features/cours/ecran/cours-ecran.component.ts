@@ -23,6 +23,8 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-worked': ['exemple'],
   'fp-concept4': ['definition'],
   'fp-plot': ['definition'],
+  'fp-challenge': ['probleme'],
+  'fp-cardsort': ['plan'],
   'fp-numeric': ['question'],
   'fp-vote': ['question'],
   'fp-recall': ['question'],

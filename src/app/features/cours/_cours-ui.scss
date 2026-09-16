@@ -706,3 +706,249 @@
     overflow-x: auto;
   }
 }
+
+/* Course presentation chrome: one reusable frame for presenter, projection and student views. */
+.cours-slide-frame {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(var(--ink-rgb), 0.12);
+  border-radius: var(--r-xl);
+  background: rgba(255, 250, 242, 0.82);
+  box-shadow: var(--shadow-card);
+}
+
+.cours-slide-frame__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: clamp(16px, 2.5vw, 28px) clamp(18px, 3vw, 36px) var(--s-3);
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.1);
+}
+
+.cours-slide-frame__identity {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cours-slide-frame__eyebrow {
+  color: var(--teal-deep);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cours-slide-frame__header h2 {
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.7vw, 1.35rem);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cours-slide-frame__meta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+}
+
+.cours-slide-frame__counter {
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--ivory);
+  color: var(--teal-ink);
+}
+
+.cours-slide-frame__progress {
+  block-size: 3px;
+  background: var(--sand);
+}
+
+.cours-slide-frame__progress span {
+  display: block;
+  block-size: 100%;
+  background: linear-gradient(90deg, var(--teal-deep), var(--gold));
+  transition: width 240ms var(--ease);
+}
+
+.cours-slide-frame__content {
+  min-width: 0;
+  padding: clamp(18px, 3vw, 42px);
+}
+
+.cours-slide-frame[data-variant='presenter'] {
+  border-color: rgba(142, 213, 200, 0.35);
+  background: #17241f;
+  box-shadow: 0 24px 60px rgba(12, 9, 2, 0.18);
+}
+
+.cours-slide-frame[data-variant='presenter'] .cours-slide-frame__header,
+.cours-slide-frame[data-variant='projection'] .cours-slide-frame__header {
+  border-color: rgba(255, 250, 242, 0.12);
+}
+
+.cours-slide-frame[data-variant='presenter'] .cours-slide-frame__eyebrow,
+.cours-slide-frame[data-variant='projection'] .cours-slide-frame__eyebrow {
+  color: #8ed5c8;
+}
+
+.cours-slide-frame[data-variant='presenter'] .cours-slide-frame__header h2,
+.cours-slide-frame[data-variant='projection'] .cours-slide-frame__header h2 {
+  color: var(--cream);
+}
+
+.cours-slide-frame[data-variant='presenter'] .cours-slide-frame__meta,
+.cours-slide-frame[data-variant='projection'] .cours-slide-frame__meta {
+  color: rgba(255, 250, 242, 0.68);
+}
+
+.cours-slide-frame[data-variant='presenter'] .cours-slide-frame__counter,
+.cours-slide-frame[data-variant='projection'] .cours-slide-frame__counter {
+  border-color: rgba(255, 250, 242, 0.18);
+  background: rgba(255, 250, 242, 0.08);
+  color: #cceee8;
+}
+
+.cours-slide-frame[data-variant='presenter'] .cours-slide-frame__content {
+  padding: clamp(18px, 3vw, 40px);
+}
+
+.cours-slide-frame[data-variant='projection'] {
+  min-height: clamp(520px, calc(100vh - 270px), 820px);
+  background: var(--cream);
+}
+
+.cours-slide-frame[data-variant='projection'] .cours-slide-frame__content {
+  display: flex;
+  min-height: clamp(420px, calc(100vh - 360px), 720px);
+  align-items: center;
+  padding: clamp(16px, 3vw, 42px);
+}
+
+.cours-slide-frame[data-variant='projection'] .cours-slide-frame__content > app-cours-ecran {
+  display: grid;
+  min-height: 100%;
+  width: 100%;
+  align-items: center;
+}
+
+.cours-slide-frame[data-variant='projection']
+  .cours-slide-frame__content
+  > app-cours-ecran
+  > [data-testid='cours-ecran-hote'] {
+  display: grid;
+  min-height: 100%;
+  width: 100%;
+  align-content: center;
+}
+
+.presentateur-workspace {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  gap: clamp(16px, 2.5vw, 28px);
+}
+
+.presentateur-stage {
+  border-color: rgba(var(--ink-rgb), 0.14);
+  background: #17241f;
+}
+
+.presentateur-stage__head {
+  padding: 14px 18px;
+  border-color: rgba(255, 250, 242, 0.12);
+  background: rgba(255, 250, 242, 0.04);
+}
+
+.presentateur-stage__head h3 {
+  color: var(--cream);
+}
+
+.presentateur-stage__body {
+  padding: clamp(12px, 2vw, 24px);
+}
+
+.presentateur-stage__body app-cours-slide-frame {
+  display: block;
+}
+
+.control-btn--accent {
+  border-color: rgba(var(--teal-rgb), 0.5) !important;
+  background: rgba(var(--teal-rgb), 0.13) !important;
+  color: var(--teal-ink) !important;
+}
+
+.screen-progress input[type='range'] {
+  block-size: 30px;
+  accent-color: var(--teal-deep);
+}
+
+.screen-progress input[type='range']::-webkit-slider-runnable-track {
+  block-size: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    var(--teal) 0 var(--progress, 0%),
+    var(--sand) var(--progress, 0%) 100%
+  );
+}
+
+.screen-progress input[type='range']::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  margin-top: -7px;
+  border: 3px solid var(--cream);
+  border-radius: 50%;
+  background: var(--teal-deep);
+  box-shadow: 0 2px 8px rgba(var(--ink-rgb), 0.22);
+  appearance: none;
+}
+
+.student-session {
+  gap: var(--s-4);
+  border-color: rgba(var(--ink-rgb), 0.12);
+  background: rgba(255, 250, 242, 0.58);
+}
+
+.student-session app-cours-slide-frame {
+  display: block;
+}
+
+.student-session .cours-slide-frame__content > app-cours-ecran {
+  display: block;
+}
+
+@media (max-width: 760px) {
+  .cours-slide-frame__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cours-slide-frame__meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cours-slide-frame__content {
+    padding: 16px;
+  }
+
+  .cours-slide-frame[data-variant='projection'] {
+    min-height: 500px;
+  }
+
+  .cours-slide-frame[data-variant='projection'] .cours-slide-frame__content {
+    min-height: 360px;
+  }
+}
