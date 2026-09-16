@@ -100,6 +100,14 @@ describe('app routes', () => {
   describe('parcours de cours', () => {
     const routeDe = (chemin: string) => routes.find((route) => route.path === chemin);
 
+    it('redirige l ancienne demonstration technique vers l espace formations', () => {
+      const route = routeDe('cours/demo');
+
+      expect(route?.redirectTo).toBe('formations');
+      expect(route?.pathMatch).toBe('full');
+      expect(route?.loadComponent).toBeUndefined();
+    });
+
     async function verifieReserveAUnFormateur(chemin: string, nomComposant: string): Promise<void> {
       const route = routeDe(chemin);
       setupTestBed({ router: true });

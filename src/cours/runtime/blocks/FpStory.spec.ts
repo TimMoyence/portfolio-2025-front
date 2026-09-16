@@ -69,6 +69,46 @@ describe('FpStory', () => {
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
+  it('rend le visuel autorise avec son texte alternatif et sa legende', () => {
+    hote.recit = {
+      ...RECIT,
+      visuel: {
+        src: '#',
+        alt: 'Tableau de données',
+        legende: 'Lire la donnée avant de la calculer.',
+      },
+    };
+    const visuel = marque(hote, 'visuel');
+    expect(visuel?.querySelector('img')?.getAttribute('src')).toBe('#');
+    expect(visuel?.querySelector('img')?.getAttribute('alt')).toBe('Tableau de données');
+    expect(visuel?.querySelector('figcaption')?.textContent).toBe(
+      'Lire la donnée avant de la calculer.',
+    );
+  });
+
+  it('rend une video avec transcription, source et licence', () => {
+    hote.recit = {
+      ...RECIT,
+      video: {
+        src: 'https://example.com/rappel.webm',
+        type: 'video/webm',
+        titre: 'Rappel du calcul',
+        poster: '#',
+        transcript: 'Partie divisée par total puis convertie en pourcentage.',
+        source: 'https://example.com/source',
+        licence: 'CC BY-SA 4.0',
+      },
+    };
+    const video = marque(hote, 'video');
+    expect(video?.querySelector('video')?.getAttribute('poster')).toBe('#');
+    expect(video?.querySelector('source')?.getAttribute('src')).toBe(
+      'https://example.com/rappel.webm',
+    );
+    expect(marque(hote, 'transcription')?.textContent).toContain('Partie divisée');
+    expect(video?.querySelector('a')?.getAttribute('href')).toBe('https://example.com/source');
+    expect(video?.textContent).toContain('CC BY-SA 4.0');
+  });
+
   it('passe le titre a la grande typographie de projection en rendu stage seulement', () => {
     expect(marque(hote, 'titre')?.classList.contains('fp-enonce')).toBe(false);
     hote.setAttribute('render', 'stage');

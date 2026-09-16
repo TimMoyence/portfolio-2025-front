@@ -186,6 +186,14 @@ describe('CoursSceneComponent', () => {
     expect(double.flux.close).toHaveBeenCalled();
   });
 
+  it('propose une projection plein écran dans le vocabulaire de présentation', async () => {
+    const fixture = await monterEtStabiliser();
+
+    const bouton = cible(fixture, 'scene-plein-ecran') as HTMLButtonElement;
+    expect(bouton.textContent).toContain('Plein écran');
+    expect(bouton.getAttribute('aria-pressed')).toBe('false');
+  });
+
   it('signale discretement dans un coin la sante du flux qu elle suit', async () => {
     const fixture = await monterEtStabiliser();
     const pastille = cible(fixture, 'scene-flux');

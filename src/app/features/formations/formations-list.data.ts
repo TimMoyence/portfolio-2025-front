@@ -11,7 +11,7 @@ export interface FormationCard {
   meta: readonly FormationMeta[];
   price: string;
   cta: string;
-  variant: 'default' | 'bonus';
+  variant: 'default' | 'live' | 'bonus';
 }
 
 export interface FormationBenefit {
@@ -21,6 +21,30 @@ export interface FormationBenefit {
 }
 
 export const FORMATIONS: readonly FormationCard[] = [
+  {
+    link: '/cours/rejoindre',
+    badge: 'BTS CG · séance formateur · 60 écrans',
+    title: 'B2-01 — Lire et contrôler l’information chiffrée',
+    description:
+      'Une séance de 3 h 30 construite autour d’une entreprise fictive : proportions, pourcentages, évolutions et tableaux de bord. Le formateur projette, la classe échange, calcule et vérifie.',
+    meta: [
+      {
+        key: $localize`:@@formations-list.meta.duration:Durée`,
+        value: '3 h 30 · 60 écrans',
+      },
+      {
+        key: $localize`:@@formations-list.meta.format:Format`,
+        value: 'Diaporama + échanges + quiz',
+      },
+      {
+        key: 'Accès',
+        value: 'Code donné par le formateur',
+      },
+    ],
+    price: 'Séance live',
+    cta: 'Rejoindre une séance',
+    variant: 'live',
+  },
   {
     link: '/formations/ia-solopreneurs',
     badge: $localize`:@@formations-list.ia-solo.badge:Gratuit · 17 slides`,

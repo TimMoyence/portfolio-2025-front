@@ -156,7 +156,7 @@ async function rejoindre(page: Page): Promise<void> {
   await page.getByLabel('Prénom').fill(IDENTITE.prenom);
   await page.getByLabel('Nom', { exact: true }).fill(IDENTITE.nom);
   await page.getByLabel('Adresse e-mail').fill(IDENTITE.email);
-  await page.getByRole('button', { name: 'Rejoindre' }).click();
+  await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
 }
 
 test.describe('Séance de cours dans un navigateur réel', () => {
@@ -200,7 +200,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
     await page.getByLabel('Prénom').fill(IDENTITE.prenom);
     await page.getByLabel('Nom', { exact: true }).fill(IDENTITE.nom);
     await page.getByLabel('Adresse e-mail').fill(IDENTITE.email);
-    await page.getByRole('button', { name: 'Rejoindre' }).click();
+    await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
 
     await expect(page.getByTestId('etudiant-chargement')).toBeVisible();
     await expect(page.getByTestId('etudiant-seance')).toBeVisible();
@@ -326,10 +326,10 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       );
     });
 
-    await page.goto('/cours/demo');
+    await page.goto('/formations');
     await page.clock.fastForward(930_000);
     await expect.poll(() => renouvellements).toBe(1);
-    await expect(page.locator('body')).toContainText('Les briques du catalogue');
+    await expect(page.locator('body')).toContainText('Du concret');
   });
 });
 
@@ -338,5 +338,5 @@ test('le parcours de rattachement reste utilisable sur un profil téléphone', a
   await installerApiEtudiant(page);
   await rejoindre(page);
   await expect(page.getByTestId('etudiant-seance')).toBeVisible();
-  await expect(page.getByRole('heading', { name: SUJET.titre })).toBeVisible();
+  await expect(page.getByTestId('etudiant-titre')).toHaveText(SUJET.titre);
 });

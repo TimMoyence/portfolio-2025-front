@@ -233,18 +233,38 @@ export class FpConcept4 extends FpBlock {
   private termes(definition: Concept4Definition): EscapedHtml {
     const cles = definition.parametres.map((parametre) => parametre.cle);
     const source = definition.formuleLatexSimplifie;
+    const morceaux: EscapedHtml[] = [];
+    const fraction = /\\dfrac\{([^{}]*)\}\{([^{}]*)\}/g;
+    let curseur = 0;
+    for (const trouve of source.matchAll(fraction)) {
+      const debut = trouve.index ?? 0;
+      morceaux.push(this.termesTexte(source.slice(curseur, debut), cles));
+      const numerateur = trouve[1] ?? '';
+      const denominateur = trouve[2] ?? '';
+      const libelleFraction = escapeHtml(`${numerateur} divisé par ${denominateur}`);
+      morceaux.push(
+        safeHtml`<span class="fp-concept4__fraction" data-testid="fraction" aria-label="${libelleFraction}"><span class="fp-concept4__fraction-numerateur">${this.termesTexte(numerateur, cles)}</span><span class="fp-concept4__fraction-denominateur">${this.termesTexte(denominateur, cles)}</span></span>`,
+      );
+      curseur = debut + trouve[0].length;
+    }
+    morceaux.push(this.termesTexte(source.slice(curseur), cles));
+    return safeHtml`${morceaux}`;
+  }
+
+  private termesTexte(source: string, cles: readonly string[]): EscapedHtml {
+    const texte = source.replaceAll('\\times', '×');
     if (cles.length === 0) {
-      return escapeHtml(source);
+      return escapeHtml(texte);
     }
     const morceaux: EscapedHtml[] = [];
     let curseur = 0;
-    for (const trouve of source.matchAll(motifDesTermes(cles))) {
+    for (const trouve of texte.matchAll(motifDesTermes(cles))) {
       const debut = trouve.index ?? 0;
-      morceaux.push(escapeHtml(source.slice(curseur, debut)));
+      morceaux.push(escapeHtml(texte.slice(curseur, debut)));
       morceaux.push(this.terme(trouve[0]));
       curseur = debut + trouve[0].length;
     }
-    morceaux.push(escapeHtml(source.slice(curseur)));
+    morceaux.push(escapeHtml(texte.slice(curseur)));
     return safeHtml`${morceaux}`;
   }
 

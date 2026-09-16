@@ -127,6 +127,28 @@ describe('FpConcept4', () => {
     expect(lu(hote, 'formule')).toContain('C × (1 + i)^n');
   });
 
+  it('rend les fractions et les multiplications en notation lisible, sans exposer le LaTeX brut', () => {
+    hote.definition = buildConcept4Definition({
+      id: 'K-PROPORTION-FORMULE',
+      parametres: [
+        { cle: 'partie', libelle: 'partie', min: 10, max: 90, pas: 10, defaut: 30 },
+        { cle: 'total', libelle: 'total', min: 100, max: 900, pas: 100, defaut: 100 },
+      ],
+      formuleLatexSimplifie: '\\dfrac{partie}{total} \\times 100',
+      calcul: '(partie/total)*100',
+      phrase: '{partie} représente {resultat} % de {total}.',
+    });
+
+    const formule = lu(hote, 'formule');
+    expect(formule).toContain('partie');
+    expect(formule).toContain('total');
+    const fraction = hote.shadowRoot?.querySelector('[data-testid="fraction"]');
+    expect(fraction).not.toBeNull();
+    expect(fraction?.getAttribute('aria-label')).toBe('partie divisé par total');
+    expect(formule).not.toContain('\\dfrac');
+    expect(formule).not.toContain('\\times');
+  });
+
   it('recalcule le tableau de valeurs et marque la seule ligne courante', () => {
     const avant = resultatsDuTableau(hote);
     bouger(hote, 'n', 25);

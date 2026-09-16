@@ -14561,5 +14561,74 @@
         <target> Try again </target>
       </segment>
     </unit>
+    <unit id="coursEtudiantKicker">
+      <notes>
+        <note category="meaning">cours.etudiantKicker</note>
+      </notes>
+      <segment>
+        <source> Séance en cours </source>
+        <target> Session in progress </target>
+      </segment>
+    </unit>
+    <unit id="presentateurKicker">
+      <notes><note category="meaning">presentateur.kicker</note></notes>
+      <segment><source> Séance en direct </source><target> Live session </target></segment>
+    </unit>
+    <unit id="presentateurSousTitre">
+      <notes><note category="meaning">presentateur.sousTitre</note></notes>
+      <segment><source> Pilotez l’écran projeté, suivez les réponses de la classe et choisissez le bon moment pour remédier. </source><target>Control the projected screen, follow the class responses and choose the right moment to remediate.</target></segment>
+    </unit>
+    <unit id="presentateurDirect">
+      <notes><note category="meaning">presentateur.direct</note></notes>
+      <segment><source>Suivi en direct</source><target>Live tracking</target></segment>
+    </unit>
+    <unit id="presentateurSessionOuverte">
+      <notes><note category="meaning">presentateur.sessionOuverte</note></notes>
+      <segment><source>Séance ouverte</source><target>Session open</target></segment>
+    </unit>
+    <unit id="presentateurParticipantsEnDirect">
+      <notes><note category="meaning">presentateur.participantsEnDirect</note></notes>
+      <segment><source>connectés à cette séance</source><target>connected to this session</target></segment>
+    </unit>
+    <unit id="presentateurDerouleKicker">
+      <notes><note category="meaning">presentateur.derouleKicker</note></notes>
+      <segment><source> Déroulé actif </source><target> Active course </target></segment>
+    </unit>
+    <unit id="presentateurStatutOuverte">
+      <notes><note category="meaning">presentateur.statutOuverte</note></notes>
+      <segment><source>Prête à démarrer</source><target>Ready to start</target></segment>
+    </unit>
+    <unit id="presentateurStatutEnCours">
+      <notes><note category="meaning">presentateur.statutEnCours</note></notes>
+      <segment><source>En cours</source><target>In progress</target></segment>
+    </unit>
+    <unit id="presentateurStatutTerminee">
+      <notes><note category="meaning">presentateur.statutTerminee</note></notes>
+      <segment><source>Terminée</source><target>Finished</target></segment>
+    </unit>
+    <unit id="presentateurSlider">
+      <notes><note category="meaning">presentateur.slider</note></notes>
+      <segment><source>Écran courant</source><target>Current screen</target></segment>
+    </unit>
+    <unit id="presentateurStageTitre">
+      <notes><note category="meaning">presentateur.stageTitre</note></notes>
+      <segment><source> Écran projeté </source><target> Projected screen </target></segment>
+    </unit>
+    <unit id="presentateurStageApercu">
+      <notes><note category="meaning">presentateur.stageApercu</note></notes>
+      <segment><source>Aperçu formateur</source><target>Teacher preview</target></segment>
+    </unit>
+    <unit id="presentateurInformationsSeance">
+      <notes><note category="meaning">presentateurInformationsSeance</note></notes>
+      <segment><source>Informations de séance</source><target>Session information</target></segment>
+    </unit>
+    <unit id="presentateurQuestionsTitre">
+      <notes><note category="meaning">presentateur.questionsTitre</note></notes>
+      <segment><source> Lecture de la classe </source><target> Class readout </target></segment>
+    </unit>
+    <unit id="syntheseKicker">
+      <notes><note category="meaning">synthese.kicker</note></notes>
+      <segment><source>Après la séance</source><target>After the session</target></segment>
+    </unit>
   </file>
 </xliff>

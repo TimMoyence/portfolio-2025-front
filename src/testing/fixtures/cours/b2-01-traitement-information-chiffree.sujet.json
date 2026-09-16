@@ -2,34 +2,180 @@
   "id": "b2-01-traitement-information-chiffree",
   "titre": "Lire et contrôler l'information chiffrée",
   "niveau": "B2",
-  "duree": 90,
+  "duree": 210,
   "concepts": ["proportion", "pourcentage", "taux-evolution"],
   "ecrans": [
     {
-      "id": "B2-01-OUVERTURE",
+      "id": "B2-01-V2-01-DIAGNOSTIC",
       "type": "fp-recall",
-      "duree": 5,
+      "duree": 4,
       "interactif": true,
       "donnees": {
         "question": {
-          "id": "B2-01-RAPPEL-PART-TOTAL",
-          "enonce": "18 dossiers sur 60 sont complets. Quelle écriture représente la proportion de dossiers complets ?",
+          "id": "B2-01-V2-DIAGNOSTIC",
+          "enonce": "Le tableau indique 72 dossiers complets sur 240. Quelle phrase est prête à être dite au comité ?",
           "options": [
             {
               "id": "o1",
-              "libelle": "18 ÷ 60 × 100 = 30"
+              "libelle": "72 ÷ 240 = 0,3 %, sans convertir en pourcentage."
             },
             {
               "id": "o2",
-              "libelle": "18 ÷ 60 = 0,3"
+              "libelle": "72 ÷ 240 × 100 = 30 % : trois dossiers sur dix sont complets."
             },
             {
               "id": "o3",
-              "libelle": "60 − 18 = 42"
+              "libelle": "72 + 240 = 312 %"
             }
           ],
           "metadonnees": {
             "concepts": ["proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-02-MISSION",
+      "type": "fp-story",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-02-MISSION",
+          "titre": "08:42 — le tableau qui bloque la réunion",
+          "paragraphes": [
+            "Atelier Rivage fabrique et répare du mobilier pour des entreprises. Chaque lundi, Lina prépare le tableau de bord destiné à la direction.",
+            "Ce matin, deux antennes annoncent des volumes différents. La direction demande : « laquelle maîtrise vraiment ses dossiers ? » Le chiffre brut ne suffit pas ; il faut rendre la comparaison défendable."
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-03-REFERENCE",
+      "type": "fp-vote",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-BASE",
+          "enonce": "Dans l’antenne 2, 45 dossiers sur 150 sont complets. Quelle valeur est la base de référence ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "150 : la base est la population totale à laquelle on rapporte la partie."
+            },
+            {
+              "id": "o2",
+              "libelle": "45, parce que c’est le nombre observé."
+            },
+            {
+              "id": "o3",
+              "libelle": "45 + 150, pour utiliser les deux nombres."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-04-COLLECTE",
+      "type": "fp-pro",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "cas": {
+          "id": "B2-01-V2-04-COLLECTE",
+          "metier": "Assistante de gestion",
+          "situation": "Le fichier affiche 72 dossiers complets sur 240 à Nantes et 45 sur 150 à Rennes, mais la colonne « performance » mélange les volumes et les taux.",
+          "geste": "Nommer partie, total, unité et question avant de calculer.",
+          "consequence": "Sans base explicite, le comité peut prendre une décision opposée aux données.",
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-05-ORDRE",
+      "type": "fp-cardsort",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "plan": {
+          "id": "B2-01-V2-05-ORDRE",
+          "intitule": "Remettre l’enquête dans l’ordre",
+          "cartes": [
+            {
+              "id": "partie",
+              "libelle": "Identifier la partie observée"
+            },
+            {
+              "id": "base",
+              "libelle": "Identifier le total de référence"
+            },
+            {
+              "id": "calcul",
+              "libelle": "Calculer partie ÷ total × 100"
+            },
+            {
+              "id": "phrase",
+              "libelle": "Écrire la phrase et l’unité"
+            }
+          ],
+          "categories": [
+            {
+              "id": "methode",
+              "libelle": "Méthode fiable"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "groupe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-06-VIDEO",
+      "type": "fp-story",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-06-VIDEO",
+          "titre": "Rappel vidéo : lire un pourcentage",
+          "paragraphes": [
+            "Regardez la capsule par segments. À chaque passage partie → total → pourcentage, mettez pause et reliez le geste au tableau Atelier Rivage.",
+            "La vidéo apporte un rappel ; la compétence évaluée reste la capacité à contrôler et communiquer une donnée réelle."
+          ],
+          "video": {
+            "src": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Mathematrix_Prozentrechnung_Vertiefend.webm",
+            "type": "video/webm",
+            "titre": "Rappel vidéo : lire un pourcentage",
+            "poster": "/assets/images/percent.png",
+            "transcript": "Cette capsule rappelle le passage entre partie, total, taux et pourcentage. Elle doit être regardée avec la feuille de données Atelier Rivage, puis arrêtée pour vérifier chaque étape.",
+            "source": "https://commons.wikimedia.org/wiki/File:Mathematrix_Prozentrechnung_Vertiefend.webm",
+            "licence": "CC BY-SA 4.0 — Yomomo"
+          },
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
             "misconceptionsCiblees": [],
             "dureeMinutes": 5,
             "modalite": "solo",
@@ -39,21 +185,83 @@
       }
     },
     {
-      "id": "B2-01-SITUATION",
-      "type": "fp-pro",
-      "duree": 6,
+      "id": "B2-01-V2-07-QUESTION-COMITE",
+      "type": "fp-challenge",
+      "duree": 2,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-07-QUESTION-COMITE",
+          "enonce": "Le directeur veut classer les antennes avec les seuls nombres 72 et 45.",
+          "invite": "Rédigez une réponse qui explique pourquoi cette décision serait fragile.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 2,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-08-DEBRIEF",
+      "type": "fp-story",
+      "duree": 4,
       "interactif": false,
       "donnees": {
-        "cas": {
-          "id": "B2-01-SITUATION",
-          "metier": "Assistant de gestion",
-          "situation": "Le tableau comporte 72 dossiers complets sur 240 dans une antenne et 30 sur 100 dans une autre.",
-          "geste": "Pour chaque antenne, diviser la partie par le total, multiplier par 100, conserver le total comme base et contrôler l’ordre de grandeur.",
-          "consequence": "Un même nombre de dossiers ne suffit pas à comparer deux antennes : sans base commune, le pourcentage annoncé peut tromper la décision.",
+        "recit": {
+          "id": "B2-01-V2-08-DEBRIEF",
+          "titre": "La pièce n°1 : une donnée n’est pas encore un indicateur",
+          "paragraphes": [
+            "72 et 45 sont des parties. Elles deviennent comparables quand chaque partie est rapportée à sa base : 72/240 et 45/150.",
+            "Ce détour n’est pas une formalité scolaire : il protège la décision contre l’effet de taille des antennes."
+          ],
+          "visuel": {
+            "src": "/assets/images/table_chart.png",
+            "alt": "Tableau de données et graphique de comparaison",
+            "legende": "Le tableau reste la pièce source ; le graphique aide à le lire."
+          },
           "metadonnees": {
             "concepts": ["proportion", "pourcentage"],
             "misconceptionsCiblees": [],
-            "dureeMinutes": 6,
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-09-CONTRAT",
+      "type": "fp-pro",
+      "duree": 1,
+      "interactif": false,
+      "donnees": {
+        "cas": {
+          "id": "B2-01-V2-09-CONTRAT",
+          "metier": "Lina, contrôleuse du tableau de bord",
+          "situation": "Lina accepte de présenter les indicateurs seulement si chaque résultat comporte sa base, son unité et une phrase de lecture.",
+          "geste": "Adopter le contrat de preuve : calcul, contrôle, communication.",
+          "consequence": "Le contrat servira de grille au comité final.",
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 1,
             "modalite": "classe",
             "regime": "ouvert"
           }
@@ -61,60 +269,114 @@
       }
     },
     {
-      "id": "B2-01-REFERENCE",
-      "type": "fp-vote",
-      "duree": 4,
+      "id": "B2-01-V2-10-MONTANT",
+      "type": "fp-numeric",
+      "duree": 3,
       "interactif": true,
       "donnees": {
         "question": {
-          "id": "B2-01-CHOIX-REFERENCE",
-          "enonce": "Pour calculer la part de 72 dossiers dans une population de 240, quelle valeur doit rester au dénominateur ?",
+          "id": "B2-01-V2-PARTIE",
+          "enonce": "Le service achats consacre 25 % d’un budget de 3 800 €. Quel montant cela représente-t-il ?",
+          "unite": "€",
+          "metadonnees": {
+            "concepts": ["pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-11-BASE-100",
+      "type": "fp-story",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-11-BASE-100",
+          "titre": "Pourquoi ramener à 100 ?",
+          "paragraphes": [
+            "Un pourcentage est une proportion exprimée sur une base commune de 100. Il permet de comparer des antennes de tailles différentes sans effacer leurs volumes.",
+            "Pour Atelier Rivage, 30 % signifie « 30 dossiers pour 100 dans les mêmes conditions », pas « 30 dossiers tout court »."
+          ],
+          "visuel": {
+            "src": "/assets/images/percent.png",
+            "alt": "Icône de pourcentage appliquée à un tableau de gestion",
+            "legende": "Le pourcentage traduit une relation, il ne décrit pas un volume isolé."
+          },
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-12-COMPARER",
+      "type": "fp-vote",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-COMPARAISON",
+          "enonce": "Quelle conclusion respecte les bases : 72/240 pour A et 45/150 pour B ?",
           "options": [
             {
               "id": "o1",
-              "libelle": "240, car c’est le total de référence."
+              "libelle": "B est meilleure car 45 est plus proche de 150 que 72 de 240."
             },
             {
               "id": "o2",
-              "libelle": "72, car c’est la valeur observée."
+              "libelle": "A est meilleure car elle compte davantage de dossiers complets."
             },
             {
               "id": "o3",
-              "libelle": "72 + 240, car il faut utiliser tous les nombres."
+              "libelle": "Les deux antennes sont à 30 % : les volumes diffèrent, la proportion est identique."
             }
           ]
         }
       }
     },
     {
-      "id": "B2-01-CONCEPT",
-      "type": "fp-concept4",
+      "id": "B2-01-V2-13-CALCUL-GUIDE",
+      "type": "fp-worked",
       "duree": 6,
       "interactif": false,
       "donnees": {
-        "definition": {
-          "id": "B2-01-CONCEPT",
-          "parametres": [
+        "exemple": {
+          "id": "B2-01-V2-13-CALCUL-GUIDE",
+          "enonce": "Comparer Nantes et Rennes à partir de 72/240 et 45/150.",
+          "etapes": [
             {
-              "cle": "partie",
-              "libelle": "partie",
-              "min": 10,
-              "max": 90,
-              "pas": 10,
-              "defaut": 30
+              "id": "reference",
+              "intitule": "Poser les bases",
+              "raisonnement": "Nantes se rapporte à 240 et Rennes à 150 : chaque total est la population de référence.",
+              "invite": "Quels nombres vont au dénominateur ?"
             },
             {
-              "cle": "total",
-              "libelle": "total",
-              "min": 100,
-              "max": 900,
-              "pas": 100,
-              "defaut": 100
+              "id": "nantes",
+              "intitule": "Calculer Nantes",
+              "raisonnement": "72 ÷ 240 = 0,30, soit 30 %.",
+              "invite": "Quel contrôle d’ordre de grandeur confirme 30 % ?"
+            },
+            {
+              "id": "rennes",
+              "intitule": "Calculer Rennes",
+              "raisonnement": "45 ÷ 150 = 0,30, soit 30 %.",
+              "invite": "Quelle différence reste entre les deux antennes ?"
+            },
+            {
+              "id": "decision",
+              "intitule": "Conclure",
+              "raisonnement": "Les proportions sont égales ; les volumes ne permettent pas de déclarer une antenne meilleure.",
+              "invite": "Quelle phrase peut être communiquée ?"
             }
           ],
-          "formuleLatexSimplifie": "\\dfrac{partie}{total} \\times 100",
-          "calcul": "(partie/total)*100",
-          "phrase": "{partie} représente {resultat} % de {total}.",
           "metadonnees": {
             "concepts": ["proportion", "pourcentage"],
             "misconceptionsCiblees": [],
@@ -126,47 +388,128 @@
       }
     },
     {
-      "id": "B2-01-CALCUL-MONTANT",
-      "type": "fp-numeric",
-      "duree": 7,
+      "id": "B2-01-V2-15-CONTROLE",
+      "type": "fp-cardsort",
+      "duree": 4,
       "interactif": true,
       "donnees": {
-        "question": {
-          "id": "B2-01-MONTANT-POURCENTAGE",
-          "enonce": "Une charge représente 25 % d’un total de 3 000 €. Quel est son montant ?",
-          "unite": "€",
+        "plan": {
+          "id": "B2-01-V2-15-CONTROLE",
+          "intitule": "Classer les contrôles avant publication",
+          "cartes": [
+            {
+              "id": "c1",
+              "libelle": "Recalculer sur la ligne source"
+            },
+            {
+              "id": "c2",
+              "libelle": "Vérifier la base et l’unité"
+            },
+            {
+              "id": "c3",
+              "libelle": "Comparer les ordres de grandeur"
+            },
+            {
+              "id": "c4",
+              "libelle": "Rédiger une phrase sans surinterpréter"
+            }
+          ],
+          "categories": [
+            {
+              "id": "methode",
+              "libelle": "Méthode fiable"
+            }
+          ],
           "metadonnees": {
-            "concepts": ["pourcentage"],
+            "concepts": ["proportion", "pourcentage"],
             "misconceptionsCiblees": [],
-            "dureeMinutes": 7,
-            "modalite": "solo",
+            "dureeMinutes": 4,
+            "modalite": "groupe",
             "regime": "ouvert"
           }
         }
       }
     },
     {
-      "id": "B2-01-ATELIER",
+      "id": "B2-01-V2-14-GRAPHIQUE-VOLUMES",
+      "type": "fp-plot",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "B2-01-V2-14-GRAPHIQUE-VOLUMES",
+          "titre": "Volumes observés et proportion comparable",
+          "source": "Source : tableau pédagogique Atelier Rivage, données fictives",
+          "abscisse": {
+            "libelle": "dossiers traités",
+            "min": 0,
+            "max": 300
+          },
+          "ordonnee": "dossiers complets",
+          "parametres": [],
+          "series": [
+            {
+              "id": "nantes",
+              "libelle": "Nantes",
+              "trait": "plein",
+              "calcul": "0.3*x"
+            },
+            {
+              "id": "rennes",
+              "libelle": "Rennes",
+              "trait": "tirets",
+              "calcul": "0.3*x"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-16-ATELIER-PARTS",
       "type": "questionnaire",
-      "duree": 20,
+      "duree": 3,
       "interactif": true,
       "donnees": {
-        "regime": "examen",
+        "regime": "focus",
         "questions": [
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-TOTAL",
+                "enonce": "450 € représentent 25 % des achats du mois. Quel est le total ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["proportion", "pourcentage"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 3,
+                  "modalite": "solo",
+                  "regime": "focus"
+                }
+              }
+            }
+          },
           {
             "brique": "fp-vote",
             "donnees": {
               "question": {
-                "id": "B2-01-FORMULE-TABLEUR",
-                "enonce": "La cellule B2 contient le total. Quelle formule calcule 25 % de B2 ?",
+                "id": "B2-01-V2-FORMULE",
+                "enonce": "La cellule B2 contient le total. Quelle formule calcule 25 % ?",
                 "options": [
                   {
                     "id": "o1",
-                    "libelle": "=B2*25"
+                    "libelle": "=B2*0.25"
                   },
                   {
                     "id": "o2",
-                    "libelle": "=B2*0.25"
+                    "libelle": "=B2*25"
                   },
                   {
                     "id": "o3",
@@ -175,18 +518,232 @@
                 ]
               }
             }
+          }
+        ]
+      }
+    },
+    {
+      "id": "B2-01-V2-17-DASHBOARD",
+      "type": "fp-pro",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "cas": {
+          "id": "B2-01-V2-17-DASHBOARD",
+          "metier": "Responsable qualité",
+          "situation": "Le responsable qualité veut afficher « 30 % de dossiers complets » dans le dashboard, mais il doit pouvoir remonter à la ligne source en audit.",
+          "geste": "Conserver le numérateur, le dénominateur, la formule et la date de mesure.",
+          "consequence": "Un indicateur non traçable devient une opinion dès que la réunion conteste le résultat.",
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-19-PHRASE",
+      "type": "fp-challenge",
+      "duree": 2,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-19-PHRASE",
+          "enonce": "Le tableau annonce 30 % mais aucune base n’est visible dans le dashboard.",
+          "invite": "Écrivez la question à poser avant de valider l’indicateur.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 2,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-18-LECTURE",
+      "type": "fp-story",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-18-LECTURE",
+          "titre": "Lire un graphique comme une phrase",
+          "paragraphes": [
+            "Commencez par le titre : que mesure-t-on ? Puis lisez l’axe horizontal, l’axe vertical et la série. Une courbe n’est pas une décoration.",
+            "La phrase « à 200 dossiers, les deux antennes atteignent 60 dossiers complets » est vérifiable. « Nantes est meilleure » ne l’est pas sans base."
+          ],
+          "visuel": {
+            "src": "/assets/images/chart.png",
+            "alt": "Graphique de données annoté",
+            "legende": "Titre, unités et source rendent un graphique exploitable."
           },
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-20-ECART-TAUX",
+      "type": "fp-vote",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-COEFFICIENT",
+          "enonce": "Une hausse de 15 % s’écrit avec quel coefficient multiplicateur ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "15/100 = 0,15"
+            },
+            {
+              "id": "o2",
+              "libelle": "1 + 15 = 16"
+            },
+            {
+              "id": "o3",
+              "libelle": "1 + 15/100 = 1,15"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-21-ALERTE-CA",
+      "type": "fp-story",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-21-ALERTE-CA",
+          "titre": "Le chiffre d’affaires monte — mais de combien ?",
+          "paragraphes": [
+            "Lina constate que les ventes passent de 1 200 € à 1 380 €. Le directeur lit « +180 » ; la responsable commerciale demande « + combien en proportion ? ».",
+            "L’écart répond à une question en euros. Le taux répond à une question de comparaison avec la base de départ."
+          ],
+          "visuel": {
+            "src": "/assets/images/trending_up.png",
+            "alt": "Flèche de tendance vers le haut pour une recette",
+            "legende": "Une hausse doit être rapportée à sa base pour être comparable."
+          },
+          "metadonnees": {
+            "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-25-TAUX",
+      "type": "fp-numeric",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-TAUX",
+          "enonce": "Le chiffre d’affaires passe de 4 000 € à 4 800 €. Quel est le taux d’évolution ?",
+          "unite": "%",
+          "metadonnees": {
+            "concepts": ["taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-22-TAUX-GUIDE",
+      "type": "fp-worked",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "B2-01-V2-22-TAUX-GUIDE",
+          "enonce": "Passer de 1 200 € à 1 380 € et préparer la phrase de compte rendu.",
+          "etapes": [
+            {
+              "id": "ecart",
+              "intitule": "Calculer l’écart",
+              "raisonnement": "1 380 − 1 200 = 180 €.",
+              "invite": "L’écart est-il déjà un taux ?"
+            },
+            {
+              "id": "base",
+              "intitule": "Choisir la base",
+              "raisonnement": "La valeur de départ 1 200 € est la référence de l’évolution.",
+              "invite": "Pourquoi ne pas diviser par 1 380 ?"
+            },
+            {
+              "id": "taux",
+              "intitule": "Calculer le taux",
+              "raisonnement": "180 ÷ 1 200 × 100 = 15 %.",
+              "invite": "Quel contrôle mental confirme le résultat ?"
+            },
+            {
+              "id": "coefficient",
+              "intitule": "Construire le coefficient",
+              "raisonnement": "1 + 15/100 = 1,15 ; 1 200 × 1,15 = 1 380.",
+              "invite": "Quelle valeur porte le coefficient ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-26-ATELIER-EVOLUTIONS",
+      "type": "questionnaire",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "regime": "examen",
+        "questions": [
           {
             "brique": "fp-numeric",
             "donnees": {
               "question": {
-                "id": "B2-01-TAUX-EVOLUTION",
-                "enonce": "Une recette passe de 3 500 € à 4 550 €. Quel est son taux d’évolution ?",
+                "id": "B2-01-V2-RECIPROQUE",
+                "enonce": "Une dépense passe de 800 € à 920 €. Quel taux faut-il appliquer à 920 € pour revenir au départ ?",
                 "unite": "%",
                 "metadonnees": {
-                  "concepts": ["pourcentage", "taux-evolution"],
+                  "concepts": ["taux-evolution", "coefficient-multiplicateur"],
                   "misconceptionsCiblees": [],
-                  "dureeMinutes": 20,
+                  "dureeMinutes": 3,
                   "modalite": "solo",
                   "regime": "examen"
                 }
@@ -197,13 +754,13 @@
             "brique": "fp-numeric",
             "donnees": {
               "question": {
-                "id": "B2-01-TOTAL-DEPUIS-PART",
-                "enonce": "950 € représentent 25 % d’un budget. Quel est le budget total ?",
+                "id": "B2-01-V2-EVOLUTIONS",
+                "enonce": "Un budget de 1 000 € augmente de 20 %, puis baisse de 10 %. Quelle valeur finale obtient-on ?",
                 "unite": "€",
                 "metadonnees": {
-                  "concepts": ["pourcentage", "taux-evolution"],
+                  "concepts": ["taux-evolution", "coefficient-multiplicateur"],
                   "misconceptionsCiblees": [],
-                  "dureeMinutes": 20,
+                  "dureeMinutes": 3,
                   "modalite": "solo",
                   "regime": "examen"
                 }
@@ -214,38 +771,30 @@
       }
     },
     {
-      "id": "B2-01-GRAPHIQUE",
-      "type": "fp-plot",
-      "duree": 6,
+      "id": "B2-01-V2-23-COEFFICIENT",
+      "type": "fp-concept4",
+      "duree": 4,
       "interactif": false,
       "donnees": {
         "definition": {
-          "id": "B2-01-GRAPHIQUE",
-          "abscisse": {
-            "libelle": "nombre de dossiers",
-            "min": 0,
-            "max": 300
-          },
-          "ordonnee": "proportion en %",
-          "parametres": [],
-          "series": [
+          "id": "B2-01-V2-23-COEFFICIENT",
+          "parametres": [
             {
-              "id": "antenne-a",
-              "libelle": "Antenne A",
-              "trait": "plein",
-              "calcul": "30"
-            },
-            {
-              "id": "antenne-b",
-              "libelle": "Antenne B",
-              "trait": "tirets",
-              "calcul": "x/10"
+              "cle": "taux",
+              "libelle": "taux d’évolution",
+              "min": -50,
+              "max": 50,
+              "pas": 5,
+              "defaut": 15
             }
           ],
+          "formuleLatexSimplifie": "coefficient = 1 + taux/100",
+          "calcul": "1+taux/100",
+          "phrase": "Pour {taux} %, le coefficient est {resultat}.",
           "metadonnees": {
-            "concepts": ["proportion", "pourcentage"],
+            "concepts": ["taux-evolution", "coefficient-multiplicateur"],
             "misconceptionsCiblees": [],
-            "dureeMinutes": 6,
+            "dureeMinutes": 4,
             "modalite": "solo",
             "regime": "ouvert"
           }
@@ -253,64 +802,263 @@
       }
     },
     {
-      "id": "B2-01-CONTROLE-GRAPHIQUE",
+      "id": "B2-01-V2-28-SUCCESSIVES",
+      "type": "fp-challenge",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-28-SUCCESSIVES",
+          "enonce": "Une remise de 10 % suit une hausse de 20 %. Le comité écrit +10 %.",
+          "invite": "Rédigez la correction en coefficients et expliquez pourquoi les pourcentages ne s’additionnent pas.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["evolutions-successives", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-24-COURBE-CA",
+      "type": "fp-plot",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "B2-01-V2-24-COURBE-CA",
+          "titre": "Une même hausse en euros n’a pas le même sens",
+          "source": "Source : scénario pédagogique Atelier Rivage, données fictives",
+          "abscisse": {
+            "libelle": "base de départ (€)",
+            "min": 0,
+            "max": 2000
+          },
+          "ordonnee": "recette d’arrivée (€)",
+          "parametres": [],
+          "series": [
+            {
+              "id": "quinze",
+              "libelle": "Hausse de 15 %",
+              "trait": "plein",
+              "calcul": "1.15*x"
+            },
+            {
+              "id": "vingt",
+              "libelle": "Hausse de 20 %",
+              "trait": "tirets",
+              "calcul": "1.2*x"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-27-COMMUNICATION",
+      "type": "fp-challenge",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-27-COMMUNICATION",
+          "enonce": "La direction veut comparer la croissance des ventes et des réparations, dont les montants de départ sont très différents.",
+          "invite": "Rédigez une phrase qui donne l’écart, le taux et la valeur de départ.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["taux-evolution", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-29-DEBRIEF-EVOL",
+      "type": "fp-story",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-29-DEBRIEF-EVOL",
+          "titre": "Deux taux successifs racontent une trajectoire",
+          "paragraphes": [
+            "Une hausse de 20 % multiplie par 1,20. Une baisse de 10 % multiplie ensuite par 0,90. Le résultat est 1,08 fois le départ, donc +8 %, pas +10 %.",
+            "Le coefficient conserve la chaîne du calcul et évite de faire porter au dernier taux une base qui a changé."
+          ],
+          "visuel": {
+            "src": "/assets/images/history.png",
+            "alt": "Historique de valeurs et évolution successive",
+            "legende": "Une trajectoire conserve les étapes et les bases qui changent."
+          },
+          "metadonnees": {
+            "concepts": ["evolutions-successives", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-30-FORMULE",
       "type": "fp-vote",
-      "duree": 4,
+      "duree": 3,
       "interactif": true,
       "donnees": {
         "question": {
-          "id": "B2-01-CONTROLE-COHERENCE",
-          "enonce": "Un tableau annonce 72 dossiers complets sur 240. Quelle vérification est la plus utile avant de communiquer le pourcentage ?",
+          "id": "B2-01-V2-FORMULE-TABLEUR",
+          "enonce": "La cellule B2 contient le total. Quelle formule calcule 25 % ?",
           "options": [
             {
               "id": "o1",
-              "libelle": "Ajouter 72 et 240 puis annoncer le résultat."
+              "libelle": "=B2*25"
             },
             {
               "id": "o2",
-              "libelle": "Diviser par le nombre de dossiers incomplets."
+              "libelle": "=B2*(1+0.25)"
             },
             {
               "id": "o3",
-              "libelle": "Calculer 72 ÷ 240 × 100 = 30 % et vérifier que la base est bien 240."
+              "libelle": "=B2*0.25"
             }
           ]
         }
       }
     },
     {
-      "id": "B2-01-REMEDIATION",
-      "type": "fp-worked",
-      "duree": 6,
+      "id": "B2-01-V2-31-TABLEUR",
+      "type": "fp-pro",
+      "duree": 4,
       "interactif": false,
       "donnees": {
-        "exemple": {
-          "id": "B2-01-REMEDIATION",
-          "enonce": "Une antenne compte 72 dossiers complets sur 240. Une recette passe de 400 € à 460 €. Produisez les deux indicateurs demandés par la direction.",
-          "etapes": [
-            {
-              "id": "base",
-              "intitule": "Identifier la référence",
-              "raisonnement": "La base d’une proportion est le total 240 ; la base d’une évolution est la valeur de départ 400 €.",
-              "invite": "Quelle valeur est au dénominateur ?"
-            },
-            {
-              "id": "proportion",
-              "intitule": "Calculer la proportion",
-              "raisonnement": "72 ÷ 240 = 0,30, soit 30 %.",
-              "invite": "Le résultat est-il dans l’ordre de grandeur attendu ?"
-            },
-            {
-              "id": "evolution",
-              "intitule": "Calculer le taux",
-              "raisonnement": "L’écart vaut 60 €. Le taux vaut 60 ÷ 400 × 100 = 15 %.",
-              "invite": "Pourquoi 60 € et 15 % ne sont-ils pas la même information ?"
-            }
-          ],
+        "cas": {
+          "id": "B2-01-V2-31-TABLEUR",
+          "metier": "Assistante comptable",
+          "situation": "La feuille de suivi contient un total en B2, une partie en C2 et un taux en D2. Une formule copiée sur 40 lignes doit rester contrôlable.",
+          "geste": "Séparer les cellules sources, écrire la formule et vérifier le format du résultat.",
+          "consequence": "Une formule compacte mais opaque coûte plus cher à auditer qu’une formule lisible.",
           "metadonnees": {
-            "concepts": ["proportion", "pourcentage", "taux-evolution"],
+            "concepts": ["pourcentage", "proportion"],
             "misconceptionsCiblees": [],
-            "dureeMinutes": 6,
+            "dureeMinutes": 4,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-37-ATELIER-TABLEUR",
+      "type": "questionnaire",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "regime": "examen",
+        "questions": [
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-CONTROLE",
+                "enonce": "Quelle vérification sécurise 84 dossiers sur 280 ?",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "Diviser par les 196 dossiers incomplets."
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "Additionner 84 et 280 puis annoncer le résultat."
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "Calculer 84 ÷ 280 × 100 = 30 %, puis vérifier l’unité et la base."
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-PARTIE-TABLEUR",
+                "enonce": "Le service achats consacre 20 % d’un budget de 3 100 €. Quel montant cela représente-t-il ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["pourcentage", "proportion"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 3,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "B2-01-V2-32-CHECKLIST",
+      "type": "fp-story",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-32-CHECKLIST",
+          "titre": "La feuille qui résiste à la relecture",
+          "paragraphes": [
+            "Une bonne feuille montre la source, la formule, l’unité, la date et le contrôle. Elle ne cache pas le total dans une constante impossible à retrouver.",
+            "Le groupe doit repérer les cellules qui permettent à une autre personne de recalculer le résultat sans demander d’explication orale."
+          ],
+          "visuel": {
+            "src": "/assets/images/business_center.png",
+            "alt": "Espace de travail et tableau de gestion",
+            "legende": "La traçabilité est une fonctionnalité métier, pas une décoration."
+          },
+          "metadonnees": {
+            "concepts": ["pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
             "modalite": "solo",
             "regime": "ouvert"
           }
@@ -318,32 +1066,287 @@
       }
     },
     {
-      "id": "B2-01-TRANSFERT",
-      "type": "fp-recall",
-      "duree": 8,
+      "id": "B2-01-V2-38-GRAPHIQUE",
+      "type": "fp-challenge",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-38-GRAPHIQUE",
+          "enonce": "Le graphique affiche 82 %, mais la ligne source donne 82 dossiers sur 1000.",
+          "invite": "Écrivez les deux contrôles prioritaires avant de corriger le graphique.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-33-TABLEUR-GUIDE",
+      "type": "fp-worked",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "B2-01-V2-33-TABLEUR-GUIDE",
+          "enonce": "Construire une ligne de contrôle pour 84 dossiers sur 280.",
+          "etapes": [
+            {
+              "id": "partie",
+              "intitule": "Saisir la partie",
+              "raisonnement": "La cellule C2 contient 84 dossiers complets.",
+              "invite": "Quelle donnée observée entre dans la formule ?"
+            },
+            {
+              "id": "total",
+              "intitule": "Saisir la base",
+              "raisonnement": "La cellule B2 contient 280 dossiers au total.",
+              "invite": "Quelle cellule est le dénominateur ?"
+            },
+            {
+              "id": "formule",
+              "intitule": "Écrire la formule",
+              "raisonnement": "=C2/B2 donne 0,30 ; le format pourcentage affiche 30 %.",
+              "invite": "Que change le format, et que ne change-t-il pas ?"
+            },
+            {
+              "id": "controle",
+              "intitule": "Contrôler",
+              "raisonnement": "84 est inférieur à 280 et 30 % est plausible ; la phrase est « 3 dossiers sur 10 ».",
+              "invite": "Quelle vérification indépendante ajoutez-vous ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-36-ANOMALIE",
+      "type": "fp-cardsort",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "plan": {
+          "id": "B2-01-V2-36-ANOMALIE",
+          "intitule": "Repérer l’anomalie avant la réunion",
+          "cartes": [
+            {
+              "id": "titre",
+              "libelle": "Lire le titre et l’unité"
+            },
+            {
+              "id": "axe",
+              "libelle": "Vérifier les axes et leur échelle"
+            },
+            {
+              "id": "source",
+              "libelle": "Retrouver la ligne source"
+            },
+            {
+              "id": "decision",
+              "libelle": "Formuler la conséquence métier"
+            }
+          ],
+          "categories": [
+            {
+              "id": "methode",
+              "libelle": "Méthode fiable"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "groupe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-34-VIDEO-TABLEUR",
+      "type": "fp-story",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-34-VIDEO-TABLEUR",
+          "titre": "Une démonstration se regarde avec une question",
+          "paragraphes": [
+            "La capsule vidéo sert de support de rappel, jamais de preuve finale. Pendant la lecture, notez le moment où le taux devient une valeur décimale.",
+            "À la fin, comparez la ligne de la vidéo à la ligne Atelier Rivage et signalez une différence de base ou d’unité."
+          ],
+          "video": {
+            "src": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Mathematrix_Prozentrechnung_Vertiefend.webm",
+            "type": "video/webm",
+            "titre": "Rappel vidéo : lire un pourcentage",
+            "poster": "/assets/images/percent.png",
+            "transcript": "Cette capsule rappelle le passage entre partie, total, taux et pourcentage. Elle doit être regardée avec la feuille de données Atelier Rivage, puis arrêtée pour vérifier chaque étape.",
+            "source": "https://commons.wikimedia.org/wiki/File:Mathematrix_Prozentrechnung_Vertiefend.webm",
+            "licence": "CC BY-SA 4.0 — Yomomo"
+          },
+          "metadonnees": {
+            "concepts": ["pourcentage", "proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-39-VALIDATION",
+      "type": "fp-vote",
+      "duree": 3,
       "interactif": true,
       "donnees": {
         "question": {
-          "id": "B2-01-TRANSFERT-METHODE",
-          "enonce": "Une recette passe de 400 € à 460 €. Quelle information faut-il donner en premier pour contrôler le calcul ?",
+          "id": "B2-01-V2-CONTROLE-VALIDATION",
+          "enonce": "Quelle vérification sécurise 84 dossiers sur 280 ?",
           "options": [
             {
               "id": "o1",
-              "libelle": "La base de départ, l’écart de 60 €, puis le taux de 15 %."
+              "libelle": "Additionner 84 et 280 puis annoncer le résultat."
             },
             {
               "id": "o2",
-              "libelle": "La valeur d’arrivée seule, car elle contient le résultat final."
+              "libelle": "Diviser par les 196 dossiers incomplets."
             },
             {
               "id": "o3",
-              "libelle": "L’écart de 60 € seulement, sans rapport à la base."
+              "libelle": "Calculer 84 ÷ 280 × 100 = 30 %, puis vérifier l’unité et la base."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-35-GRAPHIQUE-CONTROLE",
+      "type": "fp-plot",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "B2-01-V2-35-GRAPHIQUE-CONTROLE",
+          "titre": "Le graphique comme contrôle de cohérence",
+          "source": "Source : simulation pédagogique Atelier Rivage, formule explicitée dans le tableau",
+          "abscisse": {
+            "libelle": "mois",
+            "min": 1,
+            "max": 12
+          },
+          "ordonnee": "taux de dossiers complets (%)",
+          "parametres": [],
+          "series": [
+            {
+              "id": "objectif",
+              "libelle": "Objectif 70 %",
+              "trait": "tirets",
+              "calcul": "70"
+            },
+            {
+              "id": "mesure",
+              "libelle": "Mesure observée",
+              "trait": "plein",
+              "calcul": "54+2*x"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-40-TRANSMISSION",
+      "type": "fp-challenge",
+      "duree": 4,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-40-TRANSMISSION",
+          "enonce": "Le fichier est juste, mais le directeur ne comprend pas le message.",
+          "invite": "Rédigez la phrase de transmission en citant mesure, base, unité et conséquence.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["pourcentage", "proportion"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-41-RAPPEL-COMITE",
+      "type": "fp-recall",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-DECISION-RAPPEL",
+          "enonce": "Quel commentaire peut être signé dans le compte rendu (1200 € → 1380 €) ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "La recette augmente de 180 €, soit 15 % par rapport à la base de départ de 1 200 €."
+            },
+            {
+              "id": "o2",
+              "libelle": "La recette progresse de 180 %."
+            },
+            {
+              "id": "o3",
+              "libelle": "La recette progresse de 13,04 %, calculé sur 1 380 €."
             }
           ],
           "metadonnees": {
             "concepts": ["proportion", "taux-evolution"],
             "misconceptionsCiblees": [],
-            "dureeMinutes": 8,
+            "dureeMinutes": 3,
             "modalite": "solo",
             "regime": "ouvert"
           }
@@ -351,33 +1354,695 @@
       }
     },
     {
-      "id": "B2-01-SORTIE",
-      "type": "fp-exit",
-      "duree": 18,
+      "id": "B2-01-V2-42-DOSSIER",
+      "type": "fp-story",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-42-DOSSIER",
+          "titre": "Acte 5 — le comité ouvre le dossier",
+          "paragraphes": [
+            "Le comité doit décider s’il finance une seconde équipe de réparation. Trois pièces arrivent ensemble : volumes, taux de dossiers complets et chiffre d’affaires.",
+            "La décision n’est pas « trouver un nombre ». Il faut construire une conclusion qui supporte la contradiction et qui indique ce que la donnée ne permet pas d’affirmer."
+          ],
+          "visuel": {
+            "src": "/assets/images/receipt.png",
+            "alt": "Pièce comptable utilisée comme document source",
+            "legende": "Une décision commence par des pièces, pas par un graphique isolé."
+          },
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-43-TOTAL-COMITE",
+      "type": "fp-numeric",
+      "duree": 4,
       "interactif": true,
       "donnees": {
-        "billet": {
-          "id": "B2-01-SORTIE-METHODE",
-          "question": "Pour expliquer le passage de 400 à 460, quelle conclusion est correcte ?",
-          "invite": "Écrivez la méthode que vous réutiliserez dans un tableau de gestion.",
-          "options": [
+        "question": {
+          "id": "B2-01-V2-TOTAL-COMITE-QUESTION",
+          "enonce": "320 € représentent 20 % des achats du mois. Quel est le total ?",
+          "unite": "€",
+          "metadonnees": {
+            "concepts": ["pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-44-DOSSIER-GUIDE",
+      "type": "fp-worked",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "B2-01-V2-44-DOSSIER-GUIDE",
+          "enonce": "Préparer la recommandation à partir de 30 % de dossiers complets et +15 % de recette.",
+          "etapes": [
             {
-              "id": "o1",
-              "libelle": "Le taux est 60 ÷ 460 × 100, car la valeur finale est la référence."
+              "id": "qualite",
+              "intitule": "Mesurer la qualité",
+              "raisonnement": "72 ÷ 240 × 100 = 30 % de dossiers complets.",
+              "invite": "Quelle est la base de cet indicateur ?"
             },
             {
-              "id": "o2",
-              "libelle": "Le taux est 60 €, car c’est l’écart observé."
+              "id": "recette",
+              "intitule": "Mesurer l’évolution",
+              "raisonnement": "(1 380 − 1 200) ÷ 1 200 × 100 = 15 %.",
+              "invite": "Quel est le départ de l’évolution ?"
             },
             {
-              "id": "o3",
-              "libelle": "L’écart est 60 et le taux est 60 ÷ 400 × 100 = 15 %."
+              "id": "limite",
+              "intitule": "Nommer la limite",
+              "raisonnement": "Ces indicateurs ne prouvent pas à eux seuls la rentabilité : il manque les coûts.",
+              "invite": "Que refusez-vous de conclure ?"
+            },
+            {
+              "id": "recommandation",
+              "intitule": "Recommander",
+              "raisonnement": "Proposer un financement conditionné à la collecte des coûts et au suivi du taux.",
+              "invite": "Quelle décision est proportionnée aux preuves ?"
             }
           ],
           "metadonnees": {
             "concepts": ["proportion", "pourcentage", "taux-evolution"],
             "misconceptionsCiblees": [],
-            "dureeMinutes": 18,
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-47-DOSSIER-COMPLET",
+      "type": "questionnaire",
+      "duree": 6,
+      "interactif": true,
+      "donnees": {
+        "regime": "examen",
+        "questions": [
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-TAUX-COMITE",
+                "enonce": "Le chiffre d’affaires passe de 5 300 € à 6 095 €. Quel est le taux d’évolution ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": ["proportion", "pourcentage", "taux-evolution"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 6,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-PARTIE-COMITE",
+                "enonce": "Le service achats consacre 15 % d’un budget de 5 200 €. Quel montant cela représente-t-il ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["proportion", "pourcentage", "taux-evolution"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 6,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-vote",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-FORMULE-COMITE",
+                "enonce": "La cellule B2 contient le total. Quelle formule calcule 25 % ?",
+                "options": [
+                  {
+                    "id": "o1",
+                    "libelle": "=B2*(1+0.25)"
+                  },
+                  {
+                    "id": "o2",
+                    "libelle": "=B2*25"
+                  },
+                  {
+                    "id": "o3",
+                    "libelle": "=B2*0.25"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "B2-01-V2-45-COMITE",
+      "type": "fp-plot",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "B2-01-V2-45-COMITE",
+          "titre": "La qualité et la recette ne racontent pas la même chose",
+          "source": "Source : cas fictif Atelier Rivage, comité mensuel",
+          "abscisse": {
+            "libelle": "mois",
+            "min": 1,
+            "max": 6
+          },
+          "ordonnee": "indicateur indexé base 100",
+          "parametres": [],
+          "series": [
+            {
+              "id": "qualite",
+              "libelle": "Dossiers complets",
+              "trait": "plein",
+              "calcul": "100+4*x"
+            },
+            {
+              "id": "recette",
+              "libelle": "Recette",
+              "trait": "tirets",
+              "calcul": "100+7*x"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-46-LECTURE-COMITE",
+      "type": "fp-vote",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-DECISION",
+          "enonce": "Quel commentaire peut être signé dans le compte rendu (1200 € → 1380 €) ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "La recette progresse de 13,04 %, calculé sur 1 380 €."
+            },
+            {
+              "id": "o2",
+              "libelle": "La recette augmente de 180 €, soit 15 % par rapport à la base de départ de 1 200 €."
+            },
+            {
+              "id": "o3",
+              "libelle": "La recette progresse de 180 %."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-48-OBJECTION",
+      "type": "fp-challenge",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-48-OBJECTION",
+          "enonce": "Un dirigeant affirme : « +15 % de recette signifie +15 % de marge ».",
+          "invite": "Répondez avec ce que les données permettent et ne permettent pas de conclure.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["taux-evolution", "pourcentage"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-49-RECOMMANDATION",
+      "type": "fp-pro",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "cas": {
+          "id": "B2-01-V2-49-RECOMMANDATION",
+          "metier": "Assistante de gestion en comité",
+          "situation": "Le groupe doit proposer une décision sans surinterpréter : financer, différer ou demander une mesure complémentaire.",
+          "geste": "Relier chaque recommandation à une preuve chiffrée et nommer la donnée manquante.",
+          "consequence": "La qualité d’un indicateur se mesure aussi à la décision qu’il empêche de prendre trop vite.",
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "classe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-50-RETOUR",
+      "type": "fp-story",
+      "duree": 2,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-50-RETOUR",
+          "titre": "Le bon indicateur rend la discussion plus précise",
+          "paragraphes": [
+            "Le comité ne cherche pas le chiffre le plus impressionnant. Il cherche une comparaison juste, une évolution référencée et une limite clairement annoncée."
+          ],
+          "visuel": {
+            "src": "/assets/images/business_center.png",
+            "alt": "Équipe réunie autour d’un poste de travail",
+            "legende": "Le calcul devient utile lorsqu’il améliore une décision."
+          },
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 2,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-51-DEFENSE",
+      "type": "fp-cardsort",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "plan": {
+          "id": "B2-01-V2-51-DEFENSE",
+          "intitule": "Préparer la prise de parole du comité",
+          "cartes": [
+            {
+              "id": "constat",
+              "libelle": "Constat chiffré"
+            },
+            {
+              "id": "calcul",
+              "libelle": "Calcul vérifiable"
+            },
+            {
+              "id": "limite",
+              "libelle": "Limite de la donnée"
+            },
+            {
+              "id": "action",
+              "libelle": "Décision proposée"
+            }
+          ],
+          "categories": [
+            {
+              "id": "methode",
+              "libelle": "Méthode fiable"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "groupe",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-52-CORRECTION-COMITE",
+      "type": "fp-worked",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "B2-01-V2-52-CORRECTION-COMITE",
+          "enonce": "Corriger une recommandation trop ambitieuse sans perdre le signal utile.",
+          "etapes": [
+            {
+              "id": "erreur",
+              "intitule": "Nommer l’erreur",
+              "raisonnement": "Le groupe a confondu progression de recette et rentabilité.",
+              "invite": "Quelle affirmation dépasse la donnée ?"
+            },
+            {
+              "id": "preuve",
+              "intitule": "Conserver la preuve",
+              "raisonnement": "La recette progresse de 15 % et les dossiers complets représentent 30 %.",
+              "invite": "Quels faits restent valides ?"
+            },
+            {
+              "id": "action",
+              "intitule": "Reformuler",
+              "raisonnement": "Demander les coûts avant un engagement définitif.",
+              "invite": "Quelle action réduit le risque ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-53-RAPPEL-TRANSFERT",
+      "type": "fp-recall",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-BASE-TRANSFERT",
+          "enonce": "Dans l’antenne 2, 45 dossiers sur 150 sont complets. Quelle valeur est la base de référence ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "45 + 150, pour utiliser les deux nombres."
+            },
+            {
+              "id": "o2",
+              "libelle": "150 : la base est la population totale à laquelle on rapporte la partie."
+            },
+            {
+              "id": "o3",
+              "libelle": "45, parce que c’est le nombre observé."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-54-TRANSFERT",
+      "type": "fp-story",
+      "duree": 4,
+      "interactif": false,
+      "donnees": {
+        "recit": {
+          "id": "B2-01-V2-54-TRANSFERT",
+          "titre": "Nouveau contexte : les retours clients",
+          "paragraphes": [
+            "Une autre équipe compte 18 retours traités sur 60 et passe de 400 à 460 € de coûts de traitement. Les nombres changent, la méthode doit rester stable.",
+            "Le transfert est réussi si l’étudiant choisit seul la bonne base, calcule, contrôle et explique ce que le résultat signifie."
+          ],
+          "visuel": {
+            "src": "/assets/images/auto_graph.png",
+            "alt": "Graphique de tendance utilisé pour un nouveau contexte",
+            "legende": "La méthode doit survivre à un changement de contexte."
+          },
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 4,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-56-EVALUATION",
+      "type": "questionnaire",
+      "duree": 5,
+      "interactif": true,
+      "donnees": {
+        "regime": "examen",
+        "questions": [
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-TAUX-MOYEN",
+                "enonce": "Un indicateur passe de 1 000 € à 1 210 € en deux périodes au même rythme. Quel taux moyen par période ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": ["evolutions-successives", "evolution-reciproque", "taux-moyen"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 5,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-RECIPROQUE-EVALUATION",
+                "enonce": "Une dépense passe de 800 € à 920 €. Quel taux faut-il appliquer à 920 € pour revenir au départ ?",
+                "unite": "%",
+                "metadonnees": {
+                  "concepts": ["evolutions-successives", "evolution-reciproque", "taux-moyen"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 5,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          },
+          {
+            "brique": "fp-numeric",
+            "donnees": {
+              "question": {
+                "id": "B2-01-V2-EVOLUTIONS-EVALUATION",
+                "enonce": "Un budget de 1 000 € augmente de 20 %, puis baisse de 10 %. Quelle valeur finale obtient-on ?",
+                "unite": "€",
+                "metadonnees": {
+                  "concepts": ["evolutions-successives", "evolution-reciproque", "taux-moyen"],
+                  "misconceptionsCiblees": [],
+                  "dureeMinutes": 5,
+                  "modalite": "solo",
+                  "regime": "examen"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "B2-01-V2-55-TRANSFERT-GUIDE",
+      "type": "fp-worked",
+      "duree": 5,
+      "interactif": false,
+      "donnees": {
+        "exemple": {
+          "id": "B2-01-V2-55-TRANSFERT-GUIDE",
+          "enonce": "Produire un compte rendu sur 18 retours traités sur 60 et une évolution de 400 à 460 €.",
+          "etapes": [
+            {
+              "id": "part",
+              "intitule": "Proportion",
+              "raisonnement": "18 ÷ 60 = 0,30, soit 30 %.",
+              "invite": "Que représente 30 % ici ?"
+            },
+            {
+              "id": "ecart",
+              "intitule": "Écart",
+              "raisonnement": "460 − 400 = 60 €.",
+              "invite": "Quelle information donne l’écart ?"
+            },
+            {
+              "id": "taux",
+              "intitule": "Taux",
+              "raisonnement": "60 ÷ 400 × 100 = 15 %.",
+              "invite": "Pourquoi la base est-elle 400 ?"
+            },
+            {
+              "id": "phrase",
+              "intitule": "Compte rendu",
+              "raisonnement": "30 % des retours sont traités ; le coût augmente de 60 €, soit 15 %.",
+              "invite": "Quelle décision cette phrase autorise-t-elle ?"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 5,
+            "modalite": "solo",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-58-ERREUR",
+      "type": "fp-challenge",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "probleme": {
+          "id": "B2-01-V2-58-ERREUR",
+          "enonce": "Un collègue écrit 18 ÷ 60 = 0,3 % et 460 − 400 = 60 %.",
+          "invite": "Corrigez les deux erreurs et expliquez le rôle de l’unité.",
+          "strategies": [
+            {
+              "id": "preuve",
+              "libelle": "Je donne la base, le calcul, l’unité et l’interprétation."
+            },
+            {
+              "id": "volume",
+              "libelle": "Je choisis le plus grand volume sans vérifier la base."
+            },
+            {
+              "id": "taux",
+              "libelle": "Je donne un taux sans préciser la valeur de référence."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-57-SYNTHESE",
+      "type": "fp-plot",
+      "duree": 3,
+      "interactif": false,
+      "donnees": {
+        "definition": {
+          "id": "B2-01-V2-57-SYNTHESE",
+          "titre": "Trois questions, trois bases",
+          "source": "Source : synthèse pédagogique des cas Atelier Rivage",
+          "abscisse": {
+            "libelle": "étape",
+            "min": 0,
+            "max": 3
+          },
+          "ordonnee": "valeur normalisée",
+          "parametres": [],
+          "series": [
+            {
+              "id": "proportion",
+              "libelle": "Partie / total",
+              "trait": "plein",
+              "calcul": "0.3"
+            },
+            {
+              "id": "evolution",
+              "libelle": "Arrivée / départ",
+              "trait": "tirets",
+              "calcul": "1+0.15*x"
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "taux-evolution", "coefficient-multiplicateur"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 3,
+            "modalite": "binome",
+            "regime": "ouvert"
+          }
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-59-INTERPRETATION",
+      "type": "fp-vote",
+      "duree": 3,
+      "interactif": true,
+      "donnees": {
+        "question": {
+          "id": "B2-01-V2-DECISION-INTERPRETATION",
+          "enonce": "Quel commentaire peut être signé dans le compte rendu (1200 € → 1380 €) ?",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "La recette augmente de 180 €, soit 15 % par rapport à la base de départ de 1 200 €."
+            },
+            {
+              "id": "o2",
+              "libelle": "La recette progresse de 180 %."
+            },
+            {
+              "id": "o3",
+              "libelle": "La recette progresse de 13,04 %, calculé sur 1 380 €."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B2-01-V2-60-SORTIE",
+      "type": "fp-exit",
+      "duree": 2,
+      "interactif": true,
+      "donnees": {
+        "billet": {
+          "id": "B2-01-V2-SORTIE",
+          "question": "Pour 96 dossiers complets sur 320, quelle réponse professionnelle donne le calcul et son interprétation ?",
+          "invite": "Écrivez la méthode que vous réutiliserez dans un tableau de gestion : données, base, calcul, contrôle, unité, interprétation.",
+          "options": [
+            {
+              "id": "o1",
+              "libelle": "96 ÷ 320 = 0,3 %, sans unité ni interprétation."
+            },
+            {
+              "id": "o2",
+              "libelle": "96 + 320 = 416 %, donc la qualité dépasse 100 %."
+            },
+            {
+              "id": "o3",
+              "libelle": "96 ÷ 320 × 100 = 30 % : trois dossiers sur dix sont complets."
+            }
+          ],
+          "metadonnees": {
+            "concepts": ["proportion", "pourcentage", "taux-evolution"],
+            "misconceptionsCiblees": [],
+            "dureeMinutes": 2,
             "modalite": "solo",
             "regime": "ouvert"
           }

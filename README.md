@@ -75,7 +75,8 @@ Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`
 - `/cours/presenter/:slug?seance=:sessionId` — Reprise du pupitre d'une séance déjà ouverte : aucune nouvelle ouverture ; le code, les résultats, le déroulé et l'écran courant sont relus. Le pupitre inscrit lui-même `?seance=` dans l'URL dès l'ouverture.
 - `/cours/presenter/:slug/scene/:sessionId` — Scène pour le vidéoprojecteur (`authGuard` + `roleGuard("teacher")`) : écran courant en rendu `stage`, sans notes ni résultats, hors de la coquille du site (`data.coquille = false` : ni barre de navigation, ni pied de page, ni bandeau cookies).
 - `/cours/seance/:sessionId/synthese` — Synthèse de la séance close (`authGuard`).
-- `/cours/demo` — Galerie de démonstration des briques, sans séance.
+- `/cours/demo` — Ancienne URL de banc d’essai, redirigée vers `/formations` ; les briques sont
+  testées directement par leurs tests de composant.
 
 ### Utilitaires
 

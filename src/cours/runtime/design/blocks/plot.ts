@@ -52,8 +52,15 @@ export const plot = `
   min-width: 0;
 }
 
+:where(.fp-root) .fp-plot__titre {
+  color: var(--fp-texte-fort);
+  font-size: calc(1.2rem * var(--fp-echelle));
+  text-wrap: balance;
+}
+
 :where(.fp-root) .fp-plot__graphique {
   width: 100%;
+  min-height: min(36vh, 22rem);
   height: auto;
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r);
@@ -152,6 +159,12 @@ export const plot = `
 
 :where(.fp-root) .fp-plot__synthese {
   overflow-wrap: anywhere;
+}
+
+:where(.fp-root) .fp-plot__source {
+  color: var(--fp-ink-mute);
+  font-family: var(--fp-font-mono);
+  font-size: calc(0.7rem * var(--fp-echelle));
 }
 
 :where(.fp-root) .fp-plot__reperes {

@@ -195,6 +195,16 @@ describe('CoursPresentateurComponent', () => {
     TestBed.inject(AuthStateService).clearSession();
   });
 
+  it('nomme la sortie une projection et propose le plein écran', async () => {
+    const fixture = await ouvrirLaSeance();
+
+    expect(texte(fixture, 'presentateur-scene')).toContain('projection');
+    expect(texte(fixture, 'presentateur-scene')).not.toContain('scène');
+    expect(cible(fixture, 'presentateur-plein-ecran').getAttribute('aria-label')).toContain(
+      'plein écran',
+    );
+  });
+
   it('ouvre la seance par son slug et ne lit le deroule qu une fois la seance ouverte', async () => {
     const ouverture = new Subject<SeanceOuverte>();
     const lecture = new Subject<DerouleCours>();
@@ -417,6 +427,23 @@ describe('CoursPresentateurComponent', () => {
 
     expect(titres.length).toBe(1);
     expect(titres[0].textContent?.trim()).not.toBe('');
+  });
+
+  it('expose une glissiere de navigation reliee au pilotage de la seance', async () => {
+    const fixture = await ouvrirLaSeance();
+    const slider = cible(fixture, 'presentateur-slider') as HTMLInputElement;
+
+    expect(slider.type).toBe('range');
+    expect(slider.min).toBe('0');
+    expect(slider.max).toBe('3');
+    expect(slider.value).toBe('0');
+
+    slider.value = '2';
+    slider.dispatchEvent(new Event('input'));
+    await stabiliser(fixture);
+
+    expect(port.piloter).toHaveBeenCalledWith(SESSION, { ecran: 2 });
+    expect(texte(fixture, 'presentateur-ecran-slider')).toBe('3 / 4');
   });
 
   it('numerote les panneaux et montre l enonce de chaque question dans l ordre de l apercu', async () => {

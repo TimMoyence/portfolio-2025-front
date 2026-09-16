@@ -1,5 +1,5 @@
 import type { MetadonneesBrique } from '../../content/types';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
 
@@ -7,6 +7,20 @@ export interface StoryRecit {
   readonly id: string;
   readonly titre: string;
   readonly paragraphes: readonly string[];
+  readonly visuel?: {
+    readonly src: string;
+    readonly alt: string;
+    readonly legende?: string;
+  };
+  readonly video?: {
+    readonly src: string;
+    readonly type: 'video/webm' | 'video/mp4';
+    readonly titre: string;
+    readonly poster?: string;
+    readonly transcript: string;
+    readonly source: string;
+    readonly licence: string;
+  };
   readonly metadonnees: MetadonneesBrique;
 }
 
@@ -21,6 +35,8 @@ export class FpStory extends FpBlock {
             id: valeur.id,
             titre: valeur.titre,
             paragraphes: [...valeur.paragraphes],
+            visuel: valeur.visuel === undefined ? undefined : { ...valeur.visuel },
+            video: valeur.video === undefined ? undefined : { ...valeur.video },
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     this.refreshSiConnecte();
@@ -71,6 +87,8 @@ export class FpStory extends FpBlock {
     return safeHtml`
       <aside class="${escapeHtml(cadre)} fp-story__recit">
         <h2 class="${escapeHtml(styleTitre)}" data-testid="titre">${escapeHtml(recit.titre)}</h2>
+        ${this.visuel(recit)}
+        ${this.video(recit)}
         <div class="fp-prose fp-story__corps">${recit.paragraphes.map((texte) => this.paragraphe(texte))}</div>
         ${reperes}
       </aside>
@@ -79,5 +97,37 @@ export class FpStory extends FpBlock {
 
   private paragraphe(texte: string): EscapedHtml {
     return safeHtml`<p class="fp-story__paragraphe" data-testid="paragraphe">${escapeHtml(texte)}</p>`;
+  }
+
+  private visuel(recit: StoryRecit): EscapedHtml {
+    if (recit.visuel === undefined) {
+      return safeHtml``;
+    }
+    return safeHtml`
+        <figure class="fp-story__visuel" data-testid="visuel">
+        <img src="${escapeUrl(recit.visuel.src)}" alt="${escapeHtml(recit.visuel.alt)}" loading="eager" />
+        ${recit.visuel.legende === undefined ? safeHtml`` : safeHtml`<figcaption>${escapeHtml(recit.visuel.legende)}</figcaption>`}
+      </figure>
+    `;
+  }
+
+  private video(recit: StoryRecit): EscapedHtml {
+    const video = recit.video;
+    if (video === undefined) {
+      return safeHtml``;
+    }
+    return safeHtml`
+      <figure class="fp-story__video" data-testid="video">
+        <figcaption class="fp-story__video-titre">${escapeHtml(video.titre)}</figcaption>
+        <video controls preload="metadata" playsinline${video.poster === undefined ? safeHtml`` : safeHtml` poster="${escapeUrl(video.poster)}"`}>
+          <source src="${escapeUrl(video.src)}" type="${escapeHtml(video.type)}" />
+        </video>
+        <details class="fp-story__transcription">
+          <summary>Transcription et consigne de contrôle</summary>
+          <p data-testid="transcription">${escapeHtml(video.transcript)}</p>
+        </details>
+        <p class="fp-story__licence"><a href="${escapeUrl(video.source)}" target="_blank" rel="noreferrer">Source du média</a> · ${escapeHtml(video.licence)}</p>
+      </figure>
+    `;
   }
 }

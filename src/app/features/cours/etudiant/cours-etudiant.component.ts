@@ -42,6 +42,7 @@ import {
 import type { ReponseBrique } from '../ecran/cours-ecran.component';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import { CoursEcranComponent, identifiantsDesQuestions } from '../ecran/cours-ecran.component';
+import { CoursSlideFrameComponent } from '../design/cours-slide-frame.component';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
 
@@ -81,6 +82,7 @@ const MESSAGE_ECHEC = $localize`:cours.rattachementEchec|@@coursRattachementEche
 
 const MOTIF_CODE = /^\d{4}$/;
 const ESPACES = /\s+/g;
+const DELAI_MINIMUM_FORMULAIRE_MS = 1_200;
 
 function normaliserCode(saisi: string): string | null {
   const compact = saisi.replace(ESPACES, '');
@@ -140,176 +142,266 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
 @Component({
   selector: 'app-cours-etudiant',
   standalone: true,
-  imports: [CoursEcranComponent],
+  imports: [CoursEcranComponent, CoursSlideFrameComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @switch (etat()) {
-      @case ('chargement') {
-        <p
-          data-testid="etudiant-chargement"
-          role="status"
-          i18n="cours.chargementSujet|@@coursChargementSujet"
-        >
-          Chargement de votre sujet…
-        </p>
-      }
-      @case ('sujet-refuse') {
-        @if (refusSujet(); as refus) {
-          <p data-testid="etudiant-sujet-refuse" role="alert" [attr.data-motif]="refus.motif">
-            {{ refus.message }}
-          </p>
-          @if (refus.motif === 'sujet-indisponible') {
-            <button
-              type="button"
-              data-testid="etudiant-sujet-reessayer"
-              (click)="reessayer()"
-              i18n="cours.reessayerSujet|@@coursReessayerSujet"
-            >
-              Réessayer
-            </button>
+    <div class="cours-etudiant">
+      @switch (etat()) {
+        @case ('chargement') {
+          <div class="student-state" data-testid="etudiant-chargement" role="status">
+            <span class="student-state__pulse" aria-hidden="true"></span>
+            <div>
+              <p class="student-state__kicker">Préparation de la séance</p>
+              <p i18n="cours.chargementSujet|@@coursChargementSujet">Chargement de votre sujet…</p>
+            </div>
+          </div>
+        }
+        @case ('sujet-refuse') {
+          @if (refusSujet(); as refus) {
+            <p data-testid="etudiant-sujet-refuse" role="alert" [attr.data-motif]="refus.motif">
+              {{ refus.message }}
+            </p>
+            @if (refus.motif === 'sujet-indisponible') {
+              <button
+                type="button"
+                data-testid="etudiant-sujet-reessayer"
+                (click)="reessayer()"
+                i18n="cours.reessayerSujet|@@coursReessayerSujet"
+              >
+                Réessayer
+              </button>
+            }
           }
         }
-      }
-      @case ('seance') {
-        <section data-testid="etudiant-seance">
-          @if (sujet(); as cours) {
-            <h2 data-testid="etudiant-titre">{{ cours.titre }}</h2>
-            <p data-testid="etudiant-progression">
-              {{ indexEcran() + 1 }} / {{ cours.ecrans.length }}
-            </p>
-          }
-          @if (terminee()) {
-            <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
-              La séance est terminée. Merci de votre participation.
-            </p>
-          } @else {
-            @if (echecEcran(); as echec) {
-              <p data-testid="etudiant-ecran-echec" role="alert">
-                {{ echec.message }}
+        @case ('rattachement') {
+          <div class="student-state" data-testid="etudiant-rattachement" role="status">
+            <span class="student-state__pulse" aria-hidden="true"></span>
+            <div>
+              <p class="student-state__kicker">Entrée dans la classe</p>
+              <p i18n="cours.rattachement|@@coursRattachement">Connexion à la séance…</p>
+            </div>
+          </div>
+        }
+        @case ('seance') {
+          <section class="student-session" data-testid="etudiant-seance">
+            @if (sujet(); as cours) {
+              <div class="student-session__head">
+                <div>
+                  <p
+                    class="cours-etudiant__kicker"
+                    i18n="cours.etudiantKicker|@@coursEtudiantKicker"
+                  >
+                    Séance en cours
+                  </p>
+                  <h2 data-testid="etudiant-titre">{{ cours.titre }}</h2>
+                </div>
+                <p class="student-progress" data-testid="etudiant-progression">
+                  {{ indexEcran() + 1 }} / {{ cours.ecrans.length }}
+                </p>
+              </div>
+            }
+            @if (terminee()) {
+              <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
+                La séance est terminée. Merci de votre participation.
               </p>
             } @else {
-              @if (refusDuFlux(); as refus) {
-                <p
-                  data-testid="etudiant-flux-refuse"
-                  role="alert"
-                  [attr.data-statut]="refus.statut"
-                  i18n="cours.fluxRefuse|@@coursFluxRefuse"
-                >
-                  Le suivi en direct a été refusé par le serveur (statut {{ refus.statut }}). Les
-                  activités réapparaîtront dès que la connexion sera rétablie.
+              @if (echecEcran(); as echec) {
+                <p data-testid="etudiant-ecran-echec" role="alert">
+                  {{ echec.message }}
                 </p>
-              } @else if (statutSeance() !== 'en_cours') {
-                <p
-                  data-testid="etudiant-attente"
-                  role="status"
-                  i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
-                >
-                  La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
-                  formateur la lancera.
-                </p>
-              } @else if (chargementEcran()) {
-                <p data-testid="etudiant-ecran-chargement" role="status">Chargement de l’écran…</p>
               } @else {
-                @if (ecranCourant(); as ecran) {
-                  <app-cours-ecran
-                    [ecran]="ecran"
-                    rendu="hand"
-                    [role]="'etudiant'"
-                    (reponse)="envoyer($event)"
-                  />
-                }
-                @if (peutAvancer()) {
-                  <button
-                    type="button"
-                    data-testid="etudiant-suivant"
-                    (click)="avancer()"
-                    i18n="cours.ecranSuivant|@@coursEcranSuivant"
+                @if (refusDuFlux(); as refus) {
+                  <p
+                    class="student-status"
+                    data-testid="etudiant-flux-refuse"
+                    role="alert"
+                    [attr.data-statut]="refus.statut"
+                    i18n="cours.fluxRefuse|@@coursFluxRefuse"
                   >
-                    Écran suivant
-                  </button>
+                    Le suivi en direct a été refusé par le serveur (statut {{ refus.statut }}). Les
+                    activités réapparaîtront dès que la connexion sera rétablie.
+                  </p>
+                } @else if (statutSeance() !== 'en_cours') {
+                  <p
+                    class="student-status"
+                    data-testid="etudiant-attente"
+                    role="status"
+                    i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
+                  >
+                    La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
+                    formateur la lancera.
+                  </p>
+                } @else if (chargementEcran()) {
+                  <p class="student-status" data-testid="etudiant-ecran-chargement" role="status">
+                    Chargement de l’écran…
+                  </p>
+                } @else {
+                  @if (ecranCourant(); as ecran) {
+                    <app-cours-slide-frame
+                      variant="student"
+                      eyebrow="Votre parcours"
+                      [title]="sujet()?.titre ?? ''"
+                      [index]="indexEcran() + 1"
+                      [total]="sujet()?.ecrans?.length ?? 0"
+                      [duration]="ecran.duree"
+                    >
+                      <app-cours-ecran
+                        [ecran]="ecran"
+                        rendu="hand"
+                        [role]="'etudiant'"
+                        (reponse)="envoyer($event)"
+                      />
+                    </app-cours-slide-frame>
+                  }
+                  @if (peutAvancer()) {
+                    <button
+                      type="button"
+                      class="btn btn-teal"
+                      data-testid="etudiant-suivant"
+                      (click)="avancer()"
+                      i18n="cours.ecranSuivant|@@coursEcranSuivant"
+                    >
+                      Écran suivant
+                    </button>
+                  }
                 }
               }
             }
-          }
-          <ul data-testid="etudiant-verdicts" aria-live="polite">
-            @for (verdict of verdictsAffiches(); track verdict.questionId) {
-              <li
-                data-testid="etudiant-verdict"
-                [attr.data-question]="verdict.questionId"
-                [attr.data-reussite]="verdict.reussite"
+            <ul class="student-verdicts" data-testid="etudiant-verdicts" aria-live="polite">
+              @for (verdict of verdictsAffiches(); track verdict.questionId) {
+                <li
+                  data-testid="etudiant-verdict"
+                  [attr.data-question]="verdict.questionId"
+                  [attr.data-reussite]="verdict.reussite"
+                >
+                  @if (verdict.reussite) {
+                    <span
+                      data-testid="etudiant-verdict-libelle"
+                      i18n="cours.questionReussie|@@coursQuestionReussie"
+                    >
+                      Question {{ verdict.rang }} : Réussi
+                    </span>
+                  } @else {
+                    <span
+                      data-testid="etudiant-verdict-libelle"
+                      i18n="cours.questionManquee|@@coursQuestionManquee"
+                    >
+                      Question {{ verdict.rang }} : Manqué
+                    </span>
+                  }
+                  @if (verdict.etiquette; as etiquette) {
+                    <span data-testid="etudiant-confusion">{{ etiquette }}</span>
+                  }
+                </li>
+              }
+            </ul>
+            @if (enAttente()) {
+              <p
+                class="student-feedback"
+                data-testid="etudiant-hors-ligne"
+                role="status"
+                i18n="cours.horsLigne|@@coursHorsLigne"
               >
-                @if (verdict.reussite) {
-                  <span
-                    data-testid="etudiant-verdict-libelle"
-                    i18n="cours.questionReussie|@@coursQuestionReussie"
-                  >
-                    Question {{ verdict.rang }} : Réussi
-                  </span>
-                } @else {
-                  <span
-                    data-testid="etudiant-verdict-libelle"
-                    i18n="cours.questionManquee|@@coursQuestionManquee"
-                  >
-                    Question {{ verdict.rang }} : Manqué
-                  </span>
-                }
-                @if (verdict.etiquette; as etiquette) {
-                  <span data-testid="etudiant-confusion">{{ etiquette }}</span>
-                }
-              </li>
+                Votre réponse est enregistrée sur ce poste et partira au retour du réseau.
+              </p>
             }
-          </ul>
-          @if (enAttente()) {
-            <p
-              data-testid="etudiant-hors-ligne"
-              role="status"
-              i18n="cours.horsLigne|@@coursHorsLigne"
-            >
-              Votre réponse est enregistrée sur ce poste et partira au retour du réseau.
-            </p>
-          }
-          @if (refusReponse(); as refus) {
-            <p data-testid="etudiant-reponse-refusee" role="alert" [attr.data-motif]="refus.motif">
-              {{ refus.message }}
-            </p>
-          }
-          @if (fileRefusee()) {
-            <p
-              data-testid="etudiant-file-refusee"
-              role="alert"
-              i18n="cours.fileRefusee|@@coursFileRefusee"
-            >
-              Ce poste n’a pas pu mettre votre réponse de côté : prévenez votre formateur.
-            </p>
-          }
-        </section>
+            @if (refusReponse(); as refus) {
+              <p
+                class="student-feedback"
+                data-testid="etudiant-reponse-refusee"
+                role="alert"
+                [attr.data-motif]="refus.motif"
+              >
+                {{ refus.message }}
+              </p>
+            }
+            @if (fileRefusee()) {
+              <p
+                class="student-feedback"
+                data-testid="etudiant-file-refusee"
+                role="alert"
+                i18n="cours.fileRefusee|@@coursFileRefusee"
+              >
+                Ce poste n’a pas pu mettre votre réponse de côté : prévenez votre formateur.
+              </p>
+            }
+          </section>
+        }
+        @default {
+          <form class="student-entry" data-testid="etudiant-entree" (submit)="soumettre($event)">
+            <div class="student-entry__intro">
+              <p class="student-entry__kicker">Atelier · séance accompagnée</p>
+              <h1>Rejoindre une séance</h1>
+              <p class="student-entry__lead">
+                Votre formateur vous a donné un code. Entrez-le pour afficher le bon écran au bon
+                moment, répondre aux activités et suivre la séance avec le groupe.
+              </p>
+              <ol class="student-entry__steps">
+                <li><span>01</span><span>Je saisis le code de séance</span></li>
+                <li><span>02</span><span>Je renseigne mon prénom et mon nom</span></li>
+                <li>
+                  <span>03</span><span>J’entre dans le cours quand le formateur démarre</span>
+                </li>
+              </ol>
+            </div>
+
+            <div class="student-entry__fields">
+              <div class="student-entry__field student-entry__field--code">
+                <label for="etudiant-code" i18n="cours.code|@@coursCode">Code de la séance</label>
+                <span class="student-entry__hint">4 chiffres affichés par le formateur</span>
+                <input
+                  id="etudiant-code"
+                  name="code"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="student-entry__field">
+                <label for="etudiant-prenom" i18n="cours.prenom|@@coursPrenom">Prénom</label>
+                <input id="etudiant-prenom" name="prenom" autocomplete="given-name" required />
+              </div>
+              <div class="student-entry__field">
+                <label for="etudiant-nom" i18n="cours.nom|@@coursNom">Nom</label>
+                <input id="etudiant-nom" name="nom" autocomplete="family-name" required />
+              </div>
+              <div class="student-entry__field student-entry__field--wide">
+                <label for="etudiant-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
+                <span class="student-entry__hint"
+                  >Utilisée uniquement pour retrouver votre participation</span
+                >
+                <input
+                  id="etudiant-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+            <input name="website" type="text" tabindex="-1" autocomplete="off" hidden />
+            <div class="student-entry__actions">
+              <button
+                type="submit"
+                class="btn btn-teal"
+                [disabled]="etat() === 'rattachement'"
+                i18n="cours.rejoindre|@@coursRejoindre"
+              >
+                Entrer dans la séance <span aria-hidden="true">→</span>
+              </button>
+              <p class="student-entry__privacy">
+                Pas de compte à créer. Ces informations restent liées à cette séance.
+              </p>
+            </div>
+            @if (messageEchec(); as message) {
+              <p data-testid="etudiant-echec" role="alert" [attr.data-motif]="motifEchec()">
+                {{ message }}
+              </p>
+            }
+          </form>
+        }
       }
-      @default {
-        <form data-testid="etudiant-entree" (submit)="soumettre($event)">
-          <label for="etudiant-code" i18n="cours.code|@@coursCode">Code de la séance</label>
-          <input id="etudiant-code" name="code" inputmode="numeric" autocomplete="off" required />
-          <label for="etudiant-prenom" i18n="cours.prenom|@@coursPrenom">Prénom</label>
-          <input id="etudiant-prenom" name="prenom" required />
-          <label for="etudiant-nom" i18n="cours.nom|@@coursNom">Nom</label>
-          <input id="etudiant-nom" name="nom" required />
-          <label for="etudiant-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
-          <input id="etudiant-email" name="email" type="email" required />
-          <input name="website" type="text" tabindex="-1" autocomplete="off" hidden />
-          <button
-            type="submit"
-            [disabled]="etat() === 'rattachement'"
-            i18n="cours.rejoindre|@@coursRejoindre"
-          >
-            Rejoindre
-          </button>
-          @if (messageEchec(); as message) {
-            <p data-testid="etudiant-echec" role="alert" [attr.data-motif]="motifEchec()">
-              {{ message }}
-            </p>
-          }
-        </form>
-      }
-    }
+    </div>
   `,
 })
 export class CoursEtudiantComponent {
@@ -454,6 +546,13 @@ export class CoursEtudiantComponent {
     this.motifEchec.set(null);
     this.messageEchec.set(null);
     this.etat.set('rattachement');
+    const restant = DELAI_MINIMUM_FORMULAIRE_MS - (Date.now() - this.debutFormulaire);
+    if (restant > 0) {
+      await new Promise<void>((resolve) => setTimeout(resolve, restant));
+    }
+    if (this.detruit) {
+      return null;
+    }
     try {
       return await firstValueFrom(
         this.port.rejoindre(code, {

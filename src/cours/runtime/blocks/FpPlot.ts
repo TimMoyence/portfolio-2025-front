@@ -30,6 +30,8 @@ export interface PlotSerie {
 
 export interface PlotDefinition {
   readonly id: string;
+  readonly titre?: string;
+  readonly source?: string;
   readonly abscisse: PlotAxe;
   readonly ordonnee: string;
   readonly parametres: readonly PlotParametre[];
@@ -57,11 +59,11 @@ interface Cadre {
 }
 
 export const LARGEUR = 360;
-export const HAUTEUR = 220;
-export const MARGE_GAUCHE = 56;
-export const MARGE_DROITE = 12;
-export const MARGE_HAUT = 12;
-export const MARGE_BAS = 32;
+export const HAUTEUR = 260;
+export const MARGE_GAUCHE = 64;
+export const MARGE_DROITE = 18;
+export const MARGE_HAUT = 20;
+export const MARGE_BAS = 42;
 const ECHANTILLONS = 24;
 const GRADUATIONS = 4;
 
@@ -150,6 +152,8 @@ function copierSerie(serie: PlotSerie): PlotSerie {
 function copierDefinition(source: PlotDefinition): PlotDefinition {
   return {
     id: source.id,
+    titre: source.titre,
+    source: source.source,
     abscisse: {
       libelle: source.abscisse.libelle,
       min: source.abscisse.min,
@@ -282,10 +286,13 @@ export class FpPlot extends FpBlock {
   private figure(): EscapedHtml {
     const tracees = this.tracees();
     const dessinees = tracees.filter((tracee) => tracee.echantillons.length > 0);
+    const definition = this.interne;
     return safeHtml`
       <figure class="fp-plot__figure" data-testid="figure">
+        ${definition?.titre === undefined ? safeHtml`` : safeHtml`<h3 class="fp-plot__titre" data-testid="titre">${escapeHtml(definition.titre)}</h3>`}
         ${this.graphique(tracees)}
         ${dessinees.length > 0 ? safeHtml`` : this.vide()}
+        ${definition?.source === undefined ? safeHtml`` : safeHtml`<figcaption class="fp-plot__source" data-testid="source">${escapeHtml(definition.source)}</figcaption>`}
       </figure>
     `;
   }
@@ -395,7 +402,10 @@ export class FpPlot extends FpBlock {
     if (definition === null) {
       return '';
     }
-    return `${definition.ordonnee} ${this.texte('plot-selon')} ${definition.abscisse.libelle}`;
+    return (
+      definition.titre ??
+      `${definition.ordonnee} ${this.texte('plot-selon')} ${definition.abscisse.libelle}`
+    );
   }
 
   private descriptionDuGraphique(tracees: readonly SerieTracee[]): string {

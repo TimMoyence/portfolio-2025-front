@@ -25,15 +25,20 @@
       data-testid="slide-deck-fullscreen-toggle"
       (click)="toggleFullscreen()"
       [attr.aria-label]="
-        service.mode() === 'fullscreen' ? 'Quitter le plein écran' : 'Passer en plein écran'
+        service.mode() === 'fullscreen'
+          ? 'Quitter le mode présentation'
+          : 'Présenter en plein écran'
       "
       i18n-aria-label="@@slideDeckFullscreenToggle"
     >
-      <span aria-hidden="true">⛶</span>
+      <span class="slide-deck-fullscreen__icon" aria-hidden="true">⛶</span>
+      <span class="slide-deck-fullscreen__label">
+        {{ service.mode() === 'fullscreen' ? 'Quitter' : 'Présenter' }}
+      </span>
     </button>
   }
 
-  <div class="slide-deck-progress" aria-hidden="true">
+  <div class="slide-deck-progress" role="status" aria-live="polite">
     <span>{{ currentVisibleIndex() + 1 }} / {{ visibleSlides().length }}</span>
   </div>
 </div>
