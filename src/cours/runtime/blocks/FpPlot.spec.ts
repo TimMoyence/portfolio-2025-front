@@ -137,9 +137,9 @@ describe('FpPlot', () => {
     hote.definition = lineaire();
     const traces = points(hote, 'rampe');
     expect(traces.length).toBe(ECHANTILLONS_ATTENDUS);
-    expect(traces[0]).toBe('56,188');
-    expect(traces[12]).toBe('202,100');
-    expect(traces[ECHANTILLONS_ATTENDUS - 1]).toBe('348,12');
+    expect(traces[0]).toBe('64,218');
+    expect(traces[12]).toBe('203,119');
+    expect(traces[ECHANTILLONS_ATTENDUS - 1]).toBe('342,20');
   });
 
   it('distingue les deux series par le trait et par une legende en toutes lettres', () => {

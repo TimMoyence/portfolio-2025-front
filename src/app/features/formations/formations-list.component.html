@@ -13,6 +13,7 @@
         <article
           class="formation"
           [class.formation--bonus]="formation.variant === 'bonus'"
+          [class.formation--live]="formation.variant === 'live'"
           appReveal
         >
           <span class="badge">{{ formation.badge }}</span>

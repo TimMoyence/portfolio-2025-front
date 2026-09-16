@@ -209,6 +209,22 @@ describe('CoursEtudiantComponent', () => {
     localStorage.clear();
   });
 
+  it('présente une entrée de séance compréhensible sans galerie technique ni compte à créer', () => {
+    const fixture = monter();
+    const entree = lire(fixture, 'etudiant-entree');
+
+    expect(entree?.querySelector('h1')?.textContent).toContain('Rejoindre une séance');
+    expect(entree?.querySelector('.student-entry__steps')?.textContent).toContain(
+      'Je saisis le code de séance',
+    );
+    expect(entree?.querySelector('.student-entry__hint')?.textContent).toContain('4 chiffres');
+    expect(entree?.querySelector('button[type="submit"]')?.textContent).toContain(
+      'Entrer dans la séance',
+    );
+    expect(entree?.textContent).toContain('Pas de compte à créer');
+    expect(entree?.querySelector('[data-testid="cours-galerie"]')).toBeNull();
+  });
+
   it('refuse un code qui n a pas quatre chiffres avant tout appel reseau', async () => {
     const fixture = await rattacher('12a4');
 

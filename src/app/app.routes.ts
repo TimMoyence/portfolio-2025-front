@@ -308,8 +308,8 @@ export const routes: Routes = [
   },
   {
     path: 'cours/demo',
-    loadComponent: () =>
-      import('./features/cours/cours-host.component').then((m) => m.CoursHostComponent),
+    pathMatch: 'full',
+    redirectTo: 'formations',
     data: {
       seoKey: 'cours-demo',
       robots: 'noindex, nofollow',

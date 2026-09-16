@@ -218,7 +218,10 @@ test.describe('B2-01 — parcours visuel complet', () => {
       await expect(page.getByTestId('cours-ecran-echec')).toHaveCount(0);
       await expect(page.getByTestId('cours-ecran-inconnu')).toHaveCount(0);
 
-      const nombreDeBriques = ecran.type === 'questionnaire' ? 3 : 1;
+      const nombreDeBriques =
+        ecran.type === 'questionnaire' && Array.isArray(ecran.donnees?.['questions'])
+          ? ecran.donnees['questions'].length
+          : 1;
       await expect(
         page.locator('app-cours-ecran [data-testid="cours-ecran-hote"] > *'),
       ).toHaveCount(nombreDeBriques);
@@ -234,10 +237,10 @@ test.describe('B2-01 — parcours visuel complet', () => {
     await page.getByLabel('Prénom').fill('Léa');
     await page.getByLabel('Nom', { exact: true }).fill('Dubois');
     await page.getByLabel('Adresse e-mail').fill('lea.dubois@example.com');
-    await page.getByRole('button', { name: 'Rejoindre' }).click();
+    await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
 
     await expect(page.getByTestId('etudiant-seance')).toBeVisible();
-    await expect(page.getByTestId('etudiant-progression')).toHaveText('1 / 11');
+    await expect(page.getByTestId('etudiant-progression')).toHaveText('1 / 60');
     await expect(page.locator('app-cours-ecran')).toBeVisible();
     await expect(page.locator('app-cours-ecran fp-recall')).toHaveCount(1);
     await expect(page.getByTestId('presentateur-slider')).toHaveCount(0);

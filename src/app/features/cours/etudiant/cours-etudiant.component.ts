@@ -148,13 +148,13 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
     <div class="cours-etudiant">
       @switch (etat()) {
         @case ('chargement') {
-          <p
-            data-testid="etudiant-chargement"
-            role="status"
-            i18n="cours.chargementSujet|@@coursChargementSujet"
-          >
-            Chargement de votre sujet…
-          </p>
+          <div class="student-state" data-testid="etudiant-chargement" role="status">
+            <span class="student-state__pulse" aria-hidden="true"></span>
+            <div>
+              <p class="student-state__kicker">Préparation de la séance</p>
+              <p i18n="cours.chargementSujet|@@coursChargementSujet">Chargement de votre sujet…</p>
+            </div>
+          </div>
         }
         @case ('sujet-refuse') {
           @if (refusSujet(); as refus) {
@@ -174,13 +174,13 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
           }
         }
         @case ('rattachement') {
-          <p
-            data-testid="etudiant-rattachement"
-            role="status"
-            i18n="cours.rattachement|@@coursRattachement"
-          >
-            Connexion à la séance…
-          </p>
+          <div class="student-state" data-testid="etudiant-rattachement" role="status">
+            <span class="student-state__pulse" aria-hidden="true"></span>
+            <div>
+              <p class="student-state__kicker">Entrée dans la classe</p>
+              <p i18n="cours.rattachement|@@coursRattachement">Connexion à la séance…</p>
+            </div>
+          </div>
         }
         @case ('seance') {
           <section class="student-session" data-testid="etudiant-seance">
@@ -329,23 +329,70 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
         }
         @default {
           <form class="student-entry" data-testid="etudiant-entree" (submit)="soumettre($event)">
-            <label for="etudiant-code" i18n="cours.code|@@coursCode">Code de la séance</label>
-            <input id="etudiant-code" name="code" inputmode="numeric" autocomplete="off" required />
-            <label for="etudiant-prenom" i18n="cours.prenom|@@coursPrenom">Prénom</label>
-            <input id="etudiant-prenom" name="prenom" required />
-            <label for="etudiant-nom" i18n="cours.nom|@@coursNom">Nom</label>
-            <input id="etudiant-nom" name="nom" required />
-            <label for="etudiant-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
-            <input id="etudiant-email" name="email" type="email" required />
+            <div class="student-entry__intro">
+              <p class="student-entry__kicker">Atelier · séance accompagnée</p>
+              <h1>Rejoindre une séance</h1>
+              <p class="student-entry__lead">
+                Votre formateur vous a donné un code. Entrez-le pour afficher le bon écran au bon
+                moment, répondre aux activités et suivre la séance avec le groupe.
+              </p>
+              <ol class="student-entry__steps">
+                <li><span>01</span><span>Je saisis le code de séance</span></li>
+                <li><span>02</span><span>Je renseigne mon prénom et mon nom</span></li>
+                <li>
+                  <span>03</span><span>J’entre dans le cours quand le formateur démarre</span>
+                </li>
+              </ol>
+            </div>
+
+            <div class="student-entry__fields">
+              <div class="student-entry__field student-entry__field--code">
+                <label for="etudiant-code" i18n="cours.code|@@coursCode">Code de la séance</label>
+                <span class="student-entry__hint">4 chiffres affichés par le formateur</span>
+                <input
+                  id="etudiant-code"
+                  name="code"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="student-entry__field">
+                <label for="etudiant-prenom" i18n="cours.prenom|@@coursPrenom">Prénom</label>
+                <input id="etudiant-prenom" name="prenom" autocomplete="given-name" required />
+              </div>
+              <div class="student-entry__field">
+                <label for="etudiant-nom" i18n="cours.nom|@@coursNom">Nom</label>
+                <input id="etudiant-nom" name="nom" autocomplete="family-name" required />
+              </div>
+              <div class="student-entry__field student-entry__field--wide">
+                <label for="etudiant-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
+                <span class="student-entry__hint"
+                  >Utilisée uniquement pour retrouver votre participation</span
+                >
+                <input
+                  id="etudiant-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
             <input name="website" type="text" tabindex="-1" autocomplete="off" hidden />
-            <button
-              type="submit"
-              class="btn btn-teal"
-              [disabled]="etat() === 'rattachement'"
-              i18n="cours.rejoindre|@@coursRejoindre"
-            >
-              Rejoindre
-            </button>
+            <div class="student-entry__actions">
+              <button
+                type="submit"
+                class="btn btn-teal"
+                [disabled]="etat() === 'rattachement'"
+                i18n="cours.rejoindre|@@coursRejoindre"
+              >
+                Entrer dans la séance <span aria-hidden="true">→</span>
+              </button>
+              <p class="student-entry__privacy">
+                Pas de compte à créer. Ces informations restent liées à cette séance.
+              </p>
+            </div>
             @if (messageEchec(); as message) {
               <p data-testid="etudiant-echec" role="alert" [attr.data-motif]="motifEchec()">
                 {{ message }}
