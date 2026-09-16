@@ -419,6 +419,23 @@ describe('CoursPresentateurComponent', () => {
     expect(titres[0].textContent?.trim()).not.toBe('');
   });
 
+  it('expose une glissiere de navigation reliee au pilotage de la seance', async () => {
+    const fixture = await ouvrirLaSeance();
+    const slider = cible(fixture, 'presentateur-slider') as HTMLInputElement;
+
+    expect(slider.type).toBe('range');
+    expect(slider.min).toBe('0');
+    expect(slider.max).toBe('3');
+    expect(slider.value).toBe('0');
+
+    slider.value = '2';
+    slider.dispatchEvent(new Event('input'));
+    await stabiliser(fixture);
+
+    expect(port.piloter).toHaveBeenCalledWith(SESSION, { ecran: 2 });
+    expect(texte(fixture, 'presentateur-ecran-slider')).toBe('3 / 4');
+  });
+
   it('numerote les panneaux et montre l enonce de chaque question dans l ordre de l apercu', async () => {
     const vote = buildVoteQuestion({
       id: 'Q-CAP-03',

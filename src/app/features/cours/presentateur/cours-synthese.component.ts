@@ -97,117 +97,121 @@ function confusionsFrequentesDe(
   imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <h2 i18n="synthese.titre|@@syntheseTitre">Synthèse de la séance</h2>
-    @if (vide()) {
-      <p data-testid="synthese-vide" role="status" i18n="synthese.vide|@@syntheseVide">
-        Aucun participant n'a rejoint cette séance : il n'y a rien à analyser.
-      </p>
-    } @else {
-      <table data-testid="synthese-classement">
-        <thead>
-          <tr>
-            <th i18n="synthese.etudiant|@@syntheseEtudiant">Étudiant</th>
-            <th i18n="synthese.score|@@syntheseScore">Score</th>
-            <th i18n="synthese.avancement|@@syntheseAvancement">Avancement</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (ligne of classement(); track ligne.participant.email) {
-            <tr data-testid="synthese-ligne">
-              <td data-testid="synthese-nom">
-                {{ ligne.participant.prenom }} {{ ligne.participant.nom }}
-              </td>
-              @if (ligne.sansReponse) {
-                <td
-                  data-testid="synthese-sans-reponse"
-                  i18n="synthese.sansReponse|@@syntheseSansReponse"
-                >
-                  N'a répondu à aucune question
-                </td>
-              } @else {
-                <td data-testid="synthese-score">{{ ligne.participant.note }}</td>
-              }
-              <td>{{ ligne.participant.completion }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-      <section>
-        <h3 i18n="synthese.questionsTitre|@@syntheseQuestionsTitre">Résultats par question</h3>
-        <table data-testid="synthese-questions">
-          <caption i18n="synthese.questionsLegende|@@syntheseQuestionsLegende">
-            Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance
-          </caption>
+    <div class="cours-synthese">
+      <p class="cours-synthese__kicker" i18n="synthese.kicker|@@syntheseKicker">Après la séance</p>
+      <h2 i18n="synthese.titre|@@syntheseTitre">Synthèse de la séance</h2>
+      @if (vide()) {
+        <p data-testid="synthese-vide" role="status" i18n="synthese.vide|@@syntheseVide">
+          Aucun participant n'a rejoint cette séance : il n'y a rien à analyser.
+        </p>
+      } @else {
+        <table data-testid="synthese-classement">
           <thead>
             <tr>
-              <th scope="col" i18n="synthese.questionColonne|@@syntheseQuestionColonne">
-                Question
-              </th>
-              <th scope="col" i18n="synthese.correctesColonne|@@syntheseCorrectesColonne">
-                Bonnes réponses
-              </th>
-              <th scope="col" i18n="synthese.totalColonne|@@syntheseTotalColonne">Total</th>
-              <th scope="col" i18n="synthese.neSaitPasColonne|@@syntheseNeSaitPasColonne">
-                Je ne sais pas
-              </th>
+              <th i18n="synthese.etudiant|@@syntheseEtudiant">Étudiant</th>
+              <th i18n="synthese.score|@@syntheseScore">Score</th>
+              <th i18n="synthese.avancement|@@syntheseAvancement">Avancement</th>
             </tr>
           </thead>
           <tbody>
-            @for (question of questions(); track question.questionId) {
-              <tr data-testid="synthese-question-ligne">
-                <th scope="row">
-                  @if (enonces().get(question.questionId); as enonce) {
-                    <span data-testid="synthese-question-libelle">{{ enonce }}</span>
-                  }
-                  <small data-testid="synthese-question-id">{{ question.questionId }}</small>
-                </th>
-                <td data-testid="synthese-question-correctes">{{ question.correctes }}</td>
-                <td data-testid="synthese-question-total">{{ question.total }}</td>
-                <td data-testid="synthese-question-ne-sait-pas">{{ question.neSaitPas }}</td>
+            @for (ligne of classement(); track ligne.participant.email) {
+              <tr data-testid="synthese-ligne">
+                <td data-testid="synthese-nom">
+                  {{ ligne.participant.prenom }} {{ ligne.participant.nom }}
+                </td>
+                @if (ligne.sansReponse) {
+                  <td
+                    data-testid="synthese-sans-reponse"
+                    i18n="synthese.sansReponse|@@syntheseSansReponse"
+                  >
+                    N'a répondu à aucune question
+                  </td>
+                } @else {
+                  <td data-testid="synthese-score">{{ ligne.participant.note }}</td>
+                }
+                <td>{{ ligne.participant.completion }}</td>
               </tr>
             }
           </tbody>
         </table>
-      </section>
-      <section>
-        <h3 i18n="synthese.confusionsTitre|@@syntheseConfusionsTitre">
-          Confusions fréquentes de la classe
-        </h3>
-        <ol data-testid="synthese-confusions">
-          @for (confusion of confusionsFrequentes(); track confusion.id) {
-            <li data-testid="synthese-confusion">
-              <span data-testid="synthese-confusion-libelle">{{ confusion.libelle }}</span>
-              <span data-testid="synthese-confusion-nombre">{{ confusion.nombre }}</span>
-            </li>
-          }
-        </ol>
-      </section>
-      <section>
-        <h3 i18n="synthese.fragiles|@@syntheseFragiles">Ce qui a le plus accroché</h3>
-        <ul data-testid="synthese-fragiles">
-          @for (fragile of fragiles(); track fragile.concept) {
-            <li data-testid="synthese-fragile">
-              <span data-testid="synthese-fragile-concept">{{ fragile.concept }}</span>
-              <span data-testid="synthese-fragile-effectif">{{ fragile.effectif }}</span>
-              <span i18n="synthese.sousSeuil|@@syntheseSousSeuil">étudiants sous le seuil</span>
-            </li>
-          }
-        </ul>
-      </section>
-      <button
-        type="button"
-        data-testid="synthese-export"
-        (click)="telecharger()"
-        i18n="synthese.export|@@syntheseExport"
-      >
-        Exporter les réponses en CSV
-      </button>
-    }
-    @if (echec()) {
-      <p data-testid="synthese-echec" role="alert" i18n="synthese.echec|@@syntheseEchec">
-        La synthèse n'a pas pu être lue. Rechargez la page, puis réessayez.
-      </p>
-    }
+        <section>
+          <h3 i18n="synthese.questionsTitre|@@syntheseQuestionsTitre">Résultats par question</h3>
+          <table data-testid="synthese-questions">
+            <caption i18n="synthese.questionsLegende|@@syntheseQuestionsLegende">
+              Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col" i18n="synthese.questionColonne|@@syntheseQuestionColonne">
+                  Question
+                </th>
+                <th scope="col" i18n="synthese.correctesColonne|@@syntheseCorrectesColonne">
+                  Bonnes réponses
+                </th>
+                <th scope="col" i18n="synthese.totalColonne|@@syntheseTotalColonne">Total</th>
+                <th scope="col" i18n="synthese.neSaitPasColonne|@@syntheseNeSaitPasColonne">
+                  Je ne sais pas
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (question of questions(); track question.questionId) {
+                <tr data-testid="synthese-question-ligne">
+                  <th scope="row">
+                    @if (enonces().get(question.questionId); as enonce) {
+                      <span data-testid="synthese-question-libelle">{{ enonce }}</span>
+                    }
+                    <small data-testid="synthese-question-id">{{ question.questionId }}</small>
+                  </th>
+                  <td data-testid="synthese-question-correctes">{{ question.correctes }}</td>
+                  <td data-testid="synthese-question-total">{{ question.total }}</td>
+                  <td data-testid="synthese-question-ne-sait-pas">{{ question.neSaitPas }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h3 i18n="synthese.confusionsTitre|@@syntheseConfusionsTitre">
+            Confusions fréquentes de la classe
+          </h3>
+          <ol data-testid="synthese-confusions">
+            @for (confusion of confusionsFrequentes(); track confusion.id) {
+              <li data-testid="synthese-confusion">
+                <span data-testid="synthese-confusion-libelle">{{ confusion.libelle }}</span>
+                <span data-testid="synthese-confusion-nombre">{{ confusion.nombre }}</span>
+              </li>
+            }
+          </ol>
+        </section>
+        <section>
+          <h3 i18n="synthese.fragiles|@@syntheseFragiles">Ce qui a le plus accroché</h3>
+          <ul data-testid="synthese-fragiles">
+            @for (fragile of fragiles(); track fragile.concept) {
+              <li data-testid="synthese-fragile">
+                <span data-testid="synthese-fragile-concept">{{ fragile.concept }}</span>
+                <span data-testid="synthese-fragile-effectif">{{ fragile.effectif }}</span>
+                <span i18n="synthese.sousSeuil|@@syntheseSousSeuil">étudiants sous le seuil</span>
+              </li>
+            }
+          </ul>
+        </section>
+        <button
+          type="button"
+          class="btn btn-teal"
+          data-testid="synthese-export"
+          (click)="telecharger()"
+          i18n="synthese.export|@@syntheseExport"
+        >
+          Exporter les réponses en CSV
+        </button>
+      }
+      @if (echec()) {
+        <p data-testid="synthese-echec" role="alert" i18n="synthese.echec|@@syntheseEchec">
+          La synthèse n'a pas pu être lue. Rechargez la page, puis réessayez.
+        </p>
+      }
+    </div>
   `,
 })
 export class CoursSyntheseComponent {

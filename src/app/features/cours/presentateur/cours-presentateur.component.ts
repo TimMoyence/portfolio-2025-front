@@ -88,340 +88,445 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   standalone: true,
   imports: [CoursEcranComponent, CoursPanneauQuestionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    .code-seance {
-      font-size: 7rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      line-height: 1.1;
-      margin: 0;
-    }
-
-    .notes {
-      white-space: pre-line;
-    }
-
-    .suivi-du-flux[data-etat='reconnexion'],
-    .suivi-du-flux[data-etat='refuse'] {
-      border-inline-start: 0.375rem solid var(--danger);
-      padding-inline-start: 0.75rem;
-      font-weight: 700;
-    }
-  `,
+  styles: '',
   template: `
-    <h1 i18n="presentateur.titrePage|@@presentateurTitrePage">Pupitre de la séance</h1>
-    @if (statut() === 'fermee' && seance() === undefined) {
-      <button
-        type="button"
-        data-testid="presentateur-ouvrir"
-        [disabled]="ouverture() === 'chargement'"
-        (click)="ouvrir()"
-        i18n="presentateur.ouvrir|@@presentateurOuvrir"
-      >
-        Ouvrir la séance
-      </button>
-    }
-    @switch (ouverture()) {
-      @case ('chargement') {
-        <p
-          data-testid="presentateur-ouverture-chargement"
-          role="status"
-          i18n="presentateur.ouvertureChargement|@@presentateurOuvertureChargement"
-        >
-          Ouverture de la séance…
-        </p>
-      }
-      @case ('echec') {
-        <p
-          data-testid="presentateur-ouverture-echec"
-          role="alert"
-          i18n="presentateur.ouvertureEchec|@@presentateurOuvertureEchec"
-        >
-          La séance n'a pas pu être ouverte. Vérifiez la connexion, puis réessayez.
-        </p>
-      }
-    }
-    @switch (reprise()) {
-      @case ('chargement') {
-        <p
-          data-testid="presentateur-reprise-chargement"
-          role="status"
-          i18n="presentateur.repriseChargement|@@presentateurRepriseChargement"
-        >
-          Reprise de la séance…
-        </p>
-      }
-      @case ('echec') {
-        <p
-          data-testid="presentateur-reprise-echec"
-          role="alert"
-          i18n="presentateur.repriseEchec|@@presentateurRepriseEchec"
-        >
-          La séance n'a pas pu être reprise. Vérifiez la connexion, puis réessayez.
-        </p>
+    <div class="cours-presentateur">
+      <header class="presentateur-header">
+        <div>
+          <p class="presentateur-kicker" i18n="presentateur.kicker|@@presentateurKicker">
+            Séance en direct
+          </p>
+          <h1 class="presentateur-title" i18n="presentateur.titrePage|@@presentateurTitrePage">
+            Pupitre de la séance
+          </h1>
+          <p class="presentateur-subtitle" i18n="presentateur.sousTitre|@@presentateurSousTitre">
+            Pilotez l’écran projeté, suivez les réponses de la classe et choisissez le bon moment
+            pour remédier.
+          </p>
+        </div>
+        <div class="presentateur-header-meta">
+          <span class="live-chip"
+            ><span class="live-dot" aria-hidden="true"></span
+            ><span i18n="presentateur.direct|@@presentateurDirect">Suivi en direct</span></span
+          >
+          @if (code() !== null) {
+            <span
+              class="session-state"
+              i18n="presentateur.sessionOuverte|@@presentateurSessionOuverte"
+              >Séance ouverte</span
+            >
+          }
+        </div>
+      </header>
+      @if (statut() === 'fermee' && seance() === undefined) {
         <button
           type="button"
-          data-testid="presentateur-reprise-reessayer"
-          (click)="reessayerLaReprise()"
-          i18n="presentateur.repriseReessayer|@@presentateurRepriseReessayer"
+          class="btn btn-teal presentateur-open"
+          data-testid="presentateur-ouvrir"
+          [disabled]="ouverture() === 'chargement'"
+          (click)="ouvrir()"
+          i18n="presentateur.ouvrir|@@presentateurOuvrir"
         >
-          Réessayer la reprise
+          Ouvrir la séance
         </button>
       }
-    }
-    @if (sessionId() !== null) {
-      <p
-        class="suivi-du-flux"
-        data-testid="presentateur-flux"
-        role="status"
-        [attr.data-etat]="etatDuFlux()"
-        [attr.data-statut]="refusDuFlux()?.statut ?? null"
-      >
-        @switch (etatDuFlux()) {
-          @case ('connecte') {
-            <span i18n="presentateur.fluxConnecte|@@presentateurFluxConnecte"
-              >Suivi de la séance en direct.</span
-            >
-          }
-          @case ('reconnexion') {
-            <span i18n="presentateur.fluxReconnexion|@@presentateurFluxReconnexion"
-              >Suivi de la séance interrompu : reconnexion en cours. Les résultats et la scène
-              peuvent être en retard.</span
-            >
-          }
-          @case ('refuse') {
-            @if (refusDuFlux(); as refus) {
-              @switch (refus.motif) {
-                @case ('session') {
-                  <span i18n="presentateur.fluxRefusSession|@@presentateurFluxRefusSession"
-                    >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) : rechargez
-                    le pupitre, reconnectez-vous si la connexion est demandée ; la séance
-                    reprendra.</span
-                  >
-                }
-                @case ('saturation') {
-                  <span i18n="presentateur.fluxRefusSaturation|@@presentateurFluxRefusSaturation"
-                    >Trop de connexions au suivi de cette séance (statut {{ refus.statut }}) :
-                    fermez les onglets en trop ; nouvel essai automatique.</span
-                  >
-                }
-                @default {
-                  <span i18n="presentateur.fluxRefus|@@presentateurFluxRefus"
-                    >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) : nouvel
-                    essai automatique.</span
-                  >
+      @switch (ouverture()) {
+        @case ('chargement') {
+          <p
+            data-testid="presentateur-ouverture-chargement"
+            role="status"
+            i18n="presentateur.ouvertureChargement|@@presentateurOuvertureChargement"
+          >
+            Ouverture de la séance…
+          </p>
+        }
+        @case ('echec') {
+          <p
+            data-testid="presentateur-ouverture-echec"
+            role="alert"
+            i18n="presentateur.ouvertureEchec|@@presentateurOuvertureEchec"
+          >
+            La séance n'a pas pu être ouverte. Vérifiez la connexion, puis réessayez.
+          </p>
+        }
+      }
+      @switch (reprise()) {
+        @case ('chargement') {
+          <p
+            data-testid="presentateur-reprise-chargement"
+            role="status"
+            i18n="presentateur.repriseChargement|@@presentateurRepriseChargement"
+          >
+            Reprise de la séance…
+          </p>
+        }
+        @case ('echec') {
+          <p
+            data-testid="presentateur-reprise-echec"
+            role="alert"
+            i18n="presentateur.repriseEchec|@@presentateurRepriseEchec"
+          >
+            La séance n'a pas pu être reprise. Vérifiez la connexion, puis réessayez.
+          </p>
+          <button
+            type="button"
+            data-testid="presentateur-reprise-reessayer"
+            (click)="reessayerLaReprise()"
+            i18n="presentateur.repriseReessayer|@@presentateurRepriseReessayer"
+          >
+            Réessayer la reprise
+          </button>
+        }
+      }
+      @if (sessionId() !== null) {
+        <p
+          class="presentateur-flux"
+          data-testid="presentateur-flux"
+          role="status"
+          [attr.data-etat]="etatDuFlux()"
+          [attr.data-statut]="refusDuFlux()?.statut ?? null"
+        >
+          @switch (etatDuFlux()) {
+            @case ('connecte') {
+              <span i18n="presentateur.fluxConnecte|@@presentateurFluxConnecte"
+                >Suivi de la séance en direct.</span
+              >
+            }
+            @case ('reconnexion') {
+              <span i18n="presentateur.fluxReconnexion|@@presentateurFluxReconnexion"
+                >Suivi de la séance interrompu : reconnexion en cours. Les résultats et la scène
+                peuvent être en retard.</span
+              >
+            }
+            @case ('refuse') {
+              @if (refusDuFlux(); as refus) {
+                @switch (refus.motif) {
+                  @case ('session') {
+                    <span i18n="presentateur.fluxRefusSession|@@presentateurFluxRefusSession"
+                      >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) :
+                      rechargez le pupitre, reconnectez-vous si la connexion est demandée ; la
+                      séance reprendra.</span
+                    >
+                  }
+                  @case ('saturation') {
+                    <span i18n="presentateur.fluxRefusSaturation|@@presentateurFluxRefusSaturation"
+                      >Trop de connexions au suivi de cette séance (statut {{ refus.statut }}) :
+                      fermez les onglets en trop ; nouvel essai automatique.</span
+                    >
+                  }
+                  @default {
+                    <span i18n="presentateur.fluxRefus|@@presentateurFluxRefus"
+                      >Le serveur refuse le suivi de la séance (statut {{ refus.statut }}) : nouvel
+                      essai automatique.</span
+                    >
+                  }
                 }
               }
             }
-          }
-          @default {
-            <span i18n="presentateur.fluxConnexion|@@presentateurFluxConnexion"
-              >Connexion au suivi de la séance…</span
-            >
-          }
-        }
-      </p>
-    }
-    @if (code() !== null) {
-      <section>
-        <h2 i18n="presentateur.codeTitre|@@presentateurCodeTitre">Code à dicter à la classe</h2>
-        <p class="code-seance" data-testid="presentateur-code">{{ code() }}</p>
-        <p data-testid="presentateur-participants">
-          <span i18n="presentateur.participants|@@presentateurParticipants">Participants</span>
-          <span data-testid="presentateur-participants-nombre">{{ participants() }}</span>
-        </p>
-      </section>
-    }
-    @switch (lectureDeroule()) {
-      @case ('chargement') {
-        <p
-          data-testid="presentateur-deroule-chargement"
-          role="status"
-          i18n="presentateur.derouleChargement|@@presentateurDerouleChargement"
-        >
-          Chargement du déroulé…
-        </p>
-      }
-      @case ('echec') {
-        <p
-          data-testid="presentateur-deroule-echec"
-          role="alert"
-          i18n="presentateur.derouleEchec|@@presentateurDerouleEchec"
-        >
-          Le déroulé de la séance n'a pas pu être chargé.
-        </p>
-        <button
-          type="button"
-          data-testid="presentateur-deroule-reessayer"
-          (click)="relireLeDeroule()"
-          i18n="presentateur.derouleReessayer|@@presentateurDerouleReessayer"
-        >
-          Réessayer
-        </button>
-      }
-    }
-    @if (deroule(); as cours) {
-      <h2 data-testid="presentateur-titre">{{ cours.titre }}</h2>
-      @if (statut() === 'ouverte' || statut() === 'en_cours') {
-        @if (statut() === 'ouverte') {
-          <button
-            type="button"
-            data-testid="presentateur-demarrer"
-            [disabled]="pilotageBloque()"
-            (click)="demarrer()"
-            i18n="presentateur.demarrer|@@presentateurDemarrer"
-          >
-            Démarrer la séance
-          </button>
-        }
-        <nav aria-label="Pilotage des écrans" i18n-aria-label="@@presentateurPilotage">
-          <button
-            type="button"
-            data-testid="presentateur-precedent"
-            [disabled]="pilotageBloque() || ecran() <= 0"
-            (click)="precedent()"
-            i18n="presentateur.precedent|@@presentateurPrecedent"
-          >
-            Écran précédent
-          </button>
-          <output data-testid="presentateur-ecran"
-            >{{ ecran() + 1 }} / {{ cours.ecrans.length }}</output
-          >
-          <button
-            type="button"
-            data-testid="presentateur-suivant"
-            [disabled]="pilotageBloque() || ecran() >= dernierEcran()"
-            (click)="suivant()"
-            i18n="presentateur.suivant|@@presentateurSuivant"
-          >
-            Écran suivant
-          </button>
-          <button
-            type="button"
-            data-testid="presentateur-rythme"
-            [disabled]="pilotageBloque()"
-            (click)="basculerLeRythme()"
-          >
-            @if (mode() === 'pilote') {
-              <span i18n="presentateur.rythmeLibre|@@presentateurRythmeLibre"
-                >Passer en rythme libre</span
-              >
-            } @else {
-              <span i18n="presentateur.rythmePilote|@@presentateurRythmePilote"
-                >Reprendre la main</span
+            @default {
+              <span i18n="presentateur.fluxConnexion|@@presentateurFluxConnexion"
+                >Connexion au suivi de la séance…</span
               >
             }
+          }
+        </p>
+      }
+      @if (code() !== null) {
+        <section class="join-panel">
+          <div>
+            <h2 i18n="presentateur.codeTitre|@@presentateurCodeTitre">Code à dicter à la classe</h2>
+            <p class="code-seance" data-testid="presentateur-code">{{ code() }}</p>
+          </div>
+          <div class="join-panel__meta">
+            <p data-testid="presentateur-participants">
+              <span i18n="presentateur.participants|@@presentateurParticipants">Participants</span>
+              <strong data-testid="presentateur-participants-nombre">{{ participants() }}</strong>
+            </p>
+            <span i18n="presentateur.participantsEnDirect|@@presentateurParticipantsEnDirect"
+              >connectés à cette séance</span
+            >
+          </div>
+        </section>
+      }
+      @switch (lectureDeroule()) {
+        @case ('chargement') {
+          <p
+            data-testid="presentateur-deroule-chargement"
+            role="status"
+            i18n="presentateur.derouleChargement|@@presentateurDerouleChargement"
+          >
+            Chargement du déroulé…
+          </p>
+        }
+        @case ('echec') {
+          <p
+            data-testid="presentateur-deroule-echec"
+            role="alert"
+            i18n="presentateur.derouleEchec|@@presentateurDerouleEchec"
+          >
+            Le déroulé de la séance n'a pas pu être chargé.
+          </p>
+          <button
+            type="button"
+            data-testid="presentateur-deroule-reessayer"
+            (click)="relireLeDeroule()"
+            i18n="presentateur.derouleReessayer|@@presentateurDerouleReessayer"
+          >
+            Réessayer
           </button>
-          <span data-testid="presentateur-rythme-mode" [attr.data-mode]="mode()">
-            @if (mode() === 'pilote') {
-              <span i18n="presentateur.modePilote|@@presentateurModePilote">Rythme piloté</span>
+        }
+      }
+      @if (deroule(); as cours) {
+        <div class="course-heading">
+          <div>
+            <p
+              class="presentateur-kicker"
+              i18n="presentateur.derouleKicker|@@presentateurDerouleKicker"
+            >
+              Déroulé actif
+            </p>
+            <h2 data-testid="presentateur-titre">{{ cours.titre }}</h2>
+          </div>
+          <span class="session-state" data-testid="presentateur-statut">
+            @if (statut() === 'ouverte') {
+              <span i18n="presentateur.statutOuverte|@@presentateurStatutOuverte"
+                >Prête à démarrer</span
+              >
+            } @else if (statut() === 'en_cours') {
+              <span i18n="presentateur.statutEnCours|@@presentateurStatutEnCours">En cours</span>
             } @else {
-              <span i18n="presentateur.modeLibre|@@presentateurModeLibre">Rythme libre</span>
+              <span i18n="presentateur.statutTerminee|@@presentateurStatutTerminee">Terminée</span>
             }
           </span>
-          <button
-            type="button"
-            data-testid="presentateur-scene"
-            (click)="ouvrirLaScene()"
-            i18n="presentateur.scene|@@presentateurScene"
-          >
-            Ouvrir la scène
-          </button>
-        </nav>
-        @if (ecranCourant(); as ecranAffiche) {
-          <app-cours-ecran [ecran]="ecranAffiche" rendu="stage" [role]="'presentateur'" />
-          @if (ecranAffiche.notes !== '') {
-            <section data-testid="presentateur-notes">
-              <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
-              <p class="notes">{{ ecranAffiche.notes }}</p>
-            </section>
+        </div>
+        @if (statut() === 'ouverte' || statut() === 'en_cours') {
+          @if (statut() === 'ouverte') {
+            <button
+              type="button"
+              class="btn btn-teal"
+              data-testid="presentateur-demarrer"
+              [disabled]="pilotageBloque()"
+              (click)="demarrer()"
+              i18n="presentateur.demarrer|@@presentateurDemarrer"
+            >
+              Démarrer la séance
+            </button>
           }
-          <ul data-testid="presentateur-questions">
-            @for (question of questions(); track question.corrige.questionId) {
-              <li>
-                <app-cours-panneau-question
-                  [question]="question"
-                  [deroule]="cours"
-                  [seuil]="ecranAffiche.seuil"
-                  [resultats]="resultatsDesQuestions()"
-                  [participants]="participants()"
-                  [pilotageBloque]="pilotageBloque()"
-                  (remediation)="allerA($event)"
-                />
-              </li>
-            }
-          </ul>
+          <div class="presentateur-controls">
+            <nav
+              class="presentateur-control-nav"
+              aria-label="Pilotage des écrans"
+              i18n-aria-label="@@presentateurPilotage"
+            >
+              <button
+                type="button"
+                class="control-btn"
+                data-testid="presentateur-precedent"
+                [disabled]="pilotageBloque() || ecran() <= 0"
+                (click)="precedent()"
+                i18n="presentateur.precedent|@@presentateurPrecedent"
+              >
+                Écran précédent
+              </button>
+              <output data-testid="presentateur-ecran"
+                >{{ ecran() + 1 }} / {{ cours.ecrans.length }}</output
+              >
+              <button
+                type="button"
+                class="control-btn"
+                data-testid="presentateur-suivant"
+                [disabled]="pilotageBloque() || ecran() >= dernierEcran()"
+                (click)="suivant()"
+                i18n="presentateur.suivant|@@presentateurSuivant"
+              >
+                Écran suivant
+              </button>
+              <button
+                type="button"
+                class="control-btn"
+                data-testid="presentateur-rythme"
+                [disabled]="pilotageBloque()"
+                (click)="basculerLeRythme()"
+              >
+                @if (mode() === 'pilote') {
+                  <span i18n="presentateur.rythmeLibre|@@presentateurRythmeLibre"
+                    >Passer en rythme libre</span
+                  >
+                } @else {
+                  <span i18n="presentateur.rythmePilote|@@presentateurRythmePilote"
+                    >Reprendre la main</span
+                  >
+                }
+              </button>
+              <span data-testid="presentateur-rythme-mode" [attr.data-mode]="mode()">
+                @if (mode() === 'pilote') {
+                  <span i18n="presentateur.modePilote|@@presentateurModePilote">Rythme piloté</span>
+                } @else {
+                  <span i18n="presentateur.modeLibre|@@presentateurModeLibre">Rythme libre</span>
+                }
+              </span>
+              <button
+                type="button"
+                class="control-btn"
+                data-testid="presentateur-scene"
+                (click)="ouvrirLaScene()"
+                i18n="presentateur.scene|@@presentateurScene"
+              >
+                Ouvrir la scène
+              </button>
+            </nav>
+            <div class="screen-progress">
+              <label for="presentateur-slider" i18n="presentateur.slider|@@presentateurSlider"
+                >Écran courant</label
+              >
+              <input
+                id="presentateur-slider"
+                type="range"
+                data-testid="presentateur-slider"
+                min="0"
+                [max]="dernierEcran()"
+                [value]="ecran()"
+                [disabled]="pilotageBloque()"
+                (input)="changerLEcranDepuisLeCurseur($event)"
+              />
+              <output data-testid="presentateur-ecran-slider"
+                >{{ ecran() + 1 }} / {{ cours.ecrans.length }}</output
+              >
+            </div>
+          </div>
+          @if (ecranCourant(); as ecranAffiche) {
+            <div class="presentateur-workspace">
+              <main class="presentateur-stage" aria-labelledby="presentateur-stage-titre">
+                <div class="presentateur-stage__head">
+                  <h3
+                    id="presentateur-stage-titre"
+                    i18n="presentateur.stageTitre|@@presentateurStageTitre"
+                  >
+                    Écran projeté
+                  </h3>
+                  <span class="muted" i18n="presentateur.stageApercu|@@presentateurStageApercu"
+                    >Aperçu formateur</span
+                  >
+                </div>
+                <div class="presentateur-stage__body">
+                  <app-cours-ecran [ecran]="ecranAffiche" rendu="stage" [role]="'presentateur'" />
+                </div>
+              </main>
+              <aside
+                class="presentateur-sidebar"
+                aria-label="Informations de séance"
+                i18n-aria-label="@@presentateurInformationsSeance"
+              >
+                @if (ecranAffiche.notes !== '') {
+                  <section class="presentateur-notes" data-testid="presentateur-notes">
+                    <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
+                    <p class="notes">{{ ecranAffiche.notes }}</p>
+                  </section>
+                }
+                <section class="presentateur-questions-panel">
+                  <div class="presentateur-sidebar__head">
+                    <h3 i18n="presentateur.questionsTitre|@@presentateurQuestionsTitre">
+                      Lecture de la classe
+                    </h3>
+                    <span class="muted">{{ questions().length }}</span>
+                  </div>
+                  <div class="presentateur-questions-panel__body">
+                    <ul class="presentateur-questions" data-testid="presentateur-questions">
+                      @for (question of questions(); track question.corrige.questionId) {
+                        <li>
+                          <app-cours-panneau-question
+                            [question]="question"
+                            [deroule]="cours"
+                            [seuil]="ecranAffiche.seuil"
+                            [resultats]="resultatsDesQuestions()"
+                            [participants]="participants()"
+                            [pilotageBloque]="pilotageBloque()"
+                            (remediation)="allerA($event)"
+                          />
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                </section>
+              </aside>
+            </div>
+          }
         }
       }
-    }
-    @if (statut() === 'ouverte' || statut() === 'en_cours') {
-      <button
-        #boutonDeCloture
-        type="button"
-        data-testid="presentateur-cloturer"
-        (click)="demanderLaCloture()"
-        i18n="presentateur.cloturer|@@presentateurCloturer"
-      >
-        Clôturer la séance
-      </button>
-    }
-    @if (clotureDemandee() && statut() !== 'terminee') {
-      <div
-        data-testid="presentateur-cloture-confirmation"
-        role="alertdialog"
-        aria-labelledby="presentateur-cloture-question"
-      >
-        <p
-          id="presentateur-cloture-question"
-          i18n="presentateur.clotureQuestion|@@presentateurClotureQuestion"
+      @if (statut() === 'ouverte' || statut() === 'en_cours') {
+        <button
+          #boutonDeCloture
+          type="button"
+          class="control-danger presentateur-cloture"
+          data-testid="presentateur-cloturer"
+          (click)="demanderLaCloture()"
+          i18n="presentateur.cloturer|@@presentateurCloturer"
         >
-          Clôturer la séance maintenant ? Les participants ne pourront plus répondre.
+          Clôturer la séance
+        </button>
+      }
+      @if (clotureDemandee() && statut() !== 'terminee') {
+        <div
+          class="presentateur-confirmation"
+          data-testid="presentateur-cloture-confirmation"
+          role="alertdialog"
+          aria-labelledby="presentateur-cloture-question"
+        >
+          <p
+            id="presentateur-cloture-question"
+            i18n="presentateur.clotureQuestion|@@presentateurClotureQuestion"
+          >
+            Clôturer la séance maintenant ? Les participants ne pourront plus répondre.
+          </p>
+          <button
+            type="button"
+            class="control-danger"
+            data-testid="presentateur-cloture-confirmer"
+            (click)="confirmerLaCloture()"
+            i18n="presentateur.clotureConfirmer|@@presentateurClotureConfirmer"
+          >
+            Confirmer la clôture
+          </button>
+          <button
+            #retourALaSeance
+            type="button"
+            class="control-btn"
+            data-testid="presentateur-cloture-annuler"
+            (click)="annulerLaCloture()"
+            i18n="presentateur.clotureAnnuler|@@presentateurClotureAnnuler"
+          >
+            Revenir à la séance
+          </button>
+        </div>
+      }
+      @if (statut() === 'terminee') {
+        <p
+          data-testid="presentateur-terminee"
+          role="status"
+          i18n="presentateur.terminee|@@presentateurTerminee"
+        >
+          La séance est close : la synthèse est disponible.
         </p>
         <button
           type="button"
-          data-testid="presentateur-cloture-confirmer"
-          (click)="confirmerLaCloture()"
-          i18n="presentateur.clotureConfirmer|@@presentateurClotureConfirmer"
+          class="btn btn-teal"
+          data-testid="presentateur-synthese"
+          (click)="ouvrirLaSynthese()"
+          i18n="presentateur.synthese|@@presentateurSynthese"
         >
-          Confirmer la clôture
+          Voir la synthèse
         </button>
-        <button
-          #retourALaSeance
-          type="button"
-          data-testid="presentateur-cloture-annuler"
-          (click)="annulerLaCloture()"
-          i18n="presentateur.clotureAnnuler|@@presentateurClotureAnnuler"
+      }
+      @if (echec()) {
+        <p
+          data-testid="presentateur-echec"
+          role="alert"
+          i18n="presentateur.echec|@@presentateurEchec"
         >
-          Revenir à la séance
-        </button>
-      </div>
-    }
-    @if (statut() === 'terminee') {
-      <p
-        data-testid="presentateur-terminee"
-        role="status"
-        i18n="presentateur.terminee|@@presentateurTerminee"
-      >
-        La séance est close : la synthèse est disponible.
-      </p>
-      <button
-        type="button"
-        data-testid="presentateur-synthese"
-        (click)="ouvrirLaSynthese()"
-        i18n="presentateur.synthese|@@presentateurSynthese"
-      >
-        Voir la synthèse
-      </button>
-    }
-    @if (echec()) {
-      <p
-        data-testid="presentateur-echec"
-        role="alert"
-        i18n="presentateur.echec|@@presentateurEchec"
-      >
-        La dernière commande n'est pas passée. Vérifiez la connexion, puis réessayez.
-      </p>
-    }
+          La dernière commande n'est pas passée. Vérifiez la connexion, puis réessayez.
+        </p>
+      }
+    </div>
   `,
 })
 export class CoursPresentateurComponent {
@@ -521,6 +626,13 @@ export class CoursPresentateurComponent {
     const avant = this.ecran();
     this.ecran.set(cible);
     this.commander({ ecran: cible }, () => this.ecran.set(avant));
+  }
+
+  protected changerLEcranDepuisLeCurseur(evenement: Event): void {
+    const valeur = Number((evenement.target as HTMLInputElement).value);
+    if (Number.isInteger(valeur)) {
+      this.allerA(valeur);
+    }
   }
 
   protected ouvrir(): void {
