@@ -149,10 +149,16 @@ describe('CoursEtudiantComponent', () => {
   }
 
   async function rattacher(code = CODE_SAISI): Promise<Fixture> {
-    const fixture = monter();
-    soumettre(fixture, code);
-    await stabiliser(fixture);
-    return fixture;
+    jasmine.clock().install();
+    try {
+      const fixture = monter();
+      soumettre(fixture, code);
+      jasmine.clock().tick(1_200);
+      await stabiliser(fixture);
+      return fixture;
+    } finally {
+      jasmine.clock().uninstall();
+    }
   }
 
   async function repondre(fixture: Fixture, reponse: ReponseBrique): Promise<void> {
@@ -216,6 +222,27 @@ describe('CoursEtudiantComponent', () => {
 
     expect(port.rejoindre).toHaveBeenCalledOnceWith(CODE_NORMALISE, jasmine.any(Object));
     expect(fixture.componentInstance.etat()).toBe('seance');
+  });
+
+  it('attend le délai anti-robot avant de demander le rattachement', async () => {
+    jasmine.clock().install();
+    try {
+      const fixture = monter();
+      soumettre(fixture, CODE_SAISI);
+      await Promise.resolve();
+      fixture.detectChanges();
+
+      expect(port.rejoindre).not.toHaveBeenCalled();
+      expect(fixture.componentInstance.etat()).toBe('rattachement');
+      expect(lire(fixture, 'etudiant-rattachement')).not.toBeNull();
+
+      jasmine.clock().tick(1_200);
+      await stabiliser(fixture);
+
+      expect(port.rejoindre).toHaveBeenCalledOnceWith(CODE_NORMALISE, jasmine.any(Object));
+    } finally {
+      jasmine.clock().uninstall();
+    }
   });
 
   it('lit le sujet avec le jeton du rattachement et n ouvre la seance qu a son arrivee', async () => {

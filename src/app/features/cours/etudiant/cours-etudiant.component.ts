@@ -81,6 +81,7 @@ const MESSAGE_ECHEC = $localize`:cours.rattachementEchec|@@coursRattachementEche
 
 const MOTIF_CODE = /^\d{4}$/;
 const ESPACES = /\s+/g;
+const DELAI_MINIMUM_FORMULAIRE_MS = 1_200;
 
 function normaliserCode(saisi: string): string | null {
   const compact = saisi.replace(ESPACES, '');
@@ -170,6 +171,15 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
               </button>
             }
           }
+        }
+        @case ('rattachement') {
+          <p
+            data-testid="etudiant-rattachement"
+            role="status"
+            i18n="cours.rattachement|@@coursRattachement"
+          >
+            Connexion à la séance…
+          </p>
         }
         @case ('seance') {
           <section class="student-session" data-testid="etudiant-seance">
@@ -479,6 +489,13 @@ export class CoursEtudiantComponent {
     this.motifEchec.set(null);
     this.messageEchec.set(null);
     this.etat.set('rattachement');
+    const restant = DELAI_MINIMUM_FORMULAIRE_MS - (Date.now() - this.debutFormulaire);
+    if (restant > 0) {
+      await new Promise<void>((resolve) => setTimeout(resolve, restant));
+    }
+    if (this.detruit) {
+      return null;
+    }
     try {
       return await firstValueFrom(
         this.port.rejoindre(code, {
