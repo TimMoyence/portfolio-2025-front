@@ -278,13 +278,10 @@ export class SlideActivityComponent {
   }
 }
 
-export const REGISTER_SLIDE_BLOCKS = new InjectionToken<() => Promise<void>>(
-  'REGISTER_SLIDE_BLOCKS',
-  {
-    providedIn: 'root',
-    factory: () => async () => {
-      const { registerCoursBlocks } = await import('../../../../cours/runtime/core/register');
-      await registerCoursBlocks();
-    },
+const REGISTER_SLIDE_BLOCKS = new InjectionToken<() => Promise<void>>('REGISTER_SLIDE_BLOCKS', {
+  providedIn: 'root',
+  factory: () => async () => {
+    const { registerCoursBlocks } = await import('../../../../cours/runtime/core/register');
+    await registerCoursBlocks();
   },
-);
+});

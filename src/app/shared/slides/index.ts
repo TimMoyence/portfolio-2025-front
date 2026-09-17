@@ -19,10 +19,7 @@ export {
   SlideMethodPathComponent,
   type SlideMethodStep,
 } from './layouts/slide-method-path/slide-method-path.component';
-export {
-  SlideGuideComponent,
-  type SlideGuideItem,
-} from './layouts/slide-guide/slide-guide.component';
+export { SlideGuideComponent } from './layouts/slide-guide/slide-guide.component';
 export { SlideCtaComponent } from './layouts/slide-cta/slide-cta.component';
 export { SlideTableComponent, type TableColumn } from './layouts/slide-table/slide-table.component';
 export {
@@ -33,10 +30,3 @@ export {
 export { SlideQuizComponent } from './interactions/slide-quiz/slide-quiz.component';
 export { SlidePollComponent } from './interactions/slide-poll/slide-poll.component';
 export { SlideReflectionComponent } from './interactions/slide-reflection/slide-reflection.component';
-export {
-  SlideActivityComponent,
-  type QuestionDeLEcran,
-  type ReponseSlide,
-  questionsDeLEcran,
-  identifiantsDesQuestions,
-} from './session/slide-activity.component';
