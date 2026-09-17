@@ -1,6 +1,6 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression } from '../core/formula';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
 
@@ -21,6 +21,13 @@ export interface PlotAxe {
   readonly max: number;
 }
 
+export interface PlotBornesOrdonnee {
+  readonly min?: number;
+  readonly max?: number;
+  readonly minParametre?: string;
+  readonly maxParametre?: string;
+}
+
 export interface PlotSerie {
   readonly id: string;
   readonly libelle: string;
@@ -32,8 +39,10 @@ export interface PlotDefinition {
   readonly id: string;
   readonly titre?: string;
   readonly source?: string;
+  readonly sourceUrl?: string;
   readonly abscisse: PlotAxe;
   readonly ordonnee: string;
+  readonly bornesOrdonnee?: PlotBornesOrdonnee;
   readonly parametres: readonly PlotParametre[];
   readonly series: readonly PlotSerie[];
   readonly metadonnees: MetadonneesBrique;
@@ -74,13 +83,6 @@ const BORD_DROIT = LARGEUR - MARGE_DROITE;
 const DECALAGE_X = 16;
 const DECALAGE_Y = 4;
 const ECART_Y = 6;
-const PAS_CLAVIER: Readonly<Record<string, number | undefined>> = {
-  ArrowRight: 1,
-  ArrowUp: 1,
-  ArrowLeft: -1,
-  ArrowDown: -1,
-};
-
 function fini(valeur: number, repli: number): number {
   return Number.isFinite(valeur) ? valeur : repli;
 }
@@ -105,11 +107,6 @@ function plafondDe(bornes: { readonly min: number; readonly max: number }): numb
 function borner(parametre: PlotParametre, valeur: number): number {
   const bas = plancherDe(parametre);
   return Math.min(Math.max(fini(valeur, bas), bas), plafondDe(parametre));
-}
-
-function pasDe(parametre: PlotParametre): number {
-  const pas = fini(parametre.pas, 0);
-  return pas > 0 ? pas : 1;
 }
 
 function jalons(depart: number, arrivee: number, intervalles: number): number[] {
@@ -154,12 +151,14 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
     id: source.id,
     titre: source.titre,
     source: source.source,
+    sourceUrl: source.sourceUrl,
     abscisse: {
       libelle: source.abscisse.libelle,
       min: source.abscisse.min,
       max: source.abscisse.max,
     },
     ordonnee: source.ordonnee,
+    bornesOrdonnee: source.bornesOrdonnee === undefined ? undefined : { ...source.bornesOrdonnee },
     parametres: source.parametres
       .filter((parametre) => parametre.cle.trim().length > 0)
       .map(copierParametre),
@@ -179,12 +178,12 @@ function premiereOrdonnee(tracee: SerieTracee): number {
 export class FpPlot extends FpBlock {
   private interne: PlotDefinition | null = null;
   private courantes: Record<string, number> = {};
-  private suivi: string | null = null;
+  private animation: ReturnType<typeof setInterval> | null = null;
 
   set definition(valeur: PlotDefinition | null) {
+    this.arreterAnimation();
     this.interne = valeur === null ? null : copierDefinition(valeur);
     this.courantes = {};
-    this.suivi = null;
     for (const parametre of this.interne?.parametres ?? []) {
       this.courantes[parametre.cle] = borner(parametre, parametre.defaut);
     }
@@ -197,6 +196,10 @@ export class FpPlot extends FpBlock {
 
   get valeurs(): Valeurs {
     return { ...this.courantes };
+  }
+
+  disconnectedCallback(): void {
+    this.arreterAnimation();
   }
 
   renderHand(): EscapedHtml {
@@ -233,17 +236,10 @@ export class FpPlot extends FpBlock {
     this.suivreAffichage(this.interne?.id ?? null);
     if (this.mode() === 'hand') {
       racine
-        .querySelectorAll<HTMLInputElement>('[data-testid="curseur"]')
-        .forEach((curseur) => this.brancher(curseur));
-    }
-  }
-
-  private brancher(curseur: HTMLInputElement): void {
-    const cle = curseur.dataset['cle'] ?? '';
-    curseur.addEventListener('input', () => this.deplacer(cle, Number(curseur.value)));
-    curseur.addEventListener('keydown', (evenement) => this.auClavier(cle, evenement));
-    if (cle === this.suivi) {
-      curseur.focus();
+        .querySelector<HTMLButtonElement>('[data-testid="animer"]')
+        ?.addEventListener('click', () => {
+          this.animer();
+        });
     }
   }
 
@@ -271,16 +267,38 @@ export class FpPlot extends FpBlock {
   }
 
   private cadre(tracees: readonly SerieTracee[]): Cadre {
-    const axe = this.interne?.abscisse ?? { libelle: '', min: 0, max: 1 };
+    const definition = this.interne;
+    const axe = definition?.abscisse ?? { libelle: '', min: 0, max: 1 };
     const ordonnees = tracees.flatMap((tracee) =>
       tracee.echantillons.map((point) => point.ordonnee),
     );
+    const bornes = definition?.bornesOrdonnee;
+    const minParametre =
+      bornes?.minParametre === undefined ? undefined : this.valeurs[bornes.minParametre];
+    const maxParametre =
+      bornes?.maxParametre === undefined ? undefined : this.valeurs[bornes.maxParametre];
+    const minConfigure = minParametre ?? bornes?.min;
+    const maxConfigure = maxParametre ?? bornes?.max;
+    const plancher = this.borne(minConfigure, ordonnees, 0, Math.min);
+    const plafond = this.borne(maxConfigure, ordonnees, 1, Math.max);
     return {
       depart: plancherDe(axe),
       arrivee: plafondDe(axe),
-      plancher: ordonnees.length > 0 ? Math.min(...ordonnees) : 0,
-      plafond: ordonnees.length > 0 ? Math.max(...ordonnees) : 1,
+      plancher,
+      plafond: Math.max(plafond, plancher),
     };
+  }
+
+  private borne(
+    configuree: number | undefined,
+    ordonnees: readonly number[],
+    repli: number,
+    calculer: (...valeurs: number[]) => number,
+  ): number {
+    if (Number.isFinite(configuree)) {
+      return Number(configuree);
+    }
+    return ordonnees.length > 0 ? calculer(...ordonnees) : repli;
   }
 
   private figure(): EscapedHtml {
@@ -292,9 +310,19 @@ export class FpPlot extends FpBlock {
         ${definition?.titre === undefined ? safeHtml`` : safeHtml`<h3 class="fp-plot__titre" data-testid="titre">${escapeHtml(definition.titre)}</h3>`}
         ${this.graphique(tracees)}
         ${dessinees.length > 0 ? safeHtml`` : this.vide()}
-        ${definition?.source === undefined ? safeHtml`` : safeHtml`<figcaption class="fp-plot__source" data-testid="source">${escapeHtml(definition.source)}</figcaption>`}
+        ${this.source(definition)}
       </figure>
     `;
+  }
+
+  private source(definition: PlotDefinition | null): EscapedHtml {
+    if (definition?.source === undefined) {
+      return safeHtml``;
+    }
+    if (definition.sourceUrl === undefined) {
+      return safeHtml`<figcaption class="fp-plot__source" data-testid="source">${escapeHtml(definition.source)}</figcaption>`;
+    }
+    return safeHtml`<figcaption class="fp-plot__source" data-testid="source"><a href="${escapeUrl(definition.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(definition.source)}</a></figcaption>`;
   }
 
   private vide(): EscapedHtml {
@@ -451,19 +479,22 @@ export class FpPlot extends FpBlock {
     return safeHtml`
       <fieldset class="fp-plot__reglages">
         <legend>${escapeHtml(this.texte('plot-reglages'))}</legend>
-        ${(this.interne?.parametres ?? []).map((parametre) => this.curseur(parametre))}
+        <button class="fp-plot__animation" data-testid="animer" type="button">
+          ${escapeHtml(this.texte('plot-animer'))}
+        </button>
+        <div class="fp-plot__parametres" aria-live="polite">
+          ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
+        </div>
       </fieldset>
     `;
   }
 
-  private curseur(parametre: PlotParametre): EscapedHtml {
+  private parametreAffiche(parametre: PlotParametre): EscapedHtml {
     const valeur = borner(parametre, fini(this.courantes[parametre.cle], parametre.defaut));
-    const identifiant = `fp-plot-${parametre.cle}`;
     return safeHtml`
-      <div class="fp-plot__curseur">
-        <label class="fp-plot__etiquette" for="${escapeHtml(identifiant)}">${escapeHtml(parametre.libelle)}</label>
-        <input class="fp-plot__glissiere" data-testid="curseur" data-cle="${escapeHtml(parametre.cle)}" id="${escapeHtml(identifiant)}" type="range" min="${plancherDe(parametre)}" max="${plafondDe(parametre)}" step="${pasDe(parametre)}" value="${valeur}" aria-valuetext="${escapeHtml(this.enonceValeur(parametre, valeur))}">
-        <output class="fp-plot__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}">${escapeHtml(formater(valeur))}</output>
+      <div class="fp-plot__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
+        <span class="fp-plot__etiquette">${escapeHtml(parametre.libelle)}</span>
+        <output class="fp-plot__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(this.enonceValeur(parametre, valeur))}">${escapeHtml(formater(valeur))}</output>
       </div>
     `;
   }
@@ -473,34 +504,50 @@ export class FpPlot extends FpBlock {
     return `${parametre.libelle} : ${formater(valeur)} (${plage})`;
   }
 
-  private parametre(cle: string): PlotParametre | null {
-    return this.interne?.parametres.find((candidat) => candidat.cle === cle) ?? null;
-  }
-
-  private auClavier(cle: string, evenement: KeyboardEvent): void {
-    const parametre = this.parametre(cle);
-    const sens = PAS_CLAVIER[evenement.key];
-    if (parametre === null || sens === undefined) {
+  private animer(): void {
+    const parametres = this.interne?.parametres ?? [];
+    if (parametres.length === 0) {
       return;
     }
-    evenement.preventDefault();
-    const actuelle = borner(parametre, fini(this.courantes[cle], parametre.defaut));
-    this.deplacer(cle, actuelle + sens * pasDe(parametre));
+    this.arreterAnimation();
+    const depart = Object.fromEntries(
+      parametres.map((parametre) => [
+        parametre.cle,
+        borner(parametre, fini(this.courantes[parametre.cle], parametre.defaut)),
+      ]),
+    );
+    let etape = 0;
+    const total = 6;
+    const avancer = (): void => {
+      etape += 1;
+      const progression = etape / total;
+      this.courantes = Object.fromEntries(
+        parametres.map((parametre) => {
+          const valeurDepart = depart[parametre.cle] ?? parametre.defaut;
+          const valeur = valeurDepart + (plafondDe(parametre) - valeurDepart) * progression;
+          return [parametre.cle, borner(parametre, valeur)];
+        }),
+      );
+      const pilote = parametres[0];
+      this.emit('fp-plot-explore', {
+        definitionId: this.interne?.id,
+        cle: pilote.cle,
+        valeur: this.courantes[pilote.cle],
+        dureeMs: this.depuisAffichage(),
+      });
+      this.refresh();
+      if (etape >= total) {
+        this.arreterAnimation();
+      }
+    };
+    this.animation = setInterval(avancer, 180);
+    avancer();
   }
 
-  private deplacer(cle: string, valeur: number): void {
-    const parametre = this.parametre(cle);
-    if (parametre === null) {
-      return;
+  private arreterAnimation(): void {
+    if (this.animation !== null) {
+      clearInterval(this.animation);
+      this.animation = null;
     }
-    this.courantes = { ...this.courantes, [cle]: borner(parametre, valeur) };
-    this.suivi = cle;
-    this.emit('fp-plot-explore', {
-      definitionId: this.interne?.id,
-      cle,
-      valeur: this.courantes[cle],
-      dureeMs: this.depuisAffichage(),
-    });
-    this.refresh();
   }
 }

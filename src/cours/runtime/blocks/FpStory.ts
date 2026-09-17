@@ -11,6 +11,7 @@ export interface StoryRecit {
     readonly src: string;
     readonly alt: string;
     readonly legende?: string;
+    readonly source?: string;
   };
   readonly video?: {
     readonly src: string;
@@ -106,9 +107,24 @@ export class FpStory extends FpBlock {
     return safeHtml`
         <figure class="fp-story__visuel" data-testid="visuel">
         <img src="${escapeUrl(recit.visuel.src)}" alt="${escapeHtml(recit.visuel.alt)}" loading="eager" />
-        ${recit.visuel.legende === undefined ? safeHtml`` : safeHtml`<figcaption>${escapeHtml(recit.visuel.legende)}</figcaption>`}
+        ${this.attribution(recit.visuel)}
       </figure>
     `;
+  }
+
+  private attribution(visuel: NonNullable<StoryRecit['visuel']>): EscapedHtml {
+    if (visuel.legende === undefined && visuel.source === undefined) {
+      return safeHtml``;
+    }
+    const legende =
+      visuel.legende === undefined
+        ? safeHtml``
+        : safeHtml`<span>${escapeHtml(visuel.legende)}</span>`;
+    const source =
+      visuel.source === undefined
+        ? safeHtml``
+        : safeHtml`<a data-testid="source-visuel" href="${escapeUrl(visuel.source)}" target="_blank" rel="noreferrer">Source du visuel</a>`;
+    return safeHtml`<figcaption>${legende}${source}</figcaption>`;
   }
 
   private video(recit: StoryRecit): EscapedHtml {

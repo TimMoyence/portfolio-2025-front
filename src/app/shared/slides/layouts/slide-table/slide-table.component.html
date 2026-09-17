@@ -2,6 +2,9 @@
   @if (title()) {
     <h2>{{ title() }}</h2>
   }
+  @if (subtitle()) {
+    <p class="slide-table__subtitle">{{ subtitle() }}</p>
+  }
   <div class="slide-table__scroll">
     <table>
       <thead>
@@ -22,4 +25,7 @@
       </tbody>
     </table>
   </div>
+  @if (note()) {
+    <p class="slide-table__note">{{ note() }}</p>
+  }
 </div>

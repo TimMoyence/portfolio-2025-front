@@ -1,5 +1,11 @@
-@if (reflection(); as r) {
+@if (activeReflection(); as r) {
   <div class="slide-reflection">
+    @if (r.context) {
+      <p class="slide-reflection__context">{{ r.context }}</p>
+    }
+    @if (r.competency && showCompetency()) {
+      <p class="slide-reflection__competency">{{ r.competency }}</p>
+    }
     <h3 class="slide-reflection__prompt">{{ promptText() }}</h3>
     <textarea
       rows="6"
@@ -21,6 +27,17 @@
       <p class="slide-reflection__saved" i18n="@@slideReflectionSaved">
         Réflexion enregistrée localement.
       </p>
+    }
+    @if (r.expected || r.nextAction) {
+      <details class="slide-reflection__debrief">
+        <summary>Relire le raisonnement attendu</summary>
+        @if (r.expected) {
+          <p>{{ r.expected }}</p>
+        }
+        @if (r.nextAction) {
+          <p><strong>Pour progresser :</strong> {{ r.nextAction }}</p>
+        }
+      </details>
     }
   </div>
 }

@@ -1,0 +1,1139 @@
+<app-slide-deck mode="scroll" [allowFullscreen]="true" theme="b2-01">
+  <app-slide id="b2-01-s01-accroche">
+    <app-slide-hero
+      title="Lire un chiffre, ce n’est pas le croire"
+      subtitle="3 h 30 pour passer d’un nombre affiché à une décision contrôlée."
+      [bullets]="['BTS Comptabilité et Gestion · Deuxième année']"
+      [bgImage]="photoFinance"
+      bgImageAlt="Documents financiers et calculatrice sur un bureau"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s02-contrat">
+    <app-slide-method-path
+      title="Sommaire de la donnée à la décision"
+      subtitle="Avant de calculer, le professionnel s’accorde avec le lecteur sur ce qui est mesuré et sur ce qui pourra être conclu."
+      [steps]="methodSteps"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s03-prediction">
+    <app-slide-quiz [questionData]="qcmPrediction" />
+  </app-slide>
+
+  <app-slide id="b2-01-s04-axes">
+    <app-slide-chart
+      title="Même série, deux lectures visuelles"
+      caption="100, 103, 105, 108"
+      context="Une même série peut sembler spectaculaire ou modeste selon l’échelle. En contrôle, l’impression doit rester compatible avec l’écart numérique."
+      [labels]="['2021', '2022', '2023', '2024']"
+      [series]="axes"
+      [axisRanges]="axisRanges"
+      [axisLabels]="['0 à 120', '98 à 110']"
+      unit="valeurs"
+      formula="Les valeurs et les écarts sont identiques. Seul le repère change."
+      reading="L’écart total est de +8, soit +8 % par rapport à 100. L’axe 98 à 110 agrandit la pente sans créer de performance supplémentaire."
+      source="Cas de comparaison : les deux vues reprennent la série 100, 103, 105, 108 avec deux amplitudes d’axe."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s05-anatomie">
+    <app-slide-grid
+      title="27,6 % : le contrat de lecture d’un taux"
+      subtitle="Le contrat lie le producteur de la donnée, le professionnel qui la contrôle et le décideur. Il fixe la mesure, la base, la période, le périmètre et la source."
+      [items]="[
+        { title: 'Mesure', description: 'Quel indicateur ?' },
+        { title: 'Période', description: 'Quel exercice ?' },
+        { title: 'Périmètre', description: 'Quelle entité ?' },
+        { title: 'Source', description: 'Quel document ?' },
+        { title: 'Base', description: 'Rapporté à quoi ?' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s06-habiller">
+    <app-slide-grid
+      title="Fiche d’identité d’un indicateur"
+      subtitle="Un indicateur professionnel précise ce qui est mesuré, comparé et vérifiable."
+      [items]="[
+        {
+          title: 'Mesure',
+          description: 'Quel indicateur lit-on ?',
+          back: 'Taux de marge = marge totale / chiffre d’affaires total.',
+        },
+        {
+          title: 'Base',
+          description: 'Rapporté à quoi ?',
+          back: '289 800 € de marge / 1 050 000 € de chiffre d’affaires.',
+        },
+        {
+          title: 'Période',
+          description: 'Quand ?',
+          back: 'Exercice 2024 : la période observée.',
+        },
+        {
+          title: 'Périmètre',
+          description: 'Pour qui ?',
+          back: 'Société ou établissement retenu dans le sujet.',
+        },
+        {
+          title: 'Source',
+          description: 'D’où vient le montant ?',
+          back: 'Grand livre et compte de résultat : les montants peuvent être retrouvés.',
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s07-compatibilite">
+    <app-slide-comparison
+      title="Avant tout calcul : comparer la même chose"
+      subtitle="Un calcul juste sur des bases incompatibles produit une conclusion fausse."
+      note="Réflexe de futur comptable : écrire la période, le périmètre et l’unité avant la formule."
+      [columns]="[
+        {
+          label: 'CA mensuel / CA annuel',
+          tone: 'danger',
+          items: ['Pas comparable directement', 'Ramener sur une même période'],
+        },
+        {
+          label: 'Marge HT / ventes TTC',
+          tone: 'warning',
+          items: ['Unités différentes', 'Retirer la TVA ou refuser'],
+        },
+        {
+          label: 'Exercice 2024 / cumul janvier-juin 2025',
+          tone: 'warning',
+          items: ['Périodes différentes', 'Choisir une période commune'],
+        },
+        {
+          label: 'Société / établissement',
+          tone: 'warning',
+          items: ['Périmètres différents', 'Vérifier le périmètre commun'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s08-unites">
+    <app-slide-stats
+      title="Quatre écritures, quatre questions"
+      subtitle="Chaque écriture répond à une question différente. Les mélanger dans une note crée une ambiguïté de décision."
+      [stats]="[
+        { value: '18 000 €', label: 'valeur' },
+        { value: '18 %', label: 'rapport' },
+        { value: '+3 pts', label: 'écart entre deux taux' },
+        { value: '107', label: 'indice : niveau relatif' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s09-fondations">
+    <app-slide-quiz [questionData]="qcmFondations" />
+  </app-slide>
+
+  <app-slide id="b2-01-s10-controleur">
+    <app-slide-comparison
+      title="Le raisonnement professionnel en six questions"
+      subtitle="Le calcul arrive après la définition du problème. La conclusion arrive après le contrôle."
+      note="La dernière phrase doit distinguer ce qui est démontré de ce qui reste une hypothèse."
+      [columns]="[
+        { label: 'Définir', tone: 'info', items: ['Quel indicateur ?', 'Quelle question ?'] },
+        { label: 'Comparer', tone: 'info', items: ['Même période ?', 'Même périmètre ?'] },
+        {
+          label: 'Calculer',
+          tone: 'neutral',
+          items: ['Écart : -2,30 points', 'Marge : +1 200 €'],
+        },
+        { label: 'Chercher', tone: 'warning', items: ['Mix des ventes', 'Taux locaux'] },
+        { label: 'Contrôler', tone: 'warning', items: ['Source', 'Agrégation'] },
+        {
+          label: 'Conclure',
+          tone: 'success',
+          items: ['Dire ce qui est prouvé', 'Dire la limite'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s11-c1">
+    <app-slide-reflection [promptData]="reflectionC1" />
+  </app-slide>
+
+  <app-slide id="b2-01-s12-absolu-relatif">
+    <app-slide-stats
+      title="120 000 € vers 138 000 € : deux questions"
+      subtitle="Le montant répond à « combien ? ». Le taux répond à « par rapport à quelle base ? »."
+      [stats]="[
+        { value: '18 000 €', label: 'combien gagné ? · 138 000 - 120 000' },
+        { value: '15 %', label: 'de combien en proportion ? · 18 000 / 120 000' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s13-formule">
+    <app-slide-quote
+      quote="Taux d’évolution = (valeur d’arrivée - valeur de départ) / valeur de départ"
+      author="Le dénominateur est la valeur de départ."
+      role="Valeur d’arrivée = valeur de départ × (1 + taux)"
+      context="Cette formule est la traduction d’une question de gestion. Elle ne devient fiable que si les deux valeurs portent sur la même mesure, la même unité et la même période."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s14-calcul">
+    <app-slide-reflection [promptData]="reflectionCalcul" />
+  </app-slide>
+
+  <app-slide id="b2-01-s15-base">
+    <app-slide-comparison
+      title="Retrouver la base après +15 %"
+      [columns]="[
+        {
+          label: 'Donnée connue',
+          tone: 'info',
+          items: ['Arrivée : 138 000 €', 'Coefficient : 1,15'],
+        },
+        {
+          label: 'Opération inverse',
+          tone: 'neutral',
+          items: ['138 000 / 1,15', 'Base : 120 000 €'],
+        },
+        { label: 'Contrôle', tone: 'success', items: ['120 000 × 1,15', '= 138 000 €'] },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s16-points">
+    <app-slide-chart
+      title="12 % vers 15 % : deux réponses"
+      caption="Écart entre deux taux"
+      context="Dans une analyse de marge, une différence de taux se rédige en points. Une variation relative décrit le taux lui-même."
+      [labels]="['Taux initial', 'Taux final']"
+      [series]="points"
+      unit="%"
+      formula="+3 points répond à l’écart. +25 % répond à l’évolution du taux lui-même."
+      reading="Une phrase rigoureuse dira : « le taux augmente de 3 points, soit +25 % en relatif ». L’unité évite de faire croire à une hausse de 25 points."
+      source="Cas de comparaison : un taux passe de 12 % à 15 %. Les points et la variation relative répondent à deux questions."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s17-hausse-baisse">
+    <app-slide-chart
+      title="Le prix monte, puis redescend : que devient la marge ?"
+      caption="100 ventes · coût d’achat unitaire : 80 €"
+      context="Le prix de vente ne suffit pas à juger la performance. Il faut suivre le coût, la marge par vente, le chiffre d’affaires et la marge totale."
+      [labels]="['Prix initial', 'Après +10 %', 'Après -10 %']"
+      [series]="priceFlow"
+      kind="line"
+      unit="€ par vente"
+      formula="CA : 10 000 vers 11 000 vers 9 900 € · marge totale : 2 000 vers 3 000 vers 1 900 €"
+      reading="Après la baisse, le prix reste inférieur à son pic et le CA revient sous son niveau initial. Avec un coût inchangé, la marge totale tombe à 1 900 €, soit 100 € de moins qu’au départ."
+      source="Cas Atelier Nord : hypothèse de 100 ventes à chaque période et coût unitaire constant de 80 €."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s18-coefficients">
+    <app-slide-stats
+      title="La machine à coefficients"
+      subtitle="Écrire les coefficients rend visible la base de chaque variation et permet un contrôle inverse."
+      [stats]="[
+        { value: '100', label: 'base' },
+        { value: '× 1,10', label: '+10 % · 110' },
+        { value: '× 0,90', label: '-10 % · 99' },
+        { value: '99', label: 'valeur finale' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s19-successives">
+    <app-slide-quote
+      quote="Les pourcentages successifs se multiplient ; ils ne s’additionnent pas."
+      author="100 × 1,10 × 0,90 = 99"
+      role="Chaque taux porte sur la valeur devenue courante."
+      context="Les remises, hausses tarifaires et budgets révisés se traitent comme une chaîne de coefficients. L’addition des taux n’est qu’une approximation dans des cas limités."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s20-histoire">
+    <app-slide-comparison
+      title="Du calcul à la décision : préparer la lecture graphique"
+      subtitle="Une représentation vient après la question, pas avant."
+      note="Avant de choisir une forme, vérifiez que la relation à montrer est déjà définie dans le tableau source."
+      [columns]="[
+        {
+          label: 'Tableau source',
+          tone: 'info',
+          items: ['Valeurs et unités', 'Périodes et périmètre'],
+        },
+        {
+          label: 'Calcul',
+          tone: 'neutral',
+          items: ['Écart ou taux', 'Base et arrondi'],
+        },
+        {
+          label: 'Graphique',
+          tone: 'success',
+          items: ['Relation visible', 'Titre, axes et source'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s21-methode">
+    <app-slide-comparison
+      title="Quelle méthode répond à quelle question ?"
+      [columns]="[
+        {
+          label: '80 000 vers 92 000',
+          tone: 'info',
+          items: ['Écart puis taux', '12 000 € · 15 %'],
+        },
+        {
+          label: '12 % vers 15 %',
+          tone: 'warning',
+          items: ['Points puis relatif', '+3 points · +25 %'],
+        },
+        {
+          label: '+8 % puis -5 %',
+          tone: 'success',
+          items: ['Coefficients successifs', '1,08 × 0,95 = 1,026'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s22-c2">
+    <app-slide-reflection [promptData]="reflectionC2" />
+  </app-slide>
+
+  <app-slide id="b2-01-s23-inflation">
+    <app-slide-quiz [questionData]="qcmS23" />
+  </app-slide>
+
+  <app-slide id="b2-01-s24-source-inflation">
+    <app-slide-table
+      title="Lire la source avant la courbe"
+      subtitle="La série combine un taux annuel et un indice base 100. Le premier décrit le rythme ; le second décrit le niveau atteint."
+      note="Source pédagogique : inflation des prix à la consommation en France, donnée annuelle. La base 100 est fixée à la fin de 2019."
+      [columns]="[
+        { key: 'year', label: 'Année' },
+        { key: 'rate', label: 'Variation annuelle' },
+        { key: 'index', label: 'Indice base 100' },
+      ]"
+      [rows]="inflationRows"
+    />
+    <p class="b2-source-note">
+      France · prix à la consommation · variation annuelle. Source :
+      <a
+        href="https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG?locations=FR"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Banque mondiale, données FMI
+      </a>
+    </p>
+  </app-slide>
+
+  <app-slide id="b2-01-s25-desinflation">
+    <app-slide-quiz [questionData]="qcmS25" />
+  </app-slide>
+
+  <app-slide id="b2-01-s26-rythme">
+    <app-slide-chart
+      title="Le taux mesure le rythme annuel"
+      caption="Inflation en France"
+      context="Un taux positif mais plus faible correspond à une désinflation : les prix augmentent encore, à un rythme moins rapide."
+      [labels]="['2020', '2021', '2022', '2023', '2024']"
+      [series]="inflationRates"
+      unit="% par an"
+      formula="Le taux ralentit en 2024, mais reste positif : le niveau des prix continue d’augmenter."
+      reading="Le pic de 2022 est suivi d’un ralentissement. Pour un budget, cela change le rythme de révision, pas le niveau déjà atteint."
+      source="International Financial Statistics du FMI via Banque mondiale, licence CC BY 4.0."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s27-indice">
+    <app-slide-chart
+      title="L’indice mesure le niveau cumulé"
+      caption="Base 100 fin 2019"
+      context="L’indice transforme chaque taux annuel en un niveau comparable à une base. Il conserve l’effet cumulé des années précédentes."
+      [labels]="['2020', '2021', '2022', '2023', '2024']"
+      [series]="inflationIndex"
+      kind="line"
+      unit="indice"
+      formula="100 vers 114,93 signifie environ +14,93 % depuis la base, pas 114,93 € ni +114,93 %."
+      reading="Un indice 114,93 signifie qu’un panier valant 100 à la base vaut environ 114,93 dans la même unité d’indice. L’indice n’est pas un prix individuel."
+      source="Calcul pédagogique à partir des taux annuels de la série ; définition de l’inflation : Banque mondiale et FMI."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s28-conclusion-inflation">
+    <app-slide-reflection [promptData]="reflectionS28" />
+  </app-slide>
+
+  <app-slide id="b2-01-s29-pause">
+    <app-slide-grid
+      title="Pause et reprise"
+      subtitle="Votre travail est sauvegardé. Reprenez avec le concept qui sécurise le plus votre prochaine décision chiffrée."
+      [items]="[
+        { title: 'Coefficients successifs', description: 'Revoir le coefficient global.' },
+        { title: 'Points et évolution', description: 'Revoir les deux unités de comparaison.' },
+        {
+          title: 'Échelle d’un graphique',
+          description: 'Revoir l’origine et l’amplitude d’un axe.',
+        },
+        { title: 'Reprendre', description: 'Retour au parcours sans compte à rebours.' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s30-playfair">
+    <app-slide-image-left
+      [image]="playfairGraphic"
+      imageAlt="Série commerciale historique de William Playfair"
+      title="En 1786, le graphique devient un langage"
+      subtitle="Après le calcul, le graphique rend une relation visible sans remplacer la source."
+      [paragraphs]="[
+        'William Playfair utilise les séries commerciales pour rendre les évolutions comparables.',
+        'Le graphique ne remplace pas la source : il organise la lecture et peut aussi orienter l’interprétation.',
+      ]"
+      [items]="['Titre', 'Axes', 'Séries', 'Source']"
+    >
+      <a
+        class="b2-history-link"
+        href="https://commons.wikimedia.org/wiki/File:Playfair_TimeSeries-2.png"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Ouvrir le document original · Wikimedia Commons
+      </a>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="b2-01-s31-relecture">
+    <app-slide-quiz [questionData]="qcmS31" />
+  </app-slide>
+
+  <app-slide id="b2-01-s32-amplitude">
+    <app-slide-chart
+      title="Même valeur, échelle différente"
+      caption="100, 103, 105, 108"
+      context="Dans un reporting, la mise en forme ne doit pas faire croire à un écart matériel qui n’existe pas dans les données."
+      [labels]="['2021', '2022', '2023', '2024']"
+      [series]="axes"
+      [axisRanges]="axisRanges"
+      unit="valeurs"
+      formula="Une vue amplifie la pente, l’autre la remet en perspective. Les valeurs ne changent jamais."
+      reading="Avant de commenter la pente, comparez la différence absolue (+8), la variation relative (+8 %) et l’amplitude affichée."
+      source="Cas de comparaison : les deux vues reprennent la série 100, 103, 105, 108 avec deux amplitudes d’axe."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s33-forme">
+    <app-slide-comparison
+      title="Choisir une forme pour une question"
+      subtitle="Le type de graphique est une décision de communication. Il dépend de la relation que le lecteur doit vérifier."
+      note="Une forme plus spectaculaire n’est pas plus informative si elle masque l’unité, la période ou le volume."
+      [columns]="[
+        {
+          label: 'Évolution continue',
+          tone: 'info',
+          items: ['Courbe', 'Suivre un mouvement dans le temps'],
+        },
+        {
+          label: 'Comparer des catégories',
+          tone: 'success',
+          items: ['Barres', 'Comparer des niveaux distincts'],
+        },
+        {
+          label: 'Contribution cumulée',
+          tone: 'warning',
+          items: ['Aire avec prudence', 'Vérifier le volume représenté'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s34-titre">
+    <app-slide-grid
+      title="Le titre oriente la lecture"
+      subtitle="Un titre professionnel décrit avant d’interpréter."
+      [items]="[
+        {
+          title: 'Forte progression',
+          description: 'Interprétatif',
+          back: 'Quel seuil justifie « forte » ?',
+        },
+        {
+          title: '+8 points en trois ans',
+          description: 'Chiffre précis',
+          back: 'La base et l’unité doivent rester visibles.',
+        },
+        {
+          title: 'Indice 100 à 108 entre 2021 et 2024',
+          description: 'Descriptif robuste',
+          back: 'Le titre répond à la question sans exagérer.',
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s35-correlation">
+    <app-slide-quiz [questionData]="qcmS35" />
+  </app-slide>
+
+  <app-slide id="b2-01-s36-nightingale">
+    <app-slide-image-right
+      [image]="nightingaleGraphic"
+      imageAlt="Diagramme polaire de Florence Nightingale sur les causes de mortalité"
+      title="Florence Nightingale : faire décider par les données"
+      [paragraphs]="[
+        'En 1858, son diagramme polaire rend visible la part des décès liés aux maladies évitables.',
+        'La représentation sert une décision publique : comparer, expliquer, agir.',
+        'Sans légende ni source, la même image perd sa portée de preuve.',
+      ]"
+    >
+      <a
+        class="b2-history-link"
+        href="https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Voir le document original · Wikimedia Commons
+      </a>
+    </app-slide-image-right>
+  </app-slide>
+
+  <app-slide id="b2-01-s37-audit-graphique">
+    <app-slide-grid
+      title="Audit express du graphique"
+      subtitle="Cochez le premier défaut avant de discuter de la pente. Un graphique fiable permet ensuite d’expliquer un total et ses écarts."
+      [items]="[
+        { title: 'Titre', description: 'Question et mesure.' },
+        { title: 'Unité', description: '€ , % , point ou indice.' },
+        { title: 'Période', description: 'Dates et fréquence.' },
+        { title: 'Source', description: 'Origine vérifiable.' },
+        { title: 'Axe', description: 'Origine et amplitude.' },
+        { title: 'Tableau', description: 'Alternative aux formes.' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s38-mix">
+    <app-slide-quiz [questionData]="qcmS38" />
+  </app-slide>
+
+  <app-slide id="b2-01-s39-prevision-mix">
+    <app-slide-comparison
+      title="Prévoir l’effet du mix"
+      subtitle="Avant la formule, regardez quel canal gagne ou perd du poids et comparez son taux local au taux global."
+      note="La prévision est une hypothèse de travail. Le calcul pondéré et les chiffres de CA la transforment en conclusion."
+      [columns]="[
+        { label: 'Conseil', tone: 'success', items: ['Taux local élevé', 'Poids en baisse'] },
+        { label: 'Plateforme', tone: 'warning', items: ['Taux local faible', 'Poids en hausse'] },
+        {
+          label: 'Prévision',
+          tone: 'info',
+          items: ['Le taux global baisse probablement', 'La preuve vient des poids'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s40-ponderee">
+    <app-slide-quote
+      quote="Taux global = somme des marges / somme des chiffres d’affaires"
+      author="Le poids d’un canal est CA du canal / CA total."
+      role="Une moyenne simple suppose des poids égaux."
+      context="Dans un portefeuille de ventes, chaque canal contribue selon son chiffre d’affaires. Le taux global est donc une moyenne pondérée, pas la moyenne des pourcentages affichés."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s41-simulateur-mix">
+    <app-slide-chart
+      title="Quand la plateforme pèse plus, le taux global baisse"
+      caption="CA total fixé à 1 000 000 €"
+      context="Le taux Conseil reste à 36 %, Maintenance à 28 % et Plateforme à 16 %. La seule variable est la répartition du CA."
+      [labels]="['Mix 40 / 40 / 20', 'Mix 25 / 25 / 50']"
+      [series]="[
+        { label: 'Taux global', values: [28.8, 24.0], tone: 'teal' },
+        { label: 'Part plateforme', values: [20, 50], tone: 'gold' },
+      ]"
+      unit="%"
+      formula="Les taux locaux restent constants. Seuls les poids changent."
+      reading="Le taux global passe de 28,8 % à 24,0 %. Avec 1 000 000 € de CA, la marge passe de 288 000 € à 240 000 € : -48 000 € sans baisse des taux locaux."
+      source="Hypothèses du cas Atelier Nord : Conseil 36 %, Maintenance 28 %, Plateforme 16 %."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s42-valeur-taux">
+    <app-slide-comparison
+      title="Valeur et taux ne racontent pas la même chose"
+      subtitle="La valeur mesure un montant créé. Le taux mesure une efficacité relative par rapport à une base."
+      note="Conclusion défendable : la marge en euros progresse légèrement, mais le rendement du CA se dégrade. La cause reste à vérifier."
+      [columns]="[
+        {
+          label: 'Marge en euros',
+          tone: 'success',
+          items: ['2024 : 289 800 €', '2025 : 291 000 €', '+1 200 €'],
+        },
+        {
+          label: 'Taux de marge',
+          tone: 'danger',
+          items: ['2024 : 27,60 %', '2025 : 25,3043 %', '-2,30 points'],
+        },
+        {
+          label: 'Chiffre d’affaires',
+          tone: 'info',
+          items: ['1 050 000 € vers 1 150 000 €', '+100 000 €', 'La base grandit plus vite'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s43-marge-2024">
+    <app-slide-reflection [promptData]="reflectionS43" />
+  </app-slide>
+
+  <app-slide id="b2-01-s44-marge-2025">
+    <app-slide-reflection [promptData]="reflectionS44" />
+  </app-slide>
+
+  <app-slide id="b2-01-s45-recommandation">
+    <app-slide-reflection [promptData]="reflectionS45" />
+  </app-slide>
+
+  <app-slide id="b2-01-s46-vote-1">
+    <app-slide-quiz [questionData]="qcmS46" />
+  </app-slide>
+
+  <app-slide id="b2-01-s47-pairs">
+    <app-slide-reflection [promptData]="reflectionS47" />
+  </app-slide>
+
+  <app-slide id="b2-01-s48-vote-2">
+    <app-slide-quiz [questionData]="qcmS48" />
+  </app-slide>
+
+  <app-slide id="b2-01-s49-debrief">
+    <app-slide-comparison
+      title="Passer d’une intuition à une preuve"
+      subtitle="Un argument comptable doit contenir un mécanisme et un exemple chiffré vérifiable."
+      note="Changer de réponse n’est pas l’objectif. L’objectif est de pouvoir expliquer pourquoi la réponse tient avant de passer au contrôle comptable."
+      [columns]="[
+        {
+          label: 'Argument correct',
+          tone: 'success',
+          items: ['Deux taux locaux constants', 'Poids modifiés'],
+        },
+        {
+          label: 'Argument incomplet',
+          tone: 'warning',
+          items: ['Une intuition', 'Aucun exemple chiffré'],
+        },
+        { label: 'Argument faux', tone: 'danger', items: ['Moyenne simple', 'Poids ignorés'] },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s50-pacioli">
+    <app-slide-image-left
+      [image]="pacioliGraphic"
+      imageAlt="Portrait historique de Luca Pacioli"
+      title="1494 : une méthode de contrôle"
+      subtitle="Les traces comptables doivent se répondre."
+      [paragraphs]="[
+        'Luca Pacioli formalise dans la Summa la tenue en partie double.',
+        'Après le portefeuille de ventes, la même discipline s’applique aux écritures : une concordance organise le contrôle, mais un total exact ne garantit pas des lignes exactes.',
+      ]"
+    >
+      <app-slide-quiz [questionData]="qcmS50" />
+      <a
+        class="b2-history-link"
+        href="https://commons.wikimedia.org/wiki/File:Luca_Pacioli.jpg"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Voir l’image originale · Wikimedia Commons
+      </a>
+    </app-slide-image-left>
+  </app-slide>
+
+  <app-slide id="b2-01-s51-mission">
+    <app-slide-comparison
+      title="Mission de contrôle : choisir le premier test"
+      subtitle="On commence par le contrôle qui réduit le plus vite l’incertitude avec un coût raisonnable."
+      note="Un indice aide à chercher. Une pièce source permet de trancher."
+      [columns]="[
+        {
+          label: 'Rapprocher ligne par ligne',
+          tone: 'success',
+          items: ['Localise l’écart', 'Contrôle le moins coûteux'],
+        },
+        {
+          label: 'Recalculer la TVA',
+          tone: 'neutral',
+          items: ['Utile après le HT', 'Ne localise pas F004'],
+        },
+        {
+          label: 'Tester le multiple de 9',
+          tone: 'warning',
+          items: ['Indice possible', 'Pas une preuve'],
+        },
+        {
+          label: 'Lire toutes les pièces',
+          tone: 'info',
+          items: ['Coût élevé', 'À cibler après localisation'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s52-controle-global">
+    <app-slide-table
+      title="Contrôle global : calculer l’écart"
+      subtitle="Le total permet de détecter une incohérence. Il ne permet pas encore de localiser l’erreur."
+      note="Écart total : 48 795 € - 48 705 € = +90 €. L’étape suivante est le rapprochement ligne par ligne."
+      [columns]="[
+        { key: 'id', label: 'Ligne' },
+        { key: 'piece', label: 'Pièces HT' },
+        { key: 'grandLivre', label: 'Grand livre HT' },
+        { key: 'ecart', label: 'Grand livre - pièces' },
+      ]"
+      [rows]="auditRows"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s53-localiser">
+    <app-slide-table
+      title="Filtrer les lignes non concordantes"
+      subtitle="Le filtre transforme un écart global en piste de contrôle précise."
+      [columns]="[
+        { key: 'id', label: 'Ligne' },
+        { key: 'piece', label: 'Pièce' },
+        { key: 'grandLivre', label: 'Grand livre' },
+        { key: 'ecart', label: 'Écart' },
+      ]"
+      [rows]="auditRows"
+    />
+    <p class="b2-source-note">
+      La ligne F004 est la ligne fautive présumée : 12 340 € contre 12 430 €.
+    </p>
+  </app-slide>
+
+  <app-slide id="b2-01-s54-multiple-neuf">
+    <app-slide-quiz [questionData]="qcmS54" />
+  </app-slide>
+
+  <app-slide id="b2-01-s55-f004">
+    <app-slide-table
+      title="Prouver avec F004"
+      subtitle="La pièce source est indépendante de l’écriture contrôlée. Elle permet de dire quelle valeur doit être retenue."
+      [columns]="[
+        { key: 'champ', label: 'Champ de la pièce' },
+        { key: 'valeur', label: 'Valeur' },
+      ]"
+      [rows]="f004Rows"
+    />
+    <p class="b2-source-note">
+      La pièce source validée fait foi. Le grand livre ne peut pas être sa propre preuve
+      indépendante.
+    </p>
+  </app-slide>
+
+  <app-slide id="b2-01-s56-tva">
+    <app-slide-comparison
+      title="Recalculer TVA et TTC"
+      subtitle="Après correction du HT, on reconstruit la TVA et le TTC puis on effectue un contrôle inverse."
+      note="Un montant TTC exact ne corrige pas une base HT erronée. La chaîne doit être recalculée à partir de la valeur prouvée."
+      [columns]="[
+        { label: 'Base corrigée', tone: 'info', items: ['Total HT : 48 705 €', 'Taux TVA : 20 %'] },
+        { label: 'Calcul', tone: 'neutral', items: ['TVA : 9 741 €', 'TTC : 58 446 €'] },
+        { label: 'Contrôle inverse', tone: 'success', items: ['58 446 - 9 741', '= 48 705 € HT'] },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s57-compensation">
+    <app-slide-quiz [questionData]="qcmS57" />
+  </app-slide>
+
+  <app-slide id="b2-01-s58-alerte">
+    <app-slide-reflection [promptData]="reflectionS58" />
+  </app-slide>
+
+  <app-slide id="b2-01-s59-defi">
+    <app-slide-hero
+      title="Mission intégrée : prioriser ce qui peut changer une décision"
+      subtitle="Tableau de bord Nova Services · trimestre 2 · six indicateurs à sécuriser"
+      [bullets]="[
+        'Trois alertes concernent le sens, le calcul, la représentation ou la preuve.',
+        'Objectif : choisir trois contrôles et expliquer leur ordre.',
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s60-priorites">
+    <app-slide-grid
+      title="Prioriser les anomalies"
+      subtitle="Choisissez trois priorités et reliez chacune à la compétence concernée."
+      [items]="[
+        { title: 'Taux sans unité', description: 'Identifier la mesure, la période et la base.' },
+        { title: 'Axe tronqué', description: 'Comparer l’amplitude affichée à l’écart réel.' },
+        {
+          title: 'Taux cumulés additionnés',
+          description: 'Recalculer avec des coefficients successifs.',
+        },
+        {
+          title: 'Marge en hausse, taux en baisse',
+          description: 'Examiner les poids et le mix des ventes.',
+        },
+        {
+          title: 'Total exact, lignes fausses',
+          description: 'Rapprocher les écritures de la pièce source.',
+        },
+        { title: 'Donnée correcte', description: 'Aucune anomalie à traiter' },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s61-controle">
+    <app-slide-comparison
+      title="Choisir le contrôle discriminant"
+      [columns]="[
+        {
+          label: 'Donnée sans sens',
+          tone: 'info',
+          items: ['Vérifier les métadonnées', 'Mesure, unité, période, source'],
+        },
+        {
+          label: 'Calcul suspect',
+          tone: 'warning',
+          items: ['Recalculer les coefficients', 'Comparer au résultat affiché'],
+        },
+        {
+          label: 'Écart comptable',
+          tone: 'success',
+          items: ['Rapprocher les lignes et pièces', 'Chercher une preuve indépendante'],
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s62-decision">
+    <app-slide-reflection [promptData]="reflectionS62" />
+  </app-slide>
+
+  <app-slide id="b2-01-s63-flash-points">
+    <app-slide-quiz [questionData]="qcmS63" />
+  </app-slide>
+
+  <app-slide id="b2-01-s64-flash-preuve">
+    <app-slide-quiz [questionData]="qcmS64" />
+  </app-slide>
+
+  <app-slide id="b2-01-s65-maitrise">
+    <app-slide-grid
+      title="Carte de maîtrise"
+      subtitle="Les cinq compétences se lisent comme une carte de progression : comprendre, appliquer, justifier puis transférer."
+      [items]="[
+        {
+          title: 'Sens du chiffre',
+          description: 'Mesure et contexte',
+          back: 'Prochaine activité : habiller un indicateur.',
+        },
+        {
+          title: 'Transformation',
+          description: 'Taux et coefficients',
+          back: 'Prochaine activité : refaire un calcul inverse.',
+        },
+        {
+          title: 'Agrégation',
+          description: 'Valeur et mix',
+          back: 'Prochaine activité : comparer les poids.',
+        },
+        {
+          title: 'Représentation',
+          description: 'Axes et graphiques',
+          back: 'Prochaine activité : auditer une échelle.',
+        },
+        {
+          title: 'Contrôle et preuve',
+          description: 'Source et preuve',
+          back: 'Prochaine activité : rapprocher F004.',
+        },
+      ]"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s66-sortie">
+    <app-slide-cta
+      title="Du cours au poste de travail"
+      description="La méthode est posée. Les six écrans suivants la traduisent en pratiques pour Excel, la BI et l’IA, avec les mêmes exigences de preuve."
+      ctaLabel="Ouvrir la boîte à outils"
+      ctaHref="#b2-01-s67-boite-a-outils"
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s67-boite-a-outils">
+    <app-slide-guide
+      title="Le cycle de travail du futur comptable"
+      subtitle="Le logiciel accélère la manipulation. Le professionnel reste responsable du sens, du contrôle et de la décision."
+      context="Une mission réelle suit une chaîne de preuve. Elle commence dans une source, traverse un traitement documenté et se termine dans une conclusion que quelqu’un d’autre peut refaire."
+      [items]="[
+        {
+          title: 'Qualifier la source',
+          description: 'Identifier qui produit la donnée, à quelle date et avec quelle définition.',
+          detail:
+            'Exemple : grand livre, export de caisse, facture, fichier bancaire ou donnée statistique.',
+        },
+        {
+          title: 'Nettoyer sans détruire',
+          description:
+            'Corriger les types, doublons et libellés tout en conservant la source originale.',
+          detail:
+            'Le nettoyage doit être rejouable. Une correction manuelle non tracée est une nouvelle zone de risque.',
+        },
+        {
+          title: 'Calculer avec une base explicite',
+          description:
+            'Choisir la formule, l’unité, l’arrondi et le dénominateur qui répondent à la question.',
+          detail:
+            'Un tableur n’explique pas une formule : le professionnel doit pouvoir la défendre.',
+        },
+        {
+          title: 'Représenter pour décider',
+          description:
+            'Construire un tableau ou un graphique qui montre la relation utile sans exagérer l’écart.',
+          detail: 'Titre, axes, période, source et vue tabulaire restent disponibles.',
+        },
+        {
+          title: 'Rapprocher et conclure',
+          description:
+            'Comparer au document probant, qualifier la limite et recommander une action.',
+          detail:
+            'Une alerte utile dit ce qui est observé, ce qui est attendu et ce qu’il faut vérifier.',
+        },
+      ]"
+      takeaway="La compétence ne se résume pas à trouver le bon résultat. Elle consiste à produire une information fiable et réutilisable."
+      nextAction="Conserver les étapes de transformation et écrire une phrase de conclusion avec son unité."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s68-tableur-bi">
+    <app-slide-guide
+      title="Du fichier brut au tableau de bord"
+      subtitle="Excel, Power Query, Power Pivot et Power BI répondent à des niveaux différents du même problème."
+      context="Le tableur reste un outil de proximité. Pour éviter le copier-coller fragile, séparez la donnée source, la transformation, le modèle, la mesure et la restitution."
+      [items]="[
+        {
+          title: 'Excel Table',
+          description:
+            'Structurer les données en colonnes avec une ligne d’en-tête et des types cohérents.',
+          detail: 'Pas de cellules fusionnées dans la table source. Une ligne = une observation.',
+        },
+        {
+          title: 'Power Query',
+          description: 'Connecter, transformer, combiner puis actualiser les données.',
+          detail: 'Les étapes restent visibles et rejouables quand le fichier source change.',
+        },
+        {
+          title: 'Tableau croisé dynamique',
+          description:
+            'Résumer les montants par période, canal, compte ou centre de responsabilité.',
+          detail:
+            'Les regroupements répondent à une question. Ils ne remplacent pas la définition de l’indicateur.',
+        },
+        {
+          title: 'Modèle et mesures',
+          description: 'Relier plusieurs tables et distinguer une mesure d’une colonne calculée.',
+          detail:
+            'Le modèle évite de sommer deux fois le même fait ou de mélanger des grains différents.',
+        },
+        {
+          title: 'Dashboard contrôlable',
+          description: 'Publier une vue avec filtres, unités, date de rafraîchissement et source.',
+          detail: 'Une belle vue sans traçabilité reste une interface, pas une preuve.',
+        },
+      ]"
+      takeaway="La valeur de la BI vient de la chaîne de données, pas du nombre de graphiques."
+      nextAction="Nommer la source, la date de rafraîchissement et la définition de chaque KPI."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s69-formules">
+    <app-slide-guide
+      title="Les formules qu’il faut savoir expliquer"
+      subtitle="Un futur comptable n’a pas besoin de mémoriser toutes les fonctions. Il doit savoir choisir, tester et documenter les bonnes."
+      context="La fonction n’est jamais la méthode complète. Une formule fiable précise ses plages, sa base, ses unités et le contrôle qui permet de repérer une erreur."
+      [items]="[
+        {
+          title: 'RECHERCHEX',
+          description:
+            'Retrouver une donnée selon une clé et gérer explicitement l’absence de correspondance.',
+          detail: 'Contrôle : tester une clé existante, une clé absente et un doublon.',
+        },
+        {
+          title: 'SOMME.SI.ENS',
+          description:
+            'Agréger un montant selon plusieurs critères comme période, compte ou canal.',
+          detail: 'Contrôle : vérifier le total sans filtre et la cohérence des critères.',
+        },
+        {
+          title: 'SIERREUR',
+          description: 'Gérer une erreur technique sans masquer une anomalie métier.',
+          detail:
+            'Une cellule vide ou zéro par défaut peut cacher une clé manquante : contrôler avant de neutraliser.',
+        },
+        {
+          title: 'ARRONDI',
+          description: 'Choisir le moment de l’arrondi et préserver la précision interne.',
+          detail: 'Le registre de référence arrondit à l’affichage, pas à chaque étape du calcul.',
+        },
+        {
+          title: 'Contrôle inverse',
+          description:
+            'Repartir du résultat pour vérifier la formule avec une opération indépendante.',
+          detail: 'Exemple : 120 000 × 1,15 doit redonner 138 000.',
+        },
+      ]"
+      takeaway="Une formule est professionnelle quand son résultat, sa base et son contrôle sont lisibles par un tiers."
+      nextAction="Ajouter dans le classeur une feuille Sources, une feuille Calculs et une feuille Contrôles."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s70-ia-controle">
+    <app-slide-guide
+      title="IA : accélérer la préparation, jamais déléguer le jugement"
+      subtitle="L’IA générative peut proposer une structure ou une variante. Elle ne valide ni un chiffre, ni une pièce, ni une conclusion."
+      context="Le cadre d’usage français demande une plus-value pédagogique, la protection des données et la vérification des productions. Pour un comptable, cela rejoint les règles de confidentialité et de contrôle interne."
+      [items]="[
+        {
+          title: 'Cadrer la demande',
+          description:
+            'Décrire le rôle, la question, le format attendu et les contraintes de calcul.',
+          detail: 'Demander une méthode vérifiable, pas une réponse persuasive.',
+        },
+        {
+          title: 'Anonymiser les données',
+          description:
+            'Remplacer noms, numéros de compte, clients et montants réels par des données fictives.',
+          detail: 'Aucune donnée confidentielle ou personnelle dans un service grand public.',
+        },
+        {
+          title: 'Faire challenger le raisonnement',
+          description:
+            'Demander les hypothèses, les unités, les cas limites et les contrôles possibles.',
+          detail: 'Une IA est utile comme contradicteur, pas comme source primaire.',
+        },
+        {
+          title: 'Vérifier avec le tableur',
+          description:
+            'Recalculer dans Excel ou un outil déterministe et comparer aux documents sources.',
+          detail: 'Les résultats numériques doivent être reproductibles hors de la conversation.',
+        },
+        {
+          title: 'Tracer l’usage',
+          description:
+            'Conserver la question, la version retenue, les corrections humaines et la source finale.',
+          detail:
+            'Le lecteur doit savoir ce qui vient de l’outil et ce qui vient du professionnel.',
+        },
+      ]"
+      takeaway="L’IA peut réduire le temps de préparation. La responsabilité de la preuve reste humaine."
+      nextAction="Ne jamais envoyer une donnée comptable sensible et toujours croiser la réponse avec une source fiable."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s71-skills-ia">
+    <app-slide-guide
+      title="Les skills IA du comptable augmenté"
+      subtitle="Le bon usage n’est pas un prompt isolé. C’est une nouvelle manière de cadrer, vérifier et communiquer le travail."
+      context="Les compétences utiles combinent culture de la donnée, esprit critique et maîtrise du métier. Elles sont transférables d’un outil d’IA à l’autre."
+      [items]="[
+        {
+          title: 'Cadrer',
+          description: 'Transformer une demande vague en question de gestion mesurable.',
+          detail: 'Quel indicateur, quelle période, quelle base et quelle décision ?',
+        },
+        {
+          title: 'Contextualiser',
+          description:
+            'Fournir les définitions et les contraintes qui empêchent une réponse générique.',
+          detail: 'Le vocabulaire comptable et le plan de contrôle doivent être explicites.',
+        },
+        {
+          title: 'Challenger',
+          description:
+            'Chercher les hypothèses cachées, les contre-exemples et les données manquantes.',
+          detail: 'Une réponse fluide peut être mathématiquement ou juridiquement fausse.',
+        },
+        {
+          title: 'Tracer',
+          description: 'Documenter la source, la transformation, l’aide reçue et la validation.',
+          detail: 'La traçabilité rend la reprise possible par un collègue ou un auditeur.',
+        },
+        {
+          title: 'Décider',
+          description: 'Formuler une recommandation proportionnée à la preuve disponible.',
+          detail: 'Savoir dire « je ne peux pas conclure » est une compétence professionnelle.',
+        },
+      ]"
+      takeaway="Le comptable de demain ne délègue pas son jugement. Il augmente sa capacité à tester, expliquer et décider."
+      nextAction="Pour chaque suggestion d’IA, écrire : source, calcul, contrôle, limite."
+    />
+  </app-slide>
+
+  <app-slide id="b2-01-s72-ressources">
+    <app-slide-grid
+      title="Ressources pour continuer"
+      subtitle="Les outils et cadres de référence qui prolongent ce cours. Ouvrez les ressources selon votre objectif."
+      [items]="[
+        {
+          title: 'Power Query',
+          description: 'Connecter, transformer, combiner et actualiser les données dans Excel.',
+          href: 'https://support.microsoft.com/en-us/Excel/power-query-for-excel-help',
+          external: true,
+        },
+        {
+          title: 'Tableaux croisés',
+          description: 'Résumer et analyser des données par comparaison, tendance et regroupement.',
+          href: 'https://support.microsoft.com/en-us/excel/get-started/create-a-pivottable-to-analyze-worksheet-data',
+          external: true,
+        },
+        {
+          title: 'RECHERCHEX',
+          description:
+            'Retrouver une valeur par clé sans perdre de vue les cas absents et les versions Excel.',
+          href: 'https://support.microsoft.com/en-us/excel/functions/xlookup-function',
+          external: true,
+        },
+        {
+          title: 'Cadre français de l’IA',
+          description: 'Protection des données, vérification et usages autorisés en éducation.',
+          href: 'https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647',
+          external: true,
+        },
+        {
+          title: 'IPC Insee',
+          description:
+            'Consulter une série officielle d’indice des prix à la consommation et son périmètre.',
+          href: 'https://www.insee.fr/fr/statistiques/serie/001765618',
+          external: true,
+        },
+        {
+          title: 'Compétences IA UNESCO',
+          description: 'Comprendre, appliquer et créer avec une IA responsable et critique.',
+          href: 'https://www.unesco.org/en/articles/ai-competency-framework-students?hub=66973',
+          external: true,
+        },
+        {
+          title: 'WCAG 2.2',
+          description: 'Rendre les contenus web et les graphiques utilisables par tous.',
+          href: 'https://www.w3.org/TR/WCAG22/',
+          external: true,
+        },
+      ]"
+    />
+  </app-slide>
+</app-slide-deck>

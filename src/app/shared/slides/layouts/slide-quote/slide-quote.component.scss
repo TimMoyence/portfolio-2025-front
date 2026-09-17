@@ -24,6 +24,14 @@
   font-weight: 700;
 }
 
+.slide-quote__context {
+  max-width: 60ch;
+  margin: 0 0 1.5rem;
+  color: var(--ink-soft, #3c3529);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
 .slide-quote__role {
   font-size: 0.95rem;
   color: var(--text-muted, var(--slide-text-muted));

@@ -7,6 +7,7 @@ import { pro, quote, story } from './narration';
 import { numeric } from './numeric';
 import { plot } from './plot';
 import { pulse } from './pulse';
+import { quiz } from './quiz';
 import { recall } from './recall';
 import { sheet } from './sheet';
 import { spaced } from './spaced';
@@ -24,6 +25,7 @@ const FEUILLES: Readonly<Record<string, string>> = {
   plot,
   pro,
   pulse,
+  quiz,
   quote,
   recall,
   sheet,

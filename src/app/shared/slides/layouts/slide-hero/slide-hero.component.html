@@ -1,7 +1,9 @@
 <div class="slide-hero" [class]="'accent-' + accent()">
-  <div class="slide-hero__bg">
-    <img [src]="bgImage()" [alt]="bgImageAlt()" loading="lazy" decoding="async" />
-  </div>
+  @if (bgImage(); as image) {
+    <div class="slide-hero__bg">
+      <img [src]="image" [alt]="bgImageAlt()" loading="lazy" decoding="async" />
+    </div>
+  }
   <div class="slide-hero__content">
     <h1>{{ title() }}</h1>
     @if (subtitle()) {
@@ -13,6 +15,11 @@
           <li>{{ b }}</li>
         }
       </ol>
+    }
+    @if (ctaLabel() && ctaHref()) {
+      <a class="slide-hero__cta" [href]="ctaHref()">
+        {{ ctaLabel() }} <span aria-hidden="true">→</span>
+      </a>
     }
     <ng-content />
   </div>

@@ -23,26 +23,22 @@ export interface FormationBenefit {
 export const FORMATIONS: readonly FormationCard[] = [
   {
     link: '/cours/rejoindre',
-    badge: 'BTS CG · séance formateur · 60 écrans',
+    badge: 'BTS CG · Séance formateur · 12 écrans',
     title: 'B2-01 — Lire et contrôler l’information chiffrée',
     description:
-      'Une séance de 3 h 30 construite autour d’une entreprise fictive : proportions, pourcentages, évolutions et tableaux de bord. Le formateur projette, la classe échange, calcule et vérifie.',
+      'Rejoindre une séance courte pour lire, contrôler et expliquer une information chiffrée. Entrez le code donné par votre formateur pour suivre les écrans et participer au bon moment.',
     meta: [
       {
         key: $localize`:@@formations-list.meta.duration:Durée`,
-        value: '3 h 30 · 60 écrans',
+        value: '1 h 30 · 12 écrans',
       },
       {
         key: $localize`:@@formations-list.meta.format:Format`,
-        value: 'Diaporama + échanges + quiz',
-      },
-      {
-        key: 'Accès',
-        value: 'Code donné par le formateur',
+        value: 'Slides + méthode',
       },
     ],
-    price: 'Séance live',
-    cta: 'Rejoindre une séance',
+    price: 'Gratuit',
+    cta: 'Rejoindre',
     variant: 'live',
   },
   {

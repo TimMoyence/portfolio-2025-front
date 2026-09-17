@@ -26,9 +26,9 @@ import {
   ReponseRefusee,
   SujetRefuse,
 } from '../../../core/ports/formations.port';
-import type { ReponseBrique } from '../ecran/cours-ecran.component';
 import { CREATEUR_FLUX } from '../cours-flux.token';
-import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import type { ReponseSlide } from '../../../shared/slides/session/slide-activity.component';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursEtudiantComponent } from './cours-etudiant.component';
 
 type Fixture = ComponentFixture<CoursEtudiantComponent>;
@@ -41,8 +41,8 @@ const ETIQUETTE_BRUTE = 'interets-simples';
 const VALEUR_ATTENDUE = '1480.24';
 const ETIQUETTE_LIBELLE = 'Les intérêts ont été additionnés au lieu d’être composés.';
 
-const REPONSE_NUMERIQUE: ReponseBrique = { questionId: 'Q-VA-07', valeur: 1400, dureeMs: 900 };
-const REPONSE_VOTE: ReponseBrique = { questionId: 'Q-CAP-03', valeur: 'b', dureeMs: 400 };
+const REPONSE_NUMERIQUE: ReponseSlide = { questionId: 'Q-VA-07', valeur: 1400, dureeMs: 900 };
+const REPONSE_VOTE: ReponseSlide = { questionId: 'Q-CAP-03', valeur: 'b', dureeMs: 400 };
 
 const REUSSITE: VerdictReponse = { reussite: true, libelleConfusion: null };
 const CONFUSION: VerdictReponse = { reussite: false, libelleConfusion: ETIQUETTE_LIBELLE };
@@ -113,7 +113,7 @@ describe('CoursEtudiantComponent', () => {
   }
 
   function ecranDe(fixture: Fixture): DebugElement {
-    const ecran = fixture.debugElement.queryAll(By.directive(CoursEcranComponent)).at(0);
+    const ecran = fixture.debugElement.queryAll(By.directive(SlideActivityComponent)).at(0);
     if (ecran === undefined) {
       throw new Error('Aucun ecran de cours monte dans la vue etudiant');
     }
@@ -121,7 +121,7 @@ describe('CoursEtudiantComponent', () => {
   }
 
   function ecranAffiche(fixture: Fixture): unknown {
-    return (ecranDe(fixture).componentInstance as CoursEcranComponent).ecran();
+    return (ecranDe(fixture).componentInstance as SlideActivityComponent).slide();
   }
 
   function soumettre(fixture: Fixture, code: string): void {
@@ -161,7 +161,7 @@ describe('CoursEtudiantComponent', () => {
     }
   }
 
-  async function repondre(fixture: Fixture, reponse: ReponseBrique): Promise<void> {
+  async function repondre(fixture: Fixture, reponse: ReponseSlide): Promise<void> {
     ecranDe(fixture).triggerEventHandler('reponse', reponse);
     await stabiliser(fixture);
   }
@@ -384,10 +384,10 @@ describe('CoursEtudiantComponent', () => {
     );
     const fixture = await rattacher();
     diffuser(fixture, { ecranCourant: 1, participants: 11 });
-    const avant = ecranDe(fixture).componentInstance as CoursEcranComponent;
+    const avant = ecranDe(fixture).componentInstance as SlideActivityComponent;
 
-    expect(avant.ecran()).toBe(sujet.ecrans[1]);
-    expect(avant.rendu()).toBe('hand');
+    expect(avant.slide()).toBe(sujet.ecrans[1]);
+    expect(avant.render()).toBe('hand');
     expect(avant.role()).toBe('etudiant');
     expect((ecranDe(fixture).nativeElement as HTMLElement).hasAttribute('role'))
       .withContext('etudiant est un role du runtime, pas un role ARIA')
@@ -413,7 +413,7 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('role')).toBe('alert');
     expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('data-statut')).toBe('429');
     expect(lire(fixture, 'etudiant-attente')).toBeNull();
-    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+    expect(fixture.debugElement.query(By.directive(SlideActivityComponent))).toBeNull();
   });
 
   it('applique le regime de verrou propre a chaque ecran', async () => {
@@ -488,7 +488,7 @@ describe('CoursEtudiantComponent', () => {
     await stabiliser(fixture);
 
     expect(lire(fixture, 'etudiant-ecran-echec')?.getAttribute('role')).toBe('alert');
-    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+    expect(fixture.debugElement.query(By.directive(SlideActivityComponent))).toBeNull();
   });
 
   it('envoie au serveur la reponse d une brique avec son identifiant de question', async () => {
@@ -593,7 +593,7 @@ describe('CoursEtudiantComponent', () => {
       diffuser(fixture, { etat: 'attente' });
 
       expect(lire(fixture, 'etudiant-attente')?.getAttribute('role')).toBe('status');
-      expect(fixture.debugElement.query(By.directive(CoursEcranComponent)))
+      expect(fixture.debugElement.query(By.directive(SlideActivityComponent)))
         .withContext('aucune brique ne doit pouvoir etre repondue avant le demarrage')
         .toBeNull();
 
@@ -607,7 +607,7 @@ describe('CoursEtudiantComponent', () => {
       const fixture = await rattacher();
 
       expect(lire(fixture, 'etudiant-attente')?.getAttribute('role')).toBe('status');
-      expect(fixture.debugElement.query(By.directive(CoursEcranComponent)))
+      expect(fixture.debugElement.query(By.directive(SlideActivityComponent)))
         .withContext('un flux refuse ou injoignable ne doit pas ouvrir les reponses')
         .toBeNull();
 
@@ -868,7 +868,7 @@ describe('CoursEtudiantComponent', () => {
     diffuser(fixture, { etat: 'terminee', modeRythme: 'libre' });
 
     expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
-    expect(fixture.debugElement.query(By.directive(CoursEcranComponent))).toBeNull();
+    expect(fixture.debugElement.query(By.directive(SlideActivityComponent))).toBeNull();
     expect(lire(fixture, 'etudiant-suivant')).toBeNull();
   });
 });

@@ -16,7 +16,7 @@ test.describe('Parcours public des formations', () => {
     const card = page.locator('.formation--live');
     await expect(card).toBeVisible();
     await expect(card).toContainText('B2-01');
-    await expect(card).toContainText('3 h 30 · 60 écrans');
+    await expect(card).toContainText('1 h 30 · 12 écrans');
     await expect(card.getByRole('link', { name: /Rejoindre une séance/ })).toHaveAttribute(
       'href',
       '/cours/rejoindre',

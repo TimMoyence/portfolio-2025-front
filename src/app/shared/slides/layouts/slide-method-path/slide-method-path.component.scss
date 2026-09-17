@@ -1,0 +1,216 @@
+@use '../../slide-section' as slide;
+
+.slide-method-path {
+  @include slide.section;
+}
+
+.slide-method-path__subtitle {
+  max-width: 62ch;
+  margin: -1.35rem auto 2.5rem;
+  color: var(--text-muted, var(--slide-text-muted));
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  line-height: 1.45;
+  text-align: center;
+}
+
+.slide-method-path__layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.9fr) minmax(20rem, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.slide-method-path__steps {
+  position: relative;
+  display: grid;
+  gap: 0.55rem;
+  align-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block: 1.55rem;
+    inset-inline-start: 1.1rem;
+    width: 1px;
+    background: var(--border, rgba(var(--ink-rgb), 0.16));
+  }
+}
+
+.slide-method-path__step {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 0.8rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.85rem;
+  background: transparent;
+  color: var(--text, #0c0902);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+
+  &:hover,
+  &:focus-visible,
+  &.is-current {
+    border-color: var(--border, rgba(var(--ink-rgb), 0.16));
+    background: var(--card-bg, #fff);
+    transform: translateX(0.2rem);
+  }
+}
+
+.slide-method-path__number {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.2));
+  border-radius: 50%;
+  background: var(--slide-bg, #f8f5ef);
+  color: var(--teal-deep, #277c70);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.is-current .slide-method-path__number {
+  border-color: var(--teal, #4fb3a2);
+  background: var(--teal, #4fb3a2);
+  color: #fff;
+  box-shadow: 0 0 0 0.3rem rgba(79, 179, 162, 0.14);
+}
+
+.slide-method-path__step-copy {
+  display: grid;
+  gap: 0.2rem;
+
+  strong {
+    font-size: 1rem;
+  }
+
+  small {
+    color: var(--text-muted, var(--slide-text-muted));
+    font-size: 0.83rem;
+    line-height: 1.35;
+  }
+}
+
+.slide-method-path__detail {
+  display: grid;
+  align-content: center;
+  min-height: 22rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
+  border-radius: 1rem;
+  background: var(--card-bg, #fff);
+  box-shadow: var(--shadow-soft, 0 4px 12px rgba(0, 0, 0, 0.06));
+  animation: method-detail-in 320ms ease both;
+}
+
+.slide-method-path__detail-kicker {
+  margin: 0 0 0.75rem;
+  color: var(--teal-deep, #277c70);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.slide-method-path__detail h3 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.8rem);
+}
+
+.slide-method-path__question {
+  margin: 0.8rem 0 2rem;
+  color: var(--teal-deep, #277c70);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.slide-method-path__detail dl {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+.slide-method-path__detail dl div {
+  padding-block-start: 0.8rem;
+  border-block-start: 1px solid var(--border, rgba(var(--ink-rgb), 0.12));
+}
+
+.slide-method-path__detail dt {
+  color: var(--text-muted, var(--slide-text-muted));
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.slide-method-path__detail dd {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@keyframes method-detail-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.45rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .slide-method-path__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .slide-method-path__steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .slide-method-path__step {
+    align-items: start;
+    grid-template-columns: 1.8rem 1fr;
+    padding: 0.55rem;
+  }
+
+  .slide-method-path__number {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .slide-method-path__step-copy small {
+    display: none;
+  }
+
+  .slide-method-path__detail {
+    min-height: 16rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-method-path__detail,
+  .slide-method-path__step {
+    animation: none;
+    transition: none;
+  }
+}

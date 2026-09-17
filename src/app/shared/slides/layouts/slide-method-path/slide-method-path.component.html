@@ -1,0 +1,55 @@
+<section
+  class="slide-method-path"
+  (mouseenter)="pause()"
+  (mouseleave)="resume()"
+  (focusin)="pause()"
+  (focusout)="resume()"
+>
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+  @if (subtitle()) {
+    <p class="slide-method-path__subtitle">{{ subtitle() }}</p>
+  }
+
+  <div class="slide-method-path__layout">
+    <nav class="slide-method-path__steps" aria-label="Étapes de la méthode">
+      @for (step of steps(); track step.id; let index = $index) {
+        <button
+          type="button"
+          class="slide-method-path__step"
+          [class.is-current]="isCurrent(index)"
+          [attr.aria-current]="isCurrent(index) ? 'step' : null"
+          [attr.aria-label]="'Étape ' + (index + 1) + ': ' + step.title"
+          (click)="select(index)"
+        >
+          <span class="slide-method-path__number">{{ index + 1 }}</span>
+          <span class="slide-method-path__step-copy">
+            <strong>{{ step.title }}</strong>
+            <small>{{ step.question }}</small>
+          </span>
+        </button>
+      }
+    </nav>
+
+    @if (currentStep(); as step) {
+      <article class="slide-method-path__detail" aria-live="polite">
+        <p class="slide-method-path__detail-kicker">
+          Étape {{ currentIndex() + 1 }} sur {{ steps().length }}
+        </p>
+        <h3>{{ step.title }}</h3>
+        <p class="slide-method-path__question">{{ step.question }}</p>
+        <dl>
+          <div>
+            <dt>À vérifier</dt>
+            <dd>{{ step.proof }}</dd>
+          </div>
+          <div>
+            <dt>À retenir</dt>
+            <dd>{{ step.result }}</dd>
+          </div>
+        </dl>
+      </article>
+    }
+  </div>
+</section>

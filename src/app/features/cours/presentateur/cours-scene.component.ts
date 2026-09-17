@@ -9,19 +9,20 @@ import {
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { DerouleCours, EcranContent } from '../../../../cours/content/types';
+import type { DerouleCours, EcranContent, ResultatsSeance } from '../../../../cours/content/types';
 import type { EtatSession, StatutFlux, Sync } from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
-import { CoursSlideFrameComponent } from '../design/cours-slide-frame.component';
-import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { SlideComponent } from '../../../shared/slides/deck/slide.component';
+import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
 @Component({
   selector: 'app-cours-scene',
   standalone: true,
-  imports: [CoursEcranComponent, CoursSlideFrameComponent],
+  imports: [SlideActivityComponent, SlideComponent, SlideDeckComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -29,9 +30,8 @@ type Chargement = 'chargement' | 'succes' | 'echec';
       box-sizing: border-box;
       inline-size: 100%;
       block-size: 100vh;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(79, 179, 162, 0.18), transparent 28rem), #121916;
-      color: var(--cream, #fffaf2);
+      background: var(--cream, #fffaf2);
+      color: var(--ink, #0c0902);
       overflow: auto;
     }
 
@@ -56,7 +56,7 @@ type Chargement = 'chargement' | 'succes' | 'echec';
     }
 
     .scene-toolbar__eyebrow {
-      color: #8ed5c8;
+      color: var(--teal-deep, #277c70);
       font-family: var(--font-mono, monospace);
       font-size: 0.68rem;
       letter-spacing: 0.13em;
@@ -64,7 +64,7 @@ type Chargement = 'chargement' | 'succes' | 'echec';
     }
 
     .scene-toolbar__title {
-      color: #fffaf2;
+      color: var(--ink, #0c0902);
       font-family: var(--font-display, Georgia, serif);
       font-size: clamp(1.4rem, 2.4vw, 2.2rem);
     }
@@ -76,7 +76,7 @@ type Chargement = 'chargement' | 'succes' | 'echec';
     }
 
     .scene-counter {
-      color: rgba(255, 250, 242, 0.72);
+      color: var(--ink-mute, #766f63);
       font-family: var(--font-mono, monospace);
       font-size: 0.75rem;
     }
@@ -84,10 +84,10 @@ type Chargement = 'chargement' | 'succes' | 'echec';
     .scene-fullscreen {
       min-block-size: 42px;
       padding: 0.65rem 0.9rem;
-      border: 1px solid rgba(255, 250, 242, 0.24);
+      border: 1px solid rgba(12, 9, 2, 0.16);
       border-radius: 999px;
-      background: rgba(255, 250, 242, 0.08);
-      color: #fffaf2;
+      background: var(--ivory, #fbf3e6);
+      color: var(--teal-deep, #277c70);
       font: inherit;
       font-size: 0.82rem;
       cursor: pointer;
@@ -95,8 +95,8 @@ type Chargement = 'chargement' | 'succes' | 'echec';
 
     .scene-fullscreen:hover,
     .scene-fullscreen:focus-visible {
-      border-color: #8ed5c8;
-      background: rgba(79, 179, 162, 0.22);
+      border-color: var(--teal, #4fb3a2);
+      background: rgba(79, 179, 162, 0.14);
     }
 
     .scene-canvas {
@@ -104,7 +104,7 @@ type Chargement = 'chargement' | 'succes' | 'echec';
       margin-inline: auto;
     }
 
-    app-cours-slide-frame {
+    app-slide-deck {
       display: block;
     }
 
@@ -121,7 +121,7 @@ type Chargement = 'chargement' | 'succes' | 'echec';
       text-align: center;
     }
 
-    app-cours-ecran {
+    app-slide-activity {
       display: block;
       inline-size: 100%;
       min-block-size: 100%;
@@ -212,16 +212,16 @@ type Chargement = 'chargement' | 'succes' | 'echec';
         </header>
         <main class="scene-canvas">
           @if (ecranCourant(); as ecranAffiche) {
-            <app-cours-slide-frame
-              variant="projection"
-              eyebrow="Écran projeté"
-              [title]="deroule()?.titre ?? ''"
-              [index]="ecran() + 1"
-              [total]="deroule()?.ecrans?.length ?? 0"
-              [duration]="ecranAffiche.duree"
-            >
-              <app-cours-ecran [ecran]="ecranAffiche" rendu="stage" [role]="'presentateur'" />
-            </app-cours-slide-frame>
+            <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+              <app-slide [id]="ecranAffiche.id">
+                <app-slide-activity
+                  [slide]="ecranAffiche"
+                  render="stage"
+                  [role]="'presentateur'"
+                  [resultats]="resultats()"
+                />
+              </app-slide>
+            </app-slide-deck>
           }
         </main>
       </div>
@@ -265,6 +265,7 @@ export class CoursSceneComponent {
   readonly ecran = signal(0);
   readonly termine = signal(false);
   readonly suiviDuFlux = signal<StatutFlux | null>(null);
+  readonly resultats = signal<ResultatsSeance | null>(null);
   readonly pleinEcran = signal(false);
 
   readonly statutDuRefus = computed(() => {
@@ -345,6 +346,7 @@ export class CoursSceneComponent {
   private ecouterLeFlux(): void {
     const flux = this.creerFluxFormateur(this.sessionId());
     flux.onState((etat) => this.suivreLeFlux(etat));
+    flux.onResultats((resultats) => this.resultats.set(resultats));
     flux.onStatut((statut) => this.suiviDuFlux.set(statut));
     this.flux = flux;
     flux.ouvrir();

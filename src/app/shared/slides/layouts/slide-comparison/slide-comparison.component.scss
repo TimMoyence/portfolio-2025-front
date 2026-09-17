@@ -17,10 +17,27 @@
   }
 }
 
+.slide-comparison__subtitle,
+.slide-comparison__note {
+  max-width: 62ch;
+  margin: -1.5rem auto 2rem;
+  color: var(--text-muted, var(--slide-text-muted));
+  font-size: 1.05rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.slide-comparison__note {
+  margin: 1.5rem auto 0;
+  color: var(--ink-soft, #3c3529);
+  font-weight: 600;
+}
+
 .slide-comparison__column {
   padding: 2rem;
   border-radius: 1rem;
-  background: var(--card-bg, var(--slide-card-soft));
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
   border-top: 4px solid transparent;
 
   h3 {

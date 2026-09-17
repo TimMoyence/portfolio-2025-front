@@ -11,7 +11,7 @@ import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
-import { questionsDeLEcran } from '../ecran/cours-ecran.component';
+import { questionsDeLEcran } from '../../../shared/slides/session/slide-activity.component';
 
 interface LigneClassement {
   participant: ParticipantRapporte;

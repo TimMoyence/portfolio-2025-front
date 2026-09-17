@@ -32,7 +32,7 @@ import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formatio
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { CREATEUR_FLUX } from '../cours-flux.token';
-import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
 type Fixture = ComponentFixture<CoursPresentateurComponent>;
@@ -54,6 +54,8 @@ function derouleDeSeance(): DerouleCours {
     ecrans: [
       buildEcranDeroule({
         id: 'ecran-vote',
+        type: 'fp-vote',
+        donnees: { question: buildVoteQuestion() },
         corriges: [
           {
             questionId: 'Q-CAP-03',
@@ -123,12 +125,12 @@ describe('CoursPresentateurComponent', () => {
     return cible(fixture, marque) as HTMLButtonElement;
   }
 
-  function apercu(fixture: Fixture): CoursEcranComponent {
-    const ecran = fixture.debugElement.queryAll(By.directive(CoursEcranComponent)).at(0);
+  function apercu(fixture: Fixture): SlideActivityComponent {
+    const ecran = fixture.debugElement.queryAll(By.directive(SlideActivityComponent)).at(0);
     if (ecran === undefined) {
       throw new Error('Aucun apercu d ecran dans le pupitre');
     }
-    return ecran.componentInstance as CoursEcranComponent;
+    return ecran.componentInstance as SlideActivityComponent;
   }
 
   function monter(seance?: string): Fixture {
@@ -338,7 +340,7 @@ describe('CoursPresentateurComponent', () => {
       diffuser(fixture, { etat: 'en_cours', ecranCourant: 2 });
 
       expect(texte(fixture, 'presentateur-ecran')).toBe('3 / 4');
-      expect(apercu(fixture).ecran()).toBe(deroule.ecrans[2]);
+      expect(apercu(fixture).slide()).toBe(deroule.ecrans[2]);
       expect(lire(fixture, 'presentateur-demarrer')).toBeNull();
     });
 
@@ -686,7 +688,7 @@ describe('CoursPresentateurComponent', () => {
 
     expect(texte(fixture, 'presentateur-ecran')).toBe('3 / 4');
     expect(cible(fixture, 'presentateur-rythme-mode').getAttribute('data-mode')).toBe('libre');
-    expect(apercu(fixture).ecran()).toBe(deroule.ecrans[2]);
+    expect(apercu(fixture).slide()).toBe(deroule.ecrans[2]);
 
     diffuser(fixture, { etat: 'terminee', ecranCourant: 2 });
 
@@ -703,11 +705,11 @@ describe('CoursPresentateurComponent', () => {
   it('montre en scene l ecran courant du deroule avec ses notes, sans le remonter a chaque etat', async () => {
     const fixture = await ouvrirLaSeance();
     const ecran = apercu(fixture);
-    const hote = fixture.debugElement.query(By.directive(CoursEcranComponent))
+    const hote = fixture.debugElement.query(By.directive(SlideActivityComponent))
       .nativeElement as HTMLElement;
 
-    expect(ecran.ecran()).toBe(deroule.ecrans[0]);
-    expect(ecran.rendu()).toBe('stage');
+    expect(ecran.slide()).toBe(deroule.ecrans[0]);
+    expect(ecran.render()).toBe('stage');
     expect(ecran.role()).toBe('presentateur');
     expect(hote.hasAttribute('role'))
       .withContext('presentateur est un role du runtime, pas un role ARIA')
@@ -801,11 +803,21 @@ describe('CoursPresentateurComponent', () => {
 
     publier(fixture, resultatsDeLaQuestion(10, 5));
 
+    expect(apercu(fixture)?.resultats()).toEqual(resultatsDeLaQuestion(10, 5));
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector("[data-testid='cours-reponses-slide']"),
+    ).toBeNull();
     expect(cible(fixture, 'presentateur-question').getAttribute('data-etat')).toBe('sous-le-seuil');
     expect(texte(fixture, 'presentateur-question-total')).toBe('10 / 20');
     expect(texte(fixture, 'presentateur-question-part')).toMatch(/^50\s?%$/);
     expect(texte(fixture, 'presentateur-question-ne-sait-pas')).toBe('1');
     expect(texte(fixture, 'presentateur-question-seuil')).toMatch(/^70\s?%$/);
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector(
+        "[data-testid='presentateur-question-bonne-reponse']",
+      ),
+    ).toBeNull();
+    await cliquer(fixture, 'presentateur-question-reveler-correction');
     expect(texte(fixture, 'presentateur-question-bonne-reponse')).toBe('1480.24');
     const confusions = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
@@ -823,7 +835,7 @@ describe('CoursPresentateurComponent', () => {
     await cliquer(fixture, 'presentateur-remediation');
 
     expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, { ecran: 3 });
-    expect(apercu(fixture).ecran()).toBe(deroule.ecrans[3]);
+    expect(apercu(fixture).slide()).toBe(deroule.ecrans[3]);
   });
 
   for (const [cas, total, correctes] of [

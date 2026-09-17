@@ -2,8 +2,8 @@
   --accent: #{$accent};
   --accent-hover: #{$accent-hover};
   --accent-dark: #{$accent-dark};
-  --slide-deck-bg: #ffffff;
-  --card-bg: #ffffff;
+  --slide-deck-bg: var(--bg, var(--cream, #fffaf2));
+  --card-bg: var(--surface, var(--ivory, #fbf3e6));
   --card-bg-soft: var(--slide-card-soft);
   --text: var(--ink);
   --text-muted: var(--slide-text-muted);

@@ -597,3 +597,169 @@ export function buildDeckState(overrides: Partial<DeckState> = {}): DeckState {
     ...overrides,
   };
 }
+
+export function buildCoursB2SansQuestions(): CoursContent {
+  const concepts = ['proportion', 'pourcentage', 'taux-evolution'];
+  const meta = (dureeMinutes: number) =>
+    creerMetadonneesBrique({
+      concepts,
+      misconceptionsCiblees: [],
+      dureeMinutes,
+      modalite: 'classe',
+      regime: 'ouvert',
+    });
+  const recit = (
+    id: string,
+    titre: string,
+    paragraphes: readonly string[],
+    duree: number,
+  ): EcranContent => ({
+    id,
+    type: 'fp-story',
+    duree,
+    interactif: false,
+    donnees: {
+      recit: {
+        id,
+        titre,
+        paragraphes,
+        metadonnees: meta(duree),
+      },
+    },
+  });
+  const cas = (
+    id: string,
+    metier: string,
+    situation: string,
+    geste: string,
+    consequence: string,
+    duree: number,
+  ): EcranContent => ({
+    id,
+    type: 'fp-pro',
+    duree,
+    interactif: false,
+    donnees: {
+      cas: {
+        id,
+        metier,
+        situation,
+        geste,
+        consequence,
+        metadonnees: meta(duree),
+      },
+    },
+  });
+
+  return {
+    id: 'b2-01-traitement-information-chiffree',
+    titre: 'Lire et contrôler l’information chiffrée',
+    niveau: 'B2',
+    duree: 90,
+    concepts,
+    ecrans: [
+      recit(
+        'B2-01-01-CADRAGE',
+        'Un chiffre n’est pas encore une information',
+        [
+          'Un tableau peut être exact et pourtant conduire à une mauvaise décision.',
+          'Lire commence par identifier le périmètre, l’unité et la période.',
+        ],
+        6,
+      ),
+      cas(
+        'B2-01-02-MISSION',
+        'Contrôle de gestion',
+        'Une direction reçoit un total de ventes et plusieurs sous-totaux.',
+        'Reformuler la demande : quelle partie, quel total de référence, quelle période ?',
+        'Un calcul juste peut répondre à la mauvaise question.',
+        8,
+      ),
+      recit(
+        'B2-01-03-BASE',
+        'La base donne son sens au pourcentage',
+        [
+          'Une part relie une valeur étudiée à un total de référence.',
+          'Avant de calculer, formuler : cette valeur représente quelle part de quoi ?',
+        ],
+        7,
+      ),
+      cas(
+        'B2-01-04-PARTIE-TOTAL',
+        'Responsable d’activité',
+        'Le total mensuel est connu, mais une ligne de produit doit être comparée au portefeuille.',
+        'Séparer la partie, le total et la relation entre les deux.',
+        'Cette distinction évite de comparer des périmètres différents.',
+        7,
+      ),
+      recit(
+        'B2-01-05-POURCENTAGE',
+        'Un pourcentage est une relation',
+        [
+          '32 % signifie 32 pour 100 : il compare une partie à sa base.',
+          'Une présentation fiable donne la valeur, le pourcentage et la phrase d’interprétation.',
+        ],
+        8,
+      ),
+      cas(
+        'B2-01-06-EVOLUTION',
+        'Analyste commercial',
+        'Le chiffre d’affaires passe de 120 à 150 k€ entre deux périodes.',
+        'Comparer l’écart à la valeur de départ et annoncer le sens de l’évolution.',
+        'L’écart mesure des k€ ; le taux mesure une variation relative.',
+        8,
+      ),
+      recit(
+        'B2-01-07-COEFFICIENT',
+        'Le coefficient rend l’évolution calculable',
+        [
+          'Une hausse de 12 % conserve 100 % et ajoute 12 % : le coefficient est 1,12.',
+          'Pour une baisse, le coefficient est inférieur à 1.',
+        ],
+        7,
+      ),
+      cas(
+        'B2-01-08-CONTROLE',
+        'Révision comptable',
+        'Un tableau de bord affiche une variation et un montant final.',
+        'Contrôler le signe, l’unité, l’ordre de grandeur et la cohérence du résultat.',
+        'Un contrôle court repère souvent une base inversée ou une virgule déplacée.',
+        8,
+      ),
+      recit(
+        'B2-01-09-EVOLUTIONS-SUCCESSIVES',
+        'Deux évolutions se composent',
+        [
+          'La seconde évolution s’applique à la nouvelle valeur : les taux ne s’additionnent pas mécaniquement.',
+          'Les coefficients permettent de garder le fil et d’expliquer le résultat.',
+        ],
+        8,
+      ),
+      cas(
+        'B2-01-10-DECISION',
+        'Comité de pilotage',
+        'Une évolution est calculée, mais le comité doit décider d’une action.',
+        'Présenter la période, la base, l’unité et une interprétation prudente.',
+        'La communication ne masque ni le périmètre ni les limites de la donnée.',
+        8,
+      ),
+      recit(
+        'B2-01-11-CHECKLIST',
+        'La checklist avant de transmettre',
+        [
+          'Quelle est la question ? Quelle est la base ? Quelle unité ? Quel ordre de grandeur ?',
+          'Puis : calculer, contrôler, écrire une phrase qui répond à la demande.',
+        ],
+        7,
+      ),
+      cas(
+        'B2-01-12-SYNTHESE',
+        'Lecteur de données',
+        'Toute information chiffrée arrive avec un contexte, un périmètre et une décision à éclairer.',
+        'Identifier la relation, choisir le calcul adapté, puis vérifier avant de conclure.',
+        'Lire, contrôler et expliquer : c’est l’essentiel du B2-01.',
+        8,
+      ),
+    ],
+  };
+}

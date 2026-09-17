@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
-import type { DerouleCours, EcranContent } from '../src/cours/content/types';
-import sujetB201 from '../src/testing/fixtures/cours/b2-01-traitement-information-chiffree.sujet.json';
+import type { DerouleCours } from '../src/cours/content/types';
+import { buildCoursB2SansQuestions } from '../src/testing/factories/cours.factory';
 
 const API = 'http://localhost:3000/api/v1/portfolio25';
 const SESSION = '11111111-1111-4111-8111-111111111111';
@@ -15,17 +15,7 @@ const CORS_HEADERS = {
   'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
 };
 
-const BONNES_REPONSES_B201 = new Map<string, string>([
-  ['B2-01-RAPPEL-PART-TOTAL', 'o2'],
-  ['B2-01-CHOIX-REFERENCE', 'o1'],
-  ['B2-01-MONTANT-POURCENTAGE', '750'],
-  ['B2-01-FORMULE-TABLEUR', 'o2'],
-  ['B2-01-TAUX-EVOLUTION', '30'],
-  ['B2-01-TOTAL-DEPUIS-PART', '3800'],
-  ['B2-01-CONTROLE-COHERENCE', 'o3'],
-  ['B2-01-TRANSFERT-METHODE', 'o1'],
-  ['B2-01-SORTIE-METHODE', 'o3'],
-]);
+const sujetB201 = buildCoursB2SansQuestions();
 
 function sse(etat: Record<string, unknown>): string {
   return `event: etat\ndata: ${JSON.stringify(etat)}\n\n`;
@@ -39,48 +29,13 @@ async function repondre(route: Route, body: unknown, status = 200): Promise<void
   });
 }
 
-function identifiantsDesQuestions(ecran: EcranContent): readonly string[] {
-  const donnees = ecran.donnees;
-  let montages: readonly unknown[];
-  if (ecran.type === 'questionnaire') {
-    montages = Array.isArray(donnees?.['questions']) ? donnees['questions'] : [];
-  } else {
-    montages = [{ brique: ecran.type, donnees }];
-  }
-
-  return montages.flatMap((montage) => {
-    if (typeof montage !== 'object' || montage === null || Array.isArray(montage)) {
-      return [];
-    }
-    const donneesDeBrique = (montage as Record<string, unknown>)['donnees'];
-    if (
-      typeof donneesDeBrique !== 'object' ||
-      donneesDeBrique === null ||
-      Array.isArray(donneesDeBrique)
-    ) {
-      return [];
-    }
-    const porteurRecord = donneesDeBrique as Record<string, unknown>;
-    const porteur = porteurRecord['question'] ?? porteurRecord['billet'];
-    if (typeof porteur !== 'object' || porteur === null || Array.isArray(porteur)) {
-      return [];
-    }
-    const porteurObjet = porteur as Record<string, unknown>;
-    return typeof porteurObjet['id'] === 'string' ? [porteurObjet['id']] : [];
-  });
-}
-
 const derouleB201: DerouleCours = {
   ...sujetB201,
   ecrans: sujetB201.ecrans.map((ecran, index) => ({
     ...ecran,
     notes: `Étape ${index + 1} : faire verbaliser la décision avant le passage à l’écran suivant.`,
-    seuil: ecran.interactif ? 0.7 : null,
-    corriges: identifiantsDesQuestions(ecran).map((questionId) => ({
-      questionId,
-      bonneReponse: BONNES_REPONSES_B201.get(questionId) ?? 'non définie',
-      confusions: [],
-    })),
+    seuil: null,
+    corriges: [],
   })),
   remediations: {},
 };
@@ -215,15 +170,15 @@ test.describe('B2-01 — parcours visuel complet', () => {
         `${index + 1} / ${derouleB201.ecrans.length}`,
       );
       await expect(page.getByTestId('presentateur-notes')).toBeVisible();
-      await expect(page.getByTestId('cours-ecran-echec')).toHaveCount(0);
-      await expect(page.getByTestId('cours-ecran-inconnu')).toHaveCount(0);
+      await expect(page.getByTestId('slide-activity-error')).toHaveCount(0);
+      await expect(page.getByTestId('slide-activity-unknown')).toHaveCount(0);
 
       const nombreDeBriques =
         ecran.type === 'questionnaire' && Array.isArray(ecran.donnees?.['questions'])
           ? ecran.donnees['questions'].length
           : 1;
       await expect(
-        page.locator('app-cours-ecran [data-testid="cours-ecran-hote"] > *'),
+        page.locator('app-slide-activity [data-testid="slide-activity-host"] > *'),
       ).toHaveCount(nombreDeBriques);
     }
 
@@ -240,9 +195,12 @@ test.describe('B2-01 — parcours visuel complet', () => {
     await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
 
     await expect(page.getByTestId('etudiant-seance')).toBeVisible();
-    await expect(page.getByTestId('etudiant-progression')).toHaveText('1 / 60');
-    await expect(page.locator('app-cours-ecran')).toBeVisible();
-    await expect(page.locator('app-cours-ecran fp-recall')).toHaveCount(1);
+    await expect(page.getByTestId('etudiant-progression')).toHaveText('1 / 12');
+    await expect(page.locator('app-slide-activity')).toBeVisible();
+    await expect(page.locator('app-slide-activity fp-recall')).toHaveCount(0);
+    await expect(
+      page.locator('app-slide-activity fp-story, app-slide-activity fp-pro'),
+    ).toHaveCount(1);
     await expect(page.getByTestId('presentateur-slider')).toHaveCount(0);
     await expect(page.getByTestId('etudiant-slider')).toHaveCount(0);
   });

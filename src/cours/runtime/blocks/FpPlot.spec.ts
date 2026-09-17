@@ -65,35 +65,12 @@ function horsZoneDeTrace(hote: FpPlot): string[] {
   });
 }
 
-function glissiere(hote: FpPlot, cle: string): HTMLInputElement {
-  const trouvee = hote.shadowRoot?.querySelector<HTMLInputElement>(
-    `[data-testid="curseur"][data-cle="${cle}"]`,
-  );
-  if (!(trouvee instanceof HTMLInputElement)) {
-    throw new Error(`aucun curseur pour ${cle}`);
+function animer(hote: FpPlot): void {
+  const bouton = hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="animer"]');
+  if (bouton === null || bouton === undefined) {
+    throw new Error('aucun bouton d animation');
   }
-  return trouvee;
-}
-
-function regler(hote: FpPlot, cle: string, valeur: number): void {
-  const curseur = glissiere(hote, cle);
-  curseur.value = String(valeur);
-  curseur.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-function reglerSansBornageDuNavigateur(hote: FpPlot, cle: string, valeur: number): void {
-  const curseur = glissiere(hote, cle);
-  curseur.min = String(Math.min(valeur, 0));
-  curseur.max = String(Math.max(valeur, 0));
-  curseur.step = 'any';
-  curseur.value = String(valeur);
-  curseur.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-function toucher(hote: FpPlot, cle: string, touche: string): void {
-  glissiere(hote, cle).dispatchEvent(
-    new KeyboardEvent('keydown', { key: touche, bubbles: true, cancelable: true }),
-  );
+  bouton.click();
 }
 
 function valeurAffichee(hote: FpPlot, cle: string): string {
@@ -212,32 +189,51 @@ describe('FpPlot', () => {
     expect(repere(hote, 'graphique')?.getAttribute('role')).toBe('img');
   });
 
+  it('rend la source du graphique comme un lien quand elle est fournie', () => {
+    hote.definition = buildPlotDefinition({
+      id: 'K-SOURCE-06',
+      source: 'Données recréées pour le cours',
+      sourceUrl: 'https://example.com/source',
+    });
+
+    const source = hote.shadowRoot?.querySelector('[data-testid="source"]');
+    expect(source?.querySelector('a')?.getAttribute('href')).toBe('https://example.com/source');
+  });
+
   it('donne les valeurs cles en tableau equivalent a la courbe', () => {
     expect(textesDe(hote, 'depart')).toEqual(['1000', '1000']);
     expect(textesDe(hote, 'arrivee')).toEqual(['2191,12', '1800']);
     expect(texteDe(hote, 'synthese')).toContain('Écart entre les deux courbes : 391,12');
   });
 
-  it('redessine la courbe et la synthese quand un curseur bouge', () => {
+  it('redessine la courbe et la synthese quand la demonstration est lancée', () => {
     const avant = points(hote, 'compose');
-    regler(hote, 'i', 10);
-    expect(hote.valeurs).toEqual({ C: 1000, i: 10 });
+    animer(hote);
+    expect(hote.valeurs['i']).toBeGreaterThan(4);
     expect(points(hote, 'compose')).not.toEqual(avant);
-    expect(textesDe(hote, 'arrivee')).toEqual(['6727,5', '3000']);
-    expect(valeurAffichee(hote, 'i')).toBe('10');
+    expect(Number(valeurAffichee(hote, 'i').replace(',', '.'))).toBeGreaterThan(4);
   });
 
-  it('ramene dans les bornes une valeur poussee au-dela du maximum par l entree', () => {
-    reglerSansBornageDuNavigateur(hote, 'C', 99999);
-    expect(hote.valeurs['C']).toBe(5000);
-    expect(valeurAffichee(hote, 'C')).toBe('5000');
-    expect(textesDe(hote, 'depart')).toEqual(['5000', '5000']);
-    reglerSansBornageDuNavigateur(hote, 'C', -400);
-    expect(hote.valeurs['C']).toBe(100);
-    expect(valeurAffichee(hote, 'C')).toBe('100');
+  it('respecte des bornes verticales pilotées par un parametre anime', () => {
+    hote.definition = buildPlotDefinition({
+      id: 'K-AXE-PILOTE',
+      abscisse: { libelle: 'Période', min: 1, max: 4 },
+      bornesOrdonnee: { minParametre: 'origine', max: 120 },
+      parametres: [
+        { cle: 'origine', libelle: 'Origine de l’axe', min: 0, max: 98, pas: 1, defaut: 0 },
+      ],
+      series: [{ id: 'serie', libelle: 'Série', trait: 'plein', calcul: '100 + x * 2' }],
+    });
+
+    const avant = textesDe(hote, 'graduation-y');
+    animer(hote);
+    const apres = textesDe(hote, 'graduation-y');
+
+    expect(avant[0]).toBe('0');
+    expect(apres).not.toEqual(avant);
   });
 
-  it('ramene dans les bornes un defaut hors plage et la fleche qui depasse', () => {
+  it('ramene dans les bornes un defaut hors plage', () => {
     hote.definition = buildPlotDefinition({
       id: 'K-COURBE-DEFAUT',
       parametres: DEFINITION.parametres.map((parametre) =>
@@ -246,29 +242,18 @@ describe('FpPlot', () => {
     });
     expect(hote.valeurs['C']).toBe(5000);
     expect(valeurAffichee(hote, 'C')).toBe('5000');
-    toucher(hote, 'C', 'ArrowRight');
-    expect(hote.valeurs['C']).toBe(5000);
-    expect(valeurAffichee(hote, 'C')).toBe('5000');
   });
 
-  it('deplace les curseurs au clavier par pas et rend le focus a celui qui bouge', () => {
-    toucher(hote, 'i', 'ArrowUp');
-    expect(hote.valeurs['i']).toBe(4.5);
-    toucher(hote, 'i', 'ArrowLeft');
-    expect(hote.valeurs['i']).toBe(4);
-    expect(valeurAffichee(hote, 'i')).toBe('4');
-    expect(hote.shadowRoot?.activeElement?.getAttribute('data-cle')).toBe('i');
-  });
-
-  it('annonce chaque curseur en francais lisible et pas par un nombre nu', () => {
-    for (const curseur of reperes(hote, 'curseur')) {
-      const enonce = curseur.getAttribute('aria-valuetext') ?? '';
+  it('annonce chaque parametre en francais lisible et pas par un nombre nu', () => {
+    for (const valeur of reperes(hote, 'valeur')) {
+      const enonce = valeur.getAttribute('aria-label') ?? '';
       expect(enonce).not.toMatch(/^[\s\d,.]*$/);
       expect(enonce).toContain(' : ');
     }
-    expect(glissiere(hote, 'C').getAttribute('aria-valuetext')).toBe(
+    expect(repere(hote, 'valeur')?.getAttribute('aria-label')).toBe(
       'Capital place en euros : 1000 (de 100 à 5000)',
     );
+    expect(hote.shadowRoot?.querySelector('input[type="range"]')).toBeNull();
   });
 
   it('echappe le html injecte dans les libelles des axes et des series', () => {
@@ -282,13 +267,17 @@ describe('FpPlot', () => {
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(texteDe(hote, 'titre-svg')).toContain(CHARGE_XSS);
     expect(texteDe(hote, 'description-svg')).toContain(CHARGE_XSS);
-    expect(glissiere(hote, 'C').getAttribute('aria-valuetext')).toContain(CHARGE_XSS);
+    expect(
+      hote.shadowRoot
+        ?.querySelector('[data-testid="valeur"][data-cle="C"]')
+        ?.getAttribute('aria-label'),
+    ).toContain(CHARGE_XSS);
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
   it('retire les curseurs en projection et affiche les reperes au tableau', () => {
     hote.setAttribute('render', 'stage');
-    expect(reperes(hote, 'curseur')).toEqual([]);
+    expect(reperes(hote, 'animer')).toEqual([]);
     expect(repere(hote, 'synthese')?.classList.contains('fp-enonce')).toBe(true);
     hote.setAttribute('render', 'board');
     expect(texteDe(hote, 'modalite')).toBe(DEFINITION.metadonnees.modalite);
@@ -303,9 +292,8 @@ describe('FpPlot', () => {
   });
 
   it('n ecrit dans aucun stockage et n annonce que l exploration', () => {
-    regler(hote, 'i', 6);
-    toucher(hote, 'C', 'ArrowDown');
-    expect(traces.evenements).toEqual(['fp-plot-explore', 'fp-plot-explore']);
+    animer(hote);
+    expect(traces.evenements).toContain('fp-plot-explore');
     expect(traces.ecritures).toEqual([]);
   });
 

@@ -167,7 +167,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
     await rejoindre(page);
 
     await expect(page.getByTestId('etudiant-seance')).toBeVisible();
-    await expect(page.locator('app-cours-ecran')).toBeVisible();
+    await expect(page.locator('app-slide-activity')).toBeVisible();
 
     await page.evaluate(() => window.dispatchEvent(new Event('offline')));
     await page.locator('fp-vote [data-testid="option"]').first().click();

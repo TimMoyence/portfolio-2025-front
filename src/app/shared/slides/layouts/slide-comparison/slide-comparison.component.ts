@@ -17,5 +17,7 @@ export interface ComparisonColumn {
 })
 export class SlideComparisonComponent {
   readonly title = input<string>('');
+  readonly subtitle = input<string>('');
+  readonly note = input<string>('');
   readonly columns = input.required<ComparisonColumn[]>();
 }

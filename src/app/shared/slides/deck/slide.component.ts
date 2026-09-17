@@ -16,7 +16,7 @@ export type SlideVisibility = 'both' | 'scroll-only' | 'present-only';
 
 /**
  * Le contenu passe par un `TemplateRef` pour que `SlideDeckComponent` puisse
- * le projeter dans un `<swiper-slide>` enfant direct en mode fullscreen —
+ * le projeter dans un `<swiper-slide>` enfant direct en mode fullscreen.
  * pre-requis de Swiper Element.
  */
 @Component({
@@ -51,6 +51,7 @@ export type SlideVisibility = 'both' | 'scroll-only' | 'present-only';
       min-height: 100vh;
       scroll-snap-align: start;
       scroll-snap-stop: always;
+      scroll-margin-top: 6rem;
       display: flex;
       flex-direction: column;
       width: 100%;

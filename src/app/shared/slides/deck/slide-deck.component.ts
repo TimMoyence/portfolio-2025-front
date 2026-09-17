@@ -72,6 +72,7 @@ export class SlideDeckComponent implements AfterViewInit {
   });
 
   private scrollListener: (() => void) | null = null;
+  private hashListener: (() => void) | null = null;
   private rafId: number | null = null;
 
   constructor() {
@@ -101,6 +102,7 @@ export class SlideDeckComponent implements AfterViewInit {
     this.whenOutletTemplatesRendered(() => {
       this.bootstrapInitialSlide();
       this.attachScrollListener();
+      this.attachHashListener();
     });
   }
 
@@ -110,9 +112,62 @@ export class SlideDeckComponent implements AfterViewInit {
 
   private bootstrapInitialSlide(): void {
     const list = this.visibleSlides();
-    if (list.length > 0 && this.service.current() === null) {
+    if (list.length === 0) {
+      return;
+    }
+
+    const requestedId = this.requestedHashId();
+    const requestedSlide = list.find((slide) => slide.id() === requestedId);
+    if (requestedSlide) {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      this.service.goTo(requestedSlide.id());
+      this.scrollToSlide(requestedSlide.id(), 'auto');
+      return;
+    }
+
+    if (this.service.current() === null) {
       this.service.goTo(list[0].id());
     }
+  }
+
+  private attachHashListener(): void {
+    const onHashChange = () => {
+      const requestedId = this.requestedHashId();
+      if (requestedId) {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        this.scrollToSlide(requestedId, 'smooth');
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    this.hashListener = () => window.removeEventListener('hashchange', onHashChange);
+    this.destroyRef.onDestroy(() => this.hashListener?.());
+  }
+
+  private requestedHashId(): string | null {
+    const rawHash = window.location.hash.slice(1);
+    if (!rawHash) {
+      return null;
+    }
+    try {
+      return decodeURIComponent(rawHash);
+    } catch {
+      return rawHash;
+    }
+  }
+
+  private scrollToSlide(id: string, behavior: ScrollBehavior): void {
+    const root = this.deckRef().nativeElement;
+    const target = Array.from(root.querySelectorAll<HTMLElement>('section.slide')).find(
+      (section) => section.id === id,
+    );
+    if (!target) {
+      return;
+    }
+    this.service.goTo(id);
+    const rootRect = root.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const top = root.scrollTop + targetRect.top - rootRect.top;
+    root.scrollTo({ top, behavior });
   }
 
   private attachScrollListener(): void {

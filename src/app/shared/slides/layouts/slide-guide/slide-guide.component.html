@@ -1,0 +1,40 @@
+<section class="slide-guide">
+  <header class="slide-guide__header">
+    <h2>{{ title() }}</h2>
+    @if (subtitle()) {
+      <p class="slide-guide__subtitle">{{ subtitle() }}</p>
+    }
+  </header>
+
+  <div class="slide-guide__body">
+    @if (context()) {
+      <p class="slide-guide__context">{{ context() }}</p>
+    }
+
+    <ol class="slide-guide__steps">
+      @for (item of items(); track item.title) {
+        <li>
+          <span class="slide-guide__number" aria-hidden="true">{{ $index + 1 }}</span>
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+            @if (item.detail) {
+              <p class="slide-guide__detail">{{ item.detail }}</p>
+            }
+          </div>
+        </li>
+      }
+    </ol>
+  </div>
+
+  @if (takeaway() || nextAction()) {
+    <footer class="slide-guide__footer">
+      @if (takeaway()) {
+        <p><strong>À retenir</strong>{{ takeaway() }}</p>
+      }
+      @if (nextAction()) {
+        <p><strong>Geste professionnel</strong>{{ nextAction() }}</p>
+      }
+    </footer>
+  }
+</section>

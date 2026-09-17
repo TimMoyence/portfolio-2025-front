@@ -110,7 +110,7 @@ describe('FormationsListComponent', () => {
     expect(b2).toBeDefined();
     expect(b2?.link).toBe('/cours/rejoindre');
     expect(b2?.title).toContain('B2-01');
-    expect(b2?.meta.some((row) => row.value.includes('60 écrans'))).toBeTrue();
+    expect(b2?.meta.some((row) => row.value.includes('12 écrans'))).toBeTrue();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const card = compiled.querySelector('.formation.formation--live');
