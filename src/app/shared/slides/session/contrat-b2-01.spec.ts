@@ -59,6 +59,7 @@ import type {
   VerdictTentative,
 } from '../../../core/ports/formations.port';
 import type { DirectEcran, EtatPulse, EvenementBrique, RetourBrique } from './contrat-hote';
+import { ECRAN_VERROUILLE, PROPRIETES_PAR_BRIQUE } from './lecture-ecran';
 
 const METADONNEES: MetadonneesBrique = buildPulseSondage().metadonnees;
 
@@ -171,7 +172,14 @@ describe('Contrats figés du cours B2-01 V3 côté front (§ 9, lot 0)', () => {
       } satisfies ResultatsEnDirect;
       const types: TypeQuestion[] = Object.keys(enDirect.bareme.parType) as TypeQuestion[];
 
-      expect(types.length).toBe(6);
+      expect([...types].sort((a, b) => a.localeCompare(b))).toEqual([
+        'classement',
+        'enigme',
+        'feuille',
+        'numeric',
+        'tableau',
+        'vote',
+      ]);
       expect(enDirect.questions[0].parCle?.['E3']?.justes).toBe(19);
     });
 
@@ -404,7 +412,17 @@ describe('Contrats figés du cours B2-01 V3 côté front (§ 9, lot 0)', () => {
         'ecran-verrouille': {},
       } satisfies DonneesParBrique;
 
-      expect(Object.keys(donnees).length).toBe(18);
+      const briquesDuContrat = Object.keys(donnees).filter(
+        (type) => type !== 'questionnaire' && type !== ECRAN_VERROUILLE,
+      );
+      const briquesMontables = Object.keys(PROPRIETES_PAR_BRIQUE);
+
+      expect([...briquesDuContrat].sort((a, b) => a.localeCompare(b))).toEqual(
+        briquesMontables
+          .filter((brique) => brique !== 'fp-quote')
+          .sort((a, b) => a.localeCompare(b)),
+      );
+      expect(briquesMontables).toContain('fp-quote');
       expect(SPACED.boite).toBe(1);
       expect(JSON.stringify(donnees['fp-escape'])).not.toContain('fragment');
     });
@@ -463,30 +481,41 @@ describe('Contrats figés du cours B2-01 V3 côté front (§ 9, lot 0)', () => {
       } satisfies DirectEcran;
       const directEtudiant: DirectEcran = { pilotage: {}, resultats: null, comptesJalon: null };
 
-      expect(evenements.map((evenement) => evenement.kind)).toHaveSize(6);
-      expect(retours.map((retour) => retour.kind)).toHaveSize(8);
+      expect(
+        evenements.map((evenement) => evenement.kind).sort((a, b) => a.localeCompare(b)),
+      ).toEqual(['defi', 'jalon', 'libre', 'production', 'reponse', 'tentative']);
+      expect(retours.map((retour) => retour.kind).sort((a, b) => a.localeCompare(b))).toEqual([
+        'deja-repondu',
+        'progression-enigmes',
+        'rappels',
+        'refus',
+        'strategies',
+        'tentative',
+        'verdict-production',
+        'verdict-reponse',
+      ]);
       expect([direct.resultats.length, directEtudiant.resultats]).toEqual([1, null]);
     });
 
-    it('refuse à la compilation les formes hors contrat', () => {
-      const refusees = [
-        {
-          ...PARCOURS,
-          enigmes: [
-            {
-              ...PARCOURS.enigmes[0],
-              // @ts-expect-error une énigme publique ne porte aucun fragment
-              fragment: '7',
-            },
-          ],
-        } satisfies EscapeParcoursPublic,
-        // @ts-expect-error « je ne sais pas » ne s’envoie qu’à vrai
-        { type: 'tableau', neSaitPas: false } satisfies ValeurProduction,
-        // @ts-expect-error la boîte de Leitner va de 1 à 3
-        { ...SPACED, boite: 4 } satisfies SpacedQuestionPublique,
-      ];
+    it('refuse à la compilation les formes hors contrat (assertion tenue par tsc)', () => {
+      const parcoursRefuse = {
+        ...PARCOURS,
+        enigmes: [
+          {
+            ...PARCOURS.enigmes[0],
+            // @ts-expect-error une énigme publique ne porte aucun fragment
+            fragment: '7',
+          },
+        ],
+      } satisfies EscapeParcoursPublic;
+      // @ts-expect-error « je ne sais pas » ne s’envoie qu’à vrai
+      const productionRefusee = { type: 'tableau', neSaitPas: false } satisfies ValeurProduction;
+      // @ts-expect-error la boîte de Leitner va de 1 à 3
+      const rappelRefuse = { ...SPACED, boite: 4 } satisfies SpacedQuestionPublique;
 
-      expect(refusees.length).toBe(3);
+      expect(Object.keys(parcoursRefuse.enigmes[0])).toContain('fragment');
+      expect(Object.keys(productionRefusee)).toEqual(['type', 'neSaitPas']);
+      expect(rappelRefuse.boite).toBe(4);
     });
   });
 
