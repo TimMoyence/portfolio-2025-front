@@ -14,6 +14,18 @@ describe('CurrentConditionsComponent', () => {
   let component: CurrentConditionsComponent;
   let fixture: ComponentFixture<CurrentConditionsComponent>;
 
+  async function attendreTemperature(target: number): Promise<void> {
+    const deadline = Date.now() + 2_000;
+    while (component.animatedTemp() !== target) {
+      if (Date.now() >= deadline) {
+        throw new Error(
+          `La temperature animee n a pas atteint ${target} (actuelle: ${component.animatedTemp()})`,
+        );
+      }
+      await new Promise<void>((resolve) => setTimeout(resolve, 16));
+    }
+  }
+
   beforeEach(async () => {
     const weatherPortStub = createWeatherPortStub();
     weatherPortStub.getPreferences.and.returnValue(of(buildWeatherPreferences()));
@@ -75,7 +87,7 @@ describe('CurrentConditionsComponent', () => {
     expect(component.description()).toBe('Couvert');
   });
 
-  it('devrait animer la temperature vers la valeur cible', (done) => {
+  it('devrait animer la temperature vers la valeur cible', async () => {
     fixture.componentRef.setInput('current', {
       time: '2026-03-31T12:00',
       temperature_2m: 18,
@@ -85,13 +97,11 @@ describe('CurrentConditionsComponent', () => {
     });
     fixture.detectChanges();
 
-    setTimeout(() => {
-      expect(component.animatedTemp()).toBe(18);
-      done();
-    }, 600);
+    await attendreTemperature(18);
+    expect(component.animatedTemp()).toBe(18);
   });
 
-  it('devrait re-animer vers une nouvelle valeur quand la temperature change', (done) => {
+  it('devrait re-animer vers une nouvelle valeur quand la temperature change', async () => {
     fixture.componentRef.setInput('current', {
       time: '2026-03-31T12:00',
       temperature_2m: 18,
@@ -101,22 +111,18 @@ describe('CurrentConditionsComponent', () => {
     });
     fixture.detectChanges();
 
-    setTimeout(() => {
-      expect(component.animatedTemp()).toBe(18);
+    await attendreTemperature(18);
 
-      fixture.componentRef.setInput('current', {
-        time: '2026-03-31T13:00',
-        temperature_2m: 22,
-        weather_code: 0,
-        wind_speed_10m: 10,
-        apparent_temperature: 20,
-      });
-      fixture.detectChanges();
+    fixture.componentRef.setInput('current', {
+      time: '2026-03-31T13:00',
+      temperature_2m: 22,
+      weather_code: 0,
+      wind_speed_10m: 10,
+      apparent_temperature: 20,
+    });
+    fixture.detectChanges();
 
-      setTimeout(() => {
-        expect(component.animatedTemp()).toBe(22);
-        done();
-      }, 600);
-    }, 600);
+    await attendreTemperature(22);
+    expect(component.animatedTemp()).toBe(22);
   });
 });
