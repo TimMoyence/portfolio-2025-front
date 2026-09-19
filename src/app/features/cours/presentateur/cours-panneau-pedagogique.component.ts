@@ -1,4 +1,4 @@
-import { isPlatformBrowser, PercentPipe } from '@angular/common';
+import { PercentPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,11 +6,13 @@ import {
   effect,
   inject,
   input,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import type { EcranDeroule, ResultatQuestion } from '../../../../cours/content/types';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
+import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import type { GroupeFormation } from '../../../core/ports/formations.port';
 
 interface LectureClasse {
   readonly reponses: number;
@@ -166,6 +168,38 @@ function resultatDe(
       font-size: 0.72rem;
     }
 
+    .pedagogie-groups {
+      display: grid;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pedagogie-groups li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .pedagogie-groups button,
+    .pedagogie-create-group button {
+      border: 1px solid rgba(12, 9, 2, 0.16);
+      border-radius: 0.45rem;
+      background: var(--teal, #4fb3a2);
+      color: var(--ivory, #fbf3e6);
+      cursor: pointer;
+      font: inherit;
+      padding: 0.45rem 0.65rem;
+    }
+
+    .pedagogie-create-group {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.45rem;
+    }
+
     @media (max-width: 520px) {
       .pedagogie-confidence {
         grid-template-columns: 1fr;
@@ -228,6 +262,51 @@ function resultatDe(
         </dd>
       </dl>
 
+      <dl class="pedagogie-block">
+        <dt>Réponses libres étudiantes</dt>
+        <dd>
+          @if (reponsesLibres().length === 0) {
+            <span>Aucune réponse reçue sur cet écran.</span>
+          } @else {
+            <ul>
+              @for (reponse of reponsesLibres(); track reponse.id) {
+                @if (reponse.screenId === ecran().id) {
+                  <li>{{ reponse.response }}</li>
+                }
+              }
+            </ul>
+          }
+        </dd>
+      </dl>
+
+      <div class="pedagogie-block">
+        <dt>Groupes de suivi</dt>
+        @if (groupes().length === 0) {
+          <span class="pedagogie-local">Aucun groupe créé pour cette séance.</span>
+        } @else {
+          <ul class="pedagogie-groups">
+            @for (groupe of groupes(); track groupe.id) {
+              <li>
+                <input
+                  [value]="groupe.name"
+                  [attr.aria-label]="'Nom du groupe ' + groupe.name"
+                  (change)="renommerGroupe(groupe, $event)"
+                />
+              </li>
+            }
+          </ul>
+        }
+        <div class="pedagogie-create-group">
+          <input
+            [value]="nouveauGroupe()"
+            aria-label="Nouveau groupe"
+            placeholder="Nouveau groupe"
+            (input)="saisirNouveauGroupe($event)"
+          />
+          <button type="button" (click)="creerGroupe()">Créer</button>
+        </div>
+      </div>
+
       <div class="pedagogie-form pedagogie-block">
         <label for="presentateur-groupe">Groupe suivi</label>
         <input
@@ -244,7 +323,7 @@ function resultatDe(
           (input)="saisirNote($event)"
           placeholder="Observation, étudiant à relancer, exemple à reprendre…"
         ></textarea>
-        <small class="pedagogie-local">Notes conservées sur ce poste pour cette séance.</small>
+        <small class="pedagogie-local">Notes synchronisées avec le serveur de la séance.</small>
       </div>
     </section>
   `,
@@ -259,8 +338,14 @@ export class CoursPanneauPedagogiqueComponent {
 
   protected readonly note = signal('');
   protected readonly groupe = signal('Classe entière');
+  protected readonly reponsesLibres = signal<
+    readonly { id: string; screenId: string; response: string }[]
+  >([]);
+  protected readonly groupes = signal<readonly GroupeFormation[]>([]);
+  protected readonly nouveauGroupe = signal('');
+  protected readonly sauvegarde = signal<'repos' | 'enregistre' | 'echec'>('repos');
 
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly formations = inject(FORMATIONS_PORT, { optional: true });
 
   protected readonly objectif = computed(
     () =>
@@ -324,36 +409,116 @@ export class CoursPanneauPedagogiqueComponent {
 
   constructor() {
     effect(() => {
-      const key = this.storageKey();
-      if (key === null || !isPlatformBrowser(this.platformId)) {
+      const sessionId = this.sessionId();
+      const screenId = this.ecran().id;
+      if (sessionId === null || this.formations === null) {
         return;
       }
-      this.note.set(localStorage.getItem(`${key}:note`) ?? '');
-      this.groupe.set(localStorage.getItem(`${key}:groupe`) ?? 'Classe entière');
+      void this.chargerAnnotations(sessionId, screenId);
+      void this.chargerReponsesLibres(sessionId);
+      void this.chargerGroupes(sessionId);
     });
   }
-
-  private readonly storageKey = computed(() => {
-    const sessionId = this.sessionId();
-    return sessionId === null ? null : `cours-formateur:${sessionId}:${this.ecran().id}`;
-  });
 
   protected saisirNote(event: Event): void {
     const value = (event.target as HTMLTextAreaElement).value;
     this.note.set(value);
-    this.enregistrer('note', value);
+    void this.enregistrer(value);
   }
 
   protected saisirGroupe(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.groupe.set(value);
-    this.enregistrer('groupe', value);
+    if (this.note().trim() !== '') {
+      void this.enregistrer(this.note());
+    }
   }
 
-  private enregistrer(type: 'note' | 'groupe', value: string): void {
-    const key = this.storageKey();
-    if (key !== null && isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(`${key}:${type}`, value);
+  protected saisirNouveauGroupe(event: Event): void {
+    this.nouveauGroupe.set((event.target as HTMLInputElement).value);
+  }
+
+  protected async creerGroupe(): Promise<void> {
+    const sessionId = this.sessionId();
+    const name = this.nouveauGroupe().trim();
+    if (sessionId === null || this.formations === null || name === '') return;
+    try {
+      const groupe = await firstValueFrom(this.formations.creerGroupe(sessionId, name));
+      this.groupes.update((groupes) => [...groupes, groupe]);
+      this.nouveauGroupe.set('');
+    } catch {
+      this.sauvegarde.set('echec');
+    }
+  }
+
+  protected async renommerGroupe(groupe: GroupeFormation, event: Event): Promise<void> {
+    const sessionId = this.sessionId();
+    const name = (event.target as HTMLInputElement).value.trim();
+    if (sessionId === null || this.formations === null || name === '' || name === groupe.name)
+      return;
+    try {
+      const modifie = await firstValueFrom(
+        this.formations.renommerGroupe(sessionId, groupe.id, name),
+      );
+      this.groupes.update((groupes) =>
+        groupes.map((item) => (item.id === modifie.id ? modifie : item)),
+      );
+    } catch {
+      this.sauvegarde.set('echec');
+    }
+  }
+
+  private async chargerAnnotations(sessionId: string, screenId: string): Promise<void> {
+    try {
+      const resultat = await firstValueFrom(this.formations!.lireAnnotations(sessionId));
+      const annotation = resultat.annotations.find((item) => item.screenId === screenId);
+      if (annotation !== undefined) {
+        this.note.set(annotation.note);
+        this.groupe.set(annotation.groupName);
+      }
+    } catch {
+      this.sauvegarde.set('echec');
+    }
+  }
+
+  private async chargerReponsesLibres(sessionId: string): Promise<void> {
+    if (this.formations === null) return;
+    try {
+      const resultat = await firstValueFrom(this.formations.lireReponsesLibres(sessionId));
+      this.reponsesLibres.set(
+        resultat.responses.map(({ id, screenId, response }) => ({ id, screenId, response })),
+      );
+    } catch {
+      this.sauvegarde.set('echec');
+    }
+  }
+
+  private async chargerGroupes(sessionId: string): Promise<void> {
+    if (this.formations === null) return;
+    try {
+      const resultat = await firstValueFrom(this.formations.lireGroupes(sessionId));
+      this.groupes.set(resultat.groups);
+    } catch {
+      this.sauvegarde.set('echec');
+    }
+  }
+
+  private async enregistrer(note: string): Promise<void> {
+    const sessionId = this.sessionId();
+    if (sessionId === null || this.formations === null || note.trim() === '') {
+      return;
+    }
+    try {
+      await firstValueFrom(
+        this.formations.enregistrerAnnotation(sessionId, {
+          screenId: this.ecran().id,
+          groupName: this.groupe().trim() || 'Classe entière',
+          note: note.trim(),
+        }),
+      );
+      this.sauvegarde.set('enregistre');
+    } catch {
+      this.sauvegarde.set('echec');
     }
   }
 }

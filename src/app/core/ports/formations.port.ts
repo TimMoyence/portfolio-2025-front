@@ -44,6 +44,47 @@ export interface ReponseEtudiant {
   dureeMs: number;
 }
 
+export interface ReponseLibreEtudiant {
+  screenId: string;
+  activityId: string;
+  response: string;
+  dureeMs: number;
+}
+
+export interface ReponseLibreEnregistree {
+  status: 'enregistre';
+}
+
+export interface AnnotationFormateur {
+  id: string;
+  sessionId: string;
+  teacherId: string;
+  screenId: string;
+  groupName: string;
+  note: string;
+  updatedAt: string;
+}
+
+export interface ReponseLibreFormateur {
+  id: string;
+  sessionId: string;
+  participantId: string;
+  screenId: string;
+  activityId: string;
+  response: string;
+  dureeMs: number;
+  status: 'enregistre' | 'en_attente' | 'echec';
+  submittedAt: string;
+}
+
+export interface GroupeFormation {
+  id: string;
+  sessionId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface VerdictReponse {
   reussite: boolean;
   libelleConfusion: string | null;
@@ -159,8 +200,27 @@ export interface FormationsPort {
   piloter(sessionId: string, commande: CommandePilotage): Observable<void>;
   cloturer(sessionId: string): Observable<void>;
   lireResultats(sessionId: string): Observable<RapportSeance>;
+  exporterBilan(sessionId: string): Observable<RapportSeance>;
+  lireAnnotations(sessionId: string): Observable<{ annotations: readonly AnnotationFormateur[] }>;
+  enregistrerAnnotation(
+    sessionId: string,
+    annotation: Pick<AnnotationFormateur, 'screenId' | 'groupName' | 'note'>,
+  ): Observable<AnnotationFormateur>;
+  lireReponsesLibres(
+    sessionId: string,
+  ): Observable<{ responses: readonly ReponseLibreFormateur[] }>;
+  lireGroupes(sessionId: string): Observable<{ groups: readonly GroupeFormation[] }>;
+  creerGroupe(sessionId: string, name: string): Observable<GroupeFormation>;
+  renommerGroupe(sessionId: string, groupId: string, name: string): Observable<GroupeFormation>;
+  affecterParticipant(sessionId: string, participantId: string, groupId: string): Observable<void>;
+  retirerParticipantDuGroupe(sessionId: string, participantId: string): Observable<void>;
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement>;
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse>;
+  enregistrerReponseLibre(
+    sessionId: string,
+    jeton: string,
+    reponse: ReponseLibreEtudiant,
+  ): Observable<ReponseLibreEnregistree>;
   signalerIncidents(
     sessionId: string,
     jeton: string,

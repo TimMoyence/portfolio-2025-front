@@ -24,9 +24,23 @@
       Garder cette réflexion
     </button>
     @if (saved()) {
-      <p class="slide-reflection__saved" i18n="@@slideReflectionSaved">
-        Réflexion enregistrée localement.
-      </p>
+      @switch (saveState()) {
+        @case ('enregistre') {
+          <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSaved">
+            Réflexion enregistrée.
+          </p>
+        }
+        @case ('echec') {
+          <p class="slide-reflection__saved" role="alert" i18n="@@slideReflectionSaveFailed">
+            Échec d’enregistrement : nouvelle tentative nécessaire.
+          </p>
+        }
+        @default {
+          <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSavePending">
+            Réflexion en attente d’envoi.
+          </p>
+        }
+      }
     }
     @if (r.expected || r.nextAction) {
       <details class="slide-reflection__debrief">

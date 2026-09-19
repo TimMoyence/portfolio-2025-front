@@ -87,6 +87,31 @@ describe('SlideQuizComponent', () => {
     expect(feedback.classList).toContain('is-incorrect');
   }));
 
+  it('envoie le choix au serveur sans divulguer la correction quand elle est absente du sujet', () => {
+    const fixture = TestBed.createComponent(SlideQuizComponent);
+    fixture.componentRef.setInput('questionData', {
+      id: 'b2-s03-prediction',
+      type: 'quiz',
+      question: 'Quelle valeur ?',
+      options: ['A', 'B'],
+    });
+    const choix = jasmine.createSpy('choix');
+    fixture.componentInstance.selection.subscribe(choix);
+    fixture.detectChanges();
+
+    (fixture.nativeElement as HTMLElement)
+      .querySelectorAll<HTMLButtonElement>('.slide-quiz__option')[1]
+      .click();
+    fixture.detectChanges();
+
+    expect(choix).toHaveBeenCalledWith(
+      jasmine.objectContaining({ questionId: 'b2-s03-prediction', valeur: 'o2' }),
+    );
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain(
+      'La bonne réponse est',
+    );
+  });
+
   it('ne rend rien si le port échoue (degradation gracieuse)', fakeAsync(() => {
     portStub.getInteractions.and.returnValue(throwError(() => new Error('network')));
     const fixture = TestBed.createComponent(HostComponent);

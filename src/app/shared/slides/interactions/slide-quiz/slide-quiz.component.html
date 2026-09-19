@@ -42,24 +42,30 @@
           </div>
         </fieldset>
       }
-      <p
-        class="slide-quiz__feedback"
-        [class.is-correct]="isCorrect()"
-        [class.is-incorrect]="!isCorrect()"
-      >
-        @if (isCorrect()) {
-          <ng-container i18n="@@slideQuizCorrect">Bonne réponse !</ng-container>
-        } @else {
-          <ng-container i18n="@@slideQuizIncorrect"
-            >Pas tout à fait. La bonne réponse est : {{ q.options[q.correctIndex] }}</ng-container
-          >
+      @if (q.correctIndex === undefined) {
+        <p class="slide-quiz__feedback" role="status" i18n="@@slideQuizAwaitServer">
+          Réponse sélectionnée. Le résultat vient de la séance.
+        </p>
+      } @else {
+        <p
+          class="slide-quiz__feedback"
+          [class.is-correct]="isCorrect()"
+          [class.is-incorrect]="!isCorrect()"
+        >
+          @if (isCorrect()) {
+            <ng-container i18n="@@slideQuizCorrect">Bonne réponse !</ng-container>
+          } @else {
+            <ng-container i18n="@@slideQuizIncorrect"
+              >Pas tout à fait. La bonne réponse est : {{ q.options[q.correctIndex] }}</ng-container
+            >
+          }
+        </p>
+        @if (q.explanation) {
+          <p class="slide-quiz__explanation">{{ q.explanation }}</p>
         }
-      </p>
-      @if (q.explanation) {
-        <p class="slide-quiz__explanation">{{ q.explanation }}</p>
-      }
-      @if (q.nextAction) {
-        <p class="slide-quiz__next"><strong>Pour progresser :</strong> {{ q.nextAction }}</p>
+        @if (q.nextAction) {
+          <p class="slide-quiz__next"><strong>Pour progresser :</strong> {{ q.nextAction }}</p>
+        }
       }
     }
   </div>

@@ -1,4 +1,4 @@
-import { isPlatformBrowser, Location } from '@angular/common';
+import { isPlatformBrowser, Location, PercentPipe } from '@angular/common';
 import type { ElementRef, WritableSignal } from '@angular/core';
 import {
   afterNextRender,
@@ -98,6 +98,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
     SlideActivityComponent,
     SlideComponent,
     SlideDeckComponent,
+    PercentPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
@@ -257,6 +258,22 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
             <span i18n="presentateur.participantsEnDirect|@@presentateurParticipantsEnDirect"
               >connectés à cette séance</span
             >
+            @if (resultats()?.statistiques; as statistiques) {
+              <dl class="join-panel__stats" data-testid="presentateur-statistiques">
+                <div>
+                  <dt>Moyenne</dt>
+                  <dd>{{ statistiques.moyenne }}</dd>
+                </div>
+                <div>
+                  <dt>Médiane</dt>
+                  <dd>{{ statistiques.mediane }}</dd>
+                </div>
+                <div>
+                  <dt>Réussite</dt>
+                  <dd>{{ statistiques.tauxReussite | percent }}</dd>
+                </div>
+              </dl>
+            }
           </div>
         </section>
       }

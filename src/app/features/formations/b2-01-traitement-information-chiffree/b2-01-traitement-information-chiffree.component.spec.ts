@@ -1,34 +1,42 @@
 import { TestBed } from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
+import { FORMATION_CATALOGUE_PORT } from '../../../core/ports/formation-catalogue.port';
+import {
+  buildVisualCourse,
+  createFormationCataloguePortStub,
+} from '../../../../testing/factories/formation-catalogue.factory';
 import { B2TraitementInformationChiffreeComponent } from './b2-01-traitement-information-chiffree.component';
 
 describe('B2TraitementInformationChiffreeComponent', () => {
+  const catalogue = createFormationCataloguePortStub();
+
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [B2TraitementInformationChiffreeComponent] });
+    catalogue.lire.and.returnValue(of(buildVisualCourse()));
+    TestBed.configureTestingModule({
+      imports: [B2TraitementInformationChiffreeComponent],
+      providers: [{ provide: FORMATION_CATALOGUE_PORT, useValue: catalogue }],
+    });
   });
 
-  it('compose les 66 diapositives du storyboard et 6 annexes métier dans le deck partagé', () => {
+  it('compose les 72 écrans du catalogue serveur dans le deck partagé', () => {
     const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
+    expect(catalogue.lire).toHaveBeenCalledWith('b2-01-traitement-information-chiffree');
     expect(element.querySelector('app-slide-deck')).not.toBeNull();
     expect(element.querySelectorAll('section.slide')).toHaveSize(72);
     expect(element.querySelector('app-slide-hero')).not.toBeNull();
-    expect(element.querySelector('app-slide-chart')).not.toBeNull();
-    expect(element.querySelector('app-slide-guide')).not.toBeNull();
-    expect(element.querySelector('app-slide-quiz')).not.toBeNull();
-    expect(element.querySelectorAll('.slide-quiz__competency')).toHaveSize(0);
-    expect(element.querySelectorAll('.slide-reflection__competency')).toHaveSize(0);
+    expect(element.textContent).toContain('Lire un chiffre');
   });
 
-  it('garde la photo dans le code sans afficher de crédit visible', () => {
+  it('montre une erreur utile si le catalogue ne répond pas, sans créer un deuxième deck', () => {
+    catalogue.lire.and.returnValue(throwError(() => new Error('network')));
     const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('.b2-source')).toBeNull();
-    expect(element.querySelector<HTMLImageElement>('app-slide-hero img')?.src).toContain(
-      'pexels.com',
-    );
+    expect(element.querySelector('[role="alert"]')).not.toBeNull();
+    expect(element.querySelector('app-slide-deck')).toBeNull();
   });
 });

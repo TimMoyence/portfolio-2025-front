@@ -13,6 +13,7 @@ import {
   Renderer2,
   signal,
   viewChild,
+  computed,
 } from '@angular/core';
 import type {
   EcranContent,
@@ -20,11 +21,13 @@ import type {
   ResultatsSeance,
   Role,
 } from '../../../../cours/content/types';
+import { aUnePresentation, SlideVisualComponent } from '../visual/slide-visual.component';
 
 export interface ReponseSlide {
   readonly questionId: string;
   readonly valeur: number | string;
   readonly dureeMs: number;
+  readonly type?: 'libre' | 'qcm';
 }
 
 type Donnees = Readonly<Record<string, unknown>>;
@@ -142,12 +145,14 @@ export function identifiantsDesQuestions(ecran: EcranContent): readonly string[]
 @Component({
   selector: 'app-slide-activity',
   standalone: true,
+  imports: [SlideVisualComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
       #host
       class="slide-activity__blocks"
+      [hidden]="visual()"
       data-testid="slide-activity-host"
       (fp-numeric-submit)="relay($event)"
       (fp-vote-submit)="relay($event)"
@@ -156,6 +161,14 @@ export function identifiantsDesQuestions(ecran: EcranContent): readonly string[]
       (fp-quiz-submit)="relay($event)"
       (fp-block-error)="showError()"
     ></div>
+    @if (visual()) {
+      <app-slide-visual
+        [slide]="slide()"
+        [sessionId]="sessionId()"
+        [jeton]="jeton()"
+        (reponse)="reponse.emit($event)"
+      />
+    }
     @if (unknown()) {
       <p class="slide-activity__message" role="alert" data-testid="slide-activity-unknown">
         Cet écran ne peut pas être affiché : son contenu n’est pas reconnu.
@@ -192,7 +205,10 @@ export class SlideActivityComponent {
   readonly render = input<RenderMode>('hand');
   readonly role = input<Role>('etudiant');
   readonly resultats = input<ResultatsSeance | null>(null);
+  readonly sessionId = input<string | null>(null);
+  readonly jeton = input<string>('');
   readonly reponse = output<ReponseSlide>();
+  protected readonly visual = computed(() => aUnePresentation(this.slide()));
 
   protected readonly unknown = signal(false);
   protected readonly error = signal(false);
@@ -231,6 +247,11 @@ export class SlideActivityComponent {
   }
 
   private scheduleMount(slide: EcranContent, render: RenderMode, role: Role): void {
+    if (aUnePresentation(slide)) {
+      this.unknown.set(false);
+      this.error.set(false);
+      return;
+    }
     void this.registered.then((registered) => {
       if (this.destroyed) {
         return;

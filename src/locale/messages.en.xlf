@@ -7595,10 +7595,17 @@
     </unit>
     <unit id="slideReflectionSaved">
       <segment>
-        <source> Réflexion enregistrée localement. </source>
-        <target>Saved locally.</target>
+        <source> Réflexion enregistrée. </source>
+        <target>Saved.</target>
       </segment>
     </unit>
+    <unit id="slideReflectionSaveFailed"><segment><source> Échec d’enregistrement : nouvelle tentative nécessaire. </source><target>Save failed: please try again.</target></segment></unit>
+    <unit id="slideReflectionSavePending"><segment><source> Réflexion en attente d’envoi. </source><target>Waiting to send.</target></segment></unit>
+    <unit id="slideQuizAwaitServer"><segment><source>Réponse sélectionnée. Le résultat vient de la séance.</source><target>Answer selected. The session will provide the result.</target></segment></unit>
+    <unit id="b2CoursChargement"><segment><source>Chargement du cours…</source><target>Loading course…</target></segment></unit>
+    <unit id="b2CoursVide"><segment><source>Aucun écran n’est encore publié pour ce cours.</source><target>No screens have been published for this course yet.</target></segment></unit>
+    <unit id="b2CoursErreur"><segment><source>Le cours est momentanément indisponible.</source><target>The course is temporarily unavailable.</target></segment></unit>
+    <unit id="b2CoursReessayer"><segment><source>Réessayer</source><target>Try again</target></segment></unit>
 
     <!-- ia-solo: 3rd column Gemini (chat-produire) -->
     <unit id="ia-solo.chat-produire.gemini.0">

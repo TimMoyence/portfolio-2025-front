@@ -43,6 +43,16 @@ export interface ResultatQuestion {
 export interface ResultatsSeance {
   readonly participants: number;
   readonly questions: readonly ResultatQuestion[];
+  readonly statistiques?: StatistiquesSeance;
+}
+
+export interface StatistiquesSeance {
+  readonly moyenne: number;
+  readonly mediane: number;
+  readonly dispersion: number;
+  readonly tauxParticipation: number;
+  readonly tauxReussite: number;
+  readonly questionsProblemes: readonly string[];
 }
 
 export interface CorrigePresentateur {

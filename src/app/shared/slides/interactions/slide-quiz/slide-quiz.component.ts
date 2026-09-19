@@ -7,6 +7,7 @@ import {
   computed,
   OnInit,
   signal,
+  output,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
@@ -18,7 +19,7 @@ export interface QuizInteraction {
   type: 'quiz';
   question: string;
   options: string[];
-  correctIndex: number;
+  correctIndex?: number;
   context?: string;
   competency?: string;
   explanation?: string;
@@ -38,6 +39,7 @@ export class SlideQuizComponent implements OnInit {
   readonly interactionId = input<string>('');
   readonly questionData = input<QuizInteraction | null>(null);
   readonly showCompetency = input<boolean>(false);
+  readonly selection = output<{ questionId: string; valeur: string; dureeMs: number }>();
 
   protected readonly quiz = signal<QuizInteraction | null>(null);
   protected readonly activeQuiz = computed(() => this.questionData() ?? this.quiz());
@@ -47,6 +49,7 @@ export class SlideQuizComponent implements OnInit {
 
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
   private readonly destroyRef = inject(DestroyRef);
+  private readonly startedAt = Date.now();
 
   ngOnInit(): void {
     this.load();
@@ -57,6 +60,14 @@ export class SlideQuizComponent implements OnInit {
       return;
     }
     this.selectedIndex.set(index);
+    const quiz = this.activeQuiz();
+    if (quiz?.id) {
+      this.selection.emit({
+        questionId: quiz.id,
+        valeur: `o${index + 1}`,
+        dureeMs: Math.max(0, Date.now() - this.startedAt),
+      });
+    }
   }
 
   protected selectConfidence(level: number): void {
@@ -66,7 +77,7 @@ export class SlideQuizComponent implements OnInit {
   protected isCorrect(): boolean {
     const q = this.activeQuiz();
     const sel = this.selectedIndex();
-    return q !== null && sel !== null && sel === q.correctIndex;
+    return q !== null && sel !== null && q.correctIndex !== undefined && sel === q.correctIndex;
   }
 
   private load(): void {

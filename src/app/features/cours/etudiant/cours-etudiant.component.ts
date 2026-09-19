@@ -247,6 +247,8 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                           [slide]="ecran"
                           render="hand"
                           [role]="'etudiant'"
+                          [sessionId]="sessionId"
+                          [jeton]="jeton"
                           (reponse)="envoyer($event)"
                         />
                       </app-slide>
@@ -449,8 +451,8 @@ export class CoursEtudiantComponent {
 
   private identite: Identity | null = null;
   private rattachement: Rattachement | null = null;
-  private sessionId: string | null = null;
-  private jeton = '';
+  sessionId: string | null = null;
+  jeton = '';
   private flux: Sync | null = null;
   private verrou: Lock | null = null;
   private deck: Deck | null = null;

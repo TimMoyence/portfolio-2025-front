@@ -6,7 +6,9 @@ import { catchError, map } from 'rxjs/operators';
 import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
   CommandePilotage,
+  AnnotationFormateur,
   FormationsPort,
+  GroupeFormation,
   IncidentEtudiant,
   InscriptionParticipant,
   MotifRefusRattachement,
@@ -15,6 +17,9 @@ import type {
   RapportSeance,
   Rattachement,
   ReponseEtudiant,
+  ReponseLibreEnregistree,
+  ReponseLibreEtudiant,
+  ReponseLibreFormateur,
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
@@ -113,6 +118,64 @@ export class FormationsHttpAdapter implements FormationsPort {
     return this.http.get<RapportSeance>(`${this.urlSeance(sessionId)}/results`);
   }
 
+  exporterBilan(sessionId: string): Observable<RapportSeance> {
+    return this.http.get<RapportSeance>(`${this.urlSeance(sessionId)}/report`);
+  }
+
+  lireAnnotations(sessionId: string): Observable<{ annotations: readonly AnnotationFormateur[] }> {
+    return this.http.get<{ annotations: readonly AnnotationFormateur[] }>(
+      `${this.urlSeance(sessionId)}/annotations`,
+    );
+  }
+
+  enregistrerAnnotation(
+    sessionId: string,
+    annotation: Pick<AnnotationFormateur, 'screenId' | 'groupName' | 'note'>,
+  ): Observable<AnnotationFormateur> {
+    return this.http.post<AnnotationFormateur>(
+      `${this.urlSeance(sessionId)}/annotations`,
+      annotation,
+    );
+  }
+
+  lireReponsesLibres(
+    sessionId: string,
+  ): Observable<{ responses: readonly ReponseLibreFormateur[] }> {
+    return this.http.get<{ responses: readonly ReponseLibreFormateur[] }>(
+      `${this.urlSeance(sessionId)}/free-responses`,
+    );
+  }
+
+  lireGroupes(sessionId: string): Observable<{ groups: readonly GroupeFormation[] }> {
+    return this.http.get<{ groups: readonly GroupeFormation[] }>(
+      `${this.urlSeance(sessionId)}/groups`,
+    );
+  }
+
+  creerGroupe(sessionId: string, name: string): Observable<GroupeFormation> {
+    return this.http.post<GroupeFormation>(`${this.urlSeance(sessionId)}/groups`, { name });
+  }
+
+  renommerGroupe(sessionId: string, groupId: string, name: string): Observable<GroupeFormation> {
+    return this.http.patch<GroupeFormation>(
+      `${this.urlSeance(sessionId)}/groups/${encodeURIComponent(groupId)}`,
+      { name },
+    );
+  }
+
+  affecterParticipant(sessionId: string, participantId: string, groupId: string): Observable<void> {
+    return this.http.patch<void>(
+      `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}/group`,
+      { groupId },
+    );
+  }
+
+  retirerParticipantDuGroupe(sessionId: string, participantId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}/group`,
+    );
+  }
+
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement> {
     const url = `${this.baseUrl}/sessions/${encodeURIComponent(code)}/join`;
     return this.http.post<Rattachement>(url, inscription).pipe(
@@ -139,6 +202,18 @@ export class FormationsHttpAdapter implements FormationsPort {
         })),
         catchError((erreur: unknown) => throwError(() => refuserReponse(erreur))),
       );
+  }
+
+  enregistrerReponseLibre(
+    sessionId: string,
+    jeton: string,
+    reponse: ReponseLibreEtudiant,
+  ): Observable<ReponseLibreEnregistree> {
+    return this.http.post<ReponseLibreEnregistree>(
+      `${this.urlSeance(sessionId)}/free-responses`,
+      reponse,
+      { headers: entetes(jeton) },
+    );
   }
 
   signalerIncidents(

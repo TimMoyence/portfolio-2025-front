@@ -11681,12 +11681,25 @@
         </context-group>
       </trans-unit>
       <trans-unit id="slideReflectionSaved" datatype="html">
-        <source> Réflexion enregistrée localement. </source>
+        <source> Réflexion enregistrée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html</context>
           <context context-type="linenumber">22,26</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="slideReflectionSaveFailed" datatype="html">
+        <source> Échec d’enregistrement : nouvelle tentative nécessaire. </source>
+      </trans-unit>
+      <trans-unit id="slideReflectionSavePending" datatype="html">
+        <source> Réflexion en attente d’envoi. </source>
+      </trans-unit>
+      <trans-unit id="slideQuizAwaitServer" datatype="html">
+        <source>Réponse sélectionnée. Le résultat vient de la séance.</source>
+      </trans-unit>
+      <trans-unit id="b2CoursChargement" datatype="html"><source>Chargement du cours…</source></trans-unit>
+      <trans-unit id="b2CoursVide" datatype="html"><source>Aucun écran n’est encore publié pour ce cours.</source></trans-unit>
+      <trans-unit id="b2CoursErreur" datatype="html"><source>Le cours est momentanément indisponible.</source></trans-unit>
+      <trans-unit id="b2CoursReessayer" datatype="html"><source>Réessayer</source></trans-unit>
     </body>
   </file>
 </xliff>
