@@ -2,6 +2,9 @@
   @if (title()) {
     <h2>{{ title() }}</h2>
   }
+  @if (subtitle()) {
+    <p class="slide-comparison__subtitle">{{ subtitle() }}</p>
+  }
   <div class="slide-comparison__grid" [style.--cols]="columns().length">
     @for (col of columns(); track col.label) {
       <div class="slide-comparison__column" [class]="'tone-' + (col.tone ?? 'neutral')">
@@ -14,4 +17,7 @@
       </div>
     }
   </div>
+  @if (note()) {
+    <p class="slide-comparison__note">{{ note() }}</p>
+  }
 </div>

@@ -1,0 +1,23 @@
+@switch (etat()) {
+  @case ('chargement') {
+    <p role="status" i18n="@@b2CoursChargement">Chargement du cours…</p>
+  }
+  @case ('vide') {
+    <p role="status" i18n="@@b2CoursVide">Aucun écran n’est encore publié pour ce cours.</p>
+  }
+  @case ('erreur') {
+    <div role="alert">
+      <p i18n="@@b2CoursErreur">Le cours est momentanément indisponible.</p>
+      <button type="button" (click)="charger()" i18n="@@b2CoursReessayer">Réessayer</button>
+    </div>
+  }
+  @case ('pret') {
+    <app-slide-deck mode="scroll" [allowFullscreen]="true" theme="b2-01">
+      @for (ecran of ecrans(); track ecran.id) {
+        <app-slide [id]="ecran.id">
+          <app-slide-visual [slide]="ecran" />
+        </app-slide>
+      }
+    </app-slide-deck>
+  }
+}

@@ -16,7 +16,7 @@ import {
   specifications,
 } from './guard-cours-runtime.mjs';
 
-const SOCLE = { 'src/cours/runtime/core/html.ts': "export const a = 1;\n" };
+const SOCLE = { 'src/cours/runtime/core/html.ts': 'export const a = 1;\n' };
 
 /**
  * @param {Record<string, string>} fichiers
@@ -40,7 +40,9 @@ const garder = (fichiers) => {
  * @returns {string[]}
  */
 const reperes = (resultat) =>
-  resultat.violations.map((violation) => `${violation.fichier}:${violation.ligne}:${violation.regle}`);
+  resultat.violations.map(
+    (violation) => `${violation.fichier}:${violation.ligne}:${violation.regle}`,
+  );
 
 void test('contrat : le gate expose ses fonctions pures', () => {
   for (const fn of [
@@ -76,7 +78,8 @@ const CONTOURNEMENTS_AD2 = [
   {
     nom: 'import dynamique',
     fichier: 'src/cours/runtime/blocks/FpTriche.ts',
-    texte: "export async function charger() {\n  const { inject } = await import('@angular/core');\n}\n",
+    texte:
+      "export async function charger() {\n  const { inject } = await import('@angular/core');\n}\n",
     ligne: 2,
   },
   {
@@ -199,7 +202,7 @@ void test('AD-4 : la ligne qui suit la fermeture de l interface reste inspectee'
 
 void test('AD-4 : un fichier de test garde le droit de porter le corrige', () => {
   const resultat = garder({
-    'src/app/features/cours/cours-host.component.spec.ts': "const q = { misconception: null };\n",
+    'src/app/features/cours/cours-host.component.spec.ts': 'const q = { misconception: null };\n',
   });
   assert.equal(resultat.code, 0);
 });
@@ -215,7 +218,7 @@ void test('AD-4 : le pupitre formateur lit le corrige servi au runtime par le de
 
 const HORS_PUPITRE = [
   'src/app/features/cours/etudiant/cours-etudiant.component.ts',
-  'src/app/features/cours/ecran/cours-ecran.component.ts',
+  'src/app/features/cours/session/slide-activity.component.ts',
   'src/cours/content/b1-09.ts',
   'src/app/features/cours/presentateur-bis/fuite.ts',
   'src/app/features/cours/etudiant/presentateur/fuite.ts',
@@ -253,7 +256,10 @@ void test('le verdict nomme le fichier, la ligne et la raison de l interdiction'
   const fichier = 'src/app/features/cours/cours-host.component.ts';
   const resultat = garder({ [fichier]: "const q = {\n  misconception: 'interet simple',\n};\n" });
   const verdict = formatViolations(resultat);
-  assert.match(verdict, /cours-host\.component\.ts:2 — \[AD-4\] donnee de correction « misconception »/);
+  assert.match(
+    verdict,
+    /cours-host\.component\.ts:2 — \[AD-4\] donnee de correction « misconception »/,
+  );
   assert.match(verdict, /misconception: 'interet simple',/);
   assert.match(verdict, /le navigateur de l etudiant telecharge/);
   assert.match(verdict, /2 fichier\(s\) inspecte\(s\), 1 violation\(s\)/);
@@ -270,11 +276,12 @@ const IMPORTS_DU_PUPITRE = [
   {
     nom: 'import statique depuis la vue etudiant',
     fichier: 'src/app/features/cours/etudiant/cours-etudiant.component.ts',
-    texte: "import { CoursPanneauQuestionComponent } from '../presentateur/cours-panneau-question.component';\n",
+    texte:
+      "import { CoursPanneauQuestionComponent } from '../presentateur/cours-panneau-question.component';\n",
   },
   {
     nom: 'import dynamique depuis le composant d ecran',
-    fichier: 'src/app/features/cours/ecran/cours-ecran.component.ts',
+    fichier: 'src/app/features/cours/session/slide-activity.component.ts',
     texte: "const pupitre = await import('../presentateur/cours-presentateur.component');\n",
   },
   {
@@ -301,10 +308,16 @@ for (const cas of IMPORTS_DU_PUPITRE) {
 void test('AD-4 : un contenu de cours qui remonte vers le pupitre est refuse par les deux regles', () => {
   const fichier = 'src/cours/content/b1-09.ts';
   const resultat = garder({
-    [fichier]: "import { corrige } from '../../app/features/cours/presentateur/cours-presentateur.component';\n",
+    [fichier]:
+      "import { corrige } from '../../app/features/cours/presentateur/cours-presentateur.component';\n",
   });
-  assert.deepEqual([...new Set(reperes(resultat))].sort(), [`${fichier}:1:AD-2`, `${fichier}:1:AD-4`]);
-  assert.ok(resultat.violations.some((violation) => /import du pupitre formateur/.test(violation.raison)));
+  assert.deepEqual([...new Set(reperes(resultat))].sort(), [
+    `${fichier}:1:AD-2`,
+    `${fichier}:1:AD-4`,
+  ]);
+  assert.ok(
+    resultat.violations.some((violation) => /import du pupitre formateur/.test(violation.raison)),
+  );
 });
 
 const IMPORTS_ADMIS = [
@@ -326,7 +339,7 @@ const IMPORTS_ADMIS = [
   {
     nom: 'le pupitre vers le composant d ecran partage',
     fichier: 'src/app/features/cours/presentateur/cours-scene.component.ts',
-    texte: "import { CoursEcranComponent } from '../ecran/cours-ecran.component';\n",
+    texte: "import { SlideActivityComponent } from '../session/slide-activity.component';\n",
   },
 ];
 

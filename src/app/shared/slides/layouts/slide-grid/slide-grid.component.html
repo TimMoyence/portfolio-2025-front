@@ -2,12 +2,41 @@
   @if (title()) {
     <h2>{{ title() }}</h2>
   }
-  <div class="slide-grid__grid">
+  @if (subtitle()) {
+    <p class="slide-grid__subtitle">{{ subtitle() }}</p>
+  }
+  <div class="slide-grid__grid" [class.is-five]="items().length === 5">
     @for (item of items(); track item.title) {
       @if (item.href) {
-        <a class="slide-grid__card" [href]="item.href">
+        <a
+          class="slide-grid__card"
+          [href]="item.href"
+          [target]="item.external ? '_blank' : null"
+          [rel]="item.external ? 'noreferrer' : null"
+        >
           <ng-container *ngTemplateOutlet="cardBody; context: { $implicit: item }" />
         </a>
+      } @else if (item.back) {
+        <button
+          type="button"
+          class="slide-grid__card slide-grid__card--flip"
+          [class.is-flipped]="isFlipped(item.title)"
+          [attr.aria-pressed]="isFlipped(item.title)"
+          [attr.aria-label]="
+            isFlipped(item.title)
+              ? 'Revenir à ' + item.title
+              : 'Afficher le détail de ' + item.title
+          "
+          (click)="toggle(item.title)"
+        >
+          <span class="slide-grid__face slide-grid__face--front">
+            <ng-container *ngTemplateOutlet="cardBody; context: { $implicit: item }" />
+          </span>
+          <span class="slide-grid__face slide-grid__face--back">
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.back }}</span>
+          </span>
+        </button>
       } @else {
         <div class="slide-grid__card">
           <ng-container *ngTemplateOutlet="cardBody; context: { $implicit: item }" />

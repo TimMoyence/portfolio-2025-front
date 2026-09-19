@@ -16,7 +16,7 @@ export const plot = `
   font-size: calc(1.1rem * var(--fp-echelle));
 }
 
-:where(.fp-root) .fp-plot__curseur {
+:where(.fp-root) .fp-plot__parametre {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -29,15 +29,30 @@ export const plot = `
   font-weight: 600;
 }
 
-:where(.fp-root) .fp-plot__glissiere {
-  width: 100%;
-  min-width: 0;
-  accent-color: var(--fp-teal-deep);
-}
-
-:where(.fp-root) .fp-plot__glissiere:focus-visible {
+:where(.fp-root) .fp-plot__animation:focus-visible {
   outline: 2px solid var(--fp-teal);
   outline-offset: 4px;
+}
+
+:where(.fp-root) .fp-plot__animation {
+  justify-self: start;
+  padding: var(--fp-s-2) var(--fp-s-3);
+  border: 1px solid var(--fp-teal-deep);
+  border-radius: var(--fp-r-sm);
+  background: var(--fp-teal-deep);
+  color: var(--fp-cream);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+:where(.fp-root) .fp-plot__animation:hover {
+  background: var(--fp-teal-ink);
+}
+
+:where(.fp-root) .fp-plot__parametres {
+  display: grid;
+  gap: var(--fp-s-2);
 }
 
 :where(.fp-root) .fp-plot__valeur {

@@ -2,14 +2,21 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject, of, throwError } from 'rxjs';
-import type { ConfusionComptee, DerouleCours } from '../../../../cours/content/types';
+import type {
+  ConfusionComptee,
+  DerouleCours,
+  ResultatsSeance,
+} from '../../../../cours/content/types';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import { buildAuthSession } from '../../../../testing/factories/auth.factory';
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildResultatQuestion,
+  buildResultatsSeance,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
+import { buildVoteQuestion } from '../../../../testing/factories/cours.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
@@ -18,7 +25,7 @@ import type { FormationsPort } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { CREATEUR_FLUX } from '../cours-flux.token';
-import { CoursEcranComponent } from '../ecran/cours-ecran.component';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursSceneComponent } from './cours-scene.component';
 
 type Fixture = ComponentFixture<CoursSceneComponent>;
@@ -35,6 +42,8 @@ function derouleDeSeance(): DerouleCours {
     ecrans: [
       buildEcranDeroule({
         id: 'ecran-vote',
+        type: 'fp-vote',
+        donnees: { question: buildVoteQuestion() },
         notes: 'Rappeler la formule de capitalisation avant de lancer le vote.',
         corriges: [
           {
@@ -59,9 +68,9 @@ describe('CoursSceneComponent', () => {
     return cibleMarque(fixture, marque, 'la scene');
   }
 
-  function apercu(fixture: Fixture): CoursEcranComponent | null {
-    const ecran = fixture.debugElement.queryAll(By.directive(CoursEcranComponent)).at(0);
-    return ecran === undefined ? null : (ecran.componentInstance as CoursEcranComponent);
+  function apercu(fixture: Fixture): SlideActivityComponent | null {
+    const ecran = fixture.debugElement.queryAll(By.directive(SlideActivityComponent)).at(0);
+    return ecran === undefined ? null : (ecran.componentInstance as SlideActivityComponent);
   }
 
   function monter(): Fixture {
@@ -118,20 +127,20 @@ describe('CoursSceneComponent', () => {
     expect(options.entetes?.()).toEqual({ authorization: `Bearer ${JETON}` });
     expect(double.flux.ouvrir).toHaveBeenCalledTimes(1);
 
-    expect(apercu(fixture)?.ecran()).toEqual({
+    expect(apercu(fixture)?.slide()).toEqual({
       id: deroule.ecrans[0].id,
       type: deroule.ecrans[0].type,
       duree: deroule.ecrans[0].duree,
       interactif: deroule.ecrans[0].interactif,
       donnees: deroule.ecrans[0].donnees,
     });
-    expect(Object.hasOwn(apercu(fixture)?.ecran() ?? {}, 'corriges')).toBeFalse();
-    expect(apercu(fixture)?.rendu()).toBe('stage');
+    expect(Object.hasOwn(apercu(fixture)?.slide() ?? {}, 'corriges')).toBeFalse();
+    expect(apercu(fixture)?.render()).toBe('stage');
     expect(apercu(fixture)?.role()).toBe('presentateur');
 
     diffuser(fixture, { ecranCourant: 1 });
 
-    expect(apercu(fixture)?.ecran()).toEqual({
+    expect(apercu(fixture)?.slide()).toEqual({
       id: deroule.ecrans[1].id,
       type: deroule.ecrans[1].type,
       duree: deroule.ecrans[1].duree,
@@ -149,15 +158,25 @@ describe('CoursSceneComponent', () => {
     expect(options.entetes?.()).toEqual({});
   });
 
-  it('n affiche ni les notes, ni la bonne reponse, ni les confusions, et ne recupere ni resultats ni code de seance', async () => {
+  it('recupere les resultats et les transmet a la slide sans afficher les notes ni la correction', async () => {
     const fixture = await monterEtStabiliser();
+    const resultats: ResultatsSeance = buildResultatsSeance({
+      participants: 12,
+      questions: [buildResultatQuestion({ total: 10, correctes: 7 })],
+    });
+    double.diffuserResultats(resultats);
+    fixture.detectChanges();
+
     const texte = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
     expect(texte).not.toContain(deroule.ecrans[0].notes);
     expect(texte).not.toContain(deroule.ecrans[0].corriges[0].bonneReponse);
     expect(texte).not.toContain(CONFUSIONS_DE_LA_CLASSE[0].libelle);
     expect(port.ouvrirSeance).not.toHaveBeenCalled();
-    expect(double.flux.onResultats).not.toHaveBeenCalled();
+    expect(double.flux.onResultats).toHaveBeenCalled();
+    expect(apercu(fixture)?.resultats()).toEqual(resultats);
+    expect(texte).not.toContain('Réponses des élèves');
+    expect(texte).not.toContain('70 %');
   });
 
   it('affiche un message pendant le chargement du deroule', () => {

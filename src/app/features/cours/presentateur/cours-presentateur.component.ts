@@ -1,4 +1,4 @@
-import { isPlatformBrowser, Location } from '@angular/common';
+import { isPlatformBrowser, Location, PercentPipe } from '@angular/common';
 import type { ElementRef, WritableSignal } from '@angular/core';
 import {
   afterNextRender,
@@ -32,10 +32,15 @@ import type {
 import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
-import { CoursEcranComponent, questionsDeLEcran } from '../ecran/cours-ecran.component';
-import { CoursSlideFrameComponent } from '../design/cours-slide-frame.component';
+import {
+  questionsDeLEcran,
+  SlideActivityComponent,
+} from '../../../shared/slides/session/slide-activity.component';
+import { SlideComponent } from '../../../shared/slides/deck/slide.component';
+import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
+import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 
@@ -87,7 +92,14 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
 @Component({
   selector: 'app-cours-presentateur',
   standalone: true,
-  imports: [CoursEcranComponent, CoursPanneauQuestionComponent, CoursSlideFrameComponent],
+  imports: [
+    CoursPanneauQuestionComponent,
+    CoursPanneauPedagogiqueComponent,
+    SlideActivityComponent,
+    SlideComponent,
+    SlideDeckComponent,
+    PercentPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
   template: `
@@ -246,6 +258,22 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
             <span i18n="presentateur.participantsEnDirect|@@presentateurParticipantsEnDirect"
               >connectés à cette séance</span
             >
+            @if (resultats()?.statistiques; as statistiques) {
+              <dl class="join-panel__stats" data-testid="presentateur-statistiques">
+                <div>
+                  <dt>Moyenne</dt>
+                  <dd>{{ statistiques.moyenne }}</dd>
+                </div>
+                <div>
+                  <dt>Médiane</dt>
+                  <dd>{{ statistiques.mediane }}</dd>
+                </div>
+                <div>
+                  <dt>Réussite</dt>
+                  <dd>{{ statistiques.tauxReussite | percent }}</dd>
+                </div>
+              </dl>
+            }
           </div>
         </section>
       }
@@ -421,16 +449,16 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   >
                 </div>
                 <div class="presentateur-stage__body">
-                  <app-cours-slide-frame
-                    variant="presenter"
-                    eyebrow="Projection"
-                    [title]="cours.titre"
-                    [index]="ecran() + 1"
-                    [total]="cours.ecrans.length"
-                    [duration]="ecranAffiche.duree"
-                  >
-                    <app-cours-ecran [ecran]="ecranAffiche" rendu="stage" [role]="'presentateur'" />
-                  </app-cours-slide-frame>
+                  <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+                    <app-slide [id]="ecranAffiche.id">
+                      <app-slide-activity
+                        [slide]="ecranAffiche"
+                        render="stage"
+                        [role]="'presentateur'"
+                        [resultats]="resultats()"
+                      />
+                    </app-slide>
+                  </app-slide-deck>
                 </div>
               </main>
               <aside
@@ -438,37 +466,47 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 aria-label="Informations de séance"
                 i18n-aria-label="@@presentateurInformationsSeance"
               >
+                <app-cours-panneau-pedagogique
+                  [ecran]="ecranAffiche"
+                  [questions]="questions()"
+                  [resultats]="resultatsDesQuestions()"
+                  [participants]="participants()"
+                  [sessionId]="sessionId()"
+                  [nextScreenTitle]="ecranSuivantTitle()"
+                />
                 @if (ecranAffiche.notes !== '') {
                   <section class="presentateur-notes" data-testid="presentateur-notes">
                     <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
                     <p class="notes">{{ ecranAffiche.notes }}</p>
                   </section>
                 }
-                <section class="presentateur-questions-panel">
-                  <div class="presentateur-sidebar__head">
-                    <h3 i18n="presentateur.questionsTitre|@@presentateurQuestionsTitre">
-                      Lecture de la classe
-                    </h3>
-                    <span class="muted">{{ questions().length }}</span>
-                  </div>
-                  <div class="presentateur-questions-panel__body">
-                    <ul class="presentateur-questions" data-testid="presentateur-questions">
-                      @for (question of questions(); track question.corrige.questionId) {
-                        <li>
-                          <app-cours-panneau-question
-                            [question]="question"
-                            [deroule]="cours"
-                            [seuil]="ecranAffiche.seuil"
-                            [resultats]="resultatsDesQuestions()"
-                            [participants]="participants()"
-                            [pilotageBloque]="pilotageBloque()"
-                            (remediation)="allerA($event)"
-                          />
-                        </li>
-                      }
-                    </ul>
-                  </div>
-                </section>
+                @if (questions().length > 0) {
+                  <section class="presentateur-questions-panel">
+                    <div class="presentateur-sidebar__head">
+                      <h3 i18n="presentateur.questionsTitre|@@presentateurQuestionsTitre">
+                        Lecture de la classe
+                      </h3>
+                      <span class="muted">{{ questions().length }}</span>
+                    </div>
+                    <div class="presentateur-questions-panel__body">
+                      <ul class="presentateur-questions" data-testid="presentateur-questions">
+                        @for (question of questions(); track question.corrige.questionId) {
+                          <li>
+                            <app-cours-panneau-question
+                              [question]="question"
+                              [deroule]="cours"
+                              [seuil]="ecranAffiche.seuil"
+                              [resultats]="resultatsDesQuestions()"
+                              [participants]="participants()"
+                              [pilotageBloque]="pilotageBloque()"
+                              (remediation)="allerA($event)"
+                            />
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  </section>
+                }
               </aside>
             </div>
           }
@@ -589,6 +627,11 @@ export class CoursPresentateurComponent {
   readonly ecranCourant = computed<EcranDeroule | null>(
     () => this.deroule()?.ecrans[this.ecran()] ?? null,
   );
+
+  readonly ecranSuivantTitle = computed(() => {
+    const cours = this.deroule();
+    return cours?.ecrans[this.ecran() + 1]?.id ?? 'la synthèse';
+  });
 
   readonly questions = computed<readonly QuestionDuPanneau[]>(() => {
     const ecran = this.ecranCourant();

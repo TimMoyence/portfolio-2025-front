@@ -12,6 +12,7 @@ import { buildProblemeHttp } from '../../../testing/factories/probleme-http.fact
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
+  GroupeFormation,
   InscriptionParticipant,
   MotifRefusRattachement,
   MotifRefusReponse,
@@ -192,6 +193,77 @@ describe('FormationsHttpAdapter', () => {
     attendre(`${URL_SEANCE}/results`, 'GET').flush(rapport);
 
     expect(recus).toEqual([rapport]);
+  });
+
+  it('exporterBilan GETe le rapport telechargeable sur report', () => {
+    const rapport = buildRapportSeance();
+    const recus: RapportSeance[] = [];
+
+    adapter.exporterBilan(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+
+    attendre(`${URL_SEANCE}/report`, 'GET').flush(rapport);
+
+    expect(recus).toEqual([rapport]);
+  });
+
+  it('persiste les reponses libres et les annotations du formateur', () => {
+    const reponse = {
+      screenId: 'screen-1',
+      activityId: 'reflect-1',
+      response: 'raisonnement',
+      dureeMs: 3200,
+    };
+    const annotation = { screenId: 'screen-1', groupName: 'Groupe A', note: 'À reprendre' };
+
+    adapter.enregistrerReponseLibre(SESSION_ID, JETON, reponse).subscribe();
+    const reponseRequest = attendre(`${URL_SEANCE}/free-responses`, 'POST');
+    expect(reponseRequest.request.headers.get(ENTETE_JETON)).toBe(JETON);
+    expect(reponseRequest.request.body).toEqual(reponse);
+    reponseRequest.flush({ status: 'enregistre' });
+
+    adapter.enregistrerAnnotation(SESSION_ID, annotation).subscribe();
+    const annotationRequest = attendre(`${URL_SEANCE}/annotations`, 'POST');
+    expect(annotationRequest.request.body).toEqual(annotation);
+    annotationRequest.flush({
+      id: 'annotation-1',
+      sessionId: SESSION_ID,
+      teacherId: 'teacher-1',
+      ...annotation,
+      updatedAt: '2026-09-19T00:00:00.000Z',
+    });
+  });
+
+  it('expose les groupes et leurs commandes d affectation', () => {
+    const groupe: GroupeFormation = {
+      id: 'group-1',
+      sessionId: SESSION_ID,
+      name: 'Groupe A',
+      createdAt: '2026-09-19T00:00:00.000Z',
+      updatedAt: '2026-09-19T00:00:00.000Z',
+    };
+    const groupes: GroupeFormation[] = [];
+
+    adapter.lireGroupes(SESSION_ID).subscribe(({ groups }) => groupes.push(...groups));
+    attendre(`${URL_SEANCE}/groups`, 'GET').flush({ groups: [groupe] });
+    expect(groupes).toEqual([groupe]);
+
+    adapter.creerGroupe(SESSION_ID, 'Groupe B').subscribe();
+    const creation = attendre(`${URL_SEANCE}/groups`, 'POST');
+    expect(creation.request.body).toEqual({ name: 'Groupe B' });
+    creation.flush(groupe);
+
+    adapter.renommerGroupe(SESSION_ID, groupe.id, 'Groupe renommé').subscribe();
+    const renommage = attendre(`${URL_SEANCE}/groups/${groupe.id}`, 'PATCH');
+    expect(renommage.request.body).toEqual({ name: 'Groupe renommé' });
+    renommage.flush(groupe);
+
+    adapter.affecterParticipant(SESSION_ID, 'participant-1', groupe.id).subscribe();
+    const affectation = attendre(`${URL_SEANCE}/participants/participant-1/group`, 'PATCH');
+    expect(affectation.request.body).toEqual({ groupId: groupe.id });
+    affectation.flush(null);
+
+    adapter.retirerParticipantDuGroupe(SESSION_ID, 'participant-1').subscribe();
+    attendre(`${URL_SEANCE}/participants/participant-1/group`, 'DELETE').flush(null);
   });
 
   it('rejoindre POSTe l inscription sur le code et rend le jeton du participant', () => {

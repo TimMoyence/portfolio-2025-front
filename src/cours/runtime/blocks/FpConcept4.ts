@@ -42,13 +42,6 @@ const LARGEUR = 320;
 const HAUTEUR = 180;
 const MARGE = 12;
 const SPECIAUX = /[.*+?^${}()|[\]\\]/g;
-const SENS: Readonly<Record<string, number | undefined>> = {
-  ArrowRight: 1,
-  ArrowUp: 1,
-  ArrowLeft: -1,
-  ArrowDown: -1,
-};
-
 function nombre(valeur: number, repli: number): number {
   return Number.isFinite(valeur) ? valeur : repli;
 }
@@ -63,11 +56,6 @@ function haut(parametre: Concept4Parametre): number {
 
 function borner(parametre: Concept4Parametre, valeur: number): number {
   return Math.min(Math.max(nombre(valeur, bas(parametre)), bas(parametre)), haut(parametre));
-}
-
-function pasUtile(parametre: Concept4Parametre): number {
-  const pas = nombre(parametre.pas, 0);
-  return pas > 0 ? pas : 1;
 }
 
 function arrondi(valeur: number): number {
@@ -103,9 +91,10 @@ export class FpConcept4 extends FpBlock {
   private interne: Concept4Definition | null = null;
   private courantes: Record<string, number> = {};
   private actif: string | null = null;
-  private suivi: string | null = null;
+  private animation: ReturnType<typeof setInterval> | null = null;
 
   set definition(valeur: Concept4Definition | null) {
+    this.arreterAnimation();
     this.interne =
       valeur === null
         ? null
@@ -119,7 +108,6 @@ export class FpConcept4 extends FpBlock {
           };
     this.courantes = {};
     this.actif = null;
-    this.suivi = null;
     for (const parametre of this.interne?.parametres ?? []) {
       this.courantes[parametre.cle] = borner(parametre, parametre.defaut);
     }
@@ -136,6 +124,10 @@ export class FpConcept4 extends FpBlock {
 
   get termeActif(): string | null {
     return this.actif;
+  }
+
+  disconnectedCallback(): void {
+    this.arreterAnimation();
   }
 
   renderHand(): EscapedHtml {
@@ -174,14 +166,11 @@ export class FpConcept4 extends FpBlock {
     if (this.mode() !== 'hand') {
       return;
     }
-    for (const curseur of racine.querySelectorAll<HTMLInputElement>('[data-testid="curseur"]')) {
-      const cle = curseur.dataset['cle'] ?? '';
-      curseur.addEventListener('input', () => this.appliquer(cle, Number(curseur.value)));
-      curseur.addEventListener('keydown', (evenement) => this.auClavier(cle, evenement));
-      if (cle === this.suivi) {
-        curseur.focus();
-      }
-    }
+    racine
+      .querySelector<HTMLButtonElement>('[data-testid="animer"]')
+      ?.addEventListener('click', () => {
+        this.animer();
+      });
   }
 
   private faces(stylePhrase: string): EscapedHtml {
@@ -379,19 +368,22 @@ export class FpConcept4 extends FpBlock {
     return safeHtml`
       <fieldset class="fp-concept4__reglages">
         <legend>${escapeHtml(this.texte('concept4-reglages'))}</legend>
-        ${parametres.map((parametre) => this.curseur(parametre))}
+        <button class="fp-concept4__animation" data-testid="animer" type="button">
+          ${escapeHtml(this.texte('concept4-animer'))}
+        </button>
+        <div class="fp-concept4__parametres" aria-live="polite">
+          ${parametres.map((parametre) => this.parametreAffiche(parametre))}
+        </div>
       </fieldset>
     `;
   }
 
-  private curseur(parametre: Concept4Parametre): EscapedHtml {
+  private parametreAffiche(parametre: Concept4Parametre): EscapedHtml {
     const valeur = this.valeurCourante(parametre, this.courantes);
-    const identifiant = `fp-concept4-${parametre.cle}`;
     return safeHtml`
-      <div class="fp-concept4__curseur">
-        <label class="fp-concept4__etiquette" for="${escapeHtml(identifiant)}">${escapeHtml(parametre.libelle)}</label>
-        <input class="fp-concept4__glissiere" data-testid="curseur" data-cle="${escapeHtml(parametre.cle)}" id="${escapeHtml(identifiant)}" type="range" min="${bas(parametre)}" max="${haut(parametre)}" step="${pasUtile(parametre)}" value="${valeur}" aria-valuetext="${escapeHtml(this.enonceValeur(parametre, valeur))}">
-        <output class="fp-concept4__valeur fp-montant" data-testid="valeur">${escapeHtml(formater(valeur))}</output>
+      <div class="fp-concept4__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
+        <span class="fp-concept4__etiquette">${escapeHtml(parametre.libelle)}</span>
+        <output class="fp-concept4__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(this.enonceValeur(parametre, valeur))}">${escapeHtml(formater(valeur))}</output>
       </div>
     `;
   }
@@ -401,31 +393,51 @@ export class FpConcept4 extends FpBlock {
     return `${parametre.libelle} : ${formater(valeur)} (${plage})`;
   }
 
-  private auClavier(cle: string, evenement: KeyboardEvent): void {
-    const parametre = this.parametre(cle);
-    const sens = SENS[evenement.key];
-    if (parametre === null || sens === undefined) {
+  private animer(): void {
+    const parametres = this.definition?.parametres ?? [];
+    if (parametres.length === 0) {
       return;
     }
-    evenement.preventDefault();
-    const actuelle = this.valeurCourante(parametre, this.courantes);
-    this.appliquer(cle, actuelle + sens * pasUtile(parametre));
+    this.arreterAnimation();
+    const depart = Object.fromEntries(
+      parametres.map((parametre) => [
+        parametre.cle,
+        this.valeurCourante(parametre, this.courantes),
+      ]),
+    );
+    let etape = 0;
+    const total = 6;
+    const avancer = (): void => {
+      etape += 1;
+      const progression = etape / total;
+      this.courantes = Object.fromEntries(
+        parametres.map((parametre) => {
+          const valeurDepart = depart[parametre.cle] ?? parametre.defaut;
+          const valeur = valeurDepart + (haut(parametre) - valeurDepart) * progression;
+          return [parametre.cle, borner(parametre, valeur)];
+        }),
+      );
+      const pilote = parametres[parametres.length - 1];
+      this.actif = pilote.cle;
+      this.emit('fp-concept4-explore', {
+        definitionId: this.definition?.id,
+        cle: pilote.cle,
+        valeur: this.courantes[pilote.cle],
+        dureeMs: this.depuisAffichage(),
+      });
+      this.refresh();
+      if (etape >= total) {
+        this.arreterAnimation();
+      }
+    };
+    this.animation = setInterval(avancer, 180);
+    avancer();
   }
 
-  private appliquer(cle: string, valeur: number): void {
-    const parametre = this.parametre(cle);
-    if (parametre === null) {
-      return;
+  private arreterAnimation(): void {
+    if (this.animation !== null) {
+      clearInterval(this.animation);
+      this.animation = null;
     }
-    this.courantes = { ...this.courantes, [cle]: borner(parametre, valeur) };
-    this.actif = cle;
-    this.suivi = cle;
-    this.emit('fp-concept4-explore', {
-      definitionId: this.definition?.id,
-      cle,
-      valeur: this.courantes[cle],
-      dureeMs: this.depuisAffichage(),
-    });
-    this.refresh();
   }
 }

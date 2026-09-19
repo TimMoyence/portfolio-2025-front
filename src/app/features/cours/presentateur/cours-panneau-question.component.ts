@@ -1,5 +1,5 @@
 import { PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import type {
   ConfusionComptee,
   CorrigePresentateur,
@@ -87,6 +87,18 @@ function lirePanneau(
       display: block;
     }
 
+    .correction-toggle {
+      margin-block-start: 0.7rem;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid rgba(39, 124, 112, 0.35);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--teal-deep, #277c70);
+      font: inherit;
+      font-size: 0.76rem;
+      cursor: pointer;
+    }
+
     [data-etat='sous-le-seuil'] {
       border-inline-start: 0.375rem solid currentColor;
       padding-inline-start: 0.75rem;
@@ -119,9 +131,20 @@ function lirePanneau(
             <dt i18n="presentateur.seuil|@@presentateurSeuil">Seuil</dt>
             <dd data-testid="presentateur-question-seuil">{{ seuil() | percent }}</dd>
           }
-          <dt i18n="presentateur.bonneReponse|@@presentateurBonneReponse">Bonne réponse</dt>
-          <dd data-testid="presentateur-question-bonne-reponse">{{ panneau.bonneReponse }}</dd>
+          @if (correctionVisible()) {
+            <dt i18n="presentateur.bonneReponse|@@presentateurBonneReponse">Bonne réponse</dt>
+            <dd data-testid="presentateur-question-bonne-reponse">{{ panneau.bonneReponse }}</dd>
+          }
         </dl>
+        <button
+          type="button"
+          class="correction-toggle"
+          data-testid="presentateur-question-reveler-correction"
+          [attr.aria-expanded]="correctionVisible()"
+          (click)="basculerLaCorrection()"
+        >
+          {{ correctionVisible() ? 'Masquer la correction' : 'Révéler la correction' }}
+        </button>
         @if (panneau.sousLeSeuil) {
           <p
             data-testid="presentateur-question-alerte"
@@ -161,6 +184,11 @@ export class CoursPanneauQuestionComponent {
   readonly participants = input.required<number>();
   readonly pilotageBloque = input.required<boolean>();
   readonly remediation = output<number>();
+  protected readonly correctionVisible = signal(false);
+
+  protected basculerLaCorrection(): void {
+    this.correctionVisible.update((visible) => !visible);
+  }
 
   protected readonly panneau = computed(() =>
     lirePanneau(this.deroule(), this.seuil(), this.question().corrige, this.resultats()),

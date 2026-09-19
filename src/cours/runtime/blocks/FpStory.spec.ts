@@ -86,6 +86,21 @@ describe('FpStory', () => {
     );
   });
 
+  it('rend le lien de source du visuel', () => {
+    hote.recit = buildStoryRecit({
+      id: 'R-SOURCE-05',
+      visuel: {
+        src: '#',
+        alt: 'Tableau de données',
+        legende: 'Une lecture contrôlée',
+        source: 'https://example.com/photo',
+      },
+    });
+
+    const lien = hote.shadowRoot?.querySelector('[data-testid="source-visuel"]');
+    expect(lien?.getAttribute('href')).toBe('https://example.com/photo');
+  });
+
   it('rend une video avec transcription, source et licence', () => {
     hote.recit = {
       ...RECIT,

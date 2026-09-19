@@ -39,10 +39,14 @@ import {
   ReponseRefusee,
   SujetRefuse,
 } from '../../../core/ports/formations.port';
-import type { ReponseBrique } from '../ecran/cours-ecran.component';
+import type { ReponseSlide } from '../../../shared/slides/session/slide-activity.component';
 import { CREATEUR_FLUX } from '../cours-flux.token';
-import { CoursEcranComponent, identifiantsDesQuestions } from '../ecran/cours-ecran.component';
-import { CoursSlideFrameComponent } from '../design/cours-slide-frame.component';
+import {
+  identifiantsDesQuestions,
+  SlideActivityComponent,
+} from '../../../shared/slides/session/slide-activity.component';
+import { SlideComponent } from '../../../shared/slides/deck/slide.component';
+import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
 
@@ -142,7 +146,7 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
 @Component({
   selector: 'app-cours-etudiant',
   standalone: true,
-  imports: [CoursEcranComponent, CoursSlideFrameComponent],
+  imports: [SlideActivityComponent, SlideComponent, SlideDeckComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-etudiant">
@@ -237,21 +241,18 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                   </p>
                 } @else {
                   @if (ecranCourant(); as ecran) {
-                    <app-cours-slide-frame
-                      variant="student"
-                      eyebrow="Votre parcours"
-                      [title]="sujet()?.titre ?? ''"
-                      [index]="indexEcran() + 1"
-                      [total]="sujet()?.ecrans?.length ?? 0"
-                      [duration]="ecran.duree"
-                    >
-                      <app-cours-ecran
-                        [ecran]="ecran"
-                        rendu="hand"
-                        [role]="'etudiant'"
-                        (reponse)="envoyer($event)"
-                      />
-                    </app-cours-slide-frame>
+                    <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+                      <app-slide [id]="ecran.id">
+                        <app-slide-activity
+                          [slide]="ecran"
+                          render="hand"
+                          [role]="'etudiant'"
+                          [sessionId]="sessionId"
+                          [jeton]="jeton"
+                          (reponse)="envoyer($event)"
+                        />
+                      </app-slide>
+                    </app-slide-deck>
                   }
                   @if (peutAvancer()) {
                     <button
@@ -450,8 +451,8 @@ export class CoursEtudiantComponent {
 
   private identite: Identity | null = null;
   private rattachement: Rattachement | null = null;
-  private sessionId: string | null = null;
-  private jeton = '';
+  sessionId: string | null = null;
+  jeton = '';
   private flux: Sync | null = null;
   private verrou: Lock | null = null;
   private deck: Deck | null = null;
@@ -493,7 +494,7 @@ export class CoursEtudiantComponent {
     this.chantier = this.rattacher(new FormData(formulaire));
   }
 
-  protected envoyer(reponse: ReponseBrique): void {
+  protected envoyer(reponse: ReponseSlide): void {
     this.chantier = this.traiter({
       questionId: reponse.questionId,
       valeur: reponse.valeur,

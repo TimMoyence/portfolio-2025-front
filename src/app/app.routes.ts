@@ -287,6 +287,16 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'formations/b2-01-traitement-information-chiffree',
+    loadComponent: () =>
+      import('./features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component').then(
+        (m) => m.B2TraitementInformationChiffreeComponent,
+      ),
+    data: {
+      seoKey: 'formations-b2-01-traitement-information-chiffree',
+    },
+  },
+  {
     path: 'formations/automatiser-avec-ia',
     loadComponent: () =>
       import('./features/formations/automatiser-avec-ia/automatiser-avec-ia.component').then(

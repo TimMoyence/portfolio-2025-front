@@ -22,7 +22,7 @@ import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
 import type { DeckState } from '../../cours/runtime/core/state';
 
-export function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
+function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
   return {
     id: 'ecran-1',
     type: 'vote',

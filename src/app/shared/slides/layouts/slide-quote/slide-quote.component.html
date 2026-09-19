@@ -1,4 +1,7 @@
 <div class="slide-quote">
+  @if (context()) {
+    <p class="slide-quote__context">{{ context() }}</p>
+  }
   <blockquote>«&nbsp;{{ quote() }}&nbsp;»</blockquote>
   @if (author()) {
     <div class="slide-quote__author">{{ author() }}</div>

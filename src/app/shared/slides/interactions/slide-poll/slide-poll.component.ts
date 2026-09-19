@@ -5,6 +5,7 @@ import {
   DestroyRef,
   inject,
   input,
+  OnInit,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,7 +27,7 @@ interface PollInteraction {
   templateUrl: './slide-poll.component.html',
   styleUrl: './slide-poll.component.scss',
 })
-export class SlidePollComponent {
+export class SlidePollComponent implements OnInit {
   readonly slug = input.required<string>();
   readonly interactionId = input.required<string>();
 
@@ -53,8 +54,8 @@ export class SlidePollComponent {
   private readonly port = inject(PRESENTATION_PORT);
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor() {
-    queueMicrotask(() => this.load());
+  ngOnInit(): void {
+    this.load();
   }
 
   protected vote(index: number): void {

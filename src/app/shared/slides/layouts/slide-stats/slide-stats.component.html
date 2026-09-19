@@ -2,6 +2,9 @@
   @if (title()) {
     <h2>{{ title() }}</h2>
   }
+  @if (subtitle()) {
+    <p class="slide-stats__subtitle">{{ subtitle() }}</p>
+  }
   <div class="slide-stats__grid">
     @for (stat of stats(); track stat.label) {
       <div class="slide-stats__item">

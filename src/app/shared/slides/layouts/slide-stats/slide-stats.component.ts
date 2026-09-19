@@ -15,5 +15,6 @@ interface SlideStat {
 })
 export class SlideStatsComponent {
   readonly title = input<string>('');
+  readonly subtitle = input<string>('');
   readonly stats = input.required<SlideStat[]>();
 }

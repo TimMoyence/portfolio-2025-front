@@ -11,4 +11,5 @@ export class SlideQuoteComponent {
   readonly quote = input.required<string>();
   readonly author = input<string>('');
   readonly role = input<string>('');
+  readonly context = input<string>('');
 }

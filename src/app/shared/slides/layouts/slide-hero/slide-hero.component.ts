@@ -11,7 +11,9 @@ export class SlideHeroComponent {
   readonly title = input.required<string>();
   readonly subtitle = input<string>('');
   readonly bullets = input<string[]>([]);
-  readonly bgImage = input.required<string>();
-  readonly bgImageAlt = input.required<string>();
+  readonly bgImage = input<string | null>(null);
+  readonly bgImageAlt = input<string>('');
   readonly accent = input<string>('default');
+  readonly ctaLabel = input<string>('');
+  readonly ctaHref = input<string>('');
 }

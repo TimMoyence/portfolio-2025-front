@@ -1,5 +1,11 @@
-@if (quiz(); as q) {
+@if (activeQuiz(); as q) {
   <div class="slide-quiz">
+    @if (q.context) {
+      <p class="slide-quiz__context">{{ q.context }}</p>
+    }
+    @if (q.competency && showCompetency()) {
+      <p class="slide-quiz__competency">{{ q.competency }}</p>
+    }
     <h3 class="slide-quiz__question">{{ q.question }}</h3>
     <div class="slide-quiz__options">
       @for (option of q.options; track option; let i = $index) {
@@ -15,19 +21,52 @@
       }
     </div>
     @if (selectedIndex() !== null) {
-      <p
-        class="slide-quiz__feedback"
-        [class.is-correct]="isCorrect()"
-        [class.is-incorrect]="!isCorrect()"
-      >
-        @if (isCorrect()) {
-          <ng-container i18n="@@slideQuizCorrect">Bonne réponse !</ng-container>
-        } @else {
-          <ng-container i18n="@@slideQuizIncorrect"
-            >Pas tout à fait. La bonne réponse est : {{ q.options[q.correctIndex] }}</ng-container
-          >
+      @if (q.askConfidence !== false) {
+        <fieldset class="slide-quiz__confidence">
+          <legend>Quel est votre niveau de confiance ?</legend>
+          <div class="slide-quiz__confidence-options">
+            @for (
+              label of ['Hasard', 'Hésitant', 'Assez sûr', 'Très sûr'];
+              track label;
+              let i = $index
+            ) {
+              <button
+                type="button"
+                [class.is-selected]="confidence() === i + 1"
+                (click)="selectConfidence(i + 1)"
+              >
+                <span aria-hidden="true">{{ i + 1 }}</span
+                >{{ label }}
+              </button>
+            }
+          </div>
+        </fieldset>
+      }
+      @if (q.correctIndex === undefined) {
+        <p class="slide-quiz__feedback" role="status" i18n="@@slideQuizAwaitServer">
+          Réponse sélectionnée. Le résultat vient de la séance.
+        </p>
+      } @else {
+        <p
+          class="slide-quiz__feedback"
+          [class.is-correct]="isCorrect()"
+          [class.is-incorrect]="!isCorrect()"
+        >
+          @if (isCorrect()) {
+            <ng-container i18n="@@slideQuizCorrect">Bonne réponse !</ng-container>
+          } @else {
+            <ng-container i18n="@@slideQuizIncorrect"
+              >Pas tout à fait. La bonne réponse est : {{ q.options[q.correctIndex] }}</ng-container
+            >
+          }
+        </p>
+        @if (q.explanation) {
+          <p class="slide-quiz__explanation">{{ q.explanation }}</p>
         }
-      </p>
+        @if (q.nextAction) {
+          <p class="slide-quiz__next"><strong>Pour progresser :</strong> {{ q.nextAction }}</p>
+        }
+      }
     }
   </div>
 }

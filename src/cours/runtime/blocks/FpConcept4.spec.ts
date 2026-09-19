@@ -34,34 +34,12 @@ function quatreFaces(hote: FpConcept4): Readonly<Record<string, string>> {
   };
 }
 
-function curseurDe(hote: FpConcept4, cle: string): HTMLInputElement {
-  const curseurs = tous(hote, '[data-testid="curseur"]') as HTMLInputElement[];
-  const trouve = curseurs.find((candidat) => candidat.dataset['cle'] === cle);
-  if (trouve === undefined) {
-    throw new Error(`aucun curseur pour le parametre ${cle}`);
+function animer(hote: FpConcept4): void {
+  const bouton = hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="animer"]');
+  if (bouton === null || bouton === undefined) {
+    throw new Error('aucun bouton d animation');
   }
-  return trouve;
-}
-
-function bouger(hote: FpConcept4, cle: string, valeur: number): void {
-  const curseur = curseurDe(hote, cle);
-  curseur.value = String(valeur);
-  curseur.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-function bougerSansBornageDuNavigateur(hote: FpConcept4, cle: string, valeur: number): void {
-  const curseur = curseurDe(hote, cle);
-  curseur.min = String(Math.min(valeur, 0));
-  curseur.max = String(Math.max(valeur, 0));
-  curseur.step = 'any';
-  curseur.value = String(valeur);
-  curseur.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-function frapper(hote: FpConcept4, cle: string, touche: string): void {
-  curseurDe(hote, cle).dispatchEvent(
-    new KeyboardEvent('keydown', { key: touche, bubbles: true, cancelable: true }),
-  );
+  bouton.click();
 }
 
 function resultatsDuTableau(hote: FpConcept4): string[] {
@@ -107,10 +85,10 @@ describe('FpConcept4', () => {
     hote.remove();
   });
 
-  it('reflete la meme valeur dans les quatre faces apres un mouvement de curseur', () => {
-    bouger(hote, 'n', 20);
+  it('reflete la meme valeur dans les quatre faces apres une animation', () => {
+    animer(hote);
     const attendue = String(resultatAttendu(hote.valeurs));
-    expect(hote.valeurs).toEqual({ C: 1000, i: 4, n: 20 });
+    expect(hote.valeurs['n']).toBeGreaterThan(10);
     expect(quatreFaces(hote)).toEqual({
       formule: attendue,
       graphique: attendue,
@@ -119,11 +97,11 @@ describe('FpConcept4', () => {
     });
   });
 
-  it('surligne dans la formule le terme du curseur bouge et lui seul', () => {
-    bouger(hote, 'i', 6);
+  it('surligne dans la formule le terme du parametre pilote et lui seul', () => {
+    animer(hote);
     const surlignes = tous(hote, '[data-testid="terme"][data-actif="true"]');
     expect(tous(hote, '[data-testid="terme"]').length).toBe(DEFINITION.parametres.length);
-    expect(surlignes.map((terme) => terme.textContent)).toEqual(['i']);
+    expect(surlignes.map((terme) => terme.textContent)).toEqual(['n']);
     expect(lu(hote, 'formule')).toContain('C × (1 + i)^n');
   });
 
@@ -151,25 +129,23 @@ describe('FpConcept4', () => {
 
   it('recalcule le tableau de valeurs et marque la seule ligne courante', () => {
     const avant = resultatsDuTableau(hote);
-    bouger(hote, 'n', 25);
+    animer(hote);
     const apres = resultatsDuTableau(hote);
     const courantes = tous(hote, '[data-testid="ligne"][data-courant="true"]');
     expect(apres).not.toEqual(avant);
     expect(courantes.length).toBe(1);
-    expect(courantes[0]?.textContent).toContain('25');
     expect(lu(hote, 'tableau')).toContain('Duree en annees');
   });
 
   it('regenere la phrase en langage courant a chaque mouvement', () => {
     const avant = lu(hote, 'phrase-texte');
-    bouger(hote, 'n', 25);
+    animer(hote);
     const valeurs = hote.valeurs;
     const resultat = resultatAttendu(valeurs);
-    expect(lu(hote, 'phrase-texte')).not.toBe(avant);
     expect(lu(hote, 'phrase-texte')).toBe(
       remplirGabarit(DEFINITION.phrase, { ...valeurs, resultat }, formaterEsperee),
     );
-    expect(lu(hote, 'phrase-texte')).toContain('25 an(s)');
+    expect(lu(hote, 'phrase-texte')).not.toBe(avant);
   });
 
   it('dessine le graphique en svg produit par la brique sans bibliotheque', () => {
@@ -185,52 +161,22 @@ describe('FpConcept4', () => {
   it('ramene un defaut hors bornes dans les bornes au lieu de l ignorer', () => {
     hote.definition = avecDefaut('n', 99);
     expect(hote.valeurs['n']).toBe(30);
-    expect(curseurDe(hote, 'n').value).toBe('30');
     expect(lu(hote, 'phrase-texte')).toContain('30 an(s)');
     expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 4, n: 30 })));
   });
 
-  it('ramene dans les bornes une fleche qui depasse le maximum', () => {
-    hote.definition = avecDefaut('n', 30);
-    frapper(hote, 'n', 'ArrowRight');
-    expect(hote.valeurs['n']).toBe(30);
-    expect(curseurDe(hote, 'n').value).toBe('30');
-  });
-
-  it('borne lui meme une valeur saisie que le navigateur laisserait passer', () => {
-    bougerSansBornageDuNavigateur(hote, 'n', 9999);
-    expect(hote.valeurs['n']).toBe(30);
-    expect(lu(hote, 'phrase-texte')).toContain('30 an(s)');
-
-    bougerSansBornageDuNavigateur(hote, 'n', -400);
-    expect(hote.valeurs['n']).toBe(1);
-    expect(lu(hote, 'phrase-texte')).toContain('1 an(s)');
-  });
-
-  it('deplace les curseurs au clavier avec les fleches et par pas entiers', () => {
-    frapper(hote, 'n', 'ArrowRight');
-    expect(hote.valeurs['n']).toBe(11);
-    frapper(hote, 'n', 'ArrowDown');
-    expect(hote.valeurs['n']).toBe(10);
-    frapper(hote, 'i', 'ArrowUp');
-    expect(hote.valeurs['i']).toBe(4.5);
-    expect(curseurDe(hote, 'i').value).toBe('4.5');
-    expect(hote.shadowRoot?.activeElement?.getAttribute('data-cle')).toBe('i');
-  });
-
-  it('annonce chaque curseur en francais lisible et pas par un nombre nu', () => {
-    for (const curseur of tous(hote, '[data-testid="curseur"]')) {
-      const enonce = curseur.getAttribute('aria-valuetext') ?? '';
+  it('annonce chaque parametre en francais lisible et pas par un nombre nu', () => {
+    for (const valeur of tous(hote, '[data-testid="valeur"]')) {
+      const enonce = valeur.getAttribute('aria-label') ?? '';
       expect(enonce).not.toMatch(/^[\s\d,.]*$/);
       expect(enonce).toContain(' : ');
     }
-    expect(curseurDe(hote, 'n').getAttribute('aria-valuetext')).toBe(
-      'Duree en annees : 10 (de 1 à 30)',
-    );
-    bouger(hote, 'n', 12);
-    expect(curseurDe(hote, 'n').getAttribute('aria-valuetext')).toBe(
-      'Duree en annees : 12 (de 1 à 30)',
-    );
+    expect(
+      hote.shadowRoot
+        ?.querySelector('[data-testid="valeur"][data-cle="n"]')
+        ?.getAttribute('aria-label'),
+    ).toBe('Duree en annees : 10 (de 1 à 30)');
+    expect(hote.shadowRoot?.querySelector('input[type="range"]')).toBeNull();
   });
 
   it('echappe le html injecte dans la formule, les libelles et la phrase', () => {
@@ -243,7 +189,11 @@ describe('FpConcept4', () => {
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(lu(hote, 'phrase-texte')).toBe(CHARGE_XSS);
     expect(lu(hote, 'formule')).toContain(CHARGE_XSS);
-    expect(curseurDe(hote, 'n').getAttribute('aria-valuetext')).toContain(CHARGE_XSS);
+    expect(
+      hote.shadowRoot
+        ?.querySelector('[data-testid="valeur"][data-cle="n"]')
+        ?.getAttribute('aria-label'),
+    ).toContain(CHARGE_XSS);
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
@@ -259,7 +209,7 @@ describe('FpConcept4', () => {
     expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(false);
     hote.setAttribute('render', 'stage');
     expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(true);
-    expect(tous(hote, '[data-testid="curseur"]')).toEqual([]);
+    expect(tous(hote, '[data-testid="animer"]')).toEqual([]);
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
@@ -270,9 +220,8 @@ describe('FpConcept4', () => {
   });
 
   it('n ecrit dans aucun stockage et n annonce que l exploration', () => {
-    bouger(hote, 'i', 6);
-    frapper(hote, 'n', 'ArrowLeft');
-    expect(traces.evenements).toEqual(['fp-concept4-explore', 'fp-concept4-explore']);
+    animer(hote);
+    expect(traces.evenements).toContain('fp-concept4-explore');
     expect(traces.ecritures).toEqual([]);
   });
 

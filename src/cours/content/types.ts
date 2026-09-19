@@ -43,6 +43,16 @@ export interface ResultatQuestion {
 export interface ResultatsSeance {
   readonly participants: number;
   readonly questions: readonly ResultatQuestion[];
+  readonly statistiques?: StatistiquesSeance;
+}
+
+export interface StatistiquesSeance {
+  readonly moyenne: number;
+  readonly mediane: number;
+  readonly dispersion: number;
+  readonly tauxParticipation: number;
+  readonly tauxReussite: number;
+  readonly questionsProblemes: readonly string[];
 }
 
 export interface CorrigePresentateur {
@@ -51,10 +61,19 @@ export interface CorrigePresentateur {
   readonly confusions: readonly { readonly id: string; readonly libelle: string }[];
 }
 
+export interface GuideFormateur {
+  readonly objectif?: string;
+  readonly reponseAttendue?: string;
+  readonly erreursTypiques?: readonly string[];
+  readonly relance?: string;
+  readonly transition?: string;
+}
+
 export interface EcranDeroule extends EcranContent {
   readonly notes: string;
   readonly seuil: number | null;
   readonly corriges: readonly CorrigePresentateur[];
+  readonly guide?: GuideFormateur;
 }
 
 export interface DerouleCours extends Omit<CoursContent, 'ecrans'> {
