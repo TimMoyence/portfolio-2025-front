@@ -20,11 +20,19 @@
         </button>
       }
     </div>
+    @if (apercu()) {
+      <p class="slide-quiz__apercu" data-testid="slide-quiz-apercu" i18n="@@slideQuizApercu">
+        Aperçu : aucune séance n’est ouverte. Votre choix n’est pas envoyé et la correction n’est
+        donnée qu’en séance.
+      </p>
+    }
     @if (selectedIndex() !== null) {
       @if (q.correctIndex === undefined) {
-        <p class="slide-quiz__feedback" role="status" i18n="@@slideQuizAwaitServer">
-          Réponse sélectionnée. Le résultat vient de la séance.
-        </p>
+        @if (!apercu()) {
+          <p class="slide-quiz__feedback" role="status" i18n="@@slideQuizAwaitServer">
+            Réponse sélectionnée. Le résultat vient de la séance.
+          </p>
+        }
       } @else {
         <p
           class="slide-quiz__feedback"

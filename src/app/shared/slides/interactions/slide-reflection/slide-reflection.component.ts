@@ -7,7 +7,6 @@ import {
   computed,
   OnInit,
   signal,
-  output,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +19,7 @@ import {
   removeFreeResponse,
 } from './free-response.queue';
 import { loadInteraction } from '../interactions.util';
+import type { ModeInteraction } from '../mode-interaction';
 
 export interface ReflectionInteraction {
   id?: string;
@@ -50,12 +50,7 @@ export class SlideReflectionComponent implements OnInit {
   readonly screenId = input<string>('');
   readonly sessionId = input<string | null>(null);
   readonly jeton = input<string>('');
-  readonly selection = output<{
-    questionId: string;
-    valeur: string;
-    dureeMs: number;
-    type: 'libre';
-  }>();
+  readonly mode = input<ModeInteraction>('apercu');
 
   protected readonly reflection = signal<ReflectionInteraction | null>(null);
   protected readonly activeReflection = computed(() => this.promptData() ?? this.reflection());
@@ -79,40 +74,23 @@ export class SlideReflectionComponent implements OnInit {
   }
 
   protected async save(): Promise<void> {
-    if (this.value().trim().length === 0) {
+    const sessionId = this.sessionId();
+    if (
+      this.value().trim().length === 0 ||
+      this.mode() !== 'seance' ||
+      this.formations === null ||
+      sessionId === null
+    ) {
       return;
     }
     this.saved.set(true);
     const reflection = this.activeReflection();
     const questionId = reflection?.id ?? this.interactionId();
     const dureeMs = Math.max(0, Date.now() - this.startedAt);
-    this.selection.emit({
-      questionId,
-      valeur: this.value().trim(),
-      dureeMs,
-      type: 'libre',
-    });
-    if (
-      this.formations === null ||
-      this.sessionId() === null ||
-      this.jeton() === '' ||
-      this.screenId() === ''
-    ) {
-      void enqueueFreeResponse({
-        key: this.pendingKey(questionId),
-        sessionId: this.sessionId() ?? 'catalogue',
-        screenId: this.screenId(),
-        activityId: questionId,
-        response: this.value().trim(),
-        dureeMs,
-      });
-      this.saveState.set('en_attente');
-      return;
-    }
     this.saveState.set('en_attente');
     try {
       await firstValueFrom(
-        this.formations.enregistrerReponseLibre(this.sessionId()!, this.jeton(), {
+        this.formations.enregistrerReponseLibre(sessionId, this.jeton(), {
           screenId: this.screenId(),
           activityId: questionId,
           response: this.value().trim(),
@@ -123,7 +101,7 @@ export class SlideReflectionComponent implements OnInit {
     } catch {
       await enqueueFreeResponse({
         key: this.pendingKey(questionId),
-        sessionId: this.sessionId()!,
+        sessionId,
         screenId: this.screenId(),
         activityId: questionId,
         response: this.value().trim(),
@@ -135,7 +113,7 @@ export class SlideReflectionComponent implements OnInit {
 
   private readonly retryPending = async (): Promise<void> => {
     const sessionId = this.sessionId();
-    if (sessionId === null || this.jeton() === '' || this.formations === null) return;
+    if (this.mode() !== 'seance' || sessionId === null || this.formations === null) return;
     for (const pending of await pendingFreeResponses(sessionId)) {
       try {
         await firstValueFrom(
@@ -157,7 +135,7 @@ export class SlideReflectionComponent implements OnInit {
   };
 
   private pendingKey(activityId: string): string {
-    return `${this.sessionId() ?? 'catalogue'}:${this.screenId()}:${activityId}`;
+    return `${this.sessionId()}:${this.screenId()}:${activityId}`;
   }
 
   protected onInput(text: string): void {

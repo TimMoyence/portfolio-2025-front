@@ -24,6 +24,7 @@ describe('SlideActivityComponent : deck visuel B2', () => {
     const fixture = TestBed.createComponent(SlideActivityComponent);
     fixture.componentRef.setInput('slide', buildVisualQuizSlide());
     fixture.componentRef.setInput('role', 'etudiant');
+    fixture.componentRef.setInput('sessionId', 'seance-1');
     const reponses = jasmine.createSpy('reponses');
     fixture.componentInstance.reponse.subscribe(reponses);
     fixture.detectChanges();

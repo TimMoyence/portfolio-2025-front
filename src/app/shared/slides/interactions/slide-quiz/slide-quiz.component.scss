@@ -77,6 +77,14 @@
   }
 }
 
+.slide-quiz__apercu {
+  width: min(100%, 46rem);
+  margin: 1.25rem 0 0;
+  color: var(--text-muted, var(--slide-text-muted));
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .slide-quiz__explanation,
 .slide-quiz__next {
   width: min(100%, 46rem);

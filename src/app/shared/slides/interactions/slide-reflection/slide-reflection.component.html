@@ -13,16 +13,27 @@
       [value]="value()"
       (input)="onInput($any($event.target).value)"
     ></textarea>
-    <button
-      type="button"
-      class="slide-reflection__save"
-      [class.is-disabled]="value().trim().length === 0"
-      [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
-      (click)="save()"
-      i18n="@@slideReflectionSave"
-    >
-      Garder cette réflexion
-    </button>
+    @if (mode() === 'apercu') {
+      <p
+        class="slide-reflection__apercu"
+        data-testid="slide-reflection-apercu"
+        i18n="@@slideReflectionApercu"
+      >
+        Aperçu : aucune séance n’est ouverte. Cette réflexion reste sur cet écran, elle n’est ni
+        envoyée ni conservée.
+      </p>
+    } @else {
+      <button
+        type="button"
+        class="slide-reflection__save"
+        [class.is-disabled]="value().trim().length === 0"
+        [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
+        (click)="save()"
+        i18n="@@slideReflectionSave"
+      >
+        Garder cette réflexion
+      </button>
+    }
     @if (saved()) {
       @switch (saveState()) {
         @case ('enregistre') {

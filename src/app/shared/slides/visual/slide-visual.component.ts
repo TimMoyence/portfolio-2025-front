@@ -1,4 +1,4 @@
-import { NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,6 +24,7 @@ import {
 } from '..';
 import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
+import type { ModeInteraction } from '../interactions/mode-interaction';
 import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
 
 const layouts: Readonly<Record<string, Type<unknown>>> = {
@@ -50,17 +51,20 @@ function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteract
 @Component({
   selector: 'app-slide-visual',
   standalone: true,
-  imports: [NgComponentOutlet, SlideQuizComponent],
+  imports: [NgComponentOutlet, NgTemplateOutlet, SlideQuizComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <ng-template #quizDeLEcran let-quiz>
+      <app-slide-quiz [questionData]="quiz" [mode]="mode()" (selection)="reponse.emit($event)" />
+    </ng-template>
     @if (layout(); as component) {
       @if (quizData(); as quiz) {
-        <app-slide-quiz [questionData]="quiz" (selection)="reponse.emit($event)" />
+        <ng-container *ngTemplateOutlet="quizDeLEcran; context: { $implicit: quiz }" />
       } @else {
         <ng-container *ngComponentOutlet="component; inputs: layoutInputs()" />
       }
       @if (nestedQuiz(); as quiz) {
-        <app-slide-quiz [questionData]="quiz" (selection)="reponse.emit($event)" />
+        <ng-container *ngTemplateOutlet="quizDeLEcran; context: { $implicit: quiz }" />
       }
       @if (sourceLink(); as link) {
         <p class="slide-visual__source">
@@ -96,6 +100,9 @@ export class SlideVisualComponent {
   }>();
 
   private readonly presentation = computed(() => presentationDe(this.slide()));
+  protected readonly mode = computed<ModeInteraction>(() =>
+    this.sessionId() === null ? 'apercu' : 'seance',
+  );
   protected readonly layout = computed(() => {
     const renderer = this.presentation()?.renderer;
     return renderer === undefined ? null : (layouts[renderer] ?? null);
@@ -111,6 +118,7 @@ export class SlideVisualComponent {
             screenId: this.slide().id,
             sessionId: this.sessionId(),
             jeton: this.jeton(),
+            mode: this.mode(),
           }
         : {};
     return {

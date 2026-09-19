@@ -8,6 +8,7 @@ import {
   buildInteractionsResponse,
   createPresentationPortStub,
 } from '../../../../../testing/factories/presentation.factory';
+import type { ModeInteraction } from '../mode-interaction';
 import { SlideQuizComponent } from './slide-quiz.component';
 
 @Component({
@@ -87,7 +88,10 @@ describe('SlideQuizComponent', () => {
     expect(feedback.classList).toContain('is-incorrect');
   }));
 
-  it('envoie le choix au serveur sans divulguer la correction quand elle est absente du sujet', () => {
+  function choisirSansCorrection(mode?: ModeInteraction): {
+    texte: string;
+    choix: jasmine.Spy;
+  } {
     const fixture = TestBed.createComponent(SlideQuizComponent);
     fixture.componentRef.setInput('questionData', {
       id: 'b2-s03-prediction',
@@ -95,6 +99,9 @@ describe('SlideQuizComponent', () => {
       question: 'Quelle valeur ?',
       options: ['A', 'B'],
     });
+    if (mode !== undefined) {
+      fixture.componentRef.setInput('mode', mode);
+    }
     const choix = jasmine.createSpy('choix');
     fixture.componentInstance.selection.subscribe(choix);
     fixture.detectChanges();
@@ -103,13 +110,27 @@ describe('SlideQuizComponent', () => {
       .querySelectorAll<HTMLButtonElement>('.slide-quiz__option')[1]
       .click();
     fixture.detectChanges();
+    return { texte: (fixture.nativeElement as HTMLElement).textContent ?? '', choix };
+  }
+
+  it('envoie le choix au serveur sans divulguer la correction quand elle est absente du sujet', () => {
+    const { texte, choix } = choisirSansCorrection('seance');
 
     expect(choix).toHaveBeenCalledWith(
       jasmine.objectContaining({ questionId: 'b2-s03-prediction', valeur: 'o2' }),
     );
-    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain(
-      'La bonne réponse est',
-    );
+    expect(texte).toContain('Le résultat vient de la séance');
+    expect(texte).not.toContain('La bonne réponse est');
+    expect(texte).not.toContain('Aperçu');
+  });
+
+  it('sans seance, reste un apercu explicite : rien n est envoye ni annonce comme resultat', () => {
+    const { texte, choix } = choisirSansCorrection();
+
+    expect(choix).not.toHaveBeenCalled();
+    expect(texte).toContain('Aperçu');
+    expect(texte).not.toContain('Le résultat vient de la séance');
+    expect(texte).not.toContain('La bonne réponse est');
   });
 
   it('ne collecte aucun niveau de confiance que personne ne reçoit', fakeAsync(() => {

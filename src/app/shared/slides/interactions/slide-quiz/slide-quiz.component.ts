@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { loadInteraction } from '../interactions.util';
+import type { ModeInteraction } from '../mode-interaction';
 
 export interface QuizInteraction {
   id?: string;
@@ -38,10 +39,14 @@ export class SlideQuizComponent implements OnInit {
   readonly interactionId = input<string>('');
   readonly questionData = input<QuizInteraction | null>(null);
   readonly showCompetency = input<boolean>(false);
+  readonly mode = input<ModeInteraction>('apercu');
   readonly selection = output<{ questionId: string; valeur: string; dureeMs: number }>();
 
   protected readonly quiz = signal<QuizInteraction | null>(null);
   protected readonly activeQuiz = computed(() => this.questionData() ?? this.quiz());
+  protected readonly apercu = computed(
+    () => this.mode() === 'apercu' && this.activeQuiz()?.correctIndex === undefined,
+  );
   protected readonly error = signal<boolean>(false);
   protected readonly selectedIndex = signal<number | null>(null);
 
@@ -59,7 +64,7 @@ export class SlideQuizComponent implements OnInit {
     }
     this.selectedIndex.set(index);
     const quiz = this.activeQuiz();
-    if (quiz?.id) {
+    if (quiz?.id && this.mode() === 'seance') {
       this.selection.emit({
         questionId: quiz.id,
         valeur: `o${index + 1}`,
