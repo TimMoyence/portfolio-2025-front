@@ -2,6 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NEVER, Observable, of, throwError } from 'rxjs';
 import {
+  buildAnnotationFormateur,
   buildEcranDeroule,
   buildGroupeFormation,
   buildGuideFormateur,
@@ -179,6 +180,30 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
       expect(port.enregistrerAnnotation).not.toHaveBeenCalled();
       expect(etatDeLaNote(fixture)).toBe('repos');
+    }));
+
+    it('ne laisse pas une relecture plus ancienne ecraser la note qui vient d etre enregistree', fakeAsync(() => {
+      port.lireAnnotations.and.returnValue(
+        of({
+          annotations: [
+            buildAnnotationFormateur({ note: 'Ancienne', updatedAt: '2026-09-19T08:00:00.000Z' }),
+          ],
+        }),
+      );
+      port.enregistrerAnnotation.and.returnValue(
+        of(buildAnnotationFormateur({ note: 'Nouvelle', updatedAt: '2026-09-19T09:00:00.000Z' })),
+      );
+      const fixture = monter();
+      saisirLaNote(fixture, 'Nouvelle');
+      tick(600);
+
+      fixture.componentRef.setInput('resultats', [buildResultatQuestion()]);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(port.lireAnnotations).toHaveBeenCalledTimes(2);
+      expect(element<HTMLTextAreaElement>(fixture, 'annotation-note').value).toBe('Nouvelle');
     }));
 
     it('vide la note au changement d ecran sans la reenregistrer sous le nouvel ecran', fakeAsync(() => {

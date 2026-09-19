@@ -64,17 +64,22 @@ function lire<T>(source: Observable<T>): Observable<Lecture<T>> {
   );
 }
 
-function remplacerLAnnotation(
-  annotations: readonly AnnotationFormateur[],
-  annotation: AnnotationFormateur,
+function cleDAnnotation(annotation: AnnotationFormateur): string {
+  return `${annotation.screenId}\u0000${annotation.groupName}`;
+}
+
+function fusionnerLesAnnotations(
+  connues: readonly AnnotationFormateur[],
+  recues: readonly AnnotationFormateur[],
 ): readonly AnnotationFormateur[] {
-  return [
-    ...annotations.filter(
-      (existante) =>
-        existante.screenId !== annotation.screenId || existante.groupName !== annotation.groupName,
-    ),
-    annotation,
-  ];
+  const parCle = new Map(connues.map((annotation) => [cleDAnnotation(annotation), annotation]));
+  for (const recue of recues) {
+    const connue = parCle.get(cleDAnnotation(recue));
+    if (connue === undefined || Date.parse(recue.updatedAt) >= Date.parse(connue.updatedAt)) {
+      parCle.set(cleDAnnotation(recue), recue);
+    }
+  }
+  return [...parCle.values()];
 }
 
 @Component({
@@ -189,7 +194,10 @@ export class CoursPanneauPedagogiqueComponent {
         takeUntilDestroyed(),
       )
       .subscribe((lecture) => {
-        if (lecture.annotations.lue) this.annotations.set(lecture.annotations.valeur.annotations);
+        if (lecture.annotations.lue) {
+          const recues = lecture.annotations.valeur.annotations;
+          this.annotations.update((connues) => fusionnerLesAnnotations(connues, recues));
+        }
         if (lecture.groupes.lue) this.groupes.set(lecture.groupes.valeur.groups);
         if (lecture.participants.lue) {
           this.participantsDeSeance.set(lecture.participants.valeur.participants);
@@ -298,7 +306,7 @@ export class CoursPanneauPedagogiqueComponent {
       })
       .pipe(
         tap((annotation) =>
-          this.annotations.update((annotations) => remplacerLAnnotation(annotations, annotation)),
+          this.annotations.update((connues) => fusionnerLesAnnotations(connues, [annotation])),
         ),
         map((): EtatSauvegarde => 'enregistre'),
         catchError(() => of<EtatSauvegarde>('echec')),
