@@ -6479,6 +6479,132 @@
           <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="auditReportTitle" datatype="html">
+        <source> Votre rapport d&apos;audit </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditReportPillars" datatype="html">
+        <source> Scorecard par pilier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditReportQuickWins" datatype="html">
+        <source> Quick wins prioritaires </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditEffortLow" datatype="html">
+        <source>Effort faible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditEffortMedium" datatype="html">
+        <source>Effort moyen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditEffortHigh" datatype="html">
+        <source>Effort élevé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditEngineGoogleVisibility" datatype="html">
+        <source> Visibilité Google </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/engine-coverage-matrix/engine-coverage-matrix.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditEngineAiVisibility" datatype="html">
+        <source> Visibilité IA </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/engine-coverage-matrix/engine-coverage-matrix.component.html</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarTarget" datatype="html">
+        <source> / cible <x id="INTERPOLATION" equiv-text="{{ item.target }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarPerformance" datatype="html">
+        <source>Performance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarTechnical" datatype="html">
+        <source>Tech &amp; scalabilité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarTrust" datatype="html">
+        <source>Crédibilité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarConversion" datatype="html">
+        <source>Conversion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarAiVisibility" datatype="html">
+        <source>Visibilité IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarCitationWorthiness" datatype="html">
+        <source>Citabilité IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarStatusCritical" datatype="html">
+        <source>Critique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarStatusWarning" datatype="html">
+        <source>À améliorer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarStatusOk" datatype="html">
+        <source>Objectif atteint</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="auditPhaseTechnicalPages" datatype="html">
         <source>Scan technique des pages</source>
         <context-group purpose="location">
@@ -6578,6 +6704,13 @@
         <note priority="1" from="description">Section label</note>
         <note priority="1" from="meaning">audit.section.clientComms</note>
       </trans-unit>
+      <trans-unit id="auditProgressDefaultStep" datatype="html">
+        <source>Audit en cours...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit-format.utils.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="authErrorPhone" datatype="html">
         <source>Merci d’entrer un numéro de téléphone valide.</source>
         <context-group purpose="location">
@@ -6586,6 +6719,13 @@
         </context-group>
         <note priority="1" from="description">auth.error.phone</note>
       </trans-unit>
+      <trans-unit id="auditIdLabel" datatype="html">
+        <source>Audit ID: <x id="INTERPOLATION" equiv-text="{{ auditId }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
+          <context context-type="linenumber">167,170</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="auditProgressLabel" datatype="html">
         <source>Progression de l&apos;audit</source>
         <context-group purpose="location">
@@ -6593,39 +6733,60 @@
           <context context-type="linenumber">174,176</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="auditCurrentUrlLabel" datatype="html">
+        <source>URL en cours:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
+          <context context-type="linenumber">211,212</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditRecentPagesLabel" datatype="html">
+        <source> Dernières pages terminées: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
+          <context context-type="linenumber">235,236</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="auditResumeTitle" datatype="html">
         <source>Résumé de votre audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">257,259</context>
+          <context context-type="linenumber">260,262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsTitle" datatype="html">
         <source> Audit Growth en 7 piliers </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">284,286</context>
+          <context context-type="linenumber">287,289</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsSubtitle" datatype="html">
         <source> Un diagnostic concret et actionnable, aligné avec les 7 piliers du rapport livré. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">287,289</context>
+          <context context-type="linenumber">290,292</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditStepsTitle" datatype="html">
         <source> Comment ça fonctionne </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">304,306</context>
+          <context context-type="linenumber">307,309</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditIaTaskFallback" datatype="html">
+        <source>IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditHeroLabel" datatype="html">
         <source>Audit gratuit (IA + humain, 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="description">audit.hero.label</note>
       </trans-unit>
@@ -6633,7 +6794,7 @@
         <source>Audit Growth — scorecard 7 piliers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">audit.hero.title</note>
       </trans-unit>
@@ -6641,7 +6802,7 @@
         <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, conversion, visibilité IA). Ensuite, sous 24h, je repasse l&apos;audit moi-même et je vous envoie une scorecard claire, un rapport PDF détaillé et des recommandations concrètes priorisées par impact/effort.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">audit.hero.description</note>
       </trans-unit>
@@ -6649,7 +6810,7 @@
         <source>1. Vous laissez vos infos</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.title</note>
       </trans-unit>
@@ -6657,7 +6818,7 @@
         <source>Nom du site ou URL + contact (email ou téléphone).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.desc</note>
       </trans-unit>
@@ -6665,7 +6826,7 @@
         <source>2. Audit instantané (IA)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">101</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.title</note>
       </trans-unit>
@@ -6673,7 +6834,7 @@
         <source>Je scanne vos pages (SEO, performance, conversion, visibilité IA) et je sors un premier diagnostic rapide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.desc</note>
       </trans-unit>
@@ -6681,7 +6842,7 @@
         <source>3. Audit humain sous 24h</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.title</note>
       </trans-unit>
@@ -6689,7 +6850,7 @@
         <source>Je reprends l&apos;analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d&apos;actions concret.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.desc</note>
       </trans-unit>
@@ -6697,7 +6858,7 @@
         <source>Rapport PDF détaillé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.pdf</note>
       </trans-unit>
@@ -6705,7 +6866,7 @@
         <source>Scorecard claire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.score</note>
       </trans-unit>
@@ -6713,7 +6874,7 @@
         <source>Quick wins + priorités (impact/effort)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.wins</note>
       </trans-unit>
@@ -6721,7 +6882,7 @@
         <source>Aucun engagement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.noObligation</note>
       </trans-unit>
@@ -6729,7 +6890,7 @@
         <source>Questions fréquentes sur l&apos;audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <note priority="1" from="description">audit.faq.title</note>
       </trans-unit>
@@ -6737,7 +6898,7 @@
         <source>Ce que vous devez savoir avant de demander votre audit Growth — scorecard 7 piliers + recommandations priorisées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">audit.faq.description</note>
       </trans-unit>
@@ -6745,7 +6906,7 @@
         <source>Comment fonctionne l&apos;audit gratuit en 24 heures ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q1</note>
       </trans-unit>
@@ -6753,7 +6914,7 @@
         <source>Vous laissez l&apos;URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion, visibilité IA). Puis, sous 24h, je reprends l&apos;analyse moi-même et vous envoie une scorecard claire, un rapport PDF détaillé et un plan d&apos;actions priorisé par impact/effort.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a1</note>
       </trans-unit>
@@ -6761,7 +6922,7 @@
         <source>Que contient concrètement l&apos;audit Growth ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">124</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q2</note>
       </trans-unit>
@@ -6769,7 +6930,7 @@
         <source>L&apos;audit couvre sept piliers : SEO fondations (titres, meta, indexation, SEO local), vitesse et performance (Core Web Vitals), tech et scalabilité, crédibilité et confiance, conversion et clarté, visibilité IA (ChatGPT / Perplexity / Gemini) et citabilité (llms.txt, FAQ, sources). Vous recevez une scorecard, des quick wins et des recommandations priorisées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a2</note>
       </trans-unit>
@@ -6777,7 +6938,7 @@
         <source>L&apos;audit est-il vraiment gratuit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q3</note>
       </trans-unit>
@@ -6785,7 +6946,7 @@
         <source>Oui, totalement. Aucun engagement, aucune carte bancaire demandée. Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h. L&apos;objectif est de vous apporter de la valeur immédiatement, et de démarrer un échange pertinent si vous le souhaitez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a3</note>
       </trans-unit>
@@ -6793,7 +6954,7 @@
         <source>Qui réalise l&apos;audit : une IA ou un humain ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q4</note>
       </trans-unit>
@@ -6801,7 +6962,7 @@
         <source>Les deux. Un premier scan automatisé tourne instantanément via un pipeline IA (Langchain + OpenAI). Ensuite, je réalise l&apos;audit humain moi-même pour prioriser, contextualiser et formuler des recommandations concrètes adaptées à votre situation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a4</note>
       </trans-unit>
@@ -6809,7 +6970,7 @@
         <source>Pour quels types de sites l&apos;audit est-il pertinent ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q5</note>
       </trans-unit>
@@ -6817,7 +6978,7 @@
         <source>L&apos;audit est pertinent pour les sites vitrines, sites e-commerce, landing pages et applications métier web. Il est particulièrement adapté aux TPE, PME, indépendants et artisans qui veulent améliorer leur visibilité SEO et leur taux de conversion sans se perdre dans la technique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a5</note>
       </trans-unit>
@@ -6825,7 +6986,7 @@
         <source>Conversion &amp; clarté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.title</note>
       </trans-unit>
@@ -6833,7 +6994,7 @@
         <source>Proposition de valeur, CTA, friction contact, mobile.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.desc</note>
       </trans-unit>
@@ -6841,7 +7002,7 @@
         <source>Vitesse &amp; performance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.title</note>
       </trans-unit>
@@ -6849,7 +7010,7 @@
         <source>PageSpeed, poids images, Core Web Vitals.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.desc</note>
       </trans-unit>
@@ -6857,7 +7018,7 @@
         <source>SEO fondations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.title</note>
       </trans-unit>
@@ -6865,7 +7026,7 @@
         <source>Titres, H1, meta, indexation, SEO local.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.desc</note>
       </trans-unit>
@@ -6873,7 +7034,7 @@
         <source>Crédibilité &amp; confiance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.title</note>
       </trans-unit>
@@ -6881,7 +7042,7 @@
         <source>Preuves sociales, portfolio, signaux de confiance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.desc</note>
       </trans-unit>
@@ -6889,7 +7050,7 @@
         <source>Tech &amp; scalabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.title</note>
       </trans-unit>
@@ -6897,7 +7058,7 @@
         <source>CMS, sécurité, erreurs, maintenabilité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">159</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.desc</note>
       </trans-unit>
@@ -6905,7 +7066,7 @@
         <source>Visibilité IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">163</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.aiVisibility.title</note>
       </trans-unit>
@@ -6913,7 +7074,7 @@
         <source>Compréhension par les assistants IA, données structurées, réponses génératives.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.aiVisibility.desc</note>
       </trans-unit>
@@ -6921,7 +7082,7 @@
         <source>Citabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.citationWorthiness.title</note>
       </trans-unit>
@@ -6929,7 +7090,7 @@
         <source>Sources, preuves, FAQ et contenus que les moteurs peuvent citer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.citationWorthiness.desc</note>
       </trans-unit>
@@ -6937,7 +7098,7 @@
         <source>Demander un audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">audit.form.title</note>
       </trans-unit>
@@ -6945,7 +7106,7 @@
         <source>Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <note priority="1" from="description">audit.form.description</note>
       </trans-unit>
@@ -6953,7 +7114,7 @@
         <source>Nom du site ou URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <note priority="1" from="description">audit.form.websiteLabel</note>
       </trans-unit>
@@ -6961,7 +7122,7 @@
         <source>ex. https://votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">audit.form.websitePlaceholder</note>
       </trans-unit>
@@ -6969,7 +7130,7 @@
         <source>Méthode de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactMethodLabel</note>
       </trans-unit>
@@ -6977,7 +7138,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactEmail</note>
       </trans-unit>
@@ -6985,7 +7146,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactPhone</note>
       </trans-unit>
@@ -6993,7 +7154,7 @@
         <source>Coordonnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactValueLabel</note>
       </trans-unit>
@@ -7001,7 +7162,7 @@
         <source>ex. hello@votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">181</context>
         </context-group>
         <note priority="1" from="description">audit.form.emailPlaceholder</note>
       </trans-unit>
@@ -7009,7 +7170,7 @@
         <source>ex. +33 6 98 50 32 82</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">audit.form.phonePlaceholder</note>
       </trans-unit>
@@ -7017,7 +7178,7 @@
         <source>Demander mon audit (scan IA immédiat + audit humain sous 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">183</context>
         </context-group>
         <note priority="1" from="description">audit.form.submit</note>
       </trans-unit>
@@ -7025,7 +7186,7 @@
         <source>Merci ! Scan IA lancé — audit humain envoyé sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">audit.form.success</note>
       </trans-unit>
@@ -7033,7 +7194,7 @@
         <source>Impossible d&apos;envoyer la demande. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">185</context>
         </context-group>
         <note priority="1" from="description">audit.form.error</note>
       </trans-unit>
@@ -7041,7 +7202,7 @@
         <source>J&apos;accepte que mes coordonnées soient utilisées pour traiter ma demande d&apos;audit (voir &lt;a href=&quot;/fr/privacy&quot; class=&quot;underline&quot;&gt;politique de confidentialité&lt;/a&gt;).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <note priority="1" from="description">audit.form.rgpdLabel</note>
       </trans-unit>
@@ -7049,7 +7210,7 @@
         <source>Votre consentement RGPD est obligatoire pour lancer l&apos;audit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">187</context>
         </context-group>
         <note priority="1" from="description">audit.form.rgpdError</note>
       </trans-unit>
@@ -7057,7 +7218,7 @@
         <source>Audit en attente...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">291</context>
         </context-group>
         <note priority="1" from="description">Audit pending step</note>
         <note priority="1" from="meaning">growthAudit.step.pending</note>
@@ -7066,11 +7227,11 @@
         <source>Audit terminé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">375</context>
+          <context context-type="linenumber">376</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">415</context>
+          <context context-type="linenumber">416</context>
         </context-group>
         <note priority="1" from="description">Audit completed step</note>
         <note priority="1" from="meaning">growthAudit.step.completed</note>
@@ -7079,11 +7240,11 @@
         <source>L&apos;audit a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">401</context>
+          <context context-type="linenumber">402</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">426</context>
+          <context context-type="linenumber">427</context>
         </context-group>
         <note priority="1" from="description">Audit failed message</note>
         <note priority="1" from="meaning">growthAudit.error.failed</note>
@@ -7092,7 +7253,7 @@
         <source>Connexion interrompue pendant l&apos;audit. Rechargez la page pour vérifier le résultat.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">439</context>
+          <context context-type="linenumber">440</context>
         </context-group>
         <note priority="1" from="description">Connection lost during audit</note>
         <note priority="1" from="meaning">growthAudit.error.connectionLost</note>
@@ -7101,7 +7262,7 @@
         <source>Impossible de récupérer le résumé de l&apos;audit pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">445</context>
+          <context context-type="linenumber">446</context>
         </context-group>
         <note priority="1" from="description">Summary fetch error</note>
         <note priority="1" from="meaning">growthAudit.error.summaryFetch</note>

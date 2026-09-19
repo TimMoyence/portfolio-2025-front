@@ -14511,5 +14511,212 @@
         <target>Let’s talk about your context, your uses and what is genuinely worth automating.</target>
       </segment>
     </unit>
+    <unit id="auditReportTitle">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html:4,6</note>
+      </notes>
+      <segment>
+        <source> Votre rapport d&apos;audit </source>
+        <target> Your audit report </target>
+      </segment>
+    </unit>
+    <unit id="auditReportPillars">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html:15,17</note>
+      </notes>
+      <segment>
+        <source> Scorecard par pilier </source>
+        <target> Scorecard by pillar </target>
+      </segment>
+    </unit>
+    <unit id="auditReportQuickWins">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html:23,25</note>
+      </notes>
+      <segment>
+        <source> Quick wins prioritaires </source>
+        <target> Priority quick wins </target>
+      </segment>
+    </unit>
+    <unit id="auditEffortLow">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.ts:21</note>
+      </notes>
+      <segment>
+        <source>Effort faible</source>
+        <target>Low effort</target>
+      </segment>
+    </unit>
+    <unit id="auditEffortMedium">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.ts:23</note>
+      </notes>
+      <segment>
+        <source>Effort moyen</source>
+        <target>Medium effort</target>
+      </segment>
+    </unit>
+    <unit id="auditEffortHigh">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.ts:25</note>
+      </notes>
+      <segment>
+        <source>Effort élevé</source>
+        <target>High effort</target>
+      </segment>
+    </unit>
+    <unit id="auditEngineGoogleVisibility">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/engine-coverage-matrix/engine-coverage-matrix.component.html:10,12</note>
+      </notes>
+      <segment>
+        <source> Visibilité Google </source>
+        <target> Google visibility </target>
+      </segment>
+    </unit>
+    <unit id="auditEngineAiVisibility">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/engine-coverage-matrix/engine-coverage-matrix.component.html:38,40</note>
+      </notes>
+      <segment>
+        <source> Visibilité IA </source>
+        <target> AI visibility </target>
+      </segment>
+    </unit>
+    <unit id="auditPillarTarget">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.html:17,19</note>
+      </notes>
+      <segment>
+        <source> / cible <ph id="0" equiv="INTERPOLATION" disp="{{ item.target }}"/> </source>
+        <target> / target <ph id="0" equiv="INTERPOLATION" disp="{{ item.target }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="auditPillarPerformance">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:18</note>
+      </notes>
+      <segment>
+        <source>Performance</source>
+        <target>Performance</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarTechnical">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:19</note>
+      </notes>
+      <segment>
+        <source>Tech &amp; scalabilité</source>
+        <target>Tech &amp; scalability</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarTrust">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:20</note>
+      </notes>
+      <segment>
+        <source>Crédibilité</source>
+        <target>Credibility</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarConversion">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:21</note>
+      </notes>
+      <segment>
+        <source>Conversion</source>
+        <target>Conversion</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarAiVisibility">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:22</note>
+      </notes>
+      <segment>
+        <source>Visibilité IA</source>
+        <target>AI visibility</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarCitationWorthiness">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:23</note>
+      </notes>
+      <segment>
+        <source>Citabilité IA</source>
+        <target>AI citability</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarStatusCritical">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:37</note>
+      </notes>
+      <segment>
+        <source>Critique</source>
+        <target>Critical</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarStatusWarning">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:39</note>
+      </notes>
+      <segment>
+        <source>À améliorer</source>
+        <target>Needs improvement</target>
+      </segment>
+    </unit>
+    <unit id="auditPillarStatusOk">
+      <notes>
+        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:41</note>
+      </notes>
+      <segment>
+        <source>Objectif atteint</source>
+        <target>Target met</target>
+      </segment>
+    </unit>
+    <unit id="auditProgressDefaultStep">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit-format.utils.ts:110</note>
+      </notes>
+      <segment>
+        <source>Audit en cours...</source>
+        <target>Audit in progress...</target>
+      </segment>
+    </unit>
+    <unit id="auditIdLabel">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.html:167,170</note>
+      </notes>
+      <segment>
+        <source>Audit ID: <ph id="0" equiv="INTERPOLATION" disp="{{ auditId }}"/></source>
+        <target>Audit ID: <ph id="0" equiv="INTERPOLATION" disp="{{ auditId }}"/></target>
+      </segment>
+    </unit>
+    <unit id="auditCurrentUrlLabel">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.html:211,212</note>
+      </notes>
+      <segment>
+        <source>URL en cours:</source>
+        <target>Current URL:</target>
+      </segment>
+    </unit>
+    <unit id="auditRecentPagesLabel">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.html:235,236</note>
+      </notes>
+      <segment>
+        <source> Dernières pages terminées: </source>
+        <target> Recently completed pages: </target>
+      </segment>
+    </unit>
+    <unit id="auditIaTaskFallback">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:67</note>
+      </notes>
+      <segment>
+        <source>IA</source>
+        <target>AI</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

@@ -18,11 +18,11 @@ export class AuditClientReportSectionComponent {
   effortLabel(effort: 'low' | 'medium' | 'high'): string {
     switch (effort) {
       case 'low':
-        return 'Effort faible';
+        return $localize`:@@auditEffortLow:Effort faible`;
       case 'medium':
-        return 'Effort moyen';
+        return $localize`:@@auditEffortMedium:Effort moyen`;
       case 'high':
-        return 'Effort élevé';
+        return $localize`:@@auditEffortHigh:Effort élevé`;
     }
   }
 
