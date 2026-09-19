@@ -15689,5 +15689,995 @@
         <target>Day</target>
       </segment>
     </unit>
+    <unit id="slideDeckFullscreenExit">
+      <segment>
+        <source>Quitter le mode présentation</source>
+        <target>Leave presentation mode</target>
+      </segment>
+    </unit>
+    <unit id="slideDeckFullscreenEnter">
+      <segment>
+        <source>Présenter en plein écran</source>
+        <target>Present full screen</target>
+      </segment>
+    </unit>
+    <unit id="slideDeckFullscreenExitShort">
+      <segment>
+        <source>Quitter</source>
+        <target>Leave</target>
+      </segment>
+    </unit>
+    <unit id="slideDeckFullscreenEnterShort">
+      <segment>
+        <source>Présenter</source>
+        <target>Present</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeValider">
+      <segment>
+        <source>Valider</source>
+        <target>Submit</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSuivant">
+      <segment>
+        <source>Suivant</source>
+        <target>Next</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePrecedent">
+      <segment>
+        <source>Précédent</source>
+        <target>Previous</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeJeNeSaisPas">
+      <segment>
+        <source>Je ne sais pas</source>
+        <target>I don’t know</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEnAttente">
+      <segment>
+        <source>En attente de votre réponse</source>
+        <target>Waiting for your answer</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeReponseEnregistree">
+      <segment>
+        <source>Réponse enregistrée</source>
+        <target>Answer recorded</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSaisieNonNumerique">
+      <segment>
+        <source>Saisissez un nombre — la virgule décimale est acceptée</source>
+        <target>Enter a number — a decimal comma is accepted</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeARevoir">
+      <segment>
+        <source>Pas encore — regardons pourquoi</source>
+        <target>Not yet — let’s see why</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConfirme">
+      <segment>
+        <source>C’est juste</source>
+        <target>That’s right</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeDiscussionEnCours">
+      <segment>
+        <source>Discutez avec votre voisin</source>
+        <target>Discuss with your neighbour</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRevoter">
+      <segment>
+        <source>Voter à nouveau</source>
+        <target>Vote again</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEnvoyer">
+      <segment>
+        <source>Envoyer</source>
+        <target>Send</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRappelConsigne">
+      <segment>
+        <source>Écrivez tout ce dont vous vous souvenez, sans regarder vos notes</source>
+        <target>Write down everything you remember, without looking at your notes</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRappelRestant">
+      <segment>
+        <source>Options disponibles dans</source>
+        <target>Options available in</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRappelTermine">
+      <segment>
+        <source>Options disponibles</source>
+        <target>Options available</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChoixObligatoire">
+      <segment>
+        <source>Choisissez une réponse avant d’envoyer</source>
+        <target>Choose an answer before sending</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTexteLibreTropLong">
+      <segment>
+        <source>Réduisez votre réponse à</source>
+        <target>Shorten your answer to</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCaracteresMaximum">
+      <segment>
+        <source>caractères maximum</source>
+        <target>characters maximum</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChargement">
+      <segment>
+        <source>Chargement…</source>
+        <target>Loading…</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeHorsLigne">
+      <segment>
+        <source>Hors ligne — vos réponses seront envoyées à la reconnexion</source>
+        <target>Offline — your answers will be sent when you reconnect</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePulsePerdu">
+      <segment>
+        <source>Perdu</source>
+        <target>Lost</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePulseCaVa">
+      <segment>
+        <source>Ça va</source>
+        <target>OK</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePulseClair">
+      <segment>
+        <source>C’est clair</source>
+        <target>Clear</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePulseAnonymat">
+      <segment>
+        <source>Réponses anonymes : personne ne voit qui a répondu quoi</source>
+        <target>Anonymous answers: nobody sees who answered what</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePulseVotreEtat">
+      <segment>
+        <source>Votre état actuel :</source>
+        <target>Your current state:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePulseTotal">
+      <segment>
+        <source>Réponses reçues :</source>
+        <target>Answers received:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChallengeConsigne">
+      <segment>
+        <source>Cherchez par vous-même : aucune méthode ne vous a encore été donnée</source>
+        <target>Work it out yourself: no method has been given to you yet</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChallengeTentativeVide">
+      <segment>
+        <source>Écrivez votre tentative, même imparfaite : c’est elle qui compte</source>
+        <target>Write your attempt, even an imperfect one: it is what counts</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChallengeReveler">
+      <segment>
+        <source>Voir les stratégies</source>
+        <target>Show the strategies</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChallengeStrategies">
+      <segment>
+        <source>Stratégies typiques</source>
+        <target>Typical strategies</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChallengeFausse">
+      <segment>
+        <source>Piste fausse</source>
+        <target>Wrong lead</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeProGeste">
+      <segment>
+        <source>Le geste professionnel</source>
+        <target>The professional practice</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeProConsequence">
+      <segment>
+        <source>Sur le terrain :</source>
+        <target>In the field:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Reglages">
+      <segment>
+        <source>Faites varier les paramètres et observez les quatre faces</source>
+        <target>Vary the parameters and watch the four views</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Animer">
+      <segment>
+        <source>Animer le calcul</source>
+        <target>Animate the calculation</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Formule">
+      <segment>
+        <source>Formule</source>
+        <target>Formula</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Graphique">
+      <segment>
+        <source>Graphique</source>
+        <target>Chart</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Courbe">
+      <segment>
+        <source>Courbe du résultat en fonction du paramètre</source>
+        <target>Curve of the result against the parameter</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Tableau">
+      <segment>
+        <source>Tableau de valeurs</source>
+        <target>Table of values</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Phrase">
+      <segment>
+        <source>En mots</source>
+        <target>In words</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Resultat">
+      <segment>
+        <source>Résultat</source>
+        <target>Result</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Plage">
+      <segment>
+        <source>de</source>
+        <target>from</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4PlageFin">
+      <segment>
+        <source>à</source>
+        <target>to</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeWorkedConsigne">
+      <segment>
+        <source>Suivez le raisonnement, puis reprenez les étapes laissées de côté</source>
+        <target>Follow the reasoning, then complete the steps left out</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeWorkedAVous">
+      <segment>
+        <source>À vous de rédiger cette étape</source>
+        <target>Your turn to write this step</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeWorkedPourquoi">
+      <segment>
+        <source>Pourquoi cette étape ?</source>
+        <target>Why this step?</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeWorkedEtapeVide">
+      <segment>
+        <source>Rédigez chaque étape laissée de côté avant de valider</source>
+        <target>Write every step left out before submitting</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeWorkedNiveau">
+      <segment>
+        <source>Étapes montrées :</source>
+        <target>Steps shown:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotReglages">
+      <segment>
+        <source>Faites varier les paramètres et observez la forme des courbes</source>
+        <target>Vary the parameters and watch the shape of the curves</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotAnimer">
+      <segment>
+        <source>Voir l’évolution</source>
+        <target>Show the change</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotSelon">
+      <segment>
+        <source>en fonction de</source>
+        <target>against</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotLegende">
+      <segment>
+        <source>Légende des courbes</source>
+        <target>Curve legend</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotTraitPlein">
+      <segment>
+        <source>trait plein</source>
+        <target>solid line</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotTraitTirets">
+      <segment>
+        <source>trait en pointillés</source>
+        <target>dashed line</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotTableau">
+      <segment>
+        <source>Valeurs aux deux extrémités</source>
+        <target>Values at both ends</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotSerie">
+      <segment>
+        <source>Courbe</source>
+        <target>Curve</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotEcart">
+      <segment>
+        <source>Écart entre les deux courbes :</source>
+        <target>Gap between the two curves:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotAucuneSerie">
+      <segment>
+        <source>Aucune courbe à tracer : la définition ne porte aucune série</source>
+        <target>No curve to draw: the definition has no series</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotPlage">
+      <segment>
+        <source>de</source>
+        <target>from</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotPlageFin">
+      <segment>
+        <source>à</source>
+        <target>to</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildConsigne">
+      <segment>
+        <source>Bâtissez le tableau ligne à ligne : chaque cellule déduite se recalcule dès que vous saisissez</source>
+        <target>Build the table row by row: each derived cell updates as soon as you type</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildEcheance">
+      <segment>
+        <source>Échéance</source>
+        <target>Instalment</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildASaisir">
+      <segment>
+        <source>à saisir</source>
+        <target>to enter</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildDeduite">
+      <segment>
+        <source>déduite</source>
+        <target>derived</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildTotaux">
+      <segment>
+        <source>Totaux</source>
+        <target>Totals</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildSolde">
+      <segment>
+        <source>Capital restant dû après la dernière échéance :</source>
+        <target>Outstanding principal after the last instalment:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildCelluleVide">
+      <segment>
+        <source>Complétez chaque cellule à saisir avant de valider</source>
+        <target>Fill in every cell to enter before submitting</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildProgression">
+      <segment>
+        <source>Cellules saisies :</source>
+        <target>Cells entered:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildVide">
+      <segment>
+        <source>Aucune ligne à bâtir : le plan ne porte aucune échéance</source>
+        <target>No row to build: the plan has no instalment</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetConsigne">
+      <segment>
+        <source>Écrivez vos formules : commencez par « = », citez les cellules par leur nom, séparez les arguments par un point-virgule</source>
+        <target>Write your formulas: start with “=”, refer to cells by name, separate arguments with a semicolon</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetCoin">
+      <segment>
+        <source>Cellule</source>
+        <target>Cell</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetCellule">
+      <segment>
+        <source>Cellule</source>
+        <target>Cell</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetRecopier">
+      <segment>
+        <source>Recopier vers le bas</source>
+        <target>Fill down</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetRecopieImpossible">
+      <segment>
+        <source>Aucune cellule sous celle-ci : la recopie n’a rien où aller</source>
+        <target>No cell below this one: there is nowhere to fill down</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetCelluleFautive">
+      <segment>
+        <source>Formule refusée par le tableur</source>
+        <target>Formula rejected by the spreadsheet</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetErreurs">
+      <segment>
+        <source>Formules à revoir :</source>
+        <target>Formulas to review:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetAucuneFormule">
+      <segment>
+        <source>Écrivez au moins une formule avant de valider</source>
+        <target>Write at least one formula before submitting</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetProgression">
+      <segment>
+        <source>Formules écrites :</source>
+        <target>Formulas written:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetVide">
+      <segment>
+        <source>Aucune cellule à remplir : le plan ne porte aucune ligne</source>
+        <target>No cell to fill in: the plan has no row</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortConsigne">
+      <segment>
+        <source>Choisissez une carte, désignez sa catégorie, puis déplacez-la — à la souris comme au clavier</source>
+        <target>Pick a card, choose its category, then move it — with the mouse or the keyboard</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortPioche">
+      <segment>
+        <source>Cartes à trier</source>
+        <target>Cards to sort</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortDestination">
+      <segment>
+        <source>Catégorie de destination</source>
+        <target>Target category</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortDeplacer">
+      <segment>
+        <source>Déplacer la carte</source>
+        <target>Move the card</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortSelection">
+      <segment>
+        <source>Carte choisie :</source>
+        <target>Selected card:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortRelachee">
+      <segment>
+        <source>Carte relâchée : aucune carte n’est choisie</source>
+        <target>Card released: no card is selected</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortDeplacee">
+      <segment>
+        <source>déplacée vers</source>
+        <target>moved to</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortAucuneCarte">
+      <segment>
+        <source>Choisissez d’abord une carte à déplacer</source>
+        <target>First pick a card to move</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortHorsCible">
+      <segment>
+        <source>Dépôt hors d’une catégorie : la carte est revenue à sa place</source>
+        <target>Dropped outside a category: the card went back to its place</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortIncomplet">
+      <segment>
+        <source>Placez chaque carte dans une catégorie avant de valider</source>
+        <target>Place every card in a category before submitting</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortProgression">
+      <segment>
+        <source>Cartes placées :</source>
+        <target>Cards placed:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortVide">
+      <segment>
+        <source>Aucune carte à trier : le plan ne porte aucune carte</source>
+        <target>No card to sort: the plan has no card</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeConsigne">
+      <segment>
+        <source>Résolvez une énigme pour ouvrir la suivante : chaque réponse juste livre un fragment du code</source>
+        <target>Solve a puzzle to open the next one: each correct answer gives a piece of the code</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeProgression">
+      <segment>
+        <source>Énigmes résolues :</source>
+        <target>Puzzles solved:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeMinuteur">
+      <segment>
+        <source>Temps passé sur cette énigme :</source>
+        <target>Time spent on this puzzle:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeMinuteurAnnonce">
+      <segment>
+        <source>minutes annoncées</source>
+        <target>minutes planned</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeEchu">
+      <segment>
+        <source>Le temps annoncé est écoulé : rien ne se ferme, prenez le temps qu’il faut</source>
+        <target>The planned time is up: nothing closes, take the time you need</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeVide">
+      <segment>
+        <source>Aucune énigme dans ce parcours</source>
+        <target>No puzzle in this trail</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeEtatResolue">
+      <segment>
+        <source>Résolue</source>
+        <target>Solved</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeEtatOuverte">
+      <segment>
+        <source>Ouverte</source>
+        <target>Open</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeEtatVerrouillee">
+      <segment>
+        <source>Verrouillée</source>
+        <target>Locked</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeVerrouillee">
+      <segment>
+        <source>Verrouillée : l’énigme précédente l’ouvrira</source>
+        <target>Locked: the previous puzzle will open it</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeFragment">
+      <segment>
+        <source>Fragment du code obtenu :</source>
+        <target>Code piece obtained:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeReponse">
+      <segment>
+        <source>Votre réponse</source>
+        <target>Your answer</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeRepondre">
+      <segment>
+        <source>Proposer cette réponse</source>
+        <target>Submit this answer</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeReponseVide">
+      <segment>
+        <source>Écrivez une réponse avant de la proposer</source>
+        <target>Write an answer before submitting it</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeAChercher">
+      <segment>
+        <source>Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose</source>
+        <target>Not yet: reread the statement and try something else</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeIndice">
+      <segment>
+        <source>Demander un indice</source>
+        <target>Ask for a hint</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeIndiceGratuit">
+      <segment>
+        <source>Prendre un indice ne retire rien à votre parcours</source>
+        <target>Taking a hint costs you nothing</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeIndiceAttente">
+      <segment>
+        <source>L’indice s’ouvre dans</source>
+        <target>The hint opens in</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeSecondes">
+      <segment>
+        <source>secondes</source>
+        <target>seconds</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeIndicePris">
+      <segment>
+        <source>Indice ouvert : il ne retire rien à votre parcours</source>
+        <target>Hint opened: it costs you nothing</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeIndiceDonne">
+      <segment>
+        <source>Indice :</source>
+        <target>Hint:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeDebloquee">
+      <segment>
+        <source>Énigme suivante déverrouillée :</source>
+        <target>Next puzzle unlocked:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeTermine">
+      <segment>
+        <source>Toutes les énigmes sont résolues, le code est reconstitué :</source>
+        <target>All puzzles are solved, the code is complete:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeCode">
+      <segment>
+        <source>Code final :</source>
+        <target>Final code:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedConsigne">
+      <segment>
+        <source>Rappel : quelques questions sur ce que vous avez travaillé plus tôt, de mémoire, sans vos notes</source>
+        <target>Recall: a few questions on what you worked on earlier, from memory, without your notes</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedProgression">
+      <segment>
+        <source>Question</source>
+        <target>Question</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedOrigine">
+      <segment>
+        <source>Vu en</source>
+        <target>Seen in</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedBoite">
+      <segment>
+        <source>Boîte</source>
+        <target>Box</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedVide">
+      <segment>
+        <source>Rien à revoir pour l’instant</source>
+        <target>Nothing to review for now</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedErreur">
+      <segment>
+        <source>Les questions à revoir ne sont pas arrivées : réessayez dans un instant, rien n’est perdu</source>
+        <target>The review questions did not arrive: try again in a moment, nothing is lost</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedTermine">
+      <segment>
+        <source>Révision terminée : vos réponses sont parties</source>
+        <target>Review finished: your answers have been sent</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedDiagnostics">
+      <segment>
+        <source>Confusions visées :</source>
+        <target>Targeted misconceptions:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVerdictJuste">
+      <segment>
+        <source>Juste</source>
+        <target>Correct</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVerdictARevoir">
+      <segment>
+        <source>À revoir</source>
+        <target>To review</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVerdictScore">
+      <segment>
+        <source>Score :</source>
+        <target>Score:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetVerdict">
+      <segment>
+        <source>Cellules justes :</source>
+        <target>Correct cells:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortVerdict">
+      <segment>
+        <source>Cartes bien placées :</source>
+        <target>Cards correctly placed:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildVerdict">
+      <segment>
+        <source>Lignes justes :</source>
+        <target>Correct rows:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildSynthese">
+      <segment>
+        <source>Synthèse</source>
+        <target>Summary</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortChrono">
+      <segment>
+        <source>Temps restant :</source>
+        <target>Time left:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortChronoEchu">
+      <segment>
+        <source>Le temps est écoulé : vous pouvez encore envoyer</source>
+        <target>Time is up: you can still submit</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeTentativesRestantes">
+      <segment>
+        <source>Tentatives restantes :</source>
+        <target>Attempts left:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeTentativesEpuisees">
+      <segment>
+        <source>Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment</source>
+        <target>No attempts left: the next puzzle opens, without a code piece</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeChallengeAttenteRevelation">
+      <segment>
+        <source>Les pistes fausses seront signalées à la révélation</source>
+        <target>Wrong leads will be flagged at the reveal</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVotePhaseVote">
+      <segment>
+        <source>Votez seul·e, sans en parler</source>
+        <target>Vote on your own, without talking</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVotePhaseRevele">
+      <segment>
+        <source>Réponse révélée</source>
+        <target>Answer revealed</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVotePhaseFermee">
+      <segment>
+        <source>Le vote est fermé pour cette question</source>
+        <target>Voting is closed for this question</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeDejaRepondu">
+      <segment>
+        <source>Réponse déjà enregistrée : voici votre verdict</source>
+        <target>Answer already recorded: here is your result</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEcranNonServi">
+      <segment>
+        <source>Cet écran n’est pas encore ouvert</source>
+        <target>This screen is not open yet</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeApercu">
+      <segment>
+        <source>Aperçu : les réponses s’envoient pendant la séance</source>
+        <target>Preview: answers are sent during the session</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEcranVerrouille">
+      <segment>
+        <source>Disponible pendant la séance</source>
+        <target>Available during the session</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVideoSousTitres">
+      <segment>
+        <source>Sous-titres</source>
+        <target>Subtitles</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeVideoTranscription">
+      <segment>
+        <source>Transcription</source>
+        <target>Transcript</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedCarteMaitrise">
+      <segment>
+        <source>Carte de maîtrise par concept</source>
+        <target>Mastery map by concept</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSpacedNonVus">
+      <segment>
+        <source>Non vus</source>
+        <target>Not seen</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePulseMasque">
+      <segment>
+        <source>Comptes affichés à partir de 5 réponses</source>
+        <target>Counts shown from 5 answers</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeProductionVide">
+      <segment>
+        <source>Saisissez au moins une valeur ou choisissez « Je ne sais pas »</source>
+        <target>Enter at least one value or choose “I don’t know”</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeBrouillonRestaure">
+      <segment>
+        <source>Brouillon restauré</source>
+        <target>Draft restored</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotVoirDonnees">
+      <segment>
+        <source>Voir les données</source>
+        <target>Show the data</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTentativesReseau">
+      <segment>
+        <source>Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau</source>
+        <target>Attempt not sent: check the connection and submit it again</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeStorySourceVisuel">
+      <segment>
+        <source>Source du visuel</source>
+        <target>Image source</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeStorySourceMedia">
+      <segment>
+        <source>Source du média</source>
+        <target>Media source</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeDureeMinutes">
+      <segment>
+        <source>min</source>
+        <target>min</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeModaliteSolo">
+      <segment>
+        <source>Individuel</source>
+        <target>Individual</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeModaliteBinome">
+      <segment>
+        <source>En binôme</source>
+        <target>In pairs</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeModaliteGroupe">
+      <segment>
+        <source>En groupe</source>
+        <target>In groups</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeModaliteClasse">
+      <segment>
+        <source>Classe entière</source>
+        <target>Whole class</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRegimeOuvert">
+      <segment>
+        <source>Régime ouvert</source>
+        <target>Open mode</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRegimeFocus">
+      <segment>
+        <source>Régime concentré</source>
+        <target>Focus mode</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRegimeExamen">
+      <segment>
+        <source>Régime d’examen</source>
+        <target>Exam mode</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

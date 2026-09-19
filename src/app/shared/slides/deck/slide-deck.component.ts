@@ -50,6 +50,18 @@ export class SlideDeckComponent implements AfterViewInit {
     () => `slide-deck mode-${this.service.mode()} theme-${this.theme()}`,
   );
 
+  protected readonly libellePlein = computed(() =>
+    this.service.mode() === 'fullscreen'
+      ? $localize`:@@slideDeckFullscreenExit:Quitter le mode présentation`
+      : $localize`:@@slideDeckFullscreenEnter:Présenter en plein écran`,
+  );
+
+  protected readonly libelleCompact = computed(() =>
+    this.service.mode() === 'fullscreen'
+      ? $localize`:@@slideDeckFullscreenExitShort:Quitter`
+      : $localize`:@@slideDeckFullscreenEnterShort:Présenter`,
+  );
+
   protected readonly visibleSlides = computed(() => {
     const m = this.service.mode();
     return this.slides().filter((slide) => {

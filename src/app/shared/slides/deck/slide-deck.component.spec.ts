@@ -1,4 +1,5 @@
 import { Component, PLATFORM_ID } from '@angular/core';
+import { clearTranslations, loadTranslations } from '@angular/localize';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlideComponent } from './slide.component';
 import { SlideDeckComponent } from './slide-deck.component';
@@ -20,22 +21,27 @@ import { SLIDE_DECK_CONFIG } from './slide-deck.tokens';
 })
 class HostComponent {}
 
+function monterLeDeckDeDemonstration(): ComponentFixture<HostComponent> {
+  TestBed.configureTestingModule({
+    imports: [HostComponent],
+    providers: [
+      SlideDeckService,
+      FullscreenAdapter,
+      { provide: PLATFORM_ID, useValue: 'browser' },
+      { provide: SLIDE_DECK_CONFIG, useValue: buildSlideDeckConfig() },
+    ],
+  });
+  const monte = TestBed.createComponent(HostComponent);
+  monte.detectChanges();
+  return monte;
+}
+
 describe('SlideDeckComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
   let deckEl: HTMLElement;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HostComponent],
-      providers: [
-        SlideDeckService,
-        FullscreenAdapter,
-        { provide: PLATFORM_ID, useValue: 'browser' },
-        { provide: SLIDE_DECK_CONFIG, useValue: buildSlideDeckConfig() },
-      ],
-    });
-    fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
+    fixture = monterLeDeckDeDemonstration();
     deckEl = fixture.nativeElement.querySelector('.slide-deck');
   });
 
@@ -121,6 +127,53 @@ describe('SlideDeckComponent', () => {
     document.dispatchEvent(new Event('fullscreenchange'));
     fixture.detectChanges();
     expect(service.mode()).toBe('scroll');
+  });
+});
+
+describe('SlideDeckComponent — libellés du plein écran', () => {
+  function monterLeDeck(): { deck: HTMLElement; service: SlideDeckService; rafraichir(): void } {
+    const fix = monterLeDeckDeDemonstration();
+    return {
+      deck: fix.nativeElement.querySelector('.slide-deck') as HTMLElement,
+      service: TestBed.inject(SlideDeckService),
+      rafraichir: () => fix.detectChanges(),
+    };
+  }
+
+  function bouton(deck: HTMLElement): HTMLButtonElement {
+    return deck.querySelector('[data-testid="slide-deck-fullscreen-toggle"]') as HTMLButtonElement;
+  }
+
+  afterEach(() => clearTranslations());
+
+  it('nomme le bouton en français par défaut, pour l’entrée comme pour la sortie', () => {
+    const { deck, service, rafraichir } = monterLeDeck();
+    expect(bouton(deck).getAttribute('aria-label')).toBe('Présenter en plein écran');
+    expect(bouton(deck).textContent).toContain('Présenter');
+
+    service.setMode('fullscreen');
+    rafraichir();
+
+    expect(bouton(deck).getAttribute('aria-label')).toBe('Quitter le mode présentation');
+    expect(bouton(deck).textContent).toContain('Quitter');
+  });
+
+  it('traduit le libellé accessible et le libellé visible en locale anglaise', () => {
+    loadTranslations({
+      slideDeckFullscreenEnter: 'Present full screen',
+      slideDeckFullscreenExit: 'Leave presentation mode',
+      slideDeckFullscreenEnterShort: 'Present',
+      slideDeckFullscreenExitShort: 'Leave',
+    });
+    const { deck, service, rafraichir } = monterLeDeck();
+    expect(bouton(deck).getAttribute('aria-label')).toBe('Present full screen');
+
+    service.setMode('fullscreen');
+    rafraichir();
+
+    expect(bouton(deck).getAttribute('aria-label')).toBe('Leave presentation mode');
+    expect(bouton(deck).textContent?.trim()).toContain('Leave');
+    expect(bouton(deck).textContent).not.toContain('Quitter');
   });
 });
 

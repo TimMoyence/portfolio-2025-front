@@ -105,7 +105,7 @@ describe('FpSpaced', () => {
       hote.setAttribute('render', rendu);
       expect(libelleDe(hote, 'vide'))
         .withContext(`le rendu ${rendu} laisse l etudiant devant un ecran muet`)
-        .toBe('Rien à réviser aujourd’hui : revenez après la prochaine séance');
+        .toBe('Rien à revoir pour l’instant');
       expect(noeuds(hote, 'option')).toEqual([]);
     }
   });
