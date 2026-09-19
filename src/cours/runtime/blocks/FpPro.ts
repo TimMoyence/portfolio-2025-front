@@ -53,13 +53,7 @@ export class FpPro extends FpBlock {
     if (cas === null) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const metadonnees = cas.metadonnees;
-    const reperes = safeHtml`
-      <div class="fp-pro__reperes">
-        <span class="fp-badge" data-testid="modalite">${escapeHtml(metadonnees.modalite)}</span>
-        <span class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</span>
-      </div>
-    `;
+    const reperes = safeHtml`<div class="fp-pro__reperes">${this.reperes(cas.metadonnees)}</div>`;
     return this.dossier('fp-carte', 'fp-pro__geste-texte', reperes);
   }
 

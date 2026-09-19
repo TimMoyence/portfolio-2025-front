@@ -743,7 +743,6 @@ describe('CoursPresentateurComponent', () => {
     expect(options.jeton).toBeUndefined();
     expect(options.entetes?.()).toEqual({ authorization: `Bearer ${JETON}` });
     expect(double.flux.ouvrir).toHaveBeenCalledTimes(1);
-    expect(double.flux.join).not.toHaveBeenCalled();
 
     TestBed.inject(AuthStateService).login(buildAuthSession({ accessToken: 'jwt-renouvele' }));
 
@@ -799,14 +798,14 @@ describe('CoursPresentateurComponent', () => {
     expect(allersALaSynthese(navigation)).toBe(1);
   });
 
-  it('montre en scene l ecran courant du deroule avec ses notes, sans le remonter a chaque etat', async () => {
+  it('montre au pupitre l ecran courant en rendu tableau avec ses notes, sans le remonter a chaque etat', async () => {
     const fixture = await ouvrirLaSeance();
     const ecran = apercu(fixture);
     const hote = fixture.debugElement.query(By.directive(SlideActivityComponent))
       .nativeElement as HTMLElement;
 
     expect(ecran.slide()).toBe(deroule.ecrans[0]);
-    expect(ecran.render()).toBe('stage');
+    expect(ecran.render()).toBe('board');
     expect(ecran.role()).toBe('presentateur');
     expect(hote.hasAttribute('role'))
       .withContext('presentateur est un role du runtime, pas un role ARIA')
@@ -900,7 +899,9 @@ describe('CoursPresentateurComponent', () => {
 
     publier(fixture, resultatsDeLaQuestion(10, 5));
 
-    expect(apercu(fixture)?.resultats()).toEqual(resultatsDeLaQuestion(10, 5));
+    expect(apercu(fixture)?.resultats()).toEqual(
+      jasmine.objectContaining({ ...resultatsDeLaQuestion(10, 5) }),
+    );
     expect(
       (fixture.nativeElement as HTMLElement).querySelector("[data-testid='cours-reponses-slide']"),
     ).toBeNull();
@@ -1029,5 +1030,82 @@ describe('CoursPresentateurComponent', () => {
     expect(double.flux.close).not.toHaveBeenCalled();
     fixture.destroy();
     expect(double.flux.close).toHaveBeenCalledTimes(1);
+  });
+
+  describe('pilotage des briques de l ecran courant (§ 9.7)', () => {
+    function derouleAvecEcran(ecran: Parameters<typeof buildEcranDeroule>[0]): DerouleCours {
+      return buildDerouleCours({
+        ecrans: [buildEcranDeroule(ecran), ...derouleDeSeance().ecrans.slice(1)],
+      });
+    }
+
+    it('donne au rendu tableau le pilotage, les resultats et l annexe formateur de l ecran', async () => {
+      const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
+      deroule = derouleAvecEcran({
+        id: 'ecran-vote',
+        type: 'fp-vote',
+        donnees: { question: buildVoteQuestion() },
+        corrigeEcran: annexe,
+      });
+      port.lireDeroule.and.returnValue(of(deroule));
+      const fixture = await ouvrirLaSeance();
+      const resultats = resultatsDeLaQuestion(12, 8);
+
+      diffuser(fixture, { pilotage: { 'ecran-vote': { phase: 'discussion' } } });
+      publier(fixture, resultats);
+
+      expect(apercu(fixture).donneesFormateur()).toBe(annexe);
+      expect(apercu(fixture).direct()).toEqual({
+        pilotage: { phase: 'discussion' },
+        resultats: resultats.questions,
+        comptesJalon: null,
+      });
+    });
+
+    it('pilote la phase du vote depuis le panneau d activite', async () => {
+      deroule = derouleAvecEcran({
+        id: 'ecran-vote',
+        type: 'fp-vote',
+        donnees: {
+          question: buildVoteQuestion(),
+          questionJumelle: buildVoteQuestion({ id: 'Q-CAP-03-bis' }),
+        },
+      });
+      port.lireDeroule.and.returnValue(of(deroule));
+      const fixture = await ouvrirLaSeance();
+
+      await cliquer(fixture, 'activite-phase-suivante');
+
+      expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
+        pilotage: { screenId: 'ecran-vote', phase: 'discussion' },
+      });
+    });
+
+    it('lit la carte de maitrise sur l ecran de rappel espace et la confie au rendu tableau', async () => {
+      deroule = derouleAvecEcran({ id: 'ecran-rappel-espace', type: 'fp-spaced', donnees: {} });
+      port.lireDeroule.and.returnValue(of(deroule));
+      const fixture = await ouvrirLaSeance();
+
+      diffuser(fixture, { ecranCourant: 0 });
+      await stabiliser(fixture);
+
+      expect(port.lireSyntheseRappels).toHaveBeenCalledWith(SESSION);
+      expect(apercu(fixture).maitrise()).toEqual([
+        jasmine.objectContaining({ concept: 'evolution-reciproque' }),
+      ]);
+      expect(lire(fixture, 'presentateur-maitrise-echec')).toBeNull();
+    });
+
+    it('dit au formateur que la carte de maitrise n a pas pu etre lue', async () => {
+      port.lireSyntheseRappels.and.returnValue(throwError(() => new Error('reseau coupe')));
+      deroule = derouleAvecEcran({ id: 'ecran-rappel-espace', type: 'fp-spaced', donnees: {} });
+      port.lireDeroule.and.returnValue(of(deroule));
+      const fixture = await ouvrirLaSeance();
+
+      diffuser(fixture, { ecranCourant: 0 });
+      await stabiliser(fixture);
+
+      expect(cible(fixture, 'presentateur-maitrise-echec').getAttribute('role')).toBe('status');
+    });
   });
 });

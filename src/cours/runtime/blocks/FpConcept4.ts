@@ -1,6 +1,7 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { brancherCurseurs, curseur } from './curseurs';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
 
@@ -122,10 +123,6 @@ export class FpConcept4 extends FpBlock {
     return { ...this.courantes };
   }
 
-  get termeActif(): string | null {
-    return this.actif;
-  }
-
   disconnectedCallback(): void {
     this.arreterAnimation();
   }
@@ -134,7 +131,7 @@ export class FpConcept4 extends FpBlock {
     if (this.definition === null) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return safeHtml`<section class="fp-carte fp-concept4__atelier">${this.reglages()}${this.faces('fp-prose')}</section>`;
+    return safeHtml`<section class="fp-carte fp-concept4__atelier">${this.reglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-prose')}</div></section>`;
   }
 
   renderStage(): EscapedHtml {
@@ -149,14 +146,10 @@ export class FpConcept4 extends FpBlock {
     if (definition === null) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const metadonnees = definition.metadonnees;
     return safeHtml`
       <section class="fp-carte fp-concept4__atelier">
         ${this.faces('fp-prose')}
-        <div class="fp-concept4__reperes">
-          <span class="fp-badge" data-testid="modalite">${escapeHtml(metadonnees.modalite)}</span>
-          <span class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</span>
-        </div>
+        <div class="fp-concept4__reperes">${this.reperes(definition.metadonnees)}</div>
       </section>
     `;
   }
@@ -171,6 +164,24 @@ export class FpConcept4 extends FpBlock {
       ?.addEventListener('click', () => {
         this.animer();
       });
+    brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
+  }
+
+  private regler(cle: string, valeur: number): void {
+    const parametre = this.parametre(cle);
+    if (parametre === null) {
+      return;
+    }
+    this.arreterAnimation();
+    this.courantes = { ...this.courantes, [cle]: borner(parametre, valeur) };
+    this.actif = cle;
+    const sortie = this.racine.querySelector<HTMLOutputElement>(
+      `output[data-testid="valeur"][data-cle="${cle}"]`,
+    );
+    if (sortie !== null) {
+      sortie.textContent = formater(this.courantes[cle]);
+    }
+    this.rafraichirZone('faces', this.faces('fp-prose'));
   }
 
   private faces(stylePhrase: string): EscapedHtml {
@@ -230,7 +241,9 @@ export class FpConcept4 extends FpBlock {
       morceaux.push(this.termesTexte(source.slice(curseur, debut), cles));
       const numerateur = trouve[1] ?? '';
       const denominateur = trouve[2] ?? '';
-      const libelleFraction = escapeHtml(`${numerateur} divisé par ${denominateur}`);
+      const libelleFraction = escapeHtml(
+        `${numerateur} ${this.texte('concept4-divise-par')} ${denominateur}`,
+      );
       morceaux.push(
         safeHtml`<span class="fp-concept4__fraction" data-testid="fraction" aria-label="${libelleFraction}"><span class="fp-concept4__fraction-numerateur">${this.termesTexte(numerateur, cles)}</span><span class="fp-concept4__fraction-denominateur">${this.termesTexte(denominateur, cles)}</span></span>`,
       );
@@ -383,6 +396,7 @@ export class FpConcept4 extends FpBlock {
     return safeHtml`
       <div class="fp-concept4__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
         <span class="fp-concept4__etiquette">${escapeHtml(parametre.libelle)}</span>
+        ${curseur('fp-concept4', parametre, valeur, this.enonceValeur(parametre, valeur))}
         <output class="fp-concept4__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(this.enonceValeur(parametre, valeur))}">${escapeHtml(formater(valeur))}</output>
       </div>
     `;
@@ -417,14 +431,7 @@ export class FpConcept4 extends FpBlock {
           return [parametre.cle, borner(parametre, valeur)];
         }),
       );
-      const pilote = parametres[parametres.length - 1];
-      this.actif = pilote.cle;
-      this.emit('fp-concept4-explore', {
-        definitionId: this.definition?.id,
-        cle: pilote.cle,
-        valeur: this.courantes[pilote.cle],
-        dureeMs: this.depuisAffichage(),
-      });
+      this.actif = parametres[parametres.length - 1].cle;
       this.refresh();
       if (etape >= total) {
         this.arreterAnimation();

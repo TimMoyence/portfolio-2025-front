@@ -53,6 +53,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'concept4-resultat': () => $localize`:@@coursRuntimeConcept4Resultat:Résultat`,
   'concept4-plage': () => $localize`:@@coursRuntimeConcept4Plage:de`,
   'concept4-plage-fin': () => $localize`:@@coursRuntimeConcept4PlageFin:à`,
+  'concept4-divise-par': () => $localize`:@@coursRuntimeConcept4DivisePar:divisé par`,
   'worked-consigne': () =>
     $localize`:@@coursRuntimeWorkedConsigne:Suivez le raisonnement, puis reprenez les étapes laissées de côté`,
   'worked-a-vous': () => $localize`:@@coursRuntimeWorkedAVous:À vous de rédiger cette étape`,

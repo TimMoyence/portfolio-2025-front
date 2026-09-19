@@ -1,40 +1,78 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { shuffleWithSeed } from '../core/seed';
 import { FpBlock } from './FpBlock';
-import { type OptionPublique, projeterOptions } from './projection';
+import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
+import {
+  type ConceptMaitrise,
+  estObjet,
+  estVerdictDeReponse,
+  type VerdictDeReponse,
+} from './retours';
 
-export interface SpacedOption extends OptionPublique {
-  readonly misconception: string | null;
+export interface SpacedRappel {
+  readonly id: string;
+  readonly intitule: string;
+  readonly metadonnees: MetadonneesBrique;
 }
 
 export interface SpacedQuestionPublique {
   readonly questionId: string;
   readonly concept: string;
-  readonly boite: number;
+  readonly boite: 1 | 2 | 3;
   readonly cours: string;
   readonly enonce: string;
   readonly options: readonly OptionPublique[];
 }
 
-export interface SpacedQuestion extends SpacedQuestionPublique {
-  readonly options: readonly SpacedOption[];
-  readonly metadonnees: MetadonneesBrique;
+const VIDE = escapeHtml('');
+const BOITES = [1, 2, 3] as const;
+
+function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPublique {
+  return {
+    questionId: source.questionId,
+    concept: source.concept,
+    boite: source.boite,
+    cours: source.cours,
+    enonce: source.enonce,
+    options: projeterOptions(source.options),
+  };
 }
 
-const VIDE = escapeHtml('');
+function estConceptMaitrise(valeur: unknown): valeur is ConceptMaitrise {
+  return (
+    estObjet(valeur) &&
+    typeof valeur['concept'] === 'string' &&
+    typeof valeur['libelle'] === 'string' &&
+    ['boite1', 'boite2', 'boite3', 'nonVus'].every((cle) => typeof valeur[cle] === 'number')
+  );
+}
 
 export class FpSpaced extends FpBlock {
+  private interneRappel: SpacedRappel | null = null;
   private interne: readonly SpacedQuestionPublique[] | null = null;
-  private diagnostics: readonly string[] = [];
-  private rang = 0;
+  private recus = new Map<string, VerdictDeReponse>();
+  private repondues = new Set<string>();
+  private carte: readonly ConceptMaitrise[] = [];
   private message = '';
-  private panne = false;
 
-  set questions(valeur: readonly SpacedQuestion[] | null) {
-    this.interne = valeur === null ? null : valeur.map((question) => this.projeter(question));
-    this.diagnostics = valeur === null ? [] : this.diagnostiquer(valeur);
-    this.rang = 0;
+  set rappel(valeur: SpacedRappel | null) {
+    this.interneRappel =
+      valeur === null
+        ? null
+        : {
+            id: valeur.id,
+            intitule: valeur.intitule,
+            metadonnees: projeterMetadonnees(valeur.metadonnees),
+          };
+    this.refreshSiConnecte();
+  }
+
+  get rappel(): SpacedRappel | null {
+    return this.interneRappel;
+  }
+
+  set questions(valeur: readonly SpacedQuestionPublique[] | null) {
+    this.interne = valeur === null ? null : valeur.map(projeterQuestion);
     this.message = '';
     this.suivreAffichage(this.cleAffichage());
     this.refreshSiConnecte();
@@ -44,36 +82,45 @@ export class FpSpaced extends FpBlock {
     return this.interne;
   }
 
-  set erreur(valeur: boolean) {
-    this.panne = valeur;
+  set verdicts(valeur: readonly VerdictDeReponse[] | null) {
+    this.recus = new Map(
+      (valeur ?? []).filter(estVerdictDeReponse).map((verdict) => [verdict.questionId, verdict]),
+    );
+    this.suivreAffichage(this.cleAffichage());
     this.refreshSiConnecte();
   }
 
-  get erreur(): boolean {
-    return this.panne;
+  get verdicts(): readonly VerdictDeReponse[] {
+    return [...this.recus.values()];
   }
 
-  get avancement(): number {
-    return this.rang;
+  set maitrise(valeur: readonly ConceptMaitrise[] | null) {
+    this.carte = (valeur ?? []).filter(estConceptMaitrise);
+    this.refreshSiConnecte();
+  }
+
+  get maitrise(): readonly ConceptMaitrise[] {
+    return this.carte;
   }
 
   renderHand(): EscapedHtml {
     return safeHtml`
       <section class="fp-carte fp-spaced__seance">
+        ${this.entete()}
         <p class="fp-spaced__consigne">${escapeHtml(this.texte('spaced-consigne'))}</p>
-        ${this.avarie()}
+        ${this.annonces()}
         ${this.pupitre()}
+        ${this.bilan()}
         <p class="fp-spaced__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
       </section>
     `;
   }
 
   renderStage(): EscapedHtml {
-    const question = this.questionCourante();
     return safeHtml`
       <section class="fp-scene fp-spaced__seance">
-        ${this.avarie()}
-        ${question === null ? this.etatSansQuestion() : this.projection(question)}
+        ${this.entete()}
+        <p class="fp-enonce fp-spaced__consigne">${escapeHtml(this.texte('spaced-consigne'))}</p>
       </section>
     `;
   }
@@ -81,10 +128,8 @@ export class FpSpaced extends FpBlock {
   renderBoard(): EscapedHtml {
     return safeHtml`
       <section class="fp-carte fp-spaced__seance">
-        ${this.avarie()}
-        ${this.questionCourante() === null ? this.etatSansQuestion() : this.progression()}
-        ${this.tableauDesDues()}
-        ${this.solutionnaire()}
+        ${this.entete()}
+        ${this.roleActuel() === 'presentateur' ? this.carteDeMaitrise() : VIDE}
       </section>
     `;
   }
@@ -99,41 +144,27 @@ export class FpSpaced extends FpBlock {
     }
   }
 
-  private projeter(source: SpacedQuestion): SpacedQuestionPublique {
-    if (this.roleActuel() === 'presentateur') {
-      return source;
-    }
-    return {
-      questionId: source.questionId,
-      concept: source.concept,
-      boite: source.boite,
-      cours: source.cours,
-      enonce: source.enonce,
-      options: projeterOptions(source.options),
-    };
+  private entete(): EscapedHtml {
+    const rappel = this.interneRappel;
+    return rappel === null
+      ? VIDE
+      : safeHtml`<p class="fp-spaced__intitule" data-testid="intitule">${escapeHtml(rappel.intitule)}</p>`;
   }
 
-  private diagnostiquer(source: readonly SpacedQuestion[]): readonly string[] {
-    if (this.roleActuel() !== 'presentateur') {
-      return [];
-    }
-    return source.flatMap((question) =>
-      question.options
-        .map((option) => option.misconception)
-        .filter((misconception): misconception is string => misconception !== null),
-    );
+  private dejaTraitee(question: SpacedQuestionPublique): boolean {
+    return this.repondues.has(question.questionId) || this.recus.has(question.questionId);
+  }
+
+  private questionCourante(): SpacedQuestionPublique | null {
+    return this.interne?.find((question) => !this.dejaTraitee(question)) ?? null;
+  }
+
+  private rang(): number {
+    return (this.interne ?? []).filter((question) => this.dejaTraitee(question)).length;
   }
 
   private total(): number {
     return this.interne?.length ?? 0;
-  }
-
-  private acheve(): boolean {
-    return this.total() > 0 && this.rang >= this.total();
-  }
-
-  private questionCourante(): SpacedQuestionPublique | null {
-    return this.interne?.[this.rang] ?? null;
   }
 
   private cleAffichage(): string | null {
@@ -151,7 +182,7 @@ export class FpSpaced extends FpBlock {
   private projection(question: SpacedQuestionPublique): EscapedHtml {
     return safeHtml`
       ${this.progression()}
-      ${this.reperes(question)}
+      ${this.reperesDeQuestion(question)}
       <p class="fp-enonce fp-spaced__enonce" data-testid="enonce">${escapeHtml(question.enonce)}</p>
     `;
   }
@@ -160,67 +191,65 @@ export class FpSpaced extends FpBlock {
     if (this.interne === null) {
       return safeHtml`<p class="fp-spaced__attente" data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    if (this.acheve()) {
+    if (this.total() > 0) {
       return safeHtml`<p class="fp-spaced__termine" data-testid="termine">${escapeHtml(this.texte('spaced-termine'))}</p>`;
     }
     return safeHtml`<p class="fp-spaced__vide" data-testid="vide">${escapeHtml(this.texte('spaced-vide'))}</p>`;
   }
 
   private progression(): EscapedHtml {
-    const rang = Math.min(this.rang + 1, this.total());
+    const rang = Math.min(this.rang() + 1, this.total());
     return safeHtml`<p class="fp-spaced__progression" data-testid="progression">${escapeHtml(this.texte('spaced-progression'))} ${rang} / ${this.total()}</p>`;
   }
 
-  private reperes(question: SpacedQuestionPublique): EscapedHtml {
+  private reperesDeQuestion(question: SpacedQuestionPublique): EscapedHtml {
     return safeHtml`
       <p class="fp-spaced__reperes">
         <span class="fp-badge fp-spaced__origine" data-testid="origine"><span class="fp-spaced__mention">${escapeHtml(this.texte('spaced-origine'))}</span> ${escapeHtml(question.cours)}</span>
         <span class="fp-badge fp-spaced__boite" data-testid="boite" data-boite="${question.boite}">${escapeHtml(this.texte('spaced-boite'))} ${question.boite}</span>
-        <span class="fp-spaced__concept" data-testid="concept">${escapeHtml(question.concept)}</span>
       </p>
     `;
   }
 
   private options(question: SpacedQuestionPublique): EscapedHtml {
-    const boutons = shuffleWithSeed([...question.options], this.seed()).map(
+    const options = [
+      ...question.options,
+      { id: '__je_ne_sais_pas__', libelle: this.texte('je-ne-sais-pas') },
+    ];
+    const boutons = options.map(
       (option) =>
         safeHtml`<button type="button" class="fp-spaced__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );
     return safeHtml`<div class="fp-spaced__options" data-testid="options">${boutons}</div>`;
   }
 
-  private tableauDesDues(): EscapedHtml {
-    if (this.total() === 0) {
-      return VIDE;
-    }
-    return safeHtml`<ul class="fp-spaced__liste" data-testid="liste">${(this.interne ?? []).map((question) => this.ligne(question))}</ul>`;
+  private bilan(): EscapedHtml {
+    const lignes = (this.interne ?? [])
+      .filter((question) => this.recus.has(question.questionId))
+      .map((question) => {
+        const verdict = this.recus.get(question.questionId) ?? null;
+        return safeHtml`<li class="fp-spaced__ligne" data-testid="ligne" data-question="${escapeHtml(question.questionId)}"><span class="fp-spaced__nom">${escapeHtml(question.enonce)}</span>${this.verdictDeReponse(verdict)}</li>`;
+      });
+    return lignes.length === 0
+      ? VIDE
+      : safeHtml`<ul class="fp-spaced__liste" data-testid="bilan">${lignes}</ul>`;
   }
 
-  private ligne(question: SpacedQuestionPublique): EscapedHtml {
+  private carteDeMaitrise(): EscapedHtml {
+    const entetes = BOITES.map(
+      (boite) => safeHtml`<th scope="col">${escapeHtml(this.texte('spaced-boite'))} ${boite}</th>`,
+    );
+    const lignes = this.carte.map(
+      (concept) =>
+        safeHtml`<tr class="fp-spaced__concept" data-testid="concept" data-concept="${escapeHtml(concept.concept)}"><th scope="row">${escapeHtml(concept.libelle)}</th><td class="fp-montant">${concept.boite1}</td><td class="fp-montant">${concept.boite2}</td><td class="fp-montant">${concept.boite3}</td><td class="fp-montant">${concept.nonVus}</td></tr>`,
+    );
     return safeHtml`
-      <li class="fp-spaced__ligne" data-testid="ligne" data-boite="${question.boite}">
-        <span class="fp-spaced__nom">${escapeHtml(question.cours)}</span>
-        <span class="fp-badge fp-spaced__boite">${escapeHtml(this.texte('spaced-boite'))} ${question.boite}</span>
-        <span class="fp-spaced__concept">${escapeHtml(question.concept)}</span>
-      </li>
+      <table class="fp-spaced__maitrise" data-testid="carte-maitrise">
+        <caption class="fp-spaced__mention">${escapeHtml(this.texte('spaced-carte-maitrise'))}</caption>
+        <thead><tr><th scope="col"></th>${entetes}<th scope="col">${escapeHtml(this.texte('spaced-non-vus'))}</th></tr></thead>
+        <tbody>${lignes}</tbody>
+      </table>
     `;
-  }
-
-  private solutionnaire(): EscapedHtml {
-    if (this.diagnostics.length === 0) {
-      return VIDE;
-    }
-    return safeHtml`
-      <p class="fp-spaced__mention">${escapeHtml(this.texte('spaced-diagnostics'))}</p>
-      <ul class="fp-spaced__diagnostics" data-testid="diagnostics">${this.diagnostics.map((misconception) => safeHtml`<li class="fp-spaced__diagnostic">${escapeHtml(misconception)}</li>`)}</ul>
-    `;
-  }
-
-  private avarie(): EscapedHtml {
-    if (!this.panne) {
-      return VIDE;
-    }
-    return safeHtml`<p class="fp-encadre fp-spaced__panne" role="status" data-testid="panne">${escapeHtml(this.texte('spaced-erreur'))}</p>`;
   }
 
   private repondre(optionId: string): void {
@@ -228,13 +257,14 @@ export class FpSpaced extends FpBlock {
     if (question === null) {
       return;
     }
+    this.repondues.add(question.questionId);
     this.emit('fp-spaced-reponse', {
       questionId: question.questionId,
       optionId,
       dureeMs: this.depuisAffichage(),
     });
-    this.rang += 1;
-    this.message = this.acheve() ? this.texte('spaced-termine') : this.texte('reponse-enregistree');
+    this.message =
+      this.questionCourante() === null ? this.texte('spaced-termine') : this.messageApresEnvoi();
     this.suivreAffichage(this.cleAffichage());
     this.refresh();
   }

@@ -5,8 +5,11 @@ const CAPACITE_MAX = 200;
 const ECHEC_ECRITURE =
   "Le stockage local de ce poste n'a pas accepté l'écriture — la réponse n'a pas été mise en file";
 
+export type NatureEnvoi = 'reponse' | 'production' | 'jalon';
+
 export interface EnvoiReponse {
   id: number;
+  nature: NatureEnvoi;
   sessionId: string;
   studentKey: string;
   questionId: string;
@@ -17,8 +20,13 @@ export interface EnvoiReponse {
 
 export type Envoyeur = (envoi: EnvoiReponse) => boolean | Promise<boolean>;
 
+type EnvoiStocke = Omit<EnvoiReponse, 'nature'> & Partial<Pick<EnvoiReponse, 'nature'>>;
+
 export function pending(): readonly EnvoiReponse[] {
-  return readJson<EnvoiReponse[]>(CLE) ?? [];
+  return (readJson<EnvoiStocke[]>(CLE) ?? []).map((envoi) => ({
+    ...envoi,
+    nature: envoi.nature ?? 'reponse',
+  }));
 }
 
 export function enqueue(envoi: Omit<EnvoiReponse, 'id'>): void {

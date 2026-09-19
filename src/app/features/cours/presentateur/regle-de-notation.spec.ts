@@ -1,4 +1,7 @@
-import { buildRegleNotation } from '../../../../testing/factories/formations.factory';
+import {
+  buildRegleNotation,
+  buildResumeBareme,
+} from '../../../../testing/factories/formations.factory';
 import { phraseDeNotation } from './regle-de-notation';
 
 describe('phraseDeNotation', () => {
@@ -27,5 +30,16 @@ describe('phraseDeNotation', () => {
     expect(phrase).toMatch(/^Note \/10 /);
     expect(phrase).toContain('« je ne sais pas » ne compte pas comme une réponse');
     expect(phrase).toContain('les réponses libres sont notées');
+  });
+
+  it('donne le denominateur des questions notees quand le bareme est servi', () => {
+    const sansBareme = phraseDeNotation(buildRegleNotation());
+    const avecBareme = phraseDeNotation(buildRegleNotation(), buildResumeBareme());
+
+    expect(sansBareme).not.toContain('questions notées');
+    expect(avecBareme.startsWith(sansBareme)).toBeTrue();
+    expect(avecBareme).toContain('sur 31 questions notées');
+    expect(avecBareme).toContain('une production vide n’est pas acceptée');
+    expect(avecBareme).toContain('énigmes et rappels ne comptent pas');
   });
 });

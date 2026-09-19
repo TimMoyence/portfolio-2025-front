@@ -6,6 +6,7 @@ import type {
   GuideFormateur,
   ResultatQuestion,
   ResultatsSeance,
+  ResumeBareme,
   StatistiquesSeance,
 } from '../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-publiques';
@@ -84,6 +85,21 @@ export function buildRegleNotation(overrides: Partial<RegleNotation> = {}): Regl
     typesNotables: ['vote', 'numeric', 'classement', 'feuille', 'tableau'],
     productionCompteSi: 'au-moins-une-saisie',
     statistiquesSurQuestionsNotees: true,
+    ...overrides,
+  };
+}
+
+export function buildResumeBareme(overrides: Partial<ResumeBareme> = {}): ResumeBareme {
+  return {
+    questionsNotees: 31,
+    parType: {
+      vote: { notees: 19, nonNotees: 13 },
+      numeric: { notees: 7, nonNotees: 0 },
+      classement: { notees: 3, nonNotees: 0 },
+      feuille: { notees: 1, nonNotees: 0 },
+      tableau: { notees: 1, nonNotees: 0 },
+      enigme: { notees: 0, nonNotees: 4 },
+    },
     ...overrides,
   };
 }

@@ -130,6 +130,7 @@ describe('CoursSceneComponent', () => {
     expect(apercu(fixture)?.slide()).toEqual({
       id: deroule.ecrans[0].id,
       type: deroule.ecrans[0].type,
+      titre: null,
       duree: deroule.ecrans[0].duree,
       interactif: deroule.ecrans[0].interactif,
       donnees: deroule.ecrans[0].donnees,
@@ -143,6 +144,7 @@ describe('CoursSceneComponent', () => {
     expect(apercu(fixture)?.slide()).toEqual({
       id: deroule.ecrans[1].id,
       type: deroule.ecrans[1].type,
+      titre: null,
       duree: deroule.ecrans[1].duree,
       interactif: deroule.ecrans[1].interactif,
       donnees: deroule.ecrans[1].donnees,
@@ -174,7 +176,7 @@ describe('CoursSceneComponent', () => {
     expect(texte).not.toContain(CONFUSIONS_DE_LA_CLASSE[0].libelle);
     expect(port.ouvrirSeance).not.toHaveBeenCalled();
     expect(double.flux.onResultats).toHaveBeenCalled();
-    expect(apercu(fixture)?.resultats()).toEqual(resultats);
+    expect(apercu(fixture)?.resultats()).toEqual(jasmine.objectContaining({ ...resultats }));
     expect(texte).not.toContain('Réponses des élèves');
     expect(texte).not.toContain('70 %');
   });
@@ -254,5 +256,38 @@ describe('CoursSceneComponent', () => {
     expect(double.flux.close).not.toHaveBeenCalled();
     fixture.destroy();
     expect(double.flux.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('ne projette les comptes d un jalon qu a partir de cinq reponses', async () => {
+    const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
+    deroule = buildDerouleCours({
+      ecrans: [
+        buildEcranDeroule({
+          id: 'ecran-jalon',
+          type: 'fp-pulse',
+          donnees: { sondage: { id: 'P-PULSE-01' } },
+          corrigeEcran: annexe,
+        }),
+      ],
+    });
+    port.lireDeroule.and.returnValue(of(deroule));
+    const fixture = await monterEtStabiliser();
+    diffuser(fixture, { ecranCourant: 0, pilotage: { 'ecran-jalon': { revele: true } } });
+
+    double.diffuserResultats({
+      ...buildResultatsSeance(),
+      jalons: { 'P-PULSE-01': { perdu: 1, 'ca-va': 2, clair: 1, total: 4 } },
+    });
+    fixture.detectChanges();
+
+    expect(apercu(fixture)?.direct()?.comptesJalon).toBeNull();
+    expect(apercu(fixture)?.direct()?.pilotage).toEqual({ revele: true });
+    expect(apercu(fixture)?.donneesFormateur()).toBe(annexe);
+
+    const comptes = { perdu: 1, 'ca-va': 2, clair: 2, total: 5 };
+    double.diffuserResultats({ ...buildResultatsSeance(), jalons: { 'P-PULSE-01': comptes } });
+    fixture.detectChanges();
+
+    expect(apercu(fixture)?.direct()?.comptesJalon).toEqual(comptes);
   });
 });

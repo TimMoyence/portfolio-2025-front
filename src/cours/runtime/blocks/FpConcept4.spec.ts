@@ -176,7 +176,11 @@ describe('FpConcept4', () => {
         ?.querySelector('[data-testid="valeur"][data-cle="n"]')
         ?.getAttribute('aria-label'),
     ).toBe('Duree en annees : 10 (de 1 à 30)');
-    expect(hote.shadowRoot?.querySelector('input[type="range"]')).toBeNull();
+    expect(
+      hote.shadowRoot
+        ?.querySelector('[data-testid="curseur"][data-cle="n"]')
+        ?.getAttribute('aria-label'),
+    ).toBe('Duree en annees : 10 (de 1 à 30)');
   });
 
   it('echappe le html injecte dans la formule, les libelles et la phrase', () => {
@@ -219,9 +223,9 @@ describe('FpConcept4', () => {
     expect(JSON.stringify(hote.definition)).not.toContain('bonneReponse');
   });
 
-  it('n ecrit dans aucun stockage et n annonce que l exploration', () => {
+  it('explore sans rien emettre vers la seance ni ecrire dans un stockage', () => {
     animer(hote);
-    expect(traces.evenements).toContain('fp-concept4-explore');
+    expect(traces.evenements).toEqual([]);
     expect(traces.ecritures).toEqual([]);
   });
 

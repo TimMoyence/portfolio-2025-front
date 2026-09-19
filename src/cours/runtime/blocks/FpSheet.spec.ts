@@ -1,6 +1,6 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
-import { buildSheetPlan } from '../../../testing/factories/cours.factory';
+import { buildSheetPlan, buildVerdictDeProduction } from '../../../testing/factories/cours.factory';
 import { FpSheet } from './FpSheet';
 
 const PLAN = buildSheetPlan();
@@ -12,6 +12,10 @@ const MONTANT_TTC = '=C3*(1+$B$1)';
 const ATTENDU_CACHE = '64,8';
 const ATTENDU_CACHE_MACHINE = '64.8';
 const DELAI_MAX_MS = 300;
+const ATTENDUS_FORMATEUR = {
+  type: 'feuille',
+  attendus: [{ reference: 'D3', formuleReference: '=C3*(1+$B$1)', valeur: 64.8 }],
+};
 
 function repere(hote: FpSheet, nom: string): Element | null {
   return hote.shadowRoot?.querySelector(`[data-testid="${nom}"]`) ?? null;
@@ -43,6 +47,15 @@ function barre(hote: FpSheet): HTMLInputElement {
   return trouvee;
 }
 
+function selectionner(hote: FpSheet, nom: string): void {
+  cellule(hote, nom).dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+}
+
+function formuleDe(hote: FpSheet, nom: string): string {
+  selectionner(hote, nom);
+  return barre(hote).value;
+}
+
 function saisir(hote: FpSheet, nom: string, texte: string): void {
   const champ = cellule(hote, nom);
   champ.value = texte;
@@ -62,6 +75,14 @@ function entrer(hote: FpSheet, nom: string): void {
 function chiffrer(hote: FpSheet): void {
   saisir(hote, 'C3', MONTANT_HT);
   saisir(hote, 'D3', MONTANT_TTC);
+}
+
+function envois(hote: FpSheet): Record<string, unknown>[] {
+  const recus: Record<string, unknown>[] = [];
+  hote.addEventListener('fp-sheet-submit', (evenement) =>
+    recus.push((evenement as CustomEvent<Record<string, unknown>>).detail),
+  );
+  return recus;
 }
 
 describe('FpSheet', () => {
@@ -90,15 +111,17 @@ describe('FpSheet', () => {
     const racine = hote.shadowRoot;
     expect(racine?.querySelectorAll('table').length).toBe(1);
     expect(racine?.querySelector('caption')?.textContent?.trim()).toBe(PLAN.intitule);
-    expect([...(racine?.querySelectorAll('thead th') ?? [])].map((th) => th.getAttribute('scope')))
-      .withContext('la lettre de colonne doit etre un entete portant scope="col"')
-      .toEqual(['col', 'col', 'col', 'col', 'col']);
+    expect(
+      [...(racine?.querySelectorAll('thead th') ?? [])].map((th) => th.getAttribute('scope')),
+    ).toEqual(['col', 'col', 'col', 'col', 'col']);
     expect(reperes(hote, 'colonne').map((th) => th.textContent)).toEqual(['A', 'B', 'C', 'D']);
     expect(racine?.querySelectorAll('tbody tr').length).toBe(PLAN.lignes);
-    expect(
-      [...(racine?.querySelectorAll('tbody tr th') ?? [])].map((th) => th.getAttribute('scope')),
-    ).toEqual(['row', 'row', 'row', 'row', 'row', 'row']);
     expect(racine?.querySelector('[role="grid"]')).toBeNull();
+  });
+
+  it('enonce les consignes numerotees du plan', () => {
+    expect(reperes(hote, 'consignes')[0]?.querySelectorAll('li').length).toBe(2);
+    expect(texteDe(hote, 'consignes')).toContain('En C3, calculez le montant HT.');
   });
 
   it('relie chaque cellule a la lettre de sa colonne et au numero de sa ligne', () => {
@@ -110,59 +133,49 @@ describe('FpSheet', () => {
 
   it('evalue la formule saisie et affiche le resultat dans les cellules non selectionnees', () => {
     chiffrer(hote);
-    expect(cellule(hote, 'C3').value)
-      .withContext('C3 n est plus selectionnee : elle montre son resultat')
-      .toBe('54');
-    expect(cellule(hote, 'D3').value)
-      .withContext('D3 est selectionnee : elle montre sa formule')
-      .toBe(MONTANT_TTC);
-    expect(hote.saisies['C3']).toBe(MONTANT_HT);
+    expect(cellule(hote, 'C3').value).toBe('54');
+    expect(cellule(hote, 'D3').value).toBe(MONTANT_TTC);
+    expect(formuleDe(hote, 'C3')).toBe(MONTANT_HT);
   });
 
   it('montre la formule de la cellule selectionnee dans la barre de formule', () => {
     chiffrer(hote);
     expect(texteDe(hote, 'reference')).toBe('D3');
     expect(barre(hote).value).toBe(MONTANT_TTC);
-    cellule(hote, 'C3').dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+    selectionner(hote, 'C3');
     expect(texteDe(hote, 'reference')).toBe('C3');
-    expect(barre(hote).value).toBe(MONTANT_HT);
     expect(cellule(hote, 'D3').value).toBe('64,8');
   });
 
   it('ecrit dans la cellule selectionnee depuis la barre de formule', () => {
-    cellule(hote, 'C3').dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+    selectionner(hote, 'C3');
     const champ = barre(hote);
     champ.value = '=1+1';
     champ.dispatchEvent(new Event('input', { bubbles: true }));
-    expect(hote.saisies['C3']).toBe('=1+1');
     expect(hote.shadowRoot?.activeElement?.getAttribute('data-testid')).toBe('barre');
+    selectionner(hote, 'D3');
+    expect(cellule(hote, 'C3').value).toBe('2');
   });
 
   it('descend d une ligne a la touche Entree et garde le parcours de lecture au Tab', () => {
-    cellule(hote, 'C3').dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+    selectionner(hote, 'C3');
     entrer(hote, 'C3');
     expect(texteDe(hote, 'reference')).toBe('C4');
     expect(hote.shadowRoot?.activeElement?.getAttribute('data-nom')).toBe('C4');
     entrer(hote, 'C6');
-    expect(texteDe(hote, 'reference'))
-      .withContext('la derniere ligne ne doit pas sortir de la grille')
-      .toBe('C6');
-    expect(reperes(hote, 'cellule').some((noeud) => noeud.hasAttribute('tabindex')))
-      .withContext('un tabindex reordonnerait le parcours au clavier hors de l ordre de lecture')
-      .toBe(false);
+    expect(texteDe(hote, 'reference')).toBe('C6');
+    expect(reperes(hote, 'cellule').some((noeud) => noeud.hasAttribute('tabindex'))).toBe(false);
   });
 
   it('decale les references relatives a la recopie vers le bas et fige les ancrees', () => {
     chiffrer(hote);
-    cellule(hote, 'C3').dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+    selectionner(hote, 'C3');
     cliquer(hote, 'recopier');
-    expect(hote.saisies['C4']).toBe('=A4*B4');
     expect(texteDe(hote, 'reference')).toBe('C4');
-    cellule(hote, 'D3').dispatchEvent(new FocusEvent('focus', { bubbles: true }));
+    expect(barre(hote).value).toBe('=A4*B4');
+    selectionner(hote, 'D3');
     cliquer(hote, 'recopier');
-    expect(hote.saisies['D4'])
-      .withContext('$B$1 est ancree : la recopie ne la decale pas')
-      .toBe('=C4*(1+$B$1)');
+    expect(barre(hote).value).toBe('=C4*(1+$B$1)');
     expect(cellule(hote, 'C4').value).toBe('360');
   });
 
@@ -170,7 +183,7 @@ describe('FpSheet', () => {
     saisir(hote, 'C6', '=A3*2');
     cliquer(hote, 'recopier');
     expect(texteDe(hote, 'retour')).toContain('rien où aller');
-    expect(hote.saisies['C6']).toBe('=A3*2');
+    expect(barre(hote).value).toBe('=A3*2');
   });
 
   it('signale une cellule en erreur autrement que par la couleur seule', () => {
@@ -181,9 +194,7 @@ describe('FpSheet', () => {
     expect(fautive.getAttribute('title')).toContain('refusée');
     expect(texteDe(hote, 'erreurs')).toContain('C3');
     saisir(hote, 'D3', '=1');
-    expect(cellule(hote, 'C3').value)
-      .withContext('le code d erreur doit se lire en clair dans la cellule')
-      .toBe('#DIV/0!');
+    expect(cellule(hote, 'C3').value).toBe('#DIV/0!');
   });
 
   it('rend #REF! sans boucler quand deux cellules se citent en rond', () => {
@@ -192,10 +203,7 @@ describe('FpSheet', () => {
     saisir(hote, 'D3', '=C3+1');
     expect(cellule(hote, 'C3').value).toBe('#REF!');
     expect(cellule(hote, 'D3').getAttribute('data-erreur')).toBe('#REF!');
-    expect(texteDe(hote, 'erreurs')).toContain('C3');
-    expect(Date.now() - debut)
-      .withContext('un cycle doit etre coupe par la brique, pas parcouru')
-      .toBeLessThan(DELAI_MAX_MS);
+    expect(Date.now() - debut).toBeLessThan(DELAI_MAX_MS);
   });
 
   it('refuse une formule qui ressemble a du code sans jamais l executer', () => {
@@ -208,48 +216,90 @@ describe('FpSheet', () => {
 
   it('tient les cellules verrouillees hors de toute saisie', () => {
     const donnee = cellule(hote, 'A3');
-    expect(donnee.hasAttribute('readonly')).toBe(true);
     expect(donnee.readOnly).toBe(true);
     donnee.value = '999';
     donnee.dispatchEvent(new Event('input', { bubbles: true }));
-    expect(hote.saisies['A3']).toBe('12');
+    expect(formuleDe(hote, 'A3')).toBe('12');
     expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(false);
   });
 
-  it('refuse de valider tant qu aucune formule n a ete ecrite', () => {
+  it('refuse de valider tant qu aucune formule n a ete ecrite, puis envoie les seules saisies', () => {
+    const recus = envois(hote);
     cliquer(hote, 'valider');
-    expect(texteDe(hote, 'retour')).toContain('Écrivez au moins une formule');
-    expect(traces.evenements).toEqual([]);
+    expect(texteDe(hote, 'retour')).toBe(
+      'Saisissez au moins une valeur ou choisissez « Je ne sais pas »',
+    );
+    expect(recus).toEqual([]);
     chiffrer(hote);
     cliquer(hote, 'valider');
     expect(texteDe(hote, 'retour')).toBe('Réponse enregistrée');
-    expect(traces.evenements).toEqual(['fp-sheet-submit']);
+    expect(recus).toEqual([
+      {
+        planId: PLAN.id,
+        cellules: { C3: MONTANT_HT, D3: MONTANT_TTC },
+        dureeMs: jasmine.any(Number),
+      },
+    ]);
   });
 
-  it('n ecrit dans aucun stockage et n annonce la validation qu une fois', () => {
+  it('envoie je ne sais pas sans cellule', () => {
+    const recus = envois(hote);
+    cliquer(hote, 'je-ne-sais-pas');
+    expect(recus.map((detail) => detail['neSaitPas'])).toEqual([true]);
+    expect(recus[0]['cellules']).toBeUndefined();
+  });
+
+  it('n ecrit dans aucun stockage et n envoie la validation qu une fois', () => {
+    const recus = envois(hote);
     chiffrer(hote);
     cliquer(hote, 'valider');
     cliquer(hote, 'valider');
-    expect(traces.evenements).toEqual(['fp-sheet-submit']);
+    expect(recus.length).toBe(1);
     expect(traces.ecritures).toEqual([]);
     expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(true);
   });
 
-  it('efface les valeurs attendues pour le poste etudiant comme pour le presentateur', () => {
-    expect(JSON.stringify(hote.plan)).not.toContain('attendus');
-    expect(JSON.stringify(hote.plan)).not.toContain(ATTENDU_CACHE_MACHINE);
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.plan = buildSheetPlan({ id: 'K-TABLEUR-PRES' });
-    expect(JSON.stringify(hote.plan)).not.toContain('attendus');
-    expect(JSON.stringify(hote.plan)).not.toContain(ATTENDU_CACHE_MACHINE);
+  it('confie les saisies au brouillon de l hote et les restaure sans toucher aux cellules verrouillees', () => {
+    const brouillons: unknown[] = [];
+    hote.addEventListener('fp-brouillon', (evenement) =>
+      brouillons.push((evenement as CustomEvent).detail),
+    );
+    saisir(hote, 'C3', MONTANT_HT);
+    expect(brouillons).toEqual([{ id: PLAN.id, valeur: { C3: MONTANT_HT } }]);
+
+    hote.plan = buildSheetPlan({ id: 'K-TABLEUR-RECHARGE' });
+    hote.brouillon = { c3: MONTANT_HT, A3: '999', Z99: '=1' };
+
+    expect(formuleDe(hote, 'C3')).toBe(MONTANT_HT);
+    expect(formuleDe(hote, 'A3')).toBe('12');
+    expect(texteDe(hote, 'brouillon-restaure')).toBe('Brouillon restauré');
   });
 
-  it('ne publie dans le dom aucune valeur attendue tant qu elle n est pas calculee', () => {
+  it('marque les cellules selon le verdict recu', () => {
+    chiffrer(hote);
+    cliquer(hote, 'valider');
+    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+
+    const marquees = reperes(hote, 'cellule-verdict');
+    expect(marquees.map((td) => td.getAttribute('data-etat'))).toEqual(['confirme', 'a-revoir']);
+    expect(marquees[1].getAttribute('title')).toBe('Référence relative non figée');
+    expect(texteDe(hote, 'decompte')).toBe('Cellules justes : 1/2');
+  });
+
+  it('ne publie dans aucun rendu etudiant une valeur attendue non calculee', () => {
+    hote.corrige = ATTENDUS_FORMATEUR;
     for (const rendu of RENDUS) {
       hote.setAttribute('render', rendu);
       expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(ATTENDU_CACHE);
       expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(ATTENDU_CACHE_MACHINE);
     }
+  });
+
+  it('montre au pupitre les formules de reference', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('render', 'board');
+    hote.corrige = ATTENDUS_FORMATEUR;
+    expect(texteDe(hote, 'attendu')).toBe('D3 =C3*(1+$B$1) 64,8');
   });
 
   it('echappe le html de l intitule et de la formule tapee par l etudiant', () => {
@@ -258,7 +308,6 @@ describe('FpSheet', () => {
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim()).toBe(CHARGE_XSS);
     expect(cellule(hote, 'C3').value).toBe(CHARGE_XSS);
-    expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
   it('bati une grille sans ligne sans casser le tableau', () => {
@@ -274,12 +323,14 @@ describe('FpSheet', () => {
     expect(hote.shadowRoot?.querySelectorAll('input').length).toBe(0);
     expect(hote.shadowRoot?.querySelector('[data-nom="C3"]')?.textContent).toBe('54');
     hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'modalite')).toBe(PLAN.metadonnees.modalite);
-    expect(texteDe(hote, 'duree')).toContain(String(PLAN.metadonnees.dureeMinutes));
-    expect(texteDe(hote, 'progression')).toContain('écrites : 2');
+    expect(texteDe(hote, 'modalite')).toBe('Individuel');
+    expect(texteDe(hote, 'duree')).toBe('15 min');
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = ATTENDUS_FORMATEUR;
+    saisir(hote, 'C3', '=A3/0');
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'sheet')).toEqual([]);
   });

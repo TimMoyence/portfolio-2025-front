@@ -2,6 +2,9 @@ import type { CreateurFlux } from '../../app/features/cours/cours-flux.token';
 import type { ResultatsSeance } from '../../cours/content/types';
 import type {
   EtatSession,
+  FinListener,
+  RaisonDeFin,
+  ResultatsDuFlux,
   ResultatsListener,
   StatutFlux,
   StatutListener,
@@ -13,8 +16,9 @@ export interface FluxDouble {
   readonly fabrique: jasmine.Spy<CreateurFlux>;
   readonly flux: jasmine.SpyObj<Sync>;
   diffuser(etat: Partial<EtatSession>): void;
-  diffuserResultats(resultats: ResultatsSeance): void;
+  diffuserResultats(resultats: ResultatsSeance & Partial<ResultatsDuFlux>): void;
   diffuserStatut(statut: StatutFlux): void;
+  diffuserFin(raison: RaisonDeFin | null): void;
 }
 
 function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
@@ -41,18 +45,19 @@ export function createFluxDouble(): FluxDouble {
   const ecoutes: SyncListener[] = [];
   const ecoutesResultats: ResultatsListener[] = [];
   const ecoutesStatut: StatutListener[] = [];
+  const ecoutesFin: FinListener[] = [];
   const flux = jasmine.createSpyObj<Sync>('Sync', [
-    'join',
     'ouvrir',
-    'submit',
     'onState',
     'onResultats',
     'onStatut',
+    'onFin',
     'close',
   ]);
   flux.onState.and.callFake(ecouter(ecoutes));
   flux.onResultats.and.callFake(ecouter(ecoutesResultats));
   flux.onStatut.and.callFake(ecouter(ecoutesStatut));
+  flux.onFin.and.callFake(ecouter(ecoutesFin));
   return {
     fabrique: jasmine.createSpy<CreateurFlux>('creerFlux').and.returnValue(flux),
     flux,
@@ -63,13 +68,19 @@ export function createFluxDouble(): FluxDouble {
       }
     },
     diffuserResultats: (resultats) => {
+      const complets: ResultatsDuFlux = { jalons: {}, enigmes: [], bareme: null, ...resultats };
       for (const ecoute of ecoutesResultats) {
-        ecoute(resultats);
+        ecoute(complets);
       }
     },
     diffuserStatut: (statut) => {
       for (const ecoute of ecoutesStatut) {
         ecoute(statut);
+      }
+    },
+    diffuserFin: (raison) => {
+      for (const ecoute of ecoutesFin) {
+        ecoute(raison);
       }
     },
   };

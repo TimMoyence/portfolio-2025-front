@@ -70,7 +70,6 @@ describe('FpPulse', () => {
       'ca-va',
       'clair',
     ]);
-    expect(hote.etatChoisi).toBeNull();
     expect(presses(hote)).toEqual([]);
   });
 
@@ -93,7 +92,6 @@ describe('FpPulse', () => {
     const recus = changements(hote);
     declarer(hote, 'perdu');
     declarer(hote, 'clair');
-    expect(hote.etatChoisi).toBe('clair');
     expect(presses(hote)).toEqual(['clair']);
     expect(recus.map((detail) => detail['etat'])).toEqual(['perdu', 'clair']);
   });
@@ -109,7 +107,7 @@ describe('FpPulse', () => {
     declarer(hote, 'perdu');
     expect(boutonsEtat(hote).every((bouton) => !bouton.disabled)).toBe(true);
     declarer(hote, 'ca-va');
-    expect(hote.etatChoisi).toBe('ca-va');
+    expect(presses(hote)).toEqual(['ca-va']);
   });
 
   it('distingue les trois etats par un libelle et une forme sans recours a la couleur', () => {
@@ -151,7 +149,7 @@ describe('FpPulse', () => {
     const bruts = { ...COMPTES, etudiants: [NOM_ETUDIANT] };
     hote.comptes = bruts;
     expect(JSON.stringify(hote.comptes)).not.toContain(NOM_ETUDIANT);
-    expect(triees(Object.keys(hote.comptes ?? {}))).toEqual(['ca-va', 'clair', 'perdu']);
+    expect(triees(Object.keys(hote.comptes ?? {}))).toEqual(['ca-va', 'clair', 'perdu', 'total']);
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
@@ -171,8 +169,35 @@ describe('FpPulse', () => {
   it('oublie l etat declare quand un nouveau sondage arrive', () => {
     declarer(hote, 'perdu');
     hote.sondage = buildPulseSondage({ id: 'P-PULSE-05' });
-    expect(hote.etatChoisi).toBeNull();
     expect(presses(hote)).toEqual([]);
+  });
+
+  it('masque les comptes en projection sous cinq reponses, jamais au pupitre', () => {
+    hote.comptes = { perdu: 1, 'ca-va': 2, clair: 1, total: 4 };
+    hote.setAttribute('render', 'stage');
+
+    expect(lireTexte(hote, 'masque')).toBe('Comptes affichés à partir de 5 réponses');
+    expect(hote.shadowRoot?.querySelector('[data-testid="agregat"]')).toBeNull();
+
+    hote.setAttribute('render', 'board');
+    expect(lireTexte(hote, 'total')).toBe('Réponses reçues : 4');
+
+    hote.setAttribute('render', 'stage');
+    hote.comptes = { perdu: 1, 'ca-va': 2, clair: 2, total: 5 };
+    expect(lireTexte(hote, 'total')).toBe('Réponses reçues : 5');
+  });
+
+  it('memorise l etat declare et le restaure apres rechargement', () => {
+    const brouillons: unknown[] = [];
+    hote.addEventListener('fp-brouillon', (evenement) =>
+      brouillons.push((evenement as CustomEvent).detail),
+    );
+    declarer(hote, 'perdu');
+    expect(brouillons).toEqual([{ id: SONDAGE.id, valeur: { etat: 'perdu' } }]);
+
+    hote.sondage = buildPulseSondage({ id: 'P-PULSE-06' });
+    hote.brouillon = { etat: 'clair' };
+    expect(presses(hote)).toEqual(['clair']);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

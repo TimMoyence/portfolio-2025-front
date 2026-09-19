@@ -28,6 +28,18 @@ describe('queue', () => {
     expect(pending()).toEqual(relue);
   });
 
+  it('garde la nature de chaque envoi et lit une entree ancienne comme une reponse', () => {
+    enqueue(buildEnvoiReponse({ nature: 'production', questionId: 'b2-01-a4-feuille-canaux' }));
+    enqueue(buildEnvoiReponse({ nature: 'jalon', questionId: 'b2-01-jalon-1', valeur: 'perdu' }));
+    const ancienne = { ...buildEnvoiReponse({ questionId: 'Q-ANCIENNE' }), id: 3 };
+    const stockee = JSON.parse(globalThis.localStorage.getItem(CLE) ?? '[]') as object[];
+    globalThis.localStorage.setItem(
+      CLE,
+      JSON.stringify([...stockee, { ...ancienne, nature: undefined }]),
+    );
+    expect(pending().map((envoi) => envoi.nature)).toEqual(['production', 'jalon', 'reponse']);
+  });
+
   it('flush vide la file quand l envoi reussit', async () => {
     enqueue(buildEnvoiReponse());
     await flush(() => true);

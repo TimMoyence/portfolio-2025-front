@@ -253,7 +253,20 @@ describe('FpPlot', () => {
     expect(repere(hote, 'valeur')?.getAttribute('aria-label')).toBe(
       'Capital place en euros : 1000 (de 100 à 5000)',
     );
-    expect(hote.shadowRoot?.querySelector('input[type="range"]')).toBeNull();
+    expect(repere(hote, 'curseur')?.getAttribute('aria-label')).toBe(
+      'Capital place en euros : 1000 (de 100 à 5000)',
+    );
+  });
+
+  it('regle un parametre au curseur et redessine sans remplacer le curseur', () => {
+    const curseur = repere(hote, 'curseur') as HTMLInputElement;
+    const avant = texteDe(hote, 'tableau');
+    curseur.value = '3000';
+    curseur.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(repere(hote, 'curseur')).toBe(curseur);
+    expect(repere(hote, 'valeur')?.textContent?.trim()).toBe('3000');
+    expect(texteDe(hote, 'tableau')).not.toBe(avant);
   });
 
   it('echappe le html injecte dans les libelles des axes et des series', () => {
@@ -280,7 +293,7 @@ describe('FpPlot', () => {
     expect(reperes(hote, 'animer')).toEqual([]);
     expect(repere(hote, 'synthese')?.classList.contains('fp-enonce')).toBe(true);
     hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'modalite')).toBe(DEFINITION.metadonnees.modalite);
+    expect(texteDe(hote, 'modalite')).toBe('En binôme');
     expect(texteDe(hote, 'duree')).toContain(String(DEFINITION.metadonnees.dureeMinutes));
   });
 
@@ -291,9 +304,9 @@ describe('FpPlot', () => {
     expect(JSON.stringify(hote.definition)).not.toContain('bonneReponse');
   });
 
-  it('n ecrit dans aucun stockage et n annonce que l exploration', () => {
+  it('explore sans rien emettre vers la seance ni ecrire dans un stockage', () => {
     animer(hote);
-    expect(traces.evenements).toContain('fp-plot-explore');
+    expect(traces.evenements).toEqual([]);
     expect(traces.ecritures).toEqual([]);
   });
 

@@ -1,6 +1,8 @@
-import { buildChallengeProbleme } from '../../../testing/factories/cours.factory';
-import { feuilleDe } from '../design/blocks';
-import { base, stage, tokens } from '../design/styles';
+import { classesOrphelines } from '../../../testing/classes-briques';
+import {
+  buildChallengeProbleme,
+  buildStrategiesServies,
+} from '../../../testing/factories/cours.factory';
 import { FpChallenge } from './FpChallenge';
 
 interface DetailChallenge {
@@ -11,11 +13,11 @@ interface DetailChallenge {
 
 const PROBLEME = buildChallengeProbleme();
 const LIBELLE_FAUSSE = 'Diviser 100 par 7 et arrondir';
-const LIBELLE_JUSTE = PROBLEME.strategies[1].libelle;
 const TENTATIVE = 'A vue de nez une dizaine d annees, j ai ajoute 7 % chaque annee de tete';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const RENDUS = ['hand', 'stage', 'board'];
 const INSTANT_INITIAL = '2026-09-13T10:00:00.000Z';
+const CORRIGE_DU_DEFI = { type: 'defi', strategies: buildStrategiesServies(true) };
 
 function zoneTentative(element: FpChallenge): HTMLTextAreaElement {
   const champ = element.shadowRoot?.querySelector<HTMLTextAreaElement>('[data-testid="tentative"]');
@@ -40,10 +42,6 @@ function marquesDe(element: FpChallenge): string[] {
   return strategiesDe(element)
     .filter((ligne) => ligne.querySelector('[data-testid="marque"]') !== null)
     .map((ligne) => ligne.getAttribute('data-strategie') ?? '');
-}
-
-function boutonReveler(element: FpChallenge): HTMLButtonElement | null {
-  return element.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="reveler"]') ?? null;
 }
 
 function tentativesEmises(element: FpChallenge): DetailChallenge[] {
@@ -76,125 +74,116 @@ describe('FpChallenge', () => {
     jasmine.clock().uninstall();
   });
 
-  it('pose le probleme sans methode ni formule avant toute tentative', () => {
+  it('pose le probleme sans methode ni strategie avant toute tentative', () => {
     expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(PROBLEME.enonce);
     expect(hote.shadowRoot?.querySelector('[data-testid="consigne"]')?.textContent?.trim()).toBe(
       'Cherchez par vous-même : aucune méthode ne vous a encore été donnée',
     );
-    expect(zoneTentative(hote).value).toBe('');
-  });
-
-  it('ne met aucune strategie dans le dom avant la revelation', () => {
     for (const rendu of RENDUS) {
       hote.setAttribute('render', rendu);
       expect(strategiesDe(hote).length).withContext(`rendu ${rendu}`).toBe(0);
-      expect(hote.shadowRoot?.innerHTML).withContext(`rendu ${rendu}`).not.toContain(LIBELLE_JUSTE);
       expect(hote.shadowRoot?.innerHTML)
         .withContext(`rendu ${rendu}`)
         .not.toContain(LIBELLE_FAUSSE);
     }
   });
 
-  it('refuse de reveler les strategies tant qu aucune tentative n a ete soumise', () => {
-    hote.revelee = true;
-    expect(hote.revelee).toBe(false);
-    expect(strategiesDe(hote).length).toBe(0);
-    expect(hote.shadowRoot?.innerHTML).not.toContain(LIBELLE_JUSTE);
-  });
-
-  it('garde le bouton de revelation ferme tant que la tentative manque', () => {
-    expect(boutonReveler(hote)?.disabled).toBe(true);
-    boutonReveler(hote)?.click();
-    expect(hote.revelee).toBe(false);
-    tenter(hote, TENTATIVE);
-    expect(boutonReveler(hote)?.disabled).toBe(false);
-  });
-
   it('ne prend pas une tentative vide pour un echec productif', () => {
     const emises = tentativesEmises(hote);
     tenter(hote, '   \n  ');
     expect(emises).toEqual([]);
-    expect(hote.tentativeSoumise).toBe(false);
-    hote.revelee = true;
-    expect(hote.revelee).toBe(false);
-    expect(strategiesDe(hote).length).toBe(0);
     expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')?.textContent?.trim()).toBe(
       'Écrivez votre tentative, même imparfaite : c’est elle qui compte',
     );
   });
 
-  it('revele les strategies une fois la tentative soumise', () => {
-    tenter(hote, TENTATIVE);
-    hote.revelee = true;
-    expect(hote.revelee).toBe(true);
-    expect(strategiesDe(hote).length).toBe(PROBLEME.strategies.length);
-    expect(hote.shadowRoot?.innerHTML).toContain(LIBELLE_FAUSSE);
-  });
-
-  it('emet la tentative et sa duree au moment de la soumission', () => {
+  it('emet la tentative et sa duree au moment de la soumission, une seule fois', () => {
     const emises = tentativesEmises(hote);
     jasmine.clock().tick(90000);
     tenter(hote, TENTATIVE);
-    expect(emises.length).toBe(1);
-    expect(emises[0].problemeId).toBe(PROBLEME.id);
-    expect(emises[0].tentative).toBe(TENTATIVE);
-    expect(emises[0].dureeMs).toBe(90000);
-  });
-
-  it('n accepte qu une tentative et verrouille la saisie ensuite', () => {
-    const emises = tentativesEmises(hote);
-    tenter(hote, TENTATIVE);
     tenter(hote, 'seconde tentative apres coup');
-    expect(emises.length).toBe(1);
-    expect(zoneTentative(hote).disabled).toBe(true);
+
+    expect(emises).toEqual([{ problemeId: PROBLEME.id, tentative: TENTATIVE, dureeMs: 90000 }]);
+    expect(zoneTentative(hote).disabled).toBeTrue();
   });
 
-  it('ne marque aucune strategie fausse sur le poste etudiant apres revelation', () => {
+  it('affiche les strategies servies apres l envoi, sans piste fausse avant la revelation', () => {
     tenter(hote, TENTATIVE);
-    hote.revelee = true;
-    expect(strategiesDe(hote).length).toBe(PROBLEME.strategies.length);
+    hote.strategies = buildStrategiesServies();
+
+    expect(strategiesDe(hote).length).toBe(2);
     expect(marquesDe(hote)).toEqual([]);
-    expect(JSON.stringify(hote.probleme)).not.toContain('fausse');
-    expect(hote.shadowRoot?.innerHTML).not.toContain('Piste fausse');
+    expect(hote.shadowRoot?.querySelector('[data-testid="attente-revelation"]')?.textContent).toBe(
+      'Les pistes fausses seront signalées à la révélation',
+    );
   });
 
-  it('marque les strategies fausses sur le poste presentateur apres revelation', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.probleme = buildChallengeProbleme({ id: 'D-DEFI-06' });
+  it('signale la piste fausse quand le serveur la sert apres la revelation', () => {
     tenter(hote, TENTATIVE);
-    hote.revelee = true;
-    expect(marquesDe(hote)).toEqual(['a', 'c']);
+    hote.strategies = buildStrategiesServies(true);
+    hote.revele = true;
+
+    expect(marquesDe(hote)).toEqual(['diviser-cent']);
     expect(hote.shadowRoot?.querySelector('[data-testid="marque"]')?.textContent?.trim()).toBe(
       'Piste fausse',
     );
   });
 
-  it('ne marque rien sur le poste presentateur avant la revelation', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.probleme = buildChallengeProbleme({ id: 'D-DEFI-07' });
-    tenter(hote, TENTATIVE);
-    expect(marquesDe(hote)).toEqual([]);
-    expect(hote.shadowRoot?.innerHTML).not.toContain('Piste fausse');
-    expect(hote.shadowRoot?.innerHTML).not.toContain(LIBELLE_FAUSSE);
+  it('se tient pour soumise quand les strategies arrivent apres un rechargement', () => {
+    hote.brouillon = { tentative: TENTATIVE };
+    hote.strategies = buildStrategiesServies();
+
+    expect(zoneTentative(hote).value).toBe(TENTATIVE);
+    expect(zoneTentative(hote).disabled).toBeTrue();
   });
 
-  it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildChallengeProbleme({ id: 'D-DEFI-08' });
-    const metadonnees = { ...piege.metadonnees, bonneReponse: 'b' };
-    hote.probleme = { ...piege, metadonnees };
-    expect(JSON.stringify(hote.probleme)).not.toContain('bonneReponse');
+  it('memorise la tentative en brouillon a chaque frappe', () => {
+    const brouillons: unknown[] = [];
+    hote.addEventListener('fp-brouillon', (evenement) =>
+      brouillons.push((evenement as CustomEvent).detail),
+    );
+    const champ = zoneTentative(hote);
+    champ.value = 'debut';
+    champ.dispatchEvent(new Event('input'));
+    expect(brouillons).toEqual([{ id: PROBLEME.id, valeur: { tentative: 'debut' } }]);
+  });
+
+  it('ne projette les pistes, fausse comprise, qu une fois la revelation pilotee', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    hote.corrige = CORRIGE_DU_DEFI;
+
+    expect(strategiesDe(hote).length).toBe(0);
+
+    hote.revele = true;
+
+    expect(marquesDe(hote)).toEqual(['diviser-cent']);
+  });
+
+  it('montre au pupitre les strategies de reference et leur piste fausse', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('render', 'board');
+    hote.corrige = CORRIGE_DU_DEFI;
+
+    expect(marquesDe(hote)).toEqual(['diviser-cent']);
+  });
+
+  it('ne montre jamais les strategies de reference a un poste etudiant', () => {
+    hote.setAttribute('render', 'board');
+    hote.corrige = CORRIGE_DU_DEFI;
+    expect(strategiesDe(hote).length).toBe(0);
+  });
+
+  it('ignore toute strategie posee dans l enonce public', () => {
+    hote.probleme = { ...buildChallengeProbleme({ id: 'D-DEFI-08' }), strategies: [] };
+    expect(JSON.stringify(hote.probleme)).not.toContain(LIBELLE_FAUSSE);
   });
 
   it('echappe la tentative et les libelles de strategie a l affichage', () => {
-    hote.probleme = buildChallengeProbleme({
-      id: 'D-DEFI-09',
-      strategies: [{ id: 'a', libelle: CHARGE_XSS, fausse: true }],
-    });
     tenter(hote, CHARGE_XSS);
-    hote.revelee = true;
+    hote.strategies = [{ id: 'x', libelle: CHARGE_XSS }];
     const rendu = hote.shadowRoot?.innerHTML ?? '';
     expect(rendu).not.toContain('<img src=x');
-    expect(rendu).toContain('&lt;img');
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(zoneTentative(hote).value).toBe(CHARGE_XSS);
     expect(strategiesDe(hote)[0].textContent?.trim()).toBe(CHARGE_XSS);
@@ -206,26 +195,16 @@ describe('FpChallenge', () => {
       'capitalisation',
     );
     expect(hote.shadowRoot?.querySelector('[data-testid="modalite"]')?.textContent?.trim()).toBe(
-      'binome',
+      'En binôme',
     );
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    const feuille = [tokens, base, feuilleDe('challenge'), stage].join('\n');
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.probleme = buildChallengeProbleme({ id: 'D-DEFI-10' });
+    hote.corrige = CORRIGE_DU_DEFI;
     tenter(hote, TENTATIVE);
-    hote.revelee = true;
-    const emises = new Set<string>();
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      hote.shadowRoot
-        ?.querySelectorAll('[class]')
-        .forEach((noeud) => noeud.classList.forEach((classe) => emises.add(classe)));
-    }
-    expect(emises.size).toBeGreaterThanOrEqual(10);
-    expect(
-      [...emises].filter((classe) => !new RegExp(`\\.${classe}(?![\\w-])`).test(feuille)),
-    ).toEqual([]);
+    hote.strategies = buildStrategiesServies();
+    hote.revele = true;
+    expect(classesOrphelines(hote, 'challenge')).toEqual([]);
   });
 });

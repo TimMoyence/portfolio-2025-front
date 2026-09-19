@@ -20,6 +20,7 @@ import type {
   DerouleCours,
   EcranDeroule,
   PacingMode,
+  PilotageEcran,
   ResultatQuestion,
   ResultatsSeance,
 } from '../../../../cours/content/types';
@@ -33,15 +34,20 @@ import type {
   CommandePilotage,
   RapportSeance,
   RegleNotation,
+  SyntheseConcept,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
+import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import {
   enoncesDuDeroule,
   questionsDeLEcran,
   titreDeLEcran,
 } from '../../../shared/slides/session/lecture-ecran';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { objet } from '../../../shared/slides/visual/presentation-v2';
+import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
+import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 import { SlideComponent } from '../../../shared/slides/deck/slide.component';
 import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
@@ -89,6 +95,7 @@ const ETAT_ANNONCE: Readonly<Record<StatutSession, EtatSeance>> = {
 };
 
 const FENETRE_SCENE = 'cours-scene';
+const ECRAN_DE_RAPPEL = 'fp-spaced';
 
 function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   const apercu = questionsDeLEcran(ecran);
@@ -108,6 +115,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   selector: 'app-cours-presentateur',
   standalone: true,
   imports: [
+    CoursPanneauActiviteComponent,
     CoursPanneauQuestionComponent,
     CoursPanneauPedagogiqueComponent,
     SlideActivityComponent,
@@ -505,12 +513,26 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     <app-slide [id]="ecranAffiche.id">
                       <app-slide-activity
                         [slide]="ecranAffiche"
-                        render="stage"
+                        render="board"
                         [role]="'presentateur'"
                         [resultats]="resultats()"
+                        [direct]="direct()"
+                        [donneesFormateur]="ecranAffiche.corrigeEcran"
+                        [maitrise]="maitrise()"
                       />
                     </app-slide>
                   </app-slide-deck>
+                  @if (maitriseIndisponible()) {
+                    <p
+                      class="muted"
+                      data-testid="presentateur-maitrise-echec"
+                      role="status"
+                      i18n="@@presentateurMaitriseEchec"
+                    >
+                      La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain
+                      résultat.
+                    </p>
+                  }
                 </div>
               </main>
               <aside
@@ -518,6 +540,15 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 aria-label="Informations de séance"
                 i18n-aria-label="@@presentateurInformationsSeance"
               >
+                <app-cours-panneau-activite
+                  [ecran]="ecranAffiche"
+                  [resultats]="resultats()"
+                  [pilotage]="pilotageDeLEcran()"
+                  [participants]="participants()"
+                  [sessionId]="sessionId()"
+                  [pilotageBloque]="pilotageBloque()"
+                  (commande)="piloterLEcran($event)"
+                />
                 <app-cours-panneau-pedagogique
                   [ecran]="ecranAffiche"
                   [resultats]="resultatsDesQuestions()"
@@ -652,7 +683,10 @@ export class CoursPresentateurComponent {
   readonly deroule = signal<DerouleCours | null>(null);
   readonly ecran = signal(0);
   readonly mode = signal<PacingMode>('pilote');
-  readonly resultats = signal<ResultatsSeance | null>(null);
+  readonly resultats = signal<ResultatsDuPupitre | null>(null);
+  readonly pilotage = signal<Readonly<Record<string, PilotageEcran>>>({});
+  readonly maitrise = signal<readonly SyntheseConcept[] | null>(null);
+  readonly maitriseIndisponible = signal(false);
   readonly notation = signal<RegleNotation | null>(null);
   readonly lectureDeLaNotation = signal<LectureDeLaNotation>('a-lire');
   readonly commandeEnVol = signal(false);
@@ -711,7 +745,26 @@ export class CoursPresentateurComponent {
 
   readonly regleDeNotation = computed(() => {
     const notation = this.notation();
-    return notation === null ? null : phraseDeNotation(notation);
+    return notation === null ? null : phraseDeNotation(notation, this.resultats()?.bareme ?? null);
+  });
+
+  readonly pilotageDeLEcran = computed<PilotageEcran>(() => {
+    const ecran = this.ecranCourant();
+    return ecran === null ? {} : (this.pilotage()[ecran.id] ?? {});
+  });
+
+  readonly direct = computed<DirectEcran | null>(() => {
+    const ecran = this.ecranCourant();
+    if (ecran === null) {
+      return null;
+    }
+    const sondageId = objet(ecran.donnees?.['sondage'])?.['id'];
+    return {
+      pilotage: this.pilotageDeLEcran(),
+      resultats: this.resultats()?.questions ?? null,
+      comptesJalon:
+        typeof sondageId === 'string' ? (this.resultats()?.jalons?.[sondageId] ?? null) : null,
+    };
   });
 
   private readonly port = inject(FORMATIONS_PORT);
@@ -726,6 +779,7 @@ export class CoursPresentateurComponent {
 
   private flux: Sync | null = null;
   private notationEnVol = false;
+  private maitriseEnVol = false;
   private detruit = false;
   private chantier: Promise<void> = Promise.resolve();
 
@@ -939,6 +993,7 @@ export class CoursPresentateurComponent {
     flux.onResultats((resultats) => {
       this.resultats.set(resultats);
       this.lireLaNotationSiBesoin(sessionId);
+      this.lireLaMaitriseSiBesoin(sessionId);
     });
     flux.onStatut((statut) => this.suiviDuFlux.set(statut));
     this.flux = flux;
@@ -972,6 +1027,7 @@ export class CoursPresentateurComponent {
   private suivreLeFlux(etat: EtatSession): void {
     this.etatDeLaRepriseAttendu.set(false);
     this.avancerLeStatut(ETAT_ANNONCE[etat.etat]);
+    this.pilotage.set(etat.pilotage);
     if (etat.etat === 'terminee') {
       this.flux?.close();
     }
@@ -979,6 +1035,36 @@ export class CoursPresentateurComponent {
       this.ecran.set(etat.ecranCourant);
       this.mode.set(etat.modeRythme);
     }
+    const session = this.sessionId();
+    if (session !== null) {
+      this.lireLaMaitriseSiBesoin(session);
+    }
+  }
+
+  private lireLaMaitriseSiBesoin(sessionId: string): void {
+    if (this.ecranCourant()?.type !== ECRAN_DE_RAPPEL || this.maitriseEnVol) {
+      return;
+    }
+    this.maitriseEnVol = true;
+    const lecture = firstValueFrom(this.port.lireSyntheseRappels(sessionId))
+      .then(({ concepts }) => {
+        this.maitrise.set(concepts);
+        this.maitriseIndisponible.set(false);
+      })
+      .catch(() => {
+        this.maitriseIndisponible.set(true);
+      })
+      .finally(() => {
+        this.maitriseEnVol = false;
+      });
+    this.chantier = Promise.all([this.chantier, lecture]).then(() => undefined);
+  }
+
+  protected piloterLEcran(commande: CommandeDEcran): void {
+    if (!this.armee()) {
+      return;
+    }
+    this.commander({ pilotage: commande }, () => undefined);
   }
 
   private focaliserApresLeRendu(cible: () => ElementRef<HTMLButtonElement> | undefined): void {

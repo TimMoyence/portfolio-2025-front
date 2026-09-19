@@ -1,6 +1,8 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { buildRecallQuestion } from '../../../testing/factories/cours.factory';
-import { shuffleWithSeed } from '../core/seed';
+import {
+  buildRecallQuestion,
+  buildVerdictDeReponse,
+} from '../../../testing/factories/cours.factory';
 import { FpRecall } from './FpRecall';
 
 interface DetailRecall {
@@ -11,7 +13,7 @@ interface DetailRecall {
 }
 
 const QUESTION = buildRecallQuestion();
-const GRAINE = 4242;
+const OPTIONS_AVEC_JE_NE_SAIS_PAS = QUESTION.options.length + 1;
 const DELAI_DEFAUT_MS = 8000;
 const INSTANT_INITIAL = '2026-09-12T09:00:00.000Z';
 const LIBELLE_PREMIERE = 'On multiplie par (1 + i) puissance n';
@@ -77,7 +79,6 @@ describe('FpRecall', () => {
     jasmine.clock().mockDate(new Date(INSTANT_INITIAL));
     hote = document.createElement('fp-recall') as FpRecall;
     hote.question = QUESTION;
-    hote.setAttribute('seed', String(GRAINE));
     document.body.appendChild(hote);
   });
 
@@ -121,7 +122,7 @@ describe('FpRecall', () => {
   it('fait apparaitre les options a la fin des huit secondes', () => {
     expect(hote.delaiMs).toBe(DELAI_DEFAUT_MS);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    expect(optionsDe(hote).length).toBe(QUESTION.options.length);
+    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
     expect(annonceDe(hote)).toBe('Options disponibles');
   });
 
@@ -130,7 +131,7 @@ describe('FpRecall', () => {
     jasmine.clock().tick(2999);
     expect(optionsDe(hote).length).toBe(0);
     jasmine.clock().tick(1);
-    expect(optionsDe(hote).length).toBe(QUESTION.options.length);
+    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
   });
 
   it('annonce le compte a rebours dans une region live', () => {
@@ -158,7 +159,7 @@ describe('FpRecall', () => {
     document.body.appendChild(hote);
     expect(annonceDe(hote)).toBe('Options disponibles dans 3 s');
     jasmine.clock().tick(3000);
-    expect(optionsDe(hote).length).toBe(QUESTION.options.length);
+    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
   });
 
   it('ne remplace pas le champ de rappel a chaque seconde ecoulee', () => {
@@ -193,31 +194,50 @@ describe('FpRecall', () => {
     expect(optionsDe(hote).every((option) => option.disabled)).toBe(true);
   });
 
-  it('derive l ordre des options de la graine et non de l horloge', () => {
-    jasmine.clock().tick(DELAI_DEFAUT_MS);
-    const attendu = shuffleWithSeed([...QUESTION.options], GRAINE).map((option) => option.id);
-    expect(ordreAffiche(hote)).toEqual(attendu);
-    expect(ordreAffiche(hote)).not.toEqual(QUESTION.options.map((option) => option.id));
-  });
-
-  it('garde l ordre du serveur, deja melange, quand aucune graine n est fournie', () => {
-    hote.removeAttribute('seed');
+  it('garde l ordre servi, deja melange par le serveur, et termine par je ne sais pas', () => {
+    hote.setAttribute('seed', '4242');
     jasmine.clock().tick(DELAI_DEFAUT_MS);
 
-    expect(ordreAffiche(hote)).toEqual(QUESTION.options.map((option) => option.id));
+    expect(ordreAffiche(hote)).toEqual([
+      ...QUESTION.options.map((option) => option.id),
+      '__je_ne_sais_pas__',
+    ]);
   });
 
-  it('efface la misconception pour le poste etudiant', () => {
-    expect(hote.question?.options.every((option) => !('misconception' in option))).toBe(true);
-    expect(JSON.stringify(hote.question?.options)).not.toContain('interet-simple');
-  });
-
-  it('conserve la misconception pour le poste presentateur', () => {
+  it('ne garde que les champs publics des options, meme pour le poste presentateur', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.question = buildRecallQuestion({ id: 'Q-RAPPEL-05' });
-    expect(hote.question?.options[1]).toEqual(
-      jasmine.objectContaining({ misconception: 'interet-simple' }),
+    hote.question = {
+      ...buildRecallQuestion({ id: 'Q-RAPPEL-05' }),
+      options: QUESTION.options.map((option) => ({ ...option, confusion: 'interet-simple' })),
+    };
+    expect(JSON.stringify(hote.question)).not.toContain('interet-simple');
+  });
+
+  it('affiche le verdict de sa question et clot les options', () => {
+    jasmine.clock().tick(DELAI_DEFAUT_MS);
+    hote.verdict = buildVerdictDeReponse({ questionId: QUESTION.id, correcte: true });
+
+    expect(texteDe(hote, 'verdict')).toContain('Juste');
+    expect(optionsDe(hote).every((option) => option.disabled)).toBeTrue();
+  });
+
+  it('memorise le rappel en brouillon et le restaure apres rechargement', () => {
+    const brouillons: unknown[] = [];
+    hote.addEventListener('fp-brouillon', (evenement) =>
+      brouillons.push((evenement as CustomEvent).detail),
     );
+    saisirRappel(hote, RAPPEL_ETUDIANT);
+
+    expect(brouillons.at(-1)).toEqual({ id: QUESTION.id, valeur: { rappel: RAPPEL_ETUDIANT } });
+
+    const rechargee = document.createElement('fp-recall') as FpRecall;
+    rechargee.question = QUESTION;
+    rechargee.brouillon = { rappel: RAPPEL_ETUDIANT };
+    document.body.appendChild(rechargee);
+
+    expect(champRappel(rechargee).value).toBe(RAPPEL_ETUDIANT);
+    expect(texteDe(rechargee, 'brouillon-restaure')).toBe('Brouillon restauré');
+    rechargee.remove();
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
@@ -231,7 +251,7 @@ describe('FpRecall', () => {
     hote.question = buildRecallQuestion({
       id: 'Q-RAPPEL-07',
       enonce: CHARGE_XSS,
-      options: [{ id: 'a', libelle: CHARGE_XSS, misconception: null }],
+      options: [{ id: 'a', libelle: CHARGE_XSS }],
     });
     jasmine.clock().tick(DELAI_DEFAUT_MS);
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
@@ -252,7 +272,7 @@ describe('FpRecall', () => {
   it('recapitule les concepts la modalite et la duree en mode tableau', () => {
     hote.setAttribute('render', 'board');
     expect(texteDe(hote, 'concepts')).toBe('capitalisation');
-    expect(texteDe(hote, 'modalite')).toBe('solo');
+    expect(texteDe(hote, 'modalite')).toBe('Individuel');
     expect(texteDe(hote, 'duree')).toBe('4 min');
   });
 

@@ -11,15 +11,22 @@ import { RouterLink } from '@angular/router';
 import type { EcranContent } from '../../../../cours/content/types';
 import { FORMATION_CATALOGUE_PORT } from '../../../core/ports/formation-catalogue.port';
 import { SlideComponent, SlideDeckComponent } from '../../../shared/slides';
-import { SlideVisualComponent } from '../../../shared/slides/visual/slide-visual.component';
+import { ECRAN_VERROUILLE, titreDeLEcran } from '../../../shared/slides/session/lecture-ecran';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { aUnePresentation } from '../../../shared/slides/visual/presentation-v2';
 
 const SLUG = 'b2-01-traitement-information-chiffree';
+
+interface ResumeDEcran {
+  readonly titre: string;
+  readonly masque: boolean;
+}
 
 @Component({
   selector: 'app-b2-01-traitement-information-chiffree',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, SlideComponent, SlideDeckComponent, SlideVisualComponent],
+  imports: [RouterLink, SlideComponent, SlideDeckComponent, SlideActivityComponent],
   templateUrl: './b2-01-traitement-information-chiffree.component.html',
   styleUrl: './b2-01-traitement-information-chiffree.component.scss',
 })
@@ -46,5 +53,16 @@ export class B2TraitementInformationChiffreeComponent implements OnInit {
         },
         error: () => this.etat.set('erreur'),
       });
+  }
+
+  protected resume(ecran: EcranContent): ResumeDEcran | null {
+    const titre = ecran.titre ?? null;
+    if (titre === null || titre === '' || ecran.type === ECRAN_VERROUILLE) {
+      return null;
+    }
+    if (!aUnePresentation(ecran)) {
+      return { titre, masque: false };
+    }
+    return titreDeLEcran({ ...ecran, titre: null }) === titre ? null : { titre, masque: true };
   }
 }

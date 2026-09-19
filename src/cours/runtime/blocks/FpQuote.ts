@@ -55,7 +55,7 @@ export class FpQuote extends FpBlock {
     if (citation === null) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const reperes = safeHtml`<p class="fp-badge" data-testid="duree">${citation.metadonnees.dureeMinutes} min</p>`;
+    const reperes = safeHtml`<p class="fp-reperes">${this.reperes(citation.metadonnees)}</p>`;
     return this.figure('fp-carte', 'fp-quote__texte', reperes);
   }
 

@@ -1,4 +1,4 @@
-import type { DerouleCours, EcranContent } from '../../../../cours/content/types';
+import type { CoursContent, DerouleCours, EcranContent } from '../../../../cours/content/types';
 import type { Donnees } from '../visual/presentation-v2';
 import {
   aUnePresentation,
@@ -8,7 +8,7 @@ import {
   quizPrincipal,
 } from '../visual/presentation-v2';
 
-interface Montage {
+export interface Montage {
   readonly brique: string;
   readonly donnees: Donnees;
 }
@@ -16,6 +16,11 @@ interface Montage {
 export interface QuestionDeLEcran {
   readonly id: string;
   readonly enonce: string;
+}
+
+export interface EnteteDeQuestionnaire {
+  readonly intitule: string;
+  readonly consigne: string;
 }
 
 export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> = {
@@ -27,20 +32,49 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-plot': ['definition'],
   'fp-challenge': ['probleme'],
   'fp-cardsort': ['plan'],
+  'fp-sheet': ['plan'],
+  'fp-table-build': ['plan'],
+  'fp-escape': ['parcours'],
+  'fp-pulse': ['sondage'],
+  'fp-spaced': ['rappel'],
   'fp-numeric': ['question'],
-  'fp-vote': ['question'],
-  'fp-recall': ['question'],
+  'fp-vote': ['question', 'questionJumelle'],
+  'fp-recall': ['question', 'delaiMs'],
   'fp-exit': ['billet'],
 };
 
-const PORTEUR_DE_REPONSE: Readonly<Record<string, string>> = {
-  'fp-numeric': 'question',
-  'fp-vote': 'question',
-  'fp-recall': 'question',
-  'fp-exit': 'billet',
+const PORTEURS: Readonly<Record<string, readonly string[]>> = {
+  'fp-numeric': ['question'],
+  'fp-vote': ['question', 'questionJumelle'],
+  'fp-recall': ['question'],
+  'fp-exit': ['billet'],
+  'fp-cardsort': ['plan'],
+  'fp-sheet': ['plan'],
+  'fp-table-build': ['plan'],
+  'fp-escape': ['parcours'],
+  'fp-challenge': ['probleme'],
+  'fp-spaced': ['rappel'],
+  'fp-pulse': ['sondage'],
+  'fp-worked': ['exemple'],
+};
+
+const PORTEURS_DE_QUESTION: Readonly<Record<string, readonly string[]>> = {
+  'fp-numeric': ['question'],
+  'fp-vote': ['question', 'questionJumelle'],
+  'fp-recall': ['question'],
+  'fp-exit': ['billet'],
+  'fp-cardsort': ['plan'],
+  'fp-sheet': ['plan'],
+  'fp-table-build': ['plan'],
+};
+
+const CHAMP_ENONCE: Readonly<Record<string, string>> = {
+  billet: 'question',
+  plan: 'intitule',
 };
 
 const QUESTIONNAIRE = 'questionnaire';
+export const ECRAN_VERROUILLE = 'ecran-verrouille';
 
 function lireMontage(brique: unknown, donnees: unknown): Montage | null {
   if (typeof brique !== 'string' || !Object.hasOwn(PROPRIETES_PAR_BRIQUE, brique)) {
@@ -65,6 +99,28 @@ export function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
   return montages.every((montage): montage is Montage => montage !== null) ? montages : null;
 }
 
+export function enteteDeQuestionnaire(ecran: EcranContent): EnteteDeQuestionnaire | null {
+  if (ecran.type !== QUESTIONNAIRE) {
+    return null;
+  }
+  const intitule = ecran.donnees?.['intitule'];
+  const consigne = ecran.donnees?.['consigne'];
+  return typeof intitule === 'string' && typeof consigne === 'string'
+    ? { intitule, consigne }
+    : null;
+}
+
+function identifiantPorte(donnees: Donnees, propriete: string): string | null {
+  const identifiant = objet(donnees[propriete])?.['id'];
+  return typeof identifiant === 'string' && identifiant !== '' ? identifiant : null;
+}
+
+export function identifiantsDuMontage(montage: Montage): readonly string[] {
+  return (PORTEURS[montage.brique] ?? [])
+    .map((propriete) => identifiantPorte(montage.donnees, propriete))
+    .filter((identifiant): identifiant is string => identifiant !== null);
+}
+
 function questionPortee(porteur: Donnees | null, champEnonce: string): readonly QuestionDeLEcran[] {
   if (porteur === null || typeof porteur['id'] !== 'string') {
     return [];
@@ -74,8 +130,9 @@ function questionPortee(porteur: Donnees | null, champEnonce: string): readonly 
 }
 
 function questionsDuMontage(montage: Montage): readonly QuestionDeLEcran[] {
-  const propriete = PORTEUR_DE_REPONSE[montage.brique] ?? '';
-  return propriete === '' ? [] : questionPortee(objet(montage.donnees[propriete]), 'enonce');
+  return (PORTEURS_DE_QUESTION[montage.brique] ?? []).flatMap((propriete) =>
+    questionPortee(objet(montage.donnees[propriete]), CHAMP_ENONCE[propriete] ?? 'enonce'),
+  );
 }
 
 export function questionsDeLEcran(ecran: EcranContent): readonly QuestionDeLEcran[] {
@@ -91,7 +148,11 @@ export function questionsDeLEcran(ecran: EcranContent): readonly QuestionDeLEcra
 
 export function titreDeLEcran(ecran: EcranContent): string | null {
   const presentation = presentationDe(ecran);
-  const candidats = [presentation?.props['title'], quizPrincipal(presentation)?.['question']];
+  const candidats = [
+    ecran.titre,
+    presentation?.props['title'],
+    quizPrincipal(presentation)?.['question'],
+  ];
   return (
     candidats.find(
       (candidat): candidat is string => typeof candidat === 'string' && candidat !== '',
@@ -110,4 +171,22 @@ export function enoncesDuDeroule(deroule: DerouleCours): ReadonlyMap<string, str
       .filter((question) => question.enonce !== '')
       .map((question) => [question.id, question.enonce]),
   );
+}
+
+export function ecransDesIdentifiants(cours: CoursContent): ReadonlyMap<string, string> {
+  const ecrans = new Map<string, string>();
+  for (const ecran of cours.ecrans) {
+    const identifiants = [
+      ...identifiantsDesQuestions(ecran),
+      ...(planDeMontage(ecran) ?? []).flatMap(identifiantsDuMontage),
+    ];
+    for (const identifiant of identifiants) {
+      ecrans.set(identifiant, ecran.id);
+    }
+  }
+  return ecrans;
+}
+
+export function ecranDuRappel(cours: CoursContent): string | null {
+  return cours.ecrans.find((ecran) => ecran.type === 'fp-spaced')?.id ?? null;
 }

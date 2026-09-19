@@ -3,6 +3,23 @@ import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html'
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
 
+export interface StoryVideo {
+  readonly src: string;
+  readonly srcPoste?: string;
+  readonly type: 'video/webm' | 'video/mp4';
+  readonly titre: string;
+  readonly poster?: string;
+  readonly transcript: string;
+  readonly source: string;
+  readonly licence: string;
+  readonly sousTitres?: {
+    readonly src: string;
+    readonly srclang: string;
+    readonly libelle: string;
+  };
+  readonly preload?: 'none' | 'metadata';
+}
+
 export interface StoryRecit {
   readonly id: string;
   readonly titre: string;
@@ -13,16 +30,17 @@ export interface StoryRecit {
     readonly legende?: string;
     readonly source?: string;
   };
-  readonly video?: {
-    readonly src: string;
-    readonly type: 'video/webm' | 'video/mp4';
-    readonly titre: string;
-    readonly poster?: string;
-    readonly transcript: string;
-    readonly source: string;
-    readonly licence: string;
-  };
+  readonly video?: StoryVideo;
   readonly metadonnees: MetadonneesBrique;
+}
+
+const VIDE = safeHtml``;
+
+function copierVideo(video: StoryVideo): StoryVideo {
+  return {
+    ...video,
+    ...(video.sousTitres === undefined ? {} : { sousTitres: { ...video.sousTitres } }),
+  };
 }
 
 export class FpStory extends FpBlock {
@@ -37,7 +55,7 @@ export class FpStory extends FpBlock {
             titre: valeur.titre,
             paragraphes: [...valeur.paragraphes],
             visuel: valeur.visuel === undefined ? undefined : { ...valeur.visuel },
-            video: valeur.video === undefined ? undefined : { ...valeur.video },
+            video: valeur.video === undefined ? undefined : copierVideo(valeur.video),
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     this.refreshSiConnecte();
@@ -51,14 +69,14 @@ export class FpStory extends FpBlock {
     if (this.recit === null) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return this.aparte('fp-carte', 'fp-story__titre', safeHtml``);
+    return this.aparte('fp-carte', 'fp-story__titre', VIDE);
   }
 
   renderStage(): EscapedHtml {
     if (this.recit === null) {
-      return safeHtml``;
+      return VIDE;
     }
-    return this.aparte('fp-scene', 'fp-enonce fp-story__titre', safeHtml``);
+    return this.aparte('fp-scene', 'fp-enonce fp-story__titre', VIDE);
   }
 
   renderBoard(): EscapedHtml {
@@ -66,13 +84,7 @@ export class FpStory extends FpBlock {
     if (recit === null) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const metadonnees = recit.metadonnees;
-    const reperes = safeHtml`
-      <div class="fp-story__reperes">
-        <span class="fp-badge" data-testid="modalite">${escapeHtml(metadonnees.modalite)}</span>
-        <span class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</span>
-      </div>
-    `;
+    const reperes = safeHtml`<div class="fp-story__reperes">${this.reperes(recit.metadonnees)}</div>`;
     return this.aparte('fp-carte', 'fp-story__titre', reperes);
   }
 
@@ -83,7 +95,7 @@ export class FpStory extends FpBlock {
   private aparte(cadre: string, styleTitre: string, reperes: EscapedHtml): EscapedHtml {
     const recit = this.recit;
     if (recit === null) {
-      return safeHtml``;
+      return VIDE;
     }
     return safeHtml`
       <aside class="${escapeHtml(cadre)} fp-story__recit">
@@ -102,7 +114,7 @@ export class FpStory extends FpBlock {
 
   private visuel(recit: StoryRecit): EscapedHtml {
     if (recit.visuel === undefined) {
-      return safeHtml``;
+      return VIDE;
     }
     return safeHtml`
         <figure class="fp-story__visuel" data-testid="visuel">
@@ -114,35 +126,50 @@ export class FpStory extends FpBlock {
 
   private attribution(visuel: NonNullable<StoryRecit['visuel']>): EscapedHtml {
     if (visuel.legende === undefined && visuel.source === undefined) {
-      return safeHtml``;
+      return VIDE;
     }
     const legende =
-      visuel.legende === undefined
-        ? safeHtml``
-        : safeHtml`<span>${escapeHtml(visuel.legende)}</span>`;
+      visuel.legende === undefined ? VIDE : safeHtml`<span>${escapeHtml(visuel.legende)}</span>`;
     const source =
       visuel.source === undefined
-        ? safeHtml``
-        : safeHtml`<a data-testid="source-visuel" href="${escapeUrl(visuel.source)}" target="_blank" rel="noreferrer">Source du visuel</a>`;
+        ? VIDE
+        : safeHtml`<a data-testid="source-visuel" href="${escapeUrl(visuel.source)}" target="_blank" rel="noreferrer">${escapeHtml(this.texte('story-source-visuel'))}</a>`;
     return safeHtml`<figcaption>${legende}${source}</figcaption>`;
+  }
+
+  private sourceDeLaVideo(video: StoryVideo): string {
+    return this.mode() === 'hand' && video.srcPoste !== undefined ? video.srcPoste : video.src;
+  }
+
+  private piste(video: StoryVideo): EscapedHtml {
+    const sousTitres = video.sousTitres;
+    if (sousTitres === undefined) {
+      return VIDE;
+    }
+    const libelle =
+      sousTitres.libelle.trim().length > 0 ? sousTitres.libelle : this.texte('video-sous-titres');
+    return safeHtml`<track data-testid="sous-titres" kind="captions" srclang="${escapeHtml(sousTitres.srclang)}" label="${escapeHtml(libelle)}" src="${escapeUrl(sousTitres.src)}" default />`;
   }
 
   private video(recit: StoryRecit): EscapedHtml {
     const video = recit.video;
     if (video === undefined) {
-      return safeHtml``;
+      return VIDE;
     }
+    const affiche =
+      video.poster === undefined ? VIDE : safeHtml` poster="${escapeUrl(video.poster)}"`;
     return safeHtml`
       <figure class="fp-story__video" data-testid="video">
         <figcaption class="fp-story__video-titre">${escapeHtml(video.titre)}</figcaption>
-        <video controls preload="metadata" playsinline${video.poster === undefined ? safeHtml`` : safeHtml` poster="${escapeUrl(video.poster)}"`}>
-          <source src="${escapeUrl(video.src)}" type="${escapeHtml(video.type)}" />
+        <video controls preload="${escapeHtml(video.preload ?? 'none')}" playsinline${affiche}>
+          <source src="${escapeUrl(this.sourceDeLaVideo(video))}" type="${escapeHtml(video.type)}" />
+          ${this.piste(video)}
         </video>
         <details class="fp-story__transcription">
-          <summary>Transcription et consigne de contrôle</summary>
+          <summary>${escapeHtml(this.texte('video-transcription'))}</summary>
           <p data-testid="transcription">${escapeHtml(video.transcript)}</p>
         </details>
-        <p class="fp-story__licence"><a href="${escapeUrl(video.source)}" target="_blank" rel="noreferrer">Source du média</a> · ${escapeHtml(video.licence)}</p>
+        <p class="fp-story__licence"><a href="${escapeUrl(video.source)}" target="_blank" rel="noreferrer">${escapeHtml(this.texte('story-source-media'))}</a> · ${escapeHtml(video.licence)}</p>
       </figure>
     `;
   }

@@ -146,4 +146,24 @@ export const spaced = `
   color: var(--fp-ink-mute);
   font-weight: 600;
 }
+
+:where(.fp-root) .fp-spaced__intitule {
+  margin: 0;
+  font-family: var(--fp-font-display);
+  font-size: calc(1.4rem * var(--fp-echelle));
+  color: var(--fp-ink);
+}
+
+:where(.fp-root) .fp-spaced__maitrise {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.fp-root) .fp-spaced__maitrise th,
+:where(.fp-root) .fp-spaced__maitrise td {
+  padding: var(--fp-s-1) var(--fp-s-2);
+  border-bottom: 1px solid var(--fp-line);
+  text-align: start;
+}
 `;

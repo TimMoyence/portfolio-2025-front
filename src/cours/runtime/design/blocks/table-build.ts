@@ -155,4 +155,44 @@ export const tableBuild = `
   flex-wrap: wrap;
   gap: var(--fp-s-2);
 }
+
+:where(.fp-root) .fp-table-build__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fp-s-2);
+  align-items: center;
+}
+
+:where(.fp-root) .fp-table-build__consignes,
+:where(.fp-root) .fp-table-build__attendus {
+  display: grid;
+  gap: var(--fp-s-1);
+  margin: 0;
+  padding-left: var(--fp-s-3);
+}
+
+:where(.fp-root) .fp-table-build__attendu {
+  color: var(--fp-texte-fort);
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.fp-root) .fp-table-build__synthese {
+  display: grid;
+  gap: var(--fp-s-2);
+  padding: var(--fp-s-2) var(--fp-s-3);
+  border: 1px solid var(--fp-line);
+  border-radius: var(--fp-r);
+  background: var(--fp-ivory);
+}
+
+:where(.fp-root) .fp-table-build__titre {
+  margin: 0;
+  font-size: calc(1rem * var(--fp-echelle));
+}
+
+:where(.fp-root) .fp-table-build__resultat {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--fp-s-2);
+}
 `;

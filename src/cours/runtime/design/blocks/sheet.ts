@@ -203,4 +203,17 @@ export const sheet = `
   flex-wrap: wrap;
   gap: var(--fp-s-2);
 }
+
+:where(.fp-root) .fp-sheet__consignes,
+:where(.fp-root) .fp-sheet__attendus {
+  display: grid;
+  gap: var(--fp-s-1);
+  margin: 0;
+  padding-left: var(--fp-s-3);
+}
+
+:where(.fp-root) .fp-sheet__attendu {
+  color: var(--fp-texte-fort);
+  font-variant-numeric: tabular-nums;
+}
 `;

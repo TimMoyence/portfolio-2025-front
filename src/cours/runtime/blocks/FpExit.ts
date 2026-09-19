@@ -2,10 +2,7 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-
-export interface ExitOption extends OptionPublique {
-  readonly misconception: string | null;
-}
+import { estObjet, estVerdictDeReponse, type VerdictDeReponse } from './retours';
 
 export interface ExitBilletPublic {
   readonly id: string;
@@ -15,34 +12,63 @@ export interface ExitBilletPublic {
   readonly metadonnees: MetadonneesBrique;
 }
 
-export interface ExitBillet extends ExitBilletPublic {
-  readonly options: readonly ExitOption[];
-}
-
 const LIMITE_TEXTE_LIBRE = 500;
 const ID_TEXTE_LIBRE = 'fp-exit-texte-libre';
 
 export class FpExit extends FpBlock {
   private interne: ExitBilletPublic | null = null;
+  private interneVerdict: VerdictDeReponse | null = null;
   private texteLibre = '';
   private choix: string | null = null;
   private message = '';
-  private repondu = false;
+  private envoye = false;
 
   set billet(valeur: ExitBilletPublic | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : this.projeter(valeur);
+    this.interne =
+      valeur === null
+        ? null
+        : {
+            id: valeur.id,
+            question: valeur.question,
+            invite: valeur.invite,
+            options: projeterOptions(valeur.options),
+            metadonnees: projeterMetadonnees(valeur.metadonnees),
+          };
     if (change) {
       this.texteLibre = '';
       this.choix = null;
       this.message = '';
-      this.repondu = false;
+      this.envoye = false;
+      this.interneVerdict = null;
     }
     this.refreshSiConnecte();
   }
 
   get billet(): ExitBilletPublic | null {
     return this.interne;
+  }
+
+  set verdict(valeur: VerdictDeReponse | null) {
+    this.interneVerdict =
+      estVerdictDeReponse(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
+    this.refreshSiConnecte();
+  }
+
+  get verdict(): VerdictDeReponse | null {
+    return this.interneVerdict;
+  }
+
+  set brouillon(valeur: unknown) {
+    if (!estObjet(valeur) || this.envoye) {
+      return;
+    }
+    const texte = valeur['texteLibre'];
+    const choix = valeur['choix'];
+    this.texteLibre = typeof texte === 'string' ? texte : this.texteLibre;
+    this.choix = typeof choix === 'string' ? choix : this.choix;
+    this.noterBrouillonRepris();
+    this.refreshSiConnecte();
   }
 
   renderHand(): EscapedHtml {
@@ -60,6 +86,8 @@ export class FpExit extends FpBlock {
         <button type="button" class="fp-exit__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.recapitulatif()}
+        ${this.verdictDeReponse(this.interneVerdict)}
+        ${this.annonces()}
       </fieldset>
     `;
   }
@@ -81,8 +109,7 @@ export class FpExit extends FpBlock {
     return safeHtml`
       <div class="fp-carte fp-exit__billet">
         <p class="fp-enonce">${escapeHtml(billet.question)}</p>
-        <p class="fp-badge" data-testid="regime">${escapeHtml(metadonnees.regime)}</p>
-        <p class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</p>
+        <p class="fp-reperes"><span class="fp-badge" data-testid="regime">${escapeHtml(this.texte(`regime-${metadonnees.regime}`))}</span>${this.reperes(metadonnees)}</p>
       </div>
     `;
   }
@@ -97,27 +124,29 @@ export class FpExit extends FpBlock {
     if (champ === null || envoyer === null) {
       return;
     }
-    champ.disabled = this.repondu;
-    envoyer.disabled = this.repondu;
+    const verrouille = this.verrouille();
+    champ.disabled = verrouille;
+    envoyer.disabled = verrouille;
     champ.addEventListener('input', () => {
       this.texteLibre = champ.value;
+      this.memoriser();
     });
     envoyer.addEventListener('click', () => this.envoyer(champ.value));
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.disabled = this.repondu;
+      bouton.disabled = verrouille;
       bouton.addEventListener('click', () => this.selectionner(bouton.dataset['option'] ?? ''));
     }
   }
 
-  private projeter(source: ExitBilletPublic): ExitBilletPublic {
-    return {
-      id: source.id,
-      question: source.question,
-      invite: source.invite,
-      options:
-        this.roleActuel() === 'presentateur' ? source.options : projeterOptions(source.options),
-      metadonnees: projeterMetadonnees(source.metadonnees),
-    };
+  private verrouille(): boolean {
+    return this.verrouilleApresEnvoi(this.envoye, this.interneVerdict !== null);
+  }
+
+  private memoriser(): void {
+    this.signalerBrouillon(this.interne?.id ?? '', {
+      texteLibre: this.texteLibre,
+      choix: this.choix,
+    });
   }
 
   private boutonsOption(options: readonly OptionPublique[]): readonly EscapedHtml[] {
@@ -128,7 +157,7 @@ export class FpExit extends FpBlock {
   }
 
   private recapitulatif(): EscapedHtml {
-    if (!this.repondu) {
+    if (!this.envoye && this.interneVerdict === null) {
       return escapeHtml('');
     }
     return safeHtml`<div class="fp-exit__recap" data-testid="recap"><p class="fp-exit__recap-choix" data-testid="recap-choix">${escapeHtml(this.libelleChoisi())}</p><p class="fp-exit__recap-texte" data-testid="recap-texte">${escapeHtml(this.texteLibre)}</p></div>`;
@@ -143,16 +172,17 @@ export class FpExit extends FpBlock {
   }
 
   private selectionner(valeur: string): void {
-    if (this.repondu) {
+    if (this.verrouille()) {
       return;
     }
     this.choix = valeur;
     this.message = '';
+    this.memoriser();
     this.refresh();
   }
 
   private envoyer(brut: string): void {
-    if (this.repondu) {
+    if (this.verrouille()) {
       return;
     }
     this.texteLibre = brut;
@@ -166,8 +196,8 @@ export class FpExit extends FpBlock {
       this.refresh();
       return;
     }
-    this.repondu = true;
-    this.message = this.texte('reponse-enregistree');
+    this.envoye = true;
+    this.message = this.messageApresEnvoi();
     this.emit('fp-exit-submit', {
       billetId: this.billet?.id,
       valeur: this.choix,

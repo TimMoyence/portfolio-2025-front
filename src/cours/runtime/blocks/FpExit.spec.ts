@@ -1,5 +1,5 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { buildExitBillet } from '../../../testing/factories/cours.factory';
+import { buildExitBillet, buildVerdictDeReponse } from '../../../testing/factories/cours.factory';
 import { FpExit } from './FpExit';
 
 interface DetailExit {
@@ -156,7 +156,7 @@ describe('FpExit', () => {
   it('echappe le html injecte dans un libelle d option', () => {
     hote.billet = buildExitBillet({
       id: 'B-SORTIE-10',
-      options: [{ id: 'a', libelle: CHARGE_XSS, misconception: null }],
+      options: [{ id: 'a', libelle: CHARGE_XSS }],
     });
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(texteDe(hote, 'option')).toBe(CHARGE_XSS);
@@ -192,17 +192,51 @@ describe('FpExit', () => {
     expect(texteDe(hote, 'jauge')).toBe(`${TEXTE_COURT.length} / ${LIMITE}`);
   });
 
-  it('efface la misconception pour le poste etudiant', () => {
-    expect(hote.billet?.options.every((option) => !('misconception' in option))).toBe(true);
-    expect(JSON.stringify(hote.billet?.options)).not.toContain('proportionnalite');
+  it('ne garde que les champs publics des options, meme pour le poste presentateur', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.billet = {
+      ...buildExitBillet({ id: 'B-SORTIE-11' }),
+      options: BILLET.options.map((option) => ({ ...option, confusion: 'proportionnalite' })),
+    };
+    expect(JSON.stringify(hote.billet)).not.toContain('proportionnalite');
   });
 
-  it('conserve la misconception pour le poste presentateur', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.billet = buildExitBillet({ id: 'B-SORTIE-11' });
-    expect(hote.billet?.options[1]).toEqual(
-      jasmine.objectContaining({ misconception: 'proportionnalite' }),
+  it('affiche le verdict du choix et garde le recapitulatif apres reinjection', () => {
+    choisir(hote, 'b');
+    ecrire(hote, TEXTE_COURT);
+    envoyer(hote);
+    hote.verdict = buildVerdictDeReponse({
+      questionId: BILLET.id,
+      libelleConfusion: 'Proportionnalité',
+    });
+
+    expect(texteDe(hote, 'verdict')).toContain('Proportionnalité');
+    expect(texteDe(hote, 'recap-texte')).toBe(TEXTE_COURT);
+  });
+
+  it('memorise le choix et le texte en brouillon, puis les restaure', () => {
+    const brouillons: unknown[] = [];
+    hote.addEventListener('fp-brouillon', (evenement) =>
+      brouillons.push((evenement as CustomEvent).detail),
     );
+    choisir(hote, 'c');
+    ecrire(hote, TEXTE_COURT);
+
+    expect(brouillons.at(-1)).toEqual({
+      id: BILLET.id,
+      valeur: { texteLibre: TEXTE_COURT, choix: 'c' },
+    });
+
+    const rechargee = document.createElement('fp-exit') as FpExit;
+    rechargee.billet = BILLET;
+    rechargee.brouillon = { texteLibre: TEXTE_COURT, choix: 'c' };
+    document.body.appendChild(rechargee);
+
+    expect(champLibre(rechargee).value).toBe(TEXTE_COURT);
+    expect(
+      rechargee.shadowRoot?.querySelector('[data-option="c"]')?.getAttribute('aria-pressed'),
+    ).toBe('true');
+    rechargee.remove();
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
@@ -214,7 +248,7 @@ describe('FpExit', () => {
 
   it('rappelle le regime et la duree en mode tableau', () => {
     hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'regime')).toBe('ouvert');
+    expect(texteDe(hote, 'regime')).toBe('Régime ouvert');
     expect(texteDe(hote, 'duree')).toBe('5 min');
   });
 

@@ -4,14 +4,20 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import type { Observable } from 'rxjs';
 import { NEVER, of, Subject, throwError } from 'rxjs';
-import type { CoursContent } from '../../../../cours/content/types';
+import type { CoursContent, EcranContent } from '../../../../cours/content/types';
 import { clearIdentity } from '../../../../cours/runtime/core/identity';
 import { enqueue, pending } from '../../../../cours/runtime/core/queue';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
-import { buildEcranQuestionnaire } from '../../../../testing/factories/cours.factory';
+import {
+  buildEcran,
+  buildEcranQuestionnaire,
+  buildSpacedRappel,
+} from '../../../../testing/factories/cours.factory';
 import {
   buildCoursContent,
+  buildEtatParticipant,
   buildRattachement,
+  buildSpacedQuestionPublique,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
@@ -28,11 +34,17 @@ import {
   SujetRefuse,
 } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX } from '../cours-flux.token';
-import type { ReponseSlide } from '../../../shared/slides/session/slide-activity.component';
+import type { EvenementBrique, RetourBrique } from '../../../shared/slides/session/contrat-hote';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursEtudiantComponent } from './cours-etudiant.component';
 
 type Fixture = ComponentFixture<CoursEtudiantComponent>;
+
+interface ReponseSlide {
+  readonly questionId: string;
+  readonly valeur: number | string;
+  readonly dureeMs: number;
+}
 
 const JETON = 'jeton-participant-7f3a91';
 const SESSION = 'sess-42';
@@ -162,9 +174,22 @@ describe('CoursEtudiantComponent', () => {
     }
   }
 
-  async function repondre(fixture: Fixture, reponse: ReponseSlide): Promise<void> {
-    ecranDe(fixture).triggerEventHandler('reponse', reponse);
+  async function emettre(fixture: Fixture, evenement: EvenementBrique): Promise<void> {
+    ecranDe(fixture).triggerEventHandler('evenement', evenement);
     await stabiliser(fixture);
+  }
+
+  async function repondre(fixture: Fixture, reponse: ReponseSlide): Promise<void> {
+    const ecran = ecranAffiche(fixture) as EcranContent;
+    await emettre(fixture, { kind: 'reponse', screenId: ecran.id, ...reponse });
+  }
+
+  function retoursDe(fixture: Fixture, screenId = 'ecran-1'): readonly RetourBrique[] {
+    return fixture.componentInstance.retours().get(screenId) ?? [];
+  }
+
+  function genresDe(fixture: Fixture, screenId = 'ecran-1'): string[] {
+    return retoursDe(fixture, screenId).map((retour) => retour.kind);
   }
 
   function diffuser(fixture: Fixture, etat: Partial<EtatSession>): void {
@@ -374,7 +399,7 @@ describe('CoursEtudiantComponent', () => {
       .join('|');
 
     expect(double.fabrique.calls.mostRecent().args[0].jeton).toBe(JETON);
-    expect(double.flux.join).toHaveBeenCalledTimes(1);
+    expect(double.flux.ouvrir).toHaveBeenCalledTimes(1);
     expect(ecrit.length).toBeGreaterThan(0);
     expect(ecrit).not.toContain(JETON);
   });
@@ -504,41 +529,46 @@ describe('CoursEtudiantComponent', () => {
     });
   });
 
-  it('n affiche que le resultat et l etiquette de confusion', async () => {
+  it('ne pose sur la brique que le resultat et l etiquette de confusion (F6)', async () => {
     port.repondre.and.returnValue(of(verdictAvecFuite()));
     const fixture = await rattacherALaSeanceEnCours();
     await repondre(fixture, REPONSE_NUMERIQUE);
-    const rendu = (fixture.nativeElement as HTMLElement).innerHTML;
-    const [verdict] = verdictsAffiches(fixture);
+    const transmis = JSON.stringify(retoursDe(fixture));
 
-    expect(verdict.getAttribute('data-reussite')).toBe('false');
-    expect(verdict.getAttribute('data-question')).toBe('Q-VA-07');
-    expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
-    expect(rendu).not.toContain(VALEUR_ATTENDUE);
-    expect(rendu).not.toContain(ETIQUETTE_BRUTE);
+    expect(retoursDe(fixture)).toEqual([
+      {
+        kind: 'verdict-reponse',
+        questionId: 'Q-VA-07',
+        correcte: false,
+        libelleConfusion: ETIQUETTE_LIBELLE,
+      },
+    ]);
+    expect(transmis).not.toContain(VALEUR_ATTENDUE);
+    expect(transmis).not.toContain(ETIQUETTE_BRUTE);
+    expect(verdictsAffiches(fixture))
+      .withContext('le verdict d une brique runtime s affiche dans la brique, pas sous l ecran')
+      .toEqual([]);
   });
 
-  it('garde un verdict par question de l ecran et les efface au changement d ecran', async () => {
-    port.repondre.and.returnValues(of(REUSSITE), of(CONFUSION), of(CONFUSION));
+  it('pose chaque verdict sur l ecran de sa question, pas sur l ecran suivant', async () => {
+    port.repondre.and.returnValues(of(REUSSITE), of(CONFUSION));
     const fixture = await rattacherALaSeanceEnCours();
 
     await repondre(fixture, REPONSE_NUMERIQUE);
     await repondre(fixture, REPONSE_VOTE);
-    await repondre(fixture, REPONSE_NUMERIQUE);
 
     expect(
-      verdictsAffiches(fixture).map((verdict) => [
-        verdict.getAttribute('data-question'),
-        verdict.getAttribute('data-reussite'),
-      ]),
+      retoursDe(fixture).map((retour) =>
+        retour.kind === 'verdict-reponse' ? [retour.questionId, retour.correcte] : retour.kind,
+      ),
     ).toEqual([
-      ['Q-VA-07', 'false'],
-      ['Q-CAP-03', 'false'],
+      ['Q-VA-07', true],
+      ['Q-CAP-03', false],
     ]);
 
     diffuser(fixture, { ecranCourant: 1 });
 
-    expect(verdictsAffiches(fixture)).toEqual([]);
+    expect(retoursDe(fixture, sujet.ecrans[1].id)).toEqual([]);
   });
 
   it('affiche le verdict serveur du QCM d un ecran servi en presentation v2', async () => {
@@ -556,19 +586,6 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
   });
 
-  it('range les verdicts dans l ordre des questions de l ecran et les numerote', async () => {
-    port.repondre.and.returnValues(of(CONFUSION), of(REUSSITE));
-    const fixture = await rattacherALaSeanceEnCours();
-
-    await repondre(fixture, REPONSE_VOTE);
-    await repondre(fixture, REPONSE_NUMERIQUE);
-
-    expect(libellesDesVerdicts(fixture)).toEqual([
-      ['Q-VA-07', 'Question 1 : Réussi'],
-      ['Q-CAP-03', 'Question 2 : Manqué'],
-    ]);
-  });
-
   it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
     const fixture = await rattacherALaSeanceEnCours();
     window.dispatchEvent(new Event('offline'));
@@ -583,14 +600,14 @@ describe('CoursEtudiantComponent', () => {
     expect(port.repondre).toHaveBeenCalledOnceWith(SESSION, JETON, REPONSE_NUMERIQUE);
     expect(pending().length).toBe(0);
     expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
-    expect(verdictsAffiches(fixture).length).toBe(1);
+    expect(genresDe(fixture)).toEqual(['verdict-reponse']);
 
     await laisserPasserLeReseau(fixture);
 
     expect(port.repondre).toHaveBeenCalledTimes(1);
   });
 
-  it('n affiche pas sur un nouvel ecran le verdict d une reponse renvoyee depuis le precedent', async () => {
+  it('pose sur l ecran d origine, pas sur le nouvel ecran, le verdict d une reponse renvoyee', async () => {
     const fixture = await rattacherALaSeanceEnCours();
     window.dispatchEvent(new Event('offline'));
     await repondre(fixture, REPONSE_NUMERIQUE);
@@ -599,6 +616,8 @@ describe('CoursEtudiantComponent', () => {
     await laisserPasserLeReseau(fixture);
 
     expect(port.repondre).toHaveBeenCalledTimes(1);
+    expect(genresDe(fixture)).toEqual(['verdict-reponse']);
+    expect(retoursDe(fixture, sujet.ecrans[1].id)).toEqual([]);
     expect(verdictsAffiches(fixture)).toEqual([]);
   });
 
@@ -670,36 +689,69 @@ describe('CoursEtudiantComponent', () => {
       port.repondre.and.returnValue(throwError(() => new ReponseRefusee(motif, statut)));
     }
 
-    it('tient pour acceptee, sans verdict ni file, une reponse deja enregistree (409)', async () => {
+    it('relit l etat et marque deja repondue, sans file ni alerte, une reponse deja enregistree (409)', async () => {
       refuser('deja-repondue', 409);
       const fixture = await rattacherALaSeanceEnCours();
+      port.lireMonEtat.calls.reset();
 
       await repondre(fixture, REPONSE_VOTE);
 
+      expect(port.lireMonEtat).toHaveBeenCalledOnceWith(SESSION, JETON);
+      expect(retoursDe(fixture)).toEqual([{ kind: 'deja-repondu', questionId: 'Q-CAP-03' }]);
       expect(pending().length).toBe(0);
       expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
       expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
-      expect(verdictsAffiches(fixture)).toEqual([]);
     });
 
     for (const [cas, motif, statut] of [
       ['la seance n a pas demarre (409)', 'seance-non-demarree', 409],
       ['la requete est invalide (400)', 'refusee', 400],
     ] as const) {
-      it(`explique sans mettre en file un refus quand ${cas}`, async () => {
+      it(`pose sur la brique, sans mettre en file, un refus quand ${cas}`, async () => {
         refuser(motif, statut);
         const fixture = await rattacherALaSeanceEnCours();
 
         await repondre(fixture, REPONSE_VOTE);
-        const alerte = lire(fixture, 'etudiant-reponse-refusee');
 
-        expect(alerte?.getAttribute('role')).toBe('alert');
-        expect(alerte?.getAttribute('data-motif')).toBe(motif);
-        expect(alerte?.textContent?.trim()).toBe(new ReponseRefusee(motif, statut).message);
+        expect(retoursDe(fixture)).toEqual([
+          { kind: 'refus', motif, message: new ReponseRefusee(motif, statut).message },
+        ]);
+        expect(lire(fixture, 'etudiant-reponse-refusee'))
+          .withContext('la brique qui a emis porte le refus, pas un bandeau sous l ecran')
+          .toBeNull();
         expect(pending().length).toBe(0);
         expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
       });
     }
+
+    it('explique en bandeau le refus d un QCM d ecran visuel, qui n a pas de brique', async () => {
+      sujet = {
+        ...sujet,
+        ecrans: [buildVisualQuizSlide({ id: 'ecran-1' }), ...sujet.ecrans.slice(1)],
+      };
+      port.lireSujet.and.returnValue(of(sujet));
+      refuser('refusee', 400);
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await repondre(fixture, { questionId: 'b2-s03-prediction', valeur: 'o2', dureeMs: 800 });
+      const alerte = lire(fixture, 'etudiant-reponse-refusee');
+
+      expect(alerte?.getAttribute('role')).toBe('alert');
+      expect(alerte?.getAttribute('data-motif')).toBe('refusee');
+    });
+
+    it('efface le refus pose sur l ecran des que la brique emet de nouveau', async () => {
+      port.repondre.and.returnValues(
+        throwError(() => new ReponseRefusee('refusee', 400)),
+        of(REUSSITE),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+      await repondre(fixture, REPONSE_VOTE);
+
+      await repondre(fixture, REPONSE_VOTE);
+
+      expect(genresDe(fixture)).toEqual(['verdict-reponse']);
+    });
 
     it('met en file une reponse refusee par une panne du serveur (5xx)', async () => {
       refuser('reseau', 503);
@@ -745,7 +797,7 @@ describe('CoursEtudiantComponent', () => {
 
       expect(port.repondre).toHaveBeenCalledTimes(2);
       expect(pending().length).toBe(0);
-      expect(verdictsAffiches(fixture).length).toBe(1);
+      expect(genresDe(fixture)).toEqual(['verdict-reponse']);
     });
 
     it('retire de la file une reponse que le serveur refuse au renvoi, en l expliquant', async () => {
@@ -776,7 +828,7 @@ describe('CoursEtudiantComponent', () => {
     expect(jeton).toBe(JETON);
     expect(lot.length).toBe(2);
     expect(port.repondre).toHaveBeenCalledTimes(1);
-    expect(verdictsAffiches(fixture).length).toBe(1);
+    expect(genresDe(fixture)).toEqual(['verdict-reponse']);
   });
 
   it('ne propose l ecran suivant que si le rythme du flux le permet', async () => {
@@ -886,5 +938,206 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(SlideActivityComponent))).toBeNull();
     expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+  });
+
+  describe('reprise apres rechargement (§ 9.8)', () => {
+    it('relit l etat du participant et pose verdict et deja repondu sur l ecran de la question', async () => {
+      port.lireMonEtat.and.returnValue(
+        of(
+          buildEtatParticipant({
+            reponses: [
+              {
+                questionId: 'Q-VA-07',
+                valeur: 1400,
+                correcte: false,
+                score: null,
+                details: null,
+                libelleConfusion: ETIQUETTE_LIBELLE,
+              },
+            ],
+          }),
+        ),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+
+      expect(port.lireMonEtat).toHaveBeenCalledWith(SESSION, JETON);
+      expect(retoursDe(fixture)).toEqual([
+        {
+          kind: 'verdict-reponse',
+          questionId: 'Q-VA-07',
+          correcte: false,
+          libelleConfusion: ETIQUETTE_LIBELLE,
+        },
+        { kind: 'deja-repondu', questionId: 'Q-VA-07' },
+      ]);
+      expect(lire(fixture, 'etudiant-reprise-indisponible')).toBeNull();
+    });
+
+    it('dit a l etudiant que ses reponses n ont pas pu etre relues, sans bloquer la seance', async () => {
+      port.lireMonEtat.and.returnValue(throwError(() => new Error('reseau coupe')));
+      const fixture = await rattacherALaSeanceEnCours();
+
+      expect(lire(fixture, 'etudiant-reprise-indisponible')?.getAttribute('role')).toBe('status');
+      expect(ecranAffiche(fixture)).toBe(sujet.ecrans[0]);
+    });
+
+    it('confie a l ecran des brouillons propres a la seance et au participant', async () => {
+      localStorage.setItem('fp.autre-seance.participant-9.fp-exit.B-SORTIE-09', '"ancien"');
+      localStorage.setItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`, '"courant"');
+      const fixture = await rattacherALaSeanceEnCours();
+      const brouillons = (
+        ecranDe(fixture).componentInstance as SlideActivityComponent
+      ).brouillons();
+
+      expect(brouillons?.lire('fp-exit', 'B-SORTIE-09')).toBe('courant');
+      expect(localStorage.getItem('fp.autre-seance.participant-9.fp-exit.B-SORTIE-09')).toBeNull();
+    });
+
+    it('purge les brouillons de la seance quand le flux en annonce la fin', async () => {
+      localStorage.setItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`, '"courant"');
+      const fixture = await rattacherALaSeanceEnCours();
+
+      double.diffuserFin('cloturee');
+      fixture.detectChanges();
+
+      expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
+      expect(localStorage.getItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`)).toBeNull();
+    });
+  });
+
+  describe('evenements des briques runtime (§ 9.7)', () => {
+    it('charge une seule fois les questions dues quand l ecran de rappel est le premier', async () => {
+      const rappel = buildEcran({
+        id: 'ecran-rappel',
+        type: 'fp-spaced',
+        donnees: { rappel: buildSpacedRappel() },
+      });
+      sujet = { ...sujet, ecrans: [rappel, ...sujet.ecrans.slice(1)] };
+      port.lireSujet.and.returnValue(of(sujet));
+      const fixture = await rattacherALaSeanceEnCours();
+
+      expect(port.lireRappels).toHaveBeenCalledOnceWith(SESSION, JETON);
+      expect(retoursDe(fixture, 'ecran-rappel')).toEqual([
+        { kind: 'rappels', questions: [buildSpacedQuestionPublique()] },
+      ]);
+    });
+
+    it('envoie une production et pose son verdict detaille sur l ecran', async () => {
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await emettre(fixture, {
+        kind: 'production',
+        screenId: 'ecran-1',
+        questionId: 'K-TABLEUR-01',
+        valeur: { type: 'feuille', cellules: { E2: '=C2*D2' } },
+        dureeMs: 3000,
+      });
+
+      expect(port.envoyerProduction).toHaveBeenCalledOnceWith(SESSION, JETON, {
+        questionId: 'K-TABLEUR-01',
+        valeur: { type: 'feuille', cellules: { E2: '=C2*D2' } },
+        dureeMs: 3000,
+      });
+      expect(retoursDe(fixture)).toEqual([
+        jasmine.objectContaining({
+          kind: 'verdict-production',
+          questionId: 'K-TABLEUR-01',
+          score: 0.75,
+        }),
+      ]);
+    });
+
+    it('confie la tentative d enigme au serveur et pose le fragment servi', async () => {
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await emettre(fixture, {
+        kind: 'tentative',
+        screenId: 'ecran-1',
+        parcoursId: 'K-EVASION-01',
+        enigmeId: 'seuil',
+        reponse: '30000',
+        dureeMs: 40000,
+      });
+
+      expect(port.tenterEnigme).toHaveBeenCalledOnceWith(SESSION, JETON, 'K-EVASION-01', {
+        enigmeId: 'seuil',
+        reponse: '30000',
+        dureeMs: 40000,
+      });
+      expect(retoursDe(fixture)).toEqual([
+        {
+          kind: 'tentative',
+          parcoursId: 'K-EVASION-01',
+          enigmeId: 'seuil',
+          correcte: true,
+          fragment: '7',
+          tentativesRestantes: 9,
+        },
+      ]);
+    });
+
+    it('resynchronise la progression quand le serveur refuse une tentative epuisee', async () => {
+      port.tenterEnigme.and.returnValue(
+        throwError(() => new ReponseRefusee('tentatives-epuisees', 409)),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+      port.lireMonEtat.calls.reset();
+
+      await emettre(fixture, {
+        kind: 'tentative',
+        screenId: 'ecran-1',
+        parcoursId: 'K-EVASION-01',
+        enigmeId: 'seuil',
+        reponse: '1',
+        dureeMs: 100,
+      });
+
+      expect(genresDe(fixture)).toEqual(['refus']);
+      expect(port.lireMonEtat).toHaveBeenCalledTimes(1);
+    });
+
+    it('envoie la premiere tentative d un defi et pose les strategies servies', async () => {
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await emettre(fixture, {
+        kind: 'defi',
+        screenId: 'ecran-1',
+        defiId: 'D-DEFI-07',
+        texte: 'Une dizaine d annees',
+        dureeMs: 90000,
+      });
+
+      expect(port.envoyerDefi).toHaveBeenCalledOnceWith(SESSION, JETON, 'D-DEFI-07', {
+        texte: 'Une dizaine d annees',
+        dureeMs: 90000,
+      });
+      expect(genresDe(fixture)).toEqual(['strategies']);
+    });
+
+    it('declare un jalon sans duree et envoie un texte libre par le service des reponses libres', async () => {
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await emettre(fixture, {
+        kind: 'jalon',
+        screenId: 'ecran-1',
+        sondageId: 'P-PULSE-01',
+        etat: 'perdu',
+      });
+      await emettre(fixture, {
+        kind: 'libre',
+        screenId: 'ecran-1',
+        activityId: 'Q-RAPPEL-04:rappel',
+        response: 'On capitalise',
+        dureeMs: 2000,
+      });
+
+      expect(port.declarerJalon).toHaveBeenCalledOnceWith(SESSION, JETON, 'P-PULSE-01', 'perdu');
+      expect(port.enregistrerReponseLibre).toHaveBeenCalledOnceWith(SESSION, JETON, {
+        screenId: 'ecran-1',
+        activityId: 'Q-RAPPEL-04:rappel',
+        response: 'On capitalise',
+        dureeMs: 2000,
+      });
+    });
   });
 });

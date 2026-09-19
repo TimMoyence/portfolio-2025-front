@@ -1,20 +1,14 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { seedFromKey } from '../core/seed';
-import { persistJson, readJson } from '../core/storage';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
+import { estObjet, type ProgressionDesEnigmes, type VerdictDeTentative } from './retours';
 
 export interface EscapeEnigmePublique {
   readonly id: string;
   readonly intitule: string;
   readonly enonce: string;
   readonly indice: string;
-  readonly fragment: string;
-}
-
-export interface EscapeEnigme extends EscapeEnigmePublique {
-  readonly solution: string;
 }
 
 export interface EscapeParcoursPublic {
@@ -22,90 +16,151 @@ export interface EscapeParcoursPublic {
   readonly intitule: string;
   readonly delaiIndiceMs: number;
   readonly budgetEnigmeMs: number;
+  readonly tentativesMax: number;
   readonly enigmes: readonly EscapeEnigmePublique[];
   readonly metadonnees: MetadonneesBrique;
 }
 
-export interface EscapeParcours extends EscapeParcoursPublic {
-  readonly enigmes: readonly EscapeEnigme[];
+interface SolutionnaireEnigme {
+  readonly enigmeId: string;
+  readonly solution: string;
+  readonly fragment: string;
 }
 
-interface EscapeProgres {
-  readonly parcoursId: string;
-  readonly resolues: number;
+interface Solutionnaire {
+  readonly enigmes: readonly SolutionnaireEnigme[];
+  readonly codeFinal: string;
 }
 
-type EtatEnigme = 'resolue' | 'ouverte' | 'verrouillee';
+type EtatEnigme = 'resolue' | 'epuisee' | 'ouverte' | 'verrouillee';
 
 const VIDE = escapeHtml('');
 const DESACTIVE = safeHtml`disabled`;
 const MS_PAR_MINUTE = 60000;
 const MS_PAR_SECONDE = 1000;
+const TENTATIVES_PAR_DEFAUT = 10;
+const LONGUEUR_MAX_REPONSE = 40;
 
-function normaliserReponse(saisie: string): string {
-  return saisie
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .replace(/\s+/g, '')
-    .toLowerCase();
+function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
+  return {
+    id: source.id,
+    intitule: source.intitule,
+    delaiIndiceMs: source.delaiIndiceMs,
+    budgetEnigmeMs: source.budgetEnigmeMs,
+    tentativesMax:
+      Number.isInteger(source.tentativesMax) && source.tentativesMax > 0
+        ? source.tentativesMax
+        : TENTATIVES_PAR_DEFAUT,
+    enigmes: source.enigmes.map((enigme) => ({
+      id: enigme.id,
+      intitule: enigme.intitule,
+      enonce: enigme.enonce,
+      indice: enigme.indice,
+    })),
+    metadonnees: projeterMetadonnees(source.metadonnees),
+  };
 }
 
-function empreinteDe(solution: string): number {
-  return seedFromKey(normaliserReponse(solution));
+function lireSolutionnaire(valeur: unknown): Solutionnaire | null {
+  if (
+    !estObjet(valeur) ||
+    valeur['type'] !== 'enigmes' ||
+    !Array.isArray(valeur['enigmes']) ||
+    typeof valeur['codeFinal'] !== 'string'
+  ) {
+    return null;
+  }
+  const enigmes = valeur['enigmes'].filter(
+    (enigme): enigme is SolutionnaireEnigme =>
+      estObjet(enigme) &&
+      typeof enigme['enigmeId'] === 'string' &&
+      typeof enigme['solution'] === 'string' &&
+      typeof enigme['fragment'] === 'string',
+  );
+  return { enigmes, codeFinal: valeur['codeFinal'] };
 }
 
-function clePersistance(parcoursId: string): string {
-  return `fp.escape.${parcoursId}`;
+function estTentative(valeur: unknown): valeur is VerdictDeTentative {
+  return (
+    estObjet(valeur) &&
+    typeof valeur['parcoursId'] === 'string' &&
+    typeof valeur['enigmeId'] === 'string' &&
+    typeof valeur['correcte'] === 'boolean' &&
+    (valeur['fragment'] === null || typeof valeur['fragment'] === 'string') &&
+    typeof valeur['tentativesRestantes'] === 'number'
+  );
 }
 
 export class FpEscape extends FpBlock {
   private interne: EscapeParcoursPublic | null = null;
-  private empreintes: readonly number[] = [];
-  private solutions: readonly string[] = [];
-  private resolues = 0;
+  private fragments = new Map<string, string>();
+  private restantes = new Map<string, number>();
+  private enVol: string | null = null;
   private saisie = '';
   private indiceOuvert = false;
   private message = '';
+  private solutionnaire: Solutionnaire | null = null;
 
-  set parcours(valeur: EscapeParcours | null) {
-    this.interne = valeur === null ? null : this.projeterParcours(valeur);
-    this.empreintes = valeur === null ? [] : valeur.enigmes.map((e) => empreinteDe(e.solution));
-    this.solutions =
-      valeur !== null && this.roleActuel() === 'presentateur'
-        ? valeur.enigmes.map((enigme) => enigme.solution)
-        : [];
-    this.resolues = this.reprendre();
-    this.saisie = '';
-    this.indiceOuvert = false;
-    this.message = '';
+  set parcours(valeur: EscapeParcoursPublic | null) {
+    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
+    this.interne = valeur === null ? null : projeterParcours(valeur);
+    if (change) {
+      this.fragments = new Map();
+      this.restantes = new Map();
+      this.enVol = null;
+      this.saisie = '';
+      this.indiceOuvert = false;
+      this.message = '';
+    }
     this.suivreAffichage(this.cleAffichage());
     this.refreshSiConnecte();
   }
 
   get parcours(): EscapeParcoursPublic | null {
-    const source = this.interne;
-    if (source === null) {
-      return null;
-    }
-    return {
-      id: source.id,
-      intitule: source.intitule,
-      delaiIndiceMs: source.delaiIndiceMs,
-      budgetEnigmeMs: source.budgetEnigmeMs,
-      enigmes: source.enigmes.map((enigme, ordre) => this.projeterEnigme(enigme, ordre)),
-      metadonnees: projeterMetadonnees(source.metadonnees),
-    };
+    return this.interne;
   }
 
-  get avancement(): number {
-    return this.resolues;
+  set progression(valeur: ProgressionDesEnigmes | null) {
+    if (
+      !estObjet(valeur) ||
+      valeur.parcoursId !== this.interne?.id ||
+      !Array.isArray(valeur.resolues) ||
+      !estObjet(valeur.tentativesRestantes)
+    ) {
+      return;
+    }
+    for (const resolue of valeur.resolues) {
+      this.fragments.set(resolue.enigmeId, resolue.fragment);
+    }
+    for (const [enigmeId, restantes] of Object.entries(valeur.tentativesRestantes)) {
+      this.restantes.set(enigmeId, restantes);
+    }
+    this.suivreAffichage(this.cleAffichage());
+    this.refreshSiConnecte();
   }
 
-  get codeFinal(): string {
-    if (!this.acheve()) {
-      return '';
+  set tentatives(valeur: readonly VerdictDeTentative[] | null) {
+    const parcoursId = this.interne?.id;
+    for (const tentative of (valeur ?? []).filter(estTentative)) {
+      if (tentative.parcoursId === parcoursId) {
+        this.appliquer(tentative);
+      }
     }
-    return (this.interne?.enigmes ?? []).map((enigme) => enigme.fragment).join('');
+    this.suivreAffichage(this.cleAffichage());
+    this.refreshSiConnecte();
+  }
+
+  set corrige(valeur: unknown) {
+    this.solutionnaire = lireSolutionnaire(valeur);
+    this.refreshSiConnecte();
+  }
+
+  set brouillon(valeur: unknown) {
+    if (estObjet(valeur) && typeof valeur['saisie'] === 'string') {
+      this.saisie = valeur['saisie'];
+      this.noterBrouillonRepris();
+      this.refreshSiConnecte();
+    }
   }
 
   renderHand(): EscapedHtml {
@@ -117,11 +172,12 @@ export class FpEscape extends FpBlock {
       <section class="fp-carte fp-escape__parcours">
         <p class="fp-enonce fp-escape__intitule" data-testid="intitule">${escapeHtml(parcours.intitule)}</p>
         <p class="fp-escape__consigne">${escapeHtml(this.texte('escape-consigne'))}</p>
-        ${this.progression()}
+        ${this.progressionAffichee()}
         ${this.minuteur()}
         ${this.enigmes(true)}
         ${this.coffre()}
         <p class="fp-escape__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
+        ${this.annonces()}
       </section>
     `;
   }
@@ -134,9 +190,8 @@ export class FpEscape extends FpBlock {
     return safeHtml`
       <section class="fp-scene fp-escape__parcours">
         <p class="fp-enonce fp-escape__intitule" data-testid="intitule">${escapeHtml(parcours.intitule)}</p>
-        ${this.progression()}
-        ${this.enigmes(false)}
-        ${this.coffre()}
+        <p class="fp-escape__consigne">${escapeHtml(this.texte('escape-consigne'))}</p>
+        <ol class="fp-escape__liste">${parcours.enigmes.map((enigme) => safeHtml`<li class="fp-escape__enigme" data-testid="enigme" data-enigme="${escapeHtml(enigme.id)}"><span class="fp-escape__nom">${escapeHtml(enigme.intitule)}</span></li>`)}</ol>
       </section>
     `;
   }
@@ -149,13 +204,8 @@ export class FpEscape extends FpBlock {
     return safeHtml`
       <section class="fp-carte fp-escape__parcours">
         <p class="fp-enonce fp-escape__intitule" data-testid="intitule">${escapeHtml(parcours.intitule)}</p>
-        ${this.progression()}
-        ${this.minuteur()}
-        <div class="fp-escape__reperes">
-          <span class="fp-badge" data-testid="modalite">${escapeHtml(parcours.metadonnees.modalite)}</span>
-          <span class="fp-badge" data-testid="duree">${parcours.metadonnees.dureeMinutes} min</span>
-        </div>
-        ${this.solutionnaire()}
+        <div class="fp-escape__reperes">${this.reperes(parcours.metadonnees)}</div>
+        ${this.roleActuel() === 'presentateur' ? this.solutions(parcours) : VIDE}
       </section>
     `;
   }
@@ -169,6 +219,13 @@ export class FpEscape extends FpBlock {
     if (champ !== null) {
       champ.addEventListener('input', () => {
         this.saisie = champ.value;
+        this.signalerBrouillon(this.interne?.id ?? '', { saisie: champ.value });
+      });
+      champ.addEventListener('keydown', (evenement) => {
+        if (evenement.key === 'Enter') {
+          evenement.preventDefault();
+          this.repondre();
+        }
       });
     }
     racine
@@ -179,28 +236,60 @@ export class FpEscape extends FpBlock {
       ?.addEventListener('click', () => this.demanderIndice());
   }
 
-  private projeterParcours(source: EscapeParcours): EscapeParcoursPublic {
-    return {
-      id: source.id,
-      intitule: source.intitule,
-      delaiIndiceMs: source.delaiIndiceMs,
-      budgetEnigmeMs: source.budgetEnigmeMs,
-      enigmes: source.enigmes.map((enigme) => ({
-        id: enigme.id,
-        intitule: enigme.intitule,
-        enonce: enigme.enonce,
-        indice: enigme.indice,
-        fragment: enigme.fragment,
-      })),
-      metadonnees: projeterMetadonnees(source.metadonnees),
-    };
+  protected override appliquerErreur(valeur: string | null): void {
+    if (valeur !== null) {
+      this.enVol = null;
+    }
+    super.appliquerErreur(valeur);
   }
 
-  private projeterEnigme(enigme: EscapeEnigmePublique, ordre: number): EscapeEnigmePublique {
-    if (ordre < this.resolues || this.roleActuel() === 'presentateur') {
-      return { ...enigme };
+  private appliquer(tentative: VerdictDeTentative): void {
+    if (this.enVol === tentative.enigmeId) {
+      this.enVol = null;
     }
-    return { ...enigme, fragment: '' };
+    this.restantes.set(tentative.enigmeId, tentative.tentativesRestantes);
+    if (tentative.correcte && tentative.fragment !== null) {
+      const deja = this.fragments.has(tentative.enigmeId);
+      this.fragments.set(tentative.enigmeId, tentative.fragment);
+      this.saisie = '';
+      this.indiceOuvert = false;
+      this.message = deja ? this.message : this.annonceOuverture();
+      return;
+    }
+    this.message =
+      tentative.tentativesRestantes <= 0
+        ? this.texte('escape-tentatives-epuisees')
+        : this.texte('escape-a-chercher');
+  }
+
+  private tentativesMax(): number {
+    return this.interne?.tentativesMax ?? TENTATIVES_PAR_DEFAUT;
+  }
+
+  private restantesDe(enigmeId: string): number {
+    return this.restantes.get(enigmeId) ?? this.tentativesMax();
+  }
+
+  private etatDe(enigmeId: string): EtatEnigme {
+    if (this.fragments.has(enigmeId)) {
+      return 'resolue';
+    }
+    if (this.restantesDe(enigmeId) <= 0) {
+      return 'epuisee';
+    }
+    return this.enigmeOuverte()?.id === enigmeId ? 'ouverte' : 'verrouillee';
+  }
+
+  private enigmeOuverte(): EscapeEnigmePublique | null {
+    return (
+      this.interne?.enigmes.find(
+        (enigme) => !this.fragments.has(enigme.id) && this.restantesDe(enigme.id) > 0,
+      ) ?? null
+    );
+  }
+
+  private resolues(): number {
+    return this.interne?.enigmes.filter((enigme) => this.fragments.has(enigme.id)).length ?? 0;
   }
 
   private total(): number {
@@ -208,50 +297,22 @@ export class FpEscape extends FpBlock {
   }
 
   private acheve(): boolean {
-    return this.total() > 0 && this.resolues >= this.total();
+    return this.total() > 0 && this.enigmeOuverte() === null;
+  }
+
+  private codeReconstitue(): string {
+    return (this.interne?.enigmes ?? [])
+      .map((enigme) => this.fragments.get(enigme.id) ?? '·')
+      .join('');
   }
 
   private cleAffichage(): string | null {
     const parcours = this.interne;
-    return parcours === null ? null : `${parcours.id}#${this.resolues}`;
+    return parcours === null ? null : `${parcours.id}#${this.enigmeOuverte()?.id ?? 'fin'}`;
   }
 
-  private reprendre(): number {
-    const parcours = this.interne;
-    if (parcours === null) {
-      return 0;
-    }
-    const repris = readJson<EscapeProgres>(clePersistance(parcours.id));
-    if (repris === null || repris.parcoursId !== parcours.id) {
-      return 0;
-    }
-    return Math.min(Math.max(Math.trunc(repris.resolues), 0), parcours.enigmes.length);
-  }
-
-  private consigner(): void {
-    const parcours = this.interne;
-    if (parcours === null) {
-      return;
-    }
-    persistJson(clePersistance(parcours.id), {
-      parcoursId: parcours.id,
-      resolues: this.resolues,
-    });
-  }
-
-  private etatDe(ordre: number): EtatEnigme {
-    if (ordre < this.resolues) {
-      return 'resolue';
-    }
-    return ordre === this.resolues ? 'ouverte' : 'verrouillee';
-  }
-
-  private enigmeOuverte(): EscapeEnigmePublique | null {
-    return this.interne?.enigmes[this.resolues] ?? null;
-  }
-
-  private progression(): EscapedHtml {
-    return safeHtml`<p class="fp-escape__progression" data-testid="progression" data-resolues="${this.resolues}">${escapeHtml(this.texte('escape-progression'))} ${this.resolues} / ${this.total()}</p>`;
+  private progressionAffichee(): EscapedHtml {
+    return safeHtml`<p class="fp-escape__progression" data-testid="progression" data-resolues="${this.resolues()}">${escapeHtml(this.texte('escape-progression'))} ${this.resolues()} / ${this.total()}</p>`;
   }
 
   private minuteur(): EscapedHtml {
@@ -274,16 +335,20 @@ export class FpEscape extends FpBlock {
     if (this.total() === 0) {
       return safeHtml`<p class="fp-escape__vide" data-testid="vide">${escapeHtml(this.texte('escape-vide'))}</p>`;
     }
-    return safeHtml`<ol class="fp-escape__liste">${(this.interne?.enigmes ?? []).map((enigme, ordre) => this.enigme(enigme, ordre, interactif))}</ol>`;
+    return safeHtml`<ol class="fp-escape__liste">${(this.interne?.enigmes ?? []).map((enigme) => this.enigme(enigme, interactif))}</ol>`;
   }
 
-  private enigme(enigme: EscapeEnigmePublique, ordre: number, interactif: boolean): EscapedHtml {
-    const etat = this.etatDe(ordre);
+  private libelleEtat(etat: EtatEnigme): string {
+    return this.texte(etat === 'epuisee' ? 'escape-etat-verrouillee' : `escape-etat-${etat}`);
+  }
+
+  private enigme(enigme: EscapeEnigmePublique, interactif: boolean): EscapedHtml {
+    const etat = this.etatDe(enigme.id);
     return safeHtml`
       <li class="fp-escape__enigme" data-testid="enigme" data-enigme="${escapeHtml(enigme.id)}" data-etat="${escapeHtml(etat)}">
         <p class="fp-escape__titre">
           <span class="fp-escape__nom">${escapeHtml(enigme.intitule)}</span>
-          <span class="fp-badge fp-escape__etat" data-testid="etat">${escapeHtml(this.texte(`escape-etat-${etat}`))}</span>
+          <span class="fp-badge fp-escape__etat" data-testid="etat">${escapeHtml(this.libelleEtat(etat))}</span>
         </p>
         ${this.corpsEnigme(enigme, etat, interactif)}
       </li>
@@ -298,8 +363,11 @@ export class FpEscape extends FpBlock {
     if (etat === 'verrouillee') {
       return safeHtml`<p class="fp-escape__verrou" data-testid="verrou">${escapeHtml(this.texte('escape-verrouillee'))}</p>`;
     }
+    if (etat === 'epuisee') {
+      return safeHtml`<p class="fp-escape__verrou" data-testid="epuisee">${escapeHtml(this.texte('escape-tentatives-epuisees'))}</p>`;
+    }
     if (etat === 'resolue') {
-      return safeHtml`<p class="fp-escape__fragment" data-testid="fragment"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-fragment'))}</span> <span class="fp-montant">${escapeHtml(enigme.fragment)}</span></p>`;
+      return safeHtml`<p class="fp-escape__fragment" data-testid="fragment"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-fragment'))}</span> <span class="fp-montant">${escapeHtml(this.fragments.get(enigme.id) ?? '')}</span></p>`;
     }
     return safeHtml`
       <p class="fp-escape__enonce fp-prose" data-testid="enonce">${escapeHtml(enigme.enonce)}</p>
@@ -308,12 +376,14 @@ export class FpEscape extends FpBlock {
   }
 
   private atelier(enigme: EscapeEnigmePublique): EscapedHtml {
+    const bloque = this.enVol !== null && !this.enApercu();
     return safeHtml`
       <p class="fp-escape__saisie">
         <label class="fp-escape__etiquette" for="fp-escape-reponse">${escapeHtml(this.texte('escape-reponse'))}</label>
-        <input class="fp-escape__champ" id="fp-escape-reponse" type="text" data-testid="saisie" value="${escapeHtml(this.saisie)}" autocomplete="off" />
-        <button type="button" class="fp-escape__repondre" data-testid="repondre">${escapeHtml(this.texte('escape-repondre'))}</button>
+        <input class="fp-escape__champ" id="fp-escape-reponse" type="text" data-testid="saisie" maxlength="${LONGUEUR_MAX_REPONSE}" value="${escapeHtml(this.saisie)}" autocomplete="off" />
+        <button type="button" class="fp-escape__repondre" data-testid="repondre" ${bloque ? DESACTIVE : VIDE}>${escapeHtml(this.texte('escape-repondre'))}</button>
       </p>
+      <p class="fp-escape__restantes" data-testid="tentatives-restantes">${escapeHtml(this.texte('escape-tentatives-restantes'))} ${this.restantesDe(enigme.id)}</p>
       <p class="fp-escape__aide">
         <button type="button" class="fp-escape__indice" data-testid="demander-indice" data-pret="${escapeHtml(this.indiceDisponible())}" ${this.indiceOuvert ? DESACTIVE : VIDE}>${escapeHtml(this.texte('escape-indice'))}</button>
         <span class="fp-escape__gratuite" data-testid="gratuite">${escapeHtml(this.texte('escape-indice-gratuit'))}</span>
@@ -330,18 +400,20 @@ export class FpEscape extends FpBlock {
     if (!this.acheve()) {
       return VIDE;
     }
-    return safeHtml`<p class="fp-escape__coffre" data-testid="code"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-code'))}</span> <span class="fp-montant">${escapeHtml(this.codeFinal)}</span></p>`;
+    return safeHtml`<p class="fp-escape__coffre" data-testid="code"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-code'))}</span> <span class="fp-montant">${escapeHtml(this.codeReconstitue())}</span></p>`;
   }
 
-  private solutionnaire(): EscapedHtml {
-    if (this.solutions.length === 0) {
+  private solutions(parcours: EscapeParcoursPublic): EscapedHtml {
+    const solutionnaire = this.solutionnaire;
+    if (solutionnaire === null) {
       return VIDE;
     }
-    return safeHtml`<ul class="fp-escape__solutions" data-testid="solutions">${this.solutions.map((solution) => this.solution(solution))}</ul>`;
-  }
-
-  private solution(solution: string): EscapedHtml {
-    return safeHtml`<li class="fp-escape__solution">${escapeHtml(solution)}</li>`;
+    const intitule = (id: string): string =>
+      parcours.enigmes.find((enigme) => enigme.id === id)?.intitule ?? id;
+    return safeHtml`
+      <ul class="fp-escape__solutions" data-testid="solutions">${solutionnaire.enigmes.map((enigme) => safeHtml`<li class="fp-escape__solution"><strong>${escapeHtml(intitule(enigme.enigmeId))}</strong> ${escapeHtml(enigme.solution)} · ${escapeHtml(enigme.fragment)}</li>`)}</ul>
+      <p class="fp-escape__coffre" data-testid="code-final"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-code'))}</span> <span class="fp-montant">${escapeHtml(solutionnaire.codeFinal)}</span></p>
+    `;
   }
 
   private indiceDisponible(): boolean {
@@ -362,36 +434,23 @@ export class FpEscape extends FpBlock {
 
   private repondre(): void {
     const enigme = this.enigmeOuverte();
-    if (enigme === null) {
+    const parcours = this.interne;
+    if (enigme === null || parcours === null || (this.enVol !== null && !this.enApercu())) {
       return;
     }
-    if (this.saisie.trim().length === 0) {
+    const reponse = this.saisie.trim();
+    if (reponse.length === 0) {
       this.message = this.texte('escape-reponse-vide');
       this.refresh();
       return;
     }
-    if (seedFromKey(normaliserReponse(this.saisie)) !== this.empreintes[this.resolues]) {
-      this.message = this.texte('escape-a-chercher');
-      this.refresh();
-      return;
-    }
-    this.ouvrirSuivante(enigme);
-  }
-
-  private ouvrirSuivante(enigme: EscapeEnigmePublique): void {
-    const dureeMs = this.depuisAffichage();
-    this.resolues += 1;
-    this.saisie = '';
-    this.indiceOuvert = false;
-    this.message = this.annonceOuverture();
-    this.consigner();
-    this.suivreAffichage(this.cleAffichage());
-    this.emit('fp-escape-resolue', {
-      parcoursId: this.interne?.id ?? '',
+    this.enVol = enigme.id;
+    this.message = this.enApercu() ? this.texte('apercu') : '';
+    this.emit('fp-escape-tentative', {
+      parcoursId: parcours.id,
       enigmeId: enigme.id,
-      resolues: this.resolues,
-      acheve: this.acheve(),
-      dureeMs,
+      reponse: reponse.slice(0, LONGUEUR_MAX_REPONSE),
+      dureeMs: this.depuisAffichage(),
     });
     this.refresh();
   }
@@ -399,7 +458,7 @@ export class FpEscape extends FpBlock {
   private annonceOuverture(): string {
     const suivante = this.enigmeOuverte();
     if (suivante === null) {
-      return `${this.texte('escape-termine')} ${this.codeFinal}`;
+      return `${this.texte('escape-termine')} ${this.codeReconstitue()}`;
     }
     return `${this.texte('escape-debloquee')} ${suivante.intitule}`;
   }

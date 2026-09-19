@@ -1,26 +1,12 @@
-export type StorageIncidentCause = 'indisponible' | 'refus';
-
-export interface StorageIncident {
-  cle: string;
-  cause: StorageIncidentCause;
-  horodatage: string;
-}
-
-const CAPACITE_JOURNAL_MAX = 200;
-const journal: StorageIncident[] = [];
+const PREFIXE = 'fp.';
+const DELAI_BROUILLON_MS = 1000;
+const MOTIF_CLE_BROUILLON = /^fp\.[^.]+\.[^.]+\.fp-[a-z0-9-]+\..+$/;
 
 function stockageLocal(): Storage | null {
   try {
     return globalThis.localStorage ?? null;
   } catch {
     return null;
-  }
-}
-
-function consigner(cle: string, cause: StorageIncidentCause): void {
-  journal.push({ cle, cause, horodatage: new Date().toISOString() });
-  if (journal.length > CAPACITE_JOURNAL_MAX) {
-    journal.shift();
   }
 }
 
@@ -44,22 +30,10 @@ export function writeJson(cle: string, valeur: unknown): boolean {
 
 export function persistJson(cle: string, valeur: unknown): boolean {
   try {
-    if (writeJson(cle, valeur)) {
-      return true;
-    }
-    consigner(cle, 'indisponible');
+    return writeJson(cle, valeur);
   } catch {
-    consigner(cle, 'refus');
+    return false;
   }
-  return false;
-}
-
-export function storageIncidents(): readonly StorageIncident[] {
-  return [...journal];
-}
-
-export function clearStorageIncidents(): void {
-  journal.length = 0;
 }
 
 export function removeKey(cle: string): void {
@@ -67,5 +41,76 @@ export function removeKey(cle: string): void {
     stockageLocal()?.removeItem(cle);
   } catch {
     return;
+  }
+}
+
+function clesDesBrouillons(): string[] {
+  const stockage = stockageLocal();
+  if (stockage === null) {
+    return [];
+  }
+  try {
+    return Array.from({ length: stockage.length }, (_, rang) => stockage.key(rang)).filter(
+      (cle): cle is string => cle !== null && MOTIF_CLE_BROUILLON.test(cle),
+    );
+  } catch {
+    return [];
+  }
+}
+
+export interface Brouillons {
+  lire(brique: string, id: string): unknown;
+  ecrire(brique: string, id: string, valeur: unknown): void;
+  purger(): void;
+}
+
+function prefixeDeSeance(sessionId: string, participantId: string): string {
+  return `${PREFIXE}${sessionId}.${participantId}.`;
+}
+
+export function creerBrouillons(
+  sessionId: string,
+  participantId: string,
+  delaiMs = DELAI_BROUILLON_MS,
+): Brouillons {
+  const prefixe = prefixeDeSeance(sessionId, participantId);
+  const enAttente = new Map<string, ReturnType<typeof setTimeout>>();
+  const cle = (brique: string, id: string): string => `${prefixe}${brique}.${id}`;
+  return {
+    lire: (brique, id) => readJson<unknown>(cle(brique, id)),
+    ecrire(brique, id, valeur) {
+      const complete = cle(brique, id);
+      const precedent = enAttente.get(complete);
+      if (precedent !== undefined) {
+        clearTimeout(precedent);
+      }
+      enAttente.set(
+        complete,
+        setTimeout(() => {
+          enAttente.delete(complete);
+          persistJson(complete, valeur);
+        }, delaiMs),
+      );
+    },
+    purger() {
+      for (const minuteur of enAttente.values()) {
+        clearTimeout(minuteur);
+      }
+      enAttente.clear();
+      for (const existante of clesDesBrouillons()) {
+        if (existante.startsWith(prefixe)) {
+          removeKey(existante);
+        }
+      }
+    },
+  };
+}
+
+export function purgerLesAutresBrouillons(sessionId: string, participantId: string): void {
+  const prefixe = prefixeDeSeance(sessionId, participantId);
+  for (const existante of clesDesBrouillons()) {
+    if (!existante.startsWith(prefixe)) {
+      removeKey(existante);
+    }
   }
 }

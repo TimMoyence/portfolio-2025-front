@@ -1,5 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { briqueMontee } from '../../../../testing/briques-montees';
+import {
+  buildEcran,
+  buildEcranQuestionnaire,
+  buildNumericQuestion,
+} from '../../../../testing/factories/cours.factory';
 import { FORMATION_CATALOGUE_PORT } from '../../../core/ports/formation-catalogue.port';
 import {
   buildVisualCourse,
@@ -79,6 +86,89 @@ describe('B2TraitementInformationChiffreeComponent', () => {
     expect(images[0].getAttribute('fetchpriority')).toBe('high');
     expect(images[1].getAttribute('loading')).toBe('lazy');
     expect(images[1].hasAttribute('fetchpriority')).toBeFalse();
+  });
+
+  describe('écrans runtime du catalogue (F21, AC-28)', () => {
+    const ecrans = [
+      buildEcran({
+        id: 'b2-01-estimation',
+        type: 'fp-numeric',
+        titre: 'Estimer avant de calculer',
+        duree: 4,
+        donnees: { question: buildNumericQuestion() },
+      }),
+      buildEcranQuestionnaire({ id: 'b2-01-atelier-1', titre: 'Atelier 1' }),
+      buildEcran({
+        id: 'b2-01-verrou',
+        type: 'ecran-verrouille',
+        titre: 'Tâche de tableur 2',
+        duree: 11,
+      }),
+    ];
+
+    async function monterLaPage(): Promise<
+      ComponentFixture<B2TraitementInformationChiffreeComponent>
+    > {
+      catalogue.lire.and.returnValue(of(buildVisualCourse({ ecrans })));
+      const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
+      fixture.detectChanges();
+      await briqueMontee(fixture, 'fp-vote');
+      return fixture;
+    }
+
+    it('monte les briques des écrans catalogue en aperçu, en rendu main', async () => {
+      const fixture = await monterLaPage();
+      const numerique = await briqueMontee(fixture, 'fp-numeric');
+
+      expect(numerique.hasAttribute('data-apercu')).toBeTrue();
+      expect(numerique.getAttribute('render')).toBe('hand');
+      expect(numerique.getAttribute('data-cours-role')).toBe('etudiant');
+      expect(
+        (fixture.nativeElement as HTMLElement).querySelectorAll('fp-numeric, fp-vote').length,
+      ).toBe(3);
+      expect(
+        (fixture.nativeElement as HTMLElement).querySelector(
+          '[data-testid="slide-activity-error"]',
+        ),
+      ).toBeNull();
+    });
+
+    it('titre chaque écran, verrouillé compris, avec sa durée', async () => {
+      const element = (await monterLaPage()).nativeElement as HTMLElement;
+      const resumes = [...element.querySelectorAll('[data-testid="b2-ecran-resume"]')].map(
+        (entete) =>
+          [...entete.children].map((ligne) => ligne.textContent?.replace(/\s+/g, ' ').trim()),
+      );
+
+      expect(resumes).toEqual([
+        ['Estimer avant de calculer', '4 min'],
+        ['Atelier 1', '14 min'],
+      ]);
+      expect(
+        element
+          .querySelector('[data-testid="slide-activity-verrouille"]')
+          ?.textContent?.replace(/\s+/g, ' '),
+      ).toContain('Tâche de tableur 2');
+      expect(element.querySelector('[data-testid="b2-apercu"]')?.textContent).toContain(
+        'les réponses ne s’envoient que pendant une séance',
+      );
+    });
+
+    it('n envoie aucune requête de séance quand un visiteur répond en aperçu', async () => {
+      const fixture = await monterLaPage();
+      const numerique = await briqueMontee(fixture, 'fp-numeric');
+      const champ = numerique.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]');
+      if (champ) {
+        champ.value = '12';
+        champ.dispatchEvent(new Event('input'));
+      }
+      numerique.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="valider"]')?.click();
+
+      expect(numerique.shadowRoot?.querySelector('[data-testid="retour"]')?.textContent).toBe(
+        'Aperçu : les réponses s’envoient pendant la séance',
+      );
+      TestBed.inject(HttpTestingController).verify();
+    });
   });
 
   it('propose de rejoindre une séance accompagnée, même quand le catalogue est indisponible', () => {

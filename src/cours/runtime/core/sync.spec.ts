@@ -1,16 +1,15 @@
 import type { ResultatsSeance } from '../../content/types';
-import type { Identity } from './identity';
-import { pending } from './queue';
-import { removeKey } from './storage';
+import { buildResumeBareme } from '../../../testing/factories/formations.factory';
 import {
   createSync,
   type EtatSession,
   type OuvertureFlux,
+  type RaisonDeFin,
+  type ResultatsDuFlux,
   type StatutFlux,
   type Sync,
 } from './sync';
 
-const CLE_FILE = 'fp.file-reponses';
 const BASE = 'https://api.test';
 const SESSION = 's1';
 const JETON = 'jeton-participant';
@@ -94,13 +93,6 @@ function bloc(nom: string, charge: unknown): string {
   return `event: ${nom}\ndata: ${JSON.stringify(charge)}\n\n`;
 }
 
-const IDENTITE: Identity = {
-  studentKey: 'etu-1',
-  prenom: 'Theo',
-  nom: 'Martin',
-  email: 'theo@example.com',
-};
-
 const ETAT_ANCIEN = {
   etat: 'en_cours',
   modeRythme: 'pilote',
@@ -148,6 +140,8 @@ const RESULTATS: ResultatsSeance = {
   ],
 };
 
+const EN_DIRECT_ABSENT = { jalons: {}, enigmes: [], bareme: null };
+
 describe('sync', () => {
   let sync: Sync;
   let flux: FluxFactice[];
@@ -173,7 +167,7 @@ describe('sync', () => {
     monter();
     const recus: EtatSession[] = [];
     sync.onState((etat) => recus.push(etat));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     if (flux.length === 0) {
       throw new Error('aucun flux ouvert : le double d ouverture n a pas ete appele');
@@ -186,7 +180,6 @@ describe('sync', () => {
   }
 
   beforeEach(() => {
-    removeKey(CLE_FILE);
     flux = [];
   });
 
@@ -196,7 +189,7 @@ describe('sync', () => {
 
   it('pose l en tete du jeton de participant sur l ouverture du flux', async () => {
     monter();
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     expect(flux.length).toBe(1);
     expect(flux[0].entetes[ENTETE_JETON]).toBe(JETON);
@@ -205,7 +198,7 @@ describe('sync', () => {
 
   it('n envoie aucun en tete de jeton quand aucun jeton n est fourni', async () => {
     monter('');
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     expect(flux[0].entetes[ENTETE_JETON]).toBeUndefined();
   });
@@ -266,7 +259,7 @@ describe('sync', () => {
     monter();
     const recus: EtatSession[] = [];
     const arreter = sync.onState((etat) => recus.push(etat));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     arreter();
     await flux[0].envoyer(bloc('etat', ETAT));
     expect(recus).toEqual([]);
@@ -284,7 +277,7 @@ describe('sync', () => {
           return Promise.reject(new Error('reseau'));
         },
       });
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
       expect(tentatives.nombre).toBe(1);
       for (const [indice, attendu] of [1000, 2000, 4000, 8000, 16000, 30000, 30000].entries()) {
@@ -304,7 +297,7 @@ describe('sync', () => {
     jasmine.clock().install();
     try {
       monter();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await flux[0].couper();
       expect(flux.length).toBe(1);
       sync.close();
@@ -320,7 +313,7 @@ describe('sync', () => {
     jasmine.clock().install();
     try {
       monter();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await flux[0].envoyer(bloc('fin', { motif: 'seance terminee' }));
       await flux[0].couper();
       jasmine.clock().tick(60000);
@@ -329,6 +322,28 @@ describe('sync', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('annonce la fin a ses ecouteurs avec sa raison, ou null si elle est inconnue', async () => {
+    monter();
+    const raisons: (RaisonDeFin | null)[] = [];
+    sync.onFin((raison) => raisons.push(raison));
+    sync.ouvrir();
+    await vider();
+    await flux[0].envoyer(bloc('fin', { raison: 'cloturee' }));
+    await attendreJusqua(() => raisons.length > 0);
+
+    expect(raisons).toEqual(['cloturee']);
+
+    monter();
+    const inconnues: (RaisonDeFin | null)[] = [];
+    sync.onFin((raison) => inconnues.push(raison));
+    sync.ouvrir();
+    await vider();
+    await flux[1].envoyer(bloc('fin', { raison: 'effondrement' }));
+    await attendreJusqua(() => inconnues.length > 0);
+
+    expect(inconnues).toEqual([null]);
   });
 
   it('close interrompt la requete fetch ouverte par defaut', () => {
@@ -340,7 +355,7 @@ describe('sync', () => {
     }) as typeof fetch;
     try {
       sync = createSync({ baseUrl: BASE, sessionId: SESSION, jeton: JETON });
-      sync.join(IDENTITE);
+      sync.ouvrir();
       expect(new Headers(capture.init?.headers).get(ENTETE_JETON)).toBe(JETON);
       sync.close();
       expect(capture.init?.signal?.aborted).toBe(true);
@@ -355,8 +370,7 @@ describe('sync', () => {
     try {
       expect(() => {
         sync = createSync({ baseUrl: BASE, sessionId: SESSION });
-        sync.join(IDENTITE);
-        sync.submit('Q-1', 'a', 1000);
+        sync.ouvrir();
         sync.onState(() => undefined);
         sync.close();
       }).not.toThrow();
@@ -369,55 +383,54 @@ describe('sync', () => {
     }
   });
 
-  it('met la reponse en file d attente apres join', () => {
-    monter();
-    sync.join(IDENTITE);
-    sync.submit('Q-1', 'b', 1500);
-    expect(pending()).toEqual([
-      {
-        id: jasmine.any(Number),
-        sessionId: SESSION,
-        studentKey: 'etu-1',
-        questionId: 'Q-1',
-        valeur: 'b',
-        dureeMs: 1500,
-        horodatage: jasmine.any(String),
-      },
-    ]);
-  });
-
-  it('refuse d envoyer une reponse avant d avoir rejoint la session', () => {
-    monter();
-    expect(() => sync.submit('Q-1', 'b', 1500)).toThrow();
-  });
-
-  it('refuse toujours d envoyer une reponse apres un ouvrir sans identite', () => {
-    monter();
-    sync.ouvrir();
-    expect(() => sync.submit('Q-1', 'b', 1500)).toThrow();
-  });
-
   it('notifie les ecouteurs de resultats sur un evenement resultats valide', async () => {
     monter();
     const recus: ResultatsSeance[] = [];
     sync.onResultats((resultats) => recus.push(resultats));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => recus.length > 0);
-    expect(recus).toEqual([RESULTATS]);
+    expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
   });
 
   it('ignore un evenement resultats malforme', async () => {
     monter();
     const recus: ResultatsSeance[] = [];
     sync.onResultats((resultats) => recus.push(resultats));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     await flux[0].envoyer(bloc('resultats', { participants: 'douze' }));
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => recus.length > 0);
-    expect(recus).toEqual([RESULTATS]);
+    expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
+  });
+
+  it('transmet les jalons, les enigmes et le bareme des resultats en direct', async () => {
+    monter();
+    const recus: ResultatsDuFlux[] = [];
+    sync.onResultats((resultats) => recus.push(resultats));
+    sync.ouvrir();
+    await vider();
+    const enDirect = {
+      ...RESULTATS,
+      jalons: { 'b2-01-jalon-1': { perdu: 2, 'ca-va': 5, clair: 4, total: 11 } },
+      enigmes: [
+        {
+          parcoursId: 'b2-01-coffre',
+          enigmeId: 'enigme-1',
+          ouvertes: 11,
+          resolues: 7,
+          tentativesMoyennes: 2.5,
+          epuisees: 1,
+        },
+      ],
+      bareme: buildResumeBareme(),
+    };
+    await flux[0].envoyer(bloc('resultats', { ...enDirect, jalons: { x: { perdu: 'deux' } } }));
+    await flux[0].envoyer(bloc('resultats', enDirect));
+    await attendreJusqua(() => recus.length > 0);
+    expect(recus).toEqual([enDirect]);
   });
 
   describe('forme du flux servie par un serveur v2 ou v3 (F20)', () => {
@@ -425,7 +438,7 @@ describe('sync', () => {
       monter();
       const recus: ResultatsSeance[] = [];
       sync.onResultats((resultats) => recus.push(resultats));
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
       for (const charge of charges) {
         await flux[0].envoyer(bloc('resultats', charge));
@@ -465,6 +478,7 @@ describe('sync', () => {
 
       expect(recus).toEqual([
         {
+          ...EN_DIRECT_ABSENT,
           participants: 12,
           questions: [
             {
@@ -491,7 +505,7 @@ describe('sync', () => {
         RESULTATS,
       ]);
 
-      expect(recus).toEqual([RESULTATS]);
+      expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
     });
   });
 
@@ -501,7 +515,7 @@ describe('sync', () => {
     const resultats: ResultatsSeance[] = [];
     sync.onState((etat) => etats.push(etat));
     sync.onResultats((recu) => resultats.push(recu));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => resultats.length > 0);
@@ -529,7 +543,7 @@ describe('sync', () => {
       monter();
       suivreLesStatuts();
 
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
 
       expect(statuts).toEqual([{ etat: 'connecte' }]);
@@ -538,7 +552,7 @@ describe('sync', () => {
     it('annonce la reconnexion quand le flux se coupe, puis la connexion retrouvee', async () => {
       monter();
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
 
       await flux[0].couper();
@@ -585,7 +599,7 @@ describe('sync', () => {
       const etats: EtatSession[] = [];
       sync.onState((etat) => etats.push(etat));
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await flux[0].envoyer(bloc('etat', ETAT));
       await laisserPasserLeFlux();
 
@@ -611,7 +625,7 @@ describe('sync', () => {
     it('garde ouvert un flux dont les battements arrivent, puis le relance quand ils cessent', async () => {
       monter();
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await laisserPasserLeFlux();
 
       for (let battement = 0; battement < 6; battement += 1) {
@@ -643,7 +657,7 @@ describe('sync', () => {
       try {
         sync = createSync({ baseUrl: BASE, sessionId: SESSION, jeton: JETON });
         suivreLesStatuts();
-        sync.join(IDENTITE);
+        sync.ouvrir();
 
         jasmine.clock().tick(SILENCE_MAX_MS);
         await vider();
@@ -662,7 +676,7 @@ describe('sync', () => {
     it('n annonce rien et ne relance pas apres une fermeture volontaire', async () => {
       monter();
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
 
       sync.close();
@@ -672,14 +686,5 @@ describe('sync', () => {
       expect(statuts).toEqual([{ etat: 'connecte' }]);
       expect(flux.length).toBe(1);
     });
-  });
-
-  it('submit repercute l echec quand la file d attente est pleine', () => {
-    monter();
-    sync.join(IDENTITE);
-    for (let indice = 0; indice < 200; indice += 1) {
-      sync.submit(`Q-${indice}`, 'a', 100);
-    }
-    expect(() => sync.submit('Q-200', 'a', 100)).toThrow();
   });
 });

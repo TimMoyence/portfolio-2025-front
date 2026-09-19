@@ -1,13 +1,11 @@
 import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
 import { clearIdentity, readIdentity, saveIdentity } from './identity';
-import { clearStorageIncidents, storageIncidents } from './storage';
 
 const THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
 
 describe('identity', () => {
   beforeEach(() => {
     clearIdentity();
-    clearStorageIncidents();
   });
 
   afterEach(() => {
@@ -62,13 +60,12 @@ describe('identity', () => {
     ).toThrow();
   });
 
-  it('sous saturation du stockage, l identite tient en memoire et l incident est journalise', () => {
+  it('sous saturation du stockage, l identite tient en memoire et signale qu elle n est pas persistee', () => {
     spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
     const enregistrement = saveIdentity(THEO);
     expect(enregistrement.persistee).toBe(false);
     expect(enregistrement.identite.prenom).toBe('Theo');
     expect(readIdentity()?.studentKey).toBe(enregistrement.identite.studentKey);
-    expect(storageIncidents().map((incident) => incident.cause)).toEqual(['refus']);
   });
 
   it('sous stockage absent, la cle etudiant reste identique entre deux lectures', () => {
@@ -76,12 +73,9 @@ describe('identity', () => {
       const premiere = saveIdentity(THEO);
       const seconde = saveIdentity(THEO);
       expect(premiere.persistee).toBe(false);
+      expect(seconde.persistee).toBe(false);
       expect(seconde.identite.studentKey).toBe(premiere.identite.studentKey);
       expect(readIdentity()?.studentKey).toBe(premiere.identite.studentKey);
-      expect(storageIncidents().map((incident) => incident.cause)).toEqual([
-        'indisponible',
-        'indisponible',
-      ]);
     });
   });
 

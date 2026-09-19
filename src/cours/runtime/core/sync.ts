@@ -1,15 +1,16 @@
 import type {
+  ComptesJalon,
   ConfusionComptee,
   FreeRange,
   PacingMode,
   PilotageEcran,
+  ProgressionEnigme,
   ResultatQuestion,
   ResultatsSeance,
+  ResumeBareme,
   TypeQuestion,
   VotePhase,
 } from '../../content/types';
-import type { Identity } from './identity';
-import { enqueue } from './queue';
 
 export type StatutSession = 'attente' | 'en_cours' | 'terminee';
 
@@ -34,9 +35,10 @@ type ChampsV3DuResultat = Pick<
 
 type ResultatRecu = Omit<ResultatQuestion, keyof ChampsV3DuResultat> & Partial<ChampsV3DuResultat>;
 
-type ResultatsRecus = Omit<ResultatsSeance, 'questions'> & {
-  readonly questions: readonly ResultatRecu[];
-};
+type ResultatsRecus = Omit<ResultatsSeance, 'questions'> &
+  Partial<Pick<ResultatsDuFlux, 'jalons' | 'enigmes' | 'bareme'>> & {
+    readonly questions: readonly ResultatRecu[];
+  };
 
 const ETAT_SERVI_PAR_UN_SERVEUR_V2: ChampsV3DeLEtat = { revision: 0, pilotage: {} };
 
@@ -54,9 +56,18 @@ export type StatutFlux =
   | { readonly etat: 'reconnexion' }
   | { readonly etat: 'refuse'; readonly statut: number };
 
+export interface ResultatsDuFlux extends ResultatsSeance {
+  readonly jalons: Readonly<Record<string, ComptesJalon>>;
+  readonly enigmes: readonly ProgressionEnigme[];
+  readonly bareme: ResumeBareme | null;
+}
+
+export type RaisonDeFin = 'cloturee' | 'introuvable' | 'expiree';
+
 export type SyncListener = (etat: EtatSession) => void;
-export type ResultatsListener = (resultats: ResultatsSeance) => void;
+export type ResultatsListener = (resultats: ResultatsDuFlux) => void;
 export type StatutListener = (statut: StatutFlux) => void;
+export type FinListener = (raison: RaisonDeFin | null) => void;
 
 export type OuvertureFlux = (url: string, entetes: Record<string, string>) => Promise<Response>;
 
@@ -72,12 +83,11 @@ export interface SyncOptions {
 }
 
 export interface Sync {
-  join(identite: Identity): void;
   ouvrir(): void;
-  submit(questionId: string, valeur: unknown, dureeMs: number): void;
   onState(listener: SyncListener): () => void;
   onResultats(listener: ResultatsListener): () => void;
   onStatut(listener: StatutListener): () => void;
+  onFin(listener: FinListener): () => void;
   close(): void;
 }
 
@@ -222,6 +232,49 @@ function estResultatQuestion(valeur: unknown): valeur is ResultatRecu {
   );
 }
 
+function estComptesJalon(valeur: unknown): valeur is ComptesJalon {
+  return (
+    estDictionnaire(valeur) &&
+    estNombre(valeur['perdu']) &&
+    estNombre(valeur['ca-va']) &&
+    estNombre(valeur['clair']) &&
+    estNombre(valeur['total'])
+  );
+}
+
+function estProgressionEnigme(valeur: unknown): valeur is ProgressionEnigme {
+  return (
+    estDictionnaire(valeur) &&
+    typeof valeur['parcoursId'] === 'string' &&
+    typeof valeur['enigmeId'] === 'string' &&
+    ['ouvertes', 'resolues', 'tentativesMoyennes', 'epuisees'].every((cle) =>
+      estNombre(valeur[cle]),
+    )
+  );
+}
+
+function estResumeBareme(valeur: unknown): valeur is ResumeBareme {
+  return (
+    estDictionnaire(valeur) &&
+    estNombre(valeur['questionsNotees']) &&
+    estDictionnaire(valeur['parType'])
+  );
+}
+
+function aDesChampsEnDirectValides(candidat: Record<string, unknown>): boolean {
+  return (
+    absentOu(
+      candidat['jalons'],
+      (jalons) => estDictionnaire(jalons) && Object.values(jalons).every(estComptesJalon),
+    ) &&
+    absentOu(
+      candidat['enigmes'],
+      (enigmes) => Array.isArray(enigmes) && enigmes.every(estProgressionEnigme),
+    ) &&
+    absentOu(candidat['bareme'], (bareme) => nulOu(bareme, estResumeBareme))
+  );
+}
+
 function estResultatsSeance(valeur: unknown): valeur is ResultatsRecus {
   if (typeof valeur !== 'object' || valeur === null) {
     return false;
@@ -230,18 +283,30 @@ function estResultatsSeance(valeur: unknown): valeur is ResultatsRecus {
   return (
     typeof candidat['participants'] === 'number' &&
     Array.isArray(candidat['questions']) &&
-    candidat['questions'].every(estResultatQuestion)
+    candidat['questions'].every(estResultatQuestion) &&
+    aDesChampsEnDirectValides(candidat)
   );
 }
 
-function completerResultats(recus: ResultatsRecus): ResultatsSeance {
+function completerResultats(recus: ResultatsRecus): ResultatsDuFlux {
   return {
+    jalons: {},
+    enigmes: [],
+    bareme: null,
     ...recus,
     questions: recus.questions.map((question) => ({
       ...RESULTAT_SERVI_PAR_UN_SERVEUR_V2,
       ...question,
     })),
   };
+}
+
+const RAISONS_DE_FIN: readonly RaisonDeFin[] = ['cloturee', 'introuvable', 'expiree'];
+
+function lireRaisonDeFin(donnees: string): RaisonDeFin | null {
+  const charge = analyser(donnees);
+  const raison = estDictionnaire(charge) ? charge['raison'] : null;
+  return estMembre(RAISONS_DE_FIN, raison) ? raison : null;
 }
 
 function analyser(brut: string): unknown {
@@ -348,9 +413,9 @@ export function createSync(options: SyncOptions): Sync {
   const ecoutes = new Set<SyncListener>();
   const ecoutesResultats = new Set<ResultatsListener>();
   const ecoutesStatut = new Set<StatutListener>();
+  const ecoutesFin = new Set<FinListener>();
 
   let tentative: Tentative | null = null;
-  let identite: Identity | null = null;
   let etatCourant: EtatSession | null = null;
   let ferme = false;
   let delai = DELAI_INITIAL_MS;
@@ -405,6 +470,7 @@ export function createSync(options: SyncOptions): Sync {
   const distribuer = (evenement: EvenementFlux): void => {
     if (evenement.nom === EVENEMENT_FIN) {
       terminer();
+      diffuserA(ecoutesFin, lireRaisonDeFin(evenement.donnees));
       return;
     }
     if (evenement.nom === EVENEMENT_RESULTATS) {
@@ -497,25 +563,8 @@ export function createSync(options: SyncOptions): Sync {
   };
 
   return {
-    join(nouvelleIdentite) {
-      identite = nouvelleIdentite;
-      demarrer();
-    },
     ouvrir() {
       demarrer();
-    },
-    submit(questionId, valeur, dureeMs) {
-      if (!identite) {
-        throw new Error("Rejoignez la session avant d'envoyer une réponse");
-      }
-      enqueue({
-        sessionId: options.sessionId,
-        studentKey: identite.studentKey,
-        questionId,
-        valeur,
-        dureeMs,
-        horodatage: new Date().toISOString(),
-      });
     },
     onState(listener) {
       ecoutes.add(listener);
@@ -533,6 +582,12 @@ export function createSync(options: SyncOptions): Sync {
       ecoutesStatut.add(listener);
       return () => {
         ecoutesStatut.delete(listener);
+      };
+    },
+    onFin(listener) {
+      ecoutesFin.add(listener);
+      return () => {
+        ecoutesFin.delete(listener);
       };
     },
     close() {

@@ -133,7 +133,7 @@ describe('FpStory', () => {
 
   it('annonce la modalite et la duree en rendu tableau', () => {
     hote.setAttribute('render', 'board');
-    expect(marque(hote, 'modalite')?.textContent?.trim()).toBe('classe');
+    expect(marque(hote, 'modalite')?.textContent?.trim()).toBe('Classe entière');
     expect(marque(hote, 'duree')?.textContent?.trim()).toBe('3 min');
   });
 
