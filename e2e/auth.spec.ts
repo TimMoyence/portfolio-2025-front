@@ -9,8 +9,8 @@ test.describe('Auth — Page de connexion', () => {
     await expect(loginTab).toBeVisible();
     await loginTab.click();
 
-    const emailInput = page.locator('#auth-tab-log-in input[name="email"]');
-    const passwordInput = page.locator('#auth-tab-log-in input[name="password"]');
+    const emailInput = page.locator('#auth-tab-log-in #login-email');
+    const passwordInput = page.locator('#auth-tab-log-in #login-password');
     await expect(emailInput).toBeVisible();
     await expect(passwordInput).toBeVisible();
 
@@ -31,8 +31,8 @@ test.describe('Auth — Page de connexion', () => {
 
     await page.locator('#auth-trigger-log-in').click();
 
-    await page.locator('#auth-tab-log-in input[name="email"]').fill('test@test.com');
-    await page.locator('#auth-tab-log-in input[name="password"]').fill('password123');
+    await page.locator('#auth-tab-log-in #login-email').fill('test@test.com');
+    await page.locator('#auth-tab-log-in #login-password').fill('password123');
 
     await page.locator('#auth-tab-log-in button[type="submit"]').click();
 
@@ -55,12 +55,12 @@ test.describe('Auth — Page de connexion', () => {
 
     await page.locator('#auth-trigger-log-in').click();
 
-    await page.locator('#auth-tab-log-in input[name="email"]').fill('wrong@test.com');
-    await page.locator('#auth-tab-log-in input[name="password"]').fill('wrongpassword');
+    await page.locator('#auth-tab-log-in #login-email').fill('wrong@test.com');
+    await page.locator('#auth-tab-log-in #login-password').fill('wrongpassword');
 
     await page.locator('#auth-tab-log-in button[type="submit"]').click();
 
-    const errorMessage = page.locator('#auth-tab-log-in .text-red-500');
+    const errorMessage = page.locator('#auth-tab-log-in .auth-msg[role="alert"]');
     await expect(errorMessage).toBeVisible();
   });
 });
@@ -72,17 +72,9 @@ test.describe("Auth — Page d'inscription", () => {
     const signupPanel = page.locator('#auth-tab-sign-up');
     await expect(signupPanel).toBeVisible();
 
-    const firstNameInput = page.locator('#auth-tab-sign-up input[name="firstName"]');
-    const lastNameInput = page.locator('#auth-tab-sign-up input[name="lastName"]');
-    const emailInput = page.locator('#auth-tab-sign-up input[name="email"]');
-    const passwordInput = page.locator('#auth-tab-sign-up input[name="password"]');
-    const verifPasswordInput = page.locator('#auth-tab-sign-up input[name="verifPassword"]');
-
-    await expect(firstNameInput).toBeVisible();
-    await expect(lastNameInput).toBeVisible();
-    await expect(emailInput).toBeVisible();
-    await expect(passwordInput).toBeVisible();
-    await expect(verifPasswordInput).toBeVisible();
+    for (const champ of ['firstName', 'lastName', 'email', 'password', 'verifPassword']) {
+      await expect(page.locator(`#auth-tab-sign-up #reg-${champ}`)).toBeVisible();
+    }
 
     const submitButton = page.locator('#auth-tab-sign-up button[type="submit"]');
     await expect(submitButton).toBeVisible();
@@ -96,18 +88,20 @@ test.describe('Auth — Navigation login / register', () => {
     const signupTab = page.locator('#auth-trigger-sign-up');
     const loginTab = page.locator('#auth-trigger-log-in');
 
-    await expect(signupTab).toHaveAttribute('data-state', 'active');
-    await expect(loginTab).toHaveAttribute('data-state', 'inactive');
-
-    await loginTab.click();
-    await expect(loginTab).toHaveAttribute('data-state', 'active');
-    await expect(signupTab).toHaveAttribute('data-state', 'inactive');
-
+    await expect(loginTab).toHaveAttribute('aria-selected', 'true');
+    await expect(signupTab).toHaveAttribute('aria-selected', 'false');
     await expect(page.locator('#auth-tab-log-in')).toBeVisible();
+    await expect(page.locator('#auth-tab-sign-up')).toHaveCount(0);
 
     await signupTab.click();
-    await expect(signupTab).toHaveAttribute('data-state', 'active');
+    await expect(signupTab).toHaveAttribute('aria-selected', 'true');
+    await expect(loginTab).toHaveAttribute('aria-selected', 'false');
     await expect(page.locator('#auth-tab-sign-up')).toBeVisible();
+    await expect(page.locator('#auth-tab-log-in')).toHaveCount(0);
+
+    await loginTab.click();
+    await expect(loginTab).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('#auth-tab-log-in')).toBeVisible();
   });
 
   test('le lien "Mot de passe oublie" mene vers /forgot-password', async ({ page }) => {

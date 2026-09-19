@@ -24,7 +24,7 @@ test.describe('Weather — Page meteo authentifiee', () => {
   });
 
   test('la page meteo se charge et affiche le composant app', async ({ page }) => {
-    await page.goto('/atelier/meteo');
+    await page.goto('/atelier/meteo/app');
 
     const weatherApp = page.locator('app-weather-app');
     await expect(weatherApp).toBeVisible();
@@ -48,7 +48,7 @@ test.describe('Weather — Page meteo authentifiee', () => {
       });
     });
 
-    await page.goto('/atelier/meteo');
+    await page.goto('/atelier/meteo/app');
 
     const searchInput = page.locator('app-city-search input[type="text"]');
     await searchInput.fill('Paris');
@@ -82,7 +82,7 @@ test.describe('Weather — Page meteo authentifiee', () => {
       });
     });
 
-    await page.goto('/atelier/meteo');
+    await page.goto('/atelier/meteo/app');
 
     const searchInput = page.locator('app-city-search input[type="text"]');
     await searchInput.fill('Paris');
@@ -96,19 +96,25 @@ test.describe('Weather — Page meteo authentifiee', () => {
     const currentConditions = page.locator('app-current-conditions');
     await expect(currentConditions).toBeVisible();
 
-    const dailyForecast = page.locator('app-daily-forecast');
-    await expect(dailyForecast).toBeVisible();
+    const previsionsHebdomadaires = page.locator('app-weekly-overview');
+    await expect(previsionsHebdomadaires).toBeVisible();
   });
 });
 
-test.describe('Weather — Page de presentation (non authentifie)', () => {
-  test('un utilisateur non connecte voit la page de presentation', async ({ page }) => {
+test.describe('Weather — acces sans authentification', () => {
+  test('l ancienne page vitrine redirige vers les projets et n ouvre pas l app', async ({
+    page,
+  }) => {
     await page.goto('/atelier/meteo');
 
-    const presentation = page.locator('app-weather-presentation');
-    await expect(presentation).toBeVisible();
+    await expect(page).toHaveURL('/projets');
+    await expect(page.locator('app-weather-app')).toHaveCount(0);
+  });
 
-    const weatherApp = page.locator('app-weather-app');
-    await expect(weatherApp).not.toBeVisible();
+  test('un visiteur non connecte n entre pas dans l app meteo', async ({ page }) => {
+    await page.goto('/atelier/meteo/app');
+
+    await expect(page).not.toHaveURL('/atelier/meteo/app');
+    await expect(page.locator('app-weather-app')).toHaveCount(0);
   });
 });
