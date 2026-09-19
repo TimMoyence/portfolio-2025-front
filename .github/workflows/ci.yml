@@ -81,6 +81,61 @@ jobs:
       - name: Garde bundle cours
         run: npm run guard:cours-bundle
 
+  e2e:
+    name: e2e
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Empreinte de la version Playwright
+        id: playwright
+        run: |
+          echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache des navigateurs Playwright
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
+      # Le cache ne restaure pas les dependances systeme du navigateur :
+      # `--with-deps` est rejoue meme sur un cache touche, et n installe que
+      # chromium (le seul projet declare par playwright.config.ts).
+      - name: Installation de chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Chromium est bien installe
+        run: |
+          node -e "const { chromium } = require('@playwright/test'); const { existsSync } = require('node:fs'); const chemin = chromium.executablePath(); if (!existsSync(chemin)) { throw new Error('chromium absent du runner: ' + chemin); } console.log('chromium: ' + chemin);"
+
+      # Le build fournit dist/ au serveur SSR que `test:e2e:portail` demarre sur
+      # le port 4000 : sans lui, e2e/cours-sitemap.spec.ts n a pas de sitemap a lire.
+      - name: Build
+        run: npm run build
+
+      - name: Tests e2e Playwright (porte bloquante)
+        run: npm run test:e2e:portail
+
+      - name: Rapport Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
   security:
     name: security
     runs-on: ubuntu-latest
@@ -109,6 +164,7 @@ jobs:
     if: github.event_name == 'push'
     needs:
       - quality-gate
+      - e2e
       - security
     permissions:
       contents: read

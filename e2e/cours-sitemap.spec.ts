@@ -26,12 +26,14 @@ function lastmodDuCours(xml: string): string | null {
 }
 
 test.describe('sitemap du cours B2-01 servi par l API (H1)', () => {
+  test.skip(
+    baseSsr === '',
+    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
+  );
+
   test('date la page du cours au moins par le dernier commit front', async ({ request }) => {
     const reponse = await request.get(`${baseSsr}/sitemap.xml`);
-    test.skip(
-      reponse.status() !== 200,
-      '/sitemap.xml n est servi que par le serveur SSR : npm run build puis SSR_BASE_URL=http://localhost:4000',
-    );
+    expect(reponse.status()).toBe(200);
 
     const lastmod = lastmodDuCours(await reponse.text());
     expect(lastmod).not.toBeNull();
