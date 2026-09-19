@@ -1,6 +1,6 @@
-# `lastmod` du sitemap : ce qu'il mesure, et sa limite pour les pages servies par l'API
+# `lastmod` du sitemap : ce qu'il mesure, et comment il suit les cours servis par l'API
 
-## Fonctionnement actuel
+## Fonctionnement
 
 - `/sitemap.xml` est servi par le serveur SSR (`src/server.ts`, `buildSitemapXml` dans
   `src/server/seo-builders.ts`). Il lit `src/assets/seo/seo-metadata.json` (copié dans
@@ -11,43 +11,58 @@
   y est relié à des dossiers du front (`pathToSources`) ; la date retenue est celle du dernier
   commit git qui touche ces dossiers (`git log -1 --format=%ad --date=short`).
 
-`lastmod` mesure donc la dernière modification **du code front** d'une page, pas celle de son
-contenu.
+`lastmod` mesure donc, par défaut, la dernière modification **du code front** d'une page.
 
-## Limite : `/formations/b2-01-traitement-information-chiffree`
+## Pages de cours servies par l'API (H1)
 
-Le contenu de cette page (72 écrans) n'est plus dans le dépôt front : il est lu à chaque visite
-sur `GET /formations/catalogue/:slug` (rendu `RenderMode.Server`, voir
-`src/app/app.routes.server.ts`). Conséquences :
+Le contenu de `/formations/b2-01-traitement-information-chiffree` (écrans du cours) n'est pas dans
+le dépôt front : il est lu à chaque visite sur `GET /formations/catalogue/:slug` (rendu
+`RenderMode.Server`, voir `src/app/app.routes.server.ts`). Publier une nouvelle version en base ne
+touche aucun fichier du front ; le `lastmod` issu du commit ne le verrait pas.
 
-- publier une nouvelle version du cours en base ne change pas le `lastmod` du sitemap ;
-- à l'inverse, un commit front sur `src/app/features/formations/b2-01-…` avance `lastmod`
-  sans que le contenu ait changé.
+### Contrat lu
 
-### Pourquoi ce n'est pas corrigé côté front aujourd'hui
+`GET /formations/catalogue/:slug` renvoie, en plus du cours public, `version` et `publieLe`
+(ISO 8601, `publiee_le` de la table de publication : la date de la bascule, pas celle de la
+migration). Contrat fixé par `portfolio-2025-back/docs/cours-b2-01-conception.md` (§ 4.6, H1).
 
-La source fiable existe, mais l'API ne l'expose pas :
+### Lecture côté serveur SSR
 
-- côté back, chaque publication crée une ligne `(slug, version)` dans
-  `formation_course_contents`, horodatée par `created_at` (`CreateDateColumn`,
-  `FormationCourseContentEntity`) ; la version courante est celle de plus haut numéro
-  (`CoursCatalogueRepositoryTypeORM.findEntity`) ;
-- mais `GET /formations/catalogue/:slug` renvoie `CoursPublic`
-  (`id`, `titre`, `niveau`, `duree`, `concepts`, `ecrans`) : ni date ni version.
+- `src/server/cours-publication.ts` : `lecteurDePublicationsDeCours` interroge la route pour chaque
+  cours de `COURS_SERVIS_PAR_L_API`, sur le modèle de `loadArticleSitemap` :
+  - URL de l'API : `PORTFOLIO_ARTICLE_API_URL` (la même base `…/api/v1/portfolio25` que pour les
+    articles) ;
+  - délai de 2 s par requête (`AbortController`) ;
+  - cache de 5 min, repli compris : au plus une série de requêtes, ou un avertissement, toutes
+    les 5 min.
+- `buildSitemapXml` reçoit ces publications et publie, pour la page du cours,
+  `lastmod = max(lastmod de seo-metadata.json, publieLe)`. `publieLe` est ramené au jour UTC
+  (`AAAA-MM-JJ`), le format des autres entrées. Une page sans `lastmod` prend `publieLe` seul.
 
-Lire une date côté front imposerait de l'inventer. Le `lastmod` actuel, daté par le commit front,
-reste le moins faux des deux.
+### Replis, tous journalisés en `warn`
 
-### Correction proposée (back puis front)
+Le sitemap garde alors le `lastmod` de `seo-metadata.json` et le journal (`console.warn`, préfixe
+`[sitemap]`) dit pourquoi :
 
-1. **Back** : ajouter à la réponse de `GET /formations/catalogue/:slug` un champ `publieLe`
-   (ISO 8601, `created_at` de la version courante), et le champ `version`. Aucune donnée
-   sensible : la route est déjà publique.
-2. **Front, serveur SSR** : dans `src/server.ts`, sur le modèle de `loadArticleSitemap`
-   (URL de l'API par variable d'environnement, délai de 2 s, cache de 5 min, repli silencieux),
-   lire `publieLe` pour les pages de cours rendues depuis l'API et publier
-   `lastmod = max(lastmod de seo-metadata.json, publieLe)`.
+| Cas                                         | Message                                          |
+| ------------------------------------------- | ------------------------------------------------ |
+| `PORTFOLIO_ARTICLE_API_URL` absente         | variable absente, aucune date de publication lue |
+| réponse HTTP en erreur                      | code HTTP reçu                                   |
+| API injoignable ou délai de 2 s dépassé     | message de l'erreur réseau                       |
+| `publieLe` absent ou qui n'est pas une date | `publieLe` absent ou invalide                    |
 
-Réserve : pour une version insérée par une migration de données, `created_at` est l'heure
-d'exécution de la migration sur l'environnement concerné. En production, elle coïncide avec la
-mise en ligne du contenu ; sur un environnement recréé, elle date la recréation.
+Tant que le back n'expose pas `publieLe` (lot 2b), c'est le dernier cas qui s'applique : le
+sitemap reste celui d'avant, avec un avertissement toutes les 5 min.
+
+### Tests
+
+- `src/server/seo-builders.spec.ts` : `buildSitemapXml` sans API (lastmod de `seo-metadata.json`),
+  avec une publication plus récente, plus ancienne, et pour une page sans `lastmod`.
+- `src/server/cours-publication.spec.ts` : lecture de `publieLe`, chaque repli et son
+  avertissement, cache de 5 min.
+
+### Réserve
+
+Si une version est publiée par une migration de données, `publieLe` date la bascule sur
+l'environnement concerné : en production, la mise en ligne ; sur un environnement recréé, la
+recréation.

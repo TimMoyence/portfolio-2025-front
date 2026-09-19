@@ -240,6 +240,91 @@ describe('buildSitemapXml', () => {
     expect(xml).not.toContain('/anything');
   });
 
+  describe('lastmod d un cours servi par l API (H1)', () => {
+    const cours = buildMetadata([
+      {
+        id: 'formations-b2-01-traitement-information-chiffree',
+        path: '/formations/b2-01-traitement-information-chiffree',
+        index: true,
+        lastmod: '2026-09-19',
+        locales: { fr: { title: 'B2', description: 'x' } },
+      },
+      {
+        id: 'contact',
+        path: '/contact',
+        index: true,
+        lastmod: '2026-09-01',
+        locales: { fr: { title: 'Contact', description: 'x' } },
+      },
+    ] as SeoMetadataFile['pages']);
+
+    const lastmods = (xml: string): string[] =>
+      Array.from(xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g), ([, date]) => date);
+
+    it('garde le lastmod de seo-metadata.json sans API', () => {
+      const xml = buildSitemapXml(cours, 'https://asilidesign.fr');
+
+      expect(lastmods(xml)).toEqual(['2026-09-19', '2026-09-19', '2026-09-01', '2026-09-01']);
+    });
+
+    it('publie la date de publication du cours quand elle est plus récente', () => {
+      const xml = buildSitemapXml(
+        cours,
+        'https://asilidesign.fr',
+        [],
+        [
+          {
+            chemin: '/formations/b2-01-traitement-information-chiffree',
+            publieLe: '2026-10-02T08:15:00.000Z',
+          },
+        ],
+      );
+
+      expect(lastmods(xml)).toEqual(['2026-10-02', '2026-10-02', '2026-09-01', '2026-09-01']);
+    });
+
+    it('garde le lastmod de seo-metadata.json quand la publication est plus ancienne', () => {
+      const xml = buildSitemapXml(
+        cours,
+        'https://asilidesign.fr',
+        [],
+        [
+          {
+            chemin: '/formations/b2-01-traitement-information-chiffree',
+            publieLe: '2026-09-10T21:00:00.000Z',
+          },
+        ],
+      );
+
+      expect(lastmods(xml)).toEqual(['2026-09-19', '2026-09-19', '2026-09-01', '2026-09-01']);
+    });
+
+    it('date une page sans lastmod par la seule publication', () => {
+      const sansDate = buildMetadata([
+        {
+          id: 'formations-b2-01-traitement-information-chiffree',
+          path: '/formations/b2-01-traitement-information-chiffree',
+          index: true,
+          locales: { fr: { title: 'B2', description: 'x' } },
+        },
+      ] as SeoMetadataFile['pages']);
+
+      const xml = buildSitemapXml(
+        sansDate,
+        'https://asilidesign.fr',
+        [],
+        [
+          {
+            chemin: '/formations/b2-01-traitement-information-chiffree',
+            publieLe: '2026-10-02T08:15:00.000Z',
+          },
+        ],
+      );
+
+      expect(lastmods(xml)).toEqual(['2026-10-02', '2026-10-02']);
+    });
+  });
+
   it("retombe sur une locale unique vide quand aucune locale n'est definie", () => {
     const metadata = buildMetadata(
       [

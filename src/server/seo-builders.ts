@@ -1,4 +1,5 @@
 import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
+import type { PublicationDeCours } from './cours-publication';
 import { buildLocalizedPath, normalizePath } from './url-utils';
 
 const AI_USER_AGENTS: ReadonlyArray<string> = [
@@ -54,12 +55,34 @@ const indentedTag = (name: string, value: string | undefined): string =>
 const priorityValueOf = (page: SeoPageEntry): string | undefined =>
   typeof page.priority === 'number' ? page.priority.toFixed(1) : undefined;
 
-const urlEntryOf = (page: SeoPageEntry, loc: string, alternatesMarkup: string): string =>
+const jourDePublication = (publieLe: string): string | undefined => {
+  const instant = Date.parse(publieLe);
+  return Number.isNaN(instant) ? undefined : new Date(instant).toISOString().slice(0, 10);
+};
+
+const lastmodOf = (
+  page: SeoPageEntry,
+  publications: readonly PublicationDeCours[],
+): string | undefined => {
+  const publication = publications.find(({ chemin }) => chemin === page.path);
+  const publieLe = publication === undefined ? undefined : jourDePublication(publication.publieLe);
+  if (publieLe === undefined || page.lastmod === undefined) {
+    return publieLe ?? page.lastmod;
+  }
+  return publieLe > page.lastmod ? publieLe : page.lastmod;
+};
+
+const urlEntryOf = (
+  page: SeoPageEntry,
+  loc: string,
+  alternatesMarkup: string,
+  lastmod: string | undefined,
+): string =>
   [
     '  <url>',
     `    <loc>${escapeXml(loc)}</loc>`,
     alternatesMarkup ? alternatesMarkup.trimEnd() : '',
-    indentedTag('lastmod', page.lastmod),
+    indentedTag('lastmod', lastmod),
     indentedTag('changefreq', page.changefreq),
     indentedTag('priority', priorityValueOf(page)),
     '  </url>',
@@ -83,6 +106,7 @@ export const buildSitemapXml = (
   metadata: SeoMetadataFile,
   baseUrl: string,
   dynamicArticles: readonly DynamicArticleSitemapEntry[] = [],
+  publicationsDeCours: readonly PublicationDeCours[] = [],
 ): string => {
   const locales = metadata.site.locales ?? [];
   const activeLocales = locales.length > 0 ? locales : [''];
@@ -97,8 +121,9 @@ export const buildSitemapXml = (
     .flatMap((page) => {
       const pagePath = page.id === 'home' ? '/' : page.path;
       const alternatesMarkup = alternatesMarkupOf(pagePath, ctx);
+      const lastmod = lastmodOf(page, publicationsDeCours);
       return activeLocales.map((locale) =>
-        urlEntryOf(page, localizedHref(locale, pagePath, baseUrl), alternatesMarkup),
+        urlEntryOf(page, localizedHref(locale, pagePath, baseUrl), alternatesMarkup, lastmod),
       );
     });
 

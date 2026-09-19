@@ -6,6 +6,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
 import type { SeoMetadataFile } from './app/core/seo/seo-metadata.model';
+import { COURS_SERVIS_PAR_L_API, lecteurDePublicationsDeCours } from './server/cours-publication';
 import { isClientOnlyRoute, loadCsrShell } from './server/csr-shell';
 import { registerPermanentRedirects } from './server/redirects';
 import {
@@ -149,6 +150,13 @@ const loadArticleSitemap = async (): Promise<DynamicArticleSitemapEntry[]> => {
   return entries;
 };
 
+const loadCoursPublications = lecteurDePublicationsDeCours({
+  apiBaseUrl: process.env['PORTFOLIO_ARTICLE_API_URL'],
+  slugs: COURS_SERVIS_PAR_L_API,
+  fetch: (url, init) => fetch(url, init),
+  journal: console,
+});
+
 app.get('/sitemap.xml', async (req, res) => {
   const metadata = loadSeoMetadata();
   if (!metadata) {
@@ -157,7 +165,11 @@ app.get('/sitemap.xml', async (req, res) => {
   }
 
   const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-  const xml = buildSitemapXml(metadata, baseUrl, await loadArticleSitemap());
+  const [articles, publications] = await Promise.all([
+    loadArticleSitemap(),
+    loadCoursPublications(),
+  ]);
+  const xml = buildSitemapXml(metadata, baseUrl, articles, publications);
   res.setHeader('Content-Type', 'application/xml');
   res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
   res.send(xml);

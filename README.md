@@ -53,7 +53,7 @@ Apps reelles non indexables, en rendu client (`RenderMode.Client`).
 - `/atelier/meteo/app` — App meteo (`authGuard` + `roleGuard("weather")`)
 - `/atelier/sebastian/app` — App Sebastian (`authGuard` + `roleGuard("sebastian")`) avec sous-routes : `dashboard`, `rapports`, `badges`, `historique`, `objectifs`
 
-Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend public (`.../api/v1/portfolio25`). Sans cette variable, il reste statique et ne publie aucune URL inventee. Le `lastmod` des autres pages suit le dernier commit front qui les touche (`npm run seo:lastmod`) ; pour une page dont le contenu vient de l'API, comme le cours B2, il ignore les publications en base : voir [`docs/seo-lastmod.md`](./docs/seo-lastmod.md).
+Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend public (`.../api/v1/portfolio25`). Sans cette variable, il reste statique et ne publie aucune URL inventee. Le `lastmod` des autres pages suit le dernier commit front qui les touche (`npm run seo:lastmod`) ; pour un cours servi par l'API, comme le B2, la même variable sert à lire `publieLe` sur `/formations/catalogue/:slug` et le sitemap publie la plus récente des deux dates, avec un avertissement journalisé à chaque repli : voir [`docs/seo-lastmod.md`](./docs/seo-lastmod.md).
 
 ### Formations
 
