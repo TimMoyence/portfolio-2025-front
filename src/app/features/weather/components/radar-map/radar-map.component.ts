@@ -59,6 +59,7 @@ import { RADAR_PORT } from '../../../../core/ports/radar.port';
           class="h-64 w-full overflow-hidden rounded-xl md:h-80"
           role="img"
           aria-label="Carte radar des précipitations"
+          i18n-aria-label="@@weatherRadarMapAriaLabel"
         ></div>
         <div
           class="absolute bottom-3 left-3 z-[1000] rounded-lg border border-white/20 bg-black/60 px-3 py-2 backdrop-blur-sm"

@@ -63,7 +63,7 @@ export class WeeklyOverviewComponent {
   private readonly localeId = inject(LOCALE_ID);
 
   readonly granularityOptions: { value: OverviewGranularity; label: string }[] = [
-    { value: 'day', label: 'Jour' },
+    { value: 'day', label: $localize`:@@weatherGranularityDay:Jour` },
     { value: '3h', label: '3h' },
     { value: '1h', label: '1h' },
   ];

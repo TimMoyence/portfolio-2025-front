@@ -15537,5 +15537,87 @@
         <target>Goals</target>
       </segment>
     </unit>
+    <unit id="weatherGeoButton">
+      <notes>
+        <note category="location">src/app/features/weather/components/city-search/city-search.component.ts:80,81</note>
+        <note category="meaning">weather.geo.button</note>
+      </notes>
+      <segment>
+        <source>Me localiser</source>
+        <target>Locate me</target>
+      </segment>
+    </unit>
+    <unit id="weatherChartTemperature">
+      <notes>
+        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:16</note>
+      </notes>
+      <segment>
+        <source>Température</source>
+        <target>Temperature</target>
+      </segment>
+    </unit>
+    <unit id="weatherChartPrecipitation">
+      <notes>
+        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:27</note>
+      </notes>
+      <segment>
+        <source>Précipitations</source>
+        <target>Precipitation</target>
+      </segment>
+    </unit>
+    <unit id="weatherChartWind">
+      <notes>
+        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:38</note>
+      </notes>
+      <segment>
+        <source>Vent</source>
+        <target>Wind</target>
+      </segment>
+    </unit>
+    <unit id="weatherChartHumidity">
+      <notes>
+        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:49</note>
+      </notes>
+      <segment>
+        <source>Humidité</source>
+        <target>Humidity</target>
+      </segment>
+    </unit>
+    <unit id="weatherMetricCollapse">
+      <notes>
+        <note category="location">src/app/features/weather/components/metric-card/metric-card.component.ts:93</note>
+      </notes>
+      <segment>
+        <source>Réduire les détails</source>
+        <target>Hide details</target>
+      </segment>
+    </unit>
+    <unit id="weatherMetricExpand">
+      <notes>
+        <note category="location">src/app/features/weather/components/metric-card/metric-card.component.ts:94</note>
+      </notes>
+      <segment>
+        <source>Afficher les détails</source>
+        <target>Show details</target>
+      </segment>
+    </unit>
+    <unit id="weatherRadarMapAriaLabel">
+      <notes>
+        <note category="location">src/app/features/weather/components/radar-map/radar-map.component.ts:61,62</note>
+      </notes>
+      <segment>
+        <source>Carte radar des précipitations</source>
+        <target>Precipitation radar map</target>
+      </segment>
+    </unit>
+    <unit id="weatherGranularityDay">
+      <notes>
+        <note category="location">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts:66</note>
+      </notes>
+      <segment>
+        <source>Jour</source>
+        <target>Day</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

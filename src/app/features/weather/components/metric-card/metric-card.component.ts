@@ -38,7 +38,7 @@ import { LearningTooltipComponent } from '../learning-tooltip/learning-tooltip.c
               class="flex h-6 w-6 items-center justify-center rounded-full text-white/40 transition-transform hover:text-teal"
               [class.rotate-180]="expanded()"
               [attr.aria-expanded]="expanded()"
-              [attr.aria-label]="expanded() ? 'Réduire les détails' : 'Afficher les détails'"
+              [attr.aria-label]="expanded() ? collapseLabel : expandLabel"
               (click)="toggleExpand($event)"
             >
               <svg
@@ -89,6 +89,9 @@ export class MetricCardComponent {
   readonly expandable = input(false);
 
   readonly expanded = model(false);
+
+  protected readonly collapseLabel = $localize`:@@weatherMetricCollapse:Réduire les détails`;
+  protected readonly expandLabel = $localize`:@@weatherMetricExpand:Afficher les détails`;
 
   readonly variant = input<'default' | 'compact' | 'wide'>('default');
 

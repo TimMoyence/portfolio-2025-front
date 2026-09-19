@@ -11798,6 +11798,14 @@
         </context-group>
         <note priority="1" from="meaning">weather.search.placeholder</note>
       </trans-unit>
+      <trans-unit id="weatherGeoButton" datatype="html">
+        <source>Me localiser</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/city-search/city-search.component.ts</context>
+          <context context-type="linenumber">80,81</context>
+        </context-group>
+        <note priority="1" from="meaning">weather.geo.button</note>
+      </trans-unit>
       <trans-unit id="weatherGeoButtonTitle" datatype="html">
         <source>Me localiser</source>
         <context-group purpose="location">
@@ -12158,6 +12166,34 @@
         </context-group>
         <note priority="1" from="meaning">weather.historical.current</note>
       </trans-unit>
+      <trans-unit id="weatherChartTemperature" datatype="html">
+        <source>Température</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="weatherChartPrecipitation" datatype="html">
+        <source>Précipitations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="weatherChartWind" datatype="html">
+        <source>Vent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="weatherChartHumidity" datatype="html">
+        <source>Humidité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="weatherHourlyTitle" datatype="html">
         <source> Prévisions horaires </source>
         <context-group purpose="location">
@@ -12261,6 +12297,20 @@
           <context context-type="linenumber">73,78</context>
         </context-group>
         <note priority="1" from="meaning">weather.card.unavailable</note>
+      </trans-unit>
+      <trans-unit id="weatherMetricCollapse" datatype="html">
+        <source>Réduire les détails</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/metric-card/metric-card.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="weatherMetricExpand" datatype="html">
+        <source>Afficher les détails</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/metric-card/metric-card.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="weatherModelComparisonTitle" datatype="html">
         <source> Comparaison des modèles </source>
@@ -12366,11 +12416,18 @@
         </context-group>
         <note priority="1" from="meaning">weather.radar.title</note>
       </trans-unit>
+      <trans-unit id="weatherRadarMapAriaLabel" datatype="html">
+        <source>Carte radar des précipitations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
+          <context context-type="linenumber">61,62</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="weatherRadarLegend" datatype="html">
         <source> Précipitations </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
-          <context context-type="linenumber">70,72</context>
+          <context context-type="linenumber">71,73</context>
         </context-group>
         <note priority="1" from="meaning">weather.radar.legend</note>
       </trans-unit>
@@ -12378,7 +12435,7 @@
         <source>Faible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
-          <context context-type="linenumber">81,82</context>
+          <context context-type="linenumber">82,83</context>
         </context-group>
         <note priority="1" from="meaning">weather.radar.light</note>
       </trans-unit>
@@ -12386,7 +12443,7 @@
         <source>Fort</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/weather/components/radar-map/radar-map.component.ts</context>
-          <context context-type="linenumber">82,85</context>
+          <context context-type="linenumber">83,86</context>
         </context-group>
         <note priority="1" from="meaning">weather.radar.heavy</note>
       </trans-unit>
@@ -12625,6 +12682,13 @@
           <context context-type="linenumber">256,260</context>
         </context-group>
         <note priority="1" from="meaning">weather.table.pressure</note>
+      </trans-unit>
+      <trans-unit id="weatherGranularityDay" datatype="html">
+        <source>Jour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="weatherWindTooltipTitle" datatype="html">
         <source>Vent</source>

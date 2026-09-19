@@ -77,7 +77,7 @@ import { GeolocationService } from '../../services/geolocation.service';
           (click)="locateMe()"
           [disabled]="locating()"
           i18n-aria-label="weather.geo.button|@@weatherGeoButton"
-          [attr.aria-label]="'Me localiser'"
+          aria-label="Me localiser"
           i18n-title="weather.geo.button|@@weatherGeoButtonTitle"
           title="Me localiser"
         >
