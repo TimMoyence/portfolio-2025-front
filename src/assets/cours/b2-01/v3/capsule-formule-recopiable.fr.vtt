@@ -1,0 +1,144 @@
+WEBVTT
+
+NOTE
+Une formule qui se recopie, un tableau qui se contrôle
+Tim Moyence — Asili Design, 2026 — licence CC BY-SA 4.0
+Voix de synthèse Piper fr_FR-siwis-medium (modèle MIT ; données SIWIS,
+Université d’Édimbourg, CC BY 4.0). Minutage calé sur la narration mesurée.
+
+P01-1
+00:00:00.400 --> 00:00:04.104
+Une formule qui se recopie,
+un tableau qui se contrôle :
+
+P01-2
+00:00:04.104 --> 00:00:09.792
+quatre gestes de tableur, sur les ventes
+trimestrielles de sacs étanches, en € HT.
+
+P01-3
+00:00:09.792 --> 00:00:11.879
+Les données sont fictives.
+
+P02-1
+00:00:13.200 --> 00:00:22.128
+Premier geste : le total.
+En C6, on écrit =SOMME(C2:C5).
+
+P02-2
+00:00:22.128 --> 00:00:28.661
+Le tableur affiche 120 000.
+En B6, la même formule donne 110 000.
+
+P03-1
+00:00:29.967 --> 00:00:39.348
+Deuxième geste : le taux d’évolution.
+En D2 : =(C2-B2)/B2,
+
+P03-2
+00:00:39.348 --> 00:00:41.282
+B2 étant la valeur de départ.
+
+P03-3
+00:00:41.282 --> 00:00:46.554
+Résultat : 0,125, soit 12,5 %.
+
+P04-1
+00:00:47.467 --> 00:00:51.601
+On recopie vers le bas avec
+le bouton « Recopier vers le bas ».
+
+P04-2
+00:00:51.601 --> 00:00:56.772
+Les références glissent d’une ligne :
+C2 devient C3, B2 devient B3.
+
+P04-3
+00:00:56.772 --> 00:01:01.354
+C’est voulu : chaque ligne compare
+ses propres valeurs.
+
+P05-1
+00:01:02.667 --> 00:01:09.981
+Troisième geste : la part du total.
+En E2 : =C2/C6.
+
+P05-2
+00:01:09.981 --> 00:01:15.716
+Mais recopiée telle quelle, la formule
+devient =C3/C7, et C7 est vide :
+
+P05-3
+00:01:15.716 --> 00:01:19.650
+le tableur affiche #DIV/0!,
+une erreur de division par zéro.
+
+P06-1
+00:01:20.300 --> 00:01:24.805
+Le total doit rester fixe :
+on écrit =C2/$C$6.
+
+P06-2
+00:01:24.805 --> 00:01:27.359
+Le dollar fige la colonne et la ligne.
+
+P06-3
+00:01:27.359 --> 00:01:33.079
+On recopie : les parts s’affichent,
+celle du total vaut 1, soit 100 %.
+
+P07-1
+00:01:34.400 --> 00:01:38.986
+Quatrième geste : le contrôle.
+Les quatre parts doivent faire 1.
+
+P07-2
+00:01:38.986 --> 00:01:46.196
+En E8 :
+=SI(ARRONDI(SOMME(E2:E5);6)=1;1;0)
+
+P07-3
+00:01:46.196 --> 00:01:48.177
+Le contrôle affiche 1.
+
+P08-1
+00:01:49.500 --> 00:01:54.945
+Mettons-le à l’épreuve : on tape 0,4
+à la place de la formule de E3.
+
+P08-2
+00:01:54.945 --> 00:01:58.079
+La somme ne vaut plus 1 :
+le contrôle passe à 0.
+
+P08-3
+00:01:58.079 --> 00:02:01.222
+On rétablit la formule : il revient à 1.
+
+P09-1
+00:02:02.133 --> 00:02:05.564
+Ce contrôle surveille les formules,
+pas les données.
+
+P09-2
+00:02:05.564 --> 00:02:09.831
+Pour les données, on compare le total
+à une source indépendante :
+
+P09-3
+00:02:09.831 --> 00:02:13.631
+le compte de résultat indique
+120 000 € de ventes de sacs.
+
+P09-4
+00:02:13.631 --> 00:02:15.565
+Le second contrôle affiche 1.
+
+P10-1
+00:02:16.800 --> 00:02:22.222
+Total, évolution, part figée ($),
+contrôles : à vous de les appliquer
+
+P10-2
+00:02:22.222 --> 00:02:24.749
+au tableau de bord d’Atelier Rivage.

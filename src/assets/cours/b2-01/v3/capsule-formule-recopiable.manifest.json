@@ -1,0 +1,630 @@
+{
+  "titre": "Une formule qui se recopie, un tableau qui se contrôle",
+  "cours": "B2-01 V3 · écran A4-01 (média M5)",
+  "auteur": "Tim Moyence — Asili Design",
+  "annee": 2026,
+  "licence": "CC BY-SA 4.0",
+  "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr",
+  "credits": {
+    "texte": "Une formule qui se recopie, un tableau qui se contrôle · Tim Moyence — Asili Design, 2026 · Licence CC BY-SA 4.0 · Voix de synthèse : Piper, modèle fr_FR-siwis-medium (licence MIT) ; données SIWIS : J. Yamagishi, P.-E. Honnet, P. Garner, A. Lazaridis, Université d’Édimbourg, CC BY 4.0 (https://doi.org/10.7488/ds/1705) · Polices Atkinson Hyperlegible et JetBrains Mono (SIL OFL 1.1) · Données fictives · Transcription et sous-titres disponibles",
+    "voix": {
+      "moteur": "Piper",
+      "modele": "fr_FR-siwis-medium",
+      "licenceModele": "MIT",
+      "sourcesLicenceModele": [
+        "https://huggingface.co/rhasspy/piper-voices (README.md, en-tête « license: mit »)",
+        "https://huggingface.co/api/models/rhasspy/piper-voices (cardData.license = mit)"
+      ],
+      "carteModele": "https://huggingface.co/rhasspy/piper-voices/blob/main/fr/fr_FR/siwis/medium/MODEL_CARD"
+    },
+    "donneesVocales": {
+      "titre": "The SIWIS French Speech Synthesis Database",
+      "auteurs": [
+        "Yamagishi, Junichi",
+        "Honnet, Pierre-Edouard",
+        "Garner, Philip",
+        "Lazaridis, Alexandros"
+      ],
+      "editeur": "University of Edinburgh. School of Informatics. The Centre for Speech Technology Research",
+      "licence": "CC BY 4.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "doi": "https://doi.org/10.7488/ds/1705",
+      "notice": "https://datashare.ed.ac.uk/handle/10283/2353",
+      "citation": "Yamagishi, Junichi; Honnet, Pierre-Edouard; Garner, Philip; Lazaridis, Alexandros. (2017). The SIWIS French Speech Synthesis Database, 2016 [dataset]. University of Edinburgh. School of Informatics. The Centre for Speech Technology Research. https://doi.org/10.7488/ds/1705."
+    },
+    "polices": [
+      {
+        "nom": "Atkinson Hyperlegible",
+        "auteur": "Braille Institute of America",
+        "licence": "SIL OFL 1.1"
+      },
+      {
+        "nom": "JetBrains Mono",
+        "auteur": "The JetBrains Mono Project Authors",
+        "licence": "SIL OFL 1.1"
+      }
+    ],
+    "donnees": "fictives (annexe A.3)"
+  },
+  "production": {
+    "date": "2026-09-19T18:39:14.569Z",
+    "chaine": "produire.sh (page HTML/SVG rendue image par image, Piper, FFmpeg)",
+    "outils": {
+      "node": "v24.18.0",
+      "ffmpeg": "ffmpeg version 6.0 Copyright (c) 2000-2023 the FFmpeg developers (paquet npm ffmpeg-static 5.3.0)",
+      "ffprobe": "ffprobe version 4.4-tessus  https://evermeet.cx/ffmpeg/  Copyright (c) 2007-2021 the FFmpeg developers (paquet npm ffprobe-static 3.1.0)",
+      "piper": "piper-tts 1.8.0 (Python 3.13.15, onnxruntime 1.30.0, onnx 1.23.0)",
+      "playwright": "playwright 1.59.1 (dépôt front, /Users/Tim/Desktop/all/dev/perso/portfolio-2025/portfolio-2025-front/node_modules/playwright/index.mjs)",
+      "chromium": "Chrome for Testing 151.0.7922.34, chrome-headless-shell (chromium_headless_shell-1234)",
+      "sharp": "sharp 0.35.4 (libvips 8.18.6, libwebp 1.6.0)",
+      "polices": "@fontsource/atkinson-hyperlegible 5.3.0, @fontsource/jetbrains-mono 5.3.0",
+      "systeme": "Darwin 25.6.0 arm64"
+    },
+    "voixSysteme": "aucune (la voix macOS « say » n’intervient à aucune étape)"
+  },
+  "voix": {
+    "modele": {
+      "fichier": "fr_FR-siwis-medium.onnx",
+      "sha256": "641d1ab097da2b81128c076810edb052b385decc8be3381814802a64a73baf99",
+      "configSha256": "39479916c2db192b5ac9764daddd0c744d83e023ad890c6976c0633ae4df8959",
+      "depot": "https://huggingface.co/rhasspy/piper-voices (fr/fr_FR/siwis/medium/)",
+      "commit": "c10ece1aade47bb51c153c893d14e5bf8e5b7117"
+    },
+    "lengthScale": 1.15,
+    "graineOnnxRuntime": 20260919,
+    "prononciation": {
+      "P07": [
+        {
+          "texte": "SI l’arrondi",
+          "prononce": "si l’arrondi",
+          "motif": "espeak-ng épelle un mot de deux capitales (« ɛsi ») ; la ponctuation n’y peut rien, seule la casse change la lecture. Le mot et la ponctuation du texte « Voix » sont inchangés."
+        }
+      ]
+    },
+    "pistes": [
+      {
+        "plan": "P01",
+        "dureeS": 10.879,
+        "sha256": "e28ea7fd14f9802cfdd42dac653c4a46b9f0c64fea582905181364a2a4abbc6d",
+        "texte": "Une formule qui se recopie, un tableau qui se contrôle : quatre gestes de tableur, sur les ventes trimestrielles de sacs étanches, en euros hors taxes. Les données sont fictives."
+      },
+      {
+        "plan": "P02",
+        "dureeS": 14.861,
+        "sha256": "431bb729dd298aa04a75de631cd54b01017fd21d4c2a87d024274bd152ebdd51",
+        "texte": "Premier geste : le total. En C6, on écrit : égal, SOMME, parenthèse, C2 deux-points C5. Le tableur affiche cent vingt mille. En B6, la même formule donne cent dix mille."
+      },
+      {
+        "plan": "P03",
+        "dureeS": 15.987,
+        "sha256": "7e4e631b267511b6ba1504dccd699404804bf1409c1d240538f9081570b64a84",
+        "texte": "Deuxième geste : le taux d’évolution. En D2 : égal, parenthèse, C2 moins B2, parenthèse fermée, divisé par B2, la valeur de départ. Résultat : zéro virgule cent vingt-cinq, soit douze virgule cinq pour cent."
+      },
+      {
+        "plan": "P04",
+        "dureeS": 12.887,
+        "sha256": "31764940f8632432ca3cc08d7d023fd61942c634560a0755bd7132bed42e6b46",
+        "texte": "On recopie vers le bas avec le bouton « Recopier vers le bas ». Les références glissent d’une ligne : C2 devient C3, B2 devient B3. C’est ce que l’on veut : chaque ligne compare ses propres valeurs."
+      },
+      {
+        "plan": "P05",
+        "dureeS": 15.708,
+        "sha256": "bf32cf1368b666adbd7b9cdcc172191f139c13b82b6577de13684a1e2aca1574",
+        "texte": "Troisième geste : la part du total. En E2, on divise C2 par le total, C6. Mais, recopiée telle quelle, la formule divise C3 par C7, une cellule vide : le tableur affiche une erreur de division par zéro."
+      },
+      {
+        "plan": "P06",
+        "dureeS": 12.179,
+        "sha256": "23bb06115a73a327e727d601d85dc1926d4e74b593fe65f05e0f4ba1589fbfa5",
+        "texte": "Le total doit rester fixe. On écrit dollar C dollar 6 : le dollar fige la colonne et la ligne. On recopie : les parts s’affichent, et celle du total vaut 1, c’est-à-dire cent pour cent."
+      },
+      {
+        "plan": "P07",
+        "dureeS": 13.177,
+        "sha256": "ee0c6e9444e7cd11597f451d5c7904bc0d0b902bb835cec6b814483635c2a079",
+        "texte": "Quatrième geste : le contrôle. Les quatre parts doivent faire 1. En E8, on écrit : SI l’arrondi de la somme de E2 à E5 est égal à 1, alors 1, sinon 0. Le contrôle affiche 1."
+      },
+      {
+        "plan": "P08",
+        "dureeS": 11.122,
+        "sha256": "06ba7a4a039782166992fcd875ab1b8979d780de6af0e13a5ccfd328fc9e97b6",
+        "texte": "Mettons-le à l’épreuve : si quelqu’un tape zéro virgule quatre à la place de la formule de E3, la somme ne vaut plus 1 et le contrôle passe à 0. On rétablit la formule : il revient à 1."
+      },
+      {
+        "plan": "P09",
+        "dureeS": 12.353,
+        "sha256": "22f7e1188b0edf8a2fee84c7d5b3818dc84f0d08c6706a577ae119e4d35c8a9f",
+        "texte": "Ce contrôle surveille les formules, pas les données. Pour les données, on compare le total à une source indépendante : le compte de résultat indique cent vingt mille euros de ventes de sacs. Le second contrôle affiche 1."
+      },
+      {
+        "plan": "P10",
+        "dureeS": 7.349,
+        "sha256": "c69e6fa6bf8b2f5d13ff5a48429d6d02d8fa1938129488d87da05fbbb1163557",
+        "texte": "Total, évolution, part figée par le dollar, contrôles : à vous de les appliquer au tableau de bord d’Atelier Rivage."
+      }
+    ]
+  },
+  "minutage": {
+    "imagesParSeconde": 30,
+    "attaqueS": 0.4,
+    "pauseS": 1.5,
+    "pauseCalculeeS": 1.35,
+    "totalS": 151.667,
+    "images": 4550,
+    "plans": [
+      {
+        "id": "P01",
+        "debutS": 0,
+        "dureeS": 12.8,
+        "voixS": 10.879,
+        "pauseS": 1.521
+      },
+      {
+        "id": "P02",
+        "debutS": 12.8,
+        "dureeS": 16.767,
+        "voixS": 14.861,
+        "pauseS": 1.506
+      },
+      {
+        "id": "P03",
+        "debutS": 29.567,
+        "dureeS": 17.9,
+        "voixS": 15.987,
+        "pauseS": 1.513
+      },
+      {
+        "id": "P04",
+        "debutS": 47.467,
+        "dureeS": 14.8,
+        "voixS": 12.887,
+        "pauseS": 1.513
+      },
+      {
+        "id": "P05",
+        "debutS": 62.267,
+        "dureeS": 17.633,
+        "voixS": 15.708,
+        "pauseS": 1.525
+      },
+      {
+        "id": "P06",
+        "debutS": 79.9,
+        "dureeS": 14.1,
+        "voixS": 12.179,
+        "pauseS": 1.521
+      },
+      {
+        "id": "P07",
+        "debutS": 94,
+        "dureeS": 15.1,
+        "voixS": 13.177,
+        "pauseS": 1.523
+      },
+      {
+        "id": "P08",
+        "debutS": 109.1,
+        "dureeS": 13.033,
+        "voixS": 11.122,
+        "pauseS": 1.511
+      },
+      {
+        "id": "P09",
+        "debutS": 122.133,
+        "dureeS": 14.267,
+        "voixS": 12.353,
+        "pauseS": 1.514
+      },
+      {
+        "id": "P10",
+        "debutS": 136.4,
+        "dureeS": 9.267,
+        "voixS": 7.349,
+        "pauseS": 1.518
+      },
+      {
+        "id": "P11",
+        "debutS": 145.667,
+        "dureeS": 6,
+        "voixS": 0,
+        "pauseS": 6
+      }
+    ]
+  },
+  "audio": {
+    "normalisation": {
+      "filtre": "alimiter=limit=0.708:attack=5:release=50:level=disabled,loudnorm=I=-16:TP=-1.5:LRA=11 (deux passes, linear=true)",
+      "mode": "linear",
+      "narrationBrute": {
+        "integreLufs": -16,
+        "creteVraieDbtp": 0.06
+      },
+      "passe1": {
+        "integreLufs": -16.38,
+        "creteVraieDbtp": -3,
+        "lraLu": 4.7,
+        "seuil": -26.73,
+        "decalage": 0.12
+      },
+      "sortieWav": {
+        "integreLufs": -16,
+        "lraLu": 5,
+        "cretevraieDbtp": -2.5
+      }
+    },
+    "mesureWebm720p": {
+      "integreLufs": -16,
+      "creteVraieDbtp": -2,
+      "lraLu": 5
+    },
+    "mesureWebm480p": {
+      "integreLufs": -16,
+      "creteVraieDbtp": -2,
+      "lraLu": 5
+    }
+  },
+  "sousTitres": {
+    "repliques": 29,
+    "densiteMaxCps": 15,
+    "densiteMoyenneCps": 11.15,
+    "retardMaxS": 0.94,
+    "anticipationMaxS": 0.4
+  },
+  "videos": {
+    "720p": {
+      "video": {
+        "codec": "vp9",
+        "profil": "Profile 0",
+        "largeur": 1280,
+        "hauteur": 720,
+        "pixels": "yuv420p",
+        "images": "30/1"
+      },
+      "audio": {
+        "codec": "opus",
+        "frequence": 48000,
+        "canaux": 1,
+        "langue": "fre"
+      },
+      "dureeS": 151.666,
+      "octets": 3906002,
+      "integreLufs": -16,
+      "creteVraieDbtp": -2,
+      "lraLu": 5,
+      "etiquettes": {
+        "title": "Une formule qui se recopie, un tableau qui se contrôle",
+        "encoder": "Lavf",
+        "ARTIST": "Tim Moyence — Asili Design",
+        "COPYRIGHT": "CC BY-SA 4.0 — Tim Moyence — Asili Design, 2026",
+        "COMMENT": "Voix de synthèse Piper fr_FR-siwis-medium (modèle MIT ; données SIWIS, J. Yamagishi, P.-E. Honnet, P. Garner, A. Lazaridis, Université d’Édimbourg, CC BY 4.0, https://doi.org/10.7488/ds/1705). Polices Atkinson Hyperlegible et JetBrains Mono (SIL OFL 1.1). Données fictives."
+      }
+    },
+    "480p": {
+      "video": {
+        "codec": "vp9",
+        "profil": "Profile 0",
+        "largeur": 854,
+        "hauteur": 480,
+        "pixels": "yuv420p",
+        "images": "30/1"
+      },
+      "audio": {
+        "codec": "opus",
+        "frequence": 48000,
+        "canaux": 1,
+        "langue": "fre"
+      },
+      "dureeS": 151.668,
+      "octets": 2933156,
+      "integreLufs": -16,
+      "creteVraieDbtp": -2,
+      "lraLu": 5,
+      "etiquettes": {
+        "title": "Une formule qui se recopie, un tableau qui se contrôle",
+        "encoder": "Lavf",
+        "COMMENT": "Voix de synthèse Piper fr_FR-siwis-medium (modèle MIT ; données SIWIS, J. Yamagishi, P.-E. Honnet, P. Garner, A. Lazaridis, Université d’Édimbourg, CC BY 4.0, https://doi.org/10.7488/ds/1705). Polices Atkinson Hyperlegible et JetBrains Mono (SIL OFL 1.1). Données fictives.",
+        "ARTIST": "Tim Moyence — Asili Design",
+        "COPYRIGHT": "CC BY-SA 4.0 — Tim Moyence — Asili Design, 2026"
+      }
+    }
+  },
+  "recette": [
+    {
+      "critere": "capsule-formule-recopiable-720p.webm : codecs VP9 + Opus",
+      "mesure": "vp9 + opus",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-720p.webm : 1280 × 720, 30 images/s",
+      "mesure": "1280 × 720, 30/1",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-720p.webm : durée de 145 à 155 s",
+      "mesure": "151.666 s",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-720p.webm : poids ≤ 25 Mo",
+      "mesure": "3.91 Mo",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-720p.webm : −16 LUFS ± 1",
+      "mesure": "-16 LUFS",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-720p.webm : crête vraie ≤ −1,5 dBTP",
+      "mesure": "-2 dBTP",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-480p.webm : codecs VP9 + Opus",
+      "mesure": "vp9 + opus",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-480p.webm : 854 × 480, 30 images/s",
+      "mesure": "854 × 480, 30/1",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-480p.webm : durée de 145 à 155 s",
+      "mesure": "151.668 s",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-480p.webm : poids ≤ 8 Mo",
+      "mesure": "2.93 Mo",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-480p.webm : −16 LUFS ± 1",
+      "mesure": "-16 LUFS",
+      "ok": true
+    },
+    {
+      "critere": "capsule-formule-recopiable-480p.webm : crête vraie ≤ −1,5 dBTP",
+      "mesure": "-2 dBTP",
+      "ok": true
+    },
+    {
+      "critere": "affiche JPEG 1 280 × 720",
+      "mesure": "mjpeg 1280 × 720",
+      "ok": true
+    },
+    {
+      "critere": "affiche : les deux contrôles à 1 (fin de P09 − 0,5 s)",
+      "mesure": "135.900 s",
+      "ok": true
+    },
+    {
+      "critere": "WebVTT : en-tête et 29 répliques",
+      "mesure": "29 répliques",
+      "ok": true
+    },
+    {
+      "critere": "WebVTT : au plus 2 lignes de 42 caractères",
+      "mesure": "41 car. au plus",
+      "ok": true
+    },
+    {
+      "critere": "WebVTT : aucune réplique au-delà de 15 car./s",
+      "mesure": "15.00 car./s au plus",
+      "ok": true
+    },
+    {
+      "critere": "WebVTT : 12 car./s en moyenne",
+      "mesure": "11.15 car./s",
+      "ok": true
+    },
+    {
+      "critere": "WebVTT : répliques ordonnées, sans chevauchement, dans la durée",
+      "mesure": "dernière fin 144.749 s",
+      "ok": true
+    },
+    {
+      "critere": "valeurs prononcées visibles au moment où elles sont dites",
+      "mesure": "27/27",
+      "ok": true
+    },
+    {
+      "critere": "page de rendu sans ressource réseau",
+      "mesure": "0 requête(s) externe(s)",
+      "ok": true
+    },
+    {
+      "critere": "polices embarquées chargées",
+      "mesure": "toutes",
+      "ok": true
+    },
+    {
+      "critere": "aucune voix système macOS (`say`) dans la chaîne",
+      "mesure": "aucun appel",
+      "ok": true
+    },
+    {
+      "critere": "Chromium lit les deux WebM",
+      "mesure": "720p 151.666 s · 480p 151.668 s",
+      "ok": true
+    },
+    {
+      "critere": "piste WebVTT lue et activée par défaut",
+      "mesure": "mode showing, 29 répliques, langue fr",
+      "ok": true
+    },
+    {
+      "critere": "réplique affichée au bon moment (25 s)",
+      "mesure": "Le tableur affiche 120 000.\nEn B6, la même formule donne 110 000.",
+      "ok": true
+    }
+  ],
+  "synchronisation": [
+    {
+      "t": 23.539,
+      "libelle": "C6 affiche 120 000",
+      "ok": true
+    },
+    {
+      "t": 27.422,
+      "libelle": "B6 affiche 110 000",
+      "ok": true
+    },
+    {
+      "t": 22.128,
+      "libelle": "C6 validée avant « cent vingt mille »",
+      "ok": true
+    },
+    {
+      "t": 42.929,
+      "libelle": "D2 affiche 0,125",
+      "ok": true
+    },
+    {
+      "t": 44.81,
+      "libelle": "le panneau affiche 12,5 %",
+      "ok": true
+    },
+    {
+      "t": 40.265,
+      "libelle": "B2 marquée « départ »",
+      "ok": true
+    },
+    {
+      "t": 54.177,
+      "libelle": "le panneau montre =(C3-B3)/B3",
+      "ok": true
+    },
+    {
+      "t": 53.633,
+      "libelle": "D3 à D6 remplies",
+      "ok": true
+    },
+    {
+      "t": 73.69,
+      "libelle": "la barre affiche E3 =C3/C7",
+      "ok": true
+    },
+    {
+      "t": 77.191,
+      "libelle": "E3 affiche #DIV/0!",
+      "ok": true
+    },
+    {
+      "t": 74.962,
+      "libelle": "C7 marquée « vide »",
+      "ok": true
+    },
+    {
+      "t": 84.48,
+      "libelle": "la barre affiche =C2/$C$6",
+      "ok": true
+    },
+    {
+      "t": 90.615,
+      "libelle": "E6 affiche 1",
+      "ok": true
+    },
+    {
+      "t": 88.793,
+      "libelle": "E3 affiche 0,35",
+      "ok": true
+    },
+    {
+      "t": 92.009,
+      "libelle": "E3 à E6 : 0,35 ; 0,425 ; 0,075 ; 1",
+      "ok": true
+    },
+    {
+      "t": 105.94,
+      "libelle": "la formule de E8 est complète",
+      "ok": true
+    },
+    {
+      "t": 107.09,
+      "libelle": "E8 affiche 1 (OK)",
+      "ok": true
+    },
+    {
+      "t": 106.14,
+      "libelle": "accolades allumées dans l’ordre de la liste",
+      "ok": true
+    },
+    {
+      "t": 113.087,
+      "libelle": "la barre affiche 0,4",
+      "ok": true
+    },
+    {
+      "t": 117.372,
+      "libelle": "E8 affiche 0 (À vérifier)",
+      "ok": true
+    },
+    {
+      "t": 115.578,
+      "libelle": "le panneau affiche 1,05",
+      "ok": true
+    },
+    {
+      "t": 120.065,
+      "libelle": "E8 revient à 1 (OK)",
+      "ok": true
+    },
+    {
+      "t": 120.065,
+      "libelle": "E3 revient à 0,35",
+      "ok": true
+    },
+    {
+      "t": 131.049,
+      "libelle": "C9 affiche 120 000",
+      "ok": true
+    },
+    {
+      "t": 134.451,
+      "libelle": "E9 affiche 1 (OK)",
+      "ok": true
+    },
+    {
+      "t": 135.9,
+      "libelle": "affiche : les deux contrôles à 1",
+      "ok": true
+    },
+    {
+      "t": 139.139,
+      "libelle": "carte 3 visible",
+      "ok": true
+    }
+  ],
+  "fichiers": [
+    {
+      "fichier": "capsule-formule-recopiable-720p.webm",
+      "role": "vidéo de projection (VP9/Opus, 1 280 × 720)",
+      "chemin": "/assets/cours/b2-01/v3/capsule-formule-recopiable-720p.webm",
+      "octets": 3906002,
+      "sha256": "9e4a7e41453b71a14ded115c320cac090533db481b9ab2641cd88921f20f9d85"
+    },
+    {
+      "fichier": "capsule-formule-recopiable-480p.webm",
+      "role": "vidéo des postes étudiants (VP9/Opus, 854 × 480)",
+      "chemin": "/assets/cours/b2-01/v3/capsule-formule-recopiable-480p.webm",
+      "octets": 2933156,
+      "sha256": "0edab294da6d0227417b760f234ec2f2eb945e1d357d3b74c25e796dfbc04114"
+    },
+    {
+      "fichier": "capsule-formule-recopiable.jpg",
+      "role": "affiche (dernière image de P09, les deux contrôles à 1)",
+      "chemin": "/assets/cours/b2-01/v3/capsule-formule-recopiable.jpg",
+      "octets": 104761,
+      "sha256": "c78a61dfa73c9f63827b8336fbef8e53a8072dbdcec667e7aefd79a8d11b9d81"
+    },
+    {
+      "fichier": "capsule-formule-recopiable.fr.vtt",
+      "role": "sous-titres français (WebVTT)",
+      "chemin": "/assets/cours/b2-01/v3/capsule-formule-recopiable.fr.vtt",
+      "octets": 2986,
+      "sha256": "af1afa5fbb2824667a788306e8fe63c294a04eaa322b54670af22dd8b0c65ed5"
+    }
+  ]
+}
