@@ -176,7 +176,8 @@ test.describe('Séance de cours dans un navigateur réel', () => {
 
     await page.evaluate(() => window.dispatchEvent(new Event('online')));
     await expect(page.getByTestId('etudiant-hors-ligne')).toBeHidden();
-    await expect(page.getByTestId('etudiant-verdict')).toBeVisible();
+    await expect(page.locator('fp-vote [data-testid="verdict"]')).toBeVisible();
+    await expect(page.locator('fp-vote [data-testid="option"]').first()).toBeDisabled();
     expect(api.reponses()).toBe(1);
   });
 

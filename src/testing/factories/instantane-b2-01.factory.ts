@@ -21,7 +21,7 @@ import {
 } from './cours.factory';
 import { buildVisualQuizSlide, buildVisualSlide } from './visual-slide.factory';
 
-export function buildDonneesParBrique(): DonneesParBrique {
+function buildDonneesParBrique(): DonneesParBrique {
   const numerique = buildNumericQuestion();
   const vote = buildVoteQuestion();
   return {
