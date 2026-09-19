@@ -1,0 +1,71 @@
+{
+  "cours": "b2-01",
+  "version": 3,
+  "source": "portfolio-2025-back/docs/cours-b2-01-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "William Playfair, 1786 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:1786_Playfair_-_Exports_and_Imports_of_Scotland_to_and_from_different_parts_for_one_Year_from_Christmas_1780_to_Christmas_1781.jpg",
+      "fichiers": [
+        {
+          "fichier": "playfair-ecosse-1786.webp",
+          "octets": 120098,
+          "sha256": "c9439aba85bd40f1c78742eb60a34b2727cbc8ac7372945e39ed76f7e1a5dcda"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A2-01",
+      "licence": "domaine public",
+      "attribution": "Document original · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Playfair_TimeSeries.png",
+      "fichiers": [
+        {
+          "fichier": "playfair-series-1786.webp",
+          "octets": 242330,
+          "sha256": "31961250cf956be0495d9bf92d9833124db7a540793ea0f78569b4441ff8b67b"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A5-01",
+      "licence": "domaine public",
+      "attribution": "Florence Nightingale, 1858 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg",
+      "fichiers": [
+        {
+          "fichier": "nightingale-1858.webp",
+          "octets": 239422,
+          "sha256": "ae0e7cca4d4ec2b6e554cb1a3da0de2b461162687089b1af1b6b9533f8652df9"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A6-01",
+      "licence": "domaine public (PD-Art)",
+      "attribution": "Portrait attribué à Jacopo de’ Barbari, 1495 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Pacioli.jpg",
+      "fichiers": [
+        {
+          "fichier": "pacioli-1495.webp",
+          "octets": 318972,
+          "sha256": "77c7b8675dfb273e72ba0bacd50209875dd4c8c6f5fbad3b7acbf60483fb70fb"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A4-01",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Une formule qui se recopie, un tableau qui se contrôle · Asili Design, 2026 · CC BY-SA 4.0 · Voix : Piper fr_FR-siwis-medium, données SIWIS (Université d’Édimbourg), CC BY 4.0",
+      "origine": "capsule produite pour le cours (annexe A)",
+      "manifeste": "capsule-formule-recopiable.manifest.json"
+    }
+  ]
+}
