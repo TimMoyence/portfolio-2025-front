@@ -13,11 +13,11 @@ import {
   buildLlmsFullTxt,
   buildLlmsTxt,
   buildRobotsTxt,
-  buildSitemapXml,
   type DynamicArticleSitemapEntry,
 } from './server/seo-builders';
 import { buildSecurityHeaders } from './server/security-headers';
 import { injectSeoHead, isKnownRoute } from './server/seo-injector';
+import { routeDuSitemap } from './server/sitemap-route';
 import {
   ALLOWED_HOSTS,
   LOCALE_BARE_PATH,
@@ -157,23 +157,15 @@ const loadCoursPublications = lecteurDePublicationsDeCours({
   journal: console,
 });
 
-app.get('/sitemap.xml', async (req, res) => {
-  const metadata = loadSeoMetadata();
-  if (!metadata) {
-    res.status(404).type('text/plain').send('Sitemap not available');
-    return;
-  }
-
-  const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-  const [articles, publications] = await Promise.all([
-    loadArticleSitemap(),
-    loadCoursPublications(),
-  ]);
-  const xml = buildSitemapXml(metadata, baseUrl, articles, publications);
-  res.setHeader('Content-Type', 'application/xml');
-  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-  res.send(xml);
-});
+app.get(
+  '/sitemap.xml',
+  routeDuSitemap({
+    lireMetadata: loadSeoMetadata,
+    lireArticles: loadArticleSitemap,
+    lirePublicationsDeCours: loadCoursPublications,
+    baseUrlDe: buildBaseUrlFromRequest,
+  }),
+);
 
 app.get('/robots.txt', (req, res) => {
   const metadata = loadSeoMetadata();
