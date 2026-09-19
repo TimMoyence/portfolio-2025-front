@@ -1,5 +1,12 @@
-import { sansStockageLocal } from '../../../testing/sans-stockage';
-import { creerBrouillons, purgerLesAutresBrouillons, readJson, removeKey } from './storage';
+import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
+import {
+  creerBrouillons,
+  persistJson,
+  purgerLesAutresBrouillons,
+  readJson,
+  removeKey,
+  writeJson,
+} from './storage';
 
 const SEANCE = '11111111-1111-4111-8111-111111111111';
 const AUTRE_SEANCE = '99999999-9999-4999-8999-999999999999';
@@ -7,6 +14,36 @@ const PARTICIPANT = '22222222-2222-4222-8222-222222222222';
 const CLE_FEUILLE = `fp.${SEANCE}.${PARTICIPANT}.fp-sheet.b2-01-a4-feuille-canaux`;
 const CLE_AUTRE = `fp.${AUTRE_SEANCE}.${PARTICIPANT}.fp-sheet.b2-01-a4-feuille-canaux`;
 const CLES_HORS_BROUILLON = ['fp.identite', 'fp.file-reponses'];
+
+describe('écriture brute et écriture tolérante', () => {
+  afterEach(() => removeKey(CLE_FEUILLE));
+
+  it('writeJson écrit la valeur sérialisée et rend vrai', () => {
+    expect(writeJson(CLE_FEUILLE, { D2: '=C2' })).toBeTrue();
+    expect(readJson(CLE_FEUILLE)).toEqual({ D2: '=C2' });
+  });
+
+  it('writeJson lève quand le stockage refuse l’écriture : la file doit pouvoir le signaler', () => {
+    spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
+
+    expect(() => writeJson(CLE_FEUILLE, { D2: '=C2' })).toThrowMatching(
+      (erreur: Error) => erreur.name === 'QuotaExceededError',
+    );
+  });
+
+  it('persistJson avale la saturation et rend faux au lieu de lever', () => {
+    spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
+
+    expect(persistJson(CLE_FEUILLE, { D2: '=C2' })).toBeFalse();
+  });
+
+  it('rend faux, sans lever, quand le stockage local est absent', () => {
+    sansStockageLocal(() => {
+      expect(writeJson(CLE_FEUILLE, { D2: '=C2' })).toBeFalse();
+      expect(persistJson(CLE_FEUILLE, { D2: '=C2' })).toBeFalse();
+    });
+  });
+});
 
 describe('brouillons locaux', () => {
   beforeEach(() => {
