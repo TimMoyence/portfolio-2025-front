@@ -16679,5 +16679,239 @@
         <target>Exam mode</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeConcept4DivisePar">
+      <segment>
+        <source>divisé par</source>
+        <target>divided by</target>
+      </segment>
+    </unit>
+    <unit id="coursEcranPrecedent">
+      <notes>
+        <note category="meaning">cours.ecranPrecedent</note>
+      </notes>
+      <segment>
+        <source> Écran précédent </source>
+        <target> Previous screen </target>
+      </segment>
+    </unit>
+    <unit id="coursRepriseIndisponible">
+      <notes>
+        <note category="meaning">cours.repriseIndisponible</note>
+      </notes>
+      <segment>
+        <source> Vos réponses déjà envoyées n’ont pas pu être relues : elles restent enregistrées et réapparaîtront au prochain chargement. </source>
+        <target> Your previously sent answers could not be reloaded: they remain saved and will reappear on the next load. </target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePhaseVote">
+      <segment>
+        <source>Vote individuel</source>
+        <target>Individual vote</target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePhaseDiscussion">
+      <segment>
+        <source>Discussion entre voisins</source>
+        <target>Discussion with neighbours</target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePhaseRevote">
+      <segment>
+        <source>Vote sur le cas jumeau</source>
+        <target>Vote on the twin case</target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePhaseRevele">
+      <segment>
+        <source>Révélation</source>
+        <target>Reveal</target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePhaseTitre">
+      <segment>
+        <source>Instruction par les pairs</source>
+        <target>Peer instruction</target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePhaseCourante">
+      <segment>
+        <source>Phase en cours :</source>
+        <target>Current phase:</target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePasserA">
+      <segment>
+        <source>Passer à :</source>
+        <target>Move to:</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteRevelationTitre">
+      <segment>
+        <source>Pistes du défi</source>
+        <target>Challenge strategies</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteReveler">
+      <segment>
+        <source> Révéler les pistes fausses </source>
+        <target> Reveal the wrong strategies </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEtayageTitre">
+      <segment>
+        <source>Étayage de l’exemple</source>
+        <target>Worked example scaffolding</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEtayageMoins">
+      <segment>
+        <source> Montrer une étape de moins </source>
+        <target> Show one step fewer </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEtayagePlus">
+      <segment>
+        <source> Montrer une étape de plus </source>
+        <target> Show one more step </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteProductionTitre">
+      <segment>
+        <source>Productions reçues</source>
+        <target>Submitted work</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteProductionRecues">
+      <segment>
+        <source> production(s) reçue(s)</source>
+        <target> submission(s) received</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteScoreMoyen">
+      <segment>
+        <source>score moyen</source>
+        <target>average score</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCle">
+      <segment>
+        <source>Élément</source>
+        <target>Item</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteJustes">
+      <segment>
+        <source>Justes</source>
+        <target>Right</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEnigmesTitre">
+      <segment>
+        <source>Progression dans le coffre</source>
+        <target>Progress through the vault</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEnigme">
+      <segment>
+        <source>Énigme</source>
+        <target>Puzzle</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteOuvertes">
+      <segment>
+        <source>Commencée</source>
+        <target>Started</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteResolues">
+      <segment>
+        <source>Résolue</source>
+        <target>Solved</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEpuisees">
+      <segment>
+        <source>Épuisée</source>
+        <target>Out of attempts</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteTentatives">
+      <segment>
+        <source>Tentatives moyennes</source>
+        <target>Average attempts</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteBilletsTitre">
+      <segment>
+        <source>Billets de sortie</source>
+        <target>Exit tickets</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteBilletsRecus">
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ billetsRecus() }}"/> billets reçus / <ph id="1" equiv="INTERPOLATION_1" disp="{{ participants() }}"/> participants </source>
+        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ billetsRecus() }}"/> tickets received / <ph id="1" equiv="INTERPOLATION_1" disp="{{ participants() }}"/> participants </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteParticipantsTitre">
+      <segment>
+        <source>Participants</source>
+        <target>Participants</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteParticipantsAfficher">
+      <segment>
+        <source> Afficher les participants </source>
+        <target> Show participants </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteParticipantsChargement">
+      <segment>
+        <source>Chargement…</source>
+        <target>Loading…</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteParticipantsEchec">
+      <segment>
+        <source> La liste des participants n’a pas pu être lue. </source>
+        <target> The participant list could not be loaded. </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEvincer">
+      <segment>
+        <source> Retirer de la séance </source>
+        <target> Remove from the session </target>
+      </segment>
+    </unit>
+    <unit id="presentateurMaitriseEchec">
+      <segment>
+        <source> La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain résultat. </source>
+        <target> The mastery map could not be loaded: it will be reloaded with the next result. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationBareme">
+      <segment>
+        <source>La participation se compte sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées (votes, questions numériques, classements, feuille et tableau) : « je ne sais pas » y compte comme une réponse, y compris pour une production ; une production vide n’est pas acceptée ; énigmes et rappels ne comptent pas.</source>
+        <target>Participation is counted over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions (votes, numeric questions, sorts, spreadsheet and table): “I don’t know” counts as an answer, including for a production; an empty production is not accepted; puzzles and recalls do not count.</target>
+      </segment>
+    </unit>
+    <unit id="b2CoursApercu">
+      <segment>
+        <source> Aperçu : les activités se manipulent librement, les réponses ne s’envoient que pendant une séance. </source>
+        <target> Preview: activities can be tried freely, answers are only sent during a session. </target>
+      </segment>
+    </unit>
+    <unit id="b2CoursMinutes">
+      <segment>
+        <source>min</source>
+        <target>min</target>
+      </segment>
+    </unit>
+    <unit id="slideGridImprimer">
+      <segment>
+        <source> Imprimer ou enregistrer en PDF </source>
+        <target> Print or save as PDF </target>
+      </segment>
+    </unit>
   </file>
 </xliff>
