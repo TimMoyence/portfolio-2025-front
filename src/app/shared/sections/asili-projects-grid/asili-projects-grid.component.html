@@ -51,26 +51,26 @@
             <p>{{ project.desc }}</p>
             @if (project.caseStudy; as study) {
               <details class="proj-case-study">
-                <summary>Voir le cas d’usage</summary>
+                <summary i18n="@@projectsGridCaseStudyToggle">Voir le cas d’usage</summary>
                 <dl>
                   <div>
-                    <dt>Contexte</dt>
+                    <dt i18n="@@projectsGridCaseContext">Contexte</dt>
                     <dd>{{ study.context }}</dd>
                   </div>
                   <div>
-                    <dt>Problème</dt>
+                    <dt i18n="@@projectsGridCaseProblem">Problème</dt>
                     <dd>{{ study.problem }}</dd>
                   </div>
                   <div>
-                    <dt>Solution</dt>
+                    <dt i18n="@@projectsGridCaseSolution">Solution</dt>
                     <dd>{{ study.solution }}</dd>
                   </div>
                   <div>
-                    <dt>Rôle</dt>
+                    <dt i18n="@@projectsGridCaseRole">Rôle</dt>
                     <dd>{{ study.role }}</dd>
                   </div>
                   <div>
-                    <dt>Résultat</dt>
+                    <dt i18n="@@projectsGridCaseResult">Résultat</dt>
                     <dd>{{ study.result }}</dd>
                   </div>
                 </dl>

@@ -13808,5 +13808,509 @@
         <target>User area</target>
       </segment>
     </unit>
+    <unit id="projetsProject4CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:41</note>
+      </notes>
+      <segment>
+        <source>Une veille technique quotidienne devait fonctionner sans surveillance sur un Raspberry Pi.</source>
+        <target>A daily tech watch had to run unattended on a Raspberry Pi.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject4CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:42</note>
+      </notes>
+      <segment>
+        <source>Les sources étaient nombreuses, redondantes et trop longues à trier manuellement.</source>
+        <target>Sources were numerous, redundant and too long to sort by hand.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject4CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:43</note>
+      </notes>
+      <segment>
+        <source>Une chaîne collecte, déduplique, synthétise et livre une édition sourcée par Telegram.</source>
+        <target>A pipeline collects, deduplicates, summarizes and delivers a sourced edition via Telegram.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject4CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:44</note>
+      </notes>
+      <segment>
+        <source>Conception du produit, du pipeline éditorial et de son exploitation.</source>
+        <target>Design of the product, the editorial pipeline and its operation.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject4CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:45</note>
+      </notes>
+      <segment>
+        <source>50+ sources sont traitées et une édition arrive chaque matin sans intervention.</source>
+        <target>50+ sources are processed and an edition arrives every morning with no intervention.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject5CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:60</note>
+      </notes>
+      <segment>
+        <source>Une académie accueillait des centaines d’élèves dans plusieurs groupes Telegram.</source>
+        <target>An academy was welcoming hundreds of students across several Telegram groups.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject5CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:61</note>
+      </notes>
+      <segment>
+        <source>Les vérifications d’accès et les relances consommaient du temps et créaient des oublis.</source>
+        <target>Access checks and follow-ups were eating up time and letting things slip.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject5CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:62</note>
+      </notes>
+      <segment>
+        <source>Un parcours signé vérifie les groupes, relance les inscrits et consolide les états par email.</source>
+        <target>A signed journey checks group membership, follows up with enrollees and consolidates statuses by email.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject5CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:63</note>
+      </notes>
+      <segment>
+        <source>Architecture, développement backend, automatisations et intégration Telegram.</source>
+        <target>Architecture, backend development, automations and Telegram integration.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject5CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:64</note>
+      </notes>
+      <segment>
+        <source>L’onboarding multi-étapes fonctionne sans intervention manuelle au quotidien.</source>
+        <target>The multi-step onboarding runs day to day with no manual intervention.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject6CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:78</note>
+      </notes>
+      <segment>
+        <source>Un parcours culturel mobile devait rendre une œuvre compréhensible sur place.</source>
+        <target>A mobile cultural tour had to make an artwork understandable on the spot.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject6CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:79</note>
+      </notes>
+      <segment>
+        <source>Une notice statique ne répondait ni au contexte de la photo ni aux questions du visiteur.</source>
+        <target>A static label answered neither the context of the photo nor the visitor’s questions.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject6CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:80</note>
+      </notes>
+      <segment>
+        <source>Une reconnaissance visuelle ouvre un chat contextualisé et multilingue autour de l’œuvre.</source>
+        <target>Visual recognition opens a contextual, multilingual chat about the artwork.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject6CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:81</note>
+      </notes>
+      <segment>
+        <source>Co-conception du produit InnovMind, intégration des modèles et développement mobile/web.</source>
+        <target>Co-design of the InnovMind product, model integration and mobile/web development.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject6CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:82</note>
+      </notes>
+      <segment>
+        <source>Le visiteur passe de la photo à une médiation personnalisée en quelques secondes.</source>
+        <target>The visitor goes from a photo to personalized mediation in a few seconds.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject7CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:97</note>
+      </notes>
+      <segment>
+        <source>Un producteur devait suivre ses opérations de la vigne à la mise en bouteille.</source>
+        <target>A producer needed to track operations from vine to bottling.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject7CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:98</note>
+      </notes>
+      <segment>
+        <source>Les informations métier dispersées rendaient la traçabilité difficile à maintenir.</source>
+        <target>Scattered business information made traceability hard to maintain.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject7CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:99</note>
+      </notes>
+      <segment>
+        <source>Un outil métier centralise les étapes, les données de production et les historiques.</source>
+        <target>A business tool centralizes the steps, production data and history.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject7CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:100</note>
+      </notes>
+      <segment>
+        <source>Cadrage des usages, conception produit et développement de la plateforme.</source>
+        <target>Usage scoping, product design and platform development.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject7CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:101</note>
+      </notes>
+      <segment>
+        <source>La traçabilité devient exploitable au quotidien et accompagne les pratiques terrain.</source>
+        <target>Traceability becomes usable day to day and supports practices in the field.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject8CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:115</note>
+      </notes>
+      <segment>
+        <source>La préparation d’un support demandait de convertir et renommer les slides manuellement.</source>
+        <target>Preparing a deck meant converting and renaming slides by hand.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject8CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:116</note>
+      </notes>
+      <segment>
+        <source>Les exports ponctuels perdaient du temps et risquaient d’écraser des fichiers existants.</source>
+        <target>One-off exports wasted time and risked overwriting existing files.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject8CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:117</note>
+      </notes>
+      <segment>
+        <source>Une interface locale permet de sélectionner les pages et d’exporter des PNG nommés de façon déterministe.</source>
+        <target>A local interface lets you select pages and export PNGs with deterministic names.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject8CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:118</note>
+      </notes>
+      <segment>
+        <source>Conception du produit, orchestration du rendu PDF et sécurisation du flux local.</source>
+        <target>Product design, PDF rendering orchestration and securing the local flow.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject8CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:119</note>
+      </notes>
+      <segment>
+        <source>Un support devient exploitable en quelques clics sans envoyer le document sur un serveur.</source>
+        <target>A deck becomes usable in a few clicks without sending the document to a server.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject9CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:133</note>
+      </notes>
+      <segment>
+        <source>Fourmizzz Suite devait transformer une simulation myrmécologique en produit web réellement jouable.</source>
+        <target>Fourmizzz Suite had to turn a myrmecological simulation into a genuinely playable web product.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject9CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:134</note>
+      </notes>
+      <segment>
+        <source>Une simulation riche risquait de devenir illisible sans monde vivant ni règles visibles.</source>
+        <target>A rich simulation risked becoming unreadable without a living world or visible rules.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject9CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:135</note>
+      </notes>
+      <segment>
+        <source>Un MMO web combine espèces asymétriques, météo, biomes et territoires temps réel.</source>
+        <target>A web MMO combines asymmetric species, weather, biomes and real-time territories.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject9CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:136</note>
+      </notes>
+      <segment>
+        <source>Conception des mécaniques, architecture web et développement de la simulation.</source>
+        <target>Game mechanics design, web architecture and simulation development.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject9CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:137</note>
+      </notes>
+      <segment>
+        <source>Le périmètre produit relie simulation, monde persistant et choix stratégiques différenciés.</source>
+        <target>The product scope ties together simulation, a persistent world and differentiated strategic choices.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject10CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:151</note>
+      </notes>
+      <segment>
+        <source>Une équipe devait comprendre un schéma de données sans parcourir seule des centaines de lignes.</source>
+        <target>A team needed to understand a data schema without wading through hundreds of lines alone.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject10CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:152</note>
+      </notes>
+      <segment>
+        <source>Un diagramme unique devenait illisible et perdait les commentaires métier du schéma.</source>
+        <target>A single diagram became unreadable and lost the schema’s business comments.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject10CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:153</note>
+      </notes>
+      <segment>
+        <source>Schema-Atlas dérive une carte des domaines, des diagrammes par domaine et le détail d’une table.</source>
+        <target>Schema-Atlas derives a map of domains, per-domain diagrams and table-level detail.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject10CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:154</note>
+      </notes>
+      <segment>
+        <source>Conception produit, noyau déterministe et architecture API/web.</source>
+        <target>Product design, deterministic core and API/web architecture.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject10CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:155</note>
+      </notes>
+      <segment>
+        <source>Le modèle devient navigable, diffable et exploitable par une équipe produit.</source>
+        <target>The model becomes navigable, diffable and usable by a product team.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject11CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:166</note>
+      </notes>
+      <segment>
+        <source>Un cabinet devait rendre une analyse de rentabilité complexe accessible dans un outil métier.</source>
+        <target>A firm needed to make a complex profitability analysis accessible in a business tool.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject11CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:167</note>
+      </notes>
+      <segment>
+        <source>Les hypothèses, charges et financements devaient rester cohérents et auditables.</source>
+        <target>Assumptions, costs and financing had to stay consistent and auditable.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject11CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:168</note>
+      </notes>
+      <segment>
+        <source>Un monorepo structure les contrats, le calcul métier, le web et les contrôles de sécurité.</source>
+        <target>A monorepo structures the contracts, the business calculations, the web app and the security checks.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject11CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:169</note>
+      </notes>
+      <segment>
+        <source>Architecture produit, conception des contrats et développement du socle métier.</source>
+        <target>Product architecture, contract design and development of the business core.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject11CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:170</note>
+      </notes>
+      <segment>
+        <source>Le calcul devient explicable, testable et prêt à évoluer par domaines.</source>
+        <target>The calculation becomes explainable, testable and ready to evolve domain by domain.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:185</note>
+      </notes>
+      <segment>
+        <source>Un loueur-réparateur devait clarifier son offre et faire entrer la réservation en ligne.</source>
+        <target>A bike rental and repair business needed to clarify its offering and bring booking online.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:186</note>
+      </notes>
+      <segment>
+        <source>Le parcours de demande devait rester simple tout en protégeant le calcul du devis.</source>
+        <target>The request journey had to stay simple while protecting the quote calculation.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:187</note>
+      </notes>
+      <segment>
+        <source>Une refonte relie offre, réservation en six étapes, back-office et migration SEO.</source>
+        <target>A redesign connects the offering, six-step booking, the back office and the SEO migration.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:188</note>
+      </notes>
+      <segment>
+        <source>Cadrage, architecture full-stack, sécurité du calcul serveur et migration des URL.</source>
+        <target>Scoping, full-stack architecture, server-side calculation security and URL migration.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject12CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:189</note>
+      </notes>
+      <segment>
+        <source>Le parcours couvre réservation, parc, atelier et continuité des pages indexées.</source>
+        <target>The journey covers booking, fleet, workshop and continuity of indexed pages.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13CaseContext">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:203</note>
+      </notes>
+      <segment>
+        <source>Un portail d’entreprise devait réunir plusieurs usages métier dans une base sécurisée.</source>
+        <target>A company portal had to bring several business uses together on a secure foundation.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13CaseProblem">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:204</note>
+      </notes>
+      <segment>
+        <source>Les parcours d’accès, de rôles et de données sensibles devaient rester cohérents.</source>
+        <target>Access journeys, roles and sensitive data had to stay consistent.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13CaseSolution">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:205</note>
+      </notes>
+      <segment>
+        <source>Un monorepo web/API structure les contrats, l’authentification, les rôles et les parcours métier.</source>
+        <target>A web/API monorepo structures the contracts, authentication, roles and business journeys.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13CaseRole">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:206</note>
+      </notes>
+      <segment>
+        <source>Architecture full-stack, conception des garde-fous et développement des flux critiques.</source>
+        <target>Full-stack architecture, guardrail design and development of critical flows.</target>
+      </segment>
+    </unit>
+    <unit id="projetsProject13CaseResult">
+      <notes>
+        <note category="location">src/app/features/projets/projets.component.ts:207</note>
+      </notes>
+      <segment>
+        <source>Le produit dispose d’un socle lisible pour ajouter des fonctionnalités sans diluer les règles.</source>
+        <target>The product has a readable foundation for adding features without diluting the rules.</target>
+      </segment>
+    </unit>
+    <unit id="projectsGridCaseStudyToggle">
+      <notes>
+        <note category="location">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html:54,56</note>
+      </notes>
+      <segment>
+        <source>Voir le cas d’usage</source>
+        <target>See the use case</target>
+      </segment>
+    </unit>
+    <unit id="projectsGridCaseContext">
+      <notes>
+        <note category="location">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html:57,58</note>
+      </notes>
+      <segment>
+        <source>Contexte</source>
+        <target>Context</target>
+      </segment>
+    </unit>
+    <unit id="projectsGridCaseProblem">
+      <notes>
+        <note category="location">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html:61,62</note>
+      </notes>
+      <segment>
+        <source>Problème</source>
+        <target>Problem</target>
+      </segment>
+    </unit>
+    <unit id="projectsGridCaseSolution">
+      <notes>
+        <note category="location">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html:65,66</note>
+      </notes>
+      <segment>
+        <source>Solution</source>
+        <target>Solution</target>
+      </segment>
+    </unit>
+    <unit id="projectsGridCaseRole">
+      <notes>
+        <note category="location">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html:69,70</note>
+      </notes>
+      <segment>
+        <source>Rôle</source>
+        <target>Role</target>
+      </segment>
+    </unit>
+    <unit id="projectsGridCaseResult">
+      <notes>
+        <note category="location">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html:73,74</note>
+      </notes>
+      <segment>
+        <source>Résultat</source>
+        <target>Result</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
