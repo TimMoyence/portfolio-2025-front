@@ -65,15 +65,16 @@ Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL`
 - `/formations/automatiser-avec-ia/toolkit` — Toolkit Automatiser avec l'IA
 - `/formations/audit-seo-diy` — Formation Audit SEO DIY (slides)
 - `/formations/audit-seo-diy/toolkit` — Toolkit Audit SEO DIY
+- `/formations/b2-01-traitement-information-chiffree` — Cours B2-01 (72 écrans servis par le back via `/formations/catalogue/:slug`), rendu serveur à la demande (`RenderMode.Server`) pour refléter le contenu publié au moment de la visite. Hors séance, les quiz et réflexions sont en aperçu : rien n'est envoyé, le résultat n'est donné qu'en séance. La page propose « Rejoindre une séance » vers `/cours/rejoindre` ; la carte de `/formations` y mène.
 
 ### Cours en séance
 
 Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`). Le cours est servi par le back (`/formations/sessions/...`) : le front ne porte ni corrigé ni barème.
 
 - `/cours/rejoindre` — Vue étudiant, sans compte : code de séance, identité, puis écrans du sujet tiré pour l'étudiant (rendu main).
-- `/cours/presenter/:slug` — Pupitre du formateur (`authGuard` + `roleGuard("teacher")`) : ouverture de la séance du cours `:slug`, code à dicter, commandes, notes, résultats par question face au seuil, clôture.
+- `/cours/presenter/:slug` — Pupitre du formateur (`authGuard` + `roleGuard("teacher")`) : ouverture de la séance du cours `:slug`, code à dicter, statistiques de séance et règle de notation, commandes, notes, résultats par question face au seuil, panneau pédagogique (guide, lecture de la classe, réponses libres, groupes, annotations, export du bilan), clôture.
 - `/cours/presenter/:slug?seance=:sessionId` — Reprise du pupitre d'une séance déjà ouverte : aucune nouvelle ouverture ; le code, les résultats, le déroulé et l'écran courant sont relus. Le pupitre inscrit lui-même `?seance=` dans l'URL dès l'ouverture.
-- `/cours/presenter/:slug/scene/:sessionId` — Scène pour le vidéoprojecteur (`authGuard` + `roleGuard("teacher")`) : écran courant en rendu `stage`, sans notes ni résultats, hors de la coquille du site (`data.coquille = false` : ni barre de navigation, ni pied de page, ni bandeau cookies).
+- `/cours/presenter/:slug/scene/:sessionId` — Scène pour le vidéoprojecteur (`authGuard` + `roleGuard("teacher")`) : écran courant en rendu `stage`, sans notes ni corrigé ; un quiz y affiche seulement le nombre de réponses reçues sur le nombre de participants, sans options cliquables. Hors de la coquille du site (`data.coquille = false` : ni barre de navigation, ni pied de page, ni bandeau cookies).
 - `/cours/seance/:sessionId/synthese` — Synthèse de la séance close (`authGuard`).
 - `/cours/demo` — Ancienne URL de banc d’essai, redirigée vers `/formations` ; les briques sont
   testées directement par leurs tests de composant.
@@ -112,13 +113,18 @@ Matériel : un portable pour le pupitre, un écran étendu (vidéoprojecteur) po
 
 1. **Connexion** : se connecter sur `/login` avec le compte formateur (rôle `teacher`), puis ouvrir `/cours/presenter/<slug>` (par exemple `b2-01-traitement-information-chiffree`). Le jeton d'accès (15 min) se renouvelle seul pendant toute la séance, par un seul appel au serveur par rotation quel que soit le nombre de fenêtres ouvertes : sous un verrou inter-onglets, chaque fenêtre relit le jeton stocké et adopte sans appel réseau celui qu'une autre fenêtre vient d'obtenir. Le serveur limite ce renouvellement à 60 appels par heure et conserve une fenêtre de grâce de 60 secondes pour une réponse perdue sur le réseau ; au-delà (429), la fenêtre réessaie après le délai `Retry-After` sans effacer la session.
 2. **Ouverture** : « Ouvrir la séance ». Le code à quatre chiffres s'affiche en grand et l'URL prend `?seance=<id>`. Ne plus cliquer sur « Ouvrir » pour cette classe : une seconde ouverture créerait une autre séance avec un autre code.
-3. **Scène** : « Ouvrir la scène », glisser la fenêtre sur l'écran étendu et la passer en plein écran (F11). Une pastille discrète dans un coin indique l'état du suivi (vert : en direct ; orange : reconnexion ; rouge : refus).
+3. **Scène** : « Ouvrir la projection », glisser la fenêtre sur l'écran étendu et la passer en plein écran (« Projection plein écran » ou F11). Une pastille discrète dans un coin indique l'état du suivi (vert : en direct ; orange : reconnexion ; rouge : refus).
 4. **Inscription de la classe** : dicter le code ; les étudiants ouvrent `/cours/rejoindre` et saisissent code, prénom, nom et adresse e-mail. Tant que la séance n'est pas démarrée, ou tant que le téléphone n'a reçu aucun état de la séance, il affiche un message d'attente et aucune question n'est répondable.
 5. **Contrôle de l'effectif** : comparer le compteur « Participants » du pupitre à l'effectif présent. Un écart signale une inscription en trop : clôturer et rouvrir une séance avant de démarrer.
 6. **« Démarrer la séance »** : obligatoire avant la première question, rappel d'ouverture compris ; avant ce clic, le serveur refuse toute réponse.
 7. **Pilotage** : « Écran suivant » / « Écran précédent », rythme libre ou piloté, lecture des résultats par question (réponses reçues, bonnes réponses, « je ne sais pas », seuil, confusions) et « Aller à la remédiation » sous le seuil. Le bandeau de statut du pupitre dit si le suivi est en direct, en reconnexion ou refusé (401/403 : recharger le pupitre et se reconnecter si la page de connexion s'affiche ; 429 : fermer les onglets en trop).
-8. **Clôture** : « Clôturer la séance », puis confirmer. Les réponses ne sont plus acceptées.
-9. **Synthèse** : le pupitre ouvre `/cours/seance/<id>/synthese` (classement, résultats par question, confusions fréquentes, export CSV).
+8. **Statistiques et notation** : sous le code, le pupitre affiche la moyenne, la médiane, la dispersion (écart-type), la participation, la réussite et les questions problématiques (par leur énoncé), puis la règle de notation servie par le serveur, en une phrase : note de participation relative à la cohorte, seuil de signalement, prise en compte du « je ne sais pas », valeur d'une non-réponse, réponses libres notées ou non, seuil d'une question problématique. En reprise, elles sont relues du rapport de séance.
+9. **Panneau pédagogique** (à côté de l'écran courant) : guide de facilitation de l'écran (à dire, question à poser, réponse attendue masquée tant qu'elle n'est pas révélée, calcul, relance, transition) ; lecture de la classe (taux de réussite, réponses reçues, confiance du diagnostic) ; réponses libres des étudiants à l'écran courant ; groupes de suivi (créer, renommer, affecter chaque participant) ; annotation du formateur pour l'écran, pour la classe entière ou un groupe, enregistrée sur le serveur au fil de la saisie. « Exporter le bilan » télécharge le rapport de séance en JSON (`bilan-seance-<id>.json`).
+10. **Réponses libres** : sur un écran de réflexion, l'étudiant rédige puis « Garder cette réflexion » ; sans réseau, la réflexion reste sur l'appareil et part au retour de la connexion. La scène indique seulement que chacun répond sur son appareil.
+11. **Clôture** : « Clôturer la séance », puis confirmer. Les réponses ne sont plus acceptées.
+12. **Synthèse** : le pupitre ouvre `/cours/seance/<id>/synthese` (classement, résultats par question, confusions fréquentes, export CSV).
+
+Hors séance (page publique `/formations/b2-01-traitement-information-chiffree`), les quiz et réflexions s'affichent en aperçu : le choix n'est pas envoyé, la réflexion n'est ni envoyée ni conservée, et aucun résultat n'est donné.
 
 Incidents :
 
@@ -205,6 +211,16 @@ Chaque lot de changement coherent doit idealement valider :
 - `npm run typecheck`
 - `npm run test:ci`
 - `npm run build`
+
+Le cours ajoute deux gardes, jouées par `ci:check` :
+
+- `npm run guard:cours-runtime` — AD-2 : `src/cours/` n'importe aucun framework ; AD-4 : aucune
+  donnée de correction (bonne réponse, misconception, barème…) dans la surface compilée pour
+  l'étudiant, soit `src/cours/content/`, les fichiers « cours » de `src/app/`, le rendu partagé
+  `src/app/shared/slides/**` et les pages `src/app/features/formations/b2-*`. Seul le pupitre
+  (`src/app/features/cours/presentateur/`) nomme le corrigé, reçu au runtime.
+- `npm run guard:cours-bundle` — après `npm run build`, aucune clé `misconception` suivie d'une
+  valeur littérale dans `dist/`.
 
 ## Standards de contribution
 
