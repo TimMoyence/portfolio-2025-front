@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import {
   B2_ECRANS,
   B2_SLUG,
@@ -11,36 +12,36 @@ import {
 
 const QUESTION = 'Quelle échelle faut-il vérifier ?';
 
-function ecransDuCours() {
+const CORRECTION_SERVIE = {
+  correctIndex: 1,
+  explanation: 'La base de départ, sinon le pourcentage ne veut rien dire.',
+  notes: 'Insister sur la base de départ.',
+};
+
+function ecransDuCours(correction: Readonly<Record<string, unknown>> = {}) {
   return Array.from({ length: B2_ECRANS }, (_, index) => {
     const rang = index + 1;
     if (rang === 3) {
-      return ecranB2Quiz(rang, QUESTION, ['La base', 'Le résultat']);
+      return ecranB2Quiz(rang, QUESTION, ['La base', 'Le résultat'], correction);
     }
     return ecranB2Recit(rang, rang === 1 ? 'Lire un chiffre' : undefined);
   });
 }
 
-function clesPresentes(valeur: unknown): string[] {
-  if (Array.isArray(valeur)) {
-    return valeur.flatMap(clesPresentes);
-  }
-  if (typeof valeur !== 'object' || valeur === null) {
-    return [];
-  }
-  return Object.entries(valeur).flatMap(([cle, contenu]) => [cle, ...clesPresentes(contenu)]);
+async function ouvrirLeCatalogue(
+  page: Page,
+  correction: Readonly<Record<string, unknown>> = {},
+): Promise<void> {
+  await servirCatalogueB2(page, coursB2Catalogue(ecransDuCours(correction)));
+  await page.goto(`/formations/${B2_SLUG}`);
+  await expect(page.locator('app-slide-deck')).toBeVisible();
 }
 
-test('le catalogue B2 serveur rend les 72 écrans sans jamais porter de correction', async ({
+test('le rendu du catalogue B2 monte les 72 écrans sans écrire de correction dans le DOM', async ({
   page,
 }) => {
-  await servirCatalogueB2(page, coursB2Catalogue(ecransDuCours()));
-  const reponse = page.waitForResponse(`**/formations/catalogue/${B2_SLUG}`);
+  await ouvrirLeCatalogue(page);
 
-  await page.goto(`/formations/${B2_SLUG}`);
-  const recu: unknown = await (await reponse).json();
-
-  await expect(page.locator('app-slide-deck')).toBeVisible();
   await expect(page.locator('section.slide')).toHaveCount(B2_ECRANS);
   await expect(page.locator('app-slide-hero').first()).toContainText('Lire un chiffre');
   const quiz = page.locator('app-slide-quiz');
@@ -49,9 +50,30 @@ test('le catalogue B2 serveur rend les 72 écrans sans jamais porter de correcti
   await expect(quiz.locator('[data-testid="slide-quiz-apercu"]')).toBeVisible();
   await expect(quiz.locator('.slide-quiz__feedback, .slide-quiz__explanation')).toHaveCount(0);
 
-  expect(clesPresentes(recu).filter((cle) => CLES_DE_CORRECTION.includes(cle))).toEqual([]);
   const documentRendu = await page.content();
   for (const cle of CLES_DE_CORRECTION) {
     expect(documentRendu).not.toContain(`"${cle}"`);
+  }
+});
+
+test('ne laisse passer aucune correction dans le DOM même quand le serveur en livre une', async ({
+  page,
+}) => {
+  await ouvrirLeCatalogue(page, CORRECTION_SERVIE);
+
+  const quiz = page.locator('app-slide-quiz');
+  await expect(quiz).toContainText(QUESTION);
+  await quiz.locator('.slide-quiz__option').first().click();
+  await expect(quiz.locator('[data-testid="slide-quiz-apercu"]')).toBeVisible();
+  await expect(quiz.locator('.slide-quiz__feedback, .slide-quiz__explanation')).toHaveCount(0);
+
+  const documentRendu = await page.content();
+  for (const cle of CLES_DE_CORRECTION) {
+    expect(documentRendu).not.toContain(`"${cle}"`);
+  }
+  for (const secret of Object.values(CORRECTION_SERVIE)) {
+    if (typeof secret === 'string') {
+      expect(documentRendu).not.toContain(secret);
+    }
   }
 });

@@ -166,9 +166,14 @@ export function ecranB2Graphique(
   return ecranB2(rang, 'chart', props);
 }
 
-export function ecranB2Quiz(rang: number, question: string, options: string[]): EcranCatalogue {
+export function ecranB2Quiz(
+  rang: number,
+  question: string,
+  options: string[],
+  correction: Readonly<Record<string, unknown>> = {},
+): EcranCatalogue {
   return ecranB2(rang, 'quiz', {
-    questionData: { id: `b2-s${rang}-quiz`, type: 'quiz', question, options },
+    questionData: { id: `b2-s${rang}-quiz`, type: 'quiz', question, options, ...correction },
   });
 }
 
