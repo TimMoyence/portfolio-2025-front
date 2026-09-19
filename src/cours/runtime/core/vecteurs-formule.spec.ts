@@ -1,4 +1,5 @@
 import type { CodeErreur, Feuille, ResultatFormule } from './formula';
+import { evaluerExpression, evaluerFeuille, formeR1C1 } from './formula';
 import fichierBrut from './formule.vecteurs.json';
 import {
   empreinteDesVecteurs,
@@ -94,4 +95,23 @@ describe('formule.vecteurs.json, copie du back', () => {
     }
     expect(erreurs).toContain(cycle.erreur);
   });
+});
+
+function executer(vecteur: VecteurFormule): unknown {
+  switch (vecteur.type) {
+    case 'feuille':
+      return Object.fromEntries(evaluerFeuille(vecteur.entree));
+    case 'expression':
+      return evaluerExpression(vecteur.entree.expression, vecteur.entree.variables);
+    case 'r1c1':
+      return formeR1C1(vecteur.entree.formule, vecteur.entree.cellule);
+  }
+}
+
+describe('parité du moteur de formules avec les vecteurs signés du back', () => {
+  for (const vecteur of FICHIER.vecteurs) {
+    it(`${vecteur.type} ${vecteur.id} donne le résultat du moteur canonique`, () => {
+      expect(executer(vecteur)).toEqual(vecteur.attendu);
+    });
+  }
 });
