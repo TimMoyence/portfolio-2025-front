@@ -20,8 +20,10 @@ import {
   buildDerouleCours,
   buildEcranDeroule,
   buildRapportSeance,
+  buildRegleNotation,
   buildResultatQuestion,
   buildResultatsSeance,
+  buildStatistiquesSeance,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
@@ -550,6 +552,50 @@ describe('CoursPresentateurComponent', () => {
     expect(port.lireAnnotations.calls.count()).toBe(lecturesAvant + 1);
     expect(port.lireParticipants).toHaveBeenCalledWith(SESSION);
     expect(port.lireReponsesLibres).toHaveBeenCalledWith(SESSION);
+  });
+
+  describe('statistiques de la seance', () => {
+    const PROBLEMATIQUE = buildStatistiquesSeance({ questionsProblemes: ['Q-CAP-03'] });
+
+    it('affiche participation, dispersion, questions problematiques par leur enonce et la regle de notation', async () => {
+      port.lireResultats.and.returnValue(
+        of(buildRapportSeance({ notation: buildRegleNotation() })),
+      );
+      const fixture = await ouvrirLaSeance();
+
+      publier(fixture, buildResultatsSeance({ statistiques: PROBLEMATIQUE }));
+      await stabiliser(fixture);
+
+      const statistiques = texte(fixture, 'presentateur-statistiques');
+      expect(statistiques).toContain('Participation');
+      expect(statistiques).toMatch(/75\s?%/);
+      expect(statistiques).toContain('Dispersion');
+      expect(statistiques).toContain('3.25');
+      expect(statistiques).toContain(buildVoteQuestion().enonce);
+      expect(statistiques).not.toContain('Q-CAP-03');
+      expect(texte(fixture, 'presentateur-notation')).toContain(
+        'Note /20 de participation relative à la cohorte',
+      );
+      expect(port.lireResultats).toHaveBeenCalledOnceWith(SESSION);
+    });
+
+    it('reprend statistiques et regle de notation du rapport sans attendre le flux', async () => {
+      port.lireResultats.and.returnValue(
+        of(
+          buildRapportSeance({
+            code: CODE,
+            statistiques: PROBLEMATIQUE,
+            notation: buildRegleNotation(),
+          }),
+        ),
+      );
+      const fixture = monter(SESSION);
+      await stabiliser(fixture);
+
+      expect(texte(fixture, 'presentateur-statistiques')).toContain(buildVoteQuestion().enonce);
+      expect(texte(fixture, 'presentateur-notation')).toContain('Note /20');
+      expect(port.lireResultats).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('dialogue de cloture', () => {

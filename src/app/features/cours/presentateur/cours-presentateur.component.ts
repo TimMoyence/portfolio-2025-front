@@ -29,18 +29,35 @@ import type {
   StatutSession,
   Sync,
 } from '../../../../cours/runtime/core/sync';
-import type { CommandePilotage } from '../../../core/ports/formations.port';
+import type {
+  CommandePilotage,
+  RapportSeance,
+  RegleNotation,
+} from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
-import { questionsDeLEcran, titreDeLEcran } from '../../../shared/slides/session/lecture-ecran';
+import {
+  enoncesDuDeroule,
+  questionsDeLEcran,
+  titreDeLEcran,
+} from '../../../shared/slides/session/lecture-ecran';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { SlideComponent } from '../../../shared/slides/deck/slide.component';
 import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
+import { phraseDeNotation } from './regle-de-notation';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
+
+type LectureDeLaNotation = 'a-lire' | 'lue' | 'echec';
+
+function resultatsDuRapport(rapport: RapportSeance): ResultatsSeance {
+  return rapport.statistiques === undefined
+    ? rapport.resultats
+    : { ...rapport.resultats, statistiques: rapport.statistiques };
+}
 
 type Chargement = 'repos' | 'chargement' | 'succes' | 'echec';
 
@@ -259,18 +276,54 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
             @if (resultats()?.statistiques; as statistiques) {
               <dl class="join-panel__stats" data-testid="presentateur-statistiques">
                 <div>
-                  <dt>Moyenne</dt>
+                  <dt i18n="@@presentateurStatMoyenne">Moyenne</dt>
                   <dd>{{ statistiques.moyenne }}</dd>
                 </div>
                 <div>
-                  <dt>Médiane</dt>
+                  <dt i18n="@@presentateurStatMediane">Médiane</dt>
                   <dd>{{ statistiques.mediane }}</dd>
                 </div>
                 <div>
-                  <dt>Réussite</dt>
+                  <dt i18n="@@presentateurStatDispersion">Dispersion (écart-type)</dt>
+                  <dd>{{ statistiques.dispersion }}</dd>
+                </div>
+                <div>
+                  <dt i18n="@@presentateurStatParticipation">Participation</dt>
+                  <dd>{{ statistiques.tauxParticipation | percent }}</dd>
+                </div>
+                <div>
+                  <dt i18n="@@presentateurStatReussite">Réussite</dt>
                   <dd>{{ statistiques.tauxReussite | percent }}</dd>
                 </div>
+                <div class="join-panel__problemes">
+                  <dt i18n="@@presentateurStatProblemes">Questions problématiques</dt>
+                  <dd>
+                    @for (libelle of questionsProblematiques(); track $index) {
+                      <span class="join-panel__probleme">{{ libelle }}</span>
+                    } @empty {
+                      <span i18n="@@presentateurStatAucunProbleme">Aucune</span>
+                    }
+                  </dd>
+                </div>
               </dl>
+            }
+            @switch (lectureDeLaNotation()) {
+              @case ('lue') {
+                @if (regleDeNotation(); as regle) {
+                  <p class="join-panel__notation" data-testid="presentateur-notation">
+                    {{ regle }}
+                  </p>
+                }
+              }
+              @case ('echec') {
+                <p
+                  class="join-panel__notation"
+                  data-testid="presentateur-notation-echec"
+                  i18n="@@presentateurNotationEchec"
+                >
+                  La règle de notation n’a pas pu être lue.
+                </p>
+              }
             }
           </div>
         </section>
@@ -599,6 +652,8 @@ export class CoursPresentateurComponent {
   readonly ecran = signal(0);
   readonly mode = signal<PacingMode>('pilote');
   readonly resultats = signal<ResultatsSeance | null>(null);
+  readonly notation = signal<RegleNotation | null>(null);
+  readonly lectureDeLaNotation = signal<LectureDeLaNotation>('a-lire');
   readonly commandeEnVol = signal(false);
   readonly clotureDemandee = signal(false);
   readonly clotureEnVol = signal(false);
@@ -645,6 +700,19 @@ export class CoursPresentateurComponent {
     () => this.resultats()?.questions ?? [],
   );
 
+  readonly questionsProblematiques = computed<readonly string[]>(() => {
+    const deroule = this.deroule();
+    const enonces = deroule === null ? new Map<string, string>() : enoncesDuDeroule(deroule);
+    return (this.resultats()?.statistiques?.questionsProblemes ?? []).map(
+      (questionId) => enonces.get(questionId) ?? questionId,
+    );
+  });
+
+  readonly regleDeNotation = computed(() => {
+    const notation = this.notation();
+    return notation === null ? null : phraseDeNotation(notation);
+  });
+
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
   private readonly router = inject(Router);
@@ -656,6 +724,7 @@ export class CoursPresentateurComponent {
   private readonly retourALaSeance = viewChild<ElementRef<HTMLButtonElement>>('retourALaSeance');
 
   private flux: Sync | null = null;
+  private notationEnVol = false;
   private detruit = false;
   private chantier: Promise<void> = Promise.resolve();
 
@@ -834,7 +903,8 @@ export class CoursPresentateurComponent {
     this.etatDeLaRepriseAttendu.set(true);
     this.sessionId.set(sessionId);
     this.code.set(rapport.code);
-    this.resultats.set(rapport.resultats);
+    this.resultats.set(resultatsDuRapport(rapport));
+    this.retenirLaNotation(rapport);
     this.avancerLeStatut('ouverte');
     await this.lireLeDeroule(sessionId);
   }
@@ -865,10 +935,37 @@ export class CoursPresentateurComponent {
   private ecouterLeFlux(sessionId: string): void {
     const flux = this.creerFluxFormateur(sessionId);
     flux.onState((etat) => this.suivreLeFlux(etat));
-    flux.onResultats((resultats) => this.resultats.set(resultats));
+    flux.onResultats((resultats) => {
+      this.resultats.set(resultats);
+      this.lireLaNotationSiBesoin(sessionId);
+    });
     flux.onStatut((statut) => this.suiviDuFlux.set(statut));
     this.flux = flux;
     flux.ouvrir();
+  }
+
+  private lireLaNotationSiBesoin(sessionId: string): void {
+    if (this.lectureDeLaNotation() === 'lue' || this.notationEnVol) {
+      return;
+    }
+    this.notationEnVol = true;
+    const lecture = this.lireLaNotation(sessionId);
+    this.chantier = Promise.all([this.chantier, lecture]).then(() => undefined);
+  }
+
+  private async lireLaNotation(sessionId: string): Promise<void> {
+    try {
+      this.retenirLaNotation(await firstValueFrom(this.port.lireResultats(sessionId)));
+    } catch {
+      this.lectureDeLaNotation.set('echec');
+    } finally {
+      this.notationEnVol = false;
+    }
+  }
+
+  private retenirLaNotation(rapport: RapportSeance): void {
+    this.notation.set(rapport.notation ?? null);
+    this.lectureDeLaNotation.set('lue');
   }
 
   private suivreLeFlux(etat: EtatSession): void {
