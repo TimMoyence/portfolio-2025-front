@@ -31,7 +31,6 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-vote': ['question'],
   'fp-recall': ['question'],
   'fp-exit': ['billet'],
-  'fp-quiz': ['question'],
 };
 
 const PORTEUR_DE_REPONSE: Readonly<Record<string, string>> = {
@@ -39,7 +38,6 @@ const PORTEUR_DE_REPONSE: Readonly<Record<string, string>> = {
   'fp-vote': 'question',
   'fp-recall': 'question',
   'fp-exit': 'billet',
-  'fp-quiz': 'question',
 };
 
 const QUESTIONNAIRE = 'questionnaire';

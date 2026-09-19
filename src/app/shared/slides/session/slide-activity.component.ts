@@ -73,7 +73,6 @@ function lireReponse(detail: unknown): ReponseSlide | null {
       (fp-vote-submit)="relay($event)"
       (fp-recall-submit)="relay($event)"
       (fp-exit-submit)="relay($event)"
-      (fp-quiz-submit)="relay($event)"
       (fp-block-error)="showError()"
     ></div>
     @if (visual()) {
