@@ -3,7 +3,14 @@ import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import type { CoursContent, DerouleCours } from '../../../cours/content/types';
+import type {
+  CoursContent,
+  DerouleCours,
+  EtatParticipant,
+  EtatPulse,
+  ValeurProduction,
+} from '../../../cours/content/types';
+import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
 import type {
   CommandePilotage,
   AnnotationFormateur,
@@ -19,12 +26,17 @@ import type {
   QuestionsDues,
   RapportSeance,
   Rattachement,
+  RegleNotation,
   ReponseEtudiant,
   ReponseLibreEnregistree,
   ReponseLibreEtudiant,
   ReponseLibreFormateur,
   SeanceOuverte,
+  StrategiePublique,
+  SyntheseConcept,
+  VerdictProduction,
   VerdictReponse,
+  VerdictTentative,
 } from '../ports/formations.port';
 import {
   GroupeRefuse,
@@ -54,6 +66,28 @@ const MOTIFS_DE_REFUS_DE_GROUPE: Readonly<Record<number, MotifRefusGroupe>> = {
 const MOTIFS_PAR_STATUT: Readonly<Record<number, MotifRefusRattachement>> = {
   404: 'code-inconnu',
   409: 'deja-inscrit',
+};
+
+const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
+  REPONSE_DEJA_ENREGISTREE: 'deja-repondue',
+  ENIGME_DEJA_RESOLUE: 'deja-repondue',
+  SEANCE_NON_DEMARREE: 'seance-non-demarree',
+  SEANCE_TERMINEE: 'seance-terminee',
+  ECRAN_NON_SERVI: 'ecran-non-servi',
+  PHASE_FERMEE: 'phase-fermee',
+  ENIGME_VERROUILLEE: 'enigme-verrouillee',
+  TENTATIVES_EPUISEES: 'tentatives-epuisees',
+  PRODUCTION_VIDE: 'production-vide',
+  PARTICIPANT_EVINCE: 'evince',
+};
+
+const NOTATION_ABSENTE_D_UN_SERVEUR_V2: Pick<
+  RegleNotation,
+  'typesNotables' | 'productionCompteSi' | 'statistiquesSurQuestionsNotees'
+> = {
+  typesNotables: ['vote', 'numeric', 'classement', 'feuille', 'tableau'],
+  productionCompteSi: 'au-moins-une-saisie',
+  statistiquesSurQuestionsNotees: true,
 };
 
 interface VerdictBrut {
@@ -116,6 +150,33 @@ function refuserReponseLibre(erreur: unknown): ReponseLibreRefusee {
   );
 }
 
+function refuserEcritureEtudiante(erreur: unknown): ReponseRefusee {
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new ReponseRefusee('reseau', 0);
+  }
+  const statut = erreur.status;
+  if (statut === 0 || statut === 429 || statut >= 500) {
+    return new ReponseRefusee('reseau', statut);
+  }
+  const code = codeDuProbleme(erreur) ?? '';
+  const motif = Object.hasOwn(MOTIFS_D_ECRITURE_PAR_CODE, code)
+    ? MOTIFS_D_ECRITURE_PAR_CODE[code]
+    : 'refusee';
+  return new ReponseRefusee(motif, statut);
+}
+
+function ecritureEtudiante<T>(requete: Observable<T>): Observable<T> {
+  return requete.pipe(
+    catchError((erreur: unknown) => throwError(() => refuserEcritureEtudiante(erreur))),
+  );
+}
+
+function completerNotation(rapport: RapportSeance): RapportSeance {
+  return rapport.notation === undefined
+    ? rapport
+    : { ...rapport, notation: { ...NOTATION_ABSENTE_D_UN_SERVEUR_V2, ...rapport.notation } };
+}
+
 function refuserCommandeDeGroupe(erreur: unknown): GroupeRefuse {
   const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
   return new GroupeRefuse(MOTIFS_DE_REFUS_DE_GROUPE[statut] ?? 'echec', statut);
@@ -133,8 +194,11 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  ouvrirSeance(courseSlug: string): Observable<SeanceOuverte> {
-    return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, { courseSlug });
+  ouvrirSeance(
+    courseSlug: string,
+    options?: { version?: number; capacite?: number },
+  ): Observable<SeanceOuverte> {
+    return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, { courseSlug, ...options });
   }
 
   lireDeroule(sessionId: string): Observable<DerouleCours> {
@@ -160,7 +224,9 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   lireResultats(sessionId: string): Observable<RapportSeance> {
-    return this.http.get<RapportSeance>(`${this.urlSeance(sessionId)}/results`);
+    return this.http
+      .get<RapportSeance>(`${this.urlSeance(sessionId)}/results`)
+      .pipe(map(completerNotation));
   }
 
   exporterBilan(sessionId: string): Observable<RapportSeance> {
@@ -288,6 +354,98 @@ export class FormationsHttpAdapter implements FormationsPort {
     return this.http.get<QuestionsDues>(`${this.urlSeance(sessionId)}/due-questions`, {
       headers: entetes(jeton),
     });
+  }
+
+  envoyerProduction(
+    sessionId: string,
+    jeton: string,
+    production: { questionId: string; valeur: ValeurProduction; dureeMs: number },
+  ): Observable<VerdictProduction> {
+    return ecritureEtudiante(
+      this.http.post<VerdictProduction>(`${this.urlSeance(sessionId)}/productions`, production, {
+        headers: entetes(jeton),
+      }),
+    );
+  }
+
+  tenterEnigme(
+    sessionId: string,
+    jeton: string,
+    parcoursId: string,
+    tentative: { enigmeId: string; reponse: string; dureeMs: number },
+  ): Observable<VerdictTentative> {
+    const url = `${this.urlSeance(sessionId)}/escape/${encodeURIComponent(parcoursId)}/tentatives`;
+    return ecritureEtudiante(
+      this.http.post<VerdictTentative>(url, tentative, { headers: entetes(jeton) }),
+    );
+  }
+
+  declarerJalon(
+    sessionId: string,
+    jeton: string,
+    sondageId: string,
+    etat: EtatPulse,
+  ): Observable<void> {
+    const url = `${this.urlSeance(sessionId)}/pulses/${encodeURIComponent(sondageId)}`;
+    return ecritureEtudiante(this.http.put<void>(url, { etat }, { headers: entetes(jeton) }));
+  }
+
+  lireRappels(
+    sessionId: string,
+    jeton: string,
+  ): Observable<{ questions: readonly SpacedQuestionPublique[] }> {
+    return this.http.get<{ questions: readonly SpacedQuestionPublique[] }>(
+      `${this.urlSeance(sessionId)}/rappels`,
+      { headers: entetes(jeton) },
+    );
+  }
+
+  envoyerDefi(
+    sessionId: string,
+    jeton: string,
+    defiId: string,
+    tentative: { texte: string; dureeMs: number },
+  ): Observable<{ strategies: readonly StrategiePublique[] }> {
+    return ecritureEtudiante(
+      this.http.post<{ strategies: readonly StrategiePublique[] }>(
+        `${this.urlDuDefi(sessionId, defiId)}/tentative`,
+        tentative,
+        { headers: entetes(jeton) },
+      ),
+    );
+  }
+
+  lireStrategies(
+    sessionId: string,
+    jeton: string,
+    defiId: string,
+  ): Observable<{ strategies: readonly StrategiePublique[] }> {
+    return this.http.get<{ strategies: readonly StrategiePublique[] }>(
+      `${this.urlDuDefi(sessionId, defiId)}/strategies`,
+      { headers: entetes(jeton) },
+    );
+  }
+
+  lireMonEtat(sessionId: string, jeton: string): Observable<EtatParticipant> {
+    return this.http.get<EtatParticipant>(`${this.urlSeance(sessionId)}/moi`, {
+      headers: entetes(jeton),
+    });
+  }
+
+  lireSyntheseRappels(sessionId: string): Observable<{ concepts: readonly SyntheseConcept[] }> {
+    return this.http.get<{ concepts: readonly SyntheseConcept[] }>(
+      `${this.urlSeance(sessionId)}/rappels/synthese`,
+    );
+  }
+
+  evincerParticipant(sessionId: string, participantId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}`,
+    );
+  }
+
+  private urlDuDefi(sessionId: string, defiId: string): string {
+    return `${this.urlSeance(sessionId)}/defis/${encodeURIComponent(defiId)}`;
   }
 
   private urlSeance(sessionId: string): string {

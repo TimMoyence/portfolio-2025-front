@@ -12319,6 +12319,76 @@
         <target>Your answer was not accepted by the server: tell your trainer.</target>
       </segment>
     </unit>
+    <unit id="coursReponseSeanceTerminee">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:257</note>
+        <note category="meaning">cours.reponseSeanceTerminee</note>
+      </notes>
+      <segment>
+        <source>La séance est terminée : votre réponse n’a pas été enregistrée.</source>
+        <target>The session has ended: your answer was not recorded.</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseEcranNonServi">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:258</note>
+        <note category="meaning">cours.reponseEcranNonServi</note>
+      </notes>
+      <segment>
+        <source>Cet écran n’est pas encore ouvert</source>
+        <target>This screen is not open yet</target>
+      </segment>
+    </unit>
+    <unit id="coursReponsePhaseFermee">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:259</note>
+        <note category="meaning">cours.reponsePhaseFermee</note>
+      </notes>
+      <segment>
+        <source>Le vote est fermé pour cette question</source>
+        <target>Voting is closed for this question</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseEnigmeVerrouillee">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:260</note>
+        <note category="meaning">cours.reponseEnigmeVerrouillee</note>
+      </notes>
+      <segment>
+        <source>Verrouillée : l’énigme précédente l’ouvrira</source>
+        <target>Locked: the previous puzzle will open it</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseTentativesEpuisees">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:261</note>
+        <note category="meaning">cours.reponseTentativesEpuisees</note>
+      </notes>
+      <segment>
+        <source>Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment</source>
+        <target>No attempts left: the next puzzle opens, without a code piece</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseProductionVide">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:262</note>
+        <note category="meaning">cours.reponseProductionVide</note>
+      </notes>
+      <segment>
+        <source>Saisissez au moins une valeur ou choisissez « Je ne sais pas »</source>
+        <target>Enter at least one value or choose “I don’t know”</target>
+      </segment>
+    </unit>
+    <unit id="coursReponseEvince">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:263</note>
+        <note category="meaning">cours.reponseEvince</note>
+      </notes>
+      <segment>
+        <source>Votre formateur a retiré ce poste de la séance : votre réponse n’a pas été enregistrée.</source>
+        <target>Your trainer removed this device from the session: your answer was not recorded.</target>
+      </segment>
+    </unit>
     <unit id="coursCodeInvalide">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:69</note>

@@ -2,11 +2,13 @@ import { of } from 'rxjs';
 import type {
   DerouleCours,
   EcranDeroule,
+  EtatParticipant,
   GuideFormateur,
   ResultatQuestion,
   ResultatsSeance,
   StatistiquesSeance,
 } from '../../cours/content/types';
+import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-publiques';
 import type {
   AnnotationFormateur,
   FormationsPort,
@@ -16,6 +18,10 @@ import type {
   Rattachement,
   RegleNotation,
   ReponseLibreFormateur,
+  StrategiePublique,
+  SyntheseConcept,
+  VerdictProduction,
+  VerdictTentative,
 } from '../../app/core/ports/formations.port';
 import { buildCoursContent } from './cours.factory';
 
@@ -75,6 +81,87 @@ export function buildRegleNotation(overrides: Partial<RegleNotation> = {}): Regl
     reponsesLibresNotees: false,
     seuilQuestionProbleme: 0.7,
     decimalesStatistiques: 2,
+    typesNotables: ['vote', 'numeric', 'classement', 'feuille', 'tableau'],
+    productionCompteSi: 'au-moins-une-saisie',
+    statistiquesSurQuestionsNotees: true,
+    ...overrides,
+  };
+}
+
+export function buildVerdictProduction(
+  overrides: Partial<VerdictProduction> = {},
+): VerdictProduction {
+  return {
+    correcte: false,
+    score: 0.75,
+    details: [
+      { cle: 'E2', juste: true, libelleConfusion: null },
+      { cle: 'E3', juste: false, libelleConfusion: 'Référence relative non figée.' },
+    ],
+    libelleConfusion: 'Référence relative non figée.',
+    ...overrides,
+  };
+}
+
+export function buildVerdictTentative(overrides: Partial<VerdictTentative> = {}): VerdictTentative {
+  return {
+    correcte: true,
+    fragment: '7',
+    tentativesRestantes: 9,
+    ...overrides,
+  };
+}
+
+export function buildStrategiePublique(
+  overrides: Partial<StrategiePublique> = {},
+): StrategiePublique {
+  return {
+    id: 'somme-des-taux',
+    libelle: 'Additionner les taux annoncés',
+    ...overrides,
+  };
+}
+
+export function buildSyntheseConcept(overrides: Partial<SyntheseConcept> = {}): SyntheseConcept {
+  return {
+    concept: 'evolution-reciproque',
+    libelle: 'Évolution réciproque',
+    boite1: 6,
+    boite2: 14,
+    boite3: 3,
+    nonVus: 1,
+    ...overrides,
+  };
+}
+
+export function buildSpacedQuestionPublique(
+  overrides: Partial<SpacedQuestionPublique> = {},
+): SpacedQuestionPublique {
+  return {
+    questionId: 'b2-01-r-compensation',
+    concept: 'evolution-reciproque',
+    boite: 1,
+    cours: 'B2-01 · Traitement de l’information chiffrée',
+    enonce: 'Après une baisse de 20 %, quelle hausse ramène au départ ?',
+    options: [
+      { id: 'plus-25-pct-ecd953a1', libelle: '+25 %' },
+      { id: 'plus-20-pct-6b3a9c2e', libelle: '+20 %' },
+    ],
+    ...overrides,
+  };
+}
+
+export function buildEtatParticipant(overrides: Partial<EtatParticipant> = {}): EtatParticipant {
+  return {
+    sessionId: 'seance-1',
+    participantId: 'participant-1',
+    revision: 0,
+    reponses: [],
+    reponsesLibres: [],
+    jalons: [],
+    enigmes: [],
+    defis: [],
+    rappels: { questionIds: [] },
     ...overrides,
   };
 }
@@ -229,6 +316,15 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'enregistrerReponseLibre',
     'signalerIncidents',
     'lireQuestionsDues',
+    'envoyerProduction',
+    'tenterEnigme',
+    'declarerJalon',
+    'lireRappels',
+    'envoyerDefi',
+    'lireStrategies',
+    'lireMonEtat',
+    'lireSyntheseRappels',
+    'evincerParticipant',
   ]);
   port.ouvrirSeance.and.returnValue(of({ sessionId: 'seance-1', code: '4821' }));
   port.lireDeroule.and.returnValue(of(buildDerouleCours()));
@@ -256,5 +352,14 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
   port.signalerIncidents.and.returnValue(of(undefined));
   port.lireQuestionsDues.and.returnValue(of({ questions: [] }));
+  port.envoyerProduction.and.returnValue(of(buildVerdictProduction()));
+  port.tenterEnigme.and.returnValue(of(buildVerdictTentative()));
+  port.declarerJalon.and.returnValue(of(undefined));
+  port.lireRappels.and.returnValue(of({ questions: [buildSpacedQuestionPublique()] }));
+  port.envoyerDefi.and.returnValue(of({ strategies: [buildStrategiePublique()] }));
+  port.lireStrategies.and.returnValue(of({ strategies: [buildStrategiePublique()] }));
+  port.lireMonEtat.and.returnValue(of(buildEtatParticipant()));
+  port.lireSyntheseRappels.and.returnValue(of({ concepts: [buildSyntheseConcept()] }));
+  port.evincerParticipant.and.returnValue(of(undefined));
   return port;
 }

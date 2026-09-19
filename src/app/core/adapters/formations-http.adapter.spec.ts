@@ -7,11 +7,17 @@ import {
   buildAnnotationFormateur,
   buildCoursContent,
   buildDerouleCours,
+  buildEtatParticipant,
   buildParticipantDeSeance,
   buildRapportSeance,
   buildRegleNotation,
   buildReponseLibreFormateur,
+  buildSpacedQuestionPublique,
   buildStatistiquesSeance,
+  buildStrategiePublique,
+  buildSyntheseConcept,
+  buildVerdictProduction,
+  buildVerdictTentative,
 } from '../../../testing/factories/formations.factory';
 import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
@@ -29,6 +35,7 @@ import type {
   QuestionsDues,
   RapportSeance,
   Rattachement,
+  RegleNotation,
   ReponseLibreFormateur,
   SeanceOuverte,
   VerdictReponse,
@@ -666,5 +673,237 @@ describe('FormationsHttpAdapter', () => {
     req.flush(dues);
 
     expect(recus).toEqual([dues]);
+  });
+
+  describe('routes du contrat V3 (§ 9.5 et § 9.8)', () => {
+    const PARCOURS = 'b2-01-a6-coffre';
+    const SONDAGE = 'b2-01-jalon-1';
+    const DEFI = 'b2-01-a5-defi';
+    const PARTICIPANT = '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c';
+    const PRODUCTION = {
+      questionId: 'b2-01-a4-feuille-canaux',
+      valeur: { type: 'feuille', cellules: { E2: '=C2/$C$5' } },
+      dureeMs: 600000,
+    } as const;
+    const TENTATIVE = { enigmeId: 'enigme-1', reponse: '142 920', dureeMs: 42000 };
+    const TEXTE_DE_DEFI = { texte: 'Multiplier les coefficients.', dureeMs: 180000 };
+
+    interface AppelAttendu {
+      readonly nom: string;
+      readonly appeler: () => Observable<unknown>;
+      readonly url: string;
+      readonly methode: string;
+      readonly corps: unknown;
+      readonly jeton: string | null;
+      readonly reponse: object | null;
+    }
+
+    const appels = (): readonly AppelAttendu[] => [
+      {
+        nom: 'envoyerProduction',
+        appeler: () => adapter.envoyerProduction(SESSION_ID, JETON, PRODUCTION),
+        url: `${URL_SEANCE}/productions`,
+        methode: 'POST',
+        corps: PRODUCTION,
+        jeton: JETON,
+        reponse: buildVerdictProduction(),
+      },
+      {
+        nom: 'tenterEnigme',
+        appeler: () => adapter.tenterEnigme(SESSION_ID, JETON, PARCOURS, TENTATIVE),
+        url: `${URL_SEANCE}/escape/${PARCOURS}/tentatives`,
+        methode: 'POST',
+        corps: TENTATIVE,
+        jeton: JETON,
+        reponse: buildVerdictTentative(),
+      },
+      {
+        nom: 'declarerJalon',
+        appeler: () => adapter.declarerJalon(SESSION_ID, JETON, SONDAGE, 'clair'),
+        url: `${URL_SEANCE}/pulses/${SONDAGE}`,
+        methode: 'PUT',
+        corps: { etat: 'clair' },
+        jeton: JETON,
+        reponse: null,
+      },
+      {
+        nom: 'lireRappels',
+        appeler: () => adapter.lireRappels(SESSION_ID, JETON),
+        url: `${URL_SEANCE}/rappels`,
+        methode: 'GET',
+        corps: null,
+        jeton: JETON,
+        reponse: { questions: [buildSpacedQuestionPublique()] },
+      },
+      {
+        nom: 'envoyerDefi',
+        appeler: () => adapter.envoyerDefi(SESSION_ID, JETON, DEFI, TEXTE_DE_DEFI),
+        url: `${URL_SEANCE}/defis/${DEFI}/tentative`,
+        methode: 'POST',
+        corps: TEXTE_DE_DEFI,
+        jeton: JETON,
+        reponse: { strategies: [buildStrategiePublique()] },
+      },
+      {
+        nom: 'lireStrategies',
+        appeler: () => adapter.lireStrategies(SESSION_ID, JETON, DEFI),
+        url: `${URL_SEANCE}/defis/${DEFI}/strategies`,
+        methode: 'GET',
+        corps: null,
+        jeton: JETON,
+        reponse: { strategies: [buildStrategiePublique({ fausse: true })] },
+      },
+      {
+        nom: 'lireMonEtat',
+        appeler: () => adapter.lireMonEtat(SESSION_ID, JETON),
+        url: `${URL_SEANCE}/moi`,
+        methode: 'GET',
+        corps: null,
+        jeton: JETON,
+        reponse: buildEtatParticipant(),
+      },
+      {
+        nom: 'lireSyntheseRappels',
+        appeler: () => adapter.lireSyntheseRappels(SESSION_ID),
+        url: `${URL_SEANCE}/rappels/synthese`,
+        methode: 'GET',
+        corps: null,
+        jeton: null,
+        reponse: { concepts: [buildSyntheseConcept()] },
+      },
+      {
+        nom: 'evincerParticipant',
+        appeler: () => adapter.evincerParticipant(SESSION_ID, PARTICIPANT),
+        url: `${URL_SEANCE}/participants/${PARTICIPANT}`,
+        methode: 'DELETE',
+        corps: null,
+        jeton: null,
+        reponse: null,
+      },
+      {
+        nom: 'ouvrirSeance avec version et capacite',
+        appeler: () => adapter.ouvrirSeance('b2-01-x', { version: 3, capacite: 40 }),
+        url: RACINE,
+        methode: 'POST',
+        corps: { courseSlug: 'b2-01-x', version: 3, capacite: 40 },
+        jeton: null,
+        reponse: { sessionId: SESSION_ID, code: CODE },
+      },
+      {
+        nom: 'piloter une phase d ecran',
+        appeler: () =>
+          adapter.piloter(SESSION_ID, { pilotage: { screenId: 'B2-01-A3-01', phase: 'revote' } }),
+        url: `${URL_SEANCE}/control`,
+        methode: 'PATCH',
+        corps: { pilotage: { screenId: 'B2-01-A3-01', phase: 'revote' } },
+        jeton: null,
+        reponse: null,
+      },
+    ];
+
+    it('appelle chaque route avec son verbe, son corps et son en-tete, et rend la reponse servie', () => {
+      for (const appel of appels()) {
+        const recus: unknown[] = [];
+
+        appel.appeler().subscribe((valeur) => recus.push(valeur));
+        const req = attendre(appel.url, appel.methode);
+
+        expect(req.request.body).withContext(appel.nom).toEqual(appel.corps);
+        expect(req.request.headers.get(ENTETE_JETON)).withContext(appel.nom).toBe(appel.jeton);
+        req.flush(appel.reponse);
+        expect(recus).withContext(appel.nom).toEqual([appel.reponse]);
+      }
+    });
+
+    describe('refus d une ecriture etudiante', () => {
+      const ecritures = (): readonly AppelAttendu[] =>
+        appels().filter((appel) => appel.jeton !== null && appel.methode !== 'GET');
+
+      const cas: readonly (readonly [number, string | undefined, MotifRefusReponse])[] = [
+        [409, 'REPONSE_DEJA_ENREGISTREE', 'deja-repondue'],
+        [409, 'ENIGME_DEJA_RESOLUE', 'deja-repondue'],
+        [409, 'SEANCE_NON_DEMARREE', 'seance-non-demarree'],
+        [409, 'SEANCE_TERMINEE', 'seance-terminee'],
+        [409, 'ECRAN_NON_SERVI', 'ecran-non-servi'],
+        [409, 'PHASE_FERMEE', 'phase-fermee'],
+        [409, 'ENIGME_VERROUILLEE', 'enigme-verrouillee'],
+        [409, 'TENTATIVES_EPUISEES', 'tentatives-epuisees'],
+        [400, 'PRODUCTION_VIDE', 'production-vide'],
+        [401, 'PARTICIPANT_EVINCE', 'evince'],
+        [400, 'TYPE_DE_QUESTION', 'refusee'],
+        [401, undefined, 'refusee'],
+        [429, undefined, 'reseau'],
+        [503, undefined, 'reseau'],
+      ];
+
+      for (const [statut, code, motif] of cas) {
+        it(`classe un ${statut} ${code ?? 'sans code'} en ${motif} pour chaque ecriture`, () => {
+          for (const ecriture of ecritures()) {
+            const erreurs: unknown[] = [];
+
+            ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+            httpMock.expectOne(ecriture.url).flush(buildProblemeHttp({ status: statut, code }), {
+              status: statut,
+              statusText: 'Erreur',
+            });
+
+            const refus = erreurs[0] as ReponseRefusee;
+            expect(refus).withContext(ecriture.nom).toBeInstanceOf(ReponseRefusee);
+            expect([refus.motif, refus.statut]).withContext(ecriture.nom).toEqual([motif, statut]);
+            expect(refus.message).withContext(ecriture.nom).not.toBe('');
+          }
+        });
+      }
+
+      it('classe une coupure reseau, sans statut, en panne reseau', () => {
+        for (const ecriture of ecritures()) {
+          const erreurs: unknown[] = [];
+
+          ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+          httpMock.expectOne(ecriture.url).error(new ProgressEvent('error'));
+
+          expect((erreurs[0] as ReponseRefusee).motif)
+            .withContext(ecriture.nom)
+            .toBe('reseau');
+        }
+      });
+    });
+
+    describe('regle de notation servie par un serveur v2', () => {
+      const RAPPORT_V2 = (): object => {
+        const notation: Partial<RegleNotation> = { ...buildRegleNotation() };
+        delete notation.typesNotables;
+        delete notation.productionCompteSi;
+        delete notation.statistiquesSurQuestionsNotees;
+        return { ...buildRapportSeance(), notation };
+      };
+
+      it('lireResultats la complete des trois champs du contrat final', () => {
+        const recus: RapportSeance[] = [];
+
+        adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+        attendre(`${URL_SEANCE}/results`, 'GET').flush(RAPPORT_V2());
+
+        expect(recus[0].notation).toEqual(buildRegleNotation());
+      });
+
+      it('exporterBilan rend le rapport tel que le serveur l a servi', () => {
+        const recus: RapportSeance[] = [];
+
+        adapter.exporterBilan(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+        attendre(`${URL_SEANCE}/report`, 'GET').flush(RAPPORT_V2());
+
+        expect(recus).toEqual([RAPPORT_V2() as RapportSeance]);
+      });
+    });
+
+    it('laisse sans notation un rapport qui n en porte pas', () => {
+      const recus: RapportSeance[] = [];
+
+      adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+      attendre(`${URL_SEANCE}/results`, 'GET').flush(buildRapportSeance());
+
+      expect(recus).toEqual([buildRapportSeance()]);
+    });
   });
 });

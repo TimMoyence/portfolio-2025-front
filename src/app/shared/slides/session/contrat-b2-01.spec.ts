@@ -49,6 +49,15 @@ import {
   buildResultatQuestion,
   buildStatistiquesSeance,
 } from '../../../../testing/factories/formations.factory';
+import type {
+  CommandePilotage,
+  MotifRefusReponse,
+  RegleNotation,
+  StrategiePublique,
+  SyntheseConcept,
+  VerdictProduction,
+  VerdictTentative,
+} from '../../../core/ports/formations.port';
 import type { DirectEcran, EtatPulse, EvenementBrique, RetourBrique } from './contrat-hote';
 
 const METADONNEES: MetadonneesBrique = buildPulseSondage().metadonnees;
@@ -478,6 +487,77 @@ describe('Contrats figés du cours B2-01 V3 côté front (§ 9, lot 0)', () => {
       ];
 
       expect(refusees.length).toBe(3);
+    });
+  });
+
+  describe('§ 9.8 — port front', () => {
+    it('décrit les commandes, verdicts et synthèses échangés avec le serveur', () => {
+      const commande = {
+        pilotage: { screenId: 'B2-01-A3-06-INDICE-ET-TAUX-MOYEN', etayage: 1 },
+      } satisfies CommandePilotage;
+      const production = {
+        correcte: true,
+        score: 14 / 17,
+        details: [{ cle: 'E2', juste: true, libelleConfusion: null }],
+        libelleConfusion: null,
+      } satisfies VerdictProduction;
+      const tentative = {
+        correcte: false,
+        fragment: null,
+        tentativesRestantes: 8,
+      } satisfies VerdictTentative;
+      const strategies = [
+        { id: 'coefficients', libelle: 'Multiplier les coefficients' },
+        { id: 'somme-des-taux', libelle: 'Additionner les taux', fausse: true },
+      ] satisfies StrategiePublique[];
+      const synthese = {
+        concept: 'evolution-reciproque',
+        libelle: 'Évolution réciproque',
+        boite1: 6,
+        boite2: 14,
+        boite3: 3,
+        nonVus: 1,
+      } satisfies SyntheseConcept;
+      const motifs: MotifRefusReponse[] = [
+        'reseau',
+        'deja-repondue',
+        'seance-non-demarree',
+        'seance-terminee',
+        'ecran-non-servi',
+        'phase-fermee',
+        'enigme-verrouillee',
+        'tentatives-epuisees',
+        'production-vide',
+        'evince',
+        'refusee',
+      ];
+      const notation = {
+        noteMax: 20,
+        base: 'participation-relative-cohorte',
+        partCohorteReference: 0.2,
+        ratioSeuilValidation: 0.4,
+        neSaitPasCompteCommeReponse: true,
+        pointsNonReponse: 0,
+        reponsesLibresNotees: false,
+        seuilQuestionProbleme: 0.7,
+        decimalesStatistiques: 2,
+        typesNotables: ['vote', 'numeric', 'classement', 'feuille', 'tableau'],
+        productionCompteSi: 'au-moins-une-saisie',
+        statistiquesSurQuestionsNotees: true,
+      } satisfies RegleNotation;
+
+      expect(commande.pilotage.etayage).toBe(1);
+      expect([production.score, tentative.tentativesRestantes]).toEqual([14 / 17, 8]);
+      expect(strategies.filter((strategie) => strategie.fausse === true)).toHaveSize(1);
+      expect(synthese.boite1 + synthese.boite2 + synthese.boite3 + synthese.nonVus).toBe(24);
+      expect(new Set(motifs).size).toBe(11);
+      expect([...notation.typesNotables]).toEqual([
+        'vote',
+        'numeric',
+        'classement',
+        'feuille',
+        'tableau',
+      ]);
     });
   });
 });
