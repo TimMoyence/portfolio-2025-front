@@ -112,6 +112,19 @@ describe('SlideQuizComponent', () => {
     );
   });
 
+  it('ne collecte aucun niveau de confiance que personne ne reçoit', fakeAsync(() => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelectorAll('.slide-quiz__option')[1].click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.slide-quiz__confidence')).toBeNull();
+    expect(fixture.nativeElement.textContent).not.toContain('niveau de confiance');
+  }));
+
   it('ne rend rien si le port échoue (degradation gracieuse)', fakeAsync(() => {
     portStub.getInteractions.and.returnValue(throwError(() => new Error('network')));
     const fixture = TestBed.createComponent(HostComponent);

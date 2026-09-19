@@ -21,27 +21,6 @@
       }
     </div>
     @if (selectedIndex() !== null) {
-      @if (q.askConfidence !== false) {
-        <fieldset class="slide-quiz__confidence">
-          <legend>Quel est votre niveau de confiance ?</legend>
-          <div class="slide-quiz__confidence-options">
-            @for (
-              label of ['Hasard', 'Hésitant', 'Assez sûr', 'Très sûr'];
-              track label;
-              let i = $index
-            ) {
-              <button
-                type="button"
-                [class.is-selected]="confidence() === i + 1"
-                (click)="selectConfidence(i + 1)"
-              >
-                <span aria-hidden="true">{{ i + 1 }}</span
-                >{{ label }}
-              </button>
-            }
-          </div>
-        </fieldset>
-      }
       @if (q.correctIndex === undefined) {
         <p class="slide-quiz__feedback" role="status" i18n="@@slideQuizAwaitServer">
           Réponse sélectionnée. Le résultat vient de la séance.

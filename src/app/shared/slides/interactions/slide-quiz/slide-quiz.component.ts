@@ -24,7 +24,6 @@ export interface QuizInteraction {
   competency?: string;
   explanation?: string;
   nextAction?: string;
-  askConfidence?: boolean;
 }
 
 @Component({
@@ -45,7 +44,6 @@ export class SlideQuizComponent implements OnInit {
   protected readonly activeQuiz = computed(() => this.questionData() ?? this.quiz());
   protected readonly error = signal<boolean>(false);
   protected readonly selectedIndex = signal<number | null>(null);
-  protected readonly confidence = signal<number | null>(null);
 
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
   private readonly destroyRef = inject(DestroyRef);
@@ -68,10 +66,6 @@ export class SlideQuizComponent implements OnInit {
         dureeMs: Math.max(0, Date.now() - this.startedAt),
       });
     }
-  }
-
-  protected selectConfidence(level: number): void {
-    this.confidence.set(level);
   }
 
   protected isCorrect(): boolean {
