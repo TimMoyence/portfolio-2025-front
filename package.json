@@ -40,10 +40,10 @@
     "quality:knip": "knip"
   },
   "lint-staged": {
-    "*.{ts,js,html}": [
+    "*.{ts,js,mjs,html}": [
       "eslint --fix --max-warnings=0 --no-warn-ignored"
     ],
-    "*.{ts,js,html,scss,css,json,md,cjs,yml,yaml}": [
+    "*.{ts,js,mjs,html,scss,css,json,md,cjs,yml,yaml}": [
       "prettier --write"
     ]
   },
