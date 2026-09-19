@@ -7349,7 +7349,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="notFoundDescription" datatype="html">
-        <source> La page que vous cherchez a peut-être été déplacée, ou n&apos;a jamais existé. Mais Les projets utiles, eux, continuent. </source>
+        <source> La page que vous cherchez a peut-être été déplacée, ou n&apos;a jamais existé. Mais les projets utiles, eux, continuent. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/not-found/not-found.component.ts</context>
           <context context-type="linenumber">42,45</context>

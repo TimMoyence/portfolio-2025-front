@@ -424,8 +424,8 @@
         <note category="location">src/app/features/home/home.component.ts:79</note>
       </notes>
       <segment>
-        <source>∞</source>
-        <target>∞</target>
+        <source>4</source>
+        <target>4</target>
       </segment>
     </unit>
 
@@ -434,8 +434,8 @@
         <note category="location">src/app/features/home/home.component.ts:81</note>
       </notes>
       <segment>
-        <source>l&apos;Atelier, un labo vivant à essayer</source>
-        <target>the Workshop, a living lab to try</target>
+        <source>formats d&apos;intervention</source>
+        <target>engagement formats</target>
       </segment>
     </unit>
 
@@ -454,8 +454,8 @@
         <note category="location">src/app/features/home/home.component.ts:86</note>
       </notes>
       <segment>
-        <source>Essayer l&apos;Atelier</source>
-        <target>Try the Workshop</target>
+        <source>Voir les projets</source>
+        <target>View projects</target>
       </segment>
     </unit>
 
@@ -968,8 +968,8 @@
         <note category="location">src/app/features/home/home.component.ts:272</note>
       </notes>
       <segment>
-        <source>Explorer l&apos;Atelier</source>
-        <target>Explore the Workshop</target>
+        <source>Voir les projets</source>
+        <target>View projects</target>
       </segment>
     </unit>
 
@@ -2186,8 +2186,8 @@
         <note category="location">src/app/features/not-found/not-found.component.ts:18,20</note>
       </notes>
       <segment>
-        <source>Cette page a quitté <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">l&apos;atelier</pc>.</source>
-        <target>This page left <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">the workshop</pc>.</target>
+        <source> Cette page a quitté <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">le site</pc>. </source>
+        <target> This page left <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">the site</pc>. </target>
       </segment>
     </unit>
 
@@ -2196,8 +2196,8 @@
         <note category="location">src/app/features/not-found/not-found.component.ts:21,23</note>
       </notes>
       <segment>
-        <source>La page que vous cherchez a peut-être été déplacée, ou n&apos;a jamais existé. Mais l&apos;expérimentation, elle, continue.</source>
-        <target>The page you&apos;re looking for may have moved, or never existed. But the experimenting goes on.</target>
+        <source> La page que vous cherchez a peut-être été déplacée, ou n&apos;a jamais existé. Mais les projets utiles, eux, continuent. </source>
+        <target> The page you&apos;re looking for may have moved, or never existed. But the useful projects carry on. </target>
       </segment>
     </unit>
 
@@ -2206,8 +2206,8 @@
         <note category="location">src/app/features/not-found/not-found.component.ts:36,37</note>
       </notes>
       <segment>
-        <source>Retour à l&apos;accueil →</source>
-        <target>Back to home →</target>
+        <source> Retour à l&apos;accueil <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;arrow&quot;&gt;" dispEnd="&lt;/span&gt;">→</pc></source>
+        <target> Back to home <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;arrow&quot;&gt;" dispEnd="&lt;/span&gt;">→</pc></target>
       </segment>
     </unit>
 
@@ -2637,8 +2637,8 @@
         <note category="meaning">footer.nav.growthAudit</note>
       </notes>
       <segment>
-        <source>Growth Audit</source>
-        <target>Growth Audit</target>
+        <source>Audit</source>
+        <target>Audit</target>
       </segment>
     </unit>
 
@@ -3239,8 +3239,8 @@
     </unit>
     <unit id="NavbarCompanyTitle">
       <segment>
-        <source>Asili</source>
-        <target>Asili</target>
+        <source>Asili design</source>
+        <target>Asili design</target>
       </segment>
     </unit>
     <unit id="contactFormRoleLegend">
@@ -7671,8 +7671,8 @@
         <note category="location">src/app/features/offer/offer.component.ts:153</note>
       </notes>
       <segment>
-        <source>Rendre votre équipe autonome sur l&apos;IA, l&apos;automatisation ou le SEO. Adapté à votre contexte, pas un cours générique.</source>
-        <target>Make your team self-reliant on AI, automation or SEO. Adapted to your context, not a generic course.</target>
+        <source>Rendre votre équipe autonome sur l&apos;IA, l&apos;automatisation, le SEO et le management des usages. Adapté à votre contexte, pas un cours générique.</source>
+        <target>Make your team self-reliant on AI, automation, SEO and managing how these tools are used. Adapted to your context, not a generic course.</target>
       </segment>
     </unit>
     <unit id="offerMethodKicker">
@@ -8961,8 +8961,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:54</note>
       </notes>
       <segment>
-        <source>Chaque projet part d&apos;un besoin réel et finit par un outil qui tient dans le temps. Voici quelques réalisations — des plateformes métier aux expériences de l&apos;Atelier.</source>
-        <target>Every project starts from a real need and ends with a tool that lasts. Here is some of the work — from business platforms to Workshop experiments.</target>
+        <source>Chaque projet part d&apos;un besoin réel et finit par un outil qui tient dans le temps. Voici des réalisations web, métier et IA construites sur des situations concrètes.</source>
+        <target>Every project starts from a real need and ends with a tool that lasts. Here is web, business and AI work built on real-world situations.</target>
       </segment>
     </unit>
 
@@ -9068,8 +9068,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:117</note>
       </notes>
       <segment>
-        <source>Onboarding Telegram IFS — académie de formation</source>
-        <target>Telegram IFS onboarding — training academy</target>
+        <source>IFS Academy</source>
+        <target>IFS Academy</target>
       </segment>
     </unit>
 
@@ -9118,8 +9118,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:127</note>
       </notes>
       <segment>
-        <source>Musaium</source>
-        <target>Musaium</target>
+        <source>InnovMind</source>
+        <target>InnovMind</target>
       </segment>
     </unit>
 
@@ -9128,8 +9128,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:128</note>
       </notes>
       <segment>
-        <source>Médiation culturelle par l&apos;IA : reconnaissance d&apos;œuvres par photo, chat contextuel, multilingue.</source>
-        <target>AI-powered cultural mediation: artwork recognition from a photo, contextual chat, multilingual.</target>
+        <source>Produit de médiation culturelle par l&apos;IA : reconnaissance d&apos;œuvres par photo, chat contextuel et réponses multilingues.</source>
+        <target>An AI-powered cultural mediation product: artwork recognition from a photo, contextual chat and multilingual answers.</target>
       </segment>
     </unit>
 
@@ -9138,8 +9138,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:130</note>
       </notes>
       <segment>
-        <source>capture — Musaium</source>
-        <target>screenshot — Musaium</target>
+        <source>illustration — InnovMind</source>
+        <target>illustration — InnovMind</target>
       </segment>
     </unit>
 
@@ -9178,8 +9178,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:139</note>
       </notes>
       <segment>
-        <source>Gestion de chais de Cognac — traçabilité</source>
-        <target>Cognac cellar management — traceability</target>
+        <source>Gestion de chais</source>
+        <target>Cellar management</target>
       </segment>
     </unit>
 
@@ -9228,8 +9228,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:149</note>
       </notes>
       <segment>
-        <source>Louison</source>
-        <target>Louison</target>
+        <source>Slide-Shot</source>
+        <target>Slide-Shot</target>
       </segment>
     </unit>
 
@@ -9238,8 +9238,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:150</note>
       </notes>
       <segment>
-        <source>Le site complet d&apos;une praticienne : design, contenu, paiement en ligne et génération de documents PDF.</source>
-        <target>A practitioner's complete website: design, content, online payment and PDF document generation.</target>
+        <source>Outil local qui transforme un PDF de présentation en images PNG haute définition, avec sélection de slides, export 300 DPI et nommage sans écrasement.</source>
+        <target>A local tool that turns a presentation PDF into high-definition PNG images, with slide selection, 300 DPI export and file naming that never overwrites.</target>
       </segment>
     </unit>
 
@@ -9248,8 +9248,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:151</note>
       </notes>
       <segment>
-        <source>capture — Louison</source>
-        <target>screenshot — Louison</target>
+        <source>illustration — Slide-Shot</source>
+        <target>illustration — Slide-Shot</target>
       </segment>
     </unit>
 
@@ -9278,8 +9278,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:159</note>
       </notes>
       <segment>
-        <source>Le Jeu des Fourmis</source>
-        <target>The Ant Game</target>
+        <source>Fourmizzz Suite</source>
+        <target>Fourmizzz Suite</target>
       </segment>
     </unit>
 
@@ -9288,8 +9288,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:160</note>
       </notes>
       <segment>
-        <source>MMO myrmécologique : 15 espèces = 15 façons de jouer, monde persistant avec météo et biomes, territoires sur une carte du monde réel en temps réel.</source>
-        <target>A myrmecological MMO: 15 species = 15 ways to play, a persistent world with weather and biomes, territories on a real-world map in real time.</target>
+        <source>Suite de conception d&apos;un MMO myrmécologique : simulation persistante, espèces asymétriques, météo, biomes et territoires sur une carte réelle.</source>
+        <target>A design suite for a myrmecological MMO: persistent simulation, asymmetric species, weather, biomes and territories on a real-world map.</target>
       </segment>
     </unit>
 
@@ -9328,8 +9328,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:169</note>
       </notes>
       <segment>
-        <source>Growth Audit</source>
-        <target>Growth Audit</target>
+        <source>Schema-Atlas</source>
+        <target>Schema-Atlas</target>
       </segment>
     </unit>
 
@@ -9338,8 +9338,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:170</note>
       </notes>
       <segment>
-        <source>Audit SEO en temps réel : l&apos;analyse s&apos;écrit live (streaming SSE), pilotée par BullMQ.</source>
-        <target>Real-time SEO audit: the analysis writes itself live (SSE streaming), orchestrated by BullMQ.</target>
+        <source>Produit qui rend un schéma de base de données lisible : domaines, relations, diagrammes déterministes et détail des tables.</source>
+        <target>A product that makes a database schema readable: domains, relationships, deterministic diagrams and table details.</target>
       </segment>
     </unit>
 
@@ -9348,8 +9348,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:172</note>
       </notes>
       <segment>
-        <source>capture — Growth Audit</source>
-        <target>screenshot — Growth Audit</target>
+        <source>illustration — Schema-Atlas</source>
+        <target>illustration — Schema-Atlas</target>
       </segment>
     </unit>
 
@@ -9368,8 +9368,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:177</note>
       </notes>
       <segment>
-        <source>Voice IA</source>
-        <target>Voice AI</target>
+        <source>ZenFirst Renta</source>
+        <target>ZenFirst Renta</target>
       </segment>
     </unit>
 
@@ -9378,8 +9378,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:178</note>
       </notes>
       <segment>
-        <source>Assistant vocal Telegram : capture, transcrit et organise les idées vers Notion &amp; Google Calendar.</source>
-        <target>A Telegram voice assistant: it captures, transcribes and organises ideas into Notion &amp; Google Calendar.</target>
+        <source>Module de rentabilité pour cabinets d&apos;expertise-gestion : analyse métier, calculs structurés et parcours web sécurisé.</source>
+        <target>A profitability module for accounting and advisory firms: business analysis, structured calculations and a secure web journey.</target>
       </segment>
     </unit>
 
@@ -9388,8 +9388,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:179</note>
       </notes>
       <segment>
-        <source>illustration — Voice IA</source>
-        <target>illustration — Voice AI</target>
+        <source>illustration — ZenFirst Renta</source>
+        <target>illustration — ZenFirst Renta</target>
       </segment>
     </unit>
 
@@ -9558,8 +9558,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:232</note>
       </notes>
       <segment>
-        <source>Explorer l&apos;Atelier</source>
-        <target>Explore the Workshop</target>
+        <source>Découvrir l&apos;audit</source>
+        <target>Discover the audit</target>
       </segment>
     </unit>
     <unit id="formationsHeroKicker">
@@ -9570,8 +9570,8 @@
     </unit>
     <unit id="formationsHeroLead">
       <segment>
-        <source>Trois formations, toutes gratuites, au format slides interactives — avec quiz et sondages. Consultables en ligne ou projetables en présentation. Des réponses actionnables, pas un cours universitaire. Sans inscription : votre email sert seulement à recevoir le toolkit PDF.</source>
-        <target>Three trainings, all free, as interactive slides — with quizzes and polls. View them online or project them in a presentation. Actionable answers, not a university lecture. No sign-up: your email is only used to send you the PDF toolkit.</target>
+        <source>Des formations gratuites au format slides interactives — avec quiz, sondages et séances accompagnées — plus un accompagnement sur mesure pour ancrer les usages IA dans le management. Consultables en ligne ou projetables en présentation. Des réponses actionnables, pas un cours universitaire. Sans inscription : votre email sert seulement à recevoir le toolkit PDF.</source>
+        <target>Free trainings as interactive slides — with quizzes, polls and guided sessions — plus tailored support to anchor AI practices in management. View them online or project them in a presentation. Actionable answers, not a university lecture. No sign-up: your email is only used to send you the PDF toolkit.</target>
       </segment>
     </unit>
     <unit id="formationsHeroTitle">
@@ -10752,8 +10752,8 @@
         <note category="location">src/app/features/profile/profile.component.html:232,235</note>
       </notes>
       <segment>
-        <source>Découvrir Météo</source>
-        <target>Discover Weather</target>
+        <source>Demander un accès</source>
+        <target>Request access</target>
       </segment>
     </unit>
     <unit id="profileAccessDiscoverSeb">
@@ -10761,8 +10761,8 @@
         <note category="location">src/app/features/profile/profile.component.html:242,244</note>
       </notes>
       <segment>
-        <source>Découvrir Sebastian</source>
-        <target>Discover Sebastian</target>
+        <source>Demander un accès</source>
+        <target>Request access</target>
       </segment>
     </unit>
     <unit id="profileAccessLocked">
@@ -11363,8 +11363,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:179</note>
       </notes>
       <segment>
-        <source>AtlanticBike — location et réparation de vélos</source>
-        <target>AtlanticBike — bike rental and repair</target>
+        <source>AtlanticBike</source>
+        <target>AtlanticBike</target>
       </segment>
     </unit>
     <unit id="projetsProject12Desc">
@@ -11408,8 +11408,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:190</note>
       </notes>
       <segment>
-        <source>Assistant IA Geev</source>
-        <target>Geev AI Assistant</target>
+        <source>Portail-EG</source>
+        <target>Portail-EG</target>
       </segment>
     </unit>
     <unit id="projetsProject13Desc">
@@ -11417,8 +11417,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:191</note>
       </notes>
       <segment>
-        <source>Prototype d'assistant intelligent pour faciliter le tri et l'analyse d'annonces à partir de contenus visuels.</source>
-        <target>Intelligent assistant prototype to ease the sorting and analysis of listings from visual content.</target>
+        <source>Portail métier pour cabinets d&apos;expertise-gestion : comptes, rôles, rentabilité, audit et parcours sécurisés.</source>
+        <target>A business portal for accounting and advisory firms: accounts, roles, profitability, audit and secure journeys.</target>
       </segment>
     </unit>
     <unit id="projetsProject13ImageAlt">
@@ -11426,8 +11426,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:193</note>
       </notes>
       <segment>
-        <source>capture — Assistant IA Geev</source>
-        <target>screenshot — Geev AI Assistant</target>
+        <source>illustration — Portail-EG</source>
+        <target>illustration — Portail-EG</target>
       </segment>
     </unit>
     <unit id="385129033471599880">
@@ -11505,7 +11505,7 @@
     </unit>
     <unit id="homeProjectMorningBriefDesc">
       <segment>
-        <source>Une veille IA collectée, synthétisée et livrée chaque matin, bientôt publiée comme une collection d&amp;apos;articles utiles.</source>
+        <source>Une veille IA collectée, synthétisée et livrée chaque matin, bientôt publiée comme une collection d&apos;articles utiles.</source>
         <target>AI intelligence gathered, synthesized, and delivered every morning, soon published as a collection of useful articles.</target>
       </segment>
     </unit>
@@ -11528,7 +11528,7 @@
       <segment><source>Audit de visibilité web</source><target>Web visibility audit</target></segment>
     </unit>
     <unit id="homeProjectAuditDesc">
-      <segment><source>Un diagnostic technique et IA qui transforme les signaux d&amp;apos;un site en actions priorisées.</source><target>A technical and AI-powered diagnosis that turns website signals into prioritized actions.</target></segment>
+      <segment><source>Un diagnostic technique et IA qui transforme les signaux d&apos;un site en actions priorisées.</source><target>A technical and AI-powered diagnosis that turns website signals into prioritized actions.</target></segment>
     </unit>
     <unit id="homeProjectAuditImageAlt">
       <segment><source>capture — Audit de visibilité web</source><target>screenshot — Web visibility audit</target></segment>
@@ -11543,7 +11543,7 @@
       <segment><source>Formations actionnables</source><target>Actionable training</target></segment>
     </unit>
     <unit id="homeProjectFormationsDesc">
-      <segment><source>Des formats courts pour comprendre l&amp;apos;IA, tester un workflow et repartir avec un toolkit concret.</source><target>Short formats to understand AI, test a workflow, and leave with a practical toolkit.</target></segment>
+      <segment><source>Des formats courts pour comprendre l&apos;IA, tester un workflow et repartir avec un toolkit concret.</source><target>Short formats to understand AI, test a workflow, and leave with a practical toolkit.</target></segment>
     </unit>
     <unit id="homeProjectFormationsImageAlt">
       <segment><source>illustration — formations IA</source><target>illustration — AI training</target></segment>
@@ -13476,5 +13476,6 @@
         <target> This screen cannot be displayed: its content is not recognized. </target>
       </segment>
     </unit>
+
   </file>
 </xliff>
