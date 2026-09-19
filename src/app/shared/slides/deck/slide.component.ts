@@ -15,9 +15,10 @@ import { SLIDE_DECK_HOST } from './slide-deck.tokens';
 export type SlideVisibility = 'both' | 'scroll-only' | 'present-only';
 
 /**
- * Le contenu passe par un `TemplateRef` pour que `SlideDeckComponent` puisse
- * le projeter dans un `<swiper-slide>` enfant direct en mode fullscreen.
- * pre-requis de Swiper Element.
+ * Swiper Element (swiper 12.1.3, https://swiperjs.com/element) n'anime que les
+ * `<swiper-slide>` enfants directs de `<swiper-container>` : le contenu passe
+ * donc par un `TemplateRef` que `SlideDeckComponent` projette dans un
+ * `<swiper-slide>` en mode plein écran.
  */
 @Component({
   selector: 'app-slide',
