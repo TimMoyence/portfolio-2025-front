@@ -101,12 +101,30 @@ const IDENTITE: Identity = {
   email: 'theo@example.com',
 };
 
-const ETAT: EtatSession = {
+const ETAT_ANCIEN = {
   etat: 'en_cours',
   modeRythme: 'pilote',
   ecranCourant: 2,
   intervalleLibre: null,
   participants: 24,
+} satisfies Omit<EtatSession, 'revision' | 'pilotage'>;
+
+const ETAT: EtatSession = {
+  ...ETAT_ANCIEN,
+  revision: 7,
+  pilotage: {
+    'B2-01-A3-01-VOTE-HAUSSE-BAISSE': { phase: 'revote' },
+    'B2-01-A5-08-RECOMMANDATION': { revele: true },
+    'B2-01-A3-06-INDICE-ET-TAUX-MOYEN': { etayage: 2 },
+  },
+};
+
+const QUESTION_ANCIENNE = {
+  questionId: 'Q-2',
+  total: 8,
+  correctes: 5,
+  neSaitPas: 0,
+  confusions: [],
 };
 
 const JETON_PRESENTATEUR = 'jwt-presentateur';
@@ -400,6 +418,81 @@ describe('sync', () => {
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => recus.length > 0);
     expect(recus).toEqual([RESULTATS]);
+  });
+
+  describe('forme du flux servie par un serveur v2 ou v3 (F20)', () => {
+    async function collecterResultats(charges: readonly unknown[]): Promise<ResultatsSeance[]> {
+      monter();
+      const recus: ResultatsSeance[] = [];
+      sync.onResultats((resultats) => recus.push(resultats));
+      sync.join(IDENTITE);
+      await vider();
+      for (const charge of charges) {
+        await flux[0].envoyer(bloc('resultats', charge));
+      }
+      await attendreJusqua(() => recus.length > 0);
+      return recus;
+    }
+
+    it('complete un etat de l ancienne forme par une revision nulle et un pilotage vide', async () => {
+      const recus = await collecter([bloc('etat', ETAT_ANCIEN)]);
+
+      expect(recus).toEqual([{ ...ETAT_ANCIEN, revision: 0, pilotage: {} }]);
+    });
+
+    it('transmet la revision et le pilotage d un etat de la forme finale', async () => {
+      const recus = await collecter([bloc('etat', ETAT)]);
+
+      expect(recus).toEqual([ETAT]);
+    });
+
+    it('ignore un etat dont la revision ou le pilotage est malforme', async () => {
+      const recus = await collecter([
+        bloc('etat', { ...ETAT, revision: 'sept' }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-01': { phase: 'fin' } } }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-06': { etayage: -1 } } }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A5-08': { revele: 'oui' } } }),
+        bloc('etat', ETAT),
+      ]);
+
+      expect(recus).toEqual([ETAT]);
+    });
+
+    it('complete une question de resultats de l ancienne forme sans toucher ses comptes', async () => {
+      const recus = await collecterResultats([
+        { participants: 12, questions: [QUESTION_ANCIENNE] },
+      ]);
+
+      expect(recus).toEqual([
+        {
+          participants: 12,
+          questions: [
+            {
+              ...QUESTION_ANCIENNE,
+              ecranId: '',
+              type: 'vote',
+              noteCompte: true,
+              parOption: null,
+              scoreMoyen: null,
+              parCle: null,
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('ignore des resultats dont un champ de la forme finale est malforme', async () => {
+      const [question] = RESULTATS.questions;
+      const recus = await collecterResultats([
+        { ...RESULTATS, questions: [{ ...question, type: 'graphique' }] },
+        { ...RESULTATS, questions: [{ ...question, parOption: { a: 'six' } }] },
+        { ...RESULTATS, questions: [{ ...question, parCle: { E3: { total: 2 } } }] },
+        { ...RESULTATS, questions: [{ ...question, scoreMoyen: '0,7' }] },
+        RESULTATS,
+      ]);
+
+      expect(recus).toEqual([RESULTATS]);
+    });
   });
 
   it('un evenement resultats n atteint pas onState', async () => {

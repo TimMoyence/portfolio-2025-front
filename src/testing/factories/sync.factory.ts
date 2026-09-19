@@ -24,6 +24,8 @@ function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
     ecranCourant: 0,
     intervalleLibre: null,
     participants: 3,
+    revision: 0,
+    pilotage: {},
     ...overrides,
   };
 }
