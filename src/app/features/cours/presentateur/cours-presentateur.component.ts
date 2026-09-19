@@ -32,7 +32,7 @@ import type {
 import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
-import { questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
+import { questionsDeLEcran, titreDeLEcran } from '../../../shared/slides/session/lecture-ecran';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { SlideComponent } from '../../../shared/slides/deck/slide.component';
 import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
@@ -466,7 +466,6 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
               >
                 <app-cours-panneau-pedagogique
                   [ecran]="ecranAffiche"
-                  [questions]="questions()"
                   [resultats]="resultatsDesQuestions()"
                   [participants]="participants()"
                   [sessionId]="sessionId()"
@@ -627,8 +626,14 @@ export class CoursPresentateurComponent {
   );
 
   readonly ecranSuivantTitle = computed(() => {
-    const cours = this.deroule();
-    return cours?.ecrans[this.ecran() + 1]?.id ?? 'la synthèse';
+    const rang = this.ecran() + 2;
+    const suivant = this.deroule()?.ecrans[rang - 1];
+    if (suivant === undefined) {
+      return $localize`:@@presentateurEcranSuivantSynthese:la synthèse de la séance`;
+    }
+    return (
+      titreDeLEcran(suivant) ?? $localize`:@@presentateurEcranSuivantRang:l’écran ${rang}:rang:`
+    );
   });
 
   readonly questions = computed<readonly QuestionDuPanneau[]>(() => {

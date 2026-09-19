@@ -17,6 +17,7 @@ import {
   identifiantsDesQuestions,
   planDeMontage,
   questionsDeLEcran,
+  titreDeLEcran,
 } from './lecture-ecran';
 
 describe('lecture de l ecran', () => {
@@ -71,6 +72,12 @@ describe('lecture de l ecran', () => {
 
   it('refuse le plan de montage d une brique inconnue', () => {
     expect(planDeMontage(buildVisualSlide({ type: 'brique-inconnue' }))).toBeNull();
+  });
+
+  it('titre un ecran v2 par son titre, a defaut par sa question, sinon ne l invente pas', () => {
+    expect(titreDeLEcran(buildVisualSlide())).toBe('Lire un chiffre');
+    expect(titreDeLEcran(buildVisualQuizSlide())).toBe('Quelle échelle ?');
+    expect(titreDeLEcran(buildEcranQuestionnaire())).toBeNull();
   });
 
   it('associe chaque question du deroule a son enonce, v2 comme brique', () => {

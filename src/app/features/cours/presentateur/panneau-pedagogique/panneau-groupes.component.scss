@@ -1,0 +1,53 @@
+@use './panneau' as panneau;
+
+:host {
+  display: block;
+}
+
+.panneau-groupes {
+  @include panneau.bloc;
+}
+
+.panneau-groupes__titre {
+  @include panneau.intitule;
+}
+
+.panneau-groupes__vide {
+  @include panneau.discret;
+}
+
+.panneau-groupes__refus {
+  margin: 0;
+  color: var(--danger, #c0563c);
+  font-size: 0.8rem;
+}
+
+.panneau-groupes__liste {
+  @include panneau.liste;
+
+  input,
+  select {
+    @include panneau.champ;
+  }
+}
+
+.panneau-groupes__participant {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.panneau-groupes__creation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem;
+
+  input {
+    @include panneau.champ;
+  }
+
+  button {
+    @include panneau.bouton;
+  }
+}

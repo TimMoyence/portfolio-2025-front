@@ -1,0 +1,39 @@
+@use './panneau' as panneau;
+
+:host {
+  display: block;
+}
+
+.panneau-annotation {
+  @include panneau.bloc;
+
+  label {
+    color: var(--ink-mute, #766f63);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  select,
+  textarea {
+    @include panneau.champ;
+  }
+
+  textarea {
+    min-height: 5.25rem;
+    resize: vertical;
+  }
+}
+
+.panneau-annotation__titre {
+  @include panneau.intitule;
+}
+
+.panneau-annotation__etat {
+  @include panneau.discret;
+
+  min-height: 1rem;
+
+  &[data-etat='echec'] {
+    color: var(--danger, #c0563c);
+  }
+}

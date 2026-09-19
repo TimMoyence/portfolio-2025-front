@@ -62,9 +62,10 @@ export interface CorrigePresentateur {
 }
 
 export interface GuideFormateur {
-  readonly objectif?: string;
-  readonly reponseAttendue?: string;
-  readonly erreursTypiques?: readonly string[];
+  readonly aDire?: string;
+  readonly question?: string;
+  readonly reponse?: string;
+  readonly calcul?: string;
   readonly relance?: string;
   readonly transition?: string;
 }

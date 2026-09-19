@@ -91,6 +91,16 @@ export function questionsDeLEcran(ecran: EcranContent): readonly QuestionDeLEcra
   return (planDeMontage(ecran) ?? []).flatMap(questionsDuMontage);
 }
 
+export function titreDeLEcran(ecran: EcranContent): string | null {
+  const presentation = presentationDe(ecran);
+  const candidats = [presentation?.props['title'], quizPrincipal(presentation)?.['question']];
+  return (
+    candidats.find(
+      (candidat): candidat is string => typeof candidat === 'string' && candidat !== '',
+    ) ?? null
+  );
+}
+
 export function identifiantsDesQuestions(ecran: EcranContent): readonly string[] {
   return questionsDeLEcran(ecran).map((question) => question.id);
 }

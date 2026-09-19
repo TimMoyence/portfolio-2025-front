@@ -2,6 +2,7 @@ import { of } from 'rxjs';
 import type {
   DerouleCours,
   EcranDeroule,
+  GuideFormateur,
   ResultatQuestion,
   ResultatsSeance,
   StatistiquesSeance,
@@ -100,6 +101,18 @@ export function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranD
         confusions: [{ id: 'interet-simple', libelle: 'Intérêts simples au lieu de composés' }],
       },
     ],
+    ...overrides,
+  };
+}
+
+export function buildGuideFormateur(overrides: Partial<GuideFormateur> = {}): GuideFormateur {
+  return {
+    aDire: 'Avant de commenter la pente, vérifiez le repère.',
+    question: 'Quelle est l’unité de l’axe vertical ?',
+    reponse: 'Des milliers d’euros, pas des euros.',
+    calcul: '12 400 / 1 000 = 12,4',
+    relance: 'Qui peut lire la légende à voix haute ?',
+    transition: 'On passe au taux global.',
     ...overrides,
   };
 }

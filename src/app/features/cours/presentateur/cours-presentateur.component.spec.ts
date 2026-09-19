@@ -26,7 +26,10 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
-import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
+import {
+  buildVisualQuizSlide,
+  buildVisualSlide,
+} from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
@@ -518,6 +521,35 @@ describe('CoursPresentateurComponent', () => {
     const fixture = await ouvrirLaSeance();
 
     expect(texte(fixture, 'presentateur-question-enonce')).toBe('Quelle échelle ?');
+  });
+
+  it('annonce dans le guide le titre de l ecran suivant, pas son identifiant', async () => {
+    port.lireDeroule.and.returnValue(
+      of(
+        buildDerouleCours({
+          ecrans: [
+            buildEcranDeroule({ id: 'ecran-1' }),
+            buildEcranDeroule({ ...buildVisualSlide(), corriges: [], seuil: null }),
+          ],
+        }),
+      ),
+    );
+    const fixture = await ouvrirLaSeance();
+
+    expect(texte(fixture, 'presentateur-guide')).toContain('Lire un chiffre');
+    expect(texte(fixture, 'presentateur-guide')).not.toContain(buildVisualSlide().id);
+  });
+
+  it('relit notes, groupes, participants et reponses libres a chaque resultat du flux', async () => {
+    const fixture = await ouvrirLaSeance();
+    const lecturesAvant = port.lireAnnotations.calls.count();
+
+    publier(fixture, resultatsDeLaQuestion(3, 2));
+    await stabiliser(fixture);
+
+    expect(port.lireAnnotations.calls.count()).toBe(lecturesAvant + 1);
+    expect(port.lireParticipants).toHaveBeenCalledWith(SESSION);
+    expect(port.lireReponsesLibres).toHaveBeenCalledWith(SESSION);
   });
 
   describe('dialogue de cloture', () => {
