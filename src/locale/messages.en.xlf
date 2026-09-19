@@ -5667,7 +5667,7 @@
     </unit>
     <unit id="toolkit-form.submit.idle">
       <segment>
-        <source> </source>
+        <source>Recevoir la boîte à outils</source>
         <target>Get the toolkit</target>
       </segment>
     </unit>
@@ -13477,5 +13477,14 @@
       </segment>
     </unit>
 
+    <unit id="contactErrorMessageMinLength">
+      <notes>
+        <note category="location">src/app/features/contact/contact.component.html:206,209</note>
+      </notes>
+      <segment>
+        <source>Ce champ est obligatoire et doit contenir au moins 10 caractères.</source>
+        <target>This field is required and must contain at least 10 characters.</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

@@ -101,7 +101,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
             @if (state() === 'loading') {
               <span i18n="@@toolkit-form.submit.loading">Envoi en cours...</span>
             } @else {
-              <span i18n="@@toolkit-form.submit.idle">{{ submitLabel }}</span>
+              <span i18n="@@toolkit-form.submit.idle">Recevoir la boîte à outils</span>
             }
           </button>
         </form>
@@ -111,8 +111,6 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
 })
 export class ToolkitFormComponent {
   @Input() formationSlug = 'ia-solopreneurs';
-
-  @Input() submitLabel = $localize`:@@toolkit-form.submit.idle:Recevoir la boîte à outils`;
 
   private readonly port = inject(LEAD_MAGNET_PORT);
   private readonly collector = inject(InteractionCollectorService, {
