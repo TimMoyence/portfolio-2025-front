@@ -20,6 +20,9 @@ const pathToSources = {
   '/growth-audit': ['src/app/features/growth-audit'],
   '/formations': ['src/app/features/formations'],
   '/formations/ia-solopreneurs': ['src/app/features/formations/ia-solopreneurs'],
+  '/formations/b2-01-traitement-information-chiffree': [
+    'src/app/features/formations/b2-01-traitement-information-chiffree',
+  ],
   '/formations/ia-solopreneurs/toolkit': ['src/app/features/formations/ia-solopreneurs/toolkit'],
   '/formations/automatiser-avec-ia': ['src/app/features/formations/automatiser-avec-ia'],
   '/formations/automatiser-avec-ia/toolkit': [

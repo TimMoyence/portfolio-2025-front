@@ -77,4 +77,21 @@ describe('isKnownRoute', () => {
     expect(isKnownRoute('/contact', metadata)).toBeTrue();
     expect(isKnownRoute('/inconnue', metadata)).toBeFalse();
   });
+
+  it('reconnait le parcours B2 catalogue par le serveur', () => {
+    const metadata = buildMetadata(
+      { '@type': 'LocalBusiness' },
+      {
+        pages: [
+          {
+            id: 'formations-b2-01-traitement-information-chiffree',
+            path: '/formations/b2-01-traitement-information-chiffree',
+            locales: {},
+          },
+        ] as SeoMetadataFile['pages'],
+      },
+    );
+
+    expect(isKnownRoute('/formations/b2-01-traitement-information-chiffree', metadata)).toBeTrue();
+  });
 });
