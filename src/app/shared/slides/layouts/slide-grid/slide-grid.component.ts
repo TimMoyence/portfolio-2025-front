@@ -29,6 +29,12 @@ export class SlideGridComponent {
     return this.flipped().has(title);
   }
 
+  protected libelleBascule(title: string): string {
+    return this.isFlipped(title)
+      ? $localize`:@@slideGridRevenir:Revenir à ${title}:titre:`
+      : $localize`:@@slideGridAfficherDetail:Afficher le détail de ${title}:titre:`;
+  }
+
   protected toggle(title: string): void {
     const next = new Set(this.flipped());
     if (next.has(title)) {

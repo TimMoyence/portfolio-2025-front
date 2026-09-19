@@ -143,7 +143,15 @@ function lirePanneau(
           [attr.aria-expanded]="correctionVisible()"
           (click)="basculerLaCorrection()"
         >
-          {{ correctionVisible() ? 'Masquer la correction' : 'Révéler la correction' }}
+          @if (correctionVisible()) {
+            <span i18n="presentateur.masquerCorrection|@@presentateurMasquerCorrection"
+              >Masquer la correction</span
+            >
+          } @else {
+            <span i18n="presentateur.revelerCorrection|@@presentateurRevelerCorrection"
+              >Révéler la correction</span
+            >
+          }
         </button>
         @if (panneau.sousLeSeuil) {
           <p

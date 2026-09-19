@@ -55,6 +55,10 @@ export class SlideMethodPathComponent {
     }
   }
 
+  protected libelleEtape(index: number, titre: string): string {
+    return $localize`:@@slideMethodPathEtape:Étape ${index + 1}:numero: : ${titre}:titre:`;
+  }
+
   protected isCurrent(index: number): boolean {
     return this.currentIndex() === index;
   }

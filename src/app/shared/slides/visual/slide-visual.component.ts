@@ -78,7 +78,9 @@ function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteract
         </p>
       }
     } @else {
-      <p role="alert">Cet écran ne peut pas être affiché : son contenu n’est pas reconnu.</p>
+      <p role="alert" i18n="@@slideVisualEcranInconnu">
+        Cet écran ne peut pas être affiché : son contenu n’est pas reconnu.
+      </p>
     }
   `,
   styles: `

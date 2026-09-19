@@ -749,105 +749,15 @@
       </segment>
     </unit>
 
-    <unit id="homeAtelierKicker">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:165</note>
-      </notes>
-      <segment>
-        <source>L&apos;Atelier — le bac à sable</source>
-        <target>The Workshop — the sandbox</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierTitlePre">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:167</note>
-      </notes>
-      <segment>
-        <source>Un laboratoire vivant où vous pouvez</source>
-        <target>A living laboratory where you can</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierTitleAccent">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:169</note>
-      </notes>
-      <segment>
-        <source>jouer</source>
-        <target>play</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierLead">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:171</note>
-      </notes>
-      <segment>
-        <source>Pas des produits à vendre : des preuves jouables. Je teste des idées en vrai, et vous les manipulez directement — sans inscription.</source>
-        <target>Not products to sell: playable proof. I test ideas for real, and you handle them directly — no sign-up.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierMeteoTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:174</note>
-      </notes>
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierMeteoDesc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:176</note>
-      </notes>
-      <segment>
-        <source>Données réalistes, parallaxe, mode immersif ciel. La preuve d&apos;une interface vivante et précise.</source>
-        <target>Realistic data, parallax, immersive sky mode. The proof of a living, precise interface.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierMeteoLink">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:178</note>
-      </notes>
-      <segment>
-        <source>Essayer l&apos;app</source>
-        <target>Try the app</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierSebTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:181</note>
-      </notes>
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierSebDesc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:183</note>
-      </notes>
-      <segment>
-        <source>Suivi de consommation : jauge de santé, calcul d&apos;alcoolémie, heatmap, et un bot Telegram. Le dark lounge ambré.</source>
-        <target>Consumption tracking: health gauge, blood-alcohol calculation, heatmap, and a Telegram bot. The amber dark lounge.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeAtelierSebLink">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:185</note>
-      </notes>
-      <segment>
-        <source>Accéder à Sebastian</source>
-        <target>Open Sebastian</target>
-      </segment>
-    </unit>
 
     <unit id="homeManifestoStep1">
       <notes>
@@ -955,85 +865,13 @@
 
 
 
-    <unit id="homeProject2Tag1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:234</note>
-      </notes>
-      <segment>
-        <source>Atelier</source>
-        <target>Workshop</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject2Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:235</note>
-      </notes>
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject2Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:236</note>
-      </notes>
-      <segment>
-        <source>Data-viz vivante : vent, UV, arc solaire.</source>
-        <target>Living data-viz: wind, UV, solar arc.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject2ImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:238</note>
-      </notes>
-      <segment>
-        <source>capture — app Météo</source>
-        <target>screenshot — Weather app</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject3Tag1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:242</note>
-      </notes>
-      <segment>
-        <source>Atelier</source>
-        <target>Workshop</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject3Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:243</note>
-      </notes>
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject3Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:244</note>
-      </notes>
-      <segment>
-        <source>Suivi de consommation, app + bot Telegram.</source>
-        <target>Consumption tracking, app + Telegram bot.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject3ImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:246</note>
-      </notes>
-      <segment>
-        <source>capture — Sebastian</source>
-        <target>screenshot — Sebastian</target>
-      </segment>
-    </unit>
 
     <unit id="homeProject4Tag1">
       <notes>
@@ -2669,17 +2507,6 @@
       </segment>
     </unit>
 
-    <unit id="footerColumnAtelier">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:77</note>
-        <note category="description">Footer column heading</note>
-        <note category="meaning">footer.column.atelier</note>
-      </notes>
-      <segment>
-        <source>L&apos;Atelier</source>
-        <target>The Workshop</target>
-      </segment>
-    </unit>
 
     <unit id="footerColumnMore">
       <notes>
@@ -2705,29 +2532,7 @@
       </segment>
     </unit>
 
-    <unit id="footerNavMeteo">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:80</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.meteo</note>
-      </notes>
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
 
-    <unit id="footerNavSebastian">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:84</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.sebastian</note>
-      </notes>
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
 
     <unit id="footerNavLegal">
       <notes>
@@ -3445,47 +3250,6 @@
       </segment>
     </unit>
     <!-- Navbar — L'Atelier dropdown -->
-    <unit id="navAtelierLabel">
-      <segment>
-        <source>L'Atelier</source>
-        <target>The Workshop</target>
-      </segment>
-    </unit>
-    <unit id="navAtelierSubtitle">
-      <notes>
-        <note category="location">src/app/shared/components/navbar/navbar.component.ts:50</note>
-        <note category="description">Atelier drawer subtitle</note>
-        <note category="meaning">navbar.atelier.subtitle</note>
-      </notes>
-      <segment>
-        <source>Météo · Sebastian</source>
-        <target>Weather · Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="navAtelierMeteoTitle">
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
-    <unit id="navAtelierMeteoDesc">
-      <segment>
-        <source>Explorez la météo en temps réel</source>
-        <target>Explore real-time weather</target>
-      </segment>
-    </unit>
-    <unit id="navAtelierSebastianTitle">
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="navAtelierSebastianDesc">
-      <segment>
-        <source>Votre majordome personnel</source>
-        <target>Your personal butler</target>
-      </segment>
-    </unit>
     <!-- Weather presentation -->
     <!-- Weather app -->
     <unit id="weatherAppTitle">
@@ -4628,132 +4392,6 @@
     <!-- ============================================================ -->
     <!-- sebastian-presentation-data.ts                                -->
     <!-- ============================================================ -->
-    <unit id="sebastian-pres.health.message">
-      <segment>
-        <source>Bonne forme, continuez !</source>
-        <target>Looking good — keep it up!</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.first-log.name">
-      <segment>
-        <source>Premier Log</source>
-        <target>First Log</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.first-log.description">
-      <segment>
-        <source>Enregistrez votre premiere consommation</source>
-        <target>Log your first drink</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.dry-week.name">
-      <segment>
-        <source>Semaine Sobre</source>
-        <target>Dry Week</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.dry-week.description">
-      <segment>
-        <source>7 jours sans alcool</source>
-        <target>7 days alcohol-free</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.espresso-machine.name">
-      <segment>
-        <source>Maitre Barista</source>
-        <target>Master Barista</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.espresso-machine.description">
-      <segment>
-        <source>100 cafes enregistres</source>
-        <target>100 coffees logged</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.zen-monk-7.name">
-      <segment>
-        <source>Zen Monk 7</source>
-        <target>Zen Monk 7</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.zen-monk-7.description">
-      <segment>
-        <source>Score au-dessus de 80 pendant 7 jours</source>
-        <target>Score above 80 for 7 days</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.zen-monk-30.name">
-      <segment>
-        <source>Zen Monk 30</source>
-        <target>Zen Monk 30</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.zen-monk-30.description">
-      <segment>
-        <source>Score au-dessus de 80 pendant 30 jours</source>
-        <target>Score above 80 for 30 days</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.goal-crusher.name">
-      <segment>
-        <source>Goal Crusher</source>
-        <target>Goal Crusher</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.goal-crusher.description">
-      <segment>
-        <source>Respectez vos limites 7 jours d'affilee</source>
-        <target>Stay within your limits 7 days in a row</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.perfect-month.name">
-      <segment>
-        <source>Mois Parfait</source>
-        <target>Perfect Month</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.perfect-month.description">
-      <segment>
-        <source>Aucun depassement pendant 30 jours</source>
-        <target>No overruns for 30 days</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.early-bird.name">
-      <segment>
-        <source>Early Bird</source>
-        <target>Early Bird</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.early-bird.description">
-      <segment>
-        <source>Premier log avant 8h du matin</source>
-        <target>First log before 8 a.m.</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.night-owl.name">
-      <segment>
-        <source>Night Owl</source>
-        <target>Night Owl</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.night-owl.description">
-      <segment>
-        <source>Log apres minuit</source>
-        <target>Log after midnight</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.comeback-kid.name">
-      <segment>
-        <source>Comeback Kid</source>
-        <target>Comeback Kid</target>
-      </segment>
-    </unit>
-    <unit id="sebastian-pres.badge.comeback-kid.description">
-      <segment>
-        <source>Ameliorez votre score de 20 points en un mois</source>
-        <target>Improve your score by 20 points in a month</target>
-      </segment>
-    </unit>
 
     <!-- ============================================================ -->
     <!-- ia-solopreneurs.data.ts                                       -->
@@ -7600,7 +7238,6 @@
       </segment>
     </unit>
     <unit id="slideReflectionSaveFailed"><segment><source> Échec d’enregistrement : nouvelle tentative nécessaire. </source><target>Save failed: please try again.</target></segment></unit>
-    <unit id="slideReflectionSavePending"><segment><source> Réflexion en attente d’envoi. </source><target>Waiting to send.</target></segment></unit>
     <unit id="slideQuizAwaitServer"><segment><source>Réponse sélectionnée. Le résultat vient de la séance.</source><target>Answer selected. The session will provide the result.</target></segment></unit>
     <unit id="b2CoursChargement"><segment><source>Chargement du cours…</source><target>Loading course…</target></segment></unit>
     <unit id="b2CoursVide"><segment><source>Aucun écran n’est encore publié pour ce cours.</source><target>No screens have been published for this course yet.</target></segment></unit>
@@ -9335,115 +8972,16 @@
 
 
 
-    <unit id="projetsProject2Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:80</note>
-      </notes>
-      <segment>
-        <source>Atelier</source>
-        <target>Workshop</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject2Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:81</note>
-      </notes>
-      <segment>
-        <source>Data-viz</source>
-        <target>Data-viz</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject2Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:83</note>
-      </notes>
-      <segment>
-        <source>Weather</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject2Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:84</note>
-      </notes>
-      <segment>
-        <source>Prévisions, qualité de l&apos;air, alertes, circuit breaker multi-provider.</source>
-        <target>Forecasts, air quality, alerts, multi-provider circuit breaker.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject2ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:86</note>
-      </notes>
-      <segment>
-        <source>capture — Weather</source>
-        <target>screenshot — Weather</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject3Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:91</note>
-      </notes>
-      <segment>
-        <source>En production</source>
-        <target>In production</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject3Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:92</note>
-      </notes>
-      <segment>
-        <source>App web + Telegram</source>
-        <target>Web app + Telegram</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject3Tag3">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:93</note>
-      </notes>
-      <segment>
-        <source>Widmark</source>
-        <target>Widmark</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject3Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:95</note>
-      </notes>
-      <segment>
-        <source>Sebastian — suivi de consommation</source>
-        <target>Sebastian — consumption tracking</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject3Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:96</note>
-      </notes>
-      <segment>
-        <source>App complète (objectifs, calcul d&apos;alcoolémie, rapports) doublée d&apos;un bot Telegram qui logge un verre en langage naturel — « j&apos;ai bu 3 bières » — et calcule le taux en direct.</source>
-        <target>A full app (goals, blood alcohol calculation, reports) paired with a Telegram bot that logs a drink in plain language — &quot;I had 3 beers&quot; — and computes the level live.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject3ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:98</note>
-      </notes>
-      <segment>
-        <source>capture — Sebastian</source>
-        <target>screenshot — Sebastian</target>
-      </segment>
-    </unit>
 
     <unit id="projetsProject4Tag1">
       <notes>
@@ -10361,456 +9899,6 @@
       </segment>
     </unit>
 
-      <unit id="atelierCtaKicker">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:104</note>
-      </notes>
-      <segment>
-        <source>Ces démos vous parlent ?</source>
-        <target>These demos speak to you?</target>
-      </segment>
-    </unit>
-    <unit id="atelierCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:467,468</note>
-      </notes>
-      <segment>
-        <source>Voir les services</source>
-        <target>See the services</target>
-      </segment>
-    </unit>
-    <unit id="atelierCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:471,473</note>
-      </notes>
-      <segment>
-        <source>Les formations</source>
-        <target>The training</target>
-      </segment>
-    </unit>
-    <unit id="atelierCtaTitle">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:107</note>
-      </notes>
-      <segment>
-        <source>Ce savoir-faire peut servir votre projet ou votre équipe.</source>
-        <target>This know-how can serve your project or your team.</target>
-      </segment>
-    </unit>
-    <unit id="atelierDemoKicker">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:125,126</note>
-      </notes>
-      <segment>
-        <source>Jouez maintenant</source>
-        <target>Play now</target>
-      </segment>
-    </unit>
-    <unit id="atelierDemoLead">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:131,134</note>
-      </notes>
-      <segment>
-        <source> Les deux démos sont réelles et manipulables directement. Aucune inscription : c&apos;est la preuve par l&apos;usage. </source>
-        <target> Both demos are real and directly playable. No sign-up: it&apos;s proof through use. </target>
-      </segment>
-    </unit>
-    <unit id="atelierDemoTitle">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:127,129</note>
-      </notes>
-      <segment>
-        <source> Touchez. Ça <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">réagit</pc>. </source>
-        <target> Touch it. It <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">reacts</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="atelierHeroKicker">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:96</note>
-      </notes>
-      <segment>
-        <source>Le bac à sable</source>
-        <target>The sandbox</target>
-      </segment>
-    </unit>
-    <unit id="atelierHeroLead">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:99</note>
-      </notes>
-      <segment>
-        <source>Pas des produits à vendre : des preuves jouables. Je teste des idées en vrai, et vous les manipulez ici, sans inscription. Deux expériences pour l&apos;instant — Météo et Sebastian.</source>
-        <target>Not products to sell: playable proof. I test ideas for real, and you handle them here, no sign-up. Two experiences for now — Weather and Sebastian.</target>
-      </segment>
-    </unit>
-    <unit id="atelierHeroTitle">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:16,19</note>
-      </notes>
-      <segment>
-        <source> Un laboratoire vivant<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>où vous pouvez <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">jouer</pc>. </source>
-        <target> A living lab<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>where you can <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">play</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoAir">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:166,167</note>
-      </notes>
-      <segment>
-        <source>Qualité air</source>
-        <target>Air quality</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoAqiGood">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:125</note>
-      </notes>
-      <segment>
-        <source>Bon</source>
-        <target>Good</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoAqiOk">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:142</note>
-      </notes>
-      <segment>
-        <source>Correct</source>
-        <target>Fair</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoCitiesLabel">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:327,328</note>
-      </notes>
-      <segment>
-        <source>Choisir une ville</source>
-        <target>Choose a city</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoCompassLabel">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:177,178</note>
-      </notes>
-      <segment>
-        <source>Boussole de vent</source>
-        <target>Wind compass</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoCondBordeaux">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:119</note>
-      </notes>
-      <segment>
-        <source>Ciel voilé · brise d&apos;ouest</source>
-        <target>Hazy sky · westerly breeze</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoCondLyon">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:170</note>
-      </notes>
-      <segment>
-        <source>Éclaircies · brise du sud</source>
-        <target>Sunny spells · southerly breeze</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoCondNice">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:153</note>
-      </notes>
-      <segment>
-        <source>Grand soleil · mer calme</source>
-        <target>Bright sun · calm sea</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoCondParis">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:136</note>
-      </notes>
-      <segment>
-        <source>Couvert · vent du nord</source>
-        <target>Overcast · north wind</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoFeatDesc">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:49,51</note>
-      </notes>
-      <segment>
-        <source> Données météo réalistes rendues vivantes : boussole de vent, arc solaire, indice UV, qualité de l&apos;air. Parallaxe et mode immersif ciel. </source>
-        <target> Realistic weather data brought to life: wind compass, solar arc, UV index, air quality. Parallax and immersive sky mode. </target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoFeatLink">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:70,71</note>
-      </notes>
-      <segment>
-        <source>Découvrir Météo</source>
-        <target>Discover Weather</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoFeatTitle">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:47,48</note>
-      </notes>
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoFeels">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:153,154</note>
-      </notes>
-      <segment>
-        <source>Ressenti</source>
-        <target>Feels like</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoHint">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:357,359</note>
-      </notes>
-      <segment>
-        <source>Changez de ville — tout réagit, sans login.</source>
-        <target>Switch cities — everything reacts, no login.</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoHumidity">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:158,159</note>
-      </notes>
-      <segment>
-        <source>Humidité</source>
-        <target>Humidity</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoLive">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:148,150</note>
-      </notes>
-      <segment>
-        <source>EN DIRECT · 14:20</source>
-        <target>LIVE · 14:20</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoSolarCap">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:319,321</note>
-      </notes>
-      <segment>
-        <source> Arc solaire </source>
-        <target> Solar arc </target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoSolarLabel">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:255,256</note>
-      </notes>
-      <segment>
-        <source>Arc solaire</source>
-        <target>Solar arc</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoStat1">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:59,60</note>
-      </notes>
-      <segment>
-        <source> indicateurs<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>temps réel </source>
-        <target> real-time<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>indicators </target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoStat2">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:65,66</note>
-      </notes>
-      <segment>
-        <source> villes<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>jouables </source>
-        <target> playable<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>cities </target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoUv">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:162,163</note>
-      </notes>
-      <segment>
-        <source>Indice UV</source>
-        <target>UV Index</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoWindCap">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:247,248</note>
-      </notes>
-      <segment>
-        <source>Vent</source>
-        <target>Wind</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoWindN">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:144</note>
-      </notes>
-      <segment>
-        <source>N</source>
-        <target>N</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoWindS">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:178</note>
-      </notes>
-      <segment>
-        <source>S</source>
-        <target>S</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoWindSE">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:161</note>
-      </notes>
-      <segment>
-        <source>SE</source>
-        <target>SE</target>
-      </segment>
-    </unit>
-    <unit id="atelierMeteoWindW">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.ts:127</note>
-      </notes>
-      <segment>
-        <source>O</source>
-        <target>W</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebFeatDesc">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:92,94</note>
-      </notes>
-      <segment>
-        <source> Suivi de consommation, dans une ambiance dark lounge ambrée : jauge de santé animée, calcul d&apos;alcoolémie, heatmap d&apos;activité, et un bot Telegram pour logger en 2 secondes. </source>
-        <target> Consumption tracking, in an amber dark-lounge ambience: animated health gauge, blood-alcohol calculation, activity heatmap, and a Telegram bot to log in 2 seconds. </target>
-      </segment>
-    </unit>
-    <unit id="atelierSebFeatLink">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:111,112</note>
-      </notes>
-      <segment>
-        <source>Découvrir Sebastian</source>
-        <target>Discover Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebFeatTitle">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:90,91</note>
-      </notes>
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebGaugeLabel">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:402,404</note>
-      </notes>
-      <segment>
-        <source>score santé</source>
-        <target>health score</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebHeatmapCap">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:437,439</note>
-      </notes>
-      <segment>
-        <source> Activité · 4 dernières semaines </source>
-        <target> Activity · last 4 weeks </target>
-      </segment>
-    </unit>
-    <unit id="atelierSebHint">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:455,457</note>
-      </notes>
-      <segment>
-        <source>Survolez la heatmap — chaque case est un jour.</source>
-        <target>Hover the heatmap — each cell is a day.</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebStat1">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:101,102</note>
-      </notes>
-      <segment>
-        <source>verres<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>suivis</source>
-        <target>drinks<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>tracked</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebStat2">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:106,107</note>
-      </notes>
-      <segment>
-        <source> pour logger<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>via Telegram </source>
-        <target> to log<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>via Telegram </target>
-      </segment>
-    </unit>
-    <unit id="atelierSebStatDrinks">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:422,424</note>
-      </notes>
-      <segment>
-        <source>verres / jour</source>
-        <target>drinks / day</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebStatHabits">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:409,410</note>
-      </notes>
-      <segment>
-        <source> habitudes du jour </source>
-        <target> habits today </target>
-      </segment>
-    </unit>
-    <unit id="atelierSebStatStreak">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:414,416</note>
-      </notes>
-      <segment>
-        <source>série en cours</source>
-        <target>current streak</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebStatVs">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:418,420</note>
-      </notes>
-      <segment>
-        <source>vs sem. dernière</source>
-        <target>vs last week</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebStreak">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:372,374</note>
-      </notes>
-      <segment>
-        <source>SÉRIE · 12 jours</source>
-        <target>STREAK · 12 days</target>
-      </segment>
-    </unit>
-    <unit id="atelierSebWeek">
-      <notes>
-        <note category="location">src/app/features/atelier/atelier.component.html:368,369</note>
-      </notes>
-      <segment>
-        <source> Semaine 23 · en forme </source>
-        <target> Week 23 · on track </target>
-      </segment>
-    </unit>
     <unit id="authAcceptTerms">
       <notes>
         <note category="location">src/app/features/auth/auth.component.html:399,402</note>
@@ -11235,37 +10323,6 @@
       <segment>
         <source>politique de confidentialité</source>
         <target>privacy policy</target>
-      </segment>
-    </unit>
-    <unit id="footerNavAtelier">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:80</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.atelier</note>
-      </notes>
-      <segment>
-        <source>L&apos;Atelier</source>
-        <target>The Workshop</target>
-      </segment>
-    </unit>
-    <unit id="navAtelierToggle">
-      <notes>
-        <note category="location">src/app/shared/components/navbar/navbar.component.html:143,145</note>
-        <note category="description">Atelier dropdown toggle</note>
-        <note category="meaning">navbar.atelier.toggle</note>
-      </notes>
-      <segment>
-        <source>Ouvrir le menu L&apos;Atelier</source>
-        <target>Open the Workshop menu</target>
-      </segment>
-    </unit>
-    <unit id="notFoundCtaAtelier">
-      <notes>
-        <note category="location">src/app/features/not-found/not-found.component.ts:65,67</note>
-      </notes>
-      <segment>
-        <source> Explorer l&apos;Atelier </source>
-        <target> Explore the Workshop </target>
       </segment>
     </unit>
     <unit id="notFoundHint">
@@ -11888,429 +10945,6 @@
         <target> Your progress and your favorite cities. </target>
       </segment>
     </unit>
-    <unit id="sebastianLandingDemoCta">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:338,340</note>
-      </notes>
-      <segment>
-        <source>Explorer les 5 écrans</source>
-        <target>Explore the 5 screens</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoDays">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:95,97</note>
-      </notes>
-      <segment>
-        <source>j</source>
-        <target>d</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoItem1">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:299,301</note>
-      </notes>
-      <segment>
-        <source>Simulateur d&apos;alcoolémie interactif</source>
-        <target>Interactive blood-alcohol simulator</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoItem2">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:315,317</note>
-      </notes>
-      <segment>
-        <source>Heatmap d&apos;activité sur 26 semaines</source>
-        <target>Activity heatmap over 26 weeks</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoItem3">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:331,333</note>
-      </notes>
-      <segment>
-        <source>Bot Telegram pour journaliser en un message</source>
-        <target>Telegram bot to log in one message</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoKicker">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:275,277</note>
-      </notes>
-      <segment>
-        <source>Cinq écrans, une progression</source>
-        <target>Five screens, one progression</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoLead">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:281,284</note>
-      </notes>
-      <segment>
-        <source> Dashboard, Rapports, Telegram, Historique, Objectifs : chaque écran raconte votre avancée. Une ambiance dark lounge ambrée, pensée pour donner envie d&apos;y revenir. </source>
-        <target> Dashboard, Reports, Telegram, History, Goals: each screen tells your progress. An amber dark-lounge ambience, designed to make you want to come back. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoStreak">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:92,94</note>
-      </notes>
-      <segment>
-        <source>SÉRIE ·</source>
-        <target>STREAK ·</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoSub">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:87,88</note>
-      </notes>
-      <segment>
-        <source> Cochez vos habitudes du jour </source>
-        <target> Check off your habits for the day </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoTitle">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:278,280</note>
-      </notes>
-      <segment>
-        <source> Tout le parcours, <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">gamifié</pc>. </source>
-        <target> The whole journey, <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">gamified</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDemoToday">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:81,82</note>
-      </notes>
-      <segment>
-        <source> Aujourd&apos;hui </source>
-        <target> Today </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingDisclaimer">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:387,389</note>
-      </notes>
-      <segment>
-        <source> Sebastian · données simulées pour la démo </source>
-        <target> Sebastian · data simulated for the demo </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeat1Desc">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:225,227</note>
-      </notes>
-      <segment>
-        <source> Un indice synthétique qui agrège hydratation, sommeil, modération et activité. Il monte avec vous. </source>
-        <target> A synthetic index that aggregates hydration, sleep, moderation and activity. It rises with you. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeat1Title">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:223,224</note>
-      </notes>
-      <segment>
-        <source>Score de santé vivant</source>
-        <target>Living health score</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeat2Desc">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:242,244</note>
-      </notes>
-      <segment>
-        <source> Loggez un verre en langage naturel — « j&apos;ai bu 3 bières » — et obtenez votre taux d&apos;alcoolémie en une commande, sans ouvrir l&apos;app. </source>
-        <target> Log a drink in natural language — "I had 3 beers" — and get your blood-alcohol level in one command, without opening the app. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeat2Title">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:240,241</note>
-      </notes>
-      <segment>
-        <source>Bot Telegram</source>
-        <target>Telegram bot</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeat3Desc">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:262,264</note>
-      </notes>
-      <segment>
-        <source> Heatmap d&apos;activité, évolution mensuelle, répartition. Export PDF prêt à partager avec un soignant. </source>
-        <target> Activity heatmap, monthly trend, breakdown. PDF export ready to share with a healthcare provider. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeat3Title">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:259,261</note>
-      </notes>
-      <segment>
-        <source> Rapports &amp; tendances </source>
-        <target> Reports &amp; trends </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeaturesKicker">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:193,195</note>
-      </notes>
-      <segment>
-        <source>La mécanique</source>
-        <target>The mechanics</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeaturesLead">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:199,202</note>
-      </notes>
-      <segment>
-        <source> Plutôt que culpabiliser, Sebastian rend le suivi simple et lisible. Chaque verre logué nourrit un score, alimente une série, affine le calcul d&apos;alcoolémie. La donnée informe au lieu de juger. </source>
-        <target> Rather than guilt-tripping, Sebastian makes tracking simple and readable. Each logged drink feeds a score, fuels a streak, refines the blood-alcohol calculation. The data informs instead of judging. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFeaturesTitle">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:196,198</note>
-      </notes>
-      <segment>
-        <source> Le suivi devient une <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">progression</pc>. </source>
-        <target> Tracking becomes a <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">progression</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFinalCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:411,413</note>
-      </notes>
-      <segment>
-        <source>Ouvrir Sebastian</source>
-        <target>Open Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFinalCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:417,420</note>
-      </notes>
-      <segment>
-        <source>Voir l&apos;autre expérience</source>
-        <target>See the other experience</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFinalKicker">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:399,401</note>
-      </notes>
-      <segment>
-        <source>Prêt à jouer ?</source>
-        <target>Ready to play?</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFinalLead">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:405,408</note>
-      </notes>
-      <segment>
-        <source> Accédez à Sebastian — dashboard, calcul d&apos;alcoolémie, rapports et bot Telegram, dans une ambiance qui donne envie de tenir. </source>
-        <target> Access Sebastian — dashboard, blood-alcohol calculation, reports and Telegram bot, in an ambience that makes you want to keep going. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingFinalTitle">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:402,404</note>
-      </notes>
-      <segment>
-        <source> Votre meilleure série<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">commence aujourd&apos;hui</pc>. </source>
-        <target> Your best streak<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">starts today</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingGaugeLabel">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:126,127</note>
-      </notes>
-      <segment>
-        <source> score santé </source>
-        <target> health score </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingGoal1">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:354,355</note>
-      </notes>
-      <segment>
-        <source>Sous 2 verres/jour</source>
-        <target>Under 2 drinks/day</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingGoal2">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:363,364</note>
-      </notes>
-      <segment>
-        <source>Série de 30 jours</source>
-        <target>30-day streak</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingGoal3">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:373,375</note>
-      </notes>
-      <segment>
-        <source>Score santé &gt; 85</source>
-        <target>Health score &gt; 85</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHabitActivity">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.ts:116</note>
-      </notes>
-      <segment>
-        <source>🏃 Activité</source>
-        <target>🏃 Activity</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHabitHydration">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.ts:101</note>
-      </notes>
-      <segment>
-        <source>💧 Hydratation</source>
-        <target>💧 Hydration</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHabitModeration">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.ts:111</note>
-      </notes>
-      <segment>
-        <source>🚫 Pas d&apos;excès</source>
-        <target>🚫 No excess</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHabitSleep">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.ts:106</note>
-      </notes>
-      <segment>
-        <source>🌙 Sommeil 7h+</source>
-        <target>🌙 Sleep 7h+</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHabitsLabel">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:133,134</note>
-      </notes>
-      <segment>
-        <source>Habitudes du jour</source>
-        <target>Habits today</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHeatLegend">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:161,163</note>
-      </notes>
-      <segment>
-        <source> 4 dernières semaines </source>
-        <target> last 4 weeks </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHeroCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:43,45</note>
-      </notes>
-      <segment>
-        <source>Accéder à Sebastian</source>
-        <target>Open Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHeroCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:49,52</note>
-      </notes>
-      <segment>
-        <source>Voir la démo</source>
-        <target>See the demo</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHeroKicker">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:24,26</note>
-      </notes>
-      <segment>
-        <source>L&apos;Atelier · Suivi gamifié</source>
-        <target>The Workshop · Gamified tracking</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHeroLead">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:35,38</note>
-      </notes>
-      <segment>
-        <source> Sebastian transforme le suivi de consommation (alcool/café) en geste simple : un score de santé qui monte, une série à tenir, un calcul d&apos;alcoolémie en direct — et un bot Telegram pour logger un verre en 2 secondes. Cochez vos habitudes ci-contre, le score réagit. </source>
-        <target> Sebastian turns consumption tracking (alcohol/coffee) into a simple gesture: a health score that rises, a streak to keep, a live blood-alcohol calculation — and a Telegram bot to log a drink in 2 seconds. Check off your habits opposite, the score reacts. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHeroTitle">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:27,29</note>
-      </notes>
-      <segment>
-        <source> Vos habitudes,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>en mode <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">jeu</pc>. </source>
-        <target> Your habits,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>in <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">game</pc> mode. </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingHint">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:179,181</note>
-      </notes>
-      <segment>
-        <source>Cochez/décochez une habitude — le score bouge en direct.</source>
-        <target>Check/uncheck a habit — the score moves live.</target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingPreviewFoot">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:383,385</note>
-      </notes>
-      <segment>
-        <source> + Rapports, Telegram &amp; Historique dans l&apos;app </source>
-        <target> + Reports, Telegram &amp; History in the app </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingPreviewHead">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:349,351</note>
-      </notes>
-      <segment>
-        <source> Objectifs en cours </source>
-        <target> Goals in progress </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingStat1">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:57,58</note>
-      </notes>
-      <segment>
-        <source> pour logger<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>via Telegram </source>
-        <target> to log<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>via Telegram </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingStat2">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:63,64</note>
-      </notes>
-      <segment>
-        <source> écrans<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>de suivi </source>
-        <target> tracking<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>screens </target>
-      </segment>
-    </unit>
-    <unit id="sebastianLandingStat3">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-presentation.component.html:69,70</note>
-      </notes>
-      <segment>
-        <source> habitudes<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>suivies </source>
-        <target> habits<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>tracked </target>
-      </segment>
-    </unit>
     <unit id="termsDroitBody1">
       <notes>
         <note category="location">src/app/features/terms/terms.component.html:149,152</note>
@@ -12697,519 +11331,6 @@
         <target>Services &amp; training</target>
       </segment>
     </unit>
-    <unit id="weatherLandingAir">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:104,105</note>
-      </notes>
-      <segment>
-        <source>Qualité air</source>
-        <target>Air quality</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingAqiGood">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:140</note>
-      </notes>
-      <segment>
-        <source>Bon</source>
-        <target>Good</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingAqiOk">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:157</note>
-      </notes>
-      <segment>
-        <source>Correct</source>
-        <target>Fair</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingCitiesLabel">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:265,266</note>
-      </notes>
-      <segment>
-        <source>Choisir une ville</source>
-        <target>Choose a city</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingCompassLabel">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:115,116</note>
-      </notes>
-      <segment>
-        <source>Boussole de vent</source>
-        <target>Wind compass</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingCondBordeaux">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:134</note>
-      </notes>
-      <segment>
-        <source>Ciel voilé · brise d&apos;ouest</source>
-        <target>Hazy sky · westerly breeze</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingCondLyon">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:185</note>
-      </notes>
-      <segment>
-        <source>Éclaircies · brise du sud</source>
-        <target>Sunny spells · southerly breeze</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingCondNice">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:168</note>
-      </notes>
-      <segment>
-        <source>Grand soleil · mer calme</source>
-        <target>Bright sun · calm sea</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingCondParis">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:151</note>
-      </notes>
-      <segment>
-        <source>Couvert · vent du nord</source>
-        <target>Overcast · north wind</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDemoCta">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:455,457</note>
-      </notes>
-      <segment>
-        <source>Ouvrir le tableau de bord complet</source>
-        <target>Open the full dashboard</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDemoItem1">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:416,418</note>
-      </notes>
-      <segment>
-        <source>Quatre villes, des données réalistes</source>
-        <target>Four cities, realistic data</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDemoItem2">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:432,434</note>
-      </notes>
-      <segment>
-        <source>Soleil draggable, boussole animée</source>
-        <target>Draggable sun, animated compass</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDemoItem3">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:448,450</note>
-      </notes>
-      <segment>
-        <source>Architecture multi-provider avec circuit breaker</source>
-        <target>Multi-provider architecture with circuit breaker</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDemoKicker">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:394,396</note>
-      </notes>
-      <segment>
-        <source>La preuve par l&apos;usage</source>
-        <target>Proof through use</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDemoLead">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:398,401</note>
-      </notes>
-      <segment>
-        <source> La démo en haut de page n&apos;est pas une image : c&apos;est l&apos;app réelle, en miniature. Changez de ville, faites glisser le soleil le long de son arc — chaque instrument se met à jour. </source>
-        <target> The demo at the top of the page is not an image: it&apos;s the real app, in miniature. Switch cities, drag the sun along its arc — every instrument updates. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDemoTitle">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:396,397</note>
-      </notes>
-      <segment>
-        <source>Touchez. Ça <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">répond</pc>.</source>
-        <target>Touch it. It <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">responds</pc>.</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingDisclaimer">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:507,510</note>
-      </notes>
-      <segment>
-        <source> Météo · données simulées pour la démo </source>
-        <target> Weather · data simulated for the demo </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeat1Desc">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:340,342</note>
-      </notes>
-      <segment>
-        <source> Direction et force d&apos;un seul regard. L&apos;aiguille s&apos;oriente, la lecture est instantanée. </source>
-        <target> Direction and strength at a glance. The needle turns, the reading is instant. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeat1Title">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:338,339</note>
-      </notes>
-      <segment>
-        <source>Boussole de vent</source>
-        <target>Wind compass</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeat2Desc">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:364,366</note>
-      </notes>
-      <segment>
-        <source> Lever, course, coucher. Le soleil suit sa trajectoire — et vous pouvez le faire glisser. </source>
-        <target> Sunrise, course, sunset. The sun follows its trajectory — and you can drag it. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeat2Title">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:362,363</note>
-      </notes>
-      <segment>
-        <source>Arc solaire</source>
-        <target>Solar arc</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeat3Desc">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:381,383</note>
-      </notes>
-      <segment>
-        <source> Indices clairs, code couleur honnête. On comprend le risque sans manuel. </source>
-        <target> Clear indices, honest color code. You understand the risk without a manual. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeat3Title">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:379,380</note>
-      </notes>
-      <segment>
-        <source>Qualité de l&apos;air &amp; UV</source>
-        <target>Air quality &amp; UV</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeaturesKicker">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:308,310</note>
-      </notes>
-      <segment>
-        <source>Ce qui la distingue</source>
-        <target>What sets it apart</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeaturesLead">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:314,317</note>
-      </notes>
-      <segment>
-        <source> On ne se contente pas d&apos;afficher des chiffres. On choisit la représentation qui rend l&apos;information immédiate — lisible d&apos;un coup d&apos;œil, agréable à explorer. </source>
-        <target> We don&apos;t just display numbers. We choose the representation that makes the information immediate — readable at a glance, pleasant to explore. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeaturesTitle">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:311,313</note>
-      </notes>
-      <segment>
-        <source> Chaque donnée a sa <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">forme juste</pc>. </source>
-        <target> Every piece of data has its <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">right shape</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFeels">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:91,92</note>
-      </notes>
-      <segment>
-        <source>Ressenti</source>
-        <target>Feels like</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFinalCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:530,531</note>
-      </notes>
-      <segment>
-        <source>Ouvrir l&apos;app Météo</source>
-        <target>Open the Weather app</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFinalCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:535,539</note>
-      </notes>
-      <segment>
-        <source>Voir l&apos;autre expérience</source>
-        <target>See the other experience</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFinalKicker">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:519,521</note>
-      </notes>
-      <segment>
-        <source>Prêt à explorer ?</source>
-        <target>Ready to explore?</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFinalLead">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:525,528</note>
-      </notes>
-      <segment>
-        <source> Ouvrez le tableau de bord complet — prévisions horaires, 7 jours, alertes et tous les instruments. </source>
-        <target> Open the full dashboard — hourly forecasts, 7 days, alerts and all the instruments. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingFinalTitle">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:522,524</note>
-      </notes>
-      <segment>
-        <source> Le ciel, à <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">portée de doigt</pc>. </source>
-        <target> The sky, at your <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">fingertips</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingHeroCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:44,46</note>
-      </notes>
-      <segment>
-        <source>Essayer l&apos;app complète</source>
-        <target>Try the full app</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingHeroCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:49,52</note>
-      </notes>
-      <segment>
-        <source>Voir la démo</source>
-        <target>See the demo</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingHeroKicker">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:26,28</note>
-      </notes>
-      <segment>
-        <source>L&apos;Atelier · Expérience météo</source>
-        <target>The Workshop · Weather experience</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingHeroLead">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:37,40</note>
-      </notes>
-      <segment>
-        <source> Pas un widget de plus. Une interface qui respire : boussole de vent, arc solaire, indice UV, qualité de l&apos;air — chaque donnée prend forme et réagit. Touchez-la ci-contre, sans rien installer. </source>
-        <target> Not just another widget. An interface that breathes: wind compass, solar arc, UV index, air quality — every piece of data takes shape and reacts. Touch it opposite, without installing anything. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingHeroTitle">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:29,32</note>
-      </notes>
-      <segment>
-        <source> La météo,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>rendue <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">vivante</pc>. </source>
-        <target> Weather,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>made <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">alive</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingHint">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:295,297</note>
-      </notes>
-      <segment>
-        <source>Changez de ville — tout réagit, sans login.</source>
-        <target>Switch cities — everything reacts, no login.</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingHumidity">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:96,97</note>
-      </notes>
-      <segment>
-        <source>Humidité</source>
-        <target>Humidity</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingLive">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:86,88</note>
-      </notes>
-      <segment>
-        <source>EN DIRECT · 14:20</source>
-        <target>LIVE · 14:20</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingPreviewDayFri">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:478,479</note>
-      </notes>
-      <segment>
-        <source>Ven</source>
-        <target>Fri</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingPreviewDaySat">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:486,487</note>
-      </notes>
-      <segment>
-        <source>Sam</source>
-        <target>Sat</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingPreviewDaySun">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:494,495</note>
-      </notes>
-      <segment>
-        <source>Dim</source>
-        <target>Sun</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingPreviewDayToday">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:470,471</note>
-      </notes>
-      <segment>
-        <source>Auj.</source>
-        <target>Today</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingPreviewFoot">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:503,505</note>
-      </notes>
-      <segment>
-        <source> + prévisions horaires dans l&apos;app </source>
-        <target> + hourly forecasts in the app </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingPreviewHead">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:466,468</note>
-      </notes>
-      <segment>
-        <source> Aperçu · 7 jours </source>
-        <target> Preview · 7 days </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingSolarCap">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:257,259</note>
-      </notes>
-      <segment>
-        <source> Arc solaire </source>
-        <target> Solar arc </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingSolarLabel">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:193,194</note>
-      </notes>
-      <segment>
-        <source>Arc solaire</source>
-        <target>Solar arc</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingStat1">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:56,57</note>
-      </notes>
-      <segment>
-        <source> indicateurs<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>temps réel </source>
-        <target> real-time<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>indicators </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingStat2">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:62,63</note>
-      </notes>
-      <segment>
-        <source> villes<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>jouables </source>
-        <target> playable<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>cities </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingStat3">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:68,69</note>
-      </notes>
-      <segment>
-        <source> inscription<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>requise </source>
-        <target> sign-up<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>required </target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingUv">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:100,101</note>
-      </notes>
-      <segment>
-        <source>Indice UV</source>
-        <target>UV Index</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingWindCap">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.html:185,186</note>
-      </notes>
-      <segment>
-        <source>Vent</source>
-        <target>Wind</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingWindN">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:159</note>
-      </notes>
-      <segment>
-        <source>N</source>
-        <target>N</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingWindS">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:193</note>
-      </notes>
-      <segment>
-        <source>S</source>
-        <target>S</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingWindSE">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:176</note>
-      </notes>
-      <segment>
-        <source>SE</source>
-        <target>SE</target>
-      </segment>
-    </unit>
-    <unit id="weatherLandingWindW">
-      <notes>
-        <note category="location">src/app/features/weather/weather-presentation.component.ts:142</note>
-      </notes>
-      <segment>
-        <source>O</source>
-        <target>W</target>
-      </segment>
-    </unit>
     <unit id="projetsProject12Tag1">
       <notes>
         <note category="location">src/app/features/projets/projets.component.ts:175</note>
@@ -13309,51 +11430,6 @@
         <target>screenshot — Geev AI Assistant</target>
       </segment>
     </unit>
-    <unit id="projetsProject14Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:198</note>
-      </notes>
-      <segment>
-        <source>Projet académique</source>
-        <target>Academic project</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject14Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:199</note>
-      </notes>
-      <segment>
-        <source>Modélisation prédictive</source>
-        <target>Predictive modeling</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject14Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:201</note>
-      </notes>
-      <segment>
-        <source>Modélisation prédictive de risques sanitaires</source>
-        <target>Predictive modeling of health risks</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject14Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:202</note>
-      </notes>
-      <segment>
-        <source>Modélisation et analyse de données visant à anticiper l'apparition de risques sanitaires à partir de données épidémiologiques.</source>
-        <target>Data modeling and analysis aimed at anticipating emerging health risks from epidemiological data.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject14ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:204</note>
-      </notes>
-      <segment>
-        <source>capture — Modélisation prédictive de risques sanitaires</source>
-        <target>screenshot — Predictive modeling of health risks</target>
-      </segment>
-    </unit>
     <unit id="385129033471599880">
       <notes>
         <note category="location">src/app/features/auth/auth.component.html:208</note>
@@ -13403,51 +11479,6 @@
     <target>Audit</target>
   </segment>
 </unit>
-    <unit id="projetsProject15Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:153</note>
-      </notes>
-      <segment>
-        <source>Vinification</source>
-        <target>Winemaking</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject15Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:154</note>
-      </notes>
-      <segment>
-        <source>Poste &amp; mobile</source>
-        <target>Desktop &amp; mobile</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject15Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:156</note>
-      </notes>
-      <segment>
-        <source>Gestion de chais — la vinification au quotidien</source>
-        <target>Cellar management — winemaking day to day</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject15Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:157</note>
-      </notes>
-      <segment>
-        <source>Le même outil, côté terrain : les opérations de vinification se saisissent aussi bien au poste que sur mobile, pour que la traçabilité se remplisse là où le travail se fait.</source>
-        <target>The same tool, out in the field: winemaking operations can be logged from a desktop or a phone, so traceability fills in where the work actually happens.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject15ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:159</note>
-      </notes>
-      <segment>
-        <source>capture — Gestion de chais, vinification sur poste et mobile</source>
-        <target>screenshot — Cellar management, winemaking on desktop and mobile</target>
-      </segment>
-    </unit>
     <unit id="homeProjectMorningBriefTag1">
       <segment>
         <source>En production</source>
@@ -13526,16 +11557,6 @@
     <unit id="navLinkArticles">
       <segment><source>Articles</source><target>Articles</target></segment>
     </unit>
-    <unit id="coursChargement">
-      <notes>
-        <note category="location">src/app/features/cours/cours-host.component.ts:37,40</note>
-        <note category="meaning">cours.chargement</note>
-      </notes>
-      <segment>
-        <source> Chargement du cours… </source>
-        <target> Loading the course… </target>
-      </segment>
-    </unit>
     <unit id="coursPrenom">
       <notes>
         <note category="location">src/app/features/cours/cours-host.component.ts:42,43</note>
@@ -13569,56 +11590,6 @@
         <target>Email address</target>
       </segment>
     </unit>
-    <unit id="coursDemoRejoindre">
-      <notes>
-        <note category="location">src/app/features/cours/cours-host.component.ts:48,50</note>
-        <note category="meaning">cours.demoRejoindre</note>
-      </notes>
-      <segment>
-        <source>Rejoindre</source>
-        <target>Join</target>
-      </segment>
-    </unit>
-    <unit id="coursIdentiteRefus">
-      <notes>
-        <note category="location">src/app/features/cours/cours-host.component.ts:55,59</note>
-        <note category="meaning">cours.identiteRefus</note>
-      </notes>
-      <segment>
-        <source> Vos informations n&apos;ont pas pu être prises en compte : vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez. </source>
-        <target> Your information could not be accepted: check your first name, last name and email address, then try again. </target>
-      </segment>
-    </unit>
-    <unit id="coursSansMemoire">
-      <notes>
-        <note category="location">src/app/features/cours/cours-host.component.ts:68,72</note>
-        <note category="meaning">cours.sansMemoire</note>
-      </notes>
-      <segment>
-        <source> Ce poste ne peut rien mémoriser : le cours continue normalement, mais si vous rechargez la page ou fermez l&apos;onglet, vous devrez vous réinscrire et repartir du début. Signalez-le à votre formateur. </source>
-        <target> This device cannot remember anything: the course continues normally, but if you reload the page or close the tab, you will have to register again and start over. Tell your teacher. </target>
-      </segment>
-    </unit>
-    <unit id="coursGalerie">
-      <notes>
-        <note category="location">src/app/features/cours/cours-host.component.ts:75,76</note>
-        <note category="meaning">cours.galerie</note>
-      </notes>
-      <segment>
-        <source>Les briques du catalogue</source>
-        <target>Catalog building blocks</target>
-      </segment>
-    </unit>
-    <unit id="coursErreur">
-      <notes>
-        <note category="location">src/app/features/cours/cours-host.component.ts:81,86</note>
-        <note category="meaning">cours.erreur</note>
-      </notes>
-      <segment>
-        <source> Ce cours n&apos;a pas pu être chargé. Rechargez la page ; si le problème persiste, prévenez votre formateur. </source>
-        <target> This course could not be loaded. Reload the page; if the problem persists, tell your teacher. </target>
-      </segment>
-    </unit>
     <unit id="coursEcranInconnu">
       <notes>
         <note category="location">src/app/features/cours/ecran/cours-ecran.component.ts:143,147</note>
@@ -13631,12 +11602,12 @@
     </unit>
     <unit id="coursEcranEchec">
       <notes>
-        <note category="location">src/app/features/cours/ecran/cours-ecran.component.ts:148,154</note>
+        <note category="location">src/app/shared/slides/session/slide-activity.component.ts:105,110</note>
         <note category="meaning">cours.ecranEchec</note>
       </notes>
       <segment>
-        <source> Les activités de cet écran n’ont pas pu être chargées. Rechargez la page ; si le problème persiste, prévenez votre formateur. </source>
-        <target> The activities on this screen could not be loaded. Reload the page; if the problem persists, tell your teacher. </target>
+        <source> Les activités de cet écran n’ont pas pu être chargées. </source>
+        <target> The activities on this screen could not be loaded. </target>
       </segment>
     </unit>
     <unit id="coursFluxRefuse">
@@ -13741,12 +11712,12 @@
     </unit>
     <unit id="coursRejoindre">
       <notes>
-        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:218,220</note>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:389,390</note>
         <note category="meaning">cours.rejoindre</note>
       </notes>
       <segment>
-        <source> Rejoindre </source>
-        <target> Join </target>
+        <source> Entrer dans la séance <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span aria-hidden=&quot;true&quot;&gt;" dispEnd="&lt;/span&gt;">→</pc></source>
+        <target> Enter the session <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span aria-hidden=&quot;true&quot;&gt;" dispEnd="&lt;/span&gt;">→</pc></target>
       </segment>
     </unit>
     <unit id="presentateurOuvrir">
@@ -13910,12 +11881,12 @@
     </unit>
     <unit id="presentateurScene">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:274,277</note>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:455,457</note>
         <note category="meaning">presentateur.scene</note>
       </notes>
       <segment>
-        <source> Ouvrir la scène </source>
-        <target> Open the scene </target>
+        <source> Ouvrir la projection </source>
+        <target> Open the projection </target>
       </segment>
     </unit>
     <unit id="presentateurNotes">
@@ -14070,22 +12041,22 @@
     </unit>
     <unit id="sceneChargement">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:65,68</note>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:166,169</note>
         <note category="meaning">scene.chargement</note>
       </notes>
       <segment>
-        <source> Préparation de la scène… </source>
-        <target> Preparing the scene… </target>
+        <source> Préparation de la projection… </source>
+        <target> Preparing the projection… </target>
       </segment>
     </unit>
     <unit id="sceneEchec">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:75,79</note>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:176,180</note>
         <note category="meaning">scene.echec</note>
       </notes>
       <segment>
-        <source> La scène n&apos;a pas pu être affichée. </source>
-        <target> The scene could not be displayed. </target>
+        <source> La projection n&apos;a pas pu être affichée. </source>
+        <target> The projection could not be displayed. </target>
       </segment>
     </unit>
     <unit id="sceneTerminee">
@@ -14636,6 +12607,874 @@
     <unit id="syntheseKicker">
       <notes><note category="meaning">synthese.kicker</note></notes>
       <segment><source>Après la séance</source><target>After the session</target></segment>
+    </unit>
+    <unit id="coursRattachement">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:183,187</note>
+        <note category="meaning">cours.rattachement</note>
+      </notes>
+      <segment>
+        <source>Connexion à la séance…</source>
+        <target>Connecting to the session…</target>
+      </segment>
+    </unit>
+    <unit id="panneauPedagogiqueEcran">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-pedagogique.component.ts:101,103</note>
+      </notes>
+      <segment>
+        <source> Écran <ph id="0" equiv="INTERPOLATION" disp="{{ ecran().id }}"/> </source>
+        <target> Screen <ph id="0" equiv="INTERPOLATION" disp="{{ ecran().id }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="panneauPedagogiqueExporter">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-pedagogique.component.ts:111,114</note>
+      </notes>
+      <segment>
+        <source> Exporter le bilan </source>
+        <target> Export the session report </target>
+      </segment>
+    </unit>
+    <unit id="panneauPedagogiqueExportEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-pedagogique.component.ts:121,124</note>
+      </notes>
+      <segment>
+        <source> Le bilan n’a pas pu être exporté. Réessayez. </source>
+        <target> The session report could not be exported. Try again. </target>
+      </segment>
+    </unit>
+    <unit id="panneauPedagogiqueLectureEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-pedagogique.component.ts:131,135</note>
+      </notes>
+      <segment>
+        <source> Les notes, groupes et réponses de la séance n’ont pas pu être relus : l’affichage peut être en retard. </source>
+        <target> The session notes, groups and answers could not be reloaded: the display may be out of date. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurMasquerCorrection">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:148,151</note>
+        <note category="meaning">presentateur.masquerCorrection</note>
+      </notes>
+      <segment>
+        <source>Masquer la correction</source>
+        <target>Hide the correct answer</target>
+      </segment>
+    </unit>
+    <unit id="presentateurRevelerCorrection">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-panneau-question.component.ts:152,156</note>
+        <note category="meaning">presentateur.revelerCorrection</note>
+      </notes>
+      <segment>
+        <source>Révéler la correction</source>
+        <target>Reveal the correct answer</target>
+      </segment>
+    </unit>
+    <unit id="presentateurStatMoyenne">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:279,280</note>
+      </notes>
+      <segment>
+        <source>Moyenne</source>
+        <target>Average</target>
+      </segment>
+    </unit>
+    <unit id="presentateurStatMediane">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:283,284</note>
+      </notes>
+      <segment>
+        <source>Médiane</source>
+        <target>Median</target>
+      </segment>
+    </unit>
+    <unit id="presentateurStatDispersion">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:287,288</note>
+      </notes>
+      <segment>
+        <source>Dispersion (écart-type)</source>
+        <target>Spread (standard deviation)</target>
+      </segment>
+    </unit>
+    <unit id="presentateurStatParticipation">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:291,292</note>
+      </notes>
+      <segment>
+        <source>Participation</source>
+        <target>Participation</target>
+      </segment>
+    </unit>
+    <unit id="presentateurStatReussite">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:295,296</note>
+      </notes>
+      <segment>
+        <source>Réussite</source>
+        <target>Success rate</target>
+      </segment>
+    </unit>
+    <unit id="presentateurStatProblemes">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:299,301</note>
+      </notes>
+      <segment>
+        <source>Questions problématiques</source>
+        <target>Problem questions</target>
+      </segment>
+    </unit>
+    <unit id="presentateurStatAucunProbleme">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:304,306</note>
+      </notes>
+      <segment>
+        <source>Aucune</source>
+        <target>None</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:324,326</note>
+      </notes>
+      <segment>
+        <source> La règle de notation n’a pas pu être lue. </source>
+        <target> The grading rule could not be read. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurPleinEcran">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:465,468</note>
+        <note category="meaning">presentateur.pleinEcran</note>
+      </notes>
+      <segment>
+        <source> Projection plein écran </source>
+        <target> Full-screen projection </target>
+      </segment>
+    </unit>
+    <unit id="presentateurEcranSuivantSynthese">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:687</note>
+      </notes>
+      <segment>
+        <source>la synthèse de la séance</source>
+        <target>the session summary</target>
+      </segment>
+    </unit>
+    <unit id="presentateurEcranSuivantRang">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:690</note>
+      </notes>
+      <segment>
+        <source>l’écran <ph id="0" equiv="rang" disp="rang"/></source>
+        <target>screen <ph id="0" equiv="rang" disp="rang"/></target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:60,62</note>
+      </notes>
+      <segment>
+        <source> Annotation du formateur </source>
+        <target> Teacher annotation </target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationGroupe">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:62,64</note>
+      </notes>
+      <segment>
+        <source>Groupe suivi</source>
+        <target>Tracked group</target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationClasseEntiere">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:73,75</note>
+      </notes>
+      <segment>
+        <source> Classe entière </source>
+        <target> Whole class </target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationNote">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:81,83</note>
+      </notes>
+      <segment>
+        <source>Note du formateur</source>
+        <target>Teacher note</target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationIndice">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:86,87</note>
+      </notes>
+      <segment>
+        <source>Observation, étudiant à relancer, exemple à reprendre…</source>
+        <target>Observation, student to follow up, example to revisit…</target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationEnCours">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:98,100</note>
+      </notes>
+      <segment>
+        <source>Enregistrement en cours…</source>
+        <target>Saving…</target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationEnregistre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:101,103</note>
+      </notes>
+      <segment>
+        <source>Note enregistrée sur le serveur.</source>
+        <target>Note saved on the server.</target>
+      </segment>
+    </unit>
+    <unit id="panneauAnnotationEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:105,108</note>
+      </notes>
+      <segment>
+        <source>La note n’a pas pu être enregistrée : elle reste affichée ici, reprenez la saisie pour réessayer.</source>
+        <target>The note could not be saved: it stays displayed here, edit it again to retry.</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesNomDejaPris">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:20</note>
+      </notes>
+      <segment>
+        <source>Ce nom de groupe est déjà pris dans la séance.</source>
+        <target>This group name is already used in the session.</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesIntrouvable">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:21</note>
+      </notes>
+      <segment>
+        <source>Ce groupe ou ce participant n’existe plus : la liste a été relue.</source>
+        <target>This group or participant no longer exists: the list has been reloaded.</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:22</note>
+      </notes>
+      <segment>
+        <source>La modification des groupes n’a pas abouti. Réessayez.</source>
+        <target>The group change did not go through. Try again.</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:38,40</note>
+      </notes>
+      <segment>
+        <source> Groupes de suivi </source>
+        <target> Tracking groups </target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesVide">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:42,44</note>
+      </notes>
+      <segment>
+        <source> Aucun groupe créé pour cette séance. </source>
+        <target> No group has been created for this session. </target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesNouveauLibelle">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:62,63</note>
+      </notes>
+      <segment>
+        <source>Nouveau groupe</source>
+        <target>New group</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesNouveauIndice">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:64,65</note>
+      </notes>
+      <segment>
+        <source>Nouveau groupe</source>
+        <target>New group</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesCreer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:68,70</note>
+      </notes>
+      <segment>
+        <source>Créer</source>
+        <target>Create</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesParticipants">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:75,76</note>
+      </notes>
+      <segment>
+        <source>Participants</source>
+        <target>Participants</target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesParticipantsVide">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:78,81</note>
+      </notes>
+      <segment>
+        <source> Aucun participant n’a encore rejoint la séance. </source>
+        <target> No participant has joined the session yet. </target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesSansGroupe">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:101,102</note>
+      </notes>
+      <segment>
+        <source> Sans groupe </source>
+        <target> No group </target>
+      </segment>
+    </unit>
+    <unit id="panneauGroupesNomDuGroupe">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:125</note>
+      </notes>
+      <segment>
+        <source>Nom du groupe</source>
+        <target>Group name</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideADire">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:22</note>
+      </notes>
+      <segment>
+        <source>À dire</source>
+        <target>To say</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideQuestion">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:23</note>
+      </notes>
+      <segment>
+        <source>Question à poser</source>
+        <target>Question to ask</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideReponse">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:24</note>
+      </notes>
+      <segment>
+        <source>Réponse attendue</source>
+        <target>Expected answer</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideCalcul">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:25</note>
+      </notes>
+      <segment>
+        <source>Calcul</source>
+        <target>Calculation</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideRelance">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:26</note>
+      </notes>
+      <segment>
+        <source>Relance</source>
+        <target>Follow-up prompt</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideTransition">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>Transition</source>
+        <target>Transition</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:42,44</note>
+      </notes>
+      <segment>
+        <source> Guide de facilitation </source>
+        <target> Facilitation guide </target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideVide">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:46,49</note>
+      </notes>
+      <segment>
+        <source> Aucun guide de facilitation n’est fourni pour cet écran. </source>
+        <target> No facilitation guide is provided for this screen. </target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideMasquer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:70,71</note>
+      </notes>
+      <segment>
+        <source>Masquer la réponse attendue</source>
+        <target>Hide the expected answer</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideReveler">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:72,74</note>
+      </notes>
+      <segment>
+        <source>Révéler la réponse attendue</source>
+        <target>Reveal the expected answer</target>
+      </segment>
+    </unit>
+    <unit id="panneauGuideTransitionParDefaut">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:102</note>
+      </notes>
+      <segment>
+        <source>Enchaîner sur « <ph id="0" equiv="ecranSuivant" disp="this.ecranSuivant()"/> ».</source>
+        <target>Move on to “<ph id="0" equiv="ecranSuivant" disp="this.ecranSuivant()"/>”.</target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureConfianceAucune">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:16</note>
+      </notes>
+      <segment>
+        <source>Aucune donnée</source>
+        <target>No data</target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureConfianceAConfirmer">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:17</note>
+      </notes>
+      <segment>
+        <source>À confirmer</source>
+        <target>To be confirmed</target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureConfianceSolide">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:18</note>
+      </notes>
+      <segment>
+        <source>Solide</source>
+        <target>Solid</target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:49,51</note>
+      </notes>
+      <segment>
+        <source> Lecture de la classe </source>
+        <target> Class overview </target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureTaux">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:53,54</note>
+      </notes>
+      <segment>
+        <source>Taux de réussite</source>
+        <target>Success rate</target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureReponses">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:59,60</note>
+      </notes>
+      <segment>
+        <source>Réponses</source>
+        <target>Answers</target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureConfiance">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:65,66</note>
+      </notes>
+      <segment>
+        <source>Confiance du diagnostic</source>
+        <target>Diagnostic confidence</target>
+      </segment>
+    </unit>
+    <unit id="panneauReponsesLibresTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-reponses-libres.component.ts:16,18</note>
+      </notes>
+      <segment>
+        <source> Réponses libres étudiantes </source>
+        <target> Students’ free answers </target>
+      </segment>
+    </unit>
+    <unit id="panneauReponsesLibresVide">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-reponses-libres.component.ts:24,27</note>
+      </notes>
+      <segment>
+        <source> Aucune réponse reçue sur cet écran. </source>
+        <target> No answer received on this screen. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationNeSaitPasCompte">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:9</note>
+      </notes>
+      <segment>
+        <source>« je ne sais pas » compte comme une réponse</source>
+        <target>“I don’t know” counts as an answer</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationNeSaitPasNeComptePas">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:10</note>
+      </notes>
+      <segment>
+        <source>« je ne sais pas » ne compte pas comme une réponse</source>
+        <target>“I don’t know” does not count as an answer</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationLibresNotees">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:12</note>
+      </notes>
+      <segment>
+        <source>les réponses libres sont notées</source>
+        <target>free answers are graded</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationLibresNonNotees">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:13</note>
+      </notes>
+      <segment>
+        <source>les réponses libres ne sont pas notées</source>
+        <target>free answers are not graded</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotation">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:14</note>
+      </notes>
+      <segment>
+        <source>Note /<ph id="0" equiv="noteMax" disp="regle.noteMax"/> de participation relative à la cohorte : la participation de chacun est rapportée à celle des <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/> les plus actifs, et sous <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> de cette référence l’étudiant est signalé sous le seuil ; <ph id="3" equiv="neSaitPas" disp="neSaitPas"/>, une non-réponse vaut <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point, <ph id="5" equiv="libres" disp="libres"/> ; une question est jugée problématique sous <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> de réussite.</source>
+        <target>Participation grade out of <ph id="0" equiv="noteMax" disp="regle.noteMax"/>, relative to the cohort: each student’s participation is compared with that of the most active <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/>, and a student below <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> of that reference is flagged as under the threshold; <ph id="3" equiv="neSaitPas" disp="neSaitPas"/>, a non-answer is worth <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point, <ph id="5" equiv="libres" disp="libres"/>; a question is considered problematic below <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> success.</target>
+      </segment>
+    </unit>
+    <unit id="b2CoursSeanceInvite">
+      <notes>
+        <note category="location">src/app/features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component.html:3,5</note>
+      </notes>
+      <segment>
+        <source> Vous suivez ce cours avec un formateur ? Entrez le code de votre séance pour répondre en direct. </source>
+        <target> Taking this course with a teacher? Enter your session code to answer live. </target>
+      </segment>
+    </unit>
+    <unit id="b2CoursRejoindreSeance">
+      <notes>
+        <note category="location">src/app/features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component.html:6,7</note>
+      </notes>
+      <segment>
+        <source>Rejoindre une séance</source>
+        <target>Join a session</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2.badge">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:26</note>
+      </notes>
+      <segment>
+        <source>BTS CG · Cours interactif · 72 écrans</source>
+        <target>BTS CG · Interactive course · 72 screens</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2.title">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:27</note>
+      </notes>
+      <segment>
+        <source>B2-01 — Lire et contrôler l’information chiffrée</source>
+        <target>B2-01 — Reading and checking numerical information</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2.description">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:28</note>
+      </notes>
+      <segment>
+        <source>72 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À parcourir librement, ou à suivre en séance accompagnée avec le code donné par votre formateur.</source>
+        <target>72 screens to read, check and explain numerical information: proportions, percentages, changes over time. Browse them freely, or follow them in a guided session with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2.duration">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
+      </notes>
+      <segment>
+        <source>3 h 30 · 72 écrans</source>
+        <target>3 h 30 min · 72 screens</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2.format">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:36</note>
+      </notes>
+      <segment>
+        <source>Slides + séance accompagnée</source>
+        <target>Slides + guided session</target>
+      </segment>
+    </unit>
+    <unit id="slideQuizReponsesRecues">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html:17,18</note>
+      </notes>
+      <segment>
+        <source>Réponses reçues</source>
+        <target>Answers received</target>
+      </segment>
+    </unit>
+    <unit id="slideQuizApercu">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html:37,40</note>
+      </notes>
+      <segment>
+        <source> Aperçu : aucune séance n’est ouverte. Votre choix n’est pas envoyé et le résultat n’est donné qu’en séance. </source>
+        <target> Preview: no session is open. Your choice is not sent and the result is only given during a session. </target>
+      </segment>
+    </unit>
+    <unit id="slideQuizPourProgresser">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html:67,68</note>
+      </notes>
+      <segment>
+        <source>Pour progresser :</source>
+        <target>To improve:</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionProjection">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:16,19</note>
+      </notes>
+      <segment>
+        <source> Chaque étudiant répond sur son appareil. </source>
+        <target> Each student answers on their own device. </target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionApercu">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:31,34</note>
+      </notes>
+      <segment>
+        <source> Aperçu : aucune séance n’est ouverte. Cette réflexion reste sur cet écran, elle n’est ni envoyée ni conservée. </source>
+        <target> Preview: no session is open. This reflection stays on this screen; it is neither sent nor kept. </target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionEnvoi">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:54,56</note>
+      </notes>
+      <segment>
+        <source>Envoi de la réflexion…</source>
+        <target>Sending your reflection…</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionAttenteReseau">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:61,64</note>
+      </notes>
+      <segment>
+        <source>En attente de réseau : la réflexion est gardée sur cet appareil et partira au retour de la connexion.</source>
+        <target>Waiting for the network: your reflection is kept on this device and will be sent once the connection is back.</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionSeanceNonDemarree">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:67,70</note>
+      </notes>
+      <segment>
+        <source>La séance n’a pas encore démarré : cette réflexion n’a pas été enregistrée.</source>
+        <target>The session has not started yet: this reflection was not saved.</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionSeanceTerminee">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:72,75</note>
+      </notes>
+      <segment>
+        <source>La séance est terminée : cette réflexion n’a pas été enregistrée.</source>
+        <target>The session has ended: this reflection was not saved.</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionRelire">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:85,86</note>
+      </notes>
+      <segment>
+        <source>Relire le raisonnement attendu</source>
+        <target>Review the expected reasoning</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionPourProgresser">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:91,93</note>
+      </notes>
+      <segment>
+        <source>Pour progresser :</source>
+        <target>To improve:</target>
+      </segment>
+    </unit>
+    <unit id="slideChartLecture">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.html:111,112</note>
+      </notes>
+      <segment>
+        <source>Lecture professionnelle</source>
+        <target>Professional reading</target>
+      </segment>
+    </unit>
+    <unit id="slideChartVoirDonnees">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.html:116,117</note>
+      </notes>
+      <segment>
+        <source>Voir les données</source>
+        <target>View the data</target>
+      </segment>
+    </unit>
+    <unit id="slideChartSource">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.html:140,142</note>
+      </notes>
+      <segment>
+        <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
+        <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
+      </segment>
+    </unit>
+    <unit id="slideChartLegende">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.html:144</note>
+      </notes>
+      <segment>
+        <source>Légende</source>
+        <target>Legend</target>
+      </segment>
+    </unit>
+    <unit id="slideChartPeriode">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.ts:41</note>
+      </notes>
+      <segment>
+        <source>Période</source>
+        <target>Period</target>
+      </segment>
+    </unit>
+    <unit id="slideGridRevenir">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-grid/slide-grid.component.ts:34</note>
+      </notes>
+      <segment>
+        <source>Revenir à <ph id="0" equiv="titre" disp="title"/></source>
+        <target>Back to <ph id="0" equiv="titre" disp="title"/></target>
+      </segment>
+    </unit>
+    <unit id="slideGridAfficherDetail">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-grid/slide-grid.component.ts:35</note>
+      </notes>
+      <segment>
+        <source>Afficher le détail de <ph id="0" equiv="titre" disp="title"/></source>
+        <target>Show the details of <ph id="0" equiv="titre" disp="title"/></target>
+      </segment>
+    </unit>
+    <unit id="slideGuideARetenir">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-guide/slide-guide.component.html:33,34</note>
+      </notes>
+      <segment>
+        <source>À retenir</source>
+        <target>Key takeaway</target>
+      </segment>
+    </unit>
+    <unit id="slideGuideGesteProfessionnel">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-guide/slide-guide.component.html:37,39</note>
+      </notes>
+      <segment>
+        <source>Geste professionnel</source>
+        <target>Professional practice</target>
+      </segment>
+    </unit>
+    <unit id="slideMethodPathEtapes">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-method-path/slide-method-path.component.html:18,19</note>
+      </notes>
+      <segment>
+        <source>Étapes de la méthode</source>
+        <target>Method steps</target>
+      </segment>
+    </unit>
+    <unit id="slideMethodPathProgression">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-method-path/slide-method-path.component.html:42,44</note>
+      </notes>
+      <segment>
+        <source> Étape <ph id="0" equiv="INTERPOLATION" disp="{{ currentIndex() + 1 }}"/> sur <ph id="1" equiv="INTERPOLATION_1" disp="{{ steps().length }}"/> </source>
+        <target> Step <ph id="0" equiv="INTERPOLATION" disp="{{ currentIndex() + 1 }}"/> of <ph id="1" equiv="INTERPOLATION_1" disp="{{ steps().length }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="slideMethodPathAVerifier">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-method-path/slide-method-path.component.html:48,49</note>
+      </notes>
+      <segment>
+        <source>À vérifier</source>
+        <target>To check</target>
+      </segment>
+    </unit>
+    <unit id="slideMethodPathARetenir">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-method-path/slide-method-path.component.html:52,53</note>
+      </notes>
+      <segment>
+        <source>À retenir</source>
+        <target>Key takeaway</target>
+      </segment>
+    </unit>
+    <unit id="slideMethodPathEtape">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-method-path/slide-method-path.component.ts:59</note>
+      </notes>
+      <segment>
+        <source>Étape <ph id="0" equiv="numero" disp="index + 1"/> : <ph id="1" equiv="titre" disp="titre"/></source>
+        <target>Step <ph id="0" equiv="numero" disp="index + 1"/>: <ph id="1" equiv="titre" disp="titre"/></target>
+      </segment>
+    </unit>
+    <unit id="slideVisualEcranInconnu">
+      <notes>
+        <note category="location">src/app/shared/slides/visual/slide-visual.component.ts:82,86</note>
+      </notes>
+      <segment>
+        <source> Cet écran ne peut pas être affiché : son contenu n’est pas reconnu. </source>
+        <target> This screen cannot be displayed: its content is not recognized. </target>
+      </segment>
     </unit>
   </file>
 </xliff>

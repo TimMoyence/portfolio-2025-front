@@ -107,16 +107,18 @@
   }
 
   @if (reading()) {
-    <p class="slide-chart__reading"><strong>Lecture professionnelle</strong>{{ reading() }}</p>
+    <p class="slide-chart__reading">
+      <strong i18n="@@slideChartLecture">Lecture professionnelle</strong>{{ reading() }}
+    </p>
   }
 
   <details class="slide-chart__data">
-    <summary>Voir les données</summary>
+    <summary i18n="@@slideChartVoirDonnees">Voir les données</summary>
     <div class="slide-chart__table-wrap">
       <table>
         <thead>
           <tr>
-            <th scope="col">{{ caption() || 'Période' }}</th>
+            <th scope="col">{{ caption() || libellePeriode }}</th>
             @for (label of labels(); track label) {
               <th scope="col">{{ label }}</th>
             }
@@ -135,11 +137,11 @@
       </table>
     </div>
     @if (source()) {
-      <p class="slide-chart__source">Source : {{ source() }}</p>
+      <p class="slide-chart__source" i18n="@@slideChartSource">Source : {{ source() }}</p>
     }
   </details>
 
-  <ul class="slide-chart__legend" aria-label="Légende">
+  <ul class="slide-chart__legend" aria-label="Légende" i18n-aria-label="@@slideChartLegende">
     @for (serie of series(); track serie.label) {
       <li [class]="'tone-' + (serie.tone ?? 'teal')">
         <span aria-hidden="true"></span>{{ serie.label }}

@@ -82,12 +82,15 @@
     }
     @if (r.expected || r.nextAction) {
       <details class="slide-reflection__debrief">
-        <summary>Relire le raisonnement attendu</summary>
+        <summary i18n="@@slideReflectionRelire">Relire le raisonnement attendu</summary>
         @if (r.expected) {
           <p>{{ r.expected }}</p>
         }
         @if (r.nextAction) {
-          <p><strong>Pour progresser :</strong> {{ r.nextAction }}</p>
+          <p>
+            <strong i18n="@@slideReflectionPourProgresser">Pour progresser :</strong>
+            {{ r.nextAction }}
+          </p>
         }
       </details>
     }

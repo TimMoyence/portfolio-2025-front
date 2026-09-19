@@ -38,6 +38,7 @@ export class SlideChartComponent {
   readonly axisLabels = input<readonly [string, string]>(['A', 'B']);
   readonly reading = input<string>('');
 
+  protected readonly libellePeriode = $localize`:@@slideChartPeriode:Période`;
   protected readonly step = signal(-1);
   private readonly hasPlayed = signal(false);
 

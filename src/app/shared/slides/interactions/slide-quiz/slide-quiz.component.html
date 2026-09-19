@@ -63,7 +63,9 @@
           <p class="slide-quiz__explanation">{{ q.explanation }}</p>
         }
         @if (q.nextAction) {
-          <p class="slide-quiz__next"><strong>Pour progresser :</strong> {{ q.nextAction }}</p>
+          <p class="slide-quiz__next">
+            <strong i18n="@@slideQuizPourProgresser">Pour progresser :</strong> {{ q.nextAction }}
+          </p>
         }
       }
     }

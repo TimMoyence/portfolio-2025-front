@@ -86,12 +86,22 @@ function lireReponse(detail: unknown): ReponseSlide | null {
       />
     }
     @if (unknown()) {
-      <p class="slide-activity__message" role="alert" data-testid="slide-activity-unknown">
+      <p
+        class="slide-activity__message"
+        role="alert"
+        data-testid="slide-activity-unknown"
+        i18n="cours.ecranInconnu|@@coursEcranInconnu"
+      >
         Cet écran ne peut pas être affiché : son contenu n’est pas reconnu.
       </p>
     }
     @if (error()) {
-      <p class="slide-activity__message" role="alert" data-testid="slide-activity-error">
+      <p
+        class="slide-activity__message"
+        role="alert"
+        data-testid="slide-activity-error"
+        i18n="cours.ecranEchec|@@coursEcranEchec"
+      >
         Les activités de cet écran n’ont pas pu être chargées.
       </p>
     }

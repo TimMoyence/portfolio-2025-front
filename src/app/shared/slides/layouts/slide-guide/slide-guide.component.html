@@ -30,10 +30,13 @@
   @if (takeaway() || nextAction()) {
     <footer class="slide-guide__footer">
       @if (takeaway()) {
-        <p><strong>À retenir</strong>{{ takeaway() }}</p>
+        <p><strong i18n="@@slideGuideARetenir">À retenir</strong>{{ takeaway() }}</p>
       }
       @if (nextAction()) {
-        <p><strong>Geste professionnel</strong>{{ nextAction() }}</p>
+        <p>
+          <strong i18n="@@slideGuideGesteProfessionnel">Geste professionnel</strong
+          >{{ nextAction() }}
+        </p>
       }
     </footer>
   }
