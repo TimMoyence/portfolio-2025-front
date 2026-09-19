@@ -174,6 +174,14 @@ async function installerLePupitre(page: Page): Promise<Journal> {
   const groupes: Record<string, unknown>[] = [];
   let participantGroupId: string | null = null;
   let bilansExportes = 0;
+  let ecranPilote = 0;
+
+  const pilotageApplique = async (route: Route, corps: Corps): Promise<void> => {
+    if (typeof corps['ecran'] === 'number') {
+      ecranPilote = corps['ecran'];
+    }
+    await route.fulfill({ status: 204, headers: CORS });
+  };
 
   const annotationEnregistree = async (route: Route, saisie: SaisieAnnotation): Promise<void> => {
     annotations.push(saisie);
@@ -205,6 +213,7 @@ async function installerLePupitre(page: Page): Promise<Journal> {
       (route, corps) => annotationEnregistree(route, corps as unknown as SaisieAnnotation),
     ],
     [`POST ${SESSION}/groups`, (route, corps) => groupeCree(route, String(corps['name'] ?? ''))],
+    [`PATCH ${SESSION}/control`, pilotageApplique],
     [
       `PATCH /participants/${PARTICIPANT}/group`,
       (route, corps) => affectationEnregistree(route, (corps['groupId'] ?? null) as string | null),
@@ -251,7 +260,7 @@ async function installerLePupitre(page: Page): Promise<Journal> {
       await route.fulfill({
         status: 200,
         headers: { ...CORS, 'content-type': 'text/event-stream' },
-        body: `event: etat\ndata: ${JSON.stringify(ETAT_DU_FLUX)}\n\n`,
+        body: `event: etat\ndata: ${JSON.stringify({ ...ETAT_DU_FLUX, ecranCourant: ecranPilote })}\n\n`,
       });
     } else if (lecture !== undefined) {
       await servir(route, lecture[1]());
@@ -307,12 +316,13 @@ test.describe('pupitre du formateur (QA-09, QA-10, QA-11)', () => {
     const journal = await installerLePupitre(page);
     await ouvrirLePupitre(page);
 
+    const ligne = page.locator(`[data-participant="${PARTICIPANT}"]`);
+    await expect(ligne).toContainText('Léa Dubois');
+
     await page.getByTestId('groupe-nouveau').fill('Table 2');
     await page.getByTestId('groupe-creer').click();
     await expect(page.getByTestId('groupe-nom')).toHaveValue('Table 2');
 
-    const ligne = page.locator(`[data-participant="${PARTICIPANT}"]`);
-    await expect(ligne).toContainText('Léa Dubois');
     await ligne.getByTestId('participant-groupe').selectOption({ label: 'Table 2' });
     await expect(ligne.getByTestId('participant-groupe')).toHaveValue(GROUPE);
 
