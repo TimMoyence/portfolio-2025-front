@@ -100,6 +100,7 @@ export class SlideVisualComponent {
   readonly jeton = input<string>('');
   readonly role = input<Role>('etudiant');
   readonly resultats = input<ResultatsSeance | null>(null);
+  readonly prioritaire = input(false);
   readonly reponse = output<{
     questionId: string;
     valeur: string;
@@ -128,12 +129,13 @@ export class SlideVisualComponent {
     return renderer === undefined ? null : (layouts[renderer] ?? null);
   });
   protected readonly layoutInputs = computed(() => {
+    const renderer = this.presentation()?.renderer;
     const props = this.presentation()?.props ?? {};
     const inputs = Object.fromEntries(
       Object.entries(props).filter(([key]) => key !== 'sourceLink' && key !== 'nestedQuiz'),
     );
     const reflectionInputs =
-      this.presentation()?.renderer === 'reflection'
+      renderer === 'reflection'
         ? {
             screenId: this.slide().id,
             sessionId: this.sessionId(),
@@ -144,7 +146,8 @@ export class SlideVisualComponent {
     return {
       ...inputs,
       ...reflectionInputs,
-      ...(this.presentation()?.renderer === 'image-right' ? { reverse: true } : {}),
+      ...(renderer === 'image-right' ? { reverse: true } : {}),
+      ...(renderer === 'hero' && this.prioritaire() ? { priority: true } : {}),
     };
   });
   protected readonly quizData = computed(() => commeQuiz(quizPrincipal(this.presentation())));

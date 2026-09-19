@@ -25,6 +25,28 @@ export function buildVisualSlide(overrides: Partial<EcranContent> = {}): EcranCo
   };
 }
 
+export function buildVisualImageHeroSlide(id = 'B2-01-S01-ACCROCHE'): EcranContent {
+  return buildVisualSlide({
+    id,
+    donnees: {
+      recit: {
+        id,
+        presentation: {
+          version: 2,
+          screenId: id,
+          renderer: 'hero',
+          props: {
+            title: 'Lire un chiffre',
+            bullets: ['B2'],
+            bgImage: `https://images.example/${id}.webp`,
+            bgImageAlt: 'Tableau de chiffres projeté en classe',
+          },
+        },
+      },
+    },
+  });
+}
+
 export function buildVisualNestedQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
   return buildVisualSlide({
     id: 'B2-01-S07-GRAPHIQUE',

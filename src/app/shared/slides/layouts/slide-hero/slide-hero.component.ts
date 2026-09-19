@@ -16,4 +16,5 @@ export class SlideHeroComponent {
   readonly accent = input<string>('default');
   readonly ctaLabel = input<string>('');
   readonly ctaHref = input<string>('');
+  readonly priority = input(false);
 }

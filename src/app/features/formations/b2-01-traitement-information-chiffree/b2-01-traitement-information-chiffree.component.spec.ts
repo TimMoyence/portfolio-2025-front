@@ -5,7 +5,11 @@ import {
   buildVisualCourse,
   createFormationCataloguePortStub,
 } from '../../../../testing/factories/formation-catalogue.factory';
-import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
+import {
+  buildVisualImageHeroSlide,
+  buildVisualQuizSlide,
+} from '../../../../testing/factories/visual-slide.factory';
+import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { B2TraitementInformationChiffreeComponent } from './b2-01-traitement-information-chiffree.component';
 
 describe('B2TraitementInformationChiffreeComponent', () => {
@@ -13,7 +17,7 @@ describe('B2TraitementInformationChiffreeComponent', () => {
 
   beforeEach(() => {
     catalogue.lire.and.returnValue(of(buildVisualCourse()));
-    TestBed.configureTestingModule({
+    setupTestBed({
       imports: [B2TraitementInformationChiffreeComponent],
       providers: [{ provide: FORMATION_CATALOGUE_PORT, useValue: catalogue }],
     });
@@ -52,5 +56,27 @@ describe('B2TraitementInformationChiffreeComponent', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('[role="alert"]')).not.toBeNull();
     expect(element.querySelector('app-slide-deck')).toBeNull();
+  });
+
+  it('ne charge en priorité que l’image du premier écran', () => {
+    catalogue.lire.and.returnValue(
+      of(
+        buildVisualCourse({
+          ecrans: [
+            buildVisualImageHeroSlide('B2-01-S01-ACCROCHE'),
+            buildVisualImageHeroSlide('B2-01-S02-SUITE'),
+          ],
+        }),
+      ),
+    );
+    const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
+    fixture.detectChanges();
+
+    const images = (fixture.nativeElement as HTMLElement).querySelectorAll('.slide-hero__bg img');
+    expect(images).toHaveSize(2);
+    expect(images[0].getAttribute('loading')).toBe('eager');
+    expect(images[0].getAttribute('fetchpriority')).toBe('high');
+    expect(images[1].getAttribute('loading')).toBe('lazy');
+    expect(images[1].hasAttribute('fetchpriority')).toBeFalse();
   });
 });

@@ -13,9 +13,9 @@
   }
   @case ('pret') {
     <app-slide-deck mode="scroll" [allowFullscreen]="true">
-      @for (ecran of ecrans(); track ecran.id) {
+      @for (ecran of ecrans(); track ecran.id; let premier = $first) {
         <app-slide [id]="ecran.id">
-          <app-slide-visual [slide]="ecran" />
+          <app-slide-visual [slide]="ecran" [prioritaire]="premier" />
         </app-slide>
       }
     </app-slide-deck>
