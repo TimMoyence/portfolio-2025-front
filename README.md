@@ -231,7 +231,9 @@ Chaque lot de changement coherent doit idealement valider :
 
 Le cours ajoute deux gardes, jouées par `ci:check` :
 
-- `npm run guard:cours-runtime` — AD-2 : `src/cours/` n'importe aucun framework ; AD-4 : aucune
+- `npm run guard:cours-runtime` — AD-2 : `src/cours/` n'importe aucun framework (Angular, RxJS,
+  zone.js) et rien hors de `src/cours/` : c'est une couche feuille dont les briques sont des
+  Custom Elements construits par le navigateur, hors du contexte d'injection d'Angular ; AD-4 : aucune
   donnée de correction (bonne réponse, misconception, barème…) dans la surface compilée pour
   l'étudiant, soit `src/cours/content/`, les fichiers « cours » de `src/app/`, le rendu partagé
   `src/app/shared/slides/**` et les pages `src/app/features/formations/b2-*`. Seul le pupitre
