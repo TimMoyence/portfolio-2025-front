@@ -185,16 +185,33 @@ Flux a suivre a chaque ajout ou modification d'un texte marque `i18n="..."` ou
      avant `:`/`;`/`?`) a l'usage anglais standard.
    - Retirer un `trans-unit` de `messages.xlf` (id disparu du code source) doit
      retirer l'`unit` correspondante de `messages.en.xlf`.
+   - Un `trans-unit` dont le texte francais a change garde son id : reporter la
+     nouvelle `<source>` dans l'`unit` anglaise **et** retraduire la `<target>`.
+     Angular n'associe traduction et texte que par l'id, il servirait sinon
+     l'ancienne phrase en anglais sans aucun avertissement.
 
-3. Verifier qu'il ne reste aucun avertissement de traduction manquante :
+3. Verifier la synchronisation des deux fichiers :
+
+   ```bash
+   npm run test:guards
+   ```
+
+   La garde `scripts/guard-i18n-sync.test.mjs` compare `messages.xlf` et
+   `messages.en.xlf` (placeholders ramenes a leur nom, entites et espaces
+   normalises) et echoue sur trois ecarts : un id extrait sans `unit` anglaise ou
+   sans `<target>`, une `unit` anglaise dont la `<source>` n'est plus le texte
+   francais actuel (traduction perimee), une `unit` anglaise dont l'id n'est plus
+   extrait. Elle lit les fichiers commites : lancer `npm run extract-i18n` avant.
+
+4. Verifier qu'il ne reste aucun avertissement au build :
 
    ```bash
    npm run build
    ```
 
-   Inspecter la sortie : `0` occurrence de `No translation found` doit apparaitre
-   pour la locale `en`. Un id present dans `messages.xlf` sans `unit` correspondante
-   (ou dont le `<target>` est absent) declenche cet avertissement au build.
+   Inspecter la sortie : `0` occurrence de `No translation found` pour la locale
+   `en`, et `0` avertissement `Duplicate messages with id`. Un meme id `@@…` ne
+   peut porter qu'un seul texte ; deux textes identiques peuvent le partager.
 
 ## Gouvernance depot
 
