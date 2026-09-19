@@ -212,7 +212,7 @@ type Chargement = 'chargement' | 'succes' | 'echec';
         </header>
         <main class="scene-canvas">
           @if (ecranCourant(); as ecranAffiche) {
-            <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+            <app-slide-deck mode="scroll" [allowFullscreen]="false">
               <app-slide [id]="ecranAffiche.id">
                 <app-slide-activity
                   [slide]="ecranAffiche"

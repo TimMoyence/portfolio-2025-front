@@ -239,7 +239,7 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                   </p>
                 } @else {
                   @if (ecranCourant(); as ecran) {
-                    <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+                    <app-slide-deck mode="scroll" [allowFullscreen]="false">
                       <app-slide [id]="ecran.id">
                         <app-slide-activity
                           [slide]="ecran"

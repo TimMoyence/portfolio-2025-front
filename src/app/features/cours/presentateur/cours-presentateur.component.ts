@@ -500,7 +500,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   >
                 </div>
                 <div class="presentateur-stage__body">
-                  <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+                  <app-slide-deck mode="scroll" [allowFullscreen]="false">
                     <app-slide [id]="ecranAffiche.id">
                       <app-slide-activity
                         [slide]="ecranAffiche"

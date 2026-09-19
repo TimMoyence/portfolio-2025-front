@@ -12,7 +12,7 @@
     </div>
   }
   @case ('pret') {
-    <app-slide-deck mode="scroll" [allowFullscreen]="true" theme="b2-01">
+    <app-slide-deck mode="scroll" [allowFullscreen]="true">
       @for (ecran of ecrans(); track ecran.id) {
         <app-slide [id]="ecran.id">
           <app-slide-visual [slide]="ecran" />
