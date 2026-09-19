@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { formatDate } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  LOCALE_ID,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import type {
   SebastianPeriodReport,
   SebastianReportPeriod,
@@ -62,19 +70,32 @@ interface DayLabel {
       @if (report()) {
         <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4">
-            <p class="font-mono text-xs uppercase tracking-[0.06em] text-white/45">Total alcool</p>
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+              i18n="@@sebastianReportsTotalAlcohol"
+            >
+              Total alcool
+            </p>
             <p class="font-display text-3xl text-white">
               {{ report()!.totals.alcohol }}
             </p>
           </div>
           <div class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4">
-            <p class="font-mono text-xs uppercase tracking-[0.06em] text-white/45">Total cafe</p>
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+              i18n="@@sebastianReportsTotalCoffee"
+            >
+              Total cafe
+            </p>
             <p class="font-display text-3xl text-white">
               {{ report()!.totals.coffee }}
             </p>
           </div>
           <div class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4">
-            <p class="font-mono text-xs uppercase tracking-[0.06em] text-white/45">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+              i18n="@@sebastianReportsAvgAlcohol"
+            >
               Moy. alcool/jour
             </p>
             <p class="font-display text-3xl text-white">
@@ -82,7 +103,10 @@ interface DayLabel {
             </p>
           </div>
           <div class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4">
-            <p class="font-mono text-xs uppercase tracking-[0.06em] text-white/45">
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+              i18n="@@sebastianReportsAvgCoffee"
+            >
               Moy. cafe/jour
             </p>
             <p class="font-display text-3xl text-white">
@@ -92,18 +116,23 @@ interface DayLabel {
         </div>
 
         <div class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4">
-          <p class="mb-2 font-mono text-xs uppercase tracking-[0.06em] text-white/45">
+          <p
+            class="mb-2 font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+            i18n="@@sebastianReportsVsPrevious"
+          >
             vs periode precedente :
           </p>
           <div class="flex gap-4 text-sm">
             <span
               [class]="report()!.comparison.alcoholDelta < 0 ? 'text-green-500' : 'text-red-500'"
+              i18n="@@sebastianReportsAlcoholDelta"
             >
               {{ report()!.comparison.alcoholDelta > 0 ? '+' : ''
               }}{{ report()!.comparison.alcoholDelta }}% alcool
             </span>
             <span
               [class]="report()!.comparison.coffeeDelta < 0 ? 'text-green-500' : 'text-red-500'"
+              i18n="@@sebastianReportsCoffeeDelta"
             >
               {{ report()!.comparison.coffeeDelta > 0 ? '+' : ''
               }}{{ report()!.comparison.coffeeDelta }}% cafe
@@ -113,18 +142,32 @@ interface DayLabel {
 
         <div class="grid grid-cols-2 gap-4">
           <div class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4">
-            <p class="font-mono text-xs uppercase tracking-[0.06em] text-white/45">Meilleur jour</p>
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+              i18n="@@sebastianReportsBestDay"
+            >
+              Meilleur jour
+            </p>
             <p class="font-display text-lg text-white">
               {{ report()!.best.date }}
             </p>
-            <p class="text-xs text-green-500">Score {{ report()!.best.score }}</p>
+            <p class="text-xs text-green-500" i18n="@@sebastianReportsBestScore">
+              Score {{ report()!.best.score }}
+            </p>
           </div>
           <div class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4">
-            <p class="font-mono text-xs uppercase tracking-[0.06em] text-white/45">Pire jour</p>
+            <p
+              class="font-mono text-xs uppercase tracking-[0.06em] text-white/45"
+              i18n="@@sebastianReportsWorstDay"
+            >
+              Pire jour
+            </p>
             <p class="font-display text-lg text-white">
               {{ report()!.worst.date }}
             </p>
-            <p class="text-xs text-red-500">Score {{ report()!.worst.score }}</p>
+            <p class="text-xs text-red-500" i18n="@@sebastianReportsWorstScore">
+              Score {{ report()!.worst.score }}
+            </p>
           </div>
         </div>
 
@@ -134,7 +177,9 @@ interface DayLabel {
           data-testid="day-distribution"
           class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-4"
         >
-          <h3 class="mb-3 font-display text-xl text-white">Distribution par jour</h3>
+          <h3 class="mb-3 font-display text-xl text-white" i18n="@@sebastianReportsDistribution">
+            Distribution par jour
+          </h3>
           <div class="grid grid-cols-7 gap-2 text-center">
             @for (day of dayLabels; track day.index) {
               <div>
@@ -157,19 +202,19 @@ export class SebastianReportsComponent {
   private readonly port: SebastianPort = inject(SEBASTIAN_PORT);
 
   readonly periods: PeriodOption[] = [
-    { value: 'week', label: 'Semaine' },
-    { value: 'month', label: 'Mois' },
-    { value: 'quarter', label: 'Trimestre' },
+    { value: 'week', label: $localize`:@@sebastianReportsPeriodWeek:Semaine` },
+    { value: 'month', label: $localize`:@@sebastianReportsPeriodMonth:Mois` },
+    { value: 'quarter', label: $localize`:@@sebastianReportsPeriodQuarter:Trimestre` },
   ];
 
   readonly dayLabels: DayLabel[] = [
-    { index: 1, label: 'Lun' },
-    { index: 2, label: 'Mar' },
-    { index: 3, label: 'Mer' },
-    { index: 4, label: 'Jeu' },
-    { index: 5, label: 'Ven' },
-    { index: 6, label: 'Sam' },
-    { index: 0, label: 'Dim' },
+    { index: 1, label: $localize`:@@sebastianDayMonShort:Lun` },
+    { index: 2, label: $localize`:@@sebastianDayTueShort:Mar` },
+    { index: 3, label: $localize`:@@sebastianDayWedShort:Mer` },
+    { index: 4, label: $localize`:@@sebastianDayThuShort:Jeu` },
+    { index: 5, label: $localize`:@@sebastianDayFriShort:Ven` },
+    { index: 6, label: $localize`:@@sebastianDaySatShort:Sam` },
+    { index: 0, label: $localize`:@@sebastianDaySunShort:Dim` },
   ];
 
   readonly selectedPeriod = signal<SebastianReportPeriod>('week');
@@ -178,32 +223,21 @@ export class SebastianReportsComponent {
 
   readonly report = signal<SebastianPeriodReport | null>(null);
 
+  private readonly localeId = inject(LOCALE_ID);
+
   readonly periodLabel = computed(() => {
     const date = new Date(this.currentStartDate() + 'T00:00:00');
     const day = date.getDate();
-    const monthNames = [
-      'janvier',
-      'fevrier',
-      'mars',
-      'avril',
-      'mai',
-      'juin',
-      'juillet',
-      'aout',
-      'septembre',
-      'octobre',
-      'novembre',
-      'decembre',
-    ];
-    const month = monthNames[date.getMonth()];
+    const month = formatDate(date, 'MMMM', this.localeId);
+    const year = date.getFullYear();
 
     switch (this.selectedPeriod()) {
       case 'week':
-        return `Semaine du ${day} ${month}`;
+        return $localize`:@@sebastianReportsWeekOf:Semaine du ${day}:day: ${month}:month:`;
       case 'month':
-        return `${month.charAt(0).toUpperCase() + month.slice(1)} ${date.getFullYear()}`;
+        return `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
       case 'quarter':
-        return `T${Math.floor(date.getMonth() / 3) + 1} ${date.getFullYear()}`;
+        return $localize`:@@sebastianReportsQuarterOf:T${Math.floor(date.getMonth() / 3) + 1}:quarter: ${year}:year:`;
     }
   });
 

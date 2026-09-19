@@ -54,7 +54,7 @@ export class SebastianTrendChartComponent implements OnDestroy {
         labels,
         datasets: [
           {
-            label: 'Alcool',
+            label: $localize`:@@sebastianCategoryAlcohol:Alcool`,
             data: trendData.dataPoints.map((dp) => dp.alcohol),
             borderColor: '#e6aa46',
             backgroundColor: is30d ? 'rgba(230, 170, 70, 0.10)' : 'transparent',
@@ -64,7 +64,7 @@ export class SebastianTrendChartComponent implements OnDestroy {
             fill: is30d,
           },
           {
-            label: 'Cafe',
+            label: $localize`:@@sebastianCategoryCoffee:Cafe`,
             data: trendData.dataPoints.map((dp) => dp.coffee),
             borderColor: '#b8822c',
             backgroundColor: is30d ? 'rgba(184, 130, 44, 0.08)' : 'transparent',
@@ -74,13 +74,13 @@ export class SebastianTrendChartComponent implements OnDestroy {
             fill: is30d,
           },
           buildReferenceLineDataset(
-            'Obj. alcool',
+            $localize`:@@sebastianTrendGoalAlcohol:Obj. alcool`,
             trendData.objectives.alcohol,
             trendData.dataPoints.length,
             '#f4d18a',
           ),
           buildReferenceLineDataset(
-            'Obj. cafe',
+            $localize`:@@sebastianTrendGoalCoffee:Obj. cafe`,
             trendData.objectives.coffee,
             trendData.dataPoints.length,
             '#f4d18a',

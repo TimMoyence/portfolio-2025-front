@@ -10597,6 +10597,645 @@
           <context context-type="linenumber">249</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="sebastianDrinkBeer" datatype="html">
+        <source>Biere</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDrinkWine" datatype="html">
+        <source>Vin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDrinkChampagne" datatype="html">
+        <source>Champagne</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDrinkCocktail" datatype="html">
+        <source>Cocktail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDrinkSpirits" datatype="html">
+        <source>Spiritueux</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDrinkCider" datatype="html">
+        <source>Cidre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDrinkCoffee" datatype="html">
+        <source>Cafe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTimeNow" datatype="html">
+        <source>Maintenant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTime30m" datatype="html">
+        <source>Il y a 30m</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTime1h" datatype="html">
+        <source>Il y a 1h</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTimeYesterdayEvening" datatype="html">
+        <source>Hier soir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTimeCustom" datatype="html">
+        <source>Personnalise</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetRecents" datatype="html">
+        <source> Recents </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">87,89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetType" datatype="html">
+        <source> Type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">112,114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetQuantity" datatype="html">
+        <source> Quantite </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">136,138</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetDegree" datatype="html">
+        <source> Degre (%) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">172,173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetVolume" datatype="html">
+        <source> Volume (cL) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">208,209</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetWhen" datatype="html">
+        <source> Quand </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">244,246</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetNotes" datatype="html">
+        <source> Notes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">286,288</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetNotesPlaceholder" datatype="html">
+        <source>Ajouter une note...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">291,292</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetSubmit" datatype="html">
+        <source> Ajouter <x id="INTERPOLATION" equiv-text="{{ quantity() }}"/> <x id="INTERPOLATION_1" equiv-text="{{ drinkUi[selectedDrinkType()].icon }}"/> <x id="INTERPOLATION_2" equiv-text="{{ drinkUi[selectedDrinkType()].label }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">306,310</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianAddSheetTitle" datatype="html">
+        <source>Ajouter une boisson</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts</context>
+          <context context-type="linenumber">342</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianBacLegalLimit" datatype="html">
+        <source>Limite legale</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-bac-curve.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianHeatmapCombined" datatype="html">
+        <source>Combine</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianCategoryAlcohol" datatype="html">
+        <source>Alcool</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-trend-chart.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">37,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianCategoryCoffee" datatype="html">
+        <source>Cafe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-trend-chart.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">38,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDayMonShort" datatype="html">
+        <source>Lun</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDayTueShort" datatype="html">
+        <source>Mar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDayWedShort" datatype="html">
+        <source>Mer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">213</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDayThuShort" datatype="html">
+        <source>Jeu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDayFriShort" datatype="html">
+        <source>Ven</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDaySatShort" datatype="html">
+        <source>Sam</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDaySunShort" datatype="html">
+        <source>Dim</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-heatmap.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianScorePhase" datatype="html">
+        <source> Phase <x id="INTERPOLATION" equiv-text="{{ score().phase }}"/>/3 </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-score-card.component.ts</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianScoreGoalAdherence" datatype="html">
+        <source>Adherence objectifs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-score-card.component.ts</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianScoreTrendBonus" datatype="html">
+        <source>Bonus tendance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-score-card.component.ts</context>
+          <context context-type="linenumber">40,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianScoreStreakBonus" datatype="html">
+        <source>Bonus streak</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-score-card.component.ts</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTrendGoalAlcohol" datatype="html">
+        <source>Obj. alcool</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-trend-chart.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTrendGoalCoffee" datatype="html">
+        <source>Obj. cafe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/components/sebastian-trend-chart.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardSetGoal" datatype="html">
+        <source> Definir un objectif </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">35,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardEditGoals" datatype="html">
+        <source> Modifier les objectifs </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardBac" datatype="html">
+        <source> Taux d&apos;alcoolemie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">55,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardSoberAt" datatype="html">
+        <source> Sobriete estimee : <x id="INTERPOLATION" equiv-text="{{ formatTime(bac.estimatedSoberAt) }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">72,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardLast7Days" datatype="html">
+        <source> 7 derniers jours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">85,87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardLast30Days" datatype="html">
+        <source> 30 derniers jours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">93,95</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardAvgAlcohol" datatype="html">
+        <source>Moy. alcool : <x id="INTERPOLATION" equiv-text="{{ trends30d()!.summary.avgAlcohol }}"/>/j</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">101,102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDashboardAvgCoffee" datatype="html">
+        <source>Moy. cafe : <x id="INTERPOLATION" equiv-text="{{ trends30d()!.summary.avgCoffee }}"/>/j</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-dashboard.component.ts</context>
+          <context context-type="linenumber">104,105</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalPerDay" datatype="html">
+        <source>jour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalPerWeek" datatype="html">
+        <source>sem.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalPerMonth" datatype="html">
+        <source>mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalPeriodDaily" datatype="html">
+        <source>Quotidien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalPeriodWeekly" datatype="html">
+        <source>Hebdomadaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalPeriodMonthly" datatype="html">
+        <source>Mensuel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalNew" datatype="html">
+        <source> Nouvel objectif </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalQuantityPlaceholder" datatype="html">
+        <source>Quantite max</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalSubmit" datatype="html">
+        <source> Definir l&apos;objectif </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">69,71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianDelete" datatype="html">
+        <source> Supprimer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">92,93</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">103,104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianGoalEmpty" datatype="html">
+        <source> Aucun objectif actif </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-goals.component.ts</context>
+          <context context-type="linenumber">105,107</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianUnitWine" datatype="html">
+        <source>verre(s) de vin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianUnitChampagne" datatype="html">
+        <source>coupe(s) de champagne</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianUnitAlcohol" datatype="html">
+        <source>biere(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianUnitCoffee" datatype="html">
+        <source>tasse(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianHistoryAllCategories" datatype="html">
+        <source>Toutes les categories</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianHistoryDateFrom" datatype="html">
+        <source>Date debut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianHistoryDateTo" datatype="html">
+        <source>Date fin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianHistoryEmpty" datatype="html">
+        <source> Aucune entree enregistree </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-history.component.ts</context>
+          <context context-type="linenumber">112,114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsTotalAlcohol" datatype="html">
+        <source> Total alcool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsTotalCoffee" datatype="html">
+        <source> Total cafe </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">88,90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsAvgAlcohol" datatype="html">
+        <source> Moy. alcool/jour </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">99,101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsAvgCoffee" datatype="html">
+        <source> Moy. cafe/jour </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">110,112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsVsPrevious" datatype="html">
+        <source> vs periode precedente : </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">123,125</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsAlcoholDelta" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ report()!.comparison.alcoholDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
+              }}"/><x id="INTERPOLATION_1" equiv-text="{{ report()!.comparison.alcoholDelta }}"/>% alcool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">130,132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsCoffeeDelta" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ report()!.comparison.coffeeDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
+              }}"/><x id="INTERPOLATION_1" equiv-text="{{ report()!.comparison.coffeeDelta }}"/>% cafe </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">137,139</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsBestDay" datatype="html">
+        <source> Meilleur jour </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">149,151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsBestScore" datatype="html">
+        <source> Score <x id="INTERPOLATION" equiv-text="{{ report()!.best.score }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">155,157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsWorstDay" datatype="html">
+        <source> Pire jour </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">163,165</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsWorstScore" datatype="html">
+        <source> Score <x id="INTERPOLATION" equiv-text="{{ report()!.worst.score }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">169,171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsDistribution" datatype="html">
+        <source> Distribution par jour </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">181,183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsPeriodWeek" datatype="html">
+        <source>Semaine</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsPeriodMonth" datatype="html">
+        <source>Mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsPeriodQuarter" datatype="html">
+        <source>Trimestre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">207</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsWeekOf" datatype="html">
+        <source>Semaine du <x id="day" equiv-text="day"/> <x id="month" equiv-text="month"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">236</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianReportsQuarterOf" datatype="html">
+        <source>T<x id="quarter" equiv-text="Math.floor(date.getMonth() / 3) + 1"/> <x id="year" equiv-text="year"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/pages/sebastian-reports.component.ts</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="sebastianTitle" datatype="html">
         <source> Sebastian </source>
         <context-group purpose="location">
@@ -10640,6 +11279,48 @@
           <context context-type="linenumber">71,73</context>
         </context-group>
         <note priority="1" from="meaning">sebastian.counter.coffee</note>
+      </trans-unit>
+      <trans-unit id="sebastianAddEntryAriaLabel" datatype="html">
+        <source>Ajouter une consommation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">117,118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTabDashboard" datatype="html">
+        <source>Dashboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTabReports" datatype="html">
+        <source>Rapports</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTabBadges" datatype="html">
+        <source>Badges</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTabHistory" datatype="html">
+        <source>Historique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sebastianTabGoals" datatype="html">
+        <source>Objectifs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/sebastian/sebastian-app.component.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="termsHeroTitle" datatype="html">
         <source>Conditions générales &amp; <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>mentions légales<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>

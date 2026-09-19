@@ -14718,5 +14718,824 @@
         <target>AI</target>
       </segment>
     </unit>
+    <unit id="sebastianDrinkBeer">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>Biere</source>
+        <target>Beer</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDrinkWine">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:31</note>
+      </notes>
+      <segment>
+        <source>Vin</source>
+        <target>Wine</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDrinkChampagne">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:33</note>
+      </notes>
+      <segment>
+        <source>Champagne</source>
+        <target>Champagne</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDrinkCocktail">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:38</note>
+      </notes>
+      <segment>
+        <source>Cocktail</source>
+        <target>Cocktail</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDrinkSpirits">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:43</note>
+      </notes>
+      <segment>
+        <source>Spiritueux</source>
+        <target>Spirits</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDrinkCider">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:48</note>
+      </notes>
+      <segment>
+        <source>Cidre</source>
+        <target>Cider</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDrinkCoffee">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:53</note>
+      </notes>
+      <segment>
+        <source>Cafe</source>
+        <target>Coffee</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTimeNow">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:70</note>
+      </notes>
+      <segment>
+        <source>Maintenant</source>
+        <target>Now</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTime30m">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:71</note>
+      </notes>
+      <segment>
+        <source>Il y a 30m</source>
+        <target>30m ago</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTime1h">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:72</note>
+      </notes>
+      <segment>
+        <source>Il y a 1h</source>
+        <target>1h ago</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTimeYesterdayEvening">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:73</note>
+      </notes>
+      <segment>
+        <source>Hier soir</source>
+        <target>Last night</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTimeCustom">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:74</note>
+      </notes>
+      <segment>
+        <source>Personnalise</source>
+        <target>Custom</target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetRecents">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:87,89</note>
+      </notes>
+      <segment>
+        <source> Recents </source>
+        <target> Recent </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetType">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:112,114</note>
+      </notes>
+      <segment>
+        <source> Type </source>
+        <target> Type </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetQuantity">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:136,138</note>
+      </notes>
+      <segment>
+        <source> Quantite </source>
+        <target> Quantity </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetDegree">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:172,173</note>
+      </notes>
+      <segment>
+        <source> Degre (%) </source>
+        <target> ABV (%) </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetVolume">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:208,209</note>
+      </notes>
+      <segment>
+        <source> Volume (cL) </source>
+        <target> Volume (cL) </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetWhen">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:244,246</note>
+      </notes>
+      <segment>
+        <source> Quand </source>
+        <target> When </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetNotes">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:286,288</note>
+      </notes>
+      <segment>
+        <source> Notes </source>
+        <target> Notes </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetNotesPlaceholder">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:291,292</note>
+      </notes>
+      <segment>
+        <source>Ajouter une note...</source>
+        <target>Add a note...</target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetSubmit">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:306,310</note>
+      </notes>
+      <segment>
+        <source> Ajouter <ph id="0" equiv="INTERPOLATION" disp="{{ quantity() }}"/> <ph id="1" equiv="INTERPOLATION_1" disp="{{ drinkUi[selectedDrinkType()].icon }}"/> <ph id="2" equiv="INTERPOLATION_2" disp="{{ drinkUi[selectedDrinkType()].label }}"/> </source>
+        <target> Add <ph id="0" equiv="INTERPOLATION" disp="{{ quantity() }}"/> <ph id="1" equiv="INTERPOLATION_1" disp="{{ drinkUi[selectedDrinkType()].icon }}"/> <ph id="2" equiv="INTERPOLATION_2" disp="{{ drinkUi[selectedDrinkType()].label }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddSheetTitle">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:342</note>
+      </notes>
+      <segment>
+        <source>Ajouter une boisson</source>
+        <target>Add a drink</target>
+      </segment>
+    </unit>
+    <unit id="sebastianBacLegalLimit">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-bac-curve.component.ts:71</note>
+      </notes>
+      <segment>
+        <source>Limite legale</source>
+        <target>Legal limit</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHeatmapCombined">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:65</note>
+      </notes>
+      <segment>
+        <source>Combine</source>
+        <target>Combined</target>
+      </segment>
+    </unit>
+    <unit id="sebastianCategoryAlcohol">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:66</note>
+        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:57</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:41,42</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:37,38</note>
+      </notes>
+      <segment>
+        <source>Alcool</source>
+        <target>Alcohol</target>
+      </segment>
+    </unit>
+    <unit id="sebastianCategoryCoffee">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:67</note>
+        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:67</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:42,44</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:38,41</note>
+      </notes>
+      <segment>
+        <source>Cafe</source>
+        <target>Coffee</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDayMonShort">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:71</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:211</note>
+      </notes>
+      <segment>
+        <source>Lun</source>
+        <target>Mon</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDayTueShort">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:72</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:212</note>
+      </notes>
+      <segment>
+        <source>Mar</source>
+        <target>Tue</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDayWedShort">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:73</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:213</note>
+      </notes>
+      <segment>
+        <source>Mer</source>
+        <target>Wed</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDayThuShort">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:74</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:214</note>
+      </notes>
+      <segment>
+        <source>Jeu</source>
+        <target>Thu</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDayFriShort">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:75</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:215</note>
+      </notes>
+      <segment>
+        <source>Ven</source>
+        <target>Fri</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDaySatShort">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:76</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:216</note>
+      </notes>
+      <segment>
+        <source>Sam</source>
+        <target>Sat</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDaySunShort">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:77</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:217</note>
+      </notes>
+      <segment>
+        <source>Dim</source>
+        <target>Sun</target>
+      </segment>
+    </unit>
+    <unit id="sebastianScorePhase">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:20,22</note>
+      </notes>
+      <segment>
+        <source> Phase <ph id="0" equiv="INTERPOLATION" disp="{{ score().phase }}"/>/3 </source>
+        <target> Phase <ph id="0" equiv="INTERPOLATION" disp="{{ score().phase }}"/>/3 </target>
+      </segment>
+    </unit>
+    <unit id="sebastianScoreGoalAdherence">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:27,28</note>
+      </notes>
+      <segment>
+        <source>Adherence objectifs</source>
+        <target>Goal adherence</target>
+      </segment>
+    </unit>
+    <unit id="sebastianScoreTrendBonus">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:40,41</note>
+      </notes>
+      <segment>
+        <source>Bonus tendance</source>
+        <target>Trend bonus</target>
+      </segment>
+    </unit>
+    <unit id="sebastianScoreStreakBonus">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:47,48</note>
+      </notes>
+      <segment>
+        <source>Bonus streak</source>
+        <target>Streak bonus</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTrendGoalAlcohol">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:77</note>
+      </notes>
+      <segment>
+        <source>Obj. alcool</source>
+        <target>Alcohol goal</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTrendGoalCoffee">
+      <notes>
+        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:83</note>
+      </notes>
+      <segment>
+        <source>Obj. cafe</source>
+        <target>Coffee goal</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardSetGoal">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:35,37</note>
+      </notes>
+      <segment>
+        <source> Definir un objectif </source>
+        <target> Set a goal </target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardEditGoals">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:46,48</note>
+      </notes>
+      <segment>
+        <source> Modifier les objectifs </source>
+        <target> Edit goals </target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardBac">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:55,57</note>
+      </notes>
+      <segment>
+        <source> Taux d&apos;alcoolemie </source>
+        <target> Blood alcohol level </target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardSoberAt">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:72,73</note>
+      </notes>
+      <segment>
+        <source> Sobriete estimee : <ph id="0" equiv="INTERPOLATION" disp="{{ formatTime(bac.estimatedSoberAt) }}"/> </source>
+        <target> Estimated sober at: <ph id="0" equiv="INTERPOLATION" disp="{{ formatTime(bac.estimatedSoberAt) }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardLast7Days">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:85,87</note>
+      </notes>
+      <segment>
+        <source> 7 derniers jours </source>
+        <target> Last 7 days </target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardLast30Days">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:93,95</note>
+      </notes>
+      <segment>
+        <source> 30 derniers jours </source>
+        <target> Last 30 days </target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardAvgAlcohol">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:101,102</note>
+      </notes>
+      <segment>
+        <source>Moy. alcool : <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgAlcohol }}"/>/j</source>
+        <target>Avg. alcohol: <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgAlcohol }}"/>/day</target>
+      </segment>
+    </unit>
+    <unit id="sebastianDashboardAvgCoffee">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:104,105</note>
+      </notes>
+      <segment>
+        <source>Moy. cafe : <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgCoffee }}"/>/j</source>
+        <target>Avg. coffee: <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgCoffee }}"/>/day</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalPerDay">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:12</note>
+      </notes>
+      <segment>
+        <source>jour</source>
+        <target>day</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalPerWeek">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:13</note>
+      </notes>
+      <segment>
+        <source>sem.</source>
+        <target>wk</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalPerMonth">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:14</note>
+      </notes>
+      <segment>
+        <source>mois</source>
+        <target>month</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalPeriodDaily">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:18</note>
+      </notes>
+      <segment>
+        <source>Quotidien</source>
+        <target>Daily</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalPeriodWeekly">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:19</note>
+      </notes>
+      <segment>
+        <source>Hebdomadaire</source>
+        <target>Weekly</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalPeriodMonthly">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:20</note>
+      </notes>
+      <segment>
+        <source>Mensuel</source>
+        <target>Monthly</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalNew">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:33,35</note>
+      </notes>
+      <segment>
+        <source> Nouvel objectif </source>
+        <target> New goal </target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalQuantityPlaceholder">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:50,51</note>
+      </notes>
+      <segment>
+        <source>Quantite max</source>
+        <target>Max quantity</target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalSubmit">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:69,71</note>
+      </notes>
+      <segment>
+        <source> Definir l&apos;objectif </source>
+        <target> Set the goal </target>
+      </segment>
+    </unit>
+    <unit id="sebastianDelete">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:92,93</note>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:103,104</note>
+      </notes>
+      <segment>
+        <source> Supprimer </source>
+        <target> Delete </target>
+      </segment>
+    </unit>
+    <unit id="sebastianGoalEmpty">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:105,107</note>
+      </notes>
+      <segment>
+        <source> Aucun objectif actif </source>
+        <target> No active goal </target>
+      </segment>
+    </unit>
+    <unit id="sebastianUnitWine">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:8</note>
+      </notes>
+      <segment>
+        <source>verre(s) de vin</source>
+        <target>glass(es) of wine</target>
+      </segment>
+    </unit>
+    <unit id="sebastianUnitChampagne">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:9</note>
+      </notes>
+      <segment>
+        <source>coupe(s) de champagne</source>
+        <target>flute(s) of champagne</target>
+      </segment>
+    </unit>
+    <unit id="sebastianUnitAlcohol">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:10</note>
+      </notes>
+      <segment>
+        <source>biere(s)</source>
+        <target>beer(s)</target>
+      </segment>
+    </unit>
+    <unit id="sebastianUnitCoffee">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:11</note>
+      </notes>
+      <segment>
+        <source>tasse(s)</source>
+        <target>cup(s)</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHistoryAllCategories">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:36,37</note>
+      </notes>
+      <segment>
+        <source>Toutes les categories</source>
+        <target>All categories</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHistoryDateFrom">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:47,48</note>
+      </notes>
+      <segment>
+        <source>Date debut</source>
+        <target>Start date</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHistoryDateTo">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:56,57</note>
+      </notes>
+      <segment>
+        <source>Date fin</source>
+        <target>End date</target>
+      </segment>
+    </unit>
+    <unit id="sebastianHistoryEmpty">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:112,114</note>
+      </notes>
+      <segment>
+        <source> Aucune entree enregistree </source>
+        <target> No entries recorded </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsTotalAlcohol">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:77,79</note>
+      </notes>
+      <segment>
+        <source> Total alcool </source>
+        <target> Total alcohol </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsTotalCoffee">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:88,90</note>
+      </notes>
+      <segment>
+        <source> Total cafe </source>
+        <target> Total coffee </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsAvgAlcohol">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:99,101</note>
+      </notes>
+      <segment>
+        <source> Moy. alcool/jour </source>
+        <target> Avg. alcohol/day </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsAvgCoffee">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:110,112</note>
+      </notes>
+      <segment>
+        <source> Moy. cafe/jour </source>
+        <target> Avg. coffee/day </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsVsPrevious">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:123,125</note>
+      </notes>
+      <segment>
+        <source> vs periode precedente : </source>
+        <target> vs previous period: </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsAlcoholDelta">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:130,132</note>
+      </notes>
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.alcoholDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
+              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.alcoholDelta }}"/>% alcool </source>
+        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.alcoholDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
+              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.alcoholDelta }}"/>% alcohol </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsCoffeeDelta">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:137,139</note>
+      </notes>
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.coffeeDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
+              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.coffeeDelta }}"/>% cafe </source>
+        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.coffeeDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
+              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.coffeeDelta }}"/>% coffee </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsBestDay">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:149,151</note>
+      </notes>
+      <segment>
+        <source> Meilleur jour </source>
+        <target> Best day </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsBestScore">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:155,157</note>
+      </notes>
+      <segment>
+        <source> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.best.score }}"/> </source>
+        <target> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.best.score }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsWorstDay">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:163,165</note>
+      </notes>
+      <segment>
+        <source> Pire jour </source>
+        <target> Worst day </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsWorstScore">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:169,171</note>
+      </notes>
+      <segment>
+        <source> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.worst.score }}"/> </source>
+        <target> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.worst.score }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsDistribution">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:181,183</note>
+      </notes>
+      <segment>
+        <source> Distribution par jour </source>
+        <target> Distribution by day </target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsPeriodWeek">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:205</note>
+      </notes>
+      <segment>
+        <source>Semaine</source>
+        <target>Week</target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsPeriodMonth">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:206</note>
+      </notes>
+      <segment>
+        <source>Mois</source>
+        <target>Month</target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsPeriodQuarter">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:207</note>
+      </notes>
+      <segment>
+        <source>Trimestre</source>
+        <target>Quarter</target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsWeekOf">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:236</note>
+      </notes>
+      <segment>
+        <source>Semaine du <ph id="0" equiv="day" disp="day"/> <ph id="1" equiv="month" disp="month"/></source>
+        <target>Week of <ph id="1" equiv="month" disp="month"/> <ph id="0" equiv="day" disp="day"/></target>
+      </segment>
+    </unit>
+    <unit id="sebastianReportsQuarterOf">
+      <notes>
+        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:240</note>
+      </notes>
+      <segment>
+        <source>T<ph id="0" equiv="quarter" disp="Math.floor(date.getMonth() / 3) + 1"/> <ph id="1" equiv="year" disp="year"/></source>
+        <target>Q<ph id="0" equiv="quarter" disp="Math.floor(date.getMonth() / 3) + 1"/> <ph id="1" equiv="year" disp="year"/></target>
+      </segment>
+    </unit>
+    <unit id="sebastianAddEntryAriaLabel">
+      <notes>
+        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:117,118</note>
+      </notes>
+      <segment>
+        <source>Ajouter une consommation</source>
+        <target>Log a drink</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTabDashboard">
+      <notes>
+        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:137</note>
+      </notes>
+      <segment>
+        <source>Dashboard</source>
+        <target>Dashboard</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTabReports">
+      <notes>
+        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:138</note>
+      </notes>
+      <segment>
+        <source>Rapports</source>
+        <target>Reports</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTabBadges">
+      <notes>
+        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:139</note>
+      </notes>
+      <segment>
+        <source>Badges</source>
+        <target>Badges</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTabHistory">
+      <notes>
+        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:140</note>
+      </notes>
+      <segment>
+        <source>Historique</source>
+        <target>History</target>
+      </segment>
+    </unit>
+    <unit id="sebastianTabGoals">
+      <notes>
+        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:141</note>
+      </notes>
+      <segment>
+        <source>Objectifs</source>
+        <target>Goals</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

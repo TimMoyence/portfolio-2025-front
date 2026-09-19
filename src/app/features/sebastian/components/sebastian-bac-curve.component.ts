@@ -68,7 +68,7 @@ export class SebastianBacCurveComponent implements OnDestroy {
             fill: true,
           },
           buildReferenceLineDataset(
-            'Limite legale',
+            $localize`:@@sebastianBacLegalLimit:Limite legale`,
             bacData.legalLimit,
             bacData.curve.length,
             '#dc2626',
