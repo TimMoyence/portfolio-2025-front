@@ -460,6 +460,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 data-testid="presentateur-plein-ecran"
                 (click)="ouvrirLaScene()"
                 aria-label="Ouvrir la projection en plein écran"
+                i18n-aria-label="presentateur.pleinEcranAria|@@presentateurPleinEcranAria"
                 i18n="presentateur.pleinEcran|@@presentateurPleinEcran"
               >
                 Projection plein écran

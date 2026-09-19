@@ -81,6 +81,8 @@ const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
 const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
 const MESSAGE_ECHEC = $localize`:cours.rattachementEchec|@@coursRattachementEchec:Le rattachement à la séance a échoué. Prévenez votre formateur.`;
+const MESSAGE_ECRAN_INDISPONIBLE = $localize`:cours.ecranIndisponible|@@coursEcranIndisponible:L’écran n’est pas encore disponible pour cette séance.`;
+const MESSAGE_ECRAN_ECHEC = $localize`:cours.ecranChargementEchec|@@coursEcranChargementEchec:L’écran n’a pas pu être chargé.`;
 
 const MOTIF_CODE = /^\d{4}$/;
 const ESPACES = /\s+/g;
@@ -153,7 +155,12 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
           <div class="student-state" data-testid="etudiant-chargement" role="status">
             <span class="student-state__pulse" aria-hidden="true"></span>
             <div>
-              <p class="student-state__kicker">Préparation de la séance</p>
+              <p
+                class="student-state__kicker"
+                i18n="cours.kickerPreparation|@@coursKickerPreparation"
+              >
+                Préparation de la séance
+              </p>
               <p i18n="cours.chargementSujet|@@coursChargementSujet">Chargement de votre sujet…</p>
             </div>
           </div>
@@ -179,7 +186,9 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
           <div class="student-state" data-testid="etudiant-rattachement" role="status">
             <span class="student-state__pulse" aria-hidden="true"></span>
             <div>
-              <p class="student-state__kicker">Entrée dans la classe</p>
+              <p class="student-state__kicker" i18n="cours.kickerEntree|@@coursKickerEntree">
+                Entrée dans la classe
+              </p>
               <p i18n="cours.rattachement|@@coursRattachement">Connexion à la séance…</p>
             </div>
           </div>
@@ -234,7 +243,12 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                     formateur la lancera.
                   </p>
                 } @else if (chargementEcran()) {
-                  <p class="student-status" data-testid="etudiant-ecran-chargement" role="status">
+                  <p
+                    class="student-status"
+                    data-testid="etudiant-ecran-chargement"
+                    role="status"
+                    i18n="cours.chargementEcran|@@coursChargementEcran"
+                  >
                     Chargement de l’écran…
                   </p>
                 } @else {
@@ -329,17 +343,32 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
         @default {
           <form class="student-entry" data-testid="etudiant-entree" (submit)="soumettre($event)">
             <div class="student-entry__intro">
-              <p class="student-entry__kicker">Atelier · séance accompagnée</p>
-              <h1>Rejoindre une séance</h1>
-              <p class="student-entry__lead">
+              <p class="student-entry__kicker" i18n="cours.entreeKicker|@@coursEntreeKicker">
+                Atelier · séance accompagnée
+              </p>
+              <h1 i18n="cours.entreeTitre|@@coursEntreeTitre">Rejoindre une séance</h1>
+              <p class="student-entry__lead" i18n="cours.entreeIntro|@@coursEntreeIntro">
                 Votre formateur vous a donné un code. Entrez-le pour afficher le bon écran au bon
                 moment, répondre aux activités et suivre la séance avec le groupe.
               </p>
               <ol class="student-entry__steps">
-                <li><span>01</span><span>Je saisis le code de séance</span></li>
-                <li><span>02</span><span>Je renseigne mon prénom et mon nom</span></li>
                 <li>
-                  <span>03</span><span>J’entre dans le cours quand le formateur démarre</span>
+                  <span>01</span
+                  ><span i18n="cours.entreeEtapeCode|@@coursEntreeEtapeCode"
+                    >Je saisis le code de séance</span
+                  >
+                </li>
+                <li>
+                  <span>02</span
+                  ><span i18n="cours.entreeEtapeIdentite|@@coursEntreeEtapeIdentite"
+                    >Je renseigne mon prénom et mon nom</span
+                  >
+                </li>
+                <li>
+                  <span>03</span
+                  ><span i18n="cours.entreeEtapeDemarrage|@@coursEntreeEtapeDemarrage"
+                    >J’entre dans le cours quand le formateur démarre</span
+                  >
                 </li>
               </ol>
             </div>
@@ -347,7 +376,9 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
             <div class="student-entry__fields">
               <div class="student-entry__field student-entry__field--code">
                 <label for="etudiant-code" i18n="cours.code|@@coursCode">Code de la séance</label>
-                <span class="student-entry__hint">4 chiffres affichés par le formateur</span>
+                <span class="student-entry__hint" i18n="cours.codeIndice|@@coursCodeIndice"
+                  >4 chiffres affichés par le formateur</span
+                >
                 <input
                   id="etudiant-code"
                   name="code"
@@ -366,7 +397,7 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
               </div>
               <div class="student-entry__field student-entry__field--wide">
                 <label for="etudiant-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
-                <span class="student-entry__hint"
+                <span class="student-entry__hint" i18n="cours.emailIndice|@@coursEmailIndice"
                   >Utilisée uniquement pour retrouver votre participation</span
                 >
                 <input
@@ -388,7 +419,10 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
               >
                 Entrer dans la séance <span aria-hidden="true">→</span>
               </button>
-              <p class="student-entry__privacy">
+              <p
+                class="student-entry__privacy"
+                i18n="cours.entreeConfidentialite|@@coursEntreeConfidentialite"
+              >
                 Pas de compte à créer. Ces informations restent liées à cette séance.
               </p>
             </div>
@@ -680,14 +714,14 @@ export class CoursEtudiantComponent {
         if (estEcranVerrouille(ecran)) {
           this.echecEcran.set({
             motif: 'sujet-indisponible',
-            message: 'L’écran n’est pas encore disponible pour cette séance.',
+            message: MESSAGE_ECRAN_INDISPONIBLE,
           });
         }
       }
     } catch {
       this.echecEcran.set({
         motif: 'sujet-indisponible',
-        message: 'L’écran n’a pas pu être chargé.',
+        message: MESSAGE_ECRAN_ECHEC,
       });
     } finally {
       if (!this.detruit) {

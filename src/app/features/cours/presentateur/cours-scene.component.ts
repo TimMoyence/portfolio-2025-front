@@ -190,10 +190,12 @@ type Chargement = 'chargement' | 'succes' | 'echec';
       <div class="scene-shell">
         <header class="scene-toolbar">
           <div class="scene-toolbar__brand">
-            <span class="scene-toolbar__eyebrow">Projection en direct</span>
-            <strong class="scene-toolbar__title">{{
-              deroule()?.titre ?? 'Cours en direct'
-            }}</strong>
+            <span
+              class="scene-toolbar__eyebrow"
+              i18n="scene.projectionEnDirect|@@sceneProjectionEnDirect"
+              >Projection en direct</span
+            >
+            <strong class="scene-toolbar__title">{{ deroule()?.titre ?? titreParDefaut }}</strong>
           </div>
           <div class="scene-toolbar__actions">
             <span class="scene-counter"
@@ -206,7 +208,13 @@ type Chargement = 'chargement' | 'succes' | 'echec';
               (click)="basculerPleinEcran()"
               [attr.aria-pressed]="pleinEcran()"
             >
-              {{ pleinEcran() ? 'Quitter le plein écran' : 'Plein écran' }}
+              @if (pleinEcran()) {
+                <ng-container i18n="scene.quitterPleinEcran|@@sceneQuitterPleinEcran"
+                  >Quitter le plein écran</ng-container
+                >
+              } @else {
+                <ng-container i18n="scene.pleinEcran|@@scenePleinEcran">Plein écran</ng-container>
+              }
             </button>
           </div>
         </header>
@@ -267,6 +275,8 @@ export class CoursSceneComponent {
   readonly suiviDuFlux = signal<StatutFlux | null>(null);
   readonly resultats = signal<ResultatsSeance | null>(null);
   readonly pleinEcran = signal(false);
+
+  protected readonly titreParDefaut = $localize`:scene.titreParDefaut|@@sceneTitreParDefaut:Cours en direct`;
 
   readonly statutDuRefus = computed(() => {
     const suivi = this.suiviDuFlux();

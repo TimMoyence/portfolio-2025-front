@@ -13486,5 +13486,195 @@
         <target>This field is required and must contain at least 10 characters.</target>
       </segment>
     </unit>
+    <unit id="coursEcranIndisponible">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:84</note>
+        <note category="meaning">cours.ecranIndisponible</note>
+      </notes>
+      <segment>
+        <source>L’écran n’est pas encore disponible pour cette séance.</source>
+        <target>This screen is not available yet for this session.</target>
+      </segment>
+    </unit>
+    <unit id="coursEcranChargementEchec">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:85</note>
+        <note category="meaning">cours.ecranChargementEchec</note>
+      </notes>
+      <segment>
+        <source>L’écran n’a pas pu être chargé.</source>
+        <target>The screen could not be loaded.</target>
+      </segment>
+    </unit>
+    <unit id="coursKickerPreparation">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:162,164</note>
+        <note category="meaning">cours.kickerPreparation</note>
+      </notes>
+      <segment>
+        <source> Préparation de la séance </source>
+        <target> Preparing the session </target>
+      </segment>
+    </unit>
+    <unit id="coursKickerEntree">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:190,192</note>
+        <note category="meaning">cours.kickerEntree</note>
+      </notes>
+      <segment>
+        <source> Entrée dans la classe </source>
+        <target> Entering the class </target>
+      </segment>
+    </unit>
+    <unit id="coursChargementEcran">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:252,254</note>
+        <note category="meaning">cours.chargementEcran</note>
+      </notes>
+      <segment>
+        <source> Chargement de l’écran… </source>
+        <target> Loading the screen… </target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeKicker">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:347,349</note>
+        <note category="meaning">cours.entreeKicker</note>
+      </notes>
+      <segment>
+        <source> Atelier · séance accompagnée </source>
+        <target> Workshop · guided session </target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeTitre">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:349,350</note>
+        <note category="meaning">cours.entreeTitre</note>
+      </notes>
+      <segment>
+        <source>Rejoindre une séance</source>
+        <target>Join a session</target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeIntro">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:351,353</note>
+        <note category="meaning">cours.entreeIntro</note>
+      </notes>
+      <segment>
+        <source> Votre formateur vous a donné un code. Entrez-le pour afficher le bon écran au bon moment, répondre aux activités et suivre la séance avec le groupe. </source>
+        <target> Your trainer has given you a code. Enter it to see the right screen at the right time, answer the activities and follow the session with the group. </target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeEtapeCode">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:358,361</note>
+        <note category="meaning">cours.entreeEtapeCode</note>
+      </notes>
+      <segment>
+        <source>Je saisis le code de séance</source>
+        <target>I enter the session code</target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeEtapeIdentite">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:364,367</note>
+        <note category="meaning">cours.entreeEtapeIdentite</note>
+      </notes>
+      <segment>
+        <source>Je renseigne mon prénom et mon nom</source>
+        <target>I fill in my first and last name</target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeEtapeDemarrage">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:370,373</note>
+        <note category="meaning">cours.entreeEtapeDemarrage</note>
+      </notes>
+      <segment>
+        <source>J’entre dans le cours quand le formateur démarre</source>
+        <target>I join the course when the trainer starts</target>
+      </segment>
+    </unit>
+    <unit id="coursCodeIndice">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:380,382</note>
+        <note category="meaning">cours.codeIndice</note>
+      </notes>
+      <segment>
+        <source>4 chiffres affichés par le formateur</source>
+        <target>4 digits shown by the trainer</target>
+      </segment>
+    </unit>
+    <unit id="coursEmailIndice">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:401,404</note>
+        <note category="meaning">cours.emailIndice</note>
+      </notes>
+      <segment>
+        <source>Utilisée uniquement pour retrouver votre participation</source>
+        <target>Only used to find your participation again</target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeConfidentialite">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:426,429</note>
+        <note category="meaning">cours.entreeConfidentialite</note>
+      </notes>
+      <segment>
+        <source> Pas de compte à créer. Ces informations restent liées à cette séance. </source>
+        <target> No account to create. This information stays tied to this session. </target>
+      </segment>
+    </unit>
+    <unit id="presentateurPleinEcranAria">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:462,463</note>
+        <note category="meaning">presentateur.pleinEcranAria</note>
+      </notes>
+      <segment>
+        <source>Ouvrir la projection en plein écran</source>
+        <target>Open the projection in full screen</target>
+      </segment>
+    </unit>
+    <unit id="sceneProjectionEnDirect">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:196,198</note>
+        <note category="meaning">scene.projectionEnDirect</note>
+      </notes>
+      <segment>
+        <source>Projection en direct</source>
+        <target>Live projection</target>
+      </segment>
+    </unit>
+    <unit id="sceneQuitterPleinEcran">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:213,216</note>
+        <note category="meaning">scene.quitterPleinEcran</note>
+      </notes>
+      <segment>
+        <source>Quitter le plein écran</source>
+        <target>Exit full screen</target>
+      </segment>
+    </unit>
+    <unit id="scenePleinEcran">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:216,218</note>
+        <note category="meaning">scene.pleinEcran</note>
+      </notes>
+      <segment>
+        <source>Plein écran</source>
+        <target>Full screen</target>
+      </segment>
+    </unit>
+    <unit id="sceneTitreParDefaut">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-scene.component.ts:279</note>
+        <note category="meaning">scene.titreParDefaut</note>
+      </notes>
+      <segment>
+        <source>Cours en direct</source>
+        <target>Live course</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
