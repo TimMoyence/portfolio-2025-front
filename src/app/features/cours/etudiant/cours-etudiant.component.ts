@@ -245,8 +245,8 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                           [slide]="ecran"
                           render="hand"
                           [role]="'etudiant'"
-                          [sessionId]="sessionId"
-                          [jeton]="jeton"
+                          [sessionId]="sessionId()"
+                          [jeton]="jeton()"
                           (reponse)="envoyer($event)"
                         />
                       </app-slide>
@@ -447,10 +447,12 @@ export class CoursEtudiantComponent {
   private readonly incidents: IncidentEtudiant[] = [];
   private readonly debutFormulaire = Date.now();
 
+  private readonly seanceOuverte = signal<Pick<Rattachement, 'sessionId' | 'jeton'> | null>(null);
+  protected readonly sessionId = computed(() => this.seanceOuverte()?.sessionId ?? null);
+  protected readonly jeton = computed(() => this.seanceOuverte()?.jeton ?? '');
+
   private identite: Identity | null = null;
   private rattachement: Rattachement | null = null;
-  sessionId: string | null = null;
-  jeton = '';
   private flux: Sync | null = null;
   private verrou: Lock | null = null;
   private deck: Deck | null = null;
@@ -604,8 +606,7 @@ export class CoursEtudiantComponent {
     rattachement: Rattachement,
     sujet: CoursContent,
   ): void {
-    this.sessionId = rattachement.sessionId;
-    this.jeton = rattachement.jeton;
+    this.seanceOuverte.set({ sessionId: rattachement.sessionId, jeton: rattachement.jeton });
     this.sujet.set(sujet);
     const deck = this.monterLeDeck(sujet, rattachement);
     const flux = this.creerFlux({
@@ -660,17 +661,15 @@ export class CoursEtudiantComponent {
   }
 
   private async chargerLecranSiNecessaire(index: number): Promise<void> {
-    if (
-      this.sessionId === null ||
-      this.jeton === '' ||
-      !estEcranVerrouille(this.sujet()?.ecrans[index])
-    ) {
+    const sessionId = this.sessionId();
+    const jeton = this.jeton();
+    if (sessionId === null || jeton === '' || !estEcranVerrouille(this.sujet()?.ecrans[index])) {
       return;
     }
     this.chargementEcran.set(true);
     this.echecEcran.set(null);
     try {
-      const sujet = await firstValueFrom(this.port.lireSujet(this.sessionId, this.jeton));
+      const sujet = await firstValueFrom(this.port.lireSujet(sessionId, jeton));
       if (!this.detruit) {
         this.sujet.set(sujet);
         const ecran = sujet.ecrans[index];
@@ -713,11 +712,12 @@ export class CoursEtudiantComponent {
   }
 
   private async traiter(reponse: ReponseEtudiant): Promise<void> {
-    if (this.sessionId === null) {
+    const sessionId = this.sessionId();
+    if (sessionId === null) {
       return;
     }
     this.remonterLesIncidents();
-    if (!this.enLigne() || (await this.transmettre(this.sessionId, reponse)) === 'en-panne') {
+    if (!this.enLigne() || (await this.transmettre(sessionId, reponse)) === 'en-panne') {
       this.mettreEnFile(reponse);
       return;
     }
@@ -726,7 +726,7 @@ export class CoursEtudiantComponent {
 
   private async transmettre(sessionId: string, reponse: ReponseEtudiant): Promise<IssueDeLEnvoi> {
     try {
-      const recu = await firstValueFrom(this.port.repondre(sessionId, this.jeton, reponse));
+      const recu = await firstValueFrom(this.port.repondre(sessionId, this.jeton(), reponse));
       this.refusReponse.set(null);
       this.afficherVerdict(reponse.questionId, recu);
       return 'transmise';
@@ -750,12 +750,13 @@ export class CoursEtudiantComponent {
 
   private mettreEnFile(reponse: ReponseEtudiant): void {
     const identite = this.identite;
-    if (identite === null || this.sessionId === null) {
+    const sessionId = this.sessionId();
+    if (identite === null || sessionId === null) {
       return;
     }
     try {
       enqueue({
-        sessionId: this.sessionId,
+        sessionId,
         studentKey: identite.studentKey,
         questionId: reponse.questionId,
         valeur: reponse.valeur,
@@ -769,7 +770,7 @@ export class CoursEtudiantComponent {
   }
 
   private async viderLaFile(): Promise<void> {
-    if (this.sessionId === null || this.videEnCours || !this.fileDeLaSeance()) {
+    if (this.sessionId() === null || this.videEnCours || !this.fileDeLaSeance()) {
       return;
     }
     this.videEnCours = true;
@@ -782,14 +783,16 @@ export class CoursEtudiantComponent {
   }
 
   private fileDeLaSeance(): boolean {
-    return pending().some((envoi) => envoi.sessionId === this.sessionId);
+    const sessionId = this.sessionId();
+    return pending().some((envoi) => envoi.sessionId === sessionId);
   }
 
   private async renvoyer(envoi: EnvoiReponse): Promise<boolean> {
-    if (this.sessionId === null || envoi.sessionId !== this.sessionId) {
+    const sessionId = this.sessionId();
+    if (sessionId === null || envoi.sessionId !== sessionId) {
       return false;
     }
-    const issue = await this.transmettre(this.sessionId, {
+    const issue = await this.transmettre(sessionId, {
       questionId: envoi.questionId,
       valeur: envoi.valeur as ValeurReponse,
       dureeMs: envoi.dureeMs,
@@ -798,12 +801,13 @@ export class CoursEtudiantComponent {
   }
 
   private remonterLesIncidents(): void {
-    if (this.sessionId === null || this.incidents.length === 0) {
+    const sessionId = this.sessionId();
+    if (sessionId === null || this.incidents.length === 0) {
       return;
     }
     const lot = [...this.incidents];
     this.incidents.length = 0;
-    void firstValueFrom(this.port.signalerIncidents(this.sessionId, this.jeton, lot)).catch(
+    void firstValueFrom(this.port.signalerIncidents(sessionId, this.jeton(), lot)).catch(
       () => undefined,
     );
   }
