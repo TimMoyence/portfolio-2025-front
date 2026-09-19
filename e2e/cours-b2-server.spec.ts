@@ -12,10 +12,11 @@ import {
 
 const QUESTION = 'Quelle échelle faut-il vérifier ?';
 
-const CORRECTION_SERVIE = {
-  correctIndex: 1,
-  explanation: 'La base de départ, sinon le pourcentage ne veut rien dire.',
-  notes: 'Insister sur la base de départ.',
+const DONNEES_DU_FORMATEUR = {
+  notes: 'Insister sur la base de départ avant de laisser répondre.',
+  corrige: 'La base de départ, sinon le pourcentage ne veut rien dire.',
+  solution: 'Réponse attendue : la base de départ du pourcentage.',
+  misconception: 'confond-la-base-et-le-resultat',
 };
 
 function ecransDuCours(correction: Readonly<Record<string, unknown>> = {}) {
@@ -56,10 +57,10 @@ test('le rendu du catalogue B2 monte les 72 écrans sans écrire de correction d
   }
 });
 
-test('ne laisse passer aucune correction dans le DOM même quand le serveur en livre une', async ({
+test('ne projette rien des données du formateur, même quand le serveur en glisse dans la question', async ({
   page,
 }) => {
-  await ouvrirLeCatalogue(page, CORRECTION_SERVIE);
+  await ouvrirLeCatalogue(page, DONNEES_DU_FORMATEUR);
 
   const quiz = page.locator('app-slide-quiz');
   await expect(quiz).toContainText(QUESTION);
@@ -68,12 +69,8 @@ test('ne laisse passer aucune correction dans le DOM même quand le serveur en l
   await expect(quiz.locator('.slide-quiz__feedback, .slide-quiz__explanation')).toHaveCount(0);
 
   const documentRendu = await page.content();
-  for (const cle of CLES_DE_CORRECTION) {
+  for (const [cle, secret] of Object.entries(DONNEES_DU_FORMATEUR)) {
     expect(documentRendu).not.toContain(`"${cle}"`);
-  }
-  for (const secret of Object.values(CORRECTION_SERVIE)) {
-    if (typeof secret === 'string') {
-      expect(documentRendu).not.toContain(secret);
-    }
+    expect(documentRendu).not.toContain(secret);
   }
 });
