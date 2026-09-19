@@ -6,18 +6,13 @@ import {
 import type { CardsortPlan } from '../../cours/runtime/blocks/FpCardsort';
 import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
 import type { Concept4Definition } from '../../cours/runtime/blocks/FpConcept4';
-import type { EscapeParcours } from '../../cours/runtime/blocks/FpEscape';
 import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
 import type { PlotDefinition } from '../../cours/runtime/blocks/FpPlot';
 import type { ProCas } from '../../cours/runtime/blocks/FpPro';
-import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
 import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
 import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
-import type { SheetPlan } from '../../cours/runtime/blocks/FpSheet';
-import type { SpacedQuestion } from '../../cours/runtime/blocks/FpSpaced';
 import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
-import type { TableBuildPlan, TableColonne } from '../../cours/runtime/blocks/FpTableBuild';
 import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
 import type { DeckState } from '../../cours/runtime/core/state';
@@ -138,21 +133,6 @@ export function buildExitBillet(overrides: Partial<ExitBillet> = {}): ExitBillet
       misconceptionsCiblees: ['proportionnalite'],
       dureeMinutes: 5,
       modalite: 'solo',
-      regime: 'ouvert',
-    }),
-    ...overrides,
-  };
-}
-
-export function buildPulseSondage(overrides: Partial<PulseSondage> = {}): PulseSondage {
-  return {
-    id: 'P-PULSE-02',
-    invite: 'Ou en etes-vous sur le passage du taux annuel au taux mensuel ?',
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['taux-equivalent'],
-      misconceptionsCiblees: ['proportionnalite'],
-      dureeMinutes: 1,
-      modalite: 'classe',
       regime: 'ouvert',
     }),
     ...overrides,
@@ -344,70 +324,6 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
   };
 }
 
-const COLONNES_AMORTISSEMENT: readonly TableColonne[] = [
-  {
-    cle: 'crd',
-    intitule: 'Capital restant du',
-    role: 'deduite',
-    calcul: (contexte) =>
-      contexte.precedente === null
-        ? contexte.parametres['montant']
-        : contexte.precedente['crd'] - contexte.precedente['amortissement'],
-    soldeDe: null,
-    totalise: false,
-  },
-  {
-    cle: 'interets',
-    intitule: 'Interets',
-    role: 'saisie',
-    calcul: null,
-    soldeDe: null,
-    totalise: true,
-  },
-  {
-    cle: 'amortissement',
-    intitule: 'Amortissement',
-    role: 'deduite',
-    calcul: (contexte) => contexte.parametres['annuite'] - contexte.ligne['interets'],
-    soldeDe: 'crd',
-    totalise: true,
-  },
-  {
-    cle: 'annuite',
-    intitule: 'Annuite',
-    role: 'deduite',
-    calcul: (contexte) => contexte.ligne['interets'] + contexte.ligne['amortissement'],
-    soldeDe: null,
-    totalise: true,
-  },
-];
-
-export function buildTableBuildPlan(overrides: Partial<TableBuildPlan> = {}): TableBuildPlan {
-  return {
-    id: 'K-AMORTISSEMENT-01',
-    intitule: 'Emprunt de 10 000 € a 3 % sur 5 ans, annuites constantes',
-    echeances: 5,
-    parametres: { montant: 10000, taux: 0.03, annuite: 2183.55 },
-    colonnes: COLONNES_AMORTISSEMENT,
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['emprunt-indivis', 'amortissement'],
-      misconceptionsCiblees: ['amortissement-constant'],
-      dureeMinutes: 12,
-      modalite: 'solo',
-      regime: 'focus',
-    }),
-    attendus: [
-      { rang: 0, cle: 'interets', valeur: 300 },
-      { rang: 1, cle: 'interets', valeur: 243.49 },
-      { rang: 2, cle: 'interets', valeur: 185.29 },
-      { rang: 3, cle: 'interets', valeur: 125.34 },
-      { rang: 4, cle: 'interets', valeur: 63.6 },
-    ],
-    tolerance: { type: 'absolue', valeur: 0.01 },
-    ...overrides,
-  };
-}
-
 export function buildCardsortPlan(overrides: Partial<CardsortPlan> = {}): CardsortPlan {
   return {
     id: 'K-CHARGES-01',
@@ -441,149 +357,6 @@ export function buildCardsortPlan(overrides: Partial<CardsortPlan> = {}): Cardso
     ],
     ...overrides,
   };
-}
-
-export function buildSheetPlan(overrides: Partial<SheetPlan> = {}): SheetPlan {
-  return {
-    id: 'K-TABLEUR-01',
-    intitule: 'Facture : quantites, prix unitaires et total TTC',
-    lignes: 6,
-    colonnes: 4,
-    cellules: {
-      A1: 'Taux de TVA',
-      B1: '0,2',
-      A2: 'Quantite',
-      B2: 'Prix unitaire',
-      C2: 'Montant HT',
-      D2: 'Montant TTC',
-      A3: '12',
-      B3: '4,5',
-      A4: '3',
-      B4: '120',
-      A5: '7',
-      B5: '18,9',
-    },
-    verrouillees: ['A1', 'B1', 'A2', 'B2', 'C2', 'D2', 'A3', 'B3', 'A4', 'B4', 'A5', 'B5'],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['tableur', 'pourcentage'],
-      misconceptionsCiblees: ['reference-relative-figee'],
-      dureeMinutes: 15,
-      modalite: 'binome',
-      regime: 'focus',
-    }),
-    attendus: [
-      { reference: 'C3', valeur: 54 },
-      { reference: 'D3', valeur: 64.8 },
-    ],
-    ...overrides,
-  };
-}
-
-export function buildEscapeParcours(overrides: Partial<EscapeParcours> = {}): EscapeParcours {
-  return {
-    id: 'K-EVASION-01',
-    intitule: 'Ouvrez le coffre du service comptable',
-    delaiIndiceMs: 120000,
-    budgetEnigmeMs: 360000,
-    enigmes: [
-      {
-        id: 'seuil',
-        intitule: 'Le seuil de rentabilite',
-        enonce: 'Charges fixes 12 000 EUR, taux de marge sur cout variable 40 %. Quel seuil ?',
-        indice: 'Divisez les charges fixes par le taux de marge sur cout variable',
-        solution: '30000',
-        fragment: 'TR',
-      },
-      {
-        id: 'marge',
-        intitule: 'La marge commerciale',
-        enonce: 'Ventes 80 000 EUR, achats revendus 50 000 EUR. Quelle marge commerciale ?',
-        indice: 'La marge commerciale est la difference entre les ventes et les achats revendus',
-        solution: '30000',
-        fragment: 'ES',
-      },
-      {
-        id: 'tva',
-        intitule: 'La TVA a decaisser',
-        enonce: 'TVA collectee 4 200 EUR, TVA deductible 1 700 EUR. Combien decaisser ?',
-        indice: 'Retranchez la TVA deductible de la TVA collectee',
-        solution: '2500',
-        fragment: 'OR',
-      },
-    ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['seuil-de-rentabilite', 'marge-commerciale', 'tva'],
-      misconceptionsCiblees: ['tva-collectee-confondue-avec-tva-a-decaisser'],
-      dureeMinutes: 25,
-      modalite: 'groupe',
-      regime: 'ouvert',
-    }),
-    ...overrides,
-  };
-}
-
-export function buildSpacedQuestion(overrides: Partial<SpacedQuestion> = {}): SpacedQuestion {
-  return {
-    questionId: 'Q-ACT-01',
-    concept: 'actualisation',
-    boite: 1,
-    cours: 'Seance 3 — Actualisation',
-    enonce: 'Que vaut aujourd hui un encaissement de 1 000 EUR dans un an, au taux de 5 % ?',
-    options: [
-      { id: 'act-a', libelle: '952,38 EUR', misconception: null },
-      {
-        id: 'act-b',
-        libelle: '1 050,00 EUR',
-        misconception: 'actualisation-confondue-avec-capitalisation',
-      },
-      { id: 'act-c', libelle: '1 000,00 EUR', misconception: 'valeur-temps-de-l-argent-ignoree' },
-      { id: 'act-d', libelle: '950,00 EUR', misconception: 'taux-applique-en-interet-simple' },
-    ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['actualisation'],
-      misconceptionsCiblees: ['actualisation-confondue-avec-capitalisation'],
-      dureeMinutes: 2,
-      modalite: 'solo',
-      regime: 'examen',
-    }),
-    ...overrides,
-  };
-}
-
-export function buildSpacedQuestions(): SpacedQuestion[] {
-  return [
-    buildSpacedQuestion(),
-    buildSpacedQuestion({
-      questionId: 'Q-VAN-02',
-      concept: 'valeur-actuelle-nette',
-      boite: 2,
-      cours: 'Seance 5 — Choix d investissement',
-      enonce: 'Un projet dont la VAN est negative au taux exige doit-il etre retenu ?',
-      options: [
-        { id: 'van-a', libelle: 'Non, il detruit de la valeur', misconception: null },
-        {
-          id: 'van-b',
-          libelle: 'Oui, si le TRI est positif',
-          misconception: 'tri-positif-confondu-avec-projet-rentable',
-        },
-      ],
-    }),
-    buildSpacedQuestion({
-      questionId: 'Q-AMO-03',
-      concept: 'amortissement',
-      boite: 3,
-      cours: 'Seance 2 — Amortissements',
-      enonce: 'L amortissement lineaire fait-il sortir de la tresorerie chaque annee ?',
-      options: [
-        { id: 'amo-a', libelle: 'Non, c est une charge calculee', misconception: null },
-        {
-          id: 'amo-b',
-          libelle: 'Oui, du montant de l annuite',
-          misconception: 'charge-calculee-confondue-avec-decaissement',
-        },
-      ],
-    }),
-  ];
 }
 
 export function buildDeckState(overrides: Partial<DeckState> = {}): DeckState {

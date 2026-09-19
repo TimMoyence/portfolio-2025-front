@@ -6,7 +6,6 @@ export const BLOCS: ReadonlyArray<{
   { nom: 'fp-numeric', charge: async () => (await import('../blocks/FpNumeric')).FpNumeric },
   { nom: 'fp-recall', charge: async () => (await import('../blocks/FpRecall')).FpRecall },
   { nom: 'fp-exit', charge: async () => (await import('../blocks/FpExit')).FpExit },
-  { nom: 'fp-pulse', charge: async () => (await import('../blocks/FpPulse')).FpPulse },
   { nom: 'fp-challenge', charge: async () => (await import('../blocks/FpChallenge')).FpChallenge },
   { nom: 'fp-quote', charge: async () => (await import('../blocks/FpQuote')).FpQuote },
   { nom: 'fp-story', charge: async () => (await import('../blocks/FpStory')).FpStory },
@@ -14,14 +13,7 @@ export const BLOCS: ReadonlyArray<{
   { nom: 'fp-concept4', charge: async () => (await import('../blocks/FpConcept4')).FpConcept4 },
   { nom: 'fp-worked', charge: async () => (await import('../blocks/FpWorked')).FpWorked },
   { nom: 'fp-plot', charge: async () => (await import('../blocks/FpPlot')).FpPlot },
-  {
-    nom: 'fp-table-build',
-    charge: async () => (await import('../blocks/FpTableBuild')).FpTableBuild,
-  },
-  { nom: 'fp-sheet', charge: async () => (await import('../blocks/FpSheet')).FpSheet },
   { nom: 'fp-cardsort', charge: async () => (await import('../blocks/FpCardsort')).FpCardsort },
-  { nom: 'fp-escape', charge: async () => (await import('../blocks/FpEscape')).FpEscape },
-  { nom: 'fp-spaced', charge: async () => (await import('../blocks/FpSpaced')).FpSpaced },
 ];
 
 let enregistre = false;
