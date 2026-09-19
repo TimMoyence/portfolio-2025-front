@@ -7,11 +7,10 @@ import { after, test } from 'node:test';
 import { PORTE } from '../porte.mjs';
 import {
   CLE_CORRIGE,
-  creerRegleBundle,
   EXTENSIONS_INSPECTEES,
   executerCli,
-  ID_BUNDLE,
   inspecterSortie,
+  verifierSortie,
 } from './bundle.mjs';
 
 /** @type {string[]} */
@@ -40,10 +39,10 @@ function sortie(fichiers) {
 
 /**
  * @param {string} racine
- * @returns {import('../moteur.mjs').Manquement[]}
+ * @returns {import('./bundle.mjs').Manquement[]}
  */
 function manquements(racine) {
-  return creerRegleBundle(racine).controler({ id: 'B1-09', ecrans: [] });
+  return verifierSortie(racine).manquements;
 }
 
 const RUNTIME_QUI_EFFACE = [
@@ -150,12 +149,6 @@ void test('bundle : un repertoire dont les fichiers inspectables sont vides fait
 void test('bundle : un chemin de sortie vide leve en citant la porte', () => {
   assert.throws(() => inspecterSortie(''), new RegExp(PORTE));
   assert.throws(() => inspecterSortie(null), new RegExp(PORTE));
-});
-
-void test('bundle : la regle porte lidentifiant attendu et ignore le cours recu', () => {
-  const regle = creerRegleBundle(sortie({ 'main.js': RUNTIME_QUI_EFFACE }));
-  assert.equal(regle.id, ID_BUNDLE);
-  assert.deepEqual(regle.controler(undefined), []);
 });
 
 void test('bundle : seules les extensions declarees sont lues', () => {
