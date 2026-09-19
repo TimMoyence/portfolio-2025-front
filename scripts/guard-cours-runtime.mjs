@@ -20,6 +20,8 @@ const EXTENSIONS = ['.ts', '.html'];
 
 const FRAMEWORKS_INTERDITS = ['@angular', 'rxjs', 'zone.js'];
 const OUVERTURE_TYPE = /^\s*(?:export\s+)?(?:declare\s+)?(?:interface\s+\w|type\s+\w[^=]*=)/;
+const OUVERTURE_ALIAS = /^\s*(?:export\s+)?(?:declare\s+)?type\s+\w[^=]*=/;
+const FIN_D_ALIAS = /;\s*$|^\s*$/;
 const DECLARATION_TYPE = /^\s*(?:export|import)\s+type\s/;
 const TERMES_CORRIGE = [
   'misconception',
@@ -208,13 +210,21 @@ export function analyserFrontiere({ fichier, contenu }) {
 function lignesEffacees(contenu) {
   const effacees = new Set();
   let profondeur = 0;
+  let aliasOuvert = false;
   contenu.split('\n').forEach((texte, index) => {
-    const entre = profondeur === 0 && OUVERTURE_TYPE.test(texte);
-    if (profondeur > 0 || entre || DECLARATION_TYPE.test(texte)) {
+    const entre = profondeur === 0 && !aliasOuvert && OUVERTURE_TYPE.test(texte);
+    const dansUnType = profondeur > 0 || entre || aliasOuvert;
+    if (dansUnType || DECLARATION_TYPE.test(texte)) {
       effacees.add(index);
     }
-    if (profondeur > 0 || entre) {
+    if (dansUnType) {
       profondeur += compter(texte, '{') - compter(texte, '}');
+    }
+    if (entre && OUVERTURE_ALIAS.test(texte)) {
+      aliasOuvert = true;
+    }
+    if (aliasOuvert && profondeur === 0 && FIN_D_ALIAS.test(texte)) {
+      aliasOuvert = false;
     }
   });
   return effacees;

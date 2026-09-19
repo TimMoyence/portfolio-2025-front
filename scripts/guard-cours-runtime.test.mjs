@@ -199,6 +199,41 @@ void test('AD-4 : une comparaison qui designe la bonne reponse sort en code 1', 
   assert.equal(resultat.code, 1);
 });
 
+const UNION_SUR_PLUSIEURS_LIGNES = [
+  'export type RetourBrique =',
+  '  | {',
+  "      readonly kind: 'verdict-reponse';",
+  '      readonly correcte: boolean;',
+  '    }',
+  "  | { readonly kind: 'deja-repondu'; readonly questionId: string }",
+  '  | {',
+  "      readonly kind: 'enigmes';",
+  '      readonly solution: string;',
+  '    };',
+].join('\n');
+
+void test('AD-4 : un alias de type ecrit sur plusieurs lignes passe', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/contrat-hote.ts': `${UNION_SUR_PLUSIEURS_LIGNES}\n`,
+  });
+  assert.equal(resultat.code, 0);
+});
+
+void test('AD-4 : la ligne qui suit la fin d un alias sur plusieurs lignes reste inspectee', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/contrat-hote.ts': `${UNION_SUR_PLUSIEURS_LIGNES}\n\nconst fuite = { correcte: true };\n`,
+  });
+  assert.deepEqual(reperes(resultat), ['src/app/shared/slides/session/contrat-hote.ts:12:AD-4']);
+});
+
+void test('AD-4 : un alias laisse sans point-virgule ne masque pas la suite du fichier', () => {
+  const resultat = garder({
+    'src/cours/content/types.ts':
+      "export type Bareme =\n  | 'suffisant'\n  | 'insuffisant'\n\nconst fuite = { misconception: piege };\n",
+  });
+  assert.deepEqual(reperes(resultat), ['src/cours/content/types.ts:5:AD-4']);
+});
+
 void test('AD-4 : la ligne qui suit la fermeture de l interface reste inspectee', () => {
   const resultat = garder({
     'src/cours/content/types.ts':
