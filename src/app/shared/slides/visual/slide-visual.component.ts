@@ -7,7 +7,7 @@ import {
   output,
   type Type,
 } from '@angular/core';
-import type { EcranContent } from '../../../../cours/content/types';
+import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import {
   SlideChartComponent,
   SlideComparisonComponent,
@@ -55,7 +55,13 @@ function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteract
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template #quizDeLEcran let-quiz>
-      <app-slide-quiz [questionData]="quiz" [mode]="mode()" (selection)="reponse.emit($event)" />
+      <app-slide-quiz
+        [questionData]="quiz"
+        [mode]="mode()"
+        [reponsesRecues]="reponsesRecues().get(quiz.id) ?? 0"
+        [participants]="resultats()?.participants ?? 0"
+        (selection)="reponse.emit($event)"
+      />
     </ng-template>
     @if (layout(); as component) {
       @if (quizData(); as quiz) {
@@ -92,6 +98,8 @@ export class SlideVisualComponent {
   readonly slide = input.required<EcranContent>();
   readonly sessionId = input<string | null>(null);
   readonly jeton = input<string>('');
+  readonly role = input<Role>('etudiant');
+  readonly resultats = input<ResultatsSeance | null>(null);
   readonly reponse = output<{
     questionId: string;
     valeur: string;
@@ -100,8 +108,20 @@ export class SlideVisualComponent {
   }>();
 
   private readonly presentation = computed(() => presentationDe(this.slide()));
-  protected readonly mode = computed<ModeInteraction>(() =>
-    this.sessionId() === null ? 'apercu' : 'seance',
+  protected readonly mode = computed<ModeInteraction>(() => {
+    if (this.role() === 'presentateur') {
+      return 'projection';
+    }
+    return this.sessionId() === null ? 'apercu' : 'seance';
+  });
+  protected readonly reponsesRecues = computed<ReadonlyMap<string, number>>(
+    () =>
+      new Map(
+        (this.resultats()?.questions ?? []).map((question) => [
+          question.questionId,
+          question.total,
+        ]),
+      ),
   );
   protected readonly layout = computed(() => {
     const renderer = this.presentation()?.renderer;

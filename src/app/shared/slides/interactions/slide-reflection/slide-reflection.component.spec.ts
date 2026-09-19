@@ -93,6 +93,17 @@ describe('SlideReflectionComponent', () => {
     expect(formations.enregistrerReponseLibre).not.toHaveBeenCalled();
   }));
 
+  it('en projection, montre la consigne sans zone de saisie', () => {
+    const fixture = monterEnSeance('projection', null);
+
+    expect(racine(fixture).textContent).toContain('Pourquoi comparer les bases ?');
+    expect(racine(fixture).querySelector('textarea')).toBeNull();
+    expect(racine(fixture).querySelector('.slide-reflection__save')).toBeNull();
+    expect(
+      racine(fixture).querySelector('[data-testid="slide-reflection-projection"]'),
+    ).not.toBeNull();
+  });
+
   it('en seance, envoie la reflexion au serveur avec l ecran et l activite', () => {
     const fixture = monterEnSeance('seance', 'seance-envoi');
     const zone = racine(fixture).querySelector('textarea') as HTMLTextAreaElement;

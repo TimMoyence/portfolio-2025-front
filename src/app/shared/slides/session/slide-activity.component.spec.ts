@@ -1,5 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import {
+  buildResultatQuestion,
+  buildResultatsSeance,
+} from '../../../../testing/factories/formations.factory';
+import {
   buildVisualQuizSlide,
   buildVisualSlide,
 } from '../../../../testing/factories/visual-slide.factory';
@@ -7,6 +11,30 @@ import { SlideActivityComponent } from './slide-activity.component';
 
 describe('SlideActivityComponent : deck visuel B2', () => {
   beforeEach(() => TestBed.configureTestingModule({ imports: [SlideActivityComponent] }));
+
+  it('projette le quiz v2 sans interaction pour le formateur et compte les reponses recues', () => {
+    const fixture = TestBed.createComponent(SlideActivityComponent);
+    fixture.componentRef.setInput('slide', buildVisualQuizSlide());
+    fixture.componentRef.setInput('render', 'stage');
+    fixture.componentRef.setInput('role', 'presentateur');
+    fixture.componentRef.setInput(
+      'resultats',
+      buildResultatsSeance({
+        participants: 12,
+        questions: [buildResultatQuestion({ questionId: 'b2-s03-prediction', total: 7 })],
+      }),
+    );
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelectorAll('button.slide-quiz__option').length).toBe(0);
+    expect(element.querySelectorAll('.slide-quiz__option').length).toBe(2);
+    expect(
+      element
+        .querySelector('[data-testid="slide-quiz-reponses-recues"]')
+        ?.textContent?.replace(/\s+/g, ' '),
+    ).toContain('7 / 12');
+  });
 
   it('utilise le même renderer visuel que le catalogue pour l’étudiant', () => {
     const fixture = TestBed.createComponent(SlideActivityComponent);

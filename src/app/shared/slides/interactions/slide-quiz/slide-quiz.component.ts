@@ -40,6 +40,8 @@ export class SlideQuizComponent implements OnInit {
   readonly questionData = input<QuizInteraction | null>(null);
   readonly showCompetency = input<boolean>(false);
   readonly mode = input<ModeInteraction>('apercu');
+  readonly reponsesRecues = input(0);
+  readonly participants = input(0);
   readonly selection = output<{ questionId: string; valeur: string; dureeMs: number }>();
 
   protected readonly quiz = signal<QuizInteraction | null>(null);

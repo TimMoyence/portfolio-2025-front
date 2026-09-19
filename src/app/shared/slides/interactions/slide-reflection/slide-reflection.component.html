@@ -7,49 +7,59 @@
       <p class="slide-reflection__competency">{{ r.competency }}</p>
     }
     <h3 class="slide-reflection__prompt">{{ promptText() }}</h3>
-    <textarea
-      rows="6"
-      [placeholder]="r.placeholder || ''"
-      [value]="value()"
-      (input)="onInput($any($event.target).value)"
-    ></textarea>
-    @if (mode() === 'apercu') {
+    @if (mode() === 'projection') {
       <p
         class="slide-reflection__apercu"
-        data-testid="slide-reflection-apercu"
-        i18n="@@slideReflectionApercu"
+        data-testid="slide-reflection-projection"
+        i18n="@@slideReflectionProjection"
       >
-        Aperçu : aucune séance n’est ouverte. Cette réflexion reste sur cet écran, elle n’est ni
-        envoyée ni conservée.
+        Chaque étudiant répond sur son appareil.
       </p>
     } @else {
-      <button
-        type="button"
-        class="slide-reflection__save"
-        [class.is-disabled]="value().trim().length === 0"
-        [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
-        (click)="save()"
-        i18n="@@slideReflectionSave"
-      >
-        Garder cette réflexion
-      </button>
-    }
-    @if (saved()) {
-      @switch (saveState()) {
-        @case ('enregistre') {
-          <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSaved">
-            Réflexion enregistrée.
-          </p>
-        }
-        @case ('echec') {
-          <p class="slide-reflection__saved" role="alert" i18n="@@slideReflectionSaveFailed">
-            Échec d’enregistrement : nouvelle tentative nécessaire.
-          </p>
-        }
-        @default {
-          <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSavePending">
-            Réflexion en attente d’envoi.
-          </p>
+      <textarea
+        rows="6"
+        [placeholder]="r.placeholder || ''"
+        [value]="value()"
+        (input)="onInput($any($event.target).value)"
+      ></textarea>
+      @if (mode() === 'apercu') {
+        <p
+          class="slide-reflection__apercu"
+          data-testid="slide-reflection-apercu"
+          i18n="@@slideReflectionApercu"
+        >
+          Aperçu : aucune séance n’est ouverte. Cette réflexion reste sur cet écran, elle n’est ni
+          envoyée ni conservée.
+        </p>
+      } @else {
+        <button
+          type="button"
+          class="slide-reflection__save"
+          [class.is-disabled]="value().trim().length === 0"
+          [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
+          (click)="save()"
+          i18n="@@slideReflectionSave"
+        >
+          Garder cette réflexion
+        </button>
+      }
+      @if (saved()) {
+        @switch (saveState()) {
+          @case ('enregistre') {
+            <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSaved">
+              Réflexion enregistrée.
+            </p>
+          }
+          @case ('echec') {
+            <p class="slide-reflection__saved" role="alert" i18n="@@slideReflectionSaveFailed">
+              Échec d’enregistrement : nouvelle tentative nécessaire.
+            </p>
+          }
+          @default {
+            <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSavePending">
+              Réflexion en attente d’envoi.
+            </p>
+          }
         }
       }
     }

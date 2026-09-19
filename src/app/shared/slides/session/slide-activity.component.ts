@@ -81,6 +81,8 @@ function lireReponse(detail: unknown): ReponseSlide | null {
         [slide]="slide()"
         [sessionId]="sessionId()"
         [jeton]="jeton()"
+        [role]="role()"
+        [resultats]="resultats()"
         (reponse)="reponse.emit($event)"
       />
     }

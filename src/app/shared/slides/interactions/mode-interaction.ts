@@ -1,1 +1,1 @@
-export type ModeInteraction = 'apercu' | 'seance';
+export type ModeInteraction = 'apercu' | 'seance' | 'projection';
