@@ -24,6 +24,9 @@ import { renderArticleMarkdown } from './markdown-article.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticleDetailComponent {
+  protected readonly ctaKicker = $localize`:@@articleDetailCtaKicker:Un sujet à clarifier ?`;
+  protected readonly ctaTitle = $localize`:@@articleDetailCtaTitle:La bonne technologie commence par le bon problème.`;
+  protected readonly ctaLead = $localize`:@@articleDetailCtaLead:Parlons de ce que cette veille peut changer concrètement dans votre activité.`;
   protected article: PublishedArticle | null = null;
   protected renderedContent = '';
   protected isLoading = true;

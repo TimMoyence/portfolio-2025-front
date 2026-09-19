@@ -14312,5 +14312,204 @@
         <target>Result</target>
       </segment>
     </unit>
+    <unit id="articleDetailLoading">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:3,5</note>
+      </notes>
+      <segment>
+        <source> Chargement de l’article… </source>
+        <target> Loading article… </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailNotFound">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:7,8</note>
+      </notes>
+      <segment>
+        <source>Article introuvable</source>
+        <target>Article not found</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailBackToList">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:9,10</note>
+      </notes>
+      <segment>
+        <source>Retour aux articles</source>
+        <target>Back to articles</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailAllArticles">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:17,19</note>
+      </notes>
+      <segment>
+        <source>← Tous les articles</source>
+        <target>← All articles</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailReadingTime">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:24,25</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="INTERPOLATION" disp="{{ article.reading_time_minutes }}"/> min</source>
+        <target><ph id="0" equiv="INTERPOLATION" disp="{{ article.reading_time_minutes }}"/> min</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailSources">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:38,40</note>
+      </notes>
+      <segment>
+        <source>Sources</source>
+        <target>Sources</target>
+      </segment>
+    </unit>
+    <unit id="articlesCtaStart">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:53,54</note>
+        <note category="location">src/app/features/articles/articles-list.component.html:52,53</note>
+      </notes>
+      <segment>
+        <source>Démarrer la conversation</source>
+        <target>Start a conversation</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailCtaKicker">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>Un sujet à clarifier ?</source>
+        <target>A topic to clarify?</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailCtaTitle">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.ts:28</note>
+      </notes>
+      <segment>
+        <source>La bonne technologie commence par le bon problème.</source>
+        <target>The right technology starts with the right problem.</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailCtaLead">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.ts:29</note>
+      </notes>
+      <segment>
+        <source>Parlons de ce que cette veille peut changer concrètement dans votre activité.</source>
+        <target>Let’s talk about what this intelligence can change in your business.</target>
+      </segment>
+    </unit>
+    <unit id="articlesListHeroTitle">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:4,5</note>
+      </notes>
+      <segment>
+        <source>Des idées qui servent<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">le terrain</pc>.</source>
+        <target>Ideas that serve<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">the field</pc>.</target>
+      </segment>
+    </unit>
+    <unit id="articlesListSectionKicker">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:11,12</note>
+      </notes>
+      <segment>
+        <source>Dernières éditions</source>
+        <target>Latest editions</target>
+      </segment>
+    </unit>
+    <unit id="articlesListSectionTitle">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:12,16</note>
+      </notes>
+      <segment>
+        <source>Lire, comprendre, décider.</source>
+        <target>Read, understand, decide.</target>
+      </segment>
+    </unit>
+    <unit id="articlesListLoading">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:16,18</note>
+      </notes>
+      <segment>
+        <source>Chargement des articles…</source>
+        <target>Loading articles…</target>
+      </segment>
+    </unit>
+    <unit id="articlesListError">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:19,21</note>
+      </notes>
+      <segment>
+        <source> Les articles seront disponibles dans un instant. </source>
+        <target> Articles will be available shortly. </target>
+      </segment>
+    </unit>
+    <unit id="articlesListEmpty">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:22,24</note>
+      </notes>
+      <segment>
+        <source>La première édition arrive bientôt.</source>
+        <target>The first edition is coming soon.</target>
+      </segment>
+    </unit>
+    <unit id="articlesListReadArticle">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:40,41</note>
+      </notes>
+      <segment>
+        <source>Lire l’article</source>
+        <target>Read article</target>
+      </segment>
+    </unit>
+    <unit id="articlesListHeroKicker">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.ts:24</note>
+      </notes>
+      <segment>
+        <source>Articles · Morning-Brief</source>
+        <target>Articles · Morning-Brief</target>
+      </segment>
+    </unit>
+    <unit id="articlesListHeroLead">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.ts:25</note>
+      </notes>
+      <segment>
+        <source>Une veille sourcée, transformée en décisions et en pistes concrètes pour les équipes qui veulent utiliser l’IA sans perdre le fil.</source>
+        <target>Sourced intelligence, turned into practical decisions for teams that want to use AI without losing the thread.</target>
+      </segment>
+    </unit>
+    <unit id="articlesListCtaKicker">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.ts:26</note>
+      </notes>
+      <segment>
+        <source>Une question concrète ?</source>
+        <target>A concrete question?</target>
+      </segment>
+    </unit>
+    <unit id="articlesListCtaTitle">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>On peut transformer une veille en outil utile.</source>
+        <target>We can turn intelligence into a useful tool.</target>
+      </segment>
+    </unit>
+    <unit id="articlesListCtaLead">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.ts:28</note>
+      </notes>
+      <segment>
+        <source>Parlons de votre contexte, de vos usages et de ce qui mérite vraiment d’être automatisé.</source>
+        <target>Let’s talk about your context, your uses and what is genuinely worth automating.</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
