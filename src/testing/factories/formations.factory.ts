@@ -4,15 +4,23 @@ import type {
   EcranDeroule,
   ResultatQuestion,
   ResultatsSeance,
+  StatistiquesSeance,
 } from '../../cours/content/types';
 import type {
+  AnnotationFormateur,
   FormationsPort,
+  GroupeFormation,
+  ParticipantDeSeance,
   RapportSeance,
   Rattachement,
+  RegleNotation,
+  ReponseLibreFormateur,
 } from '../../app/core/ports/formations.port';
 import { buildCoursContent } from './cours.factory';
 
 export { buildCoursContent };
+
+const HORODATAGE = '2026-09-19T08:00:00.000Z';
 
 export function buildResultatQuestion(overrides: Partial<ResultatQuestion> = {}): ResultatQuestion {
   return {
@@ -31,6 +39,35 @@ export function buildResultatsSeance(overrides: Partial<ResultatsSeance> = {}): 
   return {
     participants: 24,
     questions: [buildResultatQuestion()],
+    ...overrides,
+  };
+}
+
+export function buildStatistiquesSeance(
+  overrides: Partial<StatistiquesSeance> = {},
+): StatistiquesSeance {
+  return {
+    moyenne: 12.5,
+    mediane: 13,
+    dispersion: 3.25,
+    tauxParticipation: 0.75,
+    tauxReussite: 0.6,
+    questionsProblemes: [],
+    ...overrides,
+  };
+}
+
+export function buildRegleNotation(overrides: Partial<RegleNotation> = {}): RegleNotation {
+  return {
+    noteMax: 20,
+    base: 'participation-relative-cohorte',
+    partCohorteReference: 0.2,
+    ratioSeuilValidation: 0.4,
+    neSaitPasCompteCommeReponse: true,
+    pointsNonReponse: 0,
+    reponsesLibresNotees: false,
+    seuilQuestionProbleme: 0.7,
+    decimalesStatistiques: 2,
     ...overrides,
   };
 }
@@ -91,6 +128,61 @@ export function buildRattachement(overrides: Partial<Rattachement> = {}): Rattac
   };
 }
 
+export function buildGroupeFormation(overrides: Partial<GroupeFormation> = {}): GroupeFormation {
+  return {
+    id: 'groupe-1',
+    sessionId: 'seance-1',
+    name: 'Groupe A',
+    createdAt: HORODATAGE,
+    updatedAt: HORODATAGE,
+    ...overrides,
+  };
+}
+
+export function buildAnnotationFormateur(
+  overrides: Partial<AnnotationFormateur> = {},
+): AnnotationFormateur {
+  return {
+    id: 'annotation-1',
+    sessionId: 'seance-1',
+    teacherId: 'formateur-1',
+    screenId: 'ecran-1',
+    groupName: 'Classe entière',
+    note: 'Relancer le groupe du fond sur la base de calcul.',
+    updatedAt: HORODATAGE,
+    ...overrides,
+  };
+}
+
+export function buildReponseLibreFormateur(
+  overrides: Partial<ReponseLibreFormateur> = {},
+): ReponseLibreFormateur {
+  return {
+    id: 'reponse-libre-1',
+    sessionId: 'seance-1',
+    participantId: 'participant-1',
+    screenId: 'ecran-1',
+    activityId: 'reflexion-1',
+    response: 'Je compare d’abord les bases avant les pourcentages.',
+    dureeMs: 42_000,
+    status: 'enregistre',
+    submittedAt: HORODATAGE,
+    ...overrides,
+  };
+}
+
+export function buildParticipantDeSeance(
+  overrides: Partial<ParticipantDeSeance> = {},
+): ParticipantDeSeance {
+  return {
+    id: 'participant-1',
+    prenom: 'Lea',
+    nom: 'Dubois',
+    groupId: null,
+    ...overrides,
+  };
+}
+
 export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   const port = jasmine.createSpyObj<FormationsPort>('FormationsPort', [
     'ouvrirSeance',
@@ -100,8 +192,19 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'piloter',
     'cloturer',
     'lireResultats',
+    'exporterBilan',
+    'lireAnnotations',
+    'enregistrerAnnotation',
+    'lireReponsesLibres',
+    'lireGroupes',
+    'creerGroupe',
+    'renommerGroupe',
+    'affecterParticipant',
+    'retirerParticipantDuGroupe',
+    'lireParticipants',
     'rejoindre',
     'repondre',
+    'enregistrerReponseLibre',
     'signalerIncidents',
     'lireQuestionsDues',
   ]);
@@ -112,8 +215,23 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.piloter.and.returnValue(of(undefined));
   port.cloturer.and.returnValue(of(undefined));
   port.lireResultats.and.returnValue(of(buildRapportSeance()));
+  port.exporterBilan.and.returnValue(of(buildRapportSeance()));
+  port.lireAnnotations.and.returnValue(of({ annotations: [] }));
+  port.enregistrerAnnotation.and.callFake((sessionId, annotation) =>
+    of(buildAnnotationFormateur({ sessionId, ...annotation })),
+  );
+  port.lireReponsesLibres.and.returnValue(of({ responses: [] }));
+  port.lireGroupes.and.returnValue(of({ groups: [] }));
+  port.creerGroupe.and.callFake((sessionId, name) => of(buildGroupeFormation({ sessionId, name })));
+  port.renommerGroupe.and.callFake((sessionId, id, name) =>
+    of(buildGroupeFormation({ sessionId, id, name })),
+  );
+  port.affecterParticipant.and.returnValue(of(undefined));
+  port.retirerParticipantDuGroupe.and.returnValue(of(undefined));
+  port.lireParticipants.and.returnValue(of({ participants: [] }));
   port.rejoindre.and.returnValue(of(buildRattachement()));
   port.repondre.and.returnValue(of({ reussite: true, libelleConfusion: null }));
+  port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
   port.signalerIncidents.and.returnValue(of(undefined));
   port.lireQuestionsDues.and.returnValue(of({ questions: [] }));
   return port;

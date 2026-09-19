@@ -6,6 +6,7 @@ import type {
   FreeRange,
   PacingMode,
   ResultatsSeance,
+  StatistiquesSeance,
 } from '../../../cours/content/types';
 
 export type ValeurReponse = number | string;
@@ -85,6 +86,25 @@ export interface GroupeFormation {
   updatedAt: string;
 }
 
+export interface ParticipantDeSeance {
+  id: string;
+  prenom: string;
+  nom: string;
+  groupId: string | null;
+}
+
+export interface RegleNotation {
+  noteMax: number;
+  base: 'participation-relative-cohorte';
+  partCohorteReference: number;
+  ratioSeuilValidation: number;
+  neSaitPasCompteCommeReponse: boolean;
+  pointsNonReponse: number;
+  reponsesLibresNotees: boolean;
+  seuilQuestionProbleme: number;
+  decimalesStatistiques: number;
+}
+
 export interface VerdictReponse {
   reussite: boolean;
   libelleConfusion: string | null;
@@ -136,6 +156,8 @@ export interface RapportSeance {
   participants: readonly ParticipantRapporte[];
   conceptsFragiles: readonly string[];
   resultats: ResultatsSeance;
+  statistiques?: StatistiquesSeance;
+  notation?: RegleNotation;
 }
 
 export type MotifRefusRattachement = 'code-inconnu' | 'deja-inscrit' | 'rattachement-impossible';
@@ -192,6 +214,31 @@ export class ReponseRefusee extends Error {
   }
 }
 
+export type MotifRefusReponseLibre =
+  'reseau' | 'seance-non-demarree' | 'seance-terminee' | 'refusee';
+
+export class ReponseLibreRefusee extends Error {
+  constructor(
+    readonly motif: MotifRefusReponseLibre,
+    readonly statut: number,
+  ) {
+    super(`Réponse libre refusée : ${motif} (statut ${statut})`);
+    this.name = 'ReponseLibreRefusee';
+  }
+}
+
+export type MotifRefusGroupe = 'nom-deja-pris' | 'introuvable' | 'echec';
+
+export class GroupeRefuse extends Error {
+  constructor(
+    readonly motif: MotifRefusGroupe,
+    readonly statut: number,
+  ) {
+    super(`Commande de groupe refusée : ${motif} (statut ${statut})`);
+    this.name = 'GroupeRefuse';
+  }
+}
+
 export interface FormationsPort {
   ouvrirSeance(courseSlug: string): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;
@@ -214,6 +261,7 @@ export interface FormationsPort {
   renommerGroupe(sessionId: string, groupId: string, name: string): Observable<GroupeFormation>;
   affecterParticipant(sessionId: string, participantId: string, groupId: string): Observable<void>;
   retirerParticipantDuGroupe(sessionId: string, participantId: string): Observable<void>;
+  lireParticipants(sessionId: string): Observable<{ participants: readonly ParticipantDeSeance[] }>;
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement>;
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse>;
   enregistrerReponseLibre(

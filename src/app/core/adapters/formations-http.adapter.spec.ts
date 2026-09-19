@@ -1,30 +1,43 @@
 import type { TestRequest } from '@angular/common/http/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import type { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
+  buildAnnotationFormateur,
   buildCoursContent,
   buildDerouleCours,
+  buildParticipantDeSeance,
   buildRapportSeance,
+  buildRegleNotation,
+  buildReponseLibreFormateur,
+  buildStatistiquesSeance,
 } from '../../../testing/factories/formations.factory';
 import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
+  AnnotationFormateur,
   GroupeFormation,
   InscriptionParticipant,
+  MotifRefusGroupe,
   MotifRefusRattachement,
   MotifRefusReponse,
+  MotifRefusReponseLibre,
+  ParticipantDeSeance,
   QuestionsDues,
   RapportSeance,
   Rattachement,
+  ReponseLibreFormateur,
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
 import {
   FORMATIONS_PORT,
+  GroupeRefuse,
   RattachementRefuse,
+  ReponseLibreRefusee,
   ReponseRefusee,
   SujetRefuse,
 } from '../ports/formations.port';
@@ -204,6 +217,141 @@ describe('FormationsHttpAdapter', () => {
     attendre(`${URL_SEANCE}/report`, 'GET').flush(rapport);
 
     expect(recus).toEqual([rapport]);
+  });
+
+  it('lireResultats transmet la regle de notation et les statistiques servies par le serveur', () => {
+    const rapport = buildRapportSeance({
+      notation: buildRegleNotation(),
+      statistiques: buildStatistiquesSeance(),
+    });
+    const recus: RapportSeance[] = [];
+
+    adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+    attendre(`${URL_SEANCE}/results`, 'GET').flush(rapport);
+
+    expect(recus[0].notation).toEqual(buildRegleNotation());
+    expect(recus[0].statistiques).toEqual(buildStatistiquesSeance());
+  });
+
+  it('lireAnnotations GETe les annotations du formateur sur annotations', () => {
+    const annotation = buildAnnotationFormateur({ sessionId: SESSION_ID });
+    const recues: AnnotationFormateur[] = [];
+
+    adapter.lireAnnotations(SESSION_ID).subscribe(({ annotations }) => recues.push(...annotations));
+    attendre(`${URL_SEANCE}/annotations`, 'GET').flush({ annotations: [annotation] });
+
+    expect(recues).toEqual([annotation]);
+  });
+
+  it('lireReponsesLibres GETe les reponses libres de la seance sur free-responses', () => {
+    const reponse = buildReponseLibreFormateur({ sessionId: SESSION_ID });
+    const recues: ReponseLibreFormateur[] = [];
+
+    adapter.lireReponsesLibres(SESSION_ID).subscribe(({ responses }) => recues.push(...responses));
+    attendre(`${URL_SEANCE}/free-responses`, 'GET').flush({ responses: [reponse] });
+
+    expect(recues).toEqual([reponse]);
+  });
+
+  it('lireParticipants GETe les participants et leur groupe sur participants', () => {
+    const participants = [
+      buildParticipantDeSeance(),
+      buildParticipantDeSeance({ id: 'participant-2', prenom: 'Nora', groupId: 'groupe-1' }),
+    ];
+    const recus: ParticipantDeSeance[] = [];
+
+    adapter.lireParticipants(SESSION_ID).subscribe((valeur) => recus.push(...valeur.participants));
+    attendre(`${URL_SEANCE}/participants`, 'GET').flush({ participants });
+
+    expect(recus).toEqual(participants);
+  });
+
+  describe('refus d une reponse libre', () => {
+    const cas: readonly (readonly [string, number, ProblemeHttp | null, MotifRefusReponseLibre])[] =
+      [
+        ['une coupure reseau', 0, null, 'reseau'],
+        ['une panne serveur 503', 503, null, 'reseau'],
+        [
+          'un 409 SEANCE_NON_DEMARREE',
+          409,
+          buildProblemeHttp({ code: 'SEANCE_NON_DEMARREE' }),
+          'seance-non-demarree',
+        ],
+        [
+          'un 409 SEANCE_TERMINEE',
+          409,
+          buildProblemeHttp({ code: 'SEANCE_TERMINEE' }),
+          'seance-terminee',
+        ],
+        ['un 400 reponse vide', 400, buildProblemeHttp({ status: 400 }), 'refusee'],
+      ];
+
+    for (const [nom, statut, corps, motif] of cas) {
+      it(`classe ${nom} en ${motif}`, () => {
+        const erreurs: unknown[] = [];
+
+        adapter
+          .enregistrerReponseLibre(SESSION_ID, JETON, {
+            screenId: 'screen-1',
+            activityId: 'reflect-1',
+            response: 'raisonnement',
+            dureeMs: 3200,
+          })
+          .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+        const requete = httpMock.expectOne(`${URL_SEANCE}/free-responses`);
+        if (statut === 0) {
+          requete.error(new ProgressEvent('error'));
+        } else {
+          requete.flush(corps, { status: statut, statusText: 'Erreur' });
+        }
+
+        expect(erreurs[0]).toBeInstanceOf(ReponseLibreRefusee);
+        expect((erreurs[0] as ReponseLibreRefusee).motif).toBe(motif);
+        expect((erreurs[0] as ReponseLibreRefusee).statut).toBe(statut);
+      });
+    }
+  });
+
+  describe('refus d une commande de groupe', () => {
+    const commandes: readonly (readonly [string, () => Observable<unknown>, string])[] = [
+      ['creerGroupe', () => adapter.creerGroupe(SESSION_ID, 'Groupe A'), `${URL_SEANCE}/groups`],
+      [
+        'renommerGroupe',
+        () => adapter.renommerGroupe(SESSION_ID, 'groupe-1', 'Groupe A'),
+        `${URL_SEANCE}/groups/groupe-1`,
+      ],
+      [
+        'affecterParticipant',
+        () => adapter.affecterParticipant(SESSION_ID, 'participant-1', 'groupe-1'),
+        `${URL_SEANCE}/participants/participant-1/group`,
+      ],
+      [
+        'retirerParticipantDuGroupe',
+        () => adapter.retirerParticipantDuGroupe(SESSION_ID, 'participant-1'),
+        `${URL_SEANCE}/participants/participant-1/group`,
+      ],
+    ];
+    const statuts: readonly (readonly [number, MotifRefusGroupe])[] = [
+      [409, 'nom-deja-pris'],
+      [404, 'introuvable'],
+      [500, 'echec'],
+    ];
+
+    for (const [nom, appeler, url] of commandes) {
+      for (const [statut, motif] of statuts) {
+        it(`${nom} classe un ${statut} en ${motif}`, () => {
+          const erreurs: unknown[] = [];
+
+          appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+          httpMock
+            .expectOne(url)
+            .flush(buildProblemeHttp({ status: statut }), { status: statut, statusText: 'Erreur' });
+
+          expect(erreurs[0]).toBeInstanceOf(GroupeRefuse);
+          expect((erreurs[0] as GroupeRefuse).motif).toBe(motif);
+        });
+      }
+    }
   });
 
   it('persiste les reponses libres et les annotations du formateur', () => {

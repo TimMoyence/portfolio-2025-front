@@ -11,8 +11,11 @@ import type {
   GroupeFormation,
   IncidentEtudiant,
   InscriptionParticipant,
+  MotifRefusGroupe,
   MotifRefusRattachement,
   MotifRefusReponse,
+  MotifRefusReponseLibre,
+  ParticipantDeSeance,
   QuestionsDues,
   RapportSeance,
   Rattachement,
@@ -23,13 +26,29 @@ import type {
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
-import { RattachementRefuse, ReponseRefusee, SujetRefuse } from '../ports/formations.port';
+import {
+  GroupeRefuse,
+  RattachementRefuse,
+  ReponseLibreRefusee,
+  ReponseRefusee,
+  SujetRefuse,
+} from '../ports/formations.port';
 import { getApiBaseUrl } from '../http/api-config';
 import { ENTETE_JETON_PARTICIPANT } from '../http/jeton-participant';
 
 const MOTIFS_DE_CONFLIT_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
   REPONSE_DEJA_ENREGISTREE: 'deja-repondue',
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
+};
+
+const MOTIFS_DE_CONFLIT_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
+  SEANCE_NON_DEMARREE: 'seance-non-demarree',
+  SEANCE_TERMINEE: 'seance-terminee',
+};
+
+const MOTIFS_DE_REFUS_DE_GROUPE: Readonly<Record<number, MotifRefusGroupe>> = {
+  404: 'introuvable',
+  409: 'nom-deja-pris',
 };
 
 const MOTIFS_PAR_STATUT: Readonly<Record<number, MotifRefusRattachement>> = {
@@ -62,14 +81,19 @@ function codeDuProbleme(erreur: HttpErrorResponse): string | null {
   return typeof code === 'string' ? code : null;
 }
 
-function motifDeRefusDeReponse(statut: number, code: string | null): MotifRefusReponse {
+function motifDeRefusSelonConflit<M extends string>(
+  erreur: HttpErrorResponse,
+  conflits: Readonly<Record<string, M>>,
+): M | 'reseau' | 'refusee' {
+  const statut = erreur.status;
+  const code = codeDuProbleme(erreur) ?? '';
+  let motif: M | 'reseau' | 'refusee' = 'refusee';
   if (statut === 0 || statut === 429 || statut >= 500) {
-    return 'reseau';
+    motif = 'reseau';
+  } else if (statut === 409 && Object.hasOwn(conflits, code)) {
+    motif = conflits[code];
   }
-  if (statut === 409 && code !== null && Object.hasOwn(MOTIFS_DE_CONFLIT_PAR_CODE, code)) {
-    return MOTIFS_DE_CONFLIT_PAR_CODE[code];
-  }
-  return 'refusee';
+  return motif;
 }
 
 function refuserReponse(erreur: unknown): ReponseRefusee {
@@ -77,8 +101,29 @@ function refuserReponse(erreur: unknown): ReponseRefusee {
     return new ReponseRefusee('reseau', 0);
   }
   return new ReponseRefusee(
-    motifDeRefusDeReponse(erreur.status, codeDuProbleme(erreur)),
+    motifDeRefusSelonConflit(erreur, MOTIFS_DE_CONFLIT_PAR_CODE),
     erreur.status,
+  );
+}
+
+function refuserReponseLibre(erreur: unknown): ReponseLibreRefusee {
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new ReponseLibreRefusee('reseau', 0);
+  }
+  return new ReponseLibreRefusee(
+    motifDeRefusSelonConflit(erreur, MOTIFS_DE_CONFLIT_DE_REPONSE_LIBRE),
+    erreur.status,
+  );
+}
+
+function refuserCommandeDeGroupe(erreur: unknown): GroupeRefuse {
+  const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
+  return new GroupeRefuse(MOTIFS_DE_REFUS_DE_GROUPE[statut] ?? 'echec', statut);
+}
+
+function commandeDeGroupe<T>(requete: Observable<T>): Observable<T> {
+  return requete.pipe(
+    catchError((erreur: unknown) => throwError(() => refuserCommandeDeGroupe(erreur))),
   );
 }
 
@@ -153,26 +198,37 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   creerGroupe(sessionId: string, name: string): Observable<GroupeFormation> {
-    return this.http.post<GroupeFormation>(`${this.urlSeance(sessionId)}/groups`, { name });
+    return commandeDeGroupe(
+      this.http.post<GroupeFormation>(`${this.urlSeance(sessionId)}/groups`, { name }),
+    );
   }
 
   renommerGroupe(sessionId: string, groupId: string, name: string): Observable<GroupeFormation> {
-    return this.http.patch<GroupeFormation>(
-      `${this.urlSeance(sessionId)}/groups/${encodeURIComponent(groupId)}`,
-      { name },
+    return commandeDeGroupe(
+      this.http.patch<GroupeFormation>(
+        `${this.urlSeance(sessionId)}/groups/${encodeURIComponent(groupId)}`,
+        { name },
+      ),
     );
   }
 
   affecterParticipant(sessionId: string, participantId: string, groupId: string): Observable<void> {
-    return this.http.patch<void>(
-      `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}/group`,
-      { groupId },
+    return commandeDeGroupe(
+      this.http.patch<void>(this.urlGroupeDuParticipant(sessionId, participantId), { groupId }),
     );
   }
 
   retirerParticipantDuGroupe(sessionId: string, participantId: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}/group`,
+    return commandeDeGroupe(
+      this.http.delete<void>(this.urlGroupeDuParticipant(sessionId, participantId)),
+    );
+  }
+
+  lireParticipants(
+    sessionId: string,
+  ): Observable<{ participants: readonly ParticipantDeSeance[] }> {
+    return this.http.get<{ participants: readonly ParticipantDeSeance[] }>(
+      `${this.urlSeance(sessionId)}/participants`,
     );
   }
 
@@ -209,11 +265,11 @@ export class FormationsHttpAdapter implements FormationsPort {
     jeton: string,
     reponse: ReponseLibreEtudiant,
   ): Observable<ReponseLibreEnregistree> {
-    return this.http.post<ReponseLibreEnregistree>(
-      `${this.urlSeance(sessionId)}/free-responses`,
-      reponse,
-      { headers: entetes(jeton) },
-    );
+    return this.http
+      .post<ReponseLibreEnregistree>(`${this.urlSeance(sessionId)}/free-responses`, reponse, {
+        headers: entetes(jeton),
+      })
+      .pipe(catchError((erreur: unknown) => throwError(() => refuserReponseLibre(erreur))));
   }
 
   signalerIncidents(
@@ -236,6 +292,10 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   private urlSeance(sessionId: string): string {
     return `${this.baseUrl}/sessions/${encodeURIComponent(sessionId)}`;
+  }
+
+  private urlGroupeDuParticipant(sessionId: string, participantId: string): string {
+    return `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}/group`;
   }
 }
 
