@@ -39,9 +39,7 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'projets', renderMode: RenderMode.Prerender },
   { path: 'articles', renderMode: RenderMode.Server },
   { path: 'articles/:slug', renderMode: RenderMode.Server },
+  { path: 'formations/b2-01-traitement-information-chiffree', renderMode: RenderMode.Server },
 
-  // Routes publiques — prérendues.
-  // Les formations sont enregistrees en routes STATIQUES par slug dans
-  // `app.routes.ts` (composants slide-driven dedies), donc capturees ici.
   { path: '**', renderMode: RenderMode.Prerender },
 ];
