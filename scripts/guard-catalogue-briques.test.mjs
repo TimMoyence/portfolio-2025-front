@@ -10,16 +10,21 @@ const INDEX_FEUILLES = `${DOSSIER_FEUILLES}/index.ts`;
 const SOCLE = 'FpBlock';
 const PLANCHER_FEUILLE = 20;
 
-const PERIMETRE_SERVI = [
+const PERIMETRE_V1 = [
   'fp-vote',
   'fp-numeric',
-  'fp-recall',
-  'fp-exit',
   'fp-concept4',
   'fp-worked',
   'fp-plot',
+  'fp-table-build',
+  'fp-sheet',
   'fp-cardsort',
+  'fp-escape',
   'fp-challenge',
+  'fp-pulse',
+  'fp-recall',
+  'fp-spaced',
+  'fp-exit',
   'fp-quote',
   'fp-story',
   'fp-pro',
@@ -29,7 +34,7 @@ const POURQUOI =
   'Une brique absente de BLOCS n est jamais enregistree comme element personnalise : le deck la monte, le navigateur rend un element inconnu, et rien ne le signale. Deux briques livrees et testees vertes sont restees inutilisables jusqu a ce qu on les compte.';
 
 const POURQUOI_SPEC =
-  'Comparer la table au disque ne voit jamais une brique que le serveur sert mais que le front n inscrit pas : les deux cotes sont d accord sur rien. Seule la liste des briques servies (BriqueExposition et BriqueQuestion du back) tenue a la main attrape l oubli.';
+  'Comparer la table au disque ne voit jamais une brique prevue par la specification mais jamais ecrite : les deux cotes sont d accord sur rien. Seule la liste du perimetre V1 tenue a la main attrape l oubli.';
 
 function classesDeBrique() {
   return readdirSync(DOSSIER_BRIQUES)
@@ -112,31 +117,17 @@ test('la table n inscrit aucune brique qui n existe pas sur le disque', () => {
   assert.deepEqual(fantomes, [], `inscrites sans fichier : ${fantomes.join(', ')}`);
 });
 
-test('chaque brique que le serveur peut servir est inscrite', () => {
+test('chaque brique du perimetre V1 de la specification est inscrite', () => {
   const noms = nomsEnregistres();
 
-  assert.ok(
-    PERIMETRE_SERVI.length > 0,
-    'la liste des briques servies est vide : la garde ne garde rien.',
-  );
+  assert.ok(PERIMETRE_V1.length > 0, 'la liste du perimetre V1 est vide : la garde ne garde rien.');
   assert.ok(noms.length > 0, `${REGISTRE} n inscrit aucun nom : la garde ne garde rien.`);
 
-  const jamaisEcrites = PERIMETRE_SERVI.filter((nom) => !noms.includes(nom));
+  const jamaisEcrites = PERIMETRE_V1.filter((nom) => !noms.includes(nom));
   assert.deepEqual(
     jamaisEcrites,
     [],
-    `servies par le serveur et jamais inscrites : ${jamaisEcrites.join(', ')}. ${POURQUOI_SPEC}`,
-  );
-});
-
-test('la table n inscrit aucune brique que le serveur ne sert pas', () => {
-  const noms = nomsEnregistres();
-
-  const jamaisServies = noms.filter((nom) => !PERIMETRE_SERVI.includes(nom));
-  assert.deepEqual(
-    jamaisServies,
-    [],
-    `inscrites sans qu aucun ecran servi ne les porte : ${jamaisServies.join(', ')}. Une brique que le serveur ne sert pas n est montee par aucun chemin applicatif : c est du code mort charge dans le bundle etudiant.`,
+    `prevues par la specification et jamais inscrites : ${jamaisEcrites.join(', ')}. ${POURQUOI_SPEC}`,
   );
 });
 
