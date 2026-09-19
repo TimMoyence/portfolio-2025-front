@@ -11,7 +11,7 @@ const DATABASE = 'portfolio-formation-offline';
 const STORE = 'free-responses';
 const fallback = new Map<string, PendingFreeResponse>();
 
-function database(): Promise<IDBDatabase | null> {
+function ouvrirLaBase(): Promise<IDBDatabase | null> {
   if (typeof indexedDB === 'undefined') return Promise.resolve(null);
   return new Promise((resolve) => {
     const request = indexedDB.open(DATABASE, 1);
@@ -21,47 +21,60 @@ function database(): Promise<IDBDatabase | null> {
   });
 }
 
-export async function enqueueFreeResponse(response: PendingFreeResponse): Promise<void> {
-  const db = await database();
-  if (db === null) {
-    fallback.set(response.key, response);
-    return;
+async function avecLaBase<T>(
+  operation: (base: IDBDatabase) => Promise<T>,
+  sansBase: () => T,
+): Promise<T> {
+  const base = await ouvrirLaBase();
+  if (base === null) {
+    return sansBase();
   }
-  await new Promise<void>((resolve, reject) => {
-    const transaction = db.transaction(STORE, 'readwrite');
-    transaction.objectStore(STORE).put(response);
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => reject(transaction.error);
-  });
+  try {
+    return await operation(base);
+  } finally {
+    base.close();
+  }
 }
 
-export async function pendingFreeResponses(
-  sessionId: string,
-): Promise<readonly PendingFreeResponse[]> {
-  const db = await database();
-  if (db === null) {
-    return [...fallback.values()].filter((response) => response.sessionId === sessionId);
-  }
-  return new Promise((resolve) => {
-    const request = db.transaction(STORE, 'readonly').objectStore(STORE).getAll();
-    request.onsuccess = () =>
-      resolve(
-        (request.result as PendingFreeResponse[]).filter(
-          (response) => response.sessionId === sessionId,
-        ),
-      );
-    request.onerror = () => resolve([]);
-  });
+export function enqueueFreeResponse(response: PendingFreeResponse): Promise<void> {
+  return avecLaBase(
+    (base) =>
+      new Promise<void>((resolve, reject) => {
+        const transaction = base.transaction(STORE, 'readwrite');
+        transaction.objectStore(STORE).put(response);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error);
+      }),
+    () => {
+      fallback.set(response.key, response);
+    },
+  );
 }
 
-export async function removeFreeResponse(key: string): Promise<void> {
+export function pendingFreeResponses(sessionId: string): Promise<readonly PendingFreeResponse[]> {
+  const deLaSeance = (responses: readonly PendingFreeResponse[]): PendingFreeResponse[] =>
+    responses.filter((response) => response.sessionId === sessionId);
+  return avecLaBase(
+    (base) =>
+      new Promise<readonly PendingFreeResponse[]>((resolve) => {
+        const request = base.transaction(STORE, 'readonly').objectStore(STORE).getAll();
+        request.onsuccess = () => resolve(deLaSeance(request.result as PendingFreeResponse[]));
+        request.onerror = () => resolve([]);
+      }),
+    () => deLaSeance([...fallback.values()]),
+  );
+}
+
+export function removeFreeResponse(key: string): Promise<void> {
   fallback.delete(key);
-  const db = await database();
-  if (db === null) return;
-  await new Promise<void>((resolve) => {
-    const transaction = db.transaction(STORE, 'readwrite');
-    transaction.objectStore(STORE).delete(key);
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => resolve();
-  });
+  return avecLaBase(
+    (base) =>
+      new Promise<void>((resolve) => {
+        const transaction = base.transaction(STORE, 'readwrite');
+        transaction.objectStore(STORE).delete(key);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => resolve();
+      }),
+    () => undefined,
+  );
 }

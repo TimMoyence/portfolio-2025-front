@@ -11,8 +11,13 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FORMATIONS_PORT } from '../../../../core/ports/formations.port';
+import type {
+  FormationsPort,
+  MotifRefusReponseLibre,
+} from '../../../../core/ports/formations.port';
+import { FORMATIONS_PORT, ReponseLibreRefusee } from '../../../../core/ports/formations.port';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
+import type { PendingFreeResponse } from './free-response.queue';
 import {
   enqueueFreeResponse,
   pendingFreeResponses,
@@ -32,6 +37,25 @@ export interface ReflectionInteraction {
   competency?: string;
   expected?: string;
   nextAction?: string;
+}
+
+type EtatEnvoi =
+  | 'repos'
+  | 'envoi'
+  | 'enregistre'
+  | 'attente_reseau'
+  | 'seance_non_demarree'
+  | 'seance_terminee'
+  | 'echec';
+
+const ETAT_APRES_REFUS: Readonly<Record<Exclude<MotifRefusReponseLibre, 'reseau'>, EtatEnvoi>> = {
+  'seance-non-demarree': 'seance_non_demarree',
+  'seance-terminee': 'seance_terminee',
+  refusee: 'echec',
+};
+
+function cleDeFile(sessionId: string, screenId: string, activityId: string): string {
+  return `${sessionId}:${screenId}:${activityId}`;
 }
 
 @Component({
@@ -56,8 +80,7 @@ export class SlideReflectionComponent implements OnInit {
   protected readonly activeReflection = computed(() => this.promptData() ?? this.reflection());
   protected readonly error = signal<boolean>(false);
   protected readonly value = signal<string>('');
-  protected readonly saved = signal<boolean>(false);
-  protected readonly saveState = signal<'idle' | 'en_attente' | 'enregistre' | 'echec'>('idle');
+  protected readonly saveState = signal<EtatEnvoi>('repos');
 
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
   private readonly formations = inject(FORMATIONS_PORT, { optional: true });
@@ -67,81 +90,88 @@ export class SlideReflectionComponent implements OnInit {
   ngOnInit(): void {
     this.load();
     if (typeof window !== 'undefined') {
-      window.addEventListener('online', this.retryPending);
-      this.destroyRef.onDestroy(() => window.removeEventListener('online', this.retryPending));
+      window.addEventListener('online', this.reprendre);
+      this.destroyRef.onDestroy(() => window.removeEventListener('online', this.reprendre));
     }
-    void this.retryPending();
+    void this.reprendre();
   }
 
   protected async save(): Promise<void> {
     const sessionId = this.sessionId();
-    if (
-      this.value().trim().length === 0 ||
-      this.mode() !== 'seance' ||
-      this.formations === null ||
-      sessionId === null
-    ) {
+    const formations = this.formations;
+    const response = this.value().trim();
+    if (response === '' || this.mode() !== 'seance' || sessionId === null || formations === null) {
       return;
     }
-    this.saved.set(true);
-    const reflection = this.activeReflection();
-    const questionId = reflection?.id ?? this.interactionId();
-    const dureeMs = Math.max(0, Date.now() - this.startedAt);
-    this.saveState.set('en_attente');
-    try {
-      await firstValueFrom(
-        this.formations.enregistrerReponseLibre(sessionId, this.jeton(), {
-          screenId: this.screenId(),
-          activityId: questionId,
-          response: this.value().trim(),
-          dureeMs,
-        }),
-      );
-      this.saveState.set('enregistre');
-    } catch {
-      await enqueueFreeResponse({
-        key: this.pendingKey(questionId),
+    const activityId = this.activiteCourante();
+    this.saveState.set('envoi');
+    this.saveState.set(
+      await this.transmettre(formations, {
+        key: cleDeFile(sessionId, this.screenId(), activityId),
         sessionId,
         screenId: this.screenId(),
-        activityId: questionId,
-        response: this.value().trim(),
-        dureeMs,
-      });
-      this.saveState.set('echec');
-    }
+        activityId,
+        response,
+        dureeMs: Math.max(0, Date.now() - this.startedAt),
+      }),
+    );
   }
 
-  private readonly retryPending = async (): Promise<void> => {
+  private readonly reprendre = async (): Promise<void> => {
     const sessionId = this.sessionId();
-    if (this.mode() !== 'seance' || sessionId === null || this.formations === null) return;
-    for (const pending of await pendingFreeResponses(sessionId)) {
-      try {
-        await firstValueFrom(
-          this.formations.enregistrerReponseLibre(sessionId, this.jeton(), {
-            screenId: pending.screenId,
-            activityId: pending.activityId,
-            response: pending.response,
-            dureeMs: pending.dureeMs,
-          }),
-        );
-        await removeFreeResponse(pending.key);
-        if (pending.key === this.pendingKey(this.activeReflection()?.id ?? this.interactionId())) {
-          this.saveState.set('enregistre');
-        }
-      } catch {
-        this.saveState.set('echec');
+    const formations = this.formations;
+    if (this.mode() !== 'seance' || sessionId === null || formations === null) return;
+    const cleCourante = cleDeFile(sessionId, this.screenId(), this.activiteCourante());
+    for (const envoi of await pendingFreeResponses(sessionId)) {
+      const etat = await this.transmettre(formations, envoi);
+      if (envoi.key === cleCourante) {
+        this.saveState.set(etat);
       }
     }
   };
 
-  private pendingKey(activityId: string): string {
-    return `${this.sessionId()}:${this.screenId()}:${activityId}`;
+  private async transmettre(
+    formations: FormationsPort,
+    envoi: PendingFreeResponse,
+  ): Promise<EtatEnvoi> {
+    try {
+      await firstValueFrom(
+        formations.enregistrerReponseLibre(envoi.sessionId, this.jeton(), {
+          screenId: envoi.screenId,
+          activityId: envoi.activityId,
+          response: envoi.response,
+          dureeMs: envoi.dureeMs,
+        }),
+      );
+    } catch (erreur) {
+      return this.traiterLeRefus(envoi, erreur);
+    }
+    await removeFreeResponse(envoi.key);
+    return 'enregistre';
+  }
+
+  private async traiterLeRefus(envoi: PendingFreeResponse, erreur: unknown): Promise<EtatEnvoi> {
+    const motif = erreur instanceof ReponseLibreRefusee ? erreur.motif : 'reseau';
+    if (motif !== 'reseau') {
+      await removeFreeResponse(envoi.key);
+      return ETAT_APRES_REFUS[motif];
+    }
+    try {
+      await enqueueFreeResponse(envoi);
+      return 'attente_reseau';
+    } catch {
+      return 'echec';
+    }
+  }
+
+  private activiteCourante(): string {
+    return this.activeReflection()?.id ?? this.interactionId();
   }
 
   protected onInput(text: string): void {
     this.value.set(text);
-    if (this.saved()) {
-      this.saved.set(false);
+    if (this.saveState() !== 'attente_reseau') {
+      this.saveState.set('repos');
     }
   }
 

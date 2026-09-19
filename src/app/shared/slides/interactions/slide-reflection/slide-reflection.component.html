@@ -43,25 +43,42 @@
           Garder cette réflexion
         </button>
       }
-      @if (saved()) {
+      <p
+        class="slide-reflection__saved"
+        data-testid="slide-reflection-etat"
+        role="status"
+        [attr.data-etat]="saveState()"
+      >
         @switch (saveState()) {
+          @case ('envoi') {
+            <span i18n="@@slideReflectionEnvoi">Envoi de la réflexion…</span>
+          }
           @case ('enregistre') {
-            <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSaved">
-              Réflexion enregistrée.
-            </p>
+            <span i18n="@@slideReflectionSaved">Réflexion enregistrée.</span>
+          }
+          @case ('attente_reseau') {
+            <span i18n="@@slideReflectionAttenteReseau"
+              >En attente de réseau : la réflexion est gardée sur cet appareil et partira au retour
+              de la connexion.</span
+            >
+          }
+          @case ('seance_non_demarree') {
+            <span i18n="@@slideReflectionSeanceNonDemarree"
+              >La séance n’a pas encore démarré : cette réflexion n’a pas été enregistrée.</span
+            >
+          }
+          @case ('seance_terminee') {
+            <span i18n="@@slideReflectionSeanceTerminee"
+              >La séance est terminée : cette réflexion n’a pas été enregistrée.</span
+            >
           }
           @case ('echec') {
-            <p class="slide-reflection__saved" role="alert" i18n="@@slideReflectionSaveFailed">
-              Échec d’enregistrement : nouvelle tentative nécessaire.
-            </p>
-          }
-          @default {
-            <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSavePending">
-              Réflexion en attente d’envoi.
-            </p>
+            <span i18n="@@slideReflectionSaveFailed"
+              >Échec d’enregistrement : nouvelle tentative nécessaire.</span
+            >
           }
         }
-      }
+      </p>
     }
     @if (r.expected || r.nextAction) {
       <details class="slide-reflection__debrief">
