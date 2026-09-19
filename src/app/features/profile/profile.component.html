@@ -384,8 +384,7 @@
                         type="button"
                         class="pf-fav-remove"
                         (click)="removeFavoriteCity(city)"
-                        [attr.aria-label]="'Supprimer ' + city.name + ' des favoris'"
-                        i18n-aria-label="@@profileWeatherRemoveFavoriteAriaLabel"
+                        [attr.aria-label]="removeFavoriteAriaLabel(city)"
                       >
                         <span i18n="@@profileWeatherRemoveFavorite">Supprimer</span>
                       </button>

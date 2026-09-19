@@ -13676,5 +13676,137 @@
         <target>Live course</target>
       </segment>
     </unit>
+    <unit id="authTabsAriaLabel">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.html:22,23</note>
+      </notes>
+      <segment>
+        <source>Connexion ou inscription</source>
+        <target>Log in or sign up</target>
+      </segment>
+    </unit>
+    <unit id="authShowPassword">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.ts:85</note>
+      </notes>
+      <segment>
+        <source>Afficher le mot de passe</source>
+        <target>Show password</target>
+      </segment>
+    </unit>
+    <unit id="authHidePassword">
+      <notes>
+        <note category="location">src/app/features/auth/auth.component.ts:86</note>
+      </notes>
+      <segment>
+        <source>Masquer le mot de passe</source>
+        <target>Hide password</target>
+      </segment>
+    </unit>
+    <unit id="authForgotEmailPlaceholder">
+      <notes>
+        <note category="location">src/app/features/auth/forgot-password.component.html:34,35</note>
+      </notes>
+      <segment>
+        <source>vous@exemple.fr</source>
+        <target>you@example.com</target>
+      </segment>
+    </unit>
+    <unit id="authResetPasswordPlaceholder">
+      <notes>
+        <note category="location">src/app/features/auth/reset-password.component.html:34,35</note>
+      </notes>
+      <segment>
+        <source>12 caractères minimum</source>
+        <target>12 characters minimum</target>
+      </segment>
+    </unit>
+    <unit id="profileWeatherRemoveFavoriteAriaLabel">
+      <notes>
+        <note category="location">src/app/features/profile/profile.component.ts:193</note>
+      </notes>
+      <segment>
+        <source>Supprimer <ph id="0" equiv="city" disp="city.name"/> des favoris</source>
+        <target>Remove <ph id="0" equiv="city" disp="city.name"/> from favorites</target>
+      </segment>
+    </unit>
+    <unit id="bottomSheetClose">
+      <notes>
+        <note category="location">src/app/shared/components/bottom-sheet/bottom-sheet.component.ts:51</note>
+        <note category="location">src/app/shared/components/bottom-sheet/bottom-sheet.component.ts:90</note>
+      </notes>
+      <segment>
+        <source>Fermer</source>
+        <target>Close</target>
+      </segment>
+    </unit>
+    <unit id="contactCtaInfoAriaLabel">
+      <notes>
+        <note category="location">src/app/shared/components/cta-contact/cta-contact.component.html:5,6</note>
+      </notes>
+      <segment>
+        <source>Coordonnées</source>
+        <target>Contact details</target>
+      </segment>
+    </unit>
+    <unit id="contactCtaMethodsAriaLabel">
+      <notes>
+        <note category="location">src/app/shared/components/cta-contact/cta-contact.component.html:25,26</note>
+      </notes>
+      <segment>
+        <source>Moyens de contact</source>
+        <target>Ways to get in touch</target>
+      </segment>
+    </unit>
+    <unit id="navLogoHomeAriaLabel">
+      <notes>
+        <note category="location">src/app/shared/components/navbar/navbar.component.html:12,13</note>
+      </notes>
+      <segment>
+        <source>Asili Design — accueil</source>
+        <target>Asili Design — home</target>
+      </segment>
+    </unit>
+    <unit id="navLogoAlt">
+      <notes>
+        <note category="location">src/app/shared/components/navbar/navbar.component.html:19,20</note>
+        <note category="location">src/app/shared/components/navbar/navbar.component.html:74,75</note>
+      </notes>
+      <segment>
+        <source>Logo Asili Design</source>
+        <target>Asili Design logo</target>
+      </segment>
+    </unit>
+    <unit id="navSwitchLocaleAriaLabel">
+      <notes>
+        <note category="location">src/app/shared/components/navbar/navbar.component.html:191,192</note>
+      </notes>
+      <segment>
+        <source>Voir le site en anglais</source>
+        <target>View the site in French</target>
+      </segment>
+    </unit>
+    <unit id="navUserMenuLabel">
+      <notes>
+        <note category="location">src/app/shared/components/navbar/navbar.component.html:207,208</note>
+        <note category="description">User dropdown label</note>
+        <note category="meaning">navbar.user.label</note>
+      </notes>
+      <segment>
+        <source>Menu utilisateur</source>
+        <target>User menu</target>
+      </segment>
+    </unit>
+    <unit id="navAuthLabel">
+      <notes>
+        <note category="location">src/app/shared/components/navbar/navbar.component.html:261,262</note>
+        <note category="description">Auth button label</note>
+        <note category="meaning">navbar.auth.label</note>
+      </notes>
+      <segment>
+        <source>Espace utilisateur</source>
+        <target>User area</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

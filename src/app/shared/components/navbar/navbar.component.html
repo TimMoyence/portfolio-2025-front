@@ -6,12 +6,18 @@
   i18n-aria-label="navbar.landmark|Main navigation landmark@@navLandmark"
 >
   <div class="asili-nav__inner">
-    <a class="asili-logo" routerLink="/" aria-label="Asili Design — accueil">
+    <a
+      class="asili-logo"
+      routerLink="/"
+      aria-label="Asili Design — accueil"
+      i18n-aria-label="@@navLogoHomeAriaLabel"
+    >
       <img
         class="asili-logo_img"
         aria-hidden="true"
         src="/assets/images/logo.webp"
-        alt="Asili Design logo"
+        alt="Logo Asili Design"
+        i18n-alt="@@navLogoAlt"
       />
       <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili design</span>
     </a>
@@ -65,9 +71,10 @@
             class="asili-logo_img"
             aria-hidden="true"
             src="/assets/images/logo.webp"
-            alt="Asili Design logo"
+            alt="Logo Asili Design"
+            i18n-alt="@@navLogoAlt"
           />
-          <span class="asili-logo__name">Asili design</span>
+          <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili design</span>
         </a>
         <button
           type="button"
@@ -181,7 +188,8 @@
       <a
         [href]="getAlternateLocaleUrl()"
         class="asili-lang__switch"
-        [attr.aria-label]="'Switch to ' + getAlternateLocaleLabel()"
+        aria-label="Voir le site en anglais"
+        i18n-aria-label="@@navSwitchLocaleAriaLabel"
       >
         {{ getAlternateLocaleLabel() }}
       </a>
@@ -196,7 +204,7 @@
             [attr.aria-expanded]="userDropdownOpen"
             aria-haspopup="true"
             class="asili-avatar"
-            [attr.aria-label]="'Menu utilisateur'"
+            aria-label="Menu utilisateur"
             i18n-aria-label="navbar.user.label|User dropdown label@@navUserMenuLabel"
           >
             @if (userInitials()) {
@@ -250,7 +258,7 @@
         class="asili-avatar asili-avatar--login"
         [routerLink]="'/login'"
         (click)="isMobile && closeMobileMenu()"
-        [attr.aria-label]="'Espace utilisateur'"
+        aria-label="Espace utilisateur"
         i18n-aria-label="navbar.auth.label|Auth button label@@navAuthLabel"
       >
         <app-svg-icon name="person" [size]="1.2"></app-svg-icon>
