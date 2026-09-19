@@ -19,15 +19,149 @@ export interface SlideChartSeries {
 export type SlideChartKind = 'bars' | 'line';
 
 type MarqueurDeSerie = 'rond' | 'carre' | 'losange';
+type Plage = readonly [number, number];
 
-const GRADUATIONS = 5;
+interface Graduation {
+  readonly libelle: string;
+  readonly position: number;
+}
+
+interface PointDeTrace {
+  readonly x: number;
+  readonly y: number;
+  readonly libelle: string;
+  readonly dessous: boolean;
+}
+
+interface Trace {
+  readonly serie: SlideChartSeries;
+  readonly marqueur: MarqueurDeSerie;
+  readonly points: readonly PointDeTrace[];
+  readonly ligne: string;
+  readonly etiquette: { readonly x: number; readonly y: number } | null;
+}
+
+interface Barre {
+  readonly serie: SlideChartSeries;
+  readonly marqueur: MarqueurDeSerie;
+  readonly hauteur: number;
+  readonly libelle: string;
+}
+
+interface GroupeDeBarres {
+  readonly libelle: string;
+  readonly barres: readonly Barre[];
+}
+
 const MARQUEURS: readonly MarqueurDeSerie[] = ['rond', 'carre', 'losange'];
+const PAS_RONDS = [1, 2, 2.5, 3, 5];
+const PAS_AUTOMATIQUES = [1, 2, 2.5, 5, 10];
+const INTERVALLES_MIN = 3;
+const INTERVALLES_MAX = 8;
+const INTERVALLES_VISES = 5;
+const GRADUATIONS_DE_REPLI = 5;
+const ECART_DES_ETIQUETTES = 7.5;
+const BAS_DE_ZONE = 12;
+const PRECISION = 1e-6;
+const NOMBRE_FRANCAIS = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
 
 let compteurDeGraphiques = 0;
 
 function prochainIdentifiantDeDescription(): string {
   compteurDeGraphiques += 1;
   return `slide-chart-description-${compteurDeGraphiques}`;
+}
+
+function arrondir(valeur: number): number {
+  return Math.round(valeur * 1e4) / 1e4;
+}
+
+function estEntier(valeur: number): boolean {
+  return Math.abs(valeur - Math.round(valeur)) < PRECISION * Math.max(1, Math.abs(valeur));
+}
+
+function position(valeur: number, [min, max]: Plage): number {
+  const part = ((valeur - min) / Math.max(max - min, Number.EPSILON)) * 100;
+  return arrondir(Math.min(Math.max(part, 0), 100));
+}
+
+function pasAutomatique(brut: number): number {
+  const puissance = 10 ** Math.floor(Math.log10(brut));
+  const facteur = PAS_AUTOMATIQUES.find((candidat) => candidat * puissance >= brut - PRECISION);
+  return (facteur ?? 10) * puissance;
+}
+
+function plageAutomatique(valeurs: readonly number[], depuisZero: boolean): Plage {
+  if (valeurs.length === 0) {
+    return [0, 1];
+  }
+  const min = depuisZero ? Math.min(0, ...valeurs) : Math.min(...valeurs);
+  const max = Math.max(...valeurs, min + 1);
+  const pas = pasAutomatique((max - min) / INTERVALLES_VISES);
+  return [Math.floor(min / pas + PRECISION) * pas, Math.ceil(max / pas - PRECISION) * pas];
+}
+
+function pasRond([min, max]: Plage): number | null {
+  const etendue = max - min;
+  const exposant = Math.floor(Math.log10(etendue / INTERVALLES_MAX));
+  const candidats = [exposant, exposant + 1, exposant + 2].flatMap((puissance) =>
+    PAS_RONDS.map((facteur) => facteur * 10 ** puissance),
+  );
+  const retenus = candidats.filter((pas) => {
+    const intervalles = etendue / pas;
+    return (
+      estEntier(intervalles) &&
+      estEntier(min / pas) &&
+      Math.round(intervalles) >= INTERVALLES_MIN &&
+      Math.round(intervalles) <= INTERVALLES_MAX
+    );
+  });
+  const ecart = (pas: number): number => Math.abs(etendue / pas - INTERVALLES_VISES);
+  return retenus.reduce<number | null>(
+    (meilleur, pas) =>
+      meilleur === null || ecart(pas) < ecart(meilleur) - PRECISION ? pas : meilleur,
+    null,
+  );
+}
+
+function valeursGraduees(plage: Plage): readonly number[] {
+  const [min, max] = plage;
+  if (max <= min) {
+    return [min];
+  }
+  const pas = pasRond(plage);
+  const intervalles = pas === null ? GRADUATIONS_DE_REPLI - 1 : Math.round((max - min) / pas);
+  return Array.from({ length: intervalles + 1 }, (_, rang) =>
+    arrondir(min + ((max - min) * rang) / intervalles),
+  );
+}
+
+function degager(hauteurs: readonly number[]): readonly number[] {
+  const ordre = hauteurs
+    .map((hauteur, rang) => ({ hauteur, rang }))
+    .sort((a, b) => a.hauteur - b.hauteur);
+  const placees = new Array<number>(hauteurs.length);
+  let plancher = -Infinity;
+  for (const { hauteur, rang } of ordre) {
+    placees[rang] = Math.max(hauteur, plancher);
+    plancher = placees[rang] + ECART_DES_ETIQUETTES;
+  }
+  const debordement = Math.max(0, ...placees) - 100;
+  return placees.map((hauteur) => arrondir(debordement > 0 ? hauteur - debordement : hauteur));
+}
+
+function valeurSousLePoint(hauteurs: readonly number[], rang: number): boolean {
+  const hauteur = hauteurs[rang];
+  const autres = hauteurs.filter((_, autre) => autre !== rang);
+  const audessus = autres.filter((autre) => autre >= hauteur);
+  const audessous = autres.filter((autre) => autre < hauteur);
+  if (audessus.length === 0) {
+    return false;
+  }
+  if (audessous.length === 0) {
+    return hauteur >= BAS_DE_ZONE;
+  }
+  return hauteur - Math.max(...audessous) > Math.min(...audessus) - hauteur;
 }
 
 @Component({
@@ -55,18 +189,68 @@ export class SlideChartComponent {
   protected readonly libellePeriode = $localize`:@@slideChartPeriode:Période`;
   protected readonly idDescription = prochainIdentifiantDeDescription();
   protected readonly step = signal(-1);
-  protected readonly echelle = computed<readonly [number, number]>(() => {
-    const plage = this.axisRanges().at(0);
-    if (plage !== undefined) {
-      return plage;
+  protected readonly echelle = computed<Plage>(
+    () =>
+      this.axisRanges().at(0) ??
+      plageAutomatique(
+        this.series().flatMap((serie) => serie.values),
+        this.kind() === 'bars',
+      ),
+  );
+  protected readonly graduations = computed<readonly Graduation[]>(() =>
+    valeursGraduees(this.echelle())
+      .map((valeur) => ({
+        libelle: this.formatValue(valeur),
+        position: position(valeur, this.echelle()),
+      }))
+      .reverse(),
+  );
+  protected readonly graduationsDroites = computed<readonly Graduation[]>(() => {
+    const plage = this.axisRanges().at(1);
+    if (plage === undefined) {
+      return [];
     }
-    const valeurs = this.series().flatMap((serie) => serie.values);
-    const max = Math.max(...valeurs, 0);
-    if (this.kind() === 'bars') {
-      return [0, max > 0 ? max : 1];
-    }
-    const min = Math.min(...valeurs);
-    return [min, Math.max(max, min + 1)];
+    const [min, max] = plage;
+    return this.graduations().map(({ position: hauteur }) => ({
+      libelle: this.formatValue(arrondir(min + ((max - min) * hauteur) / 100)),
+      position: hauteur,
+    }));
+  });
+  protected readonly groupes = computed<readonly GroupeDeBarres[]>(() =>
+    this.labels().map((libelle, index) => ({
+      libelle,
+      barres: this.series().map((serie, rang) => ({
+        serie,
+        marqueur: this.marqueur(rang),
+        hauteur: position(serie.values[index] ?? 0, this.axisRanges().at(rang) ?? this.echelle()),
+        libelle: this.formatValue(serie.values[index] ?? 0),
+      })),
+    })),
+  );
+  protected readonly traces = computed<readonly Trace[]>(() => {
+    const hauteursParSerie = this.series().map((serie) =>
+      serie.values.map((valeur) => position(valeur, this.echelle())),
+    );
+    const colonnes = this.labels().map((_, index) =>
+      hauteursParSerie.map((hauteurs) => hauteurs[index] ?? 0),
+    );
+    const finales = degager(hauteursParSerie.map((hauteurs) => hauteurs.at(-1) ?? 0));
+    return this.series().map((serie, rang) => {
+      const points = serie.values.map((valeur, index) => ({
+        x: this.abscisse(index),
+        y: hauteursParSerie[rang][index],
+        libelle: this.formatValue(valeur),
+        dessous: valeurSousLePoint(colonnes[index] ?? [], rang),
+      }));
+      const dernier = points.at(-1);
+      return {
+        serie,
+        marqueur: this.marqueur(rang),
+        points,
+        ligne: points.map(({ x, y }) => `${x},${arrondir(100 - y)}`).join(' '),
+        etiquette: dernier === undefined ? null : { x: dernier.x, y: finales[rang] },
+      };
+    });
   });
   private readonly hasPlayed = signal(false);
 
@@ -91,46 +275,12 @@ export class SlideChartComponent {
     return `${this.title()}: ${this.caption()}: ${data}`.trim();
   }
 
-  protected hauteur(value: number, seriesIndex = 0): number {
-    const [min, max] = this.axisRanges()[seriesIndex] ?? this.echelle();
-    const part = ((value - min) / Math.max(max - min, Number.EPSILON)) * 100;
-    return Math.round(Math.min(Math.max(part, 0), 100));
-  }
-
   protected formatValue(value: number): string {
-    return Number.isInteger(value) ? String(value) : value.toFixed(2).replace('.', ',');
-  }
-
-  protected axisTicks(range: readonly [number, number]): readonly string[] {
-    const [min, max] = range;
-    return Array.from({ length: GRADUATIONS }, (_, rang) =>
-      this.formatValue(max - ((max - min) * rang) / (GRADUATIONS - 1)),
-    );
-  }
-
-  protected pointX(index: number): number {
-    const count = Math.max(1, this.labels().length - 1);
-    return 28 + (index / count) * 744;
-  }
-
-  protected pointY(value: number): number {
-    const [min, max] = this.echelle();
-    const part = (value - min) / Math.max(max - min, Number.EPSILON);
-    return 270 - Math.min(Math.max(part, 0), 1) * 220;
+    return NOMBRE_FRANCAIS.format(value);
   }
 
   protected marqueur(seriesIndex: number): MarqueurDeSerie {
     return MARQUEURS[seriesIndex % MARQUEURS.length];
-  }
-
-  protected losange(x: number, y: number): string {
-    return `${x},${y - 8} ${x + 8},${y} ${x},${y + 8} ${x - 8},${y}`;
-  }
-
-  protected linePoints(serie: SlideChartSeries): string {
-    return serie.values
-      .map((value, index) => `${this.pointX(index)},${this.pointY(value)}`)
-      .join(' ');
   }
 
   protected play(): void {
@@ -154,6 +304,10 @@ export class SlideChartComponent {
       }
       this.step.set(next);
     }, 560);
+  }
+
+  private abscisse(index: number): number {
+    return arrondir(((index + 0.5) / Math.max(1, this.labels().length)) * 100);
   }
 
   private observeVisibility(): void {
