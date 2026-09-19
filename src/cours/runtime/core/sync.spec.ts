@@ -116,10 +116,16 @@ const RESULTATS: ResultatsSeance = {
   questions: [
     {
       questionId: 'Q-1',
+      ecranId: 'E-1',
+      type: 'vote',
+      noteCompte: true,
       total: 10,
       correctes: 6,
       neSaitPas: 1,
       confusions: [{ id: 'c1', libelle: 'Confusion frequente', nombre: 3 }],
+      parOption: { a: 6, b: 3, __je_ne_sais_pas__: 1 },
+      scoreMoyen: null,
+      parCle: null,
     },
   ],
 };

@@ -26,12 +26,18 @@ const HORODATAGE = '2026-09-19T08:00:00.000Z';
 export function buildResultatQuestion(overrides: Partial<ResultatQuestion> = {}): ResultatQuestion {
   return {
     questionId: 'Q-CAP-03',
+    ecranId: 'ecran-1',
+    type: 'vote',
+    noteCompte: true,
     total: 24,
     correctes: 16,
     neSaitPas: 2,
     confusions: [
       { id: 'interet-simple', libelle: 'Intérêts simples au lieu de composés', nombre: 6 },
     ],
+    parOption: null,
+    scoreMoyen: null,
+    parCle: null,
     ...overrides,
   };
 }
@@ -93,6 +99,7 @@ export function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranD
     duree: 180,
     interactif: true,
     notes: 'Rappeler la formule de capitalisation avant de lancer le vote.',
+    diffusion: 'catalogue',
     seuil: 0.7,
     corriges: [
       {
@@ -101,6 +108,8 @@ export function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranD
         confusions: [{ id: 'interet-simple', libelle: 'Intérêts simples au lieu de composés' }],
       },
     ],
+    questions: [],
+    corrigeEcran: null,
     ...overrides,
   };
 }

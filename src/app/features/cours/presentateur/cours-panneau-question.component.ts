@@ -24,7 +24,7 @@ interface PanneauQuestion {
   readonly remediation: number | null;
 }
 
-const SANS_REPONSE: Omit<ResultatQuestion, 'questionId'> = {
+const SANS_REPONSE: Pick<ResultatQuestion, 'total' | 'correctes' | 'neSaitPas' | 'confusions'> = {
   total: 0,
   correctes: 0,
   neSaitPas: 0,
