@@ -47,6 +47,21 @@ export function buildVisualImageHeroSlide(id = 'B2-01-S01-ACCROCHE'): EcranConte
   });
 }
 
+export function buildVisualChartSlide(
+  props: Readonly<Record<string, unknown>>,
+  id = 'B2-01-A2-04-MARGE-AXE-ZERO',
+): EcranContent {
+  return buildVisualSlide({
+    id,
+    donnees: {
+      recit: {
+        id,
+        presentation: { version: 2, screenId: id, renderer: 'chart', props },
+      },
+    },
+  });
+}
+
 export function buildVisualNestedQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
   return buildVisualSlide({
     id: 'B2-01-S07-GRAPHIQUE',
