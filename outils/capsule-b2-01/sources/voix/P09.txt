@@ -1,0 +1,1 @@
+Ce contrôle surveille les formules, pas les données. Pour les données, on compare le total à une source indépendante : le compte de résultat indique cent vingt mille euros de ventes de sacs. Le second contrôle affiche 1.

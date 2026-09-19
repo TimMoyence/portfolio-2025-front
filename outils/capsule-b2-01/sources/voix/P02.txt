@@ -1,0 +1,1 @@
+Premier geste : le total. En C6, on écrit : égal, SOMME, parenthèse, C2 deux-points C5. Le tableur affiche cent vingt mille. En B6, la même formule donne cent dix mille.

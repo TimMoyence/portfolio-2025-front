@@ -47,7 +47,7 @@
     "donnees": "fictives (annexe A.3)"
   },
   "production": {
-    "date": "2026-09-19T18:39:14.569Z",
+    "date": "2026-09-19T22:38:26.462Z",
     "chaine": "produire.sh (page HTML/SVG rendue image par image, Piper, FFmpeg)",
     "outils": {
       "node": "v24.18.0",

@@ -1,4 +1,4 @@
-const SCOPE_DIRS = ['src/', 'e2e/', 'scripts/'];
+const SCOPE_DIRS = ['src/', 'e2e/', 'scripts/', 'outils/'];
 
 const SOURCE_EXTS = new Set(['ts', 'tsx', 'mts', 'cts', 'js', 'jsx', 'mjs', 'cjs']);
 const JSDOC_TYPED_EXTS = new Set(['js', 'jsx', 'mjs', 'cjs', 'mts']);

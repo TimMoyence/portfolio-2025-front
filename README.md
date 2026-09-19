@@ -67,6 +67,10 @@ Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL`
 - `/formations/audit-seo-diy/toolkit` — Toolkit Audit SEO DIY
 - `/formations/b2-01-traitement-information-chiffree` — Cours B2-01 (72 écrans servis par le back via `/formations/catalogue/:slug`), rendu serveur à la demande (`RenderMode.Server`) pour refléter le contenu publié au moment de la visite. Hors séance, les quiz et réflexions sont en aperçu : rien n'est envoyé, le résultat n'est donné qu'en séance. La page propose « Rejoindre une séance » vers `/cours/rejoindre` ; la carte de `/formations` y mène.
 
+### Médias du cours B2-01
+
+La capsule vidéo et les images du cours sont servies depuis `src/assets/cours/b2-01/v3/`. Elles ne sont pas téléchargées : elles sont produites par la chaîne versionnée dans [`outils/capsule-b2-01/`](./outils/capsule-b2-01/MANIFESTE.md) (page HTML rendue image par image, voix Piper, FFmpeg, dérivés WebP de Wikimedia Commons). `outils/capsule-b2-01/produire.sh` refait la chaîne depuis zéro et redonne les mêmes fichiers à l'octet ; `MANIFESTE.md` liste les livrables, leurs empreintes SHA-256, leurs sources, leurs licences et la recette (AC-22, AC-23). Le dossier n'embarque ni `node_modules`, ni environnement Python, ni modèle de voix : ils sont retéléchargés et vérifiés par empreinte.
+
 ### Cours en séance
 
 Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`). Le cours est servi par le back (`/formations/sessions/...`) : le front ne porte ni corrigé ni barème.

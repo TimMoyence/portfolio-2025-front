@@ -1,7 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["src/polyfills.ts", "src/**/*.spec.ts", "scripts/*.{mjs,mts}", "e2e/**/*.spec.ts"],
-  "project": ["src/**/*.ts", "scripts/**/*.{mjs,mts}", "e2e/**/*.ts"],
-  "ignoreDependencies": ["@fontsource/.+"],
+  "entry": [
+    "src/polyfills.ts",
+    "src/**/*.spec.ts",
+    "scripts/*.{mjs,mts}",
+    "e2e/**/*.spec.ts",
+    "outils/capsule-b2-01/outils/*.mjs",
+    "outils/capsule-b2-01/page/capsule.js"
+  ],
+  "project": ["src/**/*.ts", "scripts/**/*.{mjs,mts}", "e2e/**/*.ts", "outils/**/*.{mjs,js}"],
+  "ignoreDependencies": ["@fontsource/.+", "sharp"],
   "ignoreExportsUsedInFile": { "interface": true, "type": true }
 }

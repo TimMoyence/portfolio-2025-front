@@ -1,0 +1,9 @@
+node_modules/
+.venv/
+espeak-ng-data
+build/
+assets/
+controle/
+page/fonts/
+modele/*.onnx
+modele/*.onnx.json

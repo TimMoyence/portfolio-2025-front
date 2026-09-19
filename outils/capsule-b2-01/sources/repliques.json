@@ -1,0 +1,150 @@
+[
+  {
+    "id": "P01-1",
+    "gabarit": "00:00:00.400 --> 00:00:04.190",
+    "lignes": ["Une formule qui se recopie,", "un tableau qui se contrôle :"]
+  },
+  {
+    "id": "P01-2",
+    "gabarit": "00:00:04.190 --> 00:00:09.740",
+    "lignes": [
+      "quatre gestes de tableur, sur les ventes",
+      "trimestrielles de sacs étanches, en € HT."
+    ]
+  },
+  {
+    "id": "P01-3",
+    "gabarit": "00:00:09.740 --> 00:00:11.500",
+    "lignes": ["Les données sont fictives."]
+  },
+  {
+    "id": "P02-1",
+    "gabarit": "00:00:13.400 --> 00:00:19.602",
+    "lignes": ["Premier geste : le total.", "En C6, on écrit =SOMME(C2:C5)."]
+  },
+  {
+    "id": "P02-2",
+    "gabarit": "00:00:19.602 --> 00:00:26.800",
+    "lignes": ["Le tableur affiche 120 000.", "En B6, la même formule donne 110 000."]
+  },
+  {
+    "id": "P03-1",
+    "gabarit": "00:00:28.400 --> 00:00:36.232",
+    "lignes": ["Deuxième geste : le taux d’évolution.", "En D2 : =(C2-B2)/B2,"]
+  },
+  {
+    "id": "P03-2",
+    "gabarit": "00:00:36.232 --> 00:00:40.149",
+    "lignes": ["B2 étant la valeur de départ."]
+  },
+  {
+    "id": "P03-3",
+    "gabarit": "00:00:40.149 --> 00:00:44.200",
+    "lignes": ["Résultat : 0,125, soit 12,5 %."]
+  },
+  {
+    "id": "P04-1",
+    "gabarit": "00:00:46.400 --> 00:00:50.282",
+    "lignes": ["On recopie vers le bas avec", "le bouton « Recopier vers le bas »."]
+  },
+  {
+    "id": "P04-2",
+    "gabarit": "00:00:50.282 --> 00:00:54.411",
+    "lignes": ["Les références glissent d’une ligne :", "C2 devient C3, B2 devient B3."]
+  },
+  {
+    "id": "P04-3",
+    "gabarit": "00:00:54.411 --> 00:00:57.800",
+    "lignes": ["C’est voulu : chaque ligne compare", "ses propres valeurs."]
+  },
+  {
+    "id": "P05-1",
+    "gabarit": "00:00:59.400 --> 00:01:03.715",
+    "lignes": ["Troisième geste : la part du total.", "En E2 : =C2/C6."]
+  },
+  {
+    "id": "P05-2",
+    "gabarit": "00:01:03.715 --> 00:01:09.723",
+    "lignes": ["Mais recopiée telle quelle, la formule", "devient =C3/C7, et C7 est vide :"]
+  },
+  {
+    "id": "P05-3",
+    "gabarit": "00:01:09.723 --> 00:01:14.800",
+    "lignes": ["le tableur affiche #DIV/0!,", "une erreur de division par zéro."]
+  },
+  {
+    "id": "P06-1",
+    "gabarit": "00:01:16.400 --> 00:01:19.895",
+    "lignes": ["Le total doit rester fixe :", "on écrit =C2/$C$6."]
+  },
+  {
+    "id": "P06-2",
+    "gabarit": "00:01:19.895 --> 00:01:22.782",
+    "lignes": ["Le dollar fige la colonne et la ligne."]
+  },
+  {
+    "id": "P06-3",
+    "gabarit": "00:01:22.782 --> 00:01:28.100",
+    "lignes": ["On recopie : les parts s’affichent,", "celle du total vaut 1, soit 100 %."]
+  },
+  {
+    "id": "P07-1",
+    "gabarit": "00:01:30.400 --> 00:01:36.450",
+    "lignes": ["Quatrième geste : le contrôle.", "Les quatre parts doivent faire 1."]
+  },
+  {
+    "id": "P07-2",
+    "gabarit": "00:01:36.450 --> 00:01:40.420",
+    "lignes": ["En E8 :", "=SI(ARRONDI(SOMME(E2:E5);6)=1;1;0)"]
+  },
+  {
+    "id": "P07-3",
+    "gabarit": "00:01:40.420 --> 00:01:42.500",
+    "lignes": ["Le contrôle affiche 1."]
+  },
+  {
+    "id": "P08-1",
+    "gabarit": "00:01:44.400 --> 00:01:49.151",
+    "lignes": ["Mettons-le à l’épreuve : on tape 0,4", "à la place de la formule de E3."]
+  },
+  {
+    "id": "P08-2",
+    "gabarit": "00:01:49.151 --> 00:01:52.505",
+    "lignes": ["La somme ne vaut plus 1 :", "le contrôle passe à 0."]
+  },
+  {
+    "id": "P08-3",
+    "gabarit": "00:01:52.505 --> 00:01:55.300",
+    "lignes": ["On rétablit la formule : il revient à 1."]
+  },
+  {
+    "id": "P09-1",
+    "gabarit": "00:01:57.400 --> 00:02:00.484",
+    "lignes": ["Ce contrôle surveille les formules,", "pas les données."]
+  },
+  {
+    "id": "P09-2",
+    "gabarit": "00:02:00.484 --> 00:02:04.340",
+    "lignes": ["Pour les données, on compare le total", "à une source indépendante :"]
+  },
+  {
+    "id": "P09-3",
+    "gabarit": "00:02:04.340 --> 00:02:07.780",
+    "lignes": ["le compte de résultat indique", "120 000 € de ventes de sacs."]
+  },
+  {
+    "id": "P09-4",
+    "gabarit": "00:02:07.780 --> 00:02:09.500",
+    "lignes": ["Le second contrôle affiche 1."]
+  },
+  {
+    "id": "P10-1",
+    "gabarit": "00:02:11.400 --> 00:02:16.394",
+    "lignes": ["Total, évolution, part figée ($),", "contrôles : à vous de les appliquer"]
+  },
+  {
+    "id": "P10-2",
+    "gabarit": "00:02:16.394 --> 00:02:19.000",
+    "lignes": ["au tableau de bord d’Atelier Rivage."]
+  }
+]

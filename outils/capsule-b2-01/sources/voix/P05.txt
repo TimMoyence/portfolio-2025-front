@@ -1,0 +1,1 @@
+Troisième geste : la part du total. En E2, on divise C2 par le total, C6. Mais, recopiée telle quelle, la formule divise C3 par C7, une cellule vide : le tableur affiche une erreur de division par zéro.

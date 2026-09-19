@@ -1,0 +1,1 @@
+Le total doit rester fixe. On écrit dollar C dollar 6 : le dollar fige la colonne et la ligne. On recopie : les parts s’affichent, et celle du total vaut 1, c’est-à-dire cent pour cent.

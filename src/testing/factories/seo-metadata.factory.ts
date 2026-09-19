@@ -6,7 +6,7 @@ export const SLUG_DU_COURS_B2 = 'b2-01-traitement-information-chiffree';
 
 export const CHEMIN_DU_COURS_B2 = `/formations/${SLUG_DU_COURS_B2}`;
 
-export function buildPageSeo(overrides: Partial<PageSeo> = {}): PageSeo {
+function buildPageSeo(overrides: Partial<PageSeo> = {}): PageSeo {
   return {
     id: 'page',
     path: '/page',

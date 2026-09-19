@@ -1,0 +1,1 @@
+Mettons-le à l’épreuve : si quelqu’un tape zéro virgule quatre à la place de la formule de E3, la somme ne vaut plus 1 et le contrôle passe à 0. On rétablit la formule : il revient à 1.
