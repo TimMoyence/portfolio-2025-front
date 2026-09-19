@@ -36,7 +36,8 @@ export class SlideMethodPathComponent {
 
   constructor() {
     afterNextRender(() => {
-      if (!this.autoplay() || this.steps().length < 2) {
+      const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!this.autoplay() || this.steps().length < 2 || mouvementReduit) {
         return;
       }
       const timer = window.setInterval(() => {
