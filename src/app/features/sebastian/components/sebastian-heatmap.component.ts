@@ -64,7 +64,7 @@ export class SebastianHeatmapComponent {
   readonly modes: ModeOption[] = [
     { value: 'combined', label: $localize`:@@sebastianHeatmapCombined:Combine` },
     { value: 'alcohol', label: $localize`:@@sebastianCategoryAlcohol:Alcool` },
-    { value: 'coffee', label: $localize`:@@sebastianCategoryCoffee:Cafe` },
+    { value: 'coffee', label: $localize`:@@sebastianCategoryCoffee:Café` },
   ];
 
   readonly dayLabels = [

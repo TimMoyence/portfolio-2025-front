@@ -35,7 +35,7 @@ function unitLabel(entry: SebastianEntry): string {
         >
           <option value="" i18n="@@sebastianHistoryAllCategories">Toutes les categories</option>
           <option value="alcohol" i18n="@@sebastianCategoryAlcohol">Alcool</option>
-          <option value="coffee" i18n="@@sebastianCategoryCoffee">Cafe</option>
+          <option value="coffee" i18n="@@sebastianCategoryCoffee">Café</option>
         </select>
 
         <input

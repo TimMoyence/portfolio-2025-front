@@ -50,7 +50,7 @@ const DRINK_UI: Record<SebastianDrinkType, { label: string; icon: string; colorC
     colorClass: 'text-green-400',
   },
   coffee: {
-    label: $localize`:@@sebastianDrinkCoffee:Cafe`,
+    label: $localize`:@@sebastianDrinkCoffee:Café`,
     icon: '☕',
     colorClass: 'text-scheme-accent-active',
   },
@@ -133,7 +133,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
 
         <section>
           <h4 class="mb-2 text-sm font-semibold text-white/60" i18n="@@sebastianAddSheetQuantity">
-            Quantite
+            Quantité
           </h4>
           <div class="flex items-center gap-4">
             <button

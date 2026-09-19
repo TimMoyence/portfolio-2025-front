@@ -39,7 +39,7 @@ const PERIOD_LABELS: Record<SebastianPeriod, string> = {
             [(ngModel)]="goalCategory"
           >
             <option value="alcohol" i18n="@@sebastianCategoryAlcohol">Alcool</option>
-            <option value="coffee" i18n="@@sebastianCategoryCoffee">Cafe</option>
+            <option value="coffee" i18n="@@sebastianCategoryCoffee">Café</option>
           </select>
           <input
             data-testid="goal-quantity"
@@ -47,7 +47,7 @@ const PERIOD_LABELS: Record<SebastianPeriod, string> = {
             min="1"
             class="w-full rounded-lg border border-[rgba(230,170,70,0.14)] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-[rgba(230,170,70,0.45)] focus:outline-none"
             [(ngModel)]="goalQuantity"
-            placeholder="Quantite max"
+            placeholder="Quantité max"
             i18n-placeholder="@@sebastianGoalQuantityPlaceholder"
           />
           <select

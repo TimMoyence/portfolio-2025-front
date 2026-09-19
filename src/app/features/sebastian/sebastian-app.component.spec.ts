@@ -80,6 +80,10 @@ describe('SebastianAppComponent', () => {
     expect(h1!.textContent!.trim()).toContain('Sebastian');
   });
 
+  it('écrit le compteur Café aujourd’hui avec son accent (H4)', () => {
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain("Café aujourd'hui");
+  });
+
   it('devrait afficher le FAB d ajout', () => {
     const fab: HTMLButtonElement | null = fixture.nativeElement.querySelector(
       '[aria-label="Ajouter une consommation"]',

@@ -64,7 +64,7 @@ export class SebastianTrendChartComponent implements OnDestroy {
             fill: is30d,
           },
           {
-            label: $localize`:@@sebastianCategoryCoffee:Cafe`,
+            label: $localize`:@@sebastianCategoryCoffee:Café`,
             data: trendData.dataPoints.map((dp) => dp.coffee),
             borderColor: '#b8822c',
             backgroundColor: is30d ? 'rgba(184, 130, 44, 0.08)' : 'transparent',

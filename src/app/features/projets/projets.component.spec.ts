@@ -78,6 +78,15 @@ describe('ProjetsComponent', () => {
     expect(compiled.querySelectorAll('app-asili-projects-grid .placeholder').length).toBe(0);
   });
 
+  it('décrit l illustration de Fourmizzz Suite sous le nom actuel du projet (H5)', () => {
+    const fourmizzz = component['projects'].find((p) => p.title === 'Fourmizzz Suite');
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(fourmizzz?.imageAlt).toBe('illustration — Fourmizzz Suite');
+    expect(compiled.querySelector('img[alt="illustration — Fourmizzz Suite"]')).not.toBeNull();
+    expect(compiled.innerHTML).not.toContain('Le Jeu des Fourmis');
+  });
+
   it('should no longer expose the ZenFirst Vision realisation', () => {
     const zenfirst = component['projects'].find((p) => p.title.includes('ZenFirst Vision'));
     expect(zenfirst).toBeUndefined();

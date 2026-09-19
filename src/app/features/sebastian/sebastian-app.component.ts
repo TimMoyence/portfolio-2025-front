@@ -68,7 +68,7 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
               <span
                 class="font-mono text-[10.5px] uppercase tracking-[0.12em] text-gold-deep"
                 i18n="sebastian.counter.coffee|@@sebastianCounterCoffee"
-                >Cafe aujourd'hui</span
+                >Café aujourd'hui</span
               >
               <span class="font-display text-4xl leading-none text-white">{{ todayCoffee() }}</span>
             </div>

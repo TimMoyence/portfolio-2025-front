@@ -4294,7 +4294,7 @@
     </unit>
     <unit id="sebastianCounterCoffee">
       <segment>
-        <source>Cafe aujourd&apos;hui</source>
+        <source>Café aujourd&apos;hui</source>
         <target>Coffee today</target>
       </segment>
     </unit>
@@ -9298,8 +9298,8 @@
         <note category="location">src/app/features/projets/projets.component.ts:161</note>
       </notes>
       <segment>
-        <source>illustration — Le Jeu des Fourmis</source>
-        <target>illustration — The Ant Game</target>
+        <source>illustration — Fourmizzz Suite</source>
+        <target>illustration — Fourmizzz Suite</target>
       </segment>
     </unit>
 
@@ -14847,7 +14847,7 @@
         <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:53</note>
       </notes>
       <segment>
-        <source>Cafe</source>
+        <source>Café</source>
         <target>Coffee</target>
       </segment>
     </unit>
@@ -14919,7 +14919,7 @@
         <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:136,138</note>
       </notes>
       <segment>
-        <source> Quantite </source>
+        <source> Quantité </source>
         <target> Quantity </target>
       </segment>
     </unit>
@@ -15024,7 +15024,7 @@
         <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:38,41</note>
       </notes>
       <segment>
-        <source>Cafe</source>
+        <source>Café</source>
         <target>Coffee</target>
       </segment>
     </unit>
@@ -15292,7 +15292,7 @@
         <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:50,51</note>
       </notes>
       <segment>
-        <source>Quantite max</source>
+        <source>Quantité max</source>
         <target>Max quantity</target>
       </segment>
     </unit>

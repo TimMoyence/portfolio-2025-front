@@ -72,11 +72,11 @@ describe('SebastianHeatmapComponent', () => {
     expect(alcoholButton.classList).toContain('bg-gold');
   });
 
-  it('devrait changer de mode quand on clique sur Cafe', () => {
+  it('devrait changer de mode quand on clique sur Café', () => {
     const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll(
       "[data-testid='mode-button']",
     );
-    const coffeeButton = Array.from(buttons).find((b) => b.textContent!.includes('Caf'))!;
+    const coffeeButton = Array.from(buttons).find((b) => b.textContent!.includes('Café'))!;
 
     coffeeButton.click();
     fixture.detectChanges();

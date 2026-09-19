@@ -76,6 +76,20 @@ describe('SebastianGoalsComponent', () => {
     expect(submitButton).toBeTruthy();
   });
 
+  it('écrit Café et Quantité max avec leurs accents (H4)', () => {
+    const options = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll(
+        "[data-testid='goal-category'] option",
+      ),
+    ).map((option) => option.textContent?.trim());
+    const quantite = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>(
+      "[data-testid='goal-quantity']",
+    );
+
+    expect(options).toContain('Café');
+    expect(quantite?.placeholder).toBe('Quantité max');
+  });
+
   it('devrait soumettre un nouvel objectif', () => {
     const newGoal = buildSebastianGoal({ id: 'g-new', category: 'coffee' });
     portStub.setGoal.and.returnValue(of(newGoal));

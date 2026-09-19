@@ -137,7 +137,7 @@ export class ProjetsComponent {
         result: $localize`:@@projetsProject9CaseResult:Le périmètre produit relie simulation, monde persistant et choix stratégiques différenciés.`,
       },
       image: '/assets/images/projects/jeu-des-fourmis.webp',
-      imageAlt: $localize`:@@projetsProject9ImageAlt:illustration — Le Jeu des Fourmis`,
+      imageAlt: $localize`:@@projetsProject9ImageAlt:illustration — Fourmizzz Suite`,
     },
     {
       size: 'small',
