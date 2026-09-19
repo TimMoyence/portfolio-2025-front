@@ -1,4 +1,5 @@
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
+import seoMetadata from '../assets/seo/seo-metadata.json';
 import { injectSeoHead, isKnownRoute } from './seo-injector';
 
 const BASE_URL = 'https://asilidesign.fr';
@@ -77,21 +78,28 @@ describe('isKnownRoute', () => {
     expect(isKnownRoute('/contact', metadata)).toBeTrue();
     expect(isKnownRoute('/inconnue', metadata)).toBeFalse();
   });
+});
 
-  it('reconnait le parcours B2 catalogue par le serveur', () => {
-    const metadata = buildMetadata(
-      { '@type': 'LocalBusiness' },
-      {
-        pages: [
-          {
-            id: 'formations-b2-01-traitement-information-chiffree',
-            path: '/formations/b2-01-traitement-information-chiffree',
-            locales: {},
-          },
-        ] as SeoMetadataFile['pages'],
-      },
+describe('seo-metadata.json — parcours B2 servi par le serveur', () => {
+  const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
+  const CHEMIN_B2 = '/formations/b2-01-traitement-information-chiffree';
+
+  const blocsJsonLd = (html: string): Record<string, unknown>[] =>
+    [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(
+      (trouve) => JSON.parse(trouve[1]) as Record<string, unknown>,
     );
 
-    expect(isKnownRoute('/formations/b2-01-traitement-information-chiffree', metadata)).toBeTrue();
+  it('déclare la page B2 comme une route connue', () => {
+    expect(isKnownRoute(CHEMIN_B2, METADONNEES)).toBeTrue();
+  });
+
+  it('injecte la canonique et le Course du B2 tels que le fichier les déclare', () => {
+    const html = injectSeoHead(EMPTY_HTML, METADONNEES, `/fr${CHEMIN_B2}`, BASE_URL);
+
+    expect(html).toContain(`<link rel="canonical" href="${BASE_URL}/fr${CHEMIN_B2}" />`);
+    const cours = blocsJsonLd(html).find((bloc) => bloc['@type'] === 'Course');
+    expect(cours?.['duration']).toBe('PT3H30M');
+    expect(cours?.['description']).toContain('72 écrans');
+    expect(cours?.['url']).toBe(`${BASE_URL}/fr${CHEMIN_B2}`);
   });
 });

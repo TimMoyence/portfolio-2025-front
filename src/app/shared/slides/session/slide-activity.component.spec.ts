@@ -7,10 +7,11 @@ import {
   buildVisualQuizSlide,
   buildVisualSlide,
 } from '../../../../testing/factories/visual-slide.factory';
+import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 describe('SlideActivityComponent : deck visuel B2', () => {
-  beforeEach(() => TestBed.configureTestingModule({ imports: [SlideActivityComponent] }));
+  beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
   it('projette le quiz v2 sans interaction pour le formateur et compte les reponses recues', () => {
     const fixture = TestBed.createComponent(SlideActivityComponent);
