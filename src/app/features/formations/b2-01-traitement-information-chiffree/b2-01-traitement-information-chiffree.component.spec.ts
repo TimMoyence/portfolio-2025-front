@@ -18,6 +18,7 @@ describe('B2TraitementInformationChiffreeComponent', () => {
   beforeEach(() => {
     catalogue.lire.and.returnValue(of(buildVisualCourse()));
     setupTestBed({
+      router: true,
       imports: [B2TraitementInformationChiffreeComponent],
       providers: [{ provide: FORMATION_CATALOGUE_PORT, useValue: catalogue }],
     });
@@ -78,5 +79,17 @@ describe('B2TraitementInformationChiffreeComponent', () => {
     expect(images[0].getAttribute('fetchpriority')).toBe('high');
     expect(images[1].getAttribute('loading')).toBe('lazy');
     expect(images[1].hasAttribute('fetchpriority')).toBeFalse();
+  });
+
+  it('propose de rejoindre une séance accompagnée, même quand le catalogue est indisponible', () => {
+    catalogue.lire.and.returnValue(throwError(() => new Error('network')));
+    const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
+    fixture.detectChanges();
+
+    const lien = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      '[data-testid="b2-rejoindre-seance"]',
+    );
+    expect(lien?.getAttribute('href')).toBe('/cours/rejoindre');
+    expect(lien?.textContent).toContain('Rejoindre une séance');
   });
 });

@@ -1,3 +1,13 @@
+<aside class="wrap b2-seance" aria-labelledby="b2-seance-invite">
+  <p id="b2-seance-invite" class="b2-seance__invite" i18n="@@b2CoursSeanceInvite">
+    Vous suivez ce cours avec un formateur ? Entrez le code de votre séance pour répondre en direct.
+  </p>
+  <a class="btn btn-teal" routerLink="/cours/rejoindre" data-testid="b2-rejoindre-seance">
+    <span i18n="@@b2CoursRejoindreSeance">Rejoindre une séance</span>
+    <span class="arrow" aria-hidden="true">→</span>
+  </a>
+</aside>
+
 @switch (etat()) {
   @case ('chargement') {
     <p role="status" i18n="@@b2CoursChargement">Chargement du cours…</p>

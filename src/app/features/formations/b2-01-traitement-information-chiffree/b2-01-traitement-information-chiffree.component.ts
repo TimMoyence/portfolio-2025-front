@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import type { EcranContent } from '../../../../cours/content/types';
 import { FORMATION_CATALOGUE_PORT } from '../../../core/ports/formation-catalogue.port';
 import { SlideComponent, SlideDeckComponent } from '../../../shared/slides';
@@ -18,7 +19,7 @@ const SLUG = 'b2-01-traitement-information-chiffree';
   selector: 'app-b2-01-traitement-information-chiffree',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SlideComponent, SlideDeckComponent, SlideVisualComponent],
+  imports: [RouterLink, SlideComponent, SlideDeckComponent, SlideVisualComponent],
   templateUrl: './b2-01-traitement-information-chiffree.component.html',
   styleUrl: './b2-01-traitement-information-chiffree.component.scss',
 })

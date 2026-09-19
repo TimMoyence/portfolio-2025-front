@@ -104,18 +104,22 @@ describe('FormationsListComponent', () => {
     expect(bonusCard).not.toBeNull();
   });
 
-  it('devrait présenter le B2-01 comme séance formateur, pas comme une formation autonome', () => {
+  it('devrait mener au cours B2-01 public et annoncer le déroulé réellement servi', () => {
     const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
 
     expect(b2).toBeDefined();
-    expect(b2?.link).toBe('/cours/rejoindre');
+    expect(b2?.link).toBe('/formations/b2-01-traitement-information-chiffree');
     expect(b2?.title).toContain('B2-01');
-    expect(b2?.meta.some((row) => row.value.includes('12 écrans'))).toBeTrue();
+    expect(b2?.meta.some((row) => row.value === '3 h 30 · 72 écrans')).toBeTrue();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const card = compiled.querySelector('.formation.formation--live');
     expect(card).not.toBeNull();
-    expect(card?.textContent).toContain('Rejoindre une séance');
+    expect(card?.textContent).toContain('72 écrans');
+    expect(card?.textContent).not.toContain('12 écrans');
+    expect(card?.querySelector('a')?.getAttribute('href')).toBe(
+      '/formations/b2-01-traitement-information-chiffree',
+    );
   });
 
   it('devrait rendre les trois benefices du format diapo', () => {
