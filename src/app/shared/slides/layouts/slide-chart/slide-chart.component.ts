@@ -4,6 +4,7 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  computed,
   inject,
   input,
   signal,
@@ -16,6 +17,18 @@ export interface SlideChartSeries {
 }
 
 export type SlideChartKind = 'bars' | 'line';
+
+type MarqueurDeSerie = 'rond' | 'carre' | 'losange';
+
+const GRADUATIONS = 5;
+const MARQUEURS: readonly MarqueurDeSerie[] = ['rond', 'carre', 'losange'];
+
+let compteurDeGraphiques = 0;
+
+function prochainIdentifiantDeDescription(): string {
+  compteurDeGraphiques += 1;
+  return `slide-chart-description-${compteurDeGraphiques}`;
+}
 
 @Component({
   selector: 'app-slide-chart',
@@ -37,9 +50,24 @@ export class SlideChartComponent {
   readonly axisRanges = input<readonly (readonly [number, number])[]>([]);
   readonly axisLabels = input<readonly [string, string]>(['A', 'B']);
   readonly reading = input<string>('');
+  readonly description = input<string>('');
 
   protected readonly libellePeriode = $localize`:@@slideChartPeriode:Période`;
+  protected readonly idDescription = prochainIdentifiantDeDescription();
   protected readonly step = signal(-1);
+  protected readonly echelle = computed<readonly [number, number]>(() => {
+    const plage = this.axisRanges().at(0);
+    if (plage !== undefined) {
+      return plage;
+    }
+    const valeurs = this.series().flatMap((serie) => serie.values);
+    const max = Math.max(...valeurs, 0);
+    if (this.kind() === 'bars') {
+      return [0, max > 0 ? max : 1];
+    }
+    const min = Math.min(...valeurs);
+    return [min, Math.max(max, min + 1)];
+  });
   private readonly hasPlayed = signal(false);
 
   private readonly destroyRef = inject(DestroyRef);
@@ -64,14 +92,9 @@ export class SlideChartComponent {
   }
 
   protected hauteur(value: number, seriesIndex = 0): number {
-    const range = this.axisRanges()[seriesIndex];
-    if (range) {
-      const [min, max] = range;
-      return Math.max(8, Math.round(((value - min) / Math.max(max - min, 1)) * 100));
-    }
-    const values = this.series().flatMap((serie) => serie.values);
-    const max = Math.max(...values, 1);
-    return Math.max(8, Math.round((value / max) * 100));
+    const [min, max] = this.axisRanges()[seriesIndex] ?? this.echelle();
+    const part = ((value - min) / Math.max(max - min, Number.EPSILON)) * 100;
+    return Math.round(Math.min(Math.max(part, 0), 100));
   }
 
   protected formatValue(value: number): string {
@@ -80,7 +103,9 @@ export class SlideChartComponent {
 
   protected axisTicks(range: readonly [number, number]): readonly string[] {
     const [min, max] = range;
-    return [max, min + (max - min) / 2, min].map((value) => this.formatValue(value));
+    return Array.from({ length: GRADUATIONS }, (_, rang) =>
+      this.formatValue(max - ((max - min) * rang) / (GRADUATIONS - 1)),
+    );
   }
 
   protected pointX(index: number): number {
@@ -89,10 +114,17 @@ export class SlideChartComponent {
   }
 
   protected pointY(value: number): number {
-    const values = this.series().flatMap((serie) => serie.values);
-    const min = Math.min(...values);
-    const max = Math.max(...values, min + 1);
-    return 270 - ((value - min) / (max - min)) * 220;
+    const [min, max] = this.echelle();
+    const part = (value - min) / Math.max(max - min, Number.EPSILON);
+    return 270 - Math.min(Math.max(part, 0), 1) * 220;
+  }
+
+  protected marqueur(seriesIndex: number): MarqueurDeSerie {
+    return MARQUEURS[seriesIndex % MARQUEURS.length];
+  }
+
+  protected losange(x: number, y: number): string {
+    return `${x},${y - 8} ${x + 8},${y} ${x},${y + 8} ${x - 8},${y}`;
   }
 
   protected linePoints(serie: SlideChartSeries): string {

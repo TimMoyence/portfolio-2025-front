@@ -123,3 +123,49 @@
 .slide-grid__icon {
   font-size: 2rem;
 }
+
+.slide-grid__imprimer {
+  display: block;
+  margin: -1.5rem auto 2rem;
+  min-height: 44px;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
+  border-radius: 999px;
+  background: var(--card-bg, #fff);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media screen {
+  ::ng-deep .impression-fiche {
+    display: none;
+  }
+}
+
+@media print {
+  ::ng-deep body[data-impression-fiche] > :not(.impression-fiche) {
+    display: none !important;
+  }
+
+  .slide-grid__imprimer {
+    display: none;
+  }
+
+  .slide-grid__card {
+    min-height: 0;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  .slide-grid__card--flip .slide-grid__face {
+    opacity: 1;
+    transform: none;
+  }
+
+  .slide-grid__face--back {
+    position: static;
+    padding-top: 0.75rem;
+    border-top: 1px dashed currentColor;
+  }
+}

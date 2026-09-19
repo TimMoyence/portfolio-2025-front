@@ -82,6 +82,47 @@ describe('SlideChartComponent', () => {
     expect(rendu.querySelector('.slide-chart__bars')).toBeNull();
   });
 
+  it('relie la description textuelle au graphique et garde le bouton Voir les données (AC-29)', () => {
+    const fixture = monter({
+      description: 'Le chiffre d’affaires progresse plus vite que les charges.',
+    });
+
+    const rendu = element(fixture);
+    const description = rendu.querySelector('[data-testid="slide-chart-description"]');
+    expect(description?.textContent?.trim()).toBe(
+      'Le chiffre d’affaires progresse plus vite que les charges.',
+    );
+    expect(rendu.querySelector('[role="img"]')?.getAttribute('aria-describedby')).toBe(
+      description?.id ?? 'sans description',
+    );
+    expect(rendu.querySelector('.slide-chart__data summary')?.textContent?.trim()).toBe(
+      'Voir les données',
+    );
+  });
+
+  it('gradue toujours l axe en cinq repères, barres partant de zéro', () => {
+    const graduations = Array.from(
+      element(monter()).querySelectorAll('[data-testid="slide-chart-graduation"]'),
+    ).map((graduation) => graduation.textContent?.trim());
+
+    expect(graduations).toEqual(['150', '112,50', '75', '37,50', '0']);
+  });
+
+  it('distingue les séries d une courbe par la forme du marqueur et une étiquette directe', () => {
+    const rendu = element(monter({ kind: 'line' }));
+
+    expect(
+      Array.from(rendu.querySelectorAll('.slide-chart__point')).map((point) =>
+        point.getAttribute('data-marqueur'),
+      ),
+    ).toEqual(['rond', 'rond', 'rond', 'carre', 'carre', 'carre']);
+    expect(
+      Array.from(rendu.querySelectorAll('[data-testid="slide-chart-etiquette"]')).map((etiquette) =>
+        etiquette.textContent?.trim(),
+      ),
+    ).toEqual(['Chiffre d’affaires', 'Charges']);
+  });
+
   it('affiche la lecture professionnelle et la source seulement quand elles sont fournies', () => {
     const sansLecture = monter();
     expect(element(sansLecture).querySelector('.slide-chart__reading')).toBeNull();

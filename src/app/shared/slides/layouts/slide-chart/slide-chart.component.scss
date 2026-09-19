@@ -235,6 +235,20 @@ h2 {
   text-anchor: middle;
 }
 
+.slide-chart__serie-label {
+  fill: var(--ink, #0c0902);
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.slide-chart__description {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--ink-soft, #3c3529);
+  line-height: 1.5;
+}
+
 .slide-chart__labels {
   position: absolute;
   right: 1.25rem;
@@ -344,7 +358,7 @@ h2 {
   --bar: #277c70;
 }
 .tone-gold {
-  --bar: #c39238;
+  --bar: #8a5e00;
 }
 .tone-ink {
   --bar: #0c0902;

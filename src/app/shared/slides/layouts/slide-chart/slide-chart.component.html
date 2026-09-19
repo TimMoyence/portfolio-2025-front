@@ -12,33 +12,41 @@
     }
   </header>
 
+  @if (description()) {
+    <p class="slide-chart__description" data-testid="slide-chart-description" [id]="idDescription">
+      {{ description() }}
+    </p>
+  }
+
   <div
-    class="slide-chart__plot"
+    class="slide-chart__plot has-axes"
     [class.is-line]="kind() === 'line'"
-    [class.has-axes]="axisRanges().length >= 2"
     role="img"
     [attr.aria-label]="ariaLabel()"
+    [attr.aria-describedby]="description() ? idDescription : null"
   >
     <div class="slide-chart__grid" aria-hidden="true">
       <span></span><span></span><span></span><span></span>
     </div>
 
-    @if (axisRanges().length >= 2) {
-      <div class="slide-chart__axes" aria-hidden="true">
-        <div class="slide-chart__axis slide-chart__axis--left">
+    <div class="slide-chart__axes" aria-hidden="true" data-testid="slide-chart-axes">
+      <div class="slide-chart__axis slide-chart__axis--left">
+        @if (axisRanges().length >= 2) {
           <span class="slide-chart__axis-title">{{ axisLabels()[0] }}</span>
-          @for (tick of axisTicks(axisRanges()[0]); track tick) {
-            <span>{{ tick }}</span>
-          }
-        </div>
+        }
+        @for (tick of axisTicks(echelle()); track $index) {
+          <span data-testid="slide-chart-graduation">{{ tick }}</span>
+        }
+      </div>
+      @if (axisRanges().length >= 2) {
         <div class="slide-chart__axis slide-chart__axis--right">
           <span class="slide-chart__axis-title">{{ axisLabels()[1] }}</span>
-          @for (tick of axisTicks(axisRanges()[1]); track tick) {
+          @for (tick of axisTicks(axisRanges()[1]); track $index) {
             <span>{{ tick }}</span>
           }
         </div>
-      </div>
-    }
+      }
+    </div>
 
     @if (kind() === 'line') {
       <svg
@@ -47,7 +55,7 @@
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        @for (serie of series(); track serie.label) {
+        @for (serie of series(); track serie.label; let rangSerie = $index) {
           <polyline
             class="slide-chart__line"
             [class]="'tone-' + (serie.tone ?? 'teal')"
@@ -59,12 +67,39 @@
               class="slide-chart__point"
               [class]="'tone-' + (serie.tone ?? 'teal')"
               [class.is-visible]="$index <= step()"
+              [attr.data-marqueur]="marqueur(rangSerie)"
             >
-              <circle [attr.cx]="pointX($index)" [attr.cy]="pointY(value)" r="7" />
+              @switch (marqueur(rangSerie)) {
+                @case ('carre') {
+                  <rect
+                    [attr.x]="pointX($index) - 7"
+                    [attr.y]="pointY(value) - 7"
+                    width="14"
+                    height="14"
+                  />
+                }
+                @case ('losange') {
+                  <polygon [attr.points]="losange(pointX($index), pointY(value))" />
+                }
+                @default {
+                  <circle [attr.cx]="pointX($index)" [attr.cy]="pointY(value)" r="7" />
+                }
+              }
               <text [attr.x]="pointX($index)" [attr.y]="pointY(value) - 16">
                 {{ formatValue(value) }}
               </text>
             </g>
+          }
+          @if (serie.values.length > 0) {
+            <text
+              class="slide-chart__serie-label"
+              data-testid="slide-chart-etiquette"
+              text-anchor="end"
+              [attr.x]="pointX(serie.values.length - 1) - 12"
+              [attr.y]="pointY(serie.values[serie.values.length - 1]) + 26"
+            >
+              {{ serie.label }}
+            </text>
           }
         }
       </svg>

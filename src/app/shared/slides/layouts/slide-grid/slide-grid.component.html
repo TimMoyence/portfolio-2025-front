@@ -5,6 +5,17 @@
   @if (subtitle()) {
     <p class="slide-grid__subtitle">{{ subtitle() }}</p>
   }
+  @if (imprimable()) {
+    <button
+      type="button"
+      class="slide-grid__imprimer"
+      data-testid="slide-grid-imprimer"
+      (click)="imprimer()"
+      i18n="@@slideGridImprimer"
+    >
+      Imprimer ou enregistrer en PDF
+    </button>
+  }
   <div class="slide-grid__grid" [class.is-five]="items().length === 5">
     @for (item of items(); track item.title) {
       @if (item.href) {
