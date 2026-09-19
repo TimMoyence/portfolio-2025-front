@@ -21,7 +21,9 @@ import type {
   ResultatsSeance,
   Role,
 } from '../../../../cours/content/types';
-import { aUnePresentation, SlideVisualComponent } from '../visual/slide-visual.component';
+import { aUnePresentation, objet } from '../visual/presentation-v2';
+import { SlideVisualComponent } from '../visual/slide-visual.component';
+import { planDeMontage, PROPRIETES_PAR_BRIQUE } from './lecture-ecran';
 
 export interface ReponseSlide {
   readonly questionId: string;
@@ -30,79 +32,18 @@ export interface ReponseSlide {
   readonly type?: 'libre' | 'qcm';
 }
 
-type Donnees = Readonly<Record<string, unknown>>;
-
-interface Montage {
-  readonly brique: string;
-  readonly donnees: Donnees;
-}
-
-const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> = {
-  'fp-quote': ['citation'],
-  'fp-story': ['recit'],
-  'fp-pro': ['cas'],
-  'fp-worked': ['exemple', 'etayage'],
-  'fp-concept4': ['definition'],
-  'fp-plot': ['definition'],
-  'fp-challenge': ['probleme'],
-  'fp-cardsort': ['plan'],
-  'fp-numeric': ['question'],
-  'fp-vote': ['question'],
-  'fp-recall': ['question'],
-  'fp-exit': ['billet'],
-  'fp-quiz': ['question'],
-};
-
-const PORTEUR_DE_REPONSE: Readonly<Record<string, string>> = {
-  'fp-numeric': 'question',
-  'fp-vote': 'question',
-  'fp-recall': 'question',
-  'fp-exit': 'billet',
-  'fp-quiz': 'question',
-};
-
-const QUESTIONNAIRE = 'questionnaire';
-
-function estObjet(value: unknown): value is Donnees {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function lireMontage(brique: unknown, donnees: unknown): Montage | null {
-  if (typeof brique !== 'string' || !Object.hasOwn(PROPRIETES_PAR_BRIQUE, brique)) {
-    return null;
-  }
-  return { brique, donnees: estObjet(donnees) ? donnees : {} };
-}
-
-function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
-  if (ecran.type !== QUESTIONNAIRE) {
-    const montage = lireMontage(ecran.type, ecran.donnees);
-    return montage === null ? null : [montage];
-  }
-  const questions = ecran.donnees?.['questions'];
-  if (!Array.isArray(questions) || questions.length === 0) {
-    return null;
-  }
-  const montages = questions.map((question) => {
-    if (!estObjet(question)) {
-      return null;
-    }
-    return lireMontage(question['brique'], question['donnees']);
-  });
-  return montages.every((montage): montage is Montage => montage !== null) ? montages : null;
-}
-
 function estValeur(value: unknown): value is number | string {
   return typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value));
 }
 
 function lireReponse(detail: unknown): ReponseSlide | null {
-  if (!estObjet(detail)) {
+  const donnees = objet(detail);
+  if (donnees === null) {
     return null;
   }
-  const questionId = detail['questionId'] ?? detail['billetId'];
-  const valeur = detail['valeur'];
-  const dureeMs = detail['dureeMs'];
+  const questionId = donnees['questionId'] ?? donnees['billetId'];
+  const valeur = donnees['valeur'];
+  const dureeMs = donnees['dureeMs'];
   if (
     typeof questionId !== 'string' ||
     questionId === '' ||
@@ -114,32 +55,6 @@ function lireReponse(detail: unknown): ReponseSlide | null {
     return null;
   }
   return { questionId, valeur, dureeMs };
-}
-
-export interface QuestionDeLEcran {
-  readonly id: string;
-  readonly enonce: string;
-}
-
-function questionsDuMontage(montage: Montage): readonly QuestionDeLEcran[] {
-  const propriete = PORTEUR_DE_REPONSE[montage.brique] ?? '';
-  if (propriete === '') {
-    return [];
-  }
-  const question = montage.donnees[propriete];
-  if (!estObjet(question) || typeof question['id'] !== 'string') {
-    return [];
-  }
-  const enonce = question['enonce'];
-  return [{ id: question['id'], enonce: typeof enonce === 'string' ? enonce : '' }];
-}
-
-export function questionsDeLEcran(ecran: EcranContent): readonly QuestionDeLEcran[] {
-  return (planDeMontage(ecran) ?? []).flatMap(questionsDuMontage);
-}
-
-export function identifiantsDesQuestions(ecran: EcranContent): readonly string[] {
-  return questionsDeLEcran(ecran).map((question) => question.id);
 }
 
 @Component({

@@ -26,6 +26,7 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
@@ -499,6 +500,24 @@ describe('CoursPresentateurComponent', () => {
         panneau.querySelector("[data-testid='presentateur-question-enonce']")?.textContent?.trim(),
       ),
     ).toEqual([vote.enonce, numerique.enonce]);
+  });
+
+  it('montre l enonce du QCM d un ecran servi en presentation v2 dans son panneau', async () => {
+    port.lireDeroule.and.returnValue(
+      of(
+        buildDerouleCours({
+          ecrans: [
+            buildEcranDeroule({
+              ...buildVisualQuizSlide(),
+              corriges: [{ questionId: 'b2-s03-prediction', bonneReponse: 'o2', confusions: [] }],
+            }),
+          ],
+        }),
+      ),
+    );
+    const fixture = await ouvrirLaSeance();
+
+    expect(texte(fixture, 'presentateur-question-enonce')).toBe('Quelle échelle ?');
   });
 
   describe('dialogue de cloture', () => {

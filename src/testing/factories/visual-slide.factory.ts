@@ -25,6 +25,33 @@ export function buildVisualSlide(overrides: Partial<EcranContent> = {}): EcranCo
   };
 }
 
+export function buildVisualNestedQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
+  return buildVisualSlide({
+    id: 'B2-01-S07-GRAPHIQUE',
+    interactif: true,
+    donnees: {
+      recit: {
+        id: 'B2-01-S07-GRAPHIQUE',
+        presentation: {
+          version: 2,
+          screenId: 'B2-01-S07-GRAPHIQUE',
+          renderer: 'image-left',
+          props: {
+            title: 'Le repère d’abord',
+            nestedQuiz: {
+              id: 'b2-s07-repere',
+              type: 'quiz',
+              question: 'Que faut-il vérifier en premier ?',
+              options: ['L’axe', 'La couleur'],
+            },
+          },
+        },
+      },
+    },
+    ...overrides,
+  });
+}
+
 export function buildVisualQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
   return buildVisualSlide({
     id: 'B2-01-S03-PREDICTION',

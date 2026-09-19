@@ -10,8 +10,8 @@ import {
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
-import { questionsDeLEcran } from '../../../shared/slides/session/slide-activity.component';
+import type { ResultatQuestion } from '../../../../cours/content/types';
+import { enoncesDuDeroule } from '../../../shared/slides/session/lecture-ecran';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
@@ -38,6 +38,7 @@ const ENTETE: readonly string[] = [
   'nom',
   'adresse',
   'question',
+  'enonce',
   'concept',
   'valeur',
   'duree_ms',
@@ -61,15 +62,6 @@ function echapper(champ: string): string {
 
 function ligneCsv(champs: readonly string[]): string {
   return champs.map(echapper).join(SEPARATEUR);
-}
-
-function enoncesDuDeroule(deroule: DerouleCours): ReadonlyMap<string, string> {
-  return new Map(
-    deroule.ecrans
-      .flatMap((ecran) => questionsDeLEcran(ecran))
-      .filter((question) => question.enonce !== '')
-      .map((question) => [question.id, question.enonce]),
-  );
 }
 
 function confusionsFrequentesDe(
@@ -274,6 +266,7 @@ export class CoursSyntheseComponent {
 
   exporterCsv(): string {
     const participants = this.rapport()?.participants ?? [];
+    const enonces = this.enonces();
     const lignes = participants.flatMap((participant) =>
       participant.reponses.map((reponse) =>
         ligneCsv([
@@ -281,6 +274,7 @@ export class CoursSyntheseComponent {
           participant.nom,
           participant.email,
           reponse.questionId,
+          enonces.get(reponse.questionId) ?? '',
           reponse.concept,
           reponse.valeur,
           String(reponse.dureeMs),

@@ -15,6 +15,7 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
+import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
 import { lireMarque as lire } from '../../../../testing/marqueurs-dom';
@@ -538,6 +539,21 @@ describe('CoursEtudiantComponent', () => {
     diffuser(fixture, { ecranCourant: 1 });
 
     expect(verdictsAffiches(fixture)).toEqual([]);
+  });
+
+  it('affiche le verdict serveur du QCM d un ecran servi en presentation v2', async () => {
+    sujet = {
+      ...sujet,
+      ecrans: [buildVisualQuizSlide({ id: 'ecran-1' }), ...sujet.ecrans.slice(1)],
+    };
+    port.lireSujet.and.returnValue(of(sujet));
+    port.repondre.and.returnValue(of(CONFUSION));
+    const fixture = await rattacherALaSeanceEnCours();
+
+    await repondre(fixture, { questionId: 'b2-s03-prediction', valeur: 'o2', dureeMs: 800 });
+
+    expect(libellesDesVerdicts(fixture)).toEqual([['b2-s03-prediction', 'Question 1 : Manqué']]);
+    expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
   });
 
   it('range les verdicts dans l ordre des questions de l ecran et les numerote', async () => {

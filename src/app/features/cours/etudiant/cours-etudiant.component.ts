@@ -41,10 +41,8 @@ import {
 } from '../../../core/ports/formations.port';
 import type { ReponseSlide } from '../../../shared/slides/session/slide-activity.component';
 import { CREATEUR_FLUX } from '../cours-flux.token';
-import {
-  identifiantsDesQuestions,
-  SlideActivityComponent,
-} from '../../../shared/slides/session/slide-activity.component';
+import { identifiantsDesQuestions } from '../../../shared/slides/session/lecture-ecran';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { SlideComponent } from '../../../shared/slides/deck/slide.component';
 import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 

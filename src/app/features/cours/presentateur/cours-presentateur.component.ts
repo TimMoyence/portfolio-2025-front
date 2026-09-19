@@ -32,10 +32,8 @@ import type {
 import type { CommandePilotage } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
-import {
-  questionsDeLEcran,
-  SlideActivityComponent,
-} from '../../../shared/slides/session/slide-activity.component';
+import { questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { SlideComponent } from '../../../shared/slides/deck/slide.component';
 import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';

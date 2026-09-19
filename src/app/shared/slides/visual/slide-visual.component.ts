@@ -24,6 +24,7 @@ import {
 } from '..';
 import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
+import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
 
 const layouts: Readonly<Record<string, Type<unknown>>> = {
   hero: SlideHeroComponent,
@@ -42,39 +43,8 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   guide: SlideGuideComponent,
 };
 
-interface VisualPresentation {
-  readonly version: 2;
-  readonly screenId: string;
-  readonly renderer: string;
-  readonly props: Readonly<Record<string, unknown>>;
-}
-
-function objet(value: unknown): Readonly<Record<string, unknown>> | null {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-    ? (value as Readonly<Record<string, unknown>>)
-    : null;
-}
-
-export function aUnePresentation(slide: EcranContent): boolean {
-  return Object.values(slide.donnees ?? {}).some((value) => {
-    const contenu = objet(value);
-    return objet(contenu?.['presentation'])?.['version'] === 2;
-  });
-}
-
-function presentationDe(slide: EcranContent): VisualPresentation | null {
-  for (const value of Object.values(slide.donnees ?? {})) {
-    const presentation = objet(objet(value)?.['presentation']);
-    if (
-      presentation?.['version'] === 2 &&
-      typeof presentation['screenId'] === 'string' &&
-      typeof presentation['renderer'] === 'string' &&
-      objet(presentation['props']) !== null
-    ) {
-      return presentation as unknown as VisualPresentation;
-    }
-  }
-  return null;
+function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteraction | null {
+  return quiz === null ? null : (quiz as unknown as QuizInteraction);
 }
 
 @Component({
@@ -149,15 +119,8 @@ export class SlideVisualComponent {
       ...(this.presentation()?.renderer === 'image-right' ? { reverse: true } : {}),
     };
   });
-  protected readonly quizData = computed(() => {
-    if (this.presentation()?.renderer !== 'quiz') return null;
-    const quiz = objet(this.presentation()?.props['questionData']);
-    return quiz === null ? null : (quiz as unknown as QuizInteraction);
-  });
-  protected readonly nestedQuiz = computed(() => {
-    const quiz = objet(this.presentation()?.props['nestedQuiz']);
-    return quiz === null ? null : (quiz as unknown as QuizInteraction);
-  });
+  protected readonly quizData = computed(() => commeQuiz(quizPrincipal(this.presentation())));
+  protected readonly nestedQuiz = computed(() => commeQuiz(quizImbrique(this.presentation())));
   protected readonly sourceLink = computed(() => {
     const link = objet(this.presentation()?.props['sourceLink']);
     return link !== null && typeof link['href'] === 'string' && typeof link['label'] === 'string'
