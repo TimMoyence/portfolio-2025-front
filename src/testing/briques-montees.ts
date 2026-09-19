@@ -1,4 +1,9 @@
 import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import type { EcranContent, RenderMode, Role } from '../cours/content/types';
+import { SlideActivityComponent } from '../app/shared/slides/session/slide-activity.component';
+import { aUnePresentation } from '../app/shared/slides/visual/presentation-v2';
+import { ECRAN_VERROUILLE, planDeMontage } from '../app/shared/slides/session/lecture-ecran';
 
 const ESSAIS = 200;
 const PAUSE_MS = 5;
@@ -34,4 +39,47 @@ export async function briqueMontee(
     throw new Error(`la brique ${selecteur} n a pas ete montee`);
   }
   return brique;
+}
+
+export const RENDUS_DE_MONTAGE: readonly { render: RenderMode; role: Role }[] = [
+  { render: 'hand', role: 'etudiant' },
+  { render: 'board', role: 'presentateur' },
+  { render: 'stage', role: 'presentateur' },
+];
+
+function nombreDeBriques(ecran: EcranContent): number {
+  return aUnePresentation(ecran) || ecran.type === ECRAN_VERROUILLE
+    ? 0
+    : (planDeMontage(ecran)?.length ?? 0);
+}
+
+export interface EcranMonte {
+  readonly erreurs: readonly Event[];
+  readonly element: HTMLElement;
+  readonly montees: () => Element[];
+  readonly detruire: () => void;
+}
+
+export async function monterEcran(
+  ecran: EcranContent,
+  render: RenderMode,
+  role: Role,
+): Promise<EcranMonte> {
+  const erreurs: Event[] = [];
+  const fixture = TestBed.createComponent(SlideActivityComponent);
+  const element = fixture.nativeElement as HTMLElement;
+  element.addEventListener('fp-block-error', (evenement) => erreurs.push(evenement));
+  fixture.componentRef.setInput('slide', ecran);
+  fixture.componentRef.setInput('render', render);
+  fixture.componentRef.setInput('role', role);
+  const montees = (): Element[] =>
+    [...element.querySelectorAll('[data-testid="slide-activity-host"] > *')].filter(
+      (brique) => (brique.shadowRoot?.childElementCount ?? 0) > 0,
+    );
+  await attendreQue(
+    fixture,
+    () => montees().length === nombreDeBriques(ecran),
+    `${ecran.id} en ${render}`,
+  );
+  return { erreurs, element, montees, detruire: () => fixture.destroy() };
 }
