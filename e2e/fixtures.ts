@@ -159,6 +159,13 @@ export function ecranB2Recit(rang: number, titre = `Écran ${rang}`): EcranCatal
   });
 }
 
+export function ecranB2Graphique(
+  rang: number,
+  props: Readonly<Record<string, unknown>>,
+): EcranCatalogue {
+  return ecranB2(rang, 'chart', props);
+}
+
 export function ecranB2Quiz(rang: number, question: string, options: string[]): EcranCatalogue {
   return ecranB2(rang, 'quiz', {
     questionData: { id: `b2-s${rang}-quiz`, type: 'quiz', question, options },
