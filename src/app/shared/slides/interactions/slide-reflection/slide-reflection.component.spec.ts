@@ -170,6 +170,22 @@ describe('SlideReflectionComponent', () => {
       expect(await pendingFreeResponses(sessionId)).toEqual([]);
     });
 
+    it('sur un ecran pas encore servi, l annonce et garde la reflexion en file', async () => {
+      const sessionId = `seance-ecran-non-servi-${Date.now()}`;
+      formations.enregistrerReponseLibre.and.returnValue(
+        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 409)),
+      );
+      const fixture = monterEnSeance('seance', sessionId);
+
+      garder(fixture, 'Trop tôt pour cet écran.');
+      await jusqua(fixture, () => etat(fixture) === 'ecran_non_servi');
+
+      expect(racine(fixture).textContent).toContain('pas encore ouvert');
+      expect((await pendingFreeResponses(sessionId)).map((envoi) => envoi.key)).toEqual([
+        CLE(sessionId),
+      ]);
+    });
+
     const REFUS: readonly (readonly [MotifRefusReponseLibre, number, string, string])[] = [
       ['seance-terminee', 409, 'seance_terminee', 'La séance est terminée'],
       ['seance-non-demarree', 409, 'seance_non_demarree', 'pas encore démarré'],

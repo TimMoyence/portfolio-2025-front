@@ -13,11 +13,17 @@ import {
 } from '../interactions/slide-reflection/free-response.queue';
 
 export type EtatEnvoiLibre =
-  'enregistre' | 'attente_reseau' | 'seance_non_demarree' | 'seance_terminee' | 'echec' | 'vide';
+  | 'enregistre'
+  | 'attente_reseau'
+  | 'ecran_non_servi'
+  | 'seance_non_demarree'
+  | 'seance_terminee'
+  | 'echec'
+  | 'vide';
 
-const ETAT_APRES_REFUS: Readonly<
-  Record<Exclude<MotifRefusReponseLibre, 'reseau'>, EtatEnvoiLibre>
-> = {
+type MotifDefinitif = Exclude<MotifRefusReponseLibre, 'reseau' | 'ecran-non-servi'>;
+
+const ETAT_APRES_REFUS: Readonly<Record<MotifDefinitif, EtatEnvoiLibre>> = {
   'seance-non-demarree': 'seance_non_demarree',
   'seance-terminee': 'seance_terminee',
   refusee: 'echec',
@@ -83,13 +89,13 @@ export class ReponsesLibresService {
     erreur: unknown,
   ): Promise<EtatEnvoiLibre> {
     const motif = erreur instanceof ReponseLibreRefusee ? erreur.motif : 'reseau';
-    if (motif !== 'reseau') {
+    if (motif !== 'reseau' && motif !== 'ecran-non-servi') {
       await removeFreeResponse(envoi.key);
       return ETAT_APRES_REFUS[motif];
     }
     try {
       await enqueueFreeResponse(envoi);
-      return 'attente_reseau';
+      return motif === 'reseau' ? 'attente_reseau' : 'ecran_non_servi';
     } catch {
       return 'echec';
     }

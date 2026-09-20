@@ -51,6 +51,26 @@ describe('ReponsesLibresService', () => {
     expect(await pendingFreeResponses(SESSION)).toEqual([]);
   });
 
+  it('garde en file un texte refuse parce que l ecran n est pas encore servi', async () => {
+    const seance = `${SESSION}-ecran-non-servi`;
+    port.enregistrerReponseLibre.and.returnValue(
+      throwError(() => new ReponseLibreRefusee('ecran-non-servi', 409)),
+    );
+
+    expect(await service.envoyer(seance, JETON, REPONSE)).toBe('ecran_non_servi');
+    expect((await pendingFreeResponses(seance)).map((envoi) => envoi.key)).toEqual([
+      cleDeReponseLibre(seance, 'b2-01-sortie', 'B-SORTIE-09'),
+    ]);
+
+    port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
+    const reprise = await service.reprendre(seance, JETON);
+
+    expect(reprise.get(cleDeReponseLibre(seance, 'b2-01-sortie', 'B-SORTIE-09'))).toBe(
+      'enregistre',
+    );
+    expect(await pendingFreeResponses(seance)).toEqual([]);
+  });
+
   it('garde en file un texte bloque par le reseau et le renvoie a la reprise', async () => {
     port.enregistrerReponseLibre.and.returnValues(
       throwError(() => new Error('reseau coupe')),

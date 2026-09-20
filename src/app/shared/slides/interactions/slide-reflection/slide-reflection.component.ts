@@ -31,6 +31,8 @@ export interface ReflectionInteraction {
 
 type EtatEnvoi = 'repos' | 'envoi' | Exclude<EtatEnvoiLibre, 'vide'>;
 
+const ETATS_GARDES_EN_FILE: readonly EtatEnvoi[] = ['attente_reseau', 'ecran_non_servi'];
+
 function etatAffiche(etat: EtatEnvoiLibre): EtatEnvoi {
   return etat === 'vide' ? 'repos' : etat;
 }
@@ -105,7 +107,7 @@ export class SlideReflectionComponent implements OnInit {
 
   protected onInput(text: string): void {
     this.value.set(text);
-    if (this.saveState() !== 'attente_reseau') {
+    if (!ETATS_GARDES_EN_FILE.includes(this.saveState())) {
       this.saveState.set('repos');
     }
   }
