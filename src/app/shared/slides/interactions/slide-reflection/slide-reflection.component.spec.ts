@@ -20,6 +20,7 @@ import {
   saveIdentity,
 } from '../../../../../cours/runtime/core/identity';
 import { enqueueFreeResponse, pendingFreeResponses } from './free-response.queue';
+import { ReponsesLibresService } from '../../session/reponses-libres.service';
 import { SlideReflectionComponent } from './slide-reflection.component';
 
 const cleEtudiante = (): string => readIdentity()?.studentKey ?? '';
@@ -176,6 +177,24 @@ describe('SlideReflectionComponent', () => {
       window.dispatchEvent(new Event('online'));
       await jusqua(fixture, () => etat(fixture) === 'enregistre');
 
+      expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
+    });
+
+    it('annonce le depart quand la reflexion gardee part depuis un autre relais', async () => {
+      const sessionId = `seance-depart-ailleurs-${Date.now()}`;
+      formations.enregistrerReponseLibre.and.returnValue(
+        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 409)),
+      );
+      const fixture = monterEnSeance('seance', sessionId);
+
+      garder(fixture, 'Trop tôt pour cet écran.');
+      await jusqua(fixture, () => etat(fixture) === 'ecran_non_servi');
+
+      formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
+      await TestBed.inject(ReponsesLibresService).reprendre(sessionId, 'jeton-1');
+      await jusqua(fixture, () => etat(fixture) === 'enregistre');
+
+      expect(etat(fixture)).toBe('enregistre');
       expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
     });
 

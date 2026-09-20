@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  effect,
   inject,
   input,
   computed,
@@ -65,6 +66,20 @@ export class SlideReflectionComponent implements OnInit {
   private readonly reponsesLibres = inject(ReponsesLibresService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly startedAt = Date.now();
+
+  constructor() {
+    effect(() => {
+      const sessionId = this.sessionId();
+      if (this.mode() !== 'seance' || sessionId === null) {
+        return;
+      }
+      const cle = cleDeReponseLibre(sessionId, this.screenId(), this.activiteCourante());
+      const etat = this.reponsesLibres.etatsDesEnvois().get(cle);
+      if (etat !== undefined) {
+        this.saveState.set(etatAffiche(etat));
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.load();

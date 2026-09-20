@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import type {
   MotifRefusReponseLibre,
@@ -45,6 +45,14 @@ function cleLogiqueDe(envoi: PendingFreeResponse): string {
 @Injectable({ providedIn: 'root' })
 export class ReponsesLibresService {
   private readonly port = inject(FORMATIONS_PORT, { optional: true });
+  private readonly etats = signal<ReadonlyMap<string, EtatEnvoiLibre>>(new Map());
+
+  readonly etatsDesEnvois = this.etats.asReadonly();
+
+  private noter(cleLogique: string, etat: EtatEnvoiLibre): EtatEnvoiLibre {
+    this.etats.update((connus) => new Map(connus).set(cleLogique, etat));
+    return etat;
+  }
 
   async envoyer(
     sessionId: string,
@@ -81,6 +89,10 @@ export class ReponsesLibresService {
   }
 
   private async transmettre(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
+    return this.noter(cleLogiqueDe(envoi), await this.issueDeLEnvoi(jeton, envoi));
+  }
+
+  private async issueDeLEnvoi(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
     if (this.port === null) {
       return 'echec';
     }
