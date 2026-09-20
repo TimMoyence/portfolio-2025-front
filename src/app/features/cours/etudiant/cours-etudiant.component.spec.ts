@@ -1276,4 +1276,53 @@ describe('CoursEtudiantComponent', () => {
       });
     });
   });
+
+  describe('poste partage entre deux eleves', () => {
+    const DE_A = { prenom: 'Lea', nom: 'Dubois', email: 'lea.dubois@example.com' };
+
+    function valeurDuChamp(fixture: Fixture, nom: string): string {
+      return (
+        lire(fixture, 'etudiant-entree')?.querySelector<HTMLInputElement>(`[name="${nom}"]`)
+          ?.value ?? ''
+      );
+    }
+
+    async function soumettreLeSeulCode(fixture: Fixture): Promise<void> {
+      const formulaire = lire(fixture, 'etudiant-entree');
+      const champ = formulaire?.querySelector<HTMLInputElement>('[name="code"]');
+      if (champ) {
+        champ.value = CODE_SAISI;
+      }
+      jasmine.clock().install();
+      try {
+        formulaire?.dispatchEvent(new Event('submit'));
+        jasmine.clock().tick(1_200);
+        await stabiliser(fixture);
+      } finally {
+        jasmine.clock().uninstall();
+      }
+    }
+
+    it('n affiche pas au suivant l identite laissee par le precedent', () => {
+      saveIdentity(DE_A);
+
+      const fixture = monter();
+
+      expect(valeurDuChamp(fixture, 'prenom')).toBe('');
+      expect(valeurDuChamp(fixture, 'nom')).toBe('');
+      expect(valeurDuChamp(fixture, 'email')).toBe('');
+    });
+
+    it('donne une cle neuve a B qui valide le formulaire sans le modifier apres le passage de A', async () => {
+      const { identite: deA } = saveIdentity(DE_A);
+      const fixture = monter();
+
+      await soumettreLeSeulCode(fixture);
+
+      const clesTransmises = port.rejoindre.calls
+        .allArgs()
+        .map(([, identite]) => (identite as { studentKey: string }).studentKey);
+      expect(clesTransmises).not.toContain(deA.studentKey);
+    });
+  });
 });

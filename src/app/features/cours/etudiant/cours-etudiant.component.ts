@@ -20,7 +20,7 @@ import type { Deck } from '../../../../cours/runtime/core/deck';
 import { createDeck } from '../../../../cours/runtime/core/deck';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Identity } from '../../../../cours/runtime/core/identity';
-import { readIdentity, saveIdentity } from '../../../../cours/runtime/core/identity';
+import { saveIdentity } from '../../../../cours/runtime/core/identity';
 import type { Lock } from '../../../../cours/runtime/core/lock';
 import { createLock } from '../../../../cours/runtime/core/lock';
 import type { EnvoiReponse, NatureEnvoi } from '../../../../cours/runtime/core/queue';
@@ -476,23 +476,11 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
               </div>
               <div class="student-entry__field">
                 <label for="etudiant-prenom" i18n="cours.prenom|@@coursPrenom">Prénom</label>
-                <input
-                  id="etudiant-prenom"
-                  name="prenom"
-                  autocomplete="given-name"
-                  required
-                  [value]="identitePrealable?.prenom ?? ''"
-                />
+                <input id="etudiant-prenom" name="prenom" autocomplete="given-name" required />
               </div>
               <div class="student-entry__field">
                 <label for="etudiant-nom" i18n="cours.nom|@@coursNom">Nom</label>
-                <input
-                  id="etudiant-nom"
-                  name="nom"
-                  autocomplete="family-name"
-                  required
-                  [value]="identitePrealable?.nom ?? ''"
-                />
+                <input id="etudiant-nom" name="nom" autocomplete="family-name" required />
               </div>
               <div class="student-entry__field student-entry__field--wide">
                 <label for="etudiant-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
@@ -505,7 +493,6 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                   type="email"
                   autocomplete="email"
                   required
-                  [value]="identitePrealable?.email ?? ''"
                 />
               </div>
             </div>
@@ -574,7 +561,6 @@ export class CoursEtudiantComponent {
       : { pilotage: this.pilotage()[ecran.id] ?? {}, resultats: null, comptesJalon: null };
   });
 
-  protected readonly identitePrealable = readIdentity();
   protected readonly brouillons = signal<Brouillons | null>(null);
 
   private readonly pilotage = signal<Readonly<Record<string, PilotageEcran>>>({});
