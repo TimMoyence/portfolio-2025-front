@@ -382,11 +382,14 @@ function diffuserA<T>(ecoutes: ReadonlySet<(valeur: T) => void>, valeur: T): voi
   }
 }
 
+const REFUS_SANS_RELANCE: readonly number[] = [401, 403];
+
 interface Tentative {
   readonly controleur: AbortController;
   lecteur: ReadableStreamDefaultReader<Uint8Array> | null;
   garde: ReturnType<typeof setTimeout> | null;
   refusee: boolean;
+  definitive: boolean;
 }
 
 function desarmerLaGarde(tentative: Tentative): void {
@@ -518,6 +521,7 @@ export function createSync(options: SyncOptions): Sync {
     }
     if (!reponse.ok) {
       propre.refusee = true;
+      propre.definitive = REFUS_SANS_RELANCE.includes(reponse.status);
       diffuserA(ecoutesStatut, { etat: 'refuse', statut: reponse.status });
       throw new Error(FLUX_REFUSE);
     }
@@ -538,7 +542,9 @@ export function createSync(options: SyncOptions): Sync {
       if (!propre.refusee) {
         diffuserA(ecoutesStatut, { etat: 'reconnexion' });
       }
-      planifierRelance();
+      if (!propre.definitive) {
+        planifierRelance();
+      }
     }
   };
 
@@ -551,6 +557,7 @@ export function createSync(options: SyncOptions): Sync {
       lecteur: null,
       garde: null,
       refusee: false,
+      definitive: false,
     };
     tentative = propre;
     rearmerLaGarde(propre);

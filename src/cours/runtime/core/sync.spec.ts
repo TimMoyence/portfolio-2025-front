@@ -507,7 +507,52 @@ describe('sync', () => {
       expect(statuts.at(-1)).toEqual({ etat: 'connecte' });
     });
 
-    for (const statut of [401, 403, 429]) {
+    for (const statut of [401, 403]) {
+      it(`cesse de rouvrir le flux apres un refus ${statut}, qu aucune relance ne resoudra`, async () => {
+        const tentatives = { nombre: 0 };
+        sync = createSync({
+          baseUrl: BASE,
+          sessionId: SESSION,
+          chemin: 'stream',
+          ouvrirFlux: () => {
+            tentatives.nombre += 1;
+            return Promise.resolve(new Response(null, { status: statut }));
+          },
+        });
+        suivreLesStatuts();
+
+        sync.ouvrir();
+        await vider();
+        jasmine.clock().tick(60_000);
+        await vider();
+
+        expect(tentatives.nombre).toBe(1);
+        expect(statuts).toEqual([{ etat: 'refuse', statut }]);
+      });
+
+      it(`rouvre le flux apres un refus ${statut} si le poste le redemande lui-meme`, async () => {
+        const tentatives = { nombre: 0 };
+        sync = createSync({
+          baseUrl: BASE,
+          sessionId: SESSION,
+          chemin: 'stream',
+          ouvrirFlux: () => {
+            tentatives.nombre += 1;
+            return Promise.resolve(new Response(null, { status: statut }));
+          },
+        });
+        suivreLesStatuts();
+
+        sync.ouvrir();
+        await vider();
+        sync.ouvrir();
+        await vider();
+
+        expect(tentatives.nombre).toBe(2);
+      });
+    }
+
+    for (const statut of [429, 500, 503]) {
       it(`annonce un refus ${statut} a chaque essai sans le masquer par une reconnexion`, async () => {
         const tentatives = { nombre: 0 };
         sync = createSync({
