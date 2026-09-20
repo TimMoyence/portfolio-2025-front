@@ -11436,6 +11436,16 @@
         <target> The activities on this screen could not be loaded. </target>
       </segment>
     </unit>
+    <unit id="coursAccesPerdu">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:279,281</note>
+        <note category="meaning">cours.accesPerdu</note>
+      </notes>
+      <segment>
+        <source>Votre accès à cette séance n’est plus valable (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>). Attendre ne le rétablira pas : redemandez le code à votre formateur et recommencez à rejoindre la séance.</source>
+        <target>Your access to this session is no longer valid (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>). Waiting will not restore it: ask your trainer for the code again and rejoin the session.</target>
+      </segment>
+    </unit>
     <unit id="coursFluxRefuse">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:196,200</note>

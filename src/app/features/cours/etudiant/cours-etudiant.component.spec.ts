@@ -7,6 +7,7 @@ import { NEVER, of, Subject, throwError } from 'rxjs';
 import type { CoursContent, EcranContent } from '../../../../cours/content/types';
 import { clearIdentity, saveIdentity } from '../../../../cours/runtime/core/identity';
 import { enqueue, pending } from '../../../../cours/runtime/core/queue';
+import { enqueueFreeResponse } from '../../../shared/slides/interactions/slide-reflection/free-response.queue';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
   buildEcran,
@@ -440,6 +441,31 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('data-statut')).toBe('429');
     expect(lire(fixture, 'etudiant-attente')).toBeNull();
     expect(fixture.debugElement.query(By.directive(SlideActivityComponent))).toBeNull();
+  });
+
+  for (const statut of [401, 403]) {
+    it(`sur un refus ${statut}, dit qu il faut rejoindre au lieu de promettre un retour du reseau`, async () => {
+      const fixture = await rattacher();
+
+      double.diffuserStatut({ etat: 'refuse', statut });
+      fixture.detectChanges();
+
+      const perdu = lire(fixture, 'etudiant-acces-perdu');
+      expect(perdu?.getAttribute('role')).toBe('alert');
+      expect(perdu?.getAttribute('data-statut')).toBe(String(statut));
+      expect(perdu?.textContent).toContain('rejoindre');
+      expect(lire(fixture, 'etudiant-flux-refuse')).toBeNull();
+    });
+  }
+
+  it('sur un refus de debit, garde la promesse d un retour du suivi', async () => {
+    const fixture = await rattacher();
+
+    double.diffuserStatut({ etat: 'refuse', statut: 429 });
+    fixture.detectChanges();
+
+    expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('data-statut')).toBe('429');
+    expect(lire(fixture, 'etudiant-acces-perdu')).toBeNull();
   });
 
   it('applique le regime de verrou propre a chaque ecran', async () => {
@@ -1212,6 +1238,41 @@ describe('CoursEtudiantComponent', () => {
         activityId: 'Q-RAPPEL-04:rappel',
         response: 'On capitalise',
         dureeMs: 2000,
+      });
+    });
+  });
+
+  describe('reflexion gardee sur un ecran pas encore servi', () => {
+    async function garderPuisRattacher(): Promise<Fixture> {
+      const { identite } = saveIdentity({
+        prenom: 'Lea',
+        nom: 'Dubois',
+        email: 'lea.dubois@example.com',
+      });
+      await enqueueFreeResponse({
+        key: `${identite.studentKey}:${SESSION}:ecran-3:reflexion-3`,
+        sessionId: SESSION,
+        studentKey: identite.studentKey,
+        screenId: 'ecran-3',
+        activityId: 'reflexion-3',
+        response: 'Ecrite en avance.',
+        dureeMs: 1500,
+      });
+      return rattacher();
+    }
+
+    it('la renvoie des que le formateur sert un nouvel ecran, sans attendre un rechargement', async () => {
+      const fixture = await garderPuisRattacher();
+      expect(port.enregistrerReponseLibre).not.toHaveBeenCalled();
+
+      diffuser(fixture, { etat: 'en_cours', ecranCourant: 2 });
+      await stabiliser(fixture);
+
+      expect(port.enregistrerReponseLibre).toHaveBeenCalledOnceWith(SESSION, JETON, {
+        screenId: 'ecran-3',
+        activityId: 'reflexion-3',
+        response: 'Ecrite en avance.',
+        dureeMs: 1500,
       });
     });
   });

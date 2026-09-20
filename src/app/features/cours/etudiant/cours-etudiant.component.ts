@@ -112,6 +112,8 @@ interface VerdictAffiche extends VerdictRecu {
 
 const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
 
+const STATUTS_SANS_RETOUR: readonly number[] = [401, 403];
+
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
 const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
 const MESSAGE_ECHEC = $localize`:cours.rattachementEchec|@@coursRattachementEchec:Le rattachement à la séance a échoué. Prévenez votre formateur.`;
@@ -266,16 +268,30 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                 </p>
               } @else {
                 @if (refusDuFlux(); as refus) {
-                  <p
-                    class="student-status"
-                    data-testid="etudiant-flux-refuse"
-                    role="alert"
-                    [attr.data-statut]="refus.statut"
-                    i18n="cours.fluxRefuse|@@coursFluxRefuse"
-                  >
-                    Le suivi en direct a été refusé par le serveur (statut {{ refus.statut }}). Les
-                    activités réapparaîtront dès que la connexion sera rétablie.
-                  </p>
+                  @if (accesPerdu()) {
+                    <p
+                      class="student-status"
+                      data-testid="etudiant-acces-perdu"
+                      role="alert"
+                      [attr.data-statut]="refus.statut"
+                      i18n="cours.accesPerdu|@@coursAccesPerdu"
+                    >
+                      Votre accès à cette séance n’est plus valable (statut {{ refus.statut }}).
+                      Attendre ne le rétablira pas : redemandez le code à votre formateur et
+                      recommencez à rejoindre la séance.
+                    </p>
+                  } @else {
+                    <p
+                      class="student-status"
+                      data-testid="etudiant-flux-refuse"
+                      role="alert"
+                      [attr.data-statut]="refus.statut"
+                      i18n="cours.fluxRefuse|@@coursFluxRefuse"
+                    >
+                      Le suivi en direct a été refusé par le serveur (statut {{ refus.statut }}).
+                      Les activités réapparaîtront dès que la connexion sera rétablie.
+                    </p>
+                  }
                 } @else if (statutSeance() !== 'en_cours') {
                   <p
                     class="student-status"
@@ -540,6 +556,11 @@ export class CoursEtudiantComponent {
   readonly chargementEcran = signal(false);
   readonly retours = signal<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
   readonly repriseIndisponible = signal(false);
+
+  readonly accesPerdu = computed<boolean>(() => {
+    const refus = this.refusDuFlux();
+    return refus !== null && STATUTS_SANS_RETOUR.includes(refus.statut);
+  });
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
     const ecran = this.sujet()?.ecrans[this.indexEcran()];
@@ -898,9 +919,19 @@ export class CoursEtudiantComponent {
     if (doitSuivreLeFormateur(deck.current(), etat, bascule)) {
       deck.applyRemote(etat.ecranCourant);
     }
-    this.chantier = Promise.all([this.viderLaFile(), this.relireLesStrategiesRevelees()]).then(
-      () => undefined,
-    );
+    this.chantier = Promise.all([
+      this.viderLaFile(),
+      this.reprendreLesReponsesLibres(),
+      this.relireLesStrategiesRevelees(),
+    ]).then(() => undefined);
+  }
+
+  private async reprendreLesReponsesLibres(): Promise<void> {
+    const sessionId = this.sessionId();
+    if (sessionId === null) {
+      return;
+    }
+    await this.reponsesLibres.reprendre(sessionId, this.jeton());
   }
 
   private async relireLesStrategiesRevelees(): Promise<void> {

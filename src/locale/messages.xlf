@@ -6,7 +6,7 @@
         <source>Ce code de séance n&apos;existe pas : vérifiez les caractères dictés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusCodeInconnu</note>
       </trans-unit>
@@ -14,7 +14,7 @@
         <source>Cette séance a atteint sa capacité : demandez à votre formateur de libérer une place.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">210</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusSeanceComplete</note>
       </trans-unit>
@@ -22,7 +22,7 @@
         <source>Cette séance est terminée : elle n’accepte plus de nouveau participant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">211</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusSeanceTerminee</note>
       </trans-unit>
@@ -30,7 +30,7 @@
         <source>Le rattachement à la séance a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">212</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusRattachementImpossible</note>
       </trans-unit>
@@ -38,7 +38,7 @@
         <source>Le cours a changé depuis l’ouverture de la séance : prévenez votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">231</context>
+          <context context-type="linenumber">228</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusCoursModifie</note>
       </trans-unit>
@@ -46,7 +46,7 @@
         <source>Le sujet de la séance n’a pas pu être chargé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">229</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusSujetIndisponible</note>
       </trans-unit>
@@ -54,7 +54,7 @@
         <source>Votre réponse n’a pas pu partir : ce poste la renverra dès que le serveur répondra.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">256</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseReseau</note>
       </trans-unit>
@@ -62,7 +62,7 @@
         <source>Votre réponse à cette question était déjà enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">260</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseDejaRepondue</note>
       </trans-unit>
@@ -70,7 +70,7 @@
         <source>La séance n’a pas encore démarré : votre réponse n’a pas été enregistrée. Attendez le signal de votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">261</context>
+          <context context-type="linenumber">258</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseSeanceNonDemarree</note>
       </trans-unit>
@@ -78,7 +78,7 @@
         <source>La séance est terminée : votre réponse n’a pas été enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">262</context>
+          <context context-type="linenumber">259</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseSeanceTerminee</note>
       </trans-unit>
@@ -86,7 +86,7 @@
         <source>Cet écran n’est pas encore ouvert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">260</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseEcranNonServi</note>
       </trans-unit>
@@ -94,7 +94,7 @@
         <source>Le vote est fermé pour cette question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">264</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponsePhaseFermee</note>
       </trans-unit>
@@ -102,7 +102,7 @@
         <source>Verrouillée : l’énigme précédente l’ouvrira</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">265</context>
+          <context context-type="linenumber">262</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseEnigmeVerrouillee</note>
       </trans-unit>
@@ -110,7 +110,7 @@
         <source>Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">266</context>
+          <context context-type="linenumber">263</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseTentativesEpuisees</note>
       </trans-unit>
@@ -118,7 +118,7 @@
         <source>Saisissez au moins une valeur ou choisissez « Je ne sais pas »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">267</context>
+          <context context-type="linenumber">264</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseProductionVide</note>
       </trans-unit>
@@ -126,7 +126,7 @@
         <source>Votre formateur a retiré ce poste de la séance : votre réponse n’a pas été enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">268</context>
+          <context context-type="linenumber">265</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseEvince</note>
       </trans-unit>
@@ -134,7 +134,7 @@
         <source>Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">269</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseRefusee</note>
       </trans-unit>
@@ -1666,7 +1666,7 @@
         <source>Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="meaning">cours.codeInvalide</note>
       </trans-unit>
@@ -1674,7 +1674,7 @@
         <source>Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <note priority="1" from="meaning">cours.identiteRefusee</note>
       </trans-unit>
@@ -1682,7 +1682,7 @@
         <source>Le rattachement à la séance a échoué. Prévenez votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="meaning">cours.rattachementEchec</note>
       </trans-unit>
@@ -1690,7 +1690,7 @@
         <source>L’écran n’est pas encore disponible pour cette séance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="meaning">cours.ecranIndisponible</note>
       </trans-unit>
@@ -1698,7 +1698,7 @@
         <source>L’écran n’a pas pu être chargé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="meaning">cours.ecranChargementEchec</note>
       </trans-unit>
@@ -1706,7 +1706,7 @@
         <source> Préparation de la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">206,208</context>
+          <context context-type="linenumber">208,210</context>
         </context-group>
         <note priority="1" from="meaning">cours.kickerPreparation</note>
       </trans-unit>
@@ -1714,7 +1714,7 @@
         <source>Chargement de votre sujet…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">208,212</context>
+          <context context-type="linenumber">210,214</context>
         </context-group>
         <note priority="1" from="meaning">cours.chargementSujet</note>
       </trans-unit>
@@ -1722,7 +1722,7 @@
         <source> Réessayer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">224,227</context>
+          <context context-type="linenumber">226,229</context>
         </context-group>
         <note priority="1" from="meaning">cours.reessayerSujet</note>
       </trans-unit>
@@ -1730,7 +1730,7 @@
         <source> Entrée dans la classe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">234,236</context>
+          <context context-type="linenumber">236,238</context>
         </context-group>
         <note priority="1" from="meaning">cours.kickerEntree</note>
       </trans-unit>
@@ -1738,7 +1738,7 @@
         <source>Connexion à la séance…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">236,240</context>
+          <context context-type="linenumber">238,242</context>
         </context-group>
         <note priority="1" from="meaning">cours.rattachement</note>
       </trans-unit>
@@ -1746,7 +1746,7 @@
         <source> Séance en cours </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">249,251</context>
+          <context context-type="linenumber">251,253</context>
         </context-group>
         <note priority="1" from="meaning">cours.etudiantKicker</note>
       </trans-unit>
@@ -1754,15 +1754,23 @@
         <source> La séance est terminée. Merci de votre participation. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">260,261</context>
+          <context context-type="linenumber">262,263</context>
         </context-group>
         <note priority="1" from="meaning">cours.fin</note>
+      </trans-unit>
+      <trans-unit id="coursAccesPerdu" datatype="html">
+        <source> Votre accès à cette séance n’est plus valable (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>). Attendre ne le rétablira pas : redemandez le code à votre formateur et recommencez à rejoindre la séance. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
+          <context context-type="linenumber">279,281</context>
+        </context-group>
+        <note priority="1" from="meaning">cours.accesPerdu</note>
       </trans-unit>
       <trans-unit id="coursFluxRefuse" datatype="html">
         <source> Le suivi en direct a été refusé par le serveur (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>). Les activités réapparaîtront dès que la connexion sera rétablie. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">276,277</context>
+          <context context-type="linenumber">291,292</context>
         </context-group>
         <note priority="1" from="meaning">cours.fluxRefuse</note>
       </trans-unit>
@@ -1770,7 +1778,7 @@
         <source> La séance n’a pas encore démarré : le premier écran s’affichera dès que votre formateur la lancera. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">286,288</context>
+          <context context-type="linenumber">302,304</context>
         </context-group>
         <note priority="1" from="meaning">cours.attenteDemarrage</note>
       </trans-unit>
@@ -1778,7 +1786,7 @@
         <source> Chargement de l’écran… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">296,298</context>
+          <context context-type="linenumber">312,314</context>
         </context-group>
         <note priority="1" from="meaning">cours.chargementEcran</note>
       </trans-unit>
@@ -1786,7 +1794,7 @@
         <source> Écran précédent </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">325,326</context>
+          <context context-type="linenumber">341,342</context>
         </context-group>
         <note priority="1" from="meaning">cours.ecranPrecedent</note>
       </trans-unit>
@@ -1794,7 +1802,7 @@
         <source> Écran suivant </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">336,337</context>
+          <context context-type="linenumber">352,353</context>
         </context-group>
         <note priority="1" from="meaning">cours.ecranSuivant</note>
       </trans-unit>
@@ -1802,7 +1810,7 @@
         <source> Question <x id="INTERPOLATION" equiv-text="{{ verdict.rang }}"/> : Réussi </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">355,356</context>
+          <context context-type="linenumber">371,372</context>
         </context-group>
         <note priority="1" from="meaning">cours.questionReussie</note>
       </trans-unit>
@@ -1810,7 +1818,7 @@
         <source> Question <x id="INTERPOLATION" equiv-text="{{ verdict.rang }}"/> : Manqué </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">362,363</context>
+          <context context-type="linenumber">378,379</context>
         </context-group>
         <note priority="1" from="meaning">cours.questionManquee</note>
       </trans-unit>
@@ -1818,7 +1826,7 @@
         <source> Votre réponse est enregistrée sur ce poste et partira au retour du réseau. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">378,380</context>
+          <context context-type="linenumber">394,396</context>
         </context-group>
         <note priority="1" from="meaning">cours.horsLigne</note>
       </trans-unit>
@@ -1826,7 +1834,7 @@
         <source> Vos réponses déjà envoyées n’ont pas pu être relues : elles restent enregistrées et réapparaîtront au prochain chargement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">388,392</context>
+          <context context-type="linenumber">404,408</context>
         </context-group>
         <note priority="1" from="meaning">cours.repriseIndisponible</note>
       </trans-unit>
@@ -1834,7 +1842,7 @@
         <source> Ce poste n’a pas pu mettre votre réponse de côté : prévenez votre formateur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">409,412</context>
+          <context context-type="linenumber">425,428</context>
         </context-group>
         <note priority="1" from="meaning">cours.fileRefusee</note>
       </trans-unit>
@@ -1842,7 +1850,7 @@
         <source> Atelier · séance accompagnée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">418,420</context>
+          <context context-type="linenumber">434,436</context>
         </context-group>
         <note priority="1" from="meaning">cours.entreeKicker</note>
       </trans-unit>
@@ -1850,7 +1858,7 @@
         <source>Rejoindre une séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">420,421</context>
+          <context context-type="linenumber">436,437</context>
         </context-group>
         <note priority="1" from="meaning">cours.entreeTitre</note>
       </trans-unit>
@@ -1858,7 +1866,7 @@
         <source> Votre formateur vous a donné un code. Entrez-le pour afficher le bon écran au bon moment, répondre aux activités et suivre la séance avec le groupe. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">422,424</context>
+          <context context-type="linenumber">438,440</context>
         </context-group>
         <note priority="1" from="meaning">cours.entreeIntro</note>
       </trans-unit>
@@ -1866,7 +1874,7 @@
         <source>Je saisis le code de séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">429,432</context>
+          <context context-type="linenumber">445,448</context>
         </context-group>
         <note priority="1" from="meaning">cours.entreeEtapeCode</note>
       </trans-unit>
@@ -1874,7 +1882,7 @@
         <source>Je renseigne mon prénom et mon nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">435,438</context>
+          <context context-type="linenumber">451,454</context>
         </context-group>
         <note priority="1" from="meaning">cours.entreeEtapeIdentite</note>
       </trans-unit>
@@ -1882,7 +1890,7 @@
         <source>J’entre dans le cours quand le formateur démarre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">441,444</context>
+          <context context-type="linenumber">457,460</context>
         </context-group>
         <note priority="1" from="meaning">cours.entreeEtapeDemarrage</note>
       </trans-unit>
@@ -1890,7 +1898,7 @@
         <source>Code de la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">449,450</context>
+          <context context-type="linenumber">465,466</context>
         </context-group>
         <note priority="1" from="meaning">cours.code</note>
       </trans-unit>
@@ -1898,7 +1906,7 @@
         <source>4 chiffres affichés par le formateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">451,453</context>
+          <context context-type="linenumber">467,469</context>
         </context-group>
         <note priority="1" from="meaning">cours.codeIndice</note>
       </trans-unit>
@@ -1906,7 +1914,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">462,464</context>
+          <context context-type="linenumber">478,480</context>
         </context-group>
         <note priority="1" from="meaning">cours.prenom</note>
       </trans-unit>
@@ -1914,7 +1922,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">472,474</context>
+          <context context-type="linenumber">488,490</context>
         </context-group>
         <note priority="1" from="meaning">cours.nom</note>
       </trans-unit>
@@ -1922,7 +1930,7 @@
         <source>Adresse e-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">482,483</context>
+          <context context-type="linenumber">498,499</context>
         </context-group>
         <note priority="1" from="meaning">cours.email</note>
       </trans-unit>
@@ -1930,7 +1938,7 @@
         <source>Utilisée uniquement pour retrouver votre participation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">484,487</context>
+          <context context-type="linenumber">500,503</context>
         </context-group>
         <note priority="1" from="meaning">cours.emailIndice</note>
       </trans-unit>
@@ -1938,7 +1946,7 @@
         <source> Entrer dans la séance <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span aria-hidden=&quot;true&quot;&gt;"/>→<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">504,505</context>
+          <context context-type="linenumber">520,521</context>
         </context-group>
         <note priority="1" from="meaning">cours.rejoindre</note>
       </trans-unit>
@@ -1946,7 +1954,7 @@
         <source> Pas de compte à créer. Ces informations restent liées à cette séance. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">510,513</context>
+          <context context-type="linenumber">526,529</context>
         </context-group>
         <note priority="1" from="meaning">cours.entreeConfidentialite</note>
       </trans-unit>
