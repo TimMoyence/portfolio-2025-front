@@ -20,6 +20,14 @@ module.exports = tseslint.config(
     ],
   },
   {
+    files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,mts}', 'outils/**/*.{mjs,js}'],
+    rules: {
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+    },
+  },
+  {
     files: ['src/**/*.ts'],
     extends: [
       eslint.configs.recommended,

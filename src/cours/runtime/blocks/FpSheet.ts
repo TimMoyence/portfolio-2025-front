@@ -61,19 +61,36 @@ function ligneDeConsigne(consigne: string): EscapedHtml {
   return safeHtml`<li>${escapeHtml(consigne)}</li>`;
 }
 
-function copierCellules(source: Readonly<Record<string, string>>): Record<string, string> {
+function nomsDeLaGrille(lignes: number, colonnes: number): ReadonlySet<string> {
+  const noms = new Set<string>();
+  for (let ligne = 0; ligne < lignes; ligne += 1) {
+    for (let colonne = 0; colonne < colonnes; colonne += 1) {
+      noms.add(nomCellule(ligne, colonne));
+    }
+  }
+  return noms;
+}
+
+function copierCellules(
+  source: Readonly<Record<string, string>>,
+  grille: ReadonlySet<string>,
+): Record<string, string> {
   return Object.fromEntries(
-    Object.entries(source).map(([nom, contenu]) => [nom.toUpperCase(), String(contenu)]),
+    Object.entries(source)
+      .map(([nom, contenu]): [string, string] => [nom.toUpperCase(), String(contenu)])
+      .filter(([nom]) => grille.has(nom)),
   );
 }
 
 function copierPlan(source: SheetPlanPublic): SheetPlanPublic {
+  const lignes = borner(source.lignes);
+  const colonnes = borner(source.colonnes);
   return {
     id: source.id,
     intitule: source.intitule,
-    lignes: borner(source.lignes),
-    colonnes: borner(source.colonnes),
-    cellules: copierCellules(source.cellules),
+    lignes,
+    colonnes,
+    cellules: copierCellules(source.cellules, nomsDeLaGrille(lignes, colonnes)),
     verrouillees: source.verrouillees.map((nom) => nom.toUpperCase()),
     consignes: (source.consignes ?? []).filter((consigne) => typeof consigne === 'string'),
     metadonnees: projeterMetadonnees(source.metadonnees),

@@ -17,6 +17,14 @@ export interface OptionsEvaluation {
 
 export const LONGUEUR_MAX_FORMULE = 200;
 export const PROFONDEUR_MAX = 64;
+export const NOMBRE_MAX_CELLULES = 2000;
+
+export class FeuilleHorsLimitesError extends Error {
+  constructor(raison: string) {
+    super(`Feuille hors des limites du moteur de formules : ${raison}`);
+    this.name = 'FeuilleHorsLimitesError';
+  }
+}
 
 interface Reference {
   readonly ligne: number;
@@ -93,8 +101,15 @@ const CODE_A = 'A'.charCodeAt(0);
 const PRECISION_DECIMALE = 15;
 const DECIMALES_EXPRESSION = 6;
 
+const REFUS: Readonly<Record<CodeErreur, ErreurFormule>> = {
+  '#REF!': new ErreurFormule('#REF!'),
+  '#DIV/0!': new ErreurFormule('#DIV/0!'),
+  '#NOM?': new ErreurFormule('#NOM?'),
+  '#VALEUR!': new ErreurFormule('#VALEUR!'),
+};
+
 function refuser(code: CodeErreur): never {
-  throw new ErreurFormule(code);
+  throw REFUS[code];
 }
 
 export function lettreColonne(colonne: number): string {
@@ -403,6 +418,20 @@ function echec(cause: unknown): ResultatFormule {
   return { valeur: null, erreur: cause instanceof ErreurFormule ? cause.code : '#VALEUR!' };
 }
 
+function estEntierPositif(valeur: number): boolean {
+  return Number.isSafeInteger(valeur) && valeur >= 0;
+}
+
+function exigerFeuilleRecevable(feuille: Feuille): void {
+  if (!estEntierPositif(feuille.lignes) || !estEntierPositif(feuille.colonnes)) {
+    throw new FeuilleHorsLimitesError('la grille doit être un couple d’entiers positifs');
+  }
+  const nombre = Object.keys(feuille.cellules).length;
+  if (nombre > NOMBRE_MAX_CELLULES) {
+    throw new FeuilleHorsLimitesError(`${nombre} cellules pour ${NOMBRE_MAX_CELLULES} au plus`);
+  }
+}
+
 class Evaluation {
   private restant: number;
   private readonly contenus: ReadonlyMap<string, string>;
@@ -441,6 +470,7 @@ class Evaluation {
     this.enCours.add(nom);
     let resultat: ResultatFormule;
     try {
+      this.depenser();
       resultat = { valeur: this.valeurDuContenu(nom), erreur: null };
     } catch (cause) {
       resultat = echec(cause);
@@ -472,16 +502,16 @@ class Evaluation {
     if (contenu.genre === 'texte') {
       return refuser('#VALEUR!');
     }
-    return fini(this.calculer(this.arbreDe(nom, contenu.source)));
+    return fini(this.calculer(this.arbreDe(contenu.source)));
   }
 
-  private arbreDe(nom: string, source: string): Noeud {
-    const connu = this.arbres.get(nom);
+  private arbreDe(source: string): Noeud {
+    const connu = this.arbres.get(source);
     if (connu !== undefined) {
       return connu;
     }
     const arbre = analyser(source);
-    this.arbres.set(nom, arbre);
+    this.arbres.set(source, arbre);
     return arbre;
   }
 
@@ -613,6 +643,7 @@ export function evaluerFeuille(
   feuille: Feuille,
   options: OptionsEvaluation = OPTIONS_PAR_DEFAUT,
 ): ReadonlyMap<string, ResultatFormule> {
+  exigerFeuilleRecevable(feuille);
   const evaluation = new Evaluation(feuille, {}, options);
   return new Map(evaluation.nomsRemplis().map((nom) => [nom, evaluation.resultatDe(nom)]));
 }
@@ -622,6 +653,7 @@ export function evaluerCellule(
   nom: string,
   options: OptionsEvaluation = OPTIONS_PAR_DEFAUT,
 ): ResultatFormule {
+  exigerFeuilleRecevable(feuille);
   const reference = referenceDeCellule(nom);
   if (
     reference === null ||

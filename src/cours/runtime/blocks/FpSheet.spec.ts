@@ -12,6 +12,7 @@ const MONTANT_TTC = '=C3*(1+$B$1)';
 const ATTENDU_CACHE = '64,8';
 const ATTENDU_CACHE_MACHINE = '64.8';
 const DELAI_MAX_MS = 300;
+const CELLULES_DEBORDANTES = 2500;
 const ATTENDUS_FORMATEUR = {
   type: 'feuille',
   attendus: [{ reference: 'D3', formuleReference: '=C3*(1+$B$1)', valeur: 64.8 }],
@@ -308,6 +309,22 @@ describe('FpSheet', () => {
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim()).toBe(CHARGE_XSS);
     expect(cellule(hote, 'C3').value).toBe(CHARGE_XSS);
+  });
+
+  it('ne garde du plan servi que les cellules de sa grille, hors de portee du moteur', () => {
+    const debordantes: Record<string, string> = {};
+    for (let rang = 1; rang <= CELLULES_DEBORDANTES; rang += 1) {
+      debordantes[`Z${rang}`] = '=1+1';
+    }
+
+    hote.plan = buildSheetPlan({
+      id: 'K-TABLEUR-DEBORDANT',
+      cellules: { ...buildSheetPlan().cellules, ...debordantes },
+    });
+    chiffrer(hote);
+
+    expect(cellule(hote, 'C3').value).toBe('54');
+    expect(hote.shadowRoot?.querySelector('[data-nom="Z1"]')).toBeNull();
   });
 
   it('bati une grille sans ligne sans casser le tableau', () => {
