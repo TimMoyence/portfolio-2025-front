@@ -202,11 +202,13 @@ export interface RapportSeance {
   notation?: RegleNotation;
 }
 
-export type MotifRefusRattachement = 'code-inconnu' | 'deja-inscrit' | 'rattachement-impossible';
+export type MotifRefusRattachement =
+  'code-inconnu' | 'seance-complete' | 'seance-terminee' | 'rattachement-impossible';
 
 const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, string>> = {
   'code-inconnu': $localize`:cours.refusCodeInconnu|@@coursRefusCodeInconnu:Ce code de séance n'existe pas : vérifiez les caractères dictés.`,
-  'deja-inscrit': $localize`:cours.refusDejaInscrit|@@coursRefusDejaInscrit:Cette inscription est déjà enregistrée, ou la séance n'en accepte plus.`,
+  'seance-complete': $localize`:cours.refusSeanceComplete|@@coursRefusSeanceComplete:Cette séance a atteint sa capacité : demandez à votre formateur de libérer une place.`,
+  'seance-terminee': $localize`:cours.refusSeanceTerminee|@@coursRefusSeanceTerminee:Cette séance est terminée : elle n’accepte plus de nouveau participant.`,
   'rattachement-impossible': $localize`:cours.refusRattachementImpossible|@@coursRefusRattachementImpossible:Le rattachement à la séance a échoué.`,
 };
 
@@ -275,7 +277,7 @@ export class ReponseRefusee extends Error {
 }
 
 export type MotifRefusReponseLibre =
-  'reseau' | 'seance-non-demarree' | 'seance-terminee' | 'refusee';
+  'reseau' | 'seance-non-demarree' | 'seance-terminee' | 'ecran-non-servi' | 'refusee';
 
 export class ReponseLibreRefusee extends Error {
   constructor(

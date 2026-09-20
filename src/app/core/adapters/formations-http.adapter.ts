@@ -48,14 +48,10 @@ import {
 import { getApiBaseUrl } from '../http/api-config';
 import { ENTETE_JETON_PARTICIPANT } from '../http/jeton-participant';
 
-const MOTIFS_DE_CONFLIT_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
-  REPONSE_DEJA_ENREGISTREE: 'deja-repondue',
-  SEANCE_NON_DEMARREE: 'seance-non-demarree',
-};
-
 const MOTIFS_DE_CONFLIT_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
   SEANCE_TERMINEE: 'seance-terminee',
+  ECRAN_NON_SERVI: 'ecran-non-servi',
 };
 
 const MOTIFS_DE_REFUS_DE_GROUPE: Readonly<Record<number, MotifRefusGroupe>> = {
@@ -63,9 +59,9 @@ const MOTIFS_DE_REFUS_DE_GROUPE: Readonly<Record<number, MotifRefusGroupe>> = {
   409: 'nom-deja-pris',
 };
 
-const MOTIFS_PAR_STATUT: Readonly<Record<number, MotifRefusRattachement>> = {
-  404: 'code-inconnu',
-  409: 'deja-inscrit',
+const MOTIFS_DE_RATTACHEMENT_PAR_CODE: Readonly<Record<string, MotifRefusRattachement>> = {
+  SEANCE_COMPLETE: 'seance-complete',
+  SEANCE_TERMINEE: 'seance-terminee',
 };
 
 const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
@@ -78,8 +74,9 @@ const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = 
   ENIGME_VERROUILLEE: 'enigme-verrouillee',
   TENTATIVES_EPUISEES: 'tentatives-epuisees',
   PRODUCTION_VIDE: 'production-vide',
-  PARTICIPANT_EVINCE: 'evince',
 };
+
+const POSTE_ABSENT_DE_LA_SEANCE: MotifRefusReponse = 'evince';
 
 const NOTATION_ABSENTE_D_UN_SERVEUR_V2: Pick<
   RegleNotation,
@@ -97,8 +94,17 @@ interface VerdictBrut {
 }
 
 function refuserRattachement(erreur: unknown): RattachementRefuse {
-  const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
-  return new RattachementRefuse(MOTIFS_PAR_STATUT[statut] ?? 'rattachement-impossible', statut);
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new RattachementRefuse('rattachement-impossible', 0);
+  }
+  const code = codeDuProbleme(erreur);
+  if (code !== null && Object.hasOwn(MOTIFS_DE_RATTACHEMENT_PAR_CODE, code)) {
+    return new RattachementRefuse(MOTIFS_DE_RATTACHEMENT_PAR_CODE[code], erreur.status);
+  }
+  return new RattachementRefuse(
+    erreur.status === 404 ? 'code-inconnu' : 'rattachement-impossible',
+    erreur.status,
+  );
 }
 
 function refuserSujet(erreur: unknown): SujetRefuse {
@@ -130,16 +136,6 @@ function motifDeRefusSelonConflit<M extends string>(
   return motif;
 }
 
-function refuserReponse(erreur: unknown): ReponseRefusee {
-  if (!(erreur instanceof HttpErrorResponse)) {
-    return new ReponseRefusee('reseau', 0);
-  }
-  return new ReponseRefusee(
-    motifDeRefusSelonConflit(erreur, MOTIFS_DE_CONFLIT_PAR_CODE),
-    erreur.status,
-  );
-}
-
 function refuserReponseLibre(erreur: unknown): ReponseLibreRefusee {
   if (!(erreur instanceof HttpErrorResponse)) {
     return new ReponseLibreRefusee('reseau', 0);
@@ -150,7 +146,7 @@ function refuserReponseLibre(erreur: unknown): ReponseLibreRefusee {
   );
 }
 
-function refuserEcritureEtudiante(erreur: unknown): ReponseRefusee {
+function refuserEcritureEtudiante(erreur: unknown, absence: MotifRefusReponse): ReponseRefusee {
   if (!(erreur instanceof HttpErrorResponse)) {
     return new ReponseRefusee('reseau', 0);
   }
@@ -158,16 +154,19 @@ function refuserEcritureEtudiante(erreur: unknown): ReponseRefusee {
   if (statut === 0 || statut === 429 || statut >= 500) {
     return new ReponseRefusee('reseau', statut);
   }
-  const code = codeDuProbleme(erreur) ?? '';
-  const motif = Object.hasOwn(MOTIFS_D_ECRITURE_PAR_CODE, code)
-    ? MOTIFS_D_ECRITURE_PAR_CODE[code]
-    : 'refusee';
-  return new ReponseRefusee(motif, statut);
+  const code = codeDuProbleme(erreur);
+  if (code !== null && Object.hasOwn(MOTIFS_D_ECRITURE_PAR_CODE, code)) {
+    return new ReponseRefusee(MOTIFS_D_ECRITURE_PAR_CODE[code], statut);
+  }
+  return new ReponseRefusee(code === null && statut === 404 ? absence : 'refusee', statut);
 }
 
-function ecritureEtudiante<T>(requete: Observable<T>): Observable<T> {
+function ecritureEtudiante<T>(
+  requete: Observable<T>,
+  absence: MotifRefusReponse = POSTE_ABSENT_DE_LA_SEANCE,
+): Observable<T> {
   return requete.pipe(
-    catchError((erreur: unknown) => throwError(() => refuserEcritureEtudiante(erreur))),
+    catchError((erreur: unknown) => throwError(() => refuserEcritureEtudiante(erreur, absence))),
   );
 }
 
@@ -313,17 +312,16 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse> {
-    return this.http
-      .post<VerdictBrut>(`${this.urlSeance(sessionId)}/answers`, reponse, {
+    return ecritureEtudiante(
+      this.http.post<VerdictBrut>(`${this.urlSeance(sessionId)}/answers`, reponse, {
         headers: entetes(jeton),
-      })
-      .pipe(
-        map(({ correcte, libelleConfusion }) => ({
-          reussite: correcte,
-          libelleConfusion: libelleConfusion ?? null,
-        })),
-        catchError((erreur: unknown) => throwError(() => refuserReponse(erreur))),
-      );
+      }),
+    ).pipe(
+      map(({ correcte, libelleConfusion }) => ({
+        reussite: correcte,
+        libelleConfusion: libelleConfusion ?? null,
+      })),
+    );
   }
 
   enregistrerReponseLibre(
@@ -377,6 +375,7 @@ export class FormationsHttpAdapter implements FormationsPort {
     const url = `${this.urlSeance(sessionId)}/escape/${encodeURIComponent(parcoursId)}/tentatives`;
     return ecritureEtudiante(
       this.http.post<VerdictTentative>(url, tentative, { headers: entetes(jeton) }),
+      'refusee',
     );
   }
 

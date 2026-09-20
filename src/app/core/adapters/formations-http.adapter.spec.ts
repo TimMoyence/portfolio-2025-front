@@ -290,6 +290,12 @@ describe('FormationsHttpAdapter', () => {
           buildProblemeHttp({ code: 'SEANCE_TERMINEE' }),
           'seance-terminee',
         ],
+        [
+          'un 409 ECRAN_NON_SERVI',
+          409,
+          buildProblemeHttp({ code: 'ECRAN_NON_SERVI' }),
+          'ecran-non-servi',
+        ],
         ['un 400 reponse vide', 400, buildProblemeHttp({ status: 400 }), 'refusee'],
       ];
 
@@ -458,14 +464,18 @@ describe('FormationsHttpAdapter', () => {
   });
 
   describe('refus de rattachement', () => {
-    const refusPour = (statut: number, statusText: string): RattachementRefuse => {
+    const refusPour = (
+      statut: number,
+      statusText: string,
+      corps: ProblemeHttp | '' = '',
+    ): RattachementRefuse => {
       const erreurs: unknown[] = [];
 
       adapter.rejoindre(CODE, INSCRIPTION).subscribe({
         error: (recue: unknown) => erreurs.push(recue),
       });
 
-      httpMock.expectOne(`${RACINE}/${CODE}/join`).flush('', { status: statut, statusText });
+      httpMock.expectOne(`${RACINE}/${CODE}/join`).flush(corps, { status: statut, statusText });
 
       expect(erreurs.length).toBe(1);
       expect(erreurs[0]).toBeInstanceOf(RattachementRefuse);
@@ -477,10 +487,17 @@ describe('FormationsHttpAdapter', () => {
       expect(refus.message).not.toBe('');
     };
 
-    it('distingue le 409 deja inscrit', () => {
-      const refus = refusPour(409, 'Conflict');
+    it('distingue le 409 SEANCE_COMPLETE servi par le back', () => {
+      const refus = refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_COMPLETE' }));
 
-      attendreMotif(refus, 'deja-inscrit');
+      attendreMotif(refus, 'seance-complete');
+      expect(refus.statut).toBe(409);
+    });
+
+    it('distingue le 409 SEANCE_TERMINEE servi par le back', () => {
+      const refus = refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_TERMINEE' }));
+
+      attendreMotif(refus, 'seance-terminee');
       expect(refus.statut).toBe(409);
     });
 
@@ -491,8 +508,14 @@ describe('FormationsHttpAdapter', () => {
       expect(refus.statut).toBe(404);
     });
 
-    it('ne confond pas les deux motifs', () => {
-      expect(refusPour(409, 'Conflict').motif).not.toBe(refusPour(404, 'Not Found').motif);
+    it('ne confond pas la seance complete et le code inconnu', () => {
+      expect(
+        refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_COMPLETE' })).motif,
+      ).not.toBe(refusPour(404, 'Not Found').motif);
+    });
+
+    it('rend un motif generique pour un 409 sans code, que le front ne sait pas nommer', () => {
+      attendreMotif(refusPour(409, 'Conflict'), 'rattachement-impossible');
     });
 
     it('rend un motif generique pour les autres statuts', () => {
@@ -612,16 +635,34 @@ describe('FormationsHttpAdapter', () => {
         'refusee',
       ],
       [
-        'un 409 au code inconnu',
+        'un 409 au code SEANCE_TERMINEE',
         409,
         buildProblemeHttp({ detail: TERMINEE, code: 'SEANCE_TERMINEE' }),
+        'seance-terminee',
+      ],
+      [
+        'un 409 au code ECRAN_NON_SERVI',
+        409,
+        buildProblemeHttp({ code: 'ECRAN_NON_SERVI' }),
+        'ecran-non-servi',
+      ],
+      [
+        'un 409 au code PHASE_FERMEE',
+        409,
+        buildProblemeHttp({ code: 'PHASE_FERMEE' }),
+        'phase-fermee',
+      ],
+      [
+        'un 400 de validation sans code',
+        400,
+        buildProblemeHttp({ status: 400, title: 'Bad Request' }),
         'refusee',
       ],
       [
-        'un 400 portant un code de 409',
-        400,
-        buildProblemeHttp({ status: 400, title: 'Bad Request', code: 'SEANCE_NON_DEMARREE' }),
-        'refusee',
+        'un 404 sans code, le poste ne figure plus dans la seance',
+        404,
+        buildProblemeHttp({ status: 404, title: 'Not Found' }),
+        'evince',
       ],
       ['un jeton refuse 401', 401, null, 'refusee'],
     ];
@@ -696,6 +737,7 @@ describe('FormationsHttpAdapter', () => {
       readonly corps: unknown;
       readonly jeton: string | null;
       readonly reponse: object | null;
+      readonly absence?: MotifRefusReponse;
     }
 
     const appels = (): readonly AppelAttendu[] => [
@@ -716,6 +758,7 @@ describe('FormationsHttpAdapter', () => {
         corps: TENTATIVE,
         jeton: JETON,
         reponse: buildVerdictTentative(),
+        absence: 'refusee',
       },
       {
         nom: 'declarerJalon',
@@ -829,8 +872,9 @@ describe('FormationsHttpAdapter', () => {
         [409, 'ENIGME_VERROUILLEE', 'enigme-verrouillee'],
         [409, 'TENTATIVES_EPUISEES', 'tentatives-epuisees'],
         [400, 'PRODUCTION_VIDE', 'production-vide'],
-        [401, 'PARTICIPANT_EVINCE', 'evince'],
         [400, 'TYPE_DE_QUESTION', 'refusee'],
+        [400, 'PRODUCTION_INVALIDE', 'refusee'],
+        [404, 'ACTIVITE_INCONNUE', 'refusee'],
         [401, undefined, 'refusee'],
         [429, undefined, 'reseau'],
         [503, undefined, 'reseau'],
@@ -865,6 +909,24 @@ describe('FormationsHttpAdapter', () => {
           expect((erreurs[0] as ReponseRefusee).motif)
             .withContext(ecriture.nom)
             .toBe('reseau');
+        }
+      });
+
+      it('lit un 404 sans code comme une eviction, sauf la ou il designe une enigme absente', () => {
+        for (const ecriture of ecritures()) {
+          const erreurs: unknown[] = [];
+
+          ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+          httpMock
+            .expectOne(ecriture.url)
+            .flush(buildProblemeHttp({ status: 404, title: 'Not Found' }), {
+              status: 404,
+              statusText: 'Not Found',
+            });
+
+          expect((erreurs[0] as ReponseRefusee).motif)
+            .withContext(ecriture.nom)
+            .toBe(ecriture.absence ?? 'evince');
         }
       });
     });

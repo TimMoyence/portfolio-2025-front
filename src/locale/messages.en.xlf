@@ -12065,14 +12065,24 @@
         <target>This session code does not exist: check the characters you were given.</target>
       </segment>
     </unit>
-    <unit id="coursRefusDejaInscrit">
+    <unit id="coursRefusSeanceComplete">
       <notes>
-        <note category="location">src/app/core/ports/formations.port.ts:104</note>
-        <note category="meaning">cours.refusDejaInscrit</note>
+        <note category="location">src/app/core/ports/formations.port.ts:213</note>
+        <note category="meaning">cours.refusSeanceComplete</note>
       </notes>
       <segment>
-        <source>Cette inscription est déjà enregistrée, ou la séance n&apos;en accepte plus.</source>
-        <target>This registration is already recorded, or the session no longer accepts new ones.</target>
+        <source>Cette séance a atteint sa capacité : demandez à votre formateur de libérer une place.</source>
+        <target>This session has reached its capacity: ask your trainer to free up a seat.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusSeanceTerminee">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:214</note>
+        <note category="meaning">cours.refusSeanceTerminee</note>
+      </notes>
+      <segment>
+        <source>Cette séance est terminée : elle n’accepte plus de nouveau participant.</source>
+        <target>This session is over: it no longer accepts new participants.</target>
       </segment>
     </unit>
     <unit id="coursRefusRattachementImpossible">
@@ -13201,9 +13211,18 @@
         <target>Waiting for the network: your reflection is kept on this device and will be sent once the connection is back.</target>
       </segment>
     </unit>
-    <unit id="slideReflectionSeanceNonDemarree">
+    <unit id="slideReflectionEcranNonServi">
       <notes>
         <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:67,70</note>
+      </notes>
+      <segment>
+        <source>Cet écran n’est pas encore ouvert : la réflexion est gardée sur cet appareil et repartira dès que le formateur y arrivera.</source>
+        <target>This screen is not open yet: the reflection is kept on this device and will be sent as soon as the trainer reaches it.</target>
+      </segment>
+    </unit>
+    <unit id="slideReflectionSeanceNonDemarree">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:71,74</note>
       </notes>
       <segment>
         <source>La séance n’a pas encore démarré : cette réflexion n’a pas été enregistrée.</source>
@@ -16719,6 +16738,15 @@
       <segment>
         <source>La participation se compte sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées (votes, questions numériques, classements, feuille et tableau) : « je ne sais pas » y compte comme une réponse, y compris pour une production ; une production vide n’est pas acceptée ; énigmes et rappels ne comptent pas.</source>
         <target>Participation is counted over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions (votes, numeric questions, sorts, spreadsheet and table): “I don’t know” counts as an answer, including for a production; an empty production is not accepted; puzzles and recalls do not count.</target>
+      </segment>
+    </unit>
+    <unit id="b2CoursVersionPubliee">
+      <notes>
+        <note category="location">src/app/features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component.html:27,28</note>
+      </notes>
+      <segment>
+        <source>Version publiée</source>
+        <target>Published version</target>
       </segment>
     </unit>
     <unit id="b2CoursApercu">

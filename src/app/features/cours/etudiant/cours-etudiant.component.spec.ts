@@ -919,12 +919,24 @@ describe('CoursEtudiantComponent', () => {
     expect(port.lireSujet).not.toHaveBeenCalled();
   });
 
-  it('distingue une inscription deja enregistree d un code inconnu', async () => {
-    port.rejoindre.and.returnValue(throwError(() => new RattachementRefuse('deja-inscrit', 409)));
+  it('distingue une seance complete d un code inconnu', async () => {
+    port.rejoindre.and.returnValue(
+      throwError(() => new RattachementRefuse('seance-complete', 409)),
+    );
     const fixture = await rattacher();
 
-    expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('deja-inscrit');
-    expect(lire(fixture, 'etudiant-echec')?.textContent).toContain('déjà enregistrée');
+    expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('seance-complete');
+    expect(lire(fixture, 'etudiant-echec')?.textContent).toContain('capacité');
+  });
+
+  it('dit a l etudiant que la seance est terminee quand elle n accepte plus personne', async () => {
+    port.rejoindre.and.returnValue(
+      throwError(() => new RattachementRefuse('seance-terminee', 409)),
+    );
+    const fixture = await rattacher();
+
+    expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('seance-terminee');
+    expect(lire(fixture, 'etudiant-echec')?.textContent).toContain('terminée');
   });
 
   it('clot la seance quand le flux annonce sa fin', async () => {
