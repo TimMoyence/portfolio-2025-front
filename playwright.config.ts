@@ -4,6 +4,8 @@ const SPECS_VISUELS = '**/visual-regression.spec.ts';
 
 const baseSsr = process.env['SSR_BASE_URL'];
 
+const baseSsrAnglais = process.env['SSR_EN_BASE_URL'];
+
 const serveurAngular = {
   command: 'npm run start',
   url: 'http://localhost:4200',
@@ -11,17 +13,22 @@ const serveurAngular = {
   timeout: 180_000,
 };
 
-const serveurSsr =
-  baseSsr === undefined || baseSsr === ''
+const serveurDeLocale = (commande: string, base: string | undefined) =>
+  base === undefined || base === ''
     ? []
     : [
         {
-          command: 'npm run serve:ssr:portfolio-app',
-          url: `${baseSsr}/sitemap.xml`,
+          command: commande,
+          url: `${base}/sitemap.xml`,
           reuseExistingServer: !process.env['CI'],
           timeout: 180_000,
         },
       ];
+
+const serveurSsr = [
+  ...serveurDeLocale('npm run serve:ssr:portfolio-app', baseSsr),
+  ...serveurDeLocale('npm run serve:ssr:portfolio-app:en', baseSsrAnglais),
+];
 
 export default defineConfig({
   testDir: './e2e',

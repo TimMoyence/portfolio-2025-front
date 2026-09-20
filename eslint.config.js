@@ -76,7 +76,7 @@ module.exports = tseslint.config(
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
   },
   {
-    files: ['e2e/**/*.ts', 'scripts/**/*.mts'],
+    files: ['e2e/**/*.ts', 'scripts/**/*.mts', 'playwright.config.ts'],
     extends: [sonarjs.configs.recommended],
     languageOptions: {
       parser: tseslint.parser,
