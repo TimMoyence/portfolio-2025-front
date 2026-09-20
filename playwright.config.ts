@@ -63,7 +63,7 @@ export default defineConfig({
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
   reporter: process.env['CI'] ? [['github'], ['line']] : 'html',
-  snapshotPathTemplate: 'e2e/__screenshots__/{testFilePath}/{arg}{ext}',
+  snapshotPathTemplate: 'e2e/__screenshots__/{testFilePath}/{arg}-{platform}{ext}',
   expect: {
     timeout: 10_000,
     toHaveScreenshot: {
