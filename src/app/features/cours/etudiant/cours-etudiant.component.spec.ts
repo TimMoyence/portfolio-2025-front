@@ -985,6 +985,58 @@ describe('CoursEtudiantComponent', () => {
       expect(lire(fixture, 'etudiant-reprise-indisponible')).toBeNull();
     });
 
+    it('porte au poste etudiant chaque revision de pilotage diffusee par le formateur', async () => {
+      const fixture = await rattacherALaSeanceEnCours();
+      const pilotageVu = (): unknown =>
+        (ecranDe(fixture).componentInstance as SlideActivityComponent).direct()?.pilotage;
+
+      expect(pilotageVu()).toEqual({});
+
+      diffuser(fixture, { revision: 4, pilotage: { 'ecran-1': { phase: 'revote' } } });
+      await stabiliser(fixture);
+
+      expect(pilotageVu()).toEqual({ phase: 'revote' });
+
+      diffuser(fixture, {
+        revision: 5,
+        pilotage: { 'ecran-1': { phase: 'revele', revele: true, etayage: 2 } },
+      });
+      await stabiliser(fixture);
+
+      expect(pilotageVu()).toEqual({ phase: 'revele', revele: true, etayage: 2 });
+    });
+
+    it('relit une production deja envoyee et la marque deja repondue a la reprise', async () => {
+      port.lireMonEtat.and.returnValue(
+        of(
+          buildEtatParticipant({
+            reponses: [
+              {
+                questionId: 'Q-VA-07',
+                valeur: { type: 'feuille', cellules: { E2: '=C2/$C$5' } },
+                correcte: false,
+                score: 0.5,
+                details: [{ cle: 'E2', juste: true, libelleConfusion: null }],
+                libelleConfusion: null,
+              },
+            ],
+          }),
+        ),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+
+      expect(retoursDe(fixture)).toEqual([
+        {
+          kind: 'verdict-production',
+          questionId: 'Q-VA-07',
+          correcte: false,
+          score: 0.5,
+          details: [{ cle: 'E2', juste: true, libelleConfusion: null }],
+        },
+        { kind: 'deja-repondu', questionId: 'Q-VA-07' },
+      ]);
+    });
+
     it('dit a l etudiant que ses reponses n ont pas pu etre relues, sans bloquer la seance', async () => {
       port.lireMonEtat.and.returnValue(throwError(() => new Error('reseau coupe')));
       const fixture = await rattacherALaSeanceEnCours();
