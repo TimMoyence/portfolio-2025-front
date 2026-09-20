@@ -15,6 +15,18 @@ const FICHIER = fichierBrut as FichierVecteursFormule;
 
 const TYPES_DE_VECTEUR: readonly VecteurFormule['type'][] = ['feuille', 'expression', 'r1c1'];
 
+function codesErreurDe(valeur: unknown): readonly string[] {
+  if (Array.isArray(valeur)) {
+    return valeur.flatMap(codesErreurDe);
+  }
+  if (typeof valeur !== 'object' || valeur === null) {
+    return [];
+  }
+  return Object.entries(valeur).flatMap(([cle, contenu]) =>
+    cle === 'erreur' && typeof contenu === 'string' ? [contenu] : codesErreurDe(contenu),
+  );
+}
+
 describe('serialiserCanonique', () => {
   it('trie les cles de chaque objet, a toute profondeur', () => {
     expect(serialiserCanonique({ b: 1, a: { d: [2, 1], c: null } })).toBe(
@@ -93,7 +105,12 @@ describe('formule.vecteurs.json, copie du back', () => {
     for (const attendu of attendus) {
       expect(FICHIER.vecteurs).toContain(attendu);
     }
-    expect(erreurs).toContain(cycle.erreur);
+
+    const codesServis = [...new Set(codesErreurDe(FICHIER.vecteurs))];
+
+    expect(codesServis).not.toHaveSize(0);
+    expect(codesServis.filter((code) => !erreurs.includes(code as CodeErreur))).toEqual([]);
+    expect(codesServis).toContain(cycle.erreur);
   });
 });
 
