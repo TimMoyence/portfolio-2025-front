@@ -1,5 +1,4 @@
-import type { ComponentFixture } from '@angular/core/testing';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { NEVER, Observable, of, throwError } from 'rxjs';
 import {
   buildAnnotationFormateur,
@@ -11,60 +10,33 @@ import {
   buildResultatQuestion,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
+import type { FixtureDuPanneau } from '../../../../testing/panneau-pedagogique';
+import {
+  SEANCE_DU_PANNEAU,
+  monterLePanneau,
+  noteAffichee,
+  repereDuPanneau,
+  saisirLaNoteDuPanneau,
+} from '../../../../testing/panneau-pedagogique';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { AnnotationFormateur, FormationsPort } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT, GroupeRefuse } from '../../../core/ports/formations.port';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 
-type Fixture = ComponentFixture<CoursPanneauPedagogiqueComponent>;
-
-const SESSION = 'seance-1';
+const SESSION = SEANCE_DU_PANNEAU;
 
 describe('CoursPanneauPedagogiqueComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
 
-  function monter(): Fixture {
-    const fixture = TestBed.createComponent(CoursPanneauPedagogiqueComponent);
-    fixture.componentRef.setInput(
-      'ecran',
-      buildEcranDeroule({ id: 'ecran-1', guide: buildGuideFormateur() }),
-    );
-    fixture.componentRef.setInput('resultats', []);
-    fixture.componentRef.setInput('participants', 12);
-    fixture.componentRef.setInput('sessionId', SESSION);
-    fixture.componentRef.setInput('nextScreenTitle', 'Le taux global');
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-    return fixture;
-  }
-
-  function element<T extends HTMLElement>(fixture: Fixture, marque: string): T {
-    const trouve = (fixture.nativeElement as HTMLElement).querySelector<T>(
-      `[data-testid="${marque}"]`,
-    );
-    if (trouve === null) {
-      throw new Error(`Aucun élément ${marque} dans le panneau pédagogique`);
-    }
-    return trouve;
-  }
-
-  function saisirLaNote(fixture: Fixture, texte: string): void {
-    const note = element<HTMLTextAreaElement>(fixture, 'annotation-note');
-    note.value = texte;
-    note.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-  }
-
-  function changer(fixture: Fixture, champ: HTMLSelectElement, valeur: string): void {
+  function changer(fixture: FixtureDuPanneau, champ: HTMLSelectElement, valeur: string): void {
     champ.value = valeur;
     champ.dispatchEvent(new Event('change'));
     tick();
     fixture.detectChanges();
   }
 
-  function etatDeLaNote(fixture: Fixture): string | null {
-    return element(fixture, 'annotation-etat').getAttribute('data-etat');
+  function etatDeLaNote(fixture: FixtureDuPanneau): string | null {
+    return repereDuPanneau(fixture, 'annotation-etat').getAttribute('data-etat');
   }
 
   beforeEach(() => {
@@ -76,7 +48,7 @@ describe('CoursPanneauPedagogiqueComponent', () => {
   });
 
   it('lit annotations, groupes, participants et reponses libres de la seance', fakeAsync(() => {
-    monter();
+    monterLePanneau();
 
     for (const lecture of [
       port.lireAnnotations,
@@ -89,7 +61,7 @@ describe('CoursPanneauPedagogiqueComponent', () => {
   }));
 
   it('relit les donnees partagees a chaque resultat recu du flux, sans autre sondage', fakeAsync(() => {
-    const fixture = monter();
+    const fixture = monterLePanneau();
 
     fixture.componentRef.setInput('resultats', [buildResultatQuestion()]);
     fixture.detectChanges();
@@ -104,27 +76,27 @@ describe('CoursPanneauPedagogiqueComponent', () => {
   it('signale une relecture refusee au lieu d afficher des listes vides', fakeAsync(() => {
     port.lireAnnotations.and.returnValue(throwError(() => new Error('403')));
 
-    const fixture = monter();
+    const fixture = monterLePanneau();
 
-    expect(element(fixture, 'panneau-lecture-echec').getAttribute('role')).toBe('alert');
+    expect(repereDuPanneau(fixture, 'panneau-lecture-echec').getAttribute('role')).toBe('alert');
   }));
 
   it('montre le guide de l ecran sans reveler la reponse attendue', fakeAsync(() => {
-    const fixture = monter();
+    const fixture = monterLePanneau();
 
-    expect(element(fixture, 'presentateur-guide').textContent).toContain('À dire');
-    expect(element(fixture, 'presentateur-guide').textContent).not.toContain(
+    expect(repereDuPanneau(fixture, 'presentateur-guide').textContent).toContain('À dire');
+    expect(repereDuPanneau(fixture, 'presentateur-guide').textContent).not.toContain(
       buildGuideFormateur().reponse ?? '',
     );
   }));
 
   describe('enregistrement de la note', () => {
     it('n envoie qu une requete, 600 ms apres la derniere frappe', fakeAsync(() => {
-      const fixture = monter();
+      const fixture = monterLePanneau();
 
-      saisirLaNote(fixture, 'R');
-      saisirLaNote(fixture, 'Re');
-      saisirLaNote(fixture, 'Relancer');
+      saisirLaNoteDuPanneau(fixture, 'R');
+      saisirLaNoteDuPanneau(fixture, 'Re');
+      saisirLaNoteDuPanneau(fixture, 'Relancer');
       tick(599);
 
       expect(port.enregistrerAnnotation).not.toHaveBeenCalled();
@@ -149,11 +121,11 @@ describe('CoursPanneauPedagogiqueComponent', () => {
         }),
         NEVER,
       );
-      const fixture = monter();
+      const fixture = monterLePanneau();
 
-      saisirLaNote(fixture, 'Premiere version');
+      saisirLaNoteDuPanneau(fixture, 'Premiere version');
       tick(600);
-      saisirLaNote(fixture, 'Seconde version');
+      saisirLaNoteDuPanneau(fixture, 'Seconde version');
       tick(600);
 
       expect(port.enregistrerAnnotation).toHaveBeenCalledTimes(2);
@@ -162,9 +134,9 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
     it('affiche l echec reel d un enregistrement', fakeAsync(() => {
       port.enregistrerAnnotation.and.returnValue(throwError(() => new Error('500')));
-      const fixture = monter();
+      const fixture = monterLePanneau();
 
-      saisirLaNote(fixture, 'Note');
+      saisirLaNoteDuPanneau(fixture, 'Note');
       tick(600);
       fixture.detectChanges();
 
@@ -172,9 +144,9 @@ describe('CoursPanneauPedagogiqueComponent', () => {
     }));
 
     it('n enregistre pas une note videe', fakeAsync(() => {
-      const fixture = monter();
+      const fixture = monterLePanneau();
 
-      saisirLaNote(fixture, '   ');
+      saisirLaNoteDuPanneau(fixture, '   ');
       tick(600);
       fixture.detectChanges();
 
@@ -193,8 +165,8 @@ describe('CoursPanneauPedagogiqueComponent', () => {
       port.enregistrerAnnotation.and.returnValue(
         of(buildAnnotationFormateur({ note: 'Nouvelle', updatedAt: '2026-09-19T09:00:00.000Z' })),
       );
-      const fixture = monter();
-      saisirLaNote(fixture, 'Nouvelle');
+      const fixture = monterLePanneau();
+      saisirLaNoteDuPanneau(fixture, 'Nouvelle');
       tick(600);
 
       fixture.componentRef.setInput('resultats', [buildResultatQuestion()]);
@@ -203,19 +175,19 @@ describe('CoursPanneauPedagogiqueComponent', () => {
       fixture.detectChanges();
 
       expect(port.lireAnnotations).toHaveBeenCalledTimes(2);
-      expect(element<HTMLTextAreaElement>(fixture, 'annotation-note').value).toBe('Nouvelle');
+      expect(noteAffichee(fixture)).toBe('Nouvelle');
     }));
 
     it('vide la note au changement d ecran sans la reenregistrer sous le nouvel ecran', fakeAsync(() => {
-      const fixture = monter();
-      saisirLaNote(fixture, 'Note de l ecran 1');
+      const fixture = monterLePanneau();
+      saisirLaNoteDuPanneau(fixture, 'Note de l ecran 1');
 
       fixture.componentRef.setInput('ecran', buildEcranDeroule({ id: 'ecran-2' }));
       fixture.detectChanges();
       tick(600);
       fixture.detectChanges();
 
-      expect(element<HTMLTextAreaElement>(fixture, 'annotation-note').value).toBe('');
+      expect(noteAffichee(fixture)).toBe('');
       expect(port.enregistrerAnnotation.calls.allArgs()).toEqual([
         [SESSION, { screenId: 'ecran-1', groupName: 'Classe entière', note: 'Note de l ecran 1' }],
       ]);
@@ -224,18 +196,18 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
   describe('groupes', () => {
     it('cree un groupe et le propose au suivi de l annotation', fakeAsync(() => {
-      const fixture = monter();
-      const champ = element<HTMLInputElement>(fixture, 'groupe-nouveau');
+      const fixture = monterLePanneau();
+      const champ = repereDuPanneau<HTMLInputElement>(fixture, 'groupe-nouveau');
 
       champ.value = 'Groupe du fond';
       champ.dispatchEvent(new Event('input'));
-      element<HTMLButtonElement>(fixture, 'groupe-creer').click();
+      repereDuPanneau<HTMLButtonElement>(fixture, 'groupe-creer').click();
       tick();
       fixture.detectChanges();
 
       expect(port.creerGroupe).toHaveBeenCalledOnceWith(SESSION, 'Groupe du fond');
       expect(
-        [...element<HTMLSelectElement>(fixture, 'annotation-groupe').options].map(
+        [...repereDuPanneau<HTMLSelectElement>(fixture, 'annotation-groupe').options].map(
           (option) => option.value,
         ),
       ).toEqual(['Classe entière', 'Groupe du fond']);
@@ -243,23 +215,23 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
     it('explique le refus d un nom deja pris', fakeAsync(() => {
       port.creerGroupe.and.returnValue(throwError(() => new GroupeRefuse('nom-deja-pris', 409)));
-      const fixture = monter();
-      const champ = element<HTMLInputElement>(fixture, 'groupe-nouveau');
+      const fixture = monterLePanneau();
+      const champ = repereDuPanneau<HTMLInputElement>(fixture, 'groupe-nouveau');
 
       champ.value = 'Groupe A';
       champ.dispatchEvent(new Event('input'));
-      element<HTMLButtonElement>(fixture, 'groupe-creer').click();
+      repereDuPanneau<HTMLButtonElement>(fixture, 'groupe-creer').click();
       tick();
       fixture.detectChanges();
 
-      expect(element(fixture, 'groupes-refus').textContent).toContain('déjà pris');
+      expect(repereDuPanneau(fixture, 'groupes-refus').textContent).toContain('déjà pris');
     }));
 
     it('affecte un participant a un groupe puis l en retire', fakeAsync(() => {
       port.lireGroupes.and.returnValue(of({ groups: [buildGroupeFormation()] }));
       port.lireParticipants.and.returnValue(of({ participants: [buildParticipantDeSeance()] }));
-      const fixture = monter();
-      const choix = element<HTMLSelectElement>(fixture, 'participant-groupe');
+      const fixture = monterLePanneau();
+      const choix = repereDuPanneau<HTMLSelectElement>(fixture, 'participant-groupe');
 
       changer(fixture, choix, 'groupe-1');
       changer(fixture, choix, '');
@@ -278,9 +250,9 @@ describe('CoursPanneauPedagogiqueComponent', () => {
     spyOn(URL, 'revokeObjectURL');
     const clic = spyOn(HTMLAnchorElement.prototype, 'click');
     port.exporterBilan.and.returnValue(of(buildRapportSeance({ code: '4821' })));
-    const fixture = monter();
+    const fixture = monterLePanneau();
 
-    element<HTMLButtonElement>(fixture, 'panneau-exporter-bilan').click();
+    repereDuPanneau<HTMLButtonElement>(fixture, 'panneau-exporter-bilan').click();
     tick();
 
     expect(port.exporterBilan).toHaveBeenCalledOnceWith(SESSION);
@@ -292,12 +264,12 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
   it('signale un export du bilan en echec', fakeAsync(() => {
     port.exporterBilan.and.returnValue(throwError(() => new Error('500')));
-    const fixture = monter();
+    const fixture = monterLePanneau();
 
-    element<HTMLButtonElement>(fixture, 'panneau-exporter-bilan').click();
+    repereDuPanneau<HTMLButtonElement>(fixture, 'panneau-exporter-bilan').click();
     tick();
     fixture.detectChanges();
 
-    expect(element(fixture, 'panneau-export-echec').getAttribute('role')).toBe('alert');
+    expect(repereDuPanneau(fixture, 'panneau-export-echec').getAttribute('role')).toBe('alert');
   }));
 });
