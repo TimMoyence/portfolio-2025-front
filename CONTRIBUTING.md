@@ -39,7 +39,16 @@ Les hooks Git suivants tournent automatiquement apres installation des dependanc
 
 - `pre-commit` via `lint-staged` ;
 - `commit-msg` via `commitlint` ;
-- `pre-push` via `npm run pre-push:check` (lint + format:check + typecheck + test:ci, sans build).
+- `pre-push` via `npm run pre-push:check` : toute la porte qualite (lint, format, typecheck,
+  duplication, code mort, gardes, tests, build, garde de bundle), terminee par `test:e2e:cours`.
+
+Un changement qui touche le cours servi par l'API se verifie en plus sur le banc reel :
+
+```bash
+npm run test:banc
+```
+
+Il demande Docker et le depot back clone a cote du front. Voir [`docs/banc-seance.md`](./docs/banc-seance.md).
 
 Si une verification ne peut pas etre executee, documenter la commande exacte et le blocage reel.
 
@@ -48,7 +57,8 @@ Si une verification ne peut pas etre executee, documenter la commande exacte et 
 Une tache n'est pas terminee tant que :
 
 - les tests pertinents passent ;
-- lint, format, typecheck et build passent ;
+- `npm run ci:check` passe en entier ;
+- le banc reel passe si le changement touche le cours servi par l'API ;
 - la documentation impactee est a jour ;
 - accessibilite, SSR, responsive et i18n ont ete pris en compte ;
 - le changement est committe comme une unite coherente.

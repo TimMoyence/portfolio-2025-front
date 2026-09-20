@@ -35,7 +35,7 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
 - `/growth-audit` — Audit SEO automatise
-- `/atelier`, `/atelier/meteo`, `/atelier/sebastian` — Redirections permanentes vers `/projets`
+- `/atelier`, `/atelier/meteo`, `/atelier/sebastian`, `/client-project` — Redirections permanentes vers `/projets`
 
 ### Auth
 
@@ -111,6 +111,25 @@ npm run build
 npm run ci:check
 ```
 
+## Essais de bout en bout
+
+`playwright.config.ts` declare trois projets, volontairement disjoints :
+
+| Projet     | Contenu                         | Commande              | Ce qu'il sert                                                    |
+| ---------- | ------------------------------- | --------------------- | ---------------------------------------------------------------- |
+| `chromium` | `e2e/*.spec.ts`                 | `npm run test:e2e`    | parcours navigateur sur reponses HTTP bouchonnees, joue en CI    |
+| `visuel`   | `e2e/visual-regression.spec.ts` | `npm run test:visual` | instantanes visuels                                              |
+| `banc`     | `e2e/banc/*.spec.ts`            | `npm run test:banc`   | seance reelle : front SSR + API + PostgreSQL, sans aucun bouchon |
+
+`npm run test:e2e:portail` est la porte jouee par la CI : elle demarre les serveurs SSR `fr` et
+`en` puis rejoue le projet `chromium`, qui ignore les deux autres projets.
+
+Le banc monte lui-meme sa pile, joue une seance du cours B2-01 dans de vrais navigateurs et
+redescend tout, y compris en cas d'echec. Il demande Docker et le depot back clone a cote du
+front. Il n'est pas joue par la CI : la decision, ce qu'il couvre et ce qui reste a couvrir sont
+dans [`docs/banc-seance.md`](./docs/banc-seance.md). Il se joue avant chaque deploiement qui
+touche le cours et avant toute bascule de version publiee.
+
 ## Conduire une séance de cours
 
 Matériel : un portable pour le pupitre, un écran étendu (vidéoprojecteur) pour la scène, les téléphones des étudiants. Un seul navigateur sur le portable pour le pupitre et la scène.
@@ -143,9 +162,9 @@ Apres `npm ci`, Husky installe automatiquement trois hooks :
 
 - `pre-commit` : lance `lint-staged` pour formatter et lint uniquement les fichiers indexes ;
 - `commit-msg` : impose un message au format Conventional Commit ;
-- `pre-push` : lance `npm run pre-push:check` (lint + format:check + typecheck + test:ci, sans build) pour bloquer un push sale.
+- `pre-push` : lance `npm run pre-push:check`, qui rejoue toute la porte qualite (voir plus bas) et se termine par `npm run test:e2e:cours` la ou la CI joue `npm run test:e2e:portail`.
 
-Ces hooks ne remplacent pas la CI, ils evitent surtout d'introduire une regression evidente dans l'historique local.
+Ces hooks ne remplacent pas la CI, mais `pre-push:check` en couvre l'essentiel : un push sale est bloque avant d'atteindre GitHub.
 
 ## Internationalisation (i18n)
 
@@ -225,16 +244,19 @@ Flux a suivre a chaque ajout ou modification d'un texte marque `i18n="..."` ou
 
 ## Garde-fous qualite
 
-Chaque lot de changement coherent doit idealement valider :
+`npm run ci:check` est la porte complete, dans l'ordre : `lint`, `format:check`, `typecheck`,
+`quality:dup`, `quality:dup:tests`, `quality:knip`, `test:guards`, `guard:cours-runtime`,
+`guard:medias-b2`, `guard:comments`, `test:ci`, `build`, `guard:cours-bundle`, `test:e2e:portail`.
+`npm run pre-push:check` est la meme chaine, terminee par `test:e2e:cours` (les seules suites du
+cours) au lieu du portail complet.
 
-- `npm run lint`
-- `npm run format:check`
-- `npm run typecheck`
-- `npm run test:ci`
-- `npm run build`
+Ce que chaque garde specifique tient :
 
-Le cours ajoute deux gardes, jouées par `ci:check` :
-
+- `npm run quality:dup` et `quality:dup:tests` — duplication (jscpd) sur `src`, `scripts`, `outils`
+  puis sur les seules suites de `src`, cette derniere a seuil zero.
+- `npm run quality:knip` — fichiers, exports et dependances morts.
+- `npm run test:guards` — `node --test` sur `scripts/**/*.test.mjs` : gardes d'outillage, moteur de
+  formules, catalogue de briques, synchronisation i18n (`guard-i18n-sync`), medias, banc.
 - `npm run guard:cours-runtime` — AD-2 : `src/cours/` n'importe aucun framework (Angular, RxJS,
   zone.js) et rien hors de `src/cours/` : c'est une couche feuille dont les briques sont des
   Custom Elements construits par le navigateur, hors du contexte d'injection d'Angular ; AD-4 : aucune
@@ -242,8 +264,14 @@ Le cours ajoute deux gardes, jouées par `ci:check` :
   l'étudiant, soit `src/cours/content/`, les fichiers « cours » de `src/app/`, le rendu partagé
   `src/app/shared/slides/**` et les pages `src/app/features/formations/b2-*`. Seul le pupitre
   (`src/app/features/cours/presentateur/`) nomme le corrigé, reçu au runtime.
-- `npm run guard:cours-bundle` — après `npm run build`, aucune clé `misconception` suivie d'une
-  valeur littérale dans `dist/`.
+- `npm run guard:medias-b2` — les huit medias du cours B2-01 V3 sont presents, references et
+  conformes au manifeste de production.
+- `npm run guard:comments` — plafond a zero commentaire narratif dans `src/`, `e2e/`, `scripts/` et
+  `outils/` : seule une contrainte externe citee avec sa source passe.
+- `npm run guard:cours-bundle` — apres `npm run build`, aucune cle `misconception` suivie d'une
+  valeur litterale dans `dist/`.
+
+`npm run test:banc` s'ajoute a cette porte hors CI, avant un deploiement qui touche le cours.
 
 ## Standards de contribution
 
@@ -257,6 +285,7 @@ Le cours ajoute deux gardes, jouées par `ci:check` :
 ## Documentation
 
 - [Guide de contribution](./CONTRIBUTING.md)
+- [Banc d'essai reel d'une seance](./docs/banc-seance.md)
 - [Standards d'ingenierie](./docs/engineering-standards.md)
 - [Gouvernance du depot](./docs/repository-governance.md)
 - [ADR](./docs/adr/README.md)

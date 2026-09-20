@@ -152,17 +152,20 @@ Une tache n'est pas terminee tant que tous les points suivants ne sont pas satis
 
 ### Verification minimale attendue
 
-- `npm run lint`
-- `npm run test:ci`
-- `npm run typecheck`
-- `npm run build`
+- `npm run ci:check` — la porte complete (lint, format, typecheck, duplication, code mort, gardes
+  d'outillage, gardes du cours, tests, build, garde de bundle, e2e du portail). Les commandes
+  individuelles ne remplacent pas cette chaine : le detail de chaque garde est dans `README.md`.
 
 ### Verification additionnelle selon l'impact
 
 - Si le contenu utilisateur, les textes ou les routes localisees changent :
-  - `npm run extract-i18n` ou mise a jour equivalente de la chaine i18n du projet
+  - `npm run extract-i18n` puis report des unites dans `src/locale/messages.en.xlf` (procedure
+    dans `README.md`), verifie par `npm run test:guards`
 - Si le rendu SSR, les meta tags, les assets critiques ou le prerender changent :
   - verifier explicitement que le build SSR/prerender reste sain et que le rendu ne casse pas hors navigateur
+- Si le cours servi par l'API change (contrat, pupitre, poste etudiant, briques de seance) :
+  - `npm run test:banc` — banc reel decrit dans `docs/banc-seance.md` (Docker et depot back voisin
+    requis). Il n'est pas joue par la CI : personne ne le rattrapera.
 
 L'agent ne doit jamais declarer une tache "terminee" si une verification attendue n'a pas ete executee ou si un blocage n'est pas explique precisement.
 
