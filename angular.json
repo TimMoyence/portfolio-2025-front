@@ -109,6 +109,19 @@
               "extractLicenses": false,
               "sourceMap": true,
               "localize": ["en"]
+            },
+            "banc": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.banc.ts"
+                }
+              ],
+              "localize": ["fr"],
+              "prerender": false,
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": false
             }
           },
           "defaultConfiguration": "production"

@@ -2,9 +2,15 @@ import { defineConfig, devices } from '@playwright/test';
 
 const SPECS_VISUELS = '**/visual-regression.spec.ts';
 
+const SPECS_BANC = 'banc/**/*.spec.ts';
+
 const baseSsr = process.env['SSR_BASE_URL'];
 
 const baseSsrAnglais = process.env['SSR_EN_BASE_URL'];
+
+const banc = process.env['BANC'] === '1';
+
+const baseBanc = process.env['BANC_URL_FRONT'] ?? 'http://localhost:4010';
 
 const serveurAngular = {
   command: 'npm run start',
@@ -30,6 +36,19 @@ const serveurSsr = [
   ...serveurDeLocale('npm run serve:ssr:portfolio-app:en', baseSsrAnglais),
 ];
 
+const serveurDuBanc = [
+  {
+    command: 'node dist/portfolio-app/server/fr/server.mjs',
+    url: `${baseBanc}/fr/cours/rejoindre`,
+    env: {
+      PORT: new URL(baseBanc).port,
+      PORTFOLIO_ARTICLE_API_URL: process.env['BANC_URL_API'] ?? '',
+    },
+    reuseExistingServer: !process.env['CI'],
+    timeout: 180_000,
+  },
+];
+
 export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.spec.ts',
@@ -53,7 +72,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: SPECS_VISUELS,
+      testIgnore: [SPECS_VISUELS, SPECS_BANC],
       use: { ...devices['Desktop Chrome'] },
     },
     {
@@ -61,6 +80,14 @@ export default defineConfig({
       testMatch: SPECS_VISUELS,
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'banc',
+      testMatch: SPECS_BANC,
+      fullyParallel: false,
+      timeout: 120_000,
+      expect: { timeout: 20_000 },
+      use: { ...devices['Desktop Chrome'], baseURL: baseBanc, trace: 'retain-on-failure' },
+    },
   ],
-  webServer: [serveurAngular, ...serveurSsr],
+  webServer: banc ? serveurDuBanc : [serveurAngular, ...serveurSsr],
 });

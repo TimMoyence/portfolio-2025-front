@@ -4,6 +4,7 @@
     "src/polyfills.ts",
     "src/**/*.spec.ts",
     "scripts/*.{mjs,mts}",
+    "scripts/**/*.test.mjs",
     "e2e/**/*.spec.ts",
     "outils/capsule-b2-01/outils/*.mjs",
     "outils/capsule-b2-01/page/capsule.js"

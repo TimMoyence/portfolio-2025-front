@@ -1,0 +1,25 @@
+services:
+  banc-db:
+    extends:
+      file: ../../../portfolio-2025-back/test/db-integration.compose.yaml
+      service: db-integration
+    environment:
+      POSTGRES_DB: portfolio_2025_banc
+    ports: !override
+      - '55433:5432'
+    healthcheck:
+      test: !override
+        - CMD-SHELL
+        - pg_isready -U postgres -d portfolio_2025_banc
+    volumes: !override []
+
+  banc-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '63790:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 20
