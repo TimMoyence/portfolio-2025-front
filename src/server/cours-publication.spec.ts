@@ -14,7 +14,10 @@ function reponseJson(corps: unknown, status = 200): Response {
 }
 
 function coursPublie(champs: Readonly<Record<string, unknown>>): Record<string, unknown> {
-  return { ...buildVisualCourse({ ecrans: [] }), ...champs };
+  const cours: Record<string, unknown> = { ...buildVisualCourse({ ecrans: [] }) };
+  delete cours['version'];
+  delete cours['publieLe'];
+  return { ...cours, ...champs };
 }
 
 describe('lecteurDePublicationsDeCours (H1)', () => {
