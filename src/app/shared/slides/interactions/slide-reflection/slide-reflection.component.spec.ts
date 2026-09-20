@@ -14,8 +14,15 @@ import {
   createPresentationPortStub,
 } from '../../../../../testing/factories/presentation.factory';
 import type { ModeInteraction } from '../mode-interaction';
+import {
+  clearIdentity,
+  readIdentity,
+  saveIdentity,
+} from '../../../../../cours/runtime/core/identity';
 import { enqueueFreeResponse, pendingFreeResponses } from './free-response.queue';
 import { SlideReflectionComponent } from './slide-reflection.component';
+
+const cleEtudiante = (): string => readIdentity()?.studentKey ?? '';
 
 @Component({
   standalone: true,
@@ -28,6 +35,8 @@ describe('SlideReflectionComponent', () => {
   let formations: jasmine.SpyObj<FormationsPort>;
 
   beforeEach(() => {
+    clearIdentity();
+    saveIdentity({ prenom: 'Anais', nom: 'Rivet', email: 'anais@example.com' });
     const portStub = createPresentationPortStub(
       buildInteractionsResponse({
         interactions: {
@@ -110,7 +119,7 @@ describe('SlideReflectionComponent', () => {
   });
 
   describe('etats de l envoi en seance', () => {
-    const CLE = (sessionId: string): string => `${sessionId}:ecran-1:reflexion-1`;
+    const CLE = (sessionId: string): string => `${cleEtudiante()}:${sessionId}:ecran-1:reflexion-1`;
 
     function etat(fixture: ComponentFixture<unknown>): string | null {
       return (
@@ -159,15 +168,15 @@ describe('SlideReflectionComponent', () => {
 
       expect(racine(fixture).textContent).toContain('En attente de réseau');
       expect(racine(fixture).textContent).not.toContain('Échec');
-      expect((await pendingFreeResponses(sessionId)).map((envoi) => envoi.key)).toEqual([
-        CLE(sessionId),
-      ]);
+      expect(
+        (await pendingFreeResponses(sessionId, cleEtudiante())).map((envoi) => envoi.key),
+      ).toEqual([CLE(sessionId)]);
 
       formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
       window.dispatchEvent(new Event('online'));
       await jusqua(fixture, () => etat(fixture) === 'enregistre');
 
-      expect(await pendingFreeResponses(sessionId)).toEqual([]);
+      expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
     });
 
     it('sur un ecran pas encore servi, l annonce et garde la reflexion en file', async () => {
@@ -181,9 +190,9 @@ describe('SlideReflectionComponent', () => {
       await jusqua(fixture, () => etat(fixture) === 'ecran_non_servi');
 
       expect(racine(fixture).textContent).toContain('pas encore ouvert');
-      expect((await pendingFreeResponses(sessionId)).map((envoi) => envoi.key)).toEqual([
-        CLE(sessionId),
-      ]);
+      expect(
+        (await pendingFreeResponses(sessionId, cleEtudiante())).map((envoi) => envoi.key),
+      ).toEqual([CLE(sessionId)]);
     });
 
     const REFUS: readonly (readonly [MotifRefusReponseLibre, number, string, string])[] = [
@@ -198,6 +207,7 @@ describe('SlideReflectionComponent', () => {
         await enqueueFreeResponse({
           key: CLE(sessionId),
           sessionId,
+          studentKey: cleEtudiante(),
           screenId: 'ecran-1',
           activityId: 'reflexion-1',
           response: 'Mise en file plus tôt.',
@@ -213,7 +223,7 @@ describe('SlideReflectionComponent', () => {
 
         expect(etat(fixture)).toBe(attendu);
         expect(racine(fixture).textContent).toContain(message);
-        expect(await pendingFreeResponses(sessionId)).toEqual([]);
+        expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
       });
     }
   });

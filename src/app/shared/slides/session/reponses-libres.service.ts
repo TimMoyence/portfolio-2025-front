@@ -5,6 +5,7 @@ import type {
   ReponseLibreEtudiant,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT, ReponseLibreRefusee } from '../../../core/ports/formations.port';
+import { readIdentity } from '../../../../cours/runtime/core/identity';
 import type { PendingFreeResponse } from '../interactions/slide-reflection/free-response.queue';
 import {
   enqueueFreeResponse,
@@ -33,6 +34,14 @@ export function cleDeReponseLibre(sessionId: string, screenId: string, activityI
   return `${sessionId}:${screenId}:${activityId}`;
 }
 
+function cleDeStockage(studentKey: string, cleLogique: string): string {
+  return `${studentKey}:${cleLogique}`;
+}
+
+function cleLogiqueDe(envoi: PendingFreeResponse): string {
+  return cleDeReponseLibre(envoi.sessionId, envoi.screenId, envoi.activityId);
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReponsesLibresService {
   private readonly port = inject(FORMATIONS_PORT, { optional: true });
@@ -46,9 +55,12 @@ export class ReponsesLibresService {
     if (texte.length === 0) {
       return 'vide';
     }
+    const studentKey = readIdentity()?.studentKey ?? '';
+    const cleLogique = cleDeReponseLibre(sessionId, reponse.screenId, reponse.activityId);
     return this.transmettre(jeton, {
-      key: cleDeReponseLibre(sessionId, reponse.screenId, reponse.activityId),
+      key: cleDeStockage(studentKey, cleLogique),
       sessionId,
+      studentKey,
       screenId: reponse.screenId,
       activityId: reponse.activityId,
       response: texte,
@@ -58,8 +70,12 @@ export class ReponsesLibresService {
 
   async reprendre(sessionId: string, jeton: string): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
     const etats = new Map<string, EtatEnvoiLibre>();
-    for (const envoi of await pendingFreeResponses(sessionId)) {
-      etats.set(envoi.key, await this.transmettre(jeton, envoi));
+    const studentKey = readIdentity()?.studentKey;
+    if (studentKey === undefined) {
+      return etats;
+    }
+    for (const envoi of await pendingFreeResponses(sessionId, studentKey)) {
+      etats.set(cleLogiqueDe(envoi), await this.transmettre(jeton, envoi));
     }
     return etats;
   }
@@ -92,6 +108,9 @@ export class ReponsesLibresService {
     if (motif !== 'reseau' && motif !== 'ecran-non-servi') {
       await removeFreeResponse(envoi.key);
       return ETAT_APRES_REFUS[motif];
+    }
+    if (envoi.studentKey === '') {
+      return 'echec';
     }
     try {
       await enqueueFreeResponse(envoi);

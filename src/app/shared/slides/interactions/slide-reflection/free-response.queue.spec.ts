@@ -9,6 +9,7 @@ describe('free-response queue', () => {
     return {
       key,
       sessionId: `session-${key}`,
+      studentKey: 'etu-1',
       screenId: 'screen-1',
       activityId: 'reflection-1',
       response: 'réponse hors ligne',
@@ -21,11 +22,11 @@ describe('free-response queue', () => {
 
     await enqueueFreeResponse(response);
 
-    expect(await pendingFreeResponses(response.sessionId)).toEqual([response]);
+    expect(await pendingFreeResponses(response.sessionId, response.studentKey)).toEqual([response]);
 
     await removeFreeResponse(response.key);
 
-    expect(await pendingFreeResponses(response.sessionId)).toEqual([]);
+    expect(await pendingFreeResponses(response.sessionId, response.studentKey)).toEqual([]);
   });
 
   it('ferme la connexion IndexedDB ouverte par chaque operation', async () => {
@@ -33,7 +34,7 @@ describe('free-response queue', () => {
     const response = reponseEnAttente(`fermeture-${Date.now()}`);
 
     await enqueueFreeResponse(response);
-    await pendingFreeResponses(response.sessionId);
+    await pendingFreeResponses(response.sessionId, response.studentKey);
     await removeFreeResponse(response.key);
 
     expect(fermeture).toHaveBeenCalledTimes(3);
