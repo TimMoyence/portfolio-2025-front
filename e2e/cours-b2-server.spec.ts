@@ -1,8 +1,11 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
+  API_BASE,
   B2_ECRANS,
+  B2_PUBLIE_LE,
   B2_SLUG,
+  B2_VERSION_PUBLIEE,
   CLES_DE_CORRECTION,
   coursB2Catalogue,
   ecranB2Quiz,
@@ -55,6 +58,24 @@ test('le rendu du catalogue B2 monte les 72 écrans sans écrire de correction d
   for (const cle of CLES_DE_CORRECTION) {
     expect(documentRendu).not.toContain(`"${cle}"`);
   }
+});
+
+test('annonce la version publiée du catalogue sans jamais appeler une route de séance', async ({
+  page,
+}) => {
+  const appelsDeSeance: string[] = [];
+  page.on('request', (requete) => {
+    if (requete.url().startsWith(`${API_BASE}/formations/sessions`)) {
+      appelsDeSeance.push(requete.url());
+    }
+  });
+
+  await ouvrirLeCatalogue(page);
+
+  const publication = page.locator('[data-testid="b2-publication"]');
+  await expect(publication).toContainText(String(B2_VERSION_PUBLIEE));
+  await expect(publication.locator('time')).toHaveAttribute('datetime', B2_PUBLIE_LE);
+  expect(appelsDeSeance).toEqual([]);
 });
 
 test('ne projette rien des données du formateur, même quand le serveur en glisse dans la question', async ({

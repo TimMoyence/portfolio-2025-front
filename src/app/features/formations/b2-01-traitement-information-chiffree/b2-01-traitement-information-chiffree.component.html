@@ -22,6 +22,13 @@
     </div>
   }
   @case ('pret') {
+    @if (publication(); as publiee) {
+      <p class="wrap b2-publication" data-testid="b2-publication">
+        <span i18n="@@b2CoursVersionPubliee">Version publiée</span>
+        {{ publiee.version }} ·
+        <time [attr.datetime]="publiee.publieLe">{{ publiee.publieLe | date: 'longDate' }}</time>
+      </p>
+    }
     <p class="wrap b2-apercu" data-testid="b2-apercu" i18n="@@b2CoursApercu">
       Aperçu : les activités se manipulent librement, les réponses ne s’envoient que pendant une
       séance.

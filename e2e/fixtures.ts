@@ -177,6 +177,10 @@ export function ecranB2Quiz(
   });
 }
 
+export const B2_VERSION_PUBLIEE = 3;
+
+export const B2_PUBLIE_LE = '2026-09-15T09:30:00.000Z';
+
 export function coursB2Catalogue(ecrans: readonly EcranCatalogue[]) {
   return {
     id: B2_SLUG,
@@ -184,6 +188,8 @@ export function coursB2Catalogue(ecrans: readonly EcranCatalogue[]) {
     niveau: 'B2',
     duree: 210,
     concepts: ['proportions', 'taux', 'evolutions'],
+    version: B2_VERSION_PUBLIEE,
+    publieLe: B2_PUBLIE_LE,
     ecrans,
   };
 }

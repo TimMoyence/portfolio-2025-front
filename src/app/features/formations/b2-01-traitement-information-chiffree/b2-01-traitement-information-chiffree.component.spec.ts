@@ -1,6 +1,7 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import type { CoursCatalogue } from '../../../../cours/content/types';
 import { briqueMontee } from '../../../../testing/briques-montees';
 import {
   buildEcran,
@@ -168,6 +169,45 @@ describe('B2TraitementInformationChiffreeComponent', () => {
         'Aperçu : les réponses s’envoient pendant la séance',
       );
       TestBed.inject(HttpTestingController).verify();
+    });
+  });
+
+  describe('version publiée servie par le catalogue', () => {
+    it('affiche la version et la date de bascule servies par le back', () => {
+      catalogue.lire.and.returnValue(
+        of(
+          buildVisualCourse({
+            version: 4,
+            publieLe: '2026-09-15T09:30:00.000Z',
+            ecrans: [buildVisualImageHeroSlide('B2-01-S01-ACCROCHE')],
+          }),
+        ),
+      );
+      const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
+      fixture.detectChanges();
+
+      const publication = (fixture.nativeElement as HTMLElement).querySelector(
+        '[data-testid="b2-publication"]',
+      );
+      expect(publication?.textContent).toContain('4');
+      expect(publication?.querySelector('time')?.getAttribute('datetime')).toBe(
+        '2026-09-15T09:30:00.000Z',
+      );
+    });
+
+    it('ne promet aucune version quand le serveur n en sert pas encore', () => {
+      const brut: Record<string, unknown> = {
+        ...buildVisualCourse({ ecrans: [buildVisualImageHeroSlide('B2-01-S01-ACCROCHE')] }),
+      };
+      delete brut['version'];
+      delete brut['publieLe'];
+      catalogue.lire.and.returnValue(of(brut as unknown as CoursCatalogue));
+      const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
+      fixture.detectChanges();
+
+      const element = fixture.nativeElement as HTMLElement;
+      expect(element.querySelector('[data-testid="b2-publication"]')).toBeNull();
+      expect(element.querySelector('app-slide-deck')).not.toBeNull();
     });
   });
 

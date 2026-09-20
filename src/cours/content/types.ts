@@ -70,6 +70,11 @@ export interface CoursContent {
   ecrans: readonly EcranContent[];
 }
 
+export interface CoursCatalogue extends CoursContent {
+  readonly version: number;
+  readonly publieLe: string;
+}
+
 export interface ConfusionComptee {
   readonly id: string;
   readonly libelle: string;
