@@ -931,6 +931,48 @@ describe('FormationsHttpAdapter', () => {
       });
     });
 
+    describe('routes du § 9.5 que le back ne sert pas encore (rappels espacés)', () => {
+      it('demande les rappels au chemin du contrat, avec le jeton du participant', () => {
+        const questions = [buildSpacedQuestionPublique()];
+        const recus: unknown[] = [];
+
+        adapter.lireRappels(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
+        const req = attendre(`${URL_SEANCE}/rappels`, 'GET');
+        expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
+        req.flush({ questions });
+
+        expect(recus).toEqual([{ questions }]);
+      });
+
+      it('traduit en refus affichable le 409 ECRAN_NON_SERVI annonce au contrat', () => {
+        const erreurs: unknown[] = [];
+
+        adapter.lireRappels(SESSION_ID, JETON).subscribe({
+          error: (recue: unknown) => erreurs.push(recue),
+        });
+        httpMock
+          .expectOne(`${URL_SEANCE}/rappels`)
+          .flush(buildProblemeHttp({ code: 'ECRAN_NON_SERVI' }), {
+            status: 409,
+            statusText: 'Conflict',
+          });
+
+        expect((erreurs[0] as ReponseRefusee).motif).toBe('ecran-non-servi');
+      });
+
+      it('lit la synthese des rappels au chemin du contrat, sans jeton de participant', () => {
+        const concepts = [buildSyntheseConcept()];
+        const recus: unknown[] = [];
+
+        adapter.lireSyntheseRappels(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+        const req = attendre(`${URL_SEANCE}/rappels/synthese`, 'GET');
+        expect(req.request.headers.has(ENTETE_JETON)).toBeFalse();
+        req.flush({ concepts });
+
+        expect(recus).toEqual([{ concepts }]);
+      });
+    });
+
     describe('regle de notation servie par un serveur v2', () => {
       const RAPPORT_V2 = (): object => {
         const notation: Partial<RegleNotation> = { ...buildRegleNotation() };

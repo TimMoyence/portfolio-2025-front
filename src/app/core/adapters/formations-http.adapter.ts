@@ -393,9 +393,11 @@ export class FormationsHttpAdapter implements FormationsPort {
     sessionId: string,
     jeton: string,
   ): Observable<{ questions: readonly SpacedQuestionPublique[] }> {
-    return this.http.get<{ questions: readonly SpacedQuestionPublique[] }>(
-      `${this.urlSeance(sessionId)}/rappels`,
-      { headers: entetes(jeton) },
+    return ecritureEtudiante(
+      this.http.get<{ questions: readonly SpacedQuestionPublique[] }>(
+        `${this.urlSeance(sessionId)}/rappels`,
+        { headers: entetes(jeton) },
+      ),
     );
   }
 
