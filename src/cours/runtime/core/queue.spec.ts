@@ -30,10 +30,20 @@ describe('queue', () => {
 
   it('retient sans les perdre les envois qu il ne rejoue pas', async () => {
     enqueue(buildEnvoiReponse({ studentKey: 'cle-de-a', questionId: 'Q-A' }));
+    const envoyes: string[] = [];
+    const transmettre = (envoi: EnvoiReponse): boolean => {
+      envoyes.push(envoi.questionId);
+      return true;
+    };
 
-    await flush(() => true, 'cle-de-b');
-    await flush(() => true, 'cle-de-a');
+    await flush(transmettre, 'cle-de-b');
 
+    expect(envoyes).toEqual([]);
+    expect(pending().map((envoi) => envoi.questionId)).toEqual(['Q-A']);
+
+    await flush(transmettre, 'cle-de-a');
+
+    expect(envoyes).toEqual(['Q-A']);
     expect(pending()).toEqual([]);
   });
 
