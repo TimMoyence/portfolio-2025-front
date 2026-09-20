@@ -124,6 +124,13 @@ npm run ci:check
 `npm run test:e2e:portail` est la porte jouee par la CI : elle demarre les serveurs SSR `fr` et
 `en` puis rejoue le projet `chromium`, qui ignore les deux autres projets.
 
+**Le projet `visuel` ne protege rien aujourd'hui** : `.gitignore` exclut
+`e2e/__screenshots__/visual-regression.spec.ts/`, donc aucune reference n'est versionnee. Lance
+comme il est, il cree ses instantanes au premier passage et reussit toujours. Le remettre sous une
+porte demande d'abord de versionner ses references, et de trancher la difference de rendu entre le
+macOS qui les produit et l'ubuntu de la CI — les instantanes des graphiques du cours, eux, sont
+versionnes et joues par `chromium`.
+
 Le banc monte lui-meme sa pile, joue une seance du cours B2-01 dans de vrais navigateurs et
 redescend tout, y compris en cas d'echec. Il demande Docker et le depot back clone a cote du
 front. Il n'est pas joue par la CI : la decision, ce qu'il couvre et ce qui reste a couvrir sont

@@ -265,7 +265,6 @@ async function jouer() {
     annoncer('scénarios');
     await executer('npx', ['playwright', 'test', '--project=banc', '--workers=1'], {
       env: {
-        BANC: '1',
         BANC_URL_API: URL_API,
         BANC_URL_FRONT: URL_FRONT,
         BANC_FORMATEUR_EMAIL: identifiants.email,

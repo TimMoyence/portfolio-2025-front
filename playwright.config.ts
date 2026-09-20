@@ -8,9 +8,15 @@ const baseSsr = process.env['SSR_BASE_URL'];
 
 const baseSsrAnglais = process.env['SSR_EN_BASE_URL'];
 
-const banc = process.env['BANC'] === '1';
+const PORT_DU_BANC = '4010';
 
-const baseBanc = process.env['BANC_URL_FRONT'] ?? 'http://localhost:4010';
+const projetDemande = process.argv
+  .find((argument) => argument.startsWith('--project='))
+  ?.slice('--project='.length);
+
+const banc = projetDemande === 'banc';
+
+const baseBanc = process.env['BANC_URL_FRONT'] ?? `http://localhost:${PORT_DU_BANC}`;
 
 const serveurAngular = {
   command: 'npm run start',
@@ -41,7 +47,7 @@ const serveurDuBanc = [
     command: 'node dist/portfolio-app/server/fr/server.mjs',
     url: `${baseBanc}/fr/cours/rejoindre`,
     env: {
-      PORT: new URL(baseBanc).port,
+      PORT: new URL(baseBanc).port || PORT_DU_BANC,
       PORTFOLIO_ARTICLE_API_URL: process.env['BANC_URL_API'] ?? '',
     },
     reuseExistingServer: !process.env['CI'],
