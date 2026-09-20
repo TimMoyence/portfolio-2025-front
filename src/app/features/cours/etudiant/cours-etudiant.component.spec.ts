@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import type { Observable } from 'rxjs';
 import { NEVER, of, Subject, throwError } from 'rxjs';
 import type { CoursContent, EcranContent } from '../../../../cours/content/types';
-import { clearIdentity } from '../../../../cours/runtime/core/identity';
+import { clearIdentity, saveIdentity } from '../../../../cours/runtime/core/identity';
 import { enqueue, pending } from '../../../../cours/runtime/core/queue';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
@@ -653,7 +653,18 @@ describe('CoursEtudiantComponent', () => {
     });
 
     it('efface le refus de seance non demarree et monte la brique quand la seance passe en cours', async () => {
-      enqueue(buildEnvoiReponse({ sessionId: SESSION, questionId: REPONSE_VOTE.questionId }));
+      const { identite } = saveIdentity({
+        prenom: 'Lea',
+        nom: 'Dubois',
+        email: 'lea.dubois@example.com',
+      });
+      enqueue(
+        buildEnvoiReponse({
+          sessionId: SESSION,
+          studentKey: identite.studentKey,
+          questionId: REPONSE_VOTE.questionId,
+        }),
+      );
       port.repondre.and.returnValue(
         throwError(() => new ReponseRefusee('seance-non-demarree', 409)),
       );

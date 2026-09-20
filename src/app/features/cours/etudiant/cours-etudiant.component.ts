@@ -1196,7 +1196,7 @@ export class CoursEtudiantComponent {
     }
     this.videEnCours = true;
     try {
-      await flush((envoi) => this.renvoyer(envoi));
+      await flush((envoi) => this.renvoyer(envoi), this.identite?.studentKey);
     } finally {
       this.videEnCours = false;
       this.enAttente.set(this.fileDeLaSeance());

@@ -59,8 +59,11 @@ function retirer(id: number): void {
   );
 }
 
-export async function flush(envoyer: Envoyeur): Promise<void> {
+export async function flush(envoyer: Envoyeur, studentKey?: string): Promise<void> {
   for (const envoi of pending()) {
+    if (studentKey !== undefined && envoi.studentKey !== studentKey) {
+      continue;
+    }
     const reussi = await envoyer(envoi);
     if (reussi) {
       retirer(envoi.id);

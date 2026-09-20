@@ -14,6 +14,29 @@ describe('queue', () => {
     expect(pending()).toEqual([]);
   });
 
+  it('ne rejoue pas sous le jeton courant les envois d un autre etudiant du meme poste', async () => {
+    enqueue(buildEnvoiReponse({ studentKey: 'cle-de-a', questionId: 'Q-A' }));
+    enqueue(buildEnvoiReponse({ studentKey: 'cle-de-b', questionId: 'Q-B' }));
+    const envoyes: string[] = [];
+
+    await flush((envoi) => {
+      envoyes.push(envoi.questionId);
+      return true;
+    }, 'cle-de-b');
+
+    expect(envoyes).toEqual(['Q-B']);
+    expect(pending().map((envoi) => envoi.questionId)).toEqual(['Q-A']);
+  });
+
+  it('retient sans les perdre les envois qu il ne rejoue pas', async () => {
+    enqueue(buildEnvoiReponse({ studentKey: 'cle-de-a', questionId: 'Q-A' }));
+
+    await flush(() => true, 'cle-de-b');
+    await flush(() => true, 'cle-de-a');
+
+    expect(pending()).toEqual([]);
+  });
+
   it('ecrit une reponse mise en file dans localStorage avec un identifiant', () => {
     enqueue(buildEnvoiReponse());
     const brut = globalThis.localStorage.getItem(CLE);

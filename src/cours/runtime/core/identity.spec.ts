@@ -35,11 +35,25 @@ describe('identity', () => {
     expect(enregistrement.persistee).toBe(true);
   });
 
-  it('met a jour le nom sans changer la cle', () => {
+  it('donne une cle neuve a qui saisit une autre identite sur le meme poste', () => {
     const premiere = saveIdentity(THEO);
-    const seconde = saveIdentity({ prenom: 'Theo', nom: 'Durand', email: 'theo@example.com' });
-    expect(seconde.identite.studentKey).toBe(premiere.identite.studentKey);
-    expect(seconde.identite.nom).toBe('Durand');
+    const seconde = saveIdentity({ prenom: 'Lea', nom: 'Dubois', email: 'lea@example.com' });
+    expect(seconde.identite.studentKey).not.toBe(premiere.identite.studentKey);
+    expect(seconde.identite.nom).toBe('Dubois');
+  });
+
+  it('donne une cle neuve des qu un seul champ du triplet change', () => {
+    const premiere = saveIdentity(THEO);
+    const nom = saveIdentity({ prenom: 'Theo', nom: 'Durand', email: 'theo@example.com' });
+    expect(nom.identite.studentKey).not.toBe(premiere.identite.studentKey);
+    const email = saveIdentity({ prenom: 'Theo', nom: 'Durand', email: 'autre@example.com' });
+    expect(email.identite.studentKey).not.toBe(nom.identite.studentKey);
+  });
+
+  it('garde la cle quand le meme etudiant revient, a la casse de l adresse pres', () => {
+    const premiere = saveIdentity(THEO);
+    const reprise = saveIdentity({ prenom: ' Theo ', nom: 'Martin ', email: 'THEO@example.com' });
+    expect(reprise.identite.studentKey).toBe(premiere.identite.studentKey);
   });
 
   it('oublie l identite apres effacement', () => {
