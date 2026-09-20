@@ -1,9 +1,10 @@
 import type { ResultatsSeance } from '../../content/types';
 import { buildResumeBareme } from '../../../testing/factories/formations.factory';
+import type { FluxFactice } from '../../../testing/flux-sse';
+import { bloc, creerOuverture, laisserPasserLeFlux, vider } from '../../../testing/flux-sse';
 import {
   createSync,
   type EtatSession,
-  type OuvertureFlux,
   type RaisonDeFin,
   type ResultatsDuFlux,
   type StatutFlux,
@@ -14,84 +15,6 @@ const BASE = 'https://api.test';
 const SESSION = 's1';
 const JETON = 'jeton-participant';
 const ENTETE_JETON = 'x-participant-token';
-
-const ENCODEUR = new TextEncoder();
-
-interface FluxFactice {
-  url: string;
-  entetes: Record<string, string>;
-  envoyer(morceau: string): Promise<void>;
-  couper(): Promise<void>;
-}
-
-async function vider(): Promise<void> {
-  for (let tour = 0; tour < 200; tour += 1) {
-    await Promise.resolve();
-  }
-}
-
-async function laisserPasserLeFlux(): Promise<void> {
-  for (let tour = 0; tour < 5; tour += 1) {
-    await new Promise<void>((resoudre) => {
-      const canal = new MessageChannel();
-      canal.port1.onmessage = () => resoudre();
-      canal.port2.postMessage(null);
-    });
-    await vider();
-  }
-}
-
-function creerOuverture(flux: FluxFactice[]): OuvertureFlux {
-  return (url, entetes) => {
-    const enAttente: Array<{ morceau: string | null; servi: () => void }> = [];
-    let reclame: (() => void) | null = null;
-
-    const corps = new ReadableStream<Uint8Array>({
-      pull: async (controleur) => {
-        while (enAttente.length === 0) {
-          await new Promise<void>((resoudre) => {
-            reclame = resoudre;
-          });
-        }
-        const suivant = enAttente.shift();
-        if (!suivant) {
-          return;
-        }
-        if (suivant.morceau === null) {
-          controleur.close();
-        } else {
-          controleur.enqueue(ENCODEUR.encode(suivant.morceau));
-        }
-        suivant.servi();
-      },
-    });
-
-    const deposer = (morceau: string | null): Promise<void> =>
-      new Promise<void>((resoudre) => {
-        enAttente.push({ morceau, servi: resoudre });
-        reclame?.();
-        reclame = null;
-      });
-
-    flux.push({
-      url,
-      entetes,
-      envoyer: async (morceau) => {
-        await deposer(morceau);
-        await vider();
-      },
-      couper: async () => {
-        await deposer(null);
-        await vider();
-      },
-    });
-    return Promise.resolve(new Response(corps, { status: 200 }));
-  };
-}
-
-function bloc(nom: string, charge: unknown): string {
-  return `event: ${nom}\ndata: ${JSON.stringify(charge)}\n\n`;
-}
 
 const ETAT_ANCIEN = {
   etat: 'en_cours',
@@ -322,6 +245,23 @@ describe('sync', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('ne livre plus aucun etat servi dans le meme morceau que la fin', async () => {
+    monter();
+    const recus: EtatSession[] = [];
+    const raisons: (RaisonDeFin | null)[] = [];
+    sync.onState((etat) => recus.push(etat));
+    sync.onFin((raison) => raisons.push(raison));
+    sync.ouvrir();
+    await vider();
+    await flux[0].envoyer(
+      bloc('fin', { raison: 'cloturee' }) + bloc('etat', { ...ETAT, ecranCourant: 51 }),
+    );
+    await attendreJusqua(() => raisons.length > 0);
+
+    expect(raisons).toEqual(['cloturee']);
+    expect(recus).toEqual([]);
   });
 
   it('annonce la fin a ses ecouteurs avec sa raison, ou null si elle est inconnue', async () => {

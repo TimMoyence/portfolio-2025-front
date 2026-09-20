@@ -468,6 +468,9 @@ export function createSync(options: SyncOptions): Sync {
   };
 
   const distribuer = (evenement: EvenementFlux): void => {
+    if (ferme) {
+      return;
+    }
     if (evenement.nom === EVENEMENT_FIN) {
       terminer();
       diffuserA(ecoutesFin, lireRaisonDeFin(evenement.donnees));
