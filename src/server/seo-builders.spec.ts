@@ -155,6 +155,32 @@ describe('buildSitemapXml', () => {
     expect(xml).toContain('<lastmod>2026-09-09</lastmod>');
   });
 
+  it('refuse un lastmod d article qui tenterait de sortir de sa balise', () => {
+    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
+
+    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr', [
+      {
+        locale: 'fr',
+        slug: 'morning-brief-2026-09-09-ia',
+        lastmod:
+          '2026-01-01</lastmod></url><url><loc>https://spam.example/</loc><lastmod>2026-01-01',
+      },
+    ]);
+
+    expect(xml).not.toContain('https://spam.example/');
+    expect(xml).not.toContain('<lastmod>');
+  });
+
+  it('normalise en jour un lastmod d article servi en horodatage complet', () => {
+    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
+
+    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr', [
+      { locale: 'fr', slug: 'morning-brief-2026-09-09-ia', lastmod: '2026-09-09T14:32:07.000Z' },
+    ]);
+
+    expect(xml).toContain('<lastmod>2026-09-09</lastmod>');
+  });
+
   it('filtre les pages avec index:false', () => {
     const metadata = buildMetadata([
       {

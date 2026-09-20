@@ -60,6 +60,9 @@ const jourDePublication = (publieLe: string): string | undefined => {
   return Number.isNaN(instant) ? undefined : new Date(instant).toISOString().slice(0, 10);
 };
 
+const jourDeLastmod = (lastmod: string | undefined): string | undefined =>
+  lastmod === undefined ? undefined : jourDePublication(lastmod);
+
 const lastmodOf = (
   page: SeoPageEntry,
   publications: readonly PublicationDeCours[],
@@ -94,7 +97,7 @@ const dynamicArticleEntryOf = (article: DynamicArticleSitemapEntry, baseUrl: str
   [
     '  <url>',
     `    <loc>${escapeXml(localizedHref(article.locale, '/articles/' + article.slug, baseUrl))}</loc>`,
-    indentedTag('lastmod', article.lastmod),
+    indentedTag('lastmod', jourDeLastmod(article.lastmod)),
     '    <changefreq>daily</changefreq>',
     '    <priority>0.6</priority>',
     '  </url>',
