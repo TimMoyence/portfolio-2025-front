@@ -243,6 +243,25 @@ describe('CoursPanneauPedagogiqueComponent', () => {
       );
       expect(port.retirerParticipantDuGroupe).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
     }));
+
+    it('n offre pas d affectation de groupe a un participant evince', fakeAsync(() => {
+      port.lireGroupes.and.returnValue(of({ groups: [buildGroupeFormation()] }));
+      port.lireParticipants.and.returnValue(
+        of({
+          participants: [
+            buildParticipantDeSeance(),
+            buildParticipantDeSeance({ id: 'participant-2', prenom: 'Sami', evince: true }),
+          ],
+        }),
+      );
+      const fixture = monterLePanneau();
+
+      expect(
+        (fixture.nativeElement as HTMLElement).querySelectorAll(
+          '[data-testid="participant-groupe"]',
+        ).length,
+      ).toBe(1);
+    }));
   });
 
   it('exporte le bilan de la seance en JSON', fakeAsync(() => {

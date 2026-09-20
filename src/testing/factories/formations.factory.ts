@@ -304,6 +304,7 @@ export function buildParticipantDeSeance(
     prenom: 'Lea',
     nom: 'Dubois',
     groupId: null,
+    evince: false,
     ...overrides,
   };
 }
@@ -341,6 +342,7 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'lireMonEtat',
     'lireSyntheseRappels',
     'evincerParticipant',
+    'readmettreParticipant',
   ]);
   port.ouvrirSeance.and.returnValue(of({ sessionId: 'seance-1', code: '4821' }));
   port.lireDeroule.and.returnValue(of(buildDerouleCours()));
@@ -377,5 +379,6 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.lireMonEtat.and.returnValue(of(buildEtatParticipant()));
   port.lireSyntheseRappels.and.returnValue(of({ concepts: [buildSyntheseConcept()] }));
   port.evincerParticipant.and.returnValue(of(undefined));
+  port.readmettreParticipant.and.returnValue(of(undefined));
   return port;
 }

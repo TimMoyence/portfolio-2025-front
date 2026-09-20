@@ -48,7 +48,7 @@ import {
 import { getApiBaseUrl } from '../http/api-config';
 import { ENTETE_JETON_PARTICIPANT } from '../http/jeton-participant';
 
-const MOTIFS_DE_CONFLIT_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
+const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
   SEANCE_TERMINEE: 'seance-terminee',
   ECRAN_NON_SERVI: 'ecran-non-servi',
@@ -121,17 +121,17 @@ function codeDuProbleme(erreur: HttpErrorResponse): string | null {
   return typeof code === 'string' ? code : null;
 }
 
-function motifDeRefusSelonConflit<M extends string>(
+function motifDeRefusSelonCode<M extends string>(
   erreur: HttpErrorResponse,
-  conflits: Readonly<Record<string, M>>,
+  motifsParCode: Readonly<Record<string, M>>,
 ): M | 'reseau' | 'refusee' {
   const statut = erreur.status;
   const code = codeDuProbleme(erreur) ?? '';
   let motif: M | 'reseau' | 'refusee' = 'refusee';
   if (statut === 0 || statut === 429 || statut >= 500) {
     motif = 'reseau';
-  } else if (statut === 409 && Object.hasOwn(conflits, code)) {
-    motif = conflits[code];
+  } else if (Object.hasOwn(motifsParCode, code)) {
+    motif = motifsParCode[code];
   }
   return motif;
 }
@@ -141,7 +141,7 @@ function refuserReponseLibre(erreur: unknown): ReponseLibreRefusee {
     return new ReponseLibreRefusee('reseau', 0);
   }
   return new ReponseLibreRefusee(
-    motifDeRefusSelonConflit(erreur, MOTIFS_DE_CONFLIT_DE_REPONSE_LIBRE),
+    motifDeRefusSelonCode(erreur, MOTIFS_DE_REFUS_DE_REPONSE_LIBRE),
     erreur.status,
   );
 }
@@ -440,9 +440,18 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   evincerParticipant(sessionId: string, participantId: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}`,
+    return this.http.delete<void>(this.urlDuParticipant(sessionId, participantId));
+  }
+
+  readmettreParticipant(sessionId: string, participantId: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.urlDuParticipant(sessionId, participantId)}/readmission`,
+      {},
     );
+  }
+
+  private urlDuParticipant(sessionId: string, participantId: string): string {
+    return `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}`;
   }
 
   private urlDuDefi(sessionId: string, defiId: string): string {

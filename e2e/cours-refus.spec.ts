@@ -144,13 +144,13 @@ async function repondre(page: Page): Promise<void> {
 }
 
 test.describe('refus servis par le back sur une écriture étudiante', () => {
-  test('dit que l’écran n’est pas encore ouvert quand le back sert un 409 ECRAN_NON_SERVI', async ({
+  test('dit que l’écran n’est pas encore ouvert quand le back sert un 404 ECRAN_NON_SERVI', async ({
     page,
   }) => {
     await installerLaSeance(
       page,
       problemeDuBack(
-        409,
+        404,
         'ECRAN_NON_SERVI',
         'L’écran ecran-sortie n’a pas encore été projeté : attendez que le formateur y arrive.',
       ),

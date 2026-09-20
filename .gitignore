@@ -66,6 +66,9 @@ e2e/test-results/
 # References des graphiques du cours B2-01 (F13, AC-26, AC-29, AC-30) : preuves versionnees,
 # prises sous macOS / Chromium de Playwright, a regenerer avec --update-snapshots apres controle visuel.
 !/e2e/__screenshots__/cours-graphiques.spec.ts/
+# References des pages publiques (projet playwright `visuel`, joue en CI) : une par plateforme,
+# `-darwin` prise en local et `-linux` dans mcr.microsoft.com/playwright:v1.59.1-noble.
+!/e2e/__screenshots__/visual-regression.spec.ts/
 
 # Skills de cluster regenerees par GitNexus a chaque commit (hook post-commit) :
 # artefacts locaux, non versionnes pour eviter le churn.

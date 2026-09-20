@@ -63,7 +63,7 @@ describe('ReponsesLibresService', () => {
   it('garde en file un texte refuse parce que l ecran n est pas encore servi', async () => {
     const seance = `${SESSION}-ecran-non-servi`;
     port.enregistrerReponseLibre.and.returnValue(
-      throwError(() => new ReponseLibreRefusee('ecran-non-servi', 409)),
+      throwError(() => new ReponseLibreRefusee('ecran-non-servi', 404)),
     );
 
     expect(await service.envoyer(seance, JETON, REPONSE)).toBe('ecran_non_servi');

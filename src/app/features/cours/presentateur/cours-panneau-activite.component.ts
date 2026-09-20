@@ -254,17 +254,33 @@ interface LigneDeCle {
         @default {
           <ul>
             @for (participant of listeDesParticipants(); track participant.id) {
-              <li data-testid="activite-participant" [attr.data-participant]="participant.id">
+              <li
+                data-testid="activite-participant"
+                [attr.data-participant]="participant.id"
+                [attr.data-evince]="participant.evince"
+              >
                 {{ participant.prenom }} {{ participant.nom }}
-                <button
-                  type="button"
-                  class="control-danger"
-                  data-testid="activite-evincer"
-                  (click)="evincer(participant)"
-                  i18n="@@panneauActiviteEvincer"
-                >
-                  Retirer de la séance
-                </button>
+                @if (participant.evince) {
+                  <button
+                    type="button"
+                    class="control-btn"
+                    data-testid="activite-readmettre"
+                    (click)="readmettre(participant)"
+                    i18n="@@panneauActiviteReadmettre"
+                  >
+                    Réadmettre dans la séance
+                  </button>
+                } @else {
+                  <button
+                    type="button"
+                    class="control-danger"
+                    data-testid="activite-evincer"
+                    (click)="evincer(participant)"
+                    i18n="@@panneauActiviteEvincer"
+                  >
+                    Retirer de la séance
+                  </button>
+                }
               </li>
             }
           </ul>
@@ -371,17 +387,31 @@ export class CoursPanneauActiviteComponent {
     }
   }
 
-  protected async evincer(participant: ParticipantDeSeance): Promise<void> {
+  protected evincer(participant: ParticipantDeSeance): Promise<void> {
+    return this.basculerLEviction(participant, true);
+  }
+
+  protected readmettre(participant: ParticipantDeSeance): Promise<void> {
+    return this.basculerLEviction(participant, false);
+  }
+
+  private async basculerLEviction(
+    participant: ParticipantDeSeance,
+    evince: boolean,
+  ): Promise<void> {
     const sessionId = this.sessionId();
     if (sessionId === null) {
       return;
     }
+    const commande = evince
+      ? this.port.evincerParticipant(sessionId, participant.id)
+      : this.port.readmettreParticipant(sessionId, participant.id);
     try {
-      await firstValueFrom(this.port.evincerParticipant(sessionId, participant.id), {
-        defaultValue: undefined,
-      });
+      await firstValueFrom(commande, { defaultValue: undefined });
       this.listeDesParticipants.update((liste) =>
-        liste.filter((candidat) => candidat.id !== participant.id),
+        liste.map((candidat) =>
+          candidat.id === participant.id ? { ...candidat, evince } : candidat,
+        ),
       );
     } catch {
       this.lecture.set('echec');

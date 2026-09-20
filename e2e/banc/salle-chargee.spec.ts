@@ -10,6 +10,7 @@ import {
   posteDansSonNavigateur,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
+  servirLEcran,
 } from './contexte';
 
 const CAPACITE = 35;
@@ -53,6 +54,7 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
 
     const statuts: number[] = [];
     for (let tour = 0; tour < REPONSES_PAR_POSTE; tour += 1) {
+      await servirLEcran(request, jeton, seance.sessionId, quiz[tour].rang);
       for (const poste of postes) {
         const reponse = await repondreDepuisLePoste(request, seance, poste, {
           questionId: quiz[tour].activiteId,

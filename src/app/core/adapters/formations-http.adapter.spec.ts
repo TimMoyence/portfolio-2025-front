@@ -291,10 +291,16 @@ describe('FormationsHttpAdapter', () => {
           'seance-terminee',
         ],
         [
-          'un 409 ECRAN_NON_SERVI',
-          409,
-          buildProblemeHttp({ code: 'ECRAN_NON_SERVI' }),
+          'un 404 ECRAN_NON_SERVI',
+          404,
+          buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' }),
           'ecran-non-servi',
+        ],
+        [
+          'un 404 de seance introuvable, sans code',
+          404,
+          buildProblemeHttp({ status: 404 }),
+          'refusee',
         ],
         ['un 400 reponse vide', 400, buildProblemeHttp({ status: 400 }), 'refusee'],
       ];
@@ -641,9 +647,9 @@ describe('FormationsHttpAdapter', () => {
         'seance-terminee',
       ],
       [
-        'un 409 au code ECRAN_NON_SERVI',
-        409,
-        buildProblemeHttp({ code: 'ECRAN_NON_SERVI' }),
+        'un 404 au code ECRAN_NON_SERVI',
+        404,
+        buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' }),
         'ecran-non-servi',
       ],
       [
@@ -824,6 +830,15 @@ describe('FormationsHttpAdapter', () => {
         reponse: null,
       },
       {
+        nom: 'readmettreParticipant',
+        appeler: () => adapter.readmettreParticipant(SESSION_ID, PARTICIPANT),
+        url: `${URL_SEANCE}/participants/${PARTICIPANT}/readmission`,
+        methode: 'POST',
+        corps: {},
+        jeton: null,
+        reponse: null,
+      },
+      {
         nom: 'ouvrirSeance avec version et capacite',
         appeler: () => adapter.ouvrirSeance('b2-01-x', { version: 3, capacite: 40 }),
         url: RACINE,
@@ -867,7 +882,7 @@ describe('FormationsHttpAdapter', () => {
         [409, 'ENIGME_DEJA_RESOLUE', 'deja-repondue'],
         [409, 'SEANCE_NON_DEMARREE', 'seance-non-demarree'],
         [409, 'SEANCE_TERMINEE', 'seance-terminee'],
-        [409, 'ECRAN_NON_SERVI', 'ecran-non-servi'],
+        [404, 'ECRAN_NON_SERVI', 'ecran-non-servi'],
         [409, 'PHASE_FERMEE', 'phase-fermee'],
         [409, 'ENIGME_VERROUILLEE', 'enigme-verrouillee'],
         [409, 'TENTATIVES_EPUISEES', 'tentatives-epuisees'],
@@ -944,7 +959,7 @@ describe('FormationsHttpAdapter', () => {
         expect(recus).toEqual([{ questions }]);
       });
 
-      it('traduit en refus affichable le 409 ECRAN_NON_SERVI annonce au contrat', () => {
+      it('traduit en refus affichable le 404 ECRAN_NON_SERVI annonce au contrat', () => {
         const erreurs: unknown[] = [];
 
         adapter.lireRappels(SESSION_ID, JETON).subscribe({
@@ -952,9 +967,9 @@ describe('FormationsHttpAdapter', () => {
         });
         httpMock
           .expectOne(`${URL_SEANCE}/rappels`)
-          .flush(buildProblemeHttp({ code: 'ECRAN_NON_SERVI' }), {
-            status: 409,
-            statusText: 'Conflict',
+          .flush(buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' }), {
+            status: 404,
+            statusText: 'Not Found',
           });
 
         expect((erreurs[0] as ReponseRefusee).motif).toBe('ecran-non-servi');

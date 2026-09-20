@@ -50,6 +50,7 @@ const METHODES_DU_PORT = {
   lireMonEtat: true,
   lireSyntheseRappels: true,
   evincerParticipant: true,
+  readmettreParticipant: true,
 } satisfies Record<keyof FormationsPort, true>;
 
 describe('createFormationsPortStub', () => {
@@ -107,7 +108,8 @@ describe('createFormationsPortStub', () => {
       await Promise.all([
         firstValueFrom(port.declarerJalon('seance-1', 'jeton-1', 'b2-01-jalon-1', 'perdu')),
         firstValueFrom(port.evincerParticipant('seance-1', 'participant-1')),
+        firstValueFrom(port.readmettreParticipant('seance-1', 'participant-1')),
       ]),
-    ).toEqual([undefined, undefined]);
+    ).toEqual([undefined, undefined, undefined]);
   });
 });

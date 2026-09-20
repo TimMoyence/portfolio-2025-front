@@ -16738,6 +16738,12 @@
         <target> Remove from the session </target>
       </segment>
     </unit>
+    <unit id="panneauActiviteReadmettre">
+      <segment>
+        <source> Réadmettre dans la séance </source>
+        <target> Readmit to the session </target>
+      </segment>
+    </unit>
     <unit id="presentateurMaitriseEchec">
       <segment>
         <source> La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain résultat. </source>

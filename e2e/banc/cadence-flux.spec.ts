@@ -9,8 +9,9 @@ import {
   lireLeCatalogue,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
+  servirLEcran,
 } from './contexte';
-import type { Poste, Seance } from './contexte';
+import type { EcranDuCours, Poste, Seance } from './contexte';
 
 const FENETRE_MS = 5_000;
 
@@ -64,14 +65,16 @@ function collecterLeFlux(page: Page, url: string, jeton: string): Promise<Evenem
 async function rafaleDeReponses(
   request: APIRequestContext,
   seance: Seance,
+  jeton: string,
   postes: readonly Poste[],
-  questions: readonly string[],
+  ecrans: readonly EcranDuCours[],
 ): Promise<number> {
   let envoyees = 0;
-  for (let rang = 0; rang < QUESTIONS_PAR_POSTE; rang += 1) {
+  for (const ecran of ecrans) {
+    await servirLEcran(request, jeton, seance.sessionId, ecran.rang);
     for (const poste of postes) {
       const reponse = await repondreDepuisLePoste(request, seance, poste, {
-        questionId: questions[rang],
+        questionId: ecran.activiteId,
         valeur: 'o1',
       });
       if (reponse.status() === 201) envoyees += 1;
@@ -107,8 +110,9 @@ test.describe('Banc — cadence du flux du pupitre', () => {
     const envoyees = await rafaleDeReponses(
       request,
       seance,
+      jeton,
       postes,
-      quiz.slice(0, QUESTIONS_PAR_POSTE).map((ecran) => ecran.activiteId),
+      quiz.slice(0, QUESTIONS_PAR_POSTE),
     );
     expect(envoyees).toBe(POSTES * QUESTIONS_PAR_POSTE);
 

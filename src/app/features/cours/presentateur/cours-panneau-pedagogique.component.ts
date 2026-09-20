@@ -200,7 +200,9 @@ export class CoursPanneauPedagogiqueComponent {
         }
         if (lecture.groupes.lue) this.groupes.set(lecture.groupes.valeur.groups);
         if (lecture.participants.lue) {
-          this.participantsDeSeance.set(lecture.participants.valeur.participants);
+          this.participantsDeSeance.set(
+            lecture.participants.valeur.participants.filter((participant) => !participant.evince),
+          );
         }
         if (lecture.reponses.lue) this.reponsesLibres.set(lecture.reponses.valeur.responses);
         this.lectureEchouee.set(Object.values(lecture).some((resultat) => !resultat.lue));

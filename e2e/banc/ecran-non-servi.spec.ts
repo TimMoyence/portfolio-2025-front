@@ -46,7 +46,7 @@ test.describe('Banc — écran non servi', () => {
 
     for (const ecran of reflexions.slice(1)) {
       const refus = await envoyerUneReponseLibre(request, seance, poste, ecran);
-      expect(refus.status(), `${ecran.id} devrait être refusé`).toBe(409);
+      expect(refus.status(), `${ecran.id} devrait être refusé`).toBe(404);
       const corps = (await refus.json()) as { code: string; detail: string };
       expect(corps.code).toBe('ECRAN_NON_SERVI');
       expect(corps.detail).toContain(ecran.id);

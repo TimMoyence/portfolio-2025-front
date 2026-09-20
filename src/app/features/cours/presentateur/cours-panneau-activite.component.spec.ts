@@ -240,7 +240,7 @@ describe('CoursPanneauActiviteComponent', () => {
       expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
     });
 
-    it('lit les participants puis evince celui que le formateur retire', async () => {
+    const afficherDeuxParticipants = async (): Promise<Fixture> => {
       port.lireParticipants.and.returnValue(
         of({
           participants: [
@@ -254,21 +254,53 @@ describe('CoursPanneauActiviteComponent', () => {
       cliquer(fixture, 'activite-participants-afficher');
       await fixture.whenStable();
       fixture.detectChanges();
+      return fixture;
+    };
+
+    const cliquerLePremier = async (fixture: Fixture, marque: string): Promise<void> => {
       const boutons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
-        '[data-testid="activite-evincer"]',
+        `[data-testid="${marque}"]`,
       );
+      expect(boutons.length).withContext(marque).toBeGreaterThan(0);
       boutons[0].click();
       await fixture.whenStable();
       fixture.detectChanges();
+    };
+
+    const evinces = (fixture: Fixture): readonly (string | null)[] =>
+      [
+        ...(fixture.nativeElement as HTMLElement).querySelectorAll(
+          '[data-testid="activite-participant"]',
+        ),
+      ].map((ligne) => ligne.getAttribute('data-evince'));
+
+    it('lit les participants puis marque evince celui que le formateur retire', async () => {
+      const fixture = await afficherDeuxParticipants();
+
+      await cliquerLePremier(fixture, 'activite-evincer');
 
       expect(port.evincerParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
-      expect(
-        [
-          ...(fixture.nativeElement as HTMLElement).querySelectorAll(
-            '[data-testid="activite-participant"]',
-          ),
-        ].map((ligne) => ligne.getAttribute('data-participant')),
-      ).toEqual(['participant-2']);
+      expect(evinces(fixture)).toEqual(['true', 'false']);
+    });
+
+    it('readmet l evince que le formateur avait retire par erreur', async () => {
+      const fixture = await afficherDeuxParticipants();
+      await cliquerLePremier(fixture, 'activite-evincer');
+
+      await cliquerLePremier(fixture, 'activite-readmettre');
+
+      expect(port.readmettreParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+      expect(evinces(fixture)).toEqual(['false', 'false']);
+    });
+
+    it('alerte quand la readmission est refusee, la place ayant ete reprise', async () => {
+      const fixture = await afficherDeuxParticipants();
+      await cliquerLePremier(fixture, 'activite-evincer');
+      port.readmettreParticipant.and.returnValue(throwError(() => new Error('seance complete')));
+
+      await cliquerLePremier(fixture, 'activite-readmettre');
+
+      expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
     });
 
     it('ne lit rien sans seance ouverte', () => {

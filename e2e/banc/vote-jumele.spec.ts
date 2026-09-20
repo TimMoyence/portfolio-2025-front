@@ -90,7 +90,9 @@ test.describe('Banc — vote à question jumelle', () => {
     await Promise.all([premier.context().close(), second.context().close()]);
   });
 
-  test('le barème publié ne rattache aucun vote à son rang d’écran', async ({ request }) => {
+  test('refuse en 404 le vote de la jumelle tant que son écran n’est pas projeté', async ({
+    request,
+  }) => {
     const { seance } = await seanceDuFichier(request);
     expect(jumelle.rang).toBeGreaterThan(principale.rang);
     const poste = await inscrireUnPoste(request, seance, 13);
@@ -100,7 +102,8 @@ test.describe('Banc — vote à question jumelle', () => {
       valeur: 'o1',
     });
 
-    expect(avant.status(), await avant.text()).toBe(201);
+    expect(avant.status(), await avant.text()).toBe(404);
+    expect(((await avant.json()) as { code: string }).code).toBe('ECRAN_NON_SERVI');
   });
 
   test('la version publiée refuse tout pilotage de phase et toute révélation', async ({

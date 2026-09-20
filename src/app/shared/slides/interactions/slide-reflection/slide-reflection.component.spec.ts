@@ -183,7 +183,7 @@ describe('SlideReflectionComponent', () => {
     it('annonce le depart quand la reflexion gardee part depuis un autre relais', async () => {
       const sessionId = `seance-depart-ailleurs-${Date.now()}`;
       formations.enregistrerReponseLibre.and.returnValue(
-        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 409)),
+        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 404)),
       );
       const fixture = monterEnSeance('seance', sessionId);
 
@@ -201,7 +201,7 @@ describe('SlideReflectionComponent', () => {
     it('sur un ecran pas encore servi, l annonce et garde la reflexion en file', async () => {
       const sessionId = `seance-ecran-non-servi-${Date.now()}`;
       formations.enregistrerReponseLibre.and.returnValue(
-        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 409)),
+        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 404)),
       );
       const fixture = monterEnSeance('seance', sessionId);
 

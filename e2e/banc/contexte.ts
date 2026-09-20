@@ -151,6 +151,19 @@ export async function evincerLePoste(
   return reponse.status();
 }
 
+export async function readmettreLePoste(
+  request: APIRequestContext,
+  jeton: string,
+  sessionId: string,
+  participantId: string,
+): Promise<number> {
+  const reponse = await request.post(
+    `${URL_API}/formations/sessions/${sessionId}/participants/${participantId}/readmission`,
+    { headers: entetesDuFormateur(jeton), data: {} },
+  );
+  return reponse.status();
+}
+
 export async function inscrireUnPoste(
   request: APIRequestContext,
   seance: Seance,

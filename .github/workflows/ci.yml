@@ -119,7 +119,7 @@ jobs:
       # Le cache ne restaure pas les dependances systeme du navigateur :
       # `--with-deps` est rejoue meme sur un cache touche, et n installe que
       # chromium, le seul navigateur des trois projets de playwright.config.ts.
-      # Seul `chromium` est joue ici : `visuel` et `banc` sont hors CI.
+      # `test:e2e:portail` joue `chromium` et `visuel` ; seul `banc` reste hors CI.
       - name: Installation de chromium
         run: npx playwright install --with-deps chromium
 

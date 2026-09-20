@@ -26,7 +26,7 @@ interface RefusDuBack {
 const REFUS_DU_BACK: readonly RefusDuBack[] = [
   { statut: 409, code: 'SEANCE_NON_DEMARREE', motif: 'seance-non-demarree' },
   { statut: 409, code: 'SEANCE_TERMINEE', motif: 'seance-terminee' },
-  { statut: 409, code: 'ECRAN_NON_SERVI', motif: 'ecran-non-servi' },
+  { statut: 404, code: 'ECRAN_NON_SERVI', motif: 'ecran-non-servi' },
   { statut: 409, code: 'PHASE_FERMEE', motif: 'phase-fermee' },
   { statut: 409, code: 'REPONSE_DEJA_ENREGISTREE', motif: 'deja-repondue' },
   { statut: 409, code: 'ENIGME_DEJA_RESOLUE', motif: 'deja-repondue' },

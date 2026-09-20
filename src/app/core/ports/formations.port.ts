@@ -130,6 +130,7 @@ export interface ParticipantDeSeance {
   prenom: string;
   nom: string;
   groupId: string | null;
+  evince: boolean;
 }
 
 export interface RegleNotation {
@@ -375,6 +376,7 @@ export interface FormationsPort {
   lireMonEtat(sessionId: string, jeton: string): Observable<EtatParticipant>;
   lireSyntheseRappels(sessionId: string): Observable<{ concepts: readonly SyntheseConcept[] }>;
   evincerParticipant(sessionId: string, participantId: string): Observable<void>;
+  readmettreParticipant(sessionId: string, participantId: string): Observable<void>;
 }
 
 export const FORMATIONS_PORT = new InjectionToken<FormationsPort>('FORMATIONS_PORT');

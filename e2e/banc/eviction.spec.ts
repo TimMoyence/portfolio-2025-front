@@ -8,6 +8,7 @@ import {
   inscrireUnPoste,
   lireLeCatalogue,
   lireLesResultats,
+  readmettreLePoste,
   rejoindreDansLeNavigateur,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
@@ -69,5 +70,31 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
       (question) => question.questionId === quiz[0].activiteId,
     );
     expect(comptee?.total).toBe(1);
+  });
+
+  test('le formateur réadmet le poste évincé par erreur, qui retrouve sa place et ses réponses', async ({
+    request,
+  }) => {
+    const quiz = ecransDuRenderer(await lireLeCatalogue(request), 'quiz');
+    const { seance, jeton } = await seanceDemarreeSurLEcran(request, quiz[0].rang, {
+      capacite: CAPACITE,
+    });
+    const poste = await inscrireUnPoste(request, seance, 40);
+    await repondreDepuisLePoste(request, seance, poste, {
+      questionId: quiz[0].activiteId,
+      valeur: 'o1',
+    });
+    expect(await evincerLePoste(request, jeton, seance.sessionId, poste.participantId)).toBe(204);
+
+    expect(await readmettreLePoste(request, jeton, seance.sessionId, poste.participantId)).toBe(
+      204,
+    );
+
+    const apres = await request.get(`${URL_API}/formations/sessions/${seance.sessionId}/moi`, {
+      headers: { [EN_TETE_JETON]: poste.jeton },
+    });
+    expect(apres.status()).toBe(200);
+    const bilan = (await lireLesResultats(request, jeton, seance.sessionId)) as unknown as Bilan;
+    expect(bilan.participants.map((candidat) => candidat.nom)).toContain(poste.identite.nom);
   });
 });
