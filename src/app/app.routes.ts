@@ -1,5 +1,6 @@
 import type { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
@@ -286,12 +287,15 @@ export const routes: Routes = [
   },
   {
     path: 'formations/b2-01-traitement-information-chiffree',
+    canActivate: [coursEntreeGuard],
     loadComponent: () =>
       import('./features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component').then(
         (m) => m.B2TraitementInformationChiffreeComponent,
       ),
     data: {
       seoKey: 'formations-b2-01-traitement-information-chiffree',
+      coursSlug: 'b2-01-traitement-information-chiffree',
+      robots: 'noindex, nofollow',
     },
   },
   {

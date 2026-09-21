@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit,
@@ -11,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import type { CoursCatalogue, EcranContent } from '../../../../cours/content/types';
 import { FORMATION_CATALOGUE_PORT } from '../../../core/ports/formation-catalogue.port';
+import { AuthStateService } from '../../../core/services/auth-state.service';
 import { SlideComponent, SlideDeckComponent } from '../../../shared/slides';
 import { ECRAN_VERROUILLE, titreDeLEcran } from '../../../shared/slides/session/lecture-ecran';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
@@ -48,8 +50,10 @@ export class B2TraitementInformationChiffreeComponent implements OnInit {
   protected readonly etat = signal<'chargement' | 'pret' | 'vide' | 'erreur'>('chargement');
   protected readonly ecrans = signal<readonly EcranContent[]>([]);
   protected readonly publication = signal<PublicationDuCours | null>(null);
+  protected readonly estFormateur = computed(() => this.authState.hasRole('teacher'));
 
   private readonly catalogue = inject(FORMATION_CATALOGUE_PORT);
+  private readonly authState = inject(AuthStateService);
   private readonly destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {

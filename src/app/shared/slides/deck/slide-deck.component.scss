@@ -35,10 +35,13 @@
 
     swiper-slide {
       display: flex;
-      align-items: stretch;
+      align-items: flex-start;
       justify-content: center;
+      box-sizing: border-box;
+      padding: clamp(4rem, 8vh, 7rem) clamp(1rem, 4vw, 4rem) clamp(3rem, 6vh, 5rem);
       background: var(--card-bg, var(--ivory, #fbf3e6));
       overflow-y: auto;
+      --slide-min-height: auto;
     }
   }
 }
