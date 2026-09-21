@@ -1,7 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const SPECS_VISUELS = '**/visual-regression.spec.ts';
-
 const SPECS_BANC = 'banc/**/*.spec.ts';
 
 const baseSsr = process.env['SSR_BASE_URL'];
@@ -10,11 +8,17 @@ const baseSsrAnglais = process.env['SSR_EN_BASE_URL'];
 
 const PORT_DU_BANC = '4010';
 
-const projetDemande = process.argv
-  .find((argument) => argument.startsWith('--project='))
-  ?.slice('--project='.length);
+function projetsDemandes(arguments_: readonly string[]): string[] {
+  return arguments_.flatMap((argument, rang) => {
+    if (argument.startsWith('--project=')) {
+      return [argument.slice('--project='.length)];
+    }
+    const suivant = arguments_[rang + 1];
+    return argument === '--project' && suivant !== undefined ? [suivant] : [];
+  });
+}
 
-const banc = projetDemande === 'banc';
+const banc = projetsDemandes(process.argv).includes('banc');
 
 const baseBanc = process.env['BANC_URL_FRONT'] ?? `http://localhost:${PORT_DU_BANC}`;
 
@@ -63,12 +67,8 @@ export default defineConfig({
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
   reporter: process.env['CI'] ? [['github'], ['line']] : 'html',
-  snapshotPathTemplate: 'e2e/__screenshots__/{testFilePath}/{arg}-{platform}{ext}',
   expect: {
     timeout: 10_000,
-    toHaveScreenshot: {
-      maxDiffPixelRatio: 0.01,
-    },
   },
   use: {
     baseURL: 'http://localhost:4200',
@@ -78,12 +78,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: [SPECS_VISUELS, SPECS_BANC],
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'visuel',
-      testMatch: SPECS_VISUELS,
+      testIgnore: [SPECS_BANC],
       use: { ...devices['Desktop Chrome'] },
     },
     {

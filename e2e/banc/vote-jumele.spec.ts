@@ -2,19 +2,19 @@ import { expect, test } from '@playwright/test';
 import type { APIRequestContext, APIResponse, Page } from '@playwright/test';
 import {
   URL_API,
-  ecransDuRenderer,
+  coursReleve,
   inscrireUnPoste,
-  lireLeCatalogue,
   lireLesResultats,
+  optionsDuPoste,
+  phaseDuPoste,
   posteDansSonNavigateur,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
   seancePartagee,
   servirLEcran,
+  verdictDuPoste,
 } from './contexte';
 import type { EcranDuCours, SeanceOuverte } from './contexte';
-
-const PAIRE_DE_VOTE = ['b2-s46-peer-vote-1', 'b2-s48-peer-vote-2'] as const;
 
 const PHASES = ['vote', 'discussion', 'revote', 'revele'] as const;
 
@@ -26,25 +26,28 @@ interface QuestionDesResultats {
 
 let principale: EcranDuCours;
 
-let jumelle: EcranDuCours;
+let suivant: EcranDuCours;
 
-function ecranDeVote(ecrans: readonly EcranDuCours[], questionId: string): EcranDuCours {
-  const trouve = ecrans.find((ecran) => ecran.activiteId === questionId);
-  expect(trouve, `écran de vote ${questionId} absent de la version publiée`).toBeDefined();
-  return trouve as EcranDuCours;
-}
+let reflexion: EcranDuCours;
 
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('vote-jumele', async () => {
-    const quiz = ecransDuRenderer(await lireLeCatalogue(request), 'quiz');
-    principale = ecranDeVote(quiz, PAIRE_DE_VOTE[0]);
-    jumelle = ecranDeVote(quiz, PAIRE_DE_VOTE[1]);
+    const { votes, reflexions } = await coursReleve(request);
+    [principale, suivant] = votes;
+    expect(principale.jumelle, 'le premier vote n’a pas de question jumelle').not.toBeNull();
+    reflexion = reflexions[0];
     return seanceDemarreeSurLEcran(request, principale.rang);
   });
 }
 
 function voterDans(page: Page, option: number): Promise<void> {
-  return page.locator('app-slide-quiz button.slide-quiz__option').nth(option).click();
+  return optionsDuPoste(page).nth(option).click();
+}
+
+function optionsAffichees(page: Page): Promise<string[]> {
+  return optionsDuPoste(page).evaluateAll((boutons) =>
+    boutons.map((bouton) => bouton.getAttribute('data-option') ?? ''),
+  );
 }
 
 function piloterLaPhase(
@@ -75,8 +78,8 @@ test.describe('Banc — vote à question jumelle', () => {
     const second = await posteDansSonNavigateur(browser, seance, 12);
 
     await Promise.all([voterDans(premier, 0), voterDans(second, 1)]);
-    await expect(premier.getByTestId('etudiant-verdict')).toHaveCount(1);
-    await expect(second.getByTestId('etudiant-verdict')).toHaveCount(1);
+    await expect(verdictDuPoste(premier)).toHaveCount(1);
+    await expect(verdictDuPoste(second)).toHaveCount(1);
 
     const resultats = (await lireLesResultats(request, jeton, seance.sessionId)) as unknown as {
       resultats: { questions: readonly QuestionDesResultats[] };
@@ -90,37 +93,65 @@ test.describe('Banc — vote à question jumelle', () => {
     await Promise.all([premier.context().close(), second.context().close()]);
   });
 
-  test('refuse en 404 le vote de la jumelle tant que son écran n’est pas projeté', async ({
+  test('le pupitre mène les quatre phases et le poste bascule sur la jumelle au revote', async ({
+    browser,
+    request,
+  }) => {
+    const { seance, jeton } = await seanceDemarreeSurLEcran(request, principale.rang);
+    const poste = await posteDansSonNavigateur(browser, seance, 14);
+    const jumelle = principale.jumelle!;
+
+    await expect(optionsDuPoste(poste).first()).toBeEnabled();
+    expect(await optionsAffichees(poste)).toEqual(expect.arrayContaining([...principale.options]));
+
+    for (const phase of PHASES) {
+      const pilotee = await piloterLaPhase(request, jeton, seance.sessionId, {
+        screenId: principale.id,
+        phase,
+      });
+      expect(pilotee.status(), `phase ${phase}`).toBe(204);
+      await expect(phaseDuPoste(poste)).toHaveAttribute('data-phase', phase);
+      if (phase === 'discussion') {
+        await expect(optionsDuPoste(poste).first()).toBeDisabled();
+      }
+      if (phase === 'revote') {
+        expect(await optionsAffichees(poste)).toEqual(expect.arrayContaining([...jumelle.options]));
+        await voterDans(poste, 0);
+        await expect(optionsDuPoste(poste).first()).toBeDisabled();
+      }
+    }
+
+    await expect(verdictDuPoste(poste)).toHaveAttribute('data-etat', /confirme|a-revoir/);
+    await poste.context().close();
+  });
+
+  test('refuse en 404 le vote de l’écran suivant tant qu’il n’est pas projeté', async ({
     request,
   }) => {
     const { seance } = await seanceDuFichier(request);
-    expect(jumelle.rang).toBeGreaterThan(principale.rang);
+    expect(suivant.rang).toBeGreaterThan(principale.rang);
     const poste = await inscrireUnPoste(request, seance, 13);
 
     const avant = await repondreDepuisLePoste(request, seance, poste, {
-      questionId: jumelle.activiteId,
-      valeur: 'o1',
+      questionId: suivant.activiteId,
+      valeur: suivant.options[0],
     });
 
     expect(avant.status(), await avant.text()).toBe(404);
     expect(((await avant.json()) as { code: string }).code).toBe('ECRAN_NON_SERVI');
   });
 
-  test('la version publiée refuse tout pilotage de phase et toute révélation', async ({
-    request,
-  }) => {
+  test('refuse une phase hors vote et une révélation hors défi', async ({ request }) => {
     const { seance, jeton } = await seanceDuFichier(request);
 
-    for (const phase of PHASES) {
-      const refus = await piloterLaPhase(request, jeton, seance.sessionId, {
-        screenId: principale.id,
-        phase,
-      });
-      expect(refus.status(), `phase ${phase}`).toBe(400);
-      expect(((await refus.json()) as { detail: string }).detail).toContain(
-        'seul un vote à question jumelle porte des phases',
-      );
-    }
+    const horsVote = await piloterLaPhase(request, jeton, seance.sessionId, {
+      screenId: reflexion.id,
+      phase: 'vote',
+    });
+    expect(horsVote.status(), await horsVote.text()).toBe(400);
+    expect(((await horsVote.json()) as { detail: string }).detail).toContain(
+      'seul un vote à question jumelle porte des phases',
+    );
 
     const revelation = await piloterLaPhase(request, jeton, seance.sessionId, {
       screenId: principale.id,

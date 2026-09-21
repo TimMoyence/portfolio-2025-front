@@ -1,1 +1,0 @@
-Quatrième geste : le contrôle. Les quatre parts doivent faire 1. En E8, on écrit : SI l’arrondi de la somme de E2 à E5 est égal à 1, alors 1, sinon 0. Le contrôle affiche 1.

@@ -62,7 +62,6 @@ export interface SyntheseConcept {
 }
 
 export interface InscriptionParticipant {
-  studentKey: string;
   prenom: string;
   nom: string;
   email: string;

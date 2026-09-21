@@ -1,9 +1,0 @@
-{
-  "P07": [
-    {
-      "texte": "SI l’arrondi",
-      "prononce": "si l’arrondi",
-      "motif": "espeak-ng épelle un mot de deux capitales (« ɛsi ») ; la ponctuation n’y peut rien, seule la casse change la lecture. Le mot et la ponctuation du texte « Voix » sont inchangés."
-    }
-  ]
-}

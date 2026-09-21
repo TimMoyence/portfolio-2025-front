@@ -62,13 +62,7 @@ src/assets/figma/Asili Design Mobile/Présentation en tant que développeur web 
 e2e/test-results/
 /test-results/
 /playwright-report/
-/e2e/__screenshots__/*
-# References des graphiques du cours B2-01 (F13, AC-26, AC-29, AC-30) : preuves versionnees,
-# prises sous macOS / Chromium de Playwright, a regenerer avec --update-snapshots apres controle visuel.
-!/e2e/__screenshots__/cours-graphiques.spec.ts/
-# References des pages publiques (projet playwright `visuel`, joue en CI) : une par plateforme,
-# `-darwin` prise en local et `-linux` dans mcr.microsoft.com/playwright:v1.59.1-noble.
-!/e2e/__screenshots__/visual-regression.spec.ts/
+/e2e/__screenshots__/
 
 # Skills de cluster regenerees par GitNexus a chaque commit (hook post-commit) :
 # artefacts locaux, non versionnes pour eviter le churn.

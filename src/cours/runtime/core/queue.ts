@@ -1,4 +1,4 @@
-import { readJson, writeJson } from './storage';
+import { persistJson, readJson, writeJson } from './storage';
 
 const CLE = 'fp.file-reponses';
 const CAPACITE_MAX = 200;
@@ -53,10 +53,13 @@ function ecrireOuRefuser(file: readonly EnvoiReponse[]): void {
 }
 
 function retirer(id: number): void {
-  writeJson(
-    CLE,
-    pending().filter((envoi) => envoi.id !== id),
-  );
+  ecrireOuRefuser(pending().filter((envoi) => envoi.id !== id));
+}
+
+export function purgerLesAutresEnvois(sessionId: string): boolean {
+  const file = pending();
+  const restants = file.filter((envoi) => envoi.sessionId === sessionId);
+  return restants.length === file.length || persistJson(CLE, restants);
 }
 
 export async function flush(envoyer: Envoyeur, studentKey?: string): Promise<void> {

@@ -1278,29 +1278,13 @@ describe('CoursEtudiantComponent', () => {
   });
 
   describe('poste partage entre deux eleves', () => {
-    const DE_A = { prenom: 'Lea', nom: 'Dubois', email: 'lea.dubois@example.com' };
+    const DE_A = { prenom: 'Sacha', nom: 'Morel', email: 'sacha.morel@example.com' };
 
     function valeurDuChamp(fixture: Fixture, nom: string): string {
       return (
         lire(fixture, 'etudiant-entree')?.querySelector<HTMLInputElement>(`[name="${nom}"]`)
           ?.value ?? ''
       );
-    }
-
-    async function soumettreLeSeulCode(fixture: Fixture): Promise<void> {
-      const formulaire = lire(fixture, 'etudiant-entree');
-      const champ = formulaire?.querySelector<HTMLInputElement>('[name="code"]');
-      if (champ) {
-        champ.value = CODE_SAISI;
-      }
-      jasmine.clock().install();
-      try {
-        formulaire?.dispatchEvent(new Event('submit'));
-        jasmine.clock().tick(1_200);
-        await stabiliser(fixture);
-      } finally {
-        jasmine.clock().uninstall();
-      }
     }
 
     it('n affiche pas au suivant l identite laissee par le precedent', () => {
@@ -1313,16 +1297,16 @@ describe('CoursEtudiantComponent', () => {
       expect(valeurDuChamp(fixture, 'email')).toBe('');
     });
 
-    it('donne une cle neuve a B qui valide le formulaire sans le modifier apres le passage de A', async () => {
-      const { identite: deA } = saveIdentity(DE_A);
-      const fixture = monter();
+    it('ne transmet aucune cle d etudiant : le serveur la derive du courriel', async () => {
+      saveIdentity(DE_A);
 
-      await soumettreLeSeulCode(fixture);
+      const fixture = await rattacher();
 
-      const clesTransmises = port.rejoindre.calls
-        .allArgs()
-        .map(([, identite]) => (identite as { studentKey: string }).studentKey);
-      expect(clesTransmises).not.toContain(deA.studentKey);
+      expect(port.rejoindre).toHaveBeenCalledTimes(1);
+      const [, transmise] = port.rejoindre.calls.mostRecent().args;
+      expect(Object.keys(transmise as object)).not.toContain('studentKey');
+      expect((transmise as { email: string }).email).not.toBe(DE_A.email);
+      expect(fixture.componentInstance.etat()).toBe('seance');
     });
   });
 });

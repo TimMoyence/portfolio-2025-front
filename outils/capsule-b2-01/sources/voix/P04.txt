@@ -1,1 +1,0 @@
-On recopie vers le bas avec le bouton « Recopier vers le bas ». Les références glissent d’une ligne : C2 devient C3, B2 devient B3. C’est ce que l’on veut : chaque ligne compare ses propres valeurs.

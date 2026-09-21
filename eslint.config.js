@@ -13,14 +13,10 @@ module.exports = tseslint.config(
       '.claude/**',
       'playwright-report/**',
       'test-results/**',
-      // outils/capsule-b2-01/page/capsule.html est un document HTML complet rendu par Chromium,
-      // pas un gabarit Angular : le seul analyseur HTML du depot (@angular-eslint/template-parser)
-      // ne sait pas lire son doctype. Il reste couvert par prettier, jscpd et guard:comments.
-      'outils/**/*.html',
     ],
   },
   {
-    files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,mts}', 'outils/**/*.{mjs,js}'],
+    files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,mts}'],
     rules: {
       'no-eval': 'error',
       'no-implied-eval': 'error',
@@ -88,20 +84,6 @@ module.exports = tseslint.config(
     extends: [sonarjs.configs.recommended],
     languageOptions: {
       globals: { ...globals.node },
-    },
-  },
-  {
-    files: ['outils/**/*.mjs'],
-    extends: [sonarjs.configs.recommended],
-    languageOptions: {
-      globals: { ...globals.node },
-    },
-  },
-  {
-    files: ['outils/**/page/*.js'],
-    extends: [sonarjs.configs.recommended],
-    languageOptions: {
-      globals: { ...globals.browser },
     },
   },
 );

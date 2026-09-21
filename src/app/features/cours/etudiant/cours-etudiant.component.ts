@@ -24,7 +24,12 @@ import { saveIdentity } from '../../../../cours/runtime/core/identity';
 import type { Lock } from '../../../../cours/runtime/core/lock';
 import { createLock } from '../../../../cours/runtime/core/lock';
 import type { EnvoiReponse, NatureEnvoi } from '../../../../cours/runtime/core/queue';
-import { enqueue, flush, pending } from '../../../../cours/runtime/core/queue';
+import {
+  enqueue,
+  flush,
+  pending,
+  purgerLesAutresEnvois,
+} from '../../../../cours/runtime/core/queue';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { creerBrouillons, purgerLesAutresBrouillons } from '../../../../cours/runtime/core/storage';
 import type { EtatSession, StatutSession, Sync } from '../../../../cours/runtime/core/sync';
@@ -64,6 +69,7 @@ import {
   ecransDesIdentifiants,
   identifiantsDesQuestions,
 } from '../../../shared/slides/session/lecture-ecran';
+import type { EtatEnvoiLibre } from '../../../shared/slides/session/reponses-libres.service';
 import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { aUnePresentation, objet } from '../../../shared/slides/visual/presentation-v2';
@@ -113,6 +119,8 @@ interface VerdictAffiche extends VerdictRecu {
 const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
 
 const STATUTS_SANS_RETOUR: readonly number[] = [401, 403];
+
+const ETATS_LIBRES_EN_ATTENTE: readonly EtatEnvoiLibre[] = ['attente_reseau', 'ecran_non_servi'];
 
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
 const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
@@ -415,6 +423,18 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                 {{ refus.message }}
               </p>
             }
+            @if (reflexionEnAttente(); as etat) {
+              <p
+                class="student-feedback"
+                data-testid="etudiant-reflexion-en-attente"
+                role="status"
+                [attr.data-etat]="etat"
+                i18n="cours.reflexionEnAttente|@@coursReflexionEnAttente"
+              >
+                Votre réflexion est gardée sur ce poste : elle partira dès que le formateur
+                réaffichera l’écran.
+              </p>
+            }
             @if (fileRefusee()) {
               <p
                 class="student-feedback"
@@ -543,6 +563,19 @@ export class CoursEtudiantComponent {
   readonly chargementEcran = signal(false);
   readonly retours = signal<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
   readonly repriseIndisponible = signal(false);
+
+  readonly reflexionEnAttente = computed<EtatEnvoiLibre | null>(() => {
+    const sessionId = this.sessionId();
+    if (sessionId === null) {
+      return null;
+    }
+    for (const [cle, etat] of this.reponsesLibres.etatsDesEnvois()) {
+      if (cle.startsWith(`${sessionId}:`) && ETATS_LIBRES_EN_ATTENTE.includes(etat)) {
+        return etat;
+      }
+    }
+    return null;
+  });
 
   readonly accesPerdu = computed<boolean>(() => {
     const refus = this.refusDuFlux();
@@ -713,7 +746,6 @@ export class CoursEtudiantComponent {
     try {
       return await firstValueFrom(
         this.port.rejoindre(code, {
-          studentKey: identite.studentKey,
           prenom: identite.prenom,
           nom: identite.nom,
           email: identite.email,
@@ -764,6 +796,7 @@ export class CoursEtudiantComponent {
   ): void {
     this.seanceOuverte.set({ sessionId: rattachement.sessionId, jeton: rattachement.jeton });
     purgerLesAutresBrouillons(rattachement.sessionId, rattachement.participantId);
+    this.fileRefusee.set(!purgerLesAutresEnvois(rattachement.sessionId));
     this.brouillons.set(creerBrouillons(rattachement.sessionId, rattachement.participantId));
     this.sujet.set(sujet);
     const deck = this.monterLeDeck(sujet, rattachement);
@@ -1214,6 +1247,8 @@ export class CoursEtudiantComponent {
     this.videEnCours = true;
     try {
       await flush((envoi) => this.renvoyer(envoi), this.identite?.studentKey);
+    } catch {
+      this.fileRefusee.set(true);
     } finally {
       this.videEnCours = false;
       this.enAttente.set(this.fileDeLaSeance());

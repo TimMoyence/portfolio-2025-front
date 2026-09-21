@@ -3,9 +3,10 @@ import type { Page } from '@playwright/test';
 import {
   SLUG_B2,
   connecterLeFormateur,
-  ecransDuRenderer,
-  lireLeCatalogue,
+  coursReleve,
+  optionsDuPoste,
   posteDansSonNavigateur,
+  verdictDuPoste,
 } from './contexte';
 import type { Seance } from './contexte';
 
@@ -30,7 +31,8 @@ test.describe('Banc — clôture et synthèse', () => {
     page,
     request,
   }) => {
-    const quiz = ecransDuRenderer(await lireLeCatalogue(request), 'quiz');
+    const { votes, total } = await coursReleve(request);
+    const vote = votes[0];
     const seance = await ouvrirLePupitre(page);
     expect(seance.sessionId).not.toBe('');
 
@@ -43,15 +45,15 @@ test.describe('Banc — clôture et synthèse', () => {
     }
 
     await page.getByTestId('presentateur-demarrer').click();
-    for (let saut = 0; saut < quiz[0].rang; saut += 1) {
+    for (let saut = 0; saut < vote.rang; saut += 1) {
       await page.getByTestId('presentateur-suivant').click();
     }
-    await expect(page.getByTestId('presentateur-ecran')).toHaveText(`${quiz[0].rang + 1} / 72`);
+    await expect(page.getByTestId('presentateur-ecran')).toHaveText(`${vote.rang + 1} / ${total}`);
 
     for (const poste of postes) {
-      await expect(poste.locator('app-slide-quiz')).toBeVisible();
-      await poste.locator('app-slide-quiz button.slide-quiz__option').first().click();
-      await expect(poste.getByTestId('etudiant-verdict')).toHaveCount(1);
+      await expect(optionsDuPoste(poste).first()).toBeVisible();
+      await optionsDuPoste(poste).first().click();
+      await expect(verdictDuPoste(poste)).toHaveCount(1);
     }
     await expect(page.getByTestId('presentateur-participants-nombre')).toHaveText(String(POSTES));
 
@@ -65,7 +67,7 @@ test.describe('Banc — clôture et synthèse', () => {
 
     await expect(page.getByTestId('synthese-ligne')).toHaveCount(POSTES);
     const ligne = page.getByTestId('synthese-question-ligne').filter({
-      has: page.getByTestId('synthese-question-id').filter({ hasText: quiz[0].activiteId }),
+      has: page.getByTestId('synthese-question-id').filter({ hasText: vote.activiteId }),
     });
     await expect(ligne.getByTestId('synthese-question-total')).toHaveText(String(POSTES));
 

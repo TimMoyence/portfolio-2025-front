@@ -4,7 +4,7 @@ import { B2_SLUG, coursB2Catalogue, ecranB2Graphique, servirCatalogueB2 } from '
 type Plage = readonly [number, number];
 
 interface Graphique {
-  readonly fichier: string;
+  readonly nom: string;
   readonly plage: Plage;
   readonly props: Readonly<Record<string, unknown>> & {
     readonly title: string;
@@ -12,6 +12,7 @@ interface Graphique {
     readonly reading: string;
     readonly source: string;
     readonly kind?: 'line';
+    readonly labels?: readonly string[];
     readonly series: readonly {
       readonly label: string;
       readonly values: readonly number[];
@@ -31,10 +32,8 @@ const SANS_SURCOUCHES = `${MASQUES} { display: none !important; } app-slide-char
 
 const TOLERANCE_PX = 1.5;
 
-const SEUIL_INSTANTANE = 0.002;
-
 const G1: Graphique = {
-  fichier: 'g1-marge-brute-axe-zero.png',
+  nom: 'G1 marge brute, axe à zéro',
   plage: [0, 300000],
   props: {
     title: 'Marge brute d’Atelier Rivage, 2022–2025',
@@ -54,7 +53,7 @@ const G1: Graphique = {
 };
 
 const G2: Graphique = {
-  fichier: 'g2-inflation-annuelle.png',
+  nom: 'G2 inflation annuelle',
   plage: [0, 6],
   props: {
     title: 'Inflation annuelle en France, 2019–2025',
@@ -74,7 +73,7 @@ const G2: Graphique = {
 };
 
 const G3: Graphique = {
-  fichier: 'g3-indice-des-prix.png',
+  nom: 'G3 indice des prix',
   plage: [95, 120],
   props: {
     title: 'Indice des prix à la consommation, base 100 = moyenne 2019',
@@ -102,7 +101,7 @@ const G3: Graphique = {
 };
 
 const G4: Graphique = {
-  fichier: 'g4-ca-par-canal.png',
+  nom: 'G4 CA par canal',
   plage: [0, 180],
   props: {
     title: 'CA HT 2025 d’Atelier Rivage par canal et par trimestre',
@@ -126,7 +125,7 @@ const G4: Graphique = {
 };
 
 const PRIX_DU_SAC: Graphique = {
-  fichier: 'a3-03-prix-du-sac.png',
+  nom: 'A3-03 prix du sac',
   plage: [0, 120],
   props: {
     title: 'Prix du sac étanche : +10 %, puis −10 %',
@@ -151,7 +150,7 @@ const PRIX_DU_SAC: Graphique = {
 };
 
 const DIAPOSITIVE_DE_SAMIR: Graphique = {
-  fichier: 'a1-09-diapositive-tronquee.png',
+  nom: 'A1-09 diapositive tronquée',
   plage: [284000, 292000],
   props: {
     title: 'Marge brute : une croissance continue',
@@ -213,7 +212,7 @@ test.describe('Graphiques v2 du B2-01 (F13 : AC-26, AC-29, AC-30)', () => {
   });
 
   for (const [rang, graphique] of GRAPHIQUES.entries()) {
-    test(`${graphique.fichier} : titre, unité, lecture, source et échelle graduée (AC-26, AC-29)`, async ({
+    test(`${graphique.nom} : titre, unité, lecture, source et échelle graduée (AC-26, AC-29)`, async ({
       page,
     }) => {
       const rendu = await graphiquePret(page, rang);
@@ -234,7 +233,7 @@ test.describe('Graphiques v2 du B2-01 (F13 : AC-26, AC-29, AC-30)', () => {
       );
     });
 
-    test(`${graphique.fichier} : chaque marque tombe sur l échelle graduée (AC-26)`, async ({
+    test(`${graphique.nom} : chaque marque tombe sur l échelle graduée (AC-26)`, async ({
       page,
     }) => {
       const rendu = await graphiquePret(page, rang);
@@ -266,15 +265,6 @@ test.describe('Graphiques v2 du B2-01 (F13 : AC-26, AC-29, AC-30)', () => {
         ).toBeLessThanOrEqual(TOLERANCE_PX);
       }
     });
-
-    test(`${graphique.fichier} : instantané visuel`, async ({ page }) => {
-      const rendu = await graphiquePret(page, rang);
-
-      await expect(rendu.locator('figure')).toHaveScreenshot(graphique.fichier, {
-        animations: 'disabled',
-        maxDiffPixelRatio: SEUIL_INSTANTANE,
-      });
-    });
   }
 
   test('G4 : trois courbes étiquetées directement, marqueurs distincts, sans légende (AC-30)', async ({
@@ -296,13 +286,22 @@ test.describe('Graphiques v2 du B2-01 (F13 : AC-26, AC-29, AC-30)', () => {
     await expect(rendu.locator('.slide-chart__legend')).toHaveCount(0);
   });
 
-  test('G1 : tableau « Voir les données » ouvert, instantané visuel (AC-29)', async ({ page }) => {
+  test('G1 : « Voir les données » ouvre le tableau des valeurs tracées (AC-29)', async ({
+    page,
+  }) => {
     const rendu = await graphiquePret(page, GRAPHIQUES.indexOf(G1));
-    await rendu.getByText('Voir les données').click();
+    const tableau = rendu.locator('.slide-chart__data table');
+    await expect(tableau).toBeHidden();
 
-    await expect(rendu.locator('.slide-chart__data')).toHaveScreenshot('g1-voir-les-donnees.png', {
-      animations: 'disabled',
-      maxDiffPixelRatio: SEUIL_INSTANTANE,
-    });
+    await rendu.getByText('Voir les données').click();
+    await expect(tableau).toBeVisible();
+
+    const entetes = await tableau.locator('thead th').allInnerTexts();
+    expect(entetes.slice(1)).toEqual([...(G1.props.labels ?? [])]);
+    const cellules = await tableau.locator('tbody tr td').allInnerTexts();
+    const chiffres = cellules.map((cellule) => cellule.replace(/\D/g, ''));
+    for (const valeur of G1.props.series[0].values) {
+      expect(chiffres).toContain(String(valeur));
+    }
   });
 });

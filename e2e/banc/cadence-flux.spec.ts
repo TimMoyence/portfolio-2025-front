@@ -3,10 +3,9 @@ import type { APIRequestContext, Page } from '@playwright/test';
 import {
   URL_API,
   URL_FRONT,
-  ecransDuRenderer,
+  coursReleve,
   inscrireUnPoste,
   jetonDuFormateur,
-  lireLeCatalogue,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
   servirLEcran,
@@ -18,6 +17,10 @@ const FENETRE_MS = 5_000;
 const POSTES = 4;
 
 const QUESTIONS_PAR_POSTE = 5;
+
+const DELAI_MIN_BILAN_MS = 1_000;
+
+const TOLERANCE_HORLOGE_MS = 50;
 
 interface EvenementRecu {
   readonly nom: string;
@@ -62,20 +65,34 @@ function collecterLeFlux(page: Page, url: string, jeton: string): Promise<Evenem
   );
 }
 
+function apresLInstantaneDOuverture(evenements: readonly EvenementRecu[]): EvenementRecu[] {
+  return evenements.slice(1);
+}
+
+function ecartMinimal(evenements: readonly EvenementRecu[]): number {
+  return Math.min(
+    ...evenements.slice(1).map((evenement, rang) => evenement.ts - evenements[rang].ts),
+  );
+}
+
 async function rafaleDeReponses(
   request: APIRequestContext,
   seance: Seance,
   jeton: string,
   postes: readonly Poste[],
-  ecrans: readonly EcranDuCours[],
+  questions: readonly EcranDuCours[],
 ): Promise<number> {
   let envoyees = 0;
-  for (const ecran of ecrans) {
-    await servirLEcran(request, jeton, seance.sessionId, ecran.rang);
+  let servi = -1;
+  for (const question of questions) {
+    if (question.rang !== servi) {
+      await servirLEcran(request, jeton, seance.sessionId, question.rang);
+      servi = question.rang;
+    }
     for (const poste of postes) {
       const reponse = await repondreDepuisLePoste(request, seance, poste, {
-        questionId: ecran.activiteId,
-        valeur: 'o1',
+        questionId: question.activiteId,
+        valeur: question.options[0],
       });
       if (reponse.status() === 201) envoyees += 1;
     }
@@ -89,8 +106,10 @@ test.describe('Banc — cadence du flux du pupitre', () => {
     browser,
     request,
   }) => {
-    const quiz = ecransDuRenderer(await lireLeCatalogue(request), 'quiz');
-    const { seance } = await seanceDemarreeSurLEcran(request, quiz[0].rang);
+    const { questions } = await coursReleve(request);
+    const rafale = questions.slice(0, QUESTIONS_PAR_POSTE);
+    expect(rafale).toHaveLength(QUESTIONS_PAR_POSTE);
+    const { seance } = await seanceDemarreeSurLEcran(request, rafale[0].rang);
     const jeton = await jetonDuFormateur(request);
     const postes = await Promise.all(
       Array.from({ length: POSTES }, (_, rang) => inscrireUnPoste(request, seance, 20 + rang)),
@@ -107,13 +126,7 @@ test.describe('Banc — cadence du flux du pupitre', () => {
       collecterLeFlux(second, adresse, jeton),
     ]);
 
-    const envoyees = await rafaleDeReponses(
-      request,
-      seance,
-      jeton,
-      postes,
-      quiz.slice(0, QUESTIONS_PAR_POSTE),
-    );
+    const envoyees = await rafaleDeReponses(request, seance, jeton, postes, rafale);
     expect(envoyees).toBe(POSTES * QUESTIONS_PAR_POSTE);
 
     const [gauche, droite] = await collectes;
@@ -122,11 +135,14 @@ test.describe('Banc — cadence du flux du pupitre', () => {
     const resultatsGauche = gauche.filter((evenement) => evenement.nom === 'resultats');
     const resultatsDroite = droite.filter((evenement) => evenement.nom === 'resultats');
 
-    expect(resultatsGauche.length).toBeGreaterThan(1);
-    expect(resultatsGauche.length).toBeLessThanOrEqual(Math.ceil(FENETRE_MS / 1000) + 1);
-    expect(resultatsDroite.map((evenement) => evenement.data)).toEqual(
-      resultatsGauche.map((evenement) => evenement.data),
+    const [court, long] = [resultatsGauche, resultatsDroite]
+      .map(apresLInstantaneDOuverture)
+      .sort((gauche, droite) => gauche.length - droite.length);
+    expect(court.length).toBeGreaterThan(1);
+    expect(long.map((evenement) => evenement.data).slice(-court.length)).toEqual(
+      court.map((evenement) => evenement.data),
     );
+    expect(ecartMinimal(long)).toBeGreaterThanOrEqual(DELAI_MIN_BILAN_MS - TOLERANCE_HORLOGE_MS);
 
     const dernier = JSON.parse(resultatsGauche[resultatsGauche.length - 1].data) as {
       questions: readonly unknown[];

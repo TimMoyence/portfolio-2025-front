@@ -5,11 +5,9 @@
     "src/**/*.spec.ts",
     "scripts/*.{mjs,mts}",
     "scripts/**/*.test.mjs",
-    "e2e/**/*.spec.ts",
-    "outils/capsule-b2-01/outils/*.mjs",
-    "outils/capsule-b2-01/page/capsule.js"
+    "e2e/**/*.spec.ts"
   ],
-  "project": ["src/**/*.ts", "scripts/**/*.{mjs,mts}", "e2e/**/*.ts", "outils/**/*.{mjs,js}"],
+  "project": ["src/**/*.ts", "scripts/**/*.{mjs,mts}", "e2e/**/*.ts"],
   "ignoreDependencies": ["@fontsource/.+", "sharp"],
   "ignoreExportsUsedInFile": { "interface": true, "type": true }
 }

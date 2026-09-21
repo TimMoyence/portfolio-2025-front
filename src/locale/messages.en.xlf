@@ -11526,6 +11526,16 @@
         <target> Your answer is saved on this device and will be sent once the network is back. </target>
       </segment>
     </unit>
+    <unit id="coursReflexionEnAttente">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:197,200</note>
+        <note category="meaning">cours.reflexionEnAttente</note>
+      </notes>
+      <segment>
+        <source> Votre réflexion est gardée sur ce poste : elle partira dès que le formateur réaffichera l’écran. </source>
+        <target> Your reflection is kept on this device: it will be sent as soon as your teacher shows the screen again. </target>
+      </segment>
+    </unit>
     <unit id="coursFileRefusee">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:197,200</note>

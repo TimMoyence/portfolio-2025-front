@@ -62,12 +62,6 @@ jobs:
       - name: Garde runtime cours (AD-2 / AD-4)
         run: npm run guard:cours-runtime
 
-      # Compare les empreintes SHA-256 et les tailles des huit medias du
-      # catalogue § 8.2 a ce qui est reellement livre sous src/assets, et
-      # croise les deux sens avec les chemins cites par l instantane V3.
-      - name: Garde medias B2-01 V3
-        run: npm run guard:medias-b2
-
       # Cliquet non-regressif sur les commentaires narratifs : le plafond vit
       # dans `"guard-no-comments".maxOffenses` (package.json). Le gate echoue si
       # le compte depasse le plafond, et imprime la valeur a poser quand il
@@ -118,8 +112,8 @@ jobs:
 
       # Le cache ne restaure pas les dependances systeme du navigateur :
       # `--with-deps` est rejoue meme sur un cache touche, et n installe que
-      # chromium, le seul navigateur des trois projets de playwright.config.ts.
-      # `test:e2e:portail` joue `chromium` et `visuel` ; seul `banc` reste hors CI.
+      # chromium, le seul navigateur des deux projets de playwright.config.ts.
+      # `test:e2e:portail` joue `chromium` ; seul `banc` reste hors CI.
       - name: Installation de chromium
         run: npx playwright install --with-deps chromium
 

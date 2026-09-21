@@ -26,26 +26,36 @@ export interface Poste {
 }
 
 export interface Identite {
-  readonly studentKey: string;
   readonly prenom: string;
   readonly nom: string;
   readonly email: string;
 }
 
-export interface EcranDuCours {
+export interface QuestionDuCours {
+  readonly activiteId: string;
+  readonly options: readonly string[];
+}
+
+export interface EcranDuCours extends QuestionDuCours {
   readonly rang: number;
   readonly id: string;
-  readonly activiteId: string;
+  readonly jumelle: QuestionDuCours | null;
 }
+
+export interface ReleveDuCours {
+  readonly total: number;
+  readonly questions: readonly EcranDuCours[];
+  readonly votes: readonly EcranDuCours[];
+  readonly reflexions: readonly EcranDuCours[];
+}
+
+const RANG_DU_RELEVE = 90;
 
 const PRENOMS = ['Lea', 'Noe', 'Ines', 'Youn', 'Mila', 'Sacha', 'Anouk'];
 
 export function identiteDuPoste(rang: number): Identite {
-  const prenom = PRENOMS[rang % PRENOMS.length];
-  const suffixe = String(rang).padStart(12, '0');
   return {
-    studentKey: `aaaaaaaa-aaaa-4aaa-8aaa-${suffixe}`,
-    prenom,
+    prenom: PRENOMS[rang % PRENOMS.length],
     nom: `Poste${rang}`,
     email: `poste${rang}@example.test`,
   };
@@ -171,12 +181,7 @@ export async function inscrireUnPoste(
 ): Promise<Poste> {
   const identite = identiteDuPoste(rang);
   const reponse = await request.post(`${URL_API}/formations/sessions/${seance.code}/join`, {
-    data: {
-      studentKey: identite.studentKey,
-      prenom: identite.prenom,
-      nom: identite.nom,
-      email: identite.email,
-    },
+    data: identite,
   });
   expect(reponse.status(), await reponse.text()).toBe(201);
   const { participantId, jeton } = (await reponse.json()) as {
@@ -227,47 +232,116 @@ export async function lireMonEtat(
   return (await reponse.json()) as Record<string, unknown>;
 }
 
-interface PresentationDuCatalogue {
-  readonly renderer: string;
-  readonly props: {
-    readonly questionData?: { readonly id: string };
-    readonly promptData?: { readonly id: string };
-  };
-}
-
-interface EcranDuCatalogue {
-  readonly id: string;
-  readonly donnees: { readonly recit: { readonly presentation: PresentationDuCatalogue } };
-}
-
-export async function lireLeCatalogue(
+export function lireLeSujet(
   request: APIRequestContext,
-): Promise<readonly EcranDuCatalogue[]> {
-  const reponse = await request.get(`${URL_API}/formations/catalogue/${SLUG_B2}`);
-  expect(reponse.status(), await reponse.text()).toBe(200);
-  const { ecrans } = (await reponse.json()) as { ecrans: readonly EcranDuCatalogue[] };
-  return ecrans;
-}
-
-export function ecransDuRenderer(
-  ecrans: readonly EcranDuCatalogue[],
-  renderer: 'quiz' | 'reflection',
-): readonly EcranDuCours[] {
-  return ecrans.flatMap((ecran, rang) => {
-    const presentation = ecran.donnees.recit.presentation;
-    if (presentation.renderer !== renderer) return [];
-    const activite = presentation.props.questionData ?? presentation.props.promptData;
-    return activite === undefined ? [] : [{ rang, id: ecran.id, activiteId: activite.id }];
+  seance: Seance,
+  poste: Poste,
+): Promise<import('@playwright/test').APIResponse> {
+  return request.get(`${URL_API}/formations/sessions/${seance.sessionId}/sujet`, {
+    headers: { [EN_TETE_JETON]: poste.jeton },
   });
 }
 
-export function premierEcran(
-  ecrans: readonly EcranDuCatalogue[],
-  renderer: 'quiz' | 'reflection',
-): EcranDuCours {
-  const trouves = ecransDuRenderer(ecrans, renderer);
-  expect(trouves.length, `aucun écran « ${renderer} » dans la version publiée`).toBeGreaterThan(0);
-  return trouves[0];
+interface QuestionDuSujet {
+  readonly id: string;
+  readonly options?: readonly { readonly id: string }[];
+}
+
+interface EcranDuSujet {
+  readonly id: string;
+  readonly type: string;
+  readonly donnees: {
+    readonly question?: QuestionDuSujet;
+    readonly questionJumelle?: QuestionDuSujet;
+    readonly questions?: readonly {
+      readonly donnees: { readonly question?: QuestionDuSujet };
+    }[];
+    readonly recit?: {
+      readonly presentation?: {
+        readonly renderer: string;
+        readonly props: { readonly promptData?: { readonly id: string } };
+      };
+    };
+  };
+}
+
+function questionsDeLEcran(ecran: EcranDuSujet): readonly QuestionDuSujet[] {
+  const imbriquees = (ecran.donnees.questions ?? []).flatMap((entree) =>
+    entree.donnees.question === undefined ? [] : [entree.donnees.question],
+  );
+  const directe = ecran.donnees.question;
+  return directe === undefined ? imbriquees : [directe, ...imbriquees];
+}
+
+function questionDuCours(question: QuestionDuSujet): QuestionDuCours {
+  return {
+    activiteId: question.id,
+    options: (question.options ?? []).map((option) => option.id),
+  };
+}
+
+function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
+  const questions: EcranDuCours[] = [];
+  const votes: EcranDuCours[] = [];
+  const reflexions: EcranDuCours[] = [];
+  ecrans.forEach((ecran, rang) => {
+    const jumelle = ecran.donnees.questionJumelle;
+    for (const question of questionsDeLEcran(ecran)) {
+      const posee = questionDuCours(question);
+      if (posee.options.length === 0) continue;
+      const trouvee = {
+        rang,
+        id: ecran.id,
+        ...posee,
+        jumelle:
+          jumelle === undefined || question !== ecran.donnees.question
+            ? null
+            : questionDuCours(jumelle),
+      };
+      questions.push(trouvee);
+      if (ecran.type === 'fp-vote') votes.push(trouvee);
+    }
+    const presentation = ecran.donnees.recit?.presentation;
+    const invite = presentation?.props.promptData;
+    if (presentation?.renderer === 'reflection' && invite !== undefined) {
+      reflexions.push({
+        rang,
+        id: ecran.id,
+        activiteId: invite.id,
+        options: [],
+        jumelle: null,
+      });
+    }
+  });
+  return { total: ecrans.length, questions, votes, reflexions };
+}
+
+async function relever(request: APIRequestContext): Promise<ReleveDuCours> {
+  const catalogue = await request.get(`${URL_API}/formations/catalogue/${SLUG_B2}`);
+  expect(catalogue.status(), await catalogue.text()).toBe(200);
+  const { ecrans } = (await catalogue.json()) as { ecrans: readonly unknown[] };
+
+  const jeton = await jetonDuFormateur(request);
+  const seance = await ouvrirUneSeance(request, jeton);
+  await demarrerLaSeance(request, jeton, seance.sessionId);
+  await servirLEcran(request, jeton, seance.sessionId, ecrans.length - 1);
+  const poste = await inscrireUnPoste(request, seance, RANG_DU_RELEVE);
+
+  const reponse = await lireLeSujet(request, seance, poste);
+  expect(reponse.status(), await reponse.text()).toBe(200);
+  const sujet = (await reponse.json()) as { ecrans: readonly EcranDuSujet[] };
+  const releve = classer(sujet.ecrans);
+  expect(releve.total).toBe(ecrans.length);
+  expect(releve.votes.length, 'aucun vote dans la version publiée').toBeGreaterThan(1);
+  expect(releve.reflexions.length, 'aucune réflexion dans la version publiée').toBeGreaterThan(1);
+  return releve;
+}
+
+let releveDuCours: Promise<ReleveDuCours> | null = null;
+
+export function coursReleve(request: APIRequestContext): Promise<ReleveDuCours> {
+  releveDuCours ??= relever(request);
+  return releveDuCours;
 }
 
 export async function posteDansSonNavigateur(
@@ -279,6 +353,18 @@ export async function posteDansSonNavigateur(
   const page = await contexte.newPage();
   await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(rang));
   return page;
+}
+
+export function optionsDuPoste(page: Page): import('@playwright/test').Locator {
+  return page.locator('[data-testid="slide-activity-host"] [data-testid="option"]');
+}
+
+export function verdictDuPoste(page: Page): import('@playwright/test').Locator {
+  return page.locator('[data-testid="slide-activity-host"] [data-testid="verdict"]');
+}
+
+export function phaseDuPoste(page: Page): import('@playwright/test').Locator {
+  return page.locator('[data-testid="slide-activity-host"] [data-testid="phase"]');
 }
 
 export async function connecterLeFormateur(page: Page): Promise<void> {

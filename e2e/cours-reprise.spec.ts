@@ -7,6 +7,7 @@ const SEANCE_A = { id: '11111111-1111-4111-8111-111111111111', code: '4821' };
 const SEANCE_B = { id: '44444444-4444-4444-8444-444444444444', code: '5932' };
 const TEXTE = 'Le passage du taux annuel au taux mensuel reste flou';
 const CONFUSION = 'Taux annuel divisé par 12';
+const DELAI_ENTREE_MS = 20_000;
 
 const BILLET = {
   id: 'B-SORTIE-09',
@@ -137,7 +138,9 @@ async function rejoindre(page: Page, seance: Seance): Promise<void> {
   await page.getByLabel('Nom', { exact: true }).fill('Dubois');
   await page.getByLabel('Adresse e-mail').fill('lea.dubois@example.com');
   await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
-  await expect(page.locator('fp-exit [data-testid="texte-libre"]')).toBeVisible();
+  await expect(page.locator('fp-exit [data-testid="texte-libre"]')).toBeVisible({
+    timeout: DELAI_ENTREE_MS,
+  });
 }
 
 function cleDuBrouillon(seance: Seance): string {

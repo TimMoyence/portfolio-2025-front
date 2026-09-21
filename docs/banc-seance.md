@@ -75,38 +75,33 @@ s'y branche sans rien changer : `npm run test:banc` suppose seulement que le bac
 
 ## Ce que le banc couvre
 
-Les scénarios vivent dans `e2e/banc/`. Ils jouent sur la **version publiée** du cours, lue au
-catalogue au moment du run : aucune constante d'écran n'est figée dans les tests.
+Les scénarios vivent dans `e2e/banc/`. Ils jouent sur la **version publiée** du cours, relevée au
+moment du run : aucune constante d'écran n'est figée dans les tests.
 
-| Fichier                   | Ce qui est prouvé                                                                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `reprise.spec.ts`         | un poste répond, recharge, retrouve sa séance et son état serveur ; une seconde réponse est refusée (`REPONSE_DEJA_ENREGISTREE`) sans rien écrire |
-| `ecran-non-servi.spec.ts` | toute réflexion au-delà de l'écran servi est refusée (`ECRAN_NON_SERVI`), le poste la garde hors ligne puis affiche le refus au retour du réseau  |
-| `vote-jumele.spec.ts`     | deux navigateurs votent en même temps, le pupitre compte les deux ; la version publiée refuse tout pilotage de phase et toute révélation          |
-| `cadence-flux.spec.ts`    | deux onglets formateur reçoivent les mêmes `resultats`, au plus une fois par seconde, barème compris                                              |
-| `eviction.spec.ts`        | le poste évincé perd l'accès (`PARTICIPANT_INTROUVABLE`), sa place est reprise, ses réponses restent comptées au bilan                            |
-| `salle-chargee.spec.ts`   | 35 postes rejoignent depuis une seule adresse, le 36ᵉ est refusé (`SEANCE_COMPLETE`), le débit reste indexé sur le jeton                          |
-| `cloture.spec.ts`         | le pupitre mène la séance de l'ouverture à la clôture et la synthèse reflète ce que les postes ont répondu                                        |
+Le relevé (`coursReleve` dans `e2e/banc/contexte.ts`) ouvre une séance, projette le dernier écran
+et lit `GET /sessions/:id/sujet` avec le jeton d'un poste. C'est la seule surface qui rend les
+écrans de diffusion `seance` : le catalogue public les sert verrouillés, sans leurs questions. Le
+relevé en tire les questions à options, les votes et les réflexions, avec leur rang, leur
+identifiant d'activité et leurs identifiants d'option — jumelle comprise pour un vote à deux
+temps.
 
-## Ce que le banc ne couvre pas encore
+| Fichier                   | Ce qui est prouvé                                                                                                                                                                                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reprise.spec.ts`         | un poste répond, recharge, retrouve sa séance et son état serveur ; une seconde réponse est refusée (`REPONSE_DEJA_ENREGISTREE`) sans rien écrire                                                                                         |
+| `ecran-non-servi.spec.ts` | toute réflexion au-delà de l'écran servi est refusée (`ECRAN_NON_SERVI`), le poste la garde hors ligne puis affiche le refus au retour du réseau ; les rappels espacés suivent la même garde, et s'ouvrent dès que leur écran est projeté |
+| `vote-jumele.spec.ts`     | deux navigateurs votent en même temps et le pupitre compte les deux ; le pilotage mène `vote` → `discussion` → `revote` → `revele`, le poste bascule sur la jumelle au revote et reçoit son verdict à la révélation                       |
+| `cadence-flux.spec.ts`    | deux onglets formateur reçoivent les mêmes `resultats`, au plus une fois par seconde, barème compris                                                                                                                                      |
+| `eviction.spec.ts`        | le poste évincé perd l'accès (`PARTICIPANT_INTROUVABLE`), sa place est reprise, ses réponses restent comptées au bilan                                                                                                                    |
+| `salle-chargee.spec.ts`   | 35 postes rejoignent depuis une seule adresse, le 36ᵉ est refusé (`SEANCE_COMPLETE`), le débit reste indexé sur le jeton                                                                                                                  |
+| `cloture.spec.ts`         | le pupitre mène la séance de l'ouverture à la clôture et la synthèse reflète ce que les postes ont répondu                                                                                                                                |
 
-La version publiée est la **v2**. La V3 est insérée en base par la migration `InsertB2CoursV3`
-mais n'est pas publiée : ses briques (productions, énigmes, défis, jalons, rappels espacés, votes
-à question jumelle avec phases) n'existent donc dans aucune séance ouvrable par le banc.
+## Ce que le banc ne joue pas
 
-Restent pour une seconde passe, une fois la V3 publiée :
-
-- la bascule de publication v2 → v3 → v2 (AC-36) ;
-- le refus `ECRAN_NON_SERVI` sur les autres familles d'écriture (production, tentative, jalon,
-  rappel, défi) — en v2, seule la réponse libre porte la garde d'écran servi, le barème publié ne
-  rattachant aucune question à son rang d'écran ;
-- la chorégraphie `vote` → `discussion` → `revote` → `revele` et le refus `PHASE_FERMEE` ;
-- les agrégats `jalons` et `enigmes` du flux du pupitre, vides tant que le cours n'a pas ces
-  écrans.
-
-Les scénarios sont écrits pour accueillir cette passe sans refonte : les écrans sont trouvés par
-leur `renderer` dans le catalogue servi, et `seanceDemarreeSurLEcran` accepte déjà le corps
-d'ouverture d'une séance, `version` comprise.
+Le banc pilote un navigateur : il couvre les écrans où un poste choisit une option et les
+réflexions libres. Les briques de production longue — tableur, construction de tableau, classement
+de cartes, énigmes, exemples travaillés — sont jouées côté back, sur le même deck publié, par
+`test/formations-v3-classe.db-integration.spec.ts`, qui pilote les cinquante-deux écrans avec
+trente étudiants simultanés, de l'ouverture au rapport de clôture.
 
 ## Contraintes connues
 

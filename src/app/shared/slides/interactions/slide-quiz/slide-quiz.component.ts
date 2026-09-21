@@ -45,7 +45,15 @@ export class SlideQuizComponent implements OnInit {
   readonly selection = output<{ questionId: string; valeur: string; dureeMs: number }>();
 
   protected readonly quiz = signal<QuizInteraction | null>(null);
-  protected readonly activeQuiz = computed(() => this.questionData() ?? this.quiz());
+  protected readonly activeQuiz = computed(() => {
+    const quiz = this.questionData() ?? this.quiz();
+    if (quiz === null || this.mode() !== 'seance') {
+      return quiz;
+    }
+    const pourLePoste: QuizInteraction = { ...quiz };
+    delete pourLePoste.correctIndex;
+    return pourLePoste;
+  });
   protected readonly apercu = computed(
     () => this.mode() === 'apercu' && this.activeQuiz()?.correctIndex === undefined,
   );

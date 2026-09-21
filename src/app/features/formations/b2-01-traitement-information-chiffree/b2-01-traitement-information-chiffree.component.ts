@@ -31,7 +31,7 @@ interface PublicationDuCours {
 function publicationDe(cours: CoursCatalogue): PublicationDuCours | null {
   return Number.isFinite(cours.version) &&
     typeof cours.publieLe === 'string' &&
-    cours.publieLe !== ''
+    !Number.isNaN(Date.parse(cours.publieLe))
     ? { version: cours.version, publieLe: cours.publieLe }
     : null;
 }

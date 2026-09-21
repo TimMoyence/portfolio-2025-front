@@ -3,11 +3,10 @@ import type { APIRequestContext } from '@playwright/test';
 import {
   EN_TETE_JETON,
   URL_API,
-  ecransDuRenderer,
+  coursReleve,
   envoyerUneReponseLibre,
   identiteDuPoste,
   inscrireUnPoste,
-  lireLeCatalogue,
   rejoindreDansLeNavigateur,
   seanceDemarreeSurLEcran,
   seancePartagee,
@@ -17,14 +16,15 @@ import type { EcranDuCours, SeanceOuverte } from './contexte';
 
 const TEXTE_DE_REFLEXION = 'Mesure, unité, période et source avant toute conclusion.';
 
-const ECRANS_DU_COURS = 72;
-
 let reflexions: readonly EcranDuCours[];
+
+let ecransDuCours = 0;
 
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('ecran-non-servi', async () => {
-    reflexions = ecransDuRenderer(await lireLeCatalogue(request), 'reflection');
-    expect(reflexions.length).toBeGreaterThan(1);
+    const releve = await coursReleve(request);
+    reflexions = releve.reflexions;
+    ecransDuCours = releve.total;
     return seanceDemarreeSurLEcran(request, reflexions[0].rang);
   });
 }
@@ -53,7 +53,9 @@ test.describe('Banc — écran non servi', () => {
     }
   });
 
-  test('la version publiée ne sert aucun écran de rappel espacé', async ({ request }) => {
+  test('les rappels espacés restent fermés tant que leur écran n’est pas projeté', async ({
+    request,
+  }) => {
     const { seance } = await seanceDuFichier(request);
     const poste = await inscrireUnPoste(request, seance, 5);
 
@@ -62,10 +64,30 @@ test.describe('Banc — écran non servi', () => {
       { headers: { [EN_TETE_JETON]: poste.jeton } },
     );
 
-    expect(reponse.status()).toBe(404);
-    expect(((await reponse.json()) as { detail: string }).detail).toContain(
-      'Aucun écran de rappel espacé',
+    expect(reponse.status(), await reponse.text()).toBe(404);
+    expect(((await reponse.json()) as { code: string }).code).toBe('ECRAN_NON_SERVI');
+  });
+
+  test('les rappels espacés s’ouvrent dès que le formateur projette leur écran', async ({
+    request,
+  }) => {
+    const { seance, jeton } = await seanceDuFichier(request);
+    const poste = await inscrireUnPoste(request, seance, 7);
+    await servirLEcran(request, jeton, seance.sessionId, ecransDuCours - 1);
+
+    const reponse = await request.get(
+      `${URL_API}/formations/sessions/${seance.sessionId}/rappels`,
+      { headers: { [EN_TETE_JETON]: poste.jeton } },
     );
+
+    expect(reponse.status(), await reponse.text()).toBe(200);
+    const { questions } = (await reponse.json()) as {
+      questions: readonly { questionId: string; options: readonly unknown[] }[];
+    };
+    expect(questions.length).toBeGreaterThan(0);
+    for (const question of questions) {
+      expect(question.options.length).toBeGreaterThan(1);
+    }
   });
 
   test('le poste n’offre aucune navigation au-delà de l’écran servi', async ({ page, request }) => {
@@ -74,7 +96,7 @@ test.describe('Banc — écran non servi', () => {
     await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(6));
 
     await expect(page.getByTestId('etudiant-progression')).toHaveText(
-      `${reflexions[0].rang + 1} / ${ECRANS_DU_COURS}`,
+      `${reflexions[0].rang + 1} / ${ecransDuCours}`,
     );
     await expect(page.getByTestId('etudiant-suivant')).toHaveCount(0);
   });
@@ -100,7 +122,7 @@ test.describe('Banc — écran non servi', () => {
     await servirLEcran(request, jeton, seance.sessionId, 0);
     await page.context().setOffline(false);
 
-    await expect(page.getByTestId('slide-reflection-etat')).toHaveAttribute(
+    await expect(page.getByTestId('etudiant-reflexion-en-attente')).toHaveAttribute(
       'data-etat',
       'ecran_non_servi',
     );

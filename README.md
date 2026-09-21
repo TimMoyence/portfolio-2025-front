@@ -69,7 +69,7 @@ Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL`
 
 ### Médias du cours B2-01
 
-La capsule vidéo et les images du cours sont servies depuis `src/assets/cours/b2-01/v3/`. Elles ne sont pas téléchargées : elles sont produites par la chaîne versionnée dans [`outils/capsule-b2-01/`](./outils/capsule-b2-01/MANIFESTE.md) (page HTML rendue image par image, voix Piper, FFmpeg, dérivés WebP de Wikimedia Commons). `outils/capsule-b2-01/produire.sh` refait la chaîne depuis zéro et redonne les mêmes fichiers à l'octet ; `MANIFESTE.md` liste les livrables, leurs empreintes SHA-256, leurs sources, leurs licences et la recette (AC-22, AC-23). Le dossier n'embarque ni `node_modules`, ni environnement Python, ni modèle de voix : ils sont retéléchargés et vérifiés par empreinte.
+La capsule vidéo et les images du cours sont versionnées dans `src/assets/cours/b2-01/v3/` et servies comme le reste des assets. `medias.manifest.json`, servi à côté d'elles, porte pour chaque média son format, ses dimensions, sa source et sa licence ; `e2e/cours-medias.spec.ts` vérifie que chaque entrée du manifeste est réellement livrée et atteignable en SSR.
 
 ### Cours en séance
 
@@ -113,29 +113,24 @@ npm run ci:check
 
 ## Essais de bout en bout
 
-`playwright.config.ts` declare trois projets, volontairement disjoints :
+`playwright.config.ts` declare deux projets, volontairement disjoints :
 
-| Projet     | Contenu                         | Commande              | Ce qu'il sert                                                    |
-| ---------- | ------------------------------- | --------------------- | ---------------------------------------------------------------- |
-| `chromium` | `e2e/*.spec.ts`                 | `npm run test:e2e`    | parcours navigateur sur reponses HTTP bouchonnees, joue en CI    |
-| `visuel`   | `e2e/visual-regression.spec.ts` | `npm run test:visual` | instantanes visuels                                              |
-| `banc`     | `e2e/banc/*.spec.ts`            | `npm run test:banc`   | seance reelle : front SSR + API + PostgreSQL, sans aucun bouchon |
+| Projet     | Contenu              | Commande            | Ce qu'il sert                                                    |
+| ---------- | -------------------- | ------------------- | ---------------------------------------------------------------- |
+| `chromium` | `e2e/*.spec.ts`      | `npm run test:e2e`  | parcours navigateur sur reponses HTTP bouchonnees, joue en CI    |
+| `banc`     | `e2e/banc/*.spec.ts` | `npm run test:banc` | seance reelle : front SSR + API + PostgreSQL, sans aucun bouchon |
 
 `npm run test:e2e:portail` est la porte jouee par la CI : elle demarre les serveurs SSR `fr` et
-`en` puis rejoue le projet `chromium`, qui ignore les deux autres projets.
+`en` puis rejoue le projet `chromium`, qui ignore le banc.
 
-**Le projet `visuel` ne protege rien aujourd'hui** : `.gitignore` exclut
-`e2e/__screenshots__/visual-regression.spec.ts/`, donc aucune reference n'est versionnee. Lance
-comme il est, il cree ses instantanes au premier passage et reussit toujours. Le remettre sous une
-porte demande d'abord de versionner ses references, et de trancher la difference de rendu entre le
-macOS qui les produit et l'ubuntu de la CI — les instantanes des graphiques du cours, eux, sont
-versionnes et joues par `chromium`.
+Aucune suite ne compare d'instantane d'ecran : les assertions portent sur le DOM, les reponses
+HTTP et les evenements recus, pas sur des pixels.
 
 Le banc monte lui-meme sa pile, joue une seance du cours B2-01 dans de vrais navigateurs et
 redescend tout, y compris en cas d'echec. Il demande Docker et le depot back clone a cote du
-front. Il n'est pas joue par la CI : la decision, ce qu'il couvre et ce qui reste a couvrir sont
-dans [`docs/banc-seance.md`](./docs/banc-seance.md). Il se joue avant chaque deploiement qui
-touche le cours et avant toute bascule de version publiee.
+front. Il n'est pas joue par la CI : la decision et ce qu'il couvre sont dans
+[`docs/banc-seance.md`](./docs/banc-seance.md). Il se joue avant chaque deploiement qui touche le
+cours.
 
 ## Conduire une séance de cours
 
@@ -253,17 +248,17 @@ Flux a suivre a chaque ajout ou modification d'un texte marque `i18n="..."` ou
 
 `npm run ci:check` est la porte complete, dans l'ordre : `lint`, `format:check`, `typecheck`,
 `quality:dup`, `quality:dup:tests`, `quality:knip`, `test:guards`, `guard:cours-runtime`,
-`guard:medias-b2`, `guard:comments`, `test:ci`, `build`, `guard:cours-bundle`, `test:e2e:portail`.
+`guard:comments`, `test:ci`, `build`, `guard:cours-bundle`, `test:e2e:portail`.
 `npm run pre-push:check` est la meme chaine, terminee par `test:e2e:cours` (les seules suites du
 cours) au lieu du portail complet.
 
 Ce que chaque garde specifique tient :
 
-- `npm run quality:dup` et `quality:dup:tests` — duplication (jscpd) sur `src`, `scripts`, `outils`
-  puis sur les seules suites de `src`, cette derniere a seuil zero.
+- `npm run quality:dup` et `quality:dup:tests` — duplication (jscpd) sur `src` et `scripts`, puis
+  sur les seules suites de `src`, cette derniere a seuil zero.
 - `npm run quality:knip` — fichiers, exports et dependances morts.
 - `npm run test:guards` — `node --test` sur `scripts/**/*.test.mjs` : gardes d'outillage, moteur de
-  formules, catalogue de briques, synchronisation i18n (`guard-i18n-sync`), medias, banc.
+  formules, catalogue de briques, synchronisation i18n (`guard-i18n-sync`), banc.
 - `npm run guard:cours-runtime` — AD-2 : `src/cours/` n'importe aucun framework (Angular, RxJS,
   zone.js) et rien hors de `src/cours/` : c'est une couche feuille dont les briques sont des
   Custom Elements construits par le navigateur, hors du contexte d'injection d'Angular ; AD-4 : aucune
@@ -271,10 +266,8 @@ Ce que chaque garde specifique tient :
   l'étudiant, soit `src/cours/content/`, les fichiers « cours » de `src/app/`, le rendu partagé
   `src/app/shared/slides/**` et les pages `src/app/features/formations/b2-*`. Seul le pupitre
   (`src/app/features/cours/presentateur/`) nomme le corrigé, reçu au runtime.
-- `npm run guard:medias-b2` — les huit medias du cours B2-01 V3 sont presents, references et
-  conformes au manifeste de production.
-- `npm run guard:comments` — plafond a zero commentaire narratif dans `src/`, `e2e/`, `scripts/` et
-  `outils/` : seule une contrainte externe citee avec sa source passe.
+- `npm run guard:comments` — plafond a zero commentaire narratif dans `src/`, `e2e/` et
+  `scripts/` : seule une contrainte externe citee avec sa source passe.
 - `npm run guard:cours-bundle` — apres `npm run build`, aucune cle `misconception` suivie d'une
   valeur litterale dans `dist/`.
 

@@ -1838,11 +1838,19 @@
         </context-group>
         <note priority="1" from="meaning">cours.repriseIndisponible</note>
       </trans-unit>
+      <trans-unit id="coursReflexionEnAttente" datatype="html">
+        <source> Votre réflexion est gardée sur ce poste : elle partira dès que le formateur réaffichera l’écran. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
+          <context context-type="linenumber">425,428</context>
+        </context-group>
+        <note priority="1" from="meaning">cours.reflexionEnAttente</note>
+      </trans-unit>
       <trans-unit id="coursFileRefusee" datatype="html">
         <source> Ce poste n’a pas pu mettre votre réponse de côté : prévenez votre formateur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/etudiant/cours-etudiant.component.ts</context>
-          <context context-type="linenumber">425,428</context>
+          <context context-type="linenumber">436,439</context>
         </context-group>
         <note priority="1" from="meaning">cours.fileRefusee</note>
       </trans-unit>

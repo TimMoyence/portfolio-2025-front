@@ -58,7 +58,6 @@ const RACINE = `${environment.apiBaseUrl}/formations/sessions`;
 const URL_SEANCE = `${RACINE}/${SESSION_ID}`;
 
 const INSCRIPTION: InscriptionParticipant = {
-  studentKey: '11111111-1111-4111-8111-111111111111',
   prenom: 'Theo',
   nom: 'Martin',
   email: 'theo.martin@example.com',

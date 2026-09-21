@@ -2,18 +2,22 @@ import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
   URL_API,
-  ecransDuRenderer,
+  coursReleve,
   identiteDuPoste,
   inscrireUnPoste,
-  lireLeCatalogue,
+  lireLeSujet,
   lireLesResultats,
+  optionsDuPoste,
   posteDansSonNavigateur,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
   servirLEcran,
+  verdictDuPoste,
 } from './contexte';
 
 const CAPACITE = 35;
+
+const LIMITE_SUJET_PAR_PARTICIPANT = 20;
 
 const NAVIGATEURS = 3;
 
@@ -26,8 +30,8 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     browser,
     request,
   }) => {
-    const quiz = ecransDuRenderer(await lireLeCatalogue(request), 'quiz');
-    const { seance, jeton } = await seanceDemarreeSurLEcran(request, quiz[0].rang, {
+    const { votes } = await coursReleve(request);
+    const { seance, jeton } = await seanceDemarreeSurLEcran(request, votes[0].rang, {
       capacite: CAPACITE,
     });
 
@@ -36,7 +40,7 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
       pages.push(await posteDansSonNavigateur(browser, seance, PREMIER_RANG + rang));
     }
     for (const page of pages) {
-      await expect(page.locator('app-slide-quiz')).toBeVisible();
+      await expect(optionsDuPoste(page).first()).toBeVisible();
     }
 
     const postes = [];
@@ -54,11 +58,11 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
 
     const statuts: number[] = [];
     for (let tour = 0; tour < REPONSES_PAR_POSTE; tour += 1) {
-      await servirLEcran(request, jeton, seance.sessionId, quiz[tour].rang);
+      await servirLEcran(request, jeton, seance.sessionId, votes[tour].rang);
       for (const poste of postes) {
         const reponse = await repondreDepuisLePoste(request, seance, poste, {
-          questionId: quiz[tour].activiteId,
-          valeur: 'o1',
+          questionId: votes[tour].activiteId,
+          valeur: votes[tour].options[0],
         });
         statuts.push(reponse.status());
       }
@@ -66,9 +70,20 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     expect(statuts).toHaveLength((CAPACITE - NAVIGATEURS) * REPONSES_PAR_POSTE);
     expect(statuts.filter((statut) => statut !== 201)).toEqual([]);
 
+    const [bride, voisin] = postes;
+    const statutsDuBride: number[] = [];
+    for (let appel = 0; appel <= LIMITE_SUJET_PAR_PARTICIPANT; appel += 1) {
+      statutsDuBride.push((await lireLeSujet(request, seance, bride)).status());
+    }
+    expect(statutsDuBride.slice(0, LIMITE_SUJET_PAR_PARTICIPANT)).toEqual(
+      Array.from({ length: LIMITE_SUJET_PAR_PARTICIPANT }, () => 200),
+    );
+    expect(statutsDuBride[LIMITE_SUJET_PAR_PARTICIPANT]).toBe(429);
+    expect((await lireLeSujet(request, seance, voisin)).status()).toBe(200);
+
     for (const page of pages) {
-      await page.locator('app-slide-quiz button.slide-quiz__option').first().click();
-      await expect(page.getByTestId('etudiant-verdict')).toHaveCount(1);
+      await optionsDuPoste(page).first().click();
+      await expect(verdictDuPoste(page)).toHaveCount(1);
     }
 
     const bilan = (await lireLesResultats(request, jeton, seance.sessionId)) as unknown as {

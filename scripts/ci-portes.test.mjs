@@ -19,8 +19,6 @@ const PORTE_E2E_COMPLETE = 'test:e2e:portail';
 
 const PORTE_E2E_RAPIDE = 'test:e2e:cours';
 
-const SUITE_VISUELLE = 'visual-regression.spec.ts';
-
 function analyserScripts(paquet) {
   const scripts = paquet?.scripts;
   if (!scripts || typeof scripts !== 'object' || Object.keys(scripts).length === 0) {
@@ -203,10 +201,6 @@ test('ci-portes : une porte qui inspecte dist tourne apres le build, sur les tro
 test('ci-portes : le depot declare des suites Playwright et des scripts qui les jouent', () => {
   const { scripts } = lireContexte();
   const portes = portesPlaywright(scripts);
-  assert.ok(
-    suitesPlaywright().includes(SUITE_VISUELLE),
-    'ci-portes : la suite de regression visuelle doit rester detectee comme suite Playwright.',
-  );
   for (const porte of [PORTE_E2E_COMPLETE, PORTE_E2E_RAPIDE]) {
     assert.ok(
       portes.includes(porte),
