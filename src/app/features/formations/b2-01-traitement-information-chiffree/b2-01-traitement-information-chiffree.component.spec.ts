@@ -18,6 +18,8 @@ import {
   buildVisualQuizSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { buildAuthSession, buildAuthUser } from '../../../../testing/factories/auth.factory';
+import { AuthStateService } from '../../../core/services/auth-state.service';
 import { B2TraitementInformationChiffreeComponent } from './b2-01-traitement-information-chiffree.component';
 
 describe('B2TraitementInformationChiffreeComponent', () => {
@@ -221,5 +223,23 @@ describe('B2TraitementInformationChiffreeComponent', () => {
     );
     expect(lien?.getAttribute('href')).toBe('/cours/rejoindre');
     expect(lien?.textContent).toContain('Rejoindre une séance');
+  });
+
+  it('détecte le rôle formateur et ouvre le pupitre pour créer le code étudiant', () => {
+    TestBed.inject(AuthStateService).login(
+      buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }),
+    );
+    const fixture = TestBed.createComponent(B2TraitementInformationChiffreeComponent);
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const pupitre = element.querySelector<HTMLAnchorElement>('[data-testid="b2-ouvrir-pupitre"]');
+
+    expect(pupitre?.getAttribute('href')).toBe(
+      '/cours/presenter/b2-01-traitement-information-chiffree',
+    );
+    expect(pupitre?.textContent).toContain('Ouvrir le pupitre formateur');
+    expect(element.querySelector('[data-testid="b2-rejoindre-seance"]')).toBeNull();
+    expect(element.textContent).toContain('obtenir le code à donner à vos étudiants');
   });
 });

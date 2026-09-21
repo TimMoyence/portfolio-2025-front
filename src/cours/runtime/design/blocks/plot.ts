@@ -88,6 +88,24 @@ export const plot = `
   background: var(--fp-surface);
 }
 
+:where(.fp-root[data-render='stage']) .fp-plot__atelier {
+  width: min(100%, 72rem);
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-bordure);
+  border-radius: var(--fp-r-lg);
+  box-shadow: var(--fp-shadow-card);
+}
+
+:where(.fp-root[data-render='stage']) .fp-plot__graphique {
+  width: min(100%, 760px);
+  min-height: 0;
+  max-height: min(42vh, 26rem);
+  margin-inline: auto;
+}
+
 :where(.fp-root) .fp-plot__axe {
   stroke: var(--fp-ink-mute);
   stroke-width: 1.5;

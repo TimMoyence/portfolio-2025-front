@@ -98,6 +98,23 @@ export const story = `
   object-fit: contain;
 }
 
+:where(.fp-root[data-render='stage']) .fp-story__video {
+  width: min(100%, 72rem);
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  background: var(--fp-ink);
+  border-radius: var(--fp-r-lg);
+  box-shadow: var(--fp-shadow-card);
+}
+
+:where(.fp-root[data-render='stage']) .fp-story__video video {
+  width: min(100%, 860px);
+  min-height: 0;
+  max-height: min(52vh, 30rem);
+  margin-inline: auto;
+}
+
 :where(.fp-root) .fp-story__transcription {
   margin-inline: var(--fp-s-3);
   color: var(--fp-cream);
@@ -197,5 +214,32 @@ export const pro = `
   display: flex;
   flex-wrap: wrap;
   gap: var(--fp-s-2);
+}
+
+:where(.fp-root[data-render='stage']) .fp-pro__cas {
+  width: min(100%, 72rem);
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3.5vw, 3.5rem);
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-bordure);
+  border-radius: var(--fp-r-lg);
+  box-shadow: var(--fp-shadow-card);
+}
+
+:where(.fp-root[data-render='stage']) .fp-pro__metier {
+  justify-self: center;
+  text-align: center;
+}
+
+:where(.fp-root[data-render='stage']) .fp-pro__corps {
+  max-width: 62ch;
+  margin-inline: auto;
+}
+
+:where(.fp-root[data-render='stage']) .fp-pro__geste {
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+  border-left-width: 0.35rem;
+  background: var(--fp-ivory);
 }
 `;

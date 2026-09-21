@@ -5,6 +5,7 @@
       keyboard="true"
       pagination="true"
       [attr.initial-slide]="currentVisibleIndex()"
+      (swiperslidechange)="synchroniserDepuisSwiper($event)"
     >
       @for (slide of visibleSlides(); track slide.id()) {
         <swiper-slide>

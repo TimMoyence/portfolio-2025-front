@@ -218,6 +218,23 @@ export class SlideDeckComponent implements AfterViewInit {
     }
   }
 
+  protected synchroniserDepuisSwiper(event: Event): void {
+    const detail = (event as CustomEvent<readonly [{ readonly activeIndex?: unknown }]>).detail;
+    const index = detail?.[0]?.activeIndex;
+    if (typeof index !== 'number' || !Number.isInteger(index)) {
+      return;
+    }
+
+    const slides = this.visibleSlides();
+    if (index < 0 || index >= slides.length) {
+      return;
+    }
+    const slide = slides[index];
+    if (slide.id() !== this.service.current()) {
+      this.service.goTo(slide.id());
+    }
+  }
+
   async toggleFullscreen(): Promise<void> {
     if (!this.allowFullscreen() || !isPlatformBrowser(this.platformId)) {
       return;

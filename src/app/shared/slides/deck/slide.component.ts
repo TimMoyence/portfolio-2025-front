@@ -49,7 +49,7 @@ export type SlideVisibility = 'both' | 'scroll-only' | 'present-only';
       display: contents;
     }
     .slide {
-      min-height: 100vh;
+      min-height: var(--slide-min-height, 100vh);
       scroll-snap-align: start;
       scroll-snap-stop: always;
       scroll-margin-top: 6rem;

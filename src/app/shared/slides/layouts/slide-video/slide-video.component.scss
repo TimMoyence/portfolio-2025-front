@@ -11,7 +11,8 @@
 
 .slide-video__media {
   width: 100%;
-  max-width: 1200px;
+  max-width: 860px;
+  max-height: min(58vh, 520px);
   aspect-ratio: 16 / 9;
   border-radius: 1rem;
   overflow: hidden;

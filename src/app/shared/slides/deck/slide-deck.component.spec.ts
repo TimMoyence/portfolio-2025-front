@@ -116,6 +116,24 @@ describe('SlideDeckComponent', () => {
     expect(directSlides.length).toBe(3);
   });
 
+  it('synchronise le compteur avec la slide active de swiper', () => {
+    const service = TestBed.inject(SlideDeckService);
+    service.setMode('fullscreen');
+    fixture.detectChanges();
+
+    const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
+    swiper.dispatchEvent(
+      new CustomEvent('swiperslidechange', {
+        detail: [{ activeIndex: 1 }],
+      }),
+    );
+    fixture.detectChanges();
+
+    expect(service.current()).toBe('why');
+    const progress = deckEl.querySelector('.slide-deck-progress span') as HTMLElement;
+    expect(progress.textContent?.trim()).toBe('2 / 3');
+  });
+
   it('repasse en mode scroll quand fullscreenchange retourne au document normal', () => {
     const service = TestBed.inject(SlideDeckService);
     service.setMode('fullscreen');

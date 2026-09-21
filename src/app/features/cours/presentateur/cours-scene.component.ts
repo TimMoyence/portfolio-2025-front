@@ -46,7 +46,7 @@ const SEUIL_DE_PROJECTION = 5;
 
     .scene-shell {
       min-block-size: 100%;
-      padding: clamp(16px, 3vw, 40px);
+      padding: clamp(56px, 8vh, 96px) clamp(16px, 3vw, 40px) clamp(32px, 5vh, 64px);
     }
 
     .scene-toolbar {
@@ -111,6 +111,7 @@ const SEUIL_DE_PROJECTION = 5;
     .scene-canvas {
       max-inline-size: 1500px;
       margin-inline: auto;
+      padding-block-start: clamp(16px, 3vh, 40px);
     }
 
     app-slide-deck {
