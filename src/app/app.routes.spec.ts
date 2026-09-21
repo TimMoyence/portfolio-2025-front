@@ -3,6 +3,7 @@ import type { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from 
 import { buildAuthSession, buildAuthUser } from '../testing/factories/auth.factory';
 import { setupTestBed } from '../testing/setup-test-bed';
 import { authGuard } from './core/guards/auth.guard';
+import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { AuthStateService } from './core/services/auth-state.service';
 import { routes } from './app.routes';
 
@@ -106,6 +107,14 @@ describe('app routes', () => {
       expect(route?.redirectTo).toBe('formations');
       expect(route?.pathMatch).toBe('full');
       expect(route?.loadComponent).toBeUndefined();
+    });
+
+    it('fait choisir automatiquement l espace B2 selon le rôle', () => {
+      const route = routeDe('formations/b2-01-traitement-information-chiffree');
+
+      expect(route?.canActivate).toEqual([coursEntreeGuard]);
+      expect(route?.data?.['coursSlug']).toBe('b2-01-traitement-information-chiffree');
+      expect(route?.data?.['robots']).toBe('noindex, nofollow');
     });
 
     async function verifieReserveAUnFormateur(chemin: string, nomComposant: string): Promise<void> {
