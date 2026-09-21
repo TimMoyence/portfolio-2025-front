@@ -108,6 +108,105 @@ export async function authenticateUser(page: Page): Promise<void> {
   );
 }
 
+export const B2_SLUG = 'b2-01-traitement-information-chiffree';
+
+export const B2_ECRANS = 72;
+
+export const CLES_DE_CORRECTION: readonly string[] = ['correctIndex', 'explanation', 'notes'];
+
+interface EcranCatalogue {
+  readonly id: string;
+  readonly type: 'fp-story';
+  readonly duree: number;
+  readonly interactif: boolean;
+  readonly donnees: {
+    readonly recit: {
+      readonly id: string;
+      readonly presentation: {
+        readonly version: 2;
+        readonly screenId: string;
+        readonly renderer: string;
+        readonly props: Readonly<Record<string, unknown>>;
+      };
+    };
+  };
+}
+
+function identifiantB2(rang: number): string {
+  return `B2-01-S${String(rang).padStart(2, '0')}`;
+}
+
+function ecranB2(
+  rang: number,
+  renderer: string,
+  props: Readonly<Record<string, unknown>>,
+): EcranCatalogue {
+  const id = identifiantB2(rang);
+  return {
+    id,
+    type: 'fp-story',
+    duree: 3,
+    interactif: renderer === 'quiz',
+    donnees: { recit: { id, presentation: { version: 2, screenId: id, renderer, props } } },
+  };
+}
+
+export function ecranB2Recit(rang: number, titre = `Écran ${rang}`): EcranCatalogue {
+  return ecranB2(rang, 'hero', {
+    title: titre,
+    subtitle: 'Contrôler avant de décider',
+    bullets: ['Cours B2 servi par le serveur'],
+  });
+}
+
+export function ecranB2Graphique(
+  rang: number,
+  props: Readonly<Record<string, unknown>>,
+): EcranCatalogue {
+  return ecranB2(rang, 'chart', props);
+}
+
+export function ecranB2Quiz(
+  rang: number,
+  question: string,
+  options: string[],
+  correction: Readonly<Record<string, unknown>> = {},
+): EcranCatalogue {
+  return ecranB2(rang, 'quiz', {
+    questionData: { id: `b2-s${rang}-quiz`, type: 'quiz', question, options, ...correction },
+  });
+}
+
+export const B2_VERSION_PUBLIEE = 3;
+
+export const B2_PUBLIE_LE = '2026-09-15T09:30:00.000Z';
+
+export function coursB2Catalogue(ecrans: readonly EcranCatalogue[]) {
+  return {
+    id: B2_SLUG,
+    titre: 'Lire et contrôler l’information chiffrée',
+    niveau: 'B2',
+    duree: 210,
+    concepts: ['proportions', 'taux', 'evolutions'],
+    version: B2_VERSION_PUBLIEE,
+    publieLe: B2_PUBLIE_LE,
+    ecrans,
+  };
+}
+
+export async function servirCatalogueB2(
+  page: Page,
+  cours: ReturnType<typeof coursB2Catalogue>,
+): Promise<void> {
+  await page.route(`${API_BASE}/formations/catalogue/${B2_SLUG}`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(cours),
+    });
+  });
+}
+
 export async function mockWeatherRecordUsage(page: Page): Promise<void> {
   await page.route(`${API_BASE}/weather/preferences/record-usage`, async (route) => {
     await route.fulfill({

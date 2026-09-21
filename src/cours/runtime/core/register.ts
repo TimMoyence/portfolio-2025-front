@@ -7,7 +7,6 @@ export const BLOCS: ReadonlyArray<{
   { nom: 'fp-recall', charge: async () => (await import('../blocks/FpRecall')).FpRecall },
   { nom: 'fp-exit', charge: async () => (await import('../blocks/FpExit')).FpExit },
   { nom: 'fp-pulse', charge: async () => (await import('../blocks/FpPulse')).FpPulse },
-  { nom: 'fp-quiz', charge: async () => (await import('../blocks/FpQuiz')).FpQuiz },
   { nom: 'fp-challenge', charge: async () => (await import('../blocks/FpChallenge')).FpChallenge },
   { nom: 'fp-quote', charge: async () => (await import('../blocks/FpQuote')).FpQuote },
   { nom: 'fp-story', charge: async () => (await import('../blocks/FpStory')).FpStory },

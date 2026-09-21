@@ -24,17 +24,10 @@
       class="slide-deck-fullscreen"
       data-testid="slide-deck-fullscreen-toggle"
       (click)="toggleFullscreen()"
-      [attr.aria-label]="
-        service.mode() === 'fullscreen'
-          ? 'Quitter le mode présentation'
-          : 'Présenter en plein écran'
-      "
-      i18n-aria-label="@@slideDeckFullscreenToggle"
+      [attr.aria-label]="libellePlein()"
     >
       <span class="slide-deck-fullscreen__icon" aria-hidden="true">⛶</span>
-      <span class="slide-deck-fullscreen__label">
-        {{ service.mode() === 'fullscreen' ? 'Quitter' : 'Présenter' }}
-      </span>
+      <span class="slide-deck-fullscreen__label">{{ libelleCompact() }}</span>
     </button>
   }
 

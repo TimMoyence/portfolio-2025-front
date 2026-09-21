@@ -14,6 +14,39 @@ describe('queue', () => {
     expect(pending()).toEqual([]);
   });
 
+  it('ne rejoue pas sous le jeton courant les envois d un autre etudiant du meme poste', async () => {
+    enqueue(buildEnvoiReponse({ studentKey: 'cle-de-a', questionId: 'Q-A' }));
+    enqueue(buildEnvoiReponse({ studentKey: 'cle-de-b', questionId: 'Q-B' }));
+    const envoyes: string[] = [];
+
+    await flush((envoi) => {
+      envoyes.push(envoi.questionId);
+      return true;
+    }, 'cle-de-b');
+
+    expect(envoyes).toEqual(['Q-B']);
+    expect(pending().map((envoi) => envoi.questionId)).toEqual(['Q-A']);
+  });
+
+  it('retient sans les perdre les envois qu il ne rejoue pas', async () => {
+    enqueue(buildEnvoiReponse({ studentKey: 'cle-de-a', questionId: 'Q-A' }));
+    const envoyes: string[] = [];
+    const transmettre = (envoi: EnvoiReponse): boolean => {
+      envoyes.push(envoi.questionId);
+      return true;
+    };
+
+    await flush(transmettre, 'cle-de-b');
+
+    expect(envoyes).toEqual([]);
+    expect(pending().map((envoi) => envoi.questionId)).toEqual(['Q-A']);
+
+    await flush(transmettre, 'cle-de-a');
+
+    expect(envoyes).toEqual(['Q-A']);
+    expect(pending()).toEqual([]);
+  });
+
   it('ecrit une reponse mise en file dans localStorage avec un identifiant', () => {
     enqueue(buildEnvoiReponse());
     const brut = globalThis.localStorage.getItem(CLE);
@@ -26,6 +59,18 @@ describe('queue', () => {
     const relue = JSON.parse(globalThis.localStorage.getItem(CLE) ?? '[]') as EnvoiReponse[];
     expect(relue).toEqual([{ ...buildEnvoiReponse({ questionId: 'Q-1' }), id: 1 }]);
     expect(pending()).toEqual(relue);
+  });
+
+  it('garde la nature de chaque envoi et lit une entree ancienne comme une reponse', () => {
+    enqueue(buildEnvoiReponse({ nature: 'production', questionId: 'b2-01-a4-feuille-canaux' }));
+    enqueue(buildEnvoiReponse({ nature: 'jalon', questionId: 'b2-01-jalon-1', valeur: 'perdu' }));
+    const ancienne = { ...buildEnvoiReponse({ questionId: 'Q-ANCIENNE' }), id: 3 };
+    const stockee = JSON.parse(globalThis.localStorage.getItem(CLE) ?? '[]') as object[];
+    globalThis.localStorage.setItem(
+      CLE,
+      JSON.stringify([...stockee, { ...ancienne, nature: undefined }]),
+    );
+    expect(pending().map((envoi) => envoi.nature)).toEqual(['production', 'jalon', 'reponse']);
   });
 
   it('flush vide la file quand l envoi reussit', async () => {

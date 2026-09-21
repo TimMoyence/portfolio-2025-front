@@ -1,0 +1,28 @@
+@use './panneau' as panneau;
+
+:host {
+  display: block;
+}
+
+.panneau-reponses {
+  @include panneau.bloc;
+}
+
+.panneau-reponses__titre {
+  @include panneau.intitule;
+}
+
+.panneau-reponses__vide {
+  @include panneau.discret;
+}
+
+.panneau-reponses__liste {
+  @include panneau.liste;
+
+  li {
+    padding: 0.5rem 0.65rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.42);
+    line-height: 1.45;
+  }
+}

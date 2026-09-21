@@ -4,6 +4,20 @@ import { FormsModule } from '@angular/forms';
 import type { SebastianCategory, SebastianEntry } from '../../../core/models/sebastian.model';
 import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastian.port';
 
+const UNIT_LABELS = {
+  wine: $localize`:@@sebastianUnitWine:verre(s) de vin`,
+  champagne: $localize`:@@sebastianUnitChampagne:coupe(s) de champagne`,
+  alcohol: $localize`:@@sebastianUnitAlcohol:biere(s)`,
+  coffee: $localize`:@@sebastianUnitCoffee:tasse(s)`,
+} as const;
+
+function unitLabel(entry: SebastianEntry): string {
+  if (entry.drinkType === 'wine' || entry.drinkType === 'champagne') {
+    return UNIT_LABELS[entry.drinkType];
+  }
+  return entry.category === 'alcohol' ? UNIT_LABELS.alcohol : UNIT_LABELS.coffee;
+}
+
 @Component({
   selector: 'app-sebastian-history',
   standalone: true,
@@ -19,9 +33,9 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
           [ngModel]="filterCategory()"
           (ngModelChange)="onCategoryChange($event)"
         >
-          <option value="">Toutes les categories</option>
-          <option value="alcohol">Alcool</option>
-          <option value="coffee">Cafe</option>
+          <option value="" i18n="@@sebastianHistoryAllCategories">Toutes les categories</option>
+          <option value="alcohol" i18n="@@sebastianCategoryAlcohol">Alcool</option>
+          <option value="coffee" i18n="@@sebastianCategoryCoffee">Café</option>
         </select>
 
         <input
@@ -31,6 +45,7 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
           [ngModel]="filterFrom()"
           (ngModelChange)="onFromChange($event)"
           placeholder="Date debut"
+          i18n-placeholder="@@sebastianHistoryDateFrom"
         />
         <input
           data-testid="date-to"
@@ -39,6 +54,7 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
           [ngModel]="filterTo()"
           (ngModelChange)="onToChange($event)"
           placeholder="Date fin"
+          i18n-placeholder="@@sebastianHistoryDateTo"
         />
       </div>
 
@@ -61,15 +77,7 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
               <div>
                 <span class="font-medium text-white">
                   {{ entry.quantity }}
-                  {{
-                    entry.drinkType === 'wine'
-                      ? 'verre(s) de vin'
-                      : entry.drinkType === 'champagne'
-                        ? 'coupe(s) de champagne'
-                        : entry.category === 'alcohol'
-                          ? 'biere(s)'
-                          : 'tasse(s)'
-                  }}
+                  {{ unitLabel(entry) }}
                   @if (entry.alcoholDegree) {
                     {{ entry.alcoholDegree }}°
                   }
@@ -90,12 +98,17 @@ import { SEBASTIAN_PORT, type SebastianPort } from '../../../core/ports/sebastia
               type="button"
               class="rounded-lg px-2 py-1 text-sm text-red-400 transition-colors hover:bg-red-400/20"
               (click)="removeEntry(entry.id)"
+              i18n="@@sebastianDelete"
             >
               Supprimer
             </button>
           </div>
         } @empty {
-          <p data-testid="empty-state" class="text-center text-sm text-white/45">
+          <p
+            data-testid="empty-state"
+            class="text-center text-sm text-white/45"
+            i18n="@@sebastianHistoryEmpty"
+          >
             Aucune entree enregistree
           </p>
         }
@@ -114,6 +127,8 @@ export class SebastianHistoryComponent {
   readonly filterFrom = signal<string>('');
 
   readonly filterTo = signal<string>('');
+
+  protected readonly unitLabel = unitLabel;
 
   constructor() {
     this.loadEntries();

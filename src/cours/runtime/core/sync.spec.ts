@@ -1,112 +1,45 @@
 import type { ResultatsSeance } from '../../content/types';
-import type { Identity } from './identity';
-import { pending } from './queue';
-import { removeKey } from './storage';
+import { buildResumeBareme } from '../../../testing/factories/formations.factory';
+import type { FluxFactice } from '../../../testing/flux-sse';
+import { bloc, creerOuverture, laisserPasserLeFlux, vider } from '../../../testing/flux-sse';
 import {
   createSync,
   type EtatSession,
-  type OuvertureFlux,
+  type RaisonDeFin,
+  type ResultatsDuFlux,
   type StatutFlux,
   type Sync,
 } from './sync';
 
-const CLE_FILE = 'fp.file-reponses';
 const BASE = 'https://api.test';
 const SESSION = 's1';
 const JETON = 'jeton-participant';
 const ENTETE_JETON = 'x-participant-token';
 
-const ENCODEUR = new TextEncoder();
-
-interface FluxFactice {
-  url: string;
-  entetes: Record<string, string>;
-  envoyer(morceau: string): Promise<void>;
-  couper(): Promise<void>;
-}
-
-async function vider(): Promise<void> {
-  for (let tour = 0; tour < 200; tour += 1) {
-    await Promise.resolve();
-  }
-}
-
-async function laisserPasserLeFlux(): Promise<void> {
-  for (let tour = 0; tour < 5; tour += 1) {
-    await new Promise<void>((resoudre) => {
-      const canal = new MessageChannel();
-      canal.port1.onmessage = () => resoudre();
-      canal.port2.postMessage(null);
-    });
-    await vider();
-  }
-}
-
-function creerOuverture(flux: FluxFactice[]): OuvertureFlux {
-  return (url, entetes) => {
-    const enAttente: Array<{ morceau: string | null; servi: () => void }> = [];
-    let reclame: (() => void) | null = null;
-
-    const corps = new ReadableStream<Uint8Array>({
-      pull: async (controleur) => {
-        while (enAttente.length === 0) {
-          await new Promise<void>((resoudre) => {
-            reclame = resoudre;
-          });
-        }
-        const suivant = enAttente.shift();
-        if (!suivant) {
-          return;
-        }
-        if (suivant.morceau === null) {
-          controleur.close();
-        } else {
-          controleur.enqueue(ENCODEUR.encode(suivant.morceau));
-        }
-        suivant.servi();
-      },
-    });
-
-    const deposer = (morceau: string | null): Promise<void> =>
-      new Promise<void>((resoudre) => {
-        enAttente.push({ morceau, servi: resoudre });
-        reclame?.();
-        reclame = null;
-      });
-
-    flux.push({
-      url,
-      entetes,
-      envoyer: async (morceau) => {
-        await deposer(morceau);
-        await vider();
-      },
-      couper: async () => {
-        await deposer(null);
-        await vider();
-      },
-    });
-    return Promise.resolve(new Response(corps, { status: 200 }));
-  };
-}
-
-function bloc(nom: string, charge: unknown): string {
-  return `event: ${nom}\ndata: ${JSON.stringify(charge)}\n\n`;
-}
-
-const IDENTITE: Identity = {
-  studentKey: 'etu-1',
-  prenom: 'Theo',
-  nom: 'Martin',
-  email: 'theo@example.com',
-};
-
-const ETAT: EtatSession = {
+const ETAT_ANCIEN = {
   etat: 'en_cours',
   modeRythme: 'pilote',
   ecranCourant: 2,
   intervalleLibre: null,
   participants: 24,
+} satisfies Omit<EtatSession, 'revision' | 'pilotage'>;
+
+const ETAT: EtatSession = {
+  ...ETAT_ANCIEN,
+  revision: 7,
+  pilotage: {
+    'B2-01-A3-01-VOTE-HAUSSE-BAISSE': { phase: 'revote' },
+    'B2-01-A5-08-RECOMMANDATION': { revele: true },
+    'B2-01-A3-06-INDICE-ET-TAUX-MOYEN': { etayage: 2 },
+  },
+};
+
+const QUESTION_ANCIENNE = {
+  questionId: 'Q-2',
+  total: 8,
+  correctes: 5,
+  neSaitPas: 0,
+  confusions: [],
 };
 
 const JETON_PRESENTATEUR = 'jwt-presentateur';
@@ -116,13 +49,21 @@ const RESULTATS: ResultatsSeance = {
   questions: [
     {
       questionId: 'Q-1',
+      ecranId: 'E-1',
+      type: 'vote',
+      noteCompte: true,
       total: 10,
       correctes: 6,
       neSaitPas: 1,
       confusions: [{ id: 'c1', libelle: 'Confusion frequente', nombre: 3 }],
+      parOption: { a: 6, b: 3, __je_ne_sais_pas__: 1 },
+      scoreMoyen: null,
+      parCle: null,
     },
   ],
 };
+
+const EN_DIRECT_ABSENT = { jalons: {}, enigmes: [], bareme: null };
 
 describe('sync', () => {
   let sync: Sync;
@@ -149,7 +90,7 @@ describe('sync', () => {
     monter();
     const recus: EtatSession[] = [];
     sync.onState((etat) => recus.push(etat));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     if (flux.length === 0) {
       throw new Error('aucun flux ouvert : le double d ouverture n a pas ete appele');
@@ -162,7 +103,6 @@ describe('sync', () => {
   }
 
   beforeEach(() => {
-    removeKey(CLE_FILE);
     flux = [];
   });
 
@@ -172,7 +112,7 @@ describe('sync', () => {
 
   it('pose l en tete du jeton de participant sur l ouverture du flux', async () => {
     monter();
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     expect(flux.length).toBe(1);
     expect(flux[0].entetes[ENTETE_JETON]).toBe(JETON);
@@ -181,7 +121,7 @@ describe('sync', () => {
 
   it('n envoie aucun en tete de jeton quand aucun jeton n est fourni', async () => {
     monter('');
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     expect(flux[0].entetes[ENTETE_JETON]).toBeUndefined();
   });
@@ -242,7 +182,7 @@ describe('sync', () => {
     monter();
     const recus: EtatSession[] = [];
     const arreter = sync.onState((etat) => recus.push(etat));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     arreter();
     await flux[0].envoyer(bloc('etat', ETAT));
     expect(recus).toEqual([]);
@@ -260,7 +200,7 @@ describe('sync', () => {
           return Promise.reject(new Error('reseau'));
         },
       });
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
       expect(tentatives.nombre).toBe(1);
       for (const [indice, attendu] of [1000, 2000, 4000, 8000, 16000, 30000, 30000].entries()) {
@@ -280,7 +220,7 @@ describe('sync', () => {
     jasmine.clock().install();
     try {
       monter();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await flux[0].couper();
       expect(flux.length).toBe(1);
       sync.close();
@@ -296,7 +236,7 @@ describe('sync', () => {
     jasmine.clock().install();
     try {
       monter();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await flux[0].envoyer(bloc('fin', { motif: 'seance terminee' }));
       await flux[0].couper();
       jasmine.clock().tick(60000);
@@ -305,6 +245,45 @@ describe('sync', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('ne livre plus aucun etat servi dans le meme morceau que la fin', async () => {
+    monter();
+    const recus: EtatSession[] = [];
+    const raisons: (RaisonDeFin | null)[] = [];
+    sync.onState((etat) => recus.push(etat));
+    sync.onFin((raison) => raisons.push(raison));
+    sync.ouvrir();
+    await vider();
+    await flux[0].envoyer(
+      bloc('fin', { raison: 'cloturee' }) + bloc('etat', { ...ETAT, ecranCourant: 51 }),
+    );
+    await attendreJusqua(() => raisons.length > 0);
+
+    expect(raisons).toEqual(['cloturee']);
+    expect(recus).toEqual([]);
+  });
+
+  it('annonce la fin a ses ecouteurs avec sa raison, ou null si elle est inconnue', async () => {
+    monter();
+    const raisons: (RaisonDeFin | null)[] = [];
+    sync.onFin((raison) => raisons.push(raison));
+    sync.ouvrir();
+    await vider();
+    await flux[0].envoyer(bloc('fin', { raison: 'cloturee' }));
+    await attendreJusqua(() => raisons.length > 0);
+
+    expect(raisons).toEqual(['cloturee']);
+
+    monter();
+    const inconnues: (RaisonDeFin | null)[] = [];
+    sync.onFin((raison) => inconnues.push(raison));
+    sync.ouvrir();
+    await vider();
+    await flux[1].envoyer(bloc('fin', { raison: 'effondrement' }));
+    await attendreJusqua(() => inconnues.length > 0);
+
+    expect(inconnues).toEqual([null]);
   });
 
   it('close interrompt la requete fetch ouverte par defaut', () => {
@@ -316,7 +295,7 @@ describe('sync', () => {
     }) as typeof fetch;
     try {
       sync = createSync({ baseUrl: BASE, sessionId: SESSION, jeton: JETON });
-      sync.join(IDENTITE);
+      sync.ouvrir();
       expect(new Headers(capture.init?.headers).get(ENTETE_JETON)).toBe(JETON);
       sync.close();
       expect(capture.init?.signal?.aborted).toBe(true);
@@ -331,8 +310,7 @@ describe('sync', () => {
     try {
       expect(() => {
         sync = createSync({ baseUrl: BASE, sessionId: SESSION });
-        sync.join(IDENTITE);
-        sync.submit('Q-1', 'a', 1000);
+        sync.ouvrir();
         sync.onState(() => undefined);
         sync.close();
       }).not.toThrow();
@@ -345,55 +323,130 @@ describe('sync', () => {
     }
   });
 
-  it('met la reponse en file d attente apres join', () => {
-    monter();
-    sync.join(IDENTITE);
-    sync.submit('Q-1', 'b', 1500);
-    expect(pending()).toEqual([
-      {
-        id: jasmine.any(Number),
-        sessionId: SESSION,
-        studentKey: 'etu-1',
-        questionId: 'Q-1',
-        valeur: 'b',
-        dureeMs: 1500,
-        horodatage: jasmine.any(String),
-      },
-    ]);
-  });
-
-  it('refuse d envoyer une reponse avant d avoir rejoint la session', () => {
-    monter();
-    expect(() => sync.submit('Q-1', 'b', 1500)).toThrow();
-  });
-
-  it('refuse toujours d envoyer une reponse apres un ouvrir sans identite', () => {
-    monter();
-    sync.ouvrir();
-    expect(() => sync.submit('Q-1', 'b', 1500)).toThrow();
-  });
-
   it('notifie les ecouteurs de resultats sur un evenement resultats valide', async () => {
     monter();
     const recus: ResultatsSeance[] = [];
     sync.onResultats((resultats) => recus.push(resultats));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => recus.length > 0);
-    expect(recus).toEqual([RESULTATS]);
+    expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
   });
 
   it('ignore un evenement resultats malforme', async () => {
     monter();
     const recus: ResultatsSeance[] = [];
     sync.onResultats((resultats) => recus.push(resultats));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     await flux[0].envoyer(bloc('resultats', { participants: 'douze' }));
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => recus.length > 0);
-    expect(recus).toEqual([RESULTATS]);
+    expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
+  });
+
+  it('transmet les jalons, les enigmes et le bareme des resultats en direct', async () => {
+    monter();
+    const recus: ResultatsDuFlux[] = [];
+    sync.onResultats((resultats) => recus.push(resultats));
+    sync.ouvrir();
+    await vider();
+    const enDirect = {
+      ...RESULTATS,
+      jalons: { 'b2-01-jalon-1': { perdu: 2, 'ca-va': 5, clair: 4, total: 11 } },
+      enigmes: [
+        {
+          parcoursId: 'b2-01-coffre',
+          enigmeId: 'enigme-1',
+          ouvertes: 11,
+          resolues: 7,
+          tentativesMoyennes: 2.5,
+          epuisees: 1,
+        },
+      ],
+      bareme: buildResumeBareme(),
+    };
+    await flux[0].envoyer(bloc('resultats', { ...enDirect, jalons: { x: { perdu: 'deux' } } }));
+    await flux[0].envoyer(bloc('resultats', enDirect));
+    await attendreJusqua(() => recus.length > 0);
+    expect(recus).toEqual([enDirect]);
+  });
+
+  describe('forme du flux servie par un serveur v2 ou v3 (F20)', () => {
+    async function collecterResultats(charges: readonly unknown[]): Promise<ResultatsSeance[]> {
+      monter();
+      const recus: ResultatsSeance[] = [];
+      sync.onResultats((resultats) => recus.push(resultats));
+      sync.ouvrir();
+      await vider();
+      for (const charge of charges) {
+        await flux[0].envoyer(bloc('resultats', charge));
+      }
+      await attendreJusqua(() => recus.length > 0);
+      return recus;
+    }
+
+    it('complete un etat de l ancienne forme par une revision nulle et un pilotage vide', async () => {
+      const recus = await collecter([bloc('etat', ETAT_ANCIEN)]);
+
+      expect(recus).toEqual([{ ...ETAT_ANCIEN, revision: 0, pilotage: {} }]);
+    });
+
+    it('transmet la revision et le pilotage d un etat de la forme finale', async () => {
+      const recus = await collecter([bloc('etat', ETAT)]);
+
+      expect(recus).toEqual([ETAT]);
+    });
+
+    it('ignore un etat dont la revision ou le pilotage est malforme', async () => {
+      const recus = await collecter([
+        bloc('etat', { ...ETAT, revision: 'sept' }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-01': { phase: 'fin' } } }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-06': { etayage: -1 } } }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A5-08': { revele: 'oui' } } }),
+        bloc('etat', ETAT),
+      ]);
+
+      expect(recus).toEqual([ETAT]);
+    });
+
+    it('complete une question de resultats de l ancienne forme sans toucher ses comptes', async () => {
+      const recus = await collecterResultats([
+        { participants: 12, questions: [QUESTION_ANCIENNE] },
+      ]);
+
+      expect(recus).toEqual([
+        {
+          ...EN_DIRECT_ABSENT,
+          participants: 12,
+          questions: [
+            {
+              ...QUESTION_ANCIENNE,
+              ecranId: '',
+              type: 'vote',
+              noteCompte: true,
+              parOption: null,
+              scoreMoyen: null,
+              parCle: null,
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('ignore des resultats dont un champ de la forme finale est malforme', async () => {
+      const [question] = RESULTATS.questions;
+      const recus = await collecterResultats([
+        { ...RESULTATS, questions: [{ ...question, type: 'graphique' }] },
+        { ...RESULTATS, questions: [{ ...question, parOption: { a: 'six' } }] },
+        { ...RESULTATS, questions: [{ ...question, parCle: { E3: { total: 2 } } }] },
+        { ...RESULTATS, questions: [{ ...question, scoreMoyen: '0,7' }] },
+        RESULTATS,
+      ]);
+
+      expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
+    });
   });
 
   it('un evenement resultats n atteint pas onState', async () => {
@@ -402,7 +455,7 @@ describe('sync', () => {
     const resultats: ResultatsSeance[] = [];
     sync.onState((etat) => etats.push(etat));
     sync.onResultats((recu) => resultats.push(recu));
-    sync.join(IDENTITE);
+    sync.ouvrir();
     await vider();
     await flux[0].envoyer(bloc('resultats', RESULTATS));
     await attendreJusqua(() => resultats.length > 0);
@@ -430,7 +483,7 @@ describe('sync', () => {
       monter();
       suivreLesStatuts();
 
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
 
       expect(statuts).toEqual([{ etat: 'connecte' }]);
@@ -439,7 +492,7 @@ describe('sync', () => {
     it('annonce la reconnexion quand le flux se coupe, puis la connexion retrouvee', async () => {
       monter();
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
 
       await flux[0].couper();
@@ -454,7 +507,52 @@ describe('sync', () => {
       expect(statuts.at(-1)).toEqual({ etat: 'connecte' });
     });
 
-    for (const statut of [401, 403, 429]) {
+    for (const statut of [401, 403]) {
+      it(`cesse de rouvrir le flux apres un refus ${statut}, qu aucune relance ne resoudra`, async () => {
+        const tentatives = { nombre: 0 };
+        sync = createSync({
+          baseUrl: BASE,
+          sessionId: SESSION,
+          chemin: 'stream',
+          ouvrirFlux: () => {
+            tentatives.nombre += 1;
+            return Promise.resolve(new Response(null, { status: statut }));
+          },
+        });
+        suivreLesStatuts();
+
+        sync.ouvrir();
+        await vider();
+        jasmine.clock().tick(60_000);
+        await vider();
+
+        expect(tentatives.nombre).toBe(1);
+        expect(statuts).toEqual([{ etat: 'refuse', statut }]);
+      });
+
+      it(`rouvre le flux apres un refus ${statut} si le poste le redemande lui-meme`, async () => {
+        const tentatives = { nombre: 0 };
+        sync = createSync({
+          baseUrl: BASE,
+          sessionId: SESSION,
+          chemin: 'stream',
+          ouvrirFlux: () => {
+            tentatives.nombre += 1;
+            return Promise.resolve(new Response(null, { status: statut }));
+          },
+        });
+        suivreLesStatuts();
+
+        sync.ouvrir();
+        await vider();
+        sync.ouvrir();
+        await vider();
+
+        expect(tentatives.nombre).toBe(2);
+      });
+    }
+
+    for (const statut of [429, 500, 503]) {
       it(`annonce un refus ${statut} a chaque essai sans le masquer par une reconnexion`, async () => {
         const tentatives = { nombre: 0 };
         sync = createSync({
@@ -486,7 +584,7 @@ describe('sync', () => {
       const etats: EtatSession[] = [];
       sync.onState((etat) => etats.push(etat));
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await flux[0].envoyer(bloc('etat', ETAT));
       await laisserPasserLeFlux();
 
@@ -512,7 +610,7 @@ describe('sync', () => {
     it('garde ouvert un flux dont les battements arrivent, puis le relance quand ils cessent', async () => {
       monter();
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await laisserPasserLeFlux();
 
       for (let battement = 0; battement < 6; battement += 1) {
@@ -544,7 +642,7 @@ describe('sync', () => {
       try {
         sync = createSync({ baseUrl: BASE, sessionId: SESSION, jeton: JETON });
         suivreLesStatuts();
-        sync.join(IDENTITE);
+        sync.ouvrir();
 
         jasmine.clock().tick(SILENCE_MAX_MS);
         await vider();
@@ -563,7 +661,7 @@ describe('sync', () => {
     it('n annonce rien et ne relance pas apres une fermeture volontaire', async () => {
       monter();
       suivreLesStatuts();
-      sync.join(IDENTITE);
+      sync.ouvrir();
       await vider();
 
       sync.close();
@@ -573,14 +671,5 @@ describe('sync', () => {
       expect(statuts).toEqual([{ etat: 'connecte' }]);
       expect(flux.length).toBe(1);
     });
-  });
-
-  it('submit repercute l echec quand la file d attente est pleine', () => {
-    monter();
-    sync.join(IDENTITE);
-    for (let indice = 0; indice < 200; indice += 1) {
-      sync.submit(`Q-${indice}`, 'a', 100);
-    }
-    expect(() => sync.submit('Q-200', 'a', 100)).toThrow();
   });
 });

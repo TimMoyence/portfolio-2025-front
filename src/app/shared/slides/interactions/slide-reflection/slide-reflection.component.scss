@@ -67,10 +67,31 @@
   }
 }
 
+.slide-reflection__apercu {
+  margin: 0;
+  color: var(--text-muted, var(--slide-text-muted));
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .slide-reflection__saved {
+  min-height: 1.5rem;
+  margin: 0;
   text-align: center;
   color: #0f7b65;
   font-weight: 500;
+
+  &[data-etat='attente_reseau'],
+  &[data-etat='envoi'] {
+    color: var(--text-muted, var(--slide-text-muted));
+  }
+
+  &[data-etat='echec'],
+  &[data-etat='seance_non_demarree'],
+  &[data-etat='seance_terminee'] {
+    color: #b3261e;
+  }
 }
 
 .slide-reflection__debrief {

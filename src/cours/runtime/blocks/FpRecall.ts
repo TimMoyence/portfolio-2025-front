@@ -2,10 +2,7 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-
-export interface RecallOption extends OptionPublique {
-  readonly misconception: string | null;
-}
+import { estObjet, estVerdictDeReponse, type VerdictDeReponse } from './retours';
 
 export interface RecallQuestionPublique {
   readonly id: string;
@@ -14,28 +11,35 @@ export interface RecallQuestionPublique {
   readonly metadonnees: MetadonneesBrique;
 }
 
-export interface RecallQuestion extends RecallQuestionPublique {
-  readonly options: readonly RecallOption[];
-}
-
 const DELAI_RAPPEL_MS = 8000;
 const PAS_MS = 1000;
+const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 
 export class FpRecall extends FpBlock {
   private interne: RecallQuestionPublique | null = null;
   private interneDelaiMs = DELAI_RAPPEL_MS;
+  private interneVerdict: VerdictDeReponse | null = null;
   private rappel = '';
   private message = '';
-  private repondu = false;
+  private envoye = false;
   private minuteur: ReturnType<typeof setInterval> | null = null;
 
   set question(valeur: RecallQuestionPublique | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : this.projeter(valeur);
+    this.interne =
+      valeur === null
+        ? null
+        : {
+            id: valeur.id,
+            enonce: valeur.enonce,
+            options: projeterOptions(valeur.options),
+            metadonnees: projeterMetadonnees(valeur.metadonnees),
+          };
     if (change) {
       this.rappel = '';
       this.message = '';
-      this.repondu = false;
+      this.envoye = false;
+      this.interneVerdict = null;
     }
     this.ouvrirLeRappel();
     this.refreshSiConnecte();
@@ -46,12 +50,30 @@ export class FpRecall extends FpBlock {
   }
 
   set delaiMs(valeur: number) {
-    this.interneDelaiMs = valeur;
+    this.interneDelaiMs = Number.isFinite(valeur) && valeur >= 0 ? valeur : DELAI_RAPPEL_MS;
     this.refreshSiConnecte();
   }
 
   get delaiMs(): number {
     return this.interneDelaiMs;
+  }
+
+  set verdict(valeur: VerdictDeReponse | null) {
+    this.interneVerdict =
+      estVerdictDeReponse(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
+    this.refreshSiConnecte();
+  }
+
+  get verdict(): VerdictDeReponse | null {
+    return this.interneVerdict;
+  }
+
+  set brouillon(valeur: unknown) {
+    if (estObjet(valeur) && typeof valeur['rappel'] === 'string' && !this.envoye) {
+      this.rappel = valeur['rappel'];
+      this.noterBrouillonRepris();
+      this.refreshSiConnecte();
+    }
   }
 
   override connectedCallback(): void {
@@ -76,6 +98,8 @@ export class FpRecall extends FpBlock {
         ${this.compteur()}
         ${this.optionsVisibles()}
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+        ${this.verdictDeReponse(this.interneVerdict)}
+        ${this.annonces()}
       </fieldset>
     `;
   }
@@ -98,8 +122,7 @@ export class FpRecall extends FpBlock {
       <div class="fp-carte fp-recall__billet">
         <p class="fp-enonce">${escapeHtml(question.enonce)}</p>
         <p class="fp-recall__concepts" data-testid="concepts">${escapeHtml(metadonnees.concepts.join(' · '))}</p>
-        <p class="fp-badge" data-testid="modalite">${escapeHtml(metadonnees.modalite)}</p>
-        <p class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</p>
+        <p class="fp-reperes">${this.reperes(metadonnees)}</p>
       </div>
     `;
   }
@@ -110,24 +133,23 @@ export class FpRecall extends FpBlock {
       return;
     }
     this.planifier();
+    const verrouille = this.verrouille();
     const champ = racine.querySelector<HTMLTextAreaElement>('[data-testid="rappel"]');
-    champ?.addEventListener('input', () => {
-      this.rappel = champ.value;
-    });
+    if (champ !== null) {
+      champ.disabled = verrouille;
+      champ.addEventListener('input', () => {
+        this.rappel = champ.value;
+        this.signalerBrouillon(this.interne?.id ?? '', { rappel: champ.value });
+      });
+    }
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.disabled = this.repondu;
+      bouton.disabled = verrouille;
       bouton.addEventListener('click', () => this.choisir(bouton.dataset['option'] ?? ''));
     }
   }
 
-  private projeter(source: RecallQuestionPublique): RecallQuestionPublique {
-    return {
-      id: source.id,
-      enonce: source.enonce,
-      options:
-        this.roleActuel() === 'presentateur' ? source.options : projeterOptions(source.options),
-      metadonnees: projeterMetadonnees(source.metadonnees),
-    };
+  private verrouille(): boolean {
+    return this.verrouilleApresEnvoi(this.envoye, this.interneVerdict !== null);
   }
 
   private ouvrirLeRappel(): void {
@@ -155,7 +177,11 @@ export class FpRecall extends FpBlock {
     if (question === null || this.restantMs() > 0) {
       return escapeHtml('');
     }
-    const boutons = this.ordonnerSelonLaGraine(question.options).map(
+    const options = [
+      ...question.options,
+      { id: ID_JE_NE_SAIS_PAS, libelle: this.texte('je-ne-sais-pas') },
+    ];
+    const boutons = options.map(
       (option) =>
         safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );
@@ -189,11 +215,11 @@ export class FpRecall extends FpBlock {
   }
 
   private choisir(valeur: string): void {
-    if (this.repondu || this.restantMs() > 0) {
+    if (this.verrouille() || this.restantMs() > 0) {
       return;
     }
-    this.repondu = true;
-    this.message = this.texte('reponse-enregistree');
+    this.envoye = true;
+    this.message = this.messageApresEnvoi();
     this.emit('fp-recall-submit', {
       questionId: this.question?.id,
       valeur,

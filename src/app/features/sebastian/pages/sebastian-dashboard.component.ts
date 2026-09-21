@@ -30,6 +30,7 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
             <a
               routerLink="../objectifs"
               class="inline-block rounded-full bg-gold px-6 py-2 font-semibold text-[#1a1206] transition-colors hover:bg-gold-soft"
+              i18n="@@sebastianDashboardSetGoal"
             >
               Definir un objectif
             </a>
@@ -40,6 +41,7 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
             <a
               routerLink="../objectifs"
               class="mt-2 whitespace-nowrap rounded-full border border-[rgba(230,170,70,0.14)] px-4 py-2 text-sm text-white/55 transition-colors hover:border-[rgba(230,170,70,0.35)] hover:text-white"
+              i18n="@@sebastianDashboardEditGoals"
             >
               Modifier les objectifs
             </a>
@@ -49,7 +51,9 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
 
       @if (bacResult(); as bac) {
         <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
-          <h3 class="mb-3 font-display text-2xl text-white">Taux d'alcoolemie</h3>
+          <h3 class="mb-3 font-display text-2xl text-white" i18n="@@sebastianDashboardBac">
+            Taux d'alcoolemie
+          </h3>
           <div class="mb-3 flex items-center gap-4">
             <span
               class="font-display text-4xl leading-none"
@@ -64,7 +68,7 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
               {{ bac.currentBac.toFixed(2) }} g/L
             </span>
             @if (bac.estimatedSoberAt) {
-              <span class="text-sm text-white/55">
+              <span class="text-sm text-white/55" i18n="@@sebastianDashboardSoberAt">
                 Sobriete estimee : {{ formatTime(bac.estimatedSoberAt) }}
               </span>
             }
@@ -77,20 +81,28 @@ import { SebastianTrendChartComponent } from '../components/sebastian-trend-char
 
       <div class="grid gap-6 md:grid-cols-2">
         <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
-          <h3 class="mb-3 font-display text-2xl text-white">7 derniers jours</h3>
+          <h3 class="mb-3 font-display text-2xl text-white" i18n="@@sebastianDashboardLast7Days">
+            7 derniers jours
+          </h3>
           @if (trends7d()) {
             <app-sebastian-trend-chart [data]="trends7d()!" />
           }
         </section>
         <section class="rounded-[20px] border border-[rgba(230,170,70,0.14)] bg-white/[0.04] p-6">
-          <h3 class="mb-3 font-display text-2xl text-white">30 derniers jours</h3>
+          <h3 class="mb-3 font-display text-2xl text-white" i18n="@@sebastianDashboardLast30Days">
+            30 derniers jours
+          </h3>
           @if (trends30d()) {
             <app-sebastian-trend-chart [data]="trends30d()!" />
           }
           @if (trends30d()) {
             <div class="mt-3 flex justify-between text-sm text-white/55">
-              <span class="font-mono">Moy. alcool : {{ trends30d()!.summary.avgAlcohol }}/j</span>
-              <span class="font-mono">Moy. cafe : {{ trends30d()!.summary.avgCoffee }}/j</span>
+              <span class="font-mono" i18n="@@sebastianDashboardAvgAlcohol"
+                >Moy. alcool : {{ trends30d()!.summary.avgAlcohol }}/j</span
+              >
+              <span class="font-mono" i18n="@@sebastianDashboardAvgCoffee"
+                >Moy. cafe : {{ trends30d()!.summary.avgCoffee }}/j</span
+              >
             </div>
           }
         </section>

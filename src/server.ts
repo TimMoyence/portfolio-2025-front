@@ -6,17 +6,18 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
 import type { SeoMetadataFile } from './app/core/seo/seo-metadata.model';
+import { COURS_SERVIS_PAR_L_API, lecteurDePublicationsDeCours } from './server/cours-publication';
 import { isClientOnlyRoute, loadCsrShell } from './server/csr-shell';
 import { registerPermanentRedirects } from './server/redirects';
 import {
   buildLlmsFullTxt,
   buildLlmsTxt,
   buildRobotsTxt,
-  buildSitemapXml,
   type DynamicArticleSitemapEntry,
 } from './server/seo-builders';
 import { buildSecurityHeaders } from './server/security-headers';
 import { injectSeoHead, isKnownRoute } from './server/seo-injector';
+import { routeDuSitemap } from './server/sitemap-route';
 import {
   ALLOWED_HOSTS,
   LOCALE_BARE_PATH,
@@ -149,19 +150,22 @@ const loadArticleSitemap = async (): Promise<DynamicArticleSitemapEntry[]> => {
   return entries;
 };
 
-app.get('/sitemap.xml', async (req, res) => {
-  const metadata = loadSeoMetadata();
-  if (!metadata) {
-    res.status(404).type('text/plain').send('Sitemap not available');
-    return;
-  }
-
-  const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-  const xml = buildSitemapXml(metadata, baseUrl, await loadArticleSitemap());
-  res.setHeader('Content-Type', 'application/xml');
-  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-  res.send(xml);
+const loadCoursPublications = lecteurDePublicationsDeCours({
+  apiBaseUrl: process.env['PORTFOLIO_ARTICLE_API_URL'],
+  slugs: COURS_SERVIS_PAR_L_API,
+  fetch: (url, init) => fetch(url, init),
+  journal: console,
 });
+
+app.get(
+  '/sitemap.xml',
+  routeDuSitemap({
+    lireMetadata: loadSeoMetadata,
+    lireArticles: loadArticleSitemap,
+    lirePublicationsDeCours: loadCoursPublications,
+    baseUrlDe: buildBaseUrlFromRequest,
+  }),
+);
 
 app.get('/robots.txt', (req, res) => {
   const metadata = loadSeoMetadata();

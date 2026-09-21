@@ -70,6 +70,16 @@ describe('SebastianHistoryComponent', () => {
     expect(categoryFilter).toBeTruthy();
   });
 
+  it('propose le filtre Café avec son accent (H4)', () => {
+    const options = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll(
+        "[data-testid='category-filter'] option",
+      ),
+    ).map((option) => option.textContent?.trim());
+
+    expect(options).toContain('Café');
+  });
+
   it('devrait filtrer par categorie', () => {
     portStub.getEntries.calls.reset();
     portStub.getEntries.and.returnValue(

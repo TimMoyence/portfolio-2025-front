@@ -6,8 +6,8 @@ const SESSION = '11111111-1111-4111-8111-111111111111';
 const PARTICIPANT = '22222222-2222-4222-8222-222222222222';
 const JETON = 'participant-token';
 const CODE = '4821';
+const REPONSE_LENTE_MS = 4000;
 const IDENTITE = {
-  studentKey: '33333333-3333-4333-8333-333333333333',
   prenom: 'Lea',
   nom: 'Dubois',
   email: 'lea.dubois@example.com',
@@ -115,7 +115,7 @@ async function installerApiEtudiant(
     }
     if (url.pathname.endsWith(`/sessions/${SESSION}/sujet`) && requete.method() === 'GET') {
       if (options.sujetLent) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, REPONSE_LENTE_MS));
       }
       await repondre(route, SUJET);
       return;
@@ -176,7 +176,8 @@ test.describe('Séance de cours dans un navigateur réel', () => {
 
     await page.evaluate(() => window.dispatchEvent(new Event('online')));
     await expect(page.getByTestId('etudiant-hors-ligne')).toBeHidden();
-    await expect(page.getByTestId('etudiant-verdict')).toBeVisible();
+    await expect(page.locator('fp-vote [data-testid="verdict"]')).toBeVisible();
+    await expect(page.locator('fp-vote [data-testid="option"]').first()).toBeDisabled();
     expect(api.reponses()).toBe(1);
   });
 

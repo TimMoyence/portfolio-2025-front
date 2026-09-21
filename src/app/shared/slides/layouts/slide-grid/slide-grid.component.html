@@ -5,6 +5,17 @@
   @if (subtitle()) {
     <p class="slide-grid__subtitle">{{ subtitle() }}</p>
   }
+  @if (imprimable()) {
+    <button
+      type="button"
+      class="slide-grid__imprimer"
+      data-testid="slide-grid-imprimer"
+      (click)="imprimer()"
+      i18n="@@slideGridImprimer"
+    >
+      Imprimer ou enregistrer en PDF
+    </button>
+  }
   <div class="slide-grid__grid" [class.is-five]="items().length === 5">
     @for (item of items(); track item.title) {
       @if (item.href) {
@@ -22,11 +33,7 @@
           class="slide-grid__card slide-grid__card--flip"
           [class.is-flipped]="isFlipped(item.title)"
           [attr.aria-pressed]="isFlipped(item.title)"
-          [attr.aria-label]="
-            isFlipped(item.title)
-              ? 'Revenir à ' + item.title
-              : 'Afficher le détail de ' + item.title
-          "
+          [attr.aria-label]="libelleBascule(item.title)"
           (click)="toggle(item.title)"
         >
           <span class="slide-grid__face slide-grid__face--front">

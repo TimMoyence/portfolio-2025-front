@@ -35,7 +35,7 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
 - `/growth-audit` — Audit SEO automatise
-- `/atelier`, `/atelier/meteo`, `/atelier/sebastian` — Redirections permanentes vers `/projets`
+- `/atelier`, `/atelier/meteo`, `/atelier/sebastian`, `/client-project` — Redirections permanentes vers `/projets`
 
 ### Auth
 
@@ -53,7 +53,7 @@ Apps reelles non indexables, en rendu client (`RenderMode.Client`).
 - `/atelier/meteo/app` — App meteo (`authGuard` + `roleGuard("weather")`)
 - `/atelier/sebastian/app` — App Sebastian (`authGuard` + `roleGuard("sebastian")`) avec sous-routes : `dashboard`, `rapports`, `badges`, `historique`, `objectifs`
 
-Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend public (`.../api/v1/portfolio25`). Sans cette variable, il reste statique et ne publie aucune URL inventee.
+Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend public (`.../api/v1/portfolio25`). Sans cette variable, il reste statique et ne publie aucune URL inventee. Le `lastmod` des autres pages suit le dernier commit front qui les touche (`npm run seo:lastmod`) ; pour un cours servi par l'API, comme le B2, la même variable sert à lire `publieLe` sur `/formations/catalogue/:slug` et le sitemap publie la plus récente des deux dates, avec un avertissement journalisé à chaque repli : voir [`docs/seo-lastmod.md`](./docs/seo-lastmod.md).
 
 ### Formations
 
@@ -65,15 +65,20 @@ Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL`
 - `/formations/automatiser-avec-ia/toolkit` — Toolkit Automatiser avec l'IA
 - `/formations/audit-seo-diy` — Formation Audit SEO DIY (slides)
 - `/formations/audit-seo-diy/toolkit` — Toolkit Audit SEO DIY
+- `/formations/b2-01-traitement-information-chiffree` — Cours B2-01 (72 écrans servis par le back via `/formations/catalogue/:slug`), rendu serveur à la demande (`RenderMode.Server`) pour refléter le contenu publié au moment de la visite. Hors séance, les quiz et réflexions sont en aperçu : rien n'est envoyé, le résultat n'est donné qu'en séance. La page propose « Rejoindre une séance » vers `/cours/rejoindre` ; la carte de `/formations` y mène.
+
+### Médias du cours B2-01
+
+La capsule vidéo et les images du cours sont versionnées dans `src/assets/cours/b2-01/v3/` et servies comme le reste des assets. `medias.manifest.json`, servi à côté d'elles, porte pour chaque média son format, ses dimensions, sa source et sa licence ; `e2e/cours-medias.spec.ts` vérifie que chaque entrée du manifeste est réellement livrée et atteignable en SSR.
 
 ### Cours en séance
 
 Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`). Le cours est servi par le back (`/formations/sessions/...`) : le front ne porte ni corrigé ni barème.
 
 - `/cours/rejoindre` — Vue étudiant, sans compte : code de séance, identité, puis écrans du sujet tiré pour l'étudiant (rendu main).
-- `/cours/presenter/:slug` — Pupitre du formateur (`authGuard` + `roleGuard("teacher")`) : ouverture de la séance du cours `:slug`, code à dicter, commandes, notes, résultats par question face au seuil, clôture.
+- `/cours/presenter/:slug` — Pupitre du formateur (`authGuard` + `roleGuard("teacher")`) : ouverture de la séance du cours `:slug`, code à dicter, statistiques de séance et règle de notation, commandes, notes, résultats par question face au seuil, panneau pédagogique (guide, lecture de la classe, réponses libres, groupes, annotations, export du bilan), clôture.
 - `/cours/presenter/:slug?seance=:sessionId` — Reprise du pupitre d'une séance déjà ouverte : aucune nouvelle ouverture ; le code, les résultats, le déroulé et l'écran courant sont relus. Le pupitre inscrit lui-même `?seance=` dans l'URL dès l'ouverture.
-- `/cours/presenter/:slug/scene/:sessionId` — Scène pour le vidéoprojecteur (`authGuard` + `roleGuard("teacher")`) : écran courant en rendu `stage`, sans notes ni résultats, hors de la coquille du site (`data.coquille = false` : ni barre de navigation, ni pied de page, ni bandeau cookies).
+- `/cours/presenter/:slug/scene/:sessionId` — Scène pour le vidéoprojecteur (`authGuard` + `roleGuard("teacher")`) : écran courant en rendu `stage`, sans notes ni corrigé ; un quiz y affiche seulement le nombre de réponses reçues sur le nombre de participants, sans options cliquables. Hors de la coquille du site (`data.coquille = false` : ni barre de navigation, ni pied de page, ni bandeau cookies).
 - `/cours/seance/:sessionId/synthese` — Synthèse de la séance close (`authGuard`).
 - `/cours/demo` — Ancienne URL de banc d’essai, redirigée vers `/formations` ; les briques sont
   testées directement par leurs tests de composant.
@@ -106,19 +111,45 @@ npm run build
 npm run ci:check
 ```
 
+## Essais de bout en bout
+
+`playwright.config.ts` declare deux projets, volontairement disjoints :
+
+| Projet     | Contenu              | Commande            | Ce qu'il sert                                                    |
+| ---------- | -------------------- | ------------------- | ---------------------------------------------------------------- |
+| `chromium` | `e2e/*.spec.ts`      | `npm run test:e2e`  | parcours navigateur sur reponses HTTP bouchonnees, joue en CI    |
+| `banc`     | `e2e/banc/*.spec.ts` | `npm run test:banc` | seance reelle : front SSR + API + PostgreSQL, sans aucun bouchon |
+
+`npm run test:e2e:portail` est la porte jouee par la CI : elle demarre les serveurs SSR `fr` et
+`en` puis rejoue le projet `chromium`, qui ignore le banc.
+
+Aucune suite ne compare d'instantane d'ecran : les assertions portent sur le DOM, les reponses
+HTTP et les evenements recus, pas sur des pixels.
+
+Le banc monte lui-meme sa pile, joue une seance du cours B2-01 dans de vrais navigateurs et
+redescend tout, y compris en cas d'echec. Il demande Docker et le depot back clone a cote du
+front. Il n'est pas joue par la CI : la decision et ce qu'il couvre sont dans
+[`docs/banc-seance.md`](./docs/banc-seance.md). Il se joue avant chaque deploiement qui touche le
+cours.
+
 ## Conduire une séance de cours
 
 Matériel : un portable pour le pupitre, un écran étendu (vidéoprojecteur) pour la scène, les téléphones des étudiants. Un seul navigateur sur le portable pour le pupitre et la scène.
 
 1. **Connexion** : se connecter sur `/login` avec le compte formateur (rôle `teacher`), puis ouvrir `/cours/presenter/<slug>` (par exemple `b2-01-traitement-information-chiffree`). Le jeton d'accès (15 min) se renouvelle seul pendant toute la séance, par un seul appel au serveur par rotation quel que soit le nombre de fenêtres ouvertes : sous un verrou inter-onglets, chaque fenêtre relit le jeton stocké et adopte sans appel réseau celui qu'une autre fenêtre vient d'obtenir. Le serveur limite ce renouvellement à 60 appels par heure et conserve une fenêtre de grâce de 60 secondes pour une réponse perdue sur le réseau ; au-delà (429), la fenêtre réessaie après le délai `Retry-After` sans effacer la session.
 2. **Ouverture** : « Ouvrir la séance ». Le code à quatre chiffres s'affiche en grand et l'URL prend `?seance=<id>`. Ne plus cliquer sur « Ouvrir » pour cette classe : une seconde ouverture créerait une autre séance avec un autre code.
-3. **Scène** : « Ouvrir la scène », glisser la fenêtre sur l'écran étendu et la passer en plein écran (F11). Une pastille discrète dans un coin indique l'état du suivi (vert : en direct ; orange : reconnexion ; rouge : refus).
+3. **Scène** : « Ouvrir la projection », glisser la fenêtre sur l'écran étendu et la passer en plein écran (« Projection plein écran » ou F11). Une pastille discrète dans un coin indique l'état du suivi (vert : en direct ; orange : reconnexion ; rouge : refus).
 4. **Inscription de la classe** : dicter le code ; les étudiants ouvrent `/cours/rejoindre` et saisissent code, prénom, nom et adresse e-mail. Tant que la séance n'est pas démarrée, ou tant que le téléphone n'a reçu aucun état de la séance, il affiche un message d'attente et aucune question n'est répondable.
 5. **Contrôle de l'effectif** : comparer le compteur « Participants » du pupitre à l'effectif présent. Un écart signale une inscription en trop : clôturer et rouvrir une séance avant de démarrer.
 6. **« Démarrer la séance »** : obligatoire avant la première question, rappel d'ouverture compris ; avant ce clic, le serveur refuse toute réponse.
 7. **Pilotage** : « Écran suivant » / « Écran précédent », rythme libre ou piloté, lecture des résultats par question (réponses reçues, bonnes réponses, « je ne sais pas », seuil, confusions) et « Aller à la remédiation » sous le seuil. Le bandeau de statut du pupitre dit si le suivi est en direct, en reconnexion ou refusé (401/403 : recharger le pupitre et se reconnecter si la page de connexion s'affiche ; 429 : fermer les onglets en trop).
-8. **Clôture** : « Clôturer la séance », puis confirmer. Les réponses ne sont plus acceptées.
-9. **Synthèse** : le pupitre ouvre `/cours/seance/<id>/synthese` (classement, résultats par question, confusions fréquentes, export CSV).
+8. **Statistiques et notation** : sous le code, le pupitre affiche la moyenne, la médiane, la dispersion (écart-type), la participation, la réussite et les questions problématiques (par leur énoncé), puis la règle de notation servie par le serveur, en une phrase : note de participation relative à la cohorte, seuil de signalement, prise en compte du « je ne sais pas », valeur d'une non-réponse, réponses libres notées ou non, seuil d'une question problématique. En reprise, elles sont relues du rapport de séance.
+9. **Panneau pédagogique** (à côté de l'écran courant) : guide de facilitation de l'écran (à dire, question à poser, réponse attendue masquée tant qu'elle n'est pas révélée, calcul, relance, transition) ; lecture de la classe (taux de réussite, réponses reçues, confiance du diagnostic) ; réponses libres des étudiants à l'écran courant ; groupes de suivi (créer, renommer, affecter chaque participant) ; annotation du formateur pour l'écran, pour la classe entière ou un groupe, enregistrée sur le serveur au fil de la saisie. « Exporter le bilan » télécharge le rapport de séance en JSON (`bilan-seance-<id>.json`).
+10. **Réponses libres** : sur un écran de réflexion, l'étudiant rédige puis « Garder cette réflexion » ; sans réseau, la réflexion reste sur l'appareil et part au retour de la connexion. La scène indique seulement que chacun répond sur son appareil.
+11. **Clôture** : « Clôturer la séance », puis confirmer. Les réponses ne sont plus acceptées.
+12. **Synthèse** : le pupitre ouvre `/cours/seance/<id>/synthese` (classement, résultats par question, confusions fréquentes, export CSV).
+
+Hors séance (page publique `/formations/b2-01-traitement-information-chiffree`), les quiz et réflexions s'affichent en aperçu : le choix n'est pas envoyé, la réflexion n'est ni envoyée ni conservée, et aucun résultat n'est donné.
 
 Incidents :
 
@@ -133,9 +164,9 @@ Apres `npm ci`, Husky installe automatiquement trois hooks :
 
 - `pre-commit` : lance `lint-staged` pour formatter et lint uniquement les fichiers indexes ;
 - `commit-msg` : impose un message au format Conventional Commit ;
-- `pre-push` : lance `npm run pre-push:check` (lint + format:check + typecheck + test:ci, sans build) pour bloquer un push sale.
+- `pre-push` : lance `npm run pre-push:check`, qui rejoue toute la porte qualite (voir plus bas) et se termine par `npm run test:e2e:cours` la ou la CI joue `npm run test:e2e:portail`.
 
-Ces hooks ne remplacent pas la CI, ils evitent surtout d'introduire une regression evidente dans l'historique local.
+Ces hooks ne remplacent pas la CI, mais `pre-push:check` en couvre l'essentiel : un push sale est bloque avant d'atteindre GitHub.
 
 ## Internationalisation (i18n)
 
@@ -179,16 +210,33 @@ Flux a suivre a chaque ajout ou modification d'un texte marque `i18n="..."` ou
      avant `:`/`;`/`?`) a l'usage anglais standard.
    - Retirer un `trans-unit` de `messages.xlf` (id disparu du code source) doit
      retirer l'`unit` correspondante de `messages.en.xlf`.
+   - Un `trans-unit` dont le texte francais a change garde son id : reporter la
+     nouvelle `<source>` dans l'`unit` anglaise **et** retraduire la `<target>`.
+     Angular n'associe traduction et texte que par l'id, il servirait sinon
+     l'ancienne phrase en anglais sans aucun avertissement.
 
-3. Verifier qu'il ne reste aucun avertissement de traduction manquante :
+3. Verifier la synchronisation des deux fichiers :
+
+   ```bash
+   npm run test:guards
+   ```
+
+   La garde `scripts/guard-i18n-sync.test.mjs` compare `messages.xlf` et
+   `messages.en.xlf` (placeholders ramenes a leur nom, entites et espaces
+   normalises) et echoue sur trois ecarts : un id extrait sans `unit` anglaise ou
+   sans `<target>`, une `unit` anglaise dont la `<source>` n'est plus le texte
+   francais actuel (traduction perimee), une `unit` anglaise dont l'id n'est plus
+   extrait. Elle lit les fichiers commites : lancer `npm run extract-i18n` avant.
+
+4. Verifier qu'il ne reste aucun avertissement au build :
 
    ```bash
    npm run build
    ```
 
-   Inspecter la sortie : `0` occurrence de `No translation found` doit apparaitre
-   pour la locale `en`. Un id present dans `messages.xlf` sans `unit` correspondante
-   (ou dont le `<target>` est absent) declenche cet avertissement au build.
+   Inspecter la sortie : `0` occurrence de `No translation found` pour la locale
+   `en`, et `0` avertissement `Duplicate messages with id`. Un meme id `@@…` ne
+   peut porter qu'un seul texte ; deux textes identiques peuvent le partager.
 
 ## Gouvernance depot
 
@@ -198,13 +246,32 @@ Flux a suivre a chaque ajout ou modification d'un texte marque `i18n="..."` ou
 
 ## Garde-fous qualite
 
-Chaque lot de changement coherent doit idealement valider :
+`npm run ci:check` est la porte complete, dans l'ordre : `lint`, `format:check`, `typecheck`,
+`quality:dup`, `quality:dup:tests`, `quality:knip`, `test:guards`, `guard:cours-runtime`,
+`guard:comments`, `test:ci`, `build`, `guard:cours-bundle`, `test:e2e:portail`.
+`npm run pre-push:check` est la meme chaine, terminee par `test:e2e:cours` (les seules suites du
+cours) au lieu du portail complet.
 
-- `npm run lint`
-- `npm run format:check`
-- `npm run typecheck`
-- `npm run test:ci`
-- `npm run build`
+Ce que chaque garde specifique tient :
+
+- `npm run quality:dup` et `quality:dup:tests` — duplication (jscpd) sur `src` et `scripts`, puis
+  sur les seules suites de `src`, cette derniere a seuil zero.
+- `npm run quality:knip` — fichiers, exports et dependances morts.
+- `npm run test:guards` — `node --test` sur `scripts/**/*.test.mjs` : gardes d'outillage, moteur de
+  formules, catalogue de briques, synchronisation i18n (`guard-i18n-sync`), banc.
+- `npm run guard:cours-runtime` — AD-2 : `src/cours/` n'importe aucun framework (Angular, RxJS,
+  zone.js) et rien hors de `src/cours/` : c'est une couche feuille dont les briques sont des
+  Custom Elements construits par le navigateur, hors du contexte d'injection d'Angular ; AD-4 : aucune
+  donnée de correction (bonne réponse, misconception, barème…) dans la surface compilée pour
+  l'étudiant, soit `src/cours/content/`, les fichiers « cours » de `src/app/`, le rendu partagé
+  `src/app/shared/slides/**` et les pages `src/app/features/formations/b2-*`. Seul le pupitre
+  (`src/app/features/cours/presentateur/`) nomme le corrigé, reçu au runtime.
+- `npm run guard:comments` — plafond a zero commentaire narratif dans `src/`, `e2e/` et
+  `scripts/` : seule une contrainte externe citee avec sa source passe.
+- `npm run guard:cours-bundle` — apres `npm run build`, aucune cle `misconception` suivie d'une
+  valeur litterale dans `dist/`.
+
+`npm run test:banc` s'ajoute a cette porte hors CI, avant un deploiement qui touche le cours.
 
 ## Standards de contribution
 
@@ -218,6 +285,7 @@ Chaque lot de changement coherent doit idealement valider :
 ## Documentation
 
 - [Guide de contribution](./CONTRIBUTING.md)
+- [Banc d'essai reel d'une seance](./docs/banc-seance.md)
 - [Standards d'ingenierie](./docs/engineering-standards.md)
 - [Gouvernance du depot](./docs/repository-governance.md)
 - [ADR](./docs/adr/README.md)

@@ -242,4 +242,9 @@ export const escape = `
   border-radius: var(--fp-r-sm);
   color: var(--fp-en-attente);
 }
+
+:where(.fp-root) .fp-escape__restantes {
+  color: var(--fp-ink-mute);
+  font-variant-numeric: tabular-nums;
+}
 `;

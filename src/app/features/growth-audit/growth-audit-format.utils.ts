@@ -107,7 +107,7 @@ export function formatProgressStep(event: {
   step?: string | null;
   details?: Record<string, unknown>;
 }): string {
-  const base = event.step ?? 'Audit en cours...';
+  const base = event.step ?? $localize`:@@auditProgressDefaultStep:Audit en cours...`;
   if (/\(\d+\/\d+\)/.test(base)) {
     return base;
   }

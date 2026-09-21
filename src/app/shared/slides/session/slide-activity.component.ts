@@ -2,6 +2,7 @@ import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   effect,
@@ -12,134 +13,43 @@ import {
   output,
   Renderer2,
   signal,
+  untracked,
   viewChild,
-  computed,
 } from '@angular/core';
+import type { CorrigeEcranPresentateur } from '../../../../cours/content/types';
 import type {
   EcranContent,
   RenderMode,
   ResultatsSeance,
   Role,
 } from '../../../../cours/content/types';
-import { aUnePresentation, SlideVisualComponent } from '../visual/slide-visual.component';
+import { texte } from '../../../../cours/runtime/core/i18n';
+import type { Brouillons } from '../../../../cours/runtime/core/storage';
+import type { SyntheseConcept } from '../../../core/ports/formations.port';
+import { aUnePresentation } from '../visual/presentation-v2';
+import { SlideVisualComponent } from '../visual/slide-visual.component';
+import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
+import { evenementsDe } from './evenements-brique';
+import {
+  ECRAN_VERROUILLE,
+  enteteDeQuestionnaire,
+  identifiantsDuMontage,
+  type Montage,
+  planDeMontage,
+  PROPRIETES_PAR_BRIQUE,
+} from './lecture-ecran';
+import { memeValeur, type MontageIdentifie, posesDeReinjection } from './reinjection';
 
-export interface ReponseSlide {
+type DonneesFormateur = CorrigeEcranPresentateur | null;
+
+interface MontageActif extends MontageIdentifie {
+  readonly element: HTMLElement;
+}
+
+interface ReponseVisuelle {
   readonly questionId: string;
-  readonly valeur: number | string;
+  readonly valeur: string;
   readonly dureeMs: number;
-  readonly type?: 'libre' | 'qcm';
-}
-
-type Donnees = Readonly<Record<string, unknown>>;
-
-interface Montage {
-  readonly brique: string;
-  readonly donnees: Donnees;
-}
-
-const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> = {
-  'fp-quote': ['citation'],
-  'fp-story': ['recit'],
-  'fp-pro': ['cas'],
-  'fp-worked': ['exemple', 'etayage'],
-  'fp-concept4': ['definition'],
-  'fp-plot': ['definition'],
-  'fp-challenge': ['probleme'],
-  'fp-cardsort': ['plan'],
-  'fp-numeric': ['question'],
-  'fp-vote': ['question'],
-  'fp-recall': ['question'],
-  'fp-exit': ['billet'],
-  'fp-quiz': ['question'],
-};
-
-const PORTEUR_DE_REPONSE: Readonly<Record<string, string>> = {
-  'fp-numeric': 'question',
-  'fp-vote': 'question',
-  'fp-recall': 'question',
-  'fp-exit': 'billet',
-  'fp-quiz': 'question',
-};
-
-const QUESTIONNAIRE = 'questionnaire';
-
-function estObjet(value: unknown): value is Donnees {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function lireMontage(brique: unknown, donnees: unknown): Montage | null {
-  if (typeof brique !== 'string' || !Object.hasOwn(PROPRIETES_PAR_BRIQUE, brique)) {
-    return null;
-  }
-  return { brique, donnees: estObjet(donnees) ? donnees : {} };
-}
-
-function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
-  if (ecran.type !== QUESTIONNAIRE) {
-    const montage = lireMontage(ecran.type, ecran.donnees);
-    return montage === null ? null : [montage];
-  }
-  const questions = ecran.donnees?.['questions'];
-  if (!Array.isArray(questions) || questions.length === 0) {
-    return null;
-  }
-  const montages = questions.map((question) => {
-    if (!estObjet(question)) {
-      return null;
-    }
-    return lireMontage(question['brique'], question['donnees']);
-  });
-  return montages.every((montage): montage is Montage => montage !== null) ? montages : null;
-}
-
-function estValeur(value: unknown): value is number | string {
-  return typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value));
-}
-
-function lireReponse(detail: unknown): ReponseSlide | null {
-  if (!estObjet(detail)) {
-    return null;
-  }
-  const questionId = detail['questionId'] ?? detail['billetId'];
-  const valeur = detail['valeur'];
-  const dureeMs = detail['dureeMs'];
-  if (
-    typeof questionId !== 'string' ||
-    questionId === '' ||
-    !estValeur(valeur) ||
-    typeof dureeMs !== 'number' ||
-    !Number.isInteger(dureeMs) ||
-    dureeMs < 0
-  ) {
-    return null;
-  }
-  return { questionId, valeur, dureeMs };
-}
-
-export interface QuestionDeLEcran {
-  readonly id: string;
-  readonly enonce: string;
-}
-
-function questionsDuMontage(montage: Montage): readonly QuestionDeLEcran[] {
-  const propriete = PORTEUR_DE_REPONSE[montage.brique] ?? '';
-  if (propriete === '') {
-    return [];
-  }
-  const question = montage.donnees[propriete];
-  if (!estObjet(question) || typeof question['id'] !== 'string') {
-    return [];
-  }
-  const enonce = question['enonce'];
-  return [{ id: question['id'], enonce: typeof enonce === 'string' ? enonce : '' }];
-}
-
-export function questionsDeLEcran(ecran: EcranContent): readonly QuestionDeLEcran[] {
-  return (planDeMontage(ecran) ?? []).flatMap(questionsDuMontage);
-}
-
-export function identifiantsDesQuestions(ecran: EcranContent): readonly string[] {
-  return questionsDeLEcran(ecran).map((question) => question.id);
 }
 
 @Component({
@@ -149,33 +59,71 @@ export function identifiantsDesQuestions(ecran: EcranContent): readonly string[]
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    @if (entete(); as questionnaire) {
+      <header class="slide-activity__entete" data-testid="slide-activity-entete">
+        <h2 class="slide-activity__intitule">{{ questionnaire.intitule }}</h2>
+        <p class="slide-activity__consigne">{{ questionnaire.consigne }}</p>
+      </header>
+    }
+    @if (verrouille()) {
+      <div class="slide-activity__verrouille" data-testid="slide-activity-verrouille">
+        @if (slide().titre; as titre) {
+          <p class="slide-activity__titre">{{ titre }}</p>
+        }
+        <p class="slide-activity__mention">
+          <span>{{ slide().duree }} {{ libelleMinutes }}</span> ·
+          <span>{{ libelleVerrouille }}</span>
+        </p>
+      </div>
+    }
     <div
       #host
       class="slide-activity__blocks"
-      [hidden]="visual()"
+      [hidden]="visual() || verrouille()"
       data-testid="slide-activity-host"
-      (fp-numeric-submit)="relay($event)"
-      (fp-vote-submit)="relay($event)"
-      (fp-recall-submit)="relay($event)"
-      (fp-exit-submit)="relay($event)"
-      (fp-quiz-submit)="relay($event)"
+      (fp-numeric-submit)="relayer($event)"
+      (fp-vote-submit)="relayer($event)"
+      (fp-recall-submit)="relayer($event)"
+      (fp-exit-submit)="relayer($event)"
+      (fp-spaced-reponse)="relayer($event)"
+      (fp-sheet-submit)="relayer($event)"
+      (fp-table-build-submit)="relayer($event)"
+      (fp-cardsort-submit)="relayer($event)"
+      (fp-escape-tentative)="relayer($event)"
+      (fp-pulse-change)="relayer($event)"
+      (fp-challenge-submit)="relayer($event)"
+      (fp-worked-submit)="relayer($event)"
+      (fp-brouillon)="memoriser($event)"
       (fp-block-error)="showError()"
     ></div>
     @if (visual()) {
       <app-slide-visual
         [slide]="slide()"
-        [sessionId]="sessionId()"
+        [sessionId]="apercu() ? null : sessionId()"
         [jeton]="jeton()"
-        (reponse)="reponse.emit($event)"
+        [role]="role()"
+        [resultats]="resultats()"
+        [prioritaire]="prioritaire()"
+        (reponse)="relayerVisuel($event)"
       />
     }
     @if (unknown()) {
-      <p class="slide-activity__message" role="alert" data-testid="slide-activity-unknown">
+      <p
+        class="slide-activity__message"
+        role="alert"
+        data-testid="slide-activity-unknown"
+        i18n="cours.ecranInconnu|@@coursEcranInconnu"
+      >
         Cet écran ne peut pas être affiché : son contenu n’est pas reconnu.
       </p>
     }
     @if (error()) {
-      <p class="slide-activity__message" role="alert" data-testid="slide-activity-error">
+      <p
+        class="slide-activity__message"
+        role="alert"
+        data-testid="slide-activity-error"
+        i18n="cours.ecranEchec|@@coursEcranEchec"
+      >
         Les activités de cet écran n’ont pas pu être chargées.
       </p>
     }
@@ -190,6 +138,28 @@ export function identifiantsDesQuestions(ecran: EcranContent): readonly string[]
       display: grid;
       gap: 1rem;
       width: 100%;
+    }
+
+    .slide-activity__entete,
+    .slide-activity__verrouille {
+      display: grid;
+      gap: 0.4rem;
+      max-width: 72ch;
+      margin: 0 auto 1rem;
+    }
+
+    .slide-activity__intitule,
+    .slide-activity__titre {
+      margin: 0;
+      font-family: var(--font-display, Georgia, serif);
+      font-size: 1.5rem;
+      color: var(--ink, #0c0902);
+    }
+
+    .slide-activity__consigne,
+    .slide-activity__mention {
+      margin: 0;
+      color: var(--text-muted, #6d665b);
     }
 
     .slide-activity__message {
@@ -207,8 +177,20 @@ export class SlideActivityComponent {
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly sessionId = input<string | null>(null);
   readonly jeton = input<string>('');
-  readonly reponse = output<ReponseSlide>();
+  readonly retours = input<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
+  readonly direct = input<DirectEcran | null>(null);
+  readonly donneesFormateur = input<DonneesFormateur>(null);
+  readonly maitrise = input<readonly SyntheseConcept[] | null>(null);
+  readonly brouillons = input<Brouillons | null>(null);
+  readonly apercu = input(false);
+  readonly prioritaire = input(false);
+  readonly evenement = output<EvenementBrique>();
+
   protected readonly visual = computed(() => aUnePresentation(this.slide()));
+  protected readonly verrouille = computed(() => this.slide().type === ECRAN_VERROUILLE);
+  protected readonly entete = computed(() => enteteDeQuestionnaire(this.slide()));
+  protected readonly libelleVerrouille = texte('ecran-verrouille');
+  protected readonly libelleMinutes = texte('duree-minutes');
 
   protected readonly unknown = signal(false);
   protected readonly error = signal(false);
@@ -217,19 +199,69 @@ export class SlideActivityComponent {
   private readonly renderer = inject(Renderer2);
   private readonly registerBlocks = inject(REGISTER_SLIDE_BLOCKS);
   private readonly registered = this.registerAfterRender();
+  private readonly posees = new WeakMap<HTMLElement, Map<string, unknown>>();
+  private montes: readonly MontageActif[] = [];
+  private cleDeMontage: string | null = null;
+  private dernierEmetteur: EventTarget | null = null;
   private destroyed = false;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
     });
-    effect(() => this.scheduleMount(this.slide(), this.render(), this.role()));
+    effect(() => this.scheduleMount(this.slide(), this.render(), this.role(), this.apercu()));
+    effect(() => {
+      this.retours();
+      this.direct();
+      this.donneesFormateur();
+      this.maitrise();
+      untracked(() => this.reinjecter());
+    });
   }
 
-  protected relay(event: Event): void {
-    const response = lireReponse(event instanceof CustomEvent ? event.detail : null);
-    if (response !== null) {
-      this.reponse.emit(response);
+  protected relayer(event: Event): void {
+    if (!(event instanceof CustomEvent)) {
+      return;
+    }
+    this.dernierEmetteur = event.target;
+    if (this.apercu()) {
+      return;
+    }
+    for (const evenement of evenementsDe(event.type, event.detail, this.slide().id)) {
+      this.evenement.emit(evenement);
+    }
+  }
+
+  protected relayerVisuel(reponse: ReponseVisuelle): void {
+    if (this.apercu()) {
+      return;
+    }
+    this.evenement.emit({
+      kind: 'reponse',
+      screenId: this.slide().id,
+      questionId: reponse.questionId,
+      valeur: reponse.valeur,
+      dureeMs: reponse.dureeMs,
+    });
+  }
+
+  protected memoriser(event: Event): void {
+    const brouillons = this.brouillons();
+    const cible = event.target;
+    if (
+      brouillons === null ||
+      this.apercu() ||
+      !(event instanceof CustomEvent) ||
+      !(cible instanceof HTMLElement)
+    ) {
+      return;
+    }
+    const detail: unknown = event.detail;
+    if (typeof detail === 'object' && detail !== null && 'id' in detail && 'valeur' in detail) {
+      const { id, valeur } = detail;
+      if (typeof id === 'string' && id !== '') {
+        brouillons.ecrire(cible.localName, id, valeur);
+      }
     }
   }
 
@@ -246,10 +278,17 @@ export class SlideActivityComponent {
     );
   }
 
-  private scheduleMount(slide: EcranContent, render: RenderMode, role: Role): void {
-    if (aUnePresentation(slide)) {
+  private scheduleMount(
+    slide: EcranContent,
+    render: RenderMode,
+    role: Role,
+    apercu: boolean,
+  ): void {
+    if (aUnePresentation(slide) || slide.type === ECRAN_VERROUILLE) {
       this.unknown.set(false);
       this.error.set(false);
+      this.montes = [];
+      this.cleDeMontage = null;
       return;
     }
     void this.registered.then((registered) => {
@@ -260,35 +299,112 @@ export class SlideActivityComponent {
         this.error.set(true);
         return;
       }
-      this.mount(slide, render, role);
+      this.mount(slide, render, role, apercu);
     });
   }
 
-  private mount(slide: EcranContent, render: RenderMode, role: Role): void {
-    this.clearHost();
+  private mount(slide: EcranContent, render: RenderMode, role: Role, apercu: boolean): void {
     const plan = planDeMontage(slide);
     if (plan === null) {
+      this.clearHost();
       this.unknown.set(true);
       this.error.set(false);
       return;
     }
+    const cle = `${slide.id}|${render}|${role}|${String(apercu)}|${plan.map((montage) => montage.brique).join(',')}`;
     try {
-      for (const montage of plan) {
-        const element = this.renderer.createElement(montage.brique);
-        this.renderer.setAttribute(element, 'render', render);
-        this.renderer.setAttribute(element, 'data-slide-role', role);
-        for (const property of PROPRIETES_PAR_BRIQUE[montage.brique]) {
-          if (Object.hasOwn(montage.donnees, property)) {
-            this.renderer.setProperty(element, property, montage.donnees[property]);
-          }
-        }
-        this.renderer.appendChild(this.host().nativeElement, element);
+      if (cle === this.cleDeMontage && this.montes.length === plan.length) {
+        this.montes = this.montes.map((actif, rang) => this.mettreAJour(actif, plan[rang]));
+      } else {
+        this.clearHost();
+        this.montes = plan.map((montage) => this.creer(montage, render, role, apercu));
+        this.cleDeMontage = cle;
       }
       this.unknown.set(false);
       this.error.set(false);
+      this.reinjecter();
     } catch {
       this.showError();
     }
+  }
+
+  private creer(montage: Montage, render: RenderMode, role: Role, apercu: boolean): MontageActif {
+    const element: HTMLElement = this.renderer.createElement(montage.brique);
+    this.renderer.setAttribute(element, 'render', render);
+    this.renderer.setAttribute(element, 'data-cours-role', role);
+    if (apercu) {
+      this.renderer.setAttribute(element, 'data-apercu', '');
+    }
+    this.poserLesDonnees(element, montage.brique, montage.donnees);
+    const actif: MontageActif = {
+      brique: montage.brique,
+      donnees: montage.donnees,
+      identifiants: identifiantsDuMontage(montage),
+      element,
+    };
+    this.reprendreLeBrouillon(actif, role, apercu);
+    this.renderer.appendChild(this.host().nativeElement, element);
+    return actif;
+  }
+
+  private mettreAJour(actif: MontageActif, montage: Montage): MontageActif {
+    this.poserLesDonnees(actif.element, montage.brique, montage.donnees);
+    return { ...actif, donnees: montage.donnees, identifiants: identifiantsDuMontage(montage) };
+  }
+
+  private poserLesDonnees(element: HTMLElement, brique: string, donnees: Montage['donnees']): void {
+    for (const propriete of PROPRIETES_PAR_BRIQUE[brique] ?? []) {
+      if (Object.hasOwn(donnees, propriete)) {
+        this.poser(element, propriete, donnees[propriete]);
+      }
+    }
+  }
+
+  private reprendreLeBrouillon(actif: MontageActif, role: Role, apercu: boolean): void {
+    const brouillons = this.brouillons();
+    const identifiant = actif.identifiants.at(0);
+    if (brouillons === null || apercu || role !== 'etudiant' || identifiant === undefined) {
+      return;
+    }
+    const brouillon = brouillons.lire(actif.brique, identifiant);
+    if (brouillon !== null && brouillon !== undefined) {
+      this.poser(actif.element, 'brouillon', brouillon);
+    }
+  }
+
+  private reinjecter(): void {
+    if (this.montes.length === 0) {
+      return;
+    }
+    const retours = this.retours().get(this.slide().id) ?? [];
+    try {
+      for (const actif of this.montes) {
+        const poses = posesDeReinjection(actif, {
+          retours,
+          direct: this.direct(),
+          render: this.render(),
+          role: this.role(),
+          donneesFormateur: this.donneesFormateur(),
+          maitrise: this.maitrise(),
+          dernierEmetteur: actif.element === this.dernierEmetteur,
+        });
+        for (const [propriete, valeur] of poses) {
+          this.poser(actif.element, propriete, valeur);
+        }
+      }
+    } catch {
+      this.showError();
+    }
+  }
+
+  private poser(element: HTMLElement, propriete: string, valeur: unknown): void {
+    const connues = this.posees.get(element) ?? new Map<string, unknown>();
+    if (connues.has(propriete) && memeValeur(connues.get(propriete), valeur)) {
+      return;
+    }
+    connues.set(propriete, valeur);
+    this.posees.set(element, connues);
+    this.renderer.setProperty(element, propriete, valeur);
   }
 
   private clearHost(): void {
@@ -296,6 +412,8 @@ export class SlideActivityComponent {
     for (const child of Array.from(host.childNodes)) {
       this.renderer.removeChild(host, child);
     }
+    this.montes = [];
+    this.cleDeMontage = null;
   }
 }
 

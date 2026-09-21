@@ -62,12 +62,20 @@ export class SebastianHeatmapComponent {
   readonly mode = signal<HeatmapMode>('combined');
 
   readonly modes: ModeOption[] = [
-    { value: 'combined', label: 'Combine' },
-    { value: 'alcohol', label: 'Alcool' },
-    { value: 'coffee', label: 'Cafe' },
+    { value: 'combined', label: $localize`:@@sebastianHeatmapCombined:Combine` },
+    { value: 'alcohol', label: $localize`:@@sebastianCategoryAlcohol:Alcool` },
+    { value: 'coffee', label: $localize`:@@sebastianCategoryCoffee:Café` },
   ];
 
-  readonly dayLabels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+  readonly dayLabels = [
+    $localize`:@@sebastianDayMonShort:Lun`,
+    $localize`:@@sebastianDayTueShort:Mar`,
+    $localize`:@@sebastianDayWedShort:Mer`,
+    $localize`:@@sebastianDayThuShort:Jeu`,
+    $localize`:@@sebastianDayFriShort:Ven`,
+    $localize`:@@sebastianDaySatShort:Sam`,
+    $localize`:@@sebastianDaySunShort:Dim`,
+  ];
 
   readonly cells = computed(() => {
     return this.data().map((point) => ({

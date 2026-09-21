@@ -15,12 +15,12 @@ export class PillarScorecardComponent {
 
   private static readonly PILLAR_LABELS: Readonly<Record<string, string>> = {
     seo: 'SEO',
-    performance: 'Performance',
-    technical: 'Tech & scalabilité',
-    trust: 'Crédibilité',
-    conversion: 'Conversion',
-    aiVisibility: 'Visibilité IA',
-    citationWorthiness: 'Citabilité IA',
+    performance: $localize`:@@auditPillarPerformance:Performance`,
+    technical: $localize`:@@auditPillarTechnical:Tech & scalabilité`,
+    trust: $localize`:@@auditPillarTrust:Crédibilité`,
+    conversion: $localize`:@@auditPillarConversion:Conversion`,
+    aiVisibility: $localize`:@@auditPillarAiVisibility:Visibilité IA`,
+    citationWorthiness: $localize`:@@auditPillarCitationWorthiness:Citabilité IA`,
   };
 
   formatPillarName(pillar: string): string {
@@ -34,11 +34,11 @@ export class PillarScorecardComponent {
   statusLabel(status: 'critical' | 'warning' | 'ok'): string {
     switch (status) {
       case 'critical':
-        return 'Critique';
+        return $localize`:@@auditPillarStatusCritical:Critique`;
       case 'warning':
-        return 'À améliorer';
+        return $localize`:@@auditPillarStatusWarning:À améliorer`;
       case 'ok':
-        return 'Objectif atteint';
+        return $localize`:@@auditPillarStatusOk:Objectif atteint`;
     }
   }
 }

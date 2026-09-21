@@ -1,6 +1,8 @@
 <section class="client-report flex flex-col gap-8">
   <div class="client-report__summary">
-    <h2 class="font-heading heading-h3 text-h3 mb-3">Votre rapport d'audit</h2>
+    <h2 class="font-heading heading-h3 text-h3 mb-3" i18n="@@auditReportTitle">
+      Votre rapport d'audit
+    </h2>
     <p class="report__summary text-base md:text-lg text-scheme-text">
       {{ clientReport.executiveSummary }}
     </p>
@@ -9,13 +11,17 @@
   <app-engine-coverage-matrix [matrix]="clientReport.googleVsAiMatrix"></app-engine-coverage-matrix>
 
   <div class="client-report__pillars">
-    <h3 class="font-heading heading-h4 text-h4 mb-3">Scorecard par pilier</h3>
+    <h3 class="font-heading heading-h4 text-h4 mb-3" i18n="@@auditReportPillars">
+      Scorecard par pilier
+    </h3>
     <app-pillar-scorecard [scorecard]="clientReport.pillarScorecard"></app-pillar-scorecard>
   </div>
 
   @if (clientReport.quickWins.length) {
     <div class="client-report__quick-wins">
-      <h3 class="font-heading heading-h4 text-h4 mb-3">Quick wins prioritaires</h3>
+      <h3 class="font-heading heading-h4 text-h4 mb-3" i18n="@@auditReportQuickWins">
+        Quick wins prioritaires
+      </h3>
       <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         @for (win of clientReport.quickWins; track win.title) {
           <div

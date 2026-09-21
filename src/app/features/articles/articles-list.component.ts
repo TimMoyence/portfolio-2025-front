@@ -21,6 +21,11 @@ import { AsiliCtaBandComponent, AsiliHeroComponent } from '../../shared/sections
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticlesListComponent {
+  protected readonly heroKicker = $localize`:@@articlesListHeroKicker:Articles · Morning-Brief`;
+  protected readonly heroLead = $localize`:@@articlesListHeroLead:Une veille sourcée, transformée en décisions et en pistes concrètes pour les équipes qui veulent utiliser l’IA sans perdre le fil.`;
+  protected readonly ctaKicker = $localize`:@@articlesListCtaKicker:Une question concrète ?`;
+  protected readonly ctaTitle = $localize`:@@articlesListCtaTitle:On peut transformer une veille en outil utile.`;
+  protected readonly ctaLead = $localize`:@@articlesListCtaLead:Parlons de votre contexte, de vos usages et de ce qui mérite vraiment d’être automatisé.`;
   protected readonly articles: ArticleSummary[] = [];
   protected isLoading = true;
   protected hasError = false;

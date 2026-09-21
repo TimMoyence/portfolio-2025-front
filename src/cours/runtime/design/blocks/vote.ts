@@ -97,4 +97,32 @@ export const vote = `
   height: var(--fp-s-4);
   border: 2px solid var(--fp-bordure);
 }
+
+:where(.fp-root) .fp-vote__liste {
+  display: grid;
+  gap: var(--fp-s-1);
+  margin: 0;
+  padding-left: var(--fp-s-3);
+}
+
+:where(.fp-root) .fp-vote__phase {
+  color: var(--fp-ink-soft);
+  font-weight: 600;
+}
+
+:where(.fp-root) .fp-vote__decompte {
+  justify-self: end;
+  color: var(--fp-ink-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.fp-root) .fp-vote__revelation {
+  display: grid;
+  gap: var(--fp-s-1);
+}
+
+:where(.fp-root) .fp-vote__titre {
+  margin: 0;
+  font-weight: 700;
+}
 `;

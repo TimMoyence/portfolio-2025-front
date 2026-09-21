@@ -1,11 +1,15 @@
-import type { MetadonneesBrique } from '../../content/types';
+import type { EtatPulse, MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
+import { estObjet } from './retours';
 
-export type EtatPulse = 'perdu' | 'ca-va' | 'clair';
-
-export type PulseComptes = Readonly<Record<EtatPulse, number>>;
+export interface PulseComptes {
+  readonly perdu: number;
+  readonly 'ca-va': number;
+  readonly clair: number;
+  readonly total?: number;
+}
 
 export interface PulseSondage {
   readonly id: string;
@@ -14,6 +18,7 @@ export interface PulseSondage {
 }
 
 const ETATS: readonly EtatPulse[] = ['perdu', 'ca-va', 'clair'];
+const SEUIL_DE_PROJECTION = 5;
 
 const FORMES: Readonly<Record<EtatPulse, string>> = {
   perdu: '▲',
@@ -21,21 +26,28 @@ const FORMES: Readonly<Record<EtatPulse, string>> = {
   clair: '●',
 };
 
-function compte(valeur: number): number {
-  return Number.isFinite(valeur) && valeur > 0 ? Math.trunc(valeur) : 0;
+function compte(valeur: unknown): number {
+  return typeof valeur === 'number' && Number.isFinite(valeur) && valeur > 0
+    ? Math.trunc(valeur)
+    : 0;
 }
 
-function projeterComptes(source: PulseComptes): PulseComptes {
-  return {
+function projeterComptes(source: PulseComptes): Required<PulseComptes> {
+  const comptes = {
     perdu: compte(source.perdu),
     'ca-va': compte(source['ca-va']),
     clair: compte(source.clair),
   };
+  return { ...comptes, total: comptes.perdu + comptes['ca-va'] + comptes.clair };
+}
+
+function lireEtat(valeur: unknown): EtatPulse | null {
+  return ETATS.find((etat) => etat === valeur) ?? null;
 }
 
 export class FpPulse extends FpBlock {
   private interne: PulseSondage | null = null;
-  private interneComptes: PulseComptes | null = null;
+  private interneComptes: Required<PulseComptes> | null = null;
   private choix: EtatPulse | null = null;
 
   set sondage(valeur: PulseSondage | null) {
@@ -63,12 +75,16 @@ export class FpPulse extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  get comptes(): PulseComptes | null {
+  get comptes(): Required<PulseComptes> | null {
     return this.interneComptes;
   }
 
-  get etatChoisi(): EtatPulse | null {
-    return this.choix;
+  set brouillon(valeur: unknown) {
+    const etat = estObjet(valeur) ? lireEtat(valeur['etat']) : null;
+    if (etat !== null) {
+      this.choix = etat;
+      this.refreshSiConnecte();
+    }
   }
 
   renderHand(): EscapedHtml {
@@ -82,6 +98,7 @@ export class FpPulse extends FpBlock {
         <p class="fp-pulse__anonymat" data-testid="anonymat">${escapeHtml(this.texte('pulse-anonymat'))}</p>
         <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat))}</div>
         <p class="fp-pulse__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.retour())}</p>
+        ${this.annonces()}
       </fieldset>
     `;
   }
@@ -91,7 +108,9 @@ export class FpPulse extends FpBlock {
     if (!sondage) {
       return safeHtml``;
     }
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(sondage.invite)}</p>${this.agregat()}</div>`;
+    const comptes = this.interneComptes;
+    const projetables = comptes !== null && comptes.total >= SEUIL_DE_PROJECTION;
+    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(sondage.invite)}</p>${projetables ? this.agregat() : this.masque()}</div>`;
   }
 
   renderBoard(): EscapedHtml {
@@ -103,7 +122,7 @@ export class FpPulse extends FpBlock {
       <div class="fp-carte fp-pulse__panneau">
         <p class="fp-enonce">${escapeHtml(sondage.invite)}</p>
         ${this.agregat()}
-        <p class="fp-badge" data-testid="modalite">${escapeHtml(sondage.metadonnees.modalite)}</p>
+        <p class="fp-reperes">${this.reperes(sondage.metadonnees)}</p>
       </div>
     `;
   }
@@ -133,28 +152,32 @@ export class FpPulse extends FpBlock {
     return safeHtml`<button type="button" class="fp-pulse__etat" data-testid="etat" data-etat-pulse="${escapeHtml(etat)}" aria-pressed="${escapeHtml(String(etat === this.choix))}"><span class="fp-pulse__forme" aria-hidden="true">${escapeHtml(FORMES[etat])}</span><span class="fp-pulse__libelle">${escapeHtml(this.libelle(etat))}</span></button>`;
   }
 
-  private ligne(comptes: PulseComptes, etat: EtatPulse): EscapedHtml {
+  private ligne(comptes: Required<PulseComptes>, etat: EtatPulse): EscapedHtml {
     return safeHtml`<li class="fp-pulse__ligne" data-testid="ligne" data-etat-pulse="${escapeHtml(etat)}"><span class="fp-pulse__forme" aria-hidden="true">${escapeHtml(FORMES[etat])}</span><span class="fp-pulse__libelle">${escapeHtml(this.libelle(etat))}</span><span class="fp-pulse__compte" data-testid="compte">${comptes[etat]}</span></li>`;
   }
 
+  private masque(): EscapedHtml {
+    return safeHtml`<p class="fp-pulse__masque" data-testid="masque">${escapeHtml(this.texte('pulse-masque'))}</p>`;
+  }
+
   private agregat(): EscapedHtml {
-    const comptes = this.comptes;
+    const comptes = this.interneComptes;
     if (comptes === null) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const total = ETATS.reduce((somme, etat) => somme + comptes[etat], 0);
     return safeHtml`
       <ul class="fp-pulse__agregat" data-testid="agregat">${ETATS.map((etat) => this.ligne(comptes, etat))}</ul>
-      <p class="fp-pulse__total" data-testid="total">${escapeHtml(this.texte('pulse-total'))} ${total}</p>
+      <p class="fp-pulse__total" data-testid="total">${escapeHtml(this.texte('pulse-total'))} ${comptes.total}</p>
     `;
   }
 
   private declarer(valeur: string): void {
-    const etat = ETATS.find((connu) => connu === valeur);
-    if (etat === undefined || etat === this.choix) {
+    const etat = lireEtat(valeur);
+    if (etat === null || etat === this.choix) {
       return;
     }
     this.choix = etat;
+    this.signalerBrouillon(this.sondage?.id ?? '', { etat });
     this.emit('fp-pulse-change', {
       sondageId: this.sondage?.id,
       etat,

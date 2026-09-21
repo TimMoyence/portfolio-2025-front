@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { loadInteraction } from '../interactions.util';
+import type { ModeInteraction } from '../mode-interaction';
 
 export interface QuizInteraction {
   id?: string;
@@ -24,7 +25,6 @@ export interface QuizInteraction {
   competency?: string;
   explanation?: string;
   nextAction?: string;
-  askConfidence?: boolean;
 }
 
 @Component({
@@ -39,13 +39,26 @@ export class SlideQuizComponent implements OnInit {
   readonly interactionId = input<string>('');
   readonly questionData = input<QuizInteraction | null>(null);
   readonly showCompetency = input<boolean>(false);
+  readonly mode = input<ModeInteraction>('apercu');
+  readonly reponsesRecues = input(0);
+  readonly participants = input(0);
   readonly selection = output<{ questionId: string; valeur: string; dureeMs: number }>();
 
   protected readonly quiz = signal<QuizInteraction | null>(null);
-  protected readonly activeQuiz = computed(() => this.questionData() ?? this.quiz());
+  protected readonly activeQuiz = computed(() => {
+    const quiz = this.questionData() ?? this.quiz();
+    if (quiz === null || this.mode() !== 'seance') {
+      return quiz;
+    }
+    const pourLePoste: QuizInteraction = { ...quiz };
+    delete pourLePoste.correctIndex;
+    return pourLePoste;
+  });
+  protected readonly apercu = computed(
+    () => this.mode() === 'apercu' && this.activeQuiz()?.correctIndex === undefined,
+  );
   protected readonly error = signal<boolean>(false);
   protected readonly selectedIndex = signal<number | null>(null);
-  protected readonly confidence = signal<number | null>(null);
 
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
   private readonly destroyRef = inject(DestroyRef);
@@ -61,17 +74,13 @@ export class SlideQuizComponent implements OnInit {
     }
     this.selectedIndex.set(index);
     const quiz = this.activeQuiz();
-    if (quiz?.id) {
+    if (quiz?.id && this.mode() === 'seance') {
       this.selection.emit({
         questionId: quiz.id,
         valeur: `o${index + 1}`,
         dureeMs: Math.max(0, Date.now() - this.startedAt),
       });
     }
-  }
-
-  protected selectConfidence(level: number): void {
-    this.confidence.set(level);
   }
 
   protected isCorrect(): boolean {

@@ -202,6 +202,39 @@
   font-variant-numeric: tabular-nums;
 }
 
+.join-panel__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 8px 16px;
+  inline-size: 100%;
+  margin: 12px 0 0;
+}
+
+.join-panel__stats dt {
+  font-size: 0.72rem;
+}
+
+.join-panel__stats dd {
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--font-mono);
+}
+
+.join-panel__problemes {
+  grid-column: 1 / -1;
+}
+
+.join-panel__probleme {
+  display: block;
+}
+
+.join-panel__notation {
+  max-inline-size: 60ch;
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  text-align: end;
+}
+
 .course-heading {
   display: flex;
   justify-content: space-between;
@@ -246,11 +279,6 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-}
-
-.presentateur-control-nav .control-primary {
-  --btn-bg: var(--teal);
-  --btn-fg: var(--teal-ink);
 }
 
 .presentateur-control-nav .control-danger {

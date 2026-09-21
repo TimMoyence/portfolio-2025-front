@@ -169,7 +169,7 @@ test('chaque brique inscrite declare ses metadonnees pedagogiques', () => {
   const muettes = inscrites
     .filter(({ classe }) => {
       const source = readFileSync(join(DOSSIER_BRIQUES, `${classe}.ts`), 'utf8');
-      return !/metadonnees:\s*MetadonneesBrique/.test(source);
+      return !/metadonnees\??:\s*MetadonneesBrique/.test(source);
     })
     .map(({ nom }) => nom);
 

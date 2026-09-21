@@ -68,7 +68,7 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
               <span
                 class="font-mono text-[10.5px] uppercase tracking-[0.12em] text-gold-deep"
                 i18n="sebastian.counter.coffee|@@sebastianCounterCoffee"
-                >Cafe aujourd'hui</span
+                >Café aujourd'hui</span
               >
               <span class="font-display text-4xl leading-none text-white">{{ todayCoffee() }}</span>
             </div>
@@ -115,6 +115,7 @@ import { SebastianAddDrinkSheetComponent } from './components/sebastian-add-drin
         class="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-2xl font-bold text-[#1a1206] shadow-[0_0_24px_rgba(230,170,70,0.5)] transition-transform duration-300 hover:scale-110 hover:bg-gold-soft motion-reduce:transition-none"
         (click)="addSheetOpen.set(true)"
         aria-label="Ajouter une consommation"
+        i18n-aria-label="@@sebastianAddEntryAriaLabel"
       >
         +
       </button>
@@ -133,11 +134,11 @@ export class SebastianAppComponent {
   private readonly port: SebastianPort = inject(SEBASTIAN_PORT);
 
   readonly tabs = [
-    { label: 'Dashboard', route: 'dashboard' },
-    { label: 'Rapports', route: 'rapports' },
-    { label: 'Badges', route: 'badges' },
-    { label: 'Historique', route: 'historique' },
-    { label: 'Objectifs', route: 'objectifs' },
+    { label: $localize`:@@sebastianTabDashboard:Dashboard`, route: 'dashboard' },
+    { label: $localize`:@@sebastianTabReports:Rapports`, route: 'rapports' },
+    { label: $localize`:@@sebastianTabBadges:Badges`, route: 'badges' },
+    { label: $localize`:@@sebastianTabHistory:Historique`, route: 'historique' },
+    { label: $localize`:@@sebastianTabGoals:Objectifs`, route: 'objectifs' },
   ] as const;
 
   readonly entries = signal<SebastianEntry[]>([]);

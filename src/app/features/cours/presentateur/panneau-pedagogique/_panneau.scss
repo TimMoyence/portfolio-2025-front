@@ -1,0 +1,55 @@
+@mixin bloc {
+  display: grid;
+  gap: 0.45rem;
+  padding-block-start: 0.85rem;
+  border-block-start: 1px solid rgba(12, 9, 2, 0.12);
+}
+
+@mixin intitule {
+  margin: 0;
+  color: var(--teal-deep, #277c70);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.67rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@mixin discret {
+  margin: 0;
+  color: var(--ink-mute, #766f63);
+  font-size: 0.72rem;
+}
+
+@mixin bouton {
+  border: 1px solid rgba(12, 9, 2, 0.16);
+  border-radius: 0.45rem;
+  background: var(--teal, #4fb3a2);
+  color: var(--ivory, #fbf3e6);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.45rem 0.65rem;
+}
+
+@mixin champ {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(12, 9, 2, 0.16);
+  border-radius: 0.55rem;
+  background: var(--ivory, #fbf3e6);
+  color: var(--ink, #0c0902);
+  font: inherit;
+  padding: 0.6rem 0.7rem;
+
+  &:focus-visible {
+    outline: 2px solid var(--teal, #4fb3a2);
+    outline-offset: 2px;
+  }
+}
+
+@mixin liste {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

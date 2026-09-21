@@ -91,6 +91,25 @@ describe('SlideHeroComponent', () => {
     expect(items[2].textContent).toContain('Un exercice');
   });
 
+  it("differe le chargement de l'image hors du premier ecran", () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const img: HTMLImageElement = fixture.nativeElement.querySelector('.slide-hero__bg img');
+    expect(img.getAttribute('loading')).toBe('lazy');
+    expect(img.hasAttribute('fetchpriority')).toBeFalse();
+  });
+
+  it("charge l'image en priorite quand le hero ouvre la page", () => {
+    const fixture = TestBed.createComponent(SlideHeroComponent);
+    fixture.componentRef.setInput('title', 'Lire un chiffre');
+    fixture.componentRef.setInput('bgImage', '/images/b2.webp');
+    fixture.componentRef.setInput('priority', true);
+    fixture.detectChanges();
+    const img: HTMLImageElement = fixture.nativeElement.querySelector('.slide-hero__bg img');
+    expect(img.getAttribute('loading')).toBe('eager');
+    expect(img.getAttribute('fetchpriority')).toBe('high');
+  });
+
   it('rend subtitle puis bullets quand les deux sont fournis', () => {
     const fixture = TestBed.createComponent(HostBothComponent);
     fixture.detectChanges();

@@ -189,6 +189,10 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  protected removeFavoriteAriaLabel(city: FavoriteCity): string {
+    return $localize`:@@profileWeatherRemoveFavoriteAriaLabel:Supprimer ${city.name}:city: des favoris`;
+  }
+
   removeFavoriteCity(city: FavoriteCity): void {
     const previous = this.favoriteCities;
     this.favoriteCities = this.favoriteCities.filter(

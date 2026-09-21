@@ -61,6 +61,12 @@ export const concept4 = `
   font-weight: 600;
 }
 
+:where(.fp-root) .fp-concept4__curseur {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--fp-teal-deep);
+}
+
 :where(.fp-root) .fp-concept4__faces {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
@@ -177,5 +183,10 @@ export const concept4 = `
   display: flex;
   flex-wrap: wrap;
   gap: var(--fp-s-2);
+}
+
+:where(.fp-root) .fp-concept4__zone {
+  display: grid;
+  gap: var(--fp-s-3);
 }
 `;

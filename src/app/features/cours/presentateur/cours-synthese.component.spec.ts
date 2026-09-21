@@ -24,6 +24,7 @@ import {
   buildResultatsSeance,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
+import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursSyntheseComponent } from './cours-synthese.component';
 
@@ -270,6 +271,27 @@ describe('CoursSyntheseComponent', () => {
       expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
     });
 
+    it('nomme par son enonce, a l ecran et dans le CSV, le QCM d un ecran servi en presentation v2', async () => {
+      const participant = etudiant('Ana', 9, false, [
+        { ...reponse('echelle', 'o2'), questionId: 'b2-s03-prediction' },
+      ]);
+      const fixture = await monter(
+        rapportDe(
+          [participant],
+          buildResultatsSeance({
+            participants: 1,
+            questions: [buildResultatQuestion({ questionId: 'b2-s03-prediction' })],
+          }),
+        ),
+        of(buildDerouleCours({ ecrans: [buildEcranDeroule(buildVisualQuizSlide())] })),
+      );
+
+      expect(textes(fixture, 'synthese-question-libelle')).toEqual(['Quelle échelle ?']);
+      expect(fixture.componentInstance.exporterCsv().split('\n')[1]).toBe(
+        'Ana;Durand;ana@example.com;b2-s03-prediction;Quelle échelle ?;echelle;o2;4200',
+      );
+    });
+
     it('nomme la question par son identifiant quand le deroule ne peut pas etre lu', async () => {
       const fixture = await monter(
         rapportDe([MALIK], resultatsDeDeuxQuestions()),
@@ -297,10 +319,10 @@ describe('CoursSyntheseComponent', () => {
 
     const lignes = fixture.componentInstance.exporterCsv().split('\n');
 
-    expect(lignes[0]).toBe('prenom;nom;adresse;question;concept;valeur;duree_ms');
+    expect(lignes[0]).toBe('prenom;nom;adresse;question;enonce;concept;valeur;duree_ms');
     expect(lignes.length).toBe(5);
     expect(lignes[1]).toBe(
-      'Malik;Durand;malik@example.com;Q-interets-composes;interets-composes;1400;4200',
+      'Malik;Durand;malik@example.com;Q-interets-composes;;interets-composes;1400;4200',
     );
   });
 

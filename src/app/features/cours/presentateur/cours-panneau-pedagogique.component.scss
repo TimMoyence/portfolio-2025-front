@@ -1,0 +1,35 @@
+@use './panneau-pedagogique/panneau' as panneau;
+
+:host {
+  display: block;
+}
+
+.pedagogie-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(12, 9, 2, 0.12);
+  border-radius: 0.8rem;
+  background: var(--ivory, #fbf3e6);
+}
+
+.pedagogie-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.pedagogie-panel__ecran {
+  @include panneau.discret;
+}
+
+.pedagogie-panel__export {
+  @include panneau.bouton;
+}
+
+.pedagogie-panel__alerte {
+  margin: 0;
+  color: var(--danger, #c0563c);
+  font-size: 0.8rem;
+}

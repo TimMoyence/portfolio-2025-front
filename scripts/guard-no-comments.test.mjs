@@ -312,7 +312,7 @@ void test('perimetre : le code applicatif et l outillage sont inspectes, pas les
     'src/main.ts',
     'src/app/home/home.component.html',
     'src/styles/_primitives.scss',
-    'e2e/visual-regression.spec.ts',
+    'e2e/cours-session.spec.ts',
     'scripts/x.mjs',
     'eslint.config.js',
   ];

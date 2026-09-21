@@ -1,28 +1,47 @@
 import {
   type CoursContent,
   type EcranContent,
+  type MetadonneesBrique,
   creerMetadonneesBrique,
 } from '../../cours/content/types';
-import type { CardsortPlan } from '../../cours/runtime/blocks/FpCardsort';
-import type { ChallengeProbleme } from '../../cours/runtime/blocks/FpChallenge';
+import type { CardsortPlanPublic } from '../../cours/runtime/blocks/FpCardsort';
+import type { ChallengeProblemePublic } from '../../cours/runtime/blocks/FpChallenge';
 import type { Concept4Definition } from '../../cours/runtime/blocks/FpConcept4';
-import type { EscapeParcours } from '../../cours/runtime/blocks/FpEscape';
-import type { ExitBillet } from '../../cours/runtime/blocks/FpExit';
-import type { NumericQuestion } from '../../cours/runtime/blocks/FpNumeric';
+import type { EscapeParcoursPublic } from '../../cours/runtime/blocks/FpEscape';
+import type { ExitBilletPublic } from '../../cours/runtime/blocks/FpExit';
+import type { NumericQuestionPublique } from '../../cours/runtime/blocks/FpNumeric';
 import type { PlotDefinition } from '../../cours/runtime/blocks/FpPlot';
 import type { ProCas } from '../../cours/runtime/blocks/FpPro';
 import type { PulseSondage } from '../../cours/runtime/blocks/FpPulse';
 import type { QuoteCitation } from '../../cours/runtime/blocks/FpQuote';
-import type { RecallQuestion } from '../../cours/runtime/blocks/FpRecall';
-import type { SheetPlan } from '../../cours/runtime/blocks/FpSheet';
-import type { SpacedQuestion } from '../../cours/runtime/blocks/FpSpaced';
+import type { RecallQuestionPublique } from '../../cours/runtime/blocks/FpRecall';
+import type { SheetPlanPublic } from '../../cours/runtime/blocks/FpSheet';
+import type { SpacedQuestionPublique, SpacedRappel } from '../../cours/runtime/blocks/FpSpaced';
 import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
-import type { TableBuildPlan, TableColonne } from '../../cours/runtime/blocks/FpTableBuild';
-import type { VoteQuestion } from '../../cours/runtime/blocks/FpVote';
+import type { TableBuildPlanPublic } from '../../cours/runtime/blocks/FpTableBuild';
+import type { VoteQuestionPublique } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
-import type { DeckState } from '../../cours/runtime/core/state';
+import type {
+  ProgressionDesEnigmes,
+  StrategieServie,
+  VerdictDeProduction,
+  VerdictDeReponse,
+  VerdictDeTentative,
+} from '../../cours/runtime/blocks/retours';
+import type { Brouillons } from '../../cours/runtime/core/storage';
 
-function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
+function metadonnees(overrides: Partial<MetadonneesBrique> = {}): MetadonneesBrique {
+  return creerMetadonneesBrique({
+    concepts: ['capitalisation'],
+    misconceptionsCiblees: [],
+    dureeMinutes: 3,
+    modalite: 'solo',
+    regime: 'ouvert',
+    ...overrides,
+  });
+}
+
+export function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
   return {
     id: 'ecran-1',
     type: 'vote',
@@ -36,9 +55,12 @@ export function buildEcranQuestionnaire(overrides: Partial<EcranContent> = {}): 
   return buildEcran({
     id: 'ecran-questionnaire',
     type: 'questionnaire',
-    duree: 600,
+    duree: 14,
     donnees: {
+      intitule: 'Atelier 1 — Lire, rapporter, estimer',
+      consigne: 'Répondez seul, sans calculatrice, dans l’ordre.',
       regime: 'focus',
+      ordre: 'fixe',
       questions: [
         { brique: 'fp-numeric', donnees: { question: buildNumericQuestion() } },
         { brique: 'fp-vote', donnees: { question: buildVoteQuestion() } },
@@ -65,81 +87,60 @@ export function buildCoursContent(overrides: Partial<CoursContent> = {}): CoursC
   };
 }
 
-export function buildVoteQuestion(overrides: Partial<VoteQuestion> = {}): VoteQuestion {
+export function buildVoteQuestion(
+  overrides: Partial<VoteQuestionPublique> = {},
+): VoteQuestionPublique {
   return {
     id: 'Q-CAP-03',
     enonce: 'Un capital de 1 000 € place a 4 % pendant 10 ans vaut :',
     options: [
-      { id: 'a', libelle: '1 400 €', misconception: 'interet-simple' },
-      { id: 'b', libelle: '1 480,24 €', misconception: null },
-      { id: 'c', libelle: '1 040 €', misconception: 'oubli-de-la-duree' },
+      { id: 'a', libelle: '1 400 €' },
+      { id: 'b', libelle: '1 480,24 €' },
+      { id: 'c', libelle: '1 040 €' },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation', 'valeur-acquise'],
-      misconceptionsCiblees: ['interet-simple', 'oubli-de-la-duree'],
-      dureeMinutes: 3,
-      modalite: 'classe',
-      regime: 'ouvert',
-    }),
     ...overrides,
   };
 }
 
-export function buildNumericQuestion(overrides: Partial<NumericQuestion> = {}): NumericQuestion {
+export function buildNumericQuestion(
+  overrides: Partial<NumericQuestionPublique> = {},
+): NumericQuestionPublique {
   return {
     id: 'Q-VA-07',
     enonce: 'Quelle est la valeur acquise, au centime pres ?',
     unite: '€',
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation', 'valeur-acquise'],
-      misconceptionsCiblees: ['interet-simple'],
-      dureeMinutes: 3,
-      modalite: 'solo',
-      regime: 'focus',
-    }),
-    tolerance: { type: 'absolue', valeur: 0.01 },
-    valeurAttendue: 1480.24,
+    metadonnees: metadonnees({ concepts: ['capitalisation', 'valeur-acquise'], regime: 'focus' }),
     ...overrides,
   };
 }
 
-export function buildRecallQuestion(overrides: Partial<RecallQuestion> = {}): RecallQuestion {
+export function buildRecallQuestion(
+  overrides: Partial<RecallQuestionPublique> = {},
+): RecallQuestionPublique {
   return {
     id: 'Q-RAPPEL-04',
     enonce: 'Sans vos notes : comment passe-t-on d une valeur actuelle a une valeur acquise ?',
     options: [
-      { id: 'a', libelle: 'On multiplie par (1 + i) puissance n', misconception: null },
-      { id: 'b', libelle: 'On multiplie par 1 + i fois n', misconception: 'interet-simple' },
-      { id: 'c', libelle: 'On divise par (1 + i) puissance n', misconception: 'sens-inverse' },
+      { id: 'a', libelle: 'On multiplie par (1 + i) puissance n' },
+      { id: 'b', libelle: 'On multiplie par 1 + i fois n' },
+      { id: 'c', libelle: 'On divise par (1 + i) puissance n' },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation'],
-      misconceptionsCiblees: ['interet-simple', 'sens-inverse'],
-      dureeMinutes: 4,
-      modalite: 'solo',
-      regime: 'examen',
-    }),
+    metadonnees: metadonnees({ dureeMinutes: 4, regime: 'examen' }),
     ...overrides,
   };
 }
 
-export function buildExitBillet(overrides: Partial<ExitBillet> = {}): ExitBillet {
+export function buildExitBillet(overrides: Partial<ExitBilletPublic> = {}): ExitBilletPublic {
   return {
     id: 'B-SORTIE-09',
     question: 'Le taux equivalent mensuel d un taux annuel de 12 % vaut :',
     invite: 'Qu est-ce qui reste flou ?',
     options: [
-      { id: 'a', libelle: 'Un peu moins de 1 %', misconception: null },
-      { id: 'b', libelle: 'Exactement 1 %', misconception: 'proportionnalite' },
-      { id: 'c', libelle: 'Un peu plus de 1 %', misconception: 'sens-inverse' },
+      { id: 'a', libelle: 'Un peu moins de 1 %' },
+      { id: 'b', libelle: 'Exactement 1 %' },
+      { id: 'c', libelle: 'Un peu plus de 1 %' },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['taux-equivalent'],
-      misconceptionsCiblees: ['proportionnalite'],
-      dureeMinutes: 5,
-      modalite: 'solo',
-      regime: 'ouvert',
-    }),
+    metadonnees: metadonnees({ concepts: ['taux-equivalent'], dureeMinutes: 5 }),
     ...overrides,
   };
 }
@@ -148,43 +149,41 @@ export function buildPulseSondage(overrides: Partial<PulseSondage> = {}): PulseS
   return {
     id: 'P-PULSE-02',
     invite: 'Ou en etes-vous sur le passage du taux annuel au taux mensuel ?',
-    metadonnees: creerMetadonneesBrique({
+    metadonnees: metadonnees({
       concepts: ['taux-equivalent'],
-      misconceptionsCiblees: ['proportionnalite'],
       dureeMinutes: 1,
       modalite: 'classe',
-      regime: 'ouvert',
     }),
     ...overrides,
   };
 }
 
 export function buildChallengeProbleme(
-  overrides: Partial<ChallengeProbleme> = {},
-): ChallengeProbleme {
+  overrides: Partial<ChallengeProblemePublic> = {},
+): ChallengeProblemePublic {
   return {
     id: 'D-DEFI-05',
     enonce:
       'Un capital double en combien d annees a 7 % par an ? Cherchez sans formule, estimez et expliquez.',
     invite: 'Ecrivez votre tentative et la maniere dont vous avez raisonne',
-    strategies: [
-      { id: 'a', libelle: 'Diviser 100 par 7 et arrondir', fausse: true },
-      {
-        id: 'b',
-        libelle: 'Ajouter 7 % au capital annee apres annee jusqu a depasser le double',
-        fausse: false,
-      },
-      { id: 'c', libelle: 'Multiplier 7 % par 2 pour obtenir la duree', fausse: true },
-    ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation'],
-      misconceptionsCiblees: ['interet-simple'],
-      dureeMinutes: 7,
-      modalite: 'binome',
-      regime: 'ouvert',
-    }),
+    strategies: [],
+    metadonnees: metadonnees({ dureeMinutes: 7, modalite: 'binome' }),
     ...overrides,
   };
+}
+
+export function buildStrategiesServies(revelees = false): StrategieServie[] {
+  const strategies = [
+    { id: 'diviser-cent', libelle: 'Diviser 100 par 7 et arrondir', fausse: true },
+    {
+      id: 'ajouter-sept',
+      libelle: 'Ajouter 7 % au capital annee apres annee jusqu a depasser le double',
+      fausse: false,
+    },
+  ];
+  return strategies.map(({ fausse, ...strategie }) =>
+    revelees ? { ...strategie, fausse } : strategie,
+  );
 }
 
 export function buildQuoteCitation(overrides: Partial<QuoteCitation> = {}): QuoteCitation {
@@ -193,13 +192,7 @@ export function buildQuoteCitation(overrides: Partial<QuoteCitation> = {}): Quot
     texte: 'L interet compose est la huitieme merveille du monde : qui le comprend le percoit.',
     auteur: 'Mayer Amschel Rothschild',
     source: 'attribue',
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation'],
-      misconceptionsCiblees: ['interet-simple'],
-      dureeMinutes: 1,
-      modalite: 'classe',
-      regime: 'ouvert',
-    }),
+    metadonnees: metadonnees({ dureeMinutes: 1, modalite: 'classe' }),
     ...overrides,
   };
 }
@@ -213,12 +206,9 @@ export function buildStoryRecit(overrides: Partial<StoryRecit> = {}): StoryRecit
       'Personne n y touche pendant dix-huit ans : chaque annee, les interets rejoignent le capital.',
       'Le jour de ses dix-huit ans, Sofia ne retrouve pas 500 € augmentes d un peu : elle retrouve un capital qui a travaille pour elle.',
     ],
-    metadonnees: creerMetadonneesBrique({
+    metadonnees: metadonnees({
       concepts: ['capitalisation', 'valeur-acquise'],
-      misconceptionsCiblees: ['interet-simple'],
-      dureeMinutes: 3,
       modalite: 'classe',
-      regime: 'ouvert',
     }),
     ...overrides,
   };
@@ -234,12 +224,10 @@ export function buildProCas(overrides: Partial<ProCas> = {}): ProCas {
       'Ramener les deux taux a la meme periode avant de comparer : on eleve (1 + i) a la puissance 12, on ne multiplie pas par 12.',
     consequence:
       'Annoncer le mauvais taux equivalent engage l agence sur un cout que le client decouvrira a la premiere echeance.',
-    metadonnees: creerMetadonneesBrique({
+    metadonnees: metadonnees({
       concepts: ['taux-equivalent'],
-      misconceptionsCiblees: ['proportionnalite'],
       dureeMinutes: 4,
       modalite: 'binome',
-      regime: 'ouvert',
     }),
     ...overrides,
   };
@@ -258,13 +246,7 @@ export function buildConcept4Definition(
     formuleLatexSimplifie: 'C × (1 + i)^n',
     calcul: 'C*(1+i/100)^n',
     phrase: 'Un capital de {C} € placé à {i} % pendant {n} an(s) devient {resultat} €.',
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation', 'valeur-acquise'],
-      misconceptionsCiblees: ['interet-simple'],
-      dureeMinutes: 6,
-      modalite: 'binome',
-      regime: 'ouvert',
-    }),
+    metadonnees: metadonnees({ dureeMinutes: 6, modalite: 'binome' }),
     ...overrides,
   };
 }
@@ -299,13 +281,7 @@ export function buildWorkedExemple(overrides: Partial<WorkedExemple> = {}): Work
         invite: 'Pourquoi arrondir seulement a la fin du calcul ?',
       },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation', 'valeur-acquise'],
-      misconceptionsCiblees: ['interet-simple'],
-      dureeMinutes: 8,
-      modalite: 'solo',
-      regime: 'focus',
-    }),
+    metadonnees: metadonnees({ dureeMinutes: 8, regime: 'focus' }),
     ...overrides,
   };
 }
@@ -333,82 +309,94 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
         calcul: 'C*(1+i/100*x)',
       },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['capitalisation', 'interet-simple'],
-      misconceptionsCiblees: ['croissance-lineaire'],
-      dureeMinutes: 7,
-      modalite: 'binome',
-      regime: 'ouvert',
-    }),
+    metadonnees: metadonnees({ dureeMinutes: 7, modalite: 'binome' }),
     ...overrides,
   };
 }
 
-const COLONNES_AMORTISSEMENT: readonly TableColonne[] = [
-  {
-    cle: 'crd',
-    intitule: 'Capital restant du',
-    role: 'deduite',
-    calcul: (contexte) =>
-      contexte.precedente === null
-        ? contexte.parametres['montant']
-        : contexte.precedente['crd'] - contexte.precedente['amortissement'],
-    soldeDe: null,
-    totalise: false,
-  },
-  {
-    cle: 'interets',
-    intitule: 'Interets',
-    role: 'saisie',
-    calcul: null,
-    soldeDe: null,
-    totalise: true,
-  },
-  {
-    cle: 'amortissement',
-    intitule: 'Amortissement',
-    role: 'deduite',
-    calcul: (contexte) => contexte.parametres['annuite'] - contexte.ligne['interets'],
-    soldeDe: 'crd',
-    totalise: true,
-  },
-  {
-    cle: 'annuite',
-    intitule: 'Annuite',
-    role: 'deduite',
-    calcul: (contexte) => contexte.ligne['interets'] + contexte.ligne['amortissement'],
-    soldeDe: null,
-    totalise: true,
-  },
-];
-
-export function buildTableBuildPlan(overrides: Partial<TableBuildPlan> = {}): TableBuildPlan {
+export function buildTableBuildPlan(
+  overrides: Partial<TableBuildPlanPublic> = {},
+): TableBuildPlanPublic {
   return {
-    id: 'K-AMORTISSEMENT-01',
-    intitule: 'Emprunt de 10 000 € a 3 % sur 5 ans, annuites constantes',
-    echeances: 5,
-    parametres: { montant: 10000, taux: 0.03, annuite: 2183.55 },
-    colonnes: COLONNES_AMORTISSEMENT,
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['emprunt-indivis', 'amortissement'],
-      misconceptionsCiblees: ['amortissement-constant'],
-      dureeMinutes: 12,
-      modalite: 'solo',
+    id: 'b2-01-a4-indice-toile',
+    intitule: 'Tâche de tableur 2 — Prix et indice de la toile en 2025',
+    consignes: [
+      'Pour chaque révision, calculez le nouveau prix à partir du prix précédent.',
+      'Calculez l’indice de chaque prix, base 100 au 1er janvier.',
+    ],
+    echeances: 4,
+    libellesLignes: [
+      '1er mars : +8 %',
+      '1er juin : −5 %',
+      '1er septembre : +4 %',
+      '1er décembre : −3 %',
+    ],
+    parametres: { prixInitial: 20 },
+    colonnes: [
+      {
+        cle: 'taux',
+        intitule: 'Taux annoncé (%)',
+        role: 'donnee',
+        valeurs: [8, -5, 4, -3],
+        decimales: 0,
+        totalise: true,
+      },
+      {
+        cle: 'prix',
+        intitule: 'Prix du m² après révision (€ HT)',
+        role: 'saisie',
+        decimales: 2,
+        totalise: false,
+      },
+      {
+        cle: 'coef',
+        intitule: 'Coefficient appliqué',
+        role: 'deduite',
+        formuleInitiale: 'prix / prixInitial',
+        formule: 'prix / avantPrix',
+        decimales: 4,
+        totalise: false,
+      },
+      {
+        cle: 'indice',
+        intitule: 'Indice (base 100 au 1er janvier)',
+        role: 'saisie',
+        decimales: 2,
+        totalise: false,
+      },
+      {
+        cle: 'evolution',
+        intitule: 'Évolution depuis le 1er janvier (%)',
+        role: 'deduite',
+        formule: 'indice - 100',
+        decimales: 2,
+        totalise: false,
+      },
+    ],
+    synthese: [
+      {
+        libelle: 'Somme des taux annoncés (calcul du tableau de bord)',
+        formule: 'totalTaux',
+        unite: '%',
+        decimales: 2,
+      },
+      {
+        libelle: 'Évolution réelle sur l’année',
+        formule: 'dernierEvolution',
+        unite: '%',
+        decimales: 2,
+      },
+    ],
+    metadonnees: metadonnees({
+      concepts: ['evolutions-successives'],
+      dureeMinutes: 11,
       regime: 'focus',
     }),
-    attendus: [
-      { rang: 0, cle: 'interets', valeur: 300 },
-      { rang: 1, cle: 'interets', valeur: 243.49 },
-      { rang: 2, cle: 'interets', valeur: 185.29 },
-      { rang: 3, cle: 'interets', valeur: 125.34 },
-      { rang: 4, cle: 'interets', valeur: 63.6 },
-    ],
-    tolerance: { type: 'absolue', valeur: 0.01 },
     ...overrides,
   };
 }
 
-export function buildCardsortPlan(overrides: Partial<CardsortPlan> = {}): CardsortPlan {
+export function buildCardsortPlan(overrides: Partial<CardsortPlanPublic> = {}): CardsortPlanPublic {
   return {
     id: 'K-CHARGES-01',
     intitule: 'Classez chaque charge selon sa reaction au volume produit',
@@ -424,26 +412,12 @@ export function buildCardsortPlan(overrides: Partial<CardsortPlan> = {}): Cardso
       { id: 'fixe', libelle: 'Charges fixes' },
       { id: 'variable', libelle: 'Charges variables' },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['charges-fixes', 'charges-variables'],
-      misconceptionsCiblees: ['charge-fixe-par-unite'],
-      dureeMinutes: 8,
-      modalite: 'binome',
-      regime: 'ouvert',
-    }),
-    attendus: [
-      { carteId: 'loyer', categorieId: 'fixe' },
-      { carteId: 'matieres', categorieId: 'variable' },
-      { carteId: 'assurance', categorieId: 'fixe' },
-      { carteId: 'commissions', categorieId: 'variable' },
-      { carteId: 'gerant', categorieId: 'fixe' },
-      { carteId: 'energie', categorieId: 'variable' },
-    ],
+    metadonnees: metadonnees({ concepts: ['charges-fixes'], dureeMinutes: 8, modalite: 'binome' }),
     ...overrides,
   };
 }
 
-export function buildSheetPlan(overrides: Partial<SheetPlan> = {}): SheetPlan {
+export function buildSheetPlan(overrides: Partial<SheetPlanPublic> = {}): SheetPlanPublic {
   return {
     id: 'K-TABLEUR-01',
     intitule: 'Facture : quantites, prix unitaires et total TTC',
@@ -464,65 +438,58 @@ export function buildSheetPlan(overrides: Partial<SheetPlan> = {}): SheetPlan {
       B5: '18,9',
     },
     verrouillees: ['A1', 'B1', 'A2', 'B2', 'C2', 'D2', 'A3', 'B3', 'A4', 'B4', 'A5', 'B5'],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['tableur', 'pourcentage'],
-      misconceptionsCiblees: ['reference-relative-figee'],
-      dureeMinutes: 15,
-      modalite: 'binome',
-      regime: 'focus',
-    }),
-    attendus: [
-      { reference: 'C3', valeur: 54 },
-      { reference: 'D3', valeur: 64.8 },
-    ],
+    consignes: ['En C3, calculez le montant HT.', 'En D3, calculez le montant TTC en figeant B1.'],
+    metadonnees: metadonnees({ concepts: ['tableur'], dureeMinutes: 15, regime: 'focus' }),
     ...overrides,
   };
 }
 
-export function buildEscapeParcours(overrides: Partial<EscapeParcours> = {}): EscapeParcours {
+export function buildEscapeParcours(
+  overrides: Partial<EscapeParcoursPublic> = {},
+): EscapeParcoursPublic {
   return {
     id: 'K-EVASION-01',
     intitule: 'Ouvrez le coffre du service comptable',
     delaiIndiceMs: 120000,
     budgetEnigmeMs: 360000,
+    tentativesMax: 10,
     enigmes: [
       {
         id: 'seuil',
         intitule: 'Le seuil de rentabilite',
         enonce: 'Charges fixes 12 000 EUR, taux de marge sur cout variable 40 %. Quel seuil ?',
         indice: 'Divisez les charges fixes par le taux de marge sur cout variable',
-        solution: '30000',
-        fragment: 'TR',
       },
       {
         id: 'marge',
         intitule: 'La marge commerciale',
         enonce: 'Ventes 80 000 EUR, achats revendus 50 000 EUR. Quelle marge commerciale ?',
         indice: 'La marge commerciale est la difference entre les ventes et les achats revendus',
-        solution: '30000',
-        fragment: 'ES',
       },
       {
         id: 'tva',
         intitule: 'La TVA a decaisser',
         enonce: 'TVA collectee 4 200 EUR, TVA deductible 1 700 EUR. Combien decaisser ?',
         indice: 'Retranchez la TVA deductible de la TVA collectee',
-        solution: '2500',
-        fragment: 'OR',
       },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['seuil-de-rentabilite', 'marge-commerciale', 'tva'],
-      misconceptionsCiblees: ['tva-collectee-confondue-avec-tva-a-decaisser'],
-      dureeMinutes: 25,
-      modalite: 'groupe',
-      regime: 'ouvert',
-    }),
+    metadonnees: metadonnees({ dureeMinutes: 25, modalite: 'groupe' }),
     ...overrides,
   };
 }
 
-export function buildSpacedQuestion(overrides: Partial<SpacedQuestion> = {}): SpacedQuestion {
+export function buildSpacedRappel(overrides: Partial<SpacedRappel> = {}): SpacedRappel {
+  return {
+    id: 'b2-01-rappel',
+    intitule: 'Rappel espacé : ce que vous avez travaillé ce matin',
+    metadonnees: metadonnees({ dureeMinutes: 3, regime: 'examen' }),
+    ...overrides,
+  };
+}
+
+function buildSpacedQuestion(
+  overrides: Partial<SpacedQuestionPublique> = {},
+): SpacedQuestionPublique {
   return {
     questionId: 'Q-ACT-01',
     concept: 'actualisation',
@@ -530,27 +497,15 @@ export function buildSpacedQuestion(overrides: Partial<SpacedQuestion> = {}): Sp
     cours: 'Seance 3 — Actualisation',
     enonce: 'Que vaut aujourd hui un encaissement de 1 000 EUR dans un an, au taux de 5 % ?',
     options: [
-      { id: 'act-a', libelle: '952,38 EUR', misconception: null },
-      {
-        id: 'act-b',
-        libelle: '1 050,00 EUR',
-        misconception: 'actualisation-confondue-avec-capitalisation',
-      },
-      { id: 'act-c', libelle: '1 000,00 EUR', misconception: 'valeur-temps-de-l-argent-ignoree' },
-      { id: 'act-d', libelle: '950,00 EUR', misconception: 'taux-applique-en-interet-simple' },
+      { id: 'act-a', libelle: '952,38 EUR' },
+      { id: 'act-b', libelle: '1 050,00 EUR' },
+      { id: 'act-c', libelle: '1 000,00 EUR' },
     ],
-    metadonnees: creerMetadonneesBrique({
-      concepts: ['actualisation'],
-      misconceptionsCiblees: ['actualisation-confondue-avec-capitalisation'],
-      dureeMinutes: 2,
-      modalite: 'solo',
-      regime: 'examen',
-    }),
     ...overrides,
   };
 }
 
-export function buildSpacedQuestions(): SpacedQuestion[] {
+export function buildSpacedQuestions(): SpacedQuestionPublique[] {
   return [
     buildSpacedQuestion(),
     buildSpacedQuestion({
@@ -560,12 +515,8 @@ export function buildSpacedQuestions(): SpacedQuestion[] {
       cours: 'Seance 5 — Choix d investissement',
       enonce: 'Un projet dont la VAN est negative au taux exige doit-il etre retenu ?',
       options: [
-        { id: 'van-a', libelle: 'Non, il detruit de la valeur', misconception: null },
-        {
-          id: 'van-b',
-          libelle: 'Oui, si le TRI est positif',
-          misconception: 'tri-positif-confondu-avec-projet-rentable',
-        },
+        { id: 'van-a', libelle: 'Non, il detruit de la valeur' },
+        { id: 'van-b', libelle: 'Oui, si le TRI est positif' },
       ],
     }),
     buildSpacedQuestion({
@@ -575,25 +526,63 @@ export function buildSpacedQuestions(): SpacedQuestion[] {
       cours: 'Seance 2 — Amortissements',
       enonce: 'L amortissement lineaire fait-il sortir de la tresorerie chaque annee ?',
       options: [
-        { id: 'amo-a', libelle: 'Non, c est une charge calculee', misconception: null },
-        {
-          id: 'amo-b',
-          libelle: 'Oui, du montant de l annuite',
-          misconception: 'charge-calculee-confondue-avec-decaissement',
-        },
+        { id: 'amo-a', libelle: 'Non, c est une charge calculee' },
+        { id: 'amo-b', libelle: 'Oui, du montant de l annuite' },
       ],
     }),
   ];
 }
 
-export function buildDeckState(overrides: Partial<DeckState> = {}): DeckState {
+export function buildVerdictDeReponse(overrides: Partial<VerdictDeReponse> = {}): VerdictDeReponse {
   return {
-    coursId: 'b1-09-interets-composes',
-    ecranCourant: 0,
-    modeRythme: 'pilote',
-    intervalleLibre: null,
-    reponses: {},
-    majLe: '2026-09-11T08:00:00.000Z',
+    questionId: 'Q-CAP-03',
+    correcte: false,
+    libelleConfusion: 'Intérêts simples au lieu de composés',
     ...overrides,
   };
+}
+
+export function buildVerdictDeProduction(
+  overrides: Partial<VerdictDeProduction> = {},
+): VerdictDeProduction {
+  return {
+    questionId: 'K-TABLEUR-01',
+    correcte: false,
+    score: 0.5,
+    details: [
+      { cle: 'C3', juste: true, libelleConfusion: null },
+      { cle: 'D3', juste: false, libelleConfusion: 'Référence relative non figée' },
+    ],
+    ...overrides,
+  };
+}
+
+export function buildVerdictDeTentative(
+  overrides: Partial<VerdictDeTentative> = {},
+): VerdictDeTentative {
+  return {
+    parcoursId: 'K-EVASION-01',
+    enigmeId: 'seuil',
+    correcte: true,
+    fragment: 'TR',
+    tentativesRestantes: 9,
+    ...overrides,
+  };
+}
+
+export function buildProgressionDesEnigmes(
+  overrides: Partial<ProgressionDesEnigmes> = {},
+): ProgressionDesEnigmes {
+  return {
+    parcoursId: 'K-EVASION-01',
+    resolues: [{ enigmeId: 'seuil', fragment: 'TR' }],
+    tentativesRestantes: { seuil: 8, marge: 10, tva: 10 },
+    ...overrides,
+  };
+}
+
+export function createBrouillonsStub(): jasmine.SpyObj<Brouillons> {
+  const stub = jasmine.createSpyObj<Brouillons>('Brouillons', ['lire', 'ecrire', 'purger']);
+  stub.lire.and.returnValue(null);
+  return stub;
 }

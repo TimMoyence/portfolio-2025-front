@@ -2,7 +2,8 @@
   <div class="container grid grid-cols-8">
     <div
       class="col-span-full md:col-span-4 flex flex-col justify-center pb-2 md:pb-0"
-      aria-label="Contact information"
+      aria-label="Coordonnées"
+      i18n-aria-label="@@contactCtaInfoAriaLabel"
     >
       <p
         class="mb-3 font-semibold md:mb-4"
@@ -21,7 +22,8 @@
     </div>
     <div
       class="col-span-full md:col-span-4 flex items-center justify-center background-image-bordeaux"
-      aria-label="Contact methods"
+      aria-label="Moyens de contact"
+      i18n-aria-label="@@contactCtaMethodsAriaLabel"
     >
       <div class="grid grid-cols-1 gap-x-4 gap-y-4 py-2">
         @for (method of contactMethods; track $index) {
@@ -41,13 +43,7 @@
                 {{ method.label }}
               </h3>
               @if (method.href) {
-                <a
-                  [href]="method.href"
-                  [attr.aria-label]="method.label + ': ' + method.value"
-                  i18n-aria-label="
-                    contact.method.linkAria|Aria label for contact method
-                    link@@contactMethodLinkAria"
-                >
+                <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value">
                   {{ method.value }}
                 </a>
               } @else {

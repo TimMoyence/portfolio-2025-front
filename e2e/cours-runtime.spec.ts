@@ -10,14 +10,19 @@ test.describe('Parcours public des formations', () => {
     await expect(page.getByText('Chargement du cours…')).toHaveCount(0);
   });
 
-  test('le B2-01 est présenté comme une séance formateur complète', async ({ page }) => {
+  test('le B2-01 mène à son cours public, qui propose de rejoindre une séance', async ({
+    page,
+  }) => {
     await page.goto('/formations');
 
     const card = page.locator('.formation--live');
     await expect(card).toBeVisible();
     await expect(card).toContainText('B2-01');
-    await expect(card).toContainText('3 h 30 · 60 écrans');
-    await expect(card.getByRole('link', { name: /Rejoindre une séance/ })).toHaveAttribute(
+    await expect(card).toContainText('3 h 30 · 72 écrans');
+    await card.getByRole('link', { name: /Consulter/ }).click();
+
+    await expect(page).toHaveURL(/\/formations\/b2-01-traitement-information-chiffree$/);
+    await expect(page.getByRole('link', { name: /Rejoindre une séance/ })).toHaveAttribute(
       'href',
       '/cours/rejoindre',
     );

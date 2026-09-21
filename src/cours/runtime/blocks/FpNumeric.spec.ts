@@ -1,4 +1,7 @@
-import { buildNumericQuestion } from '../../../testing/factories/cours.factory';
+import {
+  buildNumericQuestion,
+  buildVerdictDeReponse,
+} from '../../../testing/factories/cours.factory';
 import { feuilleDe } from '../design/blocks';
 import { base, stage, tokens } from '../design/styles';
 import { FpNumeric, type NumericQuestionPublique } from './FpNumeric';
@@ -254,12 +257,55 @@ describe('FpNumeric', () => {
     expect(hote.shadowRoot?.querySelector('fieldset')).toBeTruthy();
   });
 
-  it('recapitule la modalite et la duree prevue en mode tableau', () => {
+  it('recapitule la modalite et la duree prevue en mode tableau, en libelles traduits', () => {
     hote.setAttribute('render', 'board');
     const modalite = hote.shadowRoot?.querySelector('[data-testid="modalite"]');
     const duree = hote.shadowRoot?.querySelector('[data-testid="duree"]');
-    expect(modalite?.textContent?.trim()).toBe('solo');
+    expect(modalite?.textContent?.trim()).toBe('Individuel');
     expect(duree?.textContent?.trim()).toBe('3 min');
+  });
+
+  it('accepte le signe moins typographique', () => {
+    const details = detailsEmis(hote);
+    saisir(hote, '−2,8');
+    expect(details[0]?.valeur).toBeCloseTo(-2.8, 12);
+  });
+
+  it('affiche le verdict reinjecte de sa question, jamais celui d une autre', () => {
+    hote.verdict = buildVerdictDeReponse({ questionId: AUTRE_QUESTION });
+    expect(hote.shadowRoot?.querySelector('[data-testid="verdict"]')).toBeNull();
+
+    hote.verdict = buildVerdictDeReponse({ questionId: QUESTION_NOTEE.id });
+    const verdict = hote.shadowRoot?.querySelector('[data-testid="verdict"]');
+
+    expect(verdict?.getAttribute('data-etat')).toBe('a-revoir');
+    expect(verdict?.textContent).toContain('À revoir');
+    expect(verdict?.textContent).toContain('Intérêts simples au lieu de composés');
+    expect(champDe(hote)?.disabled).withContext('un verdict recu clot la question').toBeTrue();
+  });
+
+  it('montre le deja repondu et verrouille la saisie', () => {
+    hote.dejaRepondu = true;
+    expect(hote.shadowRoot?.querySelector('[data-testid="deja-repondu"]')).not.toBeNull();
+    expect(champDe(hote)?.disabled).toBeTrue();
+  });
+
+  it('rouvre la saisie quand l hote signale un refus, en l affichant', () => {
+    saisir(hote, SAISIE_VALIDE);
+    hote.erreur = 'Cet écran n’est pas encore ouvert';
+
+    expect(champDe(hote)?.disabled).toBeFalse();
+    expect(hote.shadowRoot?.querySelector('[data-testid="erreur"]')?.textContent).toContain(
+      'pas encore ouvert',
+    );
+  });
+
+  it('en apercu, annonce que les reponses partent en seance et laisse reessayer', () => {
+    hote.setAttribute('data-apercu', '');
+    saisir(hote, SAISIE_VALIDE);
+
+    expect(retourDe(hote)).toBe('Aperçu : les réponses s’envoient pendant la séance');
+    expect(champDe(hote)?.disabled).toBeFalse();
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

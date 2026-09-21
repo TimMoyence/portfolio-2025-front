@@ -15,6 +15,7 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
         </span>
         <span
           class="rounded-full bg-[rgba(230,170,70,0.16)] px-3 py-1 font-mono text-xs uppercase tracking-[0.08em] text-gold-soft"
+          i18n="@@sebastianScorePhase"
         >
           Phase {{ score().phase }}/3
         </span>
@@ -23,7 +24,7 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
       <div class="mb-4 space-y-2">
         <div>
           <div class="mb-1 flex justify-between text-sm text-white/70">
-            <span>Adherence objectifs</span>
+            <span i18n="@@sebastianScoreGoalAdherence">Adherence objectifs</span>
             <span class="font-mono text-gold-soft">{{ score().breakdown.goalAdherence }}%</span>
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
@@ -36,14 +37,14 @@ import type { SebastianHealthScore } from '../../../core/models/sebastian.model'
 
         @if (score().breakdown.trendBonus) {
           <div data-testid="trend-bonus" class="flex justify-between text-sm text-white/70">
-            <span>Bonus tendance</span>
+            <span i18n="@@sebastianScoreTrendBonus">Bonus tendance</span>
             <span class="font-semibold text-gold-soft"> +{{ score().breakdown.trendBonus }} </span>
           </div>
         }
 
         @if (score().breakdown.streakBonus) {
           <div data-testid="streak-bonus" class="flex justify-between text-sm text-white/70">
-            <span>Bonus streak</span>
+            <span i18n="@@sebastianScoreStreakBonus">Bonus streak</span>
             <span class="font-semibold text-gold-soft"> +{{ score().breakdown.streakBonus }} </span>
           </div>
         }

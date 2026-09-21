@@ -1,46 +1,25 @@
-<app-asili-hero
-  [kicker]="locale === 'fr' ? 'Articles · Morning-Brief' : 'Articles · Morning-Brief'"
-  [lead]="
-    locale === 'fr'
-      ? 'Une veille sourcée, transformée en décisions et en pistes concrètes pour les équipes qui veulent utiliser l’IA sans perdre le fil.'
-      : 'Sourced intelligence, turned into practical decisions for teams that want to use AI without losing the thread.'
-  "
->
+<app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
   <ng-container title>
-    {{ locale === 'fr' ? 'Des idées qui servent' : 'Ideas that serve' }}<br />
-    <span class="accent">{{ locale === 'fr' ? 'le terrain' : 'the field' }}</span
-    >.
+    <ng-container i18n="@@articlesListHeroTitle"
+      >Des idées qui servent<br /><span class="accent">le terrain</span>.</ng-container
+    >
   </ng-container>
 </app-asili-hero>
 
 <main class="articles-list wrap" aria-labelledby="articles-heading">
   <div class="section-heading">
-    <span class="kicker">{{ locale === 'fr' ? 'Dernières éditions' : 'Latest editions' }}</span>
-    <h1 id="articles-heading">
-      {{ locale === 'fr' ? 'Lire, comprendre, décider.' : 'Read, understand, decide.' }}
-    </h1>
+    <span class="kicker" i18n="@@articlesListSectionKicker">Dernières éditions</span>
+    <h1 id="articles-heading" i18n="@@articlesListSectionTitle">Lire, comprendre, décider.</h1>
   </div>
 
   @if (isLoading) {
-    <p class="state" aria-live="polite">
-      {{ locale === 'fr' ? 'Chargement des articles…' : 'Loading articles…' }}
-    </p>
+    <p class="state" aria-live="polite" i18n="@@articlesListLoading">Chargement des articles…</p>
   } @else if (hasError) {
-    <p class="state" role="status">
-      {{
-        locale === 'fr'
-          ? 'Les articles seront disponibles dans un instant.'
-          : 'Articles will be available shortly.'
-      }}
+    <p class="state" role="status" i18n="@@articlesListError">
+      Les articles seront disponibles dans un instant.
     </p>
   } @else if (articles.length === 0) {
-    <p class="state">
-      {{
-        locale === 'fr'
-          ? 'La première édition arrive bientôt.'
-          : 'The first edition is coming soon.'
-      }}
-    </p>
+    <p class="state" i18n="@@articlesListEmpty">La première édition arrive bientôt.</p>
   } @else {
     <div class="article-grid">
       @for (article of articles; track article.article_id) {
@@ -58,7 +37,7 @@
           </h2>
           <p>{{ article.excerpt }}</p>
           <a class="link-arrow" [routerLink]="['/articles', article.slug]">
-            {{ locale === 'fr' ? 'Lire l’article' : 'Read article' }}
+            <ng-container i18n="@@articlesListReadArticle">Lire l’article</ng-container>
             <span aria-hidden="true">→</span>
           </a>
         </article>
@@ -67,22 +46,10 @@
   }
 </main>
 
-<app-asili-cta-band
-  [kicker]="locale === 'fr' ? 'Une question concrète ?' : 'A concrete question?'"
-  [title]="
-    locale === 'fr'
-      ? 'On peut transformer une veille en outil utile.'
-      : 'We can turn intelligence into a useful tool.'
-  "
-  [lead]="
-    locale === 'fr'
-      ? 'Parlons de votre contexte, de vos usages et de ce qui mérite vraiment d’être automatisé.'
-      : 'Let’s talk about your context, your uses and what is genuinely worth automating.'
-  "
->
+<app-asili-cta-band [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead">
   <ng-container cta>
     <a class="btn btn-teal" routerLink="/contact"
-      >{{ locale === 'fr' ? 'Démarrer la conversation' : 'Start a conversation' }}
+      ><ng-container i18n="@@articlesCtaStart">Démarrer la conversation</ng-container>
       <span class="arrow" aria-hidden="true">→</span></a
     >
   </ng-container>

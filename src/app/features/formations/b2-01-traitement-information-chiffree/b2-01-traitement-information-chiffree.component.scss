@@ -6,57 +6,57 @@
   background: var(--bg, var(--cream, #fffaf2));
 }
 
-.b2-history-link {
-  display: inline-flex;
-  margin-top: 1.5rem;
+.b2-seance {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  min-height: 2.75rem;
-  padding: 0.65rem 1rem;
-  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
-  border-radius: var(--r-pill, 999px);
-  color: var(--accent-dark, var(--teal-dark));
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-block: var(--s-3);
 }
 
-.b2-history-link:hover,
-.b2-history-link:focus-visible {
-  border-color: var(--accent, var(--teal));
-  background: var(--accent, var(--teal));
-  color: var(--cream, #fffaf2);
-}
-
-.b2-source-note {
-  width: min(100% - 2rem, 74rem);
-  margin: -1.5rem auto 2rem;
-  color: var(--text-muted, var(--slide-text-muted));
-  font-size: 0.82rem;
+.b2-seance__invite {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--text-mute);
   line-height: 1.5;
-  text-align: center;
 }
 
-.b2-source-note a {
-  color: var(--accent-dark, var(--teal-dark));
-  font-weight: 700;
+.b2-publication {
+  margin-block: 0 var(--s-1);
+  color: var(--text-mute);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
 }
 
-app-slide-image-left app-slide-quiz,
-app-slide-image-right app-slide-quiz {
-  display: block;
-  min-height: auto;
-  margin-top: 1.25rem;
+.b2-apercu {
+  margin-block: 0 var(--s-3);
+  color: var(--text-mute);
+  font-size: 0.9rem;
 }
 
-app-slide-chart,
-app-slide-quiz,
-app-slide-reflection {
-  display: block;
-  min-height: 100vh;
+.b2-ecran__entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2);
+  max-width: 72rem;
+  margin: 0 auto var(--s-3);
+  padding-inline: var(--s-3);
+}
+
+.b2-ecran__titre {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.b2-ecran__duree {
+  margin: 0;
+  color: var(--text-mute);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

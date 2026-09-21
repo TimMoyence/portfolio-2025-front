@@ -38,8 +38,13 @@ export function saveIdentity(input: IdentityInput): IdentityRegistration {
     throw new Error('Adresse électronique invalide');
   }
   const existante = readIdentity();
+  const memeEtudiant =
+    existante !== null &&
+    existante.prenom === prenom &&
+    existante.nom === nom &&
+    existante.email === email;
   const identite: Identity = {
-    studentKey: existante?.studentKey ?? creerCle(),
+    studentKey: memeEtudiant ? existante.studentKey : creerCle(),
     prenom,
     nom,
     email,

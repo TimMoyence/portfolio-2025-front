@@ -2,6 +2,7 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
+import { estObjet } from './retours';
 
 export interface WorkedEtape {
   readonly id: string;
@@ -31,6 +32,17 @@ function copierEtape(etape: WorkedEtape): WorkedEtape {
 function remplis(champs: Champs): Record<string, string> {
   return Object.fromEntries(
     Object.entries(champs).filter(([, valeur]) => valeur.trim().length > 0),
+  );
+}
+
+function lireChamps(valeur: unknown): Champs {
+  if (!estObjet(valeur)) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(valeur).filter(
+      (entree): entree is [string, string] => typeof entree[1] === 'string',
+    ),
   );
 }
 
@@ -76,13 +88,25 @@ export class FpWorked extends FpBlock {
     };
   }
 
-  set etayage(valeur: number) {
-    this.montrees = Math.min(this.borner(valeur), this.montrees);
-    this.refreshSiConnecte();
+  set etayage(valeur: number | null | undefined) {
+    if (typeof valeur === 'number') {
+      this.montrees = this.borner(valeur);
+      this.refreshSiConnecte();
+    }
   }
 
   get etayage(): number {
     return this.montrees;
+  }
+
+  set brouillon(valeur: unknown) {
+    if (!estObjet(valeur) || this.soumise) {
+      return;
+    }
+    this.redactions = lireChamps(valeur['redactions']);
+    this.explications = lireChamps(valeur['explications']);
+    this.noterBrouillonRepris();
+    this.refreshSiConnecte();
   }
 
   renderHand(): EscapedHtml {
@@ -97,6 +121,7 @@ export class FpWorked extends FpBlock {
         <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etape(etape, rang))}</ol>
         <button type="button" class="fp-worked__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
         <p class="fp-worked__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+        ${this.annonces()}
       </section>
     `;
   }
@@ -119,13 +144,11 @@ export class FpWorked extends FpBlock {
     if (exemple === null) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const metadonnees = exemple.metadonnees;
     return safeHtml`
       <section class="fp-carte fp-worked__exemple">
         <p class="fp-enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
         <p class="fp-worked__niveau" data-testid="niveau" data-niveau="${this.montrees}">${escapeHtml(this.texte('worked-niveau'))} ${this.montrees} / ${this.total()}</p>
-        <p class="fp-badge" data-testid="modalite">${escapeHtml(metadonnees.modalite)}</p>
-        <p class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</p>
+        <p class="fp-reperes">${this.reperes(exemple.metadonnees)}</p>
       </section>
     `;
   }
@@ -135,15 +158,16 @@ export class FpWorked extends FpBlock {
     if (this.mode() !== 'hand') {
       return;
     }
+    const verrouille = this.verrouilleApresEnvoi(this.soumise, false);
     for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-etape]')) {
       const cle = champ.dataset['etape'] ?? '';
       const explication = champ.dataset['testid'] === 'explication';
-      champ.disabled = this.soumise;
+      champ.disabled = verrouille;
       champ.addEventListener('input', () => this.noter(explication, cle, champ.value));
     }
     const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
     if (valider !== null) {
-      valider.disabled = this.soumise;
+      valider.disabled = verrouille;
       valider.addEventListener('click', () => this.valider());
     }
   }
@@ -210,9 +234,13 @@ export class FpWorked extends FpBlock {
   private noter(explication: boolean, cle: string, valeur: string): void {
     if (explication) {
       this.explications = { ...this.explications, [cle]: valeur };
-      return;
+    } else {
+      this.redactions = { ...this.redactions, [cle]: valeur };
     }
-    this.redactions = { ...this.redactions, [cle]: valeur };
+    this.signalerBrouillon(this.interne?.id ?? '', {
+      redactions: this.redactions,
+      explications: this.explications,
+    });
   }
 
   private aCompleter(): readonly WorkedEtape[] {
@@ -221,7 +249,7 @@ export class FpWorked extends FpBlock {
 
   private valider(): void {
     const exemple = this.interne;
-    if (exemple === null || this.soumise) {
+    if (exemple === null || this.verrouilleApresEnvoi(this.soumise, false)) {
       return;
     }
     const manquante = this.aCompleter().some(
@@ -233,11 +261,9 @@ export class FpWorked extends FpBlock {
       return;
     }
     this.soumise = true;
-    this.message = this.texte('reponse-enregistree');
+    this.message = this.messageApresEnvoi();
     this.emit('fp-worked-submit', {
       exempleId: exemple.id,
-      etayage: this.montrees,
-      etayageSuivant: Math.max(0, this.montrees - 1),
       redactions: remplis(this.redactions),
       explications: remplis(this.explications),
       dureeMs: this.depuisAffichage(),

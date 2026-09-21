@@ -1,27 +1,27 @@
 @if (isLoading) {
-  <main class="article-state" aria-live="polite">
-    {{ locale === 'fr' ? 'Chargement de l’article…' : 'Loading article…' }}
+  <main class="article-state" aria-live="polite" i18n="@@articleDetailLoading">
+    Chargement de l’article…
   </main>
 } @else if (hasError || !article) {
   <main class="article-state" role="alert">
-    <h1>{{ locale === 'fr' ? 'Article introuvable' : 'Article not found' }}</h1>
+    <h1 i18n="@@articleDetailNotFound">Article introuvable</h1>
     <a class="link-arrow" routerLink="/articles"
-      >{{ locale === 'fr' ? 'Retour aux articles' : 'Back to articles' }}
+      ><ng-container i18n="@@articleDetailBackToList">Retour aux articles</ng-container>
       <span aria-hidden="true">→</span></a
     >
   </main>
 } @else {
   <main class="article-detail" aria-labelledby="article-title">
     <header class="article-detail__header wrap">
-      <a class="link-arrow" routerLink="/articles"
-        >← {{ locale === 'fr' ? 'Tous les articles' : 'All articles' }}</a
+      <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
+        >← Tous les articles</a
       >
       <div class="article-detail__meta">
         <time [attr.datetime]="article.published_at">{{
           article.published_at | date: 'longDate'
         }}</time>
         @if (article.reading_time_minutes) {
-          <span>{{ article.reading_time_minutes }} min</span>
+          <span i18n="@@articleDetailReadingTime">{{ article.reading_time_minutes }} min</span>
         }
         @for (tag of article.tags; track tag) {
           <span>{{ tag }}</span>
@@ -35,7 +35,7 @@
       <div class="article-markdown" [innerHTML]="renderedContent"></div>
 
       <section class="article-sources" aria-labelledby="article-sources-title">
-        <h2 id="article-sources-title">{{ locale === 'fr' ? 'Sources' : 'Sources' }}</h2>
+        <h2 id="article-sources-title" i18n="@@articleDetailSources">Sources</h2>
         <ul>
           @for (source of article.sources; track source.url) {
             <li>
@@ -47,22 +47,10 @@
     </article>
   </main>
 
-  <app-asili-cta-band
-    [kicker]="locale === 'fr' ? 'Un sujet à clarifier ?' : 'A topic to clarify?'"
-    [title]="
-      locale === 'fr'
-        ? 'La bonne technologie commence par le bon problème.'
-        : 'The right technology starts with the right problem.'
-    "
-    [lead]="
-      locale === 'fr'
-        ? 'Parlons de ce que cette veille peut changer concrètement dans votre activité.'
-        : 'Let’s talk about what this intelligence can change in your business.'
-    "
-  >
+  <app-asili-cta-band [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead">
     <ng-container cta>
       <a class="btn btn-teal" routerLink="/contact"
-        >{{ locale === 'fr' ? 'Démarrer la conversation' : 'Start a conversation' }}
+        ><ng-container i18n="@@articlesCtaStart">Démarrer la conversation</ng-container>
         <span class="arrow" aria-hidden="true">→</span></a
       >
     </ng-container>

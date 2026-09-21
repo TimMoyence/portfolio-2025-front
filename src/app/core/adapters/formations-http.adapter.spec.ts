@@ -1,30 +1,50 @@
 import type { TestRequest } from '@angular/common/http/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import type { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
+  buildAnnotationFormateur,
   buildCoursContent,
   buildDerouleCours,
+  buildEtatParticipant,
+  buildParticipantDeSeance,
   buildRapportSeance,
+  buildRegleNotation,
+  buildReponseLibreFormateur,
+  buildSpacedQuestionPublique,
+  buildStatistiquesSeance,
+  buildStrategiePublique,
+  buildSyntheseConcept,
+  buildVerdictProduction,
+  buildVerdictTentative,
 } from '../../../testing/factories/formations.factory';
 import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
+  AnnotationFormateur,
   GroupeFormation,
   InscriptionParticipant,
+  MotifRefusGroupe,
   MotifRefusRattachement,
   MotifRefusReponse,
+  MotifRefusReponseLibre,
+  ParticipantDeSeance,
   QuestionsDues,
   RapportSeance,
   Rattachement,
+  RegleNotation,
+  ReponseLibreFormateur,
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
 import {
   FORMATIONS_PORT,
+  GroupeRefuse,
   RattachementRefuse,
+  ReponseLibreRefusee,
   ReponseRefusee,
   SujetRefuse,
 } from '../ports/formations.port';
@@ -38,7 +58,6 @@ const RACINE = `${environment.apiBaseUrl}/formations/sessions`;
 const URL_SEANCE = `${RACINE}/${SESSION_ID}`;
 
 const INSCRIPTION: InscriptionParticipant = {
-  studentKey: '11111111-1111-4111-8111-111111111111',
   prenom: 'Theo',
   nom: 'Martin',
   email: 'theo.martin@example.com',
@@ -206,6 +225,153 @@ describe('FormationsHttpAdapter', () => {
     expect(recus).toEqual([rapport]);
   });
 
+  it('lireResultats transmet la regle de notation et les statistiques servies par le serveur', () => {
+    const rapport = buildRapportSeance({
+      notation: buildRegleNotation(),
+      statistiques: buildStatistiquesSeance(),
+    });
+    const recus: RapportSeance[] = [];
+
+    adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+    attendre(`${URL_SEANCE}/results`, 'GET').flush(rapport);
+
+    expect(recus[0].notation).toEqual(buildRegleNotation());
+    expect(recus[0].statistiques).toEqual(buildStatistiquesSeance());
+  });
+
+  it('lireAnnotations GETe les annotations du formateur sur annotations', () => {
+    const annotation = buildAnnotationFormateur({ sessionId: SESSION_ID });
+    const recues: AnnotationFormateur[] = [];
+
+    adapter.lireAnnotations(SESSION_ID).subscribe(({ annotations }) => recues.push(...annotations));
+    attendre(`${URL_SEANCE}/annotations`, 'GET').flush({ annotations: [annotation] });
+
+    expect(recues).toEqual([annotation]);
+  });
+
+  it('lireReponsesLibres GETe les reponses libres de la seance sur free-responses', () => {
+    const reponse = buildReponseLibreFormateur({ sessionId: SESSION_ID });
+    const recues: ReponseLibreFormateur[] = [];
+
+    adapter.lireReponsesLibres(SESSION_ID).subscribe(({ responses }) => recues.push(...responses));
+    attendre(`${URL_SEANCE}/free-responses`, 'GET').flush({ responses: [reponse] });
+
+    expect(recues).toEqual([reponse]);
+  });
+
+  it('lireParticipants GETe les participants et leur groupe sur participants', () => {
+    const participants = [
+      buildParticipantDeSeance(),
+      buildParticipantDeSeance({ id: 'participant-2', prenom: 'Nora', groupId: 'groupe-1' }),
+    ];
+    const recus: ParticipantDeSeance[] = [];
+
+    adapter.lireParticipants(SESSION_ID).subscribe((valeur) => recus.push(...valeur.participants));
+    attendre(`${URL_SEANCE}/participants`, 'GET').flush({ participants });
+
+    expect(recus).toEqual(participants);
+  });
+
+  describe('refus d une reponse libre', () => {
+    const cas: readonly (readonly [string, number, ProblemeHttp | null, MotifRefusReponseLibre])[] =
+      [
+        ['une coupure reseau', 0, null, 'reseau'],
+        ['une panne serveur 503', 503, null, 'reseau'],
+        [
+          'un 409 SEANCE_NON_DEMARREE',
+          409,
+          buildProblemeHttp({ code: 'SEANCE_NON_DEMARREE' }),
+          'seance-non-demarree',
+        ],
+        [
+          'un 409 SEANCE_TERMINEE',
+          409,
+          buildProblemeHttp({ code: 'SEANCE_TERMINEE' }),
+          'seance-terminee',
+        ],
+        [
+          'un 404 ECRAN_NON_SERVI',
+          404,
+          buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' }),
+          'ecran-non-servi',
+        ],
+        [
+          'un 404 de seance introuvable, sans code',
+          404,
+          buildProblemeHttp({ status: 404 }),
+          'refusee',
+        ],
+        ['un 400 reponse vide', 400, buildProblemeHttp({ status: 400 }), 'refusee'],
+      ];
+
+    for (const [nom, statut, corps, motif] of cas) {
+      it(`classe ${nom} en ${motif}`, () => {
+        const erreurs: unknown[] = [];
+
+        adapter
+          .enregistrerReponseLibre(SESSION_ID, JETON, {
+            screenId: 'screen-1',
+            activityId: 'reflect-1',
+            response: 'raisonnement',
+            dureeMs: 3200,
+          })
+          .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+        const requete = httpMock.expectOne(`${URL_SEANCE}/free-responses`);
+        if (statut === 0) {
+          requete.error(new ProgressEvent('error'));
+        } else {
+          requete.flush(corps, { status: statut, statusText: 'Erreur' });
+        }
+
+        expect(erreurs[0]).toBeInstanceOf(ReponseLibreRefusee);
+        expect((erreurs[0] as ReponseLibreRefusee).motif).toBe(motif);
+        expect((erreurs[0] as ReponseLibreRefusee).statut).toBe(statut);
+      });
+    }
+  });
+
+  describe('refus d une commande de groupe', () => {
+    const commandes: readonly (readonly [string, () => Observable<unknown>, string])[] = [
+      ['creerGroupe', () => adapter.creerGroupe(SESSION_ID, 'Groupe A'), `${URL_SEANCE}/groups`],
+      [
+        'renommerGroupe',
+        () => adapter.renommerGroupe(SESSION_ID, 'groupe-1', 'Groupe A'),
+        `${URL_SEANCE}/groups/groupe-1`,
+      ],
+      [
+        'affecterParticipant',
+        () => adapter.affecterParticipant(SESSION_ID, 'participant-1', 'groupe-1'),
+        `${URL_SEANCE}/participants/participant-1/group`,
+      ],
+      [
+        'retirerParticipantDuGroupe',
+        () => adapter.retirerParticipantDuGroupe(SESSION_ID, 'participant-1'),
+        `${URL_SEANCE}/participants/participant-1/group`,
+      ],
+    ];
+    const statuts: readonly (readonly [number, MotifRefusGroupe])[] = [
+      [409, 'nom-deja-pris'],
+      [404, 'introuvable'],
+      [500, 'echec'],
+    ];
+
+    for (const [nom, appeler, url] of commandes) {
+      for (const [statut, motif] of statuts) {
+        it(`${nom} classe un ${statut} en ${motif}`, () => {
+          const erreurs: unknown[] = [];
+
+          appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+          httpMock
+            .expectOne(url)
+            .flush(buildProblemeHttp({ status: statut }), { status: statut, statusText: 'Erreur' });
+
+          expect(erreurs[0]).toBeInstanceOf(GroupeRefuse);
+          expect((erreurs[0] as GroupeRefuse).motif).toBe(motif);
+        });
+      }
+    }
+  });
+
   it('persiste les reponses libres et les annotations du formateur', () => {
     const reponse = {
       screenId: 'screen-1',
@@ -303,14 +469,18 @@ describe('FormationsHttpAdapter', () => {
   });
 
   describe('refus de rattachement', () => {
-    const refusPour = (statut: number, statusText: string): RattachementRefuse => {
+    const refusPour = (
+      statut: number,
+      statusText: string,
+      corps: ProblemeHttp | '' = '',
+    ): RattachementRefuse => {
       const erreurs: unknown[] = [];
 
       adapter.rejoindre(CODE, INSCRIPTION).subscribe({
         error: (recue: unknown) => erreurs.push(recue),
       });
 
-      httpMock.expectOne(`${RACINE}/${CODE}/join`).flush('', { status: statut, statusText });
+      httpMock.expectOne(`${RACINE}/${CODE}/join`).flush(corps, { status: statut, statusText });
 
       expect(erreurs.length).toBe(1);
       expect(erreurs[0]).toBeInstanceOf(RattachementRefuse);
@@ -322,10 +492,17 @@ describe('FormationsHttpAdapter', () => {
       expect(refus.message).not.toBe('');
     };
 
-    it('distingue le 409 deja inscrit', () => {
-      const refus = refusPour(409, 'Conflict');
+    it('distingue le 409 SEANCE_COMPLETE servi par le back', () => {
+      const refus = refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_COMPLETE' }));
 
-      attendreMotif(refus, 'deja-inscrit');
+      attendreMotif(refus, 'seance-complete');
+      expect(refus.statut).toBe(409);
+    });
+
+    it('distingue le 409 SEANCE_TERMINEE servi par le back', () => {
+      const refus = refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_TERMINEE' }));
+
+      attendreMotif(refus, 'seance-terminee');
       expect(refus.statut).toBe(409);
     });
 
@@ -336,8 +513,14 @@ describe('FormationsHttpAdapter', () => {
       expect(refus.statut).toBe(404);
     });
 
-    it('ne confond pas les deux motifs', () => {
-      expect(refusPour(409, 'Conflict').motif).not.toBe(refusPour(404, 'Not Found').motif);
+    it('ne confond pas la seance complete et le code inconnu', () => {
+      expect(
+        refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_COMPLETE' })).motif,
+      ).not.toBe(refusPour(404, 'Not Found').motif);
+    });
+
+    it('rend un motif generique pour un 409 sans code, que le front ne sait pas nommer', () => {
+      attendreMotif(refusPour(409, 'Conflict'), 'rattachement-impossible');
     });
 
     it('rend un motif generique pour les autres statuts', () => {
@@ -457,16 +640,34 @@ describe('FormationsHttpAdapter', () => {
         'refusee',
       ],
       [
-        'un 409 au code inconnu',
+        'un 409 au code SEANCE_TERMINEE',
         409,
         buildProblemeHttp({ detail: TERMINEE, code: 'SEANCE_TERMINEE' }),
+        'seance-terminee',
+      ],
+      [
+        'un 404 au code ECRAN_NON_SERVI',
+        404,
+        buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' }),
+        'ecran-non-servi',
+      ],
+      [
+        'un 409 au code PHASE_FERMEE',
+        409,
+        buildProblemeHttp({ code: 'PHASE_FERMEE' }),
+        'phase-fermee',
+      ],
+      [
+        'un 400 de validation sans code',
+        400,
+        buildProblemeHttp({ status: 400, title: 'Bad Request' }),
         'refusee',
       ],
       [
-        'un 400 portant un code de 409',
-        400,
-        buildProblemeHttp({ status: 400, title: 'Bad Request', code: 'SEANCE_NON_DEMARREE' }),
-        'refusee',
+        'un 404 sans code, le poste ne figure plus dans la seance',
+        404,
+        buildProblemeHttp({ status: 404, title: 'Not Found' }),
+        'evince',
       ],
       ['un jeton refuse 401', 401, null, 'refusee'],
     ];
@@ -518,5 +719,309 @@ describe('FormationsHttpAdapter', () => {
     req.flush(dues);
 
     expect(recus).toEqual([dues]);
+  });
+
+  describe('routes du contrat V3 (§ 9.5 et § 9.8)', () => {
+    const PARCOURS = 'b2-01-a6-coffre';
+    const SONDAGE = 'b2-01-jalon-1';
+    const DEFI = 'b2-01-a5-defi';
+    const PARTICIPANT = '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c';
+    const PRODUCTION = {
+      questionId: 'b2-01-a4-feuille-canaux',
+      valeur: { type: 'feuille', cellules: { E2: '=C2/$C$5' } },
+      dureeMs: 600000,
+    } as const;
+    const TENTATIVE = { enigmeId: 'enigme-1', reponse: '142 920', dureeMs: 42000 };
+    const TEXTE_DE_DEFI = { texte: 'Multiplier les coefficients.', dureeMs: 180000 };
+
+    interface AppelAttendu {
+      readonly nom: string;
+      readonly appeler: () => Observable<unknown>;
+      readonly url: string;
+      readonly methode: string;
+      readonly corps: unknown;
+      readonly jeton: string | null;
+      readonly reponse: object | null;
+      readonly absence?: MotifRefusReponse;
+    }
+
+    const appels = (): readonly AppelAttendu[] => [
+      {
+        nom: 'envoyerProduction',
+        appeler: () => adapter.envoyerProduction(SESSION_ID, JETON, PRODUCTION),
+        url: `${URL_SEANCE}/productions`,
+        methode: 'POST',
+        corps: PRODUCTION,
+        jeton: JETON,
+        reponse: buildVerdictProduction(),
+      },
+      {
+        nom: 'tenterEnigme',
+        appeler: () => adapter.tenterEnigme(SESSION_ID, JETON, PARCOURS, TENTATIVE),
+        url: `${URL_SEANCE}/escape/${PARCOURS}/tentatives`,
+        methode: 'POST',
+        corps: TENTATIVE,
+        jeton: JETON,
+        reponse: buildVerdictTentative(),
+        absence: 'refusee',
+      },
+      {
+        nom: 'declarerJalon',
+        appeler: () => adapter.declarerJalon(SESSION_ID, JETON, SONDAGE, 'clair'),
+        url: `${URL_SEANCE}/pulses/${SONDAGE}`,
+        methode: 'PUT',
+        corps: { etat: 'clair' },
+        jeton: JETON,
+        reponse: null,
+      },
+      {
+        nom: 'lireRappels',
+        appeler: () => adapter.lireRappels(SESSION_ID, JETON),
+        url: `${URL_SEANCE}/rappels`,
+        methode: 'GET',
+        corps: null,
+        jeton: JETON,
+        reponse: { questions: [buildSpacedQuestionPublique()] },
+      },
+      {
+        nom: 'envoyerDefi',
+        appeler: () => adapter.envoyerDefi(SESSION_ID, JETON, DEFI, TEXTE_DE_DEFI),
+        url: `${URL_SEANCE}/defis/${DEFI}/tentative`,
+        methode: 'POST',
+        corps: TEXTE_DE_DEFI,
+        jeton: JETON,
+        reponse: { strategies: [buildStrategiePublique()] },
+      },
+      {
+        nom: 'lireStrategies',
+        appeler: () => adapter.lireStrategies(SESSION_ID, JETON, DEFI),
+        url: `${URL_SEANCE}/defis/${DEFI}/strategies`,
+        methode: 'GET',
+        corps: null,
+        jeton: JETON,
+        reponse: { strategies: [buildStrategiePublique({ fausse: true })] },
+      },
+      {
+        nom: 'lireMonEtat',
+        appeler: () => adapter.lireMonEtat(SESSION_ID, JETON),
+        url: `${URL_SEANCE}/moi`,
+        methode: 'GET',
+        corps: null,
+        jeton: JETON,
+        reponse: buildEtatParticipant(),
+      },
+      {
+        nom: 'lireSyntheseRappels',
+        appeler: () => adapter.lireSyntheseRappels(SESSION_ID),
+        url: `${URL_SEANCE}/rappels/synthese`,
+        methode: 'GET',
+        corps: null,
+        jeton: null,
+        reponse: { concepts: [buildSyntheseConcept()] },
+      },
+      {
+        nom: 'evincerParticipant',
+        appeler: () => adapter.evincerParticipant(SESSION_ID, PARTICIPANT),
+        url: `${URL_SEANCE}/participants/${PARTICIPANT}`,
+        methode: 'DELETE',
+        corps: null,
+        jeton: null,
+        reponse: null,
+      },
+      {
+        nom: 'readmettreParticipant',
+        appeler: () => adapter.readmettreParticipant(SESSION_ID, PARTICIPANT),
+        url: `${URL_SEANCE}/participants/${PARTICIPANT}/readmission`,
+        methode: 'POST',
+        corps: {},
+        jeton: null,
+        reponse: null,
+      },
+      {
+        nom: 'ouvrirSeance avec version et capacite',
+        appeler: () => adapter.ouvrirSeance('b2-01-x', { version: 3, capacite: 40 }),
+        url: RACINE,
+        methode: 'POST',
+        corps: { courseSlug: 'b2-01-x', version: 3, capacite: 40 },
+        jeton: null,
+        reponse: { sessionId: SESSION_ID, code: CODE },
+      },
+      {
+        nom: 'piloter une phase d ecran',
+        appeler: () =>
+          adapter.piloter(SESSION_ID, { pilotage: { screenId: 'B2-01-A3-01', phase: 'revote' } }),
+        url: `${URL_SEANCE}/control`,
+        methode: 'PATCH',
+        corps: { pilotage: { screenId: 'B2-01-A3-01', phase: 'revote' } },
+        jeton: null,
+        reponse: null,
+      },
+    ];
+
+    it('appelle chaque route avec son verbe, son corps et son en-tete, et rend la reponse servie', () => {
+      for (const appel of appels()) {
+        const recus: unknown[] = [];
+
+        appel.appeler().subscribe((valeur) => recus.push(valeur));
+        const req = attendre(appel.url, appel.methode);
+
+        expect(req.request.body).withContext(appel.nom).toEqual(appel.corps);
+        expect(req.request.headers.get(ENTETE_JETON)).withContext(appel.nom).toBe(appel.jeton);
+        req.flush(appel.reponse);
+        expect(recus).withContext(appel.nom).toEqual([appel.reponse]);
+      }
+    });
+
+    describe('refus d une ecriture etudiante', () => {
+      const ecritures = (): readonly AppelAttendu[] =>
+        appels().filter((appel) => appel.jeton !== null && appel.methode !== 'GET');
+
+      const cas: readonly (readonly [number, string | undefined, MotifRefusReponse])[] = [
+        [409, 'REPONSE_DEJA_ENREGISTREE', 'deja-repondue'],
+        [409, 'ENIGME_DEJA_RESOLUE', 'deja-repondue'],
+        [409, 'SEANCE_NON_DEMARREE', 'seance-non-demarree'],
+        [409, 'SEANCE_TERMINEE', 'seance-terminee'],
+        [404, 'ECRAN_NON_SERVI', 'ecran-non-servi'],
+        [409, 'PHASE_FERMEE', 'phase-fermee'],
+        [409, 'ENIGME_VERROUILLEE', 'enigme-verrouillee'],
+        [409, 'TENTATIVES_EPUISEES', 'tentatives-epuisees'],
+        [400, 'PRODUCTION_VIDE', 'production-vide'],
+        [400, 'TYPE_DE_QUESTION', 'refusee'],
+        [400, 'PRODUCTION_INVALIDE', 'refusee'],
+        [404, 'ACTIVITE_INCONNUE', 'refusee'],
+        [401, undefined, 'refusee'],
+        [429, undefined, 'reseau'],
+        [503, undefined, 'reseau'],
+      ];
+
+      for (const [statut, code, motif] of cas) {
+        it(`classe un ${statut} ${code ?? 'sans code'} en ${motif} pour chaque ecriture`, () => {
+          for (const ecriture of ecritures()) {
+            const erreurs: unknown[] = [];
+
+            ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+            httpMock.expectOne(ecriture.url).flush(buildProblemeHttp({ status: statut, code }), {
+              status: statut,
+              statusText: 'Erreur',
+            });
+
+            const refus = erreurs[0] as ReponseRefusee;
+            expect(refus).withContext(ecriture.nom).toBeInstanceOf(ReponseRefusee);
+            expect([refus.motif, refus.statut]).withContext(ecriture.nom).toEqual([motif, statut]);
+            expect(refus.message).withContext(ecriture.nom).not.toBe('');
+          }
+        });
+      }
+
+      it('classe une coupure reseau, sans statut, en panne reseau', () => {
+        for (const ecriture of ecritures()) {
+          const erreurs: unknown[] = [];
+
+          ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+          httpMock.expectOne(ecriture.url).error(new ProgressEvent('error'));
+
+          expect((erreurs[0] as ReponseRefusee).motif)
+            .withContext(ecriture.nom)
+            .toBe('reseau');
+        }
+      });
+
+      it('lit un 404 sans code comme une eviction, sauf la ou il designe une enigme absente', () => {
+        for (const ecriture of ecritures()) {
+          const erreurs: unknown[] = [];
+
+          ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+          httpMock
+            .expectOne(ecriture.url)
+            .flush(buildProblemeHttp({ status: 404, title: 'Not Found' }), {
+              status: 404,
+              statusText: 'Not Found',
+            });
+
+          expect((erreurs[0] as ReponseRefusee).motif)
+            .withContext(ecriture.nom)
+            .toBe(ecriture.absence ?? 'evince');
+        }
+      });
+    });
+
+    describe('routes du § 9.5 que le back ne sert pas encore (rappels espacés)', () => {
+      it('demande les rappels au chemin du contrat, avec le jeton du participant', () => {
+        const questions = [buildSpacedQuestionPublique()];
+        const recus: unknown[] = [];
+
+        adapter.lireRappels(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
+        const req = attendre(`${URL_SEANCE}/rappels`, 'GET');
+        expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
+        req.flush({ questions });
+
+        expect(recus).toEqual([{ questions }]);
+      });
+
+      it('traduit en refus affichable le 404 ECRAN_NON_SERVI annonce au contrat', () => {
+        const erreurs: unknown[] = [];
+
+        adapter.lireRappels(SESSION_ID, JETON).subscribe({
+          error: (recue: unknown) => erreurs.push(recue),
+        });
+        httpMock
+          .expectOne(`${URL_SEANCE}/rappels`)
+          .flush(buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' }), {
+            status: 404,
+            statusText: 'Not Found',
+          });
+
+        expect((erreurs[0] as ReponseRefusee).motif).toBe('ecran-non-servi');
+      });
+
+      it('lit la synthese des rappels au chemin du contrat, sans jeton de participant', () => {
+        const concepts = [buildSyntheseConcept()];
+        const recus: unknown[] = [];
+
+        adapter.lireSyntheseRappels(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+        const req = attendre(`${URL_SEANCE}/rappels/synthese`, 'GET');
+        expect(req.request.headers.has(ENTETE_JETON)).toBeFalse();
+        req.flush({ concepts });
+
+        expect(recus).toEqual([{ concepts }]);
+      });
+    });
+
+    describe('regle de notation servie par un serveur v2', () => {
+      const RAPPORT_V2 = (): object => {
+        const notation: Partial<RegleNotation> = { ...buildRegleNotation() };
+        delete notation.typesNotables;
+        delete notation.productionCompteSi;
+        delete notation.statistiquesSurQuestionsNotees;
+        return { ...buildRapportSeance(), notation };
+      };
+
+      it('lireResultats la complete des trois champs du contrat final', () => {
+        const recus: RapportSeance[] = [];
+
+        adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+        attendre(`${URL_SEANCE}/results`, 'GET').flush(RAPPORT_V2());
+
+        expect(recus[0].notation).toEqual(buildRegleNotation());
+      });
+
+      it('exporterBilan rend le rapport tel que le serveur l a servi', () => {
+        const recus: RapportSeance[] = [];
+
+        adapter.exporterBilan(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+        attendre(`${URL_SEANCE}/report`, 'GET').flush(RAPPORT_V2());
+
+        expect(recus).toEqual([RAPPORT_V2() as RapportSeance]);
+      });
+    });
+
+    it('laisse sans notation un rapport qui n en porte pas', () => {
+      const recus: RapportSeance[] = [];
+
+      adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+      attendre(`${URL_SEANCE}/results`, 'GET').flush(buildRapportSeance());
+
+      expect(recus).toEqual([buildRapportSeance()]);
+    });
   });
 });

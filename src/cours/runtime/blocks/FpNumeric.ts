@@ -2,11 +2,8 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
-
-export type Tolerance =
-  | { readonly type: 'absolue'; readonly valeur: number }
-  | { readonly type: 'relative'; readonly valeur: number }
-  | { readonly type: 'decimales'; readonly valeur: number };
+import { estVerdictDeReponse, type VerdictDeReponse } from './retours';
+import { lireNombreSaisi } from './saisie-numerique';
 
 export interface NumericQuestionPublique {
   readonly id: string;
@@ -15,19 +12,7 @@ export interface NumericQuestionPublique {
   readonly metadonnees: MetadonneesBrique;
 }
 
-export interface NumericQuestion extends NumericQuestionPublique {
-  readonly tolerance: Tolerance;
-  readonly valeurAttendue: number;
-}
-
 const ID_UNITE = 'fp-numeric-unite';
-const ESPACES = /\s/g;
-const DECIMAL = /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/;
-
-function normaliserSaisie(brut: string): number | null {
-  const compacte = brut.replace(ESPACES, '').replaceAll(',', '.');
-  return DECIMAL.test(compacte) ? Number(compacte) : null;
-}
 
 function projeterQuestion(source: NumericQuestionPublique): NumericQuestionPublique {
   return {
@@ -40,9 +25,10 @@ function projeterQuestion(source: NumericQuestionPublique): NumericQuestionPubli
 
 export class FpNumeric extends FpBlock {
   private interne: NumericQuestionPublique | null = null;
+  private interneVerdict: VerdictDeReponse | null = null;
   private saisie = '';
   private message = '';
-  private repondu = false;
+  private envoye = false;
 
   set question(valeur: NumericQuestionPublique | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
@@ -50,13 +36,24 @@ export class FpNumeric extends FpBlock {
     if (change) {
       this.saisie = '';
       this.message = '';
-      this.repondu = false;
+      this.envoye = false;
+      this.interneVerdict = null;
     }
     this.refreshSiConnecte();
   }
 
   get question(): NumericQuestionPublique | null {
     return this.interne;
+  }
+
+  set verdict(valeur: VerdictDeReponse | null) {
+    this.interneVerdict =
+      estVerdictDeReponse(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
+    this.refreshSiConnecte();
+  }
+
+  get verdict(): VerdictDeReponse | null {
+    return this.interneVerdict;
   }
 
   renderHand(): EscapedHtml {
@@ -80,6 +77,8 @@ export class FpNumeric extends FpBlock {
         </div>
         <button type="button" class="fp-numeric__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+        ${this.verdictDeReponse(this.interneVerdict)}
+        ${this.annonces()}
       </fieldset>
     `;
   }
@@ -102,12 +101,10 @@ export class FpNumeric extends FpBlock {
     if (!question) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const metadonnees = question.metadonnees;
     return safeHtml`
       <div class="fp-carte fp-numeric__numerique">
         <p class="fp-enonce">${escapeHtml(question.enonce)}</p>
-        <p class="fp-badge" data-testid="modalite">${escapeHtml(metadonnees.modalite)}</p>
-        <p class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} min</p>
+        <p class="fp-reperes">${this.reperes(question.metadonnees)}</p>
       </div>
     `;
   }
@@ -122,27 +119,32 @@ export class FpNumeric extends FpBlock {
     if (champ === null || valider === null) {
       return;
     }
-    champ.disabled = this.repondu;
-    valider.disabled = this.repondu;
+    const verrouille = this.verrouille();
+    champ.disabled = verrouille;
+    valider.disabled = verrouille;
     champ.addEventListener('input', () => {
       this.saisie = champ.value;
     });
     valider.addEventListener('click', () => this.soumettre(champ.value));
   }
 
+  private verrouille(): boolean {
+    return this.verrouilleApresEnvoi(this.envoye, this.interneVerdict !== null);
+  }
+
   private soumettre(brut: string): void {
-    if (this.repondu) {
+    if (this.verrouille()) {
       return;
     }
     this.saisie = brut;
-    const valeur = normaliserSaisie(brut);
+    const valeur = lireNombreSaisi(brut);
     if (valeur === null) {
       this.message = this.texte('saisie-non-numerique');
       this.refresh();
       return;
     }
-    this.repondu = true;
-    this.message = this.texte('reponse-enregistree');
+    this.envoye = true;
+    this.message = this.messageApresEnvoi();
     this.emit('fp-numeric-submit', {
       questionId: this.question?.id,
       valeur,

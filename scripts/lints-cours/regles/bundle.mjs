@@ -33,6 +33,12 @@ const BLANCS = /\s+/g;
  */
 
 /**
+ * @typedef {object} Manquement
+ * @property {string | null} ecran
+ * @property {string} raison
+ */
+
+/**
  * @typedef {object} RapportDeSortie
  * @property {string} racine
  * @property {boolean} existe
@@ -125,7 +131,7 @@ export function inspecterSortie(racine) {
 
 /**
  * @param {RapportDeSortie} rapport
- * @returns {import('../moteur.mjs').Manquement[]}
+ * @returns {Manquement[]}
  */
 function manquementsDe(rapport) {
   if (!rapport.existe) {
@@ -152,19 +158,11 @@ function manquementsDe(rapport) {
 
 /**
  * @param {string} racine
- * @returns {{ rapport: RapportDeSortie, manquements: import('../moteur.mjs').Manquement[] }}
+ * @returns {{ rapport: RapportDeSortie, manquements: Manquement[] }}
  */
 export function verifierSortie(racine) {
   const rapport = inspecterSortie(racine);
   return { rapport, manquements: manquementsDe(rapport) };
-}
-
-/**
- * @param {string} racine
- * @returns {import('../moteur.mjs').Regle}
- */
-export function creerRegleBundle(racine) {
-  return { id: ID_BUNDLE, controler: () => verifierSortie(racine).manquements };
 }
 
 /**

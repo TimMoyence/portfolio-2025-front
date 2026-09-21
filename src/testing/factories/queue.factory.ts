@@ -4,6 +4,7 @@ export function buildEnvoiReponse(
   overrides: Partial<Omit<EnvoiReponse, 'id'>> = {},
 ): Omit<EnvoiReponse, 'id'> {
   return {
+    nature: 'reponse',
     sessionId: 'b1-09-interets-composes',
     studentKey: 'etu-1',
     questionId: 'Q-CAP-03',

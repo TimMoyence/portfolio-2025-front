@@ -234,8 +234,6 @@ export const routes: Routes = [
       seoKey: 'formations',
     },
   },
-  // Routes specifiques toolkit — declarees AVANT `formations/:slug` pour
-  // prioriser le matching Angular Router (plus specifique d'abord).
   {
     path: 'formations/ia-solopreneurs/toolkit/:token',
     loadComponent: () =>

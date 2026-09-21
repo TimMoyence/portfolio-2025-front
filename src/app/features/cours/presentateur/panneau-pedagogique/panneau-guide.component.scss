@@ -1,0 +1,51 @@
+@use './panneau' as panneau;
+
+:host {
+  display: block;
+}
+
+.panneau-guide {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.panneau-guide__titre {
+  margin: 0;
+}
+
+.panneau-guide__vide {
+  @include panneau.discret;
+}
+
+.panneau-guide__liste {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.panneau-guide__rubrique {
+  @include panneau.bloc;
+
+  dt {
+    @include panneau.intitule;
+  }
+
+  dd {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+    margin: 0;
+    line-height: 1.45;
+  }
+}
+
+.panneau-guide__reveler {
+  padding: 0.4rem 0.65rem;
+  border: 1px solid rgba(39, 124, 112, 0.35);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--teal-deep, #277c70);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}

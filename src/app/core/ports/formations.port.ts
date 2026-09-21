@@ -3,10 +3,17 @@ import type { Observable } from 'rxjs';
 import type {
   CoursContent,
   DerouleCours,
+  EtatParticipant,
+  EtatPulse,
   FreeRange,
   PacingMode,
+  PilotageEcran,
   ResultatsSeance,
+  StatistiquesSeance,
+  TypeQuestion,
+  ValeurProduction,
 } from '../../../cours/content/types';
+import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
 
 export type ValeurReponse = number | string;
 
@@ -19,10 +26,42 @@ export interface CommandePilotage {
   ecran?: number;
   mode?: PacingMode;
   intervalle?: FreeRange;
+  pilotage?: { screenId: string } & PilotageEcran;
+}
+
+export interface VerdictProduction {
+  correcte: boolean;
+  score: number;
+  details: readonly {
+    cle: string;
+    juste: boolean;
+    libelleConfusion: string | null;
+  }[];
+  libelleConfusion: string | null;
+}
+
+export interface VerdictTentative {
+  correcte: boolean;
+  fragment: string | null;
+  tentativesRestantes: number;
+}
+
+export interface StrategiePublique {
+  id: string;
+  libelle: string;
+  fausse?: boolean;
+}
+
+export interface SyntheseConcept {
+  concept: string;
+  libelle: string;
+  boite1: number;
+  boite2: number;
+  boite3: number;
+  nonVus: number;
 }
 
 export interface InscriptionParticipant {
-  studentKey: string;
   prenom: string;
   nom: string;
   email: string;
@@ -85,6 +124,29 @@ export interface GroupeFormation {
   updatedAt: string;
 }
 
+export interface ParticipantDeSeance {
+  id: string;
+  prenom: string;
+  nom: string;
+  groupId: string | null;
+  evince: boolean;
+}
+
+export interface RegleNotation {
+  noteMax: number;
+  base: 'participation-relative-cohorte';
+  partCohorteReference: number;
+  ratioSeuilValidation: number;
+  neSaitPasCompteCommeReponse: boolean;
+  pointsNonReponse: number;
+  reponsesLibresNotees: boolean;
+  seuilQuestionProbleme: number;
+  decimalesStatistiques: number;
+  typesNotables: readonly TypeQuestion[];
+  productionCompteSi: 'au-moins-une-saisie';
+  statistiquesSurQuestionsNotees: boolean;
+}
+
 export interface VerdictReponse {
   reussite: boolean;
   libelleConfusion: string | null;
@@ -136,13 +198,17 @@ export interface RapportSeance {
   participants: readonly ParticipantRapporte[];
   conceptsFragiles: readonly string[];
   resultats: ResultatsSeance;
+  statistiques?: StatistiquesSeance;
+  notation?: RegleNotation;
 }
 
-export type MotifRefusRattachement = 'code-inconnu' | 'deja-inscrit' | 'rattachement-impossible';
+export type MotifRefusRattachement =
+  'code-inconnu' | 'seance-complete' | 'seance-terminee' | 'rattachement-impossible';
 
 const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, string>> = {
   'code-inconnu': $localize`:cours.refusCodeInconnu|@@coursRefusCodeInconnu:Ce code de séance n'existe pas : vérifiez les caractères dictés.`,
-  'deja-inscrit': $localize`:cours.refusDejaInscrit|@@coursRefusDejaInscrit:Cette inscription est déjà enregistrée, ou la séance n'en accepte plus.`,
+  'seance-complete': $localize`:cours.refusSeanceComplete|@@coursRefusSeanceComplete:Cette séance a atteint sa capacité : demandez à votre formateur de libérer une place.`,
+  'seance-terminee': $localize`:cours.refusSeanceTerminee|@@coursRefusSeanceTerminee:Cette séance est terminée : elle n’accepte plus de nouveau participant.`,
   'rattachement-impossible': $localize`:cours.refusRattachementImpossible|@@coursRefusRattachementImpossible:Le rattachement à la séance a échoué.`,
 };
 
@@ -173,12 +239,30 @@ export class SujetRefuse extends Error {
   }
 }
 
-export type MotifRefusReponse = 'reseau' | 'deja-repondue' | 'seance-non-demarree' | 'refusee';
+export type MotifRefusReponse =
+  | 'reseau'
+  | 'deja-repondue'
+  | 'seance-non-demarree'
+  | 'seance-terminee'
+  | 'ecran-non-servi'
+  | 'phase-fermee'
+  | 'enigme-verrouillee'
+  | 'tentatives-epuisees'
+  | 'production-vide'
+  | 'evince'
+  | 'refusee';
 
 const MESSAGES_REFUS_REPONSE: Readonly<Record<MotifRefusReponse, string>> = {
   reseau: $localize`:cours.reponseReseau|@@coursReponseReseau:Votre réponse n’a pas pu partir : ce poste la renverra dès que le serveur répondra.`,
   'deja-repondue': $localize`:cours.reponseDejaRepondue|@@coursReponseDejaRepondue:Votre réponse à cette question était déjà enregistrée.`,
   'seance-non-demarree': $localize`:cours.reponseSeanceNonDemarree|@@coursReponseSeanceNonDemarree:La séance n’a pas encore démarré : votre réponse n’a pas été enregistrée. Attendez le signal de votre formateur.`,
+  'seance-terminee': $localize`:cours.reponseSeanceTerminee|@@coursReponseSeanceTerminee:La séance est terminée : votre réponse n’a pas été enregistrée.`,
+  'ecran-non-servi': $localize`:cours.reponseEcranNonServi|@@coursReponseEcranNonServi:Cet écran n’est pas encore ouvert`,
+  'phase-fermee': $localize`:cours.reponsePhaseFermee|@@coursReponsePhaseFermee:Le vote est fermé pour cette question`,
+  'enigme-verrouillee': $localize`:cours.reponseEnigmeVerrouillee|@@coursReponseEnigmeVerrouillee:Verrouillée : l’énigme précédente l’ouvrira`,
+  'tentatives-epuisees': $localize`:cours.reponseTentativesEpuisees|@@coursReponseTentativesEpuisees:Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment`,
+  'production-vide': $localize`:cours.reponseProductionVide|@@coursReponseProductionVide:Saisissez au moins une valeur ou choisissez « Je ne sais pas »`,
+  evince: $localize`:cours.reponseEvince|@@coursReponseEvince:Votre formateur a retiré ce poste de la séance : votre réponse n’a pas été enregistrée.`,
   refusee: $localize`:cours.reponseRefusee|@@coursReponseRefusee:Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.`,
 };
 
@@ -192,8 +276,36 @@ export class ReponseRefusee extends Error {
   }
 }
 
+export type MotifRefusReponseLibre =
+  'reseau' | 'seance-non-demarree' | 'seance-terminee' | 'ecran-non-servi' | 'refusee';
+
+export class ReponseLibreRefusee extends Error {
+  constructor(
+    readonly motif: MotifRefusReponseLibre,
+    readonly statut: number,
+  ) {
+    super(`Réponse libre refusée : ${motif} (statut ${statut})`);
+    this.name = 'ReponseLibreRefusee';
+  }
+}
+
+export type MotifRefusGroupe = 'nom-deja-pris' | 'introuvable' | 'echec';
+
+export class GroupeRefuse extends Error {
+  constructor(
+    readonly motif: MotifRefusGroupe,
+    readonly statut: number,
+  ) {
+    super(`Commande de groupe refusée : ${motif} (statut ${statut})`);
+    this.name = 'GroupeRefuse';
+  }
+}
+
 export interface FormationsPort {
-  ouvrirSeance(courseSlug: string): Observable<SeanceOuverte>;
+  ouvrirSeance(
+    courseSlug: string,
+    options?: { version?: number; capacite?: number },
+  ): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;
   lireSujet(sessionId: string, jeton: string): Observable<CoursContent>;
   demarrer(sessionId: string): Observable<void>;
@@ -214,6 +326,7 @@ export interface FormationsPort {
   renommerGroupe(sessionId: string, groupId: string, name: string): Observable<GroupeFormation>;
   affecterParticipant(sessionId: string, participantId: string, groupId: string): Observable<void>;
   retirerParticipantDuGroupe(sessionId: string, participantId: string): Observable<void>;
+  lireParticipants(sessionId: string): Observable<{ participants: readonly ParticipantDeSeance[] }>;
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement>;
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse>;
   enregistrerReponseLibre(
@@ -227,6 +340,42 @@ export interface FormationsPort {
     incidents: readonly IncidentEtudiant[],
   ): Observable<void>;
   lireQuestionsDues(sessionId: string, jeton: string): Observable<QuestionsDues>;
+  envoyerProduction(
+    sessionId: string,
+    jeton: string,
+    production: { questionId: string; valeur: ValeurProduction; dureeMs: number },
+  ): Observable<VerdictProduction>;
+  tenterEnigme(
+    sessionId: string,
+    jeton: string,
+    parcoursId: string,
+    tentative: { enigmeId: string; reponse: string; dureeMs: number },
+  ): Observable<VerdictTentative>;
+  declarerJalon(
+    sessionId: string,
+    jeton: string,
+    sondageId: string,
+    etat: EtatPulse,
+  ): Observable<void>;
+  lireRappels(
+    sessionId: string,
+    jeton: string,
+  ): Observable<{ questions: readonly SpacedQuestionPublique[] }>;
+  envoyerDefi(
+    sessionId: string,
+    jeton: string,
+    defiId: string,
+    tentative: { texte: string; dureeMs: number },
+  ): Observable<{ strategies: readonly StrategiePublique[] }>;
+  lireStrategies(
+    sessionId: string,
+    jeton: string,
+    defiId: string,
+  ): Observable<{ strategies: readonly StrategiePublique[] }>;
+  lireMonEtat(sessionId: string, jeton: string): Observable<EtatParticipant>;
+  lireSyntheseRappels(sessionId: string): Observable<{ concepts: readonly SyntheseConcept[] }>;
+  evincerParticipant(sessionId: string, participantId: string): Observable<void>;
+  readmettreParticipant(sessionId: string, participantId: string): Observable<void>;
 }
 
 export const FORMATIONS_PORT = new InjectionToken<FormationsPort>('FORMATIONS_PORT');

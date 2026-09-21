@@ -12,10 +12,16 @@ const PREFIXE_COURS = `${RACINE_COURS}/`;
 const PREFIXE_CONTENU = `${RACINE_COURS}/content/`;
 const PREFIXE_TESTS = 'src/testing/';
 const PREFIXE_PUPITRE = `${RACINE_APP}/features/cours/presentateur/`;
+const PREFIXES_RENDU_ETUDIANT = [
+  `${RACINE_APP}/shared/slides/`,
+  `${RACINE_APP}/features/formations/b2-`,
+];
 const EXTENSIONS = ['.ts', '.html'];
 
 const FRAMEWORKS_INTERDITS = ['@angular', 'rxjs', 'zone.js'];
 const OUVERTURE_TYPE = /^\s*(?:export\s+)?(?:declare\s+)?(?:interface\s+\w|type\s+\w[^=]*=)/;
+const OUVERTURE_ALIAS = /^\s*(?:export\s+)?(?:declare\s+)?type\s+\w[^=]*=/;
+const FIN_D_ALIAS = /;\s*$|^\s*$/;
 const DECLARATION_TYPE = /^\s*(?:export|import)\s+type\s/;
 const TERMES_CORRIGE = [
   'misconception',
@@ -41,9 +47,9 @@ const MOTIFS_SPECIFICATION = [
 
 const POURQUOI = {
   [AD2]:
-    "AD-2 : src/cours/ doit pouvoir etre exporte tel quel en fichier HTML autoporte, ouvrable hors ligne sans Angular ni bundler. Un import de framework, meme dynamique ou a effet de bord, et toute remontee relative hors de src/cours/ rendent cet export impossible.",
+    "AD-2 : src/cours/ est une couche feuille que src/app/ consomme et qui ne consomme rien en retour. Ses briques (runtime/blocks/) sont des Custom Elements que le navigateur construit lui-meme apres customElements.define (runtime/core/register.ts), hors de tout contexte d injection et du rendu d Angular : inject() ou effect() y levent NG0203, et ce qu elles dessinent dans leur shadow root n est pas suivi par la detection de changement. Le noyau (runtime/core/) et le contenu (content/) restent des modules TypeScript purs, pilotes par appels et callbacks depuis les composants et testes sans TestBed. Un import de framework, meme dynamique ou a effet de bord, ou une remontee relative hors de src/cours/ inverse ce sens de dependance.",
   [AD4]:
-    "AD-4 : la surface cours (src/cours/content/ et les fichiers cours de src/app/) est compilee dans le fichier JavaScript que le navigateur de l etudiant telecharge. Tout ce qu elle contient est public : il suffit d ouvrir les sources et d y chercher le mot. La bonne reponse, les misconceptions et le bareme ne franchissent jamais cette frontiere, sous aucun nom. Seul le pupitre formateur (src/app/features/cours/presentateur/) nomme le corrige, qu il recoit au runtime du deroule authentifie ; aucun autre fichier de la surface cours ne l importe, sans quoi son exemption ferait entrer le corrige dans le code de l etudiant.",
+    "AD-4 : la surface cours (src/cours/content/, les fichiers cours de src/app/, le rendu partage des slides src/app/shared/slides/ et les pages de cours src/app/features/formations/b2-*) est compilee dans le fichier JavaScript que le navigateur de l etudiant telecharge. Tout ce qu elle contient est public : il suffit d ouvrir les sources et d y chercher le mot. La bonne reponse, les misconceptions et le bareme ne franchissent jamais cette frontiere, sous aucun nom. Seul le pupitre formateur (src/app/features/cours/presentateur/) nomme le corrige, qu il recoit au runtime du deroule authentifie ; aucun autre fichier de la surface cours ne l importe, sans quoi son exemption ferait entrer le corrige dans le code de l etudiant.",
 };
 
 /**
@@ -78,6 +84,9 @@ export function estFichierDeTest(fichier) {
  */
 export function estSurfaceCours(fichier) {
   if (fichier.startsWith(PREFIXE_CONTENU)) {
+    return true;
+  }
+  if (PREFIXES_RENDU_ETUDIANT.some((prefixe) => fichier.startsWith(prefixe))) {
     return true;
   }
   return fichier.startsWith(`${RACINE_APP}/`) && fichier.includes('cours');
@@ -201,13 +210,21 @@ export function analyserFrontiere({ fichier, contenu }) {
 function lignesEffacees(contenu) {
   const effacees = new Set();
   let profondeur = 0;
+  let aliasOuvert = false;
   contenu.split('\n').forEach((texte, index) => {
-    const entre = profondeur === 0 && OUVERTURE_TYPE.test(texte);
-    if (profondeur > 0 || entre || DECLARATION_TYPE.test(texte)) {
+    const entre = profondeur === 0 && !aliasOuvert && OUVERTURE_TYPE.test(texte);
+    const dansUnType = profondeur > 0 || entre || aliasOuvert;
+    if (dansUnType || DECLARATION_TYPE.test(texte)) {
       effacees.add(index);
     }
-    if (profondeur > 0 || entre) {
+    if (dansUnType) {
       profondeur += compter(texte, '{') - compter(texte, '}');
+    }
+    if (entre && OUVERTURE_ALIAS.test(texte)) {
+      aliasOuvert = true;
+    }
+    if (aliasOuvert && profondeur === 0 && FIN_D_ALIAS.test(texte)) {
+      aliasOuvert = false;
     }
   });
   return effacees;

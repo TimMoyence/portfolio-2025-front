@@ -126,6 +126,14 @@ describe('SebastianAddDrinkSheetComponent', () => {
     expect(component.quantity()).toBe(1);
   });
 
+  it('écrit Quantité et Café avec leurs accents (H4)', () => {
+    const texte = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(texte).toContain('Quantité');
+    expect(texte).toContain('Café');
+    expect(texte).not.toContain('Quantite');
+  });
+
   it('devrait afficher les recents passes en input', () => {
     const recents = [
       buildSebastianEntry({

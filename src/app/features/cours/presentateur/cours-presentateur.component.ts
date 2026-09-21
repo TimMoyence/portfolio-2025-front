@@ -20,6 +20,7 @@ import type {
   DerouleCours,
   EcranDeroule,
   PacingMode,
+  PilotageEcran,
   ResultatQuestion,
   ResultatsSeance,
 } from '../../../../cours/content/types';
@@ -29,20 +30,40 @@ import type {
   StatutSession,
   Sync,
 } from '../../../../cours/runtime/core/sync';
-import type { CommandePilotage } from '../../../core/ports/formations.port';
+import type {
+  CommandePilotage,
+  RapportSeance,
+  RegleNotation,
+  SyntheseConcept,
+} from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
+import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import {
+  enoncesDuDeroule,
   questionsDeLEcran,
-  SlideActivityComponent,
-} from '../../../shared/slides/session/slide-activity.component';
+  titreDeLEcran,
+} from '../../../shared/slides/session/lecture-ecran';
+import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { objet } from '../../../shared/slides/visual/presentation-v2';
+import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
+import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 import { SlideComponent } from '../../../shared/slides/deck/slide.component';
 import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
+import { phraseDeNotation } from './regle-de-notation';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
+
+type LectureDeLaNotation = 'a-lire' | 'lue' | 'echec';
+
+function resultatsDuRapport(rapport: RapportSeance): ResultatsSeance {
+  return rapport.statistiques === undefined
+    ? rapport.resultats
+    : { ...rapport.resultats, statistiques: rapport.statistiques };
+}
 
 type Chargement = 'repos' | 'chargement' | 'succes' | 'echec';
 
@@ -74,6 +95,7 @@ const ETAT_ANNONCE: Readonly<Record<StatutSession, EtatSeance>> = {
 };
 
 const FENETRE_SCENE = 'cours-scene';
+const ECRAN_DE_RAPPEL = 'fp-spaced';
 
 function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   const apercu = questionsDeLEcran(ecran);
@@ -93,6 +115,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   selector: 'app-cours-presentateur',
   standalone: true,
   imports: [
+    CoursPanneauActiviteComponent,
     CoursPanneauQuestionComponent,
     CoursPanneauPedagogiqueComponent,
     SlideActivityComponent,
@@ -261,18 +284,54 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
             @if (resultats()?.statistiques; as statistiques) {
               <dl class="join-panel__stats" data-testid="presentateur-statistiques">
                 <div>
-                  <dt>Moyenne</dt>
+                  <dt i18n="@@presentateurStatMoyenne">Moyenne</dt>
                   <dd>{{ statistiques.moyenne }}</dd>
                 </div>
                 <div>
-                  <dt>Médiane</dt>
+                  <dt i18n="@@presentateurStatMediane">Médiane</dt>
                   <dd>{{ statistiques.mediane }}</dd>
                 </div>
                 <div>
-                  <dt>Réussite</dt>
+                  <dt i18n="@@presentateurStatDispersion">Dispersion (écart-type)</dt>
+                  <dd>{{ statistiques.dispersion }}</dd>
+                </div>
+                <div>
+                  <dt i18n="@@presentateurStatParticipation">Participation</dt>
+                  <dd>{{ statistiques.tauxParticipation | percent }}</dd>
+                </div>
+                <div>
+                  <dt i18n="@@presentateurStatReussite">Réussite</dt>
                   <dd>{{ statistiques.tauxReussite | percent }}</dd>
                 </div>
+                <div class="join-panel__problemes">
+                  <dt i18n="@@presentateurStatProblemes">Questions problématiques</dt>
+                  <dd>
+                    @for (libelle of questionsProblematiques(); track $index) {
+                      <span class="join-panel__probleme">{{ libelle }}</span>
+                    } @empty {
+                      <span i18n="@@presentateurStatAucunProbleme">Aucune</span>
+                    }
+                  </dd>
+                </div>
               </dl>
+            }
+            @switch (lectureDeLaNotation()) {
+              @case ('lue') {
+                @if (regleDeNotation(); as regle) {
+                  <p class="join-panel__notation" data-testid="presentateur-notation">
+                    {{ regle }}
+                  </p>
+                }
+              }
+              @case ('echec') {
+                <p
+                  class="join-panel__notation"
+                  data-testid="presentateur-notation-echec"
+                  i18n="@@presentateurNotationEchec"
+                >
+                  La règle de notation n’a pas pu être lue.
+                </p>
+              }
             }
           </div>
         </section>
@@ -409,6 +468,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 data-testid="presentateur-plein-ecran"
                 (click)="ouvrirLaScene()"
                 aria-label="Ouvrir la projection en plein écran"
+                i18n-aria-label="presentateur.pleinEcranAria|@@presentateurPleinEcranAria"
                 i18n="presentateur.pleinEcran|@@presentateurPleinEcran"
               >
                 Projection plein écran
@@ -449,16 +509,30 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   >
                 </div>
                 <div class="presentateur-stage__body">
-                  <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+                  <app-slide-deck mode="scroll" [allowFullscreen]="false">
                     <app-slide [id]="ecranAffiche.id">
                       <app-slide-activity
                         [slide]="ecranAffiche"
-                        render="stage"
+                        render="board"
                         [role]="'presentateur'"
                         [resultats]="resultats()"
+                        [direct]="direct()"
+                        [donneesFormateur]="ecranAffiche.corrigeEcran"
+                        [maitrise]="maitrise()"
                       />
                     </app-slide>
                   </app-slide-deck>
+                  @if (maitriseIndisponible()) {
+                    <p
+                      class="muted"
+                      data-testid="presentateur-maitrise-echec"
+                      role="status"
+                      i18n="@@presentateurMaitriseEchec"
+                    >
+                      La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain
+                      résultat.
+                    </p>
+                  }
                 </div>
               </main>
               <aside
@@ -466,9 +540,17 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 aria-label="Informations de séance"
                 i18n-aria-label="@@presentateurInformationsSeance"
               >
+                <app-cours-panneau-activite
+                  [ecran]="ecranAffiche"
+                  [resultats]="resultats()"
+                  [pilotage]="pilotageDeLEcran()"
+                  [participants]="participants()"
+                  [sessionId]="sessionId()"
+                  [pilotageBloque]="pilotageBloque()"
+                  (commande)="piloterLEcran($event)"
+                />
                 <app-cours-panneau-pedagogique
                   [ecran]="ecranAffiche"
-                  [questions]="questions()"
                   [resultats]="resultatsDesQuestions()"
                   [participants]="participants()"
                   [sessionId]="sessionId()"
@@ -601,7 +683,12 @@ export class CoursPresentateurComponent {
   readonly deroule = signal<DerouleCours | null>(null);
   readonly ecran = signal(0);
   readonly mode = signal<PacingMode>('pilote');
-  readonly resultats = signal<ResultatsSeance | null>(null);
+  readonly resultats = signal<ResultatsDuPupitre | null>(null);
+  readonly pilotage = signal<Readonly<Record<string, PilotageEcran>>>({});
+  readonly maitrise = signal<readonly SyntheseConcept[] | null>(null);
+  readonly maitriseIndisponible = signal(false);
+  readonly notation = signal<RegleNotation | null>(null);
+  readonly lectureDeLaNotation = signal<LectureDeLaNotation>('a-lire');
   readonly commandeEnVol = signal(false);
   readonly clotureDemandee = signal(false);
   readonly clotureEnVol = signal(false);
@@ -629,8 +716,14 @@ export class CoursPresentateurComponent {
   );
 
   readonly ecranSuivantTitle = computed(() => {
-    const cours = this.deroule();
-    return cours?.ecrans[this.ecran() + 1]?.id ?? 'la synthèse';
+    const rang = this.ecran() + 2;
+    const suivant = this.deroule()?.ecrans[rang - 1];
+    if (suivant === undefined) {
+      return $localize`:@@presentateurEcranSuivantSynthese:la synthèse de la séance`;
+    }
+    return (
+      titreDeLEcran(suivant) ?? $localize`:@@presentateurEcranSuivantRang:l’écran ${rang}:rang:`
+    );
   });
 
   readonly questions = computed<readonly QuestionDuPanneau[]>(() => {
@@ -641,6 +734,38 @@ export class CoursPresentateurComponent {
   readonly resultatsDesQuestions = computed<readonly ResultatQuestion[]>(
     () => this.resultats()?.questions ?? [],
   );
+
+  readonly questionsProblematiques = computed<readonly string[]>(() => {
+    const deroule = this.deroule();
+    const enonces = deroule === null ? new Map<string, string>() : enoncesDuDeroule(deroule);
+    return (this.resultats()?.statistiques?.questionsProblemes ?? []).map(
+      (questionId) => enonces.get(questionId) ?? questionId,
+    );
+  });
+
+  readonly regleDeNotation = computed(() => {
+    const notation = this.notation();
+    return notation === null ? null : phraseDeNotation(notation, this.resultats()?.bareme ?? null);
+  });
+
+  readonly pilotageDeLEcran = computed<PilotageEcran>(() => {
+    const ecran = this.ecranCourant();
+    return ecran === null ? {} : (this.pilotage()[ecran.id] ?? {});
+  });
+
+  readonly direct = computed<DirectEcran | null>(() => {
+    const ecran = this.ecranCourant();
+    if (ecran === null) {
+      return null;
+    }
+    const sondageId = objet(ecran.donnees?.['sondage'])?.['id'];
+    return {
+      pilotage: this.pilotageDeLEcran(),
+      resultats: this.resultats()?.questions ?? null,
+      comptesJalon:
+        typeof sondageId === 'string' ? (this.resultats()?.jalons?.[sondageId] ?? null) : null,
+    };
+  });
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
@@ -653,6 +778,8 @@ export class CoursPresentateurComponent {
   private readonly retourALaSeance = viewChild<ElementRef<HTMLButtonElement>>('retourALaSeance');
 
   private flux: Sync | null = null;
+  private notationEnVol = false;
+  private maitriseEnVol = false;
   private detruit = false;
   private chantier: Promise<void> = Promise.resolve();
 
@@ -831,7 +958,8 @@ export class CoursPresentateurComponent {
     this.etatDeLaRepriseAttendu.set(true);
     this.sessionId.set(sessionId);
     this.code.set(rapport.code);
-    this.resultats.set(rapport.resultats);
+    this.resultats.set(resultatsDuRapport(rapport));
+    this.retenirLaNotation(rapport);
     this.avancerLeStatut('ouverte');
     await this.lireLeDeroule(sessionId);
   }
@@ -862,15 +990,44 @@ export class CoursPresentateurComponent {
   private ecouterLeFlux(sessionId: string): void {
     const flux = this.creerFluxFormateur(sessionId);
     flux.onState((etat) => this.suivreLeFlux(etat));
-    flux.onResultats((resultats) => this.resultats.set(resultats));
+    flux.onResultats((resultats) => {
+      this.resultats.set(resultats);
+      this.lireLaNotationSiBesoin(sessionId);
+      this.lireLaMaitriseSiBesoin(sessionId);
+    });
     flux.onStatut((statut) => this.suiviDuFlux.set(statut));
     this.flux = flux;
     flux.ouvrir();
   }
 
+  private lireLaNotationSiBesoin(sessionId: string): void {
+    if (this.lectureDeLaNotation() === 'lue' || this.notationEnVol) {
+      return;
+    }
+    this.notationEnVol = true;
+    const lecture = this.lireLaNotation(sessionId);
+    this.chantier = Promise.all([this.chantier, lecture]).then(() => undefined);
+  }
+
+  private async lireLaNotation(sessionId: string): Promise<void> {
+    try {
+      this.retenirLaNotation(await firstValueFrom(this.port.lireResultats(sessionId)));
+    } catch {
+      this.lectureDeLaNotation.set('echec');
+    } finally {
+      this.notationEnVol = false;
+    }
+  }
+
+  private retenirLaNotation(rapport: RapportSeance): void {
+    this.notation.set(rapport.notation ?? null);
+    this.lectureDeLaNotation.set('lue');
+  }
+
   private suivreLeFlux(etat: EtatSession): void {
     this.etatDeLaRepriseAttendu.set(false);
     this.avancerLeStatut(ETAT_ANNONCE[etat.etat]);
+    this.pilotage.set(etat.pilotage);
     if (etat.etat === 'terminee') {
       this.flux?.close();
     }
@@ -878,6 +1035,36 @@ export class CoursPresentateurComponent {
       this.ecran.set(etat.ecranCourant);
       this.mode.set(etat.modeRythme);
     }
+    const session = this.sessionId();
+    if (session !== null) {
+      this.lireLaMaitriseSiBesoin(session);
+    }
+  }
+
+  private lireLaMaitriseSiBesoin(sessionId: string): void {
+    if (this.ecranCourant()?.type !== ECRAN_DE_RAPPEL || this.maitriseEnVol) {
+      return;
+    }
+    this.maitriseEnVol = true;
+    const lecture = firstValueFrom(this.port.lireSyntheseRappels(sessionId))
+      .then(({ concepts }) => {
+        this.maitrise.set(concepts);
+        this.maitriseIndisponible.set(false);
+      })
+      .catch(() => {
+        this.maitriseIndisponible.set(true);
+      })
+      .finally(() => {
+        this.maitriseEnVol = false;
+      });
+    this.chantier = Promise.all([this.chantier, lecture]).then(() => undefined);
+  }
+
+  protected piloterLEcran(commande: CommandeDEcran): void {
+    if (!this.armee()) {
+      return;
+    }
+    this.commander({ pilotage: commande }, () => undefined);
   }
 
   private focaliserApresLeRendu(cible: () => ElementRef<HTMLButtonElement> | undefined): void {

@@ -36,7 +36,8 @@ export class SlideMethodPathComponent {
 
   constructor() {
     afterNextRender(() => {
-      if (!this.autoplay() || this.steps().length < 2) {
+      const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!this.autoplay() || this.steps().length < 2 || mouvementReduit) {
         return;
       }
       const timer = window.setInterval(() => {
@@ -52,6 +53,10 @@ export class SlideMethodPathComponent {
     if (index >= 0 && index < this.steps().length) {
       this.currentIndex.set(index);
     }
+  }
+
+  protected libelleEtape(index: number, titre: string): string {
+    return $localize`:@@slideMethodPathEtape:Étape ${index + 1}:numero: : ${titre}:titre:`;
   }
 
   protected isCurrent(index: number): boolean {

@@ -7,49 +7,96 @@
       <p class="slide-reflection__competency">{{ r.competency }}</p>
     }
     <h3 class="slide-reflection__prompt">{{ promptText() }}</h3>
-    <textarea
-      rows="6"
-      [placeholder]="r.placeholder || ''"
-      [value]="value()"
-      (input)="onInput($any($event.target).value)"
-    ></textarea>
-    <button
-      type="button"
-      class="slide-reflection__save"
-      [class.is-disabled]="value().trim().length === 0"
-      [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
-      (click)="save()"
-      i18n="@@slideReflectionSave"
-    >
-      Garder cette réflexion
-    </button>
-    @if (saved()) {
-      @switch (saveState()) {
-        @case ('enregistre') {
-          <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSaved">
-            Réflexion enregistrée.
-          </p>
-        }
-        @case ('echec') {
-          <p class="slide-reflection__saved" role="alert" i18n="@@slideReflectionSaveFailed">
-            Échec d’enregistrement : nouvelle tentative nécessaire.
-          </p>
-        }
-        @default {
-          <p class="slide-reflection__saved" role="status" i18n="@@slideReflectionSavePending">
-            Réflexion en attente d’envoi.
-          </p>
-        }
+    @if (mode() === 'projection') {
+      <p
+        class="slide-reflection__apercu"
+        data-testid="slide-reflection-projection"
+        i18n="@@slideReflectionProjection"
+      >
+        Chaque étudiant répond sur son appareil.
+      </p>
+    } @else {
+      <textarea
+        rows="6"
+        [placeholder]="r.placeholder || ''"
+        [value]="value()"
+        (input)="onInput($any($event.target).value)"
+      ></textarea>
+      @if (mode() === 'apercu') {
+        <p
+          class="slide-reflection__apercu"
+          data-testid="slide-reflection-apercu"
+          i18n="@@slideReflectionApercu"
+        >
+          Aperçu : aucune séance n’est ouverte. Cette réflexion reste sur cet écran, elle n’est ni
+          envoyée ni conservée.
+        </p>
+      } @else {
+        <button
+          type="button"
+          class="slide-reflection__save"
+          [class.is-disabled]="value().trim().length === 0"
+          [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
+          (click)="save()"
+          i18n="@@slideReflectionSave"
+        >
+          Garder cette réflexion
+        </button>
       }
+      <p
+        class="slide-reflection__saved"
+        data-testid="slide-reflection-etat"
+        role="status"
+        [attr.data-etat]="saveState()"
+      >
+        @switch (saveState()) {
+          @case ('envoi') {
+            <span i18n="@@slideReflectionEnvoi">Envoi de la réflexion…</span>
+          }
+          @case ('enregistre') {
+            <span i18n="@@slideReflectionSaved">Réflexion enregistrée.</span>
+          }
+          @case ('attente_reseau') {
+            <span i18n="@@slideReflectionAttenteReseau"
+              >En attente de réseau : la réflexion est gardée sur cet appareil et partira au retour
+              de la connexion.</span
+            >
+          }
+          @case ('ecran_non_servi') {
+            <span i18n="@@slideReflectionEcranNonServi"
+              >Cet écran n’est pas encore ouvert : la réflexion est gardée sur cet appareil et
+              repartira dès que le formateur y arrivera.</span
+            >
+          }
+          @case ('seance_non_demarree') {
+            <span i18n="@@slideReflectionSeanceNonDemarree"
+              >La séance n’a pas encore démarré : cette réflexion n’a pas été enregistrée.</span
+            >
+          }
+          @case ('seance_terminee') {
+            <span i18n="@@slideReflectionSeanceTerminee"
+              >La séance est terminée : cette réflexion n’a pas été enregistrée.</span
+            >
+          }
+          @case ('echec') {
+            <span i18n="@@slideReflectionSaveFailed"
+              >Échec d’enregistrement : nouvelle tentative nécessaire.</span
+            >
+          }
+        }
+      </p>
     }
     @if (r.expected || r.nextAction) {
       <details class="slide-reflection__debrief">
-        <summary>Relire le raisonnement attendu</summary>
+        <summary i18n="@@slideReflectionRelire">Relire le raisonnement attendu</summary>
         @if (r.expected) {
           <p>{{ r.expected }}</p>
         }
         @if (r.nextAction) {
-          <p><strong>Pour progresser :</strong> {{ r.nextAction }}</p>
+          <p>
+            <strong i18n="@@slideReflectionPourProgresser">Pour progresser :</strong>
+            {{ r.nextAction }}
+          </p>
         }
       </details>
     }

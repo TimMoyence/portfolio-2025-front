@@ -22,23 +22,22 @@ export interface FormationBenefit {
 
 export const FORMATIONS: readonly FormationCard[] = [
   {
-    link: '/cours/rejoindre',
-    badge: 'BTS CG · Séance formateur · 12 écrans',
-    title: 'B2-01 — Lire et contrôler l’information chiffrée',
-    description:
-      'Rejoindre une séance courte pour lire, contrôler et expliquer une information chiffrée. Entrez le code donné par votre formateur pour suivre les écrans et participer au bon moment.',
+    link: '/formations/b2-01-traitement-information-chiffree',
+    badge: $localize`:@@formations-list.b2.badge:BTS CG · Cours interactif · 72 écrans`,
+    title: $localize`:@@formations-list.b2.title:B2-01 — Lire et contrôler l’information chiffrée`,
+    description: $localize`:@@formations-list.b2.description:72 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À parcourir librement, ou à suivre en séance accompagnée avec le code donné par votre formateur.`,
     meta: [
       {
         key: $localize`:@@formations-list.meta.duration:Durée`,
-        value: '1 h 30 · 12 écrans',
+        value: $localize`:@@formations-list.b2.duration:3 h 30 · 72 écrans`,
       },
       {
         key: $localize`:@@formations-list.meta.format:Format`,
-        value: 'Slides + méthode',
+        value: $localize`:@@formations-list.b2.format:Slides + séance accompagnée`,
       },
     ],
-    price: 'Gratuit',
-    cta: 'Rejoindre',
+    price: $localize`:@@formations-list.price.free:Gratuit`,
+    cta: $localize`:@@formations-list.cta.view:Consulter`,
     variant: 'live',
   },
   {

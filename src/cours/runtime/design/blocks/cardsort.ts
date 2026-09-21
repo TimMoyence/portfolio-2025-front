@@ -162,4 +162,43 @@ export const cardsort = `
   flex-wrap: wrap;
   gap: var(--fp-s-2);
 }
+
+:where(.fp-root) .fp-cardsort__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fp-s-2);
+  align-items: center;
+}
+
+:where(.fp-root) .fp-cardsort__chrono {
+  color: var(--fp-ink-mute);
+  font-family: var(--fp-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.fp-root) .fp-cardsort__chrono[data-echu='true'] {
+  color: var(--fp-a-revoir);
+}
+
+:where(.fp-root) .fp-cardsort__confusion {
+  display: block;
+  margin-top: var(--fp-s-1);
+  color: var(--fp-a-revoir);
+  font-size: calc(0.9rem * var(--fp-echelle));
+}
+
+:where(.fp-root) .fp-cardsort__attendus {
+  display: grid;
+  gap: var(--fp-s-1);
+  margin: 0;
+  padding-left: var(--fp-s-3);
+}
+
+:where(.fp-root) .fp-cardsort__attendu {
+  color: var(--fp-texte-fort);
+}
+
+:where(.fp-root) .fp-cardsort__justification {
+  color: var(--fp-ink-mute);
+}
 `;

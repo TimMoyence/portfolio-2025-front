@@ -61,6 +61,12 @@ export const plot = `
   font-weight: 600;
 }
 
+:where(.fp-root) .fp-plot__curseur {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--fp-teal-deep);
+}
+
 :where(.fp-root) .fp-plot__figure {
   display: grid;
   gap: var(--fp-s-2);
@@ -186,5 +192,28 @@ export const plot = `
   display: flex;
   flex-wrap: wrap;
   gap: var(--fp-s-2);
+}
+
+:where(.fp-root) .fp-plot__zone {
+  display: grid;
+  gap: var(--fp-s-3);
+}
+
+:where(.fp-root) .fp-plot__description {
+  max-width: 72ch;
+  color: var(--fp-ink-soft);
+  line-height: 1.5;
+}
+
+:where(.fp-root) .fp-plot__donnees {
+  border-top: 1px solid var(--fp-line);
+  padding-top: var(--fp-s-2);
+}
+
+:where(.fp-root) .fp-plot__bouton-donnees {
+  min-height: 44px;
+  color: var(--fp-teal-ink);
+  font-weight: 600;
+  cursor: pointer;
 }
 `;

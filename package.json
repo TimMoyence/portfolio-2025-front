@@ -22,15 +22,19 @@
     "test:guards": "node --test \"scripts/**/*.test.mjs\"",
     "guard:cours-runtime": "node scripts/guard-cours-runtime.cli.mjs",
     "guard:cours-bundle": "node scripts/lints-cours/regles/bundle.mjs dist",
-    "pre-push:check": "npm run lint && npm run format:check && npm run typecheck && npm run quality:dup && npm run quality:dup:tests && npm run quality:knip && npm run test:guards && npm run guard:cours-runtime && npm run guard:comments && npm run test:ci && npm run build && npm run guard:cours-bundle",
-    "ci:check": "npm run lint && npm run format:check && npm run typecheck && npm run quality:dup && npm run quality:dup:tests && npm run quality:knip && npm run test:guards && npm run guard:cours-runtime && npm run guard:comments && npm run test:ci && npm run build && npm run guard:cours-bundle",
+    "pre-push:check": "npm run lint && npm run format:check && npm run typecheck && npm run quality:dup && npm run quality:dup:tests && npm run quality:knip && npm run test:guards && npm run guard:cours-runtime && npm run guard:comments && npm run test:ci && npm run build && npm run guard:cours-bundle && npm run test:e2e:cours",
+    "ci:check": "npm run lint && npm run format:check && npm run typecheck && npm run quality:dup && npm run quality:dup:tests && npm run quality:knip && npm run test:guards && npm run guard:cours-runtime && npm run guard:comments && npm run test:ci && npm run build && npm run guard:cours-bundle && npm run test:e2e:portail",
     "serve:ssr:portfolio-app": "node dist/portfolio-app/server/fr/server.mjs",
+    "serve:ssr:portfolio-app:en": "PORT=4001 node dist/portfolio-app/server/en/server.mjs",
     "extract-i18n": "ng extract-i18n --output-path src/locale --format xlf",
     "formation:validate": "node scripts/validate-formation.mjs",
-    "test:e2e": "npx playwright test",
-    "test:e2e:ui": "npx playwright test --ui",
-    "test:visual": "npx playwright test e2e/visual-regression.spec.ts",
-    "test:visual:update": "npx playwright test e2e/visual-regression.spec.ts --update-snapshots",
+    "test:e2e": "npx playwright test --project=chromium",
+    "test:e2e:cours": "npx playwright test --project=chromium e2e/cours-b2-server.spec.ts e2e/cours-pupitre.spec.ts e2e/cours-reprise.spec.ts e2e/cours-runtime.spec.ts e2e/cours-session.spec.ts e2e/slide-engine.spec.ts",
+    "test:e2e:portail": "SSR_BASE_URL=http://localhost:4000 SSR_EN_BASE_URL=http://localhost:4001 npx playwright test --project=chromium",
+    "test:e2e:ui": "npx playwright test --project=chromium --ui",
+    "build:banc": "ng build --configuration banc",
+    "test:banc": "node scripts/banc/jouer.mjs",
+    "banc:nettoyer": "docker compose -p portfolio2025-banc -f scripts/banc/banc.compose.yaml down -v --remove-orphans",
     "lighthouse": "lhci autorun",
     "lighthouse:collect": "lhci collect",
     "lighthouse:assert": "lhci assert",
@@ -40,10 +44,10 @@
     "quality:knip": "knip"
   },
   "lint-staged": {
-    "*.{ts,js,html}": [
+    "*.{ts,js,mjs,html}": [
       "eslint --fix --max-warnings=0 --no-warn-ignored"
     ],
-    "*.{ts,js,html,scss,css,json,md,cjs,yml,yaml}": [
+    "*.{ts,js,mjs,html,scss,css,json,md,cjs,yml,yaml}": [
       "prettier --write"
     ]
   },
@@ -95,6 +99,7 @@
     "autoprefixer": "^10.4.14",
     "eslint": "^9.39.2",
     "eslint-plugin-sonarjs": "^4.2.0",
+    "fast-check": "^4.10.2",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "jasmine-core": "~5.6.0",

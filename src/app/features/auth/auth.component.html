@@ -19,7 +19,7 @@
     class="auth-tabs"
     role="tablist"
     aria-orientation="horizontal"
-    [attr.aria-label]="'Connexion ou inscription'"
+    aria-label="Connexion ou inscription"
     i18n-aria-label="@@authTabsAriaLabel"
   >
     <button
@@ -297,8 +297,7 @@
       type="button"
       class="toggle-pw"
       (click)="showPassword = !showPassword"
-      [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
-      i18n-aria-label="@@authTogglePassword"
+      [attr.aria-label]="showPassword ? hidePasswordLabel : showPasswordLabel"
     >
       <app-svg-icon
         [name]="showPassword ? 'visibility_off' : 'visibility'"

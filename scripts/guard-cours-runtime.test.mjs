@@ -131,19 +131,26 @@ void test('AD-2 : un spec peut atteindre src/testing, un fichier de production n
   assert.equal(garder({ [`${chemin}.ts`]: texte }).code, 1);
 });
 
+const VUE_ETUDIANT = 'src/app/features/cours/etudiant/cours-etudiant.component.ts';
+const ACTIVITE_PARTAGEE = 'src/app/shared/slides/session/slide-activity.component.ts';
+const RENDU_VISUEL = 'src/app/shared/slides/visual/slide-visual.component.ts';
+const GABARIT_QUIZ = 'src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html';
+const PAGE_B2 =
+  'src/app/features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component.ts';
+
 const FUITES_AD4 = [
-  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'misconception' },
-  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'correcte' },
+  { fichier: VUE_ETUDIANT, terme: 'misconception' },
+  { fichier: VUE_ETUDIANT, terme: 'correcte' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'solution' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'bareme' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'corrige' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'corrigé' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'barème' },
   { fichier: 'src/cours/content/b1-09.ts', terme: 'correction' },
-  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'bonneReponse' },
-  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'bonneRéponse' },
-  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'reponseAttendue' },
-  { fichier: 'src/app/features/cours/cours-host.component.ts', terme: 'réponseAttendue' },
+  { fichier: ACTIVITE_PARTAGEE, terme: 'bonneReponse' },
+  { fichier: RENDU_VISUEL, terme: 'bonneRéponse' },
+  { fichier: GABARIT_QUIZ, terme: 'reponseAttendue' },
+  { fichier: PAGE_B2, terme: 'réponseAttendue' },
 ];
 
 for (const cas of FUITES_AD4) {
@@ -154,9 +161,9 @@ for (const cas of FUITES_AD4) {
   });
 }
 
-void test('AD-4 : la forme publique {id, libelle} de la question de demo passe', () => {
+void test('AD-4 : la forme publique {id, libelle} d une question passe', () => {
   const resultat = garder({
-    'src/app/features/cours/cours-host.component.ts':
+    [RENDU_VISUEL]:
       "export const Q = { id: 'Q-CAP-03', options: [{ id: 'a', libelle: '1 400 €' }] };\n",
   });
   assert.equal(resultat.code, 0);
@@ -186,9 +193,45 @@ void test('AD-4 : une affectation sans litteral sort en code 1', () => {
 
 void test('AD-4 : une comparaison qui designe la bonne reponse sort en code 1', () => {
   const resultat = garder({
-    'src/app/features/cours/cours-host.component.ts': 'const etat = { correcte: index === 2 };\n',
+    'src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.ts':
+      'const etat = { correcte: index === 2 };\n',
   });
   assert.equal(resultat.code, 1);
+});
+
+const UNION_SUR_PLUSIEURS_LIGNES = [
+  'export type RetourBrique =',
+  '  | {',
+  "      readonly kind: 'verdict-reponse';",
+  '      readonly correcte: boolean;',
+  '    }',
+  "  | { readonly kind: 'deja-repondu'; readonly questionId: string }",
+  '  | {',
+  "      readonly kind: 'enigmes';",
+  '      readonly solution: string;',
+  '    };',
+].join('\n');
+
+void test('AD-4 : un alias de type ecrit sur plusieurs lignes passe', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/contrat-hote.ts': `${UNION_SUR_PLUSIEURS_LIGNES}\n`,
+  });
+  assert.equal(resultat.code, 0);
+});
+
+void test('AD-4 : la ligne qui suit la fin d un alias sur plusieurs lignes reste inspectee', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/contrat-hote.ts': `${UNION_SUR_PLUSIEURS_LIGNES}\n\nconst fuite = { correcte: true };\n`,
+  });
+  assert.deepEqual(reperes(resultat), ['src/app/shared/slides/session/contrat-hote.ts:12:AD-4']);
+});
+
+void test('AD-4 : un alias laisse sans point-virgule ne masque pas la suite du fichier', () => {
+  const resultat = garder({
+    'src/cours/content/types.ts':
+      "export type Bareme =\n  | 'suffisant'\n  | 'insuffisant'\n\nconst fuite = { misconception: piege };\n",
+  });
+  assert.deepEqual(reperes(resultat), ['src/cours/content/types.ts:5:AD-4']);
 });
 
 void test('AD-4 : la ligne qui suit la fermeture de l interface reste inspectee', () => {
@@ -202,7 +245,8 @@ void test('AD-4 : la ligne qui suit la fermeture de l interface reste inspectee'
 
 void test('AD-4 : un fichier de test garde le droit de porter le corrige', () => {
   const resultat = garder({
-    'src/app/features/cours/cours-host.component.spec.ts': 'const q = { misconception: null };\n',
+    'src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.spec.ts':
+      'const q = { misconception: null };\n',
   });
   assert.equal(resultat.code, 0);
 });
@@ -217,8 +261,10 @@ void test('AD-4 : le pupitre formateur lit le corrige servi au runtime par le de
 });
 
 const HORS_PUPITRE = [
-  'src/app/features/cours/etudiant/cours-etudiant.component.ts',
-  'src/app/features/cours/session/slide-activity.component.ts',
+  VUE_ETUDIANT,
+  ACTIVITE_PARTAGEE,
+  RENDU_VISUEL,
+  PAGE_B2,
   'src/cours/content/b1-09.ts',
   'src/app/features/cours/presentateur-bis/fuite.ts',
   'src/app/features/cours/etudiant/presentateur/fuite.ts',
@@ -234,9 +280,20 @@ for (const fichier of HORS_PUPITRE) {
 
 void test('AD-4 : le reste de src/app n est pas dans le perimetre de la surface cours', () => {
   assert.equal(estSurfaceCours('src/app/features/projets/projets.component.ts'), false);
-  assert.equal(estSurfaceCours('src/app/features/cours/cours-host.component.ts'), true);
+  assert.equal(estSurfaceCours(VUE_ETUDIANT), true);
   assert.equal(estSurfaceCours('src/cours/content/b1-09.ts'), true);
   assert.equal(estSurfaceCours('src/cours/runtime/blocks/FpVote.ts'), false);
+  assert.equal(
+    estSurfaceCours('src/app/features/formations/ia-solopreneurs/ia-solopreneurs.component.ts'),
+    false,
+  );
+  assert.equal(estSurfaceCours('src/app/shared/components/navbar/navbar.component.ts'), false);
+});
+
+void test('AD-4 : le rendu etudiant partage et la page B2 sont dans la surface cours', () => {
+  for (const fichier of [ACTIVITE_PARTAGEE, RENDU_VISUEL, GABARIT_QUIZ, PAGE_B2]) {
+    assert.equal(estSurfaceCours(fichier), true, `${fichier} echappe a la garde AD-4`);
+  }
 });
 
 void test('AD-4 : seul le dossier du pupitre formateur est reconnu comme pupitre', () => {
@@ -253,12 +310,13 @@ void test('AD-4 : seul le dossier du pupitre formateur est reconnu comme pupitre
 });
 
 void test('le verdict nomme le fichier, la ligne et la raison de l interdiction', () => {
-  const fichier = 'src/app/features/cours/cours-host.component.ts';
-  const resultat = garder({ [fichier]: "const q = {\n  misconception: 'interet simple',\n};\n" });
+  const resultat = garder({
+    [RENDU_VISUEL]: "const q = {\n  misconception: 'interet simple',\n};\n",
+  });
   const verdict = formatViolations(resultat);
   assert.match(
     verdict,
-    /cours-host\.component\.ts:2 — \[AD-4\] donnee de correction « misconception »/,
+    /slide-visual\.component\.ts:2 — \[AD-4\] donnee de correction « misconception »/,
   );
   assert.match(verdict, /misconception: 'interet simple',/);
   assert.match(verdict, /le navigateur de l etudiant telecharge/);
@@ -280,9 +338,16 @@ const IMPORTS_DU_PUPITRE = [
       "import { CoursPanneauQuestionComponent } from '../presentateur/cours-panneau-question.component';\n",
   },
   {
-    nom: 'import dynamique depuis le composant d ecran',
-    fichier: 'src/app/features/cours/session/slide-activity.component.ts',
-    texte: "const pupitre = await import('../presentateur/cours-presentateur.component');\n",
+    nom: 'import dynamique depuis le composant d ecran partage',
+    fichier: ACTIVITE_PARTAGEE,
+    texte:
+      "const pupitre = await import('../../../features/cours/presentateur/cours-presentateur.component');\n",
+  },
+  {
+    nom: 'import statique depuis la page B2',
+    fichier: PAGE_B2,
+    texte:
+      "import { CoursSceneComponent } from '../../cours/presentateur/cours-scene.component';\n",
   },
   {
     nom: 'reexport du dossier du pupitre',
@@ -328,18 +393,19 @@ const IMPORTS_ADMIS = [
   },
   {
     nom: 'un spec hors du pupitre',
-    fichier: 'src/app/features/cours/repetition-b2-01.spec.ts',
-    texte: "import { CoursSceneComponent } from './presentateur/cours-scene.component';\n",
+    fichier: 'src/app/features/cours/etudiant/cours-etudiant.component.spec.ts',
+    texte: "import { CoursSceneComponent } from '../presentateur/cours-scene.component';\n",
   },
   {
     nom: 'un dossier voisin au nom proche',
-    fichier: 'src/app/features/cours/etudiant/cours-etudiant.component.ts',
+    fichier: VUE_ETUDIANT,
     texte: "import { x } from '../presentateur-bis/x';\n",
   },
   {
     nom: 'le pupitre vers le composant d ecran partage',
     fichier: 'src/app/features/cours/presentateur/cours-scene.component.ts',
-    texte: "import { SlideActivityComponent } from '../session/slide-activity.component';\n",
+    texte:
+      "import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';\n",
   },
 ];
 
@@ -351,7 +417,7 @@ for (const cas of IMPORTS_ADMIS) {
 
 void test('AD-4 : les routes, hors surface cours, gardent le chargement paresseux du pupitre', () => {
   const resultat = garder({
-    'src/app/features/cours/cours-host.component.ts': 'export const a = 1;\n',
+    [VUE_ETUDIANT]: 'export const a = 1;\n',
     'src/app/app.routes.ts':
       "export const r = () => import('./features/cours/presentateur/cours-presentateur.component');\n",
   });

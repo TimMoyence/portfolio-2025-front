@@ -64,6 +64,7 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   readonly localeUrlPrefix = this.getLocaleUrlPrefix();
+  protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
 
   private streamSub?: Subscription;
   private reconnectAttempts = 0;

@@ -1,12 +1,15 @@
-import { readJson, writeJson } from './storage';
+import { persistJson, readJson, writeJson } from './storage';
 
 const CLE = 'fp.file-reponses';
 const CAPACITE_MAX = 200;
 const ECHEC_ECRITURE =
   "Le stockage local de ce poste n'a pas accepté l'écriture — la réponse n'a pas été mise en file";
 
+export type NatureEnvoi = 'reponse' | 'production' | 'jalon';
+
 export interface EnvoiReponse {
   id: number;
+  nature: NatureEnvoi;
   sessionId: string;
   studentKey: string;
   questionId: string;
@@ -17,8 +20,13 @@ export interface EnvoiReponse {
 
 export type Envoyeur = (envoi: EnvoiReponse) => boolean | Promise<boolean>;
 
+type EnvoiStocke = Omit<EnvoiReponse, 'nature'> & Partial<Pick<EnvoiReponse, 'nature'>>;
+
 export function pending(): readonly EnvoiReponse[] {
-  return readJson<EnvoiReponse[]>(CLE) ?? [];
+  return (readJson<EnvoiStocke[]>(CLE) ?? []).map((envoi) => ({
+    ...envoi,
+    nature: envoi.nature ?? 'reponse',
+  }));
 }
 
 export function enqueue(envoi: Omit<EnvoiReponse, 'id'>): void {
@@ -45,14 +53,20 @@ function ecrireOuRefuser(file: readonly EnvoiReponse[]): void {
 }
 
 function retirer(id: number): void {
-  writeJson(
-    CLE,
-    pending().filter((envoi) => envoi.id !== id),
-  );
+  ecrireOuRefuser(pending().filter((envoi) => envoi.id !== id));
 }
 
-export async function flush(envoyer: Envoyeur): Promise<void> {
+export function purgerLesAutresEnvois(sessionId: string): boolean {
+  const file = pending();
+  const restants = file.filter((envoi) => envoi.sessionId === sessionId);
+  return restants.length === file.length || persistJson(CLE, restants);
+}
+
+export async function flush(envoyer: Envoyeur, studentKey?: string): Promise<void> {
   for (const envoi of pending()) {
+    if (studentKey !== undefined && envoi.studentKey !== studentKey) {
+      continue;
+    }
     const reussi = await envoyer(envoi);
     if (reussi) {
       retirer(envoi.id);

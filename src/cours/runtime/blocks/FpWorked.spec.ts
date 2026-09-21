@@ -5,8 +5,6 @@ import { FpWorked } from './FpWorked';
 
 interface EnvoiWorked {
   readonly exempleId: string;
-  readonly etayage: number;
-  readonly etayageSuivant: number;
   readonly redactions: Record<string, string>;
   readonly explications: Record<string, string>;
   readonly dureeMs: number;
@@ -70,6 +68,10 @@ describe('FpWorked', () => {
   let traces: TracesEffets;
   let envois: EnvoiWorked[];
   let ecouteur: (evenement: Event) => void;
+
+  function envoisEmis(): string[] {
+    return traces.evenements.filter((nom) => nom !== 'fp-brouillon');
+  }
 
   function dernierEnvoi(): EnvoiWorked {
     if (envois.length === 0) {
@@ -136,27 +138,26 @@ describe('FpWorked', () => {
     expect(reperes(hote, 'saisie').length).toBe(PLEIN);
   });
 
-  it('ne remonte jamais l etayage deja retire a l etudiant', () => {
+  it('suit l etayage pilote par le formateur, a la baisse comme a la hausse, dans les bornes', () => {
     hote.etayage = 1;
-    hote.etayage = PLEIN;
-    expect(hote.etayage).toBe(1);
     expect(aCompleter(hote)).toEqual(ETAPES.slice(1));
+    hote.etayage = PLEIN;
+    expect(hote.etayage).toBe(PLEIN);
     hote.etayage = 42;
-    expect(hote.etayage).toBe(1);
-    expect(montrees(hote)).toEqual(ETAPES.slice(0, 1));
+    expect(hote.etayage).toBe(PLEIN);
+    hote.etayage = -3;
+    expect(hote.etayage).toBe(0);
+    hote.etayage = undefined;
+    expect(hote.etayage).toBe(0);
   });
 
-  it('annonce un etayage plus faible que celui presente sans jamais passer sous zero', () => {
+  it('n envoie que les redactions et les explications, jamais le niveau d etayage', () => {
     hote.etayage = 1;
     completerTout(hote);
     valider(hote);
-    expect(dernierEnvoi().etayage).toBe(1);
-    expect(dernierEnvoi().etayageSuivant).toBe(0);
-    const autonome = monter(0);
-    completerTout(autonome);
-    valider(autonome);
-    expect(dernierEnvoi().etayage).toBe(0);
-    expect(dernierEnvoi().etayageSuivant).toBe(0);
+    expect(
+      Object.keys(dernierEnvoi()).sort((gauche, droite) => gauche.localeCompare(droite)),
+    ).toEqual(['dureeMs', 'exempleId', 'explications', 'redactions']);
   });
 
   it('pose le prompt d auto explication avant l etape suivante et non apres la derniere', () => {
@@ -170,7 +171,7 @@ describe('FpWorked', () => {
     completerTout(hote);
     ecrire(hote, 'explication', ETAPES[1], '   ');
     valider(hote);
-    expect(traces.evenements).toEqual(['fp-worked-submit']);
+    expect(envoisEmis()).toEqual(['fp-worked-submit']);
     expect(dernierEnvoi().explications).toEqual({});
     expect(dernierEnvoi().redactions[DERNIERE]).toBe(`redaction de ${DERNIERE}`);
   });
@@ -193,21 +194,31 @@ describe('FpWorked', () => {
     hote.etayage = PLEIN - 2;
     ecrire(hote, 'saisie', DERNIERE, 'la valeur acquise');
     valider(hote);
-    expect(traces.evenements).toEqual([]);
+    expect(envoisEmis()).toEqual([]);
     expect(reperes(hote, 'retour')[0]?.textContent).toContain('avant de valider');
     ecrire(hote, 'saisie', ETAPES[PLEIN - 2], 'on remplace les valeurs dans la formule');
     valider(hote);
-    expect(traces.evenements).toEqual(['fp-worked-submit']);
+    expect(envoisEmis()).toEqual(['fp-worked-submit']);
   });
 
-  it('reprend au remontage l etayage tenu par le deck sans rien ecrire dans un stockage', () => {
-    hote.etayage = 2;
-    completerTout(hote);
-    valider(hote);
-    const rouvert = monter(dernierEnvoi().etayageSuivant);
-    expect(rouvert.etayage).toBe(1);
-    expect(aCompleter(rouvert)).toEqual(ETAPES.slice(1));
-    expect(reperes(rouvert, 'saisie').length).toBe(PLEIN - 1);
+  it('confie chaque frappe au brouillon de l hote et la restaure au remontage, sans stockage', () => {
+    const brouillons: unknown[] = [];
+    hote.addEventListener('fp-brouillon', (evenement) =>
+      brouillons.push((evenement as CustomEvent).detail),
+    );
+    hote.etayage = PLEIN - 1;
+    ecrire(hote, 'saisie', DERNIERE, 'la valeur acquise');
+
+    expect(brouillons.at(-1)).toEqual({
+      id: EXEMPLE.id,
+      valeur: { redactions: { [DERNIERE]: 'la valeur acquise' }, explications: {} },
+    });
+
+    const rouvert = monter(PLEIN - 1);
+    rouvert.brouillon = { redactions: { [DERNIERE]: 'la valeur acquise' }, explications: {} };
+
+    expect(zone(rouvert, 'saisie', DERNIERE).value).toBe('la valeur acquise');
+    expect(reperes(rouvert, 'brouillon-restaure')[0]?.textContent).toBe('Brouillon restauré');
     expect(traces.ecritures).toEqual([]);
   });
 
@@ -252,7 +263,8 @@ describe('FpWorked', () => {
     expect(montrees(hote)).toEqual(ETAPES.slice(0, 2));
     hote.setAttribute('render', 'board');
     expect(reperes(hote, 'niveau')[0]?.dataset['niveau']).toBe('2');
-    expect(reperes(hote, 'modalite')[0]?.textContent).toBe(EXEMPLE.metadonnees.modalite);
+    expect(reperes(hote, 'modalite')[0]?.textContent).toBe('Individuel');
+    expect(reperes(hote, 'duree')[0]?.textContent).toBe('8 min');
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

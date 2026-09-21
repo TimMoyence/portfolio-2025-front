@@ -1,3 +1,13 @@
+<aside class="wrap b2-seance" aria-labelledby="b2-seance-invite">
+  <p id="b2-seance-invite" class="b2-seance__invite" i18n="@@b2CoursSeanceInvite">
+    Vous suivez ce cours avec un formateur ? Entrez le code de votre séance pour répondre en direct.
+  </p>
+  <a class="btn btn-teal" routerLink="/cours/rejoindre" data-testid="b2-rejoindre-seance">
+    <span i18n="@@b2CoursRejoindreSeance">Rejoindre une séance</span>
+    <span class="arrow" aria-hidden="true">→</span>
+  </a>
+</aside>
+
 @switch (etat()) {
   @case ('chargement') {
     <p role="status" i18n="@@b2CoursChargement">Chargement du cours…</p>
@@ -12,10 +22,33 @@
     </div>
   }
   @case ('pret') {
-    <app-slide-deck mode="scroll" [allowFullscreen]="true" theme="b2-01">
-      @for (ecran of ecrans(); track ecran.id) {
+    @if (publication(); as publiee) {
+      <p class="wrap b2-publication" data-testid="b2-publication">
+        <span i18n="@@b2CoursVersionPubliee">Version publiée</span>
+        {{ publiee.version }} ·
+        <time [attr.datetime]="publiee.publieLe">{{ publiee.publieLe | date: 'longDate' }}</time>
+      </p>
+    }
+    <p class="wrap b2-apercu" data-testid="b2-apercu" i18n="@@b2CoursApercu">
+      Aperçu : les activités se manipulent librement, les réponses ne s’envoient que pendant une
+      séance.
+    </p>
+    <app-slide-deck mode="scroll" [allowFullscreen]="true">
+      @for (ecran of ecrans(); track ecran.id; let premier = $first) {
         <app-slide [id]="ecran.id">
-          <app-slide-visual [slide]="ecran" />
+          @if (resume(ecran); as entete) {
+            <header
+              class="b2-ecran__entete"
+              [class.sr-only]="entete.masque"
+              data-testid="b2-ecran-resume"
+            >
+              <h2 class="b2-ecran__titre">{{ entete.titre }}</h2>
+              <p class="b2-ecran__duree">
+                {{ ecran.duree }} <span i18n="@@b2CoursMinutes">min</span>
+              </p>
+            </header>
+          }
+          <app-slide-activity [slide]="ecran" [apercu]="true" [prioritaire]="premier" />
         </app-slide>
       }
     </app-slide-deck>

@@ -82,6 +82,8 @@ export class AuthComponent {
 
   activeTab: AuthTab = this.resolveInitialTab();
   showPassword: boolean = false;
+  protected readonly showPasswordLabel = $localize`:@@authShowPassword:Afficher le mot de passe`;
+  protected readonly hidePasswordLabel = $localize`:@@authHidePassword:Masquer le mot de passe`;
   isSignupSubmitted: boolean = false;
   isLoginSubmitted: boolean = false;
   isSignupLoading: boolean = false;

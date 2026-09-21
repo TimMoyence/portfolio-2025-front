@@ -9,15 +9,24 @@ import {
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { DerouleCours, EcranContent, ResultatsSeance } from '../../../../cours/content/types';
-import type { EtatSession, StatutFlux, Sync } from '../../../../cours/runtime/core/sync';
+import type { DerouleCours, EcranContent, PilotageEcran } from '../../../../cours/content/types';
+import type {
+  EtatSession,
+  ResultatsDuFlux,
+  StatutFlux,
+  Sync,
+} from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
+import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { SlideComponent } from '../../../shared/slides/deck/slide.component';
 import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
+
+const SEUIL_DE_PROJECTION = 5;
 
 @Component({
   selector: 'app-cours-scene',
@@ -190,10 +199,12 @@ type Chargement = 'chargement' | 'succes' | 'echec';
       <div class="scene-shell">
         <header class="scene-toolbar">
           <div class="scene-toolbar__brand">
-            <span class="scene-toolbar__eyebrow">Projection en direct</span>
-            <strong class="scene-toolbar__title">{{
-              deroule()?.titre ?? 'Cours en direct'
-            }}</strong>
+            <span
+              class="scene-toolbar__eyebrow"
+              i18n="scene.projectionEnDirect|@@sceneProjectionEnDirect"
+              >Projection en direct</span
+            >
+            <strong class="scene-toolbar__title">{{ deroule()?.titre ?? titreParDefaut }}</strong>
           </div>
           <div class="scene-toolbar__actions">
             <span class="scene-counter"
@@ -206,19 +217,27 @@ type Chargement = 'chargement' | 'succes' | 'echec';
               (click)="basculerPleinEcran()"
               [attr.aria-pressed]="pleinEcran()"
             >
-              {{ pleinEcran() ? 'Quitter le plein écran' : 'Plein écran' }}
+              @if (pleinEcran()) {
+                <ng-container i18n="scene.quitterPleinEcran|@@sceneQuitterPleinEcran"
+                  >Quitter le plein écran</ng-container
+                >
+              } @else {
+                <ng-container i18n="scene.pleinEcran|@@scenePleinEcran">Plein écran</ng-container>
+              }
             </button>
           </div>
         </header>
         <main class="scene-canvas">
           @if (ecranCourant(); as ecranAffiche) {
-            <app-slide-deck mode="scroll" [allowFullscreen]="false" theme="cours-session">
+            <app-slide-deck mode="scroll" [allowFullscreen]="false">
               <app-slide [id]="ecranAffiche.id">
                 <app-slide-activity
                   [slide]="ecranAffiche"
                   render="stage"
                   [role]="'presentateur'"
                   [resultats]="resultats()"
+                  [direct]="direct()"
+                  [donneesFormateur]="annexeDeLEcran()"
                 />
               </app-slide>
             </app-slide-deck>
@@ -265,8 +284,11 @@ export class CoursSceneComponent {
   readonly ecran = signal(0);
   readonly termine = signal(false);
   readonly suiviDuFlux = signal<StatutFlux | null>(null);
-  readonly resultats = signal<ResultatsSeance | null>(null);
+  readonly resultats = signal<ResultatsDuFlux | null>(null);
+  readonly pilotage = signal<Readonly<Record<string, PilotageEcran>>>({});
   readonly pleinEcran = signal(false);
+
+  protected readonly titreParDefaut = $localize`:scene.titreParDefaut|@@sceneTitreParDefaut:Cours en direct`;
 
   readonly statutDuRefus = computed(() => {
     const suivi = this.suiviDuFlux();
@@ -281,9 +303,29 @@ export class CoursSceneComponent {
     return {
       id: ecran.id,
       type: ecran.type,
+      titre: ecran.titre ?? null,
       duree: ecran.duree,
       interactif: ecran.interactif,
       donnees: ecran.donnees,
+    };
+  });
+
+  readonly annexeDeLEcran = computed(
+    () => this.deroule()?.ecrans[this.ecran()]?.corrigeEcran ?? null,
+  );
+
+  readonly direct = computed<DirectEcran | null>(() => {
+    const ecran = this.ecranCourant();
+    if (ecran === null) {
+      return null;
+    }
+    const sondageId = objet(ecran.donnees?.['sondage'])?.['id'];
+    const comptes =
+      typeof sondageId === 'string' ? (this.resultats()?.jalons[sondageId] ?? null) : null;
+    return {
+      pilotage: this.pilotage()[ecran.id] ?? {},
+      resultats: this.resultats()?.questions ?? null,
+      comptesJalon: comptes !== null && comptes.total >= SEUIL_DE_PROJECTION ? comptes : null,
     };
   });
 
@@ -354,6 +396,7 @@ export class CoursSceneComponent {
 
   private suivreLeFlux(etat: EtatSession): void {
     this.ecran.set(etat.ecranCourant);
+    this.pilotage.set(etat.pilotage);
     if (etat.etat === 'terminee') {
       this.termine.set(true);
       this.flux?.close();

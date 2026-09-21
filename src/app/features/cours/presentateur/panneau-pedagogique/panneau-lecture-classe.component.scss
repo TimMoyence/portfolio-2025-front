@@ -1,0 +1,43 @@
+@use './panneau' as panneau;
+
+:host {
+  display: block;
+}
+
+.panneau-lecture {
+  @include panneau.bloc;
+}
+
+.panneau-lecture__titre {
+  @include panneau.intitule;
+}
+
+.panneau-lecture__indicateurs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+
+  div {
+    padding: 0.65rem;
+    border: 1px solid rgba(12, 9, 2, 0.12);
+    border-radius: 0.65rem;
+    background: rgba(255, 255, 255, 0.42);
+  }
+
+  dt {
+    color: var(--ink-mute, #766f63);
+    font-size: 0.7rem;
+  }
+
+  dd {
+    margin: 0.2rem 0 0;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 520px) {
+  .panneau-lecture__indicateurs {
+    grid-template-columns: 1fr;
+  }
+}

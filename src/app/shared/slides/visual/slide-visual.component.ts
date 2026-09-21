@@ -1,4 +1,4 @@
-import { NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +7,7 @@ import {
   output,
   type Type,
 } from '@angular/core';
-import type { EcranContent } from '../../../../cours/content/types';
+import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import {
   SlideChartComponent,
   SlideComparisonComponent,
@@ -24,6 +24,8 @@ import {
 } from '..';
 import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
+import type { ModeInteraction } from '../interactions/mode-interaction';
+import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
 
 const layouts: Readonly<Record<string, Type<unknown>>> = {
   hero: SlideHeroComponent,
@@ -42,55 +44,33 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   guide: SlideGuideComponent,
 };
 
-interface VisualPresentation {
-  readonly version: 2;
-  readonly screenId: string;
-  readonly renderer: string;
-  readonly props: Readonly<Record<string, unknown>>;
-}
-
-function objet(value: unknown): Readonly<Record<string, unknown>> | null {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-    ? (value as Readonly<Record<string, unknown>>)
-    : null;
-}
-
-export function aUnePresentation(slide: EcranContent): boolean {
-  return Object.values(slide.donnees ?? {}).some((value) => {
-    const contenu = objet(value);
-    return objet(contenu?.['presentation'])?.['version'] === 2;
-  });
-}
-
-function presentationDe(slide: EcranContent): VisualPresentation | null {
-  for (const value of Object.values(slide.donnees ?? {})) {
-    const presentation = objet(objet(value)?.['presentation']);
-    if (
-      presentation?.['version'] === 2 &&
-      typeof presentation['screenId'] === 'string' &&
-      typeof presentation['renderer'] === 'string' &&
-      objet(presentation['props']) !== null
-    ) {
-      return presentation as unknown as VisualPresentation;
-    }
-  }
-  return null;
+function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteraction | null {
+  return quiz === null ? null : (quiz as unknown as QuizInteraction);
 }
 
 @Component({
   selector: 'app-slide-visual',
   standalone: true,
-  imports: [NgComponentOutlet, SlideQuizComponent],
+  imports: [NgComponentOutlet, NgTemplateOutlet, SlideQuizComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <ng-template #quizDeLEcran let-quiz>
+      <app-slide-quiz
+        [questionData]="quiz"
+        [mode]="mode()"
+        [reponsesRecues]="reponsesRecues().get(quiz.id) ?? 0"
+        [participants]="resultats()?.participants ?? 0"
+        (selection)="reponse.emit($event)"
+      />
+    </ng-template>
     @if (layout(); as component) {
       @if (quizData(); as quiz) {
-        <app-slide-quiz [questionData]="quiz" (selection)="reponse.emit($event)" />
+        <ng-container *ngTemplateOutlet="quizDeLEcran; context: { $implicit: quiz }" />
       } @else {
         <ng-container *ngComponentOutlet="component; inputs: layoutInputs()" />
       }
       @if (nestedQuiz(); as quiz) {
-        <app-slide-quiz [questionData]="quiz" (selection)="reponse.emit($event)" />
+        <ng-container *ngTemplateOutlet="quizDeLEcran; context: { $implicit: quiz }" />
       }
       @if (sourceLink(); as link) {
         <p class="slide-visual__source">
@@ -98,7 +78,9 @@ function presentationDe(slide: EcranContent): VisualPresentation | null {
         </p>
       }
     } @else {
-      <p role="alert">Cet écran ne peut pas être affiché : son contenu n’est pas reconnu.</p>
+      <p role="alert" i18n="@@slideVisualEcranInconnu">
+        Cet écran ne peut pas être affiché : son contenu n’est pas reconnu.
+      </p>
     }
   `,
   styles: `
@@ -118,6 +100,9 @@ export class SlideVisualComponent {
   readonly slide = input.required<EcranContent>();
   readonly sessionId = input<string | null>(null);
   readonly jeton = input<string>('');
+  readonly role = input<Role>('etudiant');
+  readonly resultats = input<ResultatsSeance | null>(null);
+  readonly prioritaire = input(false);
   readonly reponse = output<{
     questionId: string;
     valeur: string;
@@ -126,38 +111,49 @@ export class SlideVisualComponent {
   }>();
 
   private readonly presentation = computed(() => presentationDe(this.slide()));
+  protected readonly mode = computed<ModeInteraction>(() => {
+    if (this.role() === 'presentateur') {
+      return 'projection';
+    }
+    return this.sessionId() === null ? 'apercu' : 'seance';
+  });
+  protected readonly reponsesRecues = computed<ReadonlyMap<string, number>>(
+    () =>
+      new Map(
+        (this.resultats()?.questions ?? []).map((question) => [
+          question.questionId,
+          question.total,
+        ]),
+      ),
+  );
   protected readonly layout = computed(() => {
     const renderer = this.presentation()?.renderer;
     return renderer === undefined ? null : (layouts[renderer] ?? null);
   });
   protected readonly layoutInputs = computed(() => {
+    const renderer = this.presentation()?.renderer;
     const props = this.presentation()?.props ?? {};
     const inputs = Object.fromEntries(
       Object.entries(props).filter(([key]) => key !== 'sourceLink' && key !== 'nestedQuiz'),
     );
     const reflectionInputs =
-      this.presentation()?.renderer === 'reflection'
+      renderer === 'reflection'
         ? {
             screenId: this.slide().id,
             sessionId: this.sessionId(),
             jeton: this.jeton(),
+            mode: this.mode(),
           }
         : {};
     return {
       ...inputs,
       ...reflectionInputs,
-      ...(this.presentation()?.renderer === 'image-right' ? { reverse: true } : {}),
+      ...(renderer === 'image-right' ? { reverse: true } : {}),
+      ...(renderer === 'hero' && this.prioritaire() ? { priority: true } : {}),
     };
   });
-  protected readonly quizData = computed(() => {
-    if (this.presentation()?.renderer !== 'quiz') return null;
-    const quiz = objet(this.presentation()?.props['questionData']);
-    return quiz === null ? null : (quiz as unknown as QuizInteraction);
-  });
-  protected readonly nestedQuiz = computed(() => {
-    const quiz = objet(this.presentation()?.props['nestedQuiz']);
-    return quiz === null ? null : (quiz as unknown as QuizInteraction);
-  });
+  protected readonly quizData = computed(() => commeQuiz(quizPrincipal(this.presentation())));
+  protected readonly nestedQuiz = computed(() => commeQuiz(quizImbrique(this.presentation())));
   protected readonly sourceLink = computed(() => {
     const link = objet(this.presentation()?.props['sourceLink']);
     return link !== null && typeof link['href'] === 'string' && typeof link['label'] === 'string'

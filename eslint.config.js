@@ -16,6 +16,14 @@ module.exports = tseslint.config(
     ],
   },
   {
+    files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,mts}'],
+    rules: {
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+    },
+  },
+  {
     files: ['src/**/*.ts'],
     extends: [
       eslint.configs.recommended,
@@ -64,7 +72,7 @@ module.exports = tseslint.config(
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
   },
   {
-    files: ['e2e/**/*.ts', 'scripts/**/*.mts'],
+    files: ['e2e/**/*.ts', 'scripts/**/*.mts', 'playwright.config.ts'],
     extends: [sonarjs.configs.recommended],
     languageOptions: {
       parser: tseslint.parser,

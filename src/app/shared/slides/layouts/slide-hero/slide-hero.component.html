@@ -1,7 +1,13 @@
 <div class="slide-hero" [class]="'accent-' + accent()">
   @if (bgImage(); as image) {
     <div class="slide-hero__bg">
-      <img [src]="image" [alt]="bgImageAlt()" loading="lazy" decoding="async" />
+      <img
+        [src]="image"
+        [alt]="bgImageAlt()"
+        [attr.loading]="priority() ? 'eager' : 'lazy'"
+        [attr.fetchpriority]="priority() ? 'high' : null"
+        decoding="async"
+      />
     </div>
   }
   <div class="slide-hero__content">

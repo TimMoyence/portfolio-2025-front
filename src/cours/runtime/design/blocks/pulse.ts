@@ -89,4 +89,9 @@ export const pulse = `
   color: var(--fp-ink-mute);
   font-variant-numeric: tabular-nums;
 }
+
+:where(.fp-root) .fp-pulse__masque {
+  color: var(--fp-ink-mute);
+  font-style: italic;
+}
 `;

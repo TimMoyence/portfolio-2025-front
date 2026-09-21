@@ -7,45 +7,44 @@
       <p class="slide-quiz__competency">{{ q.competency }}</p>
     }
     <h3 class="slide-quiz__question">{{ q.question }}</h3>
-    <div class="slide-quiz__options">
-      @for (option of q.options; track option; let i = $index) {
-        <button
-          type="button"
-          class="slide-quiz__option"
-          [class.is-selected]="selectedIndex() === i"
-          [disabled]="selectedIndex() !== null"
-          (click)="select(i)"
-        >
-          {{ option }}
-        </button>
-      }
-    </div>
+    @if (mode() === 'projection') {
+      <ol class="slide-quiz__options" data-testid="slide-quiz-projection">
+        @for (option of q.options; track option) {
+          <li class="slide-quiz__option slide-quiz__option--projection">{{ option }}</li>
+        }
+      </ol>
+      <p class="slide-quiz__recues" data-testid="slide-quiz-reponses-recues" role="status">
+        <span i18n="@@slideQuizReponsesRecues">Réponses reçues</span>
+        <strong>{{ reponsesRecues() }} / {{ participants() }}</strong>
+      </p>
+    } @else {
+      <div class="slide-quiz__options">
+        @for (option of q.options; track option; let i = $index) {
+          <button
+            type="button"
+            class="slide-quiz__option"
+            [class.is-selected]="selectedIndex() === i"
+            [disabled]="selectedIndex() !== null"
+            (click)="select(i)"
+          >
+            {{ option }}
+          </button>
+        }
+      </div>
+    }
+    @if (apercu()) {
+      <p class="slide-quiz__apercu" data-testid="slide-quiz-apercu" i18n="@@slideQuizApercu">
+        Aperçu : aucune séance n’est ouverte. Votre choix n’est pas envoyé et le résultat n’est
+        donné qu’en séance.
+      </p>
+    }
     @if (selectedIndex() !== null) {
-      @if (q.askConfidence !== false) {
-        <fieldset class="slide-quiz__confidence">
-          <legend>Quel est votre niveau de confiance ?</legend>
-          <div class="slide-quiz__confidence-options">
-            @for (
-              label of ['Hasard', 'Hésitant', 'Assez sûr', 'Très sûr'];
-              track label;
-              let i = $index
-            ) {
-              <button
-                type="button"
-                [class.is-selected]="confidence() === i + 1"
-                (click)="selectConfidence(i + 1)"
-              >
-                <span aria-hidden="true">{{ i + 1 }}</span
-                >{{ label }}
-              </button>
-            }
-          </div>
-        </fieldset>
-      }
       @if (q.correctIndex === undefined) {
-        <p class="slide-quiz__feedback" role="status" i18n="@@slideQuizAwaitServer">
-          Réponse sélectionnée. Le résultat vient de la séance.
-        </p>
+        @if (!apercu()) {
+          <p class="slide-quiz__feedback" role="status" i18n="@@slideQuizAwaitServer">
+            Réponse sélectionnée. Le résultat vient de la séance.
+          </p>
+        }
       } @else {
         <p
           class="slide-quiz__feedback"
@@ -64,7 +63,9 @@
           <p class="slide-quiz__explanation">{{ q.explanation }}</p>
         }
         @if (q.nextAction) {
-          <p class="slide-quiz__next"><strong>Pour progresser :</strong> {{ q.nextAction }}</p>
+          <p class="slide-quiz__next">
+            <strong i18n="@@slideQuizPourProgresser">Pour progresser :</strong> {{ q.nextAction }}
+          </p>
         }
       }
     }

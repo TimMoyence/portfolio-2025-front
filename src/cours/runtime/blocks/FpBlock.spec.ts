@@ -6,7 +6,7 @@ class FpDemo extends FpBlock {
     return safeHtml`<p data-testid="scene">scene</p>`;
   }
   renderHand(): EscapedHtml {
-    return safeHtml`<button data-testid="action">agir</button>`;
+    return safeHtml`<button data-testid="action">agir</button><input data-testid="champ" data-cle="a" value="saisie">${this.annonces()}`;
   }
   renderBoard(): EscapedHtml {
     return safeHtml`<p data-testid="tableau">tableau</p>`;
@@ -131,13 +131,49 @@ describe('FpBlock', () => {
     hoteImbrique.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="action"]')?.click();
   });
 
-  it('lit la graine depuis l attribut', () => {
-    hote.setAttribute('seed', '1001');
-    expect(hote.seed()).toBe(1001);
+  it('lit le role reel pose par l hote sur data-cours-role', () => {
+    expect(hote.roleActuel()).toBe('etudiant');
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.roleActuel()).toBe('presentateur');
+    hote.setAttribute('data-slide-role', 'revision');
+    expect(hote.roleActuel()).toBe('presentateur');
   });
 
-  it('retourne une graine nulle quand l attribut manque', () => {
-    expect(hote.seed()).toBe(0);
+  it('se sait en apercu quand l hote pose data-apercu', () => {
+    expect(hote.enApercu()).toBeFalse();
+    hote.setAttribute('data-apercu', '');
+    expect(hote.enApercu()).toBeTrue();
+  });
+
+  it('affiche le refus et le deja repondu que l hote reinjecte, puis les retire', () => {
+    hote.erreur = 'Cet écran n’est pas encore ouvert';
+    hote.dejaRepondu = true;
+    const racine = hote.shadowRoot;
+
+    expect(racine?.querySelector('[data-testid="erreur"]')?.getAttribute('role')).toBe('alert');
+    expect(racine?.querySelector('[data-testid="erreur"]')?.textContent).toContain('pas encore');
+    expect(racine?.querySelector('[data-testid="deja-repondu"]')?.textContent).toBe(
+      'Réponse déjà enregistrée : voici votre verdict',
+    );
+
+    hote.erreur = null;
+    hote.dejaRepondu = false;
+
+    expect(racine?.querySelector('[data-testid="erreur"]')).toBeNull();
+    expect(racine?.querySelector('[data-testid="deja-repondu"]')).toBeNull();
+  });
+
+  it('rend le foyer et la selection au champ saisi quand un rafraichissement le remplace', () => {
+    const champ = hote.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]');
+    champ?.focus();
+    champ?.setSelectionRange(2, 4);
+
+    hote.dejaRepondu = true;
+
+    const remplacant = hote.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]');
+    expect(remplacant).not.toBe(champ);
+    expect(hote.shadowRoot?.activeElement).toBe(remplacant ?? null);
+    expect([remplacant?.selectionStart, remplacant?.selectionEnd]).toEqual([2, 4]);
   });
 
   it('signale une erreur de rendu par un evenement compose', (done) => {

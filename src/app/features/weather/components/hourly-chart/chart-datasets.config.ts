@@ -13,7 +13,7 @@ export interface ChartParameter {
 export const CHART_PARAMETERS: ChartParameter[] = [
   {
     id: 'temperature',
-    label: 'Température',
+    label: $localize`:@@weatherChartTemperature:Température`,
     dataKey: 'temperature_2m',
     type: 'line',
     yAxisID: 'y',
@@ -24,7 +24,7 @@ export const CHART_PARAMETERS: ChartParameter[] = [
   },
   {
     id: 'precipitation',
-    label: 'Précipitations',
+    label: $localize`:@@weatherChartPrecipitation:Précipitations`,
     dataKey: 'precipitation',
     type: 'bar',
     yAxisID: 'y1',
@@ -35,7 +35,7 @@ export const CHART_PARAMETERS: ChartParameter[] = [
   },
   {
     id: 'wind',
-    label: 'Vent',
+    label: $localize`:@@weatherChartWind:Vent`,
     dataKey: 'wind_speed_10m',
     type: 'line',
     yAxisID: 'y2',
@@ -46,7 +46,7 @@ export const CHART_PARAMETERS: ChartParameter[] = [
   },
   {
     id: 'humidity',
-    label: 'Humidité',
+    label: $localize`:@@weatherChartHumidity:Humidité`,
     dataKey: 'relative_humidity_2m',
     type: 'line',
     yAxisID: 'y3',

@@ -23,22 +23,34 @@ const DRINK_DEFAULTS: Record<
 };
 
 const DRINK_UI: Record<SebastianDrinkType, { label: string; icon: string; colorClass: string }> = {
-  beer: { label: 'Biere', icon: '🍺', colorClass: 'text-scheme-warning' },
-  wine: { label: 'Vin', icon: '🍷', colorClass: 'text-red-400' },
+  beer: {
+    label: $localize`:@@sebastianDrinkBeer:Biere`,
+    icon: '🍺',
+    colorClass: 'text-scheme-warning',
+  },
+  wine: { label: $localize`:@@sebastianDrinkWine:Vin`, icon: '🍷', colorClass: 'text-red-400' },
   champagne: {
-    label: 'Champagne',
+    label: $localize`:@@sebastianDrinkChampagne:Champagne`,
     icon: '🥂',
     colorClass: 'text-yellow-400',
   },
-  cocktail: { label: 'Cocktail', icon: '🍸', colorClass: 'text-pink-400' },
+  cocktail: {
+    label: $localize`:@@sebastianDrinkCocktail:Cocktail`,
+    icon: '🍸',
+    colorClass: 'text-pink-400',
+  },
   spiritueux: {
-    label: 'Spiritueux',
+    label: $localize`:@@sebastianDrinkSpirits:Spiritueux`,
     icon: '🥃',
     colorClass: 'text-amber-600',
   },
-  cidre: { label: 'Cidre', icon: '🍏', colorClass: 'text-green-400' },
+  cidre: {
+    label: $localize`:@@sebastianDrinkCider:Cidre`,
+    icon: '🍏',
+    colorClass: 'text-green-400',
+  },
   coffee: {
-    label: 'Cafe',
+    label: $localize`:@@sebastianDrinkCoffee:Café`,
     icon: '☕',
     colorClass: 'text-scheme-accent-active',
   },
@@ -55,11 +67,11 @@ const DRINK_TYPES: SebastianDrinkType[] = [
 ];
 
 const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
-  { mode: 'now', label: 'Maintenant' },
-  { mode: '30m', label: 'Il y a 30m' },
-  { mode: '1h', label: 'Il y a 1h' },
-  { mode: 'yesterday-evening', label: 'Hier soir' },
-  { mode: 'custom', label: 'Personnalise' },
+  { mode: 'now', label: $localize`:@@sebastianTimeNow:Maintenant` },
+  { mode: '30m', label: $localize`:@@sebastianTime30m:Il y a 30m` },
+  { mode: '1h', label: $localize`:@@sebastianTime1h:Il y a 1h` },
+  { mode: 'yesterday-evening', label: $localize`:@@sebastianTimeYesterdayEvening:Hier soir` },
+  { mode: 'custom', label: $localize`:@@sebastianTimeCustom:Personnalise` },
 ];
 
 @Component({
@@ -67,15 +79,13 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
   standalone: true,
   imports: [BottomSheetComponent, FormsModule],
   template: `
-    <app-bottom-sheet
-      [open]="open()"
-      [title]="'Ajouter une boisson'"
-      (openChange)="openChange.emit($event)"
-    >
+    <app-bottom-sheet [open]="open()" [title]="sheetTitle" (openChange)="openChange.emit($event)">
       <div class="space-y-5">
         @if (recentEntries().length > 0) {
           <section>
-            <h4 class="mb-2 text-sm font-semibold text-white/60">Recents</h4>
+            <h4 class="mb-2 text-sm font-semibold text-white/60" i18n="@@sebastianAddSheetRecents">
+              Recents
+            </h4>
             <div class="flex flex-wrap gap-2">
               @for (entry of recentEntries(); track entry.id) {
                 <button
@@ -98,7 +108,9 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
         }
 
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-white/60">Type</h4>
+          <h4 class="mb-2 text-sm font-semibold text-white/60" i18n="@@sebastianAddSheetType">
+            Type
+          </h4>
           <div class="grid grid-cols-4 gap-2 md:grid-cols-7">
             @for (type of drinkTypes; track type) {
               <button
@@ -120,7 +132,9 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
         </section>
 
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-white/60">Quantite</h4>
+          <h4 class="mb-2 text-sm font-semibold text-white/60" i18n="@@sebastianAddSheetQuantity">
+            Quantité
+          </h4>
           <div class="flex items-center gap-4">
             <button
               type="button"
@@ -151,7 +165,12 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
           <section>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <h4 class="mb-2 text-sm font-semibold text-white/60">Degre (%)</h4>
+                <h4
+                  class="mb-2 text-sm font-semibold text-white/60"
+                  i18n="@@sebastianAddSheetDegree"
+                >
+                  Degre (%)
+                </h4>
                 <div class="flex items-center gap-2">
                   <button
                     type="button"
@@ -182,7 +201,12 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
               </div>
 
               <div>
-                <h4 class="mb-2 text-sm font-semibold text-white/60">Volume (cL)</h4>
+                <h4
+                  class="mb-2 text-sm font-semibold text-white/60"
+                  i18n="@@sebastianAddSheetVolume"
+                >
+                  Volume (cL)
+                </h4>
                 <div class="flex items-center gap-2">
                   <button
                     type="button"
@@ -216,7 +240,9 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
         }
 
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-white/60">Quand</h4>
+          <h4 class="mb-2 text-sm font-semibold text-white/60" i18n="@@sebastianAddSheetWhen">
+            Quand
+          </h4>
           <div class="flex flex-wrap gap-2">
             @for (opt of timeOptions; track opt.mode) {
               <button
@@ -256,11 +282,14 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
         </section>
 
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-white/60">Notes</h4>
+          <h4 class="mb-2 text-sm font-semibold text-white/60" i18n="@@sebastianAddSheetNotes">
+            Notes
+          </h4>
           <input
             type="text"
             data-testid="notes-input"
             placeholder="Ajouter une note..."
+            i18n-placeholder="@@sebastianAddSheetNotesPlaceholder"
             class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30"
             [ngModel]="notes()"
             (ngModelChange)="notes.set($event)"
@@ -272,6 +301,7 @@ const TIME_OPTIONS: { mode: TimeMode; label: string }[] = [
           data-testid="submit-button"
           class="w-full rounded-xl bg-gold px-4 py-3 font-semibold text-[#1a1206] transition-transform hover:-translate-y-0.5"
           (click)="submit()"
+          i18n="@@sebastianAddSheetSubmit"
         >
           Ajouter {{ quantity() }}
           {{ drinkUi[selectedDrinkType()].icon }}
@@ -308,6 +338,8 @@ export class SebastianAddDrinkSheetComponent {
   readonly notes = signal('');
 
   protected readonly Math = Math;
+
+  protected readonly sheetTitle = $localize`:@@sebastianAddSheetTitle:Ajouter une boisson`;
 
   protected readonly drinkTypes = DRINK_TYPES;
 

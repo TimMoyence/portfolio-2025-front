@@ -48,6 +48,7 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
           role="button"
           tabindex="-1"
           aria-label="Fermer"
+          i18n-aria-label="@@bottomSheetClose"
           (click)="close()"
           (keydown.escape)="close()"
         ></div>
@@ -86,6 +87,7 @@ import { BreakpointService } from '../../../core/services/breakpoint.service';
               class="flex h-8 w-8 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white"
               (click)="close()"
               aria-label="Fermer"
+              i18n-aria-label="@@bottomSheetClose"
             >
               <svg
                 class="h-5 w-5"

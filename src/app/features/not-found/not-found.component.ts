@@ -39,7 +39,7 @@ import { clamp } from '../../shared/utils/math.utils';
           Cette page a quitté <em>le site</em>.
         </h1>
         <p i18n="@@notFoundDescription">
-          La page que vous cherchez a peut-être été déplacée, ou n'a jamais existé. Mais Les projets
+          La page que vous cherchez a peut-être été déplacée, ou n'a jamais existé. Mais les projets
           utiles, eux, continuent.
         </p>
         <div class="nf-cta">

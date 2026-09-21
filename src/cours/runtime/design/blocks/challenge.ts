@@ -127,4 +127,9 @@ export const challenge = `
   font-size: calc(0.9rem * var(--fp-echelle));
   letter-spacing: 0.02em;
 }
+
+:where(.fp-root) .fp-challenge__attente {
+  color: var(--fp-ink-mute);
+  font-style: italic;
+}
 `;
