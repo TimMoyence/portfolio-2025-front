@@ -33,6 +33,6 @@
   }
 
   <div class="slide-deck-progress" role="status" aria-live="polite">
-    <span>{{ currentVisibleIndex() + 1 }} / {{ visibleSlides().length }}</span>
+    <span>{{ progressLabel() ?? currentVisibleIndex() + 1 + ' / ' + visibleSlides().length }}</span>
   </div>
 </div>

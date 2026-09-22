@@ -111,8 +111,13 @@ export const story = `
 :where(.fp-root[data-render='stage']) .fp-story__video video {
   width: min(100%, 860px);
   min-height: 0;
-  max-height: min(52vh, 30rem);
+  max-height: min(38vh, 22rem);
   margin-inline: auto;
+}
+
+:where(.fp-root[data-render='board']) .fp-story__video video {
+  min-height: 0;
+  max-height: min(30vh, 18rem);
 }
 
 :where(.fp-root) .fp-story__transcription {
@@ -217,10 +222,10 @@ export const pro = `
 }
 
 :where(.fp-root[data-render='stage']) .fp-pro__cas {
-  width: min(100%, 72rem);
+  width: min(100%, 64rem);
   box-sizing: border-box;
   margin-inline: auto;
-  padding: clamp(1.5rem, 3.5vw, 3.5rem);
+  padding: clamp(1rem, 2.5vw, 2rem);
   background: var(--fp-surface);
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r-lg);
@@ -237,8 +242,13 @@ export const pro = `
   margin-inline: auto;
 }
 
+:where(.fp-root[data-render='stage']) .fp-pro__geste-texte {
+  font-size: clamp(1.15rem, 2vw, 1.75rem);
+  line-height: 1.35;
+}
+
 :where(.fp-root[data-render='stage']) .fp-pro__geste {
-  padding: clamp(1rem, 2.5vw, 1.75rem);
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-left-width: 0.35rem;
   background: var(--fp-ivory);
 }

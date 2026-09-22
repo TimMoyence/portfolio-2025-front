@@ -34,7 +34,6 @@ export function buildAuthSession(overrides?: Partial<AuthSession>): AuthSession 
 export function buildLoginCredentials(overrides?: Partial<LoginCredentials>): LoginCredentials {
   return {
     email: 'test@example.com',
-    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
     password: 'Password123!',
     ...overrides,
   };
@@ -54,7 +53,6 @@ export function buildResetPasswordPayload(
 ): ResetPasswordPayload {
   return {
     token: '0'.repeat(64),
-    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
     newPassword: 'NewPassword123!',
     ...overrides,
   };
@@ -64,7 +62,6 @@ export function buildSetPasswordPayload(
   overrides?: Partial<SetPasswordPayload>,
 ): SetPasswordPayload {
   return {
-    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
     newPassword: 'NewPassword123!',
     ...overrides,
   };

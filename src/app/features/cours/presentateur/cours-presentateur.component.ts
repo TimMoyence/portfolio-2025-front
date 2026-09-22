@@ -44,12 +44,10 @@ import {
   questionsDeLEcran,
   titreDeLEcran,
 } from '../../../shared/slides/session/lecture-ecran';
-import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
-import { SlideComponent } from '../../../shared/slides/deck/slide.component';
-import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
@@ -118,9 +116,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
     CoursPanneauActiviteComponent,
     CoursPanneauQuestionComponent,
     CoursPanneauPedagogiqueComponent,
-    SlideActivityComponent,
-    SlideComponent,
-    SlideDeckComponent,
+    CoursPresentationComponent,
     PercentPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -133,7 +129,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
             Séance en direct
           </p>
           <h1 class="presentateur-title" i18n="presentateur.titrePage|@@presentateurTitrePage">
-            Pupitre de la séance
+            Séance en direct
           </h1>
           <p class="presentateur-subtitle" i18n="presentateur.sousTitre|@@presentateurSousTitre">
             Pilotez l’écran projeté, suivez les réponses de la classe et choisissez le bon moment
@@ -509,19 +505,14 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   >
                 </div>
                 <div class="presentateur-stage__body">
-                  <app-slide-deck mode="scroll" [allowFullscreen]="false">
-                    <app-slide [id]="ecranAffiche.id">
-                      <app-slide-activity
-                        [slide]="ecranAffiche"
-                        render="board"
-                        [role]="'presentateur'"
-                        [resultats]="resultats()"
-                        [direct]="direct()"
-                        [donneesFormateur]="ecranAffiche.corrigeEcran"
-                        [maitrise]="maitrise()"
-                      />
-                    </app-slide>
-                  </app-slide-deck>
+                  <app-cours-presentation
+                    mode="formateur"
+                    [slide]="ecranAffiche"
+                    [resultats]="resultats()"
+                    [direct]="direct()"
+                    [donneesFormateur]="ecranAffiche.corrigeEcran"
+                    [maitrise]="maitrise()"
+                  />
                   @if (maitriseIndisponible()) {
                     <p
                       class="muted"

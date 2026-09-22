@@ -47,7 +47,6 @@ describe('AuthHttpAdapter', () => {
   it('should POST payload to the register endpoint and return a message', () => {
     const payload = {
       email: 'john@example.com',
-      // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
       password: 'Password123!',
       firstName: 'John',
       lastName: 'Doe',

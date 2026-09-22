@@ -19,10 +19,8 @@ import type {
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
-import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
-import { SlideComponent } from '../../../shared/slides/deck/slide.component';
-import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
@@ -31,7 +29,7 @@ const SEUIL_DE_PROJECTION = 5;
 @Component({
   selector: 'app-cours-scene',
   standalone: true,
-  imports: [SlideActivityComponent, SlideComponent, SlideDeckComponent],
+  imports: [CoursPresentationComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -46,7 +44,7 @@ const SEUIL_DE_PROJECTION = 5;
 
     .scene-shell {
       min-block-size: 100%;
-      padding: clamp(56px, 8vh, 96px) clamp(16px, 3vw, 40px) clamp(32px, 5vh, 64px);
+      padding: 1rem clamp(16px, 3vw, 40px);
     }
 
     .scene-toolbar {
@@ -54,14 +52,14 @@ const SEUIL_DE_PROJECTION = 5;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      max-inline-size: 1500px;
-      margin-inline: auto;
-      margin-block-end: clamp(16px, 3vw, 32px);
+      position: fixed;
+      inset: 0.75rem 0.75rem auto auto;
+      z-index: 10;
+      margin: 0;
     }
 
     .scene-toolbar__brand {
-      display: grid;
-      gap: 0.2rem;
+      display: none;
     }
 
     .scene-toolbar__eyebrow {
@@ -85,21 +83,38 @@ const SEUIL_DE_PROJECTION = 5;
     }
 
     .scene-counter {
+      position: fixed;
+      inset: auto 1rem 1rem auto;
+      z-index: 10;
       color: var(--ink-mute, #766f63);
+      background: rgba(251, 243, 230, 0.9);
+      padding: 0.35rem 0.7rem;
+      border: 1px solid rgba(12, 9, 2, 0.12);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
       font-family: var(--font-mono, monospace);
       font-size: 0.75rem;
     }
 
     .scene-fullscreen {
-      min-block-size: 42px;
-      padding: 0.65rem 0.9rem;
+      display: inline-grid;
+      place-items: center;
+      inline-size: 2.5rem;
+      block-size: 2.5rem;
+      padding: 0;
       border: 1px solid rgba(12, 9, 2, 0.16);
       border-radius: 999px;
       background: var(--ivory, #fbf3e6);
       color: var(--teal-deep, #277c70);
       font: inherit;
-      font-size: 0.82rem;
+      font-size: 0;
       cursor: pointer;
+    }
+
+    .scene-fullscreen::before {
+      content: '⛶';
+      font-size: 1.25rem;
+      line-height: 1;
     }
 
     .scene-fullscreen:hover,
@@ -111,11 +126,9 @@ const SEUIL_DE_PROJECTION = 5;
     .scene-canvas {
       max-inline-size: 1500px;
       margin-inline: auto;
-      padding-block-start: clamp(16px, 3vh, 40px);
-    }
-
-    app-slide-deck {
-      display: block;
+      min-block-size: calc(100dvh - 2rem);
+      padding: 0;
+      --slide-min-height: calc(100dvh - 2rem);
     }
 
     .scene-message {
@@ -129,12 +142,6 @@ const SEUIL_DE_PROJECTION = 5;
       box-sizing: border-box;
       font-size: 3rem;
       text-align: center;
-    }
-
-    app-slide-activity {
-      display: block;
-      inline-size: 100%;
-      min-block-size: 100%;
     }
 
     .scene-flux {
@@ -230,18 +237,13 @@ const SEUIL_DE_PROJECTION = 5;
         </header>
         <main class="scene-canvas">
           @if (ecranCourant(); as ecranAffiche) {
-            <app-slide-deck mode="scroll" [allowFullscreen]="false">
-              <app-slide [id]="ecranAffiche.id">
-                <app-slide-activity
-                  [slide]="ecranAffiche"
-                  render="stage"
-                  [role]="'presentateur'"
-                  [resultats]="resultats()"
-                  [direct]="direct()"
-                  [donneesFormateur]="annexeDeLEcran()"
-                />
-              </app-slide>
-            </app-slide-deck>
+            <app-cours-presentation
+              mode="projection"
+              [slide]="ecranAffiche"
+              [resultats]="resultats()"
+              [direct]="direct()"
+              [donneesFormateur]="annexeDeLEcran()"
+            />
           }
         </main>
       </div>

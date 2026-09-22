@@ -34,6 +34,7 @@ import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from './slide-deck.tokens';
 export class SlideDeckComponent implements AfterViewInit {
   readonly mode = input<SlideDeckMode>('scroll');
   readonly allowFullscreen = input<boolean>(true);
+  readonly progressLabel = input<string | null>(null);
   readonly theme = input<string>('default');
   readonly slideChanged = output<{ id: string; index: number }>();
 

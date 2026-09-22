@@ -1006,3 +1006,135 @@
 .student-session app-slide-deck {
   display: block;
 }
+
+.cours-presentateur,
+.cours-etudiant {
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  padding: clamp(16px, 2.5vh, 28px) clamp(16px, 3vw, 40px) 32px;
+}
+
+.presentateur-header {
+  gap: 12px;
+  padding-bottom: 10px;
+}
+
+.presentateur-title {
+  font-size: clamp(1.1rem, 1.7vw, 1.55rem);
+  line-height: 1.1;
+}
+
+.presentateur-subtitle {
+  display: none;
+}
+
+.presentateur-kicker,
+.cours-etudiant__kicker {
+  margin-bottom: 4px;
+  font-size: 0.62rem;
+}
+
+.presentateur-open {
+  margin-block: 12px;
+}
+
+.join-panel {
+  gap: 16px;
+  margin-block: 14px;
+  padding: 16px 20px;
+}
+
+.code-seance {
+  font-size: clamp(3.6rem, 9vw, 7rem);
+}
+
+.presentateur-controls {
+  gap: 10px;
+  margin-block: 12px 16px;
+  padding: 10px 12px;
+}
+
+.presentateur-control-nav {
+  gap: 7px;
+}
+
+.presentateur-workspace {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 16px;
+}
+
+.presentateur-stage__body {
+  padding: 10px;
+  --slide-min-height: 0;
+}
+
+.presentateur-stage__body app-slide {
+  display: block;
+  min-width: 0;
+}
+
+.presentateur-sidebar {
+  max-height: calc(100dvh - 190px);
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.student-session {
+  width: min(100%, 1280px);
+  min-height: calc(100dvh - 32px);
+  margin: 0 auto;
+  gap: 12px;
+  padding: clamp(16px, 2.5vw, 32px);
+  box-shadow: none;
+}
+
+.student-session__head {
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.student-session__head h2 {
+  font-size: clamp(1.15rem, 2vw, 1.75rem);
+  line-height: 1.1;
+}
+
+.student-progress {
+  display: none;
+}
+
+.student-session app-slide-deck {
+  --slide-min-height: calc(100dvh - 150px);
+}
+
+.student-session .slide-deck.mode-scroll {
+  height: auto;
+  min-height: calc(100dvh - 150px);
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+.student-session__navigation {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.student-verdicts,
+.student-feedback {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .cours-presentateur,
+  .cours-etudiant {
+    padding-inline: 16px;
+  }
+
+  .presentateur-sidebar {
+    max-height: none;
+  }
+}
