@@ -150,7 +150,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           }
         </div>
       </header>
-      @if (statut() === 'fermee' && seance() === undefined) {
+      @if (statut() === 'fermee' && seance() === undefined && ouverture() === 'echec') {
         <button
           type="button"
           class="btn btn-teal presentateur-open"
@@ -791,9 +791,7 @@ export class CoursPresentateurComponent {
     }
     afterNextRender(() => {
       const seance = this.seance();
-      if (seance !== undefined) {
-        this.chantier = this.reprendreLaSeance(seance);
-      }
+      this.chantier = seance === undefined ? this.ouvrirLaSeance() : this.reprendreLaSeance(seance);
     });
   }
 

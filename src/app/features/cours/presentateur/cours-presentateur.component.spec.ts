@@ -164,7 +164,7 @@ describe('CoursPresentateurComponent', () => {
 
   async function ouvrirLaSeance(): Promise<Fixture> {
     const fixture = monter();
-    await cliquer(fixture, 'presentateur-ouvrir');
+    await stabiliser(fixture);
     return fixture;
   }
 
@@ -227,8 +227,7 @@ describe('CoursPresentateurComponent', () => {
       return lecture;
     });
     const fixture = monter();
-
-    bouton(fixture, 'presentateur-ouvrir').click();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(port.ouvrirSeance).toHaveBeenCalledOnceWith(SLUG);
@@ -704,7 +703,7 @@ describe('CoursPresentateurComponent', () => {
 
     expect(quitterLaPage()).withContext('aucune seance ouverte').toBeFalse();
 
-    await cliquer(fixture, 'presentateur-ouvrir');
+    await stabiliser(fixture);
 
     expect(quitterLaPage()).withContext('seance ouverte').toBeTrue();
 
