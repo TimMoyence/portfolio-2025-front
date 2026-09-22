@@ -7,8 +7,6 @@ import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
 
-const TOKEN_KEY = 'portfolio_jwt';
-const EXPIRY_KEY = 'portfolio_jwt_expire_le';
 const REFRESH_LOCK = 'portfolio-auth-refresh';
 const REFRESH_MARGIN_MS = 30_000;
 const REFRESH_MIN_DELAY_MS = 5_000;
@@ -51,32 +49,36 @@ export class AuthStateService {
   private readonly _token = signal<string | null>(null);
   private readonly _user = signal<AuthUser | null>(null);
   private readonly _isInitialized = signal(false);
+  private readonly _isSessionChecked = signal(false);
   private readonly _isUserLoading = signal(false);
   private readonly _isRestoreFailed = signal(false);
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
   private refreshAttempts = 0;
+  private accessTokenExpiresAt: number | null = null;
 
   readonly token = this._token.asReadonly();
   readonly user = this._user.asReadonly();
   readonly isLoggedIn = computed(() => !!this._token());
   readonly isInitialized = this._isInitialized.asReadonly();
   readonly isRestoreFailed = this._isRestoreFailed.asReadonly();
+  readonly isSessionCheckComplete = computed(
+    () => this._isSessionChecked() && !this._isUserLoading(),
+  );
   readonly isSessionResolved = computed(
     () =>
-      this._user() !== null ||
-      (this._isInitialized() && !this._isUserLoading() && !this._isRestoreFailed()),
+      this._isSessionChecked() &&
+      (this._user() !== null ||
+        (this._isInitialized() && !this._isUserLoading() && !this._isRestoreFailed())),
   );
 
   constructor() {
     this.destroyRef.onDestroy(() => this.clearRefreshTimer());
 
-    if (this.isBrowser) {
-      this.followOtherWindows();
-    } else {
+    if (!this.isBrowser) {
+      this._isSessionChecked.set(true);
       this._isInitialized.set(true);
     }
     afterNextRender(() => {
-      this.restoreToken();
       this._isInitialized.set(true);
     });
   }
@@ -84,10 +86,7 @@ export class AuthStateService {
   login(session: AuthSession): void {
     const expiresAt = Date.now() + session.expiresIn * 1000;
     this._user.set(session.user);
-    if (this.isBrowser) {
-      localStorage.setItem(EXPIRY_KEY, String(expiresAt));
-      localStorage.setItem(TOKEN_KEY, session.accessToken);
-    }
+    this._isSessionChecked.set(true);
     this.adoptToken(session.accessToken, expiresAt);
   }
 
@@ -117,10 +116,24 @@ export class AuthStateService {
 
   restoreSession(): void {
     const token = this._token();
-    if (!token || !this.authPort) return;
+    if (!this.authPort || this._isUserLoading()) return;
 
     this._isRestoreFailed.set(false);
     this._isUserLoading.set(true);
+    if (token === null) {
+      this.authPort
+        .refresh()
+        .pipe(
+          timeout(ME_TIMEOUT_MS),
+          finalize(() => this._isUserLoading.set(false)),
+        )
+        .subscribe({
+          next: (session: AuthSession) => this.login(session),
+          error: (error: unknown) => this.onRestoreError(error),
+        });
+      return;
+    }
+
     this.authPort
       .me()
       .pipe(
@@ -128,7 +141,7 @@ export class AuthStateService {
         finalize(() => this._isUserLoading.set(false)),
       )
       .subscribe({
-        next: (user) => {
+        next: (user: AuthUser) => {
           this._user.set(user);
           this.armRefresh();
         },
@@ -138,6 +151,7 @@ export class AuthStateService {
 
   private onRestoreError(error: unknown): void {
     const status = httpStatusOf(error);
+    this._isSessionChecked.set(true);
     if (status === 401 || status === 403) {
       this.clearSession();
       return;
@@ -147,7 +161,7 @@ export class AuthStateService {
 
   private armRefresh(): void {
     if (this.refreshTimer === null) {
-      this.scheduleRefresh(this.readStoredExpiry());
+      this.scheduleRefresh(this.accessTokenExpiresAt);
     }
   }
 
@@ -172,7 +186,7 @@ export class AuthStateService {
   }
 
   private async refreshUnderLock(): Promise<void> {
-    if (this._token() === null || this.authPort === null || this.followFreshStoredToken()) {
+    if (this._token() === null || this.authPort === null) {
       return;
     }
     try {
@@ -203,48 +217,11 @@ export class AuthStateService {
     this.planRefresh(delayMs);
   }
 
-  private followFreshStoredToken(): boolean {
-    if (!this.isBrowser) {
-      return false;
-    }
-    const stored = localStorage.getItem(TOKEN_KEY);
-    const expiresAt = this.readStoredExpiry();
-    if (stored === null || expiresAt === null || expiresAt - Date.now() <= REFRESH_MARGIN_MS) {
-      return false;
-    }
-    this.adoptToken(stored, expiresAt);
-    return true;
-  }
-
   private adoptToken(token: string, expiresAt: number | null): void {
     this._token.set(token);
+    this.accessTokenExpiresAt = expiresAt;
     this.refreshAttempts = 0;
     this.scheduleRefresh(expiresAt);
-  }
-
-  private followOtherWindows(): void {
-    const onStorage = (event: StorageEvent): void => {
-      const current = this._token();
-      if (
-        event.key !== TOKEN_KEY ||
-        event.newValue === null ||
-        current === null ||
-        event.newValue === current
-      ) {
-        return;
-      }
-      this.adoptToken(event.newValue, this.readStoredExpiry());
-    };
-    window.addEventListener('storage', onStorage);
-    this.destroyRef.onDestroy(() => window.removeEventListener('storage', onStorage));
-  }
-
-  private readStoredExpiry(): number | null {
-    if (!this.isBrowser) {
-      return null;
-    }
-    const expiresAt = Number(localStorage.getItem(EXPIRY_KEY));
-    return Number.isFinite(expiresAt) && expiresAt > 0 ? expiresAt : null;
   }
 
   private clearRefreshTimer(): void {
@@ -258,20 +235,9 @@ export class AuthStateService {
     this.clearRefreshTimer();
     this.refreshAttempts = 0;
     this._isRestoreFailed.set(false);
+    this._isSessionChecked.set(true);
     this._token.set(null);
     this._user.set(null);
-    if (this.isBrowser) {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(EXPIRY_KEY);
-    }
-  }
-
-  private restoreToken(): void {
-    if (!this.isBrowser || !this.authPort) return;
-    const savedToken = localStorage.getItem(TOKEN_KEY);
-    if (savedToken) {
-      this._token.set(savedToken);
-      this.restoreSession();
-    }
+    this.accessTokenExpiresAt = null;
   }
 }

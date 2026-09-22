@@ -17,10 +17,15 @@ export const coursEntreeGuard: CanActivateFn = (route) => {
     (authState.isLoggedIn() && router.createUrlTree(['/cours/rejoindre'])) ||
     true;
 
-  return authState.isSessionResolved()
+  const sessionCheckWasComplete = authState.isSessionCheckComplete();
+  if (!sessionCheckWasComplete) {
+    authState.restoreSession();
+  }
+
+  return sessionCheckWasComplete
     ? decide()
-    : toObservable(authState.isSessionResolved).pipe(
-        filter((resolved) => resolved),
+    : toObservable(authState.isSessionCheckComplete).pipe(
+        filter((complete) => complete),
         take(1),
         map(decide),
       );

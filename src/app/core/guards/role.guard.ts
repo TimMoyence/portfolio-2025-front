@@ -16,6 +16,10 @@ export function roleGuard(requiredRole: string): CanActivateFn {
         queryParams: { reason: 'access', app: requiredRole },
       });
 
+    if (!authState.isSessionResolved()) {
+      authState.restoreSession();
+    }
+
     return authState.isSessionResolved()
       ? decide()
       : toObservable(authState.isSessionResolved).pipe(

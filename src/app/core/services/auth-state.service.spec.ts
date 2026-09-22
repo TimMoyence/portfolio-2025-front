@@ -1,11 +1,5 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import type { EnvironmentInjector as InjecteurEnvironnement } from '@angular/core';
-import {
-  ApplicationRef,
-  createEnvironmentInjector,
-  EnvironmentInjector,
-  PLATFORM_ID,
-} from '@angular/core';
+import { ApplicationRef, PLATFORM_ID } from '@angular/core';
 import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { NEVER, of, throwError } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
@@ -14,17 +8,10 @@ import {
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import {
-  createVerrouAAccordManuel,
-  createVerrouEnMemoire,
-} from '../../../testing/factories/verrou.factory';
+import { createVerrouEnMemoire } from '../../../testing/factories/verrou.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthStateService } from './auth-state.service';
-import type { VerrouInterOnglets } from './verrou-inter-onglets';
 import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
-
-const CLE_DU_JETON = 'portfolio_jwt';
-const CLE_D_EXPIRATION = 'portfolio_jwt_expire_le';
 
 function refusHttp(status: number): () => HttpErrorResponse {
   return () => new HttpErrorResponse({ status });
@@ -42,32 +29,8 @@ describe('AuthStateService', () => {
   describe('en contexte navigateur', () => {
     let service: AuthStateService;
     let portStub: Record<keyof AuthPort, jasmine.Spy>;
-    const autresFenetres: InjecteurEnvironnement[] = [];
-
-    function ouvrirUneAutreFenetre(verrou?: VerrouInterOnglets): AuthStateService {
-      const injecteur = createEnvironmentInjector(
-        verrou === undefined
-          ? [AuthStateService]
-          : [AuthStateService, { provide: VERROU_INTER_ONGLETS, useValue: verrou }],
-        TestBed.inject(EnvironmentInjector),
-      );
-      autresFenetres.push(injecteur);
-      return injecteur.get(AuthStateService);
-    }
-
-    function livrerLEvenementStorage(jeton: string): void {
-      window.dispatchEvent(new StorageEvent('storage', { key: CLE_DU_JETON, newValue: jeton }));
-    }
-
-    function jetonEcritParUneAutreFenetre(jeton: string, expireDansMs: number): void {
-      localStorage.setItem(CLE_D_EXPIRATION, String(Date.now() + expireDansMs));
-      localStorage.setItem(CLE_DU_JETON, jeton);
-      livrerLEvenementStorage(jeton);
-    }
 
     beforeEach(() => {
-      localStorage.removeItem(CLE_DU_JETON);
-      localStorage.removeItem(CLE_D_EXPIRATION);
       portStub = createAuthPortStub();
       setupTestBed({
         providers: [
@@ -80,33 +43,21 @@ describe('AuthStateService', () => {
     });
 
     afterEach(() => {
-      for (const injecteur of autresFenetres) {
-        injecteur.destroy();
-      }
-      autresFenetres.length = 0;
       service.clearSession();
-      localStorage.removeItem(CLE_DU_JETON);
-      localStorage.removeItem(CLE_D_EXPIRATION);
     });
 
-    it('arme le renouvellement d une session restauree comme apres une connexion', fakeAsync(() => {
-      localStorage.setItem(CLE_D_EXPIRATION, String(Date.now() + 60_000));
-      localStorage.setItem(CLE_DU_JETON, 'jwt-restaure');
-      portStub.refresh.and.returnValue(of(buildAuthSession({ accessToken: 'jwt-renouvele' })));
+    it('restaure une session via le cookie HttpOnly sans persister le jeton', fakeAsync(() => {
+      const session = buildAuthSession({ accessToken: 'jwt-restaure', expiresIn: 60 });
+      portStub.refresh.and.returnValue(of(session));
 
+      service.restoreSession();
       TestBed.inject(ApplicationRef).tick();
 
       expect(service.token()).toBe('jwt-restaure');
-      tick(29_999);
-      flushMicrotasks();
-      expect(portStub.refresh).not.toHaveBeenCalled();
-
-      tick(1);
-      flushMicrotasks();
-
+      expect(service.user()).toEqual(session.user);
       expect(portStub.refresh).toHaveBeenCalledTimes(1);
-      expect(service.token()).toBe('jwt-renouvele');
-      expect(localStorage.getItem(CLE_DU_JETON)).toBe('jwt-renouvele');
+      expect(localStorage.getItem('portfolio_jwt')).toBeNull();
+      expect(localStorage.getItem('portfolio_jwt_expire_le')).toBeNull();
     }));
 
     for (const status of [0, 503]) {
@@ -129,7 +80,6 @@ describe('AuthStateService', () => {
         expect(essais).toBeGreaterThan(1);
         expect(portStub.refresh.calls.count()).withContext('nouvel essai borne').toBe(essais);
         expect(service.isLoggedIn()).toBeTrue();
-        expect(localStorage.getItem(CLE_DU_JETON)).toBe('jwt-initial');
       }));
     }
 
@@ -218,92 +168,24 @@ describe('AuthStateService', () => {
       flushMicrotasks();
 
       expect(service.isLoggedIn()).toBeFalse();
-      expect(localStorage.getItem(CLE_DU_JETON)).toBeNull();
       tick(600_000);
       flushMicrotasks();
       expect(portStub.refresh).toHaveBeenCalledTimes(1);
     }));
 
-    it('deux fenetres qui arrivent a echeance ensemble ne renouvellent qu une fois quand l evenement storage precede l accord du verrou', fakeAsync(() => {
-      portStub.refresh.and.returnValue(
-        of(buildAuthSession({ accessToken: 'jwt-renouvele', expiresIn: 900 })),
-      );
-      const verrou = createVerrouAAccordManuel();
-      const pupitre = ouvrirUneAutreFenetre(verrou.verrou);
-      const scene = ouvrirUneAutreFenetre(verrou.verrou);
-      const session = buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 });
-      pupitre.login(session);
-      scene.login(session);
-
-      tick(30_000);
-      expect(verrou.demandesEnAttente()).toBe(2);
-
-      verrou.accorderLeSuivant();
-      flushMicrotasks();
-      expect(pupitre.token()).toBe('jwt-renouvele');
-
-      livrerLEvenementStorage('jwt-renouvele');
-      expect(scene.token()).withContext('adopte avant l accord du verrou').toBe('jwt-renouvele');
-
-      verrou.accorderLeSuivant();
-      flushMicrotasks();
-
-      expect(portStub.refresh).toHaveBeenCalledTimes(1);
-      expect(scene.token()).toBe('jwt-renouvele');
-
-      tick(869_999);
-      flushMicrotasks();
-      expect(verrou.demandesEnAttente()).withContext('aucune echeance avant la rotation').toBe(0);
-      tick(1);
-      expect(verrou.demandesEnAttente()).withContext('les deux fenetres rearmees').toBe(2);
-    }));
-
-    it('une fenetre qui n a pas recu l evenement storage adopte sous le verrou le jeton renouvele par l autre', fakeAsync(() => {
-      portStub.refresh.and.returnValue(
-        of(buildAuthSession({ accessToken: 'jwt-renouvele', expiresIn: 900 })),
-      );
-      const scene = ouvrirUneAutreFenetre();
-      const session = buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 });
-      service.login(session);
-      scene.login(session);
-
-      tick(30_000);
-      flushMicrotasks();
-
-      expect(portStub.refresh).toHaveBeenCalledTimes(1);
-      expect(service.token()).toBe('jwt-renouvele');
-      expect(scene.token()).toBe('jwt-renouvele');
-    }));
-
-    it('adopte le jeton renouvele par une autre fenetre et repousse son propre renouvellement', fakeAsync(() => {
-      service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
-
-      jetonEcritParUneAutreFenetre('jwt-autre-fenetre', 900_000);
-
-      expect(service.token()).toBe('jwt-autre-fenetre');
-      tick(60_000);
-      flushMicrotasks();
-      expect(portStub.refresh).not.toHaveBeenCalled();
-
-      tick(810_000);
-      flushMicrotasks();
-      expect(portStub.refresh).toHaveBeenCalledTimes(1);
-    }));
-
-    describe('verification d une session restauree', () => {
-      function restaurer(jeton = 'jwt-restaure'): void {
-        localStorage.setItem(CLE_DU_JETON, jeton);
+    describe('restauration via le cookie HttpOnly', () => {
+      function restaurer(): void {
+        service.restoreSession();
         TestBed.inject(ApplicationRef).tick();
       }
 
       for (const status of [0, 503]) {
-        it(`garde le jeton et propose un nouvel essai quand la verification echoue en ${status}`, () => {
-          portStub.me.and.returnValue(throwError(refusHttp(status)));
+        it(`signale un echec de restauration quand le refresh echoue en ${status}`, () => {
+          portStub.refresh.and.returnValue(throwError(refusHttp(status)));
 
           restaurer();
 
-          expect(service.token()).toBe('jwt-restaure');
-          expect(localStorage.getItem(CLE_DU_JETON)).toBe('jwt-restaure');
+          expect(service.token()).toBeNull();
           expect(service.user()).toBeNull();
           expect(service.isRestoreFailed()).toBeTrue();
           expect(service.isSessionResolved())
@@ -313,20 +195,19 @@ describe('AuthStateService', () => {
       }
 
       for (const status of [401, 403]) {
-        it(`efface la session quand la verification est refusee en ${status}`, () => {
-          portStub.me.and.returnValue(throwError(refusHttp(status)));
+        it(`efface la session quand le refresh est refuse en ${status}`, () => {
+          portStub.refresh.and.returnValue(throwError(refusHttp(status)));
 
           restaurer();
 
           expect(service.token()).toBeNull();
-          expect(localStorage.getItem(CLE_DU_JETON)).toBeNull();
           expect(service.isRestoreFailed()).toBeFalse();
           expect(service.isSessionResolved()).toBeTrue();
         });
       }
 
-      it('abandonne une verification sans reponse apres dix secondes en gardant le jeton', fakeAsync(() => {
-        portStub.me.and.returnValue(NEVER);
+      it('abandonne une restauration sans reponse apres dix secondes', fakeAsync(() => {
+        portStub.refresh.and.returnValue(NEVER);
 
         restaurer();
         tick(9_999);
@@ -336,13 +217,13 @@ describe('AuthStateService', () => {
         tick(1);
 
         expect(service.isRestoreFailed()).toBeTrue();
-        expect(service.token()).toBe('jwt-restaure');
+        expect(service.token()).toBeNull();
       }));
 
       it('resout la session quand le nouvel essai aboutit', () => {
-        portStub.me.and.returnValues(
+        portStub.refresh.and.returnValues(
           throwError(refusHttp(503)),
-          of(buildAuthUser({ roles: ['teacher'] })),
+          of(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) })),
         );
         restaurer();
 
@@ -352,12 +233,6 @@ describe('AuthStateService', () => {
         expect(service.hasRole('teacher')).toBeTrue();
         expect(service.isSessionResolved()).toBeTrue();
       });
-    });
-
-    it('n adopte pas le jeton d une autre fenetre quand aucune session n est ouverte ici', () => {
-      jetonEcritParUneAutreFenetre('jwt-autre-fenetre', 900_000);
-
-      expect(service.token()).toBeNull();
     });
 
     it('devrait se creer', () => {
@@ -410,11 +285,13 @@ describe('AuthStateService', () => {
       expect(service.hasRole('admin')).toBeFalse();
     });
 
-    it('ne devrait plus stocker de refreshToken en localStorage (cookie HttpOnly)', () => {
+    it('ne stocke aucun jeton de session en localStorage', () => {
       const session = buildAuthSession();
       service.login(session);
 
       expect(localStorage.getItem('portfolio_refresh')).toBeNull();
+      expect(localStorage.getItem('portfolio_jwt')).toBeNull();
+      expect(localStorage.getItem('portfolio_jwt_expire_le')).toBeNull();
     });
 
     it('devrait planifier le refresh du token avant expiration', fakeAsync(() => {
@@ -461,7 +338,6 @@ describe('AuthStateService', () => {
 
       expect(service.isLoggedIn()).toBeFalse();
       expect(service.user()).toBeNull();
-      expect(localStorage.getItem('portfolio_jwt')).toBeNull();
     });
 
     it("devrait purger la session locale meme si le port jette avant d'emettre", () => {
@@ -473,7 +349,6 @@ describe('AuthStateService', () => {
 
       expect(service.isLoggedIn()).toBeFalse();
       expect(service.user()).toBeNull();
-      expect(localStorage.getItem('portfolio_jwt')).toBeNull();
     });
 
     it('devrait annuler le timer de refresh au logout', fakeAsync(() => {

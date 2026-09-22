@@ -9,10 +9,9 @@ const GROUPE = '66666666-6666-4666-8666-666666666666';
 const REPONSE_ATTENDUE = 'Des milliers d’euros, pas des euros.';
 const ENONCE_PROBLEME = 'Le prix monte de 20 %, puis baisse de 20 %. Où arrive-t-il ?';
 const NOTE = 'Relancer Léa sur la base de départ.';
-const JETON = 'jeton-formateur';
-
 const CORS = {
   'access-control-allow-origin': 'http://localhost:4200',
+  'access-control-allow-credentials': 'true',
   'access-control-allow-headers': 'content-type, accept, authorization',
   'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
 };
@@ -251,6 +250,12 @@ async function installerLePupitre(page: Page): Promise<Journal> {
 
     if (methode === 'OPTIONS') {
       await route.fulfill({ status: 204, headers: CORS });
+    } else if (methode === 'POST' && chemin.endsWith('/auth/refresh')) {
+      await servir(route, {
+        accessToken: 'jeton-formateur',
+        expiresIn: 900,
+        user: FORMATEUR,
+      });
     } else if (ecriture !== undefined) {
       await ecriture[1](route, (requete.postDataJSON() ?? {}) as Corps);
     } else if (chemin.endsWith(`/sessions/${SESSION}/report`)) {
@@ -270,7 +275,6 @@ async function installerLePupitre(page: Page): Promise<Journal> {
   });
 
   await page.goto('/');
-  await page.evaluate((jeton) => localStorage.setItem('portfolio_jwt', jeton), JETON);
 
   return {
     annotations: () => annotations,

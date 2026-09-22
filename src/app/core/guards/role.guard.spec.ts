@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, GuardResult, RouterStateSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
 import { isObservable, Subject } from 'rxjs';
-import type { AuthUser } from '../models/auth.model';
 import { AUTH_PORT } from '../ports/auth.port';
 import { AuthStateService } from '../services/auth-state.service';
 import {
@@ -15,12 +14,11 @@ import {
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { roleGuard } from './role.guard';
 
-const CLE_DU_JETON = 'portfolio_jwt';
 const REDIRECTION_WEATHER = '/contact?reason=access&app=weather';
 
 describe('roleGuard', () => {
   let authState: AuthStateService;
-  let utilisateurRestaure: Subject<AuthUser>;
+  let sessionRestauree: Subject<ReturnType<typeof buildAuthSession>>;
   let port: ReturnType<typeof createAuthPortStub>;
 
   function decisionsDe(requis: string): GuardResult[] {
@@ -41,10 +39,9 @@ describe('roleGuard', () => {
   }
 
   beforeEach(() => {
-    localStorage.removeItem(CLE_DU_JETON);
-    utilisateurRestaure = new Subject<AuthUser>();
+    sessionRestauree = new Subject<ReturnType<typeof buildAuthSession>>();
     port = createAuthPortStub();
-    port.me.and.returnValue(utilisateurRestaure);
+    port.refresh.and.returnValue(sessionRestauree);
     setupTestBed({
       router: true,
       providers: [{ provide: AUTH_PORT, useValue: port }],
@@ -55,7 +52,6 @@ describe('roleGuard', () => {
 
   afterEach(() => {
     authState.clearSession();
-    localStorage.removeItem(CLE_DU_JETON);
   });
 
   it('devrait autoriser l acces si l utilisateur possede le role requis', () => {
@@ -74,6 +70,7 @@ describe('roleGuard', () => {
   });
 
   it('devrait rediriger vers /contact une fois la session resolue sans jeton', () => {
+    sessionRestauree.error(new HttpErrorResponse({ status: 401 }));
     const decisions = decisionsDe('weather');
 
     rendreLaPage();
@@ -84,25 +81,20 @@ describe('roleGuard', () => {
     expect(String(decisions[0])).toBe(REDIRECTION_WEATHER);
   });
 
-  describe('au chargement d une page avec un jeton enregistre', () => {
-    beforeEach(() => {
-      localStorage.setItem(CLE_DU_JETON, 'jwt-restaure');
-    });
-
-    it('attend l utilisateur restaure et autorise le role qu il porte', () => {
+  describe('au chargement d une page avec un cookie de refresh', () => {
+    it('attend la session restauree et autorise le role qu elle porte', () => {
       const decisions = decisionsDe('teacher');
 
       rendreLaPage();
       rendreLaPage();
 
-      expect(authState.token()).toBe('jwt-restaure');
       expect(authState.isInitialized()).toBeTrue();
       expect(decisions)
         .withContext('aucune decision tant que l utilisateur n est pas revenu du serveur')
         .toEqual([]);
 
-      utilisateurRestaure.next(buildAuthUser({ roles: ['teacher'] }));
-      utilisateurRestaure.complete();
+      sessionRestauree.next(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));
+      sessionRestauree.complete();
       rendreLaPage();
 
       expect(decisions).toEqual([true]);
@@ -112,16 +104,15 @@ describe('roleGuard', () => {
       const decisions = decisionsDe('teacher');
 
       rendreLaPage();
-      utilisateurRestaure.error(new HttpErrorResponse({ status: 503 }));
+      sessionRestauree.error(new HttpErrorResponse({ status: 503 }));
       rendreLaPage();
 
       expect(decisions).withContext('une panne du serveur ne dit rien du role').toEqual([]);
-      expect(authState.token()).toBe('jwt-restaure');
 
-      const nouvelEssai = new Subject<AuthUser>();
-      port.me.and.returnValue(nouvelEssai);
+      const nouvelEssai = new Subject<ReturnType<typeof buildAuthSession>>();
+      port.refresh.and.returnValue(nouvelEssai);
       authState.restoreSession();
-      nouvelEssai.next(buildAuthUser({ roles: ['teacher'] }));
+      nouvelEssai.next(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));
       nouvelEssai.complete();
       rendreLaPage();
 
@@ -132,8 +123,8 @@ describe('roleGuard', () => {
       const decisions = decisionsDe('teacher');
 
       rendreLaPage();
-      utilisateurRestaure.next(buildAuthUser({ roles: ['weather'] }));
-      utilisateurRestaure.complete();
+      sessionRestauree.next(buildAuthSession({ user: buildAuthUser({ roles: ['weather'] }) }));
+      sessionRestauree.complete();
       rendreLaPage();
 
       expect(decisions.length).toBe(1);

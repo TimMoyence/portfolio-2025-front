@@ -16,7 +16,6 @@ describe('NavbarComponent', () => {
     let authPort: ReturnType<typeof createAuthPortStub>;
 
     beforeEach(async () => {
-      localStorage.removeItem('portfolio_jwt');
       authPort = createAuthPortStub();
 
       await TestBed.configureTestingModule({
@@ -152,7 +151,6 @@ describe('NavbarComponent', () => {
         component.logout();
 
         expect(authState.isLoggedIn()).toBeFalse();
-        expect(localStorage.getItem('portfolio_jwt')).toBeNull();
         expect(navigateSpy).toHaveBeenCalledWith(['/']);
       });
 
@@ -164,7 +162,6 @@ describe('NavbarComponent', () => {
 
         expect(authPort.logout).toHaveBeenCalledWith();
         expect(authState.isLoggedIn()).toBeFalse();
-        expect(localStorage.getItem('portfolio_jwt')).toBeNull();
         expect(navigateSpy).toHaveBeenCalledWith(['/']);
       });
     });

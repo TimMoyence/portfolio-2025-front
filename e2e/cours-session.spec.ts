@@ -68,6 +68,7 @@ const DEROULE = {
 
 const CORS_HEADERS = {
   'access-control-allow-origin': 'http://localhost:4200',
+  'access-control-allow-credentials': 'true',
   'access-control-allow-headers': 'content-type, accept, x-participant-token, authorization',
   'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
 };
@@ -211,19 +212,25 @@ test.describe('Séance de cours dans un navigateur réel', () => {
   });
 
   test('reprend un pupitre rechargé avec son déroulé et son flux', async ({ page }) => {
-    await page.addInitScript(
-      ({ token }) => {
-        localStorage.setItem('portfolio_jwt', token);
-        localStorage.setItem('portfolio_jwt_expire_le', String(Date.now() + 900_000));
-      },
-      { token: 'teacher-token' },
-    );
-
     await page.route(`${API}/**`, async (route) => {
       const requete = route.request();
       const url = new URL(requete.url());
       if (requete.method() === 'OPTIONS') {
         await route.fulfill({ status: 204, headers: CORS_HEADERS });
+      } else if (url.pathname.endsWith('/auth/refresh')) {
+        await repondre(route, {
+          accessToken: 'teacher-token',
+          expiresIn: 900,
+          user: {
+            id: 'teacher-1',
+            email: 'formateur@example.com',
+            firstName: 'Anne',
+            lastName: 'Formateur',
+            phone: null,
+            isActive: true,
+            roles: ['teacher'],
+          },
+        });
       } else if (url.pathname.endsWith('/auth/me')) {
         await repondre(route, {
           id: 'teacher-1',
@@ -284,16 +291,6 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       const url = new URL(requete.url());
       if (requete.method() === 'OPTIONS') {
         await route.fulfill({ status: 204, headers: CORS_HEADERS });
-      } else if (url.pathname.endsWith('/auth/me')) {
-        await repondre(route, {
-          id: 'teacher-1',
-          email: 'formateur@example.com',
-          firstName: 'Anne',
-          lastName: 'Formateur',
-          phone: null,
-          isActive: true,
-          roles: ['teacher'],
-        });
       } else if (url.pathname.endsWith('/auth/refresh')) {
         renouvellements += 1;
         await repondre(route, {
@@ -314,8 +311,6 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       }
     });
     await page.addInitScript(() => {
-      localStorage.setItem('portfolio_jwt', 'initial');
-      localStorage.setItem('portfolio_jwt_expire_le', String(Date.now() + 900_000));
       localStorage.setItem(
         'fp.identite',
         JSON.stringify({
@@ -327,10 +322,10 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       );
     });
 
-    await page.goto('/formations');
+    await page.goto('/profil');
     await page.clock.fastForward(930_000);
-    await expect.poll(() => renouvellements).toBe(1);
-    await expect(page.locator('body')).toContainText('Du concret');
+    await expect.poll(() => renouvellements).toBe(2);
+    await expect(page.locator('body')).not.toContainText('Se connecter');
   });
 });
 

@@ -28,8 +28,6 @@ describe('AuthComponent', () => {
     seoKey: string,
     queryParams: Record<string, string | null> = {},
   ): Promise<void> {
-    localStorage.removeItem('portfolio_jwt');
-
     authService = createAuthPortStub();
 
     await setupTestBed({

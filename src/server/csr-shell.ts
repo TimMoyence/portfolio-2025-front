@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 /**
  * Detection et service de la coquille CSR pour les routes qui doivent etre
  * rendues cote client uniquement. Pour ces routes, le SSR classique redirige
- * vers /login (le guard ne peut pas lire localStorage cote serveur), ce qui
+ * vers /login (le guard ne peut pas utiliser le cookie de refresh HttpOnly cote serveur), ce qui
  * casse le reload. On sert a la place la coquille CSR (index.csr.html) :
  * un HTML minimal avec les scripts Angular, qui laisse le client gerer le
  * routing apres hydratation.
