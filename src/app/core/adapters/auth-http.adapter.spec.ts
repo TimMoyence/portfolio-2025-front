@@ -47,7 +47,7 @@ describe('AuthHttpAdapter', () => {
   it('should POST payload to the register endpoint and return a message', () => {
     const payload = {
       email: 'john@example.com',
-      password: 'Password123!',
+      password: buildLoginCredentials().password,
       firstName: 'John',
       lastName: 'Doe',
       phone: '+33123456789',
