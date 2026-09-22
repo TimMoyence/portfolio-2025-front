@@ -22,20 +22,22 @@ export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (slide(); as current) {
-      @if (mode() === 'etudiant') {
-        <app-slide-deck mode="scroll" [allowFullscreen]="true" [progressLabel]="progressLabel()">
-          <app-slide [id]="current.id">
+      @for (screen of [current]; track screen.id) {
+        @if (mode() === 'etudiant') {
+          <app-slide-deck mode="scroll" [allowFullscreen]="true" [progressLabel]="progressLabel()">
+            <app-slide [id]="screen.id">
+              <ng-container
+                *ngTemplateOutlet="activity; context: { $implicit: screen }"
+              ></ng-container>
+            </app-slide>
+          </app-slide-deck>
+        } @else {
+          <app-slide [id]="screen.id">
             <ng-container
-              *ngTemplateOutlet="activity; context: { $implicit: current }"
+              *ngTemplateOutlet="activity; context: { $implicit: screen }"
             ></ng-container>
           </app-slide>
-        </app-slide-deck>
-      } @else {
-        <app-slide [id]="current.id">
-          <ng-container
-            *ngTemplateOutlet="activity; context: { $implicit: current }"
-          ></ng-container>
-        </app-slide>
+        }
       }
     }
 
@@ -65,6 +67,8 @@ export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 
     app-slide {
       display: block;
+      inline-size: 100%;
+      block-size: 100%;
       min-inline-size: 0;
     }
   `,

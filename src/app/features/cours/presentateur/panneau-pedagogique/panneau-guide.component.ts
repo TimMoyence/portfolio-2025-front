@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, linkedSignal } from '@angular/core';
 import type { GuideFormateur } from '../../../../../cours/content/types';
 
-type CleRubrique = keyof GuideFormateur;
+type CleRubrique = 'question' | 'reponse' | 'relance';
 
 interface Rubrique {
   readonly cle: CleRubrique;
@@ -9,22 +9,12 @@ interface Rubrique {
   readonly texte: string;
 }
 
-const ORDRE: readonly CleRubrique[] = [
-  'aDire',
-  'question',
-  'reponse',
-  'calcul',
-  'relance',
-  'transition',
-];
+const ORDRE: readonly CleRubrique[] = ['question', 'reponse', 'relance'];
 
 const LIBELLES: Readonly<Record<CleRubrique, string>> = {
-  aDire: $localize`:@@panneauGuideADire:À dire`,
   question: $localize`:@@panneauGuideQuestion:Question à poser`,
   reponse: $localize`:@@panneauGuideReponse:Réponse attendue`,
-  calcul: $localize`:@@panneauGuideCalcul:Calcul`,
   relance: $localize`:@@panneauGuideRelance:Relance`,
-  transition: $localize`:@@panneauGuideTransition:Transition`,
 };
 
 @Component({
@@ -85,7 +75,6 @@ const LIBELLES: Readonly<Record<CleRubrique, string>> = {
 export class PanneauGuideComponent {
   readonly guide = input<GuideFormateur | undefined>(undefined);
   readonly ecranId = input.required<string>();
-  readonly ecranSuivant = input.required<string>();
 
   protected readonly reponseVisible = linkedSignal({
     source: this.ecranId,
@@ -99,11 +88,9 @@ export class PanneauGuideComponent {
 
   protected readonly rubriques = computed<readonly Rubrique[]>(() => {
     const guide = this.guide() ?? {};
-    const transitionParDefaut = $localize`:@@panneauGuideTransitionParDefaut:Enchaîner sur « ${this.ecranSuivant()}:ecranSuivant: ».`;
     return ORDRE.map((cle) => {
       const servi = guide[cle] ?? '';
-      const texte = servi === '' && cle === 'transition' ? transitionParDefaut : servi;
-      return { cle, libelle: LIBELLES[cle], texte };
+      return { cle, libelle: LIBELLES[cle], texte: servi };
     }).filter((rubrique) => rubrique.texte !== '');
   });
 

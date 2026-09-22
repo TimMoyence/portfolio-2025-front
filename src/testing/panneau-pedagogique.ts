@@ -18,7 +18,6 @@ export function monterLePanneau(sessionId: string | null = SEANCE_DU_PANNEAU): F
   fixture.componentRef.setInput('resultats', []);
   fixture.componentRef.setInput('participants', 12);
   fixture.componentRef.setInput('sessionId', sessionId);
-  fixture.componentRef.setInput('nextScreenTitle', 'Le taux global');
   fixture.detectChanges();
   tick();
   fixture.detectChanges();

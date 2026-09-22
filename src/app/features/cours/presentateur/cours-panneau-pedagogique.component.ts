@@ -132,11 +132,7 @@ function fusionnerLesAnnotations(
           être en retard.
         </p>
       }
-      <app-panneau-guide
-        [guide]="ecran().guide"
-        [ecranId]="ecran().id"
-        [ecranSuivant]="nextScreenTitle()"
-      />
+      <app-panneau-guide [guide]="ecran().guide" [ecranId]="ecran().id" />
       <app-panneau-lecture-classe
         [questionIds]="questionIds()"
         [resultats]="resultats()"
@@ -166,7 +162,6 @@ export class CoursPanneauPedagogiqueComponent {
   readonly resultats = input.required<readonly ResultatQuestion[]>();
   readonly participants = input.required<number>();
   readonly sessionId = input.required<string | null>();
-  readonly nextScreenTitle = input.required<string>();
 
   protected readonly annotations = signal<readonly AnnotationFormateur[]>([]);
   protected readonly groupes = signal<readonly GroupeFormation[]>([]);

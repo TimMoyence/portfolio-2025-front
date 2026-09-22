@@ -10,7 +10,6 @@ function monter(guide: GuideFormateur | undefined, ecranId = 'ecran-1'): Fixture
   const fixture = TestBed.createComponent(PanneauGuideComponent);
   fixture.componentRef.setInput('guide', guide);
   fixture.componentRef.setInput('ecranId', ecranId);
-  fixture.componentRef.setInput('ecranSuivant', 'Le taux global');
   fixture.detectChanges();
   return fixture;
 }
@@ -41,21 +40,20 @@ function reveler(fixture: Fixture): HTMLButtonElement {
 describe('PanneauGuideComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({ imports: [PanneauGuideComponent] }));
 
-  it('affiche les six rubriques du guide servi, chaque terme dans une liste de definitions', () => {
+  it('affiche uniquement les trois repères utiles à la facilitation', () => {
     const fixture = monter(buildGuideFormateur());
 
     expect(rubriques(fixture)).toEqual([
-      ['aDire', 'À dire'],
       ['question', 'Question à poser'],
       ['reponse', 'Réponse attendue'],
-      ['calcul', 'Calcul'],
       ['relance', 'Relance'],
-      ['transition', 'Transition'],
     ]);
     for (const terme of racine(fixture).querySelectorAll('dt')) {
       expect(terme.closest('dl')).not.toBeNull();
     }
-    expect(racine(fixture).textContent).toContain(buildGuideFormateur().calcul ?? '');
+    expect(racine(fixture).textContent).not.toContain(buildGuideFormateur().aDire ?? '');
+    expect(racine(fixture).textContent).not.toContain(buildGuideFormateur().calcul ?? '');
+    expect(racine(fixture).textContent).not.toContain(buildGuideFormateur().transition ?? '');
   });
 
   it('masque la reponse attendue jusqu a la revelation, puis la remasque', () => {
@@ -90,11 +88,10 @@ describe('PanneauGuideComponent', () => {
     expect(racine(fixture).textContent).not.toContain(buildGuideFormateur().reponse ?? '');
   });
 
-  it('n affiche que les rubriques servies et annonce l ecran suivant faute de transition', () => {
-    const fixture = monter({ aDire: 'Regardez la source.' });
+  it('n affiche que les repères essentiels servis', () => {
+    const fixture = monter({ aDire: 'Regardez la source.', calcul: '12 / 4 = 3' });
 
-    expect(rubriques(fixture).map(([cle]) => cle)).toEqual(['aDire', 'transition']);
-    expect(racine(fixture).textContent).toContain('Le taux global');
+    expect(rubriques(fixture).map(([cle]) => cle)).toEqual([]);
     expect(racine(fixture).querySelector('[data-testid="panneau-guide-reveler"]')).toBeNull();
   });
 
@@ -102,6 +99,6 @@ describe('PanneauGuideComponent', () => {
     const fixture = monter(undefined);
 
     expect(racine(fixture).querySelector('[data-testid="panneau-guide-vide"]')).not.toBeNull();
-    expect(rubriques(fixture).map(([cle]) => cle)).toEqual(['transition']);
+    expect(rubriques(fixture).map(([cle]) => cle)).toEqual([]);
   });
 });

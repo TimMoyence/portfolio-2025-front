@@ -132,12 +132,14 @@ interface ReponseVisuelle {
     :host {
       display: block;
       width: 100%;
+      min-width: 0;
     }
 
     .slide-activity__blocks {
       display: grid;
       gap: 1rem;
-      width: 100%;
+      width: min(100%, 72rem);
+      margin-inline: auto;
     }
 
     .slide-activity__entete,
@@ -285,10 +287,9 @@ export class SlideActivityComponent {
     apercu: boolean,
   ): void {
     if (aUnePresentation(slide) || slide.type === ECRAN_VERROUILLE) {
+      this.clearHost();
       this.unknown.set(false);
       this.error.set(false);
-      this.montes = [];
-      this.cleDeMontage = null;
       return;
     }
     void this.registered.then((registered) => {

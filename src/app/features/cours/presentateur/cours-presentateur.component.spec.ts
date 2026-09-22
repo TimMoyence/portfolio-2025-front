@@ -525,7 +525,7 @@ describe('CoursPresentateurComponent', () => {
     expect(texte(fixture, 'presentateur-question-enonce')).toBe('Quelle échelle ?');
   });
 
-  it('annonce dans le guide le titre de l ecran suivant, pas son identifiant', async () => {
+  it('ne rajoute pas de prose de transition dans le guide', async () => {
     port.lireDeroule.and.returnValue(
       of(
         buildDerouleCours({
@@ -538,7 +538,7 @@ describe('CoursPresentateurComponent', () => {
     );
     const fixture = await ouvrirLaSeance();
 
-    expect(texte(fixture, 'presentateur-guide')).toContain('Lire un chiffre');
+    expect(texte(fixture, 'presentateur-guide')).not.toContain('Lire un chiffre');
     expect(texte(fixture, 'presentateur-guide')).not.toContain(buildVisualSlide().id);
   });
 
