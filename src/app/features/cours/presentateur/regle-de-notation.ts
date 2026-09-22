@@ -9,7 +9,7 @@ function phraseDuBareme(bareme: ResumeBareme | null): string {
   if (bareme === null) {
     return '';
   }
-  const phrase = $localize`:@@presentateurNotationBareme:La participation se compte sur ${bareme.questionsNotees}:questionsNotees: questions notées (votes, questions numériques, classements, feuille et tableau) : « je ne sais pas » y compte comme une réponse, y compris pour une production ; une production vide n’est pas acceptée ; énigmes et rappels ne comptent pas.`;
+  const phrase = $localize`:@@presentateurNotationBareme:sur ${bareme.questionsNotees}:questionsNotees: questions notées comptent (votes, numérique, classement, feuille et tableau) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée ; énigmes et rappels sont exclus.`;
   return ` ${phrase}`;
 }
 
@@ -20,6 +20,6 @@ export function phraseDeNotation(regle: RegleNotation, bareme: ResumeBareme | nu
   const libres = regle.reponsesLibresNotees
     ? $localize`:@@presentateurNotationLibresNotees:les réponses libres sont notées`
     : $localize`:@@presentateurNotationLibresNonNotees:les réponses libres ne sont pas notées`;
-  const phrase = $localize`:@@presentateurNotation:Note /${regle.noteMax}:noteMax: de participation relative à la cohorte : la participation de chacun est rapportée à celle des ${pourcentage(regle.partCohorteReference)}:reference: les plus actifs, et sous ${pourcentage(regle.ratioSeuilValidation)}:validation: de cette référence l’étudiant est signalé sous le seuil ; ${neSaitPas}:neSaitPas:, une non-réponse vaut ${regle.pointsNonReponse}:pointsNonReponse: point, ${libres}:libres: ; une question est jugée problématique sous ${pourcentage(regle.seuilQuestionProbleme)}:seuilProbleme: de réussite.`;
+  const phrase = $localize`:@@presentateurNotation:Note /${regle.noteMax}:noteMax: relative aux ${pourcentage(regle.partCohorteReference)}:reference: les plus actifs. Sous ${pourcentage(regle.ratioSeuilValidation)}:validation: de cette référence, l’étudiant est signalé sous le seuil. ${neSaitPas}:neSaitPas: ; une non-réponse vaut ${regle.pointsNonReponse}:pointsNonReponse: point ; ${libres}:libres:. Une question est problématique sous ${pourcentage(regle.seuilQuestionProbleme)}:seuilProbleme: de réussite.`;
   return `${phrase}${phraseDuBareme(bareme)}`;
 }

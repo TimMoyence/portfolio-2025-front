@@ -362,7 +362,9 @@ test.describe('pupitre du formateur (QA-09, QA-10, QA-11)', () => {
     await expect(statistiques).toContainText(/64\s*%/);
     await expect(statistiques).toContainText(ENONCE_PROBLEME);
 
-    const notation = page.getByTestId('presentateur-notation');
+    const notationHelp = page.getByTestId('presentateur-notation-help');
+    await notationHelp.hover();
+    const notation = page.getByTestId('presentateur-notation-tooltip');
     await expect(notation).toContainText('20');
     await expect(notation).not.toContainText('undefined');
     await expect(notation).not.toContainText('NaN');

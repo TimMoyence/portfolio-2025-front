@@ -133,6 +133,10 @@ async function installerLaSeance(page: Page, seance: Seance): Promise<void> {
 
 async function rejoindre(page: Page, seance: Seance): Promise<void> {
   await page.goto('/cours/rejoindre');
+  const bannièreCookies = page.locator('app-cookie-banner');
+  if (await bannièreCookies.isVisible().catch(() => false)) {
+    await bannièreCookies.getByRole('button').last().click();
+  }
   await page.getByLabel('Code de la séance').fill(seance.code);
   await page.getByLabel('Prénom').fill('Lea');
   await page.getByLabel('Nom', { exact: true }).fill('Dubois');

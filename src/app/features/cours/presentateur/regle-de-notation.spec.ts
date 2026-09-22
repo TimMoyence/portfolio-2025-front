@@ -8,9 +8,9 @@ describe('phraseDeNotation', () => {
   it('rend la regle servie en une phrase lisible par le formateur', () => {
     const phrase = phraseDeNotation(buildRegleNotation());
 
-    expect(phrase).toMatch(/^Note \/20 de participation relative à la cohorte/);
+    expect(phrase).toMatch(/^Note \/20 relative aux/);
     expect(phrase).toMatch(/20\s?% les plus actifs/);
-    expect(phrase).toMatch(/sous 40\s?% de cette référence/);
+    expect(phrase).toMatch(/Sous 40\s?% de cette référence/);
     expect(phrase).toContain('« je ne sais pas » compte comme une réponse');
     expect(phrase).toContain('une non-réponse vaut 0 point');
     expect(phrase).toContain('les réponses libres ne sont pas notées');
@@ -38,8 +38,8 @@ describe('phraseDeNotation', () => {
 
     expect(sansBareme).not.toContain('questions notées');
     expect(avecBareme.startsWith(sansBareme)).toBeTrue();
-    expect(avecBareme).toContain('sur 31 questions notées');
-    expect(avecBareme).toContain('une production vide n’est pas acceptée');
-    expect(avecBareme).toContain('énigmes et rappels ne comptent pas');
+    expect(avecBareme).toContain('sur 31 questions notées comptent');
+    expect(avecBareme).toContain('une production vide est refusée');
+    expect(avecBareme).toContain('énigmes et rappels sont exclus');
   });
 });

@@ -123,34 +123,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   styles: '',
   template: `
     <div class="cours-presentateur">
-      <header class="presentateur-header">
-        <div>
-          <p class="presentateur-kicker" i18n="presentateur.kicker|@@presentateurKicker">
-            Séance en direct
-          </p>
-          <h1 class="presentateur-title" i18n="presentateur.titrePage|@@presentateurTitrePage">
-            Séance en direct
-          </h1>
-          <p class="presentateur-subtitle" i18n="presentateur.sousTitre|@@presentateurSousTitre">
-            Pilotez l’écran projeté, suivez les réponses de la classe et choisissez le bon moment
-            pour remédier.
-          </p>
-        </div>
-        <div class="presentateur-header-meta">
-          <span class="live-chip"
-            ><span class="live-dot" aria-hidden="true"></span
-            ><span i18n="presentateur.direct|@@presentateurDirect">Suivi en direct</span></span
-          >
-          @if (code() !== null) {
-            <span
-              class="session-state"
-              i18n="presentateur.sessionOuverte|@@presentateurSessionOuverte"
-              >Séance ouverte</span
-            >
-          }
-        </div>
-      </header>
-      @if (statut() === 'fermee' && seance() === undefined) {
+      @if (statut() === 'fermee' && seance() === undefined && ouverture() === 'echec') {
         <button
           type="button"
           class="btn btn-teal presentateur-open"
@@ -210,7 +183,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           </button>
         }
       }
-      @if (sessionId() !== null) {
+      @if (sessionId() !== null && etatDuFlux() !== 'connecte') {
         <p
           class="presentateur-flux"
           data-testid="presentateur-flux"
@@ -219,11 +192,6 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           [attr.data-statut]="refusDuFlux()?.statut ?? null"
         >
           @switch (etatDuFlux()) {
-            @case ('connecte') {
-              <span i18n="presentateur.fluxConnecte|@@presentateurFluxConnecte"
-                >Suivi de la séance en direct.</span
-              >
-            }
             @case ('reconnexion') {
               <span i18n="presentateur.fluxReconnexion|@@presentateurFluxReconnexion"
                 >Suivi de la séance interrompu : reconnexion en cours. Les résultats et la scène
@@ -314,9 +282,30 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
             @switch (lectureDeLaNotation()) {
               @case ('lue') {
                 @if (regleDeNotation(); as regle) {
-                  <p class="join-panel__notation" data-testid="presentateur-notation">
-                    {{ regle }}
-                  </p>
+                  <div class="notation-help">
+                    <button
+                      type="button"
+                      class="notation-help__button"
+                      data-testid="presentateur-notation-help"
+                      aria-describedby="presentateur-notation-tooltip"
+                      aria-label="Afficher la règle de notation"
+                      i18n-aria-label="@@presentateurNotationAide"
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 10.5v6"></path>
+                        <circle cx="12" cy="7.25" r="0.8"></circle>
+                      </svg>
+                    </button>
+                    <div
+                      id="presentateur-notation-tooltip"
+                      class="notation-help__tooltip"
+                      role="tooltip"
+                      data-testid="presentateur-notation-tooltip"
+                    >
+                      {{ regle }}
+                    </div>
+                  </div>
                 }
               }
               @case ('echec') {
@@ -360,16 +349,15 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           </button>
         }
       }
+      @if (deroule() === null) {
+        <h1 class="sr-only" i18n="presentateur.titreChargement|@@presentateurTitreChargement">
+          Pupitre
+        </h1>
+      }
       @if (deroule(); as cours) {
         <div class="course-heading">
           <div>
-            <p
-              class="presentateur-kicker"
-              i18n="presentateur.derouleKicker|@@presentateurDerouleKicker"
-            >
-              Déroulé actif
-            </p>
-            <h2 data-testid="presentateur-titre">{{ cours.titre }}</h2>
+            <h1 data-testid="presentateur-titre">{{ cours.titre }}</h1>
           </div>
           <span class="session-state" data-testid="presentateur-statut">
             @if (statut() === 'ouverte') {
@@ -427,36 +415,24 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
               </button>
               <button
                 type="button"
-                class="control-btn"
+                class="control-btn rhythm-toggle"
                 data-testid="presentateur-rythme"
+                [attr.aria-pressed]="mode() === 'libre'"
+                [attr.data-mode]="mode()"
                 [disabled]="pilotageBloque()"
                 (click)="basculerLeRythme()"
+                aria-label="Changer le rythme de la séance"
+                i18n-aria-label="@@presentateurChangerRythme"
               >
-                @if (mode() === 'pilote') {
-                  <span i18n="presentateur.rythmeLibre|@@presentateurRythmeLibre"
-                    >Passer en rythme libre</span
-                  >
-                } @else {
-                  <span i18n="presentateur.rythmePilote|@@presentateurRythmePilote"
-                    >Reprendre la main</span
-                  >
-                }
-              </button>
-              <span data-testid="presentateur-rythme-mode" [attr.data-mode]="mode()">
-                @if (mode() === 'pilote') {
-                  <span i18n="presentateur.modePilote|@@presentateurModePilote">Rythme piloté</span>
-                } @else {
-                  <span i18n="presentateur.modeLibre|@@presentateurModeLibre">Rythme libre</span>
-                }
-              </span>
-              <button
-                type="button"
-                class="control-btn"
-                data-testid="presentateur-scene"
-                (click)="ouvrirLaScene()"
-                i18n="presentateur.scene|@@presentateurScene"
-              >
-                Ouvrir la projection
+                <span
+                  class="rhythm-toggle__track"
+                  data-testid="presentateur-rythme-mode"
+                  [attr.data-mode]="mode()"
+                  aria-hidden="true"
+                >
+                  <span i18n="presentateur.modePilote|@@presentateurModePilote">Piloté</span>
+                  <span i18n="presentateur.modeLibre|@@presentateurModeLibre">Libre</span>
+                </span>
               </button>
               <button
                 type="button"
@@ -791,9 +767,7 @@ export class CoursPresentateurComponent {
     }
     afterNextRender(() => {
       const seance = this.seance();
-      if (seance !== undefined) {
-        this.chantier = this.reprendreLaSeance(seance);
-      }
+      this.chantier = seance === undefined ? this.ouvrirLaSeance() : this.reprendreLaSeance(seance);
     });
   }
 
