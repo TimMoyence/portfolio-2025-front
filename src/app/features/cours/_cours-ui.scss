@@ -67,15 +67,6 @@
   transform: none;
 }
 
-.presentateur-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--s-4);
-  align-items: end;
-  padding-bottom: var(--s-4);
-  border-bottom: 1px solid var(--line);
-}
-
 .presentateur-kicker,
 .cours-etudiant__kicker,
 .cours-synthese__kicker {
@@ -88,25 +79,6 @@
   text-transform: uppercase;
 }
 
-.presentateur-title {
-  font-size: clamp(2.5rem, 5vw, 4.7rem);
-}
-
-.presentateur-subtitle {
-  max-width: 54ch;
-  margin-top: var(--s-2);
-  color: var(--ink-mute);
-  font-size: 1rem;
-}
-
-.presentateur-header-meta {
-  display: grid;
-  justify-items: end;
-  gap: var(--s-2);
-  text-align: right;
-}
-
-.presentateur-header-meta strong,
 .student-progress strong {
   color: var(--ink);
   font-variant-numeric: tabular-nums;
@@ -228,11 +200,66 @@
   display: block;
 }
 
-.join-panel__notation {
-  max-inline-size: 60ch;
-  margin: 8px 0 0;
+.notation-help {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.notation-help__button {
+  width: 34px;
+  min-height: 34px !important;
+  padding: 6px !important;
+  border-color: var(--teal-deep) !important;
+  background: transparent !important;
+  color: var(--teal-deep) !important;
+}
+
+.notation-help__button svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.notation-help__button svg circle:last-child {
+  fill: currentColor;
+  stroke: none;
+}
+
+.notation-help__tooltip {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: min(420px, calc(100vw - 48px));
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--cream);
   font-size: 0.78rem;
-  text-align: end;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition:
+    opacity 160ms var(--ease),
+    transform 160ms var(--ease),
+    visibility 160ms var(--ease);
+  visibility: hidden;
+}
+
+.notation-help:hover .notation-help__tooltip,
+.notation-help:focus-within .notation-help__tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  visibility: visible;
 }
 
 .course-heading {
@@ -243,7 +270,7 @@
   margin-block: var(--s-5) var(--s-3);
 }
 
-.course-heading h2 {
+.course-heading h1 {
   font-size: clamp(2rem, 3.8vw, 3.4rem);
 }
 
@@ -297,8 +324,7 @@
   margin-inline-start: auto;
 }
 
-.presentateur-control-nav output,
-.presentateur-rythme-mode {
+.presentateur-control-nav output {
   padding: 7px 10px;
   color: var(--ink-mute);
   font-family: var(--font-mono);
@@ -306,8 +332,40 @@
   font-variant-numeric: tabular-nums;
 }
 
-.presentateur-rythme-mode[data-mode='libre'] {
-  color: var(--gold-deep);
+.rhythm-toggle {
+  gap: 6px;
+  padding: 5px 7px !important;
+}
+
+.rhythm-toggle__track {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  min-width: 118px;
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: rgba(var(--ink-rgb), 0.08);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rhythm-toggle__track > span {
+  padding: 5px 8px;
+  border-radius: var(--r-pill);
+  text-align: center;
+  transition:
+    background 160ms var(--ease),
+    color 160ms var(--ease);
+}
+
+.rhythm-toggle[data-mode='pilote'] .rhythm-toggle__track > span:first-child,
+.rhythm-toggle[data-mode='libre'] .rhythm-toggle__track > span:last-child {
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: var(--shadow-soft);
 }
 
 .screen-progress {
@@ -852,13 +910,11 @@
 }
 
 @media (max-width: 900px) {
-  .presentateur-header,
   .join-panel,
   .presentateur-workspace {
     grid-template-columns: 1fr;
   }
 
-  .presentateur-header-meta,
   .join-panel__meta {
     justify-items: start;
     text-align: left;
@@ -1013,20 +1069,6 @@
   max-width: none;
   min-height: 100dvh;
   padding: clamp(16px, 2.5vh, 28px) clamp(16px, 3vw, 40px) 32px;
-}
-
-.presentateur-header {
-  gap: 12px;
-  padding-bottom: 10px;
-}
-
-.presentateur-title {
-  font-size: clamp(1.1rem, 1.7vw, 1.55rem);
-  line-height: 1.1;
-}
-
-.presentateur-subtitle {
-  display: none;
 }
 
 .presentateur-kicker,

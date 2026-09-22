@@ -204,11 +204,11 @@ describe('CoursPresentateurComponent', () => {
     TestBed.inject(AuthStateService).clearSession();
   });
 
-  it('nomme la sortie une projection et propose le plein écran', async () => {
+  it('propose une seule commande pour ouvrir la projection', async () => {
     const fixture = await ouvrirLaSeance();
 
-    expect(texte(fixture, 'presentateur-scene')).toContain('projection');
-    expect(texte(fixture, 'presentateur-scene')).not.toContain('scène');
+    expect(texte(fixture, 'presentateur-plein-ecran').toLowerCase()).toContain('projection');
+    expect(lire(fixture, 'presentateur-scene')).toBeNull();
     expect(cible(fixture, 'presentateur-plein-ecran').getAttribute('aria-label')).toContain(
       'plein écran',
     );
@@ -420,7 +420,7 @@ describe('CoursPresentateurComponent', () => {
       const fenetre = spyOn(window, 'open').and.returnValue(null);
       const fixture = await reprendre();
 
-      bouton(fixture, 'presentateur-scene').click();
+      bouton(fixture, 'presentateur-plein-ecran').click();
 
       expect(fenetre).toHaveBeenCalledOnceWith(
         `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/scene/${SESSION}`,
@@ -573,8 +573,10 @@ describe('CoursPresentateurComponent', () => {
       expect(statistiques).toContain('3.25');
       expect(statistiques).toContain(buildVoteQuestion().enonce);
       expect(statistiques).not.toContain('Q-CAP-03');
-      expect(texte(fixture, 'presentateur-notation')).toContain(
-        'Note /20 de participation relative à la cohorte',
+      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20 relative aux');
+      expect(lire(fixture, 'presentateur-notation')).toBeNull();
+      expect(cible(fixture, 'presentateur-notation-help').getAttribute('aria-describedby')).toBe(
+        'presentateur-notation-tooltip',
       );
       expect(port.lireResultats).toHaveBeenCalledOnceWith(SESSION);
     });
@@ -593,7 +595,7 @@ describe('CoursPresentateurComponent', () => {
       await stabiliser(fixture);
 
       expect(texte(fixture, 'presentateur-statistiques')).toContain(buildVoteQuestion().enonce);
-      expect(texte(fixture, 'presentateur-notation')).toContain('Note /20');
+      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20');
       expect(port.lireResultats).toHaveBeenCalledTimes(1);
     });
   });
@@ -655,14 +657,17 @@ describe('CoursPresentateurComponent', () => {
       return cible(fixture, 'presentateur-flux');
     }
 
-    it('annonce dans une zone de statut la connexion, le direct puis la reconnexion', async () => {
+    it('annonce dans une zone de statut la connexion et la reconnexion sans prose de direct', async () => {
       const fixture = await ouvrirLaSeance();
       const bandeau = cible(fixture, 'presentateur-flux');
 
       expect(bandeau.getAttribute('role')).toBe('status');
       expect(bandeau.getAttribute('data-etat')).toBe('connexion');
 
-      expect(annoncer(fixture, { etat: 'connecte' }).getAttribute('data-etat')).toBe('connecte');
+      double.diffuserStatut({ etat: 'connecte' });
+      fixture.detectChanges();
+
+      expect(lire(fixture, 'presentateur-flux')).toBeNull();
 
       const coupe = annoncer(fixture, { etat: 'reconnexion' });
 
@@ -686,7 +691,10 @@ describe('CoursPresentateurComponent', () => {
         expect(refus.textContent).toContain(consigne);
         expect(refus.textContent).toContain(String(statut));
 
-        expect(annoncer(fixture, { etat: 'connecte' }).hasAttribute('data-statut')).toBeFalse();
+        double.diffuserStatut({ etat: 'connecte' });
+        fixture.detectChanges();
+
+        expect(lire(fixture, 'presentateur-flux')).toBeNull();
       });
     }
 
@@ -1016,7 +1024,7 @@ describe('CoursPresentateurComponent', () => {
     const fenetre = spyOn(window, 'open').and.returnValue(null);
     const fixture = await ouvrirLaSeance();
 
-    bouton(fixture, 'presentateur-scene').click();
+    bouton(fixture, 'presentateur-plein-ecran').click();
 
     expect(fenetre).toHaveBeenCalledOnceWith(
       `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/scene/${SESSION}`,

@@ -11685,24 +11685,23 @@
         <target> Next screen </target>
       </segment>
     </unit>
-    <unit id="presentateurRythmeLibre">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:253,256</note>
-        <note category="meaning">presentateur.rythmeLibre</note>
-      </notes>
+    <unit id="presentateurNotationAide">
       <segment>
-        <source>Passer en rythme libre</source>
-        <target>Switch to free pace</target>
+        <source>Afficher la règle de notation</source>
+        <target>Show grading rule</target>
       </segment>
     </unit>
-    <unit id="presentateurRythmePilote">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:257,261</note>
-        <note category="meaning">presentateur.rythmePilote</note>
-      </notes>
+    <unit id="presentateurTitreChargement">
+      <notes><note category="meaning">presentateur.titreChargement</note></notes>
       <segment>
-        <source>Reprendre la main</source>
-        <target>Take back control</target>
+        <source> Pupitre </source>
+        <target> Presenter desk </target>
+      </segment>
+    </unit>
+    <unit id="presentateurChangerRythme">
+      <segment>
+        <source>Changer le rythme de la séance</source>
+        <target>Change session pace</target>
       </segment>
     </unit>
     <unit id="presentateurModePilote">
@@ -11711,7 +11710,7 @@
         <note category="meaning">presentateur.modePilote</note>
       </notes>
       <segment>
-        <source>Rythme piloté</source>
+        <source>Piloté</source>
         <target>Guided pace</target>
       </segment>
     </unit>
@@ -11721,18 +11720,8 @@
         <note category="meaning">presentateur.modeLibre</note>
       </notes>
       <segment>
-        <source>Rythme libre</source>
+        <source>Libre</source>
         <target>Free pace</target>
-      </segment>
-    </unit>
-    <unit id="presentateurScene">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:455,457</note>
-        <note category="meaning">presentateur.scene</note>
-      </notes>
-      <segment>
-        <source> Ouvrir la projection </source>
-        <target> Open the projection </target>
       </segment>
     </unit>
     <unit id="presentateurNotes">
@@ -12295,16 +12284,6 @@
         <target> Question <ph id="0" equiv="INTERPOLATION" disp="{{ question().numero }}"/> </target>
       </segment>
     </unit>
-    <unit id="presentateurTitrePage">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:112,113</note>
-        <note category="meaning">presentateur.titrePage</note>
-      </notes>
-      <segment>
-        <source>Séance en direct</source>
-        <target>Live session</target>
-      </segment>
-    </unit>
     <unit id="presentateurRepriseChargement">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:151,156</note>
@@ -12333,16 +12312,6 @@
       <segment>
         <source> Réessayer la reprise </source>
         <target> Retry resuming </target>
-      </segment>
-    </unit>
-    <unit id="presentateurFluxConnecte">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:183,186</note>
-        <note category="meaning">presentateur.fluxConnecte</note>
-      </notes>
-      <segment>
-        <source>Suivi de la séance en direct.</source>
-        <target>Live session tracking.</target>
       </segment>
     </unit>
     <unit id="presentateurFluxReconnexion">
@@ -12474,29 +12443,9 @@
         <target> Session in progress </target>
       </segment>
     </unit>
-    <unit id="presentateurKicker">
-      <notes><note category="meaning">presentateur.kicker</note></notes>
-      <segment><source> Séance en direct </source><target> Live session </target></segment>
-    </unit>
-    <unit id="presentateurSousTitre">
-      <notes><note category="meaning">presentateur.sousTitre</note></notes>
-      <segment><source> Pilotez l’écran projeté, suivez les réponses de la classe et choisissez le bon moment pour remédier. </source><target>Control the projected screen, follow the class responses and choose the right moment to remediate.</target></segment>
-    </unit>
-    <unit id="presentateurDirect">
-      <notes><note category="meaning">presentateur.direct</note></notes>
-      <segment><source>Suivi en direct</source><target>Live tracking</target></segment>
-    </unit>
-    <unit id="presentateurSessionOuverte">
-      <notes><note category="meaning">presentateur.sessionOuverte</note></notes>
-      <segment><source>Séance ouverte</source><target>Session open</target></segment>
-    </unit>
     <unit id="presentateurParticipantsEnDirect">
       <notes><note category="meaning">presentateur.participantsEnDirect</note></notes>
       <segment><source>connectés à cette séance</source><target>connected to this session</target></segment>
-    </unit>
-    <unit id="presentateurDerouleKicker">
-      <notes><note category="meaning">presentateur.derouleKicker</note></notes>
-      <segment><source> Déroulé actif </source><target> Active course </target></segment>
     </unit>
     <unit id="presentateurStatutOuverte">
       <notes><note category="meaning">presentateur.statutOuverte</note></notes>
@@ -13101,8 +13050,8 @@
         <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:14</note>
       </notes>
       <segment>
-        <source>Note /<ph id="0" equiv="noteMax" disp="regle.noteMax"/> de participation relative à la cohorte : la participation de chacun est rapportée à celle des <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/> les plus actifs, et sous <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> de cette référence l’étudiant est signalé sous le seuil ; <ph id="3" equiv="neSaitPas" disp="neSaitPas"/>, une non-réponse vaut <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point, <ph id="5" equiv="libres" disp="libres"/> ; une question est jugée problématique sous <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> de réussite.</source>
-        <target>Participation grade out of <ph id="0" equiv="noteMax" disp="regle.noteMax"/>, relative to the cohort: each student’s participation is compared with that of the most active <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/>, and a student below <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> of that reference is flagged as under the threshold; <ph id="3" equiv="neSaitPas" disp="neSaitPas"/>, a non-answer is worth <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point, <ph id="5" equiv="libres" disp="libres"/>; a question is considered problematic below <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> success.</target>
+        <source>Note /<ph id="0" equiv="noteMax" disp="regle.noteMax"/> relative aux <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/> les plus actifs. Sous <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> de cette référence, l’étudiant est signalé sous le seuil. <ph id="3" equiv="neSaitPas" disp="neSaitPas"/> ; une non-réponse vaut <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point ; <ph id="5" equiv="libres" disp="libres"/>. Une question est problématique sous <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> de réussite.</source>
+        <target>Grade out of <ph id="0" equiv="noteMax" disp="regle.noteMax"/>, relative to the most active <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/>. Below <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> of that reference, the student is flagged below threshold. <ph id="3" equiv="neSaitPas" disp="neSaitPas"/>; a non-answer is worth <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point; <ph id="5" equiv="libres" disp="libres"/>. A question is problematic below <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> success.</target>
       </segment>
     </unit>
     <unit id="b2CoursSeanceInvite">
@@ -16762,8 +16711,8 @@
     </unit>
     <unit id="presentateurNotationBareme">
       <segment>
-        <source>La participation se compte sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées (votes, questions numériques, classements, feuille et tableau) : « je ne sais pas » y compte comme une réponse, y compris pour une production ; une production vide n’est pas acceptée ; énigmes et rappels ne comptent pas.</source>
-        <target>Participation is counted over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions (votes, numeric questions, sorts, spreadsheet and table): “I don’t know” counts as an answer, including for a production; an empty production is not accepted; puzzles and recalls do not count.</target>
+        <source>sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées comptent (votes, numérique, classement, feuille et tableau) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée ; énigmes et rappels sont exclus.</source>
+        <target>over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions count (votes, numeric, ranking, spreadsheet and table); “I don’t know” also counts for a production; an empty production is refused; puzzles and recalls are excluded.</target>
       </segment>
     </unit>
     <unit id="b2CoursVersionPubliee">
