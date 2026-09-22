@@ -36,15 +36,16 @@ const SEUIL_DE_PROJECTION = 5;
       display: block;
       box-sizing: border-box;
       inline-size: 100%;
-      block-size: 100vh;
+      block-size: 100dvh;
       background: var(--cream, #fffaf2);
       color: var(--ink, #0c0902);
-      overflow: auto;
+      overflow: hidden;
     }
 
     .scene-shell {
-      min-block-size: 100%;
-      padding: 1rem clamp(16px, 3vw, 40px);
+      display: grid;
+      block-size: 100%;
+      place-items: stretch;
     }
 
     .scene-toolbar {
@@ -124,11 +125,21 @@ const SEUIL_DE_PROJECTION = 5;
     }
 
     .scene-canvas {
-      max-inline-size: 1500px;
+      inline-size: min(100%, 96rem);
+      block-size: 100%;
+      min-block-size: 100%;
+      box-sizing: border-box;
       margin-inline: auto;
-      min-block-size: calc(100dvh - 2rem);
-      padding: 0;
-      --slide-min-height: calc(100dvh - 2rem);
+      padding: clamp(1rem, 3vw, 2.5rem);
+      background: var(--cream, #fffaf2);
+      overflow: hidden;
+      --slide-min-height: 100%;
+    }
+
+    .scene-canvas app-cours-presentation {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
     }
 
     .scene-message {
@@ -235,7 +246,7 @@ const SEUIL_DE_PROJECTION = 5;
             </button>
           </div>
         </header>
-        <main class="scene-canvas">
+        <main class="scene-canvas" data-testid="scene-canvas">
           @if (ecranCourant(); as ecranAffiche) {
             <app-cours-presentation
               mode="projection"

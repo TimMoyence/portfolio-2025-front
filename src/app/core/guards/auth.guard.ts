@@ -15,10 +15,15 @@ export const authGuard: CanActivateFn = (_route, state) => {
       queryParams: { returnUrl: state.url },
     });
 
-  return authState.isInitialized()
+  const sessionCheckWasComplete = authState.isSessionCheckComplete();
+  if (!sessionCheckWasComplete) {
+    authState.restoreSession();
+  }
+
+  return sessionCheckWasComplete
     ? decide()
-    : toObservable(authState.isInitialized).pipe(
-        filter((initialized) => initialized),
+    : toObservable(authState.isSessionCheckComplete).pipe(
+        filter((complete) => complete),
         take(1),
         map(decide),
       );

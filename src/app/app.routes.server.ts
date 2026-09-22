@@ -5,14 +5,14 @@ import { RenderMode, type ServerRoute } from '@angular/ssr';
  *
  * Les routes protégées par un guard d'authentification ne peuvent PAS être
  * prérendues au build : pendant le prerender, l'AuthStateService n'a pas
- * accès au localStorage, donc le guard redirige systématiquement vers /login
+ * accès au cookie de refresh HttpOnly, donc le guard redirige systématiquement vers /login
  * (ou /). Le fichier HTML prérendu contient alors le contenu de /login,
  * mais est sauvé à l'emplacement de la route d'origine — au reload,
  * l'utilisateur se retrouve avec un contenu obsolète.
  *
  * Ces routes sont donc forcées en mode Client : le navigateur reçoit une
  * coquille HTML minimale et le client Angular gère le routing après
- * hydratation, moment où le token localStorage est disponible.
+ * hydratation, moment où le cookie de refresh peut restaurer la session.
  *
  * Les routes publiques de l'ancien Atelier redirigent désormais vers
  * /projets. Les applications privées restent côté client et protégées.

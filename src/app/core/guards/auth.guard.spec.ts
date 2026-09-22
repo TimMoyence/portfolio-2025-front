@@ -1,8 +1,9 @@
 import { PLATFORM_ID } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, throwError } from 'rxjs';
 import { AUTH_PORT } from '../ports/auth.port';
 import { AuthStateService } from '../services/auth-state.service';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
@@ -10,7 +11,7 @@ import { setupTestBed } from '../../../testing/setup-test-bed';
 import { authGuard } from './auth.guard';
 
 describe('authGuard', () => {
-  describe('chemin synchrone (SSR — isInitialized = true)', () => {
+  describe('chemin synchrone (SSR — session resolue)', () => {
     let authState: AuthStateService;
 
     beforeEach(() => {
@@ -49,23 +50,25 @@ describe('authGuard', () => {
     });
   });
 
-  describe('chemin asynchrone (navigateur — isInitialized = false)', () => {
+  describe('chemin asynchrone (navigateur — session non resolue)', () => {
     let authState: AuthStateService;
 
     beforeEach(() => {
+      const port = createAuthPortStub();
+      port.refresh.and.returnValue(throwError(() => new HttpErrorResponse({ status: 401 })));
       setupTestBed({
         router: true,
         providers: [
           { provide: PLATFORM_ID, useValue: 'browser' },
-          { provide: AUTH_PORT, useValue: createAuthPortStub() },
+          { provide: AUTH_PORT, useValue: port },
         ],
       });
 
       authState = TestBed.inject(AuthStateService);
     });
 
-    it('devrait retourner un Observable quand isInitialized est false', () => {
-      expect(authState.isInitialized()).toBeFalse();
+    it('devrait retourner un Observable quand la session n est pas resolue', () => {
+      expect(authState.isSessionResolved()).toBeFalse();
 
       const result = TestBed.runInInjectionContext(() =>
         authGuard(
@@ -77,7 +80,7 @@ describe('authGuard', () => {
       expect(result).toBeInstanceOf(Observable);
     });
 
-    it('devrait autoriser l acces via Observable si l utilisateur est connecte apres initialisation', async () => {
+    it('devrait autoriser l acces si la session est connectee', () => {
       authState.login(buildAuthSession());
 
       const result = TestBed.runInInjectionContext(() =>
@@ -87,16 +90,7 @@ describe('authGuard', () => {
         ),
       );
 
-      expect(result).toBeInstanceOf(Observable);
-
-      (
-        authState as unknown as {
-          _isInitialized: { set: (v: boolean) => void };
-        }
-      )._isInitialized.set(true);
-
-      const value = await firstValueFrom(result as Observable<boolean | UrlTree>);
-      expect(value).toBeTrue();
+      expect(result).toBeTrue();
     });
 
     it('devrait rediriger via Observable si l utilisateur n est pas connecte apres initialisation', async () => {

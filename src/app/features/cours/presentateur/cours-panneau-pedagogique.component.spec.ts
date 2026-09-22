@@ -84,7 +84,9 @@ describe('CoursPanneauPedagogiqueComponent', () => {
   it('montre le guide de l ecran sans reveler la reponse attendue', fakeAsync(() => {
     const fixture = monterLePanneau();
 
-    expect(repereDuPanneau(fixture, 'presentateur-guide').textContent).toContain('À dire');
+    expect(repereDuPanneau(fixture, 'presentateur-guide').textContent).toContain(
+      'Question à poser',
+    );
     expect(repereDuPanneau(fixture, 'presentateur-guide').textContent).not.toContain(
       buildGuideFormateur().reponse ?? '',
     );

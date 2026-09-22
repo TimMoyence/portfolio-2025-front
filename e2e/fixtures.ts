@@ -2,8 +2,6 @@ import type { Page } from '@playwright/test';
 
 export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';
 
-const TOKEN_KEY = 'portfolio_jwt';
-
 const MOCK_USER = {
   id: '1',
   email: 'test@test.com',
@@ -91,6 +89,13 @@ export const MOCK_FORECAST = {
 };
 
 export async function authenticateUser(page: Page): Promise<void> {
+  await page.route(`${API_BASE}/auth/refresh`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(MOCK_SESSION),
+    });
+  });
   await page.route(`${API_BASE}/auth/me`, async (route) => {
     await route.fulfill({
       status: 200,
@@ -100,12 +105,6 @@ export async function authenticateUser(page: Page): Promise<void> {
   });
 
   await page.goto('/');
-  await page.evaluate(
-    ([key, token]) => {
-      localStorage.setItem(key, token);
-    },
-    [TOKEN_KEY, MOCK_SESSION.accessToken] as const,
-  );
 }
 
 export const B2_SLUG = 'b2-01-traitement-information-chiffree';

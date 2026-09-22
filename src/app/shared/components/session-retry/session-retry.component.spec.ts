@@ -4,28 +4,30 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
-import { buildAuthUser, createAuthPortStub } from '../../../../testing/factories/auth.factory';
+import {
+  buildAuthSession,
+  buildAuthUser,
+  createAuthPortStub,
+} from '../../../../testing/factories/auth.factory';
 import { lireMarque } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SessionRetryComponent } from './session-retry.component';
-
-const CLE_DU_JETON = 'portfolio_jwt';
 
 describe('SessionRetryComponent', () => {
   let port: ReturnType<typeof createAuthPortStub>;
 
   function monter() {
+    TestBed.inject(AuthStateService).restoreSession();
     const fixture = TestBed.createComponent(SessionRetryComponent);
     fixture.detectChanges();
     return fixture;
   }
 
   beforeEach(async () => {
-    localStorage.setItem(CLE_DU_JETON, 'jwt-restaure');
     port = createAuthPortStub();
-    port.me.and.returnValues(
+    port.refresh.and.returnValues(
       throwError(() => new HttpErrorResponse({ status: 503 })),
-      of(buildAuthUser({ roles: ['teacher'] })),
+      of(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) })),
     );
     await setupTestBed({
       imports: [SessionRetryComponent],
@@ -35,11 +37,10 @@ describe('SessionRetryComponent', () => {
 
   afterEach(() => {
     TestBed.inject(AuthStateService).clearSession();
-    localStorage.removeItem(CLE_DU_JETON);
   });
 
   it('ne montre rien tant que la session n a pas echoue a se verifier', () => {
-    port.me.and.returnValue(of(buildAuthUser()));
+    port.refresh.and.returnValue(of(buildAuthSession()));
     const fixture = monter();
     TestBed.inject(ApplicationRef).tick();
     fixture.detectChanges();
@@ -54,12 +55,12 @@ describe('SessionRetryComponent', () => {
 
     const alerte = lireMarque(fixture, 'session-retry');
     expect(alerte?.getAttribute('role')).toBe('alert');
-    expect(TestBed.inject(AuthStateService).token()).toBe('jwt-restaure');
+    expect(TestBed.inject(AuthStateService).token()).toBeNull();
 
     lireMarque(fixture, 'session-retry-bouton')?.click();
     fixture.detectChanges();
 
-    expect(port.me).toHaveBeenCalledTimes(2);
+    expect(port.refresh).toHaveBeenCalledTimes(2);
     expect(lireMarque(fixture, 'session-retry')).toBeNull();
     expect(TestBed.inject(AuthStateService).hasRole('teacher')).toBeTrue();
   });

@@ -39,11 +39,7 @@ import type {
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
-import {
-  enoncesDuDeroule,
-  questionsDeLEcran,
-  titreDeLEcran,
-} from '../../../shared/slides/session/lecture-ecran';
+import { enoncesDuDeroule, questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
@@ -521,7 +517,6 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   [resultats]="resultatsDesQuestions()"
                   [participants]="participants()"
                   [sessionId]="sessionId()"
-                  [nextScreenTitle]="ecranSuivantTitle()"
                 />
                 @if (ecranAffiche.notes !== '') {
                   <section class="presentateur-notes" data-testid="presentateur-notes">
@@ -681,17 +676,6 @@ export class CoursPresentateurComponent {
   readonly ecranCourant = computed<EcranDeroule | null>(
     () => this.deroule()?.ecrans[this.ecran()] ?? null,
   );
-
-  readonly ecranSuivantTitle = computed(() => {
-    const rang = this.ecran() + 2;
-    const suivant = this.deroule()?.ecrans[rang - 1];
-    if (suivant === undefined) {
-      return $localize`:@@presentateurEcranSuivantSynthese:la synthèse de la séance`;
-    }
-    return (
-      titreDeLEcran(suivant) ?? $localize`:@@presentateurEcranSuivantRang:l’écran ${rang}:rang:`
-    );
-  });
 
   readonly questions = computed<readonly QuestionDuPanneau[]>(() => {
     const ecran = this.ecranCourant();

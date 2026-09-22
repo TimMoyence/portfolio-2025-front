@@ -17,6 +17,7 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildVoteQuestion } from '../../../../testing/factories/cours.factory';
+import { buildVisualSlide } from '../../../../testing/factories/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
@@ -181,6 +182,27 @@ describe('CoursSceneComponent', () => {
     expect(texte).not.toContain('70 %');
   });
 
+  it('remplace la projection precedente au changement de type d ecran', async () => {
+    const activite = buildEcranDeroule({
+      id: 'ecran-activite',
+      type: 'fp-vote',
+      donnees: { question: buildVoteQuestion() },
+    });
+    const visuel = buildEcranDeroule(buildVisualSlide({ id: 'ecran-visuel' }));
+    deroule = buildDerouleCours({ ecrans: [activite, visuel] });
+    port.lireDeroule.and.returnValue(of(deroule));
+
+    const fixture = await monterEtStabiliser();
+    expect(fixture.nativeElement.querySelectorAll('section.slide').length).toBe(1);
+    expect(fixture.nativeElement.querySelector('section.slide')?.id).toBe('ecran-activite');
+
+    diffuser(fixture, { ecranCourant: 1 });
+
+    expect(fixture.nativeElement.querySelectorAll('section.slide').length).toBe(1);
+    expect(fixture.nativeElement.querySelector('section.slide')?.id).toBe('ecran-visuel');
+    expect(fixture.nativeElement.querySelector('fp-vote')).toBeNull();
+  });
+
   it('affiche un message pendant le chargement du deroule', () => {
     port.lireDeroule.and.returnValue(new Subject<DerouleCours>());
     const fixture = monter();
@@ -236,13 +258,13 @@ describe('CoursSceneComponent', () => {
     expect(pastille.textContent).toContain('429');
   });
 
-  it('occupe la hauteur de la fenetre sans deborder et fait defiler un contenu plus grand', async () => {
+  it('occupe toute la surface de projection sans débordement', async () => {
     const fixture = await monterEtStabiliser();
     const hote = fixture.nativeElement as HTMLElement;
     const style = getComputedStyle(hote);
 
-    expect(style.overflowX).toBe('auto');
-    expect(style.overflowY).toBe('auto');
+    expect(style.overflowX).toBe('hidden');
+    expect(style.overflowY).toBe('hidden');
     expect(style.boxSizing).toBe('border-box');
     expect(hote.getBoundingClientRect().height).toBe(window.innerHeight);
     expect(hote.getBoundingClientRect().width).toBeLessThanOrEqual(

@@ -55,7 +55,9 @@ export type SlideVisibility = 'both' | 'scroll-only' | 'present-only';
       scroll-margin-top: 6rem;
       display: flex;
       flex-direction: column;
+      align-items: center;
       width: 100%;
+      box-sizing: border-box;
     }
   `,
 })

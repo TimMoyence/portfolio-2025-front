@@ -25,3 +25,7 @@ fe53aeace4a59cf32ccedc4fc1d2a5d94a004f7a:src/app/features/weather/components/hou
 # reformatage porte encore l'ancienne valeur. D'ou cette entree, qui ne couvre
 # que ce commit precis.
 9edc8b6d548587d2271144b73ac3458e2e64a038:src/testing/factories/auth.factory.ts:generic-api-key:67
+
+# L'operateur `...overrides` d'une factory de test est signale a tort comme une
+# cle generique : il ne contient aucune valeur secrete.
+26a6bced2a121baf007f54e89abe3602b3808cc2:src/testing/factories/auth.factory.ts:generic-api-key:69
