@@ -10,7 +10,7 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 const EMPREINTE_PUBLIEE_PAR_LE_BACK =
-  'f798f6dd298f792cd3b2d5edaa20efa549a5f5d8d7f7c7d6f4add45ff9d8d632';
+  'd9f24f34dd1a8184579a4c41dbb17e2eb5ecce5a0fa23e20df4bf64bd87b9281';
 
 const ECRANS_PUBLIES = 52;
 
@@ -43,9 +43,26 @@ async function attesterLeMontage(
 describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et en projection', () => {
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
+  it('garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier', async () => {
+    const diapositive = ecransDuPupitreV3()[12];
+    const atelier = ecransPublicsV3()[13];
+    const monte = await monterEcran(diapositive, 'hand', 'presentateur');
+    const graphique = monte.montees()[0] as HTMLElement;
+
+    expect(graphique.shadowRoot?.querySelector('[data-testid="titre"]')?.textContent).toContain(
+      'Samir',
+    );
+    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="parametre"]').length).toBe(2);
+    expect(atelier.donnees?.['consigne']).toBe(
+      'Calculatrice autorisée, sauf pour la question sur le nombre de commandes (ordre de grandeur). Répondez seul·e, puis comparez avec votre voisin·e avant la correction.',
+    );
+
+    monte.detruire();
+  });
+
   it('porte l empreinte et le nombre d écrans publiés par le back', () => {
     expect(INSTANTANE_V3.empreinte).toBe(EMPREINTE_PUBLIEE_PAR_LE_BACK);
-    expect(INSTANTANE_V3.version).toBe(3);
+    expect(INSTANTANE_V3.version).toBe(1);
     expect([
       ecransPublicsV3().length,
       ecransDuPupitreV3().length,
