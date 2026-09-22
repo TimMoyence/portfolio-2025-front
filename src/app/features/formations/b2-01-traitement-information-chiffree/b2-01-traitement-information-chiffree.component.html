@@ -1,15 +1,15 @@
 <aside class="wrap b2-seance" aria-labelledby="b2-seance-invite">
   @if (estFormateur()) {
     <p id="b2-seance-invite" class="b2-seance__invite" i18n="@@b2CoursSeanceFormateurInvite">
-      Vous êtes connecté comme formateur. Ouvrez le pupitre pour lancer une séance et obtenir le
-      code à donner à vos étudiants.
+      Vous êtes connecté comme formateur. Ouvrez votre espace formateur pour lancer une séance et
+      obtenir le code à donner à vos étudiants.
     </p>
     <a
       class="btn btn-teal"
       routerLink="/cours/presenter/b2-01-traitement-information-chiffree"
       data-testid="b2-ouvrir-pupitre"
     >
-      <span i18n="@@b2CoursOuvrirPupitre">Ouvrir le pupitre formateur</span>
+      <span i18n="@@b2CoursOuvrirPupitre">Ouvrir l’espace formateur</span>
       <span class="arrow" aria-hidden="true">→</span>
     </a>
   } @else {

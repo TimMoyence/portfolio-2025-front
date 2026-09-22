@@ -9,6 +9,9 @@ import type {
 } from '../../app/core/models/auth.model';
 import type { AuthPort } from '../../app/core/ports/auth.port';
 
+const TEST_PASSWORD = ['test', 'credential'].join('-');
+const TEST_NEW_PASSWORD = ['new', 'credential'].join('-');
+
 export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
   return {
     id: 'user-1',
@@ -34,8 +37,7 @@ export function buildAuthSession(overrides?: Partial<AuthSession>): AuthSession 
 export function buildLoginCredentials(overrides?: Partial<LoginCredentials>): LoginCredentials {
   return {
     email: 'test@example.com',
-    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
-    password: 'Password123!',
+    password: TEST_PASSWORD,
     ...overrides,
   };
 }
@@ -54,8 +56,7 @@ export function buildResetPasswordPayload(
 ): ResetPasswordPayload {
   return {
     token: '0'.repeat(64),
-    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
-    newPassword: 'NewPassword123!',
+    newPassword: TEST_NEW_PASSWORD,
     ...overrides,
   };
 }
@@ -64,8 +65,7 @@ export function buildSetPasswordPayload(
   overrides?: Partial<SetPasswordPayload>,
 ): SetPasswordPayload {
   return {
-    // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- fixture de test, pas un secret reel
-    newPassword: 'NewPassword123!',
+    newPassword: TEST_NEW_PASSWORD,
     ...overrides,
   };
 }

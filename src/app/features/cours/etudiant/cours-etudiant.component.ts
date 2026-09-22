@@ -71,10 +71,8 @@ import {
 } from '../../../shared/slides/session/lecture-ecran';
 import type { EtatEnvoiLibre } from '../../../shared/slides/session/reponses-libres.service';
 import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
-import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { aUnePresentation, objet } from '../../../shared/slides/visual/presentation-v2';
-import { SlideComponent } from '../../../shared/slides/deck/slide.component';
-import { SlideDeckComponent } from '../../../shared/slides/deck/slide-deck.component';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
@@ -200,7 +198,7 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
 @Component({
   selector: 'app-cours-etudiant',
   standalone: true,
-  imports: [SlideActivityComponent, SlideComponent, SlideDeckComponent],
+  imports: [CoursPresentationComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-etudiant">
@@ -321,21 +319,18 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                   </p>
                 } @else {
                   @if (ecranCourant(); as ecran) {
-                    <app-slide-deck mode="scroll" [allowFullscreen]="false">
-                      <app-slide [id]="ecran.id">
-                        <app-slide-activity
-                          [slide]="ecran"
-                          render="hand"
-                          [role]="'etudiant'"
-                          [sessionId]="sessionId()"
-                          [jeton]="jeton()"
-                          [retours]="retours()"
-                          [direct]="direct()"
-                          [brouillons]="brouillons()"
-                          (evenement)="surEvenement($event)"
-                        />
-                      </app-slide>
-                    </app-slide-deck>
+                    <app-cours-presentation
+                      mode="etudiant"
+                      [slide]="ecran"
+                      [index]="indexEcran()"
+                      [total]="sujet()?.ecrans?.length ?? 0"
+                      [sessionId]="sessionId()"
+                      [jeton]="jeton()"
+                      [retours]="retours()"
+                      [direct]="direct()"
+                      [brouillons]="brouillons()"
+                      (evenement)="surEvenement($event)"
+                    />
                   }
                   <div class="student-session__navigation">
                     @if (peutReculer()) {

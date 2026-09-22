@@ -102,8 +102,17 @@ export const plot = `
 :where(.fp-root[data-render='stage']) .fp-plot__graphique {
   width: min(100%, 760px);
   min-height: 0;
-  max-height: min(42vh, 26rem);
+  max-height: min(34vh, 21rem);
   margin-inline: auto;
+}
+
+:where(.fp-root[data-render='board']) .fp-plot__atelier {
+  padding: var(--fp-s-3);
+}
+
+:where(.fp-root[data-render='board']) .fp-plot__graphique {
+  min-height: 0;
+  max-height: min(30vh, 18rem);
 }
 
 :where(.fp-root) .fp-plot__axe {

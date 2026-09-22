@@ -238,7 +238,7 @@ describe('B2TraitementInformationChiffreeComponent', () => {
     expect(pupitre?.getAttribute('href')).toBe(
       '/cours/presenter/b2-01-traitement-information-chiffree',
     );
-    expect(pupitre?.textContent).toContain('Ouvrir le pupitre formateur');
+    expect(pupitre?.textContent).toContain('Ouvrir l’espace formateur');
     expect(element.querySelector('[data-testid="b2-rejoindre-seance"]')).toBeNull();
     expect(element.textContent).toContain('obtenir le code à donner à vos étudiants');
   });

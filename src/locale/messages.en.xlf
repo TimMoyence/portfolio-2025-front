@@ -12301,8 +12301,8 @@
         <note category="meaning">presentateur.titrePage</note>
       </notes>
       <segment>
-        <source>Pupitre de la séance</source>
-        <target>Session console</target>
+        <source>Séance en direct</source>
+        <target>Live session</target>
       </segment>
     </unit>
     <unit id="presentateurRepriseChargement">
@@ -16779,6 +16779,18 @@
       <segment>
         <source> Aperçu : les activités se manipulent librement, les réponses ne s’envoient que pendant une séance. </source>
         <target> Preview: activities can be tried freely, answers are only sent during a session. </target>
+      </segment>
+    </unit>
+    <unit id="b2CoursSeanceFormateurInvite">
+      <segment>
+        <source> Vous êtes connecté comme formateur. Ouvrez votre espace formateur pour lancer une séance et obtenir le code à donner à vos étudiants. </source>
+        <target> You are signed in as a trainer. Open your trainer space to start a session and get the code to give your students. </target>
+      </segment>
+    </unit>
+    <unit id="b2CoursOuvrirPupitre">
+      <segment>
+        <source>Ouvrir l’espace formateur</source>
+        <target>Open trainer space</target>
       </segment>
     </unit>
     <unit id="b2CoursMinutes">

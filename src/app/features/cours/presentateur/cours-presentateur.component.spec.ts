@@ -13,6 +13,7 @@ import type {
 import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
 import { buildAuthSession } from '../../../../testing/factories/auth.factory';
 import {
+  buildPlotDefinition,
   buildNumericQuestion,
   buildVoteQuestion,
 } from '../../../../testing/factories/cours.factory';
@@ -1038,6 +1039,19 @@ describe('CoursPresentateurComponent', () => {
         ecrans: [buildEcranDeroule(ecran), ...derouleDeSeance().ecrans.slice(1)],
       });
     }
+
+    it('conserve les curseurs du graphique dans la présentation formateur', async () => {
+      deroule = derouleAvecEcran({
+        id: 'ecran-plot',
+        type: 'fp-plot',
+        donnees: { definition: buildPlotDefinition() },
+      });
+      port.lireDeroule.and.returnValue(of(deroule));
+
+      const fixture = await ouvrirLaSeance();
+
+      expect(apercu(fixture).render()).toBe('hand');
+    });
 
     it('donne au rendu tableau le pilotage, les resultats et l annexe formateur de l ecran', async () => {
       const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
