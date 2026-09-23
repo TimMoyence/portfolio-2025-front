@@ -7,6 +7,7 @@ import { AuthStateService } from '../../services/auth-state.service';
 import { ENTETE_JETON_PARTICIPANT } from '../jeton-participant';
 
 const LOGIN_URL = '/login';
+const REFRESH_PATH = '/auth/refresh';
 
 function pendingNavigationUrl(router: Router): string | null {
   const navigation = router.getCurrentNavigation();
@@ -38,7 +39,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const targetsOwnApi = req.url.startsWith(config.apiBaseUrl);
   const authReq =
     token && targetsOwnApi ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
-  const concernsTeacherSession = !req.headers.has(ENTETE_JETON_PARTICIPANT);
+  const isSilentRefresh = req.url === `${config.apiBaseUrl}${REFRESH_PATH}`;
+  const concernsTeacherSession = !req.headers.has(ENTETE_JETON_PARTICIPANT) && !isSilentRefresh;
 
   return next(authReq).pipe(
     tap({

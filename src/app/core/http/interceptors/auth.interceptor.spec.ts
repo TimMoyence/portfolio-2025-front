@@ -172,6 +172,20 @@ describe('authInterceptor', () => {
     expect(authState.token()).toBe('jwt-formateur');
   });
 
+  it('R3 · laisse aux gardes la destination quand le rafraichissement silencieux d un visiteur echoue en 401', () => {
+    const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    const url = `${environment.apiBaseUrl}/auth/refresh`;
+    const statutsRecus: number[] = [];
+
+    http
+      .post(url, {})
+      .subscribe({ error: (erreur: HttpErrorResponse) => statutsRecus.push(erreur.status) });
+    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+
+    expect(statutsRecus).withContext('le 401 remonte a la restauration de session').toEqual([401]);
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
   it('devrait propager les erreurs non-401 sans clearSession', () => {
     authState.login(buildAuthSession());
     spyOn(authState, 'clearSession');
