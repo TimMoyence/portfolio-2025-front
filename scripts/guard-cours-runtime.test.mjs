@@ -135,8 +135,6 @@ const VUE_ETUDIANT = 'src/app/features/cours/etudiant/cours-etudiant.component.t
 const ACTIVITE_PARTAGEE = 'src/app/shared/slides/session/slide-activity.component.ts';
 const RENDU_VISUEL = 'src/app/shared/slides/visual/slide-visual.component.ts';
 const GABARIT_QUIZ = 'src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html';
-const PAGE_B2 =
-  'src/app/features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component.ts';
 
 const FUITES_AD4 = [
   { fichier: VUE_ETUDIANT, terme: 'misconception' },
@@ -150,7 +148,6 @@ const FUITES_AD4 = [
   { fichier: ACTIVITE_PARTAGEE, terme: 'bonneReponse' },
   { fichier: RENDU_VISUEL, terme: 'bonneRéponse' },
   { fichier: GABARIT_QUIZ, terme: 'reponseAttendue' },
-  { fichier: PAGE_B2, terme: 'réponseAttendue' },
 ];
 
 for (const cas of FUITES_AD4) {
@@ -264,7 +261,6 @@ const HORS_PUPITRE = [
   VUE_ETUDIANT,
   ACTIVITE_PARTAGEE,
   RENDU_VISUEL,
-  PAGE_B2,
   'src/cours/content/b1-09.ts',
   'src/app/features/cours/presentateur-bis/fuite.ts',
   'src/app/features/cours/etudiant/presentateur/fuite.ts',
@@ -290,8 +286,8 @@ void test('AD-4 : le reste de src/app n est pas dans le perimetre de la surface 
   assert.equal(estSurfaceCours('src/app/shared/components/navbar/navbar.component.ts'), false);
 });
 
-void test('AD-4 : le rendu etudiant partage et la page B2 sont dans la surface cours', () => {
-  for (const fichier of [ACTIVITE_PARTAGEE, RENDU_VISUEL, GABARIT_QUIZ, PAGE_B2]) {
+void test('AD-4 : le rendu etudiant partage est dans la surface cours', () => {
+  for (const fichier of [ACTIVITE_PARTAGEE, RENDU_VISUEL, GABARIT_QUIZ]) {
     assert.equal(estSurfaceCours(fichier), true, `${fichier} echappe a la garde AD-4`);
   }
 });
@@ -342,12 +338,6 @@ const IMPORTS_DU_PUPITRE = [
     fichier: ACTIVITE_PARTAGEE,
     texte:
       "const pupitre = await import('../../../features/cours/presentateur/cours-presentateur.component');\n",
-  },
-  {
-    nom: 'import statique depuis la page B2',
-    fichier: PAGE_B2,
-    texte:
-      "import { CoursSceneComponent } from '../../cours/presentateur/cours-scene.component';\n",
   },
   {
     nom: 'reexport du dossier du pupitre',

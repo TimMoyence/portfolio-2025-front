@@ -5,6 +5,22 @@ import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type Concept4Definition, FpConcept4 } from './FpConcept4';
 
 const DEFINITION = buildConcept4Definition();
+const MACHINE = buildConcept4Definition({
+  id: 'K-MACHINE-COEFFICIENTS',
+  parametres: [
+    { cle: 'depart', libelle: 'Valeur de départ (€)', min: 1, max: 200, pas: 1, defaut: 100 },
+    { cle: 'tauxUn', libelle: 'Premier taux (%)', min: -50, max: 50, pas: 1, defaut: 10 },
+    { cle: 'tauxDeux', libelle: 'Second taux (%)', min: -50, max: 50, pas: 1, defaut: -10 },
+  ],
+  formuleLatexSimplifie: 'arrivée = départ × (1 + t₁) × (1 + t₂)',
+  calcul: 'depart * (1 + tauxUn / 100) * (1 + tauxDeux / 100)',
+  phrase: 'De {depart} € on arrive à {resultat} €.',
+  etapes: [
+    { libelle: 'Départ', calcul: 'depart' },
+    { libelle: 'Après t₁', calcul: 'depart * (1 + tauxUn / 100)' },
+    { libelle: 'Arrivée', calcul: 'depart * (1 + tauxUn / 100) * (1 + tauxDeux / 100)' },
+  ],
+});
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 27;
 const POINTS_ATTENDUS = 25;
@@ -158,6 +174,31 @@ describe('FpConcept4', () => {
     expect(tous(hote, 'img, canvas, iframe, object, script')).toEqual([]);
   });
 
+  it('RET-21 · trace la trajectoire depart, apres t1, arrivee avec le niveau de depart en repere', () => {
+    hote.definition = MACHINE;
+    const points = (un(hote, 'trace')?.getAttribute('points') ?? '')
+      .split(' ')
+      .map((couple) => couple.split(',').map(Number));
+    const repere = un(hote, 'repere');
+    const [depart, apresUn, arrivee] = points.map(([, y]) => y);
+
+    expect(points.length).toBe(3);
+    expect(points.map(([x]) => x)).toEqual([...points.map(([x]) => x)].sort((a, b) => a - b));
+    expect(Number(repere?.getAttribute('y1'))).toBe(depart);
+    expect(Number(repere?.getAttribute('y2'))).toBe(depart);
+    expect(apresUn).toBeLessThan(depart);
+    expect(arrivee).toBeGreaterThan(depart);
+  });
+
+  it('RET-21 · liste dans le tableau chaque etape de la machine avec sa valeur', () => {
+    hote.definition = MACHINE;
+
+    expect(
+      tous(hote, '[data-testid="ligne"]').map((ligne) => ligne.firstElementChild?.textContent),
+    ).toEqual(['Départ', 'Après t₁', 'Arrivée']);
+    expect(resultatsDuTableau(hote)).toEqual(['100', '110', '99']);
+  });
+
   it('ramene un defaut hors bornes dans les bornes au lieu de l ignorer', () => {
     hote.definition = avecDefaut('n', 99);
     expect(hote.valeurs['n']).toBe(30);
@@ -213,7 +254,74 @@ describe('FpConcept4', () => {
     expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(false);
     hote.setAttribute('render', 'stage');
     expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(true);
-    expect(tous(hote, '[data-testid="animer"]')).toEqual([]);
+  });
+
+  it('RET-21 · laisse le formateur manipuler la machine en projection', () => {
+    hote.setAttribute('render', 'stage');
+    const curseurDeN = hote.shadowRoot?.querySelector<HTMLInputElement>(
+      '[data-testid="curseur"][data-cle="n"]',
+    );
+    if (curseurDeN === null || curseurDeN === undefined) {
+      throw new Error('aucun curseur projete pour n');
+    }
+    curseurDeN.value = '20';
+    curseurDeN.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(hote.valeurs['n']).toBe(20);
+    expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 4, n: 20 })));
+    expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(true);
+    expect(tous(hote, '[data-testid="animer"]').length).toBe(1);
+  });
+
+  describe('synchronisation du pupitre vers la projection', () => {
+    function reglerN(valeur: string): void {
+      const curseurDeN = hote.shadowRoot?.querySelector<HTMLInputElement>(
+        '[data-testid="curseur"][data-cle="n"]',
+      );
+      if (curseurDeN === null || curseurDeN === undefined) {
+        throw new Error('aucun curseur pour n');
+      }
+      curseurDeN.value = valeur;
+      curseurDeN.dispatchEvent(new Event('input', { bubbles: true }));
+      curseurDeN.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function reglagesEmis(): unknown[] {
+      const emis: unknown[] = [];
+      hote.addEventListener('fp-concept4-reglage', (evenement) =>
+        emis.push((evenement as CustomEvent).detail),
+      );
+      return emis;
+    }
+
+    it('RET-21 · au pupitre, emet les reglages une fois le curseur relache', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+      hote.setAttribute('render', 'stage');
+      const emis = reglagesEmis();
+
+      reglerN('20');
+
+      expect(emis).toEqual([{ reglages: { C: 1000, i: 4, n: 20 } }]);
+    });
+
+    it('RET-21 · chez l etudiant, la machine reste une exploration personnelle', () => {
+      const emis = reglagesEmis();
+
+      reglerN('20');
+
+      expect(emis).toEqual([]);
+      expect(hote.valeurs['n']).toBe(20);
+    });
+
+    it('RET-21 · la projection suit les reglages pilotes, bornes a la machine', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+      hote.setAttribute('render', 'stage');
+
+      hote.reglages = { n: 20, i: 99 };
+
+      expect(hote.valeurs).toEqual({ C: 1000, i: 10, n: 20 });
+      expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 10, n: 20 })));
+    });
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {

@@ -262,6 +262,35 @@ describe('FpVote', () => {
       expect(marque(hote, 'revelation')?.textContent).toContain('Ce que montre le cas jumeau');
     });
 
+    it('RET-20 · projette les resultats du premier vote pendant la discussion, sans la bonne reponse', () => {
+      presenter('presentateur', 'stage');
+      hote.corrige = { type: 'cible', cible: 'b' };
+      hote.resultats = RESULTATS;
+      hote.phase = 'discussion';
+
+      const histogramme = marque(hote, 'histogramme');
+      expect(histogramme?.getAttribute('data-vote')).toBe('premier');
+      expect(histogramme?.querySelectorAll('[data-testid="barre"]').length).toBe(4);
+      expect(marque(hote, 'bonne-reponse')).toBeNull();
+    });
+
+    it('RET-20 · projette cote a cote les deux votes une fois la reponse revelee', () => {
+      presenter('presentateur', 'stage');
+      hote.resultatsPremierVote = RESULTATS;
+      hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
+      hote.phase = 'revele';
+
+      const histogrammes = [
+        ...(hote.shadowRoot?.querySelectorAll('[data-testid="histogramme"]') ?? []),
+      ];
+      expect(histogrammes.map((element) => element.getAttribute('data-vote'))).toEqual([
+        'premier',
+        'second',
+      ]);
+      expect(histogrammes[0].textContent).toContain('58%');
+      expect(histogrammes[1].textContent).toContain('80%');
+    });
+
     it('montre toujours la revelation au pupitre', () => {
       presenter('presentateur', 'board');
       hote.corrige = REVELATION;

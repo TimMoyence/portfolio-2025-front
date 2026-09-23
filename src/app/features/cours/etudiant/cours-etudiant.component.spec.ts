@@ -13,6 +13,7 @@ import {
   buildEcran,
   buildEcranQuestionnaire,
   buildSpacedRappel,
+  buildWorkedExemple,
 } from '../../../../testing/factories/cours.factory';
 import {
   buildCoursContent,
@@ -1041,6 +1042,39 @@ describe('CoursEtudiantComponent', () => {
       await stabiliser(fixture);
 
       expect(pilotageVu()).toEqual({ phase: 'revele', revele: true, etayage: 2 });
+    });
+
+    it('RET-23 · relit le sujet quand le formateur revele une etape de l exemple travaille', async () => {
+      const complet = buildWorkedExemple();
+      const servi = (etayage: number): CoursContent => ({
+        ...sujet,
+        ecrans: [
+          buildEcran({
+            id: 'ecran-1',
+            type: 'fp-worked',
+            donnees: {
+              exemple: {
+                ...complet,
+                etapes: complet.etapes.map((etape, rang) =>
+                  rang < etayage ? etape : { ...etape, raisonnement: '' },
+                ),
+              },
+              etayage,
+            },
+          }),
+          ...sujet.ecrans.slice(1),
+        ],
+      });
+      port.lireSujet.and.returnValues(of(servi(0)), of(servi(1)));
+      const fixture = await rattacherALaSeanceEnCours();
+
+      diffuser(fixture, { revision: 4, pilotage: { 'ecran-1': { etayage: 1 } } });
+      await stabiliser(fixture);
+      diffuser(fixture, { revision: 5, pilotage: { 'ecran-1': { etayage: 1 } } });
+      await stabiliser(fixture);
+
+      expect(port.lireSujet).toHaveBeenCalledTimes(2);
+      expect(ecranAffiche(fixture)).toEqual(servi(1).ecrans[0]);
     });
 
     it('relit une production deja envoyee et la marque deja repondue a la reprise', async () => {

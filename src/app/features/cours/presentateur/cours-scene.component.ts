@@ -21,6 +21,7 @@ import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
+import { annexeFormateurDeLEcran } from './annexe-formateur';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
@@ -126,8 +127,8 @@ const SEUIL_DE_PROJECTION = 5;
 
     .scene-canvas {
       inline-size: min(100%, 96rem);
-      block-size: 100%;
       min-block-size: 100%;
+      block-size: 100%;
       box-sizing: border-box;
       margin-inline: auto;
       padding: clamp(1rem, 3vw, 2.5rem);
@@ -324,9 +325,10 @@ export class CoursSceneComponent {
     };
   });
 
-  readonly annexeDeLEcran = computed(
-    () => this.deroule()?.ecrans[this.ecran()]?.corrigeEcran ?? null,
-  );
+  readonly annexeDeLEcran = computed(() => {
+    const ecran = this.deroule()?.ecrans[this.ecran()];
+    return ecran === undefined ? null : annexeFormateurDeLEcran(ecran);
+  });
 
   readonly direct = computed<DirectEcran | null>(() => {
     const ecran = this.ecranCourant();

@@ -62,7 +62,7 @@ export const story = `
 :where(.fp-root) .fp-story__visuel img {
   display: block;
   width: 100%;
-  max-height: min(38vh, 22rem);
+  max-height: min(38cqh, 22rem);
   margin: 0;
   object-fit: cover;
 }
@@ -93,7 +93,7 @@ export const story = `
 
 :where(.fp-root) .fp-story__video video {
   width: 100%;
-  min-height: min(42vh, 24rem);
+  min-height: min(42cqh, 24rem);
   background: #050505;
   object-fit: contain;
 }
@@ -102,7 +102,7 @@ export const story = `
   width: min(100%, 72rem);
   box-sizing: border-box;
   margin-inline: auto;
-  padding: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1rem, 2cqi, 1.5rem);
   background: var(--fp-ink);
   border-radius: var(--fp-r-lg);
   box-shadow: var(--fp-shadow-card);
@@ -111,13 +111,13 @@ export const story = `
 :where(.fp-root[data-render='stage']) .fp-story__video video {
   width: min(100%, 860px);
   min-height: 0;
-  max-height: min(38vh, 22rem);
+  max-height: min(38cqh, 22rem);
   margin-inline: auto;
 }
 
 :where(.fp-root[data-render='board']) .fp-story__video video {
   min-height: 0;
-  max-height: min(30vh, 18rem);
+  max-height: min(30cqh, 18rem);
 }
 
 :where(.fp-root) .fp-story__transcription {
@@ -170,7 +170,7 @@ export const pro = `
 :where(.fp-root) .fp-pro__cas {
   display: grid;
   gap: var(--fp-s-3);
-  justify-items: start;
+  justify-items: center;
 }
 
 :where(.fp-root) .fp-pro__metier {
@@ -221,11 +221,69 @@ export const pro = `
   gap: var(--fp-s-2);
 }
 
+:where(.fp-root) .fp-pro__questions {
+  display: grid;
+  gap: var(--fp-s-3);
+  width: 100%;
+  margin: 0;
+  padding-left: var(--fp-s-4);
+}
+
+:where(.fp-root) .fp-pro__question {
+  display: grid;
+  gap: var(--fp-s-1);
+  color: var(--fp-texte-fort);
+  overflow-wrap: anywhere;
+}
+
+:where(.fp-root) .fp-pro__libelle {
+  font-weight: 600;
+}
+
+:where(.fp-root) .fp-pro__champ {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--fp-s-2);
+  font: inherit;
+  color: var(--fp-texte-fort);
+  background: var(--fp-surface);
+  border: 1px solid var(--fp-bordure);
+  border-radius: var(--fp-r-sm);
+  resize: vertical;
+}
+
+:where(.fp-root) .fp-pro__champ:focus-visible {
+  outline: 2px solid var(--fp-teal);
+  outline-offset: 2px;
+}
+
+:where(.fp-root) .fp-pro__champ:disabled,
+:where(.fp-root) .fp-pro__valider:disabled {
+  color: var(--fp-en-attente);
+  background: var(--fp-en-attente-fond);
+}
+
+:where(.fp-root) .fp-pro__valider {
+  justify-self: start;
+  padding: var(--fp-s-2) var(--fp-s-4);
+  font-weight: 600;
+  color: var(--fp-cream);
+  background: var(--fp-teal-deep);
+  border: 1px solid var(--fp-teal-deep);
+  border-radius: var(--fp-r-pill);
+  cursor: pointer;
+}
+
+:where(.fp-root) .fp-pro__retour {
+  min-height: calc(1.5rem * var(--fp-echelle));
+  color: var(--fp-texte-fort);
+}
+
 :where(.fp-root[data-render='stage']) .fp-pro__cas {
   width: min(100%, 64rem);
   box-sizing: border-box;
   margin-inline: auto;
-  padding: clamp(1rem, 2.5vw, 2rem);
+  padding: clamp(1rem, 2.5cqi, 2rem);
   background: var(--fp-surface);
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r-lg);
@@ -243,12 +301,12 @@ export const pro = `
 }
 
 :where(.fp-root[data-render='stage']) .fp-pro__geste-texte {
-  font-size: clamp(1.15rem, 2vw, 1.75rem);
+  font-size: clamp(1.15rem, 2cqi, 1.75rem);
   line-height: 1.35;
 }
 
 :where(.fp-root[data-render='stage']) .fp-pro__geste {
-  padding: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1rem, 2cqi, 1.5rem);
   border-left-width: 0.35rem;
   background: var(--fp-ivory);
 }

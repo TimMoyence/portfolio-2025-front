@@ -81,7 +81,7 @@ export const plot = `
 
 :where(.fp-root) .fp-plot__graphique {
   width: 100%;
-  min-height: min(36vh, 22rem);
+  min-height: min(36cqh, 22rem);
   height: auto;
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r);
@@ -92,7 +92,7 @@ export const plot = `
   width: min(100%, 72rem);
   box-sizing: border-box;
   margin-inline: auto;
-  padding: clamp(1.25rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 3cqi, 2.5rem);
   background: var(--fp-surface);
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r-lg);
@@ -102,7 +102,7 @@ export const plot = `
 :where(.fp-root[data-render='stage']) .fp-plot__graphique {
   width: min(100%, 760px);
   min-height: 0;
-  max-height: min(34vh, 21rem);
+  max-height: min(34cqh, 21rem);
   margin-inline: auto;
 }
 
@@ -112,7 +112,7 @@ export const plot = `
 
 :where(.fp-root[data-render='board']) .fp-plot__graphique {
   min-height: 0;
-  max-height: min(30vh, 18rem);
+  max-height: min(30cqh, 18rem);
 }
 
 :where(.fp-root) .fp-plot__axe {

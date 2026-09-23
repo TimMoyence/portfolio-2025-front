@@ -30,6 +30,7 @@ export interface PilotageEcran {
   readonly phase?: VotePhase;
   readonly revele?: boolean;
   readonly etayage?: number;
+  readonly reglages?: Readonly<Record<string, number>>;
 }
 
 export interface Tolerance {

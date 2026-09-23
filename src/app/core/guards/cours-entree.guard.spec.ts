@@ -57,9 +57,10 @@ describe('coursEntreeGuard', () => {
     expect(String(result)).toBe('/cours/rejoindre');
   });
 
-  it('laisse le visiteur accéder à la page publique du cours', () => {
+  it('R3 · envoie le visiteur non connecté directement au rattachement étudiant', () => {
     const result = decision();
 
-    expect(result).toBe(true);
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(String(result)).toBe('/cours/rejoindre');
   });
 });

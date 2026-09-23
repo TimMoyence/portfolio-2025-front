@@ -8,7 +8,7 @@
   max-width: 62ch;
   margin: -1.35rem auto 2.5rem;
   color: var(--text-muted, var(--slide-text-muted));
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-size: clamp(1rem, 1.4cqi, 1.2rem);
   line-height: 1.45;
   text-align: center;
 }
@@ -16,7 +16,7 @@
 .slide-method-path__layout {
   display: grid;
   grid-template-columns: minmax(16rem, 0.9fr) minmax(20rem, 1.1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
+  gap: clamp(1.5rem, 4cqi, 4rem);
   width: min(1120px, 100%);
   margin: 0 auto;
   align-items: stretch;
@@ -108,7 +108,7 @@
   display: grid;
   align-content: center;
   min-height: 22rem;
-  padding: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 4cqi, 3rem);
   border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
   border-radius: 1rem;
   background: var(--card-bg, #fff);
@@ -127,13 +127,13 @@
 
 .slide-method-path__detail h3 {
   margin: 0;
-  font-size: clamp(1.7rem, 3vw, 2.8rem);
+  font-size: clamp(1.7rem, 3cqi, 2.8rem);
 }
 
 .slide-method-path__question {
   margin: 0.8rem 0 2rem;
   color: var(--teal-deep, #277c70);
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-size: clamp(1.05rem, 1.6cqi, 1.35rem);
   font-weight: 650;
   line-height: 1.35;
 }

@@ -120,6 +120,8 @@ export class FpSheet extends FpBlock {
   private interneVerdict: VerdictDeProduction | null = null;
   private attendus: readonly AttenduDeFeuille[] = [];
   private evaluation: EvaluationDeLaFeuille | null = null;
+  private correction = 0;
+  private reprises: ReadonlySet<string> = new Set();
 
   set plan(valeur: SheetPlanPublic | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
@@ -131,6 +133,7 @@ export class FpSheet extends FpBlock {
       this.message = '';
       this.soumis = false;
       this.interneVerdict = null;
+      this.reprises = new Set();
     }
     this.refreshSiConnecte();
   }
@@ -151,6 +154,11 @@ export class FpSheet extends FpBlock {
 
   set corrige(valeur: unknown) {
     this.attendus = lireAttendus(valeur);
+    this.refreshSiConnecte();
+  }
+
+  set etayage(valeur: number) {
+    this.correction = valeur;
     this.refreshSiConnecte();
   }
 
@@ -235,7 +243,18 @@ export class FpSheet extends FpBlock {
   }
 
   private verrouille(): boolean {
-    return this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null);
+    return (
+      this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null) ||
+      (this.correction > 0 && !this.enApercu())
+    );
+  }
+
+  private modifiable(nom: string): boolean {
+    return !this.verrouillee(nom) && this.accessible(nom);
+  }
+
+  private accessible(nom: string): boolean {
+    return !this.verrouille() || this.detailDe(nom)?.juste === false;
   }
 
   private dansLaGrille(nom: string): boolean {
@@ -273,9 +292,9 @@ export class FpSheet extends FpBlock {
     if (barre === null) {
       return;
     }
-    barre.disabled = this.verrouille();
+    barre.disabled = !this.accessible(this.selection);
     barre.addEventListener('input', () => this.ecrire(this.selection, barre.value, 'barre'));
-    if (this.foyer === 'barre' && !this.verrouille()) {
+    if (this.foyer === 'barre' && this.accessible(this.selection)) {
       barre.focus();
       barre.setSelectionRange(barre.value.length, barre.value.length);
     }
@@ -286,7 +305,7 @@ export class FpSheet extends FpBlock {
     champ.addEventListener('input', () => this.ecrire(nom, champ.value, 'cellule'));
     champ.addEventListener('focus', () => this.selectionner(nom));
     champ.addEventListener('keydown', (evenement) => this.auClavier(evenement, nom));
-    if (nom === this.selection && this.foyer === 'cellule' && !this.verrouille()) {
+    if (nom === this.selection && this.foyer === 'cellule' && this.accessible(nom)) {
       champ.focus();
       champ.setSelectionRange(champ.value.length, champ.value.length);
     }
@@ -324,7 +343,7 @@ export class FpSheet extends FpBlock {
   }
 
   private selectionner(nom: string): void {
-    if (nom !== this.selection && !this.verrouille()) {
+    if (nom !== this.selection && this.accessible(nom)) {
       this.selection = nom;
       this.foyer = 'cellule';
       this.refresh();
@@ -346,13 +365,16 @@ export class FpSheet extends FpBlock {
   }
 
   private ecrire(nom: string, contenu: string, source: Foyer): void {
-    if (this.verrouille() || this.verrouillee(nom)) {
+    if (!this.modifiable(nom)) {
       return;
     }
     this.contenus = { ...this.contenus, [nom]: contenu.slice(0, LONGUEUR_MAX_CELLULE) };
     this.selection = nom;
     this.foyer = source;
     this.message = '';
+    if (this.verrouille()) {
+      this.reprises = new Set([...this.reprises, nom]);
+    }
     this.signalerBrouillon(this.interne?.id ?? '', this.saisiesDeLEtudiant());
     this.refresh();
   }
@@ -465,13 +487,29 @@ export class FpSheet extends FpBlock {
     const nom = nomCellule(ligne, colonne);
     const portes = `${PREFIXE_COLONNE}${lettreColonne(colonne)} ${PREFIXE_LIGNE}${ligne + 1}`;
     const contenu = interactif ? this.champ(nom) : this.lecture(nom);
-    const detail = interactif ? this.detailDe(nom) : null;
-    const etat =
-      detail === null ? VIDE : safeHtml`${this.etatDuDetail(detail)} data-testid="cellule-verdict"`;
+    const etat = interactif ? this.etatDeLaCellule(nom) : VIDE;
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" headers="${escapeHtml(portes)}" ${etat}>${contenu}</td>`;
   }
 
+  private etatDeLaCellule(nom: string): EscapedHtml {
+    if (this.reprises.has(nom)) {
+      return safeHtml`data-etat="reprise"`;
+    }
+    const detail = this.detailDe(nom);
+    return detail === null
+      ? VIDE
+      : safeHtml`${this.etatDuDetail(detail)} data-testid="cellule-verdict"`;
+  }
+
   private lecture(nom: string): EscapedHtml {
+    const attendu = this.attendus.find((candidat) => candidat.reference === nom);
+    if (attendu !== undefined && this.correction >= 1 && this.roleActuel() === 'presentateur') {
+      const valeur =
+        this.correction >= 2
+          ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span>`
+          : VIDE;
+      return safeHtml`<span class="fp-sheet__correction" data-testid="correction-feuille" data-nom="${escapeHtml(nom)}"><code>${escapeHtml(attendu.formuleReference)}</code>${valeur}</span>`;
+    }
     return safeHtml`<span data-testid="cellule" data-nom="${escapeHtml(nom)}">${escapeHtml(this.affichage(nom, false))}</span>`;
   }
 
@@ -484,7 +522,7 @@ export class FpSheet extends FpBlock {
         ? VIDE
         : safeHtml`aria-invalid="true" data-erreur="${escapeHtml(code)}" title="${escapeHtml(alerte)}"`;
     const enonce = `${this.texte('sheet-cellule')} ${nom}`;
-    const bloquee = this.verrouillee(nom) || this.verrouille();
+    const bloquee = !this.modifiable(nom);
     return safeHtml`<input class="fp-sheet__champ fp-montant" data-testid="cellule" data-role="cellule" data-nom="${escapeHtml(nom)}" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_CELLULE}" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(this.affichage(nom, true))}" ${marque} ${bloquee ? LECTURE_SEULE : VIDE}>`;
   }
 

@@ -233,6 +233,24 @@ export function buildProCas(overrides: Partial<ProCas> = {}): ProCas {
   };
 }
 
+export function buildProCasAQuestionsLibres(overrides: Partial<ProCas> = {}): ProCas {
+  return buildProCas({
+    id: 'B2-01-A1-03-MISSION',
+    questionsLibres: [
+      {
+        id: 'b2-01-a1-mission:mesure',
+        question: 'Que mesure chaque chiffre ?',
+        placeholder: 'Un montant, une part, une évolution…',
+      },
+      {
+        id: 'b2-01-a1-mission:comparable',
+        question: 'Les bases et les périodes sont-elles comparables ?',
+      },
+    ],
+    ...overrides,
+  });
+}
+
 export function buildConcept4Definition(
   overrides: Partial<Concept4Definition> = {},
 ): Concept4Definition {

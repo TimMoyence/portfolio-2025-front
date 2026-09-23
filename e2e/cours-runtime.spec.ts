@@ -10,22 +10,19 @@ test.describe('Parcours public des formations', () => {
     await expect(page.getByText('Chargement du cours…')).toHaveCount(0);
   });
 
-  test('le B2-01 mène à son cours public, qui propose de rejoindre une séance', async ({
-    page,
-  }) => {
+  test('L1 · le B2-01 mène un visiteur au poste étudiant, sans lecture libre', async ({ page }) => {
     await page.goto('/formations');
 
     const card = page.locator('.formation--live');
     await expect(card).toBeVisible();
     await expect(card).toContainText('B2-01');
     await expect(card).toContainText('3 h 30 · 72 écrans');
+    await expect(card).toContainText('À suivre en séance accompagnée');
+    await expect(card).not.toContainText('librement');
     await card.getByRole('link', { name: /Consulter/ }).click();
 
-    await expect(page).toHaveURL(/\/formations\/b2-01-traitement-information-chiffree$/);
-    await expect(page.getByRole('link', { name: /Rejoindre une séance/ })).toHaveAttribute(
-      'href',
-      '/cours/rejoindre',
-    );
+    await expect(page).toHaveURL(/\/cours\/rejoindre$/);
+    await expect(page.locator('app-slide-deck')).toHaveCount(0);
   });
 
   test('le catalogue reste lisible sur téléphone sans débordement', async ({ page }) => {

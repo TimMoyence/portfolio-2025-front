@@ -23,7 +23,7 @@
   max-width: 58ch;
   margin: -1.35rem auto 2.5rem;
   color: var(--text-muted, var(--slide-text-muted));
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-size: clamp(1rem, 1.4cqi, 1.2rem);
   line-height: 1.45;
   text-align: center;
 }
@@ -64,8 +64,10 @@
 
 .slide-grid__card--flip {
   appearance: none;
+  display: grid;
+  place-items: center;
   width: 100%;
-  text-align: left;
+  text-align: center;
   font: inherit;
   cursor: pointer;
   perspective: 1000px;
@@ -82,8 +84,10 @@
 
 .slide-grid__face {
   display: flex;
-  flex: 1;
+  grid-area: 1 / 1;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 0.7rem;
   backface-visibility: hidden;
   transition:
@@ -91,11 +95,22 @@
     transform 220ms ease;
 }
 
-.slide-grid__face--back {
-  position: absolute;
-  inset: 1.75rem;
-  justify-content: center;
+%face-repliee {
+  visibility: hidden;
+  max-height: 0;
+  overflow: hidden;
   opacity: 0;
+}
+
+%face-deployee {
+  visibility: visible;
+  max-height: none;
+  overflow: visible;
+  opacity: 1;
+}
+
+.slide-grid__face--back {
+  @extend %face-repliee;
   transform: rotateY(12deg);
 
   strong {
@@ -110,12 +125,12 @@
 
 .slide-grid__card--flip.is-flipped {
   .slide-grid__face--front {
-    opacity: 0;
+    @extend %face-repliee;
     transform: rotateY(-12deg);
   }
 
   .slide-grid__face--back {
-    opacity: 1;
+    @extend %face-deployee;
     transform: rotateY(0);
   }
 }
@@ -158,13 +173,17 @@
     break-inside: avoid;
   }
 
-  .slide-grid__card--flip .slide-grid__face {
+  .slide-grid__card--flip .slide-grid__face,
+  .slide-grid__card--flip.is-flipped .slide-grid__face {
+    visibility: visible;
+    max-height: none;
+    overflow: visible;
     opacity: 1;
     transform: none;
   }
 
   .slide-grid__face--back {
-    position: static;
+    grid-area: 2 / 1;
     padding-top: 0.75rem;
     border-top: 1px dashed currentColor;
   }

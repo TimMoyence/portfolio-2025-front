@@ -52,6 +52,11 @@ export type EvenementBrique =
       readonly screenId: string;
       readonly sondageId: string;
       readonly etat: EtatPulse;
+    }
+  | {
+      readonly kind: 'reglage';
+      readonly screenId: string;
+      readonly reglages: Readonly<Record<string, number>>;
     };
 
 export type RetourBrique =

@@ -34,6 +34,29 @@ describe('adoptCoursStyles', () => {
     expect(racine.adoptedStyleSheets.length).toBe(1);
   });
 
+  it('G2 · donne à la projection les couleurs du poste étudiant et une échelle valide', () => {
+    adoptCoursStyles(racine);
+    racine.innerHTML = `
+      <div class="fp-root" data-render="hand" data-testid="hand"></div>
+      <div class="fp-root" data-render="stage" data-testid="stage"></div>
+    `;
+    const jetons = (render: string): Record<string, string> => {
+      const element = racine.querySelector(`[data-testid="${render}"]`);
+      const style = element === null ? null : getComputedStyle(element);
+      return Object.fromEntries(
+        ['--fp-surface', '--fp-confirme', '--fp-a-revoir', '--fp-en-cours', '--fp-remplissage'].map(
+          (jeton) => [jeton, style?.getPropertyValue(jeton).trim() ?? ''],
+        ),
+      );
+    };
+    const corps = racine.querySelector('[data-testid="stage"]');
+
+    expect(jetons('stage')).toEqual(jetons('hand'));
+    expect(
+      corps === null ? '' : getComputedStyle(corps).getPropertyValue('--fp-echelle').trim(),
+    ).toMatch(/^\d+(\.\d+)?$/);
+  });
+
   it('n adopte rien et ne leve pas quand CSSStyleSheet est indisponible (SSR)', () => {
     const contexte = globalThis as unknown as { CSSStyleSheet?: typeof CSSStyleSheet };
     const original = contexte.CSSStyleSheet;

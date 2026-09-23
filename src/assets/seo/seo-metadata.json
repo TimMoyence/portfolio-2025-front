@@ -1616,7 +1616,7 @@
     {
       "id": "formations-b2-01-traitement-information-chiffree",
       "path": "/formations/b2-01-traitement-information-chiffree",
-      "index": true,
+      "index": false,
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-09-22",
@@ -1637,14 +1637,14 @@
       "locales": {
         "fr": {
           "title": "Lire et contrôler l’information chiffrée — B2 — Tim Moyence",
-          "description": "Formation B2 interactive en 72 écrans pour vérifier proportions, pourcentages et évolutions avant de décider.",
+          "description": "Formation B2 interactive en 53 écrans pour vérifier proportions, pourcentages et évolutions avant de décider.",
           "ogTitle": "Lire et contrôler l’information chiffrée — B2",
-          "ogDescription": "72 écrans interactifs pour passer d’un chiffre affiché à une décision contrôlée.",
+          "ogDescription": "53 écrans interactifs pour passer d’un chiffre affiché à une décision contrôlée.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
             "name": "Lire et contrôler l’information chiffrée",
-            "description": "Formation B2 interactive en 72 écrans sur les proportions, pourcentages et évolutions.",
+            "description": "Formation B2 interactive en 53 écrans sur les proportions, pourcentages et évolutions.",
             "provider": {
               "@type": "Organization",
               "name": "Asili Design",
@@ -1659,14 +1659,14 @@
         },
         "en": {
           "title": "Read and control numerical information — B2 — Tim Moyence",
-          "description": "Interactive B2 course in 72 screens to check proportions, percentages and changes before deciding.",
+          "description": "Interactive B2 course in 53 screens to check proportions, percentages and changes before deciding.",
           "ogTitle": "Read and control numerical information — B2",
-          "ogDescription": "72 interactive screens to turn a displayed number into a controlled decision.",
+          "ogDescription": "53 interactive screens to turn a displayed number into a controlled decision.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
             "name": "Read and control numerical information",
-            "description": "Interactive B2 course in 72 screens on proportions, percentages and changes.",
+            "description": "Interactive B2 course in 53 screens on proportions, percentages and changes.",
             "provider": {
               "@type": "Organization",
               "name": "Asili Design",

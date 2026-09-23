@@ -166,7 +166,6 @@
     "presentateurQuestionTitre": "placeholder",
     "presentateurStatParticipation": "emprunt",
     "panneauGroupesParticipants": "emprunt",
-    "panneauGuideTransition": "emprunt",
     "projectsGridCaseSolution": "emprunt",
     "articleDetailReadingTime": "placeholder",
     "articleDetailSources": "emprunt",
@@ -186,7 +185,6 @@
     "sebastianTabBadges": "emprunt",
     "coursRuntimeSpacedProgression": "emprunt",
     "coursRuntimeDureeMinutes": "emprunt",
-    "panneauActiviteParticipantsTitre": "emprunt",
-    "b2CoursMinutes": "emprunt"
+    "panneauActiviteParticipantsTitre": "emprunt"
   }
 }

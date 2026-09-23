@@ -42,7 +42,15 @@ const DETAILS: Readonly<Partial<Record<string, Readonly<Record<string, unknown>>
   'fp-worked-submit': {
     exempleId: 'E-CAP-01',
     redactions: { 'etape-2': 'Je multiplie par 1,04' },
-    explications: { 'etape-2': 'Le taux s applique au capital augmente' },
+    dureeMs: DUREE_MS,
+  },
+  'fp-concept4-reglage': { reglages: { prix: 250, taux: -12 } },
+  'fp-pro-submit': {
+    casId: 'B2-01-A1-03-MISSION',
+    reponses: {
+      'b2-01-a1-mission:mesure': 'Un montant de chiffre d affaires',
+      'b2-01-a1-mission:comparable': '   ',
+    },
     dureeMs: DUREE_MS,
   },
 };

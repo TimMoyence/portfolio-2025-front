@@ -10,9 +10,11 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 const EMPREINTE_PUBLIEE_PAR_LE_BACK =
-  'd9f24f34dd1a8184579a4c41dbb17e2eb5ecce5a0fa23e20df4bf64bd87b9281';
+  '5518566e8956021aae3a39d0d07330698f3cf65015267301edc30dc6d34df79a';
 
-const ECRANS_PUBLIES = 52;
+const VERSION_PUBLIEE = 3;
+
+const ECRANS_PUBLIES = 54;
 
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
@@ -44,8 +46,8 @@ describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
   it('garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier', async () => {
-    const diapositive = ecransDuPupitreV3()[12];
-    const atelier = ecransPublicsV3()[13];
+    const diapositive = ecransDuPupitreV3()[13];
+    const atelier = ecransPublicsV3()[14];
     const monte = await monterEcran(diapositive, 'hand', 'presentateur');
     const graphique = monte.montees()[0] as HTMLElement;
 
@@ -62,7 +64,7 @@ describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et
 
   it('porte l empreinte et le nombre d écrans publiés par le back', () => {
     expect(INSTANTANE_V3.empreinte).toBe(EMPREINTE_PUBLIEE_PAR_LE_BACK);
-    expect(INSTANTANE_V3.version).toBe(1);
+    expect(INSTANTANE_V3.version).toBe(VERSION_PUBLIEE);
     expect([
       ecransPublicsV3().length,
       ecransDuPupitreV3().length,

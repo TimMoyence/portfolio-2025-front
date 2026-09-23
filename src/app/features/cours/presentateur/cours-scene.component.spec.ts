@@ -258,7 +258,7 @@ describe('CoursSceneComponent', () => {
     expect(pastille.textContent).toContain('429');
   });
 
-  it('occupe toute la surface de projection sans débordement', async () => {
+  it('RET-22 · occupe toute la surface de projection sans débordement, la toile tenant dans l écran', async () => {
     const fixture = await monterEtStabiliser();
     const hote = fixture.nativeElement as HTMLElement;
     const style = getComputedStyle(hote);
@@ -270,6 +270,32 @@ describe('CoursSceneComponent', () => {
     expect(hote.getBoundingClientRect().width).toBeLessThanOrEqual(
       document.documentElement.clientWidth,
     );
+  });
+
+  it('RET-32 · confie a la projection les bonnes reponses d un questionnaire', async () => {
+    port.lireDeroule.and.returnValue(
+      of(
+        buildDerouleCours({
+          ecrans: [
+            buildEcranDeroule({
+              id: 'ecran-atelier',
+              type: 'questionnaire',
+              donnees: {
+                questions: [{ brique: 'fp-vote', donnees: { question: buildVoteQuestion() } }],
+              },
+              corriges: [{ questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] }],
+              corrigeEcran: null,
+            }),
+          ],
+        }),
+      ),
+    );
+    const fixture = await monterEtStabiliser();
+
+    expect(apercu(fixture)?.donneesFormateur()).toEqual({
+      type: 'reponses',
+      reponses: { 'Q-CAP-03': 'b' },
+    });
   });
 
   it('ferme le flux a la destruction de la scene', async () => {

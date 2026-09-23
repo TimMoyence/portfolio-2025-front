@@ -288,10 +288,23 @@ describe('FpPlot', () => {
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
-  it('retire les curseurs en projection et affiche les reperes au tableau', () => {
+  it('G2 · projette les curseurs réglables et la lecture du poste étudiant', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'stage');
-    expect(reperes(hote, 'animer')).toEqual([]);
-    expect(repere(hote, 'synthese')?.classList.contains('fp-enonce')).toBe(true);
+    const curseur = repere(hote, 'curseur') as HTMLInputElement | null;
+    const avant = texteDe(hote, 'tableau');
+
+    expect(reperes(hote, 'animer').length).toBe(1);
+    expect(repere(hote, 'synthese')?.classList.contains('fp-prose')).toBe(true);
+    if (curseur !== null) {
+      curseur.value = '3000';
+      curseur.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    expect(repere(hote, 'valeur')?.textContent?.trim()).toBe('3000');
+    expect(texteDe(hote, 'tableau')).not.toBe(avant);
+  });
+
+  it('affiche les reperes au tableau', () => {
     hote.setAttribute('render', 'board');
     expect(texteDe(hote, 'modalite')).toBe('En binôme');
     expect(texteDe(hote, 'duree')).toContain(String(DEFINITION.metadonnees.dureeMinutes));

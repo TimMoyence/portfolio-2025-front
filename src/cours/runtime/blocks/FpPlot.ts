@@ -216,7 +216,7 @@ export class FpPlot extends FpBlock {
     if (this.interne === null) {
       return safeHtml``;
     }
-    return safeHtml`<section class="fp-scene fp-plot__atelier">${this.rendu('fp-enonce')}</section>`;
+    return this.renderHand();
   }
 
   renderBoard(): EscapedHtml {
@@ -235,7 +235,7 @@ export class FpPlot extends FpBlock {
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() === 'hand') {
+    if (this.mode() !== 'board') {
       racine
         .querySelector<HTMLButtonElement>('[data-testid="animer"]')
         ?.addEventListener('click', () => {

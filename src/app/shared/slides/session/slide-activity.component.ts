@@ -37,10 +37,11 @@ import {
   type Montage,
   planDeMontage,
   PROPRIETES_PAR_BRIQUE,
+  type ReponsesDuQuestionnaire,
 } from './lecture-ecran';
 import { memeValeur, type MontageIdentifie, posesDeReinjection } from './reinjection';
 
-type DonneesFormateur = CorrigeEcranPresentateur | null;
+type DonneesFormateur = CorrigeEcranPresentateur | ReponsesDuQuestionnaire | null;
 
 interface MontageActif extends MontageIdentifie {
   readonly element: HTMLElement;
@@ -93,6 +94,8 @@ interface ReponseVisuelle {
       (fp-pulse-change)="relayer($event)"
       (fp-challenge-submit)="relayer($event)"
       (fp-worked-submit)="relayer($event)"
+      (fp-pro-submit)="relayer($event)"
+      (fp-concept4-reglage)="relayer($event)"
       (fp-brouillon)="memoriser($event)"
       (fp-block-error)="showError()"
     ></div>
@@ -104,6 +107,7 @@ interface ReponseVisuelle {
         [role]="role()"
         [resultats]="resultats()"
         [prioritaire]="prioritaire()"
+        [retours]="retours()"
         (reponse)="relayerVisuel($event)"
       />
     }
@@ -170,7 +174,35 @@ interface ReponseVisuelle {
       color: var(--text-muted, #6d665b);
       text-align: center;
     }
+
+    @container (min-height: 0px) {
+      :host(.slide-activity--questionnaire) {
+        display: flex;
+        flex-direction: column;
+        block-size: 100cqh;
+        padding: 1.25rem 1.75rem;
+        box-sizing: border-box;
+      }
+
+      :host(.slide-activity--questionnaire) .slide-activity__entete {
+        max-width: none;
+        margin: 0 0 0.75rem;
+      }
+
+      :host(.slide-activity--questionnaire) .slide-activity__blocks {
+        --fp-echelle-scene: 0.7;
+        flex: 1 1 0;
+        min-height: 0;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: minmax(0, 1fr);
+        gap: 0.75rem;
+        width: 100%;
+      }
+    }
   `,
+  host: {
+    '[class.slide-activity--questionnaire]': 'entete() !== null',
+  },
 })
 export class SlideActivityComponent {
   readonly slide = input.required<EcranContent>();

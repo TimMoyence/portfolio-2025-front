@@ -21,6 +21,24 @@ class HostComponent {
   readonly imprimable = input(false);
 }
 
+const VERSO_LONG =
+  'Un taux se lit avec son numérateur, son dénominateur, sa période et la source qui le produit : sans ces quatre repères, 27,6 % ne dit rien à personne et ne permet aucune décision.';
+
+@Component({
+  standalone: true,
+  imports: [SlideGridComponent],
+  template: `
+    <div style="width: 260px">
+      <app-slide-grid
+        [items]="[{ title: 'Mesure', description: 'Quel indicateur ?', back: verso }]"
+      />
+    </div>
+  `,
+})
+class HoteRetournableComponent {
+  readonly verso = VERSO_LONG;
+}
+
 function monter(imprimable = false): HTMLElement {
   const fixture = TestBed.createComponent(HostComponent);
   fixture.componentRef.setInput('imprimable', imprimable);
@@ -39,6 +57,40 @@ describe('SlideGridComponent', () => {
     expect(cards.length).toBe(3);
     expect(cards[0].textContent).toContain('ChatGPT');
     expect(cards[1].textContent).toContain('Analyse');
+  });
+
+  it('R8 · garde le verso d une carte retournee dans sa carte', () => {
+    const fixture = TestBed.createComponent(HoteRetournableComponent);
+    fixture.detectChanges();
+    const carte = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+      '.slide-grid__card--flip',
+    );
+    carte?.click();
+    fixture.detectChanges();
+    const verso = carte?.querySelector<HTMLElement>('.slide-grid__face--back');
+
+    expect(carte?.getAttribute('aria-pressed')).toBe('true');
+    expect(verso?.scrollHeight ?? Infinity).toBeLessThanOrEqual(verso?.clientHeight ?? 0);
+    expect(carte?.scrollHeight ?? Infinity).toBeLessThanOrEqual(carte?.clientHeight ?? 0);
+  });
+
+  it('R8 · ne reserve pas la hauteur du verso a une carte non retournee', () => {
+    const fixture = TestBed.createComponent(HoteRetournableComponent);
+    fixture.detectChanges();
+    const carte = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+      '.slide-grid__card--flip',
+    );
+    const recto = carte?.querySelector<HTMLElement>('.slide-grid__face--front');
+    const style = carte === null ? null : getComputedStyle(carte);
+    const hauteurDuRecto =
+      (recto?.offsetHeight ?? 0) +
+      parseFloat(style?.paddingTop ?? '0') +
+      parseFloat(style?.paddingBottom ?? '0');
+
+    expect(carte?.getAttribute('aria-pressed')).toBe('false');
+    expect(carte?.clientHeight ?? Infinity).toBeLessThanOrEqual(
+      Math.max(parseFloat(style?.minHeight ?? '0'), hauteurDuRecto) + 1,
+    );
   });
 
   it('ne propose l impression que pour une fiche imprimable', () => {

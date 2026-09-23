@@ -127,7 +127,7 @@ describe('CoursPanneauActiviteComponent', () => {
     ).toBeTrue();
   });
 
-  it('dose l etayage de l exemple guide entre zero et le nombre d etapes', () => {
+  it('RET-23 · part de zero correction revelee quel que soit l etayage prevu par le cours', () => {
     const exemple = buildWorkedExemple();
     const guide = buildEcranDeroule({
       id: 'ecran-guide',
@@ -136,14 +136,71 @@ describe('CoursPanneauActiviteComponent', () => {
     });
     const { fixture, commandes } = monter(guide);
 
-    expect(texte(fixture, 'activite-etayage-niveau')).toBe(`2 / ${exemple.etapes.length}`);
-    cliquer(fixture, 'activite-etayage-moins');
+    expect(texte(fixture, 'activite-etayage-niveau')).toBe(`0 / ${exemple.etapes.length}`);
+    expect(
+      (cibleMarque(fixture, 'activite-etayage-moins', 'le panneau') as HTMLButtonElement).disabled,
+    ).toBeTrue();
     cliquer(fixture, 'activite-etayage-plus');
 
+    expect(commandes).toEqual([{ screenId: 'ecran-guide', etayage: 1 }]);
+  });
+
+  it('RET-32 · revele une seule fois la correction d un questionnaire', () => {
+    const questionnaire = buildEcranDeroule({
+      id: 'ecran-atelier',
+      type: 'questionnaire',
+      donnees: {},
+    });
+    const { fixture, commandes } = monter(questionnaire);
+
+    expect(texte(fixture, 'activite-reveler')).toBe('Révéler la correction');
+    cliquer(fixture, 'activite-reveler');
+    expect(commandes).toEqual([{ screenId: 'ecran-atelier', revele: true }]);
+
+    fixture.componentRef.setInput('pilotage', { revele: true });
+    fixture.detectChanges();
+    expect(
+      (cibleMarque(fixture, 'activite-reveler', 'le panneau') as HTMLButtonElement).disabled,
+    ).toBeTrue();
+  });
+
+  it('RET-31 · corrige la feuille en deux temps, les formules puis les reponses', () => {
+    const feuille = buildEcranDeroule({ id: 'ecran-feuille', type: 'fp-sheet', donnees: {} });
+    const bouton = (fixture: Fixture, marque: string): HTMLButtonElement =>
+      cibleMarque(fixture, marque, 'le panneau') as HTMLButtonElement;
+    const { fixture, commandes } = monter(feuille);
+
+    expect(texte(fixture, 'activite-feuille-formules')).toBe('Afficher les formules');
+    expect(texte(fixture, 'activite-feuille-reponses')).toBe('Afficher les réponses');
+    expect(bouton(fixture, 'activite-feuille-reponses').disabled).toBeTrue();
+    cliquer(fixture, 'activite-feuille-formules');
+
+    fixture.componentRef.setInput('pilotage', { etayage: 1 });
+    fixture.detectChanges();
+    expect(bouton(fixture, 'activite-feuille-formules').disabled).toBeTrue();
+    cliquer(fixture, 'activite-feuille-reponses');
+
+    fixture.componentRef.setInput('pilotage', { etayage: 2 });
+    fixture.detectChanges();
+    expect(bouton(fixture, 'activite-feuille-reponses').disabled).toBeTrue();
     expect(commandes).toEqual([
-      { screenId: 'ecran-guide', etayage: 1 },
-      { screenId: 'ecran-guide', etayage: 3 },
+      { screenId: 'ecran-feuille', etayage: 1 },
+      { screenId: 'ecran-feuille', etayage: 2 },
     ]);
+  });
+
+  it('RET-23 · presente l etayage de l exemple comme la correction de l exercice', () => {
+    const guide = buildEcranDeroule({
+      id: 'ecran-guide',
+      type: 'fp-worked',
+      donnees: { exemple: buildWorkedExemple(), etayage: 0 },
+    });
+    const { fixture } = monter(guide);
+    const section = cibleMarque(fixture, 'activite-etayage', 'le panneau');
+
+    expect(section.querySelector('h3')?.textContent?.trim()).toBe('Correction de l’exercice');
+    expect(texte(fixture, 'activite-etayage-plus')).toBe('Corriger une étape de plus');
+    expect(texte(fixture, 'activite-etayage-moins')).toBe('Masquer la dernière correction');
   });
 
   it('agrege les productions recues par element, sans nommer d etudiant', () => {
@@ -281,6 +338,15 @@ describe('CoursPanneauActiviteComponent', () => {
 
       expect(port.evincerParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
       expect(evinces(fixture)).toEqual(['true', 'false']);
+    });
+
+    it('R5 · referme la liste des participants a la demande du formateur', async () => {
+      const fixture = await afficherDeuxParticipants();
+
+      await cliquerLePremier(fixture, 'activite-participants-masquer');
+
+      expect(lire(fixture, 'activite-participant')).toBeNull();
+      expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
     });
 
     it('readmet l evince que le formateur avait retire par erreur', async () => {

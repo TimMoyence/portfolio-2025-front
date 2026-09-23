@@ -1,5 +1,6 @@
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
 import seoMetadata from '../assets/seo/seo-metadata.json';
+import { buildLlmsFullTxt, buildLlmsTxt, buildSitemapXml } from './seo-builders';
 import { injectSeoHead, isKnownRoute } from './seo-injector';
 
 const BASE_URL = 'https://asilidesign.fr';
@@ -84,22 +85,30 @@ describe('seo-metadata.json — parcours B2 servi par le serveur', () => {
   const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
   const CHEMIN_B2 = '/formations/b2-01-traitement-information-chiffree';
 
-  const blocsJsonLd = (html: string): Record<string, unknown>[] =>
-    [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(
-      (trouve) => JSON.parse(trouve[1]) as Record<string, unknown>,
-    );
-
   it('déclare la page B2 comme une route connue', () => {
     expect(isKnownRoute(CHEMIN_B2, METADONNEES)).toBeTrue();
   });
 
-  it('injecte la canonique et le Course du B2 tels que le fichier les déclare', () => {
+  it('L1 · ne pose plus de canonique sur la page B2 retirée, qui mène au poste étudiant', () => {
     const html = injectSeoHead(EMPTY_HTML, METADONNEES, `/fr${CHEMIN_B2}`, BASE_URL);
 
-    expect(html).toContain(`<link rel="canonical" href="${BASE_URL}/fr${CHEMIN_B2}" />`);
-    const cours = blocsJsonLd(html).find((bloc) => bloc['@type'] === 'Course');
-    expect(cours?.['duration']).toBe('PT3H30M');
-    expect(cours?.['description']).toContain('72 écrans');
-    expect(cours?.['url']).toBe(`${BASE_URL}/fr${CHEMIN_B2}`);
+    expect(html).not.toContain('rel="canonical"');
+  });
+
+  it('L1 · ne publie plus la page B2 retirée au sitemap ni à llms.txt', () => {
+    const sitemap = buildSitemapXml(METADONNEES, BASE_URL);
+    const llms = buildLlmsTxt(METADONNEES, BASE_URL);
+    const llmsComplet = buildLlmsFullTxt(METADONNEES, BASE_URL);
+
+    expect([sitemap, llms, llmsComplet].filter((texte) => texte.includes(CHEMIN_B2))).toEqual([]);
+  });
+
+  it('L1 · annonce le nombre d écrans de la version 3 servie', () => {
+    const page = METADONNEES.pages.find((candidate) => candidate.path === CHEMIN_B2);
+    const textes = JSON.stringify(page?.locales);
+
+    expect(textes).not.toContain('72');
+    expect(textes).toContain('53 écrans');
+    expect(textes).toContain('53 screens');
   });
 });

@@ -41,6 +41,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'challenge-fausse': () => $localize`:@@coursRuntimeChallengeFausse:Piste fausse`,
   'pro-geste': () => $localize`:@@coursRuntimeProGeste:Le geste professionnel`,
   'pro-consequence': () => $localize`:@@coursRuntimeProConsequence:Sur le terrain :`,
+  'pro-reponse-vide': () =>
+    $localize`:@@coursRuntimeProReponseVide:Répondez à chaque question avant de valider`,
   'concept4-reglages': () =>
     $localize`:@@coursRuntimeConcept4Reglages:Faites varier les paramètres et observez les quatre faces`,
   'concept4-animer': () => $localize`:@@coursRuntimeConcept4Animer:Animer le calcul`,
@@ -54,13 +56,14 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'concept4-plage': () => $localize`:@@coursRuntimeConcept4Plage:de`,
   'concept4-plage-fin': () => $localize`:@@coursRuntimeConcept4PlageFin:à`,
   'concept4-divise-par': () => $localize`:@@coursRuntimeConcept4DivisePar:divisé par`,
+  'concept4-etape': () => $localize`:@@coursRuntimeConcept4Etape:Étape`,
   'worked-consigne': () =>
-    $localize`:@@coursRuntimeWorkedConsigne:Suivez le raisonnement, puis reprenez les étapes laissées de côté`,
-  'worked-a-vous': () => $localize`:@@coursRuntimeWorkedAVous:À vous de rédiger cette étape`,
-  'worked-pourquoi': () => $localize`:@@coursRuntimeWorkedPourquoi:Pourquoi cette étape ?`,
+    $localize`:@@coursRuntimeWorkedConsigne:Répondez à chaque question sous son étape. La correction s’affichera sous votre réponse quand le formateur la montrera.`,
+  'worked-correction': () => $localize`:@@coursRuntimeWorkedCorrection:Correction`,
+  'bonne-reponse': () => $localize`:@@coursRuntimeBonneReponse:Bonne réponse :`,
   'worked-etape-vide': () =>
-    $localize`:@@coursRuntimeWorkedEtapeVide:Rédigez chaque étape laissée de côté avant de valider`,
-  'worked-niveau': () => $localize`:@@coursRuntimeWorkedNiveau:Étapes montrées :`,
+    $localize`:@@coursRuntimeWorkedEtapeVide:Répondez à chaque question encore sans correction avant de valider`,
+  'worked-niveau': () => $localize`:@@coursRuntimeWorkedNiveau:Corrections montrées :`,
   'plot-reglages': () =>
     $localize`:@@coursRuntimePlotReglages:Faites varier les paramètres et observez la forme des courbes`,
   'plot-animer': () => $localize`:@@coursRuntimePlotAnimer:Voir l’évolution`,
@@ -187,8 +190,12 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeChallengeAttenteRevelation:Les pistes fausses seront signalées à la révélation`,
   'vote-phase-vote': () => $localize`:@@coursRuntimeVotePhaseVote:Votez seul·e, sans en parler`,
   'vote-phase-revele': () => $localize`:@@coursRuntimeVotePhaseRevele:Réponse révélée`,
+  'vote-premier': () => $localize`:@@coursRuntimeVotePremier:Premier vote`,
+  'vote-second': () => $localize`:@@coursRuntimeVoteSecond:Second vote, après discussion`,
   'vote-phase-fermee': () =>
     $localize`:@@coursRuntimeVotePhaseFermee:Le vote est fermé pour cette question`,
+  'reponses-closes': () =>
+    $localize`:@@coursRuntimeReponsesCloses:Correction révélée : les réponses sont closes`,
   'deja-repondu': () =>
     $localize`:@@coursRuntimeDejaRepondu:Réponse déjà enregistrée : voici votre verdict`,
   'ecran-non-servi': () =>

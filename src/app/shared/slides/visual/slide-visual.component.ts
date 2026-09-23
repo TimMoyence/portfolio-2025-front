@@ -19,12 +19,14 @@ import {
   SlideMethodPathComponent,
   SlideQuoteComponent,
   SlideReflectionComponent,
+  SlideSortReviewComponent,
   SlideStatsComponent,
   SlideTableComponent,
 } from '..';
 import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
 import type { ModeInteraction } from '../interactions/mode-interaction';
+import type { RetourBrique } from '../session/contrat-hote';
 import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
 
 const layouts: Readonly<Record<string, Type<unknown>>> = {
@@ -42,7 +44,24 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   'image-right': SlideImageComponent,
   cta: SlideCtaComponent,
   guide: SlideGuideComponent,
+  'sort-review': SlideSortReviewComponent,
 };
+
+function cartesMalPlacees(
+  source: Readonly<Record<string, unknown>> | null,
+  retours: ReadonlyMap<string, readonly RetourBrique[]>,
+): readonly string[] {
+  const screenId = source?.['screenId'];
+  const sortId = source?.['sortId'];
+  if (typeof screenId !== 'string' || typeof sortId !== 'string') {
+    return [];
+  }
+  return (retours.get(screenId) ?? []).flatMap((retour) =>
+    retour.kind === 'verdict-production' && retour.questionId === sortId
+      ? retour.details.filter((detail) => !detail.juste).map((detail) => detail.cle)
+      : [],
+  );
+}
 
 function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteraction | null {
   return quiz === null ? null : (quiz as unknown as QuizInteraction);
@@ -94,6 +113,19 @@ function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteract
       color: inherit;
       text-decoration: underline;
     }
+    @container (min-height: 0px) {
+      :host {
+        display: block;
+        position: relative;
+      }
+      .slide-visual__source {
+        position: absolute;
+        inset-inline: 3rem;
+        inset-block-end: 0.5rem;
+        margin: 0;
+        max-width: none;
+      }
+    }
   `,
 })
 export class SlideVisualComponent {
@@ -103,6 +135,7 @@ export class SlideVisualComponent {
   readonly role = input<Role>('etudiant');
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly prioritaire = input(false);
+  readonly retours = input<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
   readonly reponse = output<{
     questionId: string;
     valeur: string;
@@ -134,7 +167,12 @@ export class SlideVisualComponent {
     const renderer = this.presentation()?.renderer;
     const props = this.presentation()?.props ?? {};
     const inputs = Object.fromEntries(
-      Object.entries(props).filter(([key]) => key !== 'sourceLink' && key !== 'nestedQuiz'),
+      Object.entries(props).filter(
+        ([key]) =>
+          key !== 'sourceLink' &&
+          key !== 'nestedQuiz' &&
+          !(renderer === 'sort-review' && key === 'source'),
+      ),
     );
     const reflectionInputs =
       renderer === 'reflection'
@@ -145,9 +183,16 @@ export class SlideVisualComponent {
             mode: this.mode(),
           }
         : {};
+    const entreesDuTri =
+      renderer === 'sort-review'
+        ? {
+            misplaced: cartesMalPlacees(objet(props['source']), this.retours()),
+          }
+        : {};
     return {
       ...inputs,
       ...reflectionInputs,
+      ...entreesDuTri,
       ...(renderer === 'image-right' ? { reverse: true } : {}),
       ...(renderer === 'hero' && this.prioritaire() ? { priority: true } : {}),
     };

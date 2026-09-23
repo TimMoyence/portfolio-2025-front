@@ -288,10 +288,7 @@ export const routes: Routes = [
   {
     path: 'formations/b2-01-traitement-information-chiffree',
     canActivate: [coursEntreeGuard],
-    loadComponent: () =>
-      import('./features/formations/b2-01-traitement-information-chiffree/b2-01-traitement-information-chiffree.component').then(
-        (m) => m.B2TraitementInformationChiffreeComponent,
-      ),
+    children: [],
     data: {
       seoKey: 'formations-b2-01-traitement-information-chiffree',
       coursSlug: 'b2-01-traitement-information-chiffree',
