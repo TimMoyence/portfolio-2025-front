@@ -323,6 +323,30 @@ test.describe('Séance de cours dans un navigateur réel', () => {
   });
 });
 
+test('R3 · envoie le visiteur sans session de la page du cours au rattachement étudiant', async ({
+  page,
+}) => {
+  await page.route(`${API}/**`, async (route) => {
+    const requete = route.request();
+    if (requete.method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
+    } else if (new URL(requete.url()).pathname.endsWith('/auth/refresh')) {
+      await route.fulfill({
+        status: 401,
+        headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
+        body: JSON.stringify({ status: 401, code: 'REFRESH_ABSENT' }),
+      });
+    } else {
+      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
+    }
+  });
+
+  await page.goto('/formations/b2-01-traitement-information-chiffree');
+
+  await expect(page).toHaveURL(/\/cours\/rejoindre$/);
+  await expect(page.getByLabel('Code de la séance')).toBeVisible();
+});
+
 test('le parcours de rattachement reste utilisable sur un profil téléphone', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await installerApiEtudiant(page);
