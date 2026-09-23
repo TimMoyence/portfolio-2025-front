@@ -50,7 +50,7 @@ export function buildVisualImageHeroSlide(id = 'B2-01-S01-ACCROCHE'): EcranConte
 
 export const TRI_CORRIGE = { screenId: 'B2-01-A1-05-ANATOMIE', sortId: 'b2-01-a1-anatomie' };
 
-export function buildSortReviewProps(
+export function buildSortCorrectionProps(
   overrides: Readonly<Record<string, unknown>> = {},
 ): Readonly<Record<string, unknown>> {
   return {
@@ -79,8 +79,8 @@ export function buildSortReviewProps(
   };
 }
 
-export function buildVisualSortReviewSlide(
-  props: Readonly<Record<string, unknown>> = buildSortReviewProps(),
+export function buildVisualSortCorrectionSlide(
+  props: Readonly<Record<string, unknown>> = buildSortCorrectionProps(),
   id = 'B2-01-A1-05-CORRECTION',
 ): EcranContent {
   return buildVisualSlide({

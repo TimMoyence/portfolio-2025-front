@@ -10,6 +10,7 @@ import {
   output,
   PLATFORM_ID,
   signal,
+  type TemplateRef,
   viewChild,
 } from '@angular/core';
 import type {
@@ -29,6 +30,7 @@ export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 
 const LARGEUR_DE_TOILE = 1280;
 const HAUTEUR_DE_TOILE = 720;
+const ECHELLE_DE_MINIATURE = 0.25;
 
 interface Cadre {
   readonly largeur: number;
@@ -54,11 +56,33 @@ interface Cadre {
         } @else {
           <div class="cours-cadre" #cadre>
             <div class="cours-toile" data-testid="cours-toile" [style.transform]="transformation()">
-              <app-slide [id]="screen.id">
-                <ng-container
-                  *ngTemplateOutlet="activity; context: { $implicit: screen }"
-                ></ng-container>
-              </app-slide>
+              <div class="cours-toile__principal">
+                <app-slide [id]="screen.id">
+                  <ng-container
+                    *ngTemplateOutlet="activity; context: { $implicit: screen }"
+                  ></ng-container>
+                </app-slide>
+              </div>
+              @if (renvoi(); as reference) {
+                <aside class="cours-renvoi" data-testid="cours-renvoi">
+                  <p class="cours-renvoi__legende" i18n="@@coursRenvoiLegende">
+                    Diapositive commentée
+                  </p>
+                  <div class="cours-renvoi__cadre">
+                    <div class="cours-renvoi__toile">
+                      <app-slide-activity
+                        [slide]="reference"
+                        render="stage"
+                        role="presentateur"
+                        [apercu]="true"
+                      />
+                    </div>
+                  </div>
+                </aside>
+              }
+              @if (surimpression(); as calque) {
+                <ng-container *ngTemplateOutlet="calque" />
+              }
             </div>
           </div>
         }
@@ -118,8 +142,54 @@ interface Cadre {
       inset-inline-start: 0;
       inline-size: ${LARGEUR_DE_TOILE}px;
       block-size: ${HAUTEUR_DE_TOILE}px;
+      display: flex;
       container-type: size;
       overflow: auto;
+      transform-origin: 0 0;
+    }
+
+    .cours-toile__principal {
+      flex: 1 1 0;
+      min-inline-size: 0;
+      block-size: 100%;
+      container-type: size;
+    }
+
+    .cours-renvoi {
+      display: flex;
+      flex: 0 0 auto;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-inline-start: 1px solid rgba(12, 9, 2, 0.12);
+    }
+
+    .cours-renvoi__legende {
+      margin: 0;
+      color: var(--text-muted, #6d665b);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .cours-renvoi__cadre {
+      position: relative;
+      inline-size: ${LARGEUR_DE_TOILE * ECHELLE_DE_MINIATURE}px;
+      block-size: ${HAUTEUR_DE_TOILE * ECHELLE_DE_MINIATURE}px;
+      overflow: hidden;
+      border: 1px solid rgba(12, 9, 2, 0.16);
+      border-radius: 0.5rem;
+      background: var(--cream, #fffaf2);
+    }
+
+    .cours-renvoi__toile {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      inline-size: ${LARGEUR_DE_TOILE}px;
+      block-size: ${HAUTEUR_DE_TOILE}px;
+      container-type: size;
+      transform: scale(${ECHELLE_DE_MINIATURE});
       transform-origin: 0 0;
     }
   `,
@@ -140,6 +210,8 @@ export class CoursPresentationComponent {
   readonly donneesFormateur = input<unknown>(null);
   readonly maitrise = input<readonly SyntheseConcept[] | null>(null);
   readonly brouillons = input<Brouillons | null>(null);
+  readonly renvoi = input<EcranContent | null>(null);
+  readonly surimpression = input<TemplateRef<unknown> | null>(null);
   readonly evenement = output<EvenementBrique>();
 
   private readonly cadreObserve = viewChild<ElementRef<HTMLElement>>('cadre');

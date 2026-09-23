@@ -127,18 +127,28 @@ interface LigneDeCle {
         </button>
       </section>
     }
-    @if (ecran().type === 'questionnaire') {
-      <section class="activite-section" data-testid="activite-revelation">
-        <h3 i18n="@@panneauActiviteCorrectionQuestionnaireTitre">Correction de l’atelier</h3>
+    @if (correctionRevelable()) {
+      <section class="activite-section" data-testid="activite-correction">
+        <h3 i18n="@@panneauActiviteCorrectionTitre">Correction à l’écran</h3>
+        <p i18n="@@panneauActiviteCorrectionAide">
+          La correction s’affiche sur l’écran projeté au clic, pas avant.
+        </p>
         <button
           type="button"
           class="control-btn"
-          data-testid="activite-reveler"
+          data-testid="activite-reveler-correction"
           [disabled]="pilotageBloque() || pilotage().revele === true"
           (click)="reveler()"
-          i18n="@@panneauActiviteRevelerCorrection"
         >
-          Révéler la correction
+          @if (pilotage().revele === true) {
+            <ng-container i18n="@@panneauActiviteCorrectionRevelee"
+              >Correction révélée</ng-container
+            >
+          } @else {
+            <ng-container i18n="@@panneauActiviteRevelerCorrection"
+              >Révéler la correction</ng-container
+            >
+          }
         </button>
       </section>
     }
@@ -361,6 +371,14 @@ export class CoursPanneauActiviteComponent {
   protected readonly phaseVisible = computed(
     () =>
       this.ecran().type === 'fp-vote' && objet(this.ecran().donnees?.['questionJumelle']) !== null,
+  );
+
+  protected readonly correctionRevelable = computed(
+    () =>
+      this.ecran().type !== 'fp-challenge' &&
+      this.ecran().type !== 'fp-sheet' &&
+      !this.phaseVisible() &&
+      (this.ecran().corriges.length > 0 || this.ecran().questions.length > 0),
   );
 
   protected readonly phaseCourante = computed<VotePhase>(() => this.pilotage().phase ?? 'vote');

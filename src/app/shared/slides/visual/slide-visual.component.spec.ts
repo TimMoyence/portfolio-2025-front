@@ -6,7 +6,7 @@ import {
   buildVisualImageHeroSlide,
   buildVisualQuizSlide,
   buildVisualSlide,
-  buildVisualSortReviewSlide,
+  buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import type { RetourBrique } from '../session/contrat-hote';
 import { SlideVisualComponent } from './slide-visual.component';
@@ -77,7 +77,7 @@ describe('SlideVisualComponent', () => {
   describe('correction du tri', () => {
     function monter(retours: ReadonlyMap<string, RetourBrique[]> = new Map()): HTMLElement {
       const fixture = TestBed.createComponent(SlideVisualComponent);
-      fixture.componentRef.setInput('slide', buildVisualSortReviewSlide());
+      fixture.componentRef.setInput('slide', buildVisualSortCorrectionSlide());
       fixture.componentRef.setInput('retours', retours);
       fixture.detectChanges();
       return fixture.nativeElement as HTMLElement;

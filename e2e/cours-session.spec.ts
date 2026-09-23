@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
+import { EN_TETES_CORS } from './fixtures';
 
 const API = 'http://localhost:3000/api/v1/portfolio25';
 const SESSION = '11111111-1111-4111-8111-111111111111';
@@ -66,13 +67,6 @@ const DEROULE = {
   remediations: {},
 };
 
-const CORS_HEADERS = {
-  'access-control-allow-origin': 'http://localhost:4200',
-  'access-control-allow-credentials': 'true',
-  'access-control-allow-headers': 'content-type, accept, x-participant-token, authorization',
-  'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
-};
-
 function sse(etat: Record<string, unknown>): string {
   return `event: etat\ndata: ${JSON.stringify(etat)}\n\n`;
 }
@@ -80,7 +74,7 @@ function sse(etat: Record<string, unknown>): string {
 async function repondre(route: Route, body: unknown, status = 200): Promise<void> {
   await route.fulfill({
     status,
-    headers: { ...CORS_HEADERS, 'content-type': 'application/json' },
+    headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
     body: JSON.stringify(body),
   });
 }
@@ -97,7 +91,7 @@ async function installerApiEtudiant(
     const url = new URL(requete.url());
 
     if (requete.method() === 'OPTIONS') {
-      await route.fulfill({ status: 204, headers: CORS_HEADERS });
+      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
       return;
     }
     if (url.pathname.endsWith(`/sessions/${CODE}/join`) && requete.method() === 'POST') {
@@ -128,7 +122,7 @@ async function installerApiEtudiant(
       } else {
         await route.fulfill({
           status: 200,
-          headers: { ...CORS_HEADERS, 'content-type': 'text/event-stream' },
+          headers: { ...EN_TETES_CORS, 'content-type': 'text/event-stream' },
           body: sse({
             etat: 'en_cours',
             modeRythme: 'pilote',
@@ -216,7 +210,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       const requete = route.request();
       const url = new URL(requete.url());
       if (requete.method() === 'OPTIONS') {
-        await route.fulfill({ status: 204, headers: CORS_HEADERS });
+        await route.fulfill({ status: 204, headers: EN_TETES_CORS });
       } else if (url.pathname.endsWith('/auth/refresh')) {
         await repondre(route, {
           accessToken: 'teacher-token',
@@ -256,7 +250,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       } else if (url.pathname.endsWith(`/sessions/${SESSION}/presenter-stream`)) {
         await route.fulfill({
           status: 200,
-          headers: { ...CORS_HEADERS, 'content-type': 'text/event-stream' },
+          headers: { ...EN_TETES_CORS, 'content-type': 'text/event-stream' },
           body: sse({
             etat: 'en_cours',
             modeRythme: 'pilote',
@@ -290,7 +284,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       const requete = route.request();
       const url = new URL(requete.url());
       if (requete.method() === 'OPTIONS') {
-        await route.fulfill({ status: 204, headers: CORS_HEADERS });
+        await route.fulfill({ status: 204, headers: EN_TETES_CORS });
       } else if (url.pathname.endsWith('/auth/refresh')) {
         renouvellements += 1;
         await repondre(route, {

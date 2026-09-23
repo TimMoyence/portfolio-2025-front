@@ -1080,6 +1080,21 @@ describe('CoursPresentateurComponent', () => {
       });
     }
 
+    it('E10 · montre au pupitre, en miniature, l écran auquel renvoie l écran courant', async () => {
+      const [premier, second, ...suite] = derouleDeSeance().ecrans;
+      deroule = buildDerouleCours({
+        ecrans: [{ ...premier, renvoi: second.id }, second, ...suite],
+      });
+      port.lireDeroule.and.returnValue(of(deroule));
+
+      const fixture = await ouvrirLaSeance();
+      const ecrans = fixture.debugElement
+        .queryAll(By.directive(SlideActivityComponent))
+        .map((ecran) => (ecran.componentInstance as SlideActivityComponent).slide().id);
+
+      expect(ecrans).toEqual([premier.id, second.id]);
+    });
+
     it('G2 · rend le graphique au pupitre comme en projection', async () => {
       deroule = derouleAvecEcran({
         id: 'ecran-plot',
@@ -1178,5 +1193,45 @@ describe('CoursPresentateurComponent', () => {
 
       expect(cible(fixture, 'presentateur-maitrise-echec').getAttribute('role')).toBe('status');
     });
+  });
+});
+
+describe('le pupitre s adapte à la largeur disponible', () => {
+  function disposer(largeur: number): { apercu: DOMRect; lecture: DOMRect; debord: boolean } {
+    const pupitre = document.createElement('div');
+    pupitre.className = 'cours-presentateur';
+    pupitre.style.cssText = `display:block;width:${largeur}px;`;
+    pupitre.innerHTML = `
+      <div class="presentateur-workspace">
+        <main class="presentateur-stage"><div class="presentateur-stage__body"></div></main>
+        <aside class="presentateur-sidebar">
+          <section class="presentateur-questions-panel">
+            <div class="presentateur-sidebar__head"><h3>Lecture de la classe</h3></div>
+          </section>
+        </aside>
+      </div>`;
+    document.body.appendChild(pupitre);
+    const apercu = pupitre.querySelector('.presentateur-stage')?.getBoundingClientRect();
+    const lecture = pupitre.querySelector('.presentateur-sidebar')?.getBoundingClientRect();
+    const debord = pupitre.scrollWidth > pupitre.clientWidth;
+    pupitre.remove();
+    if (apercu === undefined || lecture === undefined) {
+      throw new Error('pupitre incomplet');
+    }
+    return { apercu, lecture, debord };
+  }
+
+  it('R8 · empile l aperçu et la lecture de la classe sur un pupitre étroit', () => {
+    const { apercu, lecture, debord } = disposer(700);
+
+    expect(lecture.top).toBeGreaterThanOrEqual(apercu.bottom);
+    expect(Math.round(lecture.width)).toBe(Math.round(apercu.width));
+    expect(debord).toBeFalse();
+  });
+
+  it('R8 · garde l aperçu et la lecture de la classe côte à côte sur un pupitre large', () => {
+    const { apercu, lecture } = disposer(1400);
+
+    expect(lecture.left).toBeGreaterThanOrEqual(apercu.right);
   });
 });

@@ -141,7 +141,7 @@ test.describe('Banc — vote à question jumelle', () => {
     expect(((await avant.json()) as { code: string }).code).toBe('ECRAN_NON_SERVI');
   });
 
-  test('refuse une phase hors vote et une révélation hors défi', async ({ request }) => {
+  test('refuse une phase hors vote et une révélation hors corrigé', async ({ request }) => {
     const { seance, jeton } = await seanceDuFichier(request);
 
     const horsVote = await piloterLaPhase(request, jeton, seance.sessionId, {
@@ -154,12 +154,12 @@ test.describe('Banc — vote à question jumelle', () => {
     );
 
     const revelation = await piloterLaPhase(request, jeton, seance.sessionId, {
-      screenId: principale.id,
+      screenId: reflexion.id,
       revele: true,
     });
-    expect(revelation.status()).toBe(400);
+    expect(revelation.status(), await revelation.text()).toBe(400);
     expect(((await revelation.json()) as { detail: string }).detail).toContain(
-      'seul un défi porte une révélation',
+      'seul un écran porteur d’un corrigé se révèle',
     );
   });
 });

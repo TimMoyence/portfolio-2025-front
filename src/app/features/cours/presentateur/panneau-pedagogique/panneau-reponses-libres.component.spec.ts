@@ -11,10 +11,11 @@ const REPONSES = [
   buildReponseLibreFormateur({ id: 'r-3', screenId: 'ecran-1', response: 'Vérifier l’unité.' }),
 ];
 
-function monter(ecranId: string): Fixture {
+function monter(ecranId: string, renvoi?: string): Fixture {
   const fixture = TestBed.createComponent(PanneauReponsesLibresComponent);
   fixture.componentRef.setInput('reponses', REPONSES);
   fixture.componentRef.setInput('ecranId', ecranId);
+  fixture.componentRef.setInput('renvoi', renvoi);
   fixture.detectChanges();
   return fixture;
 }
@@ -30,6 +31,10 @@ describe('PanneauReponsesLibresComponent', () => {
 
   it('ne montre que les reponses libres de l ecran courant', () => {
     expect(textes(monter('ecran-1'))).toEqual(['Comparer les bases.', 'Vérifier l’unité.']);
+  });
+
+  it('relit au pupitre d une correction les reponses de l ecran auquel elle renvoie', () => {
+    expect(textes(monter('ecran-3', 'ecran-2'))).toEqual(['Lire la source.']);
   });
 
   it('annonce l absence de reponse sur l ecran meme si d autres ecrans en ont recu', () => {

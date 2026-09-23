@@ -36,6 +36,11 @@ export interface PlotSerie {
   readonly calcul: string;
 }
 
+export interface PlotPrereglage {
+  readonly libelle: string;
+  readonly valeurs: Readonly<Record<string, number>>;
+}
+
 export interface PlotDefinition {
   readonly id: string;
   readonly titre?: string;
@@ -47,6 +52,10 @@ export interface PlotDefinition {
   readonly bornesOrdonnee?: PlotBornesOrdonnee;
   readonly parametres: readonly PlotParametre[];
   readonly series: readonly PlotSerie[];
+  readonly forme?: 'courbes' | 'barres';
+  readonly unite?: 'euros';
+  readonly etiquettes?: readonly string[];
+  readonly prereglages?: readonly PlotPrereglage[];
   readonly metadonnees: MetadonneesBrique;
 }
 
@@ -85,6 +94,12 @@ const BORD_DROIT = LARGEUR - MARGE_DROITE;
 const DECALAGE_X = 16;
 const DECALAGE_Y = 4;
 const ECART_Y = 6;
+const PART_DE_BARRE = 0.6;
+
+function centreDeBarre(rang: number, total: number): number {
+  return MARGE_GAUCHE + ((rang + 0.5) * LARGEUR_TRACE) / Math.max(total, 1);
+}
+
 function fini(valeur: number, repli: number): number {
   return Number.isFinite(valeur) ? valeur : repli;
 }
@@ -95,6 +110,33 @@ function arrondi(valeur: number): number {
 
 function formater(valeur: number): string {
   return Number.isFinite(valeur) ? String(arrondi(valeur)).replace('.', ',') : '—';
+}
+
+const EUROS = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR',
+  maximumFractionDigits: 0,
+});
+
+const EUROS_COMPACTS = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR',
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
+const EVOLUTION = new Intl.NumberFormat('fr-FR', {
+  style: 'percent',
+  maximumFractionDigits: 1,
+  signDisplay: 'exceptZero',
+});
+
+function entiers(depart: number, arrivee: number): number[] {
+  const premier = Math.ceil(depart);
+  return Array.from(
+    { length: Math.max(Math.floor(arrivee) - premier + 1, 0) },
+    (_, rang) => premier + rang,
+  );
 }
 
 function plancherDe(bornes: { readonly min: number; readonly max: number }): number {
@@ -166,6 +208,13 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
       .filter((parametre) => parametre.cle.trim().length > 0)
       .map(copierParametre),
     series: source.series.map(copierSerie),
+    forme: source.forme === 'barres' ? 'barres' : 'courbes',
+    unite: source.unite === 'euros' ? 'euros' : undefined,
+    etiquettes: source.etiquettes === undefined ? undefined : [...source.etiquettes],
+    prereglages: (source.prereglages ?? []).map((prereglage) => ({
+      libelle: prereglage.libelle,
+      valeurs: { ...prereglage.valeurs },
+    })),
     metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
@@ -242,7 +291,53 @@ export class FpPlot extends FpBlock {
           this.animer();
         });
       brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
+      racine.querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]').forEach((bouton) => {
+        bouton.addEventListener('click', () => {
+          this.appliquerPrereglage(Number(bouton.dataset['rang']));
+        });
+      });
     }
+  }
+
+  private appliquerPrereglage(rang: number): void {
+    const prereglage = this.interne?.prereglages?.[rang];
+    if (prereglage === undefined) {
+      return;
+    }
+    this.arreterAnimation();
+    for (const parametre of this.interne?.parametres ?? []) {
+      if (Object.hasOwn(prereglage.valeurs, parametre.cle)) {
+        this.courantes = {
+          ...this.courantes,
+          [parametre.cle]: borner(parametre, prereglage.valeurs[parametre.cle]),
+        };
+      }
+    }
+    this.refresh();
+  }
+
+  private enBarres(): boolean {
+    return this.interne?.forme === 'barres';
+  }
+
+  private chiffre(valeur: number): string {
+    if (this.interne?.unite === 'euros' && Number.isFinite(valeur)) {
+      return EUROS.format(valeur);
+    }
+    return formater(valeur);
+  }
+
+  private graduation(valeur: number): string {
+    if (this.interne?.unite === 'euros' && Number.isFinite(valeur)) {
+      return EUROS_COMPACTS.format(valeur);
+    }
+    return formater(valeur);
+  }
+
+  private etiquette(abscisse: number): string {
+    const definition = this.interne;
+    const rang = abscisse - plancherDe(definition?.abscisse ?? { min: 0, max: 0 });
+    return definition?.etiquettes?.[rang] ?? formater(abscisse);
   }
 
   private rendu(stylePhrase: string): EscapedHtml {
@@ -268,9 +363,22 @@ export class FpPlot extends FpBlock {
       `output[data-testid="valeur"][data-cle="${cle}"]`,
     );
     if (sortie !== null) {
-      sortie.textContent = formater(this.courantes[cle]);
+      sortie.textContent = this.chiffre(this.courantes[cle]);
     }
     this.rafraichirZone('rendu', this.rendu('fp-prose'));
+    this.racine
+      .querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]')
+      .forEach((bouton) => {
+        const prereglage = this.interne?.prereglages?.[Number(bouton.dataset['rang'])];
+        bouton.setAttribute('aria-pressed', String(this.estActif(prereglage)));
+      });
+  }
+
+  private estActif(prereglage: PlotPrereglage | undefined): boolean {
+    return (
+      prereglage !== undefined &&
+      Object.entries(prereglage.valeurs).every(([cle, valeur]) => this.courantes[cle] === valeur)
+    );
   }
 
   private tracees(): SerieTracee[] {
@@ -279,11 +387,11 @@ export class FpPlot extends FpBlock {
       return [];
     }
     const valeurs = this.valeurs;
-    const abscisses = jalons(
-      plancherDe(definition.abscisse),
-      plafondDe(definition.abscisse),
-      ECHANTILLONS,
-    );
+    const depart = plancherDe(definition.abscisse);
+    const arrivee = plafondDe(definition.abscisse);
+    const abscisses = this.enBarres()
+      ? entiers(depart, arrivee)
+      : jalons(depart, arrivee, ECHANTILLONS);
     return definition.series.map((serie) => ({
       serie,
       echantillons: abscisses
@@ -368,12 +476,30 @@ export class FpPlot extends FpBlock {
         <g>
           <line class="fp-plot__axe" x1="${MARGE_GAUCHE}" y1="${MARGE_HAUT}" x2="${MARGE_GAUCHE}" y2="${LIGNE_BASSE}"></line>
           <line class="fp-plot__axe" x1="${MARGE_GAUCHE}" y1="${LIGNE_BASSE}" x2="${BORD_DROIT}" y2="${LIGNE_BASSE}"></line>
-          ${this.graduationsHorizontales(cadre)}
+          ${this.enBarres() ? this.anneesDesBarres(tracees) : this.graduationsHorizontales(cadre)}
           ${this.graduationsVerticales(cadre)}
         </g>
-        ${tracees.map((tracee) => this.polyligne(tracee, cadre))}
+        ${this.enBarres() ? this.barres(tracees, cadre) : tracees.map((tracee) => this.polyligne(tracee, cadre))}
       </svg>
     `;
+  }
+
+  private anneesDesBarres(tracees: readonly SerieTracee[]): EscapedHtml[] {
+    const echantillons = tracees[0]?.echantillons ?? [];
+    return echantillons.map(
+      (point, rang) =>
+        safeHtml`<text class="fp-plot__graduation" data-testid="graduation-x" text-anchor="middle" x="${arrondi(centreDeBarre(rang, echantillons.length))}" y="${LIGNE_BASSE + DECALAGE_X}">${escapeHtml(this.etiquette(point.abscisse))}</text>`,
+    );
+  }
+
+  private barres(tracees: readonly SerieTracee[], cadre: Cadre): EscapedHtml[] {
+    const echantillons = tracees[0]?.echantillons ?? [];
+    const largeur = (LARGEUR_TRACE / Math.max(echantillons.length, 1)) * PART_DE_BARRE;
+    return echantillons.map((point, rang) => {
+      const sommet = Math.min(Math.max(versY(cadre, point.ordonnee), MARGE_HAUT), LIGNE_BASSE);
+      const centre = centreDeBarre(rang, echantillons.length);
+      return safeHtml`<g><rect class="fp-plot__barre" data-testid="barre" x="${arrondi(centre - largeur / 2)}" y="${arrondi(sommet)}" width="${arrondi(largeur)}" height="${arrondi(LIGNE_BASSE - sommet)}"></rect><text class="fp-plot__montant-barre" data-testid="montant-barre" text-anchor="middle" x="${arrondi(centre)}" y="${arrondi(Math.max(sommet - DECALAGE_Y, DECALAGE_X))}">${escapeHtml(this.chiffre(point.ordonnee))}</text></g>`;
+    });
   }
 
   private graduationsHorizontales(cadre: Cadre): EscapedHtml[] {
@@ -386,7 +512,7 @@ export class FpPlot extends FpBlock {
   private graduationsVerticales(cadre: Cadre): EscapedHtml[] {
     return jalons(cadre.plancher, cadre.plafond, GRADUATIONS).map(
       (valeur) =>
-        safeHtml`<text class="fp-plot__graduation" data-testid="graduation-y" text-anchor="end" x="${MARGE_GAUCHE - ECART_Y}" y="${arrondi(versY(cadre, valeur) + DECALAGE_Y)}">${escapeHtml(formater(valeur))}</text>`,
+        safeHtml`<text class="fp-plot__graduation" data-testid="graduation-y" text-anchor="end" x="${MARGE_GAUCHE - ECART_Y}" y="${arrondi(versY(cadre, valeur) + DECALAGE_Y)}">${escapeHtml(this.graduation(valeur))}</text>`,
     );
   }
 
@@ -407,11 +533,39 @@ export class FpPlot extends FpBlock {
     const tracees = this.tracees();
     return safeHtml`
       <div class="fp-plot__lecture">
-        ${this.legende(tracees)}
+        ${this.enBarres() ? this.rapport(tracees) : this.legende(tracees)}
         ${this.tableau(tracees)}
         <p class="${escapeHtml(stylePhrase)} fp-plot__synthese" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>
       </div>
     `;
+  }
+
+  private rapport(tracees: readonly SerieTracee[]): EscapedHtml {
+    if (tracees.length === 0 || tracees[0].echantillons.length < 2) {
+      return safeHtml``;
+    }
+    const [tracee] = tracees;
+    const premiere = tracee.echantillons[0];
+    const derniere = tracee.echantillons[tracee.echantillons.length - 1];
+    const plancher = this.cadre(tracees).plancher;
+    const hauteurs = (derniere.ordonnee - plancher) / (premiere.ordonnee - plancher);
+    const rapport =
+      premiere.ordonnee > plancher && derniere.ordonnee >= plancher
+        ? `×${formater(hauteurs)}`
+        : '—';
+    const evolution =
+      premiere.ordonnee === 0
+        ? '—'
+        : EVOLUTION.format((derniere.ordonnee - premiere.ordonnee) / premiere.ordonnee);
+    return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="polite">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong> — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong></p>`;
+  }
+
+  private enteteAbscisse(abscisse: number): string {
+    const definition = this.interne;
+    if (this.enBarres() && definition?.etiquettes !== undefined) {
+      return this.etiquette(abscisse);
+    }
+    return `${definition?.abscisse.libelle ?? ''} = ${formater(abscisse)}`;
   }
 
   private legende(tracees: readonly SerieTracee[]): EscapedHtml {
@@ -444,8 +598,8 @@ export class FpPlot extends FpBlock {
           <thead>
             <tr>
               <th scope="col">${escapeHtml(this.texte('plot-serie'))}</th>
-              <th scope="col">${escapeHtml(axe.libelle)} = ${escapeHtml(formater(plancherDe(axe)))}</th>
-              <th scope="col">${escapeHtml(axe.libelle)} = ${escapeHtml(formater(plafondDe(axe)))}</th>
+              <th scope="col">${escapeHtml(this.enteteAbscisse(plancherDe(axe)))}</th>
+              <th scope="col">${escapeHtml(this.enteteAbscisse(plafondDe(axe)))}</th>
             </tr>
           </thead>
           <tbody>${tracees.map((tracee) => this.ligne(tracee))}</tbody>
@@ -455,7 +609,7 @@ export class FpPlot extends FpBlock {
   }
 
   private ligne(tracee: SerieTracee): EscapedHtml {
-    return safeHtml`<tr class="fp-plot__ligne" data-testid="ligne" data-serie="${escapeHtml(tracee.serie.id)}"><th scope="row">${escapeHtml(tracee.serie.libelle)}</th><td class="fp-montant" data-testid="depart">${escapeHtml(formater(premiereOrdonnee(tracee)))}</td><td class="fp-montant" data-testid="arrivee">${escapeHtml(formater(derniereOrdonnee(tracee)))}</td></tr>`;
+    return safeHtml`<tr class="fp-plot__ligne" data-testid="ligne" data-serie="${escapeHtml(tracee.serie.id)}"><th scope="row">${escapeHtml(tracee.serie.libelle)}</th><td class="fp-montant" data-testid="depart">${escapeHtml(this.chiffre(premiereOrdonnee(tracee)))}</td><td class="fp-montant" data-testid="arrivee">${escapeHtml(this.chiffre(derniereOrdonnee(tracee)))}</td></tr>`;
   }
 
   private titreDuGraphique(): string {
@@ -475,7 +629,7 @@ export class FpPlot extends FpBlock {
       return '';
     }
     const axe = definition.abscisse;
-    const plage = `${axe.libelle} ${this.texte('plot-plage')} ${formater(plancherDe(axe))} ${this.texte('plot-plage-fin')} ${formater(plafondDe(axe))}`;
+    const plage = `${axe.libelle} ${this.texte('plot-plage')} ${this.etiquette(plancherDe(axe))} ${this.texte('plot-plage-fin')} ${this.etiquette(plafondDe(axe))}`;
     const courbes = tracees
       .map((tracee) => `${tracee.serie.libelle} (${this.nomDuTrait(tracee.serie.trait)})`)
       .join(' ; ');
@@ -489,9 +643,9 @@ export class FpPlot extends FpBlock {
       return this.texte('plot-aucune-serie');
     }
     const arrivees = tracees
-      .map((tracee) => `${tracee.serie.libelle} : ${formater(derniereOrdonnee(tracee))}`)
+      .map((tracee) => `${tracee.serie.libelle} : ${this.chiffre(derniereOrdonnee(tracee))}`)
       .join(' ; ');
-    const entete = `${definition.abscisse.libelle} = ${formater(plafondDe(definition.abscisse))}`;
+    const entete = this.enteteAbscisse(plafondDe(definition.abscisse));
     const ecart = this.ecartFinal(tracees);
     const fin = ecart === null ? '' : ` ${this.texte('plot-ecart')} ${formater(ecart)}`;
     return `${entete} — ${arrivees} (${definition.ordonnee}).${fin}`;
@@ -513,14 +667,23 @@ export class FpPlot extends FpBlock {
     return safeHtml`
       <fieldset class="fp-plot__reglages">
         <legend>${escapeHtml(this.texte('plot-reglages'))}</legend>
-        <button class="fp-plot__animation" data-testid="animer" type="button">
-          ${escapeHtml(this.texte('plot-animer'))}
-        </button>
+        ${this.declencheurs()}
         <div class="fp-plot__parametres" aria-live="polite">
           ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
         </div>
       </fieldset>
     `;
+  }
+
+  private declencheurs(): EscapedHtml {
+    const prereglages = this.interne?.prereglages ?? [];
+    if (prereglages.length === 0) {
+      return safeHtml`<button class="fp-plot__animation" data-testid="animer" type="button">${escapeHtml(this.texte('plot-animer'))}</button>`;
+    }
+    return safeHtml`<div class="fp-plot__prereglages" role="group" aria-label="${escapeHtml(this.texte('plot-prereglages'))}">${prereglages.map(
+      (prereglage, rang) =>
+        safeHtml`<button class="fp-plot__prereglage" data-testid="prereglage" data-rang="${rang}" type="button" aria-pressed="${escapeHtml(String(this.estActif(prereglage)))}">${escapeHtml(prereglage.libelle)}</button>`,
+    )}</div>`;
   }
 
   private parametreAffiche(parametre: PlotParametre): EscapedHtml {
@@ -529,14 +692,14 @@ export class FpPlot extends FpBlock {
       <div class="fp-plot__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
         <span class="fp-plot__etiquette">${escapeHtml(parametre.libelle)}</span>
         ${curseur('fp-plot', parametre, valeur, this.enonceValeur(parametre, valeur))}
-        <output class="fp-plot__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(this.enonceValeur(parametre, valeur))}">${escapeHtml(formater(valeur))}</output>
+        <output class="fp-plot__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(this.enonceValeur(parametre, valeur))}">${escapeHtml(this.chiffre(valeur))}</output>
       </div>
     `;
   }
 
   private enonceValeur(parametre: PlotParametre, valeur: number): string {
-    const plage = `${this.texte('plot-plage')} ${formater(plancherDe(parametre))} ${this.texte('plot-plage-fin')} ${formater(plafondDe(parametre))}`;
-    return `${parametre.libelle} : ${formater(valeur)} (${plage})`;
+    const plage = `${this.texte('plot-plage')} ${this.chiffre(plancherDe(parametre))} ${this.texte('plot-plage-fin')} ${this.chiffre(plafondDe(parametre))}`;
+    return `${parametre.libelle} : ${this.chiffre(valeur)} (${plage})`;
   }
 
   private animer(): void {

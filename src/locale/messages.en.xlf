@@ -11412,6 +11412,15 @@
         <target>Email address</target>
       </segment>
     </unit>
+    <unit id="coursRenvoiLegende">
+      <notes>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:72,74</note>
+      </notes>
+      <segment>
+        <source> Diapositive commentée </source>
+        <target> Slide under discussion </target>
+      </segment>
+    </unit>
     <unit id="coursEcranInconnu">
       <notes>
         <note category="location">src/app/features/cours/ecran/cours-ecran.component.ts:143,147</note>
@@ -12981,8 +12990,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:26</note>
       </notes>
       <segment>
-        <source>BTS CG · Cours interactif · 54 écrans</source>
-        <target>BTS CG · Interactive course · 54 screens</target>
+        <source>BTS CG · Cours interactif · 55 écrans</source>
+        <target>BTS CG · Interactive course · 55 screens</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.title">
@@ -12999,8 +13008,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:28</note>
       </notes>
       <segment>
-        <source>54 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
-        <target>54 screens to read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
+        <source>55 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>55 screens to read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.duration">
@@ -13008,8 +13017,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
       </notes>
       <segment>
-        <source>3 h 30 · 54 écrans</source>
-        <target>3 h 30 min · 54 screens</target>
+        <source>3 h 30 · 55 écrans</source>
+        <target>3 h 30 min · 55 screens</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.format">
@@ -15737,6 +15746,12 @@
         <target>Correct answer:</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeWorkedSuiteAuTableau">
+      <segment>
+        <source>La suite de la correction s’affiche au fil du cours</source>
+        <target>The rest of the correction appears as the class goes on</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimePlotReglages">
       <segment>
         <source>Faites varier les paramètres et observez la forme des courbes</source>
@@ -15807,6 +15822,30 @@
       <segment>
         <source>à</source>
         <target>to</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotPrereglages">
+      <segment>
+        <source>Préréglages de l’axe</source>
+        <target>Axis presets</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotRapportHauteurs">
+      <segment>
+        <source>Hauteur de la barre</source>
+        <target>Height of the</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotRapportA">
+      <segment>
+        <source>rapportée à celle de</source>
+        <target>bar relative to</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotEvolutionReelle">
+      <segment>
+        <source>évolution réelle</source>
+        <target>actual change</target>
       </segment>
     </unit>
     <unit id="coursRuntimeTableBuildConsigne">
@@ -16511,18 +16550,6 @@
         <target> Reveal the wrong strategies </target>
       </segment>
     </unit>
-    <unit id="panneauActiviteCorrectionQuestionnaireTitre">
-      <segment>
-        <source>Correction de l’atelier</source>
-        <target>Workshop answers</target>
-      </segment>
-    </unit>
-    <unit id="panneauActiviteRevelerCorrection">
-      <segment>
-        <source> Révéler la correction </source>
-        <target> Reveal the answers </target>
-      </segment>
-    </unit>
     <unit id="panneauActiviteCorrectionFeuilleTitre">
       <segment>
         <source>Correction de la feuille</source>
@@ -16677,6 +16704,42 @@
       <segment>
         <source> Réadmettre dans la séance </source>
         <target> Readmit to the session </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionTitre">
+      <segment>
+        <source>Correction à l’écran</source>
+        <target>On-screen correction</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionAide">
+      <segment>
+        <source> La correction s’affiche sur l’écran projeté au clic, pas avant. </source>
+        <target> The correction appears on the projected screen when you click, not before. </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionRevelee">
+      <segment>
+        <source>Correction révélée</source>
+        <target>Correction revealed</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteRevelerCorrection">
+      <segment>
+        <source>Révéler la correction</source>
+        <target>Reveal the correction</target>
+      </segment>
+    </unit>
+    <unit id="slideSortReviewBienPlacee">
+      <segment>
+        <source> Bien placée dans votre tri </source>
+        <target> Correctly placed in your sort </target>
+      </segment>
+    </unit>
+    <unit id="coursCorrectionTitre">
+      <segment>
+        <source>Correction</source>
+        <target>Correction</target>
       </segment>
     </unit>
     <unit id="presentateurMaitriseEchec">

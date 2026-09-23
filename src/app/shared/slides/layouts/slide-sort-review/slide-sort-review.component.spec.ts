@@ -1,16 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-import { buildSortReviewProps } from '../../../../../testing/factories/visual-slide.factory';
+import { buildSortCorrectionProps } from '../../../../../testing/factories/visual-slide.factory';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
 import { SlideSortReviewComponent } from './slide-sort-review.component';
 
-function monter(misplaced: readonly string[] = []): HTMLElement {
+function monter(
+  misplaced: readonly string[] = [],
+  wellPlaced: readonly string[] = [],
+): HTMLElement {
   const fixture = TestBed.createComponent(SlideSortReviewComponent);
-  const { title, subtitle, categories, cards } = buildSortReviewProps();
+  const { title, subtitle, categories, cards } = buildSortCorrectionProps();
   fixture.componentRef.setInput('title', title);
   fixture.componentRef.setInput('subtitle', subtitle);
   fixture.componentRef.setInput('categories', categories);
   fixture.componentRef.setInput('cards', cards);
   fixture.componentRef.setInput('misplaced', misplaced);
+  fixture.componentRef.setInput('wellPlaced', wellPlaced);
   fixture.detectChanges();
   return fixture.nativeElement as HTMLElement;
 }
@@ -53,6 +57,14 @@ describe('SlideSortReviewComponent', () => {
     expect(carte(element, 'inflation')?.textContent).toContain('Mal placée');
     expect(carte(element, 'ca-2025')?.classList).not.toContain('slide-sort-review__carte--erreur');
     expect(carte(element, 'ca-2025')?.textContent).not.toContain('Mal placée');
+  });
+
+  it('R3 · borde de vert et signale les cartes que l etudiant a bien placées', () => {
+    const element = monter(['inflation'], ['ca-2025']);
+
+    expect(carte(element, 'ca-2025')?.classList).toContain('slide-sort-review__carte--juste');
+    expect(carte(element, 'ca-2025')?.textContent).toContain('Bien placée');
+    expect(carte(element, 'inflation')?.classList).not.toContain('slide-sort-review__carte--juste');
   });
 
   it('L4 · ne signale aucune erreur sans retour de l etudiant', () => {

@@ -153,34 +153,86 @@ export function ecranB2Graphique(
   return ecranB2(rang, 'chart', props);
 }
 
-const B2_VERSION_PUBLIEE = 3;
+const SEANCE_B2 = {
+  sessionId: '33333333-3333-4333-8333-333333333333',
+  participantId: '44444444-4444-4444-8444-444444444444',
+  jeton: 'participant-b2',
+  code: '4822',
+} as const;
 
-const B2_PUBLIE_LE = '2026-09-15T09:30:00.000Z';
+export const EN_TETES_CORS = {
+  'access-control-allow-origin': 'http://localhost:4200',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'content-type, accept, x-participant-token, authorization',
+  'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
+};
 
-export function coursB2Catalogue(ecrans: readonly EcranCatalogue[]) {
-  return {
-    id: B2_SLUG,
-    titre: 'Lire et contrôler l’information chiffrée',
-    niveau: 'B2',
-    duree: 210,
-    concepts: ['proportions', 'taux', 'evolutions'],
-    version: B2_VERSION_PUBLIEE,
-    publieLe: B2_PUBLIE_LE,
-    ecrans,
-  };
+function reponseDeLaSeanceB2(
+  chemin: string,
+  methode: string,
+  ecrans: readonly EcranCatalogue[],
+  ecranCourant: number,
+): { readonly status: number; readonly type: string; readonly corps: string } | null {
+  const { sessionId, participantId, jeton, code } = SEANCE_B2;
+  if (methode === 'POST' && chemin.endsWith(`/sessions/${code}/join`)) {
+    const corps = { participantId, sessionId, ecranCourant, modeRythme: 'pilote', jeton };
+    return { status: 201, type: 'application/json', corps: JSON.stringify(corps) };
+  }
+  if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/sujet`)) {
+    const sujet = {
+      id: B2_SLUG,
+      titre: 'Lire et contrôler l’information chiffrée',
+      niveau: 'B2',
+      duree: 210,
+      concepts: ['proportions', 'taux', 'evolutions'],
+      ecrans,
+    };
+    return { status: 200, type: 'application/json', corps: JSON.stringify(sujet) };
+  }
+  if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/stream`)) {
+    const etat = { etat: 'en_cours', modeRythme: 'pilote', ecranCourant, participants: 1 };
+    return {
+      status: 200,
+      type: 'text/event-stream',
+      corps: `event: etat\ndata: ${JSON.stringify({ ...etat, intervalleLibre: null })}\n\n`,
+    };
+  }
+  return null;
 }
 
-export async function servirCatalogueB2(
+export async function ouvrirEcranEtudiantB2(
   page: Page,
-  cours: ReturnType<typeof coursB2Catalogue>,
+  ecrans: readonly EcranCatalogue[],
+  ecranCourant: number,
 ): Promise<void> {
-  await page.route(`${API_BASE}/formations/catalogue/${B2_SLUG}`, async (route) => {
+  await page.route(`${API_BASE}/**`, async (route) => {
+    const requete = route.request();
+    if (requete.method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
+      return;
+    }
+    const reponse = reponseDeLaSeanceB2(
+      new URL(requete.url()).pathname,
+      requete.method(),
+      ecrans,
+      ecranCourant,
+    );
+    if (reponse === null) {
+      await route.continue();
+      return;
+    }
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(cours),
+      status: reponse.status,
+      headers: { ...EN_TETES_CORS, 'content-type': reponse.type },
+      body: reponse.corps,
     });
   });
+  await page.goto('/cours/rejoindre');
+  await page.getByLabel('Code de la séance').fill(SEANCE_B2.code);
+  await page.getByLabel('Prénom').fill('Lea');
+  await page.getByLabel('Nom', { exact: true }).fill('Dubois');
+  await page.getByLabel('Adresse e-mail').fill('lea.dubois@example.com');
+  await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
 }
 
 export async function mockWeatherRecordUsage(page: Page): Promise<void> {

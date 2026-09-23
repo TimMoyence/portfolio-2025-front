@@ -332,6 +332,41 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
   };
 }
 
+export function buildPlotEnBarres(overrides: Partial<PlotDefinition> = {}): PlotDefinition {
+  return buildPlotDefinition({
+    id: 'K-BARRES-01',
+    forme: 'barres',
+    unite: 'euros',
+    abscisse: { libelle: 'Année', min: 0, max: 3 },
+    etiquettes: ['2022', '2023', '2024', '2025'],
+    ordonnee: 'Marge brute (€)',
+    bornesOrdonnee: { minParametre: 'origine', max: 292000 },
+    parametres: [
+      {
+        cle: 'origine',
+        libelle: 'Origine de l’axe',
+        min: 0,
+        max: 284000,
+        pas: 4000,
+        defaut: 284000,
+      },
+    ],
+    prereglages: [
+      { libelle: 'Axe de Samir', valeurs: { origine: 284000 } },
+      { libelle: 'Axe à zéro', valeurs: { origine: 0 } },
+    ],
+    series: [
+      {
+        id: 'marge',
+        libelle: 'Marge brute',
+        trait: 'plein',
+        calcul: 'SI(x<=1;285000+3000*x;SI(x<=2;288000+1800*(x-1);289800+1200*(x-2)))',
+      },
+    ],
+    ...overrides,
+  });
+}
+
 export function buildTableBuildPlan(
   overrides: Partial<TableBuildPlanPublic> = {},
 ): TableBuildPlanPublic {

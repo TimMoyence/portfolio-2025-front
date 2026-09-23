@@ -127,6 +127,33 @@ describe('CoursPanneauActiviteComponent', () => {
     ).toBeTrue();
   });
 
+  it('R1 · révèle à l écran la correction de tout écran porteur d un corrigé, une seule fois', () => {
+    const tableau = buildEcranDeroule({
+      id: 'ecran-tableau',
+      type: 'fp-table-build',
+      donnees: {},
+      corriges: [],
+      questions: [{ id: 'q-tableau', enonce: 'Prix et indice de la toile', options: null }],
+    });
+    const { fixture, commandes } = monter(tableau);
+
+    cliquer(fixture, 'activite-reveler-correction');
+    expect(commandes).toEqual([{ screenId: 'ecran-tableau', revele: true }]);
+
+    fixture.componentRef.setInput('pilotage', { revele: true });
+    fixture.detectChanges();
+    expect(
+      (cibleMarque(fixture, 'activite-reveler-correction', 'le panneau') as HTMLButtonElement)
+        .disabled,
+    ).toBeTrue();
+  });
+
+  it('R1 · ne propose aucune révélation sur un écran sans corrigé', () => {
+    const recit = buildEcranDeroule({ type: 'fp-story', donnees: {}, corriges: [] });
+
+    expect(lire(monter(recit).fixture, 'activite-reveler-correction')).toBeNull();
+  });
+
   it('RET-23 · part de zero correction revelee quel que soit l etayage prevu par le cours', () => {
     const exemple = buildWorkedExemple();
     const guide = buildEcranDeroule({
@@ -153,14 +180,15 @@ describe('CoursPanneauActiviteComponent', () => {
     });
     const { fixture, commandes } = monter(questionnaire);
 
-    expect(texte(fixture, 'activite-reveler')).toBe('Révéler la correction');
-    cliquer(fixture, 'activite-reveler');
+    expect(texte(fixture, 'activite-reveler-correction')).toBe('Révéler la correction');
+    cliquer(fixture, 'activite-reveler-correction');
     expect(commandes).toEqual([{ screenId: 'ecran-atelier', revele: true }]);
 
     fixture.componentRef.setInput('pilotage', { revele: true });
     fixture.detectChanges();
     expect(
-      (cibleMarque(fixture, 'activite-reveler', 'le panneau') as HTMLButtonElement).disabled,
+      (cibleMarque(fixture, 'activite-reveler-correction', 'le panneau') as HTMLButtonElement)
+        .disabled,
     ).toBeTrue();
   });
 

@@ -52,6 +52,7 @@ export class FpWorked extends FpBlock {
   private redactions: Champs = {};
   private message = '';
   private soumise = false;
+  private estPilote = false;
 
   set exemple(valeur: WorkedExemple | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
@@ -97,6 +98,11 @@ export class FpWorked extends FpBlock {
     return this.montrees;
   }
 
+  set pilote(valeur: boolean | null | undefined) {
+    this.estPilote = valeur === true;
+    this.refreshSiConnecte();
+  }
+
   set brouillon(valeur: unknown) {
     if (!estObjet(valeur) || this.soumise) {
       return;
@@ -110,6 +116,9 @@ export class FpWorked extends FpBlock {
     const exemple = this.exemple;
     if (exemple === null) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+    }
+    if (this.estPilote) {
+      return this.etapesPilotees(exemple);
     }
     return safeHtml`
       <section class="fp-carte fp-worked__exemple">
@@ -169,6 +178,20 @@ export class FpWorked extends FpBlock {
     }
   }
 
+  private etapesPilotees(exemple: WorkedExemple): EscapedHtml {
+    const suite =
+      this.montrees < this.total()
+        ? safeHtml`<p class="fp-worked__suite" data-testid="suite-au-tableau">${escapeHtml(this.texte('worked-suite-au-tableau'))}</p>`
+        : safeHtml``;
+    return safeHtml`
+      <section class="fp-carte fp-worked__exemple">
+        <p class="fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
+        <ol class="fp-worked__etapes">${exemple.etapes.slice(0, this.montrees).map((etape) => this.etapeMontree(etape))}</ol>
+        ${suite}
+      </section>
+    `;
+  }
+
   private total(): number {
     return this.interne?.etapes.length ?? 0;
   }
@@ -212,6 +235,15 @@ export class FpWorked extends FpBlock {
         <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
         <p class="fp-worked__invite" data-testid="question">${escapeHtml(etape.invite)}</p>
         ${resolue ? this.correction(etape) : safeHtml``}
+      </li>
+    `;
+  }
+
+  private etapeMontree(etape: WorkedEtape): EscapedHtml {
+    return safeHtml`
+      <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="true">
+        <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
+        ${this.raisonnement(etape)}
       </li>
     `;
   }

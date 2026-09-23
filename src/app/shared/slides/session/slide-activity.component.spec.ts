@@ -19,7 +19,7 @@ import {
   buildVerdictDuTri,
   buildVisualQuizSlide,
   buildVisualSlide,
-  buildVisualSortReviewSlide,
+  buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { EvenementBrique, RetourBrique } from './contrat-hote';
@@ -111,7 +111,7 @@ describe('SlideActivityComponent : deck visuel B2', () => {
 
   it('L4 · transmet les retours du tri a l ecran de correction pour border les cartes mal placees', () => {
     const fixture = monter({
-      slide: buildVisualSortReviewSlide(),
+      slide: buildVisualSortCorrectionSlide(),
       role: 'etudiant',
       sessionId: 'seance-1',
       retours: new Map([[TRI_CORRIGE.screenId, [buildVerdictDuTri({ inflation: false })]]]),

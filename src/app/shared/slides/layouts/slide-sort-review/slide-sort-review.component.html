@@ -14,6 +14,7 @@
             <li
               class="slide-sort-review__carte"
               [class.slide-sort-review__carte--erreur]="carte.malPlacee"
+              [class.slide-sort-review__carte--juste]="carte.bienPlacee"
               [attr.data-carte]="carte.id"
             >
               <p class="slide-sort-review__libelle">{{ carte.label }}</p>
@@ -21,6 +22,14 @@
               @if (carte.malPlacee) {
                 <p class="slide-sort-review__signal" i18n="@@slideSortReviewMalPlacee">
                   Mal placée dans votre tri
+                </p>
+              }
+              @if (carte.bienPlacee) {
+                <p
+                  class="slide-sort-review__signal slide-sort-review__signal--juste"
+                  i18n="@@slideSortReviewBienPlacee"
+                >
+                  Bien placée dans votre tri
                 </p>
               }
             </li>

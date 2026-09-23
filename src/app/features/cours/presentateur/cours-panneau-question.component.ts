@@ -6,6 +6,7 @@ import type {
   DerouleCours,
   ResultatQuestion,
 } from '../../../../cours/content/types';
+import { enFrancais } from './corrections-affichees';
 
 export interface QuestionDuPanneau {
   readonly numero: number;
@@ -30,13 +31,6 @@ const SANS_REPONSE: Pick<ResultatQuestion, 'total' | 'correctes' | 'neSaitPas' |
   neSaitPas: 0,
   confusions: [],
 };
-
-const NOMBRE_NU = /^-?\d+(\.\d+)?$/;
-const NOMBRE_FRANCAIS = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
-
-function enFrancais(reponse: string): string {
-  return NOMBRE_NU.test(reponse.trim()) ? NOMBRE_FRANCAIS.format(Number(reponse)) : reponse;
-}
 
 function confusionDominante(confusions: readonly ConfusionComptee[]): ConfusionComptee | null {
   return confusions.reduce<ConfusionComptee | null>(

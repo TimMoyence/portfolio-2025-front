@@ -1966,6 +1966,13 @@
         </context-group>
         <note priority="1" from="meaning">cours.entreeConfidentialite</note>
       </trans-unit>
+      <trans-unit id="coursCorrectionTitre" datatype="html">
+        <source>Correction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-bandeau-correction.component.ts</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="panneauActivitePhaseVote" datatype="html">
         <source>Vote individuel</source>
         <context-group purpose="location">
@@ -2029,200 +2036,214 @@
           <context context-type="linenumber">126,128</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="panneauActiviteCorrectionQuestionnaireTitre" datatype="html">
-        <source>Correction de l’atelier</source>
+      <trans-unit id="panneauActiviteCorrectionTitre" datatype="html">
+        <source>Correction à l’écran</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">132,135</context>
+          <context context-type="linenumber">132,133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="panneauActiviteCorrectionAide" datatype="html">
+        <source> La correction s’affiche sur l’écran projeté au clic, pas avant. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
+          <context context-type="linenumber">134,137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="panneauActiviteCorrectionRevelee" datatype="html">
+        <source>Correction révélée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
+          <context context-type="linenumber">145,147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteRevelerCorrection" datatype="html">
-        <source> Révéler la correction </source>
+        <source>Révéler la correction</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">141,144</context>
+          <context context-type="linenumber">149,152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteCorrectionFeuilleTitre" datatype="html">
         <source>Correction de la feuille</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">147,149</context>
+          <context context-type="linenumber">157,159</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteFeuilleFormules" datatype="html">
         <source> Afficher les formules </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">157,159</context>
+          <context context-type="linenumber">167,169</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteFeuilleReponses" datatype="html">
         <source> Afficher les réponses </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">167,169</context>
+          <context context-type="linenumber">177,179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteCorrectionExerciceTitre" datatype="html">
         <source>Correction de l’exercice</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">174,175</context>
+          <context context-type="linenumber">184,185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteCorrectionMasquer" datatype="html">
         <source> Masquer la dernière correction </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">185,187</context>
+          <context context-type="linenumber">195,197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteCorrectionEtapeSuivante" datatype="html">
         <source> Corriger une étape de plus </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">195,198</context>
+          <context context-type="linenumber">205,208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteProductionTitre" datatype="html">
         <source>Productions reçues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">202,204</context>
+          <context context-type="linenumber">212,214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteProductionRecues" datatype="html">
         <source> production(s) reçue(s)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">205,206</context>
+          <context context-type="linenumber">215,216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteScoreMoyen" datatype="html">
         <source>score moyen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">208,209</context>
+          <context context-type="linenumber">218,219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteCle" datatype="html">
         <source>Élément</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">218,219</context>
+          <context context-type="linenumber">228,229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteJustes" datatype="html">
         <source>Justes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">219,221</context>
+          <context context-type="linenumber">229,231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteEnigmesTitre" datatype="html">
         <source>Progression dans le coffre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">236,239</context>
+          <context context-type="linenumber">246,249</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteEnigme" datatype="html">
         <source>Énigme</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">240,241</context>
+          <context context-type="linenumber">250,251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteOuvertes" datatype="html">
         <source>Commencée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">241,242</context>
+          <context context-type="linenumber">251,252</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteResolues" datatype="html">
         <source>Résolue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">242,243</context>
+          <context context-type="linenumber">252,253</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteEpuisees" datatype="html">
         <source>Épuisée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">243,244</context>
+          <context context-type="linenumber">253,254</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteTentatives" datatype="html">
         <source>Tentatives moyennes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">244,246</context>
+          <context context-type="linenumber">254,256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteBilletsTitre" datatype="html">
         <source>Billets de sortie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">263,264</context>
+          <context context-type="linenumber">273,274</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteBilletsRecus" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ billetsRecus() }}"/> billets reçus / <x id="INTERPOLATION_1" equiv-text="{{ participants() }}"/> participants </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">265,267</context>
+          <context context-type="linenumber">275,277</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteParticipantsTitre" datatype="html">
         <source>Participants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">270,272</context>
+          <context context-type="linenumber">280,282</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteParticipantsAfficher" datatype="html">
         <source> Afficher les participants </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">281,284</context>
+          <context context-type="linenumber">291,294</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteParticipantsChargement" datatype="html">
         <source>Chargement…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">285,288</context>
+          <context context-type="linenumber">295,298</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteParticipantsEchec" datatype="html">
         <source> La liste des participants n’a pas pu être lue. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">293,296</context>
+          <context context-type="linenumber">303,306</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteParticipantsMasquer" datatype="html">
         <source> Masquer les participants </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">304,307</context>
+          <context context-type="linenumber">314,317</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteReadmettre" datatype="html">
         <source> Réadmettre dans la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">322,323</context>
+          <context context-type="linenumber">332,333</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActiviteEvincer" datatype="html">
         <source> Retirer de la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-activite.component.ts</context>
-          <context context-type="linenumber">332,333</context>
+          <context context-type="linenumber">342,343</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauPedagogiqueEcran" datatype="html">
@@ -2257,7 +2278,7 @@
         <source> Question <x id="INTERPOLATION" equiv-text="{{ question().numero }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">113,115</context>
+          <context context-type="linenumber">107,109</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.questionTitre</note>
       </trans-unit>
@@ -2265,7 +2286,7 @@
         <source>Réponses reçues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">117,118</context>
+          <context context-type="linenumber">111,112</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.reponses</note>
       </trans-unit>
@@ -2273,7 +2294,7 @@
         <source>Bonnes réponses</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">121,122</context>
+          <context context-type="linenumber">115,116</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.part</note>
       </trans-unit>
@@ -2281,7 +2302,7 @@
         <source>Je ne sais pas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">123,124</context>
+          <context context-type="linenumber">117,118</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.neSaitPas</note>
       </trans-unit>
@@ -2289,7 +2310,7 @@
         <source>Seuil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">126,127</context>
+          <context context-type="linenumber">120,121</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.seuil</note>
       </trans-unit>
@@ -2297,7 +2318,7 @@
         <source> Réponse attendue </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">130,132</context>
+          <context context-type="linenumber">124,126</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.reponseAttendue</note>
       </trans-unit>
@@ -2305,7 +2326,7 @@
         <source> Sous le seuil : la classe n&apos;a pas encore compris. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">139,143</context>
+          <context context-type="linenumber">133,137</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.sousLeSeuil</note>
       </trans-unit>
@@ -2313,7 +2334,7 @@
         <source> Aller à la remédiation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-panneau-question.component.ts</context>
-          <context context-type="linenumber">158,162</context>
+          <context context-type="linenumber">152,156</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.remediation</note>
       </trans-unit>
@@ -2321,7 +2342,7 @@
         <source> Ouvrir la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">132,135</context>
+          <context context-type="linenumber">135,138</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.ouvrir</note>
       </trans-unit>
@@ -2329,7 +2350,7 @@
         <source> Ouverture de la séance… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">142,147</context>
+          <context context-type="linenumber">145,150</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.ouvertureChargement</note>
       </trans-unit>
@@ -2337,7 +2358,7 @@
         <source> La séance n&apos;a pas pu être ouverte. Vérifiez la connexion, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">151,155</context>
+          <context context-type="linenumber">154,158</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.ouvertureEchec</note>
       </trans-unit>
@@ -2345,7 +2366,7 @@
         <source> Reprise de la séance… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">162,166</context>
+          <context context-type="linenumber">165,169</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.repriseChargement</note>
       </trans-unit>
@@ -2353,7 +2374,7 @@
         <source> La séance n&apos;a pas pu être reprise. Vérifiez la connexion, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">171,174</context>
+          <context context-type="linenumber">174,177</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.repriseEchec</note>
       </trans-unit>
@@ -2361,7 +2382,7 @@
         <source> Réessayer la reprise </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">179,183</context>
+          <context context-type="linenumber">182,186</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.repriseReessayer</note>
       </trans-unit>
@@ -2369,7 +2390,7 @@
         <source>Suivi de la séance interrompu : reconnexion en cours. Les résultats et la scène peuvent être en retard.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">194,198</context>
+          <context context-type="linenumber">197,201</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxReconnexion</note>
       </trans-unit>
@@ -2377,7 +2398,7 @@
         <source>Le serveur refuse le suivi de la séance (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>) : rechargez le pupitre, reconnectez-vous si la connexion est demandée ; la séance reprendra.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">203,205</context>
+          <context context-type="linenumber">206,208</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxRefusSession</note>
       </trans-unit>
@@ -2385,7 +2406,7 @@
         <source>Trop de connexions au suivi de cette séance (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>) : fermez les onglets en trop ; nouvel essai automatique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">210,211</context>
+          <context context-type="linenumber">213,214</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxRefusSaturation</note>
       </trans-unit>
@@ -2393,7 +2414,7 @@
         <source>Le serveur refuse le suivi de la séance (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>) : nouvel essai automatique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">216,217</context>
+          <context context-type="linenumber">219,220</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxRefus</note>
       </trans-unit>
@@ -2401,7 +2422,7 @@
         <source>Connexion au suivi de la séance…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">225,230</context>
+          <context context-type="linenumber">228,233</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxConnexion</note>
       </trans-unit>
@@ -2409,7 +2430,7 @@
         <source>Code à dicter à la classe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">234,235</context>
+          <context context-type="linenumber">237,238</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.codeTitre</note>
       </trans-unit>
@@ -2417,7 +2438,7 @@
         <source>Participants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">239,240</context>
+          <context context-type="linenumber">242,243</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.participants</note>
       </trans-unit>
@@ -2425,7 +2446,7 @@
         <source>connectés à cette séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">243,245</context>
+          <context context-type="linenumber">246,248</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.participantsEnDirect</note>
       </trans-unit>
@@ -2433,70 +2454,70 @@
         <source>Moyenne</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">248,249</context>
+          <context context-type="linenumber">251,252</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatMediane" datatype="html">
         <source>Médiane</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">252,253</context>
+          <context context-type="linenumber">255,256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatDispersion" datatype="html">
         <source>Dispersion (écart-type)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">256,257</context>
+          <context context-type="linenumber">259,260</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatParticipation" datatype="html">
         <source>Participation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">260,261</context>
+          <context context-type="linenumber">263,264</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatReussite" datatype="html">
         <source>Réussite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">264,265</context>
+          <context context-type="linenumber">267,268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatProblemes" datatype="html">
         <source>Questions problématiques</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">268,270</context>
+          <context context-type="linenumber">271,273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatAucunProbleme" datatype="html">
         <source>Aucune</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">273,275</context>
+          <context context-type="linenumber">276,278</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurNotationAide" datatype="html">
         <source>Afficher la règle de notation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">288,289</context>
+          <context context-type="linenumber">291,292</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurNotationEchec" datatype="html">
         <source> La règle de notation n’a pas pu être lue. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">314,316</context>
+          <context context-type="linenumber">317,319</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurDerouleChargement" datatype="html">
         <source> Chargement du déroulé… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">328,332</context>
+          <context context-type="linenumber">331,335</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.derouleChargement</note>
       </trans-unit>
@@ -2504,7 +2525,7 @@
         <source> Le déroulé de la séance n&apos;a pas pu être chargé. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">337,340</context>
+          <context context-type="linenumber">340,343</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.derouleEchec</note>
       </trans-unit>
@@ -2512,7 +2533,7 @@
         <source> Réessayer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">345,349</context>
+          <context context-type="linenumber">348,352</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.derouleReessayer</note>
       </trans-unit>
@@ -2520,7 +2541,7 @@
         <source> Pupitre </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">351,355</context>
+          <context context-type="linenumber">354,358</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.titreChargement</note>
       </trans-unit>
@@ -2528,7 +2549,7 @@
         <source>Prête à démarrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">362,364</context>
+          <context context-type="linenumber">365,367</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.statutOuverte</note>
       </trans-unit>
@@ -2536,7 +2557,7 @@
         <source>En cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">365,367</context>
+          <context context-type="linenumber">368,370</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.statutEnCours</note>
       </trans-unit>
@@ -2544,7 +2565,7 @@
         <source>Terminée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">367,371</context>
+          <context context-type="linenumber">370,374</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.statutTerminee</note>
       </trans-unit>
@@ -2552,7 +2573,7 @@
         <source> Démarrer la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">381,384</context>
+          <context context-type="linenumber">384,387</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.demarrer</note>
       </trans-unit>
@@ -2560,14 +2581,14 @@
         <source>Pilotage des écrans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">387,388</context>
+          <context context-type="linenumber">390,391</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurPrecedent" datatype="html">
         <source> Écran précédent </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">398,400</context>
+          <context context-type="linenumber">401,403</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.precedent</note>
       </trans-unit>
@@ -2575,7 +2596,7 @@
         <source> Écran suivant </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">411,413</context>
+          <context context-type="linenumber">414,416</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.suivant</note>
       </trans-unit>
@@ -2583,14 +2604,14 @@
         <source>Changer le rythme de la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">421,422</context>
+          <context context-type="linenumber">424,425</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurModePilote" datatype="html">
         <source>Piloté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">430,431</context>
+          <context context-type="linenumber">433,434</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.modePilote</note>
       </trans-unit>
@@ -2598,7 +2619,7 @@
         <source>Libre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">431,434</context>
+          <context context-type="linenumber">434,437</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.modeLibre</note>
       </trans-unit>
@@ -2606,7 +2627,7 @@
         <source>Ouvrir la projection en plein écran</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">439,440</context>
+          <context context-type="linenumber">442,443</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.pleinEcranAria</note>
       </trans-unit>
@@ -2614,7 +2635,7 @@
         <source> Projection plein écran </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">443,446</context>
+          <context context-type="linenumber">446,449</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.pleinEcran</note>
       </trans-unit>
@@ -2622,7 +2643,7 @@
         <source>Écran courant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">448,451</context>
+          <context context-type="linenumber">451,454</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.slider</note>
       </trans-unit>
@@ -2630,7 +2651,7 @@
         <source> Écran projeté </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">474,476</context>
+          <context context-type="linenumber">477,479</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.stageTitre</note>
       </trans-unit>
@@ -2638,7 +2659,7 @@
         <source>Aperçu formateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">477,480</context>
+          <context context-type="linenumber">480,483</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.stageApercu</note>
       </trans-unit>
@@ -2646,21 +2667,21 @@
         <source> La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain résultat. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">497,498</context>
+          <context context-type="linenumber">508,509</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurInformationsSeance" datatype="html">
         <source>Informations de séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">505,506</context>
+          <context context-type="linenumber">516,517</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurNotes" datatype="html">
         <source>Notes du formateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">510,511</context>
+          <context context-type="linenumber">521,522</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.notes</note>
       </trans-unit>
@@ -2668,7 +2689,7 @@
         <source> Lecture de la classe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">533,535</context>
+          <context context-type="linenumber">544,546</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.questionsTitre</note>
       </trans-unit>
@@ -2676,7 +2697,7 @@
         <source> Clôturer la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">570,573</context>
+          <context context-type="linenumber">581,584</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.cloturer</note>
       </trans-unit>
@@ -2684,7 +2705,7 @@
         <source> Clôturer la séance maintenant ? Les participants ne pourront plus répondre. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">584,588</context>
+          <context context-type="linenumber">595,599</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.clotureQuestion</note>
       </trans-unit>
@@ -2692,7 +2713,7 @@
         <source> Confirmer la clôture </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">593,596</context>
+          <context context-type="linenumber">604,607</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.clotureConfirmer</note>
       </trans-unit>
@@ -2700,7 +2721,7 @@
         <source> Revenir à la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">603,607</context>
+          <context context-type="linenumber">614,618</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.clotureAnnuler</note>
       </trans-unit>
@@ -2708,7 +2729,7 @@
         <source> La séance est close : la synthèse est disponible. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">613,616</context>
+          <context context-type="linenumber">624,627</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.terminee</note>
       </trans-unit>
@@ -2716,7 +2737,7 @@
         <source> Voir la synthèse </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">622,625</context>
+          <context context-type="linenumber">633,636</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.synthese</note>
       </trans-unit>
@@ -2724,7 +2745,7 @@
         <source> La dernière commande n&apos;est pas passée. Vérifiez la connexion, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">631,637</context>
+          <context context-type="linenumber">642,648</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.echec</note>
       </trans-unit>
@@ -2732,7 +2753,7 @@
         <source> Préparation de la projection… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">195,198</context>
+          <context context-type="linenumber">213,216</context>
         </context-group>
         <note priority="1" from="meaning">scene.chargement</note>
       </trans-unit>
@@ -2740,7 +2761,7 @@
         <source> La projection n&apos;a pas pu être affichée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">205,209</context>
+          <context context-type="linenumber">223,227</context>
         </context-group>
         <note priority="1" from="meaning">scene.echec</note>
       </trans-unit>
@@ -2748,7 +2769,7 @@
         <source> La séance est terminée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">216,219</context>
+          <context context-type="linenumber">234,237</context>
         </context-group>
         <note priority="1" from="meaning">scene.terminee</note>
       </trans-unit>
@@ -2756,7 +2777,7 @@
         <source>Projection en direct</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">225,227</context>
+          <context context-type="linenumber">243,245</context>
         </context-group>
         <note priority="1" from="meaning">scene.projectionEnDirect</note>
       </trans-unit>
@@ -2764,7 +2785,7 @@
         <source>Quitter le plein écran</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">242,245</context>
+          <context context-type="linenumber">260,263</context>
         </context-group>
         <note priority="1" from="meaning">scene.quitterPleinEcran</note>
       </trans-unit>
@@ -2772,7 +2793,7 @@
         <source>Plein écran</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">245,247</context>
+          <context context-type="linenumber">263,265</context>
         </context-group>
         <note priority="1" from="meaning">scene.pleinEcran</note>
       </trans-unit>
@@ -2780,7 +2801,7 @@
         <source>Suivi en direct</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">272,274</context>
+          <context context-type="linenumber">298,300</context>
         </context-group>
         <note priority="1" from="meaning">scene.fluxConnecte</note>
       </trans-unit>
@@ -2788,7 +2809,7 @@
         <source>Suivi interrompu, reconnexion en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">276,279</context>
+          <context context-type="linenumber">302,305</context>
         </context-group>
         <note priority="1" from="meaning">scene.fluxReconnexion</note>
       </trans-unit>
@@ -2796,7 +2817,7 @@
         <source>Suivi refusé par le serveur (statut <x id="INTERPOLATION" equiv-text="{{ statutDuRefus() }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">281,282</context>
+          <context context-type="linenumber">307,308</context>
         </context-group>
         <note priority="1" from="meaning">scene.fluxRefuse</note>
       </trans-unit>
@@ -2804,7 +2825,7 @@
         <source>Connexion au suivi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">285,288</context>
+          <context context-type="linenumber">311,314</context>
         </context-group>
         <note priority="1" from="meaning">scene.fluxConnexion</note>
       </trans-unit>
@@ -2812,7 +2833,7 @@
         <source>Cours en direct</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-scene.component.ts</context>
-          <context context-type="linenumber">306</context>
+          <context context-type="linenumber">332</context>
         </context-group>
         <note priority="1" from="meaning">scene.titreParDefaut</note>
       </trans-unit>
@@ -4830,7 +4851,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2.badge" datatype="html">
-        <source>BTS CG · Cours interactif · 54 écrans</source>
+        <source>BTS CG · Cours interactif · 55 écrans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
           <context context-type="linenumber">26</context>
@@ -4844,7 +4865,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2.description" datatype="html">
-        <source>54 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>55 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
           <context context-type="linenumber">28</context>
@@ -4870,7 +4891,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2.duration" datatype="html">
-        <source>3 h 30 · 54 écrans</source>
+        <source>3 h 30 · 55 écrans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
           <context context-type="linenumber">32</context>
@@ -14308,7 +14329,21 @@
         <source> Mal placée dans votre tri </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/slide-sort-review/slide-sort-review.component.html</context>
-          <context context-type="linenumber">23,25</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="slideSortReviewBienPlacee" datatype="html">
+        <source> Bien placée dans votre tri </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/layouts/slide-sort-review/slide-sort-review.component.html</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="coursRenvoiLegende" datatype="html">
+        <source> Diapositive commentée </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/session/cours-presentation.component.ts</context>
+          <context context-type="linenumber">69,70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursEcranInconnu" datatype="html">
@@ -14331,7 +14366,7 @@
         <source> Cet écran ne peut pas être affiché : son contenu n’est pas reconnu. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/visual/slide-visual.component.ts</context>
-          <context context-type="linenumber">101,105</context>
+          <context context-type="linenumber">102,106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeValider" datatype="html">
@@ -14691,816 +14726,851 @@
           <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="coursRuntimeWorkedSuiteAuTableau" datatype="html">
+        <source>La suite de la correction s’affiche au fil du cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="coursRuntimePlotReglages" datatype="html">
         <source>Faites varier les paramètres et observez la forme des courbes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotAnimer" datatype="html">
         <source>Voir l’évolution</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotSelon" datatype="html">
         <source>en fonction de</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">72</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotLegende" datatype="html">
         <source>Légende des courbes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotTraitPlein" datatype="html">
         <source>trait plein</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotTraitTirets" datatype="html">
         <source>trait en pointillés</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotTableau" datatype="html">
         <source>Valeurs aux deux extrémités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotSerie" datatype="html">
         <source>Courbe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotEcart" datatype="html">
         <source>Écart entre les deux courbes :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotAucuneSerie" datatype="html">
         <source>Aucune courbe à tracer : la définition ne porte aucune série</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotPlage" datatype="html">
         <source>de</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotPlageFin" datatype="html">
         <source>à</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="coursRuntimePlotPrereglages" datatype="html">
+        <source>Préréglages de l’axe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="coursRuntimePlotRapportHauteurs" datatype="html">
+        <source>Hauteur de la barre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="coursRuntimePlotRapportA" datatype="html">
+        <source>rapportée à celle de</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="coursRuntimePlotEvolutionReelle" datatype="html">
+        <source>évolution réelle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildConsigne" datatype="html">
         <source>Bâtissez le tableau ligne à ligne : chaque cellule déduite se recalcule dès que vous saisissez</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildEcheance" datatype="html">
         <source>Échéance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildASaisir" datatype="html">
         <source>à saisir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildDeduite" datatype="html">
         <source>déduite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildTotaux" datatype="html">
         <source>Totaux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildSolde" datatype="html">
         <source>Capital restant dû après la dernière échéance :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildCelluleVide" datatype="html">
         <source>Complétez chaque cellule à saisir avant de valider</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildProgression" datatype="html">
         <source>Cellules saisies :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildVide" datatype="html">
         <source>Aucune ligne à bâtir : le plan ne porte aucune échéance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetConsigne" datatype="html">
         <source>Écrivez vos formules : commencez par « = », citez les cellules par leur nom, séparez les arguments par un point-virgule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetCoin" datatype="html">
         <source>Cellule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetCellule" datatype="html">
         <source>Cellule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetRecopier" datatype="html">
         <source>Recopier vers le bas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetRecopieImpossible" datatype="html">
         <source>Aucune cellule sous celle-ci : la recopie n’a rien où aller</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetCelluleFautive" datatype="html">
         <source>Formule refusée par le tableur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetErreurs" datatype="html">
         <source>Formules à revoir :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetAucuneFormule" datatype="html">
         <source>Écrivez au moins une formule avant de valider</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetProgression" datatype="html">
         <source>Formules écrites :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetVide" datatype="html">
         <source>Aucune cellule à remplir : le plan ne porte aucune ligne</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortConsigne" datatype="html">
         <source>Choisissez une carte, désignez sa catégorie, puis déplacez-la — à la souris comme au clavier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortPioche" datatype="html">
         <source>Cartes à trier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortDestination" datatype="html">
         <source>Catégorie de destination</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortDeplacer" datatype="html">
         <source>Déplacer la carte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortSelection" datatype="html">
         <source>Carte choisie :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortRelachee" datatype="html">
         <source>Carte relâchée : aucune carte n’est choisie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortDeplacee" datatype="html">
         <source>déplacée vers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortAucuneCarte" datatype="html">
         <source>Choisissez d’abord une carte à déplacer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortHorsCible" datatype="html">
         <source>Dépôt hors d’une catégorie : la carte est revenue à sa place</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortIncomplet" datatype="html">
         <source>Placez chaque carte dans une catégorie avant de valider</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">131</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortProgression" datatype="html">
         <source>Cartes placées :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortVide" datatype="html">
         <source>Aucune carte à trier : le plan ne porte aucune carte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeConsigne" datatype="html">
         <source>Résolvez une énigme pour ouvrir la suivante : chaque réponse juste livre un fragment du code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeProgression" datatype="html">
         <source>Énigmes résolues :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeMinuteur" datatype="html">
         <source>Temps passé sur cette énigme :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeMinuteurAnnonce" datatype="html">
         <source>minutes annoncées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeEchu" datatype="html">
         <source>Le temps annoncé est écoulé : rien ne se ferme, prenez le temps qu’il faut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeVide" datatype="html">
         <source>Aucune énigme dans ce parcours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeEtatResolue" datatype="html">
         <source>Résolue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeEtatOuverte" datatype="html">
         <source>Ouverte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeEtatVerrouillee" datatype="html">
         <source>Verrouillée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">146</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeVerrouillee" datatype="html">
         <source>Verrouillée : l’énigme précédente l’ouvrira</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">148</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeFragment" datatype="html">
         <source>Fragment du code obtenu :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeReponse" datatype="html">
         <source>Votre réponse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">150</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeRepondre" datatype="html">
         <source>Proposer cette réponse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">151</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeReponseVide" datatype="html">
         <source>Écrivez une réponse avant de la proposer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeAChercher" datatype="html">
         <source>Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeIndice" datatype="html">
         <source>Demander un indice</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">156</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeIndiceGratuit" datatype="html">
         <source>Prendre un indice ne retire rien à votre parcours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">158</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeIndiceAttente" datatype="html">
         <source>L’indice s’ouvre dans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeSecondes" datatype="html">
         <source>secondes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeIndicePris" datatype="html">
         <source>Indice ouvert : il ne retire rien à votre parcours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">163</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeIndiceDonne" datatype="html">
         <source>Indice :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">164</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeDebloquee" datatype="html">
         <source>Énigme suivante déverrouillée :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeTermine" datatype="html">
         <source>Toutes les énigmes sont résolues, le code est reconstitué :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeCode" datatype="html">
         <source>Code final :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">169</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedConsigne" datatype="html">
         <source>Rappel : quelques questions sur ce que vous avez travaillé plus tôt, de mémoire, sans vos notes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedProgression" datatype="html">
         <source>Question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">172</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedOrigine" datatype="html">
         <source>Vu en</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedBoite" datatype="html">
         <source>Boîte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedVide" datatype="html">
         <source>Rien à revoir pour l’instant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedErreur" datatype="html">
         <source>Les questions à revoir ne sont pas arrivées : réessayez dans un instant, rien n’est perdu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedTermine" datatype="html">
         <source>Révision terminée : vos réponses sont parties</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedDiagnostics" datatype="html">
         <source>Confusions visées :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVerdictJuste" datatype="html">
         <source>Juste</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVerdictARevoir" datatype="html">
         <source>À revoir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVerdictScore" datatype="html">
         <source>Score :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSheetVerdict" datatype="html">
         <source>Cellules justes :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortVerdict" datatype="html">
         <source>Cartes bien placées :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildVerdict" datatype="html">
         <source>Lignes justes :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">186</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTableBuildSynthese" datatype="html">
         <source>Synthèse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortChrono" datatype="html">
         <source>Temps restant :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeCardsortChronoEchu" datatype="html">
         <source>Le temps est écoulé : vous pouvez encore envoyer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeTentativesRestantes" datatype="html">
         <source>Tentatives restantes :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEscapeTentativesEpuisees" datatype="html">
         <source>Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeChallengeAttenteRevelation" datatype="html">
         <source>Les pistes fausses seront signalées à la révélation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">190</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVotePhaseVote" datatype="html">
         <source>Votez seul·e, sans en parler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVotePhaseRevele" datatype="html">
         <source>Réponse révélée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVotePremier" datatype="html">
         <source>Premier vote</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVoteSecond" datatype="html">
         <source>Second vote, après discussion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVotePhaseFermee" datatype="html">
         <source>Le vote est fermé pour cette question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">202</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeReponsesCloses" datatype="html">
         <source>Correction révélée : les réponses sont closes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">204</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeDejaRepondu" datatype="html">
         <source>Réponse déjà enregistrée : voici votre verdict</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEcranNonServi" datatype="html">
         <source>Cet écran n’est pas encore ouvert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeApercu" datatype="html">
         <source>Aperçu : les réponses s’envoient pendant la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">203</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeEcranVerrouille" datatype="html">
         <source>Disponible pendant la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">210</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVideoSousTitres" datatype="html">
         <source>Sous-titres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeVideoTranscription" datatype="html">
         <source>Transcription</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedCarteMaitrise" datatype="html">
         <source>Carte de maîtrise par concept</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeSpacedNonVus" datatype="html">
         <source>Non vus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">209</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePulseMasque" datatype="html">
         <source>Comptes affichés à partir de 5 réponses</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeProductionVide" datatype="html">
         <source>Saisissez au moins une valeur ou choisissez « Je ne sais pas »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeBrouillonRestaure" datatype="html">
         <source>Brouillon restauré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">220</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimePlotVoirDonnees" datatype="html">
         <source>Voir les données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">221</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeTentativesReseau" datatype="html">
         <source>Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeStorySourceVisuel" datatype="html">
         <source>Source du visuel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeStorySourceMedia" datatype="html">
         <source>Source du média</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">225</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeDureeMinutes" datatype="html">
         <source>min</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeModaliteSolo" datatype="html">
         <source>Individuel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeModaliteBinome" datatype="html">
         <source>En binôme</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeModaliteGroupe" datatype="html">
         <source>En groupe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeModaliteClasse" datatype="html">
         <source>Classe entière</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">230</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeRegimeOuvert" datatype="html">
         <source>Régime ouvert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">225</context>
+          <context context-type="linenumber">231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeRegimeFocus" datatype="html">
         <source>Régime concentré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">232</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRuntimeRegimeExamen" datatype="html">
         <source>Régime d’examen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/cours/runtime/core/i18n.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">233</context>
         </context-group>
       </trans-unit>
     </body>

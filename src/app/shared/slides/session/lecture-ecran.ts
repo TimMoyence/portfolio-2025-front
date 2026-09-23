@@ -27,7 +27,7 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-quote': ['citation'],
   'fp-story': ['recit'],
   'fp-pro': ['cas'],
-  'fp-worked': ['exemple', 'etayage'],
+  'fp-worked': ['exemple', 'etayage', 'pilote'],
   'fp-concept4': ['definition'],
   'fp-plot': ['definition'],
   'fp-challenge': ['probleme'],

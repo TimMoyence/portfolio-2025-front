@@ -1,6 +1,6 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
-import { buildPlotDefinition } from '../../../testing/factories/cours.factory';
+import { buildPlotDefinition, buildPlotEnBarres } from '../../../testing/factories/cours.factory';
 import {
   FpPlot,
   HAUTEUR,
@@ -69,6 +69,20 @@ function animer(hote: FpPlot): void {
   const bouton = hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="animer"]');
   if (bouton === null || bouton === undefined) {
     throw new Error('aucun bouton d animation');
+  }
+  bouton.click();
+}
+
+function sansEspaces(texte: string): string {
+  return texte.replace(/\s/g, '');
+}
+
+function prereglage(hote: FpPlot, libelle: string): void {
+  const bouton = reperes(hote, 'prereglage').find(
+    (candidat) => candidat.textContent?.trim() === libelle,
+  );
+  if (!(bouton instanceof HTMLButtonElement)) {
+    throw new Error(`aucun préréglage ${libelle}`);
   }
   bouton.click();
 }
@@ -302,6 +316,70 @@ describe('FpPlot', () => {
     }
     expect(repere(hote, 'valeur')?.textContent?.trim()).toBe('3000');
     expect(texteDe(hote, 'tableau')).not.toBe(avant);
+  });
+
+  it('E13 · trace une barre par année, étiquetée, avec ses montants en euros', () => {
+    hote.definition = buildPlotEnBarres();
+
+    expect(reperes(hote, 'barre').length).toBe(4);
+    expect(reperes(hote, 'trace').length).toBe(0);
+    expect(textesDe(hote, 'graduation-x')).toEqual(['2022', '2023', '2024', '2025']);
+    expect(textesDe(hote, 'montant-barre').map(sansEspaces)).toEqual([
+      '285000€',
+      '288000€',
+      '289800€',
+      '291000€',
+    ]);
+    expect(sansEspaces(valeurAffichee(hote, 'origine'))).toBe('284000€');
+  });
+
+  it('E13 · confronte le rapport des hauteurs à l évolution réelle selon le préréglage', () => {
+    hote.definition = buildPlotEnBarres();
+
+    expect(texteDe(hote, 'rapport-hauteurs')).toBe('×7');
+    expect(sansEspaces(texteDe(hote, 'evolution-reelle'))).toBe('+2,1%');
+
+    prereglage(hote, 'Axe à zéro');
+
+    expect(texteDe(hote, 'rapport-hauteurs')).toBe('×1,02');
+    expect(sansEspaces(texteDe(hote, 'evolution-reelle'))).toBe('+2,1%');
+    expect(sansEspaces(valeurAffichee(hote, 'origine'))).toBe('0€');
+    expect((repere(hote, 'curseur') as HTMLInputElement | null)?.value).toBe('0');
+
+    prereglage(hote, 'Axe de Samir');
+
+    expect(texteDe(hote, 'rapport-hauteurs')).toBe('×7');
+  });
+
+  it('E13 · refuse un rapport des hauteurs ou une évolution sans base significative', () => {
+    hote.definition = buildPlotEnBarres({
+      series: [{ id: 'marge', libelle: 'Marge brute', trait: 'plein', calcul: '290000-3000*x' }],
+    });
+
+    expect(texteDe(hote, 'rapport-hauteurs')).toBe('—');
+
+    hote.definition = buildPlotEnBarres({
+      id: 'K-BARRES-NULLE',
+      series: [{ id: 'marge', libelle: 'Marge brute', trait: 'plein', calcul: '1000*x' }],
+    });
+    prereglage(hote, 'Axe à zéro');
+
+    expect(texteDe(hote, 'evolution-reelle')).toBe('—');
+  });
+
+  it('E13 · décrit les barres par leurs années et annonce le préréglage actif et le rapport', () => {
+    hote.definition = buildPlotEnBarres();
+    const pressions = (): (string | null)[] =>
+      reperes(hote, 'prereglage').map((bouton) => bouton.getAttribute('aria-pressed'));
+
+    expect(texteDe(hote, 'description-svg')).toContain('2022');
+    expect(texteDe(hote, 'description-svg')).toContain('2025');
+    expect(repere(hote, 'rapport')?.getAttribute('aria-live')).toBe('polite');
+    expect(pressions()).toEqual(['true', 'false']);
+
+    prereglage(hote, 'Axe à zéro');
+
+    expect(pressions()).toEqual(['false', 'true']);
   });
 
   it('affiche les reperes au tableau', () => {

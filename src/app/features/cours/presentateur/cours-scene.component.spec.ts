@@ -117,6 +117,21 @@ describe('CoursSceneComponent', () => {
     TestBed.inject(AuthStateService).clearSession();
   });
 
+  it('E10 · projette en miniature, sans corrigé, l écran auquel renvoie l écran courant', async () => {
+    const [vote, rappel] = derouleDeSeance().ecrans;
+    deroule = buildDerouleCours({ ecrans: [vote, { ...rappel, renvoi: vote.id }] });
+    port.lireDeroule.and.returnValue(of(deroule));
+    const fixture = await monterEtStabiliser();
+
+    diffuser(fixture, { ecranCourant: 1 });
+    const ecrans = fixture.debugElement
+      .queryAll(By.directive(SlideActivityComponent))
+      .map((ecran) => (ecran.componentInstance as SlideActivityComponent).slide());
+
+    expect(ecrans.map(({ id }) => id)).toEqual([rappel.id, vote.id]);
+    expect(Object.hasOwn(ecrans[1], 'corriges')).toBeFalse();
+  });
+
   it('lit le deroule de la session puis ouvre le flux formateur pour suivre l ecran courant', async () => {
     const fixture = await monterEtStabiliser();
 
@@ -304,6 +319,22 @@ describe('CoursSceneComponent', () => {
     expect(double.flux.close).not.toHaveBeenCalled();
     fixture.destroy();
     expect(double.flux.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('R1 · projette dans la toile la réponse attendue une fois la correction révélée, pas avant', async () => {
+    const fixture = await monterEtStabiliser();
+    const bandeau = (): string | undefined =>
+      (fixture.nativeElement as HTMLElement)
+        .querySelector('[data-testid="cours-toile"] [data-testid="cours-correction"]')
+        ?.textContent?.replace(/\s+/g, ' ');
+
+    diffuser(fixture, { ecranCourant: 0 });
+
+    expect(bandeau()).toBeUndefined();
+
+    diffuser(fixture, { ecranCourant: 0, pilotage: { 'ecran-vote': { revele: true } } });
+
+    expect(bandeau()).toContain('1 480,24');
   });
 
   it('ne projette les comptes d un jalon qu a partir de cinq reponses', async () => {

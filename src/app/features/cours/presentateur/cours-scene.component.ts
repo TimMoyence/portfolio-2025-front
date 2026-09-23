@@ -9,7 +9,12 @@ import {
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { DerouleCours, EcranContent, PilotageEcran } from '../../../../cours/content/types';
+import type {
+  DerouleCours,
+  EcranContent,
+  EcranDeroule,
+  PilotageEcran,
+} from '../../../../cours/content/types';
 import type {
   EtatSession,
   ResultatsDuFlux,
@@ -22,15 +27,28 @@ import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
+import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
+import { correctionsAffichees } from './corrections-affichees';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
 const SEUIL_DE_PROJECTION = 5;
 
+function ecranProjete(ecran: EcranDeroule): EcranContent {
+  return {
+    id: ecran.id,
+    type: ecran.type,
+    titre: ecran.titre ?? null,
+    duree: ecran.duree,
+    interactif: ecran.interactif,
+    donnees: ecran.donnees,
+  };
+}
+
 @Component({
   selector: 'app-cours-scene',
   standalone: true,
-  imports: [CoursPresentationComponent],
+  imports: [CoursPresentationComponent, CoursBandeauCorrectionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -255,7 +273,15 @@ const SEUIL_DE_PROJECTION = 5;
               [resultats]="resultats()"
               [direct]="direct()"
               [donneesFormateur]="annexeDeLEcran()"
+              [renvoi]="ecranRenvoye()"
+              [surimpression]="correction"
             />
+            <ng-template #correction>
+              <app-cours-bandeau-correction
+                [corrections]="correctionsDeLEcran()"
+                [revele]="direct()?.pilotage?.revele === true"
+              />
+            </ng-template>
           }
         </main>
       </div>
@@ -312,18 +338,19 @@ export class CoursSceneComponent {
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
     const ecran = this.deroule()?.ecrans[this.ecran()];
-    if (ecran === undefined) {
-      return null;
-    }
-    return {
-      id: ecran.id,
-      type: ecran.type,
-      titre: ecran.titre ?? null,
-      duree: ecran.duree,
-      interactif: ecran.interactif,
-      donnees: ecran.donnees,
-    };
+    return ecran === undefined ? null : ecranProjete(ecran);
   });
+
+  readonly ecranRenvoye = computed<EcranContent | null>(() => {
+    const deroule = this.deroule();
+    const renvoi = deroule?.ecrans[this.ecran()]?.renvoi;
+    const cible = deroule?.ecrans.find(({ id }) => id === renvoi);
+    return cible === undefined ? null : ecranProjete(cible);
+  });
+
+  readonly correctionsDeLEcran = computed(() =>
+    correctionsAffichees(this.deroule()?.ecrans[this.ecran()]),
+  );
 
   readonly annexeDeLEcran = computed(() => {
     const ecran = this.deroule()?.ecrans[this.ecran()];

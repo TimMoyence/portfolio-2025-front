@@ -138,7 +138,11 @@ function fusionnerLesAnnotations(
         [resultats]="resultats()"
         [participants]="participants()"
       />
-      <app-panneau-reponses-libres [reponses]="reponsesLibres()" [ecranId]="ecran().id" />
+      <app-panneau-reponses-libres
+        [reponses]="reponsesLibres()"
+        [ecranId]="ecran().id"
+        [renvoi]="ecran().renvoi"
+      />
       <app-panneau-groupes
         [groupes]="groupes()"
         [participants]="participantsDeSeance()"

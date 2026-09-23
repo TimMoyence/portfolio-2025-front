@@ -13,7 +13,10 @@ export interface CarteDuTri {
 }
 
 interface ZoneDuTri extends CategorieDuTri {
-  readonly cartes: readonly (CarteDuTri & { readonly malPlacee: boolean })[];
+  readonly cartes: readonly (CarteDuTri & {
+    readonly malPlacee: boolean;
+    readonly bienPlacee: boolean;
+  })[];
 }
 
 @Component({
@@ -29,14 +32,20 @@ export class SlideSortReviewComponent {
   readonly categories = input.required<readonly CategorieDuTri[]>();
   readonly cards = input.required<readonly CarteDuTri[]>();
   readonly misplaced = input<readonly string[]>([]);
+  readonly wellPlaced = input<readonly string[]>([]);
 
   protected readonly zones = computed<readonly ZoneDuTri[]>(() => {
     const malPlacees = new Set(this.misplaced());
+    const bienPlacees = new Set(this.wellPlaced());
     return this.categories().map((categorie) => ({
       ...categorie,
       cartes: this.cards()
         .filter((carte) => carte.category === categorie.id)
-        .map((carte) => ({ ...carte, malPlacee: malPlacees.has(carte.id) })),
+        .map((carte) => ({
+          ...carte,
+          malPlacee: malPlacees.has(carte.id),
+          bienPlacee: !malPlacees.has(carte.id) && bienPlacees.has(carte.id),
+        })),
     }));
   });
 }
